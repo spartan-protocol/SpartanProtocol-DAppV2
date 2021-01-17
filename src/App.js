@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 
 import {ContextProvider} from './context'
 
-// import Home from './Home'
+import Home from './Home'
 // import Pools from './Pools'
 // import Bond from './Pools/Bond'
 // import Liquidity from './Pools/Liquidity'
@@ -22,9 +22,8 @@ const App = () => {
   return (
     <ContextProvider>
         <Router>
-            <Layout />
+            {/* <Layout /> */}
             <div className="wrapper">
-                <ScrollToTop />
                 {tempDisable === false &&
                     <Switch>
                         <Route path="/"><Home/></Route>
