@@ -1,0 +1,28 @@
+#header {
+    width:100%;
+    padding:0;
+    background-color: $primary2-grey;
+}
+
+#logo {
+    background-color: $primary-black;
+    max-width: fit-content;
+    padding: 0;
+}
+
+#logo-mobile {
+    background-color: $primary-black;
+    max-width: fit-content;
+    padding: 0;
+}
+
+.header-section {
+    max-width: fit-content;
+    display: flex;
+    align-items: center;
+}
+
+.btn-dark {
+    color: $primary-brown;
+    background-color: $primary-black;
+}

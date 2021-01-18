@@ -3,6 +3,8 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 
 import {ContextProvider} from './context'
 
+import './app.scss'
+
 import Home from './Home'
 import Layout from './Layout'
 // import Pools from './Pools'
@@ -24,7 +26,7 @@ const App = () => {
     <ContextProvider>
         <Router>
             <Layout />
-            <div className="wrapper">
+            <div id="wrapper">
                 {tempDisable === false &&
                     <Switch>
                         <Route path="/"><Home/></Route>
