@@ -12,7 +12,6 @@ export class ContextProvider extends React.Component {
     wallet: null
   }
 
-
   // reimplementation of setState, but specifically for context state.
   setContext = (state, fn) => {
     this.setState(state, () => {

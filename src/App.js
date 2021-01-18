@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Switch, Route} from "react-router-dom"
 import {ContextProvider} from './context'
 
 import Home from './Home'
+import Layout from './Layout'
 // import Pools from './Pools'
 // import Bond from './Pools/Bond'
 // import Liquidity from './Pools/Liquidity'
@@ -22,7 +23,7 @@ const App = () => {
   return (
     <ContextProvider>
         <Router>
-            {/* <Layout /> */}
+            <Layout />
             <div className="wrapper">
                 {tempDisable === false &&
                     <Switch>
@@ -43,11 +44,11 @@ const App = () => {
                     </Switch>
                 }
                 {tempDisable === true &&
-                <>
-                    <div className='mt-5'>...</div>
-                    <div className='mt-5'>...</div>
-                    <h3 className='mt-5 text-center'>DApp temporarily disabled for smart contract upgrades</h3>
-                </>
+                    <>
+                        <div className='mt-5'>...</div>
+                        <div className='mt-5'>...</div>
+                        <h3 className='mt-5 text-center'>DApp temporarily disabled for smart contract upgrades</h3>
+                    </>
                 }
             </div>
         </Router>
