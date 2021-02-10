@@ -1,14 +1,20 @@
 {
-  "contractName": "iBASE",
+  "contractName": "iPOOLCURATION",
   "abi": [
     {
-      "inputs": [],
-      "name": "DAO",
-      "outputs": [
+      "inputs": [
         {
-          "internalType": "contract iDAO",
+          "internalType": "address",
           "name": "",
           "type": "address"
+        }
+      ],
+      "name": "isCuratedPool",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",

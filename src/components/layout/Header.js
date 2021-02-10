@@ -11,6 +11,10 @@ const Header = () => {
     const [modalShow, setModalShow] = React.useState(false)
     const [walletHeaderIcon, setWalletHeaderIcon] = useState(walletTypes[0].icon)
 
+    // ADD A USEEFFECT HERE TO CHECK WALLET STATUS
+    // CREATE SVGS TO REPRESENT EACH CONNECTION STATUS
+    // UPDATE WALLETHEADERICON IF 'CONNECTING' OR 'DISCONNECTED' ETC
+
     return (
         <>
             <Container fluid id='header'>

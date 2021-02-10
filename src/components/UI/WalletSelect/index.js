@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { ethers } from "ethers"
 import walletTypes from './walletTypes'
+import { removeLiquidity } from '../../../utils/web3Router'
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
@@ -14,15 +15,16 @@ const WalletSelect = (props) => {
 
     useEffect(() => {
         const checkWallet = () => {
-            console.log('Wallet Status:', wallet.status)
+            console.log('Wallet Status:', wallet)
             if (wallet.status === 'connected') {
                 window.localStorage.setItem("walletConnected", "1")
+                removeLiquidity(1, '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870', true, wallet.account)
             }
             else {window.localStorage.removeItem("walletConnected")}
         }
 
         checkWallet()
-    }, [wallet.status])
+    }, [wallet])
 
     const connectWallet = (props, x) => {
         wallet.reset()
