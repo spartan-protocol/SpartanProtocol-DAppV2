@@ -1,7 +1,5 @@
-import React, { useEffect, Suspense, lazy } from 'react'
+import React, { Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import BigNumber from 'bignumber.js'
 // STYLES
 import './app.scss'
 // ALWAYS LOADED LOCAL
@@ -25,20 +23,8 @@ import Home from './views/Home'
 // const FAQ = lazy(() => import('./views/Info/FAQ'))
 // const NoPage = lazy(() => import('./views/NoPage'))
 
-BigNumber.config({
-    EXPONENTIAL_AT: 1000,
-    DECIMAL_PLACES: 80,
-})
-
 const App = () => {
     const tempDisable = false
-    const { account, connect } = useWallet()
-
-    useEffect(() => {
-        if (!account && window.localStorage.getItem('accountStatus')) {
-          connect('injected')
-        }
-    }, [account, connect])
 
     return (
         <Router>

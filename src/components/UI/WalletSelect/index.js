@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+import Image from 'react-bootstrap/Image'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import { ethers } from "ethers"
+import walletTypes from './walletTypes'
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
-    const rpcUrl = process.env.REACT_APP_RPC
+    const [walletIcon, setWalletIcon] = useState('')
 
     useEffect(() => {
         const checkWallet = () => {
@@ -20,9 +24,13 @@ const WalletSelect = (props) => {
         checkWallet()
     }, [wallet.status])
 
-    const connectWallet = (props) => {
+    const connectWallet = (props, x) => {
         wallet.reset()
-        wallet.connect(props)
+        if (x.inject === '') {wallet.connect()}
+        else {wallet.connect(x.inject)}
+        window.localStorage.setItem("lastWallet", x.id)
+        setWalletIcon(x.icon)
+        props.setWalletHeaderIcon(x.icon)
     }
 
     return (
@@ -39,7 +47,8 @@ const WalletSelect = (props) => {
                 <Modal.Body>
                         {wallet.status === 'connected' ? (
                             <div>
-                                <div>Connector: {wallet.connector}</div>
+                                <Image src={walletIcon} className='wallet-modal-icon' roundedCircle />
+                                <div>Wallet: {window.localStorage.getItem("lastWallet")}</div>
                                 <div>Chain ID: {wallet.chainId}</div>
                                 <div>Account: {wallet.account}</div>
                                 <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
@@ -55,24 +64,20 @@ const WalletSelect = (props) => {
                             </div>
                         ) : (
                             <div>
-                                <Button variant="primary" onClick={() => connectWallet('bsc')}>
-                                    Binance Chain Wallet *ICON*
-                                </Button><br />
-                                <Button variant="primary" onClick={() => connectWallet()}>
-                                    MetaMask *ICON*
-                                </Button><br />
-                                <Button variant="primary" onClick={() => connectWallet('walletconnect:' + { rpcUrl })}>
-                                    WalletConnect *ICON*
-                                </Button><br />
-                                <Button variant="primary" onClick={() => connectWallet('injected')}>
-                                    TrustWallet *ICON*
-                                </Button><br />
-                                <Button variant="primary" onClick={() => connectWallet('injected')}>
-                                    MathWallet *ICON*
-                                </Button><br />
-                                <Button variant="primary" onClick={() => connectWallet('injected')}>
-                                    Try Other (Injected) *ICON*
-                                </Button>
+                                {walletTypes.map(x => (
+                                    <div key={x.id}>
+                                        <Button variant="primary" className='wallet-modal-button' onClick={() => connectWallet(props, x)}>
+                                            <Row>
+                                                <Col xs='8'>
+                                                    <h5>{x.title}</h5>
+                                                </Col>
+                                                <Col xs='4' className='px-1'>
+                                                    <Image src={x.icon} className='wallet-modal-icon' roundedCircle />
+                                                </Col>
+                                            </Row>
+                                        </Button><br />
+                                    </div>
+                                ))}
                                 {wallet.status === 'error' &&
                                     <p>Wallet connection failed! Please check that the RPC is set to BSC mainnet and that you have selected the correct wallet type!</p>
                                 }
