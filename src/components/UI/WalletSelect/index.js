@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
@@ -6,6 +6,24 @@ import Button from 'react-bootstrap/Button'
 const WalletSelect = (props) => {
     const wallet = useWallet()
     const rpcUrl = process.env.REACT_APP_RPC
+
+    useEffect(() => {
+        const checkWallet = () => {
+            console.log(wallet.status)
+            if (wallet.status === 'connected') {
+                window.localStorage.setItem("walletConnected", "1")
+            }
+            else {window.localStorage.removeItem("walletConnected")}
+        }
+
+        checkWallet()
+    }, [wallet.status])
+
+    const connectWallet = (props) => {
+        wallet.reset()
+        wallet.connect(props)
+    }
+
 
     return (
         <>
@@ -23,35 +41,33 @@ const WalletSelect = (props) => {
                             <div>
                                 <div>Account: {wallet.account}</div>
                                 <div>Balance: {wallet.balance}</div>
-                                <button onClick={() => wallet.reset()}>disconnect</button>
+                                <Button variant="secondary" onClick={() => {wallet.reset()}}>
+                                    Disconnect
+                                </Button>
                             </div>
                         ) : (
                             <div>
-                                Connect Wallet: <br />
-                                <Button 
-                                    fullWidth
-                                    variant="primary"
-                                    onClick={() => {
-                                        wallet.connect();
-                                        window.localStorage.setItem("walletConnected", "1");
-                                        props.onHide();
-                                    }}
-                                    >
+                                <Button variant="primary" onClick={() => connectWallet('bsc')}>
+                                    Binance Chain Wallet *ICON*
+                                </Button><br />
+                                <Button variant="primary" onClick={() => connectWallet()}>
                                     MetaMask *ICON*
                                 </Button><br />
-                                <Button 
-                                    variant="primary"
-                                    onClick={() => {
-                                        wallet.connect();
-                                        window.localStorage.setItem("walletConnected", "1");
-                                        props.onHide();
-                                    }}
-                                    >
-                                    MetaMask *ICON*
+                                <Button variant="primary" onClick={() => connectWallet('walletconnect:' + { rpcUrl })}>
+                                    WalletConnect *ICON*
+                                </Button><br />
+                                <Button variant="primary" onClick={() => connectWallet('injected')}>
+                                    TrustWallet *ICON*
+                                </Button><br />
+                                <Button variant="primary" onClick={() => connectWallet('injected')}>
+                                    MathWallet *ICON*
+                                </Button><br />
+                                <Button variant="primary" onClick={() => connectWallet('injected')}>
+                                    Try Other (Injected) *ICON*
                                 </Button>
-                                <button onClick={() => wallet.connect()}>MetaMask</button>
-                                <button onClick={() => wallet.connect('bsc')}>BSC</button>
-                                <button onClick={() => wallet.connect('walletconnect:' + { rpcUrl })}>WalletConnect</button>
+                                {wallet.status === 'error' &&
+                                    <p>Wallet connection failed! Please check that the RPC is set to BSC mainnet and that you have selected the correct wallet type!</p>
+                                }
                             </div>
                         )}
                 </Modal.Body>
