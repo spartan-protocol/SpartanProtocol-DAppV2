@@ -1,13 +1,19 @@
 #header {
     width:100%;
+    height:70px;
     padding:0;
     background-color: $primary2-grey;
 }
 
-#logo {
+#logoCol {
     background-color: $primary-black;
-    max-width: fit-content;
-    padding: 0;
+    flex: 0 0 70px;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.logo {
+
 }
 
 #logo-mobile {

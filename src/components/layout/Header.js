@@ -12,10 +12,10 @@ const Header = () => {
     return (
         <>
             <Container fluid id='header'>
-                <Row className='m-0'>
-                    <Col id='logo' className='d-none d-sm-block'>
-                        <Link to="/">
-                            <img src='./images/android-icon-48x48.png' alt='Spartan Protocol Icon' className='m-4 text-center' />
+                <Row className='h-100 mx-0'>
+                    <Col id='logoCol' className='d-none d-sm-inline-block'>
+                        <Link to="/" className='d-flex h-100 w-100'>
+                            <img src='./images/android-icon-48x48.png' alt='Spartan Protocol Icon' className='logo m-auto text-center' />
                         </Link>
                     </Col>
                     <Col id='logo-mobile' className='d-block d-sm-none'>

@@ -15,9 +15,8 @@ $accent2-purple: #1B1BA3;
 $light-white: #FFFFFF;
 $light-grey: #ECEAEA;
 
-#wrapper {
-    background-color: $light-grey;
-    min-height: 95vh;
+.full-height {
+    min-height: calc(100vh - 70px);
 }
 
 .bi-lg {

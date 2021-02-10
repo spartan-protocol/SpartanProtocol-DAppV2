@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
+import { ethers } from "ethers"
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
@@ -9,7 +10,7 @@ const WalletSelect = (props) => {
 
     useEffect(() => {
         const checkWallet = () => {
-            console.log(wallet.status)
+            console.log('Wallet Status:', wallet.status)
             if (wallet.status === 'connected') {
                 window.localStorage.setItem("walletConnected", "1")
             }
@@ -23,7 +24,6 @@ const WalletSelect = (props) => {
         wallet.reset()
         wallet.connect(props)
     }
-
 
     return (
         <>
@@ -39,8 +39,16 @@ const WalletSelect = (props) => {
                 <Modal.Body>
                         {wallet.status === 'connected' ? (
                             <div>
+                                <div>Connector: {wallet.connector}</div>
+                                <div>Chain ID: {wallet.chainId}</div>
                                 <div>Account: {wallet.account}</div>
-                                <div>Balance: {wallet.balance}</div>
+                                <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
+                                <Button variant="primary" onClick={() => navigator.clipboard.writeText(wallet.account)}>
+                                    Copy Address
+                                </Button>
+                                <Button variant="primary" href={'https://testnet.bscscan.com/address/' + wallet.account} target='_blank'>
+                                    View on BscScan
+                                </Button>
                                 <Button variant="secondary" onClick={() => {wallet.reset()}}>
                                     Disconnect
                                 </Button>
