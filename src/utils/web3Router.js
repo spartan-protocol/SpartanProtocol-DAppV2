@@ -1,44 +1,38 @@
 import { ethers } from "ethers";
-import ROUTER from '../config/ABI/Router.json'
 
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import ROUTER from '../config/ABI/Router.json'
+import { BNB_ADDR, WBNB_ADDR, SPARTA_ADDR } from "./web3"
 
 const rpcUrl = process.env.REACT_APP_RPC
 const net = process.env.REACT_APP_NET
 
-// TOKEN ADDRESSES
-export const BNB_ADDR = '0x0000000000000000000000000000000000000000'
-export const WBNB_ADDR = net === 'testnet' ? '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870' : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-export const SPARTA_ADDR = net === 'testnet' ? '0xb58a43D2D9809ff4393193de536F242fefb03613' : '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C'
-
 // OLD CONTRACT ADDRESSES
-export const UTILS_ADDR = net === 'testnet' ? '0x0a30aF25e652354832Ec5695981F2ce8b594e8B3' :'0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91'
-export const DAO_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b57FF9C0' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
+export const INCENTIVE_ADDR = net === 'testnet' ? '0xc241d694d51db9e934b147130cfefe8385813b86' : '0xdbe936901aeed4718608d0574cbaab01828ae016'
 export const ROUTERv1_ADDR = net === 'testnet' ? '0x94fFAD4568fF00D921C76aA158848b33D7Bd65d3' : '0x4ab5b40746566c09f4B90313D0801D3b93f56EF5'
 export const ROUTERv2_ADDR = net === 'testnet' ? '0x111589F4cE6f10E72038F1E4a19F7f19bF31Ee35' : '0x9dB88952380c0E35B95e7047E5114971dFf20D07'
-export const INCENTIVE_ADDR = net === 'testnet' ? '0xc241d694d51db9e934b147130cfefe8385813b86' : '0xdbe936901aeed4718608d0574cbaab01828ae016'
-export const BONDv1_ADDR = net === 'testnet' ? '0x4551457647f6810a917AF70Ca47252BbECD2A36c' : '0xDa7d913164C5611E5440aE8c1d3e06Df713a13Da'
-export const BONDv2_ADDR = net === 'testnet' ? '0x7e44b5461A50adB15329895b80866275192a54f6' : '0xE6844821B03828Fd4067167Bc258FA1EEFD1cCdf'
-export const BONDv3_ADDR = net === 'testnet' ? '0xa11D0a9F919EDc6D72aF8F90D56735cAd0EBE836' : '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43'
 
 // CURRENT CONTRACT ADDRESSES
-// YET TO DEPLOY GLOBALUPGRADE
-export const ROUTER_ADDR = ROUTERv2_ADDR
+export const pROUTER_ADDR = net === 'testnet' ? '0x70A06195532F816a4541F2BB406eD433F700aBb9' : ''
+export const sROUTER_ADDR = net === 'testnet' ? '0xdc1A605BE9C38FB9296A14925E0b26A35eE3Acb6' : ''
 
 // ABI
 export const ROUTER_ABI = ROUTER.abi
 
-const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
-
 // CONNECT ROUTER CONTRACT WITH PROVIDER (READ-ONLY; NOT SIGNER)
-const provROUTER = () => {
-    const contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
-    console.log(contract)
-    return contract
+export const provROUTER = () => {
+    let provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    let connectedWalletType = ''
+    if (window.sessionStorage.getItem('lastWallet') === 'BC') {connectedWalletType = window.BinanceChain}
+    else {connectedWalletType = window.ethereum}
+    let tempProvider = new ethers.providers.Web3Provider(connectedWalletType)
+    if (window.sessionStorage.getItem('walletConnected')) {provider = tempProvider}
+    console.log(provider.getSigner())
+    return provider
 }
 
 // CONNECT ROUTER CONTRACT WITH SIGNER
 const signContract = (contract, account) => {
+    const signer = new ethers.providers.JsonRpcProvider(rpcUrl)
     const signed = contract.connect(account)
     return signed
 }

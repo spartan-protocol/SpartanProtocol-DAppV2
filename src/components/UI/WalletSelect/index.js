@@ -6,8 +6,9 @@ import Image from 'react-bootstrap/Image'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { ethers } from "ethers"
+
 import walletTypes from './walletTypes'
-import { removeLiquidity } from '../../../utils/web3Router'
+import { removeLiquidity, provROUTER } from '../../../utils/web3Router'
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
@@ -15,22 +16,31 @@ const WalletSelect = (props) => {
 
     useEffect(() => {
         const checkWallet = () => {
-            console.log('Wallet Status:', wallet)
+            console.log('Wallet Status:', wallet.status)
             if (wallet.status === 'connected') {
-                window.localStorage.setItem("walletConnected", "1")
-                removeLiquidity(1, '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870', true, wallet.account)
+                window.sessionStorage.setItem("walletConnected", "1")
+                provROUTER()
+                //removeLiquidity(1, '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870', true, wallet.account)
             }
-            else {window.localStorage.removeItem("walletConnected")}
+            if (wallet.status === 'disconnected') {
+                window.sessionStorage.removeItem("walletConnected")
+                window.sessionStorage.removeItem("lastWallet")
+            }
+            if (wallet.status === 'error') {
+                window.sessionStorage.removeItem("walletConnected")
+                window.sessionStorage.removeItem("lastWallet")
+            }
         }
 
         checkWallet()
-    }, [wallet])
+    }, [wallet.status])
 
     const connectWallet = (props, x) => {
         wallet.reset()
+        console.log('reset')
         if (x.inject === '') {wallet.connect()}
         else {wallet.connect(x.inject)}
-        window.localStorage.setItem("lastWallet", x.id)
+        window.sessionStorage.setItem("lastWallet", x.id)
         setWalletIcon(x.icon)
         props.setWalletHeaderIcon(x.icon)
     }
@@ -50,7 +60,7 @@ const WalletSelect = (props) => {
                         {wallet.status === 'connected' ? (
                             <div>
                                 <Image src={walletIcon} className='wallet-modal-icon' roundedCircle />
-                                <div>Wallet: {window.localStorage.getItem("lastWallet")}</div>
+                                <div>Wallet: {window.sessionStorage.getItem("lastWallet")}</div>
                                 <div>Chain ID: {wallet.chainId}</div>
                                 <div>Account: {wallet.account}</div>
                                 <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>

@@ -1,23 +1,19 @@
 import { ethers } from "ethers";
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 
-import DAO from '../config/ABI/Dao.json'
-import DAOVAULT from '../config/ABI/DaoVault.json'
+import CURATED from '../config/ABI/Curated.json'
 import { BNB_ADDR, WBNB_ADDR, SPARTA_ADDR } from "./web3"
 
 const rpcUrl = process.env.REACT_APP_RPC
 const net = process.env.REACT_APP_NET
 
 // OLD CONTRACT ADDRESSES
-export const DAOv1_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b57FF9C0' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
 
 // CURRENT CONTRACT ADDRESSES
-export const DAO_ADDR = net === 'testnet' ? '0xEAdeAAe31B49A9E61A273Da1E4f98D34b98ebEaa' : ''
-export const DAOVAULT_ADDR = net === 'testnet' ? '0xF629B3079584c736366b472a55f06b2ad457695A' : ''
+export const CURATED_ADDR = net === 'testnet' ? '0x99a7850553BE824109521b2140Ad6627510e65e7' : ''
 
 // ABI
-export const DAO_ABI = DAO.abi
-export const DAOVAULT_ABI = DAOVAULT.abi
+export const CURATED_ABI = CURATED.abi
 
 const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
 
