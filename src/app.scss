@@ -1,3 +1,6 @@
-@import "Common/styles.scss";
-@import "Layout/styles.scss";
+@import 'bootstrap/dist/css/bootstrap.min.css';
 @import "bootstrap-icons/font/bootstrap-icons.css";
+
+@import "./style/styles.scss";
+@import "./components/layout/styles.scss";
+@import "./components/UI/styles.scss";
