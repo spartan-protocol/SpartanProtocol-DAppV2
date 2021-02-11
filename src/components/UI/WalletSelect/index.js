@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import { ethers } from "ethers"
 
 import walletTypes from './walletTypes'
-import { removeLiquidity, provROUTER } from '../../../utils/web3Router'
+import { getWalletProvider } from '../../../utils/web3'
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
@@ -19,8 +19,7 @@ const WalletSelect = (props) => {
             console.log('Wallet Status:', wallet.status)
             if (wallet.status === 'connected') {
                 window.sessionStorage.setItem("walletConnected", "1")
-                provROUTER()
-                //removeLiquidity(1, '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870', true, wallet.account)
+                getWalletProvider()
             }
             if (wallet.status === 'disconnected') {
                 window.sessionStorage.removeItem("walletConnected")
@@ -57,6 +56,13 @@ const WalletSelect = (props) => {
                     <Modal.Title id="contained-modal-title-vcenter">Manage Wallets</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
+                        {wallet.status === 'error' &&
+                            <p className='text-center'>
+                                Wallet connection failed!<br/>
+                                Check the network is set to BSC MainNet!<br/>
+                                Have you selected the correct wallet type?
+                            </p>
+                        }
                         {wallet.status === 'connected' ? (
                             <div>
                                 <Image src={walletIcon} className='wallet-modal-icon' roundedCircle />
@@ -90,9 +96,6 @@ const WalletSelect = (props) => {
                                         </Button><br />
                                     </div>
                                 ))}
-                                {wallet.status === 'error' &&
-                                    <p>Wallet connection failed! Please check that the RPC is set to BSC mainnet and that you have selected the correct wallet type!</p>
-                                }
                             </div>
                         )}
                 </Modal.Body>

@@ -16,14 +16,7 @@ export const getWalletProvider = () => {
     else {connectedWalletType = window.ethereum}
     let tempProvider = new ethers.providers.Web3Provider(connectedWalletType)
     if (window.sessionStorage.getItem('walletConnected')) {provider = tempProvider}
-    console.log(provider.getSigner())
+    provider = provider.getSigner()
+    console.log(provider)
     return provider
-}
-
-// CONNECT ROUTER CONTRACT WITH PROVIDER (READ ONLY)
-export const getWalletSigner = () => {
-    let provider = getProvider()
-    let signer = provider.​getSigner()​
-    console.log(signer)
-    return signer
 }
