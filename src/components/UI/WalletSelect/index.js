@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col'
 import { ethers } from "ethers"
 
 import walletTypes from './walletTypes'
+import { addLiquidity } from '../../../utils/web3Router'
 import { getWalletProvider } from '../../../utils/web3'
 
 const WalletSelect = (props) => {
@@ -19,7 +20,7 @@ const WalletSelect = (props) => {
             console.log('Wallet Status:', wallet.status)
             if (wallet.status === 'connected') {
                 window.sessionStorage.setItem("walletConnected", "1")
-                getWalletProvider()
+                addLiquidity('1000000000000000000', '1000000000000000000', '0x59beb0e29d3e9017a424ba594c63864bb609deb1')
             }
             if (wallet.status === 'disconnected') {
                 window.sessionStorage.removeItem("walletConnected")

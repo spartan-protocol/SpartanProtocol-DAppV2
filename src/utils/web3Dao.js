@@ -12,7 +12,7 @@ const net = process.env.REACT_APP_NET
 export const DAOv1_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b57FF9C0' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
 
 // CURRENT CONTRACT ADDRESSES
-export const DAO_ADDR = net === 'testnet' ? '0xEAdeAAe31B49A9E61A273Da1E4f98D34b98ebEaa' : ''
+export const DAO_ADDR = net === 'testnet' ? '0x9329F46b82B34703b0a584e6A48A0445f6eedC53' : ''
 export const DAOVAULT_ADDR = net === 'testnet' ? '0xF629B3079584c736366b472a55f06b2ad457695A' : ''
 
 // ABI

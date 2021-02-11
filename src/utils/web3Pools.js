@@ -10,7 +10,7 @@ const net = process.env.REACT_APP_NET
 // OLD CONTRACT ADDRESSES
 
 // CURRENT CONTRACT ADDRESSES
-export const CURATED_ADDR = net === 'testnet' ? '0x99a7850553BE824109521b2140Ad6627510e65e7' : ''
+export const CURATED_ADDR = net === 'testnet' ? '0x9894FBC249b0245Bab6740c52579a26dB8BeB0Bb' : ''
 
 // ABI
 export const CURATED_ABI = CURATED.abi
