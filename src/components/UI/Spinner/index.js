@@ -1,7 +1,11 @@
+import React from 'react'
+
 // ADD SPINNER HERE
 
 const Spinner = () => {
-    <i class="bi bi-arrow-counterclockwise" />
+    return (
+        <i className="bi bi-arrow-counterclockwise m-auto" />
+    )
 }
 
 export default Spinner
