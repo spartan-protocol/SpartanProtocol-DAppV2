@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import {Link} from "react-router-dom"
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -10,6 +10,30 @@ import walletTypes from '../UI/WalletSelect/walletTypes'
 const Header = () => {
     const [modalShow, setModalShow] = React.useState(false)
     const [walletHeaderIcon, setWalletHeaderIcon] = useState(walletTypes[0].icon)
+
+    useEffect(() => {
+        const checkTheme = () => {
+            if (window.localStorage.getItem('lightMode')) {
+                console.log('Light theme activated via preference stored in users local storage!')
+                document.body.setAttribute('data-theme', 'light')
+            }
+        }
+
+        checkTheme()
+    }, [])
+
+    const switchTheme = () => {
+        if (window.localStorage.getItem('lightMode')) {
+            window.localStorage.removeItem('lightMode')
+            document.body.removeAttribute('data-theme')
+            console.log('Light mode activated manually!')
+        }
+        else {
+            window.localStorage.setItem('lightMode', '1')
+            document.body.setAttribute('data-theme', 'light')
+            console.log('Dark mode activated manually!')
+        }
+    }
 
     // ADD A USEEFFECT HERE TO CHECK WALLET STATUS
     // CREATE SVGS TO REPRESENT EACH CONNECTION STATUS
@@ -33,7 +57,7 @@ const Header = () => {
                         </Link>
                     </Col>
                     <Col className='header-section'>
-                        <Button variant="dark" className='mx-1'><i className='bi-lg bi-sun' /></Button>
+                        <Button variant="dark" className='mx-1' onClick={() => switchTheme()}><i className='bi-lg bi-sun' /></Button>
                     </Col>
                     <Col id='logoCol' onClick={() => setModalShow(true)}>
                         <Link to="/" className='d-flex h-100 w-100'>
