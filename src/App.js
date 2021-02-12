@@ -11,7 +11,8 @@ import Footer from './components/layout/Footer'
 import Home from './views/Home'
 
 // CODE-SPLIT LOCAL
-// const Pools = lazy(() => import('./views/Pools'))
+const Samples = lazy(() => import('./views/Samples'))
+const Pools = lazy(() => import('./views/Pools'))
 // const Bond = lazy(() => import('./views/Pools/Bond'))
 // const Liquidity = lazy(() => import('./views/Pools/Liquidity'))
 // const Swap = lazy(() => import('./views/Pools/Swap'))
@@ -37,10 +38,13 @@ const App = () => {
                         <Route path="/" exact>
                             <Home />
                         </Route>
-                        {/* <Route path="/pools">
+                        <Route path="/samples" exact>
+                            <Samples />
+                        </Route>
+                        <Route path="/pools">
                             <Pools />
                         </Route>
-                        <Route path="/pools/bond">
+                        {/* <Route path="/pools/bond">
                             <Bond />
                         </Route>
                         <Route path="/pools/liquidity">

@@ -25,12 +25,14 @@ const Header = () => {
                         </Link>
                     </Col>
                     <Col className='d-flex align-items-center'>
-                        <Button variant="dark" className='mx-1'><i className='bi-lg bi-cloud-plus-fill' /><div className='d-none d-sm-inline-block ml-1'>Pools</div></Button>
-                        <Button variant="dark" className='mx-1'><i className='bi-lg bi-people-fill' /><div className='d-none d-sm-inline-block ml-1'>DAO</div></Button>
-                        <Button variant="dark" className='mx-1'><i className='bi-lg bi-info-circle' /><div className='d-none d-sm-inline-block ml-1'>Info</div></Button>
+                        <Link to="/pools">
+                            <Button variant="dark" className='mx-1'><i className='bi-lg bi-cloud-plus-fill' /><div className='d-none d-sm-inline-block ml-1'>Pools</div></Button>
+                        </Link>
+                        <Link to="/samples">
+                            <Button variant="dark" className='mx-1'><i className='bi-lg bi-people-fill' /><div className='d-none d-sm-inline-block ml-1'>Samples</div></Button>
+                        </Link>
                     </Col>
                     <Col className='header-section'>
-                        <Button variant="dark" className='mx-1'><i className='bi-lg bi-file-code-fill' /></Button>
                         <Button variant="dark" className='mx-1'><i className='bi-lg bi-sun' /></Button>
                     </Col>
                     <Col id='logoCol' onClick={() => setModalShow(true)}>
