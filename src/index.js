@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
  //import Contexts from './Contexts'
 import bsc, { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
+import "./assets/scss/spartan.scss";
 
 const rpcUrl = process.env.REACT_APP_RPC
 
