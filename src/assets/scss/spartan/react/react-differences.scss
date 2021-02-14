@@ -1,0 +1,33 @@
+// Differences from the HTML to the React product
+
+// react plugins
+@import "plugins/plugin-nouislider";
+@import "plugins/plugin-react-big-calendar";
+@import "plugins/plugin-react-bootstrap-sweetalert";
+@import "plugins/plugin-react-bootstrap-switch";
+@import "plugins/plugin-react-bootstrap-wizard";
+@import "plugins/plugin-react-datetime";
+@import "plugins/plugin-react-jvectormap";
+@import "plugins/plugin-react-select";
+@import "plugins/plugin-react-table";
+@import "plugins/plugin-react-tagsinput";
+
+// core components
+@import "alerts";
+@import "badges";
+@import "bootstrap-rtl";
+@import "buttons";
+@import "cards";
+@import "checkboxes-radio";
+@import "custom-forms";
+@import "dropdown";
+@import "fileinput";
+@import "fixed-plugin";
+@import "footers";
+@import "inputs";
+@import "modals";
+@import "navbar";
+@import "rtl";
+@import "sidebar-and-main-panel";
+@import "spinners";
+@import "white-content";

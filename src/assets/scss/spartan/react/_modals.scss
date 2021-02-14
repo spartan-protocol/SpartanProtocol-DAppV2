@@ -1,0 +1,13 @@
+.modal {
+  &.fade .modal-dialog {
+    animation-duration: unset;
+    animation-fill-mode: unset;
+    animation-name: unset;
+  }
+  &.show.modal-long .modal-dialog {
+    transform: translateY(10%);
+  }
+}
+.modal-content .modal-body+.modal-footer{
+  padding: 24px 24px 16px;
+}

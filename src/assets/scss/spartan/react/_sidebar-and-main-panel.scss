@@ -1,0 +1,41 @@
+.sidebar .logo .logo-mini .logo-img img {
+  border-radius: 50%;
+  width: 30px;
+}
+.perfect-scrollbar-on {
+  .sidebar {
+    height: 80%;
+  }
+}
+@include media-breakpoint-down(sm) {
+  .sidebar {
+    height: 100%;
+  }
+}
+@include media-breakpoint-down(md) {
+  .perfect-scrollbar-on {
+    .sidebar {
+      height: 100%;
+    }
+  }
+  html.nav-open body {
+    position: relative;
+    overflow-x: hidden;
+  }
+  html.nav-open .main-panel {
+    overflow: auto;
+    min-height: unset;
+  }
+  html.nav-open .wrapper {
+    overflow: hidden;
+  }
+}
+
+.sidebar .nav li.active > a[data-toggle="collapse"] + div .nav li:not(.active) a{
+  .sidebar-normal {
+    color: rgba($white,0.8);
+  }
+  &::before {
+    display: none;
+  }
+}

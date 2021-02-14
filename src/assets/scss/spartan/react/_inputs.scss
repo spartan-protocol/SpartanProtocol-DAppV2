@@ -1,0 +1,76 @@
+*,
+.login-page,
+.card-login.card-white {
+  textarea.form-control {
+    border: 1px solid lighten($black, 5%);
+    border-radius: $border-radius-lg;
+    &:focus,
+    &:active {
+      border: 1px solid lighten($primary, 5%);
+    }
+  }
+  .form-group:not(.has-danger):not(.has-success),
+  .input-group-focus:not(.has-danger):not(.has-success) {
+    .input-group-prepend .input-group-text,
+    .input-group-append .input-group-text {
+      border-color: $info;
+    }
+    .form-control {
+      &:focus {
+        border-color: $info;
+        & + .input-group-append .input-group-text,
+        & ~ .input-group-append .input-group-text,
+        & + .input-group-prepend .input-group-text,
+        & ~ .input-group-prepend .input-group-text {
+          border: 1px solid $info;
+        }
+      }
+    }
+  }
+  .input-group-focus:not(.has-danger):not(.has-success) {
+    .form-control {
+      border-color: $info;
+      & + .input-group-append .input-group-text,
+      & ~ .input-group-append .input-group-text,
+      & + .input-group-prepend .input-group-text,
+      & ~ .input-group-prepend .input-group-text {
+        border: 1px solid $info;
+      }
+    }
+  }
+}
+.sweet-alert input.form-control:focus {
+  border-color: $info;
+  & + .input-group-append .input-group-text,
+  & ~ .input-group-append .input-group-text,
+  & + .input-group-prepend .input-group-text,
+  & ~ .input-group-prepend .input-group-text {
+    border: 1px solid $info;
+  }
+}
+.form-group .input-group-append .input-group-text,
+.input-group .input-group-append .input-group-text {
+  padding: 10px 18px 10px 0;
+}
+.input-group-text {
+  line-height: 1;
+}
+.form-control + .input-group-append .input-group-text,
+.form-control + .input-group-prepend .input-group-text {
+  background-color: transparent;
+}
+.input-group-append,
+.input-group-prepend {
+  border: 0;
+}
+.input-group-append:last-child {
+  .input-group-text {
+    border-left: 0 !important;
+  }
+}
+.input-group .form-control:not(:first-child):not(:last-child),
+.input-group-btn:not(:first-child):not(:last-child) {
+  border-right: none;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}

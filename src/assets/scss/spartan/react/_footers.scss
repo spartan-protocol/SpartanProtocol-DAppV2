@@ -1,0 +1,9 @@
+.footer {
+  .footer-nav {
+    ul {
+      li + li {
+        margin-left: 4px;
+      }
+    }
+  }
+}
