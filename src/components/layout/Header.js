@@ -45,7 +45,7 @@ const Header = () => {
                 <Row className='h-100 mx-0'>
                     <Col id='logoCol' className=''>
                         <Link to="/" className='d-flex h-100 w-100'>
-                            <img src='./images/android-icon-48x48.png' alt='Spartan Protocol Icon' className='logo m-auto text-center' />
+                            <img src='./images/android-icon-48x48.png' alt='Spartan Protocol SpartanIcons' className='logo m-auto text-center' />
                         </Link>
                     </Col>
                     <Col className='d-flex align-items-center'>
@@ -61,7 +61,7 @@ const Header = () => {
                     </Col>
                     <Col id='logoCol' onClick={() => setModalShow(true)}>
                         <Link to="/" className='d-flex h-100 w-100'>
-                            <img src={walletHeaderIcon} alt='Spartan Protocol Icon' className='logo m-auto text-center' />
+                            <img src={walletHeaderIcon} alt='Spartan Protocol SpartanIcons' className='logo m-auto text-center' />
                         </Link>
                     </Col>
                 </Row>
