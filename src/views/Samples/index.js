@@ -18,6 +18,7 @@ import {ReactComponent as SpartanLogoRedSmall} from "../../assets/img/spartan_re
 import {ReactComponent as SpartanLogoWhiteBig} from "../../assets/img/spartan_white_big.svg";
 import {ReactComponent as SpartanLogoWhiteMedium} from "../../assets/img/spartan_white_medium.svg";
 import {ReactComponent as SpartanLogoWhiteSmall} from "../../assets/img/spartan_white_small.svg";
+import {ReactComponent as SpartanLogoBlackSmall} from "../../assets/img/spartan_black_small.svg";
 
 
 import {ReactComponent as PictoLendingBig} from "../../assets/img/picto-lending-big.svg";
@@ -28,6 +29,8 @@ import {ReactComponent as PictoPoolsSmall} from "../../assets/img/picto-pools-sm
 
 import {ReactComponent as PictoSyntheticsBig} from "../../assets/img/picto-synthetics-big.svg";
 import {ReactComponent as PictoSyntheticsSmall} from "../../assets/img/picto-synthetics-small.svg";
+
+import {ReactComponent as IconTest} from "../../assets/img/icon-wallet.svg";
 
 
 
@@ -405,6 +408,19 @@ const Samples = () => {
                                 <CardTitle tag="h4">Buttons with Label</CardTitle>
                             </CardHeader>
                             <CardBody>
+
+
+                                <Button color="default">
+                                    <SpartanLogoBlackSmall/> $1.52
+                                </Button>
+
+                                <Button type="Button" className="mx-1 btn btn-danger">
+                                    <IconTest/> Wallet
+                                </Button>
+
+                                <Button color="default">
+                                    <i className="bi-lg bi-chevron-compact-left"/> Left
+                                </Button>
                                 <Button color="default">
                                     <i className="bi-lg bi-chevron-compact-left"/> Left
                                 </Button>
