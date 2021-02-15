@@ -1,6 +1,5 @@
 import React from "react"
 import Container from 'react-bootstrap/Container'
-import Jumbotron from 'react-bootstrap/Jumbotron'
 import Card from 'react-bootstrap/Card'
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -8,7 +7,6 @@ import CardHeader from "reactstrap/es/CardHeader";
 import CardTitle from "reactstrap/es/CardTitle";
 import CardBody from "reactstrap/es/CardBody";
 import Button from "react-bootstrap/Button";
-import {UncontrolledTooltip} from "reactstrap";
 import Pagination from "react-bootstrap/Pagination";
 import PaginationItem from "reactstrap/es/PaginationItem";
 import PaginationLink from "reactstrap/es/PaginationLink";
@@ -34,6 +32,20 @@ const Samples = () => {
                         </p>
 
                     </CardBody>
+                </Card>
+                <Card>
+                    <Row>
+                        <Col md="6">
+                            <CardBody>
+                                <h1>Typogragraphy</h1>
+                                <h1>Headline 1</h1>
+                                <h2>Headline 2</h2>
+                                <h3>Headline 3</h3>
+                                <p>Body</p>
+                            </CardBody>
+
+                        </Col>
+                    </Row>
                 </Card>
                 <Card>
                     <Row>

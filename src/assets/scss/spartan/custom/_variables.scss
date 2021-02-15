@@ -113,7 +113,8 @@ $warning-states: #FC5D50 !default;
 $danger-states: #605e68 !default;
 $black-states: #1d253b !default;
 
-$background-black: #1e1e2f !default;
+// background
+$background-black: #0a0001 !default;
 $background-states-black: #1e1e24 !default;
 
 // opacity
@@ -373,9 +374,10 @@ $general-transition-time: 300ms !default;
 // Fonts
 @import url(http://fonts.googleapis.com/css?family=Kreon);
 
-
 $font-family-base: 'Roboto', sans-serif !default;
 $font-family-alt: 'Kreon', sans-serif !default;
+$font-family-headers: 'Kreon', sans-serif !default;
+
 
 $font-size-dash: .875rem !default;
 
@@ -890,7 +892,7 @@ $card-border-color: rgba($black, .05);
 $card-inner-border-radius: calc(#{$card-border-radius} - #{$card-border-width});
 $card-cap-bg: $gray-100 !default;
 $card-bg: $white !default;
-$card-black-background: #27293d !default;
+$card-black-background: #1D171F !default;
 $card-img-overlay-padding: 1.25rem !default;
 
 //$card-group-margin:                 ($grid-gutter-width / 2);
