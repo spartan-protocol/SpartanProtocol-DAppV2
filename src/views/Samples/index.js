@@ -35,15 +35,138 @@ const Samples = () => {
                 </Card>
                 <Card>
                     <Row>
+                        <Col md="12">
+                            <CardBody>
+                                <h1>Colors</h1>
+                                <h2>Base Colors</h2>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100" height="100" rx="12" fill="#0A0001"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#1D171F"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#25212D"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#403A4B"/>
+                                </svg>
+
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#605E68"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#F5F8FC"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#FFFFFF"/>
+                                </svg>
+                            </CardBody>
+                        </Col>
+                        <Col md="12">
+                            <CardBody>
+                                <h2>Primary Colors</h2>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100" height="100" rx="12" fill="#FB2715"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#FC5D50"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#FD938A"/>
+                                </svg>
+                            </CardBody>
+                        </Col>
+
+                        <Col md="12">
+                            <CardBody>
+                                <h2>Secondary Colors</h2>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100" height="100" rx="12" fill="#AACDFF"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#C0DAFF"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#D5E6FF"/>
+                                </svg>
+                            </CardBody>
+                        </Col>
+                        <Col md="12">
+                            <CardBody>
+                                <h2>Acent Colors</h2>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="100" height="100" rx="12" fill="#F5BC17"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#D4630D"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#B70000"/>
+                                </svg>
+                                <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
+                                        fill="#1A68FF"/>
+                                </svg>
+                            </CardBody>
+                        </Col>
+                    </Row>
+                </Card>
+                <Card>
+                    <Row>
                         <Col md="6">
                             <CardBody>
                                 <h1>Typogragraphy</h1>
                                 <h1>Headline 1</h1>
                                 <h2>Headline 2</h2>
                                 <h3>Headline 3</h3>
+                                <h4>Headline 4</h4>
+                                <h5>Headline 5</h5>
+                                <h6>Headline 6</h6>
                                 <p>Body</p>
                             </CardBody>
-
                         </Col>
                     </Row>
                 </Card>
@@ -51,6 +174,7 @@ const Samples = () => {
                     <Row>
                         <Col md="6">
                             <CardHeader>
+                                <h1>Buttons</h1>
                                 <CardTitle tag="h4">Primary</CardTitle>
                             </CardHeader>
                             <CardBody>
@@ -80,18 +204,12 @@ const Samples = () => {
                                 </Button>
                                 <br/>
                             </CardBody>
-                            <CardHeader>
-                                <CardTitle tag="h4">Tertairy</CardTitle>
-                            </CardHeader>
-                            <CardBody>
-                                {/*<Button>Tertairy</Button>*/}
-                                {/*<Button>Pressed</Button>*/}
-                                {/*<Button>Disabled</Button>*/}
-                                {/*<br/>*/}
-                            </CardBody>
                         </Col>
                         <Col md="6">
                             <CardHeader>
+                                <br/>
+                                <br/>
+                                <br/>
                                 <CardTitle tag="h4">Buttons with Label</CardTitle>
                             </CardHeader>
                             <CardBody>
