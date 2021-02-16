@@ -8,7 +8,7 @@ import WalletSelect from '../UI/WalletSelect'
 import walletTypes from '../UI/WalletSelect/walletTypes'
 
 const Header = () => {
-    const [modalShow, setModalShow] = React.useState(false)
+    const [modalShow, setModalShow] = useState(false)
     const [walletHeaderIcon, setWalletHeaderIcon] = useState(walletTypes[0].icon)
 
     useEffect(() => {
@@ -60,7 +60,7 @@ const Header = () => {
                         <Button variant="dark" className='mx-1' onClick={() => switchTheme()}><i className='bi-lg bi-sun' /></Button>
                     </Col>
                     <Col id='logoCol' onClick={() => setModalShow(true)}>
-                        <Link to="/" className='d-flex h-100 w-100'>
+                        <Link to="#" className='d-flex h-100 w-100'>
                             <img src={walletHeaderIcon} alt='Spartan Protocol SpartanIcons' className='logo m-auto text-center' />
                         </Link>
                     </Col>
