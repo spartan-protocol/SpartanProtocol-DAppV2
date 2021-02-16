@@ -35,13 +35,18 @@ export const addLiquidity = async (inputBase, inputToken, token) => {
     return units
 }
 
-// // LIQUIDITY - Add Asymmetrically
-// export const addLiquidityAsym = (inputToken, fromBase, token, send) => {
-//     let contract = provROUTER
-//     if (send === true) {contract = signContract(contract)}
-//     const units = contract.methods.addLiquidityAsym(inputToken,fromBase, token)
-//     return units
-// }
+// LIQUIDITY - Add Asymmetrically
+export const addLiquidityAsym = async (inputToken, fromBase, token) => {
+    let provider = getWalletProvider()
+    let contract = new ethers.Contract(pROUTER_ADDR, ROUTER_ABI, provider)
+    const gPrice = await provider.getGasPrice()
+    console.log(gPrice)
+    const gLimit = await contract.estimateGas.addLiquidityAsym(inputToken, fromBase, token)
+    console.log(gLimit)
+    const units = await contract.addLiquidityAsym(inputToken, fromBase, token, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(units)
+    return units
+}
 
 // // LIQUIDITY - Remove Symmetrically
 // export const removeLiquidity = (basisPoints, token, send, account) => {
