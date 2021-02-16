@@ -3,9 +3,6 @@ import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import CardHeader from "reactstrap/es/CardHeader";
-import CardTitle from "reactstrap/es/CardTitle";
-import CardBody from "reactstrap/es/CardBody";
 import Button from "react-bootstrap/Button";
 import Pagination from "react-bootstrap/Pagination";
 import PaginationItem from "reactstrap/es/PaginationItem";
@@ -40,7 +37,7 @@ const Samples = () => {
             <Container className='full-height'>
                 <br/>
                 <Card>
-                    <CardBody>
+                    <Card.Body>
                         <h1>Welcome, Spartans!</h1>
                         <p>
                             Welcome to the Samples page! Please add components / bootstrap elements here to view them!
@@ -52,12 +49,12 @@ const Samples = () => {
                             (i.e. importing 'Card' will allow for access to Card & Card.Title & Card.Body)
                         </p>
 
-                    </CardBody>
+                    </Card.Body>
                 </Card>
                 <Card>
                     <Row>
                         <Col md="12">
-                            <CardBody>
+                            <Card.Body>
                                 <h1>Colors</h1>
                                 <h2>Base Colors</h2>
                                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
@@ -101,10 +98,10 @@ const Samples = () => {
                                         d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
                                         fill="#FFFFFF"/>
                                 </svg>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                         <Col md="12">
-                            <CardBody>
+                            <Card.Body>
                                 <h2>Primary Colors</h2>
                                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -122,11 +119,11 @@ const Samples = () => {
                                         d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
                                         fill="#FD938A"/>
                                 </svg>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
 
                         <Col md="12">
-                            <CardBody>
+                            <Card.Body>
                                 <h2>Secondary Colors</h2>
                                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -144,10 +141,10 @@ const Samples = () => {
                                         d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
                                         fill="#D5E6FF"/>
                                 </svg>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                         <Col md="12">
-                            <CardBody>
+                            <Card.Body>
                                 <h2>Acent Colors</h2>
                                 <svg width="100" height="100" viewBox="0 0 100 100" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -171,24 +168,24 @@ const Samples = () => {
                                         d="M0 12C0 5.37258 5.37258 0 12 0H88C94.6274 0 100 5.37258 100 12V88C100 94.6274 94.6274 100 88 100H12C5.37258 100 0 94.6274 0 88V12Z"
                                         fill="#1A68FF"/>
                                 </svg>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                 </Card>
                 <Card>
                     <Row>
                         <Col md="3">
-                            <CardBody>
+                            <Card.Body>
                                 <h1>Brand</h1>
                                 <SpartanLogoRedBig/>
                                 <br/>
                                 <SpartanLogoRedMedium/>
                                 <br/>
                                 <SpartanLogoRedSmall/>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                         <Col md="3">
-                            <CardBody>
+                            <Card.Body>
                                 <br/>
                                 <br/>
                                 <br/>
@@ -197,27 +194,27 @@ const Samples = () => {
                                 <SpartanLogoWhiteMedium/>
                                 <br/>
                                 <SpartanLogoWhiteSmall/>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                 </Card>
                 <Card>
                     <Row>
                         <Col md="6">
-                            <CardBody>
+                            <Card.Body>
                                 <h1>Costum Icons</h1>
 
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M6.75012 9.00494C6.75012 8.03694 5.96562 7.25244 4.99762 7.25244C4.02962 7.25244 3.24512 8.03694 3.24512 9.00494C3.24512 9.83444 3.24512 18.6714 3.24512 19.4999C3.24512 20.4679 4.02962 21.2524 4.99762 21.2524C5.96562 21.2524 6.75012 20.4679 6.75012 19.4999C6.75012 18.6709 6.75012 9.83394 6.75012 9.00494Z"
-                                        stroke="white" stroke-width="1.5" stroke-miterlimit="10"/>
+                                        stroke="white" strokeWidth="1.5" strokeMiterlimit="10"/>
                                     <path
                                         d="M13.7526 13.5025C13.7526 12.5345 12.9681 11.75 12.0001 11.75C11.0321 11.75 10.2476 12.5345 10.2476 13.5025C10.2476 14.332 10.2476 18.6715 10.2476 19.5C10.2476 20.468 11.0321 21.2525 12.0001 21.2525C12.9681 21.2525 13.7526 20.468 13.7526 19.5C13.7526 18.671 13.7526 14.332 13.7526 13.5025Z"
-                                        stroke="white" stroke-width="1.5" stroke-miterlimit="10"/>
+                                        stroke="white" strokeWidth="1.5" strokeMiterlimit="10"/>
                                     <path
                                         d="M20.7501 4.5025C20.7501 3.5345 19.9656 2.75 18.9976 2.75C18.0296 2.75 17.2451 3.5345 17.2451 4.5025C17.2451 5.332 17.2451 18.6715 17.2451 19.5C17.2451 20.468 18.0296 21.2525 18.9976 21.2525C19.9656 21.2525 20.7501 20.468 20.7501 19.5C20.7501 18.671 20.7501 5.332 20.7501 4.5025Z"
-                                        stroke="white" stroke-width="1.5" stroke-miterlimit="10"/>
+                                        stroke="white" strokeWidth="1.5" strokeMiterlimit="10"/>
                                 </svg>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -241,9 +238,9 @@ const Samples = () => {
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M12 21.25C17.1086 21.25 21.25 17.1086 21.25 12C21.25 6.89137 17.1086 2.75 12 2.75C6.89137 2.75 2.75 6.89137 2.75 12C2.75 17.1086 6.89137 21.25 12 21.25Z"
-                                        stroke="white" stroke-width="1.5" stroke-miterlimit="10"/>
-                                    <path d="M16 10.25L12 14.25L8 10.25" stroke="white" stroke-width="1.5"
-                                          stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                        stroke="white" strokeWidth="1.5" strokeMiterlimit="10"/>
+                                    <path d="M16 10.25L12 14.25L8 10.25" stroke="white" strokeWidth="1.5"
+                                          strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -274,12 +271,12 @@ const Samples = () => {
                                      xmlns="http://www.w3.org/2000/svg">
                                     <path
                                         d="M19.25 5.75L6.375 5.75C4.649 5.75 3.25 7.149 3.25 8.875C3.25 10.601 4.649 12 6.375 12L17.625 12C19.351 12 20.75 13.399 20.75 15.125C20.75 16.851 19.351 18.25 17.625 18.25L4.25 18.25"
-                                        stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round"
-                                        stroke-linejoin="round"/>
-                                    <path d="M17.75 8.75L20.75 5.75L17.75 2.75" stroke="white" stroke-width="1.5"
-                                          stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <path d="M6.25 21.25L3.25 18.25L6.25 15.25" stroke="white" stroke-width="1.5"
-                                          stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                                        stroke="white" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round"
+                                        strokeLinejoin="round"/>
+                                    <path d="M17.75 8.75L20.75 5.75L17.75 2.75" stroke="white" strokeWidth="1.5"
+                                          strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M6.25 21.25L3.25 18.25L6.25 15.25" stroke="white" strokeWidth="1.5"
+                                          strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
                                 </svg>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                      xmlns="http://www.w3.org/2000/svg">
@@ -319,14 +316,14 @@ const Samples = () => {
                                 </svg>
 
 
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                 </Card>
                 <Card>
                     <Row>
                         <Col md="6">
-                            <CardBody>
+                            <Card.Body>
                                 <h1>Pictograms</h1>
                                 <PictoLendingBig/>
                                 <PictoLendingSmall/>
@@ -345,14 +342,14 @@ const Samples = () => {
 
 
 
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                 </Card>
                 <Card>
                     <Row>
                         <Col md="6">
-                            <CardBody>
+                            <Card.Body>
                                 <h1>Typogragraphy</h1>
                                 <h1>Headline 1</h1>
                                 <h2>Headline 2</h2>
@@ -361,18 +358,18 @@ const Samples = () => {
                                 <h5>Headline 5</h5>
                                 <h6>Headline 6</h6>
                                 <p>Body</p>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                 </Card>
                 <Card>
                     <Row>
                         <Col md="6">
-                            <CardHeader>
+                            <Card.Header>
                                 <h1>Buttons</h1>
-                                <CardTitle tag="h4">Primary</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                                <Card.Title tag="h4">Primary</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <Button type="Button" className="mx-1 btn btn-primary">
                                     <div className="d-none d-sm-inline-block ml-1">Primary</div>
                                 </Button>
@@ -383,11 +380,11 @@ const Samples = () => {
                                     <div className="d-none d-sm-inline-block ml-1">Disabled</div>
                                 </Button>
                                 <br/>
-                            </CardBody>
-                            <CardHeader>
-                                <CardTitle tag="h4">Secondary</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                            </Card.Body>
+                            <Card.Header>
+                                <Card.Title tag="h4">Secondary</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <Button type="Button" className="mx-1 btn btn-success">
                                     <div className="d-none d-sm-inline-block ml-1">Secondary</div>
                                 </Button>
@@ -398,16 +395,16 @@ const Samples = () => {
                                     <div className="d-none d-sm-inline-block ml-1">Disabled</div>
                                 </Button>
                                 <br/>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                         <Col md="6">
-                            <CardHeader>
+                            <Card.Header>
                                 <br/>
                                 <br/>
                                 <br/>
-                                <CardTitle tag="h4">Buttons with Label</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                                <Card.Title tag="h4">Buttons with Label</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
 
 
                                 <Button color="default">
@@ -440,15 +437,15 @@ const Samples = () => {
                                 <Button color="danger">
                                     <i className="bi-lg bi-exclamation-triangle-fill"/> Danger
                                 </Button>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                     <Row>
                         <Col md="6">
-                            <CardHeader>
-                                <CardTitle tag="h4">Sizes</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                            <Card.Header>
+                                <Card.Title tag="h4">Sizes</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <Button color="primary" size="sm">
                                     Small
                                 </Button>
@@ -456,13 +453,13 @@ const Samples = () => {
                                 <Button color="primary" size="lg">
                                     Large
                                 </Button>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                         <Col md="6">
-                            <CardHeader>
-                                <CardTitle tag="h4">Shapes</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                            <Card.Header>
+                                <Card.Title tag="h4">Shapes</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <Button color="primary">Default</Button>
                                 <Button className="btn-round" color="primary">
                                     round
@@ -479,19 +476,18 @@ const Samples = () => {
                                 <Button className="btn-link" color="primary">
                                     link
                                 </Button>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                     <Row>
                         <Col md="6">
-                            <CardHeader>
-                                <CardTitle tag="h4">Pagination</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                            <Card.Header>
+                                <Card.Title tag="h4">Pagination</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <nav aria-label="Page navigation example">
                                     <Pagination
                                         className="pagination pagination-warning"
-                                        listClassName="pagination-warning"
                                     >
                                         <PaginationItem className="active">
                                             <PaginationLink
@@ -589,13 +585,13 @@ const Samples = () => {
                                         </PaginationItem>
                                     </Pagination>
                                 </nav>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                         <Col md="6">
-                            <CardHeader>
-                                <CardTitle tag="h4">Button Group</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                            <Card.Header>
+                                <Card.Title tag="h4">Button Group</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <ButtonGroup>
                                     <Button color="info" type="Button">
                                         Left
@@ -634,15 +630,15 @@ const Samples = () => {
                                         7
                                     </Button>
                                 </ButtonGroup>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                     <Row>
                         <Col sm="12">
-                            <CardHeader>
-                                <CardTitle tag="h4">Social Buttons</CardTitle>
-                            </CardHeader>
-                            <CardBody>
+                            <Card.Header>
+                                <Card.Title tag="h4">Social Buttons</Card.Title>
+                            </Card.Header>
+                            <Card.Body>
                                 <Row>
                                     <Col md="1" sm="1">
                                         <p className="category"></p>
@@ -675,7 +671,7 @@ const Samples = () => {
                                         </Button>
                                     </Col>
                                 </Row>
-                            </CardBody>
+                            </Card.Body>
                         </Col>
                     </Row>
                 </Card>
