@@ -98,17 +98,17 @@ $default: #344675 !default;
 $primary: #fb2715 !default;
 $secondary: #f4f5f7 !default;
 $success: #aacdff !default;
-$info: #1d8cf8 !default;
+$info: #fb2715 !default;
 $warning: #FC5D50 !default;
 $danger: #605e68 !default;
-$black: #222a42 !default;
+$black: #404040 !default;
 
 
 // gradient
 $default-states: #263148 !default;
 $primary-states: #fb2715 !default;
 $success-states: #aacdff !default;
-$info-states: #3358f4 !default;
+$info-states: #fb2715 !default;
 $warning-states: #FC5D50 !default;
 $danger-states: #605e68 !default;
 $black-states: #1d253b !default;
@@ -476,7 +476,7 @@ $icon-size-lg: 3.6rem !default;
 $icon-size-xl: 5rem !default;
 
 
-// Tables
+// ReactTables
 
 $table-cell-padding: 1rem !default;
 $table-cell-padding-sm: .3rem !default;
