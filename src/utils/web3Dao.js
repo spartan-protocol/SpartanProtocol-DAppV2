@@ -1,9 +1,8 @@
 import { ethers } from "ethers";
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 
 import DAO from '../config/ABI/Dao.json'
 import DAOVAULT from '../config/ABI/DaoVault.json'
-import { BNB_ADDR, WBNB_ADDR, SPARTA_ADDR } from "./web3"
+import { BNB_ADDR, WBNB_ADDR, SPARTA_ADDR, getWalletProvider } from "./web3"
 
 const rpcUrl = process.env.REACT_APP_RPC
 const net = process.env.REACT_APP_NET
@@ -19,17 +18,15 @@ export const DAOVAULT_ADDR = net === 'testnet' ? '0xF629B3079584c736366b472a55f0
 export const DAO_ABI = DAO.abi
 export const DAOVAULT_ABI = DAOVAULT.abi
 
-const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
-
-// // CONNECT ROUTER CONTRACT WITH PROVIDER (READ-ONLY; NOT SIGNER)
-// const provROUTER = () => {
-//     const contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
-//     console.log(contract)
-//     return contract
-// }
-
-// // CONNECT ROUTER CONTRACT WITH SIGNER
-// const signContract = (contract, account) => {
-//     const signed = contract.connect(account)
-//     return signed
-// }
+// DAO - Deposit LP Tokens (Lock in DAO)
+export const deposit = async (pool, amount) => {
+    // Add a check to ensure 'pool' is listed (ROUTER.isPool(pool) == true)
+    // Add a check to ensure 'amount' is greater than 0
+    let provider = getWalletProvider()
+    let contract = new ethers.Contract(DAO_ADDR, DAO_ABI, provider)
+    const gPrice = await provider.getGasPrice()
+    const gLimit = await contract.estimateGas.deposit(pool, amount)
+    const result = await contract.deposit(pool, amount, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(result)
+    return result
+}

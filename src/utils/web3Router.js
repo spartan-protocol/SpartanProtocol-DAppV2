@@ -1,4 +1,4 @@
-import { ethers, providers } from "ethers";
+import { ethers } from "ethers";
 
 import ROUTER from '../config/ABI/Router.json'
 import SYNTH_ROUTER from '../config/ABI/synthRouter.json'
@@ -27,12 +27,10 @@ export const addLiquidity = async (inputBase, inputToken, token) => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(pROUTER_ADDR, ROUTER_ABI, provider)
     const gPrice = await provider.getGasPrice()
-    console.log(gPrice)
     const gLimit = await contract.estimateGas.addLiquidity(inputBase, inputToken, token)
-    console.log(gLimit)
-    const units = await contract.addLiquidity(inputBase, inputToken, token, {gasPrice: gPrice, gasLimit: gLimit})
-    console.log(units)
-    return units
+    const result = await contract.addLiquidity(inputBase, inputToken, token, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(result)
+    return result
 }
 
 // LIQUIDITY - Add Asymmetrically
@@ -40,12 +38,10 @@ export const addLiquidityAsym = async (inputToken, fromBase, token) => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(pROUTER_ADDR, ROUTER_ABI, provider)
     const gPrice = await provider.getGasPrice()
-    console.log(gPrice)
     const gLimit = await contract.estimateGas.addLiquidityAsym(inputToken, fromBase, token)
-    console.log(gLimit)
-    const units = await contract.addLiquidityAsym(inputToken, fromBase, token, {gasPrice: gPrice, gasLimit: gLimit})
-    console.log(units)
-    return units
+    const result = await contract.addLiquidityAsym(inputToken, fromBase, token, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(result)
+    return result
 }
 
 // // LIQUIDITY - Remove Symmetrically

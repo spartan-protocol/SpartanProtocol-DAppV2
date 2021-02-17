@@ -20,12 +20,10 @@ export const createPool = async (token) => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(CURATED_ADDR, CURATED_ABI, provider)
     const gPrice = await provider.getGasPrice()
-    console.log(gPrice)
     const gLimit = await contract.estimateGas.createPool(token)
-    console.log(gLimit)
-    const units = await contract.createPool(token, {gasPrice: gPrice, gasLimit: gLimit})
-    console.log(units)
-    return units
+    const result = await contract.createPool(token, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(result)
+    return result
 }
 
 // // CONNECT ROUTER CONTRACT WITH PROVIDER (READ-ONLY; NOT SIGNER)
