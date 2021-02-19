@@ -21,7 +21,7 @@
     padding: 0;
     width: 80px;
 
-    .tim-icons {
+    .bd-icons {
       font-size: 24px;
       line-height: 80px;
     }
@@ -102,7 +102,7 @@
                 &,
                 &:focus,
                 &:hover{
-                    @include diagonal-gradient($info, $info-states);
+                    @include diagonal-gradient($primary, $primary-states);
                 }
             }
         }
