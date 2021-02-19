@@ -27,7 +27,7 @@ ReactDOM.render(
             <Switch>
                 <Route path="/auth" render={(props) => <AuthLayout {...props} />}/>
                 <Route path="/admin" render={(props) => <AdminLayout {...props} />}/>
-                <Redirect from="/" to="/admin/dashboard"/>
+                <Redirect from="/" to="/admin/pools/"/>
             </Switch>
         </BrowserRouter>,
     </React.StrictMode>,

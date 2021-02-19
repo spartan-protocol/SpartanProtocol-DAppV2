@@ -122,7 +122,7 @@
 
   }
 
-  .logo-tim {
+  .logo-sparta {
     border-radius: 50%;
     border: 1px solid #333;
     display: block;
@@ -138,7 +138,6 @@
   }
 
   .nav {
-    margin-top: 0px;
     display: block;
     font-family: $font-family-base;
 
@@ -165,12 +164,13 @@
         display: block;
         text-decoration: none;
         position: relative;
-        text-transform: uppercase;
         cursor: pointer;
-        font-size: $font-size-sm;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
         font-weight: 700;
         padding: 10px 8px;
-        line-height: $line-height-lg;
+        line-height: 20px;
       }
 
       &:first-child > a {
@@ -199,13 +199,15 @@
 
         &:before {
           content: " ";
+          margin-left:-4px;
+          margin-top: -15px;
           position: absolute;
-          height: 6px;
-          width: 6px;
+          height: 35px;
+          width: 4px;
           top: 22px;
-          left: -4px;
-          background: $white;
-          border-radius: 50%;
+          left: -10px;
+          background: #FB2715;
+          border-radius: 0%;
         }
       }
 
@@ -230,24 +232,25 @@
           &:before {
             content: " ";
             position: absolute;
-            height: 6px;
-            width: 6px;
+            height: 0px;
+            width: 0px;
             top: 17px;
-            left: -4px;
-            background: $white;
-            border-radius: 50%;
+            //background: $white;
+            border-radius: 0%;
           }
         }
 
         &:before {
+          margin-left:-4px;
+          margin-top: -12px;
           content: " ";
           position: absolute;
-          height: 6px;
-          width: 6px;
+          height: 35px;
+          width: 4px;
           top: 22px;
-          left: -4px;
-          background: rgba($white, 0.6);
-          border-radius: 50%;
+          left: -10px;
+          background: #FB2715;
+          border-radius: 0%;
         }
       }
     }
@@ -356,7 +359,7 @@
     }
   }
 
-  .logo-tim {
+  .logo-sparta {
     border-radius: 50%;
     border: 1px solid #333;
     display: block;
@@ -375,7 +378,7 @@
     @include linear-gradient(#1D171F, #1D171F);
 
     &:before {
-      border-bottom-color: #1D171F;
+      border-bottom-color: transparent;
     }
   }
 
@@ -435,8 +438,10 @@
 
       .caret {
         position: absolute;
-        top: 8px;
-        right: 18px;
+        width: 16px;
+        height: 16px;
+        left: 184px;
+        top: 156px;
       }
     }
   }
