@@ -1,0 +1,193 @@
+.icon-small {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: 24px auto;
+    background-repeat: no-repeat;
+}
+
+.icon-medium {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-size: 32px auto;
+    background-repeat: no-repeat;
+}
+
+.icon-large {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    background-size: 64px auto;
+    background-repeat: no-repeat;
+}
+
+
+/* Home */
+.icon-home.icon-light {
+    background-image: url('/src/assets/icons/icon-home-light.svg#light');
+}
+
+
+
+
+/* Menu closed */
+.icon-menu-closed.icon-light {
+    background-image: url('/src/assets/icons/icon-menu-closed.svg#light');
+}
+
+
+
+/* Menu open */
+.icon-menu-open.icon-light {
+    background-image: url('/src/assets/icons/icon-menu-open.svg#light');
+}
+
+
+
+/* PoolsTable */
+.icon-pools.icon-light {
+    background-image: url('/src/assets/icons/icon-connect-light.svg#light');
+}
+
+.icon-pools.icon-dark {
+    background-image: url('/src/assets/icons/icon-connect-dark.svg#dark');
+}
+
+/* Analysis */
+.icon-analysis.icon-light {
+    background-image: url('/src/assets/icons/icon-analysis-light.svg#light');
+}
+
+.icon-analysis.icon-dark {
+    background-image: url('/src/assets/icons/icon-analysis-dark.svg#dark');
+}
+
+/* Check */
+.icon-check.icon-light {
+    background-image: url('/src/assets/icons/icon-check-light.svg#light');
+}
+
+.icon-check.icon-dark {
+    background-image: url('/src/assets/icons/icon-check-dark.svg#dark');
+}
+
+/* Cycle */
+.icon-cycle.icon-light {
+    background-image: url('/src/assets/icons/icon-cycle-light.svg#light');
+}
+
+.icon-cycle.icon-dark {
+    background-image: url('/src/assets/icons/icon-cycle-dark.svg#dark');
+}
+
+/* Down */
+.icon-down.icon-light {
+    background-image: url('/src/assets/icons/icon-down-light.svg#light');
+}
+
+.icon-down.icon-dark {
+    background-image: url('/src/assets/icons/icon-down-dark.svg#dark');
+}
+
+/* Github */
+.icon-github.icon-light {
+    background-image: url('/src/assets/icons/icon-github-light.svg#light');
+}
+
+.icon-github.icon-dark {
+    background-image: url('/src/assets/icons/icon-github-dark.svg#dark');
+}
+
+/* Info */
+.icon-info.icon-light {
+    background-image: url('/src/assets/icons/icon-info-light.svg#light');
+}
+
+.icon-info.icon-dark {
+    background-image: url('/src/assets/icons/icon-info-dark.svg#dark');
+}
+
+/* Medium */
+.icon-mediums.icon-light {
+    background-image: url('/src/assets/icons/icon-medium-light.svg#light');
+}
+
+.icon-mediums.icon-dark {
+    background-image: url('/src/assets/icons/icon-medium-dark.svg#dark');
+}
+
+/* Moon */
+.icon-moon.icon-light {
+    background-image: url('/src/assets/icons/icon-moon-light.svg#light');
+}
+
+.icon-moon.icon-dark {
+    background-image: url('/src/assets/icons/icon-moon-dark.svg#dark');
+}
+
+/* Reddit */
+.icon-reddit.icon-light {
+    background-image: url('/src/assets/icons/icon-reddit-light.svg#light');
+}
+
+.icon-reddit.icon-dark {
+    background-image: url('/src/assets/icons/icon-reddit-dark.svg#dark');
+}
+
+/* Swap */
+.icon-swap.icon-light {
+    background-image: url('/src/assets/icons/icon-swap-light.svg#light');
+}
+
+.icon-swap.icon-dark {
+    background-image: url('/src/assets/icons/icon-swap-dark.svg#dark');
+}
+
+/* Telegram */
+.icon-telegram.icon-light {
+    background-image: url('/src/assets/icons/icon-telegram-light.svg#light');
+}
+
+.icon-telegram.icon-dark {
+    background-image: url('/src/assets/icons/icon-telegram-dark.svg#dark');
+}
+
+/* Twitter */
+.icon-twitter.icon-light {
+    background-image: url('/src/assets/icons/icon-twitter-light.svg#light');
+}
+
+.icon-twitter.icon-dark {
+    background-image: url('/src/assets/icons/icon-twitter-dark.svg#dark');
+}
+
+/* Users */
+.icon-users.icon-light {
+    background-image: url('/src/assets/icons/icon-users-light.svg#light');
+}
+
+.icon-users.icon-dark {
+    background-image: url('/src/assets/icons/icon-users-dark.svg#dark');
+}
+
+/* Wallet */
+.icon-wallet.icon-light {
+    background-image: url('/src/assets/icons/icon-wallet-light.svg#light');
+}
+
+.icon-wallet.icon-dark {
+    background-image: url('/src/assets/icons/icon-wallet-dark.svg#dark');
+}
+
+/* World */
+.icon-world.icon-light {
+    background-image: url('/src/assets/icons/icon-world-light.svg#light');
+}
+
+.icon-world.icon-dark {
+    background-image: url('/src/assets/icons/icon-world-dark.svg#dark');
+}
+
+
+
