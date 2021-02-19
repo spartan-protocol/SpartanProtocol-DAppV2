@@ -6,18 +6,18 @@ import PerfectScrollbar from "perfect-scrollbar";
 import NotificationAlert from "react-notification-alert";
 
 // core components
-import HeaderNavbar from "../../Navbars/HeaderNavbar.js";
-import Footer from "../../../components/Footer/Footer.js";
-import Sidebar from "../../../components/Sidebar/Sidebar.js";
+import HeaderNavbar from "../Navbars/HeaderNavbar.js";
+import Footer from "../Footer/Footer.js";
+import Sidebar from "../Sidebar/Sidebar.js";
 
 
-import routes from "../../../routes.js";
+import routes from "../../routes.js";
 
-import logo from "../../../assets/img/spartan_black_small.svg";
+import logo from "../../assets/img/spartan_black_small.svg";
 
 var ps;
 
-const Admin = (props) => {
+const Common = (props) => {
     const [activeColor, setActiveColor] = React.useState("blue");
     const [sidebarMini, setSidebarMini] = React.useState(true);
     const [opacity, setOpacity] = React.useState(0);
@@ -80,7 +80,7 @@ const Admin = (props) => {
             if (prop.collapse) {
                 return getRoutes(prop.views);
             }
-            if (prop.layout === "/admin") {
+            if (prop.layout === "/dapp") {
                 return (
                     <Route
                         path={prop.layout + prop.path}
@@ -167,7 +167,7 @@ const Admin = (props) => {
                 />
                 <Switch>
                     {getRoutes(routes)}
-                    <Redirect from="*" to="/admin/dashboard"/>
+                    <Redirect from="*" to="/dapp/buttons"/>
                 </Switch>
                 {
                     // we don't want the Footer to be rendered on full screen maps page
@@ -181,4 +181,4 @@ const Admin = (props) => {
     );
 };
 
-export default Admin;
+export default Common;
