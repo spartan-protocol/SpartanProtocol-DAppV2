@@ -1,4 +1,19 @@
-# Getting Started with Create React App
+# Getting Started with Spartan Protocol DAppV2
+
+All you need to do to get started:
+- Copy repo URL into your Github Desktop or CLI and clone to local
+- (Before first 'start') Run 'yarn' in the project directory to get all deps loaded
+- Browse the issues list for an issue you want to work on, assign it to yourself (reach out if you want advice or permissions)
+- Create a new brance with the Github Issue ID in it and some sort of a short descriptor of your choosing. i.e. "Fix-Home-Button-#435"
+- Then run 'yarn start' in the project directory and a localhost window will pop up
+- Go ahead and code! 
+- Once you are done and have your commits completed, go ahead and make a merge request or ask someone to review the code in your branch
+- Ready to contribute? Reach out in the community telegram to get connected with an online contributor who will put you through to the contributors channel
+- Any and all skill levels welcome!
+- https://t.me/SpartanProtocolOrg
+
+
+---------------------------------------------------------------------------------------------
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
