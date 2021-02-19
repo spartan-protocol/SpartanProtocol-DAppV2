@@ -51,7 +51,6 @@ const Sidebar = (props) => {
   };
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
-  // while on the src/views/forms/RegularForms.js - route /admin/regular-forms
   const getCollapseInitialState = (routes) => {
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse && getCollapseInitialState(routes[i].views)) {
