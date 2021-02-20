@@ -8,6 +8,7 @@ import "./assets/css/spartan-icons.css";
 //import Contexts from './Contexts'
 import {UseWalletProvider} from '@binance-chain/bsc-use-wallet'
 import "./assets/scss/spartan.scss";
+import "./assets/css/styles.css";
 
 
 const rpcUrl = process.env.REACT_APP_RPC

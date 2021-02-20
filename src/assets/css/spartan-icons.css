@@ -28,7 +28,10 @@
     background-image: url('/src/assets/icons/icon-home-light.svg#light');
 }
 
-
+/* Lock */
+.icon-lock.icon-dark {
+    background-image: url('/src/assets/icons/iocn-lock-dark.svg#dark');
+}
 
 
 /* Menu closed */
