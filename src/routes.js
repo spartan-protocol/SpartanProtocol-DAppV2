@@ -92,13 +92,13 @@ const routes = [
             //     component: ExtendedForms,
             //     layout: "/dapp",
             // },
-            // {
-            //     path: "/grid",
-            //     name: "Grid",
-            //     mini: "GR",
-            //     component: Grid,
-            //     layout: "/dapp",
-            // },
+            {
+                path: "/grid",
+                name: "Grid",
+                mini: "GR",
+                component: Grid,
+                layout: "/dapp",
+            },
             // {
             //     path: "/icons",
             //     name: "Icons",
