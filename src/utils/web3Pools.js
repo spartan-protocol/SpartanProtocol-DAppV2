@@ -1,16 +1,16 @@
 import { ethers } from "ethers";
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 
 import CURATED from '../config/ABI/Curated.json'
-import { BNB_ADDR, WBNB_ADDR, SPARTA_ADDR, getWalletProvider } from "./web3"
+import { getWalletProvider } from "./web3"
 
-const rpcUrl = process.env.REACT_APP_RPC
 const net = process.env.REACT_APP_NET
 
 // OLD CONTRACT ADDRESSES
 
 // CURRENT CONTRACT ADDRESSES
-export const CURATED_ADDR = net === 'testnet' ? '0x9894FBC249b0245Bab6740c52579a26dB8BeB0Bb' : ''
+
+// FUTURE CONTRACT ADDRESSES
+// export const CURATED_ADDR = net === 'testnet' ? '' : ''
 
 // ABI
 export const CURATED_ABI = CURATED.abi

@@ -2,70 +2,28 @@
   "contractName": "iUTILS",
   "abi": [
     {
-      "inputs": [],
-      "name": "allCuratedPools",
-      "outputs": [
-        {
-          "internalType": "address[]",
-          "name": "",
-          "type": "address[]"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "token",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "units",
-          "type": "uint256"
-        }
-      ],
-      "name": "calcAsymmetricValue",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "units",
+          "name": "u",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "amount",
+          "name": "U",
           "type": "uint256"
         },
         {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "synth",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "A",
+          "type": "uint256"
         }
       ],
-      "name": "calcDebtShare",
+      "name": "calcAsymmetricShare",
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "unitSynths",
+          "name": "value",
           "type": "uint256"
         }
       ],
@@ -85,7 +43,60 @@
           "type": "uint256"
         }
       ],
-      "name": "calcSwapValueInBaseWithPool",
+      "name": "calcBasePPinTokenWithPool",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "part",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "total",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "calcShare",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "pool",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "calcValueInTokenWithPool",
       "outputs": [
         {
           "internalType": "uint256",
@@ -102,22 +113,17 @@
           "internalType": "address",
           "name": "token",
           "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "units",
-          "type": "uint256"
         }
       ],
-      "name": "calcSwapValueInToken",
+      "name": "getPool",
       "outputs": [
         {
-          "internalType": "uint256",
-          "name": "amount",
-          "type": "uint256"
+          "internalType": "address",
+          "name": "pool",
+          "type": "address"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
       "type": "function"
     }
   ],

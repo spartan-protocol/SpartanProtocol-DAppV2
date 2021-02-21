@@ -1,9 +1,9 @@
 import { ethers } from "ethers";
 
 import ROUTER from '../config/ABI/Router.json'
-import SYNTH_ROUTER from '../config/ABI/synthRouter.json'
-import LEVERAGE from '../config/ABI/Leverage.json'
-import { BNB_ADDR, WBNB_ADDR, SPARTA_ADDR, getWalletProvider } from "./web3"
+// import SYNTH_ROUTER from '../config/ABI/synthRouter.json'
+// import LEVERAGE from '../config/ABI/Leverage.json'
+import { getWalletProvider } from "./web3"
 
 const net = process.env.REACT_APP_NET
 
@@ -13,19 +13,22 @@ export const ROUTERv1_ADDR = net === 'testnet' ? '0x94fFAD4568fF00D921C76aA15884
 export const ROUTERv2_ADDR = net === 'testnet' ? '0x111589F4cE6f10E72038F1E4a19F7f19bF31Ee35' : '0x9dB88952380c0E35B95e7047E5114971dFf20D07'
 
 // CURRENT CONTRACT ADDRESSES
-export const pROUTER_ADDR = net === 'testnet' ? '0xa64439bEF145E6BccEFE85dF3D56B567C28aABc1' : ''
-export const sROUTER_ADDR = net === 'testnet' ? '0xE4006D760a3504EC2eE156c659221E3bfE2442A3' : ''
-export const LEVERAGE_ADDR = net === 'testnet' ? '0xF0A2fF290eE797322e3Ce9672E5380e536e5118D' : ''
+export const ROUTER_ADDR = net === 'testnet' ? '0x111589F4cE6f10E72038F1E4a19F7f19bF31Ee35' : '0x9dB88952380c0E35B95e7047E5114971dFf20D07'
+
+// FUTURE CONTRACT ADDRESSES
+// export const pROUTER_ADDR = net === 'testnet' ? '' : ''
+// export const sROUTER_ADDR = net === 'testnet' ? '' : ''
+// export const LEVERAGE_ADDR = net === 'testnet' ? '' : ''
 
 // ABI
 export const ROUTER_ABI = ROUTER.abi
-export const SYNTH_ROUTER_ABI = SYNTH_ROUTER.abi
-export const LEVERAGE_ABI = LEVERAGE.abi
+// export const SYNTH_ROUTER_ABI = SYNTH_ROUTER.abi
+// export const LEVERAGE_ABI = LEVERAGE.abi
 
 // LIQUIDITY - Add Symmetrically
 export const addLiquidity = async (inputBase, inputToken, token) => {
     let provider = getWalletProvider()
-    let contract = new ethers.Contract(pROUTER_ADDR, ROUTER_ABI, provider)
+    let contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
     const gPrice = await provider.getGasPrice()
     const gLimit = await contract.estimateGas.addLiquidity(inputBase, inputToken, token)
     const result = await contract.addLiquidity(inputBase, inputToken, token, {gasPrice: gPrice, gasLimit: gLimit})
@@ -36,7 +39,7 @@ export const addLiquidity = async (inputBase, inputToken, token) => {
 // LIQUIDITY - Add Asymmetrically
 export const addLiquidityAsym = async (inputToken, fromBase, token) => {
     let provider = getWalletProvider()
-    let contract = new ethers.Contract(pROUTER_ADDR, ROUTER_ABI, provider)
+    let contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
     const gPrice = await provider.getGasPrice()
     const gLimit = await contract.estimateGas.addLiquidityAsym(inputToken, fromBase, token)
     const result = await contract.addLiquidityAsym(inputToken, fromBase, token, {gasPrice: gPrice, gasLimit: gLimit})
