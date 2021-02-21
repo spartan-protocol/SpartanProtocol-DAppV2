@@ -1,0 +1,27 @@
+.accordion-container {
+    width: 100%;
+}
+
+.app-container {
+    margin: 20px;
+}
+
+.active,
+.inactive {
+    margin-bottom: 5px;
+}
+
+.active .folding-pannel {
+    transition: all 0.3s ease-in-out;
+    height: 42px;
+}
+
+.card {
+    cursor: pointer;
+}
+
+.inactive .folding-pannel {
+    transform: perspective(0px) rotateX(90deg);
+    transition: all 0.3s ease-in-out;
+    height: 0;
+}

@@ -6,7 +6,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import NotificationAlert from "react-notification-alert";
 
 // core components
-import HeaderNavbar from "../Navbars/HeaderNavbar.js";
+import Header from "../Header/Header.js";
 import Footer from "../Footer/Footer.js";
 import Sidebar from "../Sidebar/Sidebar.js";
 
@@ -158,7 +158,7 @@ const Common = (props) => {
                 closeSidebar={closeSidebar}
             />
             <div className="main-panel" ref={mainPanelRef} data={activeColor}>
-                <HeaderNavbar
+                <Header
                     {...props}
                     handleMiniClick={handleMiniClick}
                     brandText={getActiveRoute(routes)}
