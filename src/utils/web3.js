@@ -1,4 +1,6 @@
-import { ethers } from "ethers";
+import {
+    ethers
+} from "ethers";
 
 import ERC20 from '../config/ABI/ERC20.json'
 
@@ -17,10 +19,15 @@ export const ERC20_ABI = ERC20.abi
 export const getWalletProvider = () => {
     let provider = new ethers.providers.JsonRpcProvider(rpcUrl)
     let connectedWalletType = ''
-    if (window.sessionStorage.getItem('lastWallet') === 'BC') {connectedWalletType = window.BinanceChain}
-    else {connectedWalletType = window.ethereum}
+    if (window.sessionStorage.getItem('lastWallet') === 'BC') {
+        connectedWalletType = window.BinanceChain
+    } else {
+        connectedWalletType = window.ethereum
+    }
     let tempProvider = new ethers.providers.Web3Provider(connectedWalletType)
-    if (window.sessionStorage.getItem('walletConnected')) {provider = tempProvider}
+    if (window.sessionStorage.getItem('walletConnected')) {
+        provider = tempProvider
+    }
     provider = provider.getSigner()
     console.log(provider)
     return provider
@@ -39,7 +46,10 @@ export const getApproval = async (tokenAddress, contractAddress) => {
     let supply = await contract.totalSupply()
     const gPrice = await provider.getGasPrice()
     const gLimit = await contract.estimateGas.approve(contractAddress, supply)
-    contract = await contract.approve(contractAddress, supply, {gasPrice: gPrice, gasLimit: gLimit})
+    contract = await contract.approve(contractAddress, supply, {
+        gasPrice: gPrice,
+        gasLimit: gLimit
+    })
     console.log(contract)
     return contract
 }
