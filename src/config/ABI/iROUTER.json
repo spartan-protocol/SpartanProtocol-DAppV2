@@ -5,59 +5,54 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "inputBase",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "inputToken",
           "type": "uint256"
         },
         {
           "internalType": "address",
-          "name": "",
+          "name": "token",
           "type": "address"
         }
       ],
-      "name": "removeLiquidityExact",
+      "name": "addLiquidity",
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
+          "name": "units",
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "units",
           "type": "uint256"
         },
         {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
+          "internalType": "bool",
+          "name": "toBase",
+          "type": "bool"
         },
         {
           "internalType": "address",
-          "name": "",
+          "name": "token",
           "type": "address"
         }
       ],
-      "name": "swap",
+      "name": "removeLiquidityExactAndSwap",
       "outputs": [
         {
           "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "",
+          "name": "outputAmount",
           "type": "uint256"
         }
       ],

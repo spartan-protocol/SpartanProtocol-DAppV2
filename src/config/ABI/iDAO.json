@@ -3,36 +3,10 @@
   "abi": [
     {
       "inputs": [],
-      "name": "DAO",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "POOLCURATION",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
       "name": "ROUTER",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "contract iROUTER",
           "name": "",
           "type": "address"
         }
@@ -45,7 +19,7 @@
       "name": "UTILS",
       "outputs": [
         {
-          "internalType": "address",
+          "internalType": "contract iUTILS",
           "name": "",
           "type": "address"
         }
