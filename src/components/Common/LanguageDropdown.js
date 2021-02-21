@@ -3,7 +3,7 @@ import {
     Dropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem, Button
+    DropdownItem,
 } from "reactstrap";
 
 //i18n
