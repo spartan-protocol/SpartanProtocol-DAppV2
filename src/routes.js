@@ -11,10 +11,18 @@ import ReactTables from "./views/pages/Samples/ReactTables";
 import Forms from "./views/pages/Samples/Forms";
 import ExtendedForms from "./views/pages/Samples/ExtendedForms";
 import Panels from "./views/pages/Samples/Panels";
+import Tiles from "./views/pages/Samples/Tiles";
 
 
 const routes = [
 
+    {
+        path: "/home",
+        name: "Home",
+        icon: "icon-medium icon-info icon-dark",
+        component: Dashboard,
+        layout: "/dapp",
+    },
     {
         collapse: true,
         name: "Components",
@@ -22,18 +30,26 @@ const routes = [
         state: "pagesCollapse",
         views: [
             {
+                path: "/cards",
+                name: "Tiles",
+                mini: "CR",
+                component: Tiles,
+                layout: "/dapp",
+            },
+            {
                 path: "/buttons",
                 name: "Buttons",
                 mini: "BU",
                 component: Buttons,
                 layout: "/dapp",
-            }, {
-                path: "/notificaions",
-                name: "Notificaions",
-                mini: "NO",
-                component: Notifications,
-                layout: "/dapp",
             },
+            // {
+            //     path: "/notificaions",
+            //     name: "Notificaions",
+            //     mini: "NO",
+            //     component: Notifications,
+            //     layout: "/dapp",
+            // },
             {
                 path: "/panels",
                 name: "Panels",
@@ -41,41 +57,41 @@ const routes = [
                 component: Panels,
                 layout: "/dapp",
             },
-            {
-                path: "/alerts",
-                name: "Alerts",
-                mini: "AL",
-                component: Alerts,
-                layout: "/dapp",
-            },
-            {
-                path: "/typography",
-                name: "Typography",
-                mini: "TY",
-                component: Typography,
-                layout: "/dapp",
-            },
-            {
-                path: "/tables",
-                name: "ReactTables",
-                mini: "TB",
-                component: ReactTables,
-                layout: "/dapp",
-            },
-            {
-                path: "/forms",
-                name: "Forms",
-                mini: "FO",
-                component: Forms,
-                layout: "/dapp",
-            },
-            {
-                path: "/input",
-                name: "Input",
-                mini: "FO",
-                component: ExtendedForms,
-                layout: "/dapp",
-            },
+            // {
+            //     path: "/alerts",
+            //     name: "Alerts",
+            //     mini: "AL",
+            //     component: Alerts,
+            //     layout: "/dapp",
+            // },
+            // {
+            //     path: "/typography",
+            //     name: "Typography",
+            //     mini: "TY",
+            //     component: Typography,
+            //     layout: "/dapp",
+            // },
+            // {
+            //     path: "/tables",
+            //     name: "ReactTables",
+            //     mini: "TB",
+            //     component: ReactTables,
+            //     layout: "/dapp",
+            // },
+            // {
+            //     path: "/forms",
+            //     name: "Forms",
+            //     mini: "FO",
+            //     component: Forms,
+            //     layout: "/dapp",
+            // },
+            // {
+            //     path: "/input",
+            //     name: "Input",
+            //     mini: "FO",
+            //     component: ExtendedForms,
+            //     layout: "/dapp",
+            // },
             {
                 path: "/grid",
                 name: "Grid",
@@ -83,13 +99,13 @@ const routes = [
                 component: Grid,
                 layout: "/dapp",
             },
-            {
-                path: "/icons",
-                name: "Icons",
-                mini: "IC",
-                component: Icons,
-                layout: "/dapp",
-            },
+            // {
+            //     path: "/icons",
+            //     name: "Icons",
+            //     mini: "IC",
+            //     component: Icons,
+            //     layout: "/dapp",
+            // },
         ],
     }
 
