@@ -27,6 +27,43 @@ h1, h2, h3, h4, h5, h6 {
   color: $opacity-8;
 }
 
+h7 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+  /* identical to box height, or 200% */
+
+  font-feature-settings: 'liga' off;
+
+  color: #9A9A9A;
+}
+
+h8 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  font-feature-settings: 'liga' off;
+  color: #FFFFFF;
+}
+
+
+h9{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  font-feature-settings: 'liga' off;
+
+  color: #FFFFFF;
+}
 a {
   color: $primary-states;
   font-weight: $font-weight-light;

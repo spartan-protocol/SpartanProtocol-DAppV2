@@ -23,6 +23,14 @@
 }
 
 
+
+
+/* Spinner */
+.icon-spinner.icon-light {
+    background-image: url('/src/assets/icons/icon-spinner.svg#light');
+}
+
+
 /* Home */
 .icon-home.icon-light {
     background-image: url('/src/assets/icons/icon-home-light.svg#light');

@@ -7,6 +7,7 @@ import {CardBody, CardHeader, CardTitle, Collapse, NavbarBrand} from "reactstrap
 
 import Button from "react-bootstrap/Button";
 import {ReactComponent as SpartanLogo} from "../../../assets/img/logo.svg";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 const Tiles = () => {
     const [openedCollapseOne, setopenedCollapseOne] = React.useState(true);
@@ -19,28 +20,75 @@ const Tiles = () => {
 
                     <Col md={12}>
                         <Row>
-                            <Col md="1">
-                                <h3>BNB</h3>
+                            <Col md="2">
+                                <h2>BNB</h2>
                             </Col>
-                            <Col md="1">
-                                <h4>APY</h4>
+                            <Col md="2">
+                                <h7>APY</h7>
+                                <br/>
+                                <h9><i className="icon-small icon-spinner icon-light float-left"/>188.25%</h9>
                             </Col>
-                            <Col md="1">
-                                <h4>Depth</h4>
+                            <Col md="2">
+                                <h7 className="modal-title">Depth</h7>
+                                <br/>
+                                <h9>$2.113.877</h9>
                             </Col>
-                            <Col md="1">
-                                <h4>Volume</h4>
+                            <Col md="4">
+                                <h7>Volume</h7>
+                                <br/>
+                                <h9>$13.386.399</h9>
                             </Col>
-                            <Col md="2" className="ml-5">
-                                <Button className="btn btn btn-success">
-                                    <i className="bd-icons icon-bell-55"/> Bond
-                                </Button>
+                            <Col sm="0">
+                                <ButtonGroup
+                                    className="btn-group-toggle float-right"
+                                    data-toggle="buttons"
+                                >
+                                    <Button
+                                        color="primary"
+                                        id="0"
+                                        size="m"
+                                        tag="label"
+                                        className="btn btn-success"
+                                    >
+                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                          Bond
+                        </span>
+                                        <span className="d-block d-sm-none">
+                        </span>
+                                    </Button>
+                                    <Button
+                                        color="secondary"
+                                        id="0"
+                                        size="m"
+                                        tag="label"
+                                        className="btn btn-primary"
+
+                                    >
+                        <span className="d-none d-sm-block d-md-block d-lg-block d-xl-block">
+                          Exchange
+                        </span>
+                                        <span className="d-block d-sm-none">
+                        </span>
+                                    </Button>
+                                </ButtonGroup>
                             </Col>
-                            <Col md="3">
-                                <Button className="btn btn btn-primary">
-                                    <i className="bd-icons icon-bell-55"/> Exchange
-                                </Button>
-                            </Col>
+
+
+
+
+
+
+
+                            {/*<Col md="2" className="ml-5">*/}
+                            {/*    <Button className="btn btn btn-success float-right">*/}
+                            {/*        <i className="bd-icons icon-bell-55"/> Bond*/}
+                            {/*    </Button>*/}
+                            {/*</Col>*/}
+                            {/*<Col md="3">*/}
+                            {/*    <Button className="btn btn btn-primary">*/}
+                            {/*        <i className="bd-icons icon-bell-55"/> Exchange*/}
+                            {/*    </Button>*/}
+                            {/*</Col>*/}
 
                         </Row>
 
@@ -66,14 +114,14 @@ const Tiles = () => {
                                         {""}
 
                                         <Row>
-                                            <Col md="3">
+                                            <Col md="9">
                                                 <h3>BNB-SPARTA</h3>
 
                                             </Col>
                                             <Col className="ml-auto" md="2">
                                                 <h3>$10.545,85</h3>
                                             </Col>
-                                            <Col className="ml-auto" md="3">
+                                            <Col className="ml-auto" md="1">
                                                 <i
                                                     className="bd-icons icon-minimal-down mt-n8"/>
 

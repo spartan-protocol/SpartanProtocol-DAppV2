@@ -65,13 +65,13 @@ const routes = [
                 component: Buttons,
                 layout: "/dapp",
             },
-            // {
-            //     path: "/notificaions",
-            //     name: "Notificaions",
-            //     mini: "NO",
-            //     component: Notifications,
-            //     layout: "/dapp",
-            // },
+            {
+                path: "/notificaions",
+                name: "Notificaions",
+                mini: "NO",
+                component: Notifications,
+                layout: "/dapp",
+            },
             {
                 path: "/panels",
                 name: "Panels",
@@ -79,13 +79,13 @@ const routes = [
                 component: Panels,
                 layout: "/dapp",
             },
-            // {
-            //     path: "/alerts",
-            //     name: "Alerts",
-            //     mini: "AL",
-            //     component: Alerts,
-            //     layout: "/dapp",
-            // },
+            {
+                path: "/alerts",
+                name: "Alerts",
+                mini: "AL",
+                component: Alerts,
+                layout: "/dapp",
+            },
             // {
             //     path: "/typography",
             //     name: "Typography",
