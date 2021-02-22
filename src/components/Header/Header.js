@@ -8,7 +8,6 @@ import AddressConn from '../Common/AddressConn';
 
 //import components
 
-
 // reactstrap components
 import {
     Button,
@@ -17,8 +16,6 @@ import {
     DropdownMenu,
     DropdownItem,
     UncontrolledDropdown,
-    Input,
-    InputGroup,
     NavbarBrand,
     Navbar,
     NavLink,
@@ -28,9 +25,7 @@ import {
     UncontrolledTooltip,
 } from "reactstrap";
 
-
 const Header = (props) => {
-
     const [darkMode, setDarkMode] = React.useState(false);
     const [collapseOpen, setCollapseOpen] = React.useState(false);
     const [modalSearch, setModalSearch] = React.useState(false);

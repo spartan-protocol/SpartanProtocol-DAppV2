@@ -1,4 +1,4 @@
-import Dashboard from "./components/Dashbaord/Dashboard";
+import Dashboard from "./components/Dashboard/Dashboard";
 import PoolsTable from "./views/pages/Pools/PoolsTable.js";
 import Positions from "./views/pages/Pools/Positions/Positions.js";
 import Icons from "./views/pages/Samples/Icons";
