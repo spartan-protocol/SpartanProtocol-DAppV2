@@ -67,7 +67,7 @@ const LanguageDropdown = (props) => {
                 className="d-inline-block"
             >
                 <DropdownToggle
-                    className="mx-1 btn btn-danger"
+                    className="mx-1 btn btn-danger h-100"
                     tag="button"
                 >
                     <i className="icon-medium icon-world icon-dark" />

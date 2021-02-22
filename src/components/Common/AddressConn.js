@@ -1,33 +1,22 @@
-import React, {useEffect, useContext} from 'react'
-
+import React, { useState } from 'react'
+import WalletSelect from '../WalletSelect/WalletSelect'
+import walletTypes from '../WalletSelect/walletTypes'
 
 const AddressConn = (props) => {
+    const [walletModalShow, setWalletModalShow] = useState(false)
+    const [walletHeaderIcon, setWalletHeaderIcon] = useState(walletTypes[0].icon)
 
     return (
         <>
             <>
-                <div className="btn ml-1" onClick={() => (props)}>
-                    <i className="icon-medium icon-wallet icon-dark"/>
+                <div className="btn ml-1" onClick={() => setWalletModalShow(true)}>
+                    <img src={walletHeaderIcon} alt='Spartan Protocol SpartanIcons' className='logo text-center icon-medium' />
                 </div>
-                <div className="btn mr-1" onClick={() => (props)}>
-                    <i className="icon-medium icon-cycle icon-dark"/>
-                </div>
-            </>
-            <>
-                <div className="btn ml-1" onClick={""}>
-                    <i className="icon-medium icon-wallet icon-dark"/>
-                </div>
-                <div className="btn mr-1" onClick={""}>
-                    <i className="icon-medium icon-cycle icon-dark"/>
-                </div>
-            </>
-            <>
-                <div className="btn ml-1" onClick={""}>
-                    <i className="icon-medium icon-wallet icon-dark"/>
-                </div>
-                <div className="btn mr-1" onClick={""}>
-                    <i className="icon-medium icon-cycle icon-dark"/>
-                </div>
+                <WalletSelect
+                    show={walletModalShow}
+                    onHide={() => setWalletModalShow(false)}
+                    setWalletHeaderIcon={setWalletHeaderIcon}
+                />
             </>
         </>
     )
