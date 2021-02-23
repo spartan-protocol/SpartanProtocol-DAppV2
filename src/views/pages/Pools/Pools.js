@@ -14,7 +14,9 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { getListedBond } from "../../../utils/web3Bond";
 import { addLiquidity } from "../../../utils/web3Router";
+import { getListedAssets, getListedPools } from "../../../utils/web3Utils";
 
 const Pools = () => {
   return (
@@ -41,6 +43,15 @@ const Pools = () => {
                 </Button>
                 <Button className="btn-fill" color="primary" type="submit">
                   Test Remove Liq Asym
+                </Button>
+                <Button className="btn-fill" color="primary" type="submit" onClick={ () => getListedBond() }>
+                  Test Get Bond Assets
+                </Button>
+                <Button className="btn-fill" color="primary" type="submit" onClick={ () => getListedPools() }>
+                  Test Get Listed Pools
+                </Button>
+                <Button className="btn-fill" color="primary" type="submit" onClick={ () => getListedAssets() }>
+                  Test Get Listed Tokens
                 </Button>
               </CardFooter>
             </Card>

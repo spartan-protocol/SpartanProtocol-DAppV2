@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 
 import BOND from '../config/ABI/Bond.json'
+import { getWalletProvider } from "./web3"
 
 const net = process.env.REACT_APP_NET
 
@@ -13,20 +14,23 @@ export const BONDv3_ADDR = net === 'testnet' ? '0xa11D0a9F919EDc6D72aF8F90D56735
 export const BOND_ADDR = net === 'testnet' ? '0xa11D0a9F919EDc6D72aF8F90D56735cAd0EBE836' : '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43'
 
 // FUTURE CONTRACT ADDRESSES
-// export const BOND_ADDR = net === 'testnet' ? '' : ''
+// export const BONDv4_ADDR = net === 'testnet' ? '' : ''
 
 // ABI
 export const BOND_ABI = BOND.abi
 
-// // CONNECT ROUTER CONTRACT WITH PROVIDER (READ-ONLY; NOT SIGNER)
-// const provROUTER = () => {
-//     const contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
-//     console.log(contract)
-//     return contract
-// }
+// GET BOND CONTRACT
+export const getBondContract = async () => {
+    let provider = getWalletProvider()
+    let contract = new ethers.Contract(BOND_ADDR, BOND_ABI, provider)
+    console.log(contract)
+    return contract
+}
 
-// // CONNECT ROUTER CONTRACT WITH SIGNER
-// const signContract = (contract, account) => {
-//     const signed = contract.connect(account)
-//     return signed
-// }
+// GET ALL ASSETS ENABLED FOR BOND+MINT
+export const getListedBond = async () => {
+    let contract = await getBondContract()
+    const result = await contract.allListedAssets()
+    console.log(result)
+    return result
+}

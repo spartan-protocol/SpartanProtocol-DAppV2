@@ -15,7 +15,7 @@ export const SPARTA_ADDR = net === 'testnet' ? '0xb58a43D2D9809ff4393193de536F24
 // ABI
 export const ERC20_ABI = ERC20.abi
 
-// CONNECT WITH PROVIDER & SIGNER IF AVAILABLE
+// CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = () => {
     let provider = new ethers.providers.JsonRpcProvider(rpcUrl)
     let connectedWalletType = ''
@@ -24,13 +24,20 @@ export const getWalletProvider = () => {
     } else {
         connectedWalletType = window.ethereum
     }
-    let tempProvider = new ethers.providers.Web3Provider(connectedWalletType)
     if (window.sessionStorage.getItem('walletConnected')) {
-        provider = tempProvider
+        provider = new ethers.providers.Web3Provider(connectedWalletType)
+        provider = provider.getSigner()
     }
-    provider = provider.getSigner()
     console.log(provider)
     return provider
+}
+
+// GET GAS PRICE FROM PROVIDER
+export const getProviderGasPrice = () => {
+    let provider = getWalletProvider()
+    let gasPrice = provider.getGasPrice()
+    console.log(gasPrice)
+    return gasPrice
 }
 
 // CONNECT TO CONTRACT WITH PROVIDER & SIGNER IF AVAILABLE
