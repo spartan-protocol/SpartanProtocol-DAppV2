@@ -33,6 +33,14 @@ export const getRouterContract = async () => {
     return contract
 }
 
+// Get LP-token address from token address
+export const getPool = async (token) => {
+    let contract = await getRouterContract()
+    const result = await contract.getPool(token)
+    console.log(result)
+    return result
+}
+
 // LIQUIDITY - Add Symmetrically
 export const addLiquidity = async (inputBase, inputToken, token) => {
     let contract = await getRouterContract()
