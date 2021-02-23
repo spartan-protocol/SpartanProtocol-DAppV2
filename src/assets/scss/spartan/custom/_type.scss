@@ -64,6 +64,56 @@ h9{
 
   color: #FFFFFF;
 }
+
+accentcurrency{
+  display: block;
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 32px;
+  font-feature-settings: 'liga' off;
+  color: #AACDFF;
+  text-transform: uppercase;
+  margin-top: -40px;
+  /* top: 0px; */
+  margin-left: 96px;
+}
+
+
+accentstatus{
+  display: block;
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 32px;
+  font-feature-settings: 'liga' off;
+  color: #AACDFF;
+  text-transform: uppercase;
+  margin-top: -40px;
+  /* top: 0px; */
+  margin-left: 190px;
+}
+
+titlecard{
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+  display: flex;
+  align-items: center;
+  font-feature-settings: 'liga' off;
+
+  /* Light Grey */
+
+  color: #F5F8FC;
+}
+
+
+
 a {
   color: $primary-states;
   font-weight: $font-weight-light;
@@ -218,3 +268,5 @@ hr {
   margin-top: $spacer;
   margin-bottom: $spacer;
 }
+
+

@@ -23,6 +23,10 @@
 }
 
 
+/* Lock */
+.icon-lock.icon-dark{
+    background-image: url('/src/assets/icons/icon-lock-dark.svg#dark');
+}
 
 
 /* Spinner */
