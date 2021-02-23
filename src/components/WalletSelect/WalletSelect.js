@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col'
 import { ethers } from "ethers"
 
 import walletTypes from './walletTypes'
+import { getExplorerWallet } from '../../utils/extCalls'
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
@@ -71,7 +72,7 @@ const WalletSelect = (props) => {
                                 <Button variant="primary" onClick={() => navigator.clipboard.writeText(wallet.account)}>
                                     Copy Address
                                 </Button>
-                                <Button variant="primary" href={'https://testnet.bscscan.com/address/' + wallet.account} target='_blank'>
+                                <Button variant="primary" href={getExplorerWallet(wallet.account)} target='_blank'>
                                     View on BscScan
                                 </Button>
                                 <Button variant="secondary" onClick={() => {wallet.reset()}}>

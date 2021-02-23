@@ -1,6 +1,6 @@
 import Dashboard from "./components/Dashboard/Dashboard";
-import PoolsTable from "./views/pages/Pools/PoolsTable.js";
-import Positions from "./views/pages/Pools/Positions/Positions.js";
+import Pools from "./views/pages/Pools/Pools.js";
+import Positions from "./views/pages/Pools/Positions.js";
 import Icons from "./views/pages/Samples/Icons";
 import Notifications from "./views/pages/Samples/Notifications";
 import Buttons from "./views/pages/Samples/Buttons";
@@ -22,6 +22,28 @@ const routes = [
         icon: "icon-medium icon-info icon-dark",
         component: Dashboard,
         layout: "/dapp",
+    },
+    {
+        collapse: true,
+        name: "Pools",
+        icon: "icon-medium icon-pools icon-dark",
+        state: "pagesCollapse",
+        views: [
+            {
+                path: "/pools",
+                name: "Pools",
+                mini: "PO",
+                component: Pools,
+                layout: "/dapp",
+            },
+            {
+                path: "/positions",
+                name: "Positions",
+                mini: "PO",
+                component: Positions,
+                layout: "/dapp",
+            },
+        ],
     },
     {
         collapse: true,

@@ -1,6 +1,4 @@
-
 import React from "react";
-
 
 // reactstrap components
 import {
@@ -16,8 +14,9 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { addLiquidity } from "../../../utils/web3Router";
 
-const PoolsTable = () => {
+const Pools = () => {
   return (
     <>
       <div className="content">
@@ -28,11 +27,20 @@ const PoolsTable = () => {
                 <h1 className="title">Pools</h1>
               </CardHeader>
               <CardBody>
-
+                
               </CardBody>
               <CardFooter>
+                <Button className="btn-fill" color="primary" type="submit" onClick={()=> addLiquidity()}>
+                  Test Add Liq Sym
+                </Button>
                 <Button className="btn-fill" color="primary" type="submit">
-                  Save
+                  Test Add Liq Asym
+                </Button>
+                <Button className="btn-fill" color="primary" type="submit">
+                  Test Remove Liq Sym
+                </Button>
+                <Button className="btn-fill" color="primary" type="submit">
+                  Test Remove Liq Asym
                 </Button>
               </CardFooter>
             </Card>
@@ -46,14 +54,14 @@ const PoolsTable = () => {
                   <div className="block block-two" />
                   <div className="block block-three" />
                   <div className="block block-four" />
-                  <a href="#" onClick={(e) => e.preventDefault()}>
+                  <div>
                     <img
                       alt="..."
                       className="avatar"
                       src={require("../../../assets/img/spartan_black_small.svg").default}
                     />
-                    <h5 className="title"></h5>
-                  </a>
+                    <h5 className="title">Title</h5>
+                  </div>
                   <p className="description"></p>
                 </div>
               </CardBody>
@@ -65,4 +73,4 @@ const PoolsTable = () => {
   );
 };
 
-export default PoolsTable;
+export default Pools;
