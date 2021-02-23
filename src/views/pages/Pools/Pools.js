@@ -64,8 +64,8 @@ const Pools = () => {
                 <Button className="btn-fill" color="primary" type="submit" onClick={()=> calcPart(10000, '10000000000')}>
                   Calc part (100%)
                 </Button>
-                <Button className="btn-fill" color="primary" type="submit" onClick={()=> calcPart(10000, '10000000000')}>
-                  GasfasfA
+                <Button className="btn-fill" color="primary" type="submit">
+                  Test square Root
                 </Button>
                 <Button className="btn-fill" color="primary" type="submit" onClick={ () => getListedBond() }>
                   Test Get Bond Assets

@@ -87,14 +87,23 @@ export const calcValueInBase = async (token, amount) => {
 
 // ************** CORE MATHEMATICS ************** //
 
+// Calculate share
+export const calcShare = (part, total, amount) => {
+    // share = amount * part/total
+    part = BN(part)
+    total = BN(total)
+    amount = BN(amount)
+    let result = amount.mul(part).div(total)
+    return result;
+}
+
 // Calculate asymmetric share
-export const calcAsymmetricShare = async (u, U, A) => {
+export const calcAsymmetricShare = async (input, pool, toBase) => {
     // share = (u * U * (2 * A^2 - 2 * U * u + U^2))/U^3
     // (part1 * (part2 - part3 + part4)) / part5
-    // COMPARE ABOVE TO MANUAL CALC BELOW
-    u = BN(u) // UNITS (SPARTA == toToken || TOKEN == toBase)
-    U = BN(U) // TOTAL SUPPLY OF LP TOKEN
-    A = BN(A) // TOKEN IN POOL (if toToken) || SPARTA IN POOL (if toBase)
+    const u = BN(input) // UNITS (SPARTA == toToken || TOKEN == toBase)
+    const U = BN(pool.poolUnits) // TOTAL SUPPLY OF LP TOKEN
+    const A = toBase ? BN(pool.baseAmount) : BN(pool.tokenAmount) // TOKEN IN POOL (if !toBase) || SPARTA IN POOL (if toBase)
     let part1 = u.mul(A);
     let part2 = U.mul(U).mul(2);
     let part3 = U.mul(u).mul(2);
@@ -120,16 +129,6 @@ export const calcPart = (bp, total) => {
         return part
     }
     else console.log("Must be valid basis points")
-}
-
-// Calculate share
-export const calcShare = (part, total, amount) => {
-    // share = amount * part/total
-    part = BN(part)
-    total = BN(total)
-    amount = BN(amount)
-    let result = amount.mul(part).div(total)
-    return result;
 }
 
 // Calculate swap fee
