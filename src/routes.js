@@ -12,6 +12,7 @@ import Forms from "./views/pages/Samples/Forms";
 import ExtendedForms from "./views/pages/Samples/ExtendedForms";
 import Panels from "./views/pages/Samples/Panels";
 import Tiles from "./views/pages/Samples/Tiles";
+import Utils from "./utils/Utils";
 
 
 const routes = [
@@ -128,6 +129,13 @@ const routes = [
             //     component: Icons,
             //     layout: "/dapp",
             // },
+            {
+                path: "/utils",
+                name: "Utils",
+                mini: "UT",
+                component: Utils,
+                layout: "/dapp",
+            },
         ],
     }
 
