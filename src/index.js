@@ -29,13 +29,13 @@ ReactDOM.render(
                     bsc: {},
                 }}
             >
+                <BrowserRouter>
+                    <Switch>
+                        <Route path="/" render={(props) => <AdminLayout {...props} />}/>
+                        <Redirect from="/" to="/dapp/buttons/"/>
+                    </Switch>
+                </BrowserRouter>,
             </UseWalletProvider>
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/" render={(props) => <AdminLayout {...props} />}/>
-                    <Redirect from="/" to="/dapp/buttons/"/>
-                </Switch>
-            </BrowserRouter>,
         </React.StrictMode>,
     </Provider>,
 
