@@ -1,72 +1,72 @@
 nav.nav-link {
-    color: $nav-link-color;
+  color: $nav-link-color;
 
-    &:hover {
-        color: theme-color("primary");
-    }
+  &:hover {
+    color: theme-color("primary");
+  }
 }
 
 // Pills
 
 .nav-pills {
 
-    .nav-link {
-    	  padding: $nav-pills-padding-y $nav-pills-padding-x;
-        color: $nav-pills-link-color;
-        font-weight: 500;
-        background-color: $nav-pills-bg;
-        transition: $transition-base;
+  .nav-link {
+    padding: $nav-pills-padding-y $nav-pills-padding-x;
+    color: $nav-pills-link-color;
+    font-weight: 500;
+    background-color: #ffff;
+    transition: $transition-base;
 
-        &:hover {
-        	color: $nav-pills-link-hover-color;
-        }
+    &:hover {
+      color: $nav-pills-link-hover-color;
     }
+  }
 
-    .nav-link.active,
-    .show > .nav-link {
-        color: $nav-pills-link-active-color;
-        background-color: $nav-pills-link-active-bg;
-    }
+  .nav-link.active,
+  .show > .nav-link {
+    color: $nav-pills-link-active-color;
+    background-color: $nav-pills-link-active-bg;
+  }
 
 
 }
 
 @include media-breakpoint-down(sm) {
-    .nav-pills:not(.nav-pills-circle) {
-        .nav-item {
-            padding-right: 0;
-        }
+  .nav-pills:not(.nav-pills-circle) {
+    .nav-item {
+      padding-right: 0;
     }
+  }
 }
 
 // Nav pills circle
 
 .nav-pills-circle {
-    .nav-link {
-        text-align: center;
-        height: 60px;
-        width: 60px;
-        padding: 0;
-        line-height: 60px;
-        border-radius: 50%;
-    }
+  .nav-link {
+    text-align: center;
+    height: 0px;
+    width: 0px;
+    padding: 0;
+    line-height: 0px;
+    border-radius: 0%;
+  }
 
-    .nav-link-icon {
-        i, svg {
-            font-size: 1rem;
-        }
+  .nav-link-icon {
+    i, svg {
+      font-size: 1rem;
     }
+  }
 }
 
 // Nav wrapper
 .nav-wrapper {
-    padding: 1rem 0;
-    @include border-top-radius($card-border-radius);
+  padding: 1rem 0;
+  @include border-top-radius($card-border-radius);
 
-    + .card {
-        @include border-top-radius(0);
-        @include border-bottom-radius($card-border-radius);
-    }
+  + .card {
+    @include border-top-radius(0);
+    @include border-bottom-radius($card-border-radius);
+  }
 }
 
 
@@ -79,7 +79,73 @@ nav.nav-link {
     text-align: center;
 
     .nav-item > .nav-link {
-        margin-bottom: 5px;
+      margin-bottom: 5px;
     }
   }
 }
+
+
+
+.nav-tabs-custom {
+  border-bottom: 0px solid #495057;
+
+  .nav-item {
+    position: relative;
+    color: #495057;
+    .nav-link {
+      border: none;
+
+      &::after {
+        content: "";
+        background: #fb2715;
+        height: 4px;
+        position: absolute;
+        width: 100%;
+        left: 0;
+        bottom: -1px;
+        transition: all 250ms ease 0s;
+        transform: scale(0);
+      }
+
+      &.active{
+        color: #fb2715;
+        &:after{
+          transform: scale(1);
+        }
+      }
+
+    }
+  }
+}
+
+
+// vertical nav
+
+.vertical-nav{
+  .nav{
+    .nav-link{
+      padding: 24px 16px;
+      text-align: center;
+      margin-bottom: 8px;
+      .nav-icon{
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

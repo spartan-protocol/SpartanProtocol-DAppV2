@@ -1,6 +1,6 @@
-import Dashboard from "./components/Dashboard/Dashboard";
-import Pools from "./views/pages/Pools/Pools.js";
-import Positions from "./views/pages/Pools/Positions.js";
+import Dashboard from "./components/Dashbaord/Dashboard";
+import PoolsTable from "./views/pages/PoolsTable.js";
+import Positions from "./views/pages/Positions.js";
 import Icons from "./views/pages/Samples/Icons";
 import Notifications from "./views/pages/Samples/Notifications";
 import Buttons from "./views/pages/Samples/Buttons";
@@ -12,6 +12,9 @@ import Forms from "./views/pages/Samples/Forms";
 import ExtendedForms from "./views/pages/Samples/ExtendedForms";
 import Panels from "./views/pages/Samples/Panels";
 import Tiles from "./views/pages/Samples/Tiles";
+import AddLiquidity from "./views/pages/AddLiquidity";
+
+import Tabs from "./views/pages/Samples/Tabs";
 
 
 const routes = [
@@ -21,6 +24,14 @@ const routes = [
         name: "Home",
         icon: "icon-medium icon-info icon-dark",
         component: Dashboard,
+        layout: "/dapp",
+    },
+
+    {
+        path: "/join",
+        name: "Join",
+        icon: "icon-medium icon-info icon-dark",
+        component: AddLiquidity,
         layout: "/dapp",
     },
     {
@@ -100,25 +111,32 @@ const routes = [
             //     component: ReactTables,
             //     layout: "/dapp",
             // },
-            // {
-            //     path: "/forms",
-            //     name: "Forms",
-            //     mini: "FO",
-            //     component: Forms,
-            //     layout: "/dapp",
-            // },
-            // {
-            //     path: "/input",
-            //     name: "Input",
-            //     mini: "FO",
-            //     component: ExtendedForms,
-            //     layout: "/dapp",
-            // },
+            {
+                path: "/forms",
+                name: "Forms",
+                mini: "FO",
+                component: Forms,
+                layout: "/dapp",
+            },
+            {
+                path: "/input",
+                name: "Input",
+                mini: "FO",
+                component: ExtendedForms,
+                layout: "/dapp",
+            },
             {
                 path: "/grid",
                 name: "Grid",
                 mini: "GR",
                 component: Grid,
+                layout: "/dapp",
+            },
+            {
+                path: "/tabs",
+                name: "Tabs",
+                mini: "TB",
+                component: Tabs,
                 layout: "/dapp",
             },
             // {
