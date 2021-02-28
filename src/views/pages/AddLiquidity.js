@@ -355,20 +355,324 @@ const AddLiquidity = (props) => {
                                     </Row>
                                 </TabPane>
                                 <TabPane tabId="settings">
-                                    Efficiently unleash cross-media information without
-                                    cross-media value. Quickly maximize timely deliverables for
-                                    real-time schemas. <br/>
-                                    <br/>
-                                    Dramatically maintain clicks-and-mortar solutions without
-                                    functional solutions.
+                                    <Row>
+                                        <Col md={8}>
+                                            <Card className="card-body">
+                                                <Row>
+                                                    <Col>
+                                                        {" "}
+                                                        <Card
+                                                            className="card-body"
+                                                            style={{backgroundColor: "#25212D"}}
+                                                        >
+                                                            <Row>
+                                                                <Col md={6}>
+                                                                    <div className="text-left">
+                                                                        <label>Input</label>
+                                                                        <FormGroup>
+                                                                            <h5>1</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col md={6}>
+
+                                                                    <div className="text-right">
+                                                                        <label>Balance 10.36</label>
+                                                                        <FormGroup>
+                                                                            <h5><img className="mr-2"
+                                                                                     src={coin_bnb} alt="Logo"/>BNB</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </Card>
+                                                    </Col>
+                                                    <Col>
+                                                        {" "}
+                                                        <Card
+                                                            className="card-body"
+                                                            style={{backgroundColor: "#25212D"}}
+                                                        >
+                                                            <Row>
+                                                                <Col md={6}>
+                                                                    <div className="text-left">
+                                                                        <label>Input</label>
+                                                                        <FormGroup>
+                                                                            <h5>100.52</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col md={6}>
+                                                                    <div className="text-right">
+                                                                        <label>Balance 255.89</label>
+                                                                        <FormGroup>
+                                                                            <h5><img className="mr-2"
+                                                                                     src={coin_sparta} alt="Logo"/>SPARTA</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </Card>
+                                                    </Col>
+                                                </Row>
+                                                <div className="slider" ref={slider1Ref}/>
+                                                <br/>
+                                                <div
+                                                    className="slider slider-primary mb-ImageUpload.3"
+                                                    ref={slider2Ref}
+                                                />
+                                                <Row>
+                                                    <Col md={6}><h10 className='font-weight-light m-0'>Input <i
+                                                        className="bi bi-info-circle"
+                                                        id="tooltipAddBase" role='button'/></h10>
+                                                        <UncontrolledTooltip placement="right"
+                                                                             target="tooltipAddBase">The
+                                                            quantity of & SPARTA you are adding to the
+                                                            pool.</UncontrolledTooltip></Col>
+                                                    <Col className="text-right" md={6}>
+                                                        1 of 10.36 BNB
+                                                        <br/>
+                                                        100.52 of 255.89 SPARTA
+                                                    </Col>
+                                                </Row>
+                                                <br/>
+                                                <Row>
+                                                    <Col md={6}><h6 className='font-weight-light m-0'>Share <i
+                                                        className="bi bi-info-circle"
+                                                        id="tooltipAddBase" role='button'/></h6>
+                                                        <UncontrolledTooltip placement="right"
+                                                                             target="tooltipAddBase">The
+                                                            quantity of & SPARTA you are adding to the
+                                                            pool.</UncontrolledTooltip></Col>
+                                                    <Col className="text-right" md={6}>
+                                                        1 of 10.36 BNB
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col md={6}><h6 className='font-weight-light m-0'>Estimated
+                                                        output <i
+                                                            className="bi bi-info-circle"
+                                                            id="tooltipAddBase" role='button'/></h6>
+                                                        <UncontrolledTooltip placement="right"
+                                                                             target="tooltipAddBase">The
+                                                            quantity of & SPARTA you are adding to the
+                                                            pool.</UncontrolledTooltip></Col>
+                                                    <Col className="text-right" md={6}>
+                                                        52.23
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+
+                                        </Col>
+                                        <Col md={4}>
+                                            <Card className="card-body">
+                                                <Row>
+                                                    <Table borderless>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td><h5><img className="mr-2" height={15}
+                                                                         src={coin_bnb} alt="Logo"/>BNB</h5>
+                                                            </td>
+                                                            <td><div className="amount"><h5>$260.55</h5></div></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><h5><img className="mr-2"
+                                                                         src={coin_sparta} alt="Logo"/>SPARTA</h5>
+                                                            </td>
+                                                            <td>$1.30</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Spot price</td>
+                                                            <td>178.28 SPARTA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Volume</td>
+                                                            <td>$261.474.287</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Tx count</td>
+                                                            <td>@fat</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Fees</td>
+                                                            <td>$1.070.836</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Depth</td>
+                                                            <td>48.907 BNB</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>APY <i
+                                                                className="bi bi-info-circle"
+                                                                id="tooltipAddBase" role='button'/></td>
+                                                            <td>150.39%</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                </Row>
+                                            </Card>{" "}
+                                        </Col>
+                                    </Row>
                                 </TabPane>
                                 <TabPane tabId="options">
-                                    Completely synergize resource taxing relationships via premier
-                                    niche markets. Professionally cultivate one-to-one customer
-                                    service with robust ideas. <br/>
-                                    <br/>
-                                    Dynamically innovate resource-leveling customer service for
-                                    state of the art customer service.
+                                    <Row>
+                                        <Col md={8}>
+                                            <Card className="card-body">
+                                                <Row>
+                                                    <Col>
+                                                        {" "}
+                                                        <Card
+                                                            className="card-body"
+                                                            style={{backgroundColor: "#25212D"}}
+                                                        >
+                                                            <Row>
+                                                                <Col md={6}>
+                                                                    <div className="text-left">
+                                                                        <label>Input</label>
+                                                                        <FormGroup>
+                                                                            <h5>1</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col md={6}>
+
+                                                                    <div className="text-right">
+                                                                        <label>Balance 10.36</label>
+                                                                        <FormGroup>
+                                                                            <h5><img className="mr-2"
+                                                                                     src={coin_bnb} alt="Logo"/>BNB</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </Card>
+                                                    </Col>
+                                                    <Col>
+                                                        {" "}
+                                                        <Card
+                                                            className="card-body"
+                                                            style={{backgroundColor: "#25212D"}}
+                                                        >
+                                                            <Row>
+                                                                <Col md={6}>
+                                                                    <div className="text-left">
+                                                                        <label>Input</label>
+                                                                        <FormGroup>
+                                                                            <h5>100.52</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                                <Col md={6}>
+                                                                    <div className="text-right">
+                                                                        <label>Balance 255.89</label>
+                                                                        <FormGroup>
+                                                                            <h5><img className="mr-2"
+                                                                                     src={coin_sparta} alt="Logo"/>SPARTA</h5>
+                                                                        </FormGroup>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        </Card>
+                                                    </Col>
+                                                </Row>
+                                                <div className="slider" ref={slider1Ref}/>
+                                                <br/>
+                                                <div
+                                                    className="slider slider-primary mb-ImageUpload.3"
+                                                    ref={slider2Ref}
+                                                />
+                                                <Row>
+                                                    <Col md={6}><h10 className='font-weight-light m-0'>Input <i
+                                                        className="bi bi-info-circle"
+                                                        id="tooltipAddBase" role='button'/></h10>
+                                                        <UncontrolledTooltip placement="right"
+                                                                             target="tooltipAddBase">The
+                                                            quantity of & SPARTA you are adding to the
+                                                            pool.</UncontrolledTooltip></Col>
+                                                    <Col className="text-right" md={6}>
+                                                        1 of 10.36 BNB
+                                                        <br/>
+                                                        100.52 of 255.89 SPARTA
+                                                    </Col>
+                                                </Row>
+                                                <br/>
+                                                <Row>
+                                                    <Col md={6}><h6 className='font-weight-light m-0'>Share <i
+                                                        className="bi bi-info-circle"
+                                                        id="tooltipAddBase" role='button'/></h6>
+                                                        <UncontrolledTooltip placement="right"
+                                                                             target="tooltipAddBase">The
+                                                            quantity of & SPARTA you are adding to the
+                                                            pool.</UncontrolledTooltip></Col>
+                                                    <Col className="text-right" md={6}>
+                                                        1 of 10.36 BNB
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col md={6}><h6 className='font-weight-light m-0'>Estimated
+                                                        output <i
+                                                            className="bi bi-info-circle"
+                                                            id="tooltipAddBase" role='button'/></h6>
+                                                        <UncontrolledTooltip placement="right"
+                                                                             target="tooltipAddBase">The
+                                                            quantity of & SPARTA you are adding to the
+                                                            pool.</UncontrolledTooltip></Col>
+                                                    <Col className="text-right" md={6}>
+                                                        52.23
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+
+                                        </Col>
+                                        <Col md={4}>
+                                            <Card className="card-body">
+                                                <Row>
+                                                    <Table borderless>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td><h5><img className="mr-2" height={15}
+                                                                         src={coin_bnb} alt="Logo"/>BNB</h5>
+                                                            </td>
+                                                            <td><div className="amount"><h5>$260.55</h5></div></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><h5><img className="mr-2"
+                                                                         src={coin_sparta} alt="Logo"/>SPARTA</h5>
+                                                            </td>
+                                                            <td>$1.30</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Spot price</td>
+                                                            <td>178.28 SPARTA</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Volume</td>
+                                                            <td>$261.474.287</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Tx count</td>
+                                                            <td>@fat</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Fees</td>
+                                                            <td>$1.070.836</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Depth</td>
+                                                            <td>48.907 BNB</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>APY <i
+                                                                className="bi bi-info-circle"
+                                                                id="tooltipAddBase" role='button'/></td>
+                                                            <td>150.39%</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                </Row>
+                                            </Card>{" "}
+                                        </Col>
+                                    </Row>
                                 </TabPane>
                             </TabContent>
                         </Col>
