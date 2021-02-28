@@ -13,7 +13,7 @@ textarea {
 }
 
 .card {
-  h1, h2, h3, h4, h5, h6,{
+  h1, h2, h3, h4, h5, h6, {
     font-family: $font-family-headers;
     color: $opacity-8;
     font-weight: $font-weight-extra-bold;
@@ -52,7 +52,7 @@ h8 {
 }
 
 
-h9{
+h9 {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -65,7 +65,7 @@ h9{
   color: #FFFFFF;
 }
 
-accentcurrency{
+accentcurrency {
   display: block;
   font-family: $font-family-base !important;
   font-style: normal;
@@ -81,7 +81,7 @@ accentcurrency{
 }
 
 
-accentstatus{
+accentstatus {
   display: block;
   font-family: $font-family-base !important;
   font-style: normal;
@@ -97,7 +97,7 @@ accentstatus{
 }
 
 
-accent{
+accent {
   font-family: $font-family-base !important;
   font-style: normal;
   font-size: 12px;
@@ -109,21 +109,37 @@ accent{
 
 }
 
-titlecard{
-  font-family: $font-family-base !important;
+//titlecard{
+//  font-family: $font-family-base !important;
+//  font-style: normal;
+//  font-weight: 500;
+//  font-size: 16px;
+//  line-height: 24px;
+//  /* identical to box height, or 150% */
+//  display: flex;
+//  align-items: center;
+//  font-feature-settings: 'liga' off;
+//
+//  /* Light Grey */
+//
+//  color: #F5F8FC;
+//}
+
+
+breadcrum {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: $font-family-alt;
   font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  /* identical to box height, or 150% */
-  display: flex;
-  align-items: center;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
   font-feature-settings: 'liga' off;
-
-  /* Light Grey */
-
-  color: #F5F8FC;
+  color: #FFFFFF;
 }
+
+
 
 
 
@@ -191,7 +207,23 @@ p {
 
 
 .title {
-  font-weight: $font-weight-bold;
+  /* Hyperlinks */
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  display: flex;
+  align-items: center;
+  text-align: right;
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #FFFFFF;
 
   &.title-up {
     text-transform: uppercase;
@@ -283,3 +315,34 @@ hr {
 }
 
 
+
+
+.amount {
+  /* Hyperlinks */
+
+  font-family: Roboto !important;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #ffffff;
+
+  &.title-up {
+    text-transform: uppercase;
+
+    a {
+      color: $black;
+      text-decoration: none;
+    }
+  }
+
+  & + .category {
+    margin-top: -10px;
+  }
+}
