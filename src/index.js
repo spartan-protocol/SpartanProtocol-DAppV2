@@ -9,12 +9,15 @@ import "./assets/css/spartan-icons.css";
 import {UseWalletProvider} from '@binance-chain/bsc-use-wallet'
 import "./assets/scss/spartan.scss";
 
-import { createStore, applyMiddleware } from "redux";
-import { web3Reducer } from "./utils/web3Store/reducer";
+import { createStore, applyMiddleware, combineReducers } from "redux";
+import { confirmationReducer } from "./store/confirmation";
+import { infoReducer } from './store/info';
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-const store = createStore(web3Reducer, applyMiddleware(thunk));
+const reducers = combineReducers({info: infoReducer, confirmation: confirmationReducer});
+
+const store = createStore(reducers, applyMiddleware(thunk));
 
 
 const rpcUrl = process.env.REACT_APP_RPC

@@ -1,7 +1,8 @@
 export {
-    useWeb3,
+    useConfirmation,
 }
 from './selector';
+export {confirmationReducer} from './reducer';
 export {
     getApproval
 }

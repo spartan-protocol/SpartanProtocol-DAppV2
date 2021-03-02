@@ -5,7 +5,7 @@ const initialState = {
     error: null
 }
 
-export const web3Reducer = (state = initialState, action) => {
+export const confirmationReducer = (state = initialState, action) => {
     switch (action.type) {
         case Types.GET_CONTRACT: {
             return {
