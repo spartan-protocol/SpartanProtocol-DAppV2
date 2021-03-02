@@ -15,10 +15,6 @@ export const getApproval = (tokenAddress, contractAddress) => async dispatch => 
             gasPrice: gPrice,
             gasLimit: gLimit
         });
-
-        const wait = contract.wait.toString();
-
-        console.log(wait);
         
         dispatch(payloadToDispatch(Types.GET_CONTRACT, contract));
     } catch (error) {
