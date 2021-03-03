@@ -22,7 +22,7 @@ export const UTILS_ABI = UTILS.abi
 export const getUtilsContract = () => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(UTILS_ADDR, UTILS_ABI, provider)
-    console.log(contract)
+    // console.log(contract)
     return contract
 }
 

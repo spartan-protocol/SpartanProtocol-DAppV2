@@ -2,7 +2,7 @@ import * as Types from './types';
 import {getUtilsContract} from '../../utils/web3Utils';
 import {payloadToDispatch, errorToDispatch} from '../helpers';
 
-export const getListedPools = () => dispatch => {
+export const getListedPools = () => async dispatch => {
     let contract = getUtilsContract();
     
     try {
@@ -13,7 +13,7 @@ export const getListedPools = () => dispatch => {
     }
 }
 
-export const getListedPoolsRange = (first, count) => dispatch => {
+export const getListedPoolsRange = (first, count) => async dispatch => {
     let contract = getUtilsContract();
     
     try {
@@ -24,7 +24,7 @@ export const getListedPoolsRange = (first, count) => dispatch => {
     }
 }
 
-export const getListedAssets = () => dispatch => {
+export const getListedAssets = () => async dispatch => {
     let contract = getUtilsContract();
     
     try {
@@ -35,7 +35,7 @@ export const getListedAssets = () => dispatch => {
     }
 }
 
-export const getListedAssetsRange = (first, count) => dispatch => {
+export const getListedAssetsRange = (first, count) => async dispatch => {
     let contract = getUtilsContract();
     
     try {
@@ -51,7 +51,7 @@ export const getGlobalDetails = () => async dispatch =>  {
 
     try {
         let globalDetails = await contract.getGlobalDetails();
-        dispatch(payloadToDispatch(Types.GET_GLOBAL_DETAILS), globalDetails);
+        dispatch(payloadToDispatch(Types.GET_GLOBAL_DETAILS, globalDetails));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -62,7 +62,7 @@ export const getTokenDetails = (token) => async dispatch =>  {
 
     try {
         let tokenDetails = await contract.getTokenDetails(token);
-        dispatch(payloadToDispatch(Types.GET_TOKEN_DETAILS), tokenDetails);
+        dispatch(payloadToDispatch(Types.GET_TOKEN_DETAILS, tokenDetails));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -73,7 +73,7 @@ export const getPoolDetails = (pools) => async dispatch =>  {
 
     try {
         let poolDetails = await contract.getPoolData(pools);
-        dispatch(payloadToDispatch(Types.GET_POOL_DETAILS), poolDetails);
+        dispatch(payloadToDispatch(Types.GET_POOL_DETAILS, poolDetails));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -84,7 +84,7 @@ export const getMemberShare = (token, member) => async dispatch =>  {
 
     try {
         let memberShare = await contract.getMemberShare(token, member);
-        dispatch(payloadToDispatch(Types.GET_MEMBER_SHARE), memberShare);
+        dispatch(payloadToDispatch(Types.GET_MEMBER_SHARE, memberShare));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -95,7 +95,7 @@ export const getPoolShare = (token, units) => async dispatch =>  {
 
     try {
         let poolShare = await contract.getPoolShare(token, units);
-        dispatch(payloadToDispatch(Types.GET_POOL_SHARE), poolShare);
+        dispatch(payloadToDispatch(Types.GET_POOL_SHARE,  poolShare));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -106,7 +106,7 @@ export const getShareOfBaseAmount = (token, member) => async dispatch =>  {
 
     try {
         let shareOfBaseAmount = await contract.getShareOfBaseAmount(token, member);
-        dispatch(payloadToDispatch(Types.GET_SHARE_OF_BASE_AMAOUNT), shareOfBaseAmount);
+        dispatch(payloadToDispatch(Types.GET_SHARE_OF_BASE_AMAOUNT, shareOfBaseAmount));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -117,7 +117,7 @@ export const getShareOfTokenAmount = (token, member) => async dispatch =>  {
 
     try {
         let shareOfTokenAmount = await contract.getShareOfTokenAmount(token, member);
-        dispatch(payloadToDispatch(Types.GET_SHARE_OF_TOKEN_AMAOUNT), shareOfTokenAmount);
+        dispatch(payloadToDispatch(Types.GET_SHARE_OF_TOKEN_AMAOUNT, shareOfTokenAmount));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -128,7 +128,7 @@ export const getPoolShareAssym = (token, units, toBase) => async dispatch =>  {
 
     try {
         let poolShareAssym = await contract.getPoolShareAssym(token, units, toBase);
-        dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM), poolShareAssym);
+        dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM, poolShareAssym));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -139,7 +139,7 @@ export const getPoolAge = (token) => async dispatch =>  {
 
     try {
         let poolAge = await contract.getPoolAge(token);
-        dispatch(payloadToDispatch(Types.GET_POOL_AGE), poolAge);
+    dispatch(payloadToDispatch(Types.GET_POOL_AGE, poolAge));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -150,7 +150,7 @@ export const getPoolROI = (token) => async dispatch =>  {
 
     try {
         let poolROI = await contract.getPoolROI(token);
-        dispatch(payloadToDispatch(Types.GET_POOL_ROI), poolROI);
+        dispatch(payloadToDispatch(Types.GET_POOL_ROI, poolROI));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -161,7 +161,7 @@ export const getPoolAPY = (token) => async dispatch =>  {
 
     try {
         let poolAPY = await contract.getPoolAPY(token);
-        dispatch(payloadToDispatch(Types.GET_POOL_APY), poolAPY);
+        dispatch(payloadToDispatch(Types.GET_POOL_APY, poolAPY));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
@@ -172,7 +172,7 @@ export const isMember = (token, member) => async dispatch =>  {
 
     try {
         let result = await contract.isMember(token, member);
-        dispatch(payloadToDispatch(Types.IS_MEMBER), result);
+        dispatch(payloadToDispatch(Types.IS_MEMBER, result));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
