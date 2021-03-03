@@ -151,7 +151,7 @@ const Common = (props) => {
                 routes={routes}
                 activeColor={activeColor}
                 logo={{
-                  outterLink: "https://pools.spartanprotocol.org/",
+                  outterLink: "./",
                   text: "Spartan Protocol",
                   imgSrc: logo,
                 }}

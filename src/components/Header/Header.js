@@ -102,7 +102,7 @@ const Header = (props) => {
                                 <span className="navbar-toggler-bar bar3"/>
                             </button>
                         </div>
-                        <NavbarBrand href="#" onClick={(e) => e.preventDefault()}>
+                        <NavbarBrand href="./">
                             {/*{props.brandText} +*/} <SpartanLogo className="mr-2"/> Spartan Protocol
                         </NavbarBrand>
                     </div>
