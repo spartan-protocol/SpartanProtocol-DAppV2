@@ -9,7 +9,7 @@
 
 
   &:focus {
-    border-color: $primary;
+    border-color: #FFFFFF;
     background-color: $input-bg;
     @include box-shadow(none);
 
@@ -148,4 +148,12 @@
       padding: 0 10px;
     }
   }
+}
+
+
+.noUi-connect {
+  background: #e89859;
+  border-radius: 3px;
+  -webkit-transition: background 450ms;
+  transition: background 450ms;
 }

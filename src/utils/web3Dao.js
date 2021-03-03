@@ -20,19 +20,26 @@ export const DAO_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b
 export const DAO_ABI = DAO.abi
 // export const DAOVAULT_ABI = DAOVAULT.abi
 
+// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
+
 // GET DAO CONTRACT
-export const getDaoContract = async () => {
+export const getDaoContract = () => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(DAO_ADDR, DAO_ABI, provider)
     console.log(contract)
     return contract
 }
 
+// --------------------------------------- HELPERS ---------------------------------------
+
+
+// --------------------------------------- FUNCTIONS ---------------------------------------
+
 // DAO - Deposit LP Tokens (Lock in DAO)
 export const deposit = async (pool, amount) => {
     // Add a check to ensure 'pool' is listed (ROUTER.isPool(pool) == true)
     // Add a check to ensure 'amount' is greater than 0
-    let contract = await getDaoContract()
+    let contract = getDaoContract()
     const gPrice = await getProviderGasPrice()
     const gLimit = await contract.estimateGas.deposit(pool, amount)
     const result = await contract.deposit(pool, amount, {gasPrice: gPrice, gasLimit: gLimit})

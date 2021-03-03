@@ -4,7 +4,7 @@ import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
 import AdminLayout from "./components/layout/Common.js";
 import "./assets/css/bd-icons.css";
 import "./assets/css/spartan-icons.css";
-
+import "./app.scss";
 //import Contexts from './Contexts'
 import {UseWalletProvider} from '@binance-chain/bsc-use-wallet'
 import "./assets/scss/spartan.scss";

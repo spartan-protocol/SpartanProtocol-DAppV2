@@ -29,26 +29,28 @@
 
     .nav-item {
         .nav-link{
-            padding: 0 15.5px;
-            text-align: center;
-            padding: $padding-btn-vertical $padding-round-horizontal;
-            min-width: 100px;
-            font-weight: $font-weight-normal;
-            color: rgba($white,0.5);
-            background-color: darken($black,5%);
+          color: #AACDFF;
+          font-weight: bold;
+          margin: 0;
+          margin-right: 5px;
+          background-color: $transparent-bg;
+          border-radius: 0px;
+          padding: $padding-btn-vertical $padding-round-horizontal;
+          line-height: $line-height-sm;
 
 
-            &:hover{
-                background-color: darken($black,10%);
+
+          &:hover{
+            color: #FFFFFF;
             }
 
             &.active{
                 &,
                 &:focus,
                 &:hover{
-                    background-color: $dark-gray;
-                    color: $white;
-                    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+                  border: 0px ;
+                  border-radius: 0px;
+                  color: #FFFFFF
                 }
             }
 

@@ -6,23 +6,23 @@
 
     > .nav-item{
         > .nav-link{
-            color: $white;
+            color: #AACDFF;
+            font-weight: bold;
             margin: 0;
             margin-right: 5px;
             background-color: $transparent-bg;
-            border-radius: 30px;
+            border-radius: 0px;
             padding: $padding-btn-vertical $padding-round-horizontal;
             line-height: $line-height-sm;
 
             &:hover {
-                background-color: $transparent-bg;
-                border: 1px solid darken($black,5%);
-                color: rgba($white, 0.8);
+                color: #FFFFFF;
             }
 
             &.active{
-                border: 1px solid $white;
-                border-radius: 30px;
+                border: 0px ;
+                border-radius: 0px;
+                color: #FFFFFF
             }
 
             i.bd-icons{
@@ -35,7 +35,7 @@
 
         &.disabled > .nav-link,
         &.disabled > .nav-link:hover {
-            color: rgba(255,255,255,0.5);
+
         }
     }
 

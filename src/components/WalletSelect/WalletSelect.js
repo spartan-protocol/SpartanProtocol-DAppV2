@@ -9,6 +9,7 @@ import { ethers } from "ethers"
 
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
+import { SPARTA_ADDR, watchAsset } from '../../utils/web3'
 
 const WalletSelect = (props) => {
     const wallet = useWallet()
@@ -71,6 +72,9 @@ const WalletSelect = (props) => {
                                 <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
                                 <Button variant="primary" onClick={() => navigator.clipboard.writeText(wallet.account)}>
                                     Copy Address
+                                </Button>
+                                <Button variant="primary" onClick={() => {watchAsset(SPARTA_ADDR, 'SPARTA', 18)}}> 
+                                    Add to Wallet
                                 </Button>
                                 <Button variant="primary" href={getExplorerWallet(wallet.account)} target='_blank'>
                                     View on BscScan

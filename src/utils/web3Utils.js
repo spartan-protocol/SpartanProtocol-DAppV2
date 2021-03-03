@@ -25,154 +25,12 @@ export const getUtilsContract = () => {
     return contract
 }
 
-// ************** GENERAL DATA-HELPERS ************** //
-
-// GET ALL SPARTANPOOL ADDRESSES (LP TOKEN ADDRESSES)
-export const getListedPools = async () => {
-    let contract = getUtilsContract()
-    const result = await contract.allPools()
-    console.log(result)
-    return result
-}
-
-// Get a range of SpartanPool addresses (LP TOKEN ADDRESSES)
-export const getListedPoolsRange = async (first, count) => {
-    // first = the first ID in the range || count = the amount of assets in the range
-    let contract = getUtilsContract()
-    const result = await contract.poolsInRange(first, count)
-    console.log(result)
-    return result
-}
-
-// GET ALL ASSETS WHO HAVE A SPARTAN POOL (ASSET ADDRESSES)
-export const getListedAssets = async () => {
-    let contract = getUtilsContract()
-    const result = await contract.allTokens()
-    console.log(result)
-    return result
-}
-
-// Get a range of listed assets (asset addresses)
-export const getListedAssetsRange = async (first, count) => {
-    // first = the first ID in the range || count = the amount of assets in the range
-    let contract = getUtilsContract()
-    const result = await contract.tokensInRange(first, count)
-    console.log(result)
-    return result
-}
-
-// Get global details *** INVALID OUTPUT DUE TO ROUTERv2 ***
-export const getGlobalDetails = async () => {
-    let contract = getUtilsContract()
-    let globalDetails = await contract.getGlobalDetails()
-    console.log(globalDetails)
-    return globalDetails;
-}
-
-// Get token details without member (with member if wallet connected)
-// .balance .decimals .name .symbol .tokenAddress .totalSupply
-export const getTokenDetails = async (token) => {
-    const contract = getUtilsContract()
-    const tokenDetails = await contract.getTokenDetails(token)
-    console.log(tokenDetails)
-    return tokenDetails;
-}
-
-// Get pool details
-// .poolAddress .tokenAddress .genesis .baseAmount .tokenAmount
-// .baseAmountPooled .tokenAmountPooled .fees .volume .txCount .poolUnits
-export const getPoolDetails = async (pool) => {
-    const contract = getUtilsContract()
-    const poolDetails = await contract.getPoolData(pool)
-    console.log(poolDetails)
-    return poolDetails;
-}
-
-// Get member share
-export const getMemberShare = async (token, member) => {
-    const contract = getUtilsContract()
-    const result = await contract.getMemberShare(token, member)
-    console.log(result)
-    return result;
-}
-
-// Get member share
-export const getPoolShare = async (token, units) => {
-    const contract = getUtilsContract()
-    const result = await contract.getPoolShare(token, units)
-    console.log(result)
-    return result;
-}
-
-// Get share of SPARTA amount
-export const getShareOfBaseAmount = async (token, member) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.getShareOfBaseAmount(token, member)
-    console.log(result)
-    return result;
-}
-
-// Get share of TOKEN amount
-export const getShareOfTokenAmount = async (token, member) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.getShareOfTokenAmount(token, member)
-    console.log(result)
-    return result;
-}
-
-// Get pool share asym
-export const getPoolShareAssym = async (token, units, toBase) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.getPoolShareAssym(token, units, toBase)
-    console.log(result)
-    return result;
-}
-
-// Get pool age
-export const getPoolAge = async (token) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.getPoolAge(token)
-    console.log(result)
-    return result;
-}
-
-// Get pool ROI
-export const getPoolROI = async (token) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.getPoolROI(token)
-    console.log(result)
-    return result;
-}
-
-// Get pool APY
-export const getPoolAPY = async (token) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.getPoolAPY(token)
-    console.log(result)
-    return result;
-}
-
-// Get whether the wallet is currently holding the relevant LP tokens
-export const isMember = async (token, member) => {
-    // use layer-1 asset's token address i.e BTCB
-    const contract = getUtilsContract()
-    const result = await contract.isMember(token, member)
-    console.log(result)
-    return result;
-}
-
 // ************** INTERNAL PRICING VIA POOLS FUNCTIONS ************** //
 
 // Calculate sparta purchasing power in token (accounts for slippage)
 export const getBasePPinToken = async (token, amount) => {
     let contract = getUtilsContract()
-    let result = await contract.calcBasePPinToken(token, amount)
+    let result = await contract.callStatic.calcBasePPinToken(token, amount)
     console.log(result.toString())
     return result;
 }
@@ -180,7 +38,7 @@ export const getBasePPinToken = async (token, amount) => {
 // Calculate token purchasing power in sparta (accounts for slippage)
 export const getTokenPPinBase = async (token, amount) => {
     let contract = getUtilsContract()
-    let result = await contract.calcTokenPPinBase(token, amount)
+    let result = await contract.callStatic.calcTokenPPinBase(token, amount)
     console.log(result.toString())
     return result;
 }
@@ -188,7 +46,7 @@ export const getTokenPPinBase = async (token, amount) => {
 // Calculate value in token (uses spot price; no slippage)
 export const getValueInToken = async (token, amount) => {
     let contract = getUtilsContract()
-    let result = await contract.calcValueInToken(token, amount)
+    let result = await contract.callStatic.calcValueInToken(token, amount)
     console.log(result.toString())
     return result;
 }
@@ -196,7 +54,7 @@ export const getValueInToken = async (token, amount) => {
 // Calculate value of token in sparta (uses spot price; no slippage)
 export const getValueInBase = async (token, amount) => {
     let contract = getUtilsContract()
-    let result = await contract.calcValueInBase(token, amount)
+    let result = await contract.callStatic.calcValueInBase(token, amount)
     console.log(result.toString())
     return result;
 }
@@ -206,7 +64,7 @@ export const getValueInBase = async (token, amount) => {
 // Get the part
 export const getPart = async (basisPoints, total) => {
     let contract = getUtilsContract()
-    let result = await contract.calcPart(basisPoints, total)
+    let result = await contract.callStatic.calcPart(basisPoints, total)
     console.log(result.toString())
     return result;
 }
@@ -214,7 +72,7 @@ export const getPart = async (basisPoints, total) => {
 // Get the liquidity share
 export const getLiquidityShare = async (units, token, pool, member) => {
     let contract = getUtilsContract()
-    let result = await contract.calcLiquidityShare(units, token, pool, member)
+    let result = await contract.callStatic.calcLiquidityShare(units, token, pool, member)
     console.log(result.toString())
     return result;
 }
@@ -222,7 +80,7 @@ export const getLiquidityShare = async (units, token, pool, member) => {
 // Get the share
 export const getShare = async (part, total, amount) => {
     let contract = getUtilsContract()
-    let result = await contract.calcShare(part, total, amount)
+    let result = await contract.callStatic.calcShare(part, total, amount)
     console.log(result.toString())
     return result;
 }
@@ -230,7 +88,7 @@ export const getShare = async (part, total, amount) => {
 // Get the swap output
 export const getSwapOutput = async (x, X, Y) => {
     let contract = getUtilsContract()
-    let result = await contract.calcSwapOutput(x, X, Y)
+    let result = await contract.callStatic.calcSwapOutput(x, X, Y)
     console.log(result.toString())
     return result;
 }
@@ -238,7 +96,7 @@ export const getSwapOutput = async (x, X, Y) => {
 // Get the swap fee
 export const getSwapFee = async (x, X, Y) => {
     let contract = getUtilsContract()
-    let result = await contract.calcSwapFee(x, X, Y)
+    let result = await contract.callStatic.calcSwapFee(x, X, Y)
     console.log(result.toString())
     return result;
 }
@@ -246,7 +104,7 @@ export const getSwapFee = async (x, X, Y) => {
 // Get the liquidity units
 export const getLiquidityUnits = async (b, B, t, T, P) => {
     let contract = getUtilsContract()
-    let result = await contract.calcLiquidityUnits(b, B, t, T, P)
+    let result = await contract.callStatic.calcLiquidityUnits(b, B, t, T, P)
     console.log(result.toString())
     return result;
 }
@@ -254,7 +112,7 @@ export const getLiquidityUnits = async (b, B, t, T, P) => {
 // Get the slip adjustment
 export const getSlipAdustment = async (b, B, t, T) => {
     let contract = getUtilsContract()
-    let result = await contract.getSlipAdustment(b, B, t, T)
+    let result = await contract.callStatic.getSlipAdustment(b, B, t, T)
     console.log(result.toString())
     return result;
 }
@@ -262,7 +120,7 @@ export const getSlipAdustment = async (b, B, t, T) => {
 // Get the asymmetric share
 export const getAsymmetricShare = async (u, U, A) => {
     let contract = getUtilsContract()
-    let result = await contract.calcAsymmetricShare(u, U, A)
+    let result = await contract.callStatic.calcAsymmetricShare(u, U, A)
     console.log(result.toString())
     return result;
 }

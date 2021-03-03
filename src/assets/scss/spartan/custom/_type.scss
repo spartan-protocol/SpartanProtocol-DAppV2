@@ -13,7 +13,7 @@ textarea {
 }
 
 .card {
-  h1, h2, h3, h4, h5, h6,{
+  h1, h2, h3, h4, h5, h6, {
     font-family: $font-family-headers;
     color: $opacity-8;
     font-weight: $font-weight-extra-bold;
@@ -26,6 +26,122 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: $font-weight-normal;
   color: $opacity-8;
 }
+
+h7 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 20px;
+  /* identical to box height, or 200% */
+
+  font-feature-settings: 'liga' off;
+
+  color: #9A9A9A;
+}
+
+h8 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  font-feature-settings: 'liga' off;
+  color: #FFFFFF;
+}
+
+
+h9 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  font-feature-settings: 'liga' off;
+
+  color: #FFFFFF;
+}
+
+accentcurrency {
+  display: block;
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 32px;
+  font-feature-settings: 'liga' off;
+  color: #AACDFF;
+  text-transform: uppercase;
+  margin-top: -40px;
+  /* top: 0px; */
+  margin-left: 96px;
+}
+
+
+accentstatus {
+  display: block;
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 32px;
+  font-feature-settings: 'liga' off;
+  color: #AACDFF;
+  text-transform: uppercase;
+  margin-top: -40px;
+  /* top: 0px; */
+  margin-left: 190px;
+}
+
+
+accent {
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 32px;
+  font-feature-settings: 'liga' off;
+  color: #AACDFF;
+
+  /* top: 0px; */
+
+}
+
+//titlecard{
+//  font-family: $font-family-base !important;
+//  font-style: normal;
+//  font-weight: 500;
+//  font-size: 16px;
+//  line-height: 24px;
+//  /* identical to box height, or 150% */
+//  display: flex;
+//  align-items: center;
+//  font-feature-settings: 'liga' off;
+//
+//  /* Light Grey */
+//
+//  color: #F5F8FC;
+//}
+
+
+breadcrum {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-family: $font-family-alt;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+  font-feature-settings: 'liga' off;
+  color: #FFFFFF;
+}
+
+
+
+
 
 a {
   color: $primary-states;
@@ -91,7 +207,23 @@ p {
 
 
 .title {
-  font-weight: $font-weight-bold;
+  /* Hyperlinks */
+
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  display: flex;
+  align-items: center;
+  text-align: right;
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #FFFFFF;
 
   &.title-up {
     text-transform: uppercase;
@@ -180,4 +312,37 @@ hr {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   margin-top: $spacer;
   margin-bottom: $spacer;
+}
+
+
+
+
+.amount {
+  /* Hyperlinks */
+
+  font-family: Roboto !important;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  /* identical to box height, or 143% */
+
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #ffffff;
+
+  &.title-up {
+    text-transform: uppercase;
+
+    a {
+      color: $black;
+      text-decoration: none;
+    }
+  }
+
+  & + .category {
+    margin-top: -10px;
+  }
 }
