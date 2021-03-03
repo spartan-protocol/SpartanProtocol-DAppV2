@@ -7,7 +7,7 @@ import { getWalletProvider, SPARTA_ADDR } from "./web3"
 export const BASE_ABI = BASE.abi
 
 // GET ROUTER CONTRACT
-export const getSpartaContract = async () => {
+export const getSpartaContract = () => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(SPARTA_ADDR, BASE_ABI, provider)
     console.log(contract)
@@ -16,7 +16,7 @@ export const getSpartaContract = async () => {
 
 // Check whether the base contract is emitting 
 export const getEmitting = async () => {
-    let contract = await getSpartaContract()
+    let contract = getSpartaContract()
     const result = await contract.emitting()
     console.log(result)
     return result
@@ -24,7 +24,7 @@ export const getEmitting = async () => {
 
 // Get the 'burn' claim-rate of an asset (this should only be valid for BOND tokens now)
 export const getAdjustedClaimRate = async (assetAddress) => {
-    let contract = await getSpartaContract()
+    let contract = getSpartaContract()
     const result = await contract.getAdjustedClaimRate(assetAddress)
     console.log(result)
     return result
@@ -33,7 +33,7 @@ export const getAdjustedClaimRate = async (assetAddress) => {
 // Make a 'burn' claim (this should only be valid for BOND tokens now)
 export const claim = async (assetAddress, amount) => {
     let provider = getWalletProvider()
-    let contract = await getSpartaContract()
+    let contract = getSpartaContract()
     const gPrice = await provider.getGasPrice()
     const gLimit = await contract.estimateGas.claim(assetAddress, amount)
     let result = await contract.claim(assetAddress, amount, {

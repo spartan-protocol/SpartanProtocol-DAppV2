@@ -26,7 +26,7 @@ export const ROUTER_ABI = ROUTER.abi
 // export const LEVERAGE_ABI = LEVERAGE.abi
 
 // GET ROUTER CONTRACT
-export const getRouterContract = async () => {
+export const getRouterContract = () => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
     console.log(contract)
@@ -35,7 +35,7 @@ export const getRouterContract = async () => {
 
 // Get LP-token address from token address
 export const getPool = async (token) => {
-    let contract = await getRouterContract()
+    let contract = getRouterContract()
     const result = await contract.getPool(token)
     console.log(result)
     return result
@@ -43,7 +43,7 @@ export const getPool = async (token) => {
 
 // LIQUIDITY - Add Symmetrically
 export const addLiquidity = async (inputBase, inputToken, token) => {
-    let contract = await getRouterContract()
+    let contract = getRouterContract()
     const gPrice = await getProviderGasPrice()
     const gLimit = await contract.estimateGas.addLiquidity(inputBase, inputToken, token)
     const result = await contract.addLiquidity(inputBase, inputToken, token, {gasPrice: gPrice, gasLimit: gLimit})
@@ -53,7 +53,7 @@ export const addLiquidity = async (inputBase, inputToken, token) => {
 
 // LIQUIDITY - Add Asymmetrically
 export const addLiquidityAsym = async (inputToken, fromBase, token) => {
-    let contract = await getRouterContract()
+    let contract = getRouterContract()
     const gPrice = await getProviderGasPrice()
     const gLimit = await contract.estimateGas.addLiquidityAsym(inputToken, fromBase, token)
     const result = await contract.addLiquidityAsym(inputToken, fromBase, token, {gasPrice: gPrice, gasLimit: gLimit})

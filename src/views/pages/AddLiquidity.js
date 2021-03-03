@@ -49,6 +49,7 @@ import InputGroupAddon from "reactstrap/es/InputGroupAddon";
 import Slider from "nouislider";
 import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip";
 import {Breadcrumb} from "react-bootstrap";
+import { getBondBurnReady, getBondSpartaRemaining } from "../../utils/web3Bond";
 
 const AddLiquidity = (props) => {
     const [horizontalTabs, sethorizontalTabs] = React.useState("profile");
@@ -218,6 +219,7 @@ const AddLiquidity = (props) => {
 
                                                                     <div className="text-right">
                                                                         <label>Balance 10.36</label>
+                                                                        <Button onClick={()=>{getBondSpartaRemaining()}}>TEST</Button>
                                                                         <FormGroup>
                                                                             <h5><img className="mr-2"
                                                                                      src={coin_bnb} alt="Logo"/>BNB</h5>
