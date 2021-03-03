@@ -72,8 +72,16 @@ const Samples = () => {
                     Wallet
                   </Button>
 
+                  <Button color="success">
+                    <i className="bd-icons icon-check-2" /> Success
+                  </Button>
+
+                  <Button className="btn-round btn-icon" color="primary">
+                    <i className="bd-icons icon-heart-2" />
+                  </Button>
+
                   <Button color="default">
-                    <i className="bi-lg bi-chevron-compact-left"/> Left
+                    <i className="icon-small icon-lock icon-dark"/> Left
                   </Button>
                   <Button color="default">
                     <i className="bi-lg bi-chevron-compact-left"/> Left

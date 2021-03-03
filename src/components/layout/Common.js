@@ -13,7 +13,7 @@ import Sidebar from "../Sidebar/Sidebar.js";
 
 import routes from "../../routes.js";
 
-import logo from "../../assets/img/spartan_black_small.svg";
+import logo from "../../assets/img/spartan_red_medium.svg";
 
 var ps;
 
@@ -150,11 +150,11 @@ const Common = (props) => {
                 {...props}
                 routes={routes}
                 activeColor={activeColor}
-                // logo={{
-                //   outterLink: "https://pools.spartanprotocol.org/",
-                //   text: "Spartan Protocol",
-                //   imgSrc: logo,
-                // }}
+                logo={{
+                  outterLink: "./",
+                  text: "Spartan Protocol",
+                  imgSrc: logo,
+                }}
                 closeSidebar={closeSidebar}
             />
             <div className="main-panel" ref={mainPanelRef} data={activeColor}>

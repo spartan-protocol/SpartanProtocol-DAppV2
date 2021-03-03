@@ -141,6 +141,13 @@
     display: block;
     font-family: $font-family-base;
 
+    .active{
+      background: #1D171F;
+
+    }
+
+
+
     .caret {
       top: 14px;
       position: absolute;
@@ -171,6 +178,7 @@
         font-weight: 700;
         padding: 10px 8px;
         line-height: 20px;
+
       }
 
       &:first-child > a {
@@ -182,6 +190,7 @@
       &:focus:not(.active) > a {
         p, i {
           color: $white;
+
         }
       }
 
@@ -191,23 +200,27 @@
       }
 
       &.active > a:not([data-toggle="collapse"]) {
-        background: transparent;
+        border-radius: 0%;
+        padding-right: 1px;
+
 
         i, p {
           color: white;
+
+
+
         }
 
         &:before {
           content: " ";
           margin-left:-4px;
-          margin-top: -15px;
+          margin-top: -22px;
           position: absolute;
-          height: 35px;
+          height: 50px;
           width: 4px;
           top: 22px;
           left: -10px;
           background: #FB2715;
-          border-radius: 0%;
         }
       }
 
@@ -221,7 +234,6 @@
         }
 
         & + div .nav .active a {
-
           box-shadow: none;
 
           .sidebar-mini-icon, .sidebar-normal {
@@ -325,16 +337,6 @@
       @include transform-translate-x(0px);
     }
 
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      right: 15px;
-      height: 1px;
-      width: calc(100% - 30px);
-      background: $opacity-5;
-
-    }
 
     p {
       float: left;
@@ -346,16 +348,18 @@
     }
 
     .simple-text {
-      text-transform: uppercase;
       padding: $padding-base-vertical 0;
+      margin-top: 10px;
+      margin-bottom: 20px;
       display: block;
       white-space: nowrap;
-      font-size: $font-size-base;
       color: $white;
       text-decoration: none;
-      font-weight: $font-weight-normal;
-      line-height: 30px;
       overflow: hidden;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 32px;
     }
   }
 
@@ -375,7 +379,7 @@
   }
 
   &[data="blue"] {
-    @include linear-gradient(#1D171F, #1D171F);
+    @include linear-gradient(#25212D, #25212D);
 
     &:before {
       border-bottom-color: transparent;
@@ -914,3 +918,5 @@
     display: none;
   }
 }
+
+

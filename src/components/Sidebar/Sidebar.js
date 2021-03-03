@@ -152,7 +152,6 @@ const Sidebar = (props) => {
         <a
           href={logo.outterLink}
           className="simple-text logo-mini"
-          target="_blank"
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
@@ -164,7 +163,6 @@ const Sidebar = (props) => {
         <a
           href={logo.outterLink}
           className="simple-text logo-normal"
-          target="_blank"
           onClick={props.closeSidebar}
         >
           {logo.text}
