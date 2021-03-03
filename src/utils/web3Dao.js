@@ -20,6 +20,8 @@ export const DAO_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b
 export const DAO_ABI = DAO.abi
 // export const DAOVAULT_ABI = DAOVAULT.abi
 
+// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
+
 // GET DAO CONTRACT
 export const getDaoContract = () => {
     let provider = getWalletProvider()
@@ -27,6 +29,11 @@ export const getDaoContract = () => {
     console.log(contract)
     return contract
 }
+
+// --------------------------------------- HELPERS ---------------------------------------
+
+
+// --------------------------------------- FUNCTIONS ---------------------------------------
 
 // DAO - Deposit LP Tokens (Lock in DAO)
 export const deposit = async (pool, amount) => {

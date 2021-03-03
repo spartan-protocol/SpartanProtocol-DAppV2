@@ -6,6 +6,8 @@ import { getWalletProvider, SPARTA_ADDR } from "./web3"
 // ABI
 export const BASE_ABI = BASE.abi
 
+// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
+
 // GET ROUTER CONTRACT
 export const getSpartaContract = () => {
     let provider = getWalletProvider()
@@ -14,10 +16,12 @@ export const getSpartaContract = () => {
     return contract
 }
 
+// --------------------------------------- HELPERS ---------------------------------------
+
 // Check whether the base contract is emitting 
 export const getEmitting = async () => {
     let contract = getSpartaContract()
-    const result = await contract.emitting()
+    const result = await contract.callStatic.emitting()
     console.log(result)
     return result
 }
@@ -25,10 +29,12 @@ export const getEmitting = async () => {
 // Get the 'burn' claim-rate of an asset (this should only be valid for BOND tokens now)
 export const getAdjustedClaimRate = async (assetAddress) => {
     let contract = getSpartaContract()
-    const result = await contract.getAdjustedClaimRate(assetAddress)
+    const result = await contract.callStatic.getAdjustedClaimRate(assetAddress)
     console.log(result)
     return result
 }
+
+// --------------------------------------- FUNCTIONS ---------------------------------------
 
 // Make a 'burn' claim (this should only be valid for BOND tokens now)
 export const claim = async (assetAddress, amount) => {

@@ -25,6 +25,8 @@ export const ROUTER_ABI = ROUTER.abi
 // export const SYNTH_ROUTER_ABI = SYNTH_ROUTER.abi
 // export const LEVERAGE_ABI = LEVERAGE.abi
 
+// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
+
 // GET ROUTER CONTRACT
 export const getRouterContract = () => {
     let provider = getWalletProvider()
@@ -33,13 +35,17 @@ export const getRouterContract = () => {
     return contract
 }
 
+// --------------------------------------- HELPERS ---------------------------------------
+
 // Get LP-token address from token address
 export const getPool = async (token) => {
     let contract = getRouterContract()
-    const result = await contract.getPool(token)
+    const result = await contract.callStatic.getPool(token)
     console.log(result)
     return result
 }
+
+// --------------------------------------- FUNCTIONS ---------------------------------------
 
 // LIQUIDITY - Add Symmetrically
 export const addLiquidity = async (inputBase, inputToken, token) => {
