@@ -48,8 +48,8 @@ export const getTokenContract = (tokenAddress) => {
     return contract
 }
 
-// GET APPROVAL FOR ASSET TO INTERACT WITH CONTRACT VIA WALLET
-export const getApproval = async (tokenAddress, contractAddress) => {
+// GET allowance APPROVAL FOR ASSET TO INTERACT WITH CONTRACT VIA WALLET
+export const newApproval = async (tokenAddress, contractAddress) => {
     let provider = getWalletProvider()
     let contract = getTokenContract(tokenAddress)
     let supply = await contract.totalSupply()
@@ -61,6 +61,14 @@ export const getApproval = async (tokenAddress, contractAddress) => {
     })
     console.log(contract)
     return contract
+}
+
+// Check approval allowance 
+export const getApprovalAllowance = async (tokenAddress, userAddress, contractAddress) => {
+    let contract = getTokenContract(tokenAddress)
+    let result = await contract.allowance(userAddress, contractAddress)
+    console.log(result)
+    return result
 }
 
 // ADD TOKEN INFO TO WALLET

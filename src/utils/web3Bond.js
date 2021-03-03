@@ -83,7 +83,7 @@ export const getBondMemberDetails = async (bondAddress, member, asset) => {
 // Get SPARTA allocation remaining in current BOND contract
 export const getBondSpartaRemaining = async () => {
     let contract = getSpartaContract()
-    let result = await contract.balanceOf(BOND_ADDR)
+    let result = await contract.balanceOf(BOND_ADDR) // doesnt need callStatic
     console.log(result.toString())
     return result
 }
@@ -92,7 +92,7 @@ export const getBondSpartaRemaining = async () => {
 export const getBondBurnReady = async () => {
     let contract = getBondContract()
     console.log(contract)
-    let result = await contract.callStatic.balanceOf(BOND_ADDR)
+    let result = await contract.balanceOf(BOND_ADDR) // doesnt need callStatic
     console.log(result.toString())
     return result
 }
