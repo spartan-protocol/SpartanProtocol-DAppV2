@@ -123,13 +123,13 @@ const Header = (props) => {
                         <Nav className="ml-auto" navbar>
                             <li className="separator d-lg-none"/>
 
-                            {/*<LanguageDropdown/>*/}
-                            {/*<AddressConn*/}
-                            {/*    changeStates={props.changeStates}*/}
-                            {/*    changeNotification={props.changeNotification}*/}
-                            {/*    connectedTokens={props.connectedTokens}*/}
-                            {/*    connectingTokens={props.connectingTokens}*/}
-                            {/*/>*/}
+                            <LanguageDropdown/>
+                            <AddressConn
+                               changeStates={props.changeStates}
+                               changeNotification={props.changeNotification}
+                               connectedTokens={props.connectedTokens}
+                               connectingTokens={props.connectingTokens}
+                            />
                             <UncontrolledDropdown nav>
                                 <DropdownToggle
                                     caret
