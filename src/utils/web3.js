@@ -28,7 +28,6 @@ export const getWalletProvider = () => {
         provider = new ethers.providers.Web3Provider(connectedWalletType)
         provider = provider.getSigner()
     }
-    console.log(provider)
     return provider
 }
 
@@ -36,7 +35,6 @@ export const getWalletProvider = () => {
 export const getProviderGasPrice = () => {
     let provider = getWalletProvider()
     let gasPrice = provider.getGasPrice()
-    console.log(gasPrice)
     return gasPrice
 }
 
@@ -44,6 +42,5 @@ export const getProviderGasPrice = () => {
 export const getTokenContract = (tokenAddress) => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider)
-    console.log(contract)
     return contract
 }

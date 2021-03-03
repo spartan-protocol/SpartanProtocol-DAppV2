@@ -96,6 +96,7 @@ describe("Info actions", () => {
         await getGlobalDetails()(dispatchMock);
 
         console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
         expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_GLOBAL_DETAILS);
     });
 
@@ -104,6 +105,7 @@ describe("Info actions", () => {
         await getTokenDetails(token)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
         expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_TOKEN_DETAILS);
     });
 
@@ -112,6 +114,7 @@ describe("Info actions", () => {
         await getPoolDetails(pool)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
         expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOL_DETAILS);
     });
 
@@ -119,6 +122,7 @@ describe("Info actions", () => {
         await getMemberShare("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
         expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_MEMBER_SHARE);
     });
 
@@ -126,6 +130,7 @@ describe("Info actions", () => {
         await getPoolShare('0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C', 100)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
         expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOL_SHARE);
     });
 
@@ -133,51 +138,48 @@ describe("Info actions", () => {
         await getShareOfBaseAmount("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
         expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_SHARE_OF_BASE_AMAOUNT);
     });
 
     test("should get share of token amount", async () => {
         await getShareOfTokenAmount("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
 
-        expect(dispatchMock).toBeCalledWith({ 
-            type: 'GET_SHARE_OF_TOKEN_AMAOUNT',
-            payload: { _hex: '0x00', _isBigNumber: true }
-    
-        });
+        console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_SHARE_OF_TOKEN_AMAOUNT);
     });
 
     test("should get share of pool assym", async () => {
         await getPoolShareAssym("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", 100, 10)(dispatchMock);
 
-        expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOLSHARE_ASSYM);
+        console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOL_SHARE_ASSYM);
     });
 
     test("should get pool age", async () => {
         await getPoolAge("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
 
-        expect(dispatchMock).toBeCalledWith({ 
-            type: 'GET_POOL_AGE',
-            payload: { _hex: '0x6e', _isBigNumber: true }
-        });  
+        console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOL_AGE); 
     });
 
     test("should get pool roi", async () => {
         await getPoolROI("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
 
-        
-        expect(dispatchMock).toBeCalledWith({ 
-            type: 'GET_POOL_ROI',
-            payload: { _hex: '0x2898', _isBigNumber: true }    
-        });   
+        console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOL_ROI); 
     });
 
     test("should get pool apy", async () => {
         await getPoolAPY("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
 
-        expect(dispatchMock).toBeCalledWith({ 
-            type: 'GET_POOL_APY',
-            payload: { _hex: '0x86b2', _isBigNumber: true }
-        }); 
+        console.log(dispatchMock.mock.calls[0][0]);
+        expect(dispatchMock.mock.calls[0][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[0][0].type).toBe(Types.GET_POOL_APY); 
     });
 
     test("should check if is member", async () => {
