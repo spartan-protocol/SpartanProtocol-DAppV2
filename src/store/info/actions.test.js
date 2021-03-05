@@ -34,7 +34,6 @@ describe("Info actions", () => {
     });
 
     test("should get listed pools", async ()=> {
-        const dispatchMock = jest.fn();
         await getListedPools()(dispatchMock);
 
         expect(dispatchMock).toBeCalledWith({
@@ -51,7 +50,6 @@ describe("Info actions", () => {
     });
 
     test("should get listed pools according by range", async () => {
-        const dispatchMock = jest.fn();
         await getListedPoolsRange(1, 2)(dispatchMock);
 
         expect(dispatchMock).toBeCalledWith({
