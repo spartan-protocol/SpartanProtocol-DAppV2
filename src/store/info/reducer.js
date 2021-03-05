@@ -15,6 +15,7 @@ const initialState = {
     poolROI: null,
     poolAPY: null,
     isMember: false,
+    error: null
 }
 
 export const infoReducer = (state = initialState, action) => {
