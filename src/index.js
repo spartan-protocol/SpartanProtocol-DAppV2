@@ -9,26 +9,38 @@ import "./app.scss";
 import {UseWalletProvider} from '@binance-chain/bsc-use-wallet'
 import "./assets/scss/spartan.scss";
 
+import { createStore, applyMiddleware, combineReducers } from "redux";
+import { confirmationReducer } from "./store/confirmation";
+import { infoReducer } from './store/info';
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+
+const reducers = combineReducers({info: infoReducer, confirmation: confirmationReducer});
+
+const store = createStore(reducers, applyMiddleware(thunk));
+
 
 const rpcUrl = process.env.REACT_APP_RPC
 
 ReactDOM.render(
-    <React.StrictMode>
-        <UseWalletProvider
-            chainId={parseInt(process.env.REACT_APP_CHAIN_ID)}
-            connectors={{
-                walletconnect: {rpcUrl},
-                bsc: {},
-            }}
-        >
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/" render={(props) => <AdminLayout {...props} />}/>
-                    <Redirect from="/" to="/dapp/buttons/"/>
-                </Switch>
-            </BrowserRouter>,
-        </UseWalletProvider>
-    </React.StrictMode>,
+    <Provider store={store}>
+        <React.StrictMode>
+            <UseWalletProvider
+                chainId={parseInt(process.env.REACT_APP_CHAIN_ID)}
+                connectors={{
+                    walletconnect: {rpcUrl},
+                    bsc: {},
+                }}
+            >
+                <BrowserRouter>
+                    <Switch>
+                        <Route path="/" render={(props) => <AdminLayout {...props} />}/>
+                        <Redirect from="/" to="/dapp/buttons/"/>
+                    </Switch>
+                </BrowserRouter>,
+            </UseWalletProvider>
+        </React.StrictMode>,
+    </Provider>,
 
     document.getElementById("root")
 );
