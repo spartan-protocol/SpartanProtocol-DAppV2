@@ -16,6 +16,7 @@ export const pricingReducer = (state = initialState, action) => {
             return {
                 ...state,
                 basePPinToken: action.payload,
+                error: null,
                 loading: false
             }
         }
@@ -24,6 +25,7 @@ export const pricingReducer = (state = initialState, action) => {
             return {
                 ...state,
                 tokenPPinBase: action.payload,
+                error: null,
                 loading: false
             }
         }
@@ -32,6 +34,7 @@ export const pricingReducer = (state = initialState, action) => {
             return {
                 ...state,
                 valueInBase: action.payload,
+                error: null,
                 loading: false
             }
         }
@@ -40,6 +43,7 @@ export const pricingReducer = (state = initialState, action) => {
             return {
                 ...state,
                 valueInToken: action.payload,
+                error: null,
                 loading: false
             }
         }
@@ -47,7 +51,8 @@ export const pricingReducer = (state = initialState, action) => {
         case Types.PRICING_LOADING: {
             return {
                 ...state,
-                loading: true
+                error: null,
+                loading: true,
             }
         }
 

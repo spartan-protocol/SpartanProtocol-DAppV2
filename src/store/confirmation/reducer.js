@@ -12,7 +12,8 @@ export const confirmationReducer = (state = initialState, action) => {
             return {
                 ...state,
                 contract: action.payload,
-                loading: false
+                loading: false,
+                error: null,
             }
         }
 

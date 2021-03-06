@@ -25,7 +25,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 pools: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -33,7 +34,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 pools: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -41,7 +43,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 assets: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -49,7 +52,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 assets: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -57,7 +61,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 globalDetails: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -65,7 +70,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 tokenDetails: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -73,7 +79,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 poolDetails: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -81,7 +88,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 memberShare: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -89,7 +97,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 poolShare: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -97,7 +106,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 shareOfBaseAmount: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -105,7 +115,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 shareOfTokenAmount: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -113,7 +124,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 poolShareAssym: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -121,7 +133,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 poolAge: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -129,7 +142,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 poolROI: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -137,7 +151,8 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 poolAPY: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
@@ -145,14 +160,16 @@ export const infoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isMember: action.payload,
-                loading: false
+                loading: false,
+                error: null
             }
         }
 
         case Types.INFO_LOADING: {
             return {
                 ...state,
-                loading: true
+                loading: true,
+                error: null
             }
         }
 
