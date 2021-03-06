@@ -25,40 +25,6 @@ export const getUtilsContract = () => {
     return contract
 }
 
-// ************** INTERNAL PRICING VIA POOLS FUNCTIONS ************** //
-
-// Calculate sparta purchasing power in token (accounts for slippage)
-export const getBasePPinToken = async (token, amount) => {
-    let contract = getUtilsContract()
-    let result = await contract.callStatic.calcBasePPinToken(token, amount)
-    console.log(result.toString())
-    return result;
-}
-
-// Calculate token purchasing power in sparta (accounts for slippage)
-export const getTokenPPinBase = async (token, amount) => {
-    let contract = getUtilsContract()
-    let result = await contract.callStatic.calcTokenPPinBase(token, amount)
-    console.log(result.toString())
-    return result;
-}
-
-// Calculate value in token (uses spot price; no slippage)
-export const getValueInToken = async (token, amount) => {
-    let contract = getUtilsContract()
-    let result = await contract.callStatic.calcValueInToken(token, amount)
-    console.log(result.toString())
-    return result;
-}
-
-// Calculate value of token in sparta (uses spot price; no slippage)
-export const getValueInBase = async (token, amount) => {
-    let contract = getUtilsContract()
-    let result = await contract.callStatic.calcValueInBase(token, amount)
-    console.log(result.toString())
-    return result;
-}
-
 // ************** CORE MATHEMATICS (CALL VIA CONTRACT || FOR NON-ASYNC ONES, CHECK THE LOWER SECTION) ************** //
 
 // Get the part

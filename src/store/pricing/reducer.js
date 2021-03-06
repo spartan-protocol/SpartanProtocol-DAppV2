@@ -2,10 +2,11 @@ import { act } from "react-dom/test-utils";
 import * as Types from "./types";
 
 const initialState = {
-    basePPinToken: "",
-    tokenPPinBase: "",
-    valueInToken: "",
-    valueInBase: "",
+    basePPinToken: {},
+    tokenPPinBase: {},
+    valueInToken: {},
+    valueInBase: {},
+    loading: false,
     error: null,
 }
 
@@ -14,35 +15,47 @@ export const pricingReducer = (state = initialState, action) => {
         case Types.GET_BASE_P_PIN_TOKEN: {
             return {
                 ...state,
-                basePPinToken: action.payload
+                basePPinToken: action.payload,
+                loading: false
             }
         }
 
         case Types.GET_TOKEN_P_PIN_BASE: {
             return {
                 ...state,
-                tokenPPinBase: action.payload
+                tokenPPinBase: action.payload,
+                loading: false
             }
         }
 
         case Types.GET_VALUE_IN_TOKEN: {
             return {
                 ...state,
-                valueInBase: action.payload
+                valueInBase: action.payload,
+                loading: false
             }
         }
 
         case Types.GET_VALUE_IN_BASE: {
             return {
                 ...state,
-                valueInToken: action.payload
+                valueInToken: action.payload,
+                loading: false
+            }
+        }
+
+        case Types.PRICING_LOADING: {
+            return {
+                ...state,
+                loading: true
             }
         }
 
         case Types.PRICING_ERROR: {
             return {
                 ...state,
-                error: action.error
+                error: action.error,
+                loading: false
             }
         }
     }

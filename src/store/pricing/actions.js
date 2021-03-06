@@ -2,7 +2,12 @@ import * as Types from "./types";
 import {getUtilsContract} from '../../utils/web3Utils';
 import {payloadToDispatch, errorToDispatch} from "../helpers";
 
+export const pricingLoading = () => ({
+    type: Types.INFO_LOADING
+});
+
 export const getBasePPinToken = (token, amount) => async dispatch => {
+    dispatch(pricingLoading());
     let contract = getUtilsContract()
 
     try {
@@ -14,6 +19,7 @@ export const getBasePPinToken = (token, amount) => async dispatch => {
 }
 
 export const getTokenPPinBase = (token, amount) => async dispatch => {
+    dispatch(pricingLoading());
     let contract = getUtilsContract()
 
     try {
@@ -25,6 +31,7 @@ export const getTokenPPinBase = (token, amount) => async dispatch => {
 }
 
 export const getValueInToken = (token, amount) => async dispatch => {
+    dispatch(pricingLoading());
     let contract = getUtilsContract()
 
     try {
@@ -36,6 +43,7 @@ export const getValueInToken = (token, amount) => async dispatch => {
 }
 
 export const getValueInBase = (token, amount) => async dispatch => {
+    dispatch(pricingLoading());
     let contract = getUtilsContract()
 
     try {

@@ -2,6 +2,7 @@ import * as Types from "./types";
 
 const initialState = {
     contract: {},
+    loading: false,
     error: null
 }
 
@@ -10,14 +11,23 @@ export const confirmationReducer = (state = initialState, action) => {
         case Types.GET_CONTRACT: {
             return {
                 ...state,
-                contract: action.payload
+                contract: action.payload,
+                loading: false
+            }
+        }
+
+        case Types.CONTRACT_LOADING: {
+            return {
+                ...state,
+                loading: true
             }
         }
 
         case Types.CONTRACT_ERROR: {
             return {
                 ...state,
-                error: action.error
+                error: action.error,
+                loading: false
             }
         }
         default:
