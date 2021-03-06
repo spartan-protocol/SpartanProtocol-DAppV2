@@ -1,6 +1,5 @@
 import Dashboard from "./components/Dashboard/Dashboard";
 import PoolsTable from "./views/pages/PoolsTable.js";
-import Positions from "./views/pages/Positions.js";
 import Icons from "./views/pages/Samples/Icons";
 import Notifications from "./views/pages/Samples/Notifications";
 import Buttons from "./views/pages/Samples/Buttons";
@@ -13,9 +12,8 @@ import ExtendedForms from "./views/pages/Samples/ExtendedForms";
 import Panels from "./views/pages/Samples/Panels";
 import Tiles from "./views/pages/Samples/Tiles";
 import Utils from "./utils/Utils";
-import AddLiquidity from "./views/pages/AddLiquidity";
 import Tabs from "./views/pages/Samples/Tabs";
-
+import Liquidity from "./views/pages/Pools/Liquidity.js";
 
 const routes = [
 
@@ -28,55 +26,79 @@ const routes = [
     },
 
     {
-        path: "/join",
+        collapse: true,
         name: "Pools",
-        icon: "icon-medium icon-swords icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
+        icon: "icon-medium icon-info icon-dark",
+        state: "pagesCollapse",
+        views: [
+            {
+                path: "/pools/overview",
+                name: "Overview",
+                mini: "OVIEW",
+                component: PoolsTable,
+                layout: "/dapp",
+            },
+            {
+                path: "/pools/swap",
+                name: "Swap",
+                mini: "SWAP",
+                component: Tiles,
+                layout: "/dapp",
+            },
+            {
+                path: "/pools/liquidity",
+                name: "Liquidity",
+                mini: "LIQ",
+                component: Liquidity,
+                layout: "/dapp",
+            },
+            {
+                path: "/pools/bond",
+                name: "Bond",
+                mini: "BOND",
+                component: Tiles,
+                layout: "/dapp",
+            },
+            {
+                path: "/pools/positions",
+                name: "Positions",
+                mini: "POS",
+                component: Tiles,
+                layout: "/dapp",
+            },
+        ],
     },
 
     {
-        path: "/join1",
-        name: "Dao",
-        icon: "icon-medium icon-colosseum icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
-    },
-    {
-        path: "/join2",
-        name: "Trade",
-        icon: "icon-medium icon-sword icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
-    },
-    {
-        path: "/join3",
-        name: "Vote",
-        icon: "icon-medium icon-circle icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
-    },
-    {
-        path: "/join4",
-        name: "Analysis",
-        icon: "icon-medium icon-helmet icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
-    },
-    {
-        path: "/join5",
-        name: "Documents",
+        collapse: true,
+        name: "DAO",
         icon: "icon-medium icon-info icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
+        state: "pagesCollapse",
+        views: [
+            {
+                path: "/dao/overview",
+                name: "Overview",
+                mini: "OVIEW",
+                component: Tiles,
+                layout: "/dapp",
+            },
+            {
+                path: "/dao/lockearn",
+                name: "Lock+Earn",
+                mini: "EARN",
+                component: Tiles,
+                layout: "/dapp",
+            },
+            {
+                path: "/dao/proposals",
+                name: "Proposals",
+                mini: "PROP",
+                component: Tiles,
+                layout: "/dapp",
+            },
+        ],
     },
-    {
-        path: "/join6",
-        name: "Settings",
-        icon: "icon-medium icon-gear icon-dark",
-        component: AddLiquidity,
-        layout: "/dapp",
-    },
+
     {
         collapse: true,
         name: "Components",
