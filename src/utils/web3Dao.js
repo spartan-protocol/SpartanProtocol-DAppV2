@@ -32,17 +32,39 @@ export const getDaoContract = () => {
 
 // --------------------------------------- HELPERS ---------------------------------------
 
+// function calcCurrentReward(address member) public returns(uint){
+
 
 // --------------------------------------- FUNCTIONS ---------------------------------------
 
 // DAO - Deposit LP Tokens (Lock in DAO)
-export const deposit = async (pool, amount) => {
+export const daoDeposit = async (pool, amount) => {
     // Add a check to ensure 'pool' is listed (ROUTER.isPool(pool) == true)
     // Add a check to ensure 'amount' is greater than 0
     let contract = getDaoContract()
     const gPrice = await getProviderGasPrice()
     const gLimit = await contract.estimateGas.deposit(pool, amount)
     const result = await contract.deposit(pool, amount, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(result)
+    return result
+}
+
+// DAO - Withdraw LP Tokens (From DAO)
+export const daoWithdraw = async (pool) => {
+    let contract = getDaoContract()
+    const gPrice = await getProviderGasPrice()
+    const gLimit = await contract.estimateGas.withdraw(pool)
+    const result = await contract.withdraw(pool, {gasPrice: gPrice, gasLimit: gLimit})
+    console.log(result)
+    return result
+}
+
+// DAO - Harvest SPARTA rewards (currently no emissions going in to fill-up, but later; probably 10% of emissions will go in)
+export const daoHarvest = async () => {
+    let contract = getDaoContract()
+    const gPrice = await getProviderGasPrice()
+    const gLimit = await contract.estimateGas.harvest()
+    const result = await contract.harvest({gasPrice: gPrice, gasLimit: gLimit})
     console.log(result)
     return result
 }
