@@ -156,7 +156,7 @@ export const getPoolAge = (token) => async dispatch =>  {
 
     try {
         let poolAge = await contract.callStatic.getPoolAge(token);
-    dispatch(payloadToDispatch(Types.GET_POOL_AGE, poolAge));
+        dispatch(payloadToDispatch(Types.GET_POOL_AGE, poolAge));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
