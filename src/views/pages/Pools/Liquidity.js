@@ -40,18 +40,18 @@ import {
 } from "reactstrap";
 
 import {withNamespaces} from "react-i18next";
-import {manageBodyClass} from "../../components/Common/common";
-import bnb_sparta from "../../assets/icons/bnb_sparta.png";
-import coin_sparta from "../../assets/icons/coin_sparta.svg";
-import coin_bnb from "../../assets/icons/coin_bnb.svg";
+import {manageBodyClass} from "../../../components/Common/common";
+import bnb_sparta from "../../../assets/icons/bnb_sparta.png";
+import coin_sparta from "../../../assets/icons/coin_sparta.svg";
+import coin_bnb from "../../../assets/icons/coin_bnb.svg";
 import InputGroup from "reactstrap/es/InputGroup";
 import InputGroupAddon from "reactstrap/es/InputGroupAddon";
 import Slider from "nouislider";
 import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip";
 import {Breadcrumb} from "react-bootstrap";
-import { getBondBurnReady, getBondSpartaRemaining } from "../../utils/web3Bond";
+import { getBondBurnReady, getBondSpartaRemaining } from "../../../utils/web3Bond";
 
-const AddLiquidity = (props) => {
+const Liquidity = (props) => {
     const [horizontalTabs, sethorizontalTabs] = React.useState("profile");
     const [setverticalTabs] = React.useState("profile");
     const [setverticalTabsIcons] = React.useState("home");
@@ -685,5 +685,5 @@ const AddLiquidity = (props) => {
     );
 };
 
-export default AddLiquidity;
+export default Liquidity;
 
