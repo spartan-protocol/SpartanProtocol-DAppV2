@@ -30,12 +30,59 @@ export const getDaoContract = () => {
     return contract
 }
 
-// --------------------------------------- HELPERS ---------------------------------------
+// --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
-// function calcCurrentReward(address member) public returns(uint){
+// Returns the amount of members with LP tokens locked in the DAO
+export const getDaoMemberCount = async () => {
+    let contract = getDaoContract()
+    const result = await contract.callStatic.memberCount()
+    console.log(result)
+    return result
+}
 
+// Returns a specified member's details
+// .isMember .weight .lastBlock .poolsCount
+export const getDaoMemberDetails = async (member) => {
+    let contract = getDaoContract()
+    const result = await contract.callStatic.getMemberDetails(member)
+    console.log(result)
+    return result
+}
 
-// --------------------------------------- FUNCTIONS ---------------------------------------
+// Returns the total weight in the DAO
+export const getDaoTotalWeight = async () => {
+    let contract = getDaoContract()
+    const result = await contract.callStatic.totalWeight()
+    console.log(result)
+    return result
+}
+
+// Returns the member's weight in the DAO
+export const getDaoMemberWeight = async (member) => {
+    let contract = getDaoContract()
+    const result = await contract.callStatic.mapMember_weight(member)
+    console.log(result)
+    return result
+}
+
+// Get the current harvestable amount of SPARTA from Lock+Earn
+// Uses getDaoHarvestEraAmount() but works out what portion of an era/s the member can claim
+export const getDaoHarvestAmount = async (member) => {
+    let contract = getDaoContract()
+    const result = await contract.callStatic.calcCurrentReward(member)
+    console.log(result)
+    return result
+}
+
+// Get the member's current harvest share of the DAO (per era)
+export const getDaoHarvestEraAmount = async (member) => {
+    let contract = getDaoContract()
+    const result = await contract.callStatic.calcReward(member)
+    console.log(result)
+    return result
+}
+
+// --------------------------------------- GENERAL DAO FUNCTIONS ---------------------------------------
 
 // DAO - Deposit LP Tokens (Lock in DAO)
 export const daoDeposit = async (pool, amount) => {
@@ -68,3 +115,11 @@ export const daoHarvest = async () => {
     console.log(result)
     return result
 }
+
+//============================== DAO PROPOSAL HELPERS ================================//
+
+// Wait for V2 contracts
+
+//============================== DAO PROPOSAL FUNCTIONS ================================//
+
+// Wait for V2 contracts
