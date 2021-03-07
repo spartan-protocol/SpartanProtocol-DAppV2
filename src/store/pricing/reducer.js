@@ -63,5 +63,7 @@ export const pricingReducer = (state = initialState, action) => {
                 loading: false
             }
         }
+        default:
+            return state;
     }
 }

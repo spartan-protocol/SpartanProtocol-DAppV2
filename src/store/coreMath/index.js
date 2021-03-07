@@ -5,6 +5,7 @@ export {
     getShare,
     getLiquidityShare,
     getLiquidityUnits,
+    getSwapOutput,
     getSwapFee,
     getSlipAdustment,
     getAsymmetricShare,

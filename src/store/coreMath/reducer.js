@@ -68,7 +68,7 @@ export const coreMathReducer = (state = initialState, action) => {
             }
         }
 
-        case Types.GET_ASYMMETRICS_HARE: {
+        case Types.GET_ASYMMETRICS_SHARE: {
             return {
                 ...state,
                 asymmetricShare: action.payload,
@@ -90,5 +90,7 @@ export const coreMathReducer = (state = initialState, action) => {
                 loading: false,
             }
         }
+        default:
+            return state;
     }
 }

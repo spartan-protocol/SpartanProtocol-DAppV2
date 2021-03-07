@@ -93,91 +93,91 @@ describe("Info actions", () => {
     test("should get global details", async () => {
         await getGlobalDetails()(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_GLOBAL_DETAILS);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_GLOBAL_DETAILS);
     });
 
     test("should get token details", async () => {
         const token = "0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C";
         await getTokenDetails(token)(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_TOKEN_DETAILS);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_TOKEN_DETAILS);
     });
 
     test("should get pool details", async () => {
         const pool = "0xC6D2d179fB03e951DB72edCcC9491c265b86515A";
         await getPoolDetails(pool)(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_POOL_DETAILS);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL_DETAILS);
     });
 
     test("should get member share", async () => {
         await getMemberShare("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_MEMBER_SHARE);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_MEMBER_SHARE);
     });
 
     test("should get pool share", async () => {
         await getPoolShare('0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C', 100)(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_POOL_SHARE);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL_SHARE);
     });
 
     test("should get share of base amount", async () => {
         await getShareOfBaseAmount("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_SHARE_OF_BASE_AMAOUNT);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_SHARE_OF_BASE_AMAOUNT);
     });
 
     test("should get share of token amount", async () => {
         await getShareOfTokenAmount("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_SHARE_OF_TOKEN_AMAOUNT);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_SHARE_OF_TOKEN_AMAOUNT);
     });
 
     test("should get share of pool assym", async () => {
         await getPoolShareAssym("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", 100, 10)(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_POOL_SHARE_ASSYM);
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL_SHARE_ASSYM);
     });
 
     test("should get pool age", async () => {
         await getPoolAge("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_POOL_AGE); 
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL_AGE); 
     });
 
     test("should get pool roi", async () => {
         await getPoolROI("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_POOL_ROI); 
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL_ROI); 
     });
 
     test("should get pool apy", async () => {
         await getPoolAPY("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
 
-        console.log(dispatchMock.mock.calls[0][1]);
-        expect(dispatchMock.mock.calls[0][1].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[0][1].type).toBe(Types.GET_POOL_APY); 
+        console.log(dispatchMock.mock.calls[1][0]);
+        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
+        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL_APY); 
     });
 
     test("should check if is member", async () => {

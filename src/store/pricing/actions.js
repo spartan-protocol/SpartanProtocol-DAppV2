@@ -3,7 +3,7 @@ import {getUtilsContract} from '../../utils/web3Utils';
 import {payloadToDispatch, errorToDispatch} from "../helpers";
 
 export const pricingLoading = () => ({
-    type: Types.INFO_LOADING
+    type: Types.PRICING_LOADING
 });
 
 export const getBasePPinToken = (token, amount) => async dispatch => {

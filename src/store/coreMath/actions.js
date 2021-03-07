@@ -42,6 +42,18 @@ export const getShare = (part, total, amount) => async dispatch => {
     }
 }
 
+export const getSwapOutput = (x, X, Y) => async dispatch => {
+    dispatch(coreMathLoading());
+    let contract = getUtilsContract();
+
+    try {
+        let swapOutput = await contract.callStatic.calcSwapOutput(x, X, Y);
+        dispatch(payloadToDispatch(Types.GET_SWAP_OUTPUT, swapOutput));
+    } catch (error) {
+        dispatch(errorToDispatch(Types.CORE_MATH_ERROR, error));
+    }
+}
+
 export const getSwapFee = (x, X, Y) => async dispatch => {
     dispatch(coreMathLoading());
     let contract = getUtilsContract();
@@ -83,7 +95,7 @@ export const getAsymmetricShare = (u, U, A) => async dispatch => {
     let contract = getUtilsContract();
 
     try {
-        let asymmetricShare = await contract.callStatic.getAsymmetricShare(u, U, A);
+        let asymmetricShare = await contract.callStatic.calcAsymmetricShare(u, U, A);
         dispatch(payloadToDispatch(Types.GET_ASYMMETRICS_SHARE, asymmetricShare));
     } catch (error) {
         dispatch(errorToDispatch(Types.CORE_MATH_ERROR, error));

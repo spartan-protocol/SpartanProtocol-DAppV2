@@ -12,10 +12,12 @@ import "./assets/scss/spartan.scss";
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import { confirmationReducer } from "./store/confirmation";
 import { infoReducer } from './store/info';
+import { pricingReducer } from './store/pricing';
+import { coreMathReducer } from './store/coreMath';
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-const reducers = combineReducers({info: infoReducer, confirmation: confirmationReducer});
+const reducers = combineReducers({info: infoReducer, confirmation: confirmationReducer, pricing: pricingReducer, coreMath: coreMathReducer });
 
 const store = createStore(reducers, applyMiddleware(thunk));
 

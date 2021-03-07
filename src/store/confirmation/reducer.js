@@ -17,14 +17,14 @@ export const confirmationReducer = (state = initialState, action) => {
             }
         }
 
-        case Types.CONTRACT_LOADING: {
+        case Types.CONFIRMATION_LOADING: {
             return {
                 ...state,
                 loading: true
             }
         }
 
-        case Types.CONTRACT_ERROR: {
+        case Types.CONFIRMATION_ERROR: {
             return {
                 ...state,
                 error: action.error,
