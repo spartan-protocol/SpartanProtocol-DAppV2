@@ -39,12 +39,9 @@ describe("Info actions", () => {
         expect(dispatchMock).toHaveBeenNthCalledWith(2, {
             type: 'GET_LISTED_POOLS',
             payload: [
-            '0x7d92c7F898623D8Bb190D17C3491eF3bd8af8796',
-            '0x59151Db3Ba8ec50777DA9d6AB316BAF5d15611A8',
-            '0x5e8eaB015Cc853825d56B3E723f7a613A6FAFf34',
-            '0x7d9Ca6F922fC68Ed16b7eF091898B35CCE38E037',
-            '0x59BEB0E29d3e9017a424Ba594c63864bb609DEb1',
-            '0x3b3916030e3B9BF3f8202A472e7DD442805cC719'
+            "0xA2C646CF5F55657EC0ecee5b8d2fCcb4cA843bd3",
+            "0xef95192CC1B7766A06629721Cf8C7169ed34810a",
+            "0xcDf4b29d15f9ffaDa27bd2De6097Eb54EFDe9d75"
             ]
         });
     });
@@ -55,8 +52,8 @@ describe("Info actions", () => {
         expect(dispatchMock).toHaveBeenNthCalledWith(2, {
             type: 'GET_LISTED_POOLS_RANGE',
             payload: [
-            '0x7d92c7F898623D8Bb190D17C3491eF3bd8af8796',
-            '0x59151Db3Ba8ec50777DA9d6AB316BAF5d15611A8',
+            '0xA2C646CF5F55657EC0ecee5b8d2fCcb4cA843bd3',
+            '0xef95192CC1B7766A06629721Cf8C7169ed34810a'
             ]
         });
     });
@@ -68,11 +65,8 @@ describe("Info actions", () => {
             type: 'GET_LISTED_ASSETS',
             payload: [
                 '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
-                '0xC6D2d179fB03e951DB72edCcC9491c265b86515A',
-                '0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C',
-                '0x4Fd9562C5a51514644f7c37139E43d1d82616464',
-                '0x90c92451e0D2e439D2ED15bd2C6Ba3B31d42571B',
-                '0x6f840f8691E92F1B2dD43924bcbE45350714c7bF'      
+                '0x4102773565d82C8B0785f1262cfe75F04F170777',
+                '0xE875aEBD01EfE587487e929cDFF6b52131A513b6'    
             ]
         });
     });
@@ -84,8 +78,7 @@ describe("Info actions", () => {
             type: 'GET_LISTED_ASSETS_RANGE',
             payload: [
                 '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
-                '0xC6D2d179fB03e951DB72edCcC9491c265b86515A',
-                '0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C',
+                '0x4102773565d82C8B0785f1262cfe75F04F170777'
             ]
         });
     });
@@ -99,7 +92,7 @@ describe("Info actions", () => {
     });
 
     test("should get token details", async () => {
-        const token = "0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C";
+        const token = "0x4102773565d82C8B0785f1262cfe75F04F170777";
         await getTokenDetails(token)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
@@ -108,7 +101,7 @@ describe("Info actions", () => {
     });
 
     test("should get pool details", async () => {
-        const pool = "0xC6D2d179fB03e951DB72edCcC9491c265b86515A";
+        const pool = "0xA2C646CF5F55657EC0ecee5b8d2fCcb4cA843bd3";
         await getPoolDetails(pool)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
@@ -117,7 +110,7 @@ describe("Info actions", () => {
     });
 
     test("should get member share", async () => {
-        await getMemberShare("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
+        await getMemberShare("0x4102773565d82C8B0785f1262cfe75F04F170777", "0x0E8196b0EFe6e0062Da1B1d9F03f0a3ab3d53C77")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -125,7 +118,7 @@ describe("Info actions", () => {
     });
 
     test("should get pool share", async () => {
-        await getPoolShare('0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C', 100)(dispatchMock);
+        await getPoolShare('0x4102773565d82C8B0785f1262cfe75F04F170777', 100)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -133,7 +126,7 @@ describe("Info actions", () => {
     });
 
     test("should get share of base amount", async () => {
-        await getShareOfBaseAmount("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
+        await getShareOfBaseAmount("0x4102773565d82C8B0785f1262cfe75F04F170777", "0x0E8196b0EFe6e0062Da1B1d9F03f0a3ab3d53C77")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -141,7 +134,7 @@ describe("Info actions", () => {
     });
 
     test("should get share of token amount", async () => {
-        await getShareOfTokenAmount("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
+        await getShareOfTokenAmount("0x4102773565d82C8B0785f1262cfe75F04F170777", "0x0E8196b0EFe6e0062Da1B1d9F03f0a3ab3d53C77")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -149,7 +142,7 @@ describe("Info actions", () => {
     });
 
     test("should get share of pool assym", async () => {
-        await getPoolShareAssym("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", 100, 10)(dispatchMock);
+        await getPoolShareAssym("0x4102773565d82C8B0785f1262cfe75F04F170777", 100, 10)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -157,7 +150,7 @@ describe("Info actions", () => {
     });
 
     test("should get pool age", async () => {
-        await getPoolAge("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
+        await getPoolAge("0x4102773565d82C8B0785f1262cfe75F04F170777")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -165,7 +158,7 @@ describe("Info actions", () => {
     });
 
     test("should get pool roi", async () => {
-        await getPoolROI("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
+        await getPoolROI("0x4102773565d82C8B0785f1262cfe75F04F170777")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -173,7 +166,7 @@ describe("Info actions", () => {
     });
 
     test("should get pool apy", async () => {
-        await getPoolAPY("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C")(dispatchMock);
+        await getPoolAPY("0x4102773565d82C8B0785f1262cfe75F04F170777")(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);
         expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
@@ -181,7 +174,7 @@ describe("Info actions", () => {
     });
 
     test("should check if is member", async () => {
-        await isMember("0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C", "0xC6D2d179fB03e951DB72edCcC9491c265b86515A")(dispatchMock);
+        await isMember("0x4102773565d82C8B0785f1262cfe75F04F170777", "0x0E8196b0EFe6e0062Da1B1d9F03f0a3ab3d53C77")(dispatchMock);
 
         expect(dispatchMock).toBeCalledWith({type: 'IS_MEMBER', payload: false});
     });

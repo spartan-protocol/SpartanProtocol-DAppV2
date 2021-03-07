@@ -7,10 +7,10 @@ import { getWalletProvider, getProviderGasPrice } from "./web3"
 const net = process.env.REACT_APP_NET
 
 // OLD CONTRACT ADDRESSES
-export const DAOv1_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b57FF9C0' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
+export const DAOv1_ADDR = net === 'testnet' ? '0xbC6134840a2604D00222F276c16d143dd3666dA3' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
 
 // CURRENT CONTRACT ADDRESSES
-export const DAO_ADDR = net === 'testnet' ? '0x1b83a813045165c81d84b9f5d6916067b57FF9C0' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
+export const DAO_ADDR = net === 'testnet' ? '0xbC6134840a2604D00222F276c16d143dd3666dA3' : '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0'
 
 // FUTURE CONTRACT ADDRESSES
 // export const DAOv2_ADDR = net === 'testnet' ? '' : ''
