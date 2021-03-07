@@ -8,9 +8,6 @@ import {
     binanceChainMock,
     ethereumChainMock
 } from "./chain.mock";
-import {
-    deposit
-} from "./web3Dao";
 
 dotenv.config({
     path: path.resolve(__dirname, '../.env.test.local'),
@@ -59,12 +56,5 @@ describe("Utils", () => {
         const contract = getTokenContract(process.env.REACT_APP_ADDR);
 
         expect(contract.address).toBe(process.env.REACT_APP_ADDR);
-    });
-
-
-    test("should deposit 1000 coins in a pool", async () => {
-        const depositResponse = await deposit("0xa7d9ddbe1f17865597fbd27ec712455208b6b76d", 1000);
-
-        expect(depositResponse.hash).toBe("0xc6a8fa37107ed2bd3d9c07be0c86ff8a83002ab590d296cc3af303f09f68b379");
     });
 });

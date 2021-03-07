@@ -14,4 +14,5 @@ export const GET_POOL_AGE = "GET_POOL_AGE";
 export const GET_POOL_ROI = "GET_POOL_ROI";
 export const GET_POOL_APY = "GET_POOL_APY";
 export const IS_MEMBER = "IS_MEMBER";
+export const INFO_LOADING = "INFO_LOADING";
 export const INFO_ERROR = "INFO_ERROR";

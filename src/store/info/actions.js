@@ -2,7 +2,12 @@ import * as Types from './types';
 import {getUtilsContract} from '../../utils/web3Utils';
 import {payloadToDispatch, errorToDispatch} from '../helpers';
 
+export const infoLoading = () => ({
+    type: Types.INFO_LOADING
+});
+
 export const getListedPools = () => async dispatch => {
+    dispatch(infoLoading())
     let contract = getUtilsContract();
     
     try {
@@ -14,6 +19,7 @@ export const getListedPools = () => async dispatch => {
 }
 
 export const getListedPoolsRange = (first, count) => async dispatch => {
+    dispatch(infoLoading())
     let contract = getUtilsContract();
     
     try {
@@ -25,6 +31,7 @@ export const getListedPoolsRange = (first, count) => async dispatch => {
 }
 
 export const getListedAssets = () => async dispatch => {
+    dispatch(infoLoading())
     let contract = getUtilsContract();
     
     try {
@@ -36,6 +43,7 @@ export const getListedAssets = () => async dispatch => {
 }
 
 export const getListedAssetsRange = (first, count) => async dispatch => {
+    dispatch(infoLoading())
     let contract = getUtilsContract();
     
     try {
@@ -47,6 +55,7 @@ export const getListedAssetsRange = (first, count) => async dispatch => {
 }
 
 export const getGlobalDetails = () => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -58,6 +67,7 @@ export const getGlobalDetails = () => async dispatch =>  {
 }
 
 export const getTokenDetails = (token) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -69,6 +79,7 @@ export const getTokenDetails = (token) => async dispatch =>  {
 }
 
 export const getPoolDetails = (pools) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -80,6 +91,7 @@ export const getPoolDetails = (pools) => async dispatch =>  {
 }
 
 export const getMemberShare = (token, member) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -91,6 +103,7 @@ export const getMemberShare = (token, member) => async dispatch =>  {
 }
 
 export const getPoolShare = (token, units) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -102,6 +115,7 @@ export const getPoolShare = (token, units) => async dispatch =>  {
 }
 
 export const getShareOfBaseAmount = (token, member) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -113,6 +127,7 @@ export const getShareOfBaseAmount = (token, member) => async dispatch =>  {
 }
 
 export const getShareOfTokenAmount = (token, member) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -124,6 +139,7 @@ export const getShareOfTokenAmount = (token, member) => async dispatch =>  {
 }
 
 export const getPoolShareAssym = (token, units, toBase) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -135,17 +151,19 @@ export const getPoolShareAssym = (token, units, toBase) => async dispatch =>  {
 }
 
 export const getPoolAge = (token) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
         let poolAge = await contract.callStatic.getPoolAge(token);
-    dispatch(payloadToDispatch(Types.GET_POOL_AGE, poolAge));
+        dispatch(payloadToDispatch(Types.GET_POOL_AGE, poolAge));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
     }
 }
 
 export const getPoolROI = (token) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -157,6 +175,7 @@ export const getPoolROI = (token) => async dispatch =>  {
 }
 
 export const getPoolAPY = (token) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
@@ -168,6 +187,7 @@ export const getPoolAPY = (token) => async dispatch =>  {
 }
 
 export const isMember = (token, member) => async dispatch =>  {
+    dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
