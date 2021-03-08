@@ -14,10 +14,17 @@ import { confirmationReducer } from "./store/confirmation";
 import { infoReducer } from './store/info';
 import { pricingReducer } from './store/pricing';
 import { coreMathReducer } from './store/coreMath';
+import { spartaReducer } from './store/sparta';
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-const reducers = combineReducers({info: infoReducer, confirmation: confirmationReducer, pricing: pricingReducer, coreMath: coreMathReducer });
+const reducers = combineReducers({
+    info: infoReducer,
+    confirmation: confirmationReducer,
+    pricing: pricingReducer,
+    coreMath: coreMathReducer,
+    sparta: spartaReducer,
+});
 
 const store = createStore(reducers, applyMiddleware(thunk));
 

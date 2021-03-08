@@ -101,7 +101,7 @@ describe("Info actions", () => {
     });
 
     test("should get pool details", async () => {
-        const pool = "0xA2C646CF5F55657EC0ecee5b8d2fCcb4cA843bd3";
+        const pool = "0x4102773565d82C8B0785f1262cfe75F04F170777";
         await getPoolDetails(pool)(dispatchMock);
 
         console.log(dispatchMock.mock.calls[1][0]);

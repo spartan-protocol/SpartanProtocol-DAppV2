@@ -78,12 +78,12 @@ export const getTokenDetails = (token) => async dispatch =>  {
     }
 }
 
-export const getPoolDetails = (pools) => async dispatch =>  {
+export const getPoolDetails = (pool) => async dispatch =>  {
     dispatch(infoLoading())
     let contract = getUtilsContract()
 
     try {
-        let poolDetails = await contract.callStatic.getPoolData(pools);
+        let poolDetails = await contract.callStatic.getPoolData(pool);
         dispatch(payloadToDispatch(Types.GET_POOL_DETAILS, poolDetails));
     } catch (error) {
         dispatch(errorToDispatch(Types.INFO_ERROR, error));
