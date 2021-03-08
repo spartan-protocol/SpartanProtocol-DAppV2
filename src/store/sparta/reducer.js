@@ -4,7 +4,9 @@ import * as Types from './types';
 const initialState = {
     emitting: {},
     adjustedClaimRate: {},
-    claim: {}
+    claim: {},
+    error: null,
+    loading: false
 }
 
 export const spartaReducer = (state = initialState, action) => {
