@@ -12,7 +12,6 @@ export const BASE_ABI = BASE.abi
 export const getSpartaContract = () => {
     let provider = getWalletProvider()
     let contract = new ethers.Contract(SPARTA_ADDR, BASE_ABI, provider)
-    console.log(contract)
     return contract
 }
 
