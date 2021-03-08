@@ -4,7 +4,6 @@ import {
     getListedPoolsRange,
     getListedAssets,
     getListedAssetsRange,
-    getGlobalDetails,
     getTokenDetails,
     getPoolDetails,
     getMemberShare,
@@ -81,14 +80,6 @@ describe("Info actions", () => {
                 '0x4102773565d82C8B0785f1262cfe75F04F170777'
             ]
         });
-    });
-
-    test("should get global details", async () => {
-        await getGlobalDetails()(dispatchMock);
-
-        console.log(dispatchMock.mock.calls[1][0]);
-        expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined();
-        expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_GLOBAL_DETAILS);
     });
 
     test("should get token details", async () => {
