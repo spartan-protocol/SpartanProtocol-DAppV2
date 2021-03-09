@@ -1,5 +1,5 @@
-export const GET_EMTTING = "GET_EMTTING";
-export const GET_ADJUSTED_CLAIM_RATE = "GET_ADJUSTED_CLAIM_RATE";
-export const CLAIM = "CLAIM";
-export const SPARTA_LOADING = "SPARTA_LOADING";
-export const SPARTA_ERROR = "SPARTA_ERROR"
+export const GET_EMTTING = 'GET_EMTTING'
+export const GET_ADJUSTED_CLAIM_RATE = 'GET_ADJUSTED_CLAIM_RATE'
+export const CLAIM = 'CLAIM'
+export const SPARTA_LOADING = 'SPARTA_LOADING'
+export const SPARTA_ERROR = 'SPARTA_ERROR'

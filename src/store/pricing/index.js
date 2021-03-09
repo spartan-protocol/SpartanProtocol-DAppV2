@@ -1,14 +1,10 @@
-export {
-    usePricing
-} from './selector';
+export { usePricing } from './selector'
+
+export { pricingReducer } from './reducer'
 
 export {
-    pricingReducer
-} from './reducer';
-
-export {
-    getBasePPinToken,
-    getTokenPPinBase,
-    getValueInBase,
-    getValueInToken,
-} from './actions';
+  getBasePPinToken,
+  getTokenPPinBase,
+  getValueInBase,
+  getValueInToken,
+} from './actions'

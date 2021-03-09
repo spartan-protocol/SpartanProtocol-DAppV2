@@ -1,5 +1,3 @@
-import {
-    useSelector
-} from 'react-redux';
+import { useSelector } from 'react-redux'
 
-export const useSparta = () => useSelector(state => state.sparta);
+export const useSparta = () => useSelector((state) => state.sparta)
