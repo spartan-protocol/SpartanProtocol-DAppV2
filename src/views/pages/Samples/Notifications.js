@@ -18,6 +18,7 @@ import {
 } from "reactstrap";
 
 const Notifications = () => {
+
     const [modalMini, setModalMini] = React.useState(false);
     const [modalClassic, setModalClassic] = React.useState(false);
     const [modalNotice, setModalNotice] = React.useState(false);
@@ -31,6 +32,10 @@ const Notifications = () => {
     const toggleModalMini = () => {
         setModalMini(!modalMini);
     };
+
+
+
+
     const notify = (place) => {
         var color = Math.floor(Math.random() * 5 + 1);
         var type;
