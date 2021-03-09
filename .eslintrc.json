@@ -12,11 +12,17 @@
   "rules": {
     "semi": 0,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/require-default-props": "off",
+    "react/prop-types": "off",
+    "react/destructuring-assignment": "off",
+    "no-plusplus": "off",
+    "no-console": "off",
+    "no-underscore-dangle": 0,
+    "import/prefer-default-export": "off",
     "prettier/prettier": [
       "error", {
         "semi": false,
-        "endOfLine": "auto",
-        "no-console": "off"
+        "endOfLine": "auto"
       }
     ]
   }

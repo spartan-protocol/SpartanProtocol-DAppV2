@@ -1,7 +1,7 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers'
 
 import BASE from '../config/ABI/Base.json'
-import { getWalletProvider, SPARTA_ADDR } from "./web3"
+import { getWalletProvider, SPARTA_ADDR } from './web3'
 
 // ABI
 export const BASE_ABI = BASE.abi
@@ -10,7 +10,7 @@ export const BASE_ABI = BASE.abi
 
 // GET ROUTER CONTRACT
 export const getSpartaContract = () => {
-    let provider = getWalletProvider()
-    let contract = new ethers.Contract(SPARTA_ADDR, BASE_ABI, provider)
-    return contract
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(SPARTA_ADDR, BASE_ABI, provider)
+  return contract
 }

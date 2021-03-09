@@ -1,5 +1,3 @@
-import {
-    useSelector
-} from 'react-redux';
+import { useSelector } from 'react-redux'
 
-export const usePricing = () => useSelector(state => state.pricing);
+export const usePricing = () => useSelector((state) => state.pricing)

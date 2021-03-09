@@ -1,89 +1,97 @@
-import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
+/* eslint-disable react/no-array-index-key */
+import React, { useCallback } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
+import PerfectScrollbar from 'perfect-scrollbar'
 
 // reactstrap components
-import { Nav, Collapse } from "reactstrap";
+import { Nav, Collapse } from 'reactstrap'
 
-var ps;
+let ps
 
 const Sidebar = (props) => {
-  const [state, setState] = React.useState({});
-  const sidebarRef = React.useRef(null);
-  const location = useLocation();
-  React.useEffect(() => {
-    setState(getCollapseStates(props.routes));
-  }, []);
-  React.useEffect(() => {
-    // if you are using a Windows Machine, the scrollbars will have a Mac look
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(sidebarRef.current, {
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-    }
-    return function cleanup() {
-      // we need to destroy the false scrollbar when we navigate
-      // to a page that doesn't have this component rendered
-      if (navigator.platform.indexOf("Win") > -1) {
-        ps.destroy();
-      }
-    };
-  });
-  // this creates the intial state of this component based on the collapse routes
-  // that it gets through props.routes
-  const getCollapseStates = (routes) => {
-    let initialState = {};
-    routes.map((prop, key) => {
-      if (prop.collapse) {
-        initialState = {
-          [prop.state]: getCollapseInitialState(prop.views),
-          ...getCollapseStates(prop.views),
-          ...initialState,
-        };
-      }
-      return null;
-    });
-    return initialState;
-  };
+  const [state, setState] = React.useState({})
+  const sidebarRef = React.useRef(null)
+  const location = useLocation()
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
   const getCollapseInitialState = (routes) => {
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse && getCollapseInitialState(routes[i].views)) {
-        return true;
-      } else if (window.location.href.indexOf(routes[i].path) !== -1) {
-        return true;
+        return true
+      }
+      if (window.location.href.indexOf(routes[i].path) !== -1) {
+        return true
       }
     }
-    return false;
-  };
+    return false
+  }
+  // this creates the intial state of this component based on the collapse routes
+  // that it gets through props.routes
+  const getCollapseStates = useCallback((routes) => {
+    let initialState = {}
+    routes.map((prop) => {
+      if (prop.collapse) {
+        initialState = {
+          [prop.state]: getCollapseInitialState(prop.views),
+          ...getCollapseStates(prop.views),
+          ...initialState,
+        }
+      }
+      return null
+    })
+    return initialState
+  })
+  React.useEffect(() => {
+    setState(getCollapseStates(props.routes))
+  }, [props.routes])
+  React.useEffect(() => {
+    // if you are using a Windows Machine, the scrollbars will have a Mac look
+    if (navigator.platform.indexOf('Win') > -1) {
+      ps = new PerfectScrollbar(sidebarRef.current, {
+        suppressScrollX: true,
+        suppressScrollY: false,
+      })
+    }
+    return function cleanup() {
+      // we need to destroy the false scrollbar when we navigate
+      // to a page that doesn't have this component rendered
+      if (navigator.platform.indexOf('Win') > -1) {
+        ps.destroy()
+      }
+    }
+  })
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
-    const { rtlActive } = props;
+    const { rtlActive } = props
     return routes.map((prop, key) => {
       if (prop.redirect) {
-        return null;
+        return null
       }
       if (prop.collapse) {
-        let st = {};
-        st[prop["state"]] = !state[prop.state];
+        const st = {}
+        st[prop.state] = !state[prop.state]
         return (
           <li
-            className={getCollapseInitialState(prop.views) ? "active" : ""}
+            className={getCollapseInitialState(prop.views) ? 'active' : ''}
             key={key}
           >
-            <a
+            <div
               href="#"
               data-toggle="collapse"
               aria-expanded={state[prop.state]}
               onClick={(e) => {
-                e.preventDefault();
-                setState({ ...state, ...st });
+                e.preventDefault()
+                setState({ ...state, ...st })
               }}
+              onKeyPress={(e) => {
+                e.preventDefault()
+                setState({ ...state, ...st })
+              }}
+              role="button"
+              tabIndex="0"
             >
               {prop.icon !== undefined ? (
                 <>
@@ -104,13 +112,16 @@ const Sidebar = (props) => {
                   </span>
                 </>
               )}
-            </a>
+            </div>
             <Collapse isOpen={state[prop.state]}>
               <ul className="nav">{createLinks(prop.views)}</ul>
             </Collapse>
           </li>
-        );
+        )
       }
+      // verifies if routeName is the one active (in browser input)
+      const activeRoute = (routeName) =>
+        location.pathname === routeName ? 'active' : ''
       return (
         <li className={activeRoute(prop.layout + prop.path)} key={key}>
           <NavLink
@@ -135,17 +146,13 @@ const Sidebar = (props) => {
             )}
           </NavLink>
         </li>
-      );
-    });
-  };
-  // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName) => {
-    return location.pathname === routeName ? "active" : "";
-  };
+      )
+    })
+  }
 
-  const { activeColor, logo } = props;
-  let logoImg = null;
-  let logoText = null;
+  const { activeColor, logo } = props
+  let logoImg = null
+  let logoText = null
   if (logo !== undefined) {
     if (logo.outterLink !== undefined) {
       logoImg = (
@@ -158,7 +165,7 @@ const Sidebar = (props) => {
             <img src={logo.imgSrc} alt="react-logo" />
           </div>
         </a>
-      );
+      )
       logoText = (
         <a
           href={logo.outterLink}
@@ -167,7 +174,7 @@ const Sidebar = (props) => {
         >
           {logo.text}
         </a>
-      );
+      )
     } else {
       logoImg = (
         <NavLink
@@ -179,7 +186,7 @@ const Sidebar = (props) => {
             <img src={logo.imgSrc} alt="spartan-logo" />
           </div>
         </NavLink>
-      );
+      )
       logoText = (
         <NavLink
           to={logo.innerLink}
@@ -188,7 +195,7 @@ const Sidebar = (props) => {
         >
           {logo.text}
         </NavLink>
-      );
+      )
     }
   }
   return (
@@ -203,13 +210,13 @@ const Sidebar = (props) => {
         <Nav>{createLinks(props.routes)}</Nav>
       </div>
     </div>
-  );
-};
+  )
+}
 
 Sidebar.propTypes = {
-  activeColor: PropTypes.oneOf(["primary", "blue", "green", "orange", "red"]),
+  activeColor: PropTypes.oneOf(['primary', 'blue', 'green', 'orange', 'red']),
   rtlActive: PropTypes.bool,
-  routes: PropTypes.array.isRequired,
+  routes: PropTypes.arrayOf.isRequired,
   logo: PropTypes.oneOfType([
     PropTypes.shape({
       innerLink: PropTypes.string.isRequired,
@@ -224,6 +231,6 @@ Sidebar.propTypes = {
   ]),
   // this is used on responsive to close the sidebar on route navigation
   closeSidebar: PropTypes.func,
-};
+}
 
-export default Sidebar;
+export default Sidebar

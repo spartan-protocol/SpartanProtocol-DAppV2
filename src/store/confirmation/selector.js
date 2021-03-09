@@ -1,5 +1,3 @@
-import {
-    useSelector
-} from 'react-redux';
+import { useSelector } from 'react-redux'
 
-export const useConfirmation = () => useSelector(state => state.confirmation);
+export const useConfirmation = () => useSelector((state) => state.confirmation)

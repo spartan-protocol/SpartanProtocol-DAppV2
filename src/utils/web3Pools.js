@@ -1,9 +1,4 @@
-import { ethers } from "ethers";
-
-import CURATED from '../config/ABI/Curated.json'
-import { getWalletProvider } from "./web3"
-
-const net = process.env.REACT_APP_NET
+// import CURATED from '../config/ABI/Curated.json'
 
 // OLD CONTRACT ADDRESSES
 
@@ -13,12 +8,10 @@ const net = process.env.REACT_APP_NET
 // export const CURATED_ADDR = net === 'testnet' ? '' : ''
 
 // ABI
-export const CURATED_ABI = CURATED.abi
+// export const CURATED_ABI = CURATED.abi
 
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
-
 // --------------------------------------- HELPERS ---------------------------------------
-
 
 // --------------------------------------- FUNCTIONS ---------------------------------------
