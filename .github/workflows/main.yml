@@ -29,8 +29,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Build the app 
-        run: npm ci --ignore-scripts
+        run: yarn install --frozen-lockfile
       - name: Lint code
-        run: npm run lint
+        run: yarn lint
       - name: Run tests
-        run: npm test -- --watchAll=false --ci --coverage
+        run: yarn test -- --watchAll=false --ci --coverage
