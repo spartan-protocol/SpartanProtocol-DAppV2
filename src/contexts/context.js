@@ -1,5 +1,8 @@
+/* eslint-disable react/state-in-constructor */
+/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/static-property-placement */
 import React from 'react'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
 export const Context = React.createContext({})
 
@@ -9,7 +12,7 @@ export class ContextProvider extends React.Component {
   }
 
   state = {
-    wallet: null
+    wallet: null,
   }
 
   // reimplementation of setState, but specifically for context state.
@@ -26,7 +29,7 @@ export class ContextProvider extends React.Component {
       <Context.Provider
         value={{
           ...this.state,
-          setContext: this.setContext
+          setContext: this.setContext,
         }}
       >
         {this.props.children}
