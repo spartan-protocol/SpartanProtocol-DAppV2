@@ -43,72 +43,94 @@ export const getTotalPooledValue = () => async (dispatch) => {
   }
 }
 
-export const routerAddLiq = (inputBase, inputToken, token) => async (
+export const routerAddLiq = (inputBase, inputToken, token, justCheck) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
   const contract = getRouterContract()
 
   try {
-    const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.addLiquidity(
-      inputBase,
-      inputToken,
-      token,
-    )
-
-    const liquidity = await contract.addLiquidity(
-      inputBase,
-      inputToken,
-      token,
-      {
+    let liquidity = {}
+    if (justCheck === true) {
+      liquidity = await contract.callStatic.addLiquidity(
+        inputBase,
+        inputToken,
+        token,
+      )
+    } else {
+      const gPrice = await getProviderGasPrice()
+      const gLimit = await contract.estimateGas.addLiquidity(
+        inputBase,
+        inputToken,
+        token,
+      )
+      liquidity = await contract.addLiquidity(inputBase, inputToken, token, {
         gasPrice: gPrice,
         gasLimit: gLimit,
-      },
-    )
+      })
+    }
     dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, liquidity))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
   }
 }
 
-export const routerRemoveLiq = (basisPoints, token) => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract()
-
-  try {
-    const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.removeLiquidity(
-      basisPoints,
-      token,
-    )
-    const liquidity = await contract.removeLiquidity(basisPoints, token, {
-      gasPrice: gPrice,
-      gasLimit: gLimit,
-    })
-    dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, liquidity))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
-  }
-}
-
-export const routerSwapAssets = (inputAmount, fromToken, toToken) => async (
+export const routerRemoveLiq = (basisPoints, token, justCheck) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
   const contract = getRouterContract()
 
   try {
-    const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.swap(
-      inputAmount,
-      fromToken,
-      toToken,
-    )
-    const assetsSwapped = await contract.swap(inputAmount, fromToken, toToken, {
-      gasPrice: gPrice,
-      gasLimit: gLimit,
-    })
+    let liquidity = {}
+    if (justCheck === true) {
+      liquidity = await contract.callStatic.removeLiquidity(basisPoints, token)
+    } else {
+      const gPrice = await getProviderGasPrice()
+      const gLimit = await contract.estimateGas.removeLiquidity(
+        basisPoints,
+        token,
+      )
+      liquidity = await contract.removeLiquidity(basisPoints, token, {
+        gasPrice: gPrice,
+        gasLimit: gLimit,
+      })
+    }
+    dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, liquidity))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+  }
+}
+
+export const routerSwapAssets = (
+  inputAmount,
+  fromToken,
+  toToken,
+  justCheck,
+) => async (dispatch) => {
+  dispatch(routerLoading())
+  const contract = getRouterContract()
+
+  try {
+    let assetsSwapped = {}
+    if (justCheck === true) {
+      assetsSwapped = await contract.callStatic.swap(
+        inputAmount,
+        fromToken,
+        toToken,
+      )
+    } else {
+      const gPrice = await getProviderGasPrice()
+      const gLimit = await contract.estimateGas.swap(
+        inputAmount,
+        fromToken,
+        toToken,
+      )
+      assetsSwapped = await contract.swap(inputAmount, fromToken, toToken, {
+        gasPrice: gPrice,
+        gasLimit: gLimit,
+      })
+    }
     dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSETS, assetsSwapped))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, error))

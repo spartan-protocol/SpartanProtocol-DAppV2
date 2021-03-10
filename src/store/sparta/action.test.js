@@ -33,4 +33,6 @@ describe('Sparta actions', () => {
       Types.GET_ADJUSTED_CLAIM_RATE,
     )
   })
+
+  // ADD CLAIM TEST HERE AFTER DOING ISSUE #61
 })
