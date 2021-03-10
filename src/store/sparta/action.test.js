@@ -1,4 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
+import { BOND_ADDR } from '../../utils/web3Bond'
 import { getAdjustedClaimRate, getEmitting } from './actions'
 import * as Types from './types'
 
@@ -18,21 +19,15 @@ describe('Sparta actions', () => {
 
   test('should get emitting', async () => {
     await getEmitting()(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_EMTTING)
   })
 
   test('should get adjusted claim rate', async () => {
-    await getAdjustedClaimRate('0x696a6B50d7FC6213a566fCC197acced4c4dDefa2')(
-      dispatchMock,
-    )
-    console.log(dispatchMock.mock.calls[1][0])
+    await getAdjustedClaimRate(BOND_ADDR)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(
       Types.GET_ADJUSTED_CLAIM_RATE,
     )
   })
-
-  // ADD CLAIM TEST HERE AFTER DOING ISSUE #61
 })

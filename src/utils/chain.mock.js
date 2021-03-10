@@ -1,9 +1,11 @@
+import { TEST_WALLET } from './web3'
+
 /* eslint-disable no-unused-vars */
 export const binanceChainMock = {
   request: async ({ method, param }) => {
     console.log(`Method ${method}, Param: ${param}`)
     if (method === 'eth_accounts') {
-      return ['0x407d73d8a49eeb85d32cf465507dd71d507100c1']
+      return [TEST_WALLET]
     }
 
     if (method === 'eth_call') {
