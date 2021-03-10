@@ -6,7 +6,6 @@ export {
   daoDeposit,
   daoHarvest,
   daoWithdraw,
-  getDaoMember,
   getDaoHarvestAmount,
   getDaoHarvestEraAmount,
   getDaoMemberCount,

@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 import { TEST_POOL, TEST_TOKEN, TEST_WALLET } from '../../utils/web3'
 import {
@@ -6,7 +5,6 @@ import {
   calcLiquidityUnits,
   calcPart,
   calcShare,
-  calcSlipAdjustment,
   calcSwapFee,
   calcSwapOutput,
 } from '../../utils/web3Utils'
