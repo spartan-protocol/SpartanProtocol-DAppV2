@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import ROUTER from '../config/ABI/Router.json'
 // import SYNTH_ROUTER from '../config/ABI/synthRouter.json'
 // import LEVERAGE from '../config/ABI/Leverage.json'
-import { getWalletProvider, getProviderGasPrice } from './web3'
+import { getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
 
