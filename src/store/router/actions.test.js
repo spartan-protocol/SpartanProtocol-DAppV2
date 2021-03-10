@@ -1,12 +1,10 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { SPARTA_ADDR, TEST_TOKEN } from '../../utils/web3'
+import { TEST_TOKEN } from '../../utils/web3'
 import {
   getPool,
   getTokenCount,
   getTotalPooledValue,
-  routerAddLiq,
   routerRemoveLiq,
-  routerSwapAssets,
 } from './actions'
 import * as Types from './types'
 
