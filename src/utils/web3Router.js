@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import ROUTER from '../config/ABI/Router.json'
 // import SYNTH_ROUTER from '../config/ABI/synthRouter.json'
 // import LEVERAGE from '../config/ABI/Leverage.json'
-import { getWalletProvider, getProviderGasPrice } from './web3'
+import { getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
 
@@ -55,115 +55,4 @@ export const getRouterContract = () => {
   const contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
   console.log(contract)
   return contract
-}
-
-// --------------------------------------- ROUTER HELPERS ---------------------------------------
-
-// Get LP-token address from token address
-export const getPool = async (token) => {
-  const contract = getRouterContract()
-  const result = await contract.callStatic.getPool(token)
-  console.log(result)
-  return result
-}
-
-// Get count of tokens listed in pools
-export const getTokenCount = async () => {
-  const contract = getRouterContract()
-  const result = await contract.callStatic.tokenCount()
-  console.log(result)
-  return result
-}
-
-// Get TVL in SPARTA-terms (Total value locked in SPARTA value)
-export const getTotalPooledValue = async () => {
-  const contract = getRouterContract()
-  const result = await contract.callStatic.totalPooled()
-  console.log(result)
-  return result
-}
-
-// --------------------------------------- ROUTER FUNCTIONS ---------------------------------------
-
-// LIQUIDITY - Add Symmetrically
-export const routerAddLiq = async (inputBase, inputToken, token) => {
-  const contract = getRouterContract()
-  const gPrice = await getProviderGasPrice()
-  const gLimit = await contract.estimateGas.addLiquidity(
-    inputBase,
-    inputToken,
-    token,
-  )
-  const result = await contract.addLiquidity(inputBase, inputToken, token, {
-    gasPrice: gPrice,
-    gasLimit: gLimit,
-  })
-  console.log(result)
-  return result
-}
-
-// LIQUIDITY - Add Asymmetrically
-export const routerAddLiqAsym = async (inputToken, fromBase, token) => {
-  const contract = getRouterContract()
-  const gPrice = await getProviderGasPrice()
-  const gLimit = await contract.estimateGas.addLiquidityAsym(
-    inputToken,
-    fromBase,
-    token,
-  )
-  const result = await contract.addLiquidityAsym(inputToken, fromBase, token, {
-    gasPrice: gPrice,
-    gasLimit: gLimit,
-  })
-  console.log(result)
-  return result
-}
-
-// LIQUIDITY - Remove Symmetrically by percentage (0 to 10,000 basisPoints)
-export const routerRemoveLiq = async (basisPoints, token) => {
-  const contract = getRouterContract()
-  const gPrice = await getProviderGasPrice()
-  const gLimit = await contract.estimateGas.removeLiquidity(basisPoints, token)
-  const result = await contract.removeLiquidity(basisPoints, token, {
-    gasPrice: gPrice,
-    gasLimit: gLimit,
-  })
-  console.log(result)
-  return result
-}
-
-// LIQUIDITY - Remove Asymmetrically by percentage (0 to 10,000 basisPoints)
-export const routerRemoveLiqAsym = async (basisPoints, toBase, token) => {
-  const contract = getRouterContract()
-  const gPrice = await getProviderGasPrice()
-  const gLimit = await contract.estimateGas.removeLiquidityAndSwap(
-    basisPoints,
-    toBase,
-    token,
-  )
-  const result = await contract.removeLiquidityAndSwap(
-    basisPoints,
-    toBase,
-    token,
-    { gasPrice: gPrice, gasLimit: gLimit },
-  )
-  console.log(result)
-  return result
-}
-
-// Swap one token for another
-export const routerSwapAssets = async (inputAmount, fromToken, toToken) => {
-  const contract = getRouterContract()
-  const gPrice = await getProviderGasPrice()
-  const gLimit = await contract.estimateGas.swap(
-    inputAmount,
-    fromToken,
-    toToken,
-  )
-  const result = await contract.swap(inputAmount, fromToken, toToken, {
-    gasPrice: gPrice,
-    gasLimit: gLimit,
-  })
-  console.log(result)
-  return result
 }
