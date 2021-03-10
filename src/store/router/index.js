@@ -5,8 +5,6 @@ export {
   getTokenCount,
   getTotalPooledValue,
   routerRemoveLiq,
-  routerRemoveLiqAsym,
   routerSwapAssets,
   routerAddLiq,
-  routerAddLiqAsym,
 } from './actions'

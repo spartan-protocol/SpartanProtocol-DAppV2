@@ -48,25 +48,7 @@ export const routerReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.ROUTER_ADD_LIQ_ASYM: {
-      return {
-        ...state,
-        liquidity: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
     case Types.ROUTER_REMOVE_LIQ: {
-      return {
-        ...state,
-        liquidity: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.ROUTER_REMOVE_LIQ_ASYM: {
       return {
         ...state,
         liquidity: action.payload,
