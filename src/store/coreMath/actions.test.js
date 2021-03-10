@@ -1,4 +1,15 @@
+import { ethers } from 'ethers'
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
+import { TEST_POOL, TEST_TOKEN, TEST_WALLET } from '../../utils/web3'
+import {
+  calcAsymmetricShare,
+  calcLiquidityUnits,
+  calcPart,
+  calcShare,
+  calcSlipAdjustment,
+  calcSwapFee,
+  calcSwapOutput,
+} from '../../utils/web3Utils'
 import {
   getPart,
   getShare,
@@ -29,16 +40,16 @@ describe('Math core actions', () => {
     await getPart(10, 1000)(dispatchMock)
 
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].payload).toEqual(calcPart(10, 1000))
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_PART)
   })
 
   test('should get liquidityShare', async () => {
     await getLiquidityShare(
       100,
-      '0xbcc27CadA55D4b0baA033e3Ce75C97A8BDc1586C',
-      '0x7d9Ca6F922fC68Ed16b7eF091898B35CCE38E037',
-      '0xC6D2d179fB03e951DB72edCcC9491c265b86515A',
+      TEST_TOKEN,
+      TEST_POOL,
+      TEST_WALLET,
     )(dispatchMock)
 
     console.log(dispatchMock.mock.calls[1][0])
@@ -50,7 +61,12 @@ describe('Math core actions', () => {
     await getLiquidityUnits(100, 100, 100, 100, 100)(dispatchMock)
 
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].payload).toEqual(
+      calcLiquidityUnits(
+        { baseAmount: 100, tokenAmount: 100 },
+        { baseAmount: 100, tokenAmount: 100, units: 100 },
+      ),
+    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_LIQUIDITY_UNITS)
   })
 
@@ -62,18 +78,22 @@ describe('Math core actions', () => {
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_SLIP_ADUSTMENT)
   })
 
-  test('shuld get share', async () => {
+  test('should get share', async () => {
     await getShare(100, 100, 100)(dispatchMock)
 
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].payload).toEqual(
+      calcShare(100, 100, 100),
+    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_SHARE)
   })
 
   test('should get swap fee', async () => {
     await getSwapFee(100, 100, 100)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].payload).toEqual(
+      calcSwapFee(100, { tokenAmount: 100, baseAmount: 100 }, true),
+    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_SWAP_FEE)
   })
 
@@ -81,7 +101,9 @@ describe('Math core actions', () => {
     await getSwapOutput(100, 100, 100)(dispatchMock)
 
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].payload).toEqual(
+      calcSwapOutput(100, { tokenAmount: 100, baseAmount: 100 }, true),
+    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_SWAP_OUTPUT)
   })
 
@@ -89,7 +111,13 @@ describe('Math core actions', () => {
     await getAsymmetricShare(100, 100, 100)(dispatchMock)
 
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].payload).toEqual(
+      calcAsymmetricShare(
+        100,
+        { tokenAmount: 100, baseAmount: 100, poolUnits: 100 },
+        true,
+      ),
+    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_ASYMMETRICS_SHARE)
   })
 })
