@@ -16,7 +16,7 @@ import './assets/scss/spartan.scss'
 import { confirmationReducer } from './store/confirmation'
 import { infoReducer } from './store/info'
 import { pricingReducer } from './store/pricing'
-import { coreMathReducer } from './store/coreMath'
+import { utilsMathReducer } from './store/utilsMath'
 import { spartaReducer } from './store/sparta'
 import { routerReducer } from './store/router'
 
@@ -24,7 +24,7 @@ const reducers = combineReducers({
   info: infoReducer,
   confirmation: confirmationReducer,
   pricing: pricingReducer,
-  coreMath: coreMathReducer,
+  utilsMath: utilsMathReducer,
   sparta: spartaReducer,
   router: routerReducer,
 })

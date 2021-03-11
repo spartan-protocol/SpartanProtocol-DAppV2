@@ -12,7 +12,7 @@ const initialState = {
   error: null,
 }
 
-export const coreMathReducer = (state = initialState, action) => {
+export const utilsMathReducer = (state = initialState, action) => {
   switch (action.type) {
     case Types.GET_PART: {
       return {
@@ -76,14 +76,14 @@ export const coreMathReducer = (state = initialState, action) => {
         loading: false,
       }
     }
-    case Types.CORE_MATH_LOADING: {
+    case Types.UTILS_MATH_LOADING: {
       return {
         ...state,
         loading: true,
         error: null,
       }
     }
-    case Types.CORE_MATH_ERROR: {
+    case Types.UTILS_MATH_ERROR: {
       return {
         ...state,
         error: action.error,

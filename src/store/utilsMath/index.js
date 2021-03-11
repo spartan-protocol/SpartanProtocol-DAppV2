@@ -1,5 +1,5 @@
-export { useCoreMath } from './selector'
-export { coreMathReducer } from './reducer'
+export { useUtilsMath } from './selector'
+export { utilsMathReducer } from './reducer'
 export {
   getPart,
   getShare,
