@@ -6,6 +6,12 @@ export const infoLoading = () => ({
   type: Types.INFO_LOADING,
 })
 
+// --------------------------------------- GENERAL UTILS HELPERS ---------------------------------------
+
+/**
+ * UTILS HELPER -
+ * Returns an array of pool addresses
+ */
 export const getListedPools = () => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -18,6 +24,10 @@ export const getListedPools = () => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns an array of pool addresses based on specified range
+ */
 export const getListedPoolsRange = (first, count) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -30,6 +40,10 @@ export const getListedPoolsRange = (first, count) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns an array of listed token addresses
+ */
 export const getListedAssets = () => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -42,6 +56,10 @@ export const getListedAssets = () => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns an array of listed token addresses by specified range
+ */
 export const getListedAssetsRange = (first, count) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -54,6 +72,11 @@ export const getListedAssetsRange = (first, count) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the global details/stats
+ * @returns [ totalPooled | totalVolume | totalFees | removeLiquidityTx | addLiquidityTx | swapTx ]
+ */
 export const getGlobalDetails = () => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -66,6 +89,11 @@ export const getGlobalDetails = () => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the token's contract details
+ * @returns [ name | symbol | decimals | totalSupply | balance ]
+ */
 export const getTokenDetails = (token) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -78,6 +106,11 @@ export const getTokenDetails = (token) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the pool's details
+ * @returns [ tokenAddress | poolAddress | genesis | baseAmount | tokenAmount | baseAmountPooled | tokenAmountPooled | fees | volume | txCount | poolUnits ]
+ */
 export const getPoolDetails = (pool) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -90,6 +123,11 @@ export const getPoolDetails = (pool) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the share of a pool based on member's holdings (doesn't include LP tokens locked in DAO)
+ * @returns [ uint baseAmount | uint tokenAmount ]
+ */
 export const getMemberShare = (token, member) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -102,6 +140,11 @@ export const getMemberShare = (token, member) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the share of a pool based on input LP token units
+ * @returns [ uint baseAmount | uint tokenAmount ]
+ */
 export const getPoolShare = (token, units) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -114,6 +157,11 @@ export const getPoolShare = (token, units) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the SPARTA share of a pool based on member's holdings (doesn't include LP tokens locked in DAO nor the TOKEN share)
+ * @returns uint baseAmount
+ */
 export const getShareOfBaseAmount = (token, member) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -131,6 +179,11 @@ export const getShareOfBaseAmount = (token, member) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the TOKEN share of a pool based on member's holdings (doesn't include LP tokens locked in DAO nor the SPARTA share)
+ * @returns uint tokenAmount
+ */
 export const getShareOfTokenAmount = (token, member) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -148,6 +201,12 @@ export const getShareOfTokenAmount = (token, member) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the asymmetric share of a pool based on input LP token units.
+ * Works out what you would end up with if you removed the liquidity and then swapped it all to one asset.
+ * @returns [ uint baseAmount | uint tokenAmount | uint outputAmt ]
+ */
 export const getPoolShareAssym = (token, units, toBase) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -164,6 +223,11 @@ export const getPoolShareAssym = (token, units, toBase) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the ~days since the pools creation
+ * @returns uint daysSinceGenesis
+ */
 export const getPoolAge = (token) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -176,6 +240,11 @@ export const getPoolAge = (token) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the pools ROI calc
+ * @returns uint roi
+ */
 export const getPoolROI = (token) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -188,6 +257,11 @@ export const getPoolROI = (token) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns the pools APY calc
+ * @returns uint apy
+ */
 export const getPoolAPY = (token) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()
@@ -200,6 +274,11 @@ export const getPoolAPY = (token) => async (dispatch) => {
   }
 }
 
+/**
+ * UTILS HELPER -
+ * Returns whether the wallet address is a member of the pool
+ * @returns bool
+ */
 export const isMember = (token, member) => async (dispatch) => {
   dispatch(infoLoading())
   const contract = getUtilsContract()

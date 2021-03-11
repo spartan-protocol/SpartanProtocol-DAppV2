@@ -10,8 +10,9 @@ export const daoLoading = () => ({
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
 /**
- * GENERAL DAO HELPER -
+ * DAO HELPER -
  * Returns the amount of members with LP tokens locked in the DAO
+ * @returns unit
  */
 export const getDaoMemberCount = () => async (dispatch) => {
   dispatch(daoLoading())
@@ -26,9 +27,9 @@ export const getDaoMemberCount = () => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO HELPER -
+ * DAO HELPER -
  * Returns a specified member's details:
- * { .isMember, .weight, .lastBlock, .poolsCount }
+ * @returns [ isMember | weight | totalFees | lastBlock | poolsCount ]
  */
 export const getDaoMemberDetails = (member) => async (dispatch) => {
   dispatch(daoLoading())
@@ -43,8 +44,9 @@ export const getDaoMemberDetails = (member) => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO HELPER -
+ * DAO HELPER -
  * Returns the total weight in the DAO
+ * @returns unit
  */
 export const getDaoTotalWeight = () => async (dispatch) => {
   dispatch(daoLoading())
@@ -59,8 +61,9 @@ export const getDaoTotalWeight = () => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO HELPER -
+ * DAO HELPER -
  * Returns the member's weight in the DAO
+ * @returns unit
  */
 export const getDaoMemberWeight = (member) => async (dispatch) => {
   dispatch(daoLoading())
@@ -75,9 +78,10 @@ export const getDaoMemberWeight = (member) => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO HELPER -
+ * DAO HELPER -
  * Get the current harvestable amount of SPARTA from Lock+Earn
  * Uses getDaoHarvestEraAmount() but works out what portion of an era/s the member can claim
+ * @returns unit
  */
 export const getDaoHarvestAmount = (member) => async (dispatch) => {
   dispatch(daoLoading())
@@ -92,8 +96,9 @@ export const getDaoHarvestAmount = (member) => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO HELPER -
+ * DAO HELPER -
  * Get the member's current harvest share of the DAO (per era)
+ * @returns unit
  */
 export const getDaoHarvestEraAmount = (member) => async (dispatch) => {
   dispatch(daoLoading())
@@ -112,8 +117,9 @@ export const getDaoHarvestEraAmount = (member) => async (dispatch) => {
 // --------------------------------------- GENERAL DAO FUNCTIONS ---------------------------------------
 
 /**
- * GENERAL DAO FUNCTION -
+ * DAO FUNCTION -
  * Deposit / Stake LP Tokens (Lock them in the DAO)
+ * @return null
  */
 export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
   dispatch(daoLoading())
@@ -122,10 +128,10 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
   try {
     let deposit = {}
     if (justCheck) {
-      deposit = await contract.callStatic.harvest()
+      deposit = await contract.callStatic.deposit()
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.harvest()
+      const gLimit = await contract.estimateGas.deposit()
       deposit = await contract.deposit(pool, amount, {
         gasPrice: gPrice,
         gasLimit: gLimit,
@@ -138,8 +144,9 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO FUNCTION -
+ * DAO FUNCTION -
  * Withdraw / Unstake LP Tokens (Unlock them from the DAO)
+ * @return null
  */
 export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
   // ADD 'amount' IN V2 CONTRACTS
@@ -149,10 +156,10 @@ export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
   try {
     let withdraw = {}
     if (justCheck) {
-      withdraw = await contract.callStatic.harvest()
+      withdraw = await contract.callStatic.withdraw()
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.harvest()
+      const gLimit = await contract.estimateGas.withdraw()
       withdraw = await contract.withdraw(pool, {
         gasPrice: gPrice,
         gasLimit: gLimit,
@@ -165,9 +172,10 @@ export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
 }
 
 /**
- * GENERAL DAO FUNCTION -
+ * DAO FUNCTION -
  * Harvest SPARTA 'staking' rewards
  * (currently no emissions going in to fill this up, but later; probably 10% of emissions will go in)
+ * @return null
  */
 export const daoHarvest = (justCheck) => async (dispatch) => {
   dispatch(daoLoading())
@@ -191,10 +199,10 @@ export const daoHarvest = (justCheck) => async (dispatch) => {
   }
 }
 
-//= ============================= DAO PROPOSAL HELPERS ================================//
+//= ============================= DAO PROPOSAL HELPERS ADD THIS AS NEW STORE 'daoProposals' ================================//
 
 // Wait for V2 contracts
 
-//= ============================= DAO PROPOSAL FUNCTIONS ================================//
+//= ============================= DAO PROPOSAL FUNCTIONS ADD THIS AS NEW STORE 'daoProposals'  ================================//
 
 // Wait for V2 contracts
