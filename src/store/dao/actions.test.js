@@ -81,8 +81,10 @@ describe('Router actions', () => {
     if (dispatchMock.mock.calls[1][0].payload) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_DEPOSIT)
-    } else expect(dispatchMock.mock.calls[1][0].error.reason).toBe('BalanceErr')
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+    } else {
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('BalanceErr')
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+    }
   })
 
   test('should withdraw LPS from DAO for member', async () => {
@@ -91,11 +93,12 @@ describe('Router actions', () => {
     if (dispatchMock.mock.calls[1][0].payload) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_WITHDRAW)
-    } else
+    } else {
       expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
         'Must have a balance',
       )
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+    }
   })
 
   test('should perform a harvest for the DAO member', async () => {
