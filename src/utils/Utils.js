@@ -1,10 +1,10 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useInfo, getListedPools } from '../store/info'
+import { useUtils, getListedPools } from '../store/utils'
 
 const Utils = () => {
-  const info = useInfo()
+  const utils = useUtils()
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const Utils = () => {
     <>
       <div className="content">
         <h2>Pool listed</h2>
-        {info.pools.map((pool, i) => (
+        {utils.pools.map((pool, i) => (
           <p key={`pool-${i}`}>{pool}</p>
         ))}
       </div>

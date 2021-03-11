@@ -19,7 +19,7 @@ const initialState = {
   loading: false,
 }
 
-export const infoReducer = (state = initialState, action) => {
+export const utilsReducer = (state = initialState, action) => {
   switch (action.type) {
     case Types.GET_LISTED_POOLS: {
       return {
@@ -165,7 +165,7 @@ export const infoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.INFO_LOADING: {
+    case Types.UTILS_LOADING: {
       return {
         ...state,
         loading: true,
@@ -173,7 +173,7 @@ export const infoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.INFO_ERROR: {
+    case Types.UTILS_ERROR: {
       return {
         ...state,
         error: action.error,

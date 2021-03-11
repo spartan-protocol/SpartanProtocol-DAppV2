@@ -22,7 +22,7 @@ import * as Types from './types'
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
 
-describe('Info actions', () => {
+describe('Utils actions', () => {
   let dispatchMock
 
   beforeEach(() => {
