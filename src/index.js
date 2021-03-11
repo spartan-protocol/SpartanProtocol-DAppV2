@@ -13,7 +13,7 @@ import './app.scss'
 // import Contexts from './Contexts'
 import './assets/scss/spartan.scss'
 
-import { confirmationReducer } from './store/confirmation'
+import { web3AllReducer } from './store/web3All'
 import { infoReducer } from './store/info'
 import { pricingReducer } from './store/pricing'
 import { utilsMathReducer } from './store/utilsMath'
@@ -22,7 +22,7 @@ import { routerReducer } from './store/router'
 
 const reducers = combineReducers({
   info: infoReducer,
-  confirmation: confirmationReducer,
+  web3All: web3AllReducer,
   pricing: pricingReducer,
   utilsMath: utilsMathReducer,
   sparta: spartaReducer,
