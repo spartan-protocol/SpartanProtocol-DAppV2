@@ -8,13 +8,23 @@ import Col from 'react-bootstrap/Col'
 import { ethers } from 'ethers'
 
 import { Alert } from 'reactstrap'
+import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { SPARTA_ADDR, watchAsset } from '../../utils/web3'
+import { useNetwork } from '../../store/web3/selector'
+import { changeNetwork } from '../../store/web3'
 
 const WalletSelect = (props) => {
   const wallet = useWallet()
   const [walletIcon, setWalletIcon] = useState('')
+
+  const dispatch = useDispatch()
+  const network = useNetwork()
+
+  const _changeNetwork = (net) => {
+    dispatch(changeNetwork(net))
+  }
 
   //   const [modalMini, setModalMini] = React.useState(false)
   //   const [modalClassic, setModalClassic] = React.useState(false)
@@ -90,6 +100,33 @@ const WalletSelect = (props) => {
               </span>
             </Alert>
           )}
+
+          <div>
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={() => _changeNetwork('mainnet')}
+            >
+              <Col>
+                <div className="">Mainnet</div>
+              </Col>
+            </button>
+            <button
+              type="button"
+              className="btn btn-success"
+              onClick={() => _changeNetwork('testnet')}
+            >
+              <Col>
+                <div className="">Testnet</div>
+              </Col>
+            </button>
+            <button type="button" className="btn btn-success">
+              <Col>
+                <div className="">Network: {network.net}</div>
+              </Col>
+            </button>
+          </div>
+
           {wallet.status === 'connected' ? (
             <div>
               <Image

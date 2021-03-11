@@ -2,37 +2,67 @@ import { ethers } from 'ethers'
 
 import ERC20 from '../config/ABI/ERC20.json'
 
-const rpcUrl = process.env.REACT_APP_RPC
-const net = process.env.REACT_APP_NET
+export const getNetwork = () => window.sessionStorage.getItem('network')
+
+// RPC NETWORK CONSTANTS
+export const BSC_RPCS =
+  getNetwork === 'testnet'
+    ? [
+        'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        'https://data-seed-prebsc-2-s1.binance.org:8545/',
+        'https://data-seed-prebsc-1-s2.binance.org:8545/',
+        'https://data-seed-prebsc-2-s2.binance.org:8545/',
+        'https://data-seed-prebsc-1-s3.binance.org:8545/',
+        'https://data-seed-prebsc-2-s3.binance.org:8545/',
+      ]
+    : [
+        'https://bsc-dataseed.binance.org/',
+        'https://bsc-dataseed1.defibit.io/',
+        'https://bsc-dataseed1.ninicoin.io/',
+      ]
 
 // TOKEN ADDRESSES
 export const BNB_ADDR = '0x0000000000000000000000000000000000000000'
 export const WBNB_ADDR =
-  net === 'testnet'
+  getNetwork === 'testnet'
     ? '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870'
     : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 export const SPARTA_ADDR =
-  net === 'testnet'
+  getNetwork === 'testnet'
     ? '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB'
     : '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C'
 
 // ADDRESSES FOR TESTS
 export const TEST_WALLET = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
 export const TEST_TOKEN =
-  net === 'testnet'
+  getNetwork === 'testnet'
     ? '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870'
     : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
 export const TEST_POOL =
-  net === 'testnet'
+  getNetwork === 'testnet'
     ? '0xA2C646CF5F55657EC0ecee5b8d2fCcb4cA843bd3'
     : '0x3de669c4F1f167a8aFBc9993E4753b84b576426f'
 
 // ABI
 export const ERC20_ABI = ERC20.abi
 
+// Get RPC URL
+export const getRpcUrl = () => {
+  const rpcIndex = Math.random() * (BSC_RPCS.length + 1)
+  const rpcUrl = BSC_RPCS[rpcIndex]
+  console.log(rpcUrl)
+  return rpcUrl
+}
+
+// Get Chain ID
+export const getChainId = (network) => {
+  const chainId = network === 'testnet' ? 97 : 56
+  return chainId
+}
+
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = () => {
-  let provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+  let provider = new ethers.providers.JsonRpcProvider(getRpcUrl())
   let connectedWalletType = ''
   if (window.sessionStorage.getItem('lastWallet') === 'BC') {
     connectedWalletType = window.BinanceChain

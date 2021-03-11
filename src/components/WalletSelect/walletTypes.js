@@ -4,8 +4,7 @@ import WalletConnect from '../../assets/icons/WalletConnect.svg'
 import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
 import TokenPocket from '../../assets/icons/TokenPocket.svg'
-
-const rpcUrl = process.env.REACT_APP_RPC
+import { getRpcUrl } from '../../utils/web3'
 
 const walletTypes = [
   {
@@ -24,7 +23,7 @@ const walletTypes = [
     id: 'WC',
     title: 'WalletConnect',
     icon: WalletConnect,
-    inject: `walletconnect:${{ rpcUrl }}`,
+    inject: `walletconnect:${{ getRpcUrl }}`,
   },
   {
     id: 'TW',
