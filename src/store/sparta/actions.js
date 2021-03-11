@@ -42,7 +42,7 @@ export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
 
   try {
     let claimed = {}
-    if (justCheck === true) {
+    if (justCheck) {
       claimed = await contract.callStatic.claim(assetAddress, amount)
     } else {
       const gPrice = await provider.getGasPrice()

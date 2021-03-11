@@ -51,7 +51,7 @@ export const routerAddLiq = (inputBase, inputToken, token, justCheck) => async (
 
   try {
     let liquidity = {}
-    if (justCheck === true) {
+    if (justCheck) {
       liquidity = await contract.callStatic.addLiquidity(
         inputBase,
         inputToken,
@@ -83,7 +83,7 @@ export const routerRemoveLiq = (basisPoints, token, justCheck) => async (
 
   try {
     let liquidity = {}
-    if (justCheck === true) {
+    if (justCheck) {
       liquidity = await contract.callStatic.removeLiquidity(basisPoints, token)
     } else {
       const gPrice = await getProviderGasPrice()
@@ -113,7 +113,7 @@ export const routerSwapAssets = (
 
   try {
     let assetsSwapped = {}
-    if (justCheck === true) {
+    if (justCheck) {
       assetsSwapped = await contract.callStatic.swap(
         inputAmount,
         fromToken,
