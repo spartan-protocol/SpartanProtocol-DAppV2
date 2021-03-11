@@ -15,7 +15,7 @@ import './assets/scss/spartan.scss'
 
 import { web3AllReducer } from './store/web3All'
 import { infoReducer } from './store/info'
-import { pricingReducer } from './store/pricing'
+import { utilsPricingReducer } from './store/utilsPricing'
 import { utilsMathReducer } from './store/utilsMath'
 import { spartaReducer } from './store/sparta'
 import { routerReducer } from './store/router'
@@ -23,7 +23,7 @@ import { routerReducer } from './store/router'
 const reducers = combineReducers({
   info: infoReducer,
   web3All: web3AllReducer,
-  pricing: pricingReducer,
+  utilsPricing: utilsPricingReducer,
   utilsMath: utilsMathReducer,
   sparta: spartaReducer,
   router: routerReducer,

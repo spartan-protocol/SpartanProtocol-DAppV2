@@ -11,7 +11,7 @@ import * as Types from './types'
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
 
-describe('Pricing actions', () => {
+describe('UTILS Pricing actions', () => {
   let dispatchMock
 
   beforeEach(() => {

@@ -9,7 +9,7 @@ const initialState = {
   error: null,
 }
 
-export const pricingReducer = (state = initialState, action) => {
+export const utilsPricingReducer = (state = initialState, action) => {
   switch (action.type) {
     case Types.GET_BASE_P_PIN_TOKEN: {
       return {
@@ -47,7 +47,7 @@ export const pricingReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.PRICING_LOADING: {
+    case Types.UTILSPRICING_LOADING: {
       return {
         ...state,
         error: null,
@@ -55,7 +55,7 @@ export const pricingReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.PRICING_ERROR: {
+    case Types.UTILSPRICING_ERROR: {
       return {
         ...state,
         error: action.error,

@@ -1,6 +1,6 @@
-export { usePricing } from './selector'
+export { useUtilsPricing } from './selector'
 
-export { pricingReducer } from './reducer'
+export { utilsPricingReducer } from './reducer'
 
 export {
   getBasePPinToken,
