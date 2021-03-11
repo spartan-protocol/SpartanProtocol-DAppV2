@@ -35,18 +35,23 @@ export const getAdjustedClaimRate = (assetAddress) => async (dispatch) => {
   }
 }
 
-export const claim = (assetAddress, amount) => async (dispatch) => {
+export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
   dispatch(spartaLoading())
   const provider = getWalletProvider()
   const contract = getSpartaContract()
 
   try {
-    const gPrice = await provider.getGasPrice()
-    const gLimit = await contract.estimateGas.claim(assetAddress, amount)
-    const claimed = await contract.claim(assetAddress, amount, {
-      gasPrice: gPrice,
-      gasLimit: gLimit,
-    })
+    let claimed = {}
+    if (justCheck) {
+      claimed = await contract.callStatic.claim(assetAddress, amount)
+    } else {
+      const gPrice = await provider.getGasPrice()
+      const gLimit = await contract.estimateGas.claim(assetAddress, amount)
+      claimed = await contract.claim(assetAddress, amount, {
+        gasPrice: gPrice,
+        gasLimit: gLimit,
+      })
+    }
     dispatch(payloadToDispatch(Types.CLAIM, claimed))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))

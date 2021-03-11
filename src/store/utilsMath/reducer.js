@@ -1,80 +1,89 @@
 import * as Types from './types'
 
 const initialState = {
-  pool: {},
-  tokenCount: {},
-  totalPooled: {},
-  liquidity: {},
-  assetsSwapped: {},
+  part: {},
+  share: {},
+  shareOutput: {},
+  swapFee: {},
+  liquidityUnits: {},
+  slipAdustment: {},
+  asymmetricShare: {},
   loading: false,
   error: null,
 }
 
-export const routerReducer = (state = initialState, action) => {
+export const utilsMathReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_POOL: {
+    case Types.GET_PART: {
       return {
         ...state,
-        pool: action.payload,
+        part: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.GET_TOKEN_COUNT: {
+    case Types.GET_SHARE: {
       return {
         ...state,
-        tokenCount: action.payload,
+        share: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.GET_TOTAL_POOLED_VALUE: {
+    case Types.GET_SWAP_OUTPUT: {
       return {
         ...state,
-        totalPooled: action.payload,
+        shareOutput: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_ADD_LIQ: {
+    case Types.GET_SWAP_FEE: {
       return {
         ...state,
-        liquidity: action.payload,
+        swapFee: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_REMOVE_LIQ: {
+    case Types.GET_LIQUIDITY_UNITS: {
       return {
         ...state,
-        liquidity: action.payload,
+        liquidityUnits: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_SWAP_ASSETS: {
+    case Types.GET_LIQUIDITY_SHARE: {
       return {
         ...state,
-        assetsSwapped: action.payload,
+        slipAdustment: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_LOADING: {
+    case Types.GET_ASYMMETRICS_SHARE: {
+      return {
+        ...state,
+        asymmetricShare: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+    case Types.UTILS_MATH_LOADING: {
       return {
         ...state,
         loading: true,
         error: null,
       }
     }
-
-    case Types.ROUTER_ERROR: {
+    case Types.UTILS_MATH_ERROR: {
       return {
         ...state,
         error: action.error,
