@@ -1,6 +1,6 @@
-export { useInfo } from './selector'
+export { useUtils } from './selector'
 
-export { infoReducer } from './reducer'
+export { utilsReducer } from './reducer'
 
 export {
   getListedPools,

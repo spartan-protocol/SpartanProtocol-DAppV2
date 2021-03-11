@@ -65,6 +65,22 @@ export const routerReducer = (state = initialState, action) => {
         loading: false,
       }
     }
+
+    case Types.ROUTER_LOADING: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    }
+
+    case Types.ROUTER_ERROR: {
+      return {
+        ...state,
+        error: action.error,
+        loading: false,
+      }
+    }
     default:
       return state
   }
