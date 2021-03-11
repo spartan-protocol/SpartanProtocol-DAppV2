@@ -90,7 +90,7 @@ export const calcSlipAdjustment = (b, B, t, T) => {
   const denominator = part3.mul(part4)
   const result = BN(1).sub(numerator.div(denominator))
   console.log(result.toString())
-  return result
+  return result.mul(BN(1).pow(18))
 }
 
 // Calculate liquidity units

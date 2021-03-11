@@ -1,4 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
+import { TEST_TOKEN } from '../../utils/web3'
 import {
   getBasePPinToken,
   getTokenPPinBase,
@@ -22,41 +23,25 @@ describe('Pricing actions', () => {
   })
 
   test('should get the base pp in token', async () => {
-    await getBasePPinToken(
-      '0x4102773565d82C8B0785f1262cfe75F04F170777',
-      100,
-    )(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
+    await getBasePPinToken(TEST_TOKEN, 100)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BASE_P_PIN_TOKEN)
   })
 
   test('should get the token pp in value', async () => {
-    await getTokenPPinBase(
-      '0x4102773565d82C8B0785f1262cfe75F04F170777',
-      100,
-    )(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
+    await getTokenPPinBase(TEST_TOKEN, 100)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_TOKEN_P_PIN_BASE)
   })
 
   test('should get value in base', async () => {
-    await getValueInBase(
-      '0x4102773565d82C8B0785f1262cfe75F04F170777',
-      100,
-    )(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
+    await getValueInBase(TEST_TOKEN, 100)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_VALUE_IN_BASE)
   })
 
   test('should get value in token', async () => {
-    await getValueInToken(
-      '0x4102773565d82C8B0785f1262cfe75F04F170777',
-      100,
-    )(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
+    await getValueInToken(TEST_TOKEN, 100)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_VALUE_IN_TOKEN)
   })
