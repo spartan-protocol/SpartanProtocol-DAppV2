@@ -128,10 +128,10 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
   try {
     let deposit = {}
     if (justCheck) {
-      deposit = await contract.callStatic.deposit()
+      deposit = await contract.callStatic.deposit(pool, amount)
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.deposit()
+      const gLimit = await contract.estimateGas.deposit(pool, amount)
       deposit = await contract.deposit(pool, amount, {
         gasPrice: gPrice,
         gasLimit: gLimit,
@@ -156,10 +156,10 @@ export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
   try {
     let withdraw = {}
     if (justCheck) {
-      withdraw = await contract.callStatic.withdraw()
+      withdraw = await contract.callStatic.withdraw(pool)
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.withdraw()
+      const gLimit = await contract.estimateGas.withdraw(pool)
       withdraw = await contract.withdraw(pool, {
         gasPrice: gPrice,
         gasLimit: gLimit,

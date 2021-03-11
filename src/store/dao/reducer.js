@@ -7,9 +7,11 @@ const initialState = {
   memberWeight: 0,
   harvestAmount: 0,
   harvestEraAmount: 0,
-  deposit: null,
-  withdraw: null,
-  harvest: null,
+  deposit: {},
+  withdraw: {},
+  harvest: {},
+  error: null,
+  loading: false,
 }
 
 export const daoReducer = (state = initialState, action) => {
@@ -91,6 +93,22 @@ export const daoReducer = (state = initialState, action) => {
         ...state,
         harvest: action.payload,
         error: null,
+        loading: false,
+      }
+    }
+
+    case Types.DAO_LOADING: {
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+    }
+
+    case Types.DAO_ERROR: {
+      return {
+        ...state,
+        error: action.error,
         loading: false,
       }
     }
