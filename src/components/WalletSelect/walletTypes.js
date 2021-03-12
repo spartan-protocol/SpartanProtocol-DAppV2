@@ -4,9 +4,6 @@ import WalletConnect from '../../assets/icons/WalletConnect.svg'
 import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
 import TokenPocket from '../../assets/icons/TokenPocket.svg'
-import { useWeb3 } from '../../store/web3'
-
-const web3 = useWeb3()
 
 const walletTypes = [
   {
@@ -25,7 +22,7 @@ const walletTypes = [
     id: 'WC',
     title: 'WalletConnect',
     icon: [WalletConnect],
-    inject: `walletconnect:${web3.rpcUrl}`,
+    inject: `walletconnect:${'RPC url here from redux?'}`, // ADD RPC URL HERE FROM THE WEB3STORE?
   },
   {
     id: 'OT',

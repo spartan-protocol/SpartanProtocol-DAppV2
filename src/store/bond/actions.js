@@ -4,9 +4,9 @@ import {
   getOldBondContract,
   BOND_ADDR,
 } from '../../utils/web3Bond'
-import { getSpartaContract } from '../../utils/web3Sparta'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getProviderGasPrice } from '../../utils/web3'
+import { getSpartaContract } from '../sparta'
 
 export const bondLoading = () => ({
   type: Types.BOND_LOADING,

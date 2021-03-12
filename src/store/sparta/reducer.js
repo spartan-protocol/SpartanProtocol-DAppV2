@@ -1,6 +1,7 @@
 import * as Types from './types'
 
 const initialState = {
+  contract: {},
   emitting: {},
   adjustedClaimRate: {},
   claim: {},
@@ -10,6 +11,15 @@ const initialState = {
 
 export const spartaReducer = (state = initialState, action) => {
   switch (action.type) {
+    case Types.GET_SPARTA_CONTRACT: {
+      return {
+        ...state,
+        contract: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.GET_EMTTING: {
       return {
         ...state,

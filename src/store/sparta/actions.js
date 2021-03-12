@@ -1,11 +1,30 @@
+import { ethers } from 'ethers'
 import * as Types from './types'
-import { getSpartaContract } from '../../utils/web3Sparta'
+import { BASE_ABI } from '../../utils/web3Sparta'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getWalletProvider } from '../../utils/web3'
+import { useWeb3 } from '../web3/selector'
 
 export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
 })
+
+export const getSpartaContract = () => (dispatch) => {
+  dispatch(spartaLoading())
+  const web3 = useWeb3()
+  const provider = getWalletProvider()
+
+  try {
+    const contract = new ethers.Contract(
+      web3.addrList.sparta,
+      BASE_ABI,
+      provider,
+    )
+    dispatch(payloadToDispatch(Types.GET_SPARTA_CONTRACT, contract))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
+  }
+}
 
 export const getEmitting = () => async (dispatch) => {
   dispatch(spartaLoading())
