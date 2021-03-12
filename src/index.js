@@ -19,6 +19,7 @@ import { utilsPricingReducer } from './store/utilsPricing'
 import { utilsMathReducer } from './store/utilsMath'
 import { spartaReducer } from './store/sparta'
 import { routerReducer } from './store/router'
+import { bondReducer } from './store/bond'
 
 const reducers = combineReducers({
   utils: utilsReducer,
@@ -27,6 +28,7 @@ const reducers = combineReducers({
   utilsMath: utilsMathReducer,
   sparta: spartaReducer,
   router: routerReducer,
+  bond: bondReducer,
 })
 
 const store = createStore(reducers, applyMiddleware(thunk))
