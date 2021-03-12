@@ -4,43 +4,33 @@ import WalletConnect from '../../assets/icons/WalletConnect.svg'
 import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
 import TokenPocket from '../../assets/icons/TokenPocket.svg'
-import { getRpcUrl } from '../../utils/web3'
+import { useWeb3 } from '../../store/web3'
+
+const web3 = useWeb3()
 
 const walletTypes = [
   {
     id: 'BC',
     title: 'BinanceChain',
-    icon: BinanceChain,
+    icon: [BinanceChain],
     inject: 'bsc',
   },
   {
     id: 'MM',
     title: 'MetaMask',
-    icon: MetaMask,
+    icon: [MetaMask],
     inject: '',
   },
   {
     id: 'WC',
     title: 'WalletConnect',
-    icon: WalletConnect,
-    inject: `walletconnect:${{ getRpcUrl }}`,
+    icon: [WalletConnect],
+    inject: `walletconnect:${web3.rpcUrl}`,
   },
   {
-    id: 'TW',
-    title: 'TrustWallet',
-    icon: TrustWallet,
-    inject: 'injected',
-  },
-  {
-    id: 'MW',
-    title: 'MathWallet',
-    icon: MathWallet,
-    inject: 'injected',
-  },
-  {
-    id: 'UW',
-    title: 'Manual',
-    icon: TokenPocket,
+    id: 'OT',
+    title: 'Others',
+    icon: [TokenPocket, MathWallet, TrustWallet],
     inject: 'injected',
   },
 ]

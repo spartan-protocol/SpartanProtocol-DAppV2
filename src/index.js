@@ -41,7 +41,7 @@ const rpcUrl = process.env.REACT_APP_RPC
 ReactDOM.render(
   <Provider store={store}>
     <UseWalletProvider
-      chainId={parseInt(process.env.REACT_APP_CHAIN_ID, 10)}
+      chainId={parseInt(store.getState().web3.network.chainId, 10)}
       connectors={{
         walletconnect: { rpcUrl },
         bsc: {},

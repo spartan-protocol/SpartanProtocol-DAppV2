@@ -11,8 +11,8 @@ import { Alert } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import { SPARTA_ADDR, watchAsset } from '../../utils/web3'
-import { useNetwork } from '../../store/web3/selector'
+import { watchAsset } from '../../utils/web3'
+import { useWeb3 } from '../../store/web3/selector'
 import { changeNetwork } from '../../store/web3'
 
 const WalletSelect = (props) => {
@@ -20,7 +20,7 @@ const WalletSelect = (props) => {
   const [walletIcon, setWalletIcon] = useState('')
 
   const dispatch = useDispatch()
-  const network = useNetwork()
+  const web3 = useWeb3()
 
   const _changeNetwork = (net) => {
     dispatch(changeNetwork(net))
@@ -86,7 +86,7 @@ const WalletSelect = (props) => {
             <i className="bd-icons icon-simple-remove" />
           </button>
           <h2 className="modal-title text-center" id="myModalLabel">
-            Connect to a wallet
+            Connect to a wallet - Network: {web3.network.net}
           </h2>
         </div>
 
@@ -104,7 +104,7 @@ const WalletSelect = (props) => {
           <div>
             <button
               type="button"
-              className="btn btn-success"
+              className="btn btn-success w-50 mx-0 px-1"
               onClick={() => _changeNetwork('mainnet')}
             >
               <Col>
@@ -113,16 +113,11 @@ const WalletSelect = (props) => {
             </button>
             <button
               type="button"
-              className="btn btn-success"
+              className="btn btn-success w-50 mx-0 px-1"
               onClick={() => _changeNetwork('testnet')}
             >
               <Col>
                 <div className="">Testnet</div>
-              </Col>
-            </button>
-            <button type="button" className="btn btn-success">
-              <Col>
-                <div className="">Network: {network.net}</div>
               </Col>
             </button>
           </div>
@@ -147,7 +142,7 @@ const WalletSelect = (props) => {
               <Button
                 variant="primary"
                 onClick={() => {
-                  watchAsset(SPARTA_ADDR, 'SPARTA', 18)
+                  watchAsset(web3.addrList.sparta, 'SPARTA', 18)
                 }}
               >
                 Add to Wallet
@@ -182,7 +177,13 @@ const WalletSelect = (props) => {
                     <Col>
                       <div className="float-left mt-2 ">{x.title}</div>
                       <div className="float-right">
-                        <Image src={x.icon} className="px-1 wallet-icons" />
+                        {x.icon.map((img) => (
+                          <Image
+                            key={img}
+                            src={img}
+                            className="px-1 wallet-icons"
+                          />
+                        ))}
                       </div>
                     </Col>
                   </button>

@@ -1,3 +1,5 @@
+export const CHANGE_ADDR_LIST = 'CHANGE_ADDR_LIST'
+export const CHANGE_RPC_URL = 'CHANGE_RPC_URL'
 export const CHANGE_NETWORK = 'CHANGE_NETWORK'
 export const GET_CONTRACT = 'GET_CONTRACT'
 export const WEB3_LOADING = 'WEB3_LOADING'
