@@ -1,5 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_TOKEN, SPARTA_ADDR } from '../../utils/web3'
+import { TEST_TOKEN, TEST_SPARTA } from '../../utils/web3'
 import {
   getPool,
   getTokenCount,
@@ -66,7 +66,7 @@ describe('Router actions', () => {
   })
 
   test('should be able to swap assets', async () => {
-    await routerSwapAssets('10', SPARTA_ADDR, TEST_TOKEN, true)(dispatchMock)
+    await routerSwapAssets('10', TEST_SPARTA, TEST_TOKEN, true)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     if (dispatchMock.mock.calls[1][0].payload) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
