@@ -13,6 +13,7 @@ import './app.scss'
 // import Contexts from './Contexts'
 import './assets/scss/spartan.scss'
 
+import { bondReducer } from './store/bond'
 import { daoReducer } from './store/dao'
 import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
@@ -20,10 +21,9 @@ import { utilsReducer } from './store/utils'
 import { utilsMathReducer } from './store/utilsMath'
 import { utilsPricingReducer } from './store/utilsPricing'
 import { web3Reducer } from './store/web3'
-import { routerReducer } from './store/router'
-import { bondReducer } from './store/bond'
 
 const reducers = combineReducers({
+  bond: bondReducer,
   dao: daoReducer,
   router: routerReducer,
   sparta: spartaReducer,
@@ -31,7 +31,6 @@ const reducers = combineReducers({
   utilsMath: utilsMathReducer,
   utilsPricing: utilsPricingReducer,
   web3: web3Reducer,
-  bond: bondReducer,
 })
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
