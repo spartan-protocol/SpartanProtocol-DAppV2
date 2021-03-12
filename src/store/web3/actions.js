@@ -18,6 +18,7 @@ export const changeNetwork = (net) => (dispatch) => {
     net === 'testnet'
       ? { chainId: 97, net: 'testnet', chain: 'BSC' }
       : { chainId: 56, net: 'mainnet', chain: 'BSC' }
+  window.localStorage.setItem('network', JSON.stringify(network))
   dispatch(payloadToDispatch(Types.CHANGE_NETWORK, network))
 }
 
