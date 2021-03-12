@@ -1,6 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_TOKEN, TEST_WALLET, BNB_ADDR } from '../../utils/web3'
-import { BOND_ADDR } from '../../utils/web3Bond'
+import { TEST_TOKEN, TEST_WALLET, TEST_BNB, TEST_BOND } from '../../utils/web3'
 import {
   getBondListed,
   getBondListedAsset,
@@ -46,14 +45,14 @@ describe('Bond actions', () => {
   })
 
   test('should get bond claimable', async () => {
-    await getBondClaimable(BOND_ADDR, TEST_WALLET, BNB_ADDR)(dispatchMock)
+    await getBondClaimable(TEST_BOND, TEST_WALLET, TEST_BNB)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_CLAIMABLE)
   })
 
   test('should get bond member details', async () => {
-    await getBondMemberDetails(BOND_ADDR, TEST_WALLET, TEST_TOKEN)(dispatchMock)
+    await getBondMemberDetails(TEST_BOND, TEST_WALLET, TEST_TOKEN)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(
