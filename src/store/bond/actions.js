@@ -328,7 +328,7 @@ export const bondProposalVote = (proposalID) => async (dispatch) => {
       gasLimit: gLimit,
     })
 
-    dispatch(payloadToDispatch(Types.BOND_PROPOSAL_DELIST_ASSET, proposalVote))
+    dispatch(payloadToDispatch(Types.BOND_PROPOSAL_VOTE, proposalVote))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
@@ -373,7 +373,7 @@ export const bondProposalReplace = (oldProposalID, newProposalID) => async (
       },
     )
 
-    dispatch(payloadToDispatch(Types.BOND_PROPOSAL_FINALIZE, proposalReplace))
+    dispatch(payloadToDispatch(Types.BOND_PROPOSAL_REPLACE, proposalReplace))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
@@ -391,7 +391,7 @@ export const bondProposalRecount = (proposalID) => async (dispatch) => {
       gasLimit: gLimit,
     })
 
-    dispatch(payloadToDispatch(Types.BOND_PROPOSAL_REPLACE, proposalRecount))
+    dispatch(payloadToDispatch(Types.BOND_PROPOSAL_RECOUNT, proposalRecount))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
