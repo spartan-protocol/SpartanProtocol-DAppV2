@@ -74,7 +74,7 @@ export const getBondMemberDetails = (bondAddress, member, asset) => async (
 
 export const getBondSpartaRemaining = () => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getSpartaContract()
+  const contract = getSpartaContract() // ISSUE HERE
 
   try {
     const bondSpartaRemaining = await contract.callStatic.balanceOf(BOND_ADDR)

@@ -56,8 +56,10 @@ export const getAdjustedClaimRate = (assetAddress) => async (dispatch) => {
 
 export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
   dispatch(spartaLoading())
+  dispatch(getSpartaContract())
+  const web3 = useWeb3()
   const provider = getWalletProvider()
-  const contract = getSpartaContract()
+  const { contract } = web3
 
   try {
     let claimed = {}

@@ -80,8 +80,10 @@ export const TEST_BOND = '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43'
 export const ERC20_ABI = ERC20.abi
 
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
-export const getWalletProvider = (rpcUrl) => {
-  let provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+export const getWalletProvider = () => {
+  let provider = new ethers.providers.JsonRpcProvider(
+    'https://bsc-dataseed.binance.org/',
+  ) // DONT FORGET TO MOVE THIS AND DYNAMICLA THE RPC
   let connectedWalletType = ''
   if (window.sessionStorage.getItem('lastWallet') === 'BC') {
     connectedWalletType = window.BinanceChain
