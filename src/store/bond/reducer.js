@@ -2,7 +2,7 @@ import * as Types from './types'
 
 const initialState = {
   bondListed: [],
-  bondListedAssets: [],
+  bondListedAsset: false,
   bondDepositEstimated: 0,
   bondClaimable: 0,
   bondMemberDetails: {},
@@ -35,10 +35,10 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
-    case Types.GET_BOND_LISTED_ASSETS: {
+    case Types.GET_BOND_LISTED_ASSET: {
       return {
         ...state,
-        bondListedAssets: action.payload,
+        bondListedAsset: action.payload,
         loading: false,
         error: null,
       }

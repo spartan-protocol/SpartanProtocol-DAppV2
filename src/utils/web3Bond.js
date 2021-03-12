@@ -41,7 +41,6 @@ export const BOND_ABI = BOND.abi
 export const getOldBondContract = (bondAddress) => {
   const provider = getWalletProvider()
   const contract = new ethers.Contract(bondAddress, BOND_ABI, provider)
-  console.log(contract)
   return contract
 }
 
@@ -49,7 +48,6 @@ export const getOldBondContract = (bondAddress) => {
 export const getBondContract = () => {
   const provider = getWalletProvider()
   const contract = new ethers.Contract(BOND_ADDR, BOND_ABI, provider)
-  console.log(contract)
   return contract
 }
 
