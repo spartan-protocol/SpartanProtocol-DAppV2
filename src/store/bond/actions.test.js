@@ -1,9 +1,9 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_TOKEN, TEST_WALLET, TEST_POOL } from '../../utils/web3'
+import { TEST_TOKEN, TEST_WALLET, BNB_ADDR } from '../../utils/web3'
+import { BOND_ADDR } from '../../utils/web3Bond'
 import {
   getBondListed,
   getBondListedAsset,
-  getBondDepositEstimate,
   getBondClaimable,
   getBondMemberDetails,
   getBondSpartaRemaining,
@@ -32,13 +32,9 @@ describe('Bond actions', () => {
   test('should get bond listed', async () => {
     await getBondListed()(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).toStrictEqual([
+    expect(dispatchMock.mock.calls[1][0].payload).toContain(
       '0x0000000000000000000000000000000000000000',
-      '0x90c92451e0D2e439D2ED15bd2C6Ba3B31d42571B',
-      '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee',
-      '0x07dc3a8cD1B54CDFd55d223Ca15863dcA6B70C1A',
-      '0xb0bbC81b0769A57079E01FE1333E060e7Cd438Aa',
-    ])
+    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_LISTED)
   })
 
@@ -49,24 +45,15 @@ describe('Bond actions', () => {
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_LISTED_ASSET)
   })
 
-  test('should get bond deposit estimate', async () => {
-    await getBondDepositEstimate(TEST_TOKEN, 1000)(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_BOND_DEPOSIT_ESTIMATED,
-    )
-  })
-
   test('should get bond claimable', async () => {
-    await getBondClaimable(TEST_WALLET, TEST_POOL, TEST_TOKEN)(dispatchMock)
+    await getBondClaimable(BOND_ADDR, TEST_WALLET, BNB_ADDR)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_CLAIMABLE)
   })
 
   test('should get bond member details', async () => {
-    await getBondMemberDetails(TEST_WALLET, TEST_POOL, TEST_TOKEN)(dispatchMock)
+    await getBondMemberDetails(BOND_ADDR, TEST_WALLET, TEST_TOKEN)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(
@@ -99,7 +86,7 @@ describe('Bond actions', () => {
   })
 
   test('should get bond proposal', async () => {
-    await getBondProposal(405504)(dispatchMock)
+    await getBondProposal(1)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_PROPOSAL)

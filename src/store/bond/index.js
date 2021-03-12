@@ -4,7 +4,6 @@ export { bondReducer } from './reducer'
 export {
   getBondListed,
   getBondListedAsset,
-  getBondDepositEstimate,
   getBondClaimable,
   getBondMemberDetails,
   getBondSpartaRemaining,

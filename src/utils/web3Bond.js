@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-import BOND from '../config/ABI/Bond.json'
+import BOND from '../config/ABI/BondV3.json' // UPDATE WITH NEW BOND CONTRACT
 import { getProviderGasPrice, getWalletProvider } from './web3'
 import { getSpartaContract } from './web3Sparta'
 

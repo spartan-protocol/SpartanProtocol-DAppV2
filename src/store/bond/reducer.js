@@ -3,7 +3,6 @@ import * as Types from './types'
 const initialState = {
   bondListed: [],
   bondListedAsset: false,
-  bondDepositEstimated: 0,
   bondClaimable: 0,
   bondMemberDetails: {},
   bondSpartaRemaining: 0,

@@ -38,23 +38,6 @@ export const getBondListedAsset = (asset) => async (dispatch) => {
   }
 }
 
-export const getBondDepositEstimate = (asset, amount) => async (dispatch) => {
-  dispatch(bondLoading())
-  const contract = getBondContract()
-
-  try {
-    const depositEstimate = await contract.callStatic.handleTransferIn(
-      asset,
-      amount,
-    )
-    dispatch(
-      payloadToDispatch(Types.GET_BOND_DEPOSIT_ESTIMATED, depositEstimate),
-    )
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
-  }
-}
-
 export const getBondClaimable = (bondAddress, member, asset) => async (
   dispatch,
 ) => {
