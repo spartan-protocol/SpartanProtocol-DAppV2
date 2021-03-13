@@ -17,6 +17,7 @@ import {
 
 import classnames from 'classnames'
 import PoolsTable from "../PoolsTable";
+import CardHeader from "reactstrap/es/CardHeader";
 
 class Overview extends Component {
     constructor(props) {
@@ -95,7 +96,9 @@ class Overview extends Component {
         return (
             <>
                 <div className="content">
+                    <Breadcrumb>Pools</Breadcrumb>
                     <Row>
+
                         <Col lg={6}>
 
                             <Nav tabs className="nav-tabs-custom">
@@ -173,33 +176,13 @@ class Overview extends Component {
 
                                 </TabPane>
                                 <TabPane tabId="2" className="p-3">
-                                    <Row xs="1" sm="2" md="4">
-                                        <Col>
-                                            <Card className="card-body">
-                                                XXX
-                                            </Card>
-                                        </Col>
-                                        <Col>Column</Col>
-                                        <Col>Column</Col>
-                                        <Col>Column</Col>
-                                    </Row>
+
                                 </TabPane>
                                 <TabPane tabId="3" className="p-3">
-                                    <Row>
-                                        <Col sm="12">
-                                            <CardText>
-                                                X
-                                            </CardText>
-                                        </Col>
-                                    </Row>
+
                                 </TabPane>
                                 <TabPane tabId="4" className="p-3">
-                                    <Row>
-                                        <Col>.col</Col>
-                                        <Col>.col</Col>
-                                        <Col>.col</Col>
-                                        <Col>.col</Col>
-                                    </Row>
+
                                 </TabPane>
                                 <TabPane tabId="5" className="p-3">
                                     <Row>

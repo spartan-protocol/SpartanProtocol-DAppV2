@@ -1,63 +1,40 @@
 /* eslint-disable global-require */
+
 import React from 'react'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import {CardBody, CardHeader, Collapse} from 'reactstrap'
 
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardText,
-  Row,
-  Col,
-} from 'reactstrap'
+import Button from 'react-bootstrap/Button'
 
-const PoolsTable = () => (
-  <>
-    <div className="content">
-      <Row>
-        <Col md="8">
-          <Card>
-            <CardHeader>
-              <h1 className="title">Pools</h1>
-            </CardHeader>
-            <CardBody />
-            <CardFooter>
-              <Button className="btn-fill" color="primary" type="submit">
-                Save
-              </Button>
-            </CardFooter>
-          </Card>
-        </Col>
-        <Col md="4">
-          <Card className="card-user">
-            <CardBody>
-              <CardText />
-              <div className="author">
-                <div className="block block-one" />
-                <div className="block block-two" />
-                <div className="block block-three" />
-                <div className="block block-four" />
-                <div href="#">
-                  <img
-                    alt="..."
-                    className="avatar"
-                    src={
-                      require('../../assets/img/spartan_black_small.svg')
-                        .default
-                    }
-                  />
-                  <div className="title" />
-                </div>
-                <p className="description" />
-              </div>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </div>
-  </>
-)
 
-export default PoolsTable
+import bnb from '../../assets/icons/BNB.svg'
+import coin_bnb from '../../assets/icons/coin_bnb.svg'
+import coin_sparta from '../../assets/icons/coin_sparta.svg'
+import bnb_sparta from '../../assets/icons/bnb_sparta.png'
+
+const PoolsTable = () => {
+  //   const [openedCollapseOne, setopenedCollapseOne] = React.useState(true)
+  //   const [openedCollapseTwo, setopenedCollapseTwo] = React.useState(false)
+  const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
+  return (
+      <>
+        <Card className="card-body">
+          <Row xs="1" sm="2" md="4">
+            <Col>Column</Col>
+            <Col>Column</Col>
+            <Col>Column</Col>
+            <Col>Column</Col>
+          </Row>
+        </Card>
+
+
+
+
+
+      </>
+  )
+}
+
+export default PoolsTable;
