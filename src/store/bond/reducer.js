@@ -42,14 +42,14 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
-    case Types.GET_BOND_DEPOSIT_ESTIMATED: {
-      return {
-        ...state,
-        bondDepositEstimated: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
+    // case Types.GET_BOND_DEPOSIT_ESTIMATED: {
+    //   return {
+    //     ...state,
+    //     bondDepositEstimated: action.payload,
+    //     loading: false,
+    //     error: null,
+    //   }
+    // }
     case Types.GET_BOND_CLAIMABLE: {
       return {
         ...state,
