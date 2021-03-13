@@ -1,3 +1,12 @@
+.icon-extra-small {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-size: 18px auto;
+    background-repeat: no-repeat;
+}
+
+
 .icon-small {
     display: inline-block;
     width: 24px;

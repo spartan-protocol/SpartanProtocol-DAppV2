@@ -99,7 +99,7 @@ class Overview extends Component {
                     <Breadcrumb>Pools</Breadcrumb>
                     <Row>
 
-                        <Col lg={6}>
+                        <Col lg={12}>
 
                             <Nav tabs className="nav-tabs-custom">
                                 <NavItem>
