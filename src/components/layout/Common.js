@@ -66,6 +66,7 @@ const Common = (props) => {
       }
     }
     window.addEventListener('scroll', showNavbarButton)
+
     return function cleanup() {
       if (navigator.platform.indexOf('Win') > -1) {
         ps.destroy()

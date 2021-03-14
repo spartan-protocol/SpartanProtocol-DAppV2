@@ -28,13 +28,17 @@ const RegularForms = () => (
             </CardHeader>
             <CardBody>
               <Form action="#">
-                <label>Email address</label>
                 <FormGroup>
-                  <Input type="email" />
+                  <label>
+                    Email address
+                    <Input type="email" />
+                  </label>
                 </FormGroup>
-                <label>Password</label>
                 <FormGroup>
-                  <Input type="password" autoComplete="off" />
+                  <label>
+                    Password
+                    <Input type="password" autoComplete="off" />
+                  </label>
                 </FormGroup>
                 <FormGroup check className="mt-3">
                   <Label check>

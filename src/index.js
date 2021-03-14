@@ -37,23 +37,21 @@ const rpcUrl = process.env.REACT_APP_RPC
 
 ReactDOM.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <UseWalletProvider
-        chainId={parseInt(process.env.REACT_APP_CHAIN_ID, 16)}
-        connectors={{
-          walletconnect: { rpcUrl },
-          bsc: {},
-        }}
-      >
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" render={(props) => <AdminLayout {...props} />} />
-            <Redirect from="/" to="/dapp/buttons/" />
-          </Switch>
-        </BrowserRouter>
-        ,
-      </UseWalletProvider>
-    </React.StrictMode>
+    <UseWalletProvider
+      chainId={parseInt(process.env.REACT_APP_CHAIN_ID, 16)}
+      connectors={{
+        walletconnect: { rpcUrl },
+        bsc: {},
+      }}
+    >
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" render={(props) => <AdminLayout {...props} />} />
+          <Redirect from="/" to="/dapp/buttons/" />
+        </Switch>
+      </BrowserRouter>
+      ,
+    </UseWalletProvider>
     ,
   </Provider>,
 

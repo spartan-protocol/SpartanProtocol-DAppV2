@@ -1,5 +1,5 @@
 import Dashboard from './components/Dashboard/Dashboard'
-import PoolsTable from './views/pages/PoolsTable'
+// import PoolsTable from './views/pages/PoolsTable'
 import Icons from './views/pages/Samples/Icons'
 import Notifications from './views/pages/Samples/Notifications'
 import Buttons from './views/pages/Samples/Buttons'
@@ -13,7 +13,8 @@ import Panels from './views/pages/Samples/Panels'
 import Tiles from './views/pages/Samples/Tiles'
 import Utils from './utils/Utils'
 import Tabs from './views/pages/Samples/Tabs'
-import Liquidity from './views/pages/Pools/Liquidity'
+// import Liquidity from './views/pages/Pools/Liquidity'
+import Overview from './views/pages/Pools/Overview'
 
 const routes = [
   {
@@ -25,78 +26,86 @@ const routes = [
   },
 
   {
-    collapse: true,
+    path: '/pools/overview',
     name: 'Pools',
-    icon: 'icon-medium icon-info icon-dark',
-    state: 'pagesCollapse',
-    views: [
-      {
-        path: '/pools/overview',
-        name: 'Overview',
-        mini: 'OVIEW',
-        component: PoolsTable,
-        layout: '/dapp',
-      },
-      {
-        path: '/pools/swap',
-        name: 'Swap',
-        mini: 'SWAP',
-        component: Tiles,
-        layout: '/dapp',
-      },
-      {
-        path: '/pools/liquidity',
-        name: 'Liquidity',
-        mini: 'LIQ',
-        component: Liquidity,
-        layout: '/dapp',
-      },
-      {
-        path: '/pools/bond',
-        name: 'Bond',
-        mini: 'BOND',
-        component: Tiles,
-        layout: '/dapp',
-      },
-      {
-        path: '/pools/positions',
-        name: 'Positions',
-        mini: 'POS',
-        component: Tiles,
-        layout: '/dapp',
-      },
-    ],
+    icon: 'icon-medium icon-swords icon-dark',
+    component: Overview,
+    layout: '/dapp',
   },
 
-  {
-    collapse: true,
-    name: 'DAO',
-    icon: 'icon-medium icon-info icon-dark',
-    state: 'pagesCollapse',
-    views: [
-      {
-        path: '/dao/overview',
-        name: 'Overview',
-        mini: 'OVIEW',
-        component: Tiles,
-        layout: '/dapp',
-      },
-      {
-        path: '/dao/lockearn',
-        name: 'Lock+Earn',
-        mini: 'EARN',
-        component: Tiles,
-        layout: '/dapp',
-      },
-      {
-        path: '/dao/proposals',
-        name: 'Proposals',
-        mini: 'PROP',
-        component: Tiles,
-        layout: '/dapp',
-      },
-    ],
-  },
+  // {
+  //   collapse: true,
+  //   name: 'Pools',
+  //   icon: 'icon-medium icon-info icon-dark',
+  //   state: 'pagesCollapse',
+  //   views: [
+  //     {
+  //       path: '/pools/overview',
+  //       name: 'Overview',
+  //       mini: 'OVIEW',
+  //       component: Overview,
+  //       layout: '/dapp',
+  //     },
+  //     {
+  //       path: '/pools/swap',
+  //       name: 'Swap',
+  //       mini: 'SWAP',
+  //       component: Tiles,
+  //       layout: '/dapp',
+  //     },
+  //     {
+  //       path: '/pools/liquidity',
+  //       name: 'Liquidity',
+  //       mini: 'LIQ',
+  //       component: Liquidity,
+  //       layout: '/dapp',
+  //     },
+  //     {
+  //       path: '/pools/bond',
+  //       name: 'Bond',
+  //       mini: 'BOND',
+  //       component: Tiles,
+  //       layout: '/dapp',
+  //     },
+  //     {
+  //       path: '/pools/positions',
+  //       name: 'Positions',
+  //       mini: 'POS',
+  //       component: Tiles,
+  //       layout: '/dapp',
+  //     },
+  //   ],
+  // },
+  //
+  // {
+  //   collapse: true,
+  //   name: 'DAO',
+  //   icon: 'icon-medium icon-info icon-dark',
+  //   state: 'pagesCollapse',
+  //   views: [
+  //     {
+  //       path: '/dao/overview',
+  //       name: 'Overview',
+  //       mini: 'OVIEW',
+  //       component: Tiles,
+  //       layout: '/dapp',
+  //     },
+  //     {
+  //       path: '/dao/lockearn',
+  //       name: 'Lock+Earn',
+  //       mini: 'EARN',
+  //       component: Tiles,
+  //       layout: '/dapp',
+  //     },
+  //     {
+  //       path: '/dao/proposals',
+  //       name: 'Proposals',
+  //       mini: 'PROP',
+  //       component: Tiles,
+  //       layout: '/dapp',
+  //     },
+  //   ],
+  // },
 
   {
     collapse: true,

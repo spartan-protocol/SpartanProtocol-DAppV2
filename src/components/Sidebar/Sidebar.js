@@ -1,4 +1,6 @@
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable react/forbid-prop-types */
+
 import React, { useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -17,7 +19,7 @@ const Sidebar = (props) => {
   const location = useLocation()
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
-  const getCollapseInitialState = (routes) => {
+  const getCollapseInitialState = useCallback((routes) => {
     for (let i = 0; i < routes.length; i++) {
       if (routes[i].collapse && getCollapseInitialState(routes[i].views)) {
         return true
@@ -27,26 +29,30 @@ const Sidebar = (props) => {
       }
     }
     return false
-  }
+  }, [])
   // this creates the intial state of this component based on the collapse routes
   // that it gets through props.routes
-  const getCollapseStates = useCallback((routes) => {
-    let initialState = {}
-    routes.map((prop) => {
-      if (prop.collapse) {
-        initialState = {
-          [prop.state]: getCollapseInitialState(prop.views),
-          ...getCollapseStates(prop.views),
-          ...initialState,
+  const getCollapseStates = useCallback(
+    (routes) => {
+      let initialState = {}
+      routes.map((prop) => {
+        if (prop.collapse) {
+          initialState = {
+            [prop.state]: getCollapseInitialState(prop.views),
+            ...getCollapseStates(prop.views),
+            ...initialState,
+          }
         }
-      }
-      return null
-    })
-    return initialState
-  })
+        return null
+      })
+      return initialState
+    },
+    [getCollapseInitialState],
+  )
+
   React.useEffect(() => {
     setState(getCollapseStates(props.routes))
-  }, [props.routes])
+  }, [getCollapseStates, props.routes])
   React.useEffect(() => {
     // if you are using a Windows Machine, the scrollbars will have a Mac look
     if (navigator.platform.indexOf('Win') > -1) {
@@ -79,19 +85,19 @@ const Sidebar = (props) => {
             key={key}
           >
             <div
-              href="#"
+              role="button"
+              className="navdiv"
+              tabIndex={-1}
+              onKeyPress={(e) => {
+                e.preventDefault()
+                setState({ ...state, ...st })
+              }}
               data-toggle="collapse"
               aria-expanded={state[prop.state]}
               onClick={(e) => {
                 e.preventDefault()
                 setState({ ...state, ...st })
               }}
-              onKeyPress={(e) => {
-                e.preventDefault()
-                setState({ ...state, ...st })
-              }}
-              role="button"
-              tabIndex="0"
             >
               {prop.icon !== undefined ? (
                 <>
@@ -159,6 +165,8 @@ const Sidebar = (props) => {
         <a
           href={logo.outterLink}
           className="simple-text logo-mini"
+          target="_blank"
+          rel="noreferrer"
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
@@ -170,6 +178,8 @@ const Sidebar = (props) => {
         <a
           href={logo.outterLink}
           className="simple-text logo-normal"
+          target="_blank"
+          rel="noreferrer"
           onClick={props.closeSidebar}
         >
           {logo.text}
@@ -216,7 +226,7 @@ const Sidebar = (props) => {
 Sidebar.propTypes = {
   activeColor: PropTypes.oneOf(['primary', 'blue', 'green', 'orange', 'red']),
   rtlActive: PropTypes.bool,
-  routes: PropTypes.arrayOf.isRequired,
+  routes: PropTypes.array.isRequired,
   logo: PropTypes.oneOfType([
     PropTypes.shape({
       innerLink: PropTypes.string.isRequired,
