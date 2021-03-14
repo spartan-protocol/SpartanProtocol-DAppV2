@@ -9,7 +9,7 @@ import walletTypes from '../WalletSelect/walletTypes'
 
 const Header = () => {
   const [modalShow, setModalShow] = useState(false)
-  const [walletHeaderIcon, setWalletHeaderIcon] = useState(walletTypes[0].icon)
+  const [walletHeaderIcon] = useState(walletTypes[0].icon)
 
   useEffect(() => {
     const checkTheme = () => {
@@ -89,7 +89,7 @@ const Header = () => {
         <WalletSelect
           show={modalShow}
           onHide={() => setModalShow(false)}
-          setWalletHeaderIcon={setWalletHeaderIcon}
+          // setWalletHeaderIcon={setWalletHeaderIcon}
         />
       </Container>
     </>

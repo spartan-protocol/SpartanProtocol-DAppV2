@@ -1,3 +1,6 @@
-export const GET_CONTRACT = 'GET_CONTRACT'
+export const ADD_NETWORK = 'ADD_NETWORK'
+export const GET_APPROVAL = 'GET_CONTRACT'
+export const GET_ALLOWANCE = 'GET_CONTRACT'
+export const WATCH_ASSET = 'GET_CONTRACT'
 export const WEB3_LOADING = 'WEB3_LOADING'
 export const WEB3_ERROR = 'WEB3_ERROR'

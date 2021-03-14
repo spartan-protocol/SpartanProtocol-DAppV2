@@ -8,13 +8,22 @@ import Col from 'react-bootstrap/Col'
 import { ethers } from 'ethers'
 
 import { Alert } from 'reactstrap'
+import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import { SPARTA_ADDR, watchAsset } from '../../utils/web3'
+import { changeNetwork, getNetwork, SPARTA_ADDR } from '../../utils/web3'
+import { addNetwork, watchAsset } from '../../store/web3'
 
 const WalletSelect = (props) => {
+  const dispatch = useDispatch()
   const wallet = useWallet()
   const [walletIcon, setWalletIcon] = useState('')
+  const [network, setNetwork] = useState(getNetwork)
+
+  const _changeNetwork = (net) => {
+    setNetwork(changeNetwork(net))
+    dispatch(addNetwork())
+  }
 
   //   const [modalMini, setModalMini] = React.useState(false)
   //   const [modalClassic, setModalClassic] = React.useState(false)
@@ -53,13 +62,15 @@ const WalletSelect = (props) => {
     wallet.reset()
     console.log('reset')
     if (x.inject === '') {
+      console.log('no inject')
       wallet.connect()
     } else {
+      console.log(`${x.inject} inject`)
       wallet.connect(x.inject)
     }
     window.sessionStorage.setItem('lastWallet', x.id)
-    setWalletIcon(x.icon)
-    props.setWalletHeaderIcon(x.icon)
+    setWalletIcon(x.icon[0])
+    // props.setWalletHeaderIcon(x.icon[0])
   }
 
   return (
@@ -76,7 +87,7 @@ const WalletSelect = (props) => {
             <i className="bd-icons icon-simple-remove" />
           </button>
           <h2 className="modal-title text-center" id="myModalLabel">
-            Connect to a wallet
+            Connect to a wallet - Network: {network.net}
           </h2>
         </div>
 
@@ -85,11 +96,33 @@ const WalletSelect = (props) => {
             <Alert color="warning">
               <span>
                 {' '}
-                Wallet connection failed! Check the network is set to BSC
-                MainNet! Have you selected the correct wallet type?
+                Wallet connection failed! Check the network in your wallet
+                matches the selection in the DApp.
               </span>
             </Alert>
           )}
+
+          <div>
+            <button
+              type="button"
+              className="btn btn-success w-50 mx-0 px-1"
+              onClick={() => _changeNetwork('mainnet')}
+            >
+              <Col>
+                <div className="">Mainnet</div>
+              </Col>
+            </button>
+            <button
+              type="button"
+              className="btn btn-success w-50 mx-0 px-1"
+              onClick={() => _changeNetwork('testnet')}
+            >
+              <Col>
+                <div className="">Testnet</div>
+              </Col>
+            </button>
+          </div>
+
           {wallet.status === 'connected' ? (
             <div>
               <Image
@@ -110,7 +143,7 @@ const WalletSelect = (props) => {
               <Button
                 variant="primary"
                 onClick={() => {
-                  watchAsset(SPARTA_ADDR, 'SPARTA', 18)
+                  dispatch(watchAsset(SPARTA_ADDR, 'SPARTA', 18))
                 }}
               >
                 Add to Wallet
@@ -140,12 +173,18 @@ const WalletSelect = (props) => {
                     color="success"
                     type="button"
                     className="btn btn-warning btn-block"
-                    onClick={() => connectWallet(props, x)}
+                    onClick={() => connectWallet(x)}
                   >
                     <Col>
                       <div className="float-left mt-2 ">{x.title}</div>
                       <div className="float-right">
-                        <Image src={x.icon} className="px-1 wallet-icons" />
+                        {x.icon.map((i) => (
+                          <Image
+                            key={`${x.id}icon${i}`}
+                            src={i}
+                            className="px-1 wallet-icons"
+                          />
+                        ))}
                       </div>
                     </Col>
                   </button>
