@@ -30,8 +30,6 @@ const reducers = combineReducers({
 
 const store = createStore(reducers, applyMiddleware(thunk))
 
-const rpcUrl = process.env.REACT_APP_RPC
-
 const Providers = () => {
   const [network, setNetwork] = useState(getNetwork())
 
@@ -49,7 +47,7 @@ const Providers = () => {
       <UseWalletProvider
         chainId={parseInt(network.chainId, 10)}
         connectors={{
-          walletconnect: { rpcUrl },
+          walletconnect: network.rpc,
           bsc: {},
         }}
       >
