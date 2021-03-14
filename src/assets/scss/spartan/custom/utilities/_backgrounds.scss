@@ -40,3 +40,19 @@ section {
 .fill-opacity-8 {
 	fill-opacity: .8;
 }
+
+element.style {
+}
+
+.breadcrumb {
+  display: flex;
+  font-family: $font-family-alt;
+  font-size: 40px;
+  color: $white;
+  flex-wrap: wrap;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  list-style: none;
+  background-color: transparent;
+  border-radius: 0.25rem;
+}
