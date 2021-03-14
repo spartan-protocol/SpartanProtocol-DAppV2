@@ -1,3 +1,3 @@
 export const GET_CONTRACT = 'GET_CONTRACT'
-export const WEB3ALL_LOADING = 'WEB3ALL_LOADING'
-export const WEB3ALL_ERROR = 'WEB3ALL_ERROR'
+export const WEB3_LOADING = 'WEB3_LOADING'
+export const WEB3_ERROR = 'WEB3_ERROR'

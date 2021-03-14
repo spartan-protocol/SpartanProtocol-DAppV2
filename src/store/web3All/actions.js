@@ -3,14 +3,14 @@ import * as Types from './types'
 import { getWalletProvider, getTokenContract } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 
-export const web3AllLoading = () => ({
-  type: Types.WEB3ALL_LOADING,
+export const web3Loading = () => ({
+  type: Types.WEB3_LOADING,
 })
 
 export const getApproval = (tokenAddress, contractAddress) => async (
   dispatch,
 ) => {
-  dispatch(web3AllLoading())
+  dispatch(web3Loading())
   const provider = getWalletProvider()
   let contract = getTokenContract(tokenAddress)
 
@@ -25,6 +25,6 @@ export const getApproval = (tokenAddress, contractAddress) => async (
 
     dispatch(payloadToDispatch(Types.GET_CONTRACT, contract))
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3ALL_ERROR, error))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }

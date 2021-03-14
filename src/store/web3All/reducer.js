@@ -6,7 +6,7 @@ const initialState = {
   error: null,
 }
 
-export const web3AllReducer = (state = initialState, action) => {
+export const web3Reducer = (state = initialState, action) => {
   switch (action.type) {
     case Types.GET_CONTRACT: {
       return {
@@ -17,14 +17,14 @@ export const web3AllReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.WEB3ALL_LOADING: {
+    case Types.WEB3_LOADING: {
       return {
         ...state,
         loading: true,
       }
     }
 
-    case Types.WEB3ALL_ERROR: {
+    case Types.WEB3_ERROR: {
       return {
         ...state,
         error: action.error,
