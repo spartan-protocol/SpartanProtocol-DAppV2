@@ -5,7 +5,7 @@ import * as Types from './types'
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
 
-describe('Web3All actions', () => {
+describe('Web3 actions', () => {
   test('should the contract be approved', async () => {
     window.sessionStorage.setItem('walletConnected', true)
     window.sessionStorage.setItem('lastWallet', 'BC')
