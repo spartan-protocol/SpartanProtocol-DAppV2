@@ -13,22 +13,24 @@ import './app.scss'
 // import Contexts from './Contexts'
 import './assets/scss/spartan.scss'
 
-import { web3Reducer } from './store/web3'
-import { utilsReducer } from './store/utils'
-import { utilsPricingReducer } from './store/utilsPricing'
-import { utilsMathReducer } from './store/utilsMath'
-import { spartaReducer } from './store/sparta'
-import { routerReducer } from './store/router'
 import { bondReducer } from './store/bond'
+import { daoReducer } from './store/dao'
+import { routerReducer } from './store/router'
+import { spartaReducer } from './store/sparta'
+import { utilsReducer } from './store/utils'
+import { utilsMathReducer } from './store/utilsMath'
+import { utilsPricingReducer } from './store/utilsPricing'
+import { web3Reducer } from './store/web3'
 
 const reducers = combineReducers({
-  utils: utilsReducer,
-  web3: web3Reducer,
-  utilsPricing: utilsPricingReducer,
-  utilsMath: utilsMathReducer,
-  sparta: spartaReducer,
-  router: routerReducer,
   bond: bondReducer,
+  dao: daoReducer,
+  router: routerReducer,
+  sparta: spartaReducer,
+  utils: utilsReducer,
+  utilsMath: utilsMathReducer,
+  utilsPricing: utilsPricingReducer,
+  web3: web3Reducer,
 })
 
 const store = createStore(reducers, applyMiddleware(thunk))
