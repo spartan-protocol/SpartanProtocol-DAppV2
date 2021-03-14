@@ -11,37 +11,25 @@ const walletTypes = [
   {
     id: 'BC',
     title: 'BinanceChain',
-    icon: BinanceChain,
+    icon: [BinanceChain],
     inject: 'bsc',
   },
   {
     id: 'MM',
     title: 'MetaMask',
-    icon: MetaMask,
+    icon: [MetaMask],
     inject: '',
   },
   {
     id: 'WC',
     title: 'WalletConnect',
-    icon: WalletConnect,
-    inject: `walletconnect:${{ rpcUrl }}`,
+    icon: [WalletConnect],
+    inject: `walletconnect:${{ rpcUrl }}`, // Need to add capability to handle this after creating random-RPC function
   },
   {
-    id: 'TW',
-    title: 'TrustWallet',
-    icon: TrustWallet,
-    inject: 'injected',
-  },
-  {
-    id: 'MW',
-    title: 'MathWallet',
-    icon: MathWallet,
-    inject: 'injected',
-  },
-  {
-    id: 'UW',
-    title: 'Manual',
-    icon: TokenPocket,
+    id: 'OOT',
+    title: 'Others',
+    icon: [TokenPocket, MathWallet, TrustWallet],
     inject: 'injected',
   },
 ]

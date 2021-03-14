@@ -8,13 +8,21 @@ import Col from 'react-bootstrap/Col'
 import { ethers } from 'ethers'
 
 import { Alert } from 'reactstrap'
+import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import { SPARTA_ADDR, watchAsset } from '../../utils/web3'
+import { changeNetwork, getNetwork, SPARTA_ADDR } from '../../utils/web3'
+import { watchAsset } from '../../store/web3'
 
 const WalletSelect = (props) => {
+  const dispatch = useDispatch()
   const wallet = useWallet()
   const [walletIcon, setWalletIcon] = useState('')
+  const [network, setNetwork] = useState(getNetwork)
+
+  const _changeNetwork = (net) => {
+    setNetwork(changeNetwork(net))
+  }
 
   //   const [modalMini, setModalMini] = React.useState(false)
   //   const [modalClassic, setModalClassic] = React.useState(false)
@@ -76,7 +84,7 @@ const WalletSelect = (props) => {
             <i className="bd-icons icon-simple-remove" />
           </button>
           <h2 className="modal-title text-center" id="myModalLabel">
-            Connect to a wallet
+            Connect to a wallet - Network: {network.net}
           </h2>
         </div>
 
@@ -90,6 +98,28 @@ const WalletSelect = (props) => {
               </span>
             </Alert>
           )}
+
+          <div>
+            <button
+              type="button"
+              className="btn btn-success w-50 mx-0 px-1"
+              onClick={() => _changeNetwork('mainnet')}
+            >
+              <Col>
+                <div className="">Mainnet</div>
+              </Col>
+            </button>
+            <button
+              type="button"
+              className="btn btn-success w-50 mx-0 px-1"
+              onClick={() => _changeNetwork('testnet')}
+            >
+              <Col>
+                <div className="">Testnet</div>
+              </Col>
+            </button>
+          </div>
+
           {wallet.status === 'connected' ? (
             <div>
               <Image
@@ -110,7 +140,7 @@ const WalletSelect = (props) => {
               <Button
                 variant="primary"
                 onClick={() => {
-                  watchAsset(SPARTA_ADDR, 'SPARTA', 18)
+                  dispatch(watchAsset(SPARTA_ADDR, 'SPARTA', 18))
                 }}
               >
                 Add to Wallet

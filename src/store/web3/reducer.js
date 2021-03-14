@@ -1,6 +1,9 @@
 import * as Types from './types'
 
+const initialNetwork = JSON.parse(window.localStorage.getItem('network'))
+
 const initialState = {
+  network: initialNetwork || { chainId: 56, net: 'mainnet', chain: 'BSC' },
   contract: {},
   loading: false,
   error: null,
@@ -8,10 +11,28 @@ const initialState = {
 
 export const web3Reducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_CONTRACT: {
+    case Types.GET_APPROVAL: {
       return {
         ...state,
-        contract: action.payload,
+        approval: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_ALLOWANCE: {
+      return {
+        ...state,
+        allowance: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.WATCH_ASSET: {
+      return {
+        ...state,
+        watchingAsset: action.payload,
         loading: false,
         error: null,
       }

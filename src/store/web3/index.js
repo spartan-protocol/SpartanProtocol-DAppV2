@@ -1,3 +1,5 @@
 export { useWeb3 } from './selector'
 export { web3Reducer } from './reducer'
 export { getApproval } from './actions'
+export { getAllowance } from './actions'
+export { watchAsset } from './actions'

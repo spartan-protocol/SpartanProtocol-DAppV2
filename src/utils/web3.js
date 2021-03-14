@@ -60,69 +60,42 @@ export const getTokenContract = (tokenAddress) => {
   return contract
 }
 
-// GET allowance APPROVAL FOR ASSET TO INTERACT WITH CONTRACT VIA WALLET
-export const newApproval = async (tokenAddress, contractAddress) => {
-  const provider = getWalletProvider()
-  let contract = getTokenContract(tokenAddress)
-  const supply = await contract.totalSupply()
-  const gPrice = await provider.getGasPrice()
-  const gLimit = await contract.estimateGas.approve(contractAddress, supply)
-  contract = await contract.approve(contractAddress, supply, {
-    gasPrice: gPrice,
-    gasLimit: gLimit,
-  })
-  console.log(contract)
-  return contract
+/**
+ * Trigger change between mainnet and testnet
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} chainId (56), net (mainnet), chain (BSC)
+ */
+export const changeNetwork = (_network) => {
+  const network =
+    _network === 'testnet'
+      ? { chainId: 97, net: 'testnet', chain: 'BSC' }
+      : { chainId: 56, net: 'mainnet', chain: 'BSC' }
+  window.localStorage.setItem('network', JSON.stringify(network))
+  return network
 }
 
-// Check approval allowance
-export const getApprovalAllowance = async (
-  tokenAddress,
-  userAddress,
-  contractAddress,
-) => {
-  const contract = getTokenContract(tokenAddress)
-  const result = await contract.allowance(userAddress, contractAddress)
-  console.log(result)
-  return result
+/**
+ * Check localStorage for net and set default if missing
+ * @returns {Object} chainId (56), net (mainnet), chain (BSC)
+ */
+export const getNetwork = () => {
+  const network = JSON.parse(window.sessionStorage.getItem('network'))
+    ? JSON.parse(window.sessionStorage.getItem('network'))
+    : changeNetwork('mainnet')
+  return network
 }
 
-// ADD TOKEN INFO TO WALLET
-export const watchAsset = async (
-  tokenAddress,
-  tokenSymbol,
-  tokenDecimals,
-  tokenImage,
-) => {
+/**
+ * Get the 'window' object of the connected walletType
+ * @param {} - uses localStorage
+ * @returns {Object} window.ethereum or BinanceChain
+ */
+export const getWalletWindowObj = () => {
   let connectedWalletType = ''
   if (window.sessionStorage.getItem('lastWallet') === 'BC') {
     connectedWalletType = window.BinanceChain
   } else {
     connectedWalletType = window.ethereum
   }
-  if (window.sessionStorage.getItem('walletConnected')) {
-    try {
-      const wasAdded = await connectedWalletType.request({
-        method: 'wallet_watchAsset',
-        params: {
-          type: 'ERC20', // Initially only supports ERC20, but eventually more!
-          options: {
-            address: tokenAddress, // The address that the token is at.
-            symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 chars.
-            decimals: tokenDecimals, // The number of decimals in the token
-            image: tokenImage, // A string url of the token logo
-          },
-        },
-      })
-      if (wasAdded) {
-        console.log('Token added to wallet watch list')
-      } else {
-        console.log('Token not added to wallet watch list')
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  } else {
-    console.log('Please connect your wallet first')
-  }
+  return connectedWalletType
 }

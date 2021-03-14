@@ -21,6 +21,7 @@ import { utilsReducer } from './store/utils'
 import { utilsMathReducer } from './store/utilsMath'
 import { utilsPricingReducer } from './store/utilsPricing'
 import { web3Reducer } from './store/web3'
+import { getNetwork } from './utils/web3'
 
 const reducers = combineReducers({
   bond: bondReducer,
@@ -40,7 +41,7 @@ const rpcUrl = process.env.REACT_APP_RPC
 ReactDOM.render(
   <Provider store={store}>
     <UseWalletProvider
-      chainId={parseInt(process.env.REACT_APP_CHAIN_ID, 16)}
+      chainId={parseInt(getNetwork().chainId, 10)}
       connectors={{
         walletconnect: { rpcUrl },
         bsc: {},
