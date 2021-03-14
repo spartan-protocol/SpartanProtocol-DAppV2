@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { changeNetwork, getNetwork, SPARTA_ADDR } from '../../utils/web3'
-import { watchAsset } from '../../store/web3'
+import { addNetwork, watchAsset } from '../../store/web3'
 
 const WalletSelect = (props) => {
   const dispatch = useDispatch()
@@ -22,6 +22,7 @@ const WalletSelect = (props) => {
 
   const _changeNetwork = (net) => {
     setNetwork(changeNetwork(net))
+    dispatch(addNetwork())
   }
 
   //   const [modalMini, setModalMini] = React.useState(false)
@@ -95,8 +96,8 @@ const WalletSelect = (props) => {
             <Alert color="warning">
               <span>
                 {' '}
-                Wallet connection failed! Check the network is set to BSC
-                MainNet! Have you selected the correct wallet type?
+                Wallet connection failed! Check the network in your wallet
+                matches the selection in the DApp.
               </span>
             </Alert>
           )}

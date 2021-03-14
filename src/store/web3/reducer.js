@@ -1,13 +1,25 @@
 import * as Types from './types'
 
 const initialState = {
-  contract: {},
+  addedNetwork: {},
+  approval: false,
+  allowance: {},
+  watchingAsset: false,
   loading: false,
   error: null,
 }
 
 export const web3Reducer = (state = initialState, action) => {
   switch (action.type) {
+    case Types.ADD_NETWORK: {
+      return {
+        ...state,
+        addedNetwork: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
     case Types.GET_APPROVAL: {
       return {
         ...state,

@@ -4,12 +4,62 @@ import {
   getWalletProvider,
   getTokenContract,
   getWalletWindowObj,
+  bscRpcsMN,
+  bscRpcsTN,
+  getNetwork,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 
 export const web3Loading = () => ({
   type: Types.WEB3_LOADING,
 })
+
+/**
+ * Prompt the user to add BSC as a network on Metamask, or switch to BSC if the wallet is on a different network
+ * @returns {boolean} true if the setup succeeded, false otherwise
+ */
+/**
+ * Check which network selected is selected in the wallet and prompt to add or change if available
+ * @param {string} network - Whether it is 'mainnet' or 'testnet'
+ * @returns {boolean} true if succeeds
+ */
+export const addNetwork = () => async (dispatch) => {
+  dispatch(web3Loading())
+  const provider = window.ethereum ? window.ethereum : window.BinanceChain
+  const network = getNetwork()
+  if (provider === window.ethereum) {
+    const chainId = parseInt(network.chainId, 10)
+    try {
+      console.log(provider)
+      const addedNetwork = await provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: `0x${chainId.toString(16)}`,
+            chainName: `BSC ${network.net}`,
+            nativeCurrency: {
+              name: 'BNB',
+              symbol: 'bnb',
+              decimals: 18,
+            },
+            rpcUrls: network.net === 'testnet' ? bscRpcsTN : bscRpcsMN,
+            blockExplorerUrls: ['https://bscscan.com/'],
+          },
+        ],
+      })
+      dispatch(payloadToDispatch(Types.ADD_NETWORK, addedNetwork))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    }
+  } else {
+    dispatch(
+      errorToDispatch(
+        Types.WEB3_ERROR,
+        'There was an issue adding the network; do you have metamask installed?',
+      ),
+    )
+  }
+}
 
 /**
  * Get approval for a smart contract to handle transferring a token for the wallet
@@ -41,7 +91,7 @@ export const getApproval = (tokenAddress, contractAddress) => async (
 /**
  * Get the current allowance-limit for a smart contract to handle transferring a token on behlf of a wallet
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
- * @returns {boolean} true if succeeds
+ * @returns {BigNumber?}
  */
 export const getAllowance = (
   tokenAddress,
