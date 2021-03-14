@@ -181,6 +181,23 @@
 
       }
 
+      > .navdiv {
+        margin: 10px 15px 0;
+        border-radius: $btn-round-radius;
+        color: $white;
+        display: block;
+        text-decoration: none;
+        position: relative;
+        cursor: pointer;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 14px;
+        font-weight: 700;
+        padding: 10px 8px;
+        line-height: 20px;
+
+      }
+
       &:first-child > a {
         margin: 0 15px;
 
@@ -200,6 +217,31 @@
       }
 
       &.active > a:not([data-toggle="collapse"]) {
+        border-radius: 0%;
+        padding-right: 1px;
+
+
+        i, p {
+          color: white;
+
+
+
+        }
+
+        &:before {
+          content: " ";
+          margin-left:-4px;
+          margin-top: -22px;
+          position: absolute;
+          height: 50px;
+          width: 4px;
+          top: 22px;
+          left: -10px;
+          background: #FB2715;
+        }
+      }
+
+      &.active > div:not([data-toggle="collapse"]) {
         border-radius: 0%;
         padding-right: 1px;
 
@@ -258,6 +300,48 @@
           content: " ";
           position: absolute;
           height: 35px;
+          width: 4px;
+          top: 22px;
+          left: -10px;
+          background: #FB2715;
+          border-radius: 0%;
+        }
+      }
+
+      &.active > div[data-toggle="collapse"] {
+        background: transparent;
+        box-shadow: none;
+        color: $white;
+
+        i {
+          color: $white;
+        }
+
+        & + div .nav .active div {
+          box-shadow: none;
+
+          .sidebar-mini-icon, .sidebar-normal {
+            color: $white;
+            font-weight: $font-weight-normal;
+          }
+
+          &:before {
+            content: " ";
+            position: absolute;
+            height: 0px;
+            width: 0px;
+            top: 17px;
+            //background: $white;
+            border-radius: 0%;
+          }
+        }
+
+        &:before {
+          margin-left:-4px;
+          margin-top: -22px;
+          content: " ";
+          position: absolute;
+          height: 50px;
           width: 4px;
           top: 22px;
           left: -10px;
