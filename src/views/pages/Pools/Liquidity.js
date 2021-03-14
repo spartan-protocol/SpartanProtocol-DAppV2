@@ -4,7 +4,6 @@ import React from 'react'
 
 import {
   Row,
-  Button,
   Col,
   Card,
   Nav,
@@ -30,10 +29,6 @@ import coin_bnb from '../../../assets/icons/coin_bnb.svg'
 import coin_sparta from '../../../assets/icons/coin_sparta.svg'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
-import {
-  //   getBondBurnReady,
-  getBondSpartaRemaining,
-} from '../../../utils/web3Bond'
 
 const Liquidity = () => {
   const [horizontalTabs, sethorizontalTabs] = React.useState('profile')
@@ -202,13 +197,6 @@ const Liquidity = () => {
                                 <Col md={6}>
                                   <div className="text-right">
                                     <label>Balance 10.36</label>
-                                    <Button
-                                      onClick={() => {
-                                        getBondSpartaRemaining()
-                                      }}
-                                    >
-                                      TEST
-                                    </Button>
                                     <FormGroup>
                                       <h5>
                                         <img
