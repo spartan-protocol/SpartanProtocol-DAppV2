@@ -61,13 +61,15 @@ const WalletSelect = (props) => {
     wallet.reset()
     console.log('reset')
     if (x.inject === '') {
+      console.log('no inject')
       wallet.connect()
     } else {
+      console.log(`${x.inject} inject`)
       wallet.connect(x.inject)
     }
     window.sessionStorage.setItem('lastWallet', x.id)
-    setWalletIcon(x.icon)
-    props.setWalletHeaderIcon(x.icon)
+    setWalletIcon(x.icon[0])
+    // props.setWalletHeaderIcon(x.icon[0])
   }
 
   return (
@@ -170,12 +172,18 @@ const WalletSelect = (props) => {
                     color="success"
                     type="button"
                     className="btn btn-warning btn-block"
-                    onClick={() => connectWallet(props, x)}
+                    onClick={() => connectWallet(x)}
                   >
                     <Col>
                       <div className="float-left mt-2 ">{x.title}</div>
                       <div className="float-right">
-                        <Image src={x.icon} className="px-1 wallet-icons" />
+                        {x.icon.map((i) => (
+                          <Image
+                            key={`${x.id}icon${i}`}
+                            src={i}
+                            className="px-1 wallet-icons"
+                          />
+                        ))}
                       </div>
                     </Col>
                   </button>

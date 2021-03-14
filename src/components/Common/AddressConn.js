@@ -4,7 +4,7 @@ import walletTypes from '../WalletSelect/walletTypes'
 
 const AddressConn = () => {
   const [walletModalShow, setWalletModalShow] = useState(false)
-  const [walletHeaderIcon, setWalletHeaderIcon] = useState(walletTypes[0].icon)
+  const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
   return (
     <>
@@ -25,7 +25,7 @@ const AddressConn = () => {
         <WalletSelect
           show={walletModalShow}
           onHide={() => setWalletModalShow(false)}
-          setWalletHeaderIcon={setWalletHeaderIcon}
+          // setWalletHeaderIcon={setWalletHeaderIcon}
         />
       </>
     </>

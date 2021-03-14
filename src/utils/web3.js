@@ -79,8 +79,8 @@ export const changeNetwork = (_network) => {
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
 export const getNetwork = () => {
-  const network = JSON.parse(window.sessionStorage.getItem('network'))
-    ? JSON.parse(window.sessionStorage.getItem('network'))
+  const network = JSON.parse(window.localStorage.getItem('network'))
+    ? JSON.parse(window.localStorage.getItem('network'))
     : changeNetwork('mainnet')
   return network
 }

@@ -1,9 +1,6 @@
 import * as Types from './types'
 
-const initialNetwork = JSON.parse(window.localStorage.getItem('network'))
-
 const initialState = {
-  network: initialNetwork || { chainId: 56, net: 'mainnet', chain: 'BSC' },
   contract: {},
   loading: false,
   error: null,
