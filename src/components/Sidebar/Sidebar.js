@@ -1,6 +1,6 @@
-/* prettier-ignore */
-
 /* eslint-disable react/no-array-index-key */
+/* eslint-disable react/forbid-prop-types */
+
 import React, { useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'

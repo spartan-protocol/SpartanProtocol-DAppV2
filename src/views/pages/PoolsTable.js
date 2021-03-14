@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable global-require */
 
 import React from 'react'
@@ -9,8 +10,6 @@ import { CardBody, CardHeader, Collapse } from 'reactstrap'
 import Button from 'react-bootstrap/Button'
 
 import bnb from '../../assets/icons/BNB.svg'
-import coin_bnb from '../../assets/icons/coin_bnb.svg'
-import coin_sparta from '../../assets/icons/coin_sparta.svg'
 import bnb_sparta from '../../assets/icons/bnb_sparta.png'
 
 const PoolsTable = () => {
