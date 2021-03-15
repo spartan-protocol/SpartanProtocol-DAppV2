@@ -26,7 +26,6 @@ describe('Router actions', () => {
 
   test('should get the pool', async () => {
     await getPool(TEST_TOKEN)(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_POOL)
   })

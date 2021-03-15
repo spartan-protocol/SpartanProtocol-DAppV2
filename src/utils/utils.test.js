@@ -15,7 +15,7 @@ describe('Utils', () => {
     const { connection } = getWalletProvider()
 
     expect(connection).toStrictEqual({
-      url: 'https://bsc-dataseed1.ninicoin.io/',
+      url: 'https://bsc-dataseed.binance.org/',
     })
   })
   test('should get wallet provider from ethereum globals in the first conection', () => {
@@ -23,7 +23,7 @@ describe('Utils', () => {
     const { provider } = getWalletProvider()
 
     expect(provider.connection).toStrictEqual({
-      url: 'eip-1193:',
+      url: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
     })
   })
 
@@ -34,7 +34,7 @@ describe('Utils', () => {
     const { provider } = getWalletProvider()
 
     expect(provider.connection).toStrictEqual({
-      url: 'eip-1193:',
+      url: 'https://data-seed-prebsc-2-s1.binance.org:8545/',
     })
   })
   test('should get contract', () => {
