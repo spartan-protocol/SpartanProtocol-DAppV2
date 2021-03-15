@@ -53,6 +53,5 @@ export const ROUTER_ABI = ROUTER.abi
 export const getRouterContract = () => {
   const provider = getWalletProvider()
   const contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
-  console.log(contract)
   return contract
 }

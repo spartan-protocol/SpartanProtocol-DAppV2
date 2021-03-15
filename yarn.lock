@@ -856,7 +856,7 @@
     resolve "^1.8.1"
     semver "^5.5.1"
 
-"@babel/plugin-transform-runtime@^7.5.5":
+"@babel/plugin-transform-runtime@^7.13.10", "@babel/plugin-transform-runtime@^7.5.5":
   version "7.13.10"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.13.10.tgz#a1e40d22e2bf570c591c9c7e5ab42d6bf1e419e1"
   integrity sha512-Y5k8ipgfvz5d/76tx7JYbKQTcgFSU6VgJ3kKQv4zGTKr+a9T/KBvfRvGtSFgKDQGt/DBykQixV0vNWKIdzWErA==
@@ -1000,7 +1000,7 @@
     core-js-compat "^3.6.2"
     semver "^5.5.0"
 
-"@babel/preset-env@^7.8.4", "@babel/preset-env@^7.9.5":
+"@babel/preset-env@^7.13.10", "@babel/preset-env@^7.8.4", "@babel/preset-env@^7.9.5":
   version "7.13.10"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.13.10.tgz#b5cde31d5fe77ab2a6ab3d453b59041a1b3a5252"
   integrity sha512-nOsTScuoRghRtUsRr/c69d042ysfPHcu+KOB4A9aAO9eJYqrkat+LF8G1yp1HD18QiwixT2CisZTr/0b3YZPXQ==
@@ -1098,7 +1098,7 @@
     "@babel/plugin-transform-react-jsx-source" "^7.12.1"
     "@babel/plugin-transform-react-pure-annotations" "^7.12.1"
 
-"@babel/preset-react@^7.9.4":
+"@babel/preset-react@^7.12.13", "@babel/preset-react@^7.9.4":
   version "7.12.13"
   resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.12.13.tgz#5f911b2eb24277fa686820d5bd81cad9a0602a0a"
   integrity sha512-TYM0V9z6Abb6dj1K7i5NrEhA13oS5ujUYQYDfqIBXYHOc2c2VkFgc+q9kyssIyUfy4/hEwqrgSlJ/Qgv8zJLsA==
@@ -9240,7 +9240,7 @@ jest-circus@26.6.0:
     stack-utils "^2.0.2"
     throat "^5.0.0"
 
-jest-cli@^26.6.0:
+jest-cli@^26.6.0, jest-cli@^26.6.3:
   version "26.6.3"
   resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-26.6.3.tgz#43117cfef24bc4cd691a174a8796a532e135e92a"
   integrity sha512-GF9noBSa9t08pSyl3CY4frMrqp+aQXFGFkf5hEPbh/pIUFYWMK6ZLTfbmadxJVcJrdRoChlWQsA2VkJcDFK8hg==
@@ -9638,6 +9638,15 @@ jest@26.6.0:
     "@jest/core" "^26.6.0"
     import-local "^3.0.2"
     jest-cli "^26.6.0"
+
+jest@^26.6.3:
+  version "26.6.3"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-26.6.3.tgz#40e8fdbe48f00dfa1f0ce8121ca74b88ac9148ef"
+  integrity sha512-lGS5PXGAzR4RF7V5+XObhqz2KZIDUA1yD0DG6pBVmy10eh0ZIXQImRuzocsI/N2XZ1GrLFwTS27In2i2jlpq1Q==
+  dependencies:
+    "@jest/core" "^26.6.3"
+    import-local "^3.0.2"
+    jest-cli "^26.6.3"
 
 jquery-mousewheel@^3.1.13:
   version "3.1.13"
@@ -12899,15 +12908,15 @@ react-input-autosize@^2.2.2:
   dependencies:
     prop-types "^15.5.8"
 
+"react-is@^16.12.0 || ^17.0.0", react-is@^17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
+  integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
 react-is@^16.13.1, react-is@^16.3.2, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
-
-react-is@^17.0.1:
-  version "17.0.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
-  integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
 
 react-jvectormap@0.0.16:
   version "0.0.16"
@@ -13095,10 +13104,28 @@ react-select@3.1.1:
     react-input-autosize "^2.2.2"
     react-transition-group "^4.3.0"
 
+react-shallow-renderer@^16.13.1:
+  version "16.14.1"
+  resolved "https://registry.yarnpkg.com/react-shallow-renderer/-/react-shallow-renderer-16.14.1.tgz#bf0d02df8a519a558fd9b8215442efa5c840e124"
+  integrity sha512-rkIMcQi01/+kxiTE9D3fdS959U1g7gs+/rborw++42m1O9FAQiNI/UNRZExVUoAOprn4umcXf+pFRou8i4zuBg==
+  dependencies:
+    object-assign "^4.1.1"
+    react-is "^16.12.0 || ^17.0.0"
+
 react-table@7.6.2:
   version "7.6.2"
   resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.6.2.tgz#b60932fa6d457c2bca0da49815cd6a8fe9451f77"
   integrity sha512-urwNZTieb+xg/+BITUIrqdH5jZfJlw7rKVAAq25iXpBPwbQojLCEKJuGycLbVwn8fzU+Ovly3y8HHNaLNrPCvQ==
+
+react-test-renderer@^17.0.1:
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-17.0.1.tgz#3187e636c3063e6ae498aedf21ecf972721574c7"
+  integrity sha512-/dRae3mj6aObwkjCcxZPlxDFh73XZLgvwhhyON2haZGUEhiaY5EjfAdw+d/rQmlcFwdTpMXCSGVk374QbCTlrA==
+  dependencies:
+    object-assign "^4.1.1"
+    react-is "^17.0.1"
+    react-shallow-renderer "^16.13.1"
+    scheduler "^0.20.1"
 
 react-transition-group@^2.3.1:
   version "2.9.0"

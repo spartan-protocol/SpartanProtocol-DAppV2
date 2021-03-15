@@ -1,5 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_TOKEN, TEST_WALLET } from '../../utils/web3'
+import { TEST_TOKEN, TEST_WALLET, bscRpcsTN } from '../../utils/web3'
 import {
   getListedPools,
   getListedPoolsRange,
@@ -27,6 +27,15 @@ describe('Utils actions', () => {
 
   beforeEach(() => {
     dispatchMock = jest.fn()
+  })
+
+  beforeAll(() => {
+    window.sessionStorage.setItem('network', {
+      chainId: 97,
+      net: 'testnet',
+      chain: 'BSC',
+      rpc: bscRpcsTN,
+    })
   })
 
   afterEach(() => {

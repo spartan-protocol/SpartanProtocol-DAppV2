@@ -4,21 +4,18 @@ import { getWalletProvider, getTokenContract } from './web3'
 import { binanceChainMock, ethereumChainMock } from './chain.mock'
 
 dotenv.config({
-  path: path.resolve(__dirname, '../.env.test.local'),
+  path: path.resolve(__dirname, '../../.env.test.local'),
 })
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
-
-const rpcUrlBc = process.env.REACT_APP_RPC
-const rpcUrlEth = process.env.REACT_APP_RPC_ETH
 
 describe('Utils', () => {
   test('should get default provider when the wallet is not connected', () => {
     const { connection } = getWalletProvider()
 
     expect(connection).toStrictEqual({
-      url: rpcUrlBc,
+      url: 'https://bsc-dataseed1.ninicoin.io/',
     })
   })
   test('should get wallet provider from ethereum globals in the first conection', () => {
@@ -26,7 +23,7 @@ describe('Utils', () => {
     const { provider } = getWalletProvider()
 
     expect(provider.connection).toStrictEqual({
-      url: rpcUrlEth,
+      url: 'eip-1193:',
     })
   })
 
@@ -37,7 +34,7 @@ describe('Utils', () => {
     const { provider } = getWalletProvider()
 
     expect(provider.connection).toStrictEqual({
-      url: rpcUrlBc,
+      url: 'eip-1193:',
     })
   })
   test('should get contract', () => {
