@@ -251,3 +251,39 @@
 #accordion > div > div.card-body.card{
   margin-top: -45px;
 }
+
+
+.title-card{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 20px;
+  /* identical to box height, or 200% */
+
+  font-feature-settings: 'liga' off;
+
+  /* Grey 10 */
+
+  color: #A5ADAF
+}
+
+
+
+
+.subtitle-card{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+  /* identical to box height, or 167% */
+
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #FFFFFF;
+}
+
+

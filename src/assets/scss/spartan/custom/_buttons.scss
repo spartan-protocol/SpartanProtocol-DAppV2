@@ -219,6 +219,18 @@
     }
 }
 
+
+.btn-rounded{
+  border-width: $border-thin;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+
+  &.btn-simple{
+    padding: $padding-btn-vertical - 1  $padding-round-horizontal - 1;
+  }
+}
+
 .no-caret {
   &.dropdown-toggle::after {
     display: none;

@@ -27,40 +27,32 @@ const PoolsTable = () => {
                 BNB
               </h2>
             </Col>
-            <Col md="2">
-              <h7 is="custTag">APY</h7>
+            <Col md="1">
+              <div className="title-card">APY</div>
               <br />
-              <h9 is="custTag">
-                <i className="icon-small icon-spinner icon-light float-left" />
-                188.25%
-              </h9>
+              <div className="subtitle-card">188.25%</div>
             </Col>
-            <Col md="2">
-              <h7 className="modal-title" is="custTag">
-                Depth
-              </h7>
+            <Col md="1">
+              <div className="title-card">Liquidity</div>
               <br />
-              <h9 is="custTag">$2.113.877</h9>
+              <div className="subtitle-card">$2.113.877</div>
             </Col>
-            <Col md="2">
-              <h7 is="custTag">Volume</h7>
+            <Col md="1">
+              <div className="title-card">Volume (24hrs)</div>
               <br />
-              <h9 is="custTag">$13.386.399</h9>
+              <div className="subtitle-card">$13.386.399</div>
+            </Col>
+            <Col md="1">
+              <div className="title-card">Locked LP</div>
+              <br />
+              <div className="subtitle-card">0.00</div>
             </Col>
             <Col sm="0">
-              {/* <Button type="Button" className="btn btn-primary ml-2"> */}
-              {/*    <i className="icon-extra-small icon-swap icon-light"/> */}
-              {/* </Button> */}
-
-              {/* <Button type="Button" className="btn btn-primary mr-5"> */}
-              {/*    <i className="bi-lg bi bi-lock-fill mb-2"/> Bond */}
-              {/* </Button> */}
               <Button type="Button" className="btn btn-primary">
-                <i className="icon-extra-small icon-swap icon-light" />
+                Bond
               </Button>
               <Button type="Button" className="btn btn-primary">
-                <i className="bi-lg bi bi-lock-fill" />
-                Bond
+                Swap
               </Button>
               <Button type="Button" className="btn btn-primary">
                 Join
