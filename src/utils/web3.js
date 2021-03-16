@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 
 // Testnet ABI Imports
 import abiTnBase from '../ABI/TN/Base.json'
-import abiTnBond from '../ABI/TN/Bond.json'
+import abiTnBond from '../ABI/TN/BondV3.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
 import abiTnLock from '../ABI/TN/Lock.json'
@@ -15,7 +15,7 @@ import abiTnWbnb from '../ABI/TN/WBNB.json'
 
 // Mainnet ABI Imports
 import abiMnBase from '../ABI/MN/Base.json'
-import abiMnBond from '../ABI/MN/Bond.json'
+import abiMnBond from '../ABI/MN/BondV3.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
 import abiMnLock from '../ABI/MN/Lock.json'

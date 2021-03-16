@@ -1,31 +1,16 @@
 import { ethers } from 'ethers'
 
-import { getAbis, getWalletProvider } from './web3'
+import { getAbis, getAddresses, getWalletProvider } from './web3'
 
-const net = process.env.REACT_APP_NET
-
-// OLD CONTRACT ADDRESSES
 // eslint-disable-next-line camelcase
-export const BONDv1_ADDR =
-  net === 'testnet'
-    ? '0x4551457647f6810a917AF70Ca47252BbECD2A36c'
-    : '0xDa7d913164C5611E5440aE8c1d3e06Df713a13Da'
+export const BONDv1_ADDR = getAddresses().bondv1
 // eslint-disable-next-line camelcase
-export const BONDv2_ADDR =
-  net === 'testnet'
-    ? '0x2021047F7E3F8c9882e502A63eF036daEFA0B5f6'
-    : '0xE6844821B03828Fd4067167Bc258FA1EEFD1cCdf'
+export const BONDv2_ADDR = getAddresses().bondv2
 // eslint-disable-next-line camelcase
-export const BONDv3_ADDR =
-  net === 'testnet'
-    ? '0xa11D0a9F919EDc6D72aF8F90D56735cAd0EBE836'
-    : '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43'
+export const BONDv3_ADDR = getAddresses().bondv3
 
 // CURRENT CONTRACT ADDRESSES
-export const BOND_ADDR =
-  net === 'testnet'
-    ? '0xa11D0a9F919EDc6D72aF8F90D56735cAd0EBE836'
-    : '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43'
+export const BOND_ADDR = getAddresses().bond
 
 // FUTURE CONTRACT ADDRESSES
 // export const BONDv4_ADDR = net === 'testnet' ? '' : ''
