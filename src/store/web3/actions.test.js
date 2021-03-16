@@ -1,7 +1,12 @@
+import path from 'path'
+import dotenv from 'dotenv'
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 import { getApproval } from './actions'
 import * as Types from './types'
 
+dotenv.config({
+  path: path.resolve(__dirname, '../../../.env.test.local'),
+})
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
 
@@ -15,7 +20,7 @@ describe('Web3 actions', () => {
       process.env.REACT_APP_CONTRACT_ADDR,
     )(dispatchMock)
 
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_CONTRACT)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_APPROVAL)
     expect(dispatchMock.mock.calls[1][0].payload.hash).toBe(
       '0xc6a8fa37107ed2bd3d9c07be0c86ff8a83002ab590d296cc3af303f09f68b379',
     )

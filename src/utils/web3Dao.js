@@ -33,6 +33,5 @@ export const DAO_ABI = DAO.abi
 export const getDaoContract = () => {
   const provider = getWalletProvider()
   const contract = new ethers.Contract(DAO_ADDR, DAO_ABI, provider)
-  console.log(contract)
   return contract
 }

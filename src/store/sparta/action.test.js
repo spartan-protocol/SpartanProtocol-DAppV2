@@ -32,7 +32,7 @@ describe('Sparta actions', () => {
   })
 
   test('should be able to claim from base', async () => {
-    await claim(BOND_ADDR, '1000000000000000000', true)(dispatchMock)
+    await claim(BOND_ADDR, 100, true)(dispatchMock)
     console.log(dispatchMock.mock.calls[1][0])
     if (dispatchMock.mock.calls[1][0].payload) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()

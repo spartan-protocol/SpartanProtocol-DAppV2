@@ -132,7 +132,7 @@ export const getNetwork = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = () => {
   const network = getNetwork()
-  let provider = new ethers.providers.JsonRpcProvider(network.rpcUrl)
+  let provider = new ethers.providers.JsonRpcProvider(network.rpc)
   let connectedWalletType = ''
   if (window.sessionStorage.getItem('lastWallet') === 'BC') {
     connectedWalletType = window.BinanceChain
