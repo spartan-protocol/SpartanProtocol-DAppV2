@@ -1,7 +1,5 @@
 import { ethers } from 'ethers'
-
-import UTILS from '../config/ABI/Utils.json'
-import { getWalletProvider } from './web3'
+import { getAbis, getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
 const BN = ethers.BigNumber.from
@@ -22,13 +20,11 @@ export const UTILS_ADDR =
 // FUTURE CONTRACT ADDRESSES
 // export const UTILSv2_ADDR = net === 'testnet' ? '' : ''
 
-// ABI
-export const UTILS_ABI = UTILS.abi
-
 // GET UTILS CONTRACT
 export const getUtilsContract = () => {
+  const abiUtils = getAbis().utils
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(UTILS_ADDR, UTILS_ABI, provider)
+  const contract = new ethers.Contract(UTILS_ADDR, abiUtils, provider)
   return contract
 }
 

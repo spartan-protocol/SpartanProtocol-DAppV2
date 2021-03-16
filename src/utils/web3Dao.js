@@ -1,8 +1,5 @@
 import { ethers } from 'ethers'
-
-import DAO from '../config/ABI/Dao.json'
-// import DAOVAULT from '../config/ABI/DaoVault.json'
-import { getWalletProvider } from './web3'
+import { getAbis, getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
 
@@ -23,15 +20,12 @@ export const DAO_ADDR =
 // export const DAOv2_ADDR = net === 'testnet' ? '' : ''
 // export const DAOVAULTv1_ADDR = net === 'testnet' ? '' : ''
 
-// ABI
-export const DAO_ABI = DAO.abi
-// export const DAOVAULT_ABI = DAOVAULT.abi
-
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
 // GET DAO CONTRACT
 export const getDaoContract = () => {
+  const abiDao = getAbis().dao
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(DAO_ADDR, DAO_ABI, provider)
+  const contract = new ethers.Contract(DAO_ADDR, abiDao, provider)
   return contract
 }

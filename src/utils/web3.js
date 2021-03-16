@@ -1,10 +1,34 @@
 import { ethers } from 'ethers'
 
-import ERC20 from '../config/ABI/ERC20.json'
+// Testnet ABI Imports
+import abiTnBase from '../ABI/TN/Base.json'
+import abiTnBond from '../ABI/TN/Bond.json'
+import abiTnDao from '../ABI/TN/Dao.json'
+import abiTnErc20 from '../ABI/TN/ERC20.json'
+import abiTnLock from '../ABI/TN/Lock.json'
+import abiTnPool from '../ABI/TN/Pool.json'
+import abiTnRecover from '../ABI/TN/Recover.json'
+import abiTnRouter from '../ABI/TN/Router.json'
+import abiTnSynthetics from '../ABI/TN/Synthetics.json'
+import abiTnUtils from '../ABI/TN/Utils.json'
+import abiTnWbnb from '../ABI/TN/WBNB.json'
+
+// Mainnet ABI Imports
+import abiMnBase from '../ABI/MN/Base.json'
+import abiMnBond from '../ABI/MN/Bond.json'
+import abiMnDao from '../ABI/MN/Dao.json'
+import abiMnErc20 from '../ABI/MN/ERC20.json'
+import abiMnLock from '../ABI/MN/Lock.json'
+import abiMnPool from '../ABI/MN/Pool.json'
+import abiMnRecover from '../ABI/MN/Recover.json'
+import abiMnRouter from '../ABI/MN/Router.json'
+import abiMnSynthetics from '../ABI/MN/Synthetics.json'
+import abiMnUtils from '../ABI/MN/Utils.json'
+import abiMnWbnb from '../ABI/MN/WBNB.json'
 
 const net = process.env.REACT_APP_NET
 
-// TOKEN ADDRESSES
+// TOKEN ADDRESSES (REMOVE ONCE COMPLETELY UNLINKED FROM ALL TESTS/FUNCTIONS)
 export const BNB_ADDR = '0x0000000000000000000000000000000000000000'
 export const WBNB_ADDR =
   net === 'testnet'
@@ -14,6 +38,34 @@ export const SPARTA_ADDR =
   net === 'testnet'
     ? '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB'
     : '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C'
+
+export const abisTN = {
+  base: abiTnBase.abi,
+  bond: abiTnBond.abi,
+  dao: abiTnDao.abi,
+  erc20: abiTnErc20.abi,
+  lock: abiTnLock.abi, // Confirm this one?
+  pool: abiTnPool.abi, // Confirm this one?
+  recover: abiTnRecover.abi, // Confirm this one?
+  router: abiTnRouter.abi,
+  synthetics: abiTnSynthetics.abi, // Confirm this one?
+  utils: abiTnUtils.abi,
+  wbnb: abiTnWbnb.abi, // Confirm this one?
+}
+
+export const abisMN = {
+  base: abiMnBase.abi,
+  bond: abiMnBond.abi,
+  dao: abiMnDao.abi,
+  erc20: abiMnErc20.abi,
+  lock: abiMnLock.abi, // Confirm this one?
+  pool: abiMnPool.abi, // Confirm this one?
+  recover: abiMnRecover.abi, // Confirm this one?
+  router: abiMnRouter.abi,
+  synthetics: abiMnSynthetics.abi, // Confirm this one?
+  utils: abiMnUtils.abi,
+  wbnb: abiMnWbnb.abi, // Confirm this one?
+}
 
 // ADDRESSES FOR TESTS
 export const TEST_WALLET = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
@@ -88,8 +140,27 @@ export const bscRpcsMN = [
   'https://bsc-dataseed1.ninicoin.io/',
 ]
 
-// ABI
-export const ERC20_ABI = ERC20.abi
+/**
+ * Trigger change between ABIs
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} Relevant ABI array
+ */
+export const changeAbis = (_network) => {
+  const abis = _network === 'testnet' ? abisTN : abisMN
+  window.localStorage.setItem('abis', JSON.stringify(abis))
+  return abis
+}
+
+/**
+ * Check localStorage for net and set default if missing
+ * @returns {Object} chainId (56), net (mainnet), chain (BSC)
+ */
+export const getAbis = () => {
+  const abis = JSON.parse(window.localStorage.getItem('abis'))
+    ? JSON.parse(window.localStorage.getItem('abis'))
+    : changeAbis('mainnet')
+  return abis
+}
 
 /**
  * Trigger random selection of a relevant RPC URL
@@ -110,6 +181,7 @@ export const changeRpc = (_network) => {
  */
 export const changeNetwork = (_network) => {
   const rpcUrl = changeRpc(_network)
+  changeAbis(_network)
   const network =
     _network === 'testnet'
       ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
@@ -155,8 +227,9 @@ export const getProviderGasPrice = () => {
 
 // CONNECT TO CONTRACT WITH PROVIDER & SIGNER IF AVAILABLE
 export const getTokenContract = (tokenAddress) => {
+  const abi = getAbis().erc20
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider)
+  const contract = new ethers.Contract(tokenAddress, abi, provider)
   return contract
 }
 

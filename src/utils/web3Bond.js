@@ -1,9 +1,10 @@
 import { ethers } from 'ethers'
 
-import BOND from '../config/ABI/BondV3.json' // UPDATE WITH NEW BOND CONTRACT
-import { getWalletProvider } from './web3'
+import { getAbis, getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
+
+console.log(getAbis.bond)
 
 // OLD CONTRACT ADDRESSES
 // eslint-disable-next-line camelcase
@@ -31,21 +32,20 @@ export const BOND_ADDR =
 // FUTURE CONTRACT ADDRESSES
 // export const BONDv4_ADDR = net === 'testnet' ? '' : ''
 
-// ABI
-export const BOND_ABI = BOND.abi
-
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
 // GET OLDER BOND CONTRACT (v1, v2, v3)
 export const getOldBondContract = (bondAddress) => {
+  const abiBond = getAbis().bond
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(bondAddress, BOND_ABI, provider)
+  const contract = new ethers.Contract(bondAddress, abiBond, provider)
   return contract
 }
 
 // GET CURRENT BOND CONTRACT
 export const getBondContract = () => {
+  const abiBond = getAbis().bond
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(BOND_ADDR, BOND_ABI, provider)
+  const contract = new ethers.Contract(BOND_ADDR, abiBond, provider)
   return contract
 }

@@ -1,9 +1,6 @@
 import { ethers } from 'ethers'
 
-import ROUTER from '../config/ABI/Router.json'
-// import SYNTH_ROUTER from '../config/ABI/synthRouter.json'
-// import LEVERAGE from '../config/ABI/Leverage.json'
-import { getWalletProvider } from './web3'
+import { getAbis, getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
 
@@ -42,16 +39,12 @@ export const ROUTER_ADDR = ROUTERv2c_ADDR
 // export const sROUTERv1_ADDR = net === 'testnet' ? '' : ''
 // export const LEVERAGEv1_ADDR = net === 'testnet' ? '' : ''
 
-// ABI
-export const ROUTER_ABI = ROUTER.abi
-// export const SYNTH_ROUTER_ABI = SYNTH_ROUTER.abi
-// export const LEVERAGE_ABI = LEVERAGE.abi
-
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
 // GET ROUTER CONTRACT
 export const getRouterContract = () => {
+  const abiRouter = getAbis().router
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(ROUTER_ADDR, ROUTER_ABI, provider)
+  const contract = new ethers.Contract(ROUTER_ADDR, abiRouter, provider)
   return contract
 }
