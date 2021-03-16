@@ -4,8 +4,6 @@ import { getAbis, getWalletProvider } from './web3'
 
 const net = process.env.REACT_APP_NET
 
-console.log(getAbis.bond)
-
 // OLD CONTRACT ADDRESSES
 // eslint-disable-next-line camelcase
 export const BONDv1_ADDR =

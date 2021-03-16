@@ -141,9 +141,31 @@ export const bscRpcsMN = [
 ]
 
 /**
+ * Trigger change between Addresses
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} Relevant list of addresses
+ */
+export const changeAddresses = (_network) => {
+  const addresses = _network === 'testnet' ? addressesTN : addressesMN
+  window.localStorage.setItem('addresses', JSON.stringify(addresses))
+  return addresses
+}
+
+/**
+ * Check localStorage for addresses and set default if missing
+ * @returns {Object} Relevant list of addresses
+ */
+export const getAddresses = () => {
+  const addresses = JSON.parse(window.localStorage.getItem('addresses'))
+    ? JSON.parse(window.localStorage.getItem('addresses'))
+    : changeAddresses('mainnet')
+  return addresses
+}
+
+/**
  * Trigger change between ABIs
  * @param {string} net - 'mainnet' or 'testnet'
- * @returns {Object} Relevant ABI array
+ * @returns {Object} Relevant list of ABIs
  */
 export const changeAbis = (_network) => {
   const abis = _network === 'testnet' ? abisTN : abisMN
@@ -152,8 +174,8 @@ export const changeAbis = (_network) => {
 }
 
 /**
- * Check localStorage for net and set default if missing
- * @returns {Object} chainId (56), net (mainnet), chain (BSC)
+ * Check localStorage for ABIs and set default if missing
+ * @returns {Object} Relevant list of ABIs
  */
 export const getAbis = () => {
   const abis = JSON.parse(window.localStorage.getItem('abis'))
@@ -182,6 +204,7 @@ export const changeRpc = (_network) => {
 export const changeNetwork = (_network) => {
   const rpcUrl = changeRpc(_network)
   changeAbis(_network)
+  changeAddresses(_network)
   const network =
     _network === 'testnet'
       ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
