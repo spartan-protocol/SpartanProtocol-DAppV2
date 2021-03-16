@@ -254,10 +254,10 @@
 
 
 .title-card{
-  font-family: Roboto;
+  font-family: $font-family-base;
   font-style: normal;
   font-weight: normal;
-  font-size: 10px;
+  font-size: 14px;
   line-height: 20px;
   /* identical to box height, or 200% */
 
@@ -265,17 +265,17 @@
 
   /* Grey 10 */
 
-  color: #A5ADAF
+  color: #A5ADAF;
 }
 
 
 
 
 .subtitle-card{
-  font-family: Roboto;
+  font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 20px;
   /* identical to box height, or 167% */
 
@@ -287,3 +287,24 @@
 }
 
 
+.subtitle-amount{
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height, or 167% */
+
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #AACDFF;;
+}
+
+.card-collaps {
+  float: right;
+  position: relative;
+  color: #425e1a;
+  top: 1px;
+}
