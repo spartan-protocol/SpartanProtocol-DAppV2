@@ -1,12 +1,12 @@
 import { ethers } from 'ethers'
-import { getAbis, getWalletProvider, SPARTA_ADDR } from './web3'
+import { getAbis, getAddresses, getWalletProvider } from './web3'
 
-// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
+const addr = getAddresses()
 
 // GET ROUTER CONTRACT
 export const getSpartaContract = () => {
   const abiBase = getAbis().base
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(SPARTA_ADDR, abiBase, provider)
+  const contract = new ethers.Contract(addr.sparta, abiBase, provider)
   return contract
 }

@@ -1,5 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_TOKEN, SPARTA_ADDR } from '../../utils/web3'
+import { TEST_TOKEN, getAddresses } from '../../utils/web3'
 import {
   getPool,
   getTokenCount,
@@ -9,6 +9,8 @@ import {
   routerSwapAssets,
 } from './actions'
 import * as Types from './types'
+
+const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
@@ -46,7 +48,6 @@ describe('Router actions', () => {
 
   test('should be able to add liquidity', async () => {
     await routerAddLiq('10', '10', TEST_TOKEN, true)(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
     if (dispatchMock.mock.calls[1][0].payload) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ADD_LIQ)
@@ -59,15 +60,12 @@ describe('Router actions', () => {
   })
 
   test('should be able to remove liquidity', async () => {
-    await routerRemoveLiq('100', TEST_TOKEN, true)(dispatchMock)
-    console.log(dispatchMock.mock.calls)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_REMOVE_LIQ)
   })
 
   test('should be able to swap assets', async () => {
-    await routerSwapAssets('10', SPARTA_ADDR, TEST_TOKEN, true)(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
+    await routerSwapAssets('10', addr.sparta, TEST_TOKEN, true)(dispatchMock)
     if (dispatchMock.mock.calls[1][0].payload) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_SWAP_ASSETS)

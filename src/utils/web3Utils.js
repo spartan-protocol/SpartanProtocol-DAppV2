@@ -1,30 +1,15 @@
 import { ethers } from 'ethers'
-import { getAbis, getWalletProvider } from './web3'
+import { getAbis, getAddresses, getWalletProvider } from './web3'
 
-const net = process.env.REACT_APP_NET
+const addr = getAddresses()
+
 const BN = ethers.BigNumber.from
-
-// OLD CONTRACT ADDRESSES
-// eslint-disable-next-line camelcase
-export const UTILSv1_ADDR =
-  net === 'testnet'
-    ? '0x4029A4173F9431763Ee68F5BfCF0C6aA703B1653'
-    : '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91'
-
-// CURRENT CONTRACT ADDRESSES
-export const UTILS_ADDR =
-  net === 'testnet'
-    ? '0x4029A4173F9431763Ee68F5BfCF0C6aA703B1653'
-    : '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91'
-
-// FUTURE CONTRACT ADDRESSES
-// export const UTILSv2_ADDR = net === 'testnet' ? '' : ''
 
 // GET UTILS CONTRACT
 export const getUtilsContract = () => {
   const abiUtils = getAbis().utils
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(UTILS_ADDR, abiUtils, provider)
+  const contract = new ethers.Contract(addr.utils, abiUtils, provider)
   return contract
 }
 

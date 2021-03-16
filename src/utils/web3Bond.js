@@ -2,18 +2,7 @@ import { ethers } from 'ethers'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
 
-// eslint-disable-next-line camelcase
-export const BONDv1_ADDR = getAddresses().bondv1
-// eslint-disable-next-line camelcase
-export const BONDv2_ADDR = getAddresses().bondv2
-// eslint-disable-next-line camelcase
-export const BONDv3_ADDR = getAddresses().bondv3
-
-// CURRENT CONTRACT ADDRESSES
-export const BOND_ADDR = getAddresses().bond
-
-// FUTURE CONTRACT ADDRESSES
-// export const BONDv4_ADDR = net === 'testnet' ? '' : ''
+const addr = getAddresses()
 
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
@@ -29,6 +18,6 @@ export const getOldBondContract = (bondAddress) => {
 export const getBondContract = () => {
   const abiBond = getAbis().bond
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(BOND_ADDR, abiBond, provider)
+  const contract = new ethers.Contract(addr.bond, abiBond, provider)
   return contract
 }

@@ -1,12 +1,10 @@
 import * as Types from './types'
-import {
-  getBondContract,
-  getOldBondContract,
-  BOND_ADDR,
-} from '../../utils/web3Bond'
+import { getBondContract, getOldBondContract } from '../../utils/web3Bond'
 import { getSpartaContract } from '../../utils/web3Sparta'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getProviderGasPrice } from '../../utils/web3'
+import { getProviderGasPrice, getAddresses } from '../../utils/web3'
+
+const addr = getAddresses()
 
 export const bondLoading = () => ({
   type: Types.BOND_LOADING,
@@ -77,7 +75,7 @@ export const getBondSpartaRemaining = () => async (dispatch) => {
   const contract = getSpartaContract()
 
   try {
-    const bondSpartaRemaining = await contract.callStatic.balanceOf(BOND_ADDR)
+    const bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)
     dispatch(
       payloadToDispatch(Types.GET_BOND_SPARTA_REMAINING, bondSpartaRemaining),
     )
@@ -91,7 +89,7 @@ export const getBondBurnReady = () => async (dispatch) => {
   const contract = getBondContract()
 
   try {
-    const bondBurnReady = await contract.callStatic.balanceOf(BOND_ADDR)
+    const bondBurnReady = await contract.callStatic.balanceOf(addr.bond)
     dispatch(payloadToDispatch(Types.GET_BOND_BURN_READY, bondBurnReady))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))

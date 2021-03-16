@@ -26,19 +26,6 @@ import abiMnSynthetics from '../ABI/MN/Synthetics.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 
-const net = process.env.REACT_APP_NET
-
-// TOKEN ADDRESSES (REMOVE ONCE COMPLETELY UNLINKED FROM ALL TESTS/FUNCTIONS)
-export const BNB_ADDR = '0x0000000000000000000000000000000000000000'
-export const WBNB_ADDR =
-  net === 'testnet'
-    ? '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870'
-    : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-export const SPARTA_ADDR =
-  net === 'testnet'
-    ? '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB'
-    : '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C'
-
 export const abisTN = {
   base: abiTnBase.abi,
   bond: abiTnBond.abi,
@@ -69,14 +56,8 @@ export const abisMN = {
 
 // ADDRESSES FOR TESTS
 export const TEST_WALLET = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
-export const TEST_TOKEN =
-  net === 'testnet'
-    ? '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870'
-    : '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-export const TEST_POOL =
-  net === 'testnet'
-    ? '0xA2C646CF5F55657EC0ecee5b8d2fCcb4cA843bd3'
-    : '0x3de669c4F1f167a8aFBc9993E4753b84b576426f'
+export const TEST_TOKEN = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
+export const TEST_POOL = '0x3de669c4F1f167a8aFBc9993E4753b84b576426f'
 
 export const addressesTN = {
   // TOKEN ADDRESSES

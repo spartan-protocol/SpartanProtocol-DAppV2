@@ -11,8 +11,10 @@ import { Alert } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import { changeNetwork, getNetwork, SPARTA_ADDR } from '../../utils/web3'
+import { changeNetwork, getNetwork, getAddresses } from '../../utils/web3'
 import { addNetwork, watchAsset } from '../../store/web3'
+
+const addr = getAddresses()
 
 const WalletSelect = (props) => {
   const dispatch = useDispatch()
@@ -143,7 +145,7 @@ const WalletSelect = (props) => {
               <Button
                 variant="primary"
                 onClick={() => {
-                  dispatch(watchAsset(SPARTA_ADDR, 'SPARTA', 18))
+                  dispatch(watchAsset(addr.sparta, 'SPARTA', 18))
                 }}
               >
                 Add to Wallet

@@ -1,12 +1,12 @@
 import * as Types from './types'
 
 import {
-  getWalletProvider,
   getTokenContract,
   getWalletWindowObj,
   bscRpcsMN,
   bscRpcsTN,
   getNetwork,
+  getProviderGasPrice,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 
@@ -70,12 +70,11 @@ export const getApproval = (tokenAddress, contractAddress) => async (
   dispatch,
 ) => {
   dispatch(web3Loading())
-  const provider = getWalletProvider()
   const contract = getTokenContract(tokenAddress)
 
   try {
     const supply = await contract.totalSupply()
-    const gPrice = await provider.getGasPrice()
+    const gPrice = await getProviderGasPrice()
     const gLimit = await contract.estimateGas.approve(contractAddress, supply)
     const approval = await contract.approve(contractAddress, supply, {
       gasPrice: gPrice,
