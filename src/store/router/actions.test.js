@@ -60,6 +60,7 @@ describe('Router actions', () => {
   })
 
   test('should be able to remove liquidity', async () => {
+    await routerRemoveLiq('100', TEST_TOKEN, true)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_REMOVE_LIQ)
   })
