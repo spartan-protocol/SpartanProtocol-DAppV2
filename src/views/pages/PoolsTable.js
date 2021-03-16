@@ -46,11 +46,11 @@ const PoolsTable = () => {
                       BNB
                     </h2>
                   </Col>
-                  <Col md="0" className="mr-3">
+                  <Col md="0" className="mr-4">
                     <div className="title-card">APY</div>
                     <div className="subtitle-card">188.25%</div>
                   </Col>
-                  <Col md="0" className="mr-3">
+                  <Col md="0" className="mr-">
                     <div className="title-card">Liquidity</div>
                     <div className="subtitle-card">$22.584.633</div>
                   </Col>
