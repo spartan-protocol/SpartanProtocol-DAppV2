@@ -22,7 +22,7 @@ const walletTypes = [
     id: 'WC',
     title: 'WalletConnect',
     icon: [WalletConnect],
-    inject: '', // Need to add capability to handle this after creating random-RPC function
+    inject: 'walletconnect', // Need to add capability to handle this after creating random-RPC function
   },
   {
     id: 'OOT',

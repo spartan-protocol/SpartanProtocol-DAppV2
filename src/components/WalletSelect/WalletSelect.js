@@ -58,20 +58,14 @@ const WalletSelect = (props) => {
     checkWallet()
   }, [wallet.status])
 
-  useEffect(() => {
-    const walletType = walletTypes.find((wt) => wt.id === 'WC')
-    walletType.inject = `walletconnect:${network.rpc}`
-  }, [network.rpc])
-
   const connectWallet = (x) => {
     wallet.reset()
     console.log('reset')
     if (x.inject === '') {
-      console.log('no inject')
       wallet.connect()
     } else {
-      console.log(`${x.inject} inject`)
-      wallet.connect(JSON.stringify(x.inject))
+      wallet.connectors.walletconnect.rpcUrl = network.rpc
+      wallet.connect(x.inject)
     }
     window.sessionStorage.setItem('lastWallet', x.id)
     setWalletIcon(x.icon[0])
