@@ -377,9 +377,9 @@ $general-transition-time: 300ms !default;
 // Fonts
 @import url(http://fonts.googleapis.com/css?family=Kreon);
 
-$font-family-base: 'Roboto', sans-serif !default;
+$font-family-base: 'Roboto';
 $font-family-alt: 'Kreon', sans-serif !default;
-$font-family-headers: 'Kreon', sans-serif !default;
+$font-family-headers: 'Kreon';
 
 
 $font-size-dash: .875rem !default;

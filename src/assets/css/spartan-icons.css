@@ -31,6 +31,27 @@
     background-repeat: no-repeat;
 }
 
+
+/* Remove */
+.icon-remove.icon-dark{
+    background-image: url('/src/assets/icons/icon-removeboth.svg#dark');
+}
+
+
+
+/* Add single */
+.icon-add-single.icon-dark{
+    background-image: url('/src/assets/icons/icon-addsingle.svg#dark');
+}
+
+
+
+/* Add both */
+.icon-add-both.icon-dark{
+    background-image: url('/src/assets/icons/icon-addboth.svg#dark');
+}
+
+
 /* Gear */
 .icon-gear.icon-dark{
      background-image: url('/src/assets/icons/icon-menu-gear.svg#dark');
