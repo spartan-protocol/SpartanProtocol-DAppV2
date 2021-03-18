@@ -20,7 +20,7 @@ const WalletSelect = (props) => {
   const [walletIcon, setWalletIcon] = useState('')
   const [network, setNetwork] = useState(getNetwork)
 
-  const _changeNetwork = (net) => {
+  const onChangeNetwork = (net) => {
     setNetwork(changeNetwork(net))
     dispatch(addNetwork())
   }
@@ -58,6 +58,11 @@ const WalletSelect = (props) => {
     checkWallet()
   }, [wallet.status])
 
+  useEffect(() => {
+    const walletType = walletTypes.find((wt) => wt.id === 'WC')
+    walletType.inject = `walletconnect:${network.rpc}`
+  }, [network.rpc])
+
   const connectWallet = (x) => {
     wallet.reset()
     console.log('reset')
@@ -66,7 +71,7 @@ const WalletSelect = (props) => {
       wallet.connect()
     } else {
       console.log(`${x.inject} inject`)
-      wallet.connect(x.inject)
+      wallet.connect(JSON.stringify(x.inject))
     }
     window.sessionStorage.setItem('lastWallet', x.id)
     setWalletIcon(x.icon[0])
@@ -106,7 +111,7 @@ const WalletSelect = (props) => {
             <button
               type="button"
               className="btn btn-success w-50 mx-0 px-1"
-              onClick={() => _changeNetwork('mainnet')}
+              onClick={() => onChangeNetwork('mainnet')}
             >
               <Col>
                 <div className="">Mainnet</div>
@@ -115,7 +120,7 @@ const WalletSelect = (props) => {
             <button
               type="button"
               className="btn btn-success w-50 mx-0 px-1"
-              onClick={() => _changeNetwork('testnet')}
+              onClick={() => onChangeNetwork('testnet')}
             >
               <Col>
                 <div className="">Testnet</div>
@@ -134,6 +139,7 @@ const WalletSelect = (props) => {
               <div>Chain ID: {wallet.chainId}</div>
               <div>Account: {wallet.account}</div>
               <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
+              <div>RPC: {network.rpc}</div>
               <Button
                 variant="primary"
                 onClick={() => navigator.clipboard.writeText(wallet.account)}

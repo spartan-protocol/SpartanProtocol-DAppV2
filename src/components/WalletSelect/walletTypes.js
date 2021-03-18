@@ -5,8 +5,6 @@ import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
 import TokenPocket from '../../assets/icons/TokenPocket.svg'
 
-const rpcUrl = process.env.REACT_APP_RPC
-
 const walletTypes = [
   {
     id: 'BC',
@@ -24,7 +22,7 @@ const walletTypes = [
     id: 'WC',
     title: 'WalletConnect',
     icon: [WalletConnect],
-    inject: `walletconnect:${{ rpcUrl }}`, // Need to add capability to handle this after creating random-RPC function
+    inject: '', // Need to add capability to handle this after creating random-RPC function
   },
   {
     id: 'OOT',
