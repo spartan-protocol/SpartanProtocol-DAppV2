@@ -66,35 +66,6 @@ export const getDaoProposalMinority = async (proposalID) => {
 }
 
 /**
- * Get the count of DAO members
- * @returns {unit} dao
- */
-export const getDaoMemberCount = async () => {
-  const contract = getDaoContract()
-  try {
-    const memberCount = await contract.callStatic.memberCount()
-    console.log(memberCount)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-/**
- * Get the dao members' details
- * @param {address} member
- * @returns {object} isMember, weight, lastBlock, poolCount
- */
-export const getDaoMemberDetails = async (member) => {
-  const contract = getDaoContract()
-  try {
-    const memberDetails = await contract.callStatic.getMemberDetails(member)
-    console.log(memberDetails)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-/**
  * Get the dao proposal details
  * @param {uint} proposalID
  * @returns {object} id, proposalType, votes, timeStart, finalising, finalised, param, proposedAddress

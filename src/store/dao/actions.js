@@ -10,9 +10,8 @@ export const daoLoading = () => ({
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
 /**
- * DAO HELPER -
- * Returns the amount of members with LP tokens locked in the DAO
- * @returns unit
+ * Get the count of DAO members
+ * @returns {unit} dao
  */
 export const getDaoMemberCount = () => async (dispatch) => {
   dispatch(daoLoading())
@@ -27,9 +26,9 @@ export const getDaoMemberCount = () => async (dispatch) => {
 }
 
 /**
- * DAO HELPER -
- * Returns a specified member's details:
- * @returns [ isMember | weight | totalFees | lastBlock | poolsCount ]
+ * Get the dao members' details
+ * @param {address} member
+ * @returns {object} isMember, weight, lastBlock, poolCount
  */
 export const getDaoMemberDetails = (member) => async (dispatch) => {
   dispatch(daoLoading())
