@@ -1,9 +1,9 @@
 import axios from 'axios'
-
-const net = process.env.REACT_APP_NET
+import { getNetwork } from './web3'
 
 // GET BSCSCAN URL BY WALLET ADDRESS
 export const getExplorerWallet = (wallet) => {
+  const { net } = getNetwork()
   let link = `https://bscscan.com/address/${wallet}`
   if (net === 'testnet') {
     link = `https://${net}.bscscan.com/address/${wallet}`
@@ -13,6 +13,7 @@ export const getExplorerWallet = (wallet) => {
 
 // GET BSCSCAN URL BY TXN HASH
 export const getExplorerTxn = (txnHash) => {
+  const { net } = getNetwork()
   let link = `https://bscscan.com/tx/${txnHash}`
   if (net === 'testnet') {
     link = `https://${net}.bscscan.com/tx/${txnHash}`
