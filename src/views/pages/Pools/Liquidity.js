@@ -29,6 +29,7 @@ import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
 import coin_bnb from "../../../assets/icons/coin_bnb.svg"
 import coin_sparta from "../../../assets/icons/coin_sparta.svg"
 import bnb_sparta from "../../../assets/icons/bnb_sparta.png"
+import PoolsPaneSide from "./PoolsPaneSide"
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -160,7 +161,7 @@ const Liquidity = () => {
 
 
         <Row>
-          <Col md={7}>
+          <Col md={8}>
 
             <Card className="card-body">
 
@@ -643,7 +644,9 @@ const Liquidity = () => {
             </Card>
 
           </Col>
-          <Col md={5}> <Card className="card-body"><h1>PANE</h1><br /><br /><br /><br /><br /></Card>
+          <Col md={4}> <Card className="card-body">
+            <PoolsPaneSide/>
+          </Card>
           </Col>
         </Row>
 
