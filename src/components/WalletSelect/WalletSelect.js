@@ -58,13 +58,17 @@ const WalletSelect = (props) => {
     checkWallet()
   }, [wallet.status])
 
-  const connectWallet = (x) => {
+  const connectWallet = async (x) => {
     wallet.reset()
     console.log('reset')
     if (x.inject === '') {
       wallet.connect()
-    } else {
+    } else if (x.inject === 'walletconnect') {
       wallet.connectors.walletconnect.rpcUrl = network.rpc
+      await wallet.connect(x.inject)
+      wallet.reset()
+      wallet.connect(x.inject)
+    } else {
       wallet.connect(x.inject)
     }
     window.sessionStorage.setItem('lastWallet', x.id)
