@@ -47,7 +47,7 @@ const Providers = () => {
       <UseWalletProvider
         chainId={parseInt(network.chainId, 10)}
         connectors={{
-          walletconnect: network.rpc,
+          walletconnect: { rpcUrl: network.rpc },
           bsc: {},
         }}
       >
