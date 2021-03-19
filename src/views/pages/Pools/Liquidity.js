@@ -166,11 +166,10 @@ const Liquidity = () => {
             <Card className="card-body">
 
               <Row>
-                {/*<Nav tabs className="nav-tabs-custom">*/}
                 <Col md={4} className="justify-content-center">
 
                   <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
-                    <NavItem>
+                    <NavItem style={{ listStyleType: "none" }}>
                       <NavLink
                         data-toggle="tab"
                         href="#"
@@ -189,8 +188,8 @@ const Liquidity = () => {
                 </Col>
                 <Col md={4} className="justify-content-center">
                   <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
-                    <NavItem>
-                      <NavLink
+                    <NavItem style={{ listStyleType: "none" }}>
+                    <NavLink
                         data-toggle="tab"
                         href="#"
                         className={
@@ -211,8 +210,8 @@ const Liquidity = () => {
 
                 <Col md={4} className="justify-content-center">
                   <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
-                    <NavItem>
-                      <NavLink
+                    <NavItem style={{ listStyleType: "none" }}>
+                    <NavLink
                         data-toggle="tab"
                         href="#"
                         className={horizontalTabs === "remove" ? "active" : ""}
@@ -228,7 +227,6 @@ const Liquidity = () => {
                     </NavItem>
                   </Card>
                 </Col>
-                {/*</Nav>*/}
               </Row>
               <TabContent className="tab-space" activeTab={horizontalTabs}>
                 <TabPane tabId="addBoth">
