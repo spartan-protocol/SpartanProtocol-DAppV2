@@ -56,3 +56,29 @@
     top: 2px;
 
 }
+
+
+
+element.style {
+}
+#root > div > div.main-panel.ps.ps--active-y > nav > div > div.collapse.navbar-collapse > ul > div.d-inline-block.dropdown > button {
+    background-color: #fc5d50;
+}
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+.navbar .btn {
+    margin: 0 5px 0 10px;
+}
+button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
+    cursor: pointer;
+}
+.btn {
+    cursor: pointer;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #403743;
+}

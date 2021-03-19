@@ -30,6 +30,7 @@ import coin_bnb from "../../../assets/icons/coin_bnb.svg"
 import coin_sparta from "../../../assets/icons/coin_sparta.svg"
 import bnb_sparta from "../../../assets/icons/bnb_sparta.png"
 import PoolsPaneSide from "./PoolsPaneSide"
+import Wallet from "../../../components/Wallet/Wallet"
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -119,47 +120,7 @@ const Liquidity = () => {
     <>
       <div className="content">
         <br />
-        <Breadcrumb><Col md={10}>Join</Col><Col md={2}> <UncontrolledDropdown>
-          <DropdownToggle
-            aria-expanded={false}
-            aria-haspopup
-            caret
-            className="btn-block"
-            color="danger"
-            data-toggle="dropdown"
-            id="dropdownMenuButton"
-            type="button"
-          >
-            <i className="bi bi-wallet mr-2" />
-            Wallet
-          </DropdownToggle>
-          <DropdownMenu aria-labelledby="dropdownMenuButton">
-            <DropdownItem
-              className="text-center"
-              href="#pablo"
-              onClick={(e) => e.preventDefault()}
-            >
-              Available Balance
-              <DropdownItem divider />
-            </DropdownItem>
-            <DropdownItem href="">
-              SPARTA : <span className="float-right">XXX</span>
-            </DropdownItem>
-            <DropdownItem href="">
-              BNB: <span className="float-right">XXX</span>
-            </DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem
-              className="text-primary text-center"
-              onClick={(e) => e.preventDefault()}
-            >
-              View all assets
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown></Col>
-        </Breadcrumb>
-
-
+        <Breadcrumb><Col md={10}>Join</Col><Col md={2}> <Wallet /></Col></Breadcrumb>
         <Row>
           <Col md={8}>
 
@@ -189,7 +150,7 @@ const Liquidity = () => {
                 <Col md={4} className="justify-content-center">
                   <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
                     <NavItem style={{ listStyleType: "none" }}>
-                    <NavLink
+                      <NavLink
                         data-toggle="tab"
                         href="#"
                         className={
@@ -211,7 +172,7 @@ const Liquidity = () => {
                 <Col md={4} className="justify-content-center">
                   <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
                     <NavItem style={{ listStyleType: "none" }}>
-                    <NavLink
+                      <NavLink
                         data-toggle="tab"
                         href="#"
                         className={horizontalTabs === "remove" ? "active" : ""}
@@ -322,7 +283,7 @@ const Liquidity = () => {
                         </UncontrolledTooltip>
 
                       </div>
-                      <br/>
+                      <br />
 
                       <div className="amount">Estimated output{" "}<i
                         className="icon-small icon-info icon-dark ml-2"
@@ -643,7 +604,7 @@ const Liquidity = () => {
 
           </Col>
           <Col md={4}> <Card className="card-body">
-            <PoolsPaneSide/>
+            <PoolsPaneSide />
           </Card>
           </Col>
         </Row>

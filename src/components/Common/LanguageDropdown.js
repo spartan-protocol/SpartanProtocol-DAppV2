@@ -50,12 +50,20 @@ const LanguageDropdown = () => {
   const toggle = () => {
     setMenu(!menu)
   }
-
+//<Button className="btn-round btn-icon" color="primary">
+//                 <i className="bi-lg bi bi-wallet" />
+//               </Button>
   return (
     <>
-      <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block">
-        <DropdownToggle className="mx-1 btn btn-danger h-100" tag="button">
-          <i className="icon-medium icon-world icon-dark" />
+      <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block mr-5">
+        <DropdownToggle     aria-expanded={false}
+                            aria-haspopup
+                            className="btn-round btn-icon"
+                            color="default"
+                            data-toggle="dropdown"
+                            id="dropdownMenuButton"
+                            type="button">
+          <i className="icon-small icon-lang icon-dark mt-1" />
         </DropdownToggle>
         <DropdownMenu className="language-switch" right>
           <DropdownItem
@@ -65,7 +73,7 @@ const LanguageDropdown = () => {
             className={`notify-item ${lng === 'English' ? 'active' : 'none'}`}
           >
             <img src={usFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1">English</span>
+            <span className="align-middle ml-1 output-card">English</span>
           </DropdownItem>
           <DropdownItem
             tag="a"
@@ -74,7 +82,7 @@ const LanguageDropdown = () => {
             className={`notify-item ${lng === 'Chinese' ? 'active' : 'none'}`}
           >
             <img src={china} alt="Spartan" height="12" />
-            <span className="align-middle ml-1">Chinese</span>
+            <span className="align-middle ml-1 output-card" >Chinese</span>
           </DropdownItem>
           <DropdownItem
             tag="a"
@@ -83,7 +91,7 @@ const LanguageDropdown = () => {
             className={`notify-item ${lng === 'German' ? 'active' : 'none'}`}
           >
             <img src={russia} alt="Spartan" height="12" />
-            <span className="align-middle ml-1">Russian</span>
+            <span className="align-middle ml-1 output-card">Russian</span>
           </DropdownItem>
           <DropdownItem
             tag="a"
@@ -92,7 +100,7 @@ const LanguageDropdown = () => {
             className={`notify-item ${lng === 'Italian' ? 'active' : 'none'}`}
           >
             <img src={turkey} alt="Spartan" height="12" />
-            <span className="align-middle ml-1">Turkish</span>
+            <span className="align-middle ml-1 output-card">Turkish</span>
           </DropdownItem>
           <DropdownItem
             tag="a"
@@ -103,7 +111,7 @@ const LanguageDropdown = () => {
             }`}
           >
             <img src={vietnam} alt="Spartan" height="12" />
-            <span className="align-middle ml-1">Vietnamese</span>
+            <span className="align-middle ml-1 output-card">Vietnamese</span>
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

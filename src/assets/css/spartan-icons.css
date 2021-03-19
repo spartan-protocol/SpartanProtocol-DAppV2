@@ -32,6 +32,13 @@
 }
 
 
+
+/* Lang */
+.icon-lang.icon-dark{
+    background-image: url('/src/assets/icons/icon-lang-dark.svg#dark');
+}
+
+
 /* Remove */
 .icon-remove.icon-dark{
     background-image: url('/src/assets/icons/icon-removeboth.svg#dark');

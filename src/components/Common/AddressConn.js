@@ -10,7 +10,6 @@ const AddressConn = () => {
     <>
       <>
         <div
-          className="btn ml-1"
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
           role="button"
