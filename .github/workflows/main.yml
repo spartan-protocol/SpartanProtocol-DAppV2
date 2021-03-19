@@ -4,9 +4,9 @@ name: DAppV2 CI
 on: [push, pull_request]
 
 env:
-  REACT_APP_CHAIN_ID: 97
-  REACT_APP_RPC: 'https://data-seed-prebsc-2-s1.binance.org:8545/'
-  REACT_APP_RPC_ETH: 'https://data-seed-prebsc-1-s1.binance.org:8545/'
+  REACT_APP_CHAIN_ID: 56
+  REACT_APP_RPC: 'https://bsc-dataseed.binance.org/'
+  REACT_APP_RPC_ETH: 'https://bsc-dataseed.binance.org/'
   REACT_APP_NET: 'mainnet'
   REACT_APP_ADDR: '0x43364696e478E344E95831CE8427623202e5CBFb'
   REACT_APP_CONTRACT_ADDR: '0xd46e8dd67c5d32be8058bb8eb970870f07244567'

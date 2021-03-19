@@ -1,11 +1,7 @@
-import path from 'path'
-import dotenv from 'dotenv'
-import { getWalletProvider, getTokenContract } from './web3'
+import { getWalletProvider, getTokenContract, getAddresses } from './web3'
 import { binanceChainMock, ethereumChainMock } from './chain.mock'
 
-dotenv.config({
-  path: path.resolve(__dirname, '../../.env.test.local'),
-})
+const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
@@ -32,8 +28,8 @@ describe('Utils', () => {
     expect(provider.connection.url).not.toBeUndefined()
   })
   test('should get contract', () => {
-    const contract = getTokenContract(process.env.REACT_APP_ADDR)
+    const contract = getTokenContract(addr.sparta)
 
-    expect(contract.address).toBe(process.env.REACT_APP_ADDR)
+    expect(contract.address).toBe(addr.sparta)
   })
 })
