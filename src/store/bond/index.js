@@ -10,7 +10,7 @@ export {
   getBondBurnReady,
   bondBurn,
   bondDeposit,
-  bondClaimLock,
+  bondClaimAll,
   getBondProposalCount,
   getBondProposal,
   getBondProposals,

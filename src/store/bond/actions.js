@@ -115,6 +115,12 @@ export const bondBurn = () => async (dispatch) => {
   }
 }
 
+/**
+ * Deposit asset via bond+mint contract
+ * @param {address} asset
+ * @param {uint256} amount
+ * @returns {boolean}
+ */
 export const bondDeposit = (asset, amount) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondContract()
@@ -132,19 +138,24 @@ export const bondDeposit = (asset, amount) => async (dispatch) => {
   }
 }
 
-export const bondClaimLock = (asset) => async (dispatch) => {
+/**
+ * Claim all available bond by member
+ * @param {address} member
+ * @returns {boolean}
+ */
+export const bondClaimAll = (member) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondContract()
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.claimAndLock(asset)
-    const claimedAndLocked = await contract.claimAndLock(asset, {
+    const gLimit = await contract.estimateGas.claimAllForMember(member)
+    const bondClaimedAll = await contract.claimAllForMember(member, {
       gasPrice: gPrice,
       gasLimit: gLimit,
     })
 
-    dispatch(payloadToDispatch(Types.BOND_CLAIM_LOCK, claimedAndLocked))
+    dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimedAll))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }

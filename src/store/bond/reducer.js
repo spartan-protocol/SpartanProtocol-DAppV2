@@ -8,7 +8,7 @@ const initialState = {
   bondSpartaRemaining: 0,
   bondBurnReady: 0,
   bondBurn: 0,
-  bondClaimLock: 0,
+  bondClaimAll: 0,
   bondProposalCount: 0,
   bondProposal: {},
   bondProposals: [],
@@ -91,10 +91,10 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
-    case Types.BOND_CLAIM_LOCK: {
+    case Types.BOND_CLAIM_ALL: {
       return {
         ...state,
-        bondClaimLock: action.payload,
+        bondClaimAll: action.payload,
         loading: false,
         error: null,
       }

@@ -117,9 +117,9 @@ export const getDaoHarvestEraAmount = (member) => async (dispatch) => {
 // --------------------------------------- GENERAL DAO FUNCTIONS ---------------------------------------
 
 /**
- * DAO FUNCTION -
  * Deposit / Stake LP Tokens (Lock them in the DAO)
- * @return null
+ * @param {address} pool
+ * @param {uint256} amount
  */
 export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
   dispatch(daoLoading())
@@ -144,23 +144,22 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
 }
 
 /**
- * DAO FUNCTION -
  * Withdraw / Unstake LP Tokens (Unlock them from the DAO)
- * @return null
+ * @param {address} pool
+ * @param {uint} amount
  */
-export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
-  // ADD 'amount' IN V2 CONTRACTS
+export const daoWithdraw = (pool, amount, justCheck) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract()
 
   try {
     let withdraw = {}
     if (justCheck) {
-      withdraw = await contract.callStatic.withdraw(pool)
+      withdraw = await contract.callStatic.withdraw(pool, amount)
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.withdraw(pool)
-      withdraw = await contract.withdraw(pool, {
+      const gLimit = await contract.estimateGas.withdraw(pool, amount)
+      withdraw = await contract.withdraw(pool, amount, {
         gasPrice: gPrice,
         gasLimit: gLimit,
       })
@@ -172,10 +171,7 @@ export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
 }
 
 /**
- * DAO FUNCTION -
  * Harvest SPARTA 'staking' rewards
- * (currently no emissions going in to fill this up, but later; probably 10% of emissions will go in)
- * @return null
  */
 export const daoHarvest = (justCheck) => async (dispatch) => {
   dispatch(daoLoading())
