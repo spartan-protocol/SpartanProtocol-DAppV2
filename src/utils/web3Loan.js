@@ -18,7 +18,7 @@ export const getLoanContract = () => {
   return contract
 }
 
-// ---------------- ASYNC FUNCTIONS FOR STORE (NOT YET FINALISED; THESE MAY CHANGE!!!) ---------------
+// ---------------- ASYNC FUNCTIONS FOR STORE (WAIT FOR PHASE 2 BEFORE CREATING THE STORE) ---------------
 
 /**
  * Add collateral via the loan contract
