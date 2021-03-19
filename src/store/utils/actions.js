@@ -124,8 +124,7 @@ export const getPoolDetails = (pool) => async (dispatch) => {
 }
 
 /**
- * UTILS HELPER -
- * Returns the share of a pool based on member's holdings (doesn't include LP tokens locked in DAO)
+ * Get share of pool by member (using tokenAddr) (doesn't include LP tokens locked in DAO)
  * @returns [ uint baseAmount | uint tokenAmount ]
  */
 export const getMemberShare = (token, member) => async (dispatch) => {
