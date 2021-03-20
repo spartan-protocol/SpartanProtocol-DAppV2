@@ -88,7 +88,7 @@
        text-transform: uppercase;
        font-weight: $font-weight-extra-bold;
        border: 0;
-       color: rgba($white, 0.7);
+       color: $white;
    }
 
    .radio,
@@ -116,7 +116,7 @@
    > thead > tr > td,
    > tbody > tr > td,
    > tfoot > tr > td{
-       border-color: rgba(255, 255, 255, 0.1);
+       border-color: $white;
        padding: 12px 7px;
        vertical-align: middle;
    }
@@ -152,7 +152,7 @@
     }
 
     > tfoot > tr {
-      color: hsla(0,0%,100%,.7);
+      color: $white;
       text-transform: uppercase;
     }
 
@@ -174,7 +174,7 @@
         font-weight: $font-weight-normal;
         font-size: 1.5em;
         small{
-            color: $dark-gray;
+            color: $white;
             font-size: 0.75em;
             font-weight: $font-weight-light;
         }

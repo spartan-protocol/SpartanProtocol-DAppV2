@@ -1,25 +1,25 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
-import Image from 'react-bootstrap/Image'
-import Col from 'react-bootstrap/Col'
-import { ethers } from 'ethers'
+import React, { useEffect, useState } from "react"
+import { useWallet } from "@binance-chain/bsc-use-wallet"
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
+import Image from "react-bootstrap/Image"
+import Col from "react-bootstrap/Col"
+import { ethers } from "ethers"
 
-import { Alert } from 'reactstrap'
-import { useDispatch } from 'react-redux'
-import walletTypes from './walletTypes'
-import { getExplorerWallet } from '../../utils/extCalls'
-import { changeNetwork, getNetwork, getAddresses } from '../../utils/web3'
-import { addNetwork, watchAsset } from '../../store/web3'
+import { Alert, TabPane } from "reactstrap"
+import { useDispatch } from "react-redux"
+import walletTypes from "./walletTypes"
+import { getExplorerWallet } from "../../utils/extCalls"
+import { changeNetwork, getNetwork, getAddresses } from "../../utils/web3"
+import { addNetwork, watchAsset } from "../../store/web3"
 
 const addr = getAddresses()
 
 const WalletSelect = (props) => {
   const dispatch = useDispatch()
   const wallet = useWallet()
-  const [walletIcon, setWalletIcon] = useState('')
+  const [walletIcon, setWalletIcon] = useState("")
   const [network, setNetwork] = useState(getNetwork)
 
   const onChangeNetwork = (net) => {
@@ -43,17 +43,17 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     const checkWallet = () => {
-      console.log('Wallet Status:', wallet.status)
-      if (wallet.status === 'connected') {
-        window.sessionStorage.setItem('walletConnected', '1')
+      console.log("Wallet Status:", wallet.status)
+      if (wallet.status === "connected") {
+        window.sessionStorage.setItem("walletConnected", "1")
       }
-      if (wallet.status === 'disconnected') {
-        window.sessionStorage.removeItem('walletConnected')
-        window.sessionStorage.removeItem('lastWallet')
+      if (wallet.status === "disconnected") {
+        window.sessionStorage.removeItem("walletConnected")
+        window.sessionStorage.removeItem("lastWallet")
       }
-      if (wallet.status === 'error') {
-        window.sessionStorage.removeItem('walletConnected')
-        window.sessionStorage.removeItem('lastWallet')
+      if (wallet.status === "error") {
+        window.sessionStorage.removeItem("walletConnected")
+        window.sessionStorage.removeItem("lastWallet")
       }
     }
 
@@ -62,8 +62,9 @@ const WalletSelect = (props) => {
 
   const connectWallet = async (x) => {
     wallet.reset()
-    console.log('reset')
-    if (x.inject === '') {
+    console.log("reset")
+    if (x.inject === "") {
+      console.log("no inject")
       wallet.connect()
     } else if (x.inject === 'walletconnect') {
       wallet.connectors.walletconnect.rpcUrl = network.rpc
@@ -73,7 +74,7 @@ const WalletSelect = (props) => {
     } else {
       wallet.connect(x.inject)
     }
-    window.sessionStorage.setItem('lastWallet', x.id)
+    window.sessionStorage.setItem("lastWallet", x.id)
     setWalletIcon(x.icon[0])
     // props.setWalletHeaderIcon(x.icon[0])
   }
@@ -82,25 +83,28 @@ const WalletSelect = (props) => {
     <>
       <Modal {...props}>
         <div className="modal-header ">
-          <button
-            aria-hidden
-            className="close"
-            data-dismiss="modal"
-            type="button"
-            onClick={props.onHide}
-          >
-            <i className="bd-icons icon-simple-remove" />
-          </button>
-          <h2 className="modal-title text-center" id="myModalLabel">
-            Connect to a wallet - Network: {network.net}
-          </h2>
+          {/*<button*/}
+          {/*  aria-hidden*/}
+          {/*  className="close"*/}
+          {/*  data-dismiss="modal"*/}
+          {/*  type="button"*/}
+          {/*  onClick={props.onHide}*/}
+          {/*>*/}
+          {/*  <i className="bd-icons icon-simple-remove" />*/}
+          {/*</button>*/}
+          <Col>
+            <div className="small-4 medium-4 large-4 columns text-center">
+              <i className="icon-large icon-wallet icon-dark text-center "></i>
+            </div>
+            <h1 className="modal-title text-center" id="myModalLabel">Connect to {network.net}</h1>
+          </Col>
         </div>
 
         <Modal.Body className="center-text">
-          {wallet.status === 'error' && (
+          {wallet.status === "error" && (
             <Alert color="warning">
               <span>
-                {' '}
+                {" "}
                 Wallet connection failed! Check the network in your wallet
                 matches the selection in the DApp.
               </span>
@@ -127,21 +131,22 @@ const WalletSelect = (props) => {
               </Col>
             </button>
           </div>
+          <br/>
 
-          {wallet.status === 'connected' ? (
+          {wallet.status === "connected" ? (
             <div>
               <Image
                 src={walletIcon}
                 className="wallet-modal-icon"
                 roundedCircle
               />
-              <div>Wallet: {window.sessionStorage.getItem('lastWallet')}</div>
+              <div>Wallet: {window.sessionStorage.getItem("lastWallet")}</div>
               <div>Chain ID: {wallet.chainId}</div>
               <div>Account: {wallet.account}</div>
               <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
               <div>RPC: {network.rpc}</div>
               <Button
-                variant="primary"
+                variant="danger"
                 onClick={() => navigator.clipboard.writeText(wallet.account)}
               >
                 Copy Address
@@ -178,7 +183,7 @@ const WalletSelect = (props) => {
                     size="lg"
                     color="success"
                     type="button"
-                    className="btn btn-warning btn-block"
+                    className="btn btn-danger btn-block mt-n3"
                     onClick={() => connectWallet(x)}
                   >
                     <Col>
@@ -200,15 +205,16 @@ const WalletSelect = (props) => {
             </div>
           )}
         </Modal.Body>
-        <div className="modal-footer justify-content-center">
+        <div className="ml-4 mr-4 mb-3">
           <Button
-            className="btn-round"
+            className="btn-round btn-block "
             color="info"
             data-dismiss="modal"
             type="button"
+            size="lg"
             onClick={props.onHide}
           >
-            Close
+            Cancel
           </Button>
         </div>
       </Modal>
