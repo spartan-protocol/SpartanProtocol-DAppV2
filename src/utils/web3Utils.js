@@ -378,7 +378,7 @@ export const getSwapValueInBase = async (token, amount) => {
 }
 
 /**
- * Calculate the swap value in SPARTA (Including slip)
+ * Calculate the swap value in TOKEN (Including slip)
  * @param {address} token
  * @param {uint} amount
  * @returns {uint} output
@@ -387,4 +387,29 @@ export const getSwapValueInToken = async (token, amount) => {
   const contract = getUtilsContract()
   const output = await contract.callStatic.calcSwapValueInToken(token, amount)
   return output
+}
+
+// ---------------- HELPER ASYNC FUNCTIONS FOR UTILSMATH STORE ---------------
+
+/**
+ * Calculate the value of a synthetic asset
+ * @param {address} pool
+ * @param {uint} amount
+ * @returns {uint} units
+ */
+export const getSynthsValue = async (pool, amount) => {
+  const contract = getUtilsContract()
+  const units = await contract.callStatic.calcSynthsValue(pool, amount)
+  return units
+}
+
+/**
+ * Calculate the value of a synthetic asset
+ * @param {address} synth
+ * @returns {uint} cdpValue
+ */
+export const getCDPValue = async (synth) => {
+  const contract = getUtilsContract()
+  const cdpValue = await contract.callStatic.calcCDPValue(synth)
+  return cdpValue
 }
