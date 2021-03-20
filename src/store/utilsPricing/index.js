@@ -7,4 +7,8 @@ export {
   getTokenPPinBase,
   getValueInBase,
   getValueInToken,
+  getSpotValueInBase,
+  getSpotValueInToken,
+  getSwapValueInBase,
+  getSwapValueInToken,
 } from './actions'

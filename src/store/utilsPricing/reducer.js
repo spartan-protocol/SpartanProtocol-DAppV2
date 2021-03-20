@@ -47,6 +47,42 @@ export const utilsPricingReducer = (state = initialState, action) => {
       }
     }
 
+    case Types.GET_SPOT_VALUE_IN_BASE: {
+      return {
+        ...state,
+        valueInBase: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.GET_SPOT_VALUE_IN_TOKEN: {
+      return {
+        ...state,
+        valueInToken: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.GET_SWAP_VALUE_IN_BASE: {
+      return {
+        ...state,
+        valueInBase: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.GET_SWAP_VALUE_IN_TOKEN: {
+      return {
+        ...state,
+        valueInToken: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.UTILSPRICING_LOADING: {
       return {
         ...state,
@@ -62,6 +98,7 @@ export const utilsPricingReducer = (state = initialState, action) => {
         loading: false,
       }
     }
+
     default:
       return state
   }

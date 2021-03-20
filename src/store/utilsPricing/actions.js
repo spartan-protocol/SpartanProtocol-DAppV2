@@ -62,3 +62,89 @@ export const getValueInBase = (token, amount) => async (dispatch) => {
     dispatch(errorToDispatch(Types.UTILSPRICING_ERROR, error))
   }
 }
+
+// NEW ONES TO ADD:
+
+/**
+ * Calculate the spot value in SPARTA (No slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} value
+ */
+export const getSpotValueInBase = (token, amount) => async (dispatch) => {
+  dispatch(utilsPricingLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const valueInBase = await contract.callStatic.calcSpotValueInBase(
+      token,
+      amount,
+    )
+    dispatch(payloadToDispatch(Types.GET_SPOT_VALUE_IN_BASE, valueInBase))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILSPRICING_ERROR, error))
+  }
+}
+
+/**
+ * Calculate the spot value in TOKEN (No slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} value
+ */
+export const getSpotValueInToken = (token, amount) => async (dispatch) => {
+  dispatch(utilsPricingLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const valueInToken = await contract.callStatic.calcSpotValueInToken(
+      token,
+      amount,
+    )
+    dispatch(payloadToDispatch(Types.GET_SPOT_VALUE_IN_TOKEN, valueInToken))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILSPRICING_ERROR, error))
+  }
+}
+
+/**
+ * Calculate the swap value in SPARTA (Including slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} output
+ */
+export const getSwapValueInBase = (token, amount) => async (dispatch) => {
+  dispatch(utilsPricingLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const valueInBase = await contract.callStatic.calcSwapValueInBase(
+      token,
+      amount,
+    )
+    dispatch(payloadToDispatch(Types.GET_SWAP_VALUE_IN_BASE, valueInBase))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILSPRICING_ERROR, error))
+  }
+}
+
+/**
+ * Calculate the swap value in TOKEN (Including slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} output
+ */
+export const getSwapValueInToken = (token, amount) => async (dispatch) => {
+  dispatch(utilsPricingLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const valueInToken = await contract.callStatic.calcSwapValueInToken(
+      token,
+      amount,
+    )
+    dispatch(payloadToDispatch(Types.GET_SWAP_VALUE_IN_TOKEN, valueInToken))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILSPRICING_ERROR, error))
+  }
+}
