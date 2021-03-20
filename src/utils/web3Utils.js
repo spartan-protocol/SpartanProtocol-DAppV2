@@ -308,7 +308,7 @@ export const getDebtShare = async (units, totalSupply, lpToken, synth) => {
  * Get count of curated pools
  * @returns {uint} count
  */
- export const getCuratedPoolCount = async () => {
+export const getCuratedPoolCount = async () => {
   const contract = getUtilsContract()
   const count = await contract.callStatic.curatedPoolCount()
   return count
@@ -318,7 +318,7 @@ export const getDebtShare = async (units, totalSupply, lpToken, synth) => {
  * Get all curated pools
  * @returns {aray} curatedPools
  */
- export const getCuratedPools = async () => {
+export const getCuratedPools = async () => {
   const contract = getUtilsContract()
   const curatedPools = await contract.callStatic.allCuratedPools()
   return curatedPools
@@ -330,8 +330,11 @@ export const getDebtShare = async (units, totalSupply, lpToken, synth) => {
  * @param {uint} count
  * @returns {aray} curatedPools
  */
- export const getCuratedPoolsInRange = async (start, count) => {
+export const getCuratedPoolsInRange = async (start, count) => {
   const contract = getUtilsContract()
-  const curatedPools = await contract.callStatic.curatedPoolsInRange(start, count)
+  const curatedPools = await contract.callStatic.curatedPoolsInRange(
+    start,
+    count,
+  )
   return curatedPools
 }

@@ -53,6 +53,12 @@ export const getBondClaimable = (bondAddress, member, asset) => async (
   }
 }
 
+/**
+ * Get a bond members' details
+ * @param {address} member
+ * @param {address} asset
+ * @returns {object} isMember, bondedLP, claimRate, lastBlockTime
+ */
 export const getBondMemberDetails = (bondAddress, member, asset) => async (
   dispatch,
 ) => {
@@ -389,6 +395,10 @@ export const bondProposalRecount = (proposalID) => async (dispatch) => {
   }
 }
 
+/**
+ * Get a count of all bond-listed assets
+ * @returns {uint256} count
+ */
 export const getBondListedCount = () => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondContract()
@@ -402,6 +412,10 @@ export const getBondListedCount = () => async (dispatch) => {
   }
 }
 
+/**
+ * Get a count of all bond members
+ * @returns {uint256} count
+ */
 export const getBondMemberCount = () => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondContract()
@@ -415,6 +429,10 @@ export const getBondMemberCount = () => async (dispatch) => {
   }
 }
 
+/**
+ * Get an array of all bond members
+ * @returns {address} array all members
+ */
 export const getBondMembers = () => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondContract()
@@ -428,6 +446,12 @@ export const getBondMembers = () => async (dispatch) => {
   }
 }
 
+/**
+ * Claim bond by asset & member
+ * @param {address} asset
+ * @param {address} member
+ * @returns {boolean}
+ */
 export const bondClaimAsset = (asset, member) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondContract()
