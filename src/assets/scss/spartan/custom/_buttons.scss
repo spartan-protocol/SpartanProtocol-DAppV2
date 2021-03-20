@@ -120,7 +120,7 @@
 .btn-danger  { @include btn-styles($danger, $danger-states);
 
               }
-.btn-neutral { @include btn-styles($white, $white); }
+.btn-neutral { @include btn-styles(#25212D, #25212D); }
 
 .btn{
      &:disabled,
@@ -219,6 +219,18 @@
     }
 }
 
+
+.btn-rounded{
+  border-width: $border-thin;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+
+  &.btn-simple{
+    padding: $padding-btn-vertical - 1  $padding-round-horizontal - 1;
+  }
+}
+
 .no-caret {
   &.dropdown-toggle::after {
     display: none;
@@ -284,3 +296,19 @@
 .btn-success {
 color: #0A0001;
 }
+
+
+.btn-neutral {
+  background: #25212D;
+  background-color: #25212D;
+  border-width: 2px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  margin: 4px 1px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: none;
+  box-shadow: none;
+}
+

@@ -9,12 +9,12 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: $font-family-base;
+  font-family: $font-family-base
 }
 
 .card {
   h1, h2, h3, h4, h5, h6, {
-    font-family: $font-family-headers;
+    font-family: $font-family-base;
     color: $opacity-8;
     font-weight: $font-weight-extra-bold;
 
@@ -22,48 +22,11 @@ textarea {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: $font-family-headers;
+  font-family: $font-family-base;
   font-weight: $font-weight-normal;
   color: $opacity-8;
 }
 
-h7 {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 20px;
-  /* identical to box height, or 200% */
-
-  font-feature-settings: 'liga' off;
-
-  color: #9A9A9A;
-}
-
-h8 {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 14px;
-  line-height: 20px;
-  /* identical to box height, or 143% */
-  font-feature-settings: 'liga' off;
-  color: #FFFFFF;
-}
-
-
-h9 {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-  /* identical to box height, or 143% */
-
-  font-feature-settings: 'liga' off;
-
-  color: #FFFFFF;
-}
 
 accentcurrency {
   display: block;
@@ -140,9 +103,6 @@ breadcrum {
 }
 
 
-
-
-
 a {
   color: $primary-states;
   font-weight: $font-weight-light;
@@ -209,7 +169,7 @@ p {
 .title {
   /* Hyperlinks */
 
-  font-family: Roboto;
+  font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -315,15 +275,13 @@ hr {
 }
 
 
-
-
 .amount {
   /* Hyperlinks */
 
-  font-family: Roboto !important;
+  font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 20px;
   /* identical to box height, or 143% */
 

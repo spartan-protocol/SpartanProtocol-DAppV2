@@ -97,24 +97,24 @@ $colors: map-merge((
 $default-color-opacity: rgba(182, 182, 182, .6) !default;
 $orange-color: #f96332 !default;
 
-$default: #344675 !default;
+$default: #1d171f !default;
 $primary: #fb2715 !default;
 $secondary: #f4f5f7 !default;
 $success: #aacdff !default;
 $info: #fb2715 !default;
 $warning: #FC5D50 !default;
 $danger: #605e68 !default;
-$black: #404040 !default;
+$black: #1D171F !default;
 
 
 // gradient
-$default-states: #263148 !default;
+$default-states: #1d171f !default;
 $primary-states: #fb2715 !default;
 $success-states: #aacdff !default;
 $info-states: #fb2715 !default;
 $warning-states: #FC5D50 !default;
 $danger-states: #605e68 !default;
-$black-states: #1d253b !default;
+$black-states: #1D171F !default;
 
 // background
 $background-black: #0a0001 !default;
@@ -335,7 +335,7 @@ $border-color: $gray-200 !default;
 
 $border-radius: .25rem !default;
 $border-radius-xl: 0.875rem !default;
-$border-radius-lg: 0.4285rem !default;
+$border-radius-lg: 12px !default;
 $border-radius-sm: 0.2857rem !default;
 $border-radius-xs: 0.1428rem !default;
 
@@ -379,7 +379,7 @@ $general-transition-time: 300ms !default;
 
 $font-family-base: 'Roboto', sans-serif !default;
 $font-family-alt: 'Kreon', sans-serif !default;
-$font-family-headers: 'Kreon', sans-serif !default;
+$font-family-headers: 'Kreon';
 
 
 $font-size-dash: .875rem !default;
