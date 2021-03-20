@@ -10,6 +10,19 @@ import {
   daoDeposit,
   daoHarvest,
   daoWithdraw,
+  getDaoProposalMajority,
+  getDaoProposalQuorum,
+  getDaoProposalMinority,
+  getDaoProposalDetails,
+  getDaoGrantDetails,
+  daoProposalNewAction,
+  daoProposalNewParam,
+  daoProposalNewAddress,
+  daoProposalNewGrant,
+  daoProposalVote,
+  daoProposalRemoveVote,
+  daoProposalCancel,
+  daoProposalFinalise,
 } from './actions'
 import * as Types from './types'
 
@@ -97,5 +110,101 @@ describe('Router actions', () => {
     await daoHarvest(true)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_HARVEST)
+  })
+
+  test('should get dao proposal mayority', async () => {
+    await getDaoProposalMajority(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.GET_DAO_PROPOSAL_MAJORITY,
+    )
+  })
+
+  test('should get dao proposal quorum', async () => {
+    await getDaoProposalQuorum(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.GET_DAO_PROPOSAL_QUORUM,
+    )
+  })
+
+  test('should get dao proposal minority', async () => {
+    await getDaoProposalMinority(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.GET_DAO_PROPOSAL_MINORITY,
+    )
+  })
+
+  test('should get dao proposal details', async () => {
+    await getDaoProposalDetails(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.GET_DAO_PROPOSAL_DETAILS,
+    )
+  })
+
+  test('should get dao grant details', async () => {
+    await getDaoGrantDetails(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_GRANT_DETAILS)
+  })
+
+  test('should create new action proposal', async () => {
+    await daoProposalNewAction('BUY')(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.DAO_PROPOSAL_NEW_ACTION,
+    )
+  })
+
+  test('should create new param proposal', async () => {
+    await daoProposalNewParam('buy', 'BUY')(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.DAO_PROPOSAL_NEW_PARAM,
+    )
+  })
+
+  test('should create new address proposal', async () => {
+    await daoProposalNewAddress(TEST_WALLET, 'SPARTA')(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.DAO_PROPOSAL_NEW_ADDRESS,
+    )
+  })
+
+  test('should create new grant proposal', async () => {
+    await daoProposalNewGrant(TEST_WALLET, 100)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.DAO_PROPOSAL_NEW_GRANT,
+    )
+  })
+
+  test('should create new vote proposal', async () => {
+    await daoProposalVote(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_VOTE)
+  })
+
+  test('should create remove vote', async () => {
+    await daoProposalRemoveVote(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.DAO_PROPOSAL_REMOTE_VOTE,
+    )
+  })
+
+  test('should cancel proposal', async () => {
+    await daoProposalCancel(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_CANCEL)
+  })
+
+  test('should finalise proposal', async () => {
+    await daoProposalFinalise(1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_FINALISE)
   })
 })

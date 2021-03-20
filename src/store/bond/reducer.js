@@ -23,7 +23,7 @@ const initialState = {
   bondListedCount: 0,
   bondMemberCount: 0,
   bondMembers: [],
-  bondClaimAsset: {},
+  bondClaimAsset: false,
   loading: false,
   error: null,
 }
