@@ -239,7 +239,7 @@ const Liquidity = () => {
                   </Row>
                   <Row>
                     <Col><br /><br /><Row><Col>0%</Col><Col>25%</Col><Col>50%</Col><Col>75%</Col><Col>
-                      <div class="text-right output-card">MAX</div>
+                      <div className="text-right output-card">MAX</div>
                     </Col></Row>
                       <br />
                       <div className="slider" ref={slider1Ref} />
@@ -364,7 +364,7 @@ const Liquidity = () => {
                   </Row>
                   <Row>
                     <Col><br /><br /><Row><Col>0%</Col><Col>25%</Col><Col>50%</Col><Col>75%</Col><Col>
-                      <div class="text-right output-card">MAX</div>
+                      <div className="text-right output-card">MAX</div>
                     </Col></Row>
                       <br />
                       <div className="slider" ref={slider3Ref} />
@@ -503,7 +503,7 @@ const Liquidity = () => {
                   </Row>
                   <Row>
                     <Col><br /><br /><Row><Col>0%</Col><Col>25%</Col><Col>50%</Col><Col>75%</Col><Col>
-                      <div class="text-right output-card">MAX</div>
+                      <div className="text-right output-card">MAX</div>
                     </Col></Row>
                       <br />
                       <div className="slider" ref={slider5Ref} />
