@@ -198,7 +198,7 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
 //     return result
 // }
 
-// ---------------- HELPER ASYNC FUNCTIONS FOR STORE ---------------
+// ---------------- HELPER ASYNC FUNCTIONS FOR UTILS STORE ---------------
 
 /**
  * Get a pool address from the token address
@@ -337,4 +337,54 @@ export const getCuratedPoolsInRange = async (start, count) => {
     count,
   )
   return curatedPools
+}
+
+// ---------------- HELPER ASYNC FUNCTIONS FOR UTILSPRICING STORE ---------------
+
+/**
+ * Calculate the spot value in SPARTA (No slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} value
+ */
+export const getSpotValueInBase = async (token, amount) => {
+  const contract = getUtilsContract()
+  const value = await contract.callStatic.calcSpotValueInBase(token, amount)
+  return value
+}
+
+/**
+ * Calculate the spot value in TOKEN (No slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} value
+ */
+export const getSpotValueInToken = async (token, amount) => {
+  const contract = getUtilsContract()
+  const value = await contract.callStatic.calcSpotValueInToken(token, amount)
+  return value
+}
+
+/**
+ * Calculate the swap value in SPARTA (Including slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} output
+ */
+export const getSwapValueInBase = async (token, amount) => {
+  const contract = getUtilsContract()
+  const output = await contract.callStatic.calcSwapValueInBase(token, amount)
+  return output
+}
+
+/**
+ * Calculate the swap value in SPARTA (Including slip)
+ * @param {address} token
+ * @param {uint} amount
+ * @returns {uint} output
+ */
+export const getSwapValueInToken = async (token, amount) => {
+  const contract = getUtilsContract()
+  const output = await contract.callStatic.calcSwapValueInToken(token, amount)
+  return output
 }
