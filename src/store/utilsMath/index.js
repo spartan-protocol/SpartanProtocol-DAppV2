@@ -9,4 +9,6 @@ export {
   getSwapFee,
   getSlipAdustment,
   getAsymmetricShare,
+  getSynthsValue,
+  getCDPValue,
 } from './actions'

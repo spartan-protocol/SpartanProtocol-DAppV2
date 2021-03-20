@@ -415,28 +415,3 @@ export const getCuratedPoolsInRange = async (start, count) => {
   )
   return curatedPools
 }
-
-// ---------------- HELPER ASYNC FUNCTIONS FOR UTILSMATH STORE ---------------
-
-/**
- * Calculate the value of a synthetic asset
- * @param {address} pool
- * @param {uint} amount
- * @returns {uint} units
- */
-export const getSynthsValue = async (pool, amount) => {
-  const contract = getUtilsContract()
-  const units = await contract.callStatic.calcSynthsValue(pool, amount)
-  return units
-}
-
-/**
- * Calculate the value of a synthetic asset
- * @param {address} synth
- * @returns {uint} cdpValue
- */
-export const getCDPValue = async (synth) => {
-  const contract = getUtilsContract()
-  const cdpValue = await contract.callStatic.calcCDPValue(synth)
-  return cdpValue
-}
