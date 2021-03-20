@@ -388,3 +388,60 @@ export const bondProposalRecount = (proposalID) => async (dispatch) => {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
 }
+
+export const getBondListedCount = () => async (dispatch) => {
+  dispatch(bondLoading())
+  const contract = getBondContract()
+
+  try {
+    const bondListedCount = await contract.callStatic.assetListedCount()
+
+    dispatch(payloadToDispatch(Types.GET_BOND_LISTED_COUNT, bondListedCount))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+  }
+}
+
+export const getBondMemberCount = () => async (dispatch) => {
+  dispatch(bondLoading())
+  const contract = getBondContract()
+
+  try {
+    const memberCount = await contract.callStatic.memberCount()
+
+    dispatch(payloadToDispatch(Types.GET_BOND_MEMBER_COUNT, memberCount))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+  }
+}
+
+export const getBondMembers = () => async (dispatch) => {
+  dispatch(bondLoading())
+  const contract = getBondContract()
+
+  try {
+    const members = await contract.callStatic.allMembers()
+
+    dispatch(payloadToDispatch(Types.GET_BOND_MEMBERS, members))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+  }
+}
+
+export const bondClaimAsset = (asset, member) => async (dispatch) => {
+  dispatch(bondLoading())
+  const contract = getBondContract()
+
+  try {
+    const gPrice = await getProviderGasPrice()
+    const gLimit = await contract.estimateGas.claimForMember(asset, member)
+    const bondClaimed = await contract.claimForMember(asset, member, {
+      gasPrice: gPrice,
+      gasLimit: gLimit,
+    })
+
+    dispatch(payloadToDispatch(Types.BOND_CLAIM_ASSET, bondClaimed))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+  }
+}

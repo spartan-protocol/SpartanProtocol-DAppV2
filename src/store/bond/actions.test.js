@@ -11,6 +11,10 @@ import {
   getBondProposal,
   getBondProposals,
   getBondCoolOffPeriod,
+  getBondListedCount,
+  getBondMemberCount,
+  getBondMembers,
+  bondClaimAsset,
 } from './actions'
 import * as Types from './types'
 
@@ -97,5 +101,29 @@ describe('Bond actions', () => {
     expect(dispatchMock.mock.calls[1][0].type).toBe(
       Types.GET_BOND_COOL_OFF_PERIOD,
     )
+  })
+
+  test('should get bond listed count', async () => {
+    await getBondListedCount()(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_LISTED_COUNT)
+  })
+
+  test('should get bond member count', async () => {
+    await getBondMemberCount()(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBER_COUNT)
+  })
+
+  test('should get bond members', async () => {
+    await getBondMembers()(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBERS)
+  })
+
+  test('should claim bond asset', async () => {
+    await bondClaimAsset(TEST_TOKEN, 1)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.BOND_CLAIM_ASSET)
   })
 })

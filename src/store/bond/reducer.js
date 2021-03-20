@@ -20,6 +20,10 @@ const initialState = {
   bondProposalFinalize: {},
   bondProposalReplace: {},
   bondProposalRecount: {},
+  bondListedCount: 0,
+  bondMemberCount: 0,
+  bondMembers: [],
+  bondClaimAsset: {},
   loading: false,
   error: null,
 }
@@ -183,6 +187,38 @@ export const bondReducer = (state = initialState, action) => {
       return {
         ...state,
         bondProposalRecount: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+    case Types.GET_BOND_LISTED_COUNT: {
+      return {
+        ...state,
+        bondListedCount: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+    case Types.GET_BOND_MEMBER_COUNT: {
+      return {
+        ...state,
+        bondMemberCount: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+    case Types.GET_BOND_MEMBERS: {
+      return {
+        ...state,
+        bondMembers: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+    case Types.BOND_CLAIM_ASSET: {
+      return {
+        ...state,
+        bondClaimAsset: action.payload,
         loading: false,
         error: null,
       }

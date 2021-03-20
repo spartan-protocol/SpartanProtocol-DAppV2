@@ -22,4 +22,8 @@ export {
   bondProposalFinalize,
   bondProposalReplace,
   bondProposalRecount,
+  getBondMembers,
+  getBondMemberCount,
+  getBondListedCount,
+  bondClaimAsset,
 } from './actions'
