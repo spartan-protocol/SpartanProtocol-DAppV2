@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 import {
   Row,
@@ -6,36 +6,30 @@ import {
   Card,
   Breadcrumb,
   Button,
-  Nav,
   NavItem,
   NavLink,
   TabPane,
   TabContent,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  FormGroup,
-  Table,
-  UncontrolledDropdown, Alert, CardBody, UncontrolledAlert
-} from "reactstrap"
+  UncontrolledAlert,
+} from 'reactstrap'
 
 // import { withNamespaces } from 'react-i18next'
 // import InputGroup from 'reactstrap/es/InputGroup'
 // import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
-import Slider from "nouislider"
+import Slider from 'nouislider'
 
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
+import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 // import { Breadcrumb } from 'react-bootstrap'
-import coin_bnb from "../../../assets/icons/coin_bnb.svg"
-import coin_sparta from "../../../assets/icons/coin_sparta.svg"
-import bnb_sparta from "../../../assets/icons/bnb_sparta.png"
-import PoolsPaneSide from "./PoolsPaneSide"
-import Wallet from "../../../components/Wallet/Wallet"
+import coinBnb from '../../../assets/icons/coin_bnb.svg'
+import coinSparta from '../../../assets/icons/coin_sparta.svg'
+import bnbSparta from '../../../assets/icons/bnb_sparta.png'
+import PoolsPaneSide from './PoolsPaneSide'
+import Wallet from '../../../components/Wallet/Wallet'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
 const Liquidity = () => {
-  const [horizontalTabs, sethorizontalTabs] = React.useState("addBoth")
+  const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
     sethorizontalTabs(tabName)
@@ -50,24 +44,23 @@ const Liquidity = () => {
   const slider5Ref = React.useRef(null)
   const slider6Ref = React.useRef(null)
 
-
   React.useEffect(() => {
     const slider1 = slider1Ref.current
     const slider2 = slider2Ref.current
-    if (slider1.className === "slider") {
+    if (slider1.className === 'slider') {
       Slider.create(slider1, {
         start: [40],
         connect: [true, false],
         step: 1,
-        range: { min: 0, max: 100 }
+        range: { min: 0, max: 100 },
       })
     }
-    if (slider2.className === "slider slider-primary mb-3") {
+    if (slider2.className === 'slider slider-primary mb-3') {
       Slider.create(slider2, {
         start: [20, 60],
         connect: [false, true, false],
         step: 1,
-        range: { min: 0, max: 100 }
+        range: { min: 0, max: 100 },
       })
     }
   }, [])
@@ -75,72 +68,79 @@ const Liquidity = () => {
   React.useEffect(() => {
     const slider3 = slider3Ref.current
     const slider4 = slider4Ref.current
-    if (slider3.className === "slider") {
+    if (slider3.className === 'slider') {
       Slider.create(slider3, {
         start: [80],
         connect: [true, false],
         step: 1,
-        range: { min: 0, max: 100 }
+        range: { min: 0, max: 100 },
       })
     }
-    if (slider4.className === "slider slider-primary mb-3") {
+    if (slider4.className === 'slider slider-primary mb-3') {
       Slider.create(slider4, {
         start: [20, 60],
         connect: [false, true, false],
         step: 1,
-        range: { min: 0, max: 100 }
+        range: { min: 0, max: 100 },
       })
     }
   }, [])
-
 
   React.useEffect(() => {
     const slider5 = slider5Ref.current
     const slider6 = slider6Ref.current
-    if (slider5.className === "slider") {
+    if (slider5.className === 'slider') {
       Slider.create(slider5, {
         start: [100],
         connect: [true, false],
         step: 1,
-        range: { min: 0, max: 100 }
+        range: { min: 0, max: 100 },
       })
     }
-    if (slider6.className === "slider slider-primary mb-3") {
+    if (slider6.className === 'slider slider-primary mb-3') {
       Slider.create(slider6, {
         start: [20, 60],
         connect: [false, true, false],
         step: 1,
-        range: { min: 0, max: 100 }
+        range: { min: 0, max: 100 },
       })
     }
   }, [])
-
 
   return (
     <>
       <div className="content">
         <br />
-        <Breadcrumb><Col md={10}>Join</Col><Col md={2}> <Wallet /></Col></Breadcrumb>
+        <Breadcrumb>
+          <Col md={10}>Join</Col>
+          <Col md={2}>
+            {' '}
+            <Wallet />
+          </Col>
+        </Breadcrumb>
         <Row>
           <Col md={8}>
-
             <Card className="card-body">
-
               <Row>
                 <Col md={4} className="justify-content-center">
-
-                  <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
-                    <NavItem style={{ listStyleType: "none" }}>
+                  <Card
+                    style={{ backgroundColor: '#25212D' }}
+                    className="card-body "
+                  >
+                    <NavItem style={{ listStyleType: 'none' }}>
                       <NavLink
                         data-toggle="tab"
                         href="#"
-                        className={horizontalTabs === "addBoth" ? "active" : ""}
+                        className={horizontalTabs === 'addBoth' ? 'active' : ''}
                         onClick={(e) =>
-                          changeActiveTab(e, "horizontalTabs", "addBoth")
+                          changeActiveTab(e, 'horizontalTabs', 'addBoth')
                         }
                       >
-                        <div className="text-center"><i className="icon-small icon-add-both icon-dark text-center"
-                                                        aria-hidden="true"></i>
+                        <div className="text-center">
+                          <i
+                            className="icon-small icon-add-both icon-dark text-center"
+                            aria-hidden="true"
+                          />
                           <div className="output-card">Add Both</div>
                         </div>
                       </NavLink>
@@ -148,20 +148,26 @@ const Liquidity = () => {
                   </Card>
                 </Col>
                 <Col md={4} className="justify-content-center">
-                  <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
-                    <NavItem style={{ listStyleType: "none" }}>
+                  <Card
+                    style={{ backgroundColor: '#25212D' }}
+                    className="card-body "
+                  >
+                    <NavItem style={{ listStyleType: 'none' }}>
                       <NavLink
                         data-toggle="tab"
                         href="#"
                         className={
-                          horizontalTabs === "addSingle" ? "active" : ""
+                          horizontalTabs === 'addSingle' ? 'active' : ''
                         }
                         onClick={(e) =>
-                          changeActiveTab(e, "horizontalTabs", "addSingle")
+                          changeActiveTab(e, 'horizontalTabs', 'addSingle')
                         }
                       >
-                        <div className="text-center"><i className="icon-small icon-add-single icon-dark text-center"
-                                                        aria-hidden="true"></i>
+                        <div className="text-center">
+                          <i
+                            className="icon-small icon-add-single icon-dark text-center"
+                            aria-hidden="true"
+                          />
                           <div className="output-card">Add BNB</div>
                         </div>
                       </NavLink>
@@ -170,18 +176,24 @@ const Liquidity = () => {
                 </Col>
 
                 <Col md={4} className="justify-content-center">
-                  <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
-                    <NavItem style={{ listStyleType: "none" }}>
+                  <Card
+                    style={{ backgroundColor: '#25212D' }}
+                    className="card-body "
+                  >
+                    <NavItem style={{ listStyleType: 'none' }}>
                       <NavLink
                         data-toggle="tab"
                         href="#"
-                        className={horizontalTabs === "remove" ? "active" : ""}
+                        className={horizontalTabs === 'remove' ? 'active' : ''}
                         onClick={(e) =>
-                          changeActiveTab(e, "horizontalTabs", "remove")
+                          changeActiveTab(e, 'horizontalTabs', 'remove')
                         }
                       >
-                        <div className="text-center"><i className="icon-small icon-remove icon-dark text-center"
-                                                        aria-hidden="true"></i>
+                        <div className="text-center">
+                          <i
+                            className="icon-small icon-remove icon-dark text-center"
+                            aria-hidden="true"
+                          />
                           <div className="output-card">Remove Both</div>
                         </div>
                       </NavLink>
@@ -193,7 +205,10 @@ const Liquidity = () => {
                 <TabPane tabId="addBoth">
                   <Row>
                     <Col md={6}>
-                      <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
+                      <Card
+                        style={{ backgroundColor: '#25212D' }}
+                        className="card-body "
+                      >
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
@@ -201,13 +216,9 @@ const Liquidity = () => {
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 10.36</div>
-                            <div className="output-card">BNB
-                              <img
-                                className="ml-2"
-                                src={coin_bnb}
-                                alt="BNB"
-                              />
-
+                            <div className="output-card">
+                              BNB
+                              <img className="ml-2" src={coinBnb} alt="BNB" />
                             </div>
                           </Col>
                         </Row>
@@ -215,7 +226,10 @@ const Liquidity = () => {
                     </Col>
 
                     <Col md={6}>
-                      <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
+                      <Card
+                        style={{ backgroundColor: '#25212D' }}
+                        className="card-body "
+                      >
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
@@ -223,24 +237,32 @@ const Liquidity = () => {
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 10.36</div>
-                            <div className="output-card">SPARTA
+                            <div className="output-card">
+                              SPARTA
                               <img
                                 className="ml-2"
-                                src={coin_sparta}
+                                src={coinSparta}
                                 alt="SPARTA"
                               />
-
                             </div>
                           </Col>
                         </Row>
                       </Card>
                     </Col>
-
                   </Row>
                   <Row>
-                    <Col><br /><br /><Row><Col>0%</Col><Col>25%</Col><Col>50%</Col><Col>75%</Col><Col>
-                      <div className="text-right output-card">MAX</div>
-                    </Col></Row>
+                    <Col>
+                      <br />
+                      <br />
+                      <Row>
+                        <Col>0%</Col>
+                        <Col>25%</Col>
+                        <Col>50%</Col>
+                        <Col>75%</Col>
+                        <Col>
+                          <div className="text-right output-card">MAX</div>
+                        </Col>
+                      </Row>
                       <br />
                       <div className="slider" ref={slider1Ref} />
                       <br />
@@ -248,60 +270,56 @@ const Liquidity = () => {
                         className="slider slider-primary mb-ImageUpload.3"
                         ref={slider2Ref}
                       />
-                    </Col></Row>
+                    </Col>
+                  </Row>
                   <br />
                   <Row>
                     <Col md={6}>
-                      <div className="text-card">Input{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Input{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
-                      <div className="text-card">Share{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Share{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
 
-                      <div className="amount">Estimated output{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="amount">
+                        Estimated output{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
-
                     </Col>
                     <Col md={6} className="text-right">
                       <div className="output-card">1 of 10.36 BNB</div>
@@ -313,12 +331,17 @@ const Liquidity = () => {
                     </Col>
                   </Row>
                   <br />
-                  <Button color="primary" size="lg" block>Add to pool</Button>
+                  <Button color="primary" size="lg" block>
+                    Add to pool
+                  </Button>
                 </TabPane>
                 <TabPane tabId="addSingle">
                   <Row>
                     <Col md={6}>
-                      <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
+                      <Card
+                        style={{ backgroundColor: '#25212D' }}
+                        className="card-body "
+                      >
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
@@ -326,13 +349,9 @@ const Liquidity = () => {
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 10.36</div>
-                            <div className="output-card">BNB
-                              <img
-                                className="ml-2"
-                                src={coin_bnb}
-                                alt="BNB"
-                              />
-
+                            <div className="output-card">
+                              BNB
+                              <img className="ml-2" src={coinBnb} alt="BNB" />
                             </div>
                           </Col>
                         </Row>
@@ -340,7 +359,10 @@ const Liquidity = () => {
                     </Col>
 
                     <Col md={6}>
-                      <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
+                      <Card
+                        style={{ backgroundColor: '#25212D' }}
+                        className="card-body "
+                      >
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
@@ -348,24 +370,32 @@ const Liquidity = () => {
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 10.36</div>
-                            <div className="output-card">SPARTA
+                            <div className="output-card">
+                              SPARTA
                               <img
                                 className="ml-2"
-                                src={coin_sparta}
+                                src={coinSparta}
                                 alt="SPARTA"
                               />
-
                             </div>
                           </Col>
                         </Row>
                       </Card>
                     </Col>
-
                   </Row>
                   <Row>
-                    <Col><br /><br /><Row><Col>0%</Col><Col>25%</Col><Col>50%</Col><Col>75%</Col><Col>
-                      <div className="text-right output-card">MAX</div>
-                    </Col></Row>
+                    <Col>
+                      <br />
+                      <br />
+                      <Row>
+                        <Col>0%</Col>
+                        <Col>25%</Col>
+                        <Col>50%</Col>
+                        <Col>75%</Col>
+                        <Col>
+                          <div className="text-right output-card">MAX</div>
+                        </Col>
+                      </Row>
                       <br />
                       <div className="slider" ref={slider3Ref} />
                       <br />
@@ -373,77 +403,71 @@ const Liquidity = () => {
                         className="slider slider-primary mb-ImageUpload.3"
                         ref={slider4Ref}
                       />
-                    </Col></Row>
+                    </Col>
+                  </Row>
                   <br />
                   <Row>
                     <Col md={6}>
-                      <div className="text-card">Input{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Input{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
-                      <div className="text-card">Swap{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Swap{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
-                      <div className="text-card">Share{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Share{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
-
 
                       <br />
-                      <div className="amount">Estimated output{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="amount">
+                        Estimated output{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
-
                     </Col>
                     <Col md={6} className="text-right">
                       <div className="output-card">1 of 10.36 BNB</div>
@@ -457,26 +481,35 @@ const Liquidity = () => {
                     </Col>
                   </Row>
                   <br />
-                  <Button color="primary" size="lg" block>Add to pool</Button>
+                  <Button color="primary" size="lg" block>
+                    Add to pool
+                  </Button>
                   <br />
                   <UncontrolledAlert
                     className="alert-with-icon"
                     color="danger"
                     fade={false}
                   >
-                    <span data-notify="icon" className="icon-medium icon-info icon-dark mb-5" />
+                    <span
+                      data-notify="icon"
+                      className="icon-medium icon-info icon-dark mb-5"
+                    />
                     <span data-notify="message">
-                      Please ensure you understand the risks related to this asymmetric add! 50%
-                      of the input BNB will be swapped to SPARTA before adding both to the pool.
-                      This is subject to the usual swap fees and may have unfavourable
-                      'impermanent loss' vs hodling your assets!
-                  </span>
+                      Please ensure you understand the risks related to this
+                      asymmetric add! 50% of the input BNB will be swapped to
+                      SPARTA before adding both to the pool. This is subject to
+                      the usual swap fees and may have unfavourable impermanent
+                      loss vs hodling your assets!
+                    </span>
                   </UncontrolledAlert>
                 </TabPane>
                 <TabPane tabId="remove">
                   <Row>
                     <Col md={12}>
-                      <Card style={{ backgroundColor: "#25212D" }} className="card-body ">
+                      <Card
+                        style={{ backgroundColor: '#25212D' }}
+                        className="card-body "
+                      >
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Redeem</div>
@@ -484,27 +517,33 @@ const Liquidity = () => {
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 52.23</div>
-                            <div className="output-card"><img
-                              className="mr-2"
-                              src={bnb_sparta}
-                              alt="Logo"
-                              height="25"
-                            />
+                            <div className="output-card">
+                              <img
+                                className="mr-2"
+                                src={bnbSparta}
+                                alt="Logo"
+                                height="25"
+                              />
                               WBNB-SPARTA LP
-
-
                             </div>
                           </Col>
                         </Row>
                       </Card>
                     </Col>
-
-
                   </Row>
                   <Row>
-                    <Col><br /><br /><Row><Col>0%</Col><Col>25%</Col><Col>50%</Col><Col>75%</Col><Col>
-                      <div className="text-right output-card">MAX</div>
-                    </Col></Row>
+                    <Col>
+                      <br />
+                      <br />
+                      <Row>
+                        <Col>0%</Col>
+                        <Col>25%</Col>
+                        <Col>50%</Col>
+                        <Col>75%</Col>
+                        <Col>
+                          <div className="text-right output-card">MAX</div>
+                        </Col>
+                      </Row>
                       <br />
                       <div className="slider" ref={slider5Ref} />
                       <br />
@@ -512,75 +551,71 @@ const Liquidity = () => {
                         className="slider slider-primary mb-ImageUpload.3"
                         ref={slider6Ref}
                       />
-                    </Col></Row>
+                    </Col>
+                  </Row>
                   <br />
                   <Row>
                     <Col md={6}>
-                      <div className="text-card">Redeem LP Tokens{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Redeem LP Tokens{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
-                      <div className="text-card">Receive{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Receive{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
                       <br />
-                      <div className="text-card">Staked LP Tokens{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Staked LP Tokens{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
                       <br />
-                      <div className="text-card">Projected output{" "}<i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-
-
+                      <div className="text-card">
+                        Projected output{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
                         <UncontrolledTooltip
                           placement="right"
-                          target="tooltipAddBase">
-                          The quantity of & SPARTA you are adding to the
-                          pool.
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
                         </UncontrolledTooltip>
-
                       </div>
-
                     </Col>
                     <Col md={6} className="text-right">
                       <div className="output-card">52.23 of 52.23</div>
@@ -595,20 +630,21 @@ const Liquidity = () => {
                     </Col>
                   </Row>
                   <br />
-                  <Button color="primary" size="lg" block>Redeem LP Tokens</Button>
+                  <Button color="primary" size="lg" block>
+                    Redeem LP Tokens
+                  </Button>
                 </TabPane>
               </TabContent>
-              <Row>
-              </Row>
+              <Row />
             </Card>
-
           </Col>
-          <Col md={4}> <Card className="card-body">
-            <PoolsPaneSide />
-          </Card>
+          <Col md={4}>
+            {' '}
+            <Card className="card-body">
+              <PoolsPaneSide />
+            </Card>
           </Col>
         </Row>
-
       </div>
     </>
   )

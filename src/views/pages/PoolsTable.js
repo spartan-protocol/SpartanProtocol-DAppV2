@@ -1,13 +1,13 @@
-import React from "react"
-import Card from "react-bootstrap/Card"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
-import { CardBody, CardHeader, Collapse } from "reactstrap"
+import React from 'react'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import { CardBody, CardHeader, Collapse } from 'reactstrap'
 
-import Button from "react-bootstrap/Button"
+import Button from 'react-bootstrap/Button'
 
-import bnb from "../../assets/icons/BNB.svg"
-import bnb_sparta from "../../assets/icons/bnb_sparta.png"
+import bnb from '../../assets/icons/BNB.svg'
+import bnbSparta from '../../assets/icons/bnb_sparta.png'
 
 const PoolsTable = () => {
   //   const [openedCollapseOne, setopenedCollapseOne] = React.useState(true)
@@ -15,7 +15,7 @@ const PoolsTable = () => {
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
   return (
     <>
-      <Card className="card-body" style={{ backgroundColor: "#1D171F" }}>
+      <Card className="card-body" style={{ backgroundColor: '#1D171F' }}>
         <div
           aria-multiselectable
           className="card-collapse"
@@ -74,13 +74,16 @@ const PoolsTable = () => {
                     </Button>
                   </Col>
                   <Col className="ml-auto" md="1">
-                    {/* ADD ARROW ICON*/}
-                    <i className="bd-icons icon-minimal-down mt-n8" style={{ color: "#FFF" }} />
+                    {/* ADD ARROW ICON */}
+                    <i
+                      className="bd-icons icon-minimal-down mt-n8"
+                      style={{ color: '#FFF' }}
+                    />
                   </Col>
                 </Row>
               </div>
             </CardHeader>
-            <Card style={{ backgroundColor: "#25212D" }}>
+            <Card style={{ backgroundColor: '#25212D' }}>
               <Collapse role="tabpanel" isOpen={openedCollapseThree}>
                 <CardBody>
                   <Row>
@@ -88,7 +91,7 @@ const PoolsTable = () => {
                       <h3>
                         <img
                           className="mr-2"
-                          src={bnb_sparta}
+                          src={bnbSparta}
                           alt="Logo"
                           height="32"
                         />
@@ -101,7 +104,8 @@ const PoolsTable = () => {
                     </Col>
                     <Col md="4">
                       <Button type="Button" className="btn btn-success">
-                        Lock</Button>
+                        Lock
+                      </Button>
                       <Button type="Button" className="btn btn-success">
                         Unlock
                       </Button>

@@ -1,50 +1,21 @@
-import React from "react"
+import React from 'react'
 
+import { Row, Table } from 'reactstrap'
+import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import coinBnb from '../../../assets/icons/coin_bnb.svg'
+import coinSparta from '../../../assets/icons/coin_sparta.svg'
 
-import coin_bnb from "../../../assets/icons/coin_bnb.svg"
-import bnb_sparta from "../../../assets/icons/bnb_sparta.png"
-
-import {
-  Row,
-  Col,
-  Card,
-  Breadcrumb,
-  Button,
-  Nav,
-  NavItem,
-  NavLink,
-  TabPane,
-  TabContent,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  FormGroup,
-  Table,
-  UncontrolledDropdown, Alert, CardBody, UncontrolledAlert
-} from "reactstrap"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
-import coin_sparta from "../../../assets/icons/coin_sparta.svg"
-
-
-const PoolsPaneSide = () => {
-
-  return (
-    <>
-      <h4>Pair details</h4>
-      <Row>
-        <Table borderless className="ml-2 mr-5">
-          <tbody>
-
+const PoolsPaneSide = () => (
+  <>
+    <h4>Pair details</h4>
+    <Row>
+      <Table borderless className="ml-2 mr-5">
+        <tbody>
           <tr>
             <td>
               <div className="output-card">
-                <img
-                  className="mr-2"
-                  src={coin_bnb}
-                  alt="Logo"
-                  height="32"
-                />BNB
-
+                <img className="mr-2" src={coinBnb} alt="Logo" height="32" />
+                BNB
               </div>
             </td>
             <th className="output-card text-right">$260.55</th>
@@ -52,13 +23,8 @@ const PoolsPaneSide = () => {
           <tr>
             <td>
               <div className="output-card">
-                <img
-                  className="mr-2"
-                  src={coin_sparta}
-                  alt="Logo"
-                  height="32"
-                />SPARTA
-
+                <img className="mr-2" src={coinSparta} alt="Logo" height="32" />
+                SPARTA
               </div>
             </td>
             <th className="output-card text-right">$1.30</th>
@@ -84,51 +50,46 @@ const PoolsPaneSide = () => {
             <th className="output-card text-right">48.907 BNB</th>
           </tr>
           <tr>
-            <td></td>
+            <td />
             <th className="output-card text-right">9.159.375 SPARTA</th>
           </tr>
           <tr>
             <td className="text-card">
-              <div className="text-card">APY{" "}<i
-                className="icon-small icon-info icon-dark ml-2"
-                id="tooltipAddBase"
-                role="button"
-              />
-                <UncontrolledTooltip
-                  placement="right"
-                  target="tooltipAddBase">
-                  The quantity of & SPARTA you are adding to the
-                  pool.
+              <div className="text-card">
+                APY{' '}
+                <i
+                  className="icon-small icon-info icon-dark ml-2"
+                  id="tooltipAddBase"
+                  role="button"
+                />
+                <UncontrolledTooltip placement="right" target="tooltipAddBase">
+                  The quantity of & SPARTA you are adding to the pool.
                 </UncontrolledTooltip>
-
               </div>
-
             </td>
             <th className="output-card text-right">150.39%</th>
           </tr>
-          </tbody>
-        </Table>
+        </tbody>
+      </Table>
 
-        {/*<Col>*/}
+      {/* <Col> */}
 
-        {/*  <div className="output-card">*/}
-        {/*    <img*/}
-        {/*      className="mr-2"*/}
-        {/*      src={coin_bnb}*/}
-        {/*      alt="Logo"*/}
-        {/*      height="32"*/}
-        {/*    />BNB*/}
+      {/*  <div className="output-card"> */}
+      {/*    <img */}
+      {/*      className="mr-2" */}
+      {/*      src={coin_bnb} */}
+      {/*      alt="Logo" */}
+      {/*      height="32" */}
+      {/*    />BNB */}
 
-        {/*  </div>*/}
-        {/*</Col>*/}
-        {/*  <Col className="text-right">*/}
-        {/*    <div className="output-card">$260.55</div>*/}
-        {/*    <div className="output-card">$260.55</div>*/}
-        {/*  </Col>*/}
-      </Row>
-
-    </>
-  )
-}
+      {/*  </div> */}
+      {/* </Col> */}
+      {/*  <Col className="text-right"> */}
+      {/*    <div className="output-card">$260.55</div> */}
+      {/*    <div className="output-card">$260.55</div> */}
+      {/*  </Col> */}
+    </Row>
+  </>
+)
 
 export default PoolsPaneSide
