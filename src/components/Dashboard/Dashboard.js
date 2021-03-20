@@ -1,14 +1,16 @@
 import React from 'react'
-// nodejs library that concatenates classes
-// react plugin used to create charts
-// react plugin for creating vector maps
 
 // reactstrap components
-import { Row } from 'reactstrap'
+import { Row, Button } from 'reactstrap'
+import { calcLiquidityHoldings } from '../../utils/web3Utils'
 
 const Dashboard = () => (
   <div className="content">
-    <Row />
+    <Row>
+      <Button onClick={() => calcLiquidityHoldings('123', '122', '122')}>
+        TEST
+      </Button>
+    </Row>
   </div>
 )
 
