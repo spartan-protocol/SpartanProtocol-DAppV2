@@ -15,6 +15,7 @@ import Utils from './utils/Utils'
 import Tabs from './views/pages/Samples/Tabs'
 // import Liquidity from './views/pages/Pools/Liquidity'
 import Overview from './views/pages/Pools/Overview'
+import Liquidity from './views/pages/Pools/Liquidity'
 
 const routes = [
   {
@@ -30,6 +31,14 @@ const routes = [
     name: 'Pools',
     icon: 'icon-medium icon-swords icon-dark',
     component: Overview,
+    layout: '/dapp',
+  },
+
+  {
+    path: '/pools/liquidity',
+    name: 'Join',
+    icon: 'icon-medium icon-sword icon-dark',
+    component: Liquidity,
     layout: '/dapp',
   },
 

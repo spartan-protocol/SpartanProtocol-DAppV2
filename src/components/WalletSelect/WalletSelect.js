@@ -64,6 +64,7 @@ const WalletSelect = (props) => {
     wallet.reset()
     console.log('reset')
     if (x.inject === '') {
+      console.log('no inject')
       wallet.connect()
     } else if (x.inject === 'walletconnect') {
       wallet.connectors.walletconnect.rpcUrl = network.rpc
@@ -82,18 +83,23 @@ const WalletSelect = (props) => {
     <>
       <Modal {...props}>
         <div className="modal-header ">
-          <button
-            aria-hidden
-            className="close"
-            data-dismiss="modal"
-            type="button"
-            onClick={props.onHide}
-          >
-            <i className="bd-icons icon-simple-remove" />
-          </button>
-          <h2 className="modal-title text-center" id="myModalLabel">
-            Connect to a wallet - Network: {network.net}
-          </h2>
+          {/* <button */}
+          {/*  aria-hidden */}
+          {/*  className="close" */}
+          {/*  data-dismiss="modal" */}
+          {/*  type="button" */}
+          {/*  onClick={props.onHide} */}
+          {/* > */}
+          {/*  <i className="bd-icons icon-simple-remove" /> */}
+          {/* </button> */}
+          <Col>
+            <div className="small-4 medium-4 large-4 columns text-center">
+              <i className="icon-large icon-wallet icon-dark text-center " />
+            </div>
+            <h1 className="modal-title text-center" id="myModalLabel">
+              Connect to {network.net}
+            </h1>
+          </Col>
         </div>
 
         <Modal.Body className="center-text">
@@ -127,6 +133,7 @@ const WalletSelect = (props) => {
               </Col>
             </button>
           </div>
+          <br />
 
           {wallet.status === 'connected' ? (
             <div>
@@ -141,7 +148,7 @@ const WalletSelect = (props) => {
               <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
               <div>RPC: {network.rpc}</div>
               <Button
-                variant="primary"
+                variant="danger"
                 onClick={() => navigator.clipboard.writeText(wallet.account)}
               >
                 Copy Address
@@ -178,7 +185,7 @@ const WalletSelect = (props) => {
                     size="lg"
                     color="success"
                     type="button"
-                    className="btn btn-warning btn-block"
+                    className="btn btn-danger btn-block mt-n3"
                     onClick={() => connectWallet(x)}
                   >
                     <Col>
@@ -200,15 +207,16 @@ const WalletSelect = (props) => {
             </div>
           )}
         </Modal.Body>
-        <div className="modal-footer justify-content-center">
+        <div className="ml-4 mr-4 mb-3">
           <Button
-            className="btn-round"
+            className="btn-round btn-block "
             color="info"
             data-dismiss="modal"
             type="button"
+            size="lg"
             onClick={props.onHide}
           >
-            Close
+            Cancel
           </Button>
         </div>
       </Modal>
