@@ -7,6 +7,11 @@ import {
   routerAddLiq,
   routerRemoveLiq,
   routerSwapAssets,
+  routerAddLiqAsym,
+  routerRemoveLiqAsym,
+  routerSwapBaseToSynth,
+  routerSwapSynthToBase,
+  routerZapLiquidity,
 } from './actions'
 import * as Types from './types'
 
@@ -76,5 +81,41 @@ describe('Router actions', () => {
       )
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ERROR)
     }
+  })
+
+  test('should add liquid asymmetrically', async () => {
+    await routerAddLiqAsym(100, true, TEST_TOKEN)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ADD_LIQ_ASYM)
+  })
+
+  test('should add zap liquidity ', async () => {
+    await routerZapLiquidity(100, TEST_TOKEN, TEST_TOKEN)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ZAP_LIQUIDITY)
+  })
+
+  test('should romove liquidity asymmetrically', async () => {
+    await routerRemoveLiqAsym(100, TEST_TOKEN, TEST_TOKEN)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.ROUTER_REMOVE_LIQ_ASYM,
+    )
+  })
+
+  test('should swap base to synthetic', async () => {
+    await routerSwapBaseToSynth(100, TEST_TOKEN)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.ROUTER_SWAP_BASE_TO_SYNTH,
+    )
+  })
+
+  test('should swap synthetic to base', async () => {
+    await routerSwapSynthToBase(100, TEST_TOKEN)(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    expect(dispatchMock.mock.calls[1][0].type).toBe(
+      Types.ROUTER_SWAP_SYNTH_TO_BASE,
+    )
   })
 })

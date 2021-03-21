@@ -7,4 +7,9 @@ export {
   routerRemoveLiq,
   routerSwapAssets,
   routerAddLiq,
+  routerAddLiqAsym,
+  routerRemoveLiqAsym,
+  routerSwapBaseToSynth,
+  routerSwapSynthToBase,
+  routerZapLiquidity,
 } from './actions'
