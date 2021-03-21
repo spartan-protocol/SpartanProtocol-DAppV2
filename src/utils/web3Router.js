@@ -1,11 +1,6 @@
 import { ethers } from 'ethers'
 
-import {
-  getAbis,
-  getAddresses,
-  getProviderGasPrice,
-  getWalletProvider,
-} from './web3'
+import { getAbis, getAddresses, getWalletProvider } from './web3'
 
 const addr = getAddresses()
 
