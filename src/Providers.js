@@ -28,7 +28,12 @@ const reducers = combineReducers({
   web3: web3Reducer,
 })
 
-const store = createStore(reducers, applyMiddleware(thunk))
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+
+const store = createStore(
+  reducers,
+  /* preloadedState, */ composeEnhancers(applyMiddleware(thunk)),
+)
 
 const Providers = () => {
   const [network, setNetwork] = useState(getNetwork())
