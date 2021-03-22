@@ -9,17 +9,7 @@ const initialState = {
   bondBurnReady: 0,
   bondBurn: 0,
   bondClaimAll: 0,
-  bondProposalCount: 0,
-  bondProposal: {},
-  bondProposals: [],
   bondCoolOffPeriod: {},
-  bondProposalMintBond: {},
-  bondProposalListAsset: [],
-  bondProposalDelistAsset: [],
-  bondProposalVote: {},
-  bondProposalFinalize: {},
-  bondProposalReplace: {},
-  bondProposalRecount: {},
   bondListedCount: 0,
   bondMemberCount: 0,
   bondMembers: [],
@@ -38,6 +28,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.GET_BOND_LISTED_ASSET: {
       return {
         ...state,
@@ -55,6 +46,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.GET_BOND_MEMBER_DETAILS: {
       return {
         ...state,
@@ -63,6 +55,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.GET_BOND_SPARTA_REMAINING: {
       return {
         ...state,
@@ -71,6 +64,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.GET_BOND_BURN_READY: {
       return {
         ...state,
@@ -79,6 +73,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.BOND_BURN: {
       return {
         ...state,
@@ -87,6 +82,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.BOND_DEPOSIT: {
       return {
         ...state,
@@ -95,6 +91,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.BOND_CLAIM_ALL: {
       return {
         ...state,
@@ -103,94 +100,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
-    case Types.GET_BOND_PROPOSAL_COUNT: {
-      return {
-        ...state,
-        bondProposalCount: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.GET_BOND_PROPOSAL: {
-      return {
-        ...state,
-        bondProposal: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.GET_BOND_PROPOSALS: {
-      return {
-        ...state,
-        bondProposals: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.GET_BOND_COOL_OFF_PERIOD: {
-      return {
-        ...state,
-        bondCoolOffPeriod: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_MINT_BOND: {
-      return {
-        ...state,
-        bondProposalMintBond: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_LIST_ASSET: {
-      return {
-        ...state,
-        bondProposalListAsset: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_DELIST_ASSET: {
-      return {
-        ...state,
-        bondProposalDelistAsset: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_VOTE: {
-      return {
-        ...state,
-        bondProposalVote: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_FINALIZE: {
-      return {
-        ...state,
-        bondProposalFinalize: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_REPLACE: {
-      return {
-        ...state,
-        bondProposalReplace: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-    case Types.BOND_PROPOSAL_RECOUNT: {
-      return {
-        ...state,
-        bondProposalRecount: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
+
     case Types.GET_BOND_LISTED_COUNT: {
       return {
         ...state,
@@ -199,6 +109,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.GET_BOND_MEMBER_COUNT: {
       return {
         ...state,
@@ -207,6 +118,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.GET_BOND_MEMBERS: {
       return {
         ...state,
@@ -215,6 +127,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.BOND_CLAIM_ASSET: {
       return {
         ...state,
@@ -223,6 +136,7 @@ export const bondReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.BOND_LOADING: {
       return {
         ...state,
@@ -237,6 +151,7 @@ export const bondReducer = (state = initialState, action) => {
         loading: false,
       }
     }
+
     default:
       return state
   }
