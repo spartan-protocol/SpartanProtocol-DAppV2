@@ -103,15 +103,16 @@ export const getSlipAdustment = (b, B, t, T) => async (dispatch) => {
   }
 }
 
-export const getAsymmetricShare = (u, U, A) => async (dispatch) => {
+export const getAsymmetricShare = (poolAddr, memberAddr) => async (
+  dispatch,
+) => {
   dispatch(utilsMathLoading())
   const contract = getUtilsContract()
 
   try {
     const asymmetricShare = await contract.callStatic.calcAsymmetricShare(
-      u,
-      U,
-      A,
+      poolAddr,
+      memberAddr,
     )
     dispatch(payloadToDispatch(Types.GET_ASYMMETRICS_SHARE, asymmetricShare))
   } catch (error) {
