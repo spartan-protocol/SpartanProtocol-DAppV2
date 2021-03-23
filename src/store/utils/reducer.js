@@ -12,8 +12,15 @@ const initialState = {
   shareOfTokenAmount: {},
   poolShareAssym: {},
   poolAge: {},
-  poolROI: {},
-  poolAPY: {},
+  pool: {},
+  count: {},
+  outputAmount: {},
+  weight: {},
+  baseAmount: {},
+  synth: {},
+  synthData: {},
+  share: {},
+  curatedPools: {},
   isMember: false,
   error: null,
   loading: false,
@@ -138,28 +145,109 @@ export const utilsReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_POOL_ROI: {
-      return {
-        ...state,
-        poolROI: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_POOL_APY: {
-      return {
-        ...state,
-        poolAPY: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
     case Types.IS_MEMBER: {
       return {
         ...state,
         isMember: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_POOL: {
+      return {
+        ...state,
+        pool: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_POOL_COUNT: {
+      return {
+        ...state,
+        count: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_MEMBER_POOL_SHARE: {
+      return {
+        ...state,
+        outputAmount: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_POOL_SHARE_WEIGHT: {
+      return {
+        ...state,
+        weight: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_DEPTH: {
+      return {
+        ...state,
+        baseAmount: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_SYNTH: {
+      return {
+        ...state,
+        synth: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_SYNTH_DATA: {
+      return {
+        ...state,
+        synthData: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_DEBT_SHARE: {
+      return {
+        ...state,
+        share: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_CURATED_POOL_COUNT: {
+      return {
+        ...state,
+        curatedPools: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_CURATED_POOLS: {
+      return {
+        ...state,
+        curatedPools: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_CURATED_POOLS_IN_RANGE: {
+      return {
+        ...state,
+        curatedPools: action.payload,
         loading: false,
         error: null,
       }

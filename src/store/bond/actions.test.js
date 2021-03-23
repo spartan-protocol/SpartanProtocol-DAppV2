@@ -7,10 +7,10 @@ import {
   getBondMemberDetails,
   getBondSpartaRemaining,
   getBondBurnReady,
-  getBondProposalCount,
-  getBondProposal,
-  getBondProposals,
-  getBondCoolOffPeriod,
+  getBondListedCount,
+  getBondMemberCount,
+  getBondMembers,
+  // bondClaimAsset,
 } from './actions'
 import * as Types from './types'
 
@@ -32,70 +32,75 @@ describe('Bond actions', () => {
 
   test('should get bond listed', async () => {
     await getBondListed()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).toContain(
-      '0x0000000000000000000000000000000000000000',
-    )
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_LISTED)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
   test('should get bond listed asset', async () => {
     await getBondListedAsset(TEST_TOKEN)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_LISTED_ASSET)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
   test('should get bond claimable', async () => {
-    await getBondClaimable(addr.bond, TEST_WALLET, addr.bnb)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_CLAIMABLE)
+    await getBondClaimable(
+      addr.bond,
+      TEST_WALLET,
+      '0x0000000000000000000000000000000000000000',
+    )(dispatchMock)
+    if (dispatchMock.mock.calls[1][0].type === Types.GET_BOND_CLAIMABLE) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.BOND_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!listed')
+    }
   })
 
   test('should get bond member details', async () => {
     await getBondMemberDetails(addr.bond, TEST_WALLET, TEST_TOKEN)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(
       Types.GET_BOND_MEMBER_DETAILS,
     )
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
+
   test('should get bond sparta remaining', async () => {
     await getBondSpartaRemaining()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(
       Types.GET_BOND_SPARTA_REMAINING,
     )
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
   test('should get bond burn ready', async () => {
     await getBondBurnReady()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_BURN_READY)
+    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
-  test('should get bond proposal count', async () => {
-    await getBondProposalCount()(dispatchMock)
+  test('should get bond listed count', async () => {
+    await getBondListedCount()(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_LISTED_COUNT)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_BOND_PROPOSAL_COUNT,
-    )
   })
 
-  test('should get bond proposal', async () => {
-    await getBondProposal(1)(dispatchMock)
+  test('should get bond member count', async () => {
+    await getBondMemberCount()(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBER_COUNT)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_PROPOSAL)
   })
 
-  test('should get bond proposals', async () => {
-    await getBondProposals()(dispatchMock)
+  test('should get bond members', async () => {
+    await getBondMembers()(dispatchMock)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBERS)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_PROPOSALS)
   })
 
-  test('should get bond cool off period', async () => {
-    await getBondCoolOffPeriod()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_BOND_COOL_OFF_PERIOD,
-    )
-  })
+  // THIS FUNCTION REQUIRES THE CONTRACT TO HAVE A LISTED ASSET + MEMBER IN THAT BOND ETC
+  // test('should claim bond asset', async () => {
+  //   await bondClaimAsset(TEST_TOKEN, TEST_WALLET)(dispatchMock)
+  //   console.log(dispatchMock.mock.calls[1][0])
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.BOND_CLAIM_ASSET)
+  // })
 })

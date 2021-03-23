@@ -124,8 +124,7 @@ export const getPoolDetails = (pool) => async (dispatch) => {
 }
 
 /**
- * UTILS HELPER -
- * Returns the share of a pool based on member's holdings (doesn't include LP tokens locked in DAO)
+ * Get share of pool by member (using tokenAddr) (doesn't include LP tokens locked in DAO)
  * @returns [ uint baseAmount | uint tokenAmount ]
  */
 export const getMemberShare = (token, member) => async (dispatch) => {
@@ -242,40 +241,6 @@ export const getPoolAge = (token) => async (dispatch) => {
 
 /**
  * UTILS HELPER -
- * Returns the pools ROI calc
- * @returns uint roi
- */
-export const getPoolROI = (token) => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract()
-
-  try {
-    const poolROI = await contract.callStatic.getPoolROI(token)
-    dispatch(payloadToDispatch(Types.GET_POOL_ROI, poolROI))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-  }
-}
-
-/**
- * UTILS HELPER -
- * Returns the pools APY calc
- * @returns uint apy
- */
-export const getPoolAPY = (token) => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract()
-
-  try {
-    const poolAPY = await contract.callStatic.getPoolAPY(token)
-    dispatch(payloadToDispatch(Types.GET_POOL_APY, poolAPY))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-  }
-}
-
-/**
- * UTILS HELPER -
  * Returns whether the wallet address is a member of the pool
  * @returns bool
  */
@@ -286,6 +251,215 @@ export const isMember = (token, member) => async (dispatch) => {
   try {
     const result = await contract.callStatic.isMember(token, member)
     dispatch(payloadToDispatch(Types.IS_MEMBER, result))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+// NEW ONES - ADD TO REDUCER ETC BELOW
+
+/**
+ * Get a pool address from the token address
+ * @param {address} token
+ * @returns {address} pool
+ */
+export const getPool = (token) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const pool = await contract.callStatic.getPool(token)
+    dispatch(payloadToDispatch(Types.GET_POOL, pool))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get count of all pools
+ * @returns {uint256} count
+ */
+export const getPoolCount = () => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const count = await contract.callStatic.poolCount()
+    dispatch(payloadToDispatch(Types.GET_POOL_COUNT, count))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get share of pool by member (using poolAddr)
+ * (doesn't include LP tokens locked in DAO)
+ * @param {address} pool
+ * @param {address} member
+ * @returns {uint} baseAmount
+ * @returns {uint} tokenAmount
+ */
+export const getMemberPoolShare = (pool, member) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const outputAmount = await contract.callStatic.getMemberPoolShare(
+      pool,
+      member,
+    )
+    dispatch(payloadToDispatch(Types.GET_MEMBER_POOL_SHARE, outputAmount))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get weight of pool by LP units
+ * @param {address} token
+ * @param {uint} units
+ * @returns {uint} weight
+ */
+export const getPoolShareWeight = (tokens, units) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const weight = await contract.callStatic.getPoolShareWeight(tokens, units)
+    dispatch(payloadToDispatch(Types.GET_POOL_SHARE_WEIGHT, weight))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get depth of pool in SPARTA
+ * Multiply this by 2 and then by SPARTA's USD price to get rough actual all-asset depth in USD
+ * @param {address} pool
+ * @returns {uint} baseAmount
+ */
+export const getDepth = (pool) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const baseAmount = await contract.callStatic.getDepth(pool)
+    dispatch(payloadToDispatch(Types.GET_DEPTH, baseAmount))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get synthetic asset address via the base token's address
+ * @param {address} token
+ * @returns {address} synth
+ */
+export const getSynth = (token) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const synth = await contract.callStatic.getSynth(token)
+    dispatch(payloadToDispatch(Types.GET_SYNTH, synth))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get synthetic asset address via the base token's address
+ * @param {address} token
+ * @returns {object} synthAddress, tokenAddress, genesis, totalDebt
+ */
+export const getSynthData = (token) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const synthData = await contract.callStatic.getSynthData(token)
+    dispatch(payloadToDispatch(Types.GET_SYNTH_DATA, synthData))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get share of debt
+ * share = amount * part/total
+ * @param {uint} units
+ * @param {uint} totalSupply
+ * @param {address} lpToken
+ * @param {address} synth
+ * @returns {uint} share
+ */
+export const getDebtShare = (units, totalSupply, lpToken, synth) => async (
+  dispatch,
+) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const share = await contract.callStatic.calcDebtShare(
+      units,
+      totalSupply,
+      lpToken,
+      synth,
+    )
+    dispatch(payloadToDispatch(Types.GET_DEBT_SHARE, share))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get count of curated pools
+ * @returns {uint} count
+ */
+export const getCuratedPoolCount = () => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const count = await contract.callStatic.curatedPoolCount()
+    dispatch(payloadToDispatch(Types.GET_CURATED_POOL_COUNT, count))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get all curated pools
+ * @returns {aray} curatedPools
+ */
+export const getCuratedPools = () => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const curatedPools = await contract.callStatic.allCuratedPools()
+    dispatch(payloadToDispatch(Types.GET_CURATED_POOLS, curatedPools))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+  }
+}
+
+/**
+ * Get curated pools in range
+ * @param {uint} start
+ * @param {uint} count
+ * @returns {aray} curatedPools
+ */
+export const getCuratedPoolsInRange = (start, count) => async (dispatch) => {
+  dispatch(utilsLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const curatedPools = await contract.callStatic.curatedPoolsInRange(
+      start,
+      count,
+    )
+    dispatch(payloadToDispatch(Types.GET_CURATED_POOLS_IN_RANGE, curatedPools))
   } catch (error) {
     dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }

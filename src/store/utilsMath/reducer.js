@@ -8,6 +8,8 @@ const initialState = {
   liquidityUnits: {},
   slipAdustment: {},
   asymmetricShare: {},
+  units: {},
+  cdpValue: {},
   loading: false,
   error: null,
 }
@@ -76,6 +78,25 @@ export const utilsMathReducer = (state = initialState, action) => {
         loading: false,
       }
     }
+
+    case Types.GET_SYNTHS_VALUE: {
+      return {
+        ...state,
+        units: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.GET_CDP_VALUE: {
+      return {
+        ...state,
+        cdpValue: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.UTILS_MATH_LOADING: {
       return {
         ...state,
@@ -83,6 +104,7 @@ export const utilsMathReducer = (state = initialState, action) => {
         error: null,
       }
     }
+
     case Types.UTILS_MATH_ERROR: {
       return {
         ...state,

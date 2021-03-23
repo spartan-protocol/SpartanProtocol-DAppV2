@@ -103,17 +103,53 @@ export const getSlipAdustment = (b, B, t, T) => async (dispatch) => {
   }
 }
 
-export const getAsymmetricShare = (u, U, A) => async (dispatch) => {
+export const getAsymmetricShare = (poolAddr, memberAddr) => async (
+  dispatch,
+) => {
   dispatch(utilsMathLoading())
   const contract = getUtilsContract()
 
   try {
     const asymmetricShare = await contract.callStatic.calcAsymmetricShare(
-      u,
-      U,
-      A,
+      poolAddr,
+      memberAddr,
     )
     dispatch(payloadToDispatch(Types.GET_ASYMMETRICS_SHARE, asymmetricShare))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+  }
+}
+
+/**
+ * Calculate the value of a synthetic asset
+ * @param {address} pool
+ * @param {uint} amount
+ * @returns {uint} units
+ */
+export const getSynthsValue = (pool, amount) => async (dispatch) => {
+  dispatch(utilsMathLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const units = await contract.callStatic.calcSynthsValue(pool, amount)
+    dispatch(payloadToDispatch(Types.GET_SYNTHS_VALUE, units))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+  }
+}
+
+/**
+ * Calculate the value of a synthetic asset
+ * @param {address} synth
+ * @returns {uint} cdpValue
+ */
+export const getCDPValue = (synth) => async (dispatch) => {
+  dispatch(utilsMathLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const cdpValue = await contract.callStatic.calcCDPValue(synth)
+    dispatch(payloadToDispatch(Types.GET_CDP_VALUE, cdpValue))
   } catch (error) {
     dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
   }
