@@ -227,7 +227,7 @@ export const calcDoubleSwapFee = (inputAmount, pool1, pool2) => {
   const x = calcSwapOutput(inputAmount, pool1, true)
   const fee2 = calcSwapFee(x, pool2, false)
   const fee1Token = calcValueInToken(pool2, fee1)
-  const result = fee2.add(fee1Token)
+  const result = fee2.plus(fee1Token)
   console.log(result)
   return result
 }
@@ -262,15 +262,15 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
   return result
 }
 
-// // Calculate swap input
-// export const getSwapInput = (outputAmount, pool, toBase) => {
-//     // formula: (((X*Y)/y - 2*X) - sqrt(((X*Y)/y - 2*X)^2 - 4*X^2))/2
-//     // (part1 - sqrt(part1 - part2))/2
-//     const y = BN(outputAmount) // Output amount
-//     const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
-//     const Y = toBase ? BN(pool.baseAmount) : BN(pool.tokenAmount) // if toBase; baseAmount
-//     const part1 = X.times(Y).div(y).sub(X.times(2))
-//     const part2 = X.pow(2).times(4)
-//     const result = part1.minus(part1.pow(2).sub(part2).redSqrt()).div(2) // BN.JS PROVIDE SQRT???***
-//     return result
-// }
+// Calculate swap input
+export const getSwapInput = (outputAmount, pool, toBase) => {
+  // formula: (((X*Y)/y - 2*X) - sqrt(((X*Y)/y - 2*X)^2 - 4*X^2))/2
+  // (part1 - sqrt(part1 - part2))/2
+  const y = BN(outputAmount) // Output amount
+  const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
+  const Y = toBase ? BN(pool.baseAmount) : BN(pool.tokenAmount) // if toBase; baseAmount
+  const part1 = X.times(Y).div(y).minus(X.times(2))
+  const part2 = X.pow(2).times(4)
+  const result = part1.minus(part1.pow(2).minus(part2).sqrt()).div(2)
+  return result
+}
