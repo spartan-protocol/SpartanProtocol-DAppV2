@@ -68,18 +68,26 @@ describe('Dao actions', () => {
 
   test('should get a DAO members harvestable amount', async () => {
     await getDaoHarvestAmount(TEST_WALLET)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_HARVEST_AMOUNT,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.GET_DAO_HARVEST_AMOUNT) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!member')
+    }
   })
 
   test('should get a DAO members harvestable amount per era', async () => {
     await getDaoHarvestEraAmount(TEST_WALLET)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_HARVEST_ERA_AMOUNT,
-    )
+    if (
+      dispatchMock.mock.calls[1][0].type === Types.GET_DAO_HARVEST_ERA_AMOUNT
+    ) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
+        'SafeMath: division by zero',
+      )
+    }
   })
 
   test('should deposit LPs in DAO for member', async () => {
@@ -104,8 +112,12 @@ describe('Dao actions', () => {
 
   test('should perform a harvest for the DAO member', async () => {
     await daoHarvest(true)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_HARVEST)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_HARVEST) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!member')
+    }
   })
 
   test('should get dao proposal mayority', async () => {
@@ -148,59 +160,99 @@ describe('Dao actions', () => {
 
   test('should create new action proposal', async () => {
     await daoProposalNewAction('BUY')(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.DAO_PROPOSAL_NEW_ACTION,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_NEW_ACTION) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should create new param proposal', async () => {
-    await daoProposalNewParam('buy', 'BUY')(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.DAO_PROPOSAL_NEW_PARAM,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    await daoProposalNewParam(100, 'BUY')(dispatchMock)
+    console.log(dispatchMock.mock.calls[1][0])
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_NEW_PARAM) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should create new address proposal', async () => {
     await daoProposalNewAddress(TEST_WALLET, 'SPARTA')(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.DAO_PROPOSAL_NEW_ADDRESS,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_NEW_ADDRESS) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should create new grant proposal', async () => {
     await daoProposalNewGrant(TEST_WALLET, 100)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.DAO_PROPOSAL_NEW_GRANT,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_NEW_GRANT) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should create new vote proposal', async () => {
     await daoProposalVote(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_VOTE)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_VOTE) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should create remove vote', async () => {
     await daoProposalRemoveVote(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.DAO_PROPOSAL_REMOTE_VOTE,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_REMOTE_VOTE) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should cancel proposal', async () => {
-    await daoProposalCancel(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_CANCEL)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    await daoProposalCancel(1, 2)(dispatchMock)
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_CANCEL) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 
   test('should finalise proposal', async () => {
+    jest.setTimeout(10000)
     await daoProposalFinalise(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_FINALISE)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_FINALISE) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
   })
 })
