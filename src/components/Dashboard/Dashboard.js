@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
-import { routerSwapAssets } from '../../store/router/actions'
-import { getAddresses, TEST_TOKEN } from '../../utils/web3'
+import { getAdjustedClaimRate } from '../../store/sparta/actions'
+import { getAddresses } from '../../utils/web3'
 
 const addr = getAddresses()
 
@@ -12,11 +12,7 @@ const Dashboard = () => {
   return (
     <div className="content">
       <Row>
-        <Button
-          onClick={() =>
-            dispatch(routerSwapAssets('10', addr.sparta, TEST_TOKEN, true))
-          }
-        >
+        <Button onClick={() => dispatch(getAdjustedClaimRate(addr.bond))}>
           TEST
         </Button>
       </Row>
