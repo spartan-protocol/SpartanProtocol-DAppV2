@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
 // import { getSwapOutput } from '../../store/utilsMath/actions'
 // import { TEST_TOKEN } from '../../utils/web3'
@@ -7,18 +7,14 @@ import { Row, Button } from 'reactstrap'
 
 // const addr = getAddresses()
 
-const Dashboard = () => {
-  const dispatch = useDispatch()
+const Dashboard = () => (
+  // const dispatch = useDispatch()
 
-  return (
-    <div className="content">
-      <Row>
-        {/* <Button onClick={() => dispatch(getSwapOutput('100', '100', '100'))}>
-          TEST
-        </Button> */}
-      </Row>
-    </div>
-  )
-}
+  <div className="content">
+    <Row>
+      <Button onClick={() => console.log('test here')}>TEST</Button>
+    </Row>
+  </div>
+)
 
 export default Dashboard
