@@ -82,3 +82,11 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     text-decoration: none;
     background-color: #403743;
 }
+
+
+.btn-danger {
+    color: #aacdff;
+    background-color: #605e68;
+    border-color: #605e68;
+    box-shadow: 0 4px 6px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
+}

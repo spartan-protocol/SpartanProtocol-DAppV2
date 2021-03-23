@@ -1,5 +1,4 @@
 import Dashboard from './components/Dashboard/Dashboard'
-// import PoolsTable from './views/pages/PoolsTable'
 import Icons from './views/pages/Samples/Icons'
 import Notifications from './views/pages/Samples/Notifications'
 import Buttons from './views/pages/Samples/Buttons'
@@ -13,9 +12,9 @@ import Panels from './views/pages/Samples/Panels'
 import Tiles from './views/pages/Samples/Tiles'
 import Utils from './utils/Utils'
 import Tabs from './views/pages/Samples/Tabs'
-// import Liquidity from './views/pages/Pools/Liquidity'
 import Overview from './views/pages/Pools/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
+import Bond from './views/pages/Pools/Bond'
 
 const routes = [
   {
@@ -39,6 +38,14 @@ const routes = [
     name: 'Join',
     icon: 'icon-medium icon-sword icon-dark',
     component: Liquidity,
+    layout: '/dapp',
+  },
+
+  {
+    path: '/pools/bond',
+    name: 'Bond',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: Bond,
     layout: '/dapp',
   },
 
