@@ -16,33 +16,6 @@ const initialState = {
 
 export const routerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_POOL: {
-      return {
-        ...state,
-        pool: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.GET_TOKEN_COUNT: {
-      return {
-        ...state,
-        tokenCount: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.GET_TOTAL_POOLED_VALUE: {
-      return {
-        ...state,
-        totalPooled: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
     case Types.ROUTER_ADD_LIQ: {
       return {
         ...state,

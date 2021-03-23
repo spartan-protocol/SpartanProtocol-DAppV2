@@ -172,7 +172,6 @@ describe('Dao actions', () => {
 
   test('should create new param proposal', async () => {
     await daoProposalNewParam(100, 'BUY')(dispatchMock)
-    console.log(dispatchMock.mock.calls[1][0])
     if (dispatchMock.mock.calls[1][0].type === Types.DAO_PROPOSAL_NEW_PARAM) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {

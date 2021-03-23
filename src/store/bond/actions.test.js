@@ -51,7 +51,6 @@ describe('Bond actions', () => {
     if (dispatchMock.mock.calls[1][0].type === Types.GET_BOND_CLAIMABLE) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
-      console.log(dispatchMock.mock.calls[1][0])
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.BOND_ERROR)
       expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!listed')
     }

@@ -7,42 +7,6 @@ export const routerLoading = () => ({
   type: Types.ROUTER_LOADING,
 })
 
-export const getPool = (token) => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract()
-
-  try {
-    const pool = await contract.callStatic.getPool(token)
-    dispatch(payloadToDispatch(Types.GET_POOL, pool))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
-  }
-}
-
-export const getTokenCount = () => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract()
-
-  try {
-    const tokenCount = await contract.callStatic.tokenCount()
-    dispatch(payloadToDispatch(Types.GET_TOKEN_COUNT, tokenCount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
-  }
-}
-
-export const getTotalPooledValue = () => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract()
-
-  try {
-    const totalPooled = await contract.callStatic.totalPooled()
-    dispatch(payloadToDispatch(Types.GET_TOTAL_POOLED_VALUE, totalPooled))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
-  }
-}
-
 export const routerAddLiq = (inputBase, inputToken, token, justCheck) => async (
   dispatch,
 ) => {

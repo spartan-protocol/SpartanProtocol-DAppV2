@@ -1,9 +1,10 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
-// import { TEST_WALLET } from '../../utils/web3'
+import { routerSwapAssets } from '../../store/router/actions'
+import { getAddresses, TEST_TOKEN } from '../../utils/web3'
 
-import { daoProposalNewParam } from '../../store/dao/actions'
+const addr = getAddresses()
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -11,7 +12,11 @@ const Dashboard = () => {
   return (
     <div className="content">
       <Row>
-        <Button onClick={() => dispatch(daoProposalNewParam('buy', 'BUY'))}>
+        <Button
+          onClick={() =>
+            dispatch(routerSwapAssets('10', addr.sparta, TEST_TOKEN, true))
+          }
+        >
           TEST
         </Button>
       </Row>
