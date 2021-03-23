@@ -29,7 +29,7 @@ import * as Types from './types'
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
 
-describe('Router actions', () => {
+describe('Dao actions', () => {
   let dispatchMock
 
   beforeEach(() => {
@@ -87,17 +87,17 @@ describe('Router actions', () => {
     if (dispatchMock.mock.calls[1][0].type === Types.DAO_DEPOSIT) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('BalanceErr')
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!Curated')
     }
   })
 
   test('should withdraw LPS from DAO for member', async () => {
-    await daoWithdraw(TEST_POOL, true)(dispatchMock)
+    await daoWithdraw(TEST_POOL, 1, true)(dispatchMock)
     if (dispatchMock.mock.calls[1][0].type === Types.DAO_WITHDRAW) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
       expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
-        'Must have a balance',
+        'SafeMath: subtraction overflow',
       )
     }
   })

@@ -65,7 +65,7 @@ export const calcAsymmetricShare = (input, pool, toBase) => {
   const part2 = U.times(U).times(2)
   const part3 = U.times(u).times(2)
   const part4 = u.times(u)
-  const numerator = part1.times(part2.sub(part3).add(part4))
+  const numerator = part1.times(part2.minus(part3).plus(part4))
   const part5 = U.times(U).times(U)
   const globalDetails = numerator.div(part5)
   console.log(globalDetails.toFixed())
@@ -88,16 +88,16 @@ export const calcSlipAdjustment = (b, B, t, T) => {
   // 1 - ABS(part1 - part2)/(part3 * part4))
   const part1 = BN(B).times(t)
   const part2 = BN(b).times(T)
-  const part3 = BN(b).times(2).add(B)
-  const part4 = BN(t).add(T)
+  const part3 = BN(b).times(2).plus(B)
+  const part4 = BN(t).plus(T)
   let numerator = ''
   if (part1.lt(part2) === true) {
-    numerator = part1.sub(part2)
+    numerator = part1.minus(part2)
   } else {
-    numerator = part2.sub(part1)
+    numerator = part2.minus(part1)
   }
   const denominator = part3.times(part4)
-  const result = BN(1).sub(numerator.div(denominator))
+  const result = BN(1).minus(numerator.div(denominator))
   console.log(result.toFixed())
   return result.times(BN(1).pow(18))
 }
@@ -125,7 +125,7 @@ export const calcLiquidityUnits = (
   const part1 = t.times(B)
   const part2 = T.times(b)
   const part3 = T.times(B).times(2)
-  const result = P.times(part1.add(part2)).div(part3).times(slipAdjustment)
+  const result = P.times(part1.plus(part2)).div(part3).times(slipAdjustment)
   console.log(result.toFixed())
   return result
 }
@@ -152,7 +152,7 @@ export const calcSwapFee = (inputAmount, pool, toBase) => {
   const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
   const Y = toBase ? BN(pool.baseAmount) : BN(pool.tokenAmount) // if toBase; baseAmount
   const numerator = x.times(x.times(Y))
-  const denominator = x.add(X).times(x.add(X))
+  const denominator = x.plus(X).times(x.plus(X))
   const result = numerator.div(denominator)
   console.log(result)
   return result
@@ -170,7 +170,7 @@ export const calcSwapOutput = (
   const X = toBase ? BN(tokensInPool) : BN(spartaInPool) // if toBase; tokenAmount
   const Y = toBase ? BN(spartaInPool) : BN(tokensInPool) // if toBase; baseAmount
   const numerator = x.times(X.times(Y))
-  const denominator = x.add(X).times(x.add(X))
+  const denominator = x.plus(X).times(x.plus(X))
   const result = numerator.div(denominator)
   console.log(result)
   return result
@@ -246,7 +246,7 @@ export const calcSwapSlip = (inputAmount, pool, toBase) => {
   // formula: (x) / (x + X)
   const x = BN(inputAmount) // input amount
   const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
-  const result = x.div(x.add(X))
+  const result = x.div(x.plus(X))
   console.log(result.toFixed())
   return result
 }
@@ -257,7 +257,7 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
   const swapSlip1 = calcSwapSlip(inputAmount, pool1, true)
   const x = calcSwapOutput(inputAmount, pool1, true)
   const swapSlip2 = calcSwapSlip(x, pool2, false)
-  const result = swapSlip1.add(swapSlip2)
+  const result = swapSlip1.plus(swapSlip2)
   console.log(result.toFixed())
   return result
 }
