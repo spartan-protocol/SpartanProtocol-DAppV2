@@ -14,8 +14,7 @@ import Utils from './utils/Utils'
 import Tabs from './views/pages/Samples/Tabs'
 import Overview from './views/pages/Pools/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
-import Bond  from './views/pages/Pools/Bond'
-
+import Bond from './views/pages/Pools/Bond'
 
 const routes = [
   {

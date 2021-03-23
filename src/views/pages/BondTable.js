@@ -1,60 +1,37 @@
 /* eslint-disable global-require */
 /* eslint-disable react/no-unescaped-entities */
-import React from "react"
-import classnames from "classnames"
+import React from 'react'
 // react plugin for creating notifications over the dashboard
-import NotificationAlert from "react-notification-alert"
 
 // reactstrap components
-import {
-  UncontrolledAlert,
-  Alert,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  Modal,
-  ModalBody,
-  Row,
-  Col, NavItem, NavLink, TabContent, TabPane, Collapse
-} from "reactstrap"
-import coinBnb from "../../assets/icons/coin_bnb.svg"
-import coinSparta from "../../assets/icons/coin_sparta.svg"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
-import bnbSparta from "../../assets/icons/bnb_sparta.png"
-import bnb from "../../assets/icons/BNB.svg"
-import Slider from "nouislider"
+import { Button, Card, CardBody, Row, Col, Collapse } from 'reactstrap'
+import bnbSparta from '../../assets/icons/bnb_sparta.png'
+import bnb from '../../assets/icons/BNB.svg'
 
 const Poolstable = () => {
+  // const [horizontalTabs, sethorizontalTabs] = React.useState('harvest')
+  // const changeActiveTab = (e, tabState, tabName) => {
+  //   e.preventDefault()
+  //   sethorizontalTabs(tabName)
+  // }
 
-
-  const [horizontalTabs, sethorizontalTabs] = React.useState("harvest")
-  const changeActiveTab = (e, tabState, tabName) => {
-    e.preventDefault()
-    sethorizontalTabs(tabName)
-  }
-
-  const [modalNotice, setModalNotice] = React.useState(false)
-  const toggleModalNotice = () => {
-    setModalNotice(!modalNotice)
-  }
+  // const [modalNotice, setModalNotice] = React.useState(false)
+  // const toggleModalNotice = () => {
+  //   setModalNotice(!modalNotice)
+  // }
 
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
 
-
   return (
-
     <>
-
       <Col md={10}>
-        <Card className="card-body" style={{ backgroundColor: "#1D171F" }}>
+        <Card className="card-body" style={{ backgroundColor: '#1D171F' }}>
           <div
             aria-multiselectable
             className="card-collapse"
             id="accordion"
-            role="tablist">
-
+            role="tablist"
+          >
             <Card>
               <Row>
                 <Col md="2">
@@ -98,8 +75,9 @@ const Poolstable = () => {
                   >
                     <i
                       className="bd-icons icon-minimal-down mt-3"
-                      style={{ color: "#FFF" }}
-                    /></div>
+                      style={{ color: '#FFF' }}
+                    />
+                  </div>
                 </Col>
               </Row>
 
@@ -136,13 +114,11 @@ const Poolstable = () => {
                     </Col>
                   </Row>
                 </CardBody>
-
               </Collapse>
             </Card>
           </div>
         </Card>
       </Col>
-
     </>
   )
 }

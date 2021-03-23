@@ -266,7 +266,10 @@ const Liquidity = () => {
                       <br />
                       <div className="slider" ref={slider1Ref} />
                       <br />
-                      <div className="slider slider-primary mb-ImageUpload.3" ref={slider2Ref} />
+                      <div
+                        className="slider slider-primary mb-ImageUpload.3"
+                        ref={slider2Ref}
+                      />
                     </Col>
                   </Row>
                   <br />
