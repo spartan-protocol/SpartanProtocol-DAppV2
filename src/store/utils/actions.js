@@ -241,40 +241,6 @@ export const getPoolAge = (token) => async (dispatch) => {
 
 /**
  * UTILS HELPER -
- * Returns the pools ROI calc
- * @returns uint roi
- */
-export const getPoolROI = (token) => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract()
-
-  try {
-    const poolROI = await contract.callStatic.getPoolROI(token)
-    dispatch(payloadToDispatch(Types.GET_POOL_ROI, poolROI))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-  }
-}
-
-/**
- * UTILS HELPER -
- * Returns the pools APY calc
- * @returns uint apy
- */
-export const getPoolAPY = (token) => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract()
-
-  try {
-    const poolAPY = await contract.callStatic.getPoolAPY(token)
-    dispatch(payloadToDispatch(Types.GET_POOL_APY, poolAPY))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-  }
-}
-
-/**
- * UTILS HELPER -
  * Returns whether the wallet address is a member of the pool
  * @returns bool
  */

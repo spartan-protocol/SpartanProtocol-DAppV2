@@ -12,8 +12,6 @@ const initialState = {
   shareOfTokenAmount: {},
   poolShareAssym: {},
   poolAge: {},
-  poolROI: {},
-  poolAPY: {},
   pool: {},
   count: {},
   outputAmount: {},
@@ -142,24 +140,6 @@ export const utilsReducer = (state = initialState, action) => {
       return {
         ...state,
         poolAge: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_POOL_ROI: {
-      return {
-        ...state,
-        poolROI: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_POOL_APY: {
-      return {
-        ...state,
-        poolAPY: action.payload,
         loading: false,
         error: null,
       }

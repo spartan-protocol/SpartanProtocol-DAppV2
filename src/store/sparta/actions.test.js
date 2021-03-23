@@ -1,6 +1,6 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 import { getAddresses } from '../../utils/web3'
-import { claim, getAdjustedClaimRate, getEmitting } from './actions'
+import { claim } from './actions'
 import * as Types from './types'
 
 const addr = getAddresses()
