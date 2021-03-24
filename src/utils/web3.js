@@ -158,6 +158,49 @@ export const addressesMN = {
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
 }
 
+// Listed tokens on testNet
+export const listedTokensTN = [
+  {
+    name: 'Binance Coin',
+    symbol: 'BNB',
+    decimals: '18',
+    address: addressesTN.wbnb,
+    icon: 'filename',
+  },
+  {
+    name: 'Binance USD',
+    symbol: 'BUSD',
+    decimals: '18',
+    address: '0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee',
+    icon: 'filename',
+  },
+  {
+    name: 'DAI StableCoin',
+    symbol: 'DAI',
+    decimals: '18',
+    address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
+    icon: 'filename',
+  },
+]
+
+// Listed tokens on mainnet
+export const listedTokensMN = [
+  {
+    name: 'Binance Coin',
+    symbol: 'BNB',
+    decimals: '18',
+    address: addressesMN.wbnb,
+    icon: 'filename',
+  },
+  {
+    name: 'Binance USD',
+    symbol: 'BUSD',
+    decimals: '18',
+    address: '',
+    icon: 'filename',
+  },
+]
+
 export const bscRpcsTN = [
   'https://data-seed-prebsc-1-s1.binance.org:8545/',
   'https://data-seed-prebsc-2-s1.binance.org:8545/',
