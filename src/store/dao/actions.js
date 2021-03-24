@@ -10,6 +10,23 @@ export const daoLoading = () => ({
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
 /**
+ * Check if the wallet is a member of the DAO
+ * @param {address} member
+ * @returns {boolean} isMember
+ */
+export const getDaoIsMember = (member) => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoContract()
+
+  try {
+    const isMember = await contract.callStatic.isMember(member)
+    dispatch(payloadToDispatch(Types.GET_DAO_IS_MEMBER, isMember))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+  }
+}
+
+/**
  * Get the count of DAO members
  * @returns {unit} dao
  */

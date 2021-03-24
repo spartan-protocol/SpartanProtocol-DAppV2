@@ -9,24 +9,7 @@ export const daoVaultLoading = () => ({
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
 /**
- * Check if the wallet is a member of the DAO
- * @param {address} member
- * @returns {boolean} isMember
- */
-export const getDaoVaultIsMember = (member) => async (dispatch) => {
-  dispatch(daoVaultLoading())
-  const contract = getDaoVaultContract()
-
-  try {
-    const isMember = await contract.callStatic.isMember(member)
-    dispatch(payloadToDispatch(Types.GET_DAOVAULT_IS_MEMBER, isMember))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAOVAULT_ERROR, error))
-  }
-}
-
-/**
- * Check if the wallet is a member of the DAO
+ * Check members weight in particular pool
  * @param {address} member
  * @param {address} poolAddr?
  * @returns {boolean} memberPoolWeight

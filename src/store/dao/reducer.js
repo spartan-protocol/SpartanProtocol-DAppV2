@@ -1,6 +1,7 @@
 import * as Types from './types'
 
 const initialState = {
+  isMember: false,
   memberCount: 0,
   harvestAmount: 0,
   harvestEraAmount: 0,
@@ -26,6 +27,15 @@ const initialState = {
 
 export const daoReducer = (state = initialState, action) => {
   switch (action.type) {
+    case Types.GET_DAO_IS_MEMBER: {
+      return {
+        ...state,
+        isMember: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.GET_DAO_MEMBER_COUNT: {
       return {
         ...state,

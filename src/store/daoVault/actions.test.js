@@ -1,7 +1,6 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 import { TEST_WALLET } from '../../utils/web3'
 import {
-  getDaoVaultIsMember,
   // getDaoVaultMemberPoolWeight,
   getDaoVaultMemberWeight,
   getDaoVaultTotalWeight,
@@ -20,14 +19,6 @@ describe('Dao vault actions', () => {
 
   afterEach(() => {
     dispatchMock.mockRestore()
-  })
-
-  test('should get if wallet is member of DAO', async () => {
-    await getDaoVaultIsMember(TEST_WALLET)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAOVAULT_IS_MEMBER,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
   // COME BACK TO THIS ONE LATER

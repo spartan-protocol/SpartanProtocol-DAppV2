@@ -3,6 +3,7 @@ export { useDao } from './selector'
 export { daoReducer } from './reducer'
 
 export {
+  getDaoIsMember,
   daoDeposit,
   daoHarvest,
   daoWithdraw,
