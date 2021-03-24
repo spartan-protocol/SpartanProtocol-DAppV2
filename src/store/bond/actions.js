@@ -53,29 +53,6 @@ export const getBondClaimable = (bondAddress, member, asset) => async (
   }
 }
 
-/**
- * Get a bond members' details
- * @param {address} member
- * @param {address} asset
- * @returns {object} isMember, bondedLP, claimRate, lastBlockTime
- */
-export const getBondMemberDetails = (bondAddress, member, asset) => async (
-  dispatch,
-) => {
-  dispatch(bondLoading())
-  const contract = getOldBondContract(bondAddress)
-
-  try {
-    const memberDetails = await contract.callStatic.getMemberDetails(
-      member,
-      asset,
-    )
-    dispatch(payloadToDispatch(Types.GET_BOND_MEMBER_DETAILS, memberDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
-  }
-}
-
 export const getBondSpartaRemaining = () => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getSpartaContract()
@@ -213,30 +190,6 @@ export const bondClaimAll = (member) => async (dispatch) => {
     })
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimedAll))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
-  }
-}
-
-/**
- * Claim bond by asset & member
- * @param {address} asset
- * @param {address} member
- * @returns {boolean}
- */
-export const bondClaimAsset = (asset, member) => async (dispatch) => {
-  dispatch(bondLoading())
-  const contract = getBondContract()
-
-  try {
-    const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.claimForMember(asset, member)
-    const bondClaimed = await contract.claimForMember(asset, member, {
-      gasPrice: gPrice,
-      gasLimit: gLimit,
-    })
-
-    dispatch(payloadToDispatch(Types.BOND_CLAIM_ASSET, bondClaimed))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }

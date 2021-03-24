@@ -42,38 +42,6 @@ export const getListedPoolsRange = (first, count) => async (dispatch) => {
 
 /**
  * UTILS HELPER -
- * Returns an array of listed token addresses
- */
-export const getListedAssets = () => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract()
-
-  try {
-    const assets = await contract.callStatic.allTokens()
-    dispatch(payloadToDispatch(Types.GET_LISTED_ASSETS, assets))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-  }
-}
-
-/**
- * UTILS HELPER -
- * Returns an array of listed token addresses by specified range
- */
-export const getListedAssetsRange = (first, count) => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract()
-
-  try {
-    const assets = await contract.callStatic.tokensInRange(first, count)
-    dispatch(payloadToDispatch(Types.GET_LISTED_ASSETS_RANGE, assets))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-  }
-}
-
-/**
- * UTILS HELPER -
  * Returns the global details/stats
  * @returns [ totalPooled | totalVolume | totalFees | removeLiquidityTx | addLiquidityTx | swapTx ]
  */
@@ -206,14 +174,16 @@ export const getShareOfTokenAmount = (token, member) => async (dispatch) => {
  * Works out what you would end up with if you removed the liquidity and then swapped it all to one asset.
  * @returns [ uint baseAmount | uint tokenAmount | uint outputAmt ]
  */
-export const getPoolShareAssym = (token, units, toBase) => async (dispatch) => {
+export const getPoolShareAssym = (token, member, toBase) => async (
+  dispatch,
+) => {
   dispatch(utilsLoading())
   const contract = getUtilsContract()
 
   try {
     const poolShareAssym = await contract.callStatic.getPoolShareAssym(
       token,
-      units,
+      member,
       toBase,
     )
     dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM, poolShareAssym))

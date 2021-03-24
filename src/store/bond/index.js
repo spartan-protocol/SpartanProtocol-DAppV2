@@ -5,7 +5,6 @@ export {
   getBondListed,
   getBondListedAsset,
   getBondClaimable,
-  getBondMemberDetails,
   getBondSpartaRemaining,
   getBondBurnReady,
   bondBurn,
@@ -14,5 +13,4 @@ export {
   getBondMembers,
   getBondMemberCount,
   getBondListedCount,
-  bondClaimAsset,
 } from './actions'

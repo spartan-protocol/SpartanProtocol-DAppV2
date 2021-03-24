@@ -146,11 +146,16 @@ export const calcPart = (bp, total) => {
 }
 
 // Calculate swap fee
-export const calcSwapFee = (inputAmount, pool, toBase) => {
+export const calcSwapFee = (
+  inputAmount,
+  poolTokenAmount,
+  poolSpartaAmount,
+  toBase,
+) => {
   // y = (x * x * Y) / (x + X)^2
   const x = BN(inputAmount) // Input amount
-  const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
-  const Y = toBase ? BN(pool.baseAmount) : BN(pool.tokenAmount) // if toBase; baseAmount
+  const X = toBase ? BN(poolTokenAmount) : BN(poolSpartaAmount) // if toBase; tokenAmount
+  const Y = toBase ? BN(poolSpartaAmount) : BN(poolTokenAmount) // if toBase; baseAmount
   const numerator = x.times(x.times(Y))
   const denominator = x.plus(X).times(x.plus(X))
   const result = numerator.div(denominator)
@@ -212,21 +217,27 @@ export const calcSynthsValue = (
 }
 
 // Calculate value in token
-export const calcValueInToken = (pool, amount) => {
-  const _baseAmount = pool.baseAmount
-  const _tokenAmount = pool.tokenAmount
+export const calcValueInToken = (poolTokenAmount, poolSpartaAmount, amount) => {
+  const _baseAmount = poolSpartaAmount
+  const _tokenAmount = poolTokenAmount
   const result = BN(amount).times(BN(_tokenAmount)).div(BN(_baseAmount))
   console.log(result)
   return result
 }
 
 // Calculate double-swap fee
-export const calcDoubleSwapFee = (inputAmount, pool1, pool2) => {
+export const calcDoubleSwapFee = (
+  inputAmount,
+  pool1TokenAmount,
+  pool1BaseAmount,
+  pool2TokenAmount,
+  pools2BaseAmount,
+) => {
   // formula: getSwapFee1 + getSwapFee2
-  const fee1 = calcSwapFee(inputAmount, pool1, true)
-  const x = calcSwapOutput(inputAmount, pool1, true)
-  const fee2 = calcSwapFee(x, pool2, false)
-  const fee1Token = calcValueInToken(pool2, fee1)
+  const fee1 = calcSwapFee(inputAmount, pool1TokenAmount, pool1BaseAmount, true)
+  const x = calcSwapOutput(inputAmount, pool1TokenAmount, pool1BaseAmount, true)
+  const fee2 = calcSwapFee(x, pool2TokenAmount, pools2BaseAmount, false)
+  const fee1Token = calcValueInToken(pool2TokenAmount, pools2BaseAmount, fee1)
   const result = fee2.plus(fee1Token)
   console.log(result)
   return result

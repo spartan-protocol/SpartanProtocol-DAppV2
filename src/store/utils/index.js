@@ -5,8 +5,6 @@ export { utilsReducer } from './reducer'
 export {
   getListedPools,
   getListedPoolsRange,
-  getListedAssets,
-  getListedAssetsRange,
   getGlobalDetails,
   getPoolDetails,
   getTokenDetails,

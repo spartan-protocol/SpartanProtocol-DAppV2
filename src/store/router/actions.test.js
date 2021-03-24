@@ -1,9 +1,9 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_TOKEN } from '../../utils/web3'
+import { getAddresses, TEST_TOKEN } from '../../utils/web3'
 import {
   routerAddLiq,
-  // routerRemoveLiq,
-  // routerSwapAssets,
+  routerRemoveLiq,
+  routerSwapAssets,
   routerAddLiqAsym,
   routerRemoveLiqAsym,
   routerSwapBaseToSynth,
@@ -12,7 +12,7 @@ import {
 } from './actions'
 import * as Types from './types'
 
-// const addr = getAddresses()
+const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
@@ -41,33 +41,29 @@ describe('Router actions', () => {
     }
   })
 
-  // WAIT UNTIL WE HAVE POOLS LISTED TO TEST
-  // test('should be able to remove liquidity', async () => {
-  //   await routerRemoveLiq('100', TEST_TOKEN, true)(dispatchMock)
-  //   if (dispatchMock.mock.calls[1][0].type === Types.ROUTER_REMOVE_LIQ) {
-  //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  //   } else {
-  //     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ERROR)
-  //     expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
-  //       'iBEP20: transfer from the zero address',
-  //     )
-  //   }
-  // })
+  test('should be able to remove liquidity', async () => {
+    await routerRemoveLiq('100', TEST_TOKEN, true)(dispatchMock)
+    if (dispatchMock.mock.calls[1][0].type === Types.ROUTER_REMOVE_LIQ) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
+        'iBEP20: transfer from the zero address',
+      )
+    }
+  })
 
-  // WAIT UNTIL WE HAVE POOLS LISTED TO TEST
-  // test('should be able to swap assets', async () => {
-  //   jest.setTimeout(10000) // in milliseconds
-  //   await routerSwapAssets('10', addr.sparta, TEST_TOKEN, true)(dispatchMock)
-  //   console.log('CURRENT TEST', dispatchMock.mock.calls[1][0])
-  //   if (dispatchMock.mock.calls[1][0].type === Types.ROUTER_SWAP_ASSETS) {
-  //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  //   } else {
-  //     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ERROR)
-  //     expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
-  //       'iBEP20: transfer from the zero address',
-  //     )
-  //   }
-  // })
+  test('should be able to swap assets', async () => {
+    await routerSwapAssets('10', addr.sparta, TEST_TOKEN)(dispatchMock)
+    if (dispatchMock.mock.calls[1][0].type === Types.ROUTER_SWAP_ASSETS) {
+      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+    } else {
+      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ERROR)
+      expect(dispatchMock.mock.calls[1][0].error.body).toBe(
+        '{"jsonrpc":"2.0","id":44,"error":{"code":-32000,"message":"missing from address"}}\n',
+      )
+    }
+  })
 
   test('should add liquid asymmetrically', async () => {
     await routerAddLiqAsym('100', true, TEST_TOKEN)(dispatchMock)

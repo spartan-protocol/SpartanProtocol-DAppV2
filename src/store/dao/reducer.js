@@ -2,9 +2,6 @@ import * as Types from './types'
 
 const initialState = {
   memberCount: 0,
-  memberDetails: {},
-  daoTotalWeight: 0,
-  memberWeight: 0,
   harvestAmount: 0,
   harvestEraAmount: 0,
   deposit: {},
@@ -33,33 +30,6 @@ export const daoReducer = (state = initialState, action) => {
       return {
         ...state,
         memberCount: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.GET_DAO_MEMBER_DETAILS: {
-      return {
-        ...state,
-        memberDetails: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.GET_DAO_TOTAL_WEIGHT: {
-      return {
-        ...state,
-        daoTotalWeight: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.GET_DAO_MEMBER_WEIGHT: {
-      return {
-        ...state,
-        memberWeight: action.payload,
         error: null,
         loading: false,
       }

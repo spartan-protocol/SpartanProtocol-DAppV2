@@ -10,10 +10,10 @@ const initialState = {
 
 export const spartaReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_EMTTING: {
+    case Types.GET_EMITTING: {
       return {
         ...state,
-        emiting: action.payload,
+        emitting: action.payload,
         error: null,
         loading: false,
       }

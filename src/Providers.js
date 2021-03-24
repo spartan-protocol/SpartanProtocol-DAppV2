@@ -8,7 +8,9 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import AdminLayout from './components/layout/Common'
 
 import { bondReducer } from './store/bond'
+import { bondVaultReducer } from './store/bondVault'
 import { daoReducer } from './store/dao'
+import { daoVaultReducer } from './store/daoVault'
 import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
 import { utilsReducer } from './store/utils'
@@ -19,7 +21,9 @@ import { getNetwork } from './utils/web3'
 
 const reducers = combineReducers({
   bond: bondReducer,
+  bondVault: bondVaultReducer,
   dao: daoReducer,
+  daoVault: daoVaultReducer,
   router: routerReducer,
   sparta: spartaReducer,
   utils: utilsReducer,
