@@ -26,57 +26,6 @@ export const getDaoMemberCount = () => async (dispatch) => {
 }
 
 /**
- * Get the dao members' details
- * @param {address} member
- * @returns {object} isMember, weight, lastBlock, poolCount
- */
-export const getDaoMemberDetails = (member) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract()
-
-  try {
-    const memberDetails = await contract.callStatic.getMemberDetails(member)
-    dispatch(payloadToDispatch(Types.GET_DAO_MEMBER_DETAILS, memberDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
-  }
-}
-
-/**
- * DAO HELPER -
- * Returns the total weight in the DAO
- * @returns unit
- */
-export const getDaoTotalWeight = () => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract()
-
-  try {
-    const daoTotalWeight = await contract.callStatic.totalWeight()
-    dispatch(payloadToDispatch(Types.GET_DAO_TOTAL_WEIGHT, daoTotalWeight))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
-  }
-}
-
-/**
- * DAO HELPER -
- * Returns the member's weight in the DAO
- * @returns unit
- */
-export const getDaoMemberWeight = (member) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract()
-
-  try {
-    const memberWeight = await contract.callStatic.mapMember_weight(member)
-    dispatch(payloadToDispatch(Types.GET_DAO_MEMBER_WEIGHT, memberWeight))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
-  }
-}
-
-/**
  * DAO HELPER -
  * Get the current harvestable amount of SPARTA from Lock+Earn
  * Uses getDaoHarvestEraAmount() but works out what portion of an era/s the member can claim
@@ -417,8 +366,8 @@ export const daoProposalRemoveVote = (proposalID) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas._removeVote(proposalID)
-    const voteWeightRemoved = await contract._removeVote(proposalID, {
+    const gLimit = await contract.estimateGas.removeVote(proposalID)
+    const voteWeightRemoved = await contract.removeVote(proposalID, {
       gasPrice: gPrice,
       gasLimit: gLimit,
     })

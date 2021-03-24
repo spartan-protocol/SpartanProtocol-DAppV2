@@ -3,6 +3,7 @@ import { ethers } from 'ethers'
 // Testnet ABI Imports
 import abiTnBase from '../ABI/TN/Base.json'
 import abiTnBond from '../ABI/TN/Bond.json'
+import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
@@ -21,6 +22,7 @@ import abiTnWbnb from '../ABI/TN/WBNB.json'
 // Mainnet ABI Imports
 import abiMnBase from '../ABI/MN/Base.json'
 import abiMnBond from '../ABI/MN/Bond.json'
+import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnDaoVault from '../ABI/MN/DaoVault.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
@@ -39,6 +41,7 @@ import abiMnWbnb from '../ABI/MN/WBNB.json'
 export const abisTN = {
   base: abiTnBase.abi,
   bond: abiTnBond.abi,
+  bondVault: abiTnBondVault.abi,
   dao: abiTnDao.abi,
   daoVault: abiTnDaoVault.abi,
   erc20: abiTnErc20.abi,
@@ -58,6 +61,7 @@ export const abisTN = {
 export const abisMN = {
   base: abiMnBase.abi,
   bond: abiMnBond.abi,
+  bondVault: abiMnBondVault.abi,
   dao: abiMnDao.abi,
   daoVault: abiMnDaoVault.abi,
   erc20: abiMnErc20.abi,
@@ -74,10 +78,10 @@ export const abisMN = {
   wbnb: abiMnWbnb.abi,
 }
 
-// ADDRESSES FOR TESTS
-export const TEST_WALLET = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
-export const TEST_TOKEN = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
-export const TEST_POOL = '0x3de669c4F1f167a8aFBc9993E4753b84b576426f'
+// ADDRESSES FOR TESTS (UPDATE WHENEVER TESTS POINT SOMEWHERE ELSE)
+export const TEST_WALLET = '0x0E8196b0EFe6e0062Da1B1d9F03f0a3ab3d53C77'
+export const TEST_TOKEN = '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870'
+export const TEST_POOL = '0x1F9F44A3f4B166cBca67078082FDd1CC170D90Cb'
 
 export const addressesTN = {
   // TOKEN ADDRESSES
@@ -85,21 +89,24 @@ export const addressesTN = {
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
   sparta: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
   // CURRENT ADDRESSES
-  poolFactory: '0x141dCce43d158c8dF1ec77A95e4904b45A3d5593',
-  synthFactory: '0x84B73074cc75f8154C5A701Ba7A3FA83f7a4D4d0',
-  bond: '0xd7EF54D4CF64662A9Fdae6bF6E690A686cE54414',
-  dao: '0x20d608e9b4f114BAad59ecd0B1290b2703063Cb0',
-  daoVault: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be',
-  router: '0x1511858f4Af0E9891B99c9924D2c7e8610147742',
-  utils: '0xAee54019B9d2EdE282b3129Ec7AA3b90A52ae4d1',
+  poolFactory: '0xB3f30D7D7Fd8C634249078bd401Db8F12526aF81',
+  synthFactory: '0x220C10DB0b1B11135C29160f38c52738eD15396f',
+  bond: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
+  bondVault: '0x59A661418BdEA413B4a40725468FcBA940827962',
+  dao: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
+  daoVault: '0xd36b6537dD317ea674E3637d99171a7A49E9C74E',
+  router: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  utils: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
+  migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
   // OLD ADDRESSES SPV2
-  poolFactoryv1: '0x141dCce43d158c8dF1ec77A95e4904b45A3d5593',
-  synthFactoryv1: '0x84B73074cc75f8154C5A701Ba7A3FA83f7a4D4d0',
-  bondv4: '0xd7EF54D4CF64662A9Fdae6bF6E690A686cE54414',
-  daov2: '0x20d608e9b4f114BAad59ecd0B1290b2703063Cb0',
-  daoVaultv1: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be',
-  routerv3: '0x1511858f4Af0E9891B99c9924D2c7e8610147742',
-  utilsv2: '0xAee54019B9d2EdE282b3129Ec7AA3b90A52ae4d1',
+  poolFactoryv1: '0xB3f30D7D7Fd8C634249078bd401Db8F12526aF81',
+  synthFactoryv1: '0x220C10DB0b1B11135C29160f38c52738eD15396f',
+  bondv4: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
+  bondVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
+  daov2: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
+  daoVaultv1: '0xd36b6537dD317ea674E3637d99171a7A49E9C74E',
+  routerv3: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  utilsv2: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   // OLD ADDRESSES SPV1
   bondv1: '0x4551457647f6810a917AF70Ca47252BbECD2A36c',
   bondv2: '0x2021047F7E3F8c9882e502A63eF036daEFA0B5f6',
@@ -120,21 +127,24 @@ export const addressesMN = {
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   sparta: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
   // CURRENT ADDRESSES
-  poolFactory: '0x141dCce43d158c8dF1ec77A95e4904b45A3d5593',
-  synthFactory: '0x84B73074cc75f8154C5A701Ba7A3FA83f7a4D4d0',
-  bond: '0xd7EF54D4CF64662A9Fdae6bF6E690A686cE54414',
-  dao: '0x20d608e9b4f114BAad59ecd0B1290b2703063Cb0',
+  poolFactory: '0xB3f30D7D7Fd8C634249078bd401Db8F12526aF81',
+  synthFactory: '0x220C10DB0b1B11135C29160f38c52738eD15396f',
+  bond: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
+  bondVault: '0x59A661418BdEA413B4a40725468FcBA940827962',
+  dao: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
   daoVault: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be',
-  router: '0x1511858f4Af0E9891B99c9924D2c7e8610147742',
-  utils: '0xAee54019B9d2EdE282b3129Ec7AA3b90A52ae4d1',
+  router: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  utils: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
+  migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
   // OLD ADDRESSES SPV2
-  poolFactoryv1: '0x141dCce43d158c8dF1ec77A95e4904b45A3d5593',
-  synthFactoryv1: '0x84B73074cc75f8154C5A701Ba7A3FA83f7a4D4d0',
-  bondv4: '0xd7EF54D4CF64662A9Fdae6bF6E690A686cE54414',
-  daov2: '0x20d608e9b4f114BAad59ecd0B1290b2703063Cb0',
-  daoVaultv1: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be',
-  routerv3: '0x1511858f4Af0E9891B99c9924D2c7e8610147742',
-  utilsv2: '0xAee54019B9d2EdE282b3129Ec7AA3b90A52ae4d1',
+  poolFactoryv1: '0xB3f30D7D7Fd8C634249078bd401Db8F12526aF81',
+  synthFactoryv1: '0x220C10DB0b1B11135C29160f38c52738eD15396f',
+  bondv4: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
+  bondVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
+  daov2: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
+  daoVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
+  routerv3: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  utilsv2: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   // OLD ADDRESSES SPV1
   bondv1: '0xDa7d913164C5611E5440aE8c1d3e06Df713a13Da',
   bondv2: '0xE6844821B03828Fd4067167Bc258FA1EEFD1cCdf',
@@ -181,7 +191,7 @@ export const changeAddresses = (_network) => {
 export const getAddresses = () => {
   const addresses = JSON.parse(window.localStorage.getItem('addresses'))
     ? JSON.parse(window.localStorage.getItem('addresses'))
-    : changeAddresses('mainnet')
+    : changeAddresses('testnet') // Change this to 'mainnet' after mainnet is deployed
   return addresses
 }
 
@@ -203,7 +213,7 @@ export const changeAbis = (_network) => {
 export const getAbis = () => {
   const abis = JSON.parse(window.localStorage.getItem('abis'))
     ? JSON.parse(window.localStorage.getItem('abis'))
-    : changeAbis('mainnet')
+    : changeAbis('testnet') // Change this to 'mainnet' after mainnet is deployed
   return abis
 }
 
@@ -245,7 +255,7 @@ export const changeNetwork = (_network) => {
 export const getNetwork = () => {
   const network = JSON.parse(window.localStorage.getItem('network'))
     ? JSON.parse(window.localStorage.getItem('network'))
-    : changeNetwork('mainnet')
+    : changeNetwork('testnet') // Change this to 'mainnet' after mainnet is deployed
   return network
 }
 

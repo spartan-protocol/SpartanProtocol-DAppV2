@@ -13,7 +13,7 @@ export const getEmitting = () => async (dispatch) => {
 
   try {
     const emitting = await contract.callStatic.emitting()
-    dispatch(payloadToDispatch(Types.GET_EMTTING, emitting))
+    dispatch(payloadToDispatch(Types.GET_EMITTING, emitting))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }

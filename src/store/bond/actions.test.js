@@ -4,13 +4,11 @@ import {
   getBondListed,
   getBondListedAsset,
   getBondClaimable,
-  getBondMemberDetails,
   getBondSpartaRemaining,
   getBondBurnReady,
   getBondListedCount,
   getBondMemberCount,
   getBondMembers,
-  // bondClaimAsset,
 } from './actions'
 import * as Types from './types'
 
@@ -56,14 +54,6 @@ describe('Bond actions', () => {
     }
   })
 
-  test('should get bond member details', async () => {
-    await getBondMemberDetails(addr.bond, TEST_WALLET, TEST_TOKEN)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_BOND_MEMBER_DETAILS,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
-
   test('should get bond sparta remaining', async () => {
     await getBondSpartaRemaining()(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].type).toBe(
@@ -95,12 +85,4 @@ describe('Bond actions', () => {
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBERS)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
-
-  // THIS FUNCTION REQUIRES THE CONTRACT TO HAVE A LISTED ASSET + MEMBER IN THAT BOND ETC
-  // test('should claim bond asset', async () => {
-  //   await bondClaimAsset(TEST_TOKEN, TEST_WALLET)(dispatchMock)
-  //   console.log(dispatchMock.mock.calls[1][0])
-  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.BOND_CLAIM_ASSET)
-  // })
 })

@@ -4,9 +4,6 @@ import {
   getDaoHarvestAmount,
   getDaoHarvestEraAmount,
   getDaoMemberCount,
-  getDaoMemberDetails,
-  getDaoMemberWeight,
-  getDaoTotalWeight,
   daoDeposit,
   daoHarvest,
   daoWithdraw,
@@ -43,26 +40,6 @@ describe('Dao actions', () => {
   test('should get the DAO member count', async () => {
     await getDaoMemberCount()(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_MEMBER_COUNT)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
-
-  test('should get a DAO members details', async () => {
-    await getDaoMemberDetails(TEST_WALLET)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_MEMBER_DETAILS,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
-
-  test('should get DAOs total weight', async () => {
-    await getDaoTotalWeight()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_TOTAL_WEIGHT)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
-
-  test('should get a DAO members weight', async () => {
-    await getDaoMemberWeight(TEST_WALLET)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_MEMBER_WEIGHT)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 

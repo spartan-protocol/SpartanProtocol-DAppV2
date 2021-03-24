@@ -2,7 +2,6 @@ import * as Types from './types'
 
 const initialState = {
   pools: [],
-  assets: [],
   globalDetails: [],
   tokenDetails: [],
   poolDetails: [],
@@ -41,24 +40,6 @@ export const utilsReducer = (state = initialState, action) => {
       return {
         ...state,
         pools: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_LISTED_ASSETS: {
-      return {
-        ...state,
-        assets: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_LISTED_ASSETS_RANGE: {
-      return {
-        ...state,
-        assets: action.payload,
         loading: false,
         error: null,
       }

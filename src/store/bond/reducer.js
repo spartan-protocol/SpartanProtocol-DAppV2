@@ -4,7 +4,6 @@ const initialState = {
   bondListed: [],
   bondListedAsset: false,
   bondClaimable: 0,
-  bondMemberDetails: {},
   bondSpartaRemaining: 0,
   bondBurnReady: 0,
   bondBurn: 0,
@@ -13,7 +12,6 @@ const initialState = {
   bondListedCount: 0,
   bondMemberCount: 0,
   bondMembers: [],
-  bondClaimAsset: false,
   loading: false,
   error: null,
 }
@@ -42,15 +40,6 @@ export const bondReducer = (state = initialState, action) => {
       return {
         ...state,
         bondClaimable: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_BOND_MEMBER_DETAILS: {
-      return {
-        ...state,
-        bondMemberDetails: action.payload,
         loading: false,
         error: null,
       }
@@ -123,15 +112,6 @@ export const bondReducer = (state = initialState, action) => {
       return {
         ...state,
         bondMembers: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_CLAIM_ASSET: {
-      return {
-        ...state,
-        bondClaimAsset: action.payload,
         loading: false,
         error: null,
       }
