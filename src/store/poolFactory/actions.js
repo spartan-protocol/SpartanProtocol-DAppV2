@@ -1,6 +1,7 @@
 import * as Types from './types'
 import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
+import { getUtilsContract } from '../../utils/web3Utils'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -79,29 +80,6 @@ export const getPoolFactoryTokenArray = (tokenCount) => async (dispatch) => {
 }
 
 /**
- * Get array of pool addresses
- * @param {uint} poolCount
- * @returns {array} poolArray
- */
-export const getPoolFactoryArray = (poolCount) => async (dispatch) => {
-  dispatch(poolFactoryLoading())
-  const contract = getPoolFactoryContract()
-
-  try {
-    const tempArray = []
-    for (let i = 0; i < poolCount; i++) {
-      tempArray.push(i)
-    }
-    const poolArray = await Promise.all(
-      tempArray.map((pool) => contract.callStatic.getPoolArray(pool)),
-    )
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_ARRAY, poolArray))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-  }
-}
-
-/**
  * Get curated pools count
  * @returns {uint} curatedPoolCount
  */
@@ -141,6 +119,103 @@ export const getPoolFactoryCuratedArray = (curatedPoolCount) => async (
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_CURATED_ARRAY, curatedPoolArray),
     )
+  } catch (error) {
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+  }
+}
+
+/**
+ * Get array of tokenAddresses grouped with poolAddresses
+ * @param {array} tokenArray
+ * @returns {array} poolArray
+ */
+export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
+  dispatch(poolFactoryLoading())
+  const contract = getPoolFactoryContract()
+
+  try {
+    const tempArray = await Promise.all(
+      tokenArray.map((token) => contract.callStatic.getPool(token)),
+    )
+    const poolArray = []
+    for (let i = 0; i < tokenArray.length; i++) {
+      const tempItem = {
+        tokenAddress: tokenArray[i],
+        poolAddress: tempArray[i],
+      }
+      poolArray.push(tempItem)
+    }
+    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_ARRAY, poolArray))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+  }
+}
+
+/**
+ * Get detailed array of token/pool information
+ * @param {array} poolArray
+ * @returns {array} detailedArray
+ */
+export const getPoolFactoryDetailedArray = (poolArray) => async (dispatch) => {
+  dispatch(poolFactoryLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const tempArray = await Promise.all(
+      poolArray.map((i) => contract.callStatic.getTokenDetails(i.tokenAddress)),
+    )
+    const detailedArray = []
+    for (let i = 0; i < poolArray.length; i++) {
+      const tempItem = {
+        tokenAddress: poolArray[i].tokenAddress,
+        poolAddress: poolArray[i].poolAddress,
+        name: tempArray[i].name,
+        symbol: tempArray[i].symbol,
+        decimals: tempArray[i].decimals.toString(),
+        totalSupply: tempArray[i].totalSupply.toString(),
+        balance: tempArray[i].balance.toString(),
+      }
+      detailedArray.push(tempItem)
+    }
+    dispatch(
+      payloadToDispatch(Types.POOLFACTORY_GET_DETAILED_ARRAY, detailedArray),
+    )
+  } catch (error) {
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+  }
+}
+
+/**
+ * Get finalised/useable array of token/pool information
+ * @param {array} detailedArray
+ * @returns {array} finalArray
+ */
+export const getPoolFactoryFinalArray = (detailedArray) => async (dispatch) => {
+  dispatch(poolFactoryLoading())
+  const contract = getUtilsContract()
+
+  try {
+    const tempArray = await Promise.all(
+      detailedArray.map((i) => contract.callStatic.getPoolData(i.tokenAddress)),
+    )
+    const finalArray = []
+    for (let i = 0; i < detailedArray.length; i++) {
+      const tempItem = {
+        tokenAddress: detailedArray[i].tokenAddress,
+        poolAddress: detailedArray[i].poolAddress,
+        name: detailedArray[i].name,
+        symbol: detailedArray[i].symbol,
+        decimals: detailedArray[i].decimals,
+        totalSupply: detailedArray[i].totalSupply,
+        balance: detailedArray[i].balance,
+        genesis: tempArray[i].genesis.toString(),
+        baseAmount: tempArray[i].baseAmount.toString(),
+        tokenAmount: tempArray[i].tokenAmount.toString(),
+        poolUnits: tempArray[i].poolUnits.toString(),
+      }
+      finalArray.push(tempItem)
+    }
+    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_FINAL_ARRAY, finalArray))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }

@@ -8,6 +8,7 @@ const initialState = {
   tokenArray: {},
   curatedPoolCount: 0,
   curatedPoolArray: {},
+  detailedArray: {},
   loading: false,
   error: null,
 }
@@ -72,6 +73,24 @@ export const poolFactoryReducer = (state = initialState, action) => {
       return {
         ...state,
         curatedPoolArray: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.POOLFACTORY_GET_DETAILED_ARRAY: {
+      return {
+        ...state,
+        detailedArray: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.POOLFACTORY_GET_FINAL_ARRAY: {
+      return {
+        ...state,
+        finalArray: action.payload,
         error: null,
         loading: false,
       }

@@ -8,4 +8,6 @@ export {
   getPoolFactoryArray,
   getPoolFactoryCuratedCount,
   getPoolFactoryCuratedArray,
+  getPoolFactoryDetailedArray,
+  getPoolFactoryFinalArray,
 } from './actions'
