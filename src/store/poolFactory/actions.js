@@ -71,7 +71,7 @@ export const getPoolFactoryCuratedCount = () => async (dispatch) => {
   const contract = getPoolFactoryContract()
 
   try {
-    const curatedPoolCount = await contract.callStatic.poolCount()
+    const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_CURATED_COUNT, curatedPoolCount),
     )

@@ -19,6 +19,7 @@ import Sidebar from '../Sidebar/Sidebar'
 import routes from '../../routes'
 
 import logo from '../../assets/img/spartan_red_medium.svg'
+import DataManager from '../DataManager/DataManager'
 
 let ps
 
@@ -136,6 +137,7 @@ const Common = (props) => {
   return (
     <div className="wrapper">
       <div className="rna-container">
+        <DataManager />
         <NotificationAlert ref={notificationAlertRef} />
       </div>
       <div className="navbar-minimize-fixed" style={{ opacity }}>
