@@ -6,11 +6,11 @@ import {
   getPoolFactoryCuratedCount,
   usePoolFactory,
 } from '../../store/poolFactory'
-// import { BN } from '../../utils/web3Utils'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
+  // const network = JSON.parse(window.localStorage.getItem('network'))
 
   const [prevPoolCount, setPrevPoolCount] = useState(poolFactory.poolCount)
   const [prevCuratedCount, setPrevCuratedCount] = useState(
