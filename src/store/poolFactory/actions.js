@@ -188,9 +188,12 @@ export const getPoolFactoryDetailedArray = (poolArray) => async (dispatch) => {
 /**
  * Get finalised/useable array of token/pool information
  * @param {array} detailedArray
+ * @param {array} curatedArray
  * @returns {array} finalArray
  */
-export const getPoolFactoryFinalArray = (detailedArray) => async (dispatch) => {
+export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
+  dispatch,
+) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
@@ -200,18 +203,21 @@ export const getPoolFactoryFinalArray = (detailedArray) => async (dispatch) => {
     )
     const finalArray = []
     for (let i = 0; i < detailedArray.length; i++) {
+      const tokenAddr = detailedArray[i].tokenAddress
       const tempItem = {
-        tokenAddress: detailedArray[i].tokenAddress,
-        poolAddress: detailedArray[i].poolAddress,
+        tokenAddress: tokenAddr,
         name: detailedArray[i].name,
         symbol: detailedArray[i].symbol,
         decimals: detailedArray[i].decimals,
         totalSupply: detailedArray[i].totalSupply,
-        balance: detailedArray[i].balance,
+        accountBalance: detailedArray[i].balance,
+        poolAddress: detailedArray[i].poolAddress,
         genesis: tempArray[i].genesis.toString(),
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
+        curated: curatedArray.includes(tokenAddr),
+        symbolUrl: 'placeholder for icon',
       }
       finalArray.push(tempItem)
     }

@@ -104,7 +104,9 @@ const DataManager = () => {
     const { detailedArray } = poolFactory
     const checkDetailedArray = () => {
       if (detailedArray !== setPrevDetailedArray && detailedArray.length > 0) {
-        dispatch(getPoolFactoryFinalArray(detailedArray))
+        dispatch(
+          getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
+        )
         setPrevFinalArray(poolFactory.finalArray)
         console.log(prevFinalArray)
       }
