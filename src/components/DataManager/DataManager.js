@@ -1,3 +1,4 @@
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
@@ -11,16 +12,16 @@ import {
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
 import { getNetwork } from '../../utils/web3'
-// import { useWeb3 } from '../../store/web3'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
-  // const web3 = useWeb3()
+  const wallet = useWallet()
 
   useEffect(() => {
     const checkNetwork = () => {
       dispatch(getNetwork)
+      console.log(wallet)
     }
 
     checkNetwork()
@@ -90,20 +91,19 @@ const DataManager = () => {
       if (poolArray !== prevPoolArray && poolArray.length > 0) {
         dispatch(getPoolFactoryDetailedArray(poolArray))
         setPrevDetailedArray(poolFactory.detailedArray)
-        console.log(prevDetailedArray)
       }
     }
 
     checkDetailedArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.poolArray])
+  }, [poolFactory.poolArray, window.sessionStorage.getItem('walletConnected')])
 
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
 
   useEffect(() => {
     const { detailedArray } = poolFactory
     const checkDetailedArray = () => {
-      if (detailedArray !== setPrevDetailedArray && detailedArray.length > 0) {
+      if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
         )

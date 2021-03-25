@@ -206,12 +206,14 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
       const tokenAddr = detailedArray[i].tokenAddress
       const tempItem = {
         tokenAddress: tokenAddr,
+        balanceTokens: detailedArray[i].balance,
         name: detailedArray[i].name,
         symbol: detailedArray[i].symbol,
         decimals: detailedArray[i].decimals,
         totalSupply: detailedArray[i].totalSupply,
-        accountBalance: detailedArray[i].balance,
         poolAddress: detailedArray[i].poolAddress,
+        balanceLPs: 'placehodler wallet holdings of LP tokens',
+        lockedLPs: 'placehodler LP tokens locked in DAO?',
         genesis: tempArray[i].genesis.toString(),
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
