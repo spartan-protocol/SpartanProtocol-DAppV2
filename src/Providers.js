@@ -11,6 +11,7 @@ import { bondReducer } from './store/bond'
 import { bondVaultReducer } from './store/bondVault'
 import { daoReducer } from './store/dao'
 import { daoVaultReducer } from './store/daoVault'
+import { poolFactoryReducer } from './store/poolFactory'
 import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
 import { utilsReducer } from './store/utils'
@@ -24,6 +25,7 @@ const reducers = combineReducers({
   bondVault: bondVaultReducer,
   dao: daoReducer,
   daoVault: daoVaultReducer,
+  poolFactory: poolFactoryReducer,
   router: routerReducer,
   sparta: spartaReducer,
   utils: utilsReducer,

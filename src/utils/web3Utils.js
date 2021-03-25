@@ -5,7 +5,7 @@ const BigNumber = require('bignumber.js')
 
 const addr = getAddresses()
 
-export const BN = BigNumber
+export const BN = (x) => new BigNumber(x)
 
 // GET UTILS CONTRACT
 export const getUtilsContract = () => {
