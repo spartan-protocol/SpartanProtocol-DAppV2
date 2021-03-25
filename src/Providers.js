@@ -36,7 +36,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 
 const store = createStore(
   reducers,
-  /* preloadedState, */ composeEnhancers(applyMiddleware(thunk)),
+  /* preloadedState, */ composeEnhancers
+    ? composeEnhancers(applyMiddleware(thunk))
+    : applyMiddleware(thunk),
 )
 
 const Providers = () => {
