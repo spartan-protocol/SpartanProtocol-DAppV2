@@ -7,7 +7,7 @@ const initialState = {
   tokenCount: 0,
   tokenArray: {},
   curatedPoolCount: 0,
-  curatedPoolArray: {},
+  curatedPoolArray: [],
   detailedArray: {},
   loading: false,
   error: null,
