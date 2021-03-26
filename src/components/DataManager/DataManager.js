@@ -5,7 +5,7 @@ import {
   usePoolFactory,
   getPoolFactoryTokenCount,
   getPoolFactoryTokenArray,
-  getPoolFactoryArray,
+  // getPoolFactoryArray,
   getPoolFactoryCuratedCount,
   getPoolFactoryCuratedArray,
   getPoolFactoryDetailedArray,
@@ -75,38 +75,40 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenCount])
 
-  const [prevPoolArray, setPrevPoolArray] = useState(poolFactory.poolArray)
+  // const [prevPoolArray, setPrevPoolArray] = useState(poolFactory.poolArray)
 
-  useEffect(() => {
-    const { tokenArray } = poolFactory
-    const checkPoolArray = () => {
-      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-        dispatch(getPoolFactoryArray(tokenArray))
-        setPrevPoolArray(poolFactory.poolArray)
-        console.log(prevPoolArray)
-      }
-    }
+  // useEffect(() => {
+  //   const { tokenArray } = poolFactory
+  //   const checkPoolArray = () => {
+  //     if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
+  //       dispatch(getPoolFactoryArray(tokenArray))
+  //       setPrevPoolArray(poolFactory.poolArray)
+  //       console.log(prevPoolArray)
+  //     }
+  //   }
 
-    checkPoolArray()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenArray])
+  //   checkPoolArray()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [poolFactory.tokenArray])
 
   const [prevDetailedArray, setPrevDetailedArray] = useState(
     poolFactory.detailedArray,
   )
 
   useEffect(() => {
-    const { poolArray } = poolFactory
+    const { tokenArray } = poolFactory
     const checkDetailedArray = () => {
-      if (poolArray !== prevPoolArray && poolArray.length > 0) {
-        dispatch(getPoolFactoryDetailedArray(poolArray, addr.wbnb, addr.sparta))
+      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
+        dispatch(
+          getPoolFactoryDetailedArray(tokenArray, addr.wbnb, addr.sparta),
+        )
         setPrevDetailedArray(poolFactory.detailedArray)
       }
     }
 
     checkDetailedArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.poolArray, window.sessionStorage.getItem('walletConnected')])
+  }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
 
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
 
