@@ -11,12 +11,13 @@ import {
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
-import { getNetwork } from '../../utils/web3'
+import { getAddresses, getNetwork } from '../../utils/web3'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
   const wallet = useWallet()
+  const addr = getAddresses()
 
   useEffect(() => {
     const checkNetwork = () => {
@@ -89,7 +90,7 @@ const DataManager = () => {
     const { poolArray } = poolFactory
     const checkDetailedArray = () => {
       if (poolArray !== prevPoolArray && poolArray.length > 0) {
-        dispatch(getPoolFactoryDetailedArray(poolArray))
+        dispatch(getPoolFactoryDetailedArray(poolArray, addr.wbnb, addr.sparta))
         setPrevDetailedArray(poolFactory.detailedArray)
       }
     }
@@ -102,7 +103,7 @@ const DataManager = () => {
 
   useEffect(() => {
     const { detailedArray } = poolFactory
-    const checkDetailedArray = () => {
+    const checkFinalArray = () => {
       if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
@@ -112,7 +113,7 @@ const DataManager = () => {
       }
     }
 
-    checkDetailedArray()
+    checkFinalArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
 

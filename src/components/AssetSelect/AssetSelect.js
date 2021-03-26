@@ -7,6 +7,7 @@ import {
 } from 'reactstrap'
 import { usePoolFactory } from '../../store/poolFactory'
 import { formatFromWei } from '../../utils/bigNumber'
+import coinBnb from '../../assets/icons/coin_bnb.svg'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -17,12 +18,16 @@ import { formatFromWei } from '../../utils/bigNumber'
 const AssetSelect = (props) => {
   const poolFactory = usePoolFactory()
 
-  const addSelection = (assetDetails) => {
+  const addSelection = (assetSymbol, assetAddress) => {
     window.localStorage.setItem(
       `assetSelected${props.priority}`,
-      JSON.stringify(assetDetails),
+      JSON.stringify([assetSymbol, assetAddress]),
     )
   }
+
+  const selectedItem = JSON.parse(
+    window.localStorage.getItem(`assetSelected${props.priority}`),
+  )
 
   return (
     <>
@@ -31,28 +36,30 @@ const AssetSelect = (props) => {
           aria-expanded={false}
           aria-haspopup
           caret
-          className="btn-block"
-          color="primary"
+          className=""
+          color=""
           data-toggle="dropdown"
           id="dropdownMenuButton"
           type="button"
         >
-          {
-            JSON.parse(
-              window.localStorage.getItem(`assetSelected${props.priority}`),
-            )?.symbol
-          }
+          <img className="mr-2" src={coinBnb} alt="BNB" />
+          {selectedItem && selectedItem[0]}
         </DropdownToggle>
         <DropdownMenu aria-labelledby="dropdownMenuButton">
-          <DropdownItem header>Dropdown header</DropdownItem>
-          {poolFactory.finalArray?.map((asset) => (
-            <DropdownItem
-              key={asset.tokenAddress}
-              onClick={() => addSelection(asset)}
-            >
-              {asset.symbol} - {formatFromWei(asset.balanceTokens)}
-            </DropdownItem>
-          ))}
+          <DropdownItem header>Select Asset</DropdownItem>
+          {poolFactory.finalArray &&
+            poolFactory.finalArray.map((asset) => (
+              <DropdownItem
+                key={asset.tokenAddress}
+                onClick={() => addSelection(asset.symbol, asset.tokenAddress)}
+              >
+                <img className="mr-2" src={coinBnb} alt="BNB" /> {asset.symbol}{' '}
+                - {formatFromWei(asset.balanceTokens)}
+              </DropdownItem>
+            ))}
+          {poolFactory.finalArray === null && (
+            <DropdownItem>...LOADER...</DropdownItem>
+          )}
         </DropdownMenu>
       </UncontrolledDropdown>
     </>

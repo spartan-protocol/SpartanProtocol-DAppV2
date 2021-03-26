@@ -8,6 +8,6 @@ export const BN = (x) => new BigNumber(x)
  * @returns {string} units
  */
 export const formatFromWei = (weiString) => {
-  const units = BN(weiString).shiftedBy(-18).toFormat()
+  const units = BN(weiString).shiftedBy(-18).toFormat(4)
   return units
 }

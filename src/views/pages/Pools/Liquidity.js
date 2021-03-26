@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   Row,
@@ -16,7 +16,7 @@ import {
 // import { withNamespaces } from 'react-i18next'
 // import InputGroup from 'reactstrap/es/InputGroup'
 // import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
-import Slider from 'nouislider'
+// import Slider from 'nouislider'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 // import { Breadcrumb } from 'react-bootstrap'
@@ -26,87 +26,114 @@ import bnbSparta from '../../../assets/icons/bnb_sparta.png'
 import PoolsPaneSide from './PoolsPaneSide'
 import Wallet from '../../../components/Wallet/Wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
+import { getAddresses, getItemFromArray } from '../../../utils/web3'
+import { usePoolFactory } from '../../../store/poolFactory'
+import { formatFromWei } from '../../../utils/bigNumber'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
 const Liquidity = () => {
+  const addr = getAddresses()
+  const poolFactory = usePoolFactory()
+  const [asset1, setAsset1] = useState('...')
+  const [asset2, setAsset2] = useState('...')
+
+  useEffect(() => {
+    const { finalArray } = poolFactory
+    const getAsset1Details = () => {
+      if (finalArray) {
+        let asset1LS = JSON.parse(window.localStorage.getItem('assetSelected1'))
+        asset1LS = asset1LS ? asset1LS[1] : addr.wbnb
+        setAsset1(getItemFromArray(asset1LS, poolFactory.finalArray))
+        setAsset2(getItemFromArray(addr.sparta, poolFactory.finalArray))
+      }
+    }
+
+    getAsset1Details()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolFactory.finalArray, window.localStorage.getItem('assetSelected1')])
+
+  useEffect(() => {
+    console.log(asset1)
+  }, [asset1])
+
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
     sethorizontalTabs(tabName)
   }
 
-  const slider1Ref = React.useRef(null)
-  const slider2Ref = React.useRef(null)
+  // const slider1Ref = React.useRef(null)
+  // const slider2Ref = React.useRef(null)
 
-  const slider3Ref = React.useRef(null)
-  const slider4Ref = React.useRef(null)
+  // const slider3Ref = React.useRef(null)
+  // const slider4Ref = React.useRef(null)
 
-  const slider5Ref = React.useRef(null)
-  const slider6Ref = React.useRef(null)
+  // const slider5Ref = React.useRef(null)
+  // const slider6Ref = React.useRef(null)
 
-  React.useEffect(() => {
-    const slider1 = slider1Ref.current
-    const slider2 = slider2Ref.current
-    if (slider1.className === 'slider') {
-      Slider.create(slider1, {
-        start: [40],
-        connect: [true, false],
-        step: 1,
-        range: { min: 0, max: 100 },
-      })
-    }
-    if (slider2.className === 'slider slider-primary mb-3') {
-      Slider.create(slider2, {
-        start: [20, 60],
-        connect: [false, true, false],
-        step: 1,
-        range: { min: 0, max: 100 },
-      })
-    }
-  }, [])
+  // React.useEffect(() => {
+  //   const slider1 = slider1Ref.current
+  //   const slider2 = slider2Ref.current
+  //   if (slider1.className === 'slider') {
+  //     Slider.create(slider1, {
+  //       start: [40],
+  //       connect: [true, false],
+  //       step: 1,
+  //       range: { min: 0, max: 100 },
+  //     })
+  //   }
+  //   if (slider2.className === 'slider slider-primary mb-3') {
+  //     Slider.create(slider2, {
+  //       start: [20, 60],
+  //       connect: [false, true, false],
+  //       step: 1,
+  //       range: { min: 0, max: 100 },
+  //     })
+  //   }
+  // }, [])
 
-  React.useEffect(() => {
-    const slider3 = slider3Ref.current
-    const slider4 = slider4Ref.current
-    if (slider3.className === 'slider') {
-      Slider.create(slider3, {
-        start: [80],
-        connect: [true, false],
-        step: 1,
-        range: { min: 0, max: 100 },
-      })
-    }
-    if (slider4.className === 'slider slider-primary mb-3') {
-      Slider.create(slider4, {
-        start: [20, 60],
-        connect: [false, true, false],
-        step: 1,
-        range: { min: 0, max: 100 },
-      })
-    }
-  }, [])
+  // React.useEffect(() => {
+  //   const slider3 = slider3Ref.current
+  //   const slider4 = slider4Ref.current
+  //   if (slider3.className === 'slider') {
+  //     Slider.create(slider3, {
+  //       start: [80],
+  //       connect: [true, false],
+  //       step: 1,
+  //       range: { min: 0, max: 100 },
+  //     })
+  //   }
+  //   if (slider4.className === 'slider slider-primary mb-3') {
+  //     Slider.create(slider4, {
+  //       start: [20, 60],
+  //       connect: [false, true, false],
+  //       step: 1,
+  //       range: { min: 0, max: 100 },
+  //     })
+  //   }
+  // }, [])
 
-  React.useEffect(() => {
-    const slider5 = slider5Ref.current
-    const slider6 = slider6Ref.current
-    if (slider5.className === 'slider') {
-      Slider.create(slider5, {
-        start: [100],
-        connect: [true, false],
-        step: 1,
-        range: { min: 0, max: 100 },
-      })
-    }
-    if (slider6.className === 'slider slider-primary mb-3') {
-      Slider.create(slider6, {
-        start: [20, 60],
-        connect: [false, true, false],
-        step: 1,
-        range: { min: 0, max: 100 },
-      })
-    }
-  }, [])
+  // React.useEffect(() => {
+  //   const slider5 = slider5Ref.current
+  //   const slider6 = slider6Ref.current
+  //   if (slider5.className === 'slider') {
+  //     Slider.create(slider5, {
+  //       start: [100],
+  //       connect: [true, false],
+  //       step: 1,
+  //       range: { min: 0, max: 100 },
+  //     })
+  //   }
+  //   if (slider6.className === 'slider slider-primary mb-3') {
+  //     Slider.create(slider6, {
+  //       start: [20, 60],
+  //       connect: [false, true, false],
+  //       step: 1,
+  //       range: { min: 0, max: 100 },
+  //     })
+  //   }
+  // }, [])
 
   return (
     <>
@@ -216,11 +243,13 @@ const Liquidity = () => {
                             <AssetSelect priority="1" />
                           </Col>
                           <Col className="text-right">
-                            <div className="title-card">Balance 10.36</div>
-                            <div className="output-card">
-                              BNB
-                              <img className="ml-2" src={coinBnb} alt="BNB" />
+                            <div className="title-card">
+                              Balance{' '}
+                              {asset1 !== '...' &&
+                                formatFromWei(asset1[0].balanceTokens)}
                             </div>
+                            <div className="output-card">XXX input amnt</div>
+                            <div className="title-card">~$XXX.XX</div>
                           </Col>
                         </Row>
                       </Card>
@@ -234,10 +263,6 @@ const Liquidity = () => {
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
-                            <div className="output-card">1</div>
-                          </Col>
-                          <Col className="text-right">
-                            <div className="title-card">Balance 10.36</div>
                             <div className="output-card">
                               SPARTA
                               <img
@@ -247,11 +272,23 @@ const Liquidity = () => {
                               />
                             </div>
                           </Col>
+                          <Col className="text-right">
+                            <div className="title-card">
+                              {' '}
+                              Balance{' '}
+                              {asset2 !== '...' &&
+                                formatFromWei(asset2[0].balanceTokens)}
+                            </div>
+                            <div className="output-card">XXX input amnt</div>
+                            <div className="title-card">
+                              1 {asset1[0].symbol} = XXX SPARTA
+                            </div>
+                          </Col>
                         </Row>
                       </Card>
                     </Col>
                   </Row>
-                  <Row>
+                  {/* <Row>
                     <Col>
                       <br />
                       <br />
@@ -272,7 +309,7 @@ const Liquidity = () => {
                         ref={slider2Ref}
                       />
                     </Col>
-                  </Row>
+                  </Row> */}
                   <br />
                   <Row>
                     <Col md={6}>
@@ -323,12 +360,17 @@ const Liquidity = () => {
                       </div>
                     </Col>
                     <Col md={6} className="text-right">
-                      <div className="output-card">1 of 10.36 BNB</div>
-                      <div className="output-card">100.52 of 255.89 SPARTA</div>
-                      <div className="output-card">1 of 10.36 BNB</div>
+                      <div className="output-card">
+                        X of {formatFromWei(asset1[0].balanceTokens)}{' '}
+                        {asset1[0].symbol}
+                      </div>
+                      <div className="output-card">
+                        X of {formatFromWei(asset2[0].balanceTokens)} SPARTA
+                      </div>
+                      <div className="output-card">X of X LP TOKENS?</div>
                       <br />
                       <br />
-                      <div className="subtitle-amount">52.23</div>
+                      <div className="subtitle-amount">XX.XX</div>
                     </Col>
                   </Row>
                   <br />
@@ -384,7 +426,7 @@ const Liquidity = () => {
                       </Card>
                     </Col>
                   </Row>
-                  <Row>
+                  {/* <Row>
                     <Col>
                       <br />
                       <br />
@@ -405,7 +447,7 @@ const Liquidity = () => {
                         ref={slider4Ref}
                       />
                     </Col>
-                  </Row>
+                  </Row> */}
                   <br />
                   <Row>
                     <Col md={6}>
@@ -532,7 +574,7 @@ const Liquidity = () => {
                       </Card>
                     </Col>
                   </Row>
-                  <Row>
+                  {/* <Row>
                     <Col>
                       <br />
                       <br />
@@ -553,7 +595,7 @@ const Liquidity = () => {
                         ref={slider6Ref}
                       />
                     </Col>
-                  </Row>
+                  </Row> */}
                   <br />
                   <Row>
                     <Col md={6}>

@@ -156,13 +156,29 @@ export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (poolArray) => async (dispatch) => {
+export const getPoolFactoryDetailedArray = (
+  poolArray,
+  wbnbAddr,
+  spartaAddr,
+) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
   try {
+    if (poolArray[0].tokenAddress !== spartaAddr) {
+      poolArray.unshift({
+        tokenAddress: spartaAddr,
+        poolAddress: null,
+      })
+    }
     const tempArray = await Promise.all(
-      poolArray.map((i) => contract.callStatic.getTokenDetails(i.tokenAddress)),
+      poolArray.map((i) =>
+        i.tokenAddress === wbnbAddr
+          ? contract.callStatic.getTokenDetails(
+              '0x0000000000000000000000000000000000000000',
+            )
+          : contract.callStatic.getTokenDetails(i.tokenAddress),
+      ),
     )
     const detailedArray = []
     for (let i = 0; i < poolArray.length; i++) {
@@ -199,7 +215,16 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
 
   try {
     const tempArray = await Promise.all(
-      detailedArray.map((i) => contract.callStatic.getPoolData(i.tokenAddress)),
+      detailedArray.map((i) =>
+        i.symbol === 'SPARTA'
+          ? {
+              genesis: '0',
+              baseAmount: '0',
+              tokenAmount: '0',
+              poolUnits: '0',
+            }
+          : contract.callStatic.getPoolData(i.tokenAddress),
+      ),
     )
     const finalArray = []
     for (let i = 0; i < detailedArray.length; i++) {

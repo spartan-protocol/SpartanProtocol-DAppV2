@@ -217,6 +217,19 @@ export const bscRpcsMN = [
 ]
 
 /**
+ * Filter finalArray (or any array) to the scope of the assetAddress
+ * @param {string} assetAddress
+ * @param {string} finalArray
+ * @returns {Object} item from finalArray
+ */
+export const getItemFromArray = (assetAddress, finalArray) => {
+  const arrayItem = finalArray?.filter(
+    (asset) => asset.tokenAddress === assetAddress,
+  )
+  return arrayItem
+}
+
+/**
  * Trigger change between Addresses
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} Relevant list of addresses
