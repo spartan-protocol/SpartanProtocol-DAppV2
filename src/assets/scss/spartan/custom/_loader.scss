@@ -1,7 +1,9 @@
-.loading {
-    position: absolute;
+.spartan-loading {
+    position: relative;
     left: 45%;
     top: 15%;
+    margin-top: 50px;
+    height: 400px;
     img {
         width: 200px;
         animation: sizing 5s infinite;
@@ -18,4 +20,10 @@
     100% {
         width: 300px;
     }
+}
+
+.helm-loading{
+    position: relative;
+    left: 45%;
+    width: 300px;
 }

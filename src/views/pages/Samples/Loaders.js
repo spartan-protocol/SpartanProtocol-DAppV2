@@ -1,9 +1,15 @@
 import React from 'react'
-import Loading from '../../../components/Loader/Loader'
+import SpartanLoading from '../../../components/Loaders/SpartanLoading'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Loaders = () => (
-  <div className="loading">
-    <Loading />
+  <div>
+    <div className="spartan-loading">
+      <SpartanLoading />
+    </div>
+    <div className="helm-loading">
+      <HelmetLoading />
+    </div>
   </div>
 )
 
