@@ -3,6 +3,16 @@ import BigNumber from 'bignumber.js'
 export const BN = (x) => new BigNumber(x)
 
 /**
+ * Shift units to wei string
+ * @param {string} units
+ * @returns {string} weiString
+ */
+export const convertToWei = (units) => {
+  const weiString = BN(units).shiftedBy(18).toFixed(0)
+  return weiString
+}
+
+/**
  * Shift Wei string to units. Format using globalFormatting
  * @param {string} weiString
  * @returns {string} units

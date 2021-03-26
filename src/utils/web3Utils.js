@@ -98,7 +98,6 @@ export const calcSlipAdjustment = (b, B, t, T) => {
   }
   const denominator = part3.times(part4)
   const result = BN(1).minus(numerator.div(denominator))
-  console.log(result.toFixed())
   return result.times(BN(1).pow(18))
 }
 
@@ -126,7 +125,6 @@ export const calcLiquidityUnits = (
   const part2 = T.times(b)
   const part3 = T.times(B).times(2)
   const result = P.times(part1.plus(part2)).div(part3).times(slipAdjustment)
-  console.log(result.toFixed())
   return result
 }
 

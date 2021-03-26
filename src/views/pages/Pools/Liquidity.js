@@ -22,6 +22,7 @@ import {
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 // import { Breadcrumb } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
 import coinBnb from '../../../assets/icons/coin_bnb.svg'
 import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
@@ -30,13 +31,24 @@ import Wallet from '../../../components/Wallet/Wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
-import { BN, formatFromWei, formatFromUnits } from '../../../utils/bigNumber'
-import { calcValueInBase, calcValueInToken } from '../../../utils/web3Utils'
+import {
+  BN,
+  formatFromWei,
+  formatFromUnits,
+  convertToWei,
+} from '../../../utils/bigNumber'
+import {
+  calcLiquidityUnits,
+  calcValueInBase,
+  calcValueInToken,
+} from '../../../utils/web3Utils'
 import { useWeb3 } from '../../../store/web3'
+import { routerAddLiq } from '../../../store/router/actions'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
 const Liquidity = () => {
+  const dispatch = useDispatch()
   const addr = getAddresses()
   const poolFactory = usePoolFactory()
   const web3 = useWeb3()
@@ -58,10 +70,6 @@ const Liquidity = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalArray, window.localStorage.getItem('assetSelected1')])
 
-  // const [focused, setFocused] = useState(null)
-  // const [asset1Input, setAsset1Input] = useState('0')
-  // const [asset2Input, setAsset2Input] = useState('0')
-
   const assetInput1 = document.getElementById('assetInput1')
   const assetInput2 = document.getElementById('assetInput2')
 
@@ -72,9 +80,6 @@ const Liquidity = () => {
         asset1[0].baseAmount,
         input,
       )
-      // setAsset2Input(
-      //   calcValueInBase(asset1[0].tokenAmount, asset1[0].baseAmount, input),
-      // )
     } else {
       assetInput1.value = calcValueInToken(
         asset1[0].tokenAmount,
@@ -105,23 +110,6 @@ const Liquidity = () => {
     clearInputs()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asset2])
-
-  // const [tokenPrice, setTokenPrice] = useState('0')
-
-  // useEffect(() => {
-  //   const calcFromSparta = () => {
-  //     console.log('starting calcFromSparta')
-  //     const perSparta = calcValueInBase(
-  //       asset1[0].tokenAmount,
-  //       asset1[0].baseAmount,
-  //       '0',
-  //     )
-  //     setTokenPrice(formatFromWei(BN(perSparta).times(BN(web3.spartaPrice))))
-  //   }
-
-  //   calcFromSparta()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [web3.spartaPrice])
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -332,10 +320,15 @@ const Liquidity = () => {
                             <div className="title-card">
                               ~$
                               {assetInput2 &&
+                                web3.spartaPrice &&
+                                assetInput2.value > 0 &&
                                 formatFromUnits(
                                   BN(assetInput2.value).times(web3.spartaPrice),
                                   2,
                                 )}
+                              {!assetInput2 ||
+                                !web3.spartaPrice ||
+                                (assetInput2.value <= 0 && '0')}
                             </div>
                           </Col>
                         </Row>
@@ -351,12 +344,12 @@ const Liquidity = () => {
                           <Col className="text-left">
                             <div className="title-card">Input</div>
                             <div className="output-card">
-                              SPARTA
                               <img
-                                className="ml-2"
+                                className="mr-2"
                                 src={coinSparta}
                                 alt="SPARTA"
                               />
+                              SPARTA
                             </div>
                           </Col>
                           <Col className="text-right">
@@ -383,7 +376,14 @@ const Liquidity = () => {
                               </FormGroup>
                             </div>
                             <div className="title-card">
-                              1 {asset1[0].symbol} = XXX SPARTA
+                              1 {asset1[0].symbol} ={' '}
+                              {formatFromUnits(
+                                BN(asset1[0].baseAmount).div(
+                                  BN(asset1[0].tokenAmount),
+                                ),
+                                2,
+                              )}{' '}
+                              SPARTA
                             </div>
                           </Col>
                         </Row>
@@ -463,20 +463,61 @@ const Liquidity = () => {
                     </Col>
                     <Col md={6} className="text-right">
                       <div className="output-card">
-                        X of {formatFromWei(asset1[0].balanceTokens)}{' '}
-                        {asset1[0].symbol}
+                        {formatFromUnits(assetInput1?.value, 4)} of{' '}
+                        {formatFromWei(asset1[0]?.balanceTokens)}{' '}
+                        {asset1[0]?.symbol}
                       </div>
                       <div className="output-card">
-                        X of {formatFromWei(asset2[0].balanceTokens)} SPARTA
+                        {assetInput2?.value > 0 &&
+                          formatFromUnits(assetInput2.value, 4)}{' '}
+                        of {formatFromWei(asset2[0]?.balanceTokens)} SPARTA
                       </div>
-                      <div className="output-card">X of X LP TOKENS?</div>
+                      <div className="output-card">
+                        {formatFromUnits(
+                          calcLiquidityUnits(
+                            assetInput2?.value,
+                            assetInput1?.value,
+                            asset1[0]?.baseAmount,
+                            asset1[0]?.tokenAmount,
+                            asset1[0]?.poolUnits,
+                          ),
+                          4,
+                        )}{' '}
+                        of {formatFromWei(asset1[0]?.poolUnits)} SPT2-
+                        {asset1[0]?.symbol}
+                      </div>
                       <br />
                       <br />
-                      <div className="subtitle-amount">XX.XX</div>
+                      <div className="subtitle-amount">
+                        {formatFromUnits(
+                          calcLiquidityUnits(
+                            assetInput2?.value,
+                            assetInput1?.value,
+                            asset1[0]?.baseAmount,
+                            asset1[0]?.tokenAmount,
+                            asset1[0]?.poolUnits,
+                          ),
+                          4,
+                        )}{' '}
+                        SPT2-{asset1[0]?.symbol}
+                      </div>
                     </Col>
                   </Row>
                   <br />
-                  <Button color="primary" size="lg" block>
+                  <Button
+                    color="primary"
+                    size="lg"
+                    block
+                    onClick={() =>
+                      dispatch(
+                        routerAddLiq(
+                          convertToWei(assetInput2?.value),
+                          convertToWei(assetInput1?.value),
+                          asset1[0].tokenAddress,
+                        ),
+                      )
+                    }
+                  >
                     Add to pool
                   </Button>
                 </TabPane>
