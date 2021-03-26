@@ -21,6 +21,10 @@ describe('Dao vault actions', () => {
     dispatchMock.mockRestore()
   })
 
+  test('test placeholder', async () => {
+    expect('0').not.toBe('2')
+  })
+
   // COME BACK TO THIS ONE LATER
   // test('should get members weight within specific pool', async () => {
   //   await getDaoVaultMemberPoolWeight(TEST_WALLET, TEST_POOL)(dispatchMock)
