@@ -81,7 +81,7 @@ export const abisMN = {
 // ADDRESSES FOR TESTS (UPDATE WHENEVER TESTS POINT SOMEWHERE ELSE)
 export const TEST_WALLET = '0x0E8196b0EFe6e0062Da1B1d9F03f0a3ab3d53C77'
 export const TEST_TOKEN = '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870'
-export const TEST_POOL = '0x1F9F44A3f4B166cBca67078082FDd1CC170D90Cb'
+export const TEST_POOL = '0xF551C348210200E3D42f531d4F6386DC37A71612'
 
 export const addressesTN = {
   // OLD ADDRESSES SPV1
@@ -101,7 +101,7 @@ export const addressesTN = {
   bondv4: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
   bondVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
   daov2: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
-  daoVaultv1: '0xd36b6537dD317ea674E3637d99171a7A49E9C74E',
+  daoVaultv1: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
   routerv3: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
   utilsv2: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   // CURRENT ADDRESSES
@@ -110,7 +110,7 @@ export const addressesTN = {
   bond: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
   bondVault: '0x59A661418BdEA413B4a40725468FcBA940827962',
   dao: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
-  daoVault: '0xd36b6537dD317ea674E3637d99171a7A49E9C74E',
+  daoVault: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
   router: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
   utils: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
@@ -139,7 +139,7 @@ export const addressesMN = {
   bondv4: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
   bondVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
   daov2: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
-  daoVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
+  daoVaultv1: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
   routerv3: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
   utilsv2: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   // CURRENT ADDRESSES
@@ -148,7 +148,7 @@ export const addressesMN = {
   bond: '0x791498A3424f19DD00eA7b3aF9dC2c62EF127f34',
   bondVault: '0x59A661418BdEA413B4a40725468FcBA940827962',
   dao: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
-  daoVault: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be',
+  daoVault: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
   router: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
   utils: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
@@ -215,6 +215,19 @@ export const bscRpcsMN = [
   'https://bsc-dataseed1.defibit.io/',
   'https://bsc-dataseed1.ninicoin.io/',
 ]
+
+/**
+ * Filter finalArray (or any array) to the scope of the assetAddress
+ * @param {string} assetAddress
+ * @param {string} finalArray
+ * @returns {Object} item from finalArray
+ */
+export const getItemFromArray = (assetAddress, finalArray) => {
+  const arrayItem = finalArray?.filter(
+    (asset) => asset.tokenAddress === assetAddress,
+  )
+  return arrayItem
+}
 
 /**
  * Trigger change between Addresses

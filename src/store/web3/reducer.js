@@ -5,6 +5,7 @@ const initialState = {
   approval: false,
   allowance: {},
   watchingAsset: false,
+  spartaPrice: 0,
   loading: false,
   error: null,
 }
@@ -42,6 +43,15 @@ export const web3Reducer = (state = initialState, action) => {
       return {
         ...state,
         watchingAsset: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.SPARTA_PRICE: {
+      return {
+        ...state,
+        spartaPrice: action.payload,
         loading: false,
         error: null,
       }
