@@ -1,3 +1,4 @@
+import axios from 'axios'
 import * as Types from './types'
 
 import {
@@ -149,5 +150,26 @@ export const watchAsset = (
     dispatch(
       errorToDispatch(Types.WEB3_ERROR, 'Please connect your wallet first'),
     )
+  }
+}
+
+/**
+ * Get price of SPARTA token via coinGecko API
+ * @returns {uint} spartaPrice
+ */
+export const getSpartaPrice = () => async (dispatch) => {
+  dispatch(web3Loading())
+  try {
+    const spartaPrice = await axios.get(
+      'https://api.coingecko.com/api/v3/simple/price?ids=spartan-protocol-token&vs_currencies=usd',
+    )
+    dispatch(
+      payloadToDispatch(
+        Types.SPARTA_PRICE,
+        spartaPrice.data['spartan-protocol-token'].usd,
+      ),
+    )
+  } catch (error) {
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }

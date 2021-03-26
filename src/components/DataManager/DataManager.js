@@ -11,6 +11,7 @@ import {
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
+import { getSpartaPrice } from '../../store/web3'
 import { getAddresses, getNetwork } from '../../utils/web3'
 
 const DataManager = () => {
@@ -26,6 +27,14 @@ const DataManager = () => {
     }
 
     checkNetwork()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(getSpartaPrice())
+    }, 5000)
+    return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

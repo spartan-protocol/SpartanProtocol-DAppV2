@@ -221,7 +221,14 @@ export const calcValueInToken = (poolTokenAmount, poolSpartaAmount, amount) => {
   const _baseAmount = poolSpartaAmount
   const _tokenAmount = poolTokenAmount
   const result = BN(amount).times(BN(_tokenAmount)).div(BN(_baseAmount))
-  console.log(result)
+  return result
+}
+
+// Calculate value in token
+export const calcValueInBase = (poolTokenAmount, poolSpartaAmount, amount) => {
+  const _baseAmount = poolSpartaAmount
+  const _tokenAmount = poolTokenAmount
+  const result = BN(amount).times(BN(_baseAmount)).div(BN(_tokenAmount))
   return result
 }
 

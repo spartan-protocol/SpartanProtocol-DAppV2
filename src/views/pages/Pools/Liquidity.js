@@ -31,6 +31,7 @@ import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { formatFromWei } from '../../../utils/bigNumber'
+import { calcValueInBase, calcValueInToken } from '../../../utils/web3Utils'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -55,14 +56,50 @@ const Liquidity = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalArray, window.localStorage.getItem('assetSelected1')])
 
-  useEffect(() => {
-    console.log(asset1) // delete this
-    // Function which nests the two below 'ifs'
-    // If input1 is in focus; calculate & set input2's value (use coreMath)
-    // If input2 is in focus; calculate & set input1's value (use coreMath)
+  // const [focused, setFocused] = useState(null)
+  // const [asset1Input, setAsset1Input] = useState('0')
+  // const [asset2Input, setAsset2Input] = useState('0')
 
-    // Call the above function here
-  }, [asset1]) // Make this depend on input1.value && input2.value (remove asset1)
+  const assetInput1 = document.getElementById('assetInput1')
+  const assetInput2 = document.getElementById('assetInput2')
+
+  const handleInputChange = (input, toBase) => {
+    if (toBase) {
+      assetInput2.value = calcValueInBase(
+        asset1[0].tokenAmount,
+        asset1[0].baseAmount,
+        input,
+      )
+    } else {
+      assetInput1.value = calcValueInToken(
+        asset1[0].tokenAmount,
+        asset1[0].baseAmount,
+        input,
+      )
+    }
+  }
+
+  useEffect(() => {
+    const clearInputs = () => {
+      if (assetInput1) {
+        assetInput1.value = null
+      }
+    }
+
+    clearInputs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asset1])
+
+  useEffect(() => {
+    const clearInputs = () => {
+      if (assetInput2) {
+        assetInput2.value = null
+      }
+    }
+
+    clearInputs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asset2])
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -261,6 +298,12 @@ const Liquidity = () => {
                                   className="text-right"
                                   type="text"
                                   placeholder="0"
+                                  id="assetInput1"
+                                  // onFocus={() => setFocused('asset1')}
+                                  // onBlur={() => setFocused(null)}
+                                  onInput={(event) =>
+                                    handleInputChange(event.target.value, true)
+                                  }
                                 />
                               </FormGroup>
                             </div>
@@ -301,6 +344,12 @@ const Liquidity = () => {
                                   className="text-right"
                                   type="text"
                                   placeholder="0"
+                                  id="assetInput2"
+                                  // onFocus={() => setFocused('asset2')}
+                                  // onBlur={() => setFocused(null)}
+                                  onInput={(event) =>
+                                    handleInputChange(event.target.value)
+                                  }
                                 />
                               </FormGroup>
                             </div>
