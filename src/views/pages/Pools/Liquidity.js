@@ -25,6 +25,7 @@ import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
 import PoolsPaneSide from './PoolsPaneSide'
 import Wallet from '../../../components/Wallet/Wallet'
+import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -212,7 +213,7 @@ const Liquidity = () => {
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
-                            <div className="output-card">1</div>
+                            <AssetSelect />
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 10.36</div>
