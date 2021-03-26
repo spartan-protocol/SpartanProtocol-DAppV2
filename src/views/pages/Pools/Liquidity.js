@@ -11,6 +11,8 @@ import {
   TabPane,
   TabContent,
   UncontrolledAlert,
+  FormGroup,
+  Input,
 } from 'reactstrap'
 
 // import { withNamespaces } from 'react-i18next'
@@ -54,8 +56,13 @@ const Liquidity = () => {
   }, [poolFactory.finalArray, window.localStorage.getItem('assetSelected1')])
 
   useEffect(() => {
-    console.log(asset1)
-  }, [asset1])
+    console.log(asset1) // delete this
+    // Function which nests the two below 'ifs'
+    // If input1 is in focus; calculate & set input2's value (use coreMath)
+    // If input2 is in focus; calculate & set input1's value (use coreMath)
+
+    // Call the above function here
+  }, [asset1]) // Make this depend on input1.value && input2.value (remove asset1)
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -248,7 +255,15 @@ const Liquidity = () => {
                               {asset1 !== '...' &&
                                 formatFromWei(asset1[0].balanceTokens)}
                             </div>
-                            <div className="output-card">XXX input amnt</div>
+                            <div className="output-card">
+                              <FormGroup>
+                                <Input
+                                  className="text-right"
+                                  type="text"
+                                  placeholder="0"
+                                />
+                              </FormGroup>
+                            </div>
                             <div className="title-card">~$XXX.XX</div>
                           </Col>
                         </Row>
@@ -279,7 +294,16 @@ const Liquidity = () => {
                               {asset2 !== '...' &&
                                 formatFromWei(asset2[0].balanceTokens)}
                             </div>
-                            <div className="output-card">XXX input amnt</div>
+                            <div className="output-card">
+                              {' '}
+                              <FormGroup>
+                                <Input
+                                  className="text-right"
+                                  type="text"
+                                  placeholder="0"
+                                />
+                              </FormGroup>
+                            </div>
                             <div className="title-card">
                               1 {asset1[0].symbol} = XXX SPARTA
                             </div>
