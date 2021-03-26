@@ -213,7 +213,7 @@ const Liquidity = () => {
                         <Row>
                           <Col className="text-left">
                             <div className="title-card">Input</div>
-                            <AssetSelect />
+                            <AssetSelect priority="1" />
                           </Col>
                           <Col className="text-right">
                             <div className="title-card">Balance 10.36</div>
