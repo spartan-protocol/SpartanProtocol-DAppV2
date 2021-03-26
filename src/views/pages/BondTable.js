@@ -8,7 +8,7 @@ import { Button, Card, CardBody, Row, Col, Collapse } from 'reactstrap'
 import bnbSparta from '../../assets/icons/bnb_sparta.png'
 import bnb from '../../assets/icons/BNB.svg'
 
-const Poolstable = () => {
+const BondTable = () => {
   // const [horizontalTabs, sethorizontalTabs] = React.useState('harvest')
   // const changeActiveTab = (e, tabState, tabName) => {
   //   e.preventDefault()
@@ -123,4 +123,4 @@ const Poolstable = () => {
   )
 }
 
-export default Poolstable
+export default BondTable
