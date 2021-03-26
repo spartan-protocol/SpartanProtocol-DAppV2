@@ -9,6 +9,7 @@ const initialState = {
   curatedPoolCount: 0,
   curatedPoolArray: [],
   detailedArray: {},
+  finalArray: null,
   loading: false,
   error: null,
 }

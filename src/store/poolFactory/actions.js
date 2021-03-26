@@ -156,19 +156,31 @@ export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (poolArray) => async (dispatch) => {
+export const getPoolFactoryDetailedArray = (
+  tokenArray,
+  wbnbAddr,
+  spartaAddr,
+) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
   try {
+    if (tokenArray[0] !== spartaAddr) {
+      tokenArray.unshift(spartaAddr)
+    }
     const tempArray = await Promise.all(
-      poolArray.map((i) => contract.callStatic.getTokenDetails(i.tokenAddress)),
+      tokenArray.map((i) =>
+        i === wbnbAddr
+          ? contract.callStatic.getTokenDetails(
+              '0x0000000000000000000000000000000000000000',
+            )
+          : contract.callStatic.getTokenDetails(i),
+      ),
     )
     const detailedArray = []
-    for (let i = 0; i < poolArray.length; i++) {
+    for (let i = 0; i < tokenArray.length; i++) {
       const tempItem = {
-        tokenAddress: poolArray[i].tokenAddress,
-        poolAddress: poolArray[i].poolAddress,
+        tokenAddress: tokenArray[i],
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
@@ -199,7 +211,16 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
 
   try {
     const tempArray = await Promise.all(
-      detailedArray.map((i) => contract.callStatic.getPoolData(i.tokenAddress)),
+      detailedArray.map((i) =>
+        i.symbol === 'SPARTA'
+          ? {
+              genesis: '0',
+              baseAmount: '0',
+              tokenAmount: '0',
+              poolUnits: '0',
+            }
+          : contract.callStatic.getPoolData(i.tokenAddress),
+      ),
     )
     const finalArray = []
     for (let i = 0; i < detailedArray.length; i++) {
@@ -211,7 +232,7 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
         symbol: detailedArray[i].symbol,
         decimals: detailedArray[i].decimals,
         totalSupply: detailedArray[i].totalSupply,
-        poolAddress: detailedArray[i].poolAddress,
+        poolAddress: tempArray[i].poolAddress,
         balanceLPs: 'placehodler wallet holdings of LP tokens',
         lockedLPs: 'placehodler LP tokens locked in DAO?',
         genesis: tempArray[i].genesis.toString(),

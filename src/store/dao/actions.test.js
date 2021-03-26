@@ -3,14 +3,14 @@ import { TEST_POOL, TEST_WALLET } from '../../utils/web3'
 import {
   getDaoIsMember,
   getDaoHarvestAmount,
-  getDaoHarvestEraAmount,
+  // getDaoHarvestEraAmount,
   getDaoMemberCount,
   daoDeposit,
   daoHarvest,
   daoWithdraw,
-  getDaoProposalMajority,
-  getDaoProposalQuorum,
-  getDaoProposalMinority,
+  // getDaoProposalMajority,
+  // getDaoProposalQuorum,
+  // getDaoProposalMinority,
   getDaoProposalDetails,
   getDaoGrantDetails,
   daoProposalNewAction,
@@ -60,19 +60,19 @@ describe('Dao actions', () => {
     }
   })
 
-  test('should get a DAO members harvestable amount per era', async () => {
-    await getDaoHarvestEraAmount(TEST_WALLET)(dispatchMock)
-    if (
-      dispatchMock.mock.calls[1][0].type === Types.GET_DAO_HARVEST_ERA_AMOUNT
-    ) {
-      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    } else {
-      expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
-        'SafeMath: division by zero',
-      )
-    }
-  })
+  // test('should get a DAO members harvestable amount per era', async () => {
+  //   await getDaoHarvestEraAmount(TEST_WALLET)(dispatchMock)
+  //   if (
+  //     dispatchMock.mock.calls[1][0].type === Types.GET_DAO_HARVEST_ERA_AMOUNT
+  //   ) {
+  //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  //   } else {
+  //     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
+  //     expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
+  //       'SafeMath: division by zero',
+  //     )
+  //   }
+  // })
 
   test('should deposit LPs in DAO for member', async () => {
     await daoDeposit(TEST_POOL, 1, true)(dispatchMock)
@@ -104,29 +104,29 @@ describe('Dao actions', () => {
     }
   })
 
-  test('should get dao proposal mayority', async () => {
-    await getDaoProposalMajority(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_PROPOSAL_MAJORITY,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
-  })
+  // test('should get dao proposal mayority', async () => {
+  //   await getDaoProposalMajority(1)(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(
+  //     Types.GET_DAO_PROPOSAL_MAJORITY,
+  //   )
+  //   expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
+  // })
 
-  test('should get dao proposal quorum', async () => {
-    await getDaoProposalQuorum(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_PROPOSAL_QUORUM,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
-  })
+  // test('should get dao proposal quorum', async () => {
+  //   await getDaoProposalQuorum(1)(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(
+  //     Types.GET_DAO_PROPOSAL_QUORUM,
+  //   )
+  //   expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
+  // })
 
-  test('should get dao proposal minority', async () => {
-    await getDaoProposalMinority(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_PROPOSAL_MINORITY,
-    )
-    expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
-  })
+  // test('should get dao proposal minority', async () => {
+  //   await getDaoProposalMinority(1)(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(
+  //     Types.GET_DAO_PROPOSAL_MINORITY,
+  //   )
+  //   expect(dispatchMock.mock.calls[1][0].payload).toBe(false)
+  // })
 
   test('should get dao proposal details', async () => {
     await getDaoProposalDetails(1)(dispatchMock)

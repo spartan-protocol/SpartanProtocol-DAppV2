@@ -5,18 +5,20 @@ import {
   usePoolFactory,
   getPoolFactoryTokenCount,
   getPoolFactoryTokenArray,
-  getPoolFactoryArray,
+  // getPoolFactoryArray,
   getPoolFactoryCuratedCount,
   getPoolFactoryCuratedArray,
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
-import { getNetwork } from '../../utils/web3'
+import { getSpartaPrice } from '../../store/web3'
+import { getAddresses, getNetwork } from '../../utils/web3'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
   const wallet = useWallet()
+  const addr = getAddresses()
 
   useEffect(() => {
     const checkNetwork = () => {
@@ -25,6 +27,14 @@ const DataManager = () => {
     }
 
     checkNetwork()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(getSpartaPrice())
+    }, 5000)
+    return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -65,44 +75,46 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenCount])
 
-  const [prevPoolArray, setPrevPoolArray] = useState(poolFactory.poolArray)
+  // const [prevPoolArray, setPrevPoolArray] = useState(poolFactory.poolArray)
 
-  useEffect(() => {
-    const { tokenArray } = poolFactory
-    const checkPoolArray = () => {
-      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-        dispatch(getPoolFactoryArray(tokenArray))
-        setPrevPoolArray(poolFactory.poolArray)
-        console.log(prevPoolArray)
-      }
-    }
+  // useEffect(() => {
+  //   const { tokenArray } = poolFactory
+  //   const checkPoolArray = () => {
+  //     if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
+  //       dispatch(getPoolFactoryArray(tokenArray))
+  //       setPrevPoolArray(poolFactory.poolArray)
+  //       console.log(prevPoolArray)
+  //     }
+  //   }
 
-    checkPoolArray()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenArray])
+  //   checkPoolArray()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [poolFactory.tokenArray])
 
   const [prevDetailedArray, setPrevDetailedArray] = useState(
     poolFactory.detailedArray,
   )
 
   useEffect(() => {
-    const { poolArray } = poolFactory
+    const { tokenArray } = poolFactory
     const checkDetailedArray = () => {
-      if (poolArray !== prevPoolArray && poolArray.length > 0) {
-        dispatch(getPoolFactoryDetailedArray(poolArray))
+      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
+        dispatch(
+          getPoolFactoryDetailedArray(tokenArray, addr.wbnb, addr.sparta),
+        )
         setPrevDetailedArray(poolFactory.detailedArray)
       }
     }
 
     checkDetailedArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.poolArray, window.sessionStorage.getItem('walletConnected')])
+  }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
 
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
 
   useEffect(() => {
     const { detailedArray } = poolFactory
-    const checkDetailedArray = () => {
+    const checkFinalArray = () => {
       if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
@@ -112,7 +124,7 @@ const DataManager = () => {
       }
     }
 
-    checkDetailedArray()
+    checkFinalArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
 

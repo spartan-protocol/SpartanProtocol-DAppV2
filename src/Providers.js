@@ -5,6 +5,7 @@ import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import BigNumber from 'bignumber.js'
 import AdminLayout from './components/layout/Common'
 
 import { bondReducer } from './store/bond'
@@ -19,6 +20,19 @@ import { utilsMathReducer } from './store/utilsMath'
 import { utilsPricingReducer } from './store/utilsPricing'
 import { web3Reducer } from './store/web3'
 import { getNetwork } from './utils/web3'
+
+const globalFormat = {
+  prefix: '',
+  decimalSeparator: '.',
+  groupSeparator: ',',
+  groupSize: 3,
+  secondaryGroupSize: 0,
+  fractionGroupSeparator: ' ',
+  fractionGroupSize: 0,
+  suffix: '',
+}
+
+BigNumber.config({ FORMAT: globalFormat })
 
 const reducers = combineReducers({
   bond: bondReducer,
