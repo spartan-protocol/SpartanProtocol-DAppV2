@@ -30,14 +30,16 @@ import Wallet from '../../../components/Wallet/Wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
-import { formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromWei, formatFromUnits } from '../../../utils/bigNumber'
 import { calcValueInBase, calcValueInToken } from '../../../utils/web3Utils'
+import { useWeb3 } from '../../../store/web3'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
 const Liquidity = () => {
   const addr = getAddresses()
   const poolFactory = usePoolFactory()
+  const web3 = useWeb3()
   const [asset1, setAsset1] = useState('...')
   const [asset2, setAsset2] = useState('...')
 
@@ -70,6 +72,9 @@ const Liquidity = () => {
         asset1[0].baseAmount,
         input,
       )
+      // setAsset2Input(
+      //   calcValueInBase(asset1[0].tokenAmount, asset1[0].baseAmount, input),
+      // )
     } else {
       assetInput1.value = calcValueInToken(
         asset1[0].tokenAmount,
@@ -82,7 +87,7 @@ const Liquidity = () => {
   useEffect(() => {
     const clearInputs = () => {
       if (assetInput1) {
-        assetInput1.value = null
+        assetInput1.value = ''
       }
     }
 
@@ -93,13 +98,30 @@ const Liquidity = () => {
   useEffect(() => {
     const clearInputs = () => {
       if (assetInput2) {
-        assetInput2.value = null
+        assetInput2.value = ''
       }
     }
 
     clearInputs()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asset2])
+
+  // const [tokenPrice, setTokenPrice] = useState('0')
+
+  // useEffect(() => {
+  //   const calcFromSparta = () => {
+  //     console.log('starting calcFromSparta')
+  //     const perSparta = calcValueInBase(
+  //       asset1[0].tokenAmount,
+  //       asset1[0].baseAmount,
+  //       '0',
+  //     )
+  //     setTokenPrice(formatFromWei(BN(perSparta).times(BN(web3.spartaPrice))))
+  //   }
+
+  //   calcFromSparta()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [web3.spartaPrice])
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -307,7 +329,14 @@ const Liquidity = () => {
                                 />
                               </FormGroup>
                             </div>
-                            <div className="title-card">~$XXX.XX</div>
+                            <div className="title-card">
+                              ~$
+                              {assetInput2 &&
+                                formatFromUnits(
+                                  BN(assetInput2.value).times(web3.spartaPrice),
+                                  2,
+                                )}
+                            </div>
                           </Col>
                         </Row>
                       </Card>
