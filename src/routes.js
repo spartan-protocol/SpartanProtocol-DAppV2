@@ -1,4 +1,5 @@
 import Dashboard from './components/Dashboard/Dashboard'
+import Loaders from './views/pages/Samples/Loaders'
 import Icons from './views/pages/Samples/Icons'
 import Notifications from './views/pages/Samples/Notifications'
 import Buttons from './views/pages/Samples/Buttons'
@@ -176,6 +177,13 @@ const routes = [
         name: 'ReactTables',
         mini: 'TB',
         component: ReactTables,
+        layout: '/dapp',
+      },
+      {
+        path: '/loading',
+        name: 'Loader',
+        mini: 'LO',
+        component: Loaders,
         layout: '/dapp',
       },
       {

@@ -1,6 +1,6 @@
 import React from 'react'
-// import Spinner from '../UI/Spinner'
+import Loading from '../../assets/img/loading.png'
 
-const Loader = () => <div className="page">{/* <Spinner /> */}</div>
+const Loader = () => <img src={Loading} alt="loading" />
 
 export default Loader
