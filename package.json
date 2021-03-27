@@ -22,6 +22,7 @@
     "ethers": "^5.0.26",
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^4.1.1",
+    "lottie-react": "^2.1.0",
     "match-sorter": "6.0.2",
     "moment": "2.29.1",
     "node-sass": "^4.14.1",
