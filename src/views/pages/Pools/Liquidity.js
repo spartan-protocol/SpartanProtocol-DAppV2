@@ -167,13 +167,15 @@ const Liquidity = () => {
                     <NavLink
                       data-toggle="tab"
                       href="#"
-                      className={horizontalTabs === 'remove' ? 'active' : ''}
+                      className={
+                        horizontalTabs === 'removeBoth' ? 'active' : ''
+                      }
                       onClick={(e) =>
-                        changeActiveTab(e, 'horizontalTabs', 'remove')
+                        changeActiveTab(e, 'horizontalTabs', 'removeBoth')
                       }
                     >
                       <div className="text-center">
-                        <div className="output-card">Remove Both</div>
+                        <div className="output-card">Remove both</div>
                       </div>
                     </NavLink>
                   </NavItem>
@@ -182,10 +184,10 @@ const Liquidity = () => {
                       data-toggle="tab"
                       href="#"
                       className={
-                        horizontalTabs === 'removeBoth' ? 'active' : ''
+                        horizontalTabs === 'removeSingle' ? 'active' : ''
                       }
                       onClick={(e) =>
-                        changeActiveTab(e, 'horizontalTabs', 'removeBoth')
+                        changeActiveTab(e, 'horizontalTabs', 'removeSingle')
                       }
                     >
                       <div className="text-center">
@@ -442,7 +444,7 @@ const Liquidity = () => {
                     >
                       <Row>
                         <Col className="text-left">
-                          <div className="title-card">Input</div>
+                          <div className="title-card">Select pool</div>
                           <div className="output-card">1</div>
                         </Col>
                         <Col className="text-right">
@@ -580,7 +582,117 @@ const Liquidity = () => {
                   </span>
                 </UncontrolledAlert>
               </TabPane>
-              <TabPane tabId="remove">
+              <TabPane tabId="removeBoth">
+                <Row>
+                  <Col md={12}>
+                    <Card
+                      style={{ backgroundColor: '#25212D' }}
+                      className="card-body "
+                    >
+                      <Row>
+                        <Col className="text-left">
+                          <div className="title-card">Redeem</div>
+                          <div className="output-card">52.23</div>
+                        </Col>
+                        <Col className="text-right">
+                          <div className="title-card">Balance 52.23</div>
+                          <div className="output-card">
+                            <img
+                              className="mr-2"
+                              src={bnbSparta}
+                              alt="Logo"
+                              height="25"
+                            />
+                            WBNB-SPARTA LP
+                          </div>
+                        </Col>
+                      </Row>
+                    </Card>
+                  </Col>
+                </Row>
+
+                <br />
+                <Row>
+                  <Col md={6}>
+                    <div className="text-card">
+                      Redeem LP Tokens{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="text-card">
+                      Receive{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <br />
+                    <div className="text-card">
+                      Staked LP Tokens{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="text-card">
+                      Projected output{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                  </Col>
+                  <Col md={6} className="text-right">
+                    <div className="output-card">52.23 of 52.23</div>
+                    <div className="output-card">1.02 BNB</div>
+                    <div className="output-card">100.52 SPARTA</div>
+                    <div className="output-card">52.23</div>
+                    <br />
+                    <br />
+                    <div className="subtitle-amount">1.02 BNB</div>
+                    <br />
+                    <div className="subtitle-amount">100.52 SPARTA</div>
+                  </Col>
+                </Row>
+                <br />
+                <Button color="primary" size="lg" block>
+                  Redeem LP Tokens
+                </Button>
+              </TabPane>
+              <TabPane tabId="removeSingle">
                 <Row>
                   <Col md={12}>
                     <Card
