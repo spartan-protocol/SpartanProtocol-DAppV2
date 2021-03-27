@@ -292,41 +292,21 @@ const Liquidity = () => {
                             </div>
                             <div className="title-card">
                               1 {asset1[0].symbol} ={' '}
-                              {formatFromUnits(
-                                BN(asset1[0].baseAmount).div(
-                                  BN(asset1[0].tokenAmount),
-                                ),
-                                2,
-                              )}{' '}
-                              SPARTA
+                              {poolFactory.finalArray &&
+                                formatFromUnits(
+                                  BN(asset1[0].baseAmount).div(
+                                    BN(asset1[0].tokenAmount),
+                                  ),
+                                  2,
+                                )}
+                              {!poolFactory.finalArray && '...'} SPARTA
                             </div>
                           </Col>
                         </Row>
                       </Card>
                     </Col>
                   </Row>
-                  {/* <Row>
-                    <Col>
-                      <br />
-                      <br />
-                      <Row>
-                        <Col>0%</Col>
-                        <Col>25%</Col>
-                        <Col>50%</Col>
-                        <Col>75%</Col>
-                        <Col>
-                          <div className="text-right output-card">MAX</div>
-                        </Col>
-                      </Row>
-                      <br />
-                      <div className="slider" ref={slider1Ref} />
-                      <br />
-                      <div
-                        className="slider slider-primary mb-ImageUpload.3"
-                        ref={slider2Ref}
-                      />
-                    </Col>
-                  </Row> */}
+
                   <br />
                   <Row>
                     <Col md={6}>
@@ -378,42 +358,58 @@ const Liquidity = () => {
                     </Col>
                     <Col md={6} className="text-right">
                       <div className="output-card">
-                        {formatFromUnits(assetInput1?.value, 4)} of{' '}
-                        {formatFromWei(asset1[0]?.balanceTokens)}{' '}
+                        {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          formatFromUnits(assetInput1?.value, 4)}{' '}
+                        of {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          formatFromWei(asset1[0]?.balanceTokens)}{' '}
                         {asset1[0]?.symbol}
                       </div>
                       <div className="output-card">
-                        {assetInput2?.value > 0 &&
+                        {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          assetInput2?.value > 0 &&
                           formatFromUnits(assetInput2.value, 4)}{' '}
-                        of {formatFromWei(asset2[0]?.balanceTokens)} SPARTA
+                        of {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          formatFromWei(asset2[0]?.balanceTokens)}{' '}
+                        SPARTA
                       </div>
                       <div className="output-card">
-                        {formatFromUnits(
-                          calcLiquidityUnits(
-                            assetInput2?.value,
-                            assetInput1?.value,
-                            asset1[0]?.baseAmount,
-                            asset1[0]?.tokenAmount,
-                            asset1[0]?.poolUnits,
-                          ),
-                          4,
-                        )}{' '}
-                        of {formatFromWei(asset1[0]?.poolUnits)} SPT2-
+                        {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          formatFromUnits(
+                            calcLiquidityUnits(
+                              assetInput2?.value,
+                              assetInput1?.value,
+                              asset1[0]?.baseAmount,
+                              asset1[0]?.tokenAmount,
+                              asset1[0]?.poolUnits,
+                            ),
+                            4,
+                          )}{' '}
+                        of {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          formatFromWei(asset1[0]?.poolUnits)}{' '}
+                        SPT2-
                         {asset1[0]?.symbol}
                       </div>
                       <br />
                       <br />
                       <div className="subtitle-amount">
-                        {formatFromUnits(
-                          calcLiquidityUnits(
-                            assetInput2?.value,
-                            assetInput1?.value,
-                            asset1[0]?.baseAmount,
-                            asset1[0]?.tokenAmount,
-                            asset1[0]?.poolUnits,
-                          ),
-                          4,
-                        )}{' '}
+                        {!poolFactory.finalArray && '...'}
+                        {poolFactory.finalArray &&
+                          formatFromUnits(
+                            calcLiquidityUnits(
+                              assetInput2?.value,
+                              assetInput1?.value,
+                              asset1[0]?.baseAmount,
+                              asset1[0]?.tokenAmount,
+                              asset1[0]?.poolUnits,
+                            ),
+                            4,
+                          )}{' '}
                         SPT2-{asset1[0]?.symbol}
                       </div>
                     </Col>
