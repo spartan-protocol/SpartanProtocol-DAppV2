@@ -157,7 +157,6 @@ export const calcSwapFee = (
   const numerator = x.times(x.times(Y))
   const denominator = x.plus(X).times(x.plus(X))
   const result = numerator.div(denominator)
-  console.log(result)
   return result
 }
 
@@ -175,7 +174,6 @@ export const calcSwapOutput = (
   const numerator = x.times(X.times(Y))
   const denominator = x.plus(X).times(x.plus(X))
   const result = numerator.div(denominator)
-  console.log(result)
   return result
 }
 
