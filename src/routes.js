@@ -13,7 +13,8 @@ import Panels from './views/pages/Samples/Panels'
 import Tiles from './views/pages/Samples/Tiles'
 import Utils from './utils/Utils'
 import Tabs from './views/pages/Samples/Tabs'
-import Overview from './views/pages/Pools/Overview'
+import PoolsOverview from './views/pages/Pools/Overview'
+import DaoOverview from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Pools/Bond'
 
@@ -30,7 +31,7 @@ const routes = [
     path: '/pools/overview',
     name: 'Pools',
     icon: 'icon-medium icon-swords icon-dark',
-    component: Overview,
+    component: PoolsOverview,
     layout: '/dapp',
   },
 
@@ -47,6 +48,14 @@ const routes = [
     name: 'Bond',
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Bond,
+    layout: '/dapp',
+  },
+
+  {
+    path: '/pools/dao',
+    name: 'Dao',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: DaoOverview,
     layout: '/dapp',
   },
 
