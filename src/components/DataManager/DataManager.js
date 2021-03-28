@@ -1,4 +1,3 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
@@ -12,18 +11,21 @@ import {
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
 import { getSpartaPrice } from '../../store/web3'
-import { getAddresses, getNetwork } from '../../utils/web3'
+import { changeNetwork, getAddresses } from '../../utils/web3'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
-  const wallet = useWallet()
   const addr = getAddresses()
 
   useEffect(() => {
+    const tempNetwork = JSON.parse(window.localStorage.getItem('network'))
     const checkNetwork = () => {
-      dispatch(getNetwork)
-      console.log(wallet)
+      if (tempNetwork.net === 'mainnet' || tempNetwork.net === 'testnet') {
+        changeNetwork(tempNetwork.net)
+      } else {
+        changeNetwork('testnet')
+      } // CHANGE TO MAINNET AFTER DEPLOY
     }
 
     checkNetwork()
@@ -33,7 +35,7 @@ const DataManager = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(getSpartaPrice())
-    }, 5000)
+    }, 7500)
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
