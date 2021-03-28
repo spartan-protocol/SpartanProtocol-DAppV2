@@ -1,3 +1,4 @@
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
@@ -10,6 +11,7 @@ import {
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
+import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
 import { addNetwork, getSpartaPrice } from '../../store/web3'
 import { changeNetwork, getAddresses } from '../../utils/web3'
 
@@ -17,6 +19,7 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
+  const wallet = useWallet()
 
   useEffect(() => {
     const tempNetwork = JSON.parse(window.localStorage.getItem('network'))
@@ -114,6 +117,8 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
 
+  const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
+
   useEffect(() => {
     const { detailedArray } = poolFactory
     const checkFinalArray = () => {
@@ -121,12 +126,30 @@ const DataManager = () => {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
         )
+        setPrevFinalArray(poolFactory.finalArray)
       }
     }
 
     checkFinalArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
+
+  useEffect(() => {
+    const { finalArray } = poolFactory
+    const checkFinalArrayForLP = () => {
+      if (
+        wallet.account &&
+        finalArray !== prevFinalArray &&
+        finalArray?.length > 0
+      ) {
+        dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
+        setPrevFinalArray(poolFactory.finalArray)
+      }
+    }
+
+    checkFinalArrayForLP()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolFactory.finalArray])
 
   return <></>
 }

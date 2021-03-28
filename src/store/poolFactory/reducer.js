@@ -10,6 +10,7 @@ const initialState = {
   curatedPoolArray: [],
   detailedArray: [],
   finalArray: null,
+  finalLpArray: null,
   loading: false,
   error: null,
 }
@@ -92,6 +93,15 @@ export const poolFactoryReducer = (state = initialState, action) => {
       return {
         ...state,
         finalArray: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.POOLFACTORY_GET_FINAL_LP_ARRAY: {
+      return {
+        ...state,
+        finalLpArray: action.payload,
         error: null,
         loading: false,
       }

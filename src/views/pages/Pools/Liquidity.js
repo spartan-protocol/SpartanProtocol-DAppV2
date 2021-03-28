@@ -72,7 +72,6 @@ const Liquidity = () => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
       if (finalArray) {
-        console.log(wallet.account)
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
