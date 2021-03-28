@@ -52,7 +52,7 @@ const routes = [
 
   // {
   //   collapse: true,
-  //   name: 'Pools',
+  //   name: 'Overview',
   //   icon: 'icon-medium icon-info icon-dark',
   //   state: 'pagesCollapse',
   //   views: [
