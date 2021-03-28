@@ -22,10 +22,10 @@ import coinSparta from '../../assets/icons/coin_sparta.svg'
 const AssetSelect = (props) => {
   const poolFactory = usePoolFactory()
 
-  const addSelection = (assetSymbol, assetAddress) => {
+  const addSelection = (asset) => {
     window.localStorage.setItem(
       `assetSelected${props.priority}`,
-      JSON.stringify([assetSymbol, assetAddress]),
+      JSON.stringify([asset]),
     )
   }
 
@@ -49,7 +49,7 @@ const AssetSelect = (props) => {
           {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
           <img className="mr-2" src={coinBnb} alt="BNB" />
           {props.type === 'pools' && 'SPT2-'}
-          {selectedItem && selectedItem[0]}
+          {selectedItem && selectedItem[0].symbol}
         </DropdownToggle>
         <DropdownMenu aria-labelledby="dropdownMenuButton">
           <DropdownItem header>Select Asset</DropdownItem>
@@ -61,7 +61,7 @@ const AssetSelect = (props) => {
               .map((asset) => (
                 <DropdownItem
                   key={asset.tokenAddress}
-                  onClick={() => addSelection(asset.symbol, asset.tokenAddress)}
+                  onClick={() => addSelection(asset)}
                 >
                   {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
                   <img className="mr-2" src={coinBnb} alt="BNB" />{' '}
@@ -72,12 +72,16 @@ const AssetSelect = (props) => {
           {poolFactory.finalArray &&
             props.whiteList &&
             poolFactory.finalArray
-              .filter((asset) => props.whiteList.includes(asset.tokenAddress))
+              .filter(
+                (asset) =>
+                  props.whiteList.find((item) => item === asset.tokenAddress) >
+                  0,
+              )
               .sort((a, b) => b.balanceTokens - a.balanceTokens)
               .map((asset) => (
                 <DropdownItem
                   key={asset.tokenAddress}
-                  onClick={() => addSelection(asset.symbol, asset.tokenAddress)}
+                  onClick={() => addSelection(asset)}
                 >
                   {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
                   <img className="mr-2" src={coinBnb} alt="BNB" />{' '}
@@ -90,13 +94,15 @@ const AssetSelect = (props) => {
             poolFactory.finalArray
               .filter(
                 (asset) =>
-                  props.blackList.includes(asset.tokenAddress) === false,
+                  props.blackList.find(
+                    (item) => item === asset.tokenAddress,
+                  ) === undefined,
               )
               .sort((a, b) => b.balanceTokens - a.balanceTokens)
               .map((asset) => (
                 <DropdownItem
                   key={asset.tokenAddress}
-                  onClick={() => addSelection(asset.symbol, asset.tokenAddress)}
+                  onClick={() => addSelection(asset)}
                 >
                   {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
                   <img className="mr-2" src={coinBnb} alt="BNB" />{' '}

@@ -222,10 +222,14 @@ export const bscRpcsMN = [
  * @param {string} finalArray
  * @returns {Object} item from finalArray
  */
-export const getItemFromArray = (assetAddress, finalArray) => {
-  const arrayItem = finalArray?.filter(
-    (asset) => asset.tokenAddress === assetAddress,
-  )
+export const getItemFromArray = (asset, finalArray) => {
+  console.log(asset)
+  let arrayItem = finalArray.filter((item) => item.symbol === 'SPARTA')
+  if (finalArray?.find((item) => item?.tokenAddress === asset?.tokenAddress)) {
+    arrayItem = finalArray.filter(
+      (item) => item.tokenAddress === asset.tokenAddress,
+    )
+  }
   return arrayItem
 }
 
