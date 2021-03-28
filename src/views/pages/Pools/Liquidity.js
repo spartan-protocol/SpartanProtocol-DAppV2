@@ -83,17 +83,27 @@ const Liquidity = () => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
       if (finalArray) {
+        console.log('testing')
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
         let asset4 = JSON.parse(window.localStorage.getItem('assetSelected4'))
 
-        asset1 = asset1 ? asset1[0] : addr.wbnb
-        asset3 = asset3 ? asset3[0] : addr.wbnb
-        asset4 = asset3 && asset4 && asset3 !== asset4 ? asset4[0] : addr.sparta
+        asset1 = asset1 || { tokenAddress: addr.wbnb }
+        asset3 =
+          asset3 && asset3.tokenAddress !== addr.sparta
+            ? asset3
+            : { tokenAddress: addr.wbnb }
+        asset4 =
+          asset3 && asset4 && asset3.tokenAddress === asset4.tokenAddress
+            ? asset3
+            : { tokenAddress: addr.sparta }
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-        asset2 = getItemFromArray(addr.sparta, poolFactory.finalArray)
+        asset2 = getItemFromArray(
+          { tokenAddress: addr.sparta },
+          poolFactory.finalArray,
+        )
         asset3 = getItemFromArray(asset3, poolFactory.finalArray)
         asset4 = getItemFromArray(asset4, poolFactory.finalArray)
 
@@ -135,41 +145,41 @@ const Liquidity = () => {
   }
 
   const getAddOneSwapOutput = () => {
-    if (addInput4 && assetAdd3[0] && assetAdd4[0]) {
+    if (addInput4 && assetAdd3 && assetAdd4) {
       return calcSwapOutput(
         convertToWei(BN(addInput4?.value).div(2)),
-        assetAdd3[0]?.tokenAmount,
-        assetAdd3[0]?.baseAmount,
-        assetAdd4[0]?.symbol !== 'SPARTA',
+        assetAdd3?.tokenAmount,
+        assetAdd3?.baseAmount,
+        assetAdd4?.symbol !== 'SPARTA',
       )
     }
     return '0'
   }
 
   const getAddOneSwapFee = () => {
-    if (addInput4 && assetAdd3[0] && assetAdd4[0]) {
+    if (addInput4 && assetAdd3 && assetAdd4) {
       return calcSwapFee(
         convertToWei(BN(addInput4.value).div(2)),
-        assetAdd3[0].tokenAmount,
-        assetAdd3[0].baseAmount,
-        assetAdd4[0].symbol !== 'SPARTA',
+        assetAdd3.tokenAmount,
+        assetAdd3.baseAmount,
+        assetAdd4.symbol !== 'SPARTA',
       )
     }
     return '0'
   }
 
   const getAddOneOutputLP = () => {
-    if (assetAdd4 && assetAdd3[0] && assetAdd4[0]) {
+    if (assetAdd4 && assetAdd3 && assetAdd4) {
       return calcLiquidityUnits(
-        assetAdd4[0].symbol === 'SPARTA'
+        assetAdd4.symbol === 'SPARTA'
           ? getAddOneSwapInput()
           : BN(getAddOneSwapOutput()).minus(getAddOneSwapFee()),
-        assetAdd4[0].symbol === 'SPARTA'
+        assetAdd4.symbol === 'SPARTA'
           ? BN(getAddOneSwapOutput()).minus(getAddOneSwapFee())
           : getAddOneSwapInput(),
-        assetAdd3[0]?.baseAmount,
-        assetAdd3[0]?.tokenAmount,
-        assetAdd3[0]?.poolUnits,
+        assetAdd3?.baseAmount,
+        assetAdd3?.tokenAmount,
+        assetAdd3?.poolUnits,
       )
     }
     return '0'
@@ -178,14 +188,14 @@ const Liquidity = () => {
   const handleInputChange = (input, toBase) => {
     if (toBase) {
       addInput2.value = calcValueInBase(
-        assetAdd1[0].tokenAmount,
-        assetAdd1[0].baseAmount,
+        assetAdd1.tokenAmount,
+        assetAdd1.baseAmount,
         input,
       )
     } else {
       addInput1.value = calcValueInToken(
-        assetAdd1[0].tokenAmount,
-        assetAdd1[0].baseAmount,
+        assetAdd1.tokenAmount,
+        assetAdd1.baseAmount,
         input,
       )
     }
@@ -321,7 +331,7 @@ const Liquidity = () => {
                             <div className="title-card">
                               Balance{' '}
                               {assetAdd1 !== '...' &&
-                                formatFromWei(assetAdd1[0]?.balanceTokens)}
+                                formatFromWei(assetAdd1?.balanceTokens)}
                             </div>
                             <div className="output-card">
                               <FormGroup>
@@ -378,7 +388,7 @@ const Liquidity = () => {
                               {' '}
                               Balance{' '}
                               {assetAdd2 !== '...' &&
-                                formatFromWei(assetAdd2[0]?.balanceTokens)}
+                                formatFromWei(assetAdd2?.balanceTokens)}
                             </div>
                             <div className="output-card">
                               {' '}
@@ -397,11 +407,11 @@ const Liquidity = () => {
                               </FormGroup>
                             </div>
                             <div className="title-card">
-                              1 {assetAdd1[0]?.symbol} ={' '}
+                              1 {assetAdd1?.symbol} ={' '}
                               {poolFactory.finalArray &&
                                 formatFromUnits(
-                                  BN(assetAdd1[0]?.baseAmount).div(
-                                    BN(assetAdd1[0]?.tokenAmount),
+                                  BN(assetAdd1?.baseAmount).div(
+                                    BN(assetAdd1?.tokenAmount),
                                   ),
                                   2,
                                 )}
@@ -469,8 +479,8 @@ const Liquidity = () => {
                           formatFromUnits(addInput1?.value, 4)}{' '}
                         of {!poolFactory.finalArray && '...'}
                         {poolFactory.finalArray &&
-                          formatFromWei(assetAdd1[0]?.balanceTokens)}{' '}
-                        {assetAdd1[0]?.symbol}
+                          formatFromWei(assetAdd1?.balanceTokens)}{' '}
+                        {assetAdd1?.symbol}
                       </div>
                       <div className="output-card">
                         {!poolFactory.finalArray && '...'}
@@ -479,7 +489,7 @@ const Liquidity = () => {
                           formatFromUnits(addInput2?.value, 4)}{' '}
                         of {!poolFactory.finalArray && '...'}
                         {poolFactory.finalArray &&
-                          formatFromWei(assetAdd2[0]?.balanceTokens)}{' '}
+                          formatFromWei(assetAdd2?.balanceTokens)}{' '}
                         SPARTA
                       </div>
                       <div className="output-card">
@@ -489,17 +499,17 @@ const Liquidity = () => {
                             calcLiquidityUnits(
                               addInput2?.value,
                               addInput1?.value,
-                              assetAdd1[0]?.baseAmount,
-                              assetAdd1[0]?.tokenAmount,
-                              assetAdd1[0]?.poolUnits,
+                              assetAdd1?.baseAmount,
+                              assetAdd1?.tokenAmount,
+                              assetAdd1?.poolUnits,
                             ),
                             4,
                           )}{' '}
                         of {!poolFactory.finalArray && '...'}
                         {poolFactory.finalArray &&
-                          formatFromWei(assetAdd1[0]?.poolUnits)}{' '}
+                          formatFromWei(assetAdd1?.poolUnits)}{' '}
                         SPT2-
-                        {assetAdd1[0]?.symbol}
+                        {assetAdd1?.symbol}
                       </div>
                       <br />
                       <br />
@@ -510,13 +520,13 @@ const Liquidity = () => {
                             calcLiquidityUnits(
                               addInput2?.value,
                               addInput1?.value,
-                              assetAdd1[0]?.baseAmount,
-                              assetAdd1[0]?.tokenAmount,
-                              assetAdd1[0]?.poolUnits,
+                              assetAdd1?.baseAmount,
+                              assetAdd1?.tokenAmount,
+                              assetAdd1?.poolUnits,
                             ),
                             4,
                           )}{' '}
-                        SPT2-{assetAdd1[0]?.symbol}
+                        SPT2-{assetAdd1?.symbol}
                       </div>
                     </Col>
                   </Row>
@@ -530,7 +540,7 @@ const Liquidity = () => {
                         routerAddLiq(
                           convertToWei(addInput2?.value),
                           convertToWei(addInput1?.value),
-                          assetAdd1[0]?.tokenAddress,
+                          assetAdd1?.tokenAddress,
                         ),
                       )
                     }
@@ -579,17 +589,14 @@ const Liquidity = () => {
                           <div className="title-card">Input</div>
                           <AssetSelect
                             priority="4"
-                            whiteList={[
-                              assetAdd3[0]?.tokenAddress,
-                              addr.sparta,
-                            ]}
+                            whiteList={[assetAdd3?.tokenAddress, addr.sparta]}
                           />
                         </Col>
                         <Col className="text-right">
                           <div className="title-card">
                             Balance{' '}
                             {assetAdd4 !== '...' &&
-                              formatFromWei(assetAdd4[0]?.balanceTokens)}
+                              formatFromWei(assetAdd4?.balanceTokens)}
                           </div>
                           <div className="output-card">
                             <FormGroup>
@@ -607,8 +614,8 @@ const Liquidity = () => {
                               web3.spartaPrice &&
                               addInput4.value > 0 &&
                               formatFromUnits(
-                                BN(assetAdd3[0]?.baseAmount)
-                                  .div(BN(assetAdd3[0]?.tokenAmount))
+                                BN(assetAdd3?.baseAmount)
+                                  .div(BN(assetAdd3?.tokenAmount))
                                   .times(BN(addInput4?.value)),
                                 2,
                               )}
@@ -626,7 +633,7 @@ const Liquidity = () => {
                   <Col>
                     {assetAdd4 && wallet && routerContract && addInput4 && (
                       <Approval
-                        tokenAddress={assetAdd4[0]?.tokenAddress}
+                        tokenAddress={assetAdd4?.tokenAddress}
                         walletAddress={wallet?.account}
                         contractAddress={routerContract}
                         txnAmount={addInput4?.value}
@@ -703,22 +710,22 @@ const Liquidity = () => {
                     <div className="output-card">
                       {addInput4 && formatFromUnits(addInput4?.value, 4)} of{' '}
                       {assetAdd4 !== '...' &&
-                        formatFromWei(assetAdd4[0]?.balanceTokens)}
-                      {assetAdd4[0]?.symbol}
+                        formatFromWei(assetAdd4?.balanceTokens)}
+                      {assetAdd4?.symbol}
                     </div>
                     <br />
                     <div className="output-card">
                       {assetAdd4 &&
                         addInput4 &&
                         formatFromWei(getAddOneSwapInput())}{' '}
-                      {assetAdd4[0]?.symbol} to{' '}
+                      {assetAdd4?.symbol} to{' '}
                       {assetAdd4 &&
                         addInput4 &&
                         formatFromWei(
                           BN(getAddOneSwapOutput()).minus(getAddOneSwapFee()),
                         )}{' '}
-                      {assetAdd4[0]?.symbol === 'SPARTA'
-                        ? assetAdd3[0]?.symbol
+                      {assetAdd4?.symbol === 'SPARTA'
+                        ? assetAdd3?.symbol
                         : 'SPARTA'}
                     </div>
                     <br />
@@ -728,20 +735,20 @@ const Liquidity = () => {
                         formatFromWei(
                           BN(getAddOneSwapOutput()).minus(getAddOneSwapFee()),
                         )}{' '}
-                      {assetAdd4[0]?.symbol === 'SPARTA'
-                        ? assetAdd3[0]?.symbol
+                      {assetAdd4?.symbol === 'SPARTA'
+                        ? assetAdd3?.symbol
                         : 'SPARTA'}{' '}
                       +{' '}
                       {assetAdd4 &&
                         addInput4 &&
                         formatFromWei(getAddOneSwapInput(), 4)}{' '}
-                      {assetAdd4[0]?.symbol}
+                      {assetAdd4?.symbol}
                     </div>
                     <br />
                     <div className="subtitle-amount">
                       {poolFactory.finalArray &&
                         formatFromWei(getAddOneOutputLP())}{' '}
-                      SPT2-{assetAdd3[0]?.symbol}
+                      SPT2-{assetAdd3?.symbol}
                     </div>
                     <br />
                   </Col>
@@ -754,8 +761,8 @@ const Liquidity = () => {
                     dispatch(
                       routerAddLiqAsym(
                         convertToWei(BN(addInput4?.value)),
-                        assetAdd4[0]?.symbol === 'SPARTA',
-                        assetAdd3[0]?.tokenAddress,
+                        assetAdd4?.symbol === 'SPARTA',
+                        assetAdd3?.tokenAddress,
                       ),
                     )
                   }

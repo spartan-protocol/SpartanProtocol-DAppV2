@@ -25,7 +25,7 @@ const AssetSelect = (props) => {
   const addSelection = (asset) => {
     window.localStorage.setItem(
       `assetSelected${props.priority}`,
-      JSON.stringify([asset]),
+      JSON.stringify(asset),
     )
   }
 
@@ -49,7 +49,7 @@ const AssetSelect = (props) => {
           {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
           <img className="mr-2" src={coinBnb} alt="BNB" />
           {props.type === 'pools' && 'SPT2-'}
-          {selectedItem && selectedItem[0].symbol}
+          {selectedItem && selectedItem.symbol}
         </DropdownToggle>
         <DropdownMenu aria-labelledby="dropdownMenuButton">
           <DropdownItem header>Select Asset</DropdownItem>
