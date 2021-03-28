@@ -10,7 +10,7 @@ import {
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
-import { getSpartaPrice } from '../../store/web3'
+import { addNetwork, getSpartaPrice } from '../../store/web3'
 import { changeNetwork, getAddresses } from '../../utils/web3'
 
 const DataManager = () => {
@@ -23,8 +23,10 @@ const DataManager = () => {
     const checkNetwork = () => {
       if (tempNetwork.net === 'mainnet' || tempNetwork.net === 'testnet') {
         changeNetwork(tempNetwork.net)
+        dispatch(addNetwork(tempNetwork.net))
       } else {
         changeNetwork('testnet')
+        dispatch(addNetwork('testnet'))
       } // CHANGE TO MAINNET AFTER DEPLOY
     }
 

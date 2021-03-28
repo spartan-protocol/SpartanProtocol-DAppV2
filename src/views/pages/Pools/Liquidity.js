@@ -63,8 +63,8 @@ const Liquidity = () => {
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [assetAdd3, setAssetAdd3] = useState('...')
   const [assetAdd4, setAssetAdd4] = useState('...')
-  // const [assetRemove1, setAssetRemove1] = useState('...')
-  // const [assetRemove2, setAssetRemove2] = useState('...')
+  const [assetRemove1, setAssetRemove1] = useState('...')
+  const [assetRemove2, setAssetRemove2] = useState('...')
   // const [assetRemove3, setAssetRemove3] = useState('...')
   // const [assetRemove4, setAssetRemove4] = useState('...')
 
@@ -77,6 +77,10 @@ const Liquidity = () => {
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
         let asset4 = JSON.parse(window.localStorage.getItem('assetSelected4'))
+        let asset5 = JSON.parse(window.localStorage.getItem('assetSelected5'))
+        let asset6 = JSON.parse(window.localStorage.getItem('assetSelected6'))
+        // let asset7 = JSON.parse(window.localStorage.getItem('assetSelected7'))
+        // let asset8 = JSON.parse(window.localStorage.getItem('assetSelected8'))
 
         asset1 = asset1 || { tokenAddress: addr.wbnb }
         asset3 =
@@ -87,6 +91,7 @@ const Liquidity = () => {
           asset3 && asset4 && asset3.tokenAddress === asset4.tokenAddress
             ? asset3
             : { tokenAddress: addr.sparta }
+        asset5 = asset5 || { tokenAddress: addr.wbnb }
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
         asset2 = getItemFromArray(
@@ -95,16 +100,29 @@ const Liquidity = () => {
         )
         asset3 = getItemFromArray(asset3, poolFactory.finalArray)
         asset4 = getItemFromArray(asset4, poolFactory.finalArray)
+        asset5 = getItemFromArray(asset5, poolFactory.finalArray)
+        asset6 = getItemFromArray(
+          { tokenAddress: addr.sparta },
+          poolFactory.finalArray,
+        )
 
         setAssetAdd1(asset1)
         setAssetAdd2(asset2)
         setAssetAdd3(asset3)
         setAssetAdd4(asset4)
+        setAssetRemove1(asset5)
+        setAssetRemove2(asset6)
+        // setAssetRemove3(asset3)
+        // setAssetRemove4(asset4)
 
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
         window.localStorage.setItem('assetSelected4', JSON.stringify(asset4))
+        window.localStorage.setItem('assetSelected5', JSON.stringify(asset5))
+        window.localStorage.setItem('assetSelected6', JSON.stringify(asset6))
+        // window.localStorage.setItem('assetSelected7', JSON.stringify(asset7))
+        // window.localStorage.setItem('assetSelected8', JSON.stringify(asset8))
       }
     }
 
@@ -115,16 +133,19 @@ const Liquidity = () => {
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected3'),
     window.localStorage.getItem('assetSelected4'),
+    window.localStorage.getItem('assetSelected5'),
+    // window.localStorage.getItem('assetSelected7'),
+    // window.localStorage.getItem('assetSelected8'),
   ])
 
   const addInput1 = document.getElementById('addInput1')
   const addInput2 = document.getElementById('addInput2')
   // const addInput3 = document.getElementById('addInput3') // There is no addInput3
   const addInput4 = document.getElementById('addInput4')
-  // const RemBothInput1 = document.getElementById('RemBothInput1') // There is no RemBothInput1
-  // const RemBothInput2 = document.getElementById('RemBothInput2')
-  // const RemOneInput1 = document.getElementById('RemOneInput1') // Use LP token details here
-  // const RemOneInput2 = document.getElementById('RemOneInput2')
+  // const removeInput1 = document.getElementById('RemBothInput1') // There is no removeInput1
+  const removeInput2 = document.getElementById('removeInput2') // Use LP token details here
+  // const removeInput3 = document.getElementById('RemOneInput1') // Use LP token details here
+  // const removeInput4 = document.getElementById('RemOneInput2')
 
   const getAddOneSwapInput = () => {
     if (addInput4) {
@@ -620,7 +641,6 @@ const Liquidity = () => {
 
                 <Row>
                   <Col>
-                    <div>hello step 1</div>
                     {assetAdd4?.tokenAddress &&
                       wallet?.account &&
                       addInput4?.value && (
@@ -791,18 +811,26 @@ const Liquidity = () => {
                       <Row>
                         <Col className="text-left">
                           <div className="title-card">Redeem</div>
-                          <div className="output-card">52.23</div>
+                          <AssetSelect
+                            priority="5"
+                            type="pools"
+                            blackList={[addr.sparta]}
+                          />
                         </Col>
                         <Col className="text-right">
-                          <div className="title-card">Balance 52.23</div>
-                          <div className="output-card">
-                            <img
-                              className="mr-2"
-                              src={bnbSparta}
-                              alt="Logo"
-                              height="25"
+                          <div className="title-card">
+                            Balance {formatFromWei(assetRemove1?.balanceTokens)}
+                          </div>
+                          <FormGroup>
+                            <Input
+                              className="text-right"
+                              type="text"
+                              placeholder="0"
+                              id="removeInput2"
                             />
-                            WBNB-SPARTA LP
+                          </FormGroup>
+                          <div className="output-card">
+                            {removeInput2?.value} - {assetRemove2?.symbol}
                           </div>
                         </Col>
                       </Row>
