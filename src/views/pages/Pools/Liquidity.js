@@ -1039,7 +1039,7 @@ const Liquidity = () => {
                     </div>
                     <br />
                     <div className="text-card">
-                      Receive{' '}
+                      Removed{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1053,9 +1053,8 @@ const Liquidity = () => {
                       </UncontrolledTooltip>
                     </div>
                     <br />
-                    <br />
                     <div className="text-card">
-                      Staked LP Tokens{' '}
+                      Swapped{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1085,15 +1084,16 @@ const Liquidity = () => {
                     </div>
                   </Col>
                   <Col md={6} className="text-right">
-                    <div className="output-card">52.23 of 52.23</div>
-                    <div className="output-card">1.02 BNB</div>
-                    <div className="output-card">100.52 SPARTA</div>
-                    <div className="output-card">52.23</div>
+                    <div className="output-card">XX.XXX of XX.XXX SPT2-XXX</div>
                     <br />
+                    <div className="output-card">XXX.XX TOKEN</div>
+                    <div className="output-card">XXX.XX SPARTA</div>
                     <br />
-                    <div className="subtitle-amount">1.02 BNB</div>
+                    <div className="output-card">
+                      XXX.XX TOKEN1 to XXX.XX TOKEN2
+                    </div>
                     <br />
-                    <div className="subtitle-amount">100.52 SPARTA</div>
+                    <div className="subtitle-amount">XXX.XX TOKENS</div>
                   </Col>
                 </Row>
                 <br />
