@@ -39,7 +39,6 @@ export const calcBasisPoints = (input, balance) => {
  */
 export const calcLiquidityHoldings = (tokensInPool, units, poolTotalSupply) => {
   const part = BN(tokensInPool).times(BN(units)).div(BN(poolTotalSupply))
-  console.log(part.toFixed())
   return part
 }
 
@@ -50,7 +49,6 @@ export const calcShare = (part, total, amount) => {
   const _total = BN(total)
   const _amount = BN(amount)
   const result = _amount.times(_part).div(_total)
-  console.log(result)
   return result
 }
 
@@ -68,7 +66,6 @@ export const calcAsymmetricShare = (input, pool, toBase) => {
   const numerator = part1.times(part2.minus(part3).plus(part4))
   const part5 = U.times(U).times(U)
   const globalDetails = numerator.div(part5)
-  console.log(globalDetails.toFixed())
   return globalDetails
 }
 
@@ -79,7 +76,6 @@ export const calcLiquidityShare = (input, pool) => {
   const amount = BN(pool.tokenAmount)
   const totalSupply = BN(pool.poolUnits)
   const result = amount.times(_input).div(totalSupply)
-  console.log(result.toFixed())
   return result
 }
 
@@ -117,7 +113,6 @@ export const calcLiquidityUnits = (
   const T = BN(tokensInPool) // T = tokenAmount
   const P = BN(poolTotalSupply) // P = LP Token TotalSupply
   if (P === 0) {
-    console.log(b.toFixed())
     return b
   }
   const slipAdjustment = calcSlipAdjustment(b, B, t, T)

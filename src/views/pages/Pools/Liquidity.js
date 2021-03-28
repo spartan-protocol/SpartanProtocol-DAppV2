@@ -41,6 +41,7 @@ import {
   convertToWei,
 } from '../../../utils/bigNumber'
 import {
+  calcLiquidityHoldings,
   calcLiquidityUnits,
   calcSwapFee,
   calcSwapOutput,
@@ -48,7 +49,11 @@ import {
   calcValueInToken,
 } from '../../../utils/web3Utils'
 import { useWeb3 } from '../../../store/web3'
-import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
+import {
+  routerAddLiq,
+  routerAddLiqAsym,
+  routerRemoveLiq,
+} from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
@@ -64,7 +69,7 @@ const Liquidity = () => {
   const [assetAdd3, setAssetAdd3] = useState('...')
   const [assetAdd4, setAssetAdd4] = useState('...')
   const [assetRemove1, setAssetRemove1] = useState('...')
-  const [assetRemove2, setAssetRemove2] = useState('...')
+  // const [assetRemove2, setAssetRemove2] = useState('...') //UNUSED
   // const [assetRemove3, setAssetRemove3] = useState('...')
   // const [assetRemove4, setAssetRemove4] = useState('...')
 
@@ -77,7 +82,7 @@ const Liquidity = () => {
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
         let asset4 = JSON.parse(window.localStorage.getItem('assetSelected4'))
         let asset5 = JSON.parse(window.localStorage.getItem('assetSelected5'))
-        let asset6 = JSON.parse(window.localStorage.getItem('assetSelected6'))
+        // let asset6 = JSON.parse(window.localStorage.getItem('assetSelected6')) //UNUSED
         // let asset7 = JSON.parse(window.localStorage.getItem('assetSelected7'))
         // let asset8 = JSON.parse(window.localStorage.getItem('assetSelected8'))
 
@@ -99,18 +104,21 @@ const Liquidity = () => {
         )
         asset3 = getItemFromArray(asset3, poolFactory.finalArray)
         asset4 = getItemFromArray(asset4, poolFactory.finalArray)
-        asset5 = getItemFromArray(asset5, poolFactory.finalArray)
-        asset6 = getItemFromArray(
-          { tokenAddress: addr.sparta },
-          poolFactory.finalArray,
-        )
+        if (poolFactory.finalLpArray) {
+          asset5 = getItemFromArray(asset5, poolFactory.finalLpArray)
+        } // Use LP array here for LP balance
+        else asset5 = getItemFromArray(asset5, poolFactory.finalArray) // Fallback to finalLpArray
+        // asset6 = getItemFromArray(
+        //   { tokenAddress: addr.sparta },
+        //   poolFactory.finalArray,
+        // ) //UNUSED
 
         setAssetAdd1(asset1)
         setAssetAdd2(asset2)
         setAssetAdd3(asset3)
         setAssetAdd4(asset4)
         setAssetRemove1(asset5)
-        setAssetRemove2(asset6)
+        // setAssetRemove2(asset6) //UNUSED
         // setAssetRemove3(asset3)
         // setAssetRemove4(asset4)
 
@@ -119,7 +127,7 @@ const Liquidity = () => {
         window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
         window.localStorage.setItem('assetSelected4', JSON.stringify(asset4))
         window.localStorage.setItem('assetSelected5', JSON.stringify(asset5))
-        window.localStorage.setItem('assetSelected6', JSON.stringify(asset6))
+        // window.localStorage.setItem('assetSelected6', JSON.stringify(asset6)) //UNUSED
         // window.localStorage.setItem('assetSelected7', JSON.stringify(asset7))
         // window.localStorage.setItem('assetSelected8', JSON.stringify(asset8))
       }
@@ -129,6 +137,7 @@ const Liquidity = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     poolFactory.finalArray,
+    poolFactory.finalLpArray,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected3'),
     window.localStorage.getItem('assetSelected4'),
@@ -146,6 +155,11 @@ const Liquidity = () => {
   // const removeInput3 = document.getElementById('RemOneInput1') // Use LP token details here
   // const removeInput4 = document.getElementById('RemOneInput2')
 
+  //= =================================================================================//
+  // 'Add Both' Functions (Re-Factor)
+
+  //= =================================================================================//
+  // 'Add Single' Functions (Re-Factor)
   const getAddOneSwapInput = () => {
     if (addInput4) {
       return convertToWei(BN(addInput4.value).div(2))
@@ -193,6 +207,49 @@ const Liquidity = () => {
     }
     return '0'
   }
+
+  //= =================================================================================//
+  // 'Remove Both' Functions (Re-Factor)
+
+  const getRemBothOutputToken = () => {
+    if (assetRemove1 && removeInput2?.value) {
+      return calcLiquidityHoldings(
+        assetRemove1?.tokenAmount,
+        convertToWei(removeInput2?.value),
+        assetRemove1?.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getRemBothOutputBase = () => {
+    if (assetRemove1 && removeInput2?.value) {
+      return calcLiquidityHoldings(
+        assetRemove1?.baseAmount,
+        convertToWei(removeInput2?.value),
+        assetRemove1?.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getRemBothInputValue = () => {
+    if (assetRemove1 && removeInput2?.value) {
+      return BN(
+        calcValueInBase(
+          assetRemove1?.tokenAmount,
+          assetRemove1?.baseAmount,
+          getRemBothOutputToken(),
+        ),
+      ).plus(BN(getRemBothOutputBase()).times(web3.spartaPrice))
+    }
+    return '0'
+  }
+  //= =================================================================================//
+  // 'Remove Single' Functions (Re-Factor)
+
+  //= =================================================================================//
+  // General Functions
 
   const handleInputChange = (input, toBase) => {
     if (toBase) {
@@ -818,7 +875,8 @@ const Liquidity = () => {
                         </Col>
                         <Col className="text-right">
                           <div className="title-card">
-                            Balance {formatFromWei(assetRemove1?.balanceTokens)}
+                            Balance {formatFromWei(assetRemove1?.balanceLPs)}{' '}
+                            STP2-{assetRemove1?.symbol}
                           </div>
                           <FormGroup>
                             <Input
@@ -829,7 +887,7 @@ const Liquidity = () => {
                             />
                           </FormGroup>
                           <div className="output-card">
-                            {removeInput2?.value} - {assetRemove2?.symbol}
+                            ~${formatFromWei(getRemBothInputValue()).toString()}
                           </div>
                         </Col>
                       </Row>
@@ -902,19 +960,41 @@ const Liquidity = () => {
                     </div>
                   </Col>
                   <Col md={6} className="text-right">
-                    <div className="output-card">52.23 of 52.23</div>
-                    <div className="output-card">1.02 BNB</div>
-                    <div className="output-card">100.52 SPARTA</div>
-                    <div className="output-card">52.23</div>
+                    <div className="output-card">
+                      {formatFromUnits(removeInput2?.value, 4)} of{' '}
+                      {formatFromWei(assetRemove1?.balanceLPs)}
+                    </div>
                     <br />
+                    <div className="output-card">
+                      {formatFromWei(getRemBothOutputToken())}{' '}
+                      {assetRemove1?.symbol}
+                    </div>
+                    <div className="output-card">
+                      {formatFromWei(getRemBothOutputBase())} SPARTA
+                    </div>
                     <br />
-                    <div className="subtitle-amount">1.02 BNB</div>
+                    <div className="subtitle-amount">XX.XX</div>
                     <br />
-                    <div className="subtitle-amount">100.52 SPARTA</div>
+                    <div className="subtitle-amount">XX.XX</div>
                   </Col>
                 </Row>
                 <br />
-                <Button color="primary" size="lg" block>
+                <Button
+                  color="primary"
+                  size="lg"
+                  onClick={() =>
+                    dispatch(
+                      routerRemoveLiq(
+                        BN(convertToWei(removeInput2.value))
+                          .div(BN(assetRemove1?.balanceLPs))
+                          .times('10000')
+                          .toFixed(0),
+                        assetRemove1?.tokenAddress,
+                      ),
+                    )
+                  }
+                  block
+                >
                   Redeem LP Tokens
                 </Button>
               </TabPane>
