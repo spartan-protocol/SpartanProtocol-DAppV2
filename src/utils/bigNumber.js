@@ -23,13 +23,13 @@ export const formatFromWei = (weiString) => {
 }
 
 /**
- * Shift Wei string to units. Format using globalFormatting
+ * Format using globalFormatting
  * @param {string} unitString
  * @param {unit} formatDecimals
  * @returns {string} units
  */
-export const formatFromUnits = (weiString, formatDecimals) => {
+export const formatFromUnits = (unitString, formatDecimals) => {
   const decimals = formatDecimals || 2
-  const units = BN(weiString).toFormat(decimals)
+  const units = BN(unitString).toFormat(decimals)
   return units
 }

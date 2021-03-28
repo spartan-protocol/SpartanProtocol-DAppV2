@@ -10,4 +10,5 @@ export {
   getPoolFactoryCuratedArray,
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
+  getPoolFactoryFinalLpArray,
 } from './actions'

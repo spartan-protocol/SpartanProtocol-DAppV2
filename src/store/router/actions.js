@@ -103,12 +103,12 @@ export const routerSwapAssets = (
 
 /**
  * Add liquidity asymmetrically
- * @param {uint} inputToken
+ * @param {uint} input
  * @param {bool} fromBase
  * @param {address} token
  * @returns {unit} units
  */
-export const routerAddLiqAsym = (inputToken, fromBase, token) => async (
+export const routerAddLiqAsym = (input, fromBase, token) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -117,11 +117,11 @@ export const routerAddLiqAsym = (inputToken, fromBase, token) => async (
   try {
     const gPrice = await getProviderGasPrice()
     const gLimit = await contract.estimateGas.addLiquidityAsym(
-      inputToken,
+      input,
       fromBase,
       token,
     )
-    const units = await contract.addLiquidityAsym(inputToken, fromBase, token, {
+    const units = await contract.addLiquidityAsym(input, fromBase, token, {
       gasPrice: gPrice,
       gasLimit: gLimit,
     })

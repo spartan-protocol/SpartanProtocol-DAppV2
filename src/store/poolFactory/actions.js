@@ -2,6 +2,7 @@ import * as Types from './types'
 import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
+import { getTokenContract } from '../../utils/web3'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -239,12 +240,60 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
-        curated: curatedArray.includes(tokenAddr),
+        curated: curatedArray.find((item) => item === tokenAddr) > 0,
         symbolUrl: 'placeholder for icon',
       }
       finalArray.push(tempItem)
     }
     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_FINAL_ARRAY, finalArray))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+  }
+}
+
+/**
+ * Add LP holdings to final array (maybe add the other LP calls here too?)
+ * @param {array} finalArray
+ * @returns {array} finalLpArray
+ */
+export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
+  dispatch,
+) => {
+  dispatch(poolFactoryLoading())
+
+  try {
+    const tempArray = await Promise.all(
+      finalArray.map((i) => {
+        const contract =
+          i.symbol === 'SPARTA' ? null : getTokenContract(i.poolAddress)
+
+        return i.symbol === 'SPARTA' ? '0' : contract.balanceOf(walletAddress)
+      }),
+    )
+    const finalLpArray = []
+    for (let i = 0; i < finalArray.length; i++) {
+      const tempItem = {
+        tokenAddress: finalArray[i].tokenAddress,
+        balanceTokens: finalArray[i].balanceTokens,
+        name: finalArray[i].name,
+        symbol: finalArray[i].symbol,
+        decimals: finalArray[i].decimals,
+        totalSupply: finalArray[i].totalSupply,
+        poolAddress: finalArray[i].poolAddress,
+        balanceLPs: tempArray[i].toString(),
+        lockedLPs: 'placehodler LP tokens locked in DAO?',
+        genesis: finalArray[i].genesis,
+        baseAmount: finalArray[i].baseAmount,
+        tokenAmount: finalArray[i].tokenAmount,
+        poolUnits: finalArray[i].poolUnits,
+        curated: finalArray[i].curated,
+        symbolUrl: 'placeholder for icon',
+      }
+      finalLpArray.push(tempItem)
+    }
+    dispatch(
+      payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),
+    )
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }

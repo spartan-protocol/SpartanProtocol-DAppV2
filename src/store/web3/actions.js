@@ -31,7 +31,6 @@ export const addNetwork = () => async (dispatch) => {
   if (provider === window.ethereum) {
     const chainId = parseInt(network.chainId, 10)
     try {
-      console.log(provider)
       const addedNetwork = await provider.request({
         method: 'wallet_addEthereumChain',
         params: [
