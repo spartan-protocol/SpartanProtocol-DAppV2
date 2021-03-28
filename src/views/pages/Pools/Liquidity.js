@@ -158,6 +158,19 @@ const Liquidity = () => {
   //= =================================================================================//
   // 'Add Both' Functions (Re-Factor)
 
+  const getAddBothOutputLP = () => {
+    if (addInput1 && addInput2 && assetAdd1) {
+      return calcLiquidityUnits(
+        addInput2?.value,
+        addInput1?.value,
+        assetAdd1?.baseAmount,
+        assetAdd1?.tokenAmount,
+        assetAdd1?.poolUnits,
+      )
+    }
+    return '0'
+  }
+
   //= =================================================================================//
   // 'Add Single' Functions (Re-Factor)
   const getAddOneSwapInput = () => {
@@ -406,8 +419,6 @@ const Liquidity = () => {
                                   type="text"
                                   placeholder="0"
                                   id="addInput1"
-                                  // onFocus={() => setFocused('asset1')}
-                                  // onBlur={() => setFocused(null)}
                                   onInput={(event) =>
                                     handleInputChange(event.target.value, true)
                                   }
@@ -561,16 +572,7 @@ const Liquidity = () => {
                       <div className="output-card">
                         {!poolFactory.finalArray && '...'}
                         {poolFactory.finalArray &&
-                          formatFromUnits(
-                            calcLiquidityUnits(
-                              addInput2?.value,
-                              addInput1?.value,
-                              assetAdd1?.baseAmount,
-                              assetAdd1?.tokenAmount,
-                              assetAdd1?.poolUnits,
-                            ),
-                            4,
-                          )}{' '}
+                          formatFromUnits(getAddBothOutputLP(), 4)}{' '}
                         of {!poolFactory.finalArray && '...'}
                         {poolFactory.finalArray &&
                           formatFromWei(assetAdd1?.poolUnits)}{' '}
@@ -582,16 +584,7 @@ const Liquidity = () => {
                       <div className="subtitle-amount">
                         {!poolFactory.finalArray && '...'}
                         {poolFactory.finalArray &&
-                          formatFromUnits(
-                            calcLiquidityUnits(
-                              addInput2?.value,
-                              addInput1?.value,
-                              assetAdd1?.baseAmount,
-                              assetAdd1?.tokenAmount,
-                              assetAdd1?.poolUnits,
-                            ),
-                            4,
-                          )}{' '}
+                          formatFromUnits(getAddBothOutputLP(), 4)}{' '}
                         SPT2-{assetAdd1?.symbol}
                       </div>
                     </Col>
