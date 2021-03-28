@@ -50,7 +50,6 @@ import {
 import { useWeb3 } from '../../../store/web3'
 import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
-import { getRouterContract } from '../../../utils/web3Router'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -60,7 +59,6 @@ const Liquidity = () => {
   const addr = getAddresses()
   const poolFactory = usePoolFactory()
   const web3 = useWeb3()
-  const [routerContract, setRouterContract] = useState(getRouterContract())
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [assetAdd3, setAssetAdd3] = useState('...')
@@ -71,19 +69,10 @@ const Liquidity = () => {
   // const [assetRemove4, setAssetRemove4] = useState('...')
 
   useEffect(() => {
-    const checkContracts = () => {
-      if (wallet.status === 'connected') {
-        setRouterContract(getRouterContract())
-      }
-    }
-    checkContracts()
-  }, [wallet.account, window.localStorage.getItem('network')])
-
-  useEffect(() => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
       if (finalArray) {
-        console.log('testing')
+        console.log(wallet.account)
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
@@ -631,14 +620,17 @@ const Liquidity = () => {
 
                 <Row>
                   <Col>
-                    {assetAdd4 && wallet && routerContract && addInput4 && (
-                      <Approval
-                        tokenAddress={assetAdd4?.tokenAddress}
-                        walletAddress={wallet?.account}
-                        contractAddress={routerContract}
-                        txnAmount={addInput4?.value}
-                      />
-                    )}
+                    <div>hello step 1</div>
+                    {assetAdd4?.tokenAddress &&
+                      wallet?.account &&
+                      addInput4?.value && (
+                        <Approval
+                          tokenAddress={assetAdd4?.tokenAddress}
+                          walletAddress={wallet?.account}
+                          contractAddress={addr.router}
+                          txnAmount={addInput4?.value}
+                        />
+                      )}
                   </Col>
                 </Row>
 

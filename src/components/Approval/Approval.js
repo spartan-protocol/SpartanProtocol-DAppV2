@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import ReactBSAlert from 'react-bootstrap-sweetalert'
 import { useDispatch } from 'react-redux'
 import { Button, Card, CardText, CardBody } from 'reactstrap'
-import { getAllowance } from '../../store/web3'
+import { getAllowance, getApproval, useWeb3 } from '../../store/web3'
+import { BN, convertToWei } from '../../utils/bigNumber'
 // import { usePoolFactory } from '../../store/poolFactory'
 
 /**
@@ -12,28 +13,32 @@ import { getAllowance } from '../../store/web3'
  * @param {address} contractAddress
  * @param {string} txnAmount
  */
-const Approval = (tokenAddress, walletAddress, contractAddress, txnAmount) => {
+const Approval = ({
+  tokenAddress,
+  walletAddress,
+  contractAddress,
+  txnAmount,
+}) => {
   const dispatch = useDispatch()
   const [alert, setAlert] = React.useState(null)
-  const [allowance, setAllowance] = React.useState('0')
+  const web3 = useWeb3()
 
   useEffect(() => {
     const checkAllowance = () => {
       if (tokenAddress && walletAddress && contractAddress) {
         console.log('getting allowance')
-        setAllowance(
-          dispatch(getAllowance(tokenAddress, walletAddress, contractAddress)),
-        )
+        dispatch(getAllowance(tokenAddress, walletAddress, contractAddress))
       }
     }
     checkAllowance()
-  }, [contractAddress, tokenAddress, walletAddress])
+  }, [contractAddress, tokenAddress, walletAddress, dispatch, web3.approval])
 
   const hideAlert = () => {
     setAlert(null)
   }
 
   const successDelete = () => {
+    dispatch(getApproval(tokenAddress, contractAddress))
     setAlert(
       <ReactBSAlert
         success
@@ -67,19 +72,20 @@ const Approval = (tokenAddress, walletAddress, contractAddress, txnAmount) => {
         showCancel
         btnSize=""
       >
-        Proceed to approve *TOKEN1*
+        Proceed to approve *TOKEN*
       </ReactBSAlert>,
     )
   }
 
   return (
     <>
-      {allowance < txnAmount && (
+      {BN(web3.allowance._hex).comparedTo(BN(convertToWei(txnAmount))) ===
+        -1 && (
         <Card>
           {alert}
           <Card>
             <CardBody className="text-center">
-              <CardText>You need to approve *TOKEN1* first!</CardText>
+              <CardText>You need to approve *TOKEN* first!</CardText>
               <Button
                 className="btn-fill"
                 color="primary"

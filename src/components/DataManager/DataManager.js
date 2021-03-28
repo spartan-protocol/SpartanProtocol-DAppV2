@@ -112,8 +112,6 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
 
-  const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
-
   useEffect(() => {
     const { detailedArray } = poolFactory
     const checkFinalArray = () => {
@@ -121,8 +119,6 @@ const DataManager = () => {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
         )
-        setPrevFinalArray(poolFactory.finalArray)
-        console.log(prevFinalArray)
       }
     }
 
