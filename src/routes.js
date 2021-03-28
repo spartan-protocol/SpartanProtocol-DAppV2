@@ -16,6 +16,7 @@ import Tabs from './views/pages/Samples/Tabs'
 import Overview from './views/pages/Pools/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Pools/Bond'
+import Share from './views/pages/Samples/Share'
 
 const routes = [
   {
@@ -149,6 +150,13 @@ const routes = [
         name: 'Notificaions',
         mini: 'NO',
         component: Notifications,
+        layout: '/dapp',
+      },
+      {
+        path: '/share',
+        name: 'Share',
+        mini: 'SH',
+        component: Share,
         layout: '/dapp',
       },
       {
