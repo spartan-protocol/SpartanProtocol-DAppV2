@@ -82,22 +82,6 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenCount])
 
-  // const [prevPoolArray, setPrevPoolArray] = useState(poolFactory.poolArray)
-
-  // useEffect(() => {
-  //   const { tokenArray } = poolFactory
-  //   const checkPoolArray = () => {
-  //     if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-  //       dispatch(getPoolFactoryArray(tokenArray))
-  //       setPrevPoolArray(poolFactory.poolArray)
-  //       console.log(prevPoolArray)
-  //     }
-  //   }
-
-  //   checkPoolArray()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [poolFactory.tokenArray])
-
   const [prevDetailedArray, setPrevDetailedArray] = useState(
     poolFactory.detailedArray,
   )

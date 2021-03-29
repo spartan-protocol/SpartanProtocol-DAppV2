@@ -53,6 +53,7 @@ import {
   routerAddLiq,
   routerAddLiqAsym,
   routerRemoveLiq,
+  routerRemoveLiqAsym,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
@@ -70,8 +71,8 @@ const Liquidity = () => {
   const [assetAdd4, setAssetAdd4] = useState('...')
   const [assetRemove1, setAssetRemove1] = useState('...')
   // const [assetRemove2, setAssetRemove2] = useState('...') //UNUSED
-  // const [assetRemove3, setAssetRemove3] = useState('...')
-  // const [assetRemove4, setAssetRemove4] = useState('...')
+  const [assetRemove3, setAssetRemove3] = useState('...')
+  const [assetRemove4, setAssetRemove4] = useState('...')
 
   useEffect(() => {
     const { finalArray } = poolFactory
@@ -83,8 +84,8 @@ const Liquidity = () => {
         let asset4 = JSON.parse(window.localStorage.getItem('assetSelected4'))
         let asset5 = JSON.parse(window.localStorage.getItem('assetSelected5'))
         // let asset6 = JSON.parse(window.localStorage.getItem('assetSelected6')) //UNUSED
-        // let asset7 = JSON.parse(window.localStorage.getItem('assetSelected7'))
-        // let asset8 = JSON.parse(window.localStorage.getItem('assetSelected8'))
+        let asset7 = JSON.parse(window.localStorage.getItem('assetSelected7'))
+        let asset8 = JSON.parse(window.localStorage.getItem('assetSelected8'))
 
         asset1 = asset1 || { tokenAddress: addr.wbnb }
         asset3 =
@@ -96,6 +97,14 @@ const Liquidity = () => {
             ? asset3
             : { tokenAddress: addr.sparta }
         asset5 = asset5 || { tokenAddress: addr.wbnb }
+        asset7 =
+          asset7 && asset7.tokenAddress !== addr.sparta
+            ? asset7
+            : { tokenAddress: addr.wbnb }
+        asset8 =
+          asset7 && asset8 && asset7.tokenAddress === asset8.tokenAddress
+            ? asset7
+            : { tokenAddress: addr.sparta }
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
         asset2 = getItemFromArray(
@@ -112,6 +121,12 @@ const Liquidity = () => {
         //   { tokenAddress: addr.sparta },
         //   poolFactory.finalArray,
         // ) //UNUSED
+        if (poolFactory.finalLpArray) {
+          asset7 = getItemFromArray(asset7, poolFactory.finalLpArray)
+        } else asset7 = getItemFromArray(asset7, poolFactory.finalArray)
+        if (poolFactory.finalLpArray) {
+          asset8 = getItemFromArray(asset8, poolFactory.finalLpArray)
+        } else asset8 = getItemFromArray(asset8, poolFactory.finalArray)
 
         setAssetAdd1(asset1)
         setAssetAdd2(asset2)
@@ -119,8 +134,8 @@ const Liquidity = () => {
         setAssetAdd4(asset4)
         setAssetRemove1(asset5)
         // setAssetRemove2(asset6) //UNUSED
-        // setAssetRemove3(asset3)
-        // setAssetRemove4(asset4)
+        setAssetRemove3(asset7)
+        setAssetRemove4(asset8)
 
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
@@ -128,8 +143,8 @@ const Liquidity = () => {
         window.localStorage.setItem('assetSelected4', JSON.stringify(asset4))
         window.localStorage.setItem('assetSelected5', JSON.stringify(asset5))
         // window.localStorage.setItem('assetSelected6', JSON.stringify(asset6)) //UNUSED
-        // window.localStorage.setItem('assetSelected7', JSON.stringify(asset7))
-        // window.localStorage.setItem('assetSelected8', JSON.stringify(asset8))
+        window.localStorage.setItem('assetSelected7', JSON.stringify(asset7))
+        window.localStorage.setItem('assetSelected8', JSON.stringify(asset8))
       }
     }
 
@@ -142,8 +157,8 @@ const Liquidity = () => {
     window.localStorage.getItem('assetSelected3'),
     window.localStorage.getItem('assetSelected4'),
     window.localStorage.getItem('assetSelected5'),
-    // window.localStorage.getItem('assetSelected7'),
-    // window.localStorage.getItem('assetSelected8'),
+    window.localStorage.getItem('assetSelected7'),
+    window.localStorage.getItem('assetSelected8'),
   ])
 
   const addInput1 = document.getElementById('addInput1')
@@ -152,8 +167,8 @@ const Liquidity = () => {
   const addInput4 = document.getElementById('addInput4')
   // const removeInput1 = document.getElementById('RemBothInput1') // There is no removeInput1
   const removeInput2 = document.getElementById('removeInput2') // Use LP token details here
-  // const removeInput3 = document.getElementById('RemOneInput1') // Use LP token details here
-  // const removeInput4 = document.getElementById('RemOneInput2')
+  // const removeInput3 = document.getElementById('removeInput3') // There is no removeInput3
+  const removeInput4 = document.getElementById('removeInput4')
 
   //= =================================================================================//
   // 'Add Both' Functions (Re-Factor)
@@ -183,7 +198,7 @@ const Liquidity = () => {
   const getAddOneSwapOutput = () => {
     if (addInput4 && assetAdd3 && assetAdd4) {
       return calcSwapOutput(
-        convertToWei(BN(addInput4?.value).div(2)),
+        getAddOneSwapInput(),
         assetAdd3?.tokenAmount,
         assetAdd3?.baseAmount,
         assetAdd4?.symbol !== 'SPARTA',
@@ -195,7 +210,7 @@ const Liquidity = () => {
   const getAddOneSwapFee = () => {
     if (addInput4 && assetAdd3 && assetAdd4) {
       return calcSwapFee(
-        convertToWei(BN(addInput4.value).div(2)),
+        getAddOneSwapInput(),
         assetAdd3.tokenAmount,
         assetAdd3.baseAmount,
         assetAdd4.symbol !== 'SPARTA',
@@ -209,9 +224,9 @@ const Liquidity = () => {
       return calcLiquidityUnits(
         assetAdd4.symbol === 'SPARTA'
           ? getAddOneSwapInput()
-          : BN(getAddOneSwapOutput()).minus(getAddOneSwapFee()),
+          : getAddOneSwapOutput(),
         assetAdd4.symbol === 'SPARTA'
-          ? BN(getAddOneSwapOutput()).minus(getAddOneSwapFee())
+          ? getAddOneSwapOutput()
           : getAddOneSwapInput(),
         assetAdd3?.baseAmount,
         assetAdd3?.tokenAmount,
@@ -260,6 +275,95 @@ const Liquidity = () => {
   }
   //= =================================================================================//
   // 'Remove Single' Functions (Re-Factor)
+
+  const getRemOneOutputToken = () => {
+    if (assetRemove3 && removeInput4?.value) {
+      return calcLiquidityHoldings(
+        assetRemove3?.tokenAmount,
+        convertToWei(removeInput4?.value),
+        assetRemove3?.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getRemOneOutputBase = () => {
+    if (assetRemove3 && removeInput4?.value) {
+      return calcLiquidityHoldings(
+        assetRemove3?.baseAmount,
+        convertToWei(removeInput4?.value),
+        assetRemove3?.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getRemoveOneSwapInput = () => {
+    if (removeInput4) {
+      if (assetRemove3?.tokenAddress === assetRemove4?.tokenAddress) {
+        return BN(getRemOneOutputBase())
+      }
+      return BN(getRemOneOutputToken())
+    }
+    return '0'
+  }
+
+  const getRemoveOneSwapFee = () => {
+    if (removeInput4 && assetRemove3 && assetRemove4) {
+      let swapFee = calcSwapFee(
+        getRemoveOneSwapInput(),
+        assetRemove3?.tokenAmount,
+        assetRemove3?.baseAmount,
+        assetRemove4?.symbol === 'SPARTA',
+      )
+      if (assetRemove4?.symbol !== 'SPARTA') {
+        swapFee = calcValueInBase(
+          assetRemove3?.tokenAmount,
+          assetRemove3?.baseAmount,
+          swapFee,
+        )
+      }
+      return swapFee
+    }
+    return '0'
+  }
+
+  const getRemoveOneSwapOutput = () => {
+    if (removeInput4 && assetRemove3 && assetRemove4) {
+      return calcSwapOutput(
+        BN(getRemoveOneSwapInput()),
+        assetRemove3?.tokenAmount,
+        assetRemove3?.baseAmount,
+        assetRemove4?.symbol === 'SPARTA',
+      )
+    }
+    return '0'
+  }
+
+  const getRemoveOneFinalOutput = () => {
+    if (assetRemove4 && assetRemove3 && assetRemove4) {
+      const result = BN(getRemoveOneSwapOutput()).plus(
+        assetRemove4?.symbol === 'SPARTA'
+          ? BN(getRemOneOutputBase())
+          : BN(getRemOneOutputToken()),
+      )
+      return result
+    }
+    return '0'
+  }
+
+  const getRemOneInputValue = () => {
+    if (assetRemove3 && removeInput4?.value) {
+      return BN(
+        calcValueInBase(
+          assetRemove3?.tokenAmount,
+          assetRemove3?.baseAmount,
+          getRemOneOutputToken(),
+        ),
+      ).plus(BN(getRemOneOutputBase()).times(web3.spartaPrice))
+    }
+    return '0'
+  }
 
   //= =================================================================================//
   // General Functions
@@ -500,6 +604,36 @@ const Liquidity = () => {
                     </Col>
                   </Row>
 
+                  <Row>
+                    <Col>
+                      {assetAdd1?.tokenAddress &&
+                        wallet?.account &&
+                        addInput1?.value && (
+                          <Approval
+                            tokenAddress={assetAdd1?.tokenAddress}
+                            walletAddress={wallet?.account}
+                            contractAddress={addr.router}
+                            txnAmount={addInput1?.value}
+                          />
+                        )}
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col>
+                      {assetAdd2?.tokenAddress &&
+                        wallet?.account &&
+                        addInput2?.value && (
+                          <Approval
+                            tokenAddress={assetAdd2?.tokenAddress}
+                            walletAddress={wallet?.account}
+                            contractAddress={addr.router}
+                            txnAmount={addInput2?.value}
+                          />
+                        )}
+                    </Col>
+                  </Row>
+
                   <br />
                   <Row>
                     <Col md={6}>
@@ -594,7 +728,12 @@ const Liquidity = () => {
                     color="primary"
                     size="lg"
                     block
-                    onClick={() =>
+                    onClick={() => {
+                      console.log(
+                        convertToWei(addInput2?.value),
+                        convertToWei(addInput1?.value),
+                        assetAdd1?.tokenAddress,
+                      )
                       dispatch(
                         routerAddLiq(
                           convertToWei(addInput2?.value),
@@ -602,7 +741,7 @@ const Liquidity = () => {
                           assetAdd1?.tokenAddress,
                         ),
                       )
-                    }
+                    }}
                   >
                     Add to pool
                   </Button>
@@ -782,20 +921,22 @@ const Liquidity = () => {
                       {assetAdd4?.symbol} to{' '}
                       {assetAdd4 &&
                         addInput4 &&
-                        formatFromWei(
-                          BN(getAddOneSwapOutput()).minus(getAddOneSwapFee()),
-                        )}{' '}
+                        formatFromWei(getAddOneSwapOutput())}{' '}
                       {assetAdd4?.symbol === 'SPARTA'
                         ? assetAdd3?.symbol
                         : 'SPARTA'}
+                    </div>
+                    <div className="output-card">
+                      {assetAdd4 &&
+                        addInput4 &&
+                        formatFromWei(getAddOneSwapFee())}{' '}
+                      (Slip Fee)
                     </div>
                     <br />
                     <div className="output-card">
                       {assetAdd4 &&
                         addInput4 &&
-                        formatFromWei(
-                          BN(getAddOneSwapOutput()).minus(getAddOneSwapFee()),
-                        )}{' '}
+                        formatFromWei(getAddOneSwapOutput())}{' '}
                       {assetAdd4?.symbol === 'SPARTA'
                         ? assetAdd3?.symbol
                         : 'SPARTA'}{' '}
@@ -993,18 +1134,21 @@ const Liquidity = () => {
               </TabPane>
               <TabPane tabId="removeSingle">
                 <Row>
-                  <Col md={12}>
+                  <Col md={6}>
                     <Card
                       style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
+                      className="card-body"
                     >
                       <Row>
                         <Col className="text-left">
-                          <div className="title-card">Redeem</div>
-                          <div className="output-card">52.23</div>
+                          <div className="title-card">Select pool</div>
+                          <AssetSelect
+                            priority="7"
+                            type="pools"
+                            blackList={[addr.sparta]}
+                          />
                         </Col>
                         <Col className="text-right">
-                          <div className="title-card">Balance 52.23</div>
                           <div className="output-card">
                             <img
                               className="mr-2"
@@ -1012,7 +1156,47 @@ const Liquidity = () => {
                               alt="Logo"
                               height="25"
                             />
-                            WBNB-SPARTA LP
+                          </div>
+                        </Col>
+                      </Row>
+                    </Card>
+                  </Col>
+
+                  <Col md={6}>
+                    <Card
+                      style={{ backgroundColor: '#25212D' }}
+                      className="card-body "
+                    >
+                      <Row>
+                        <Col className="text-left">
+                          <div className="title-card">Output</div>
+                          <AssetSelect
+                            priority="8"
+                            whiteList={[
+                              assetRemove3?.tokenAddress,
+                              addr.sparta,
+                            ]}
+                          />
+                        </Col>
+                        <Col className="text-right">
+                          <div className="title-card">
+                            Balance{' '}
+                            {assetRemove4 !== '...' &&
+                              formatFromWei(assetRemove3?.balanceLPs)}{' '}
+                            SPT2-{assetRemove3?.symbol}
+                          </div>
+                          <div className="output-card">
+                            <FormGroup>
+                              <Input
+                                className="text-right"
+                                type="text"
+                                placeholder="0"
+                                id="removeInput4"
+                              />
+                            </FormGroup>
+                          </div>
+                          <div className="title-card">
+                            ~${formatFromWei(getRemOneInputValue()).toString()}
                           </div>
                         </Col>
                       </Row>
@@ -1024,7 +1208,7 @@ const Liquidity = () => {
                 <Row>
                   <Col md={6}>
                     <div className="text-card">
-                      Redeem LP Tokens{' '}
+                      Input{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1039,7 +1223,7 @@ const Liquidity = () => {
                     </div>
                     <br />
                     <div className="text-card">
-                      Removed{' '}
+                      Remove{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1054,7 +1238,7 @@ const Liquidity = () => {
                     </div>
                     <br />
                     <div className="text-card">
-                      Swapped{' '}
+                      Swap{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1069,7 +1253,23 @@ const Liquidity = () => {
                     </div>
                     <br />
                     <div className="text-card">
-                      Projected output{' '}
+                      Share{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+
+                    <br />
+                    <div className="amount">
+                      Estimated output{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1084,22 +1284,85 @@ const Liquidity = () => {
                     </div>
                   </Col>
                   <Col md={6} className="text-right">
-                    <div className="output-card">XX.XXX of XX.XXX SPT2-XXX</div>
-                    <br />
-                    <div className="output-card">XXX.XX TOKEN</div>
-                    <div className="output-card">XXX.XX SPARTA</div>
-                    <br />
                     <div className="output-card">
-                      XXX.XX TOKEN1 to XXX.XX TOKEN2
+                      {removeInput4 && formatFromUnits(removeInput4?.value, 4)}{' '}
+                      of{' '}
+                      {assetRemove4 !== '...' &&
+                        formatFromWei(assetRemove3?.balanceLPs)}{' '}
+                      SPT2-{assetRemove3?.symbol}
                     </div>
                     <br />
-                    <div className="subtitle-amount">XXX.XX TOKENS</div>
+                    <div className="output-card">
+                      {assetRemove4 &&
+                        removeInput4 &&
+                        formatFromWei(getRemOneOutputToken())}{' '}
+                      {assetRemove3?.symbol}
+                    </div>
+                    <div className="output-card">
+                      {assetRemove4 &&
+                        removeInput4 &&
+                        formatFromWei(getRemOneOutputBase())}{' '}
+                      SPARTA
+                    </div>
+                    <br />
+                    <div className="output-card">
+                      {formatFromWei(getRemoveOneSwapInput())}{' '}
+                      {assetRemove4?.symbol === 'SPARTA'
+                        ? assetRemove3?.symbol
+                        : 'SPARTA'}{' '}
+                      to {formatFromWei(getRemoveOneSwapOutput())}{' '}
+                      {assetRemove4?.symbol === 'SPARTA'
+                        ? 'SPARTA'
+                        : assetRemove3?.symbol}
+                    </div>
+                    <div className="output-card">
+                      {formatFromWei(getRemoveOneSwapFee())} SPARTA (Swap Fee)
+                    </div>
+                    <br />
+                    <div className="subtitle-amount">
+                      {poolFactory.finalArray &&
+                        formatFromWei(getRemoveOneFinalOutput())}{' '}
+                      {assetRemove4?.symbol}
+                    </div>
+                    <br />
+                    <br />
                   </Col>
                 </Row>
                 <br />
-                <Button color="primary" size="lg" block>
-                  Redeem LP Tokens
+                <Button
+                  color="primary"
+                  size="lg"
+                  onClick={() =>
+                    dispatch(
+                      routerRemoveLiqAsym(
+                        convertToWei(BN(removeInput4?.value)),
+                        assetRemove4?.symbol === 'SPARTA',
+                        assetRemove3?.tokenAddress,
+                      ),
+                    )
+                  }
+                  block
+                >
+                  Add to pool
                 </Button>
+                <br />
+                <UncontrolledAlert
+                  className="alert-with-icon"
+                  color="danger"
+                  fade={false}
+                >
+                  <span
+                    data-notify="icon"
+                    className="icon-medium icon-info icon-dark mb-5"
+                  />
+                  <span data-notify="message">
+                    Please ensure you understand the risks related to this
+                    asymmetric add! 50% of the input BNB will be swapped to
+                    SPARTA before adding both to the pool. This is subject to
+                    the usual swap fees and may have unfavourable impermanent
+                    loss vs hodling your assets!
+                  </span>
+                </UncontrolledAlert>
               </TabPane>
             </TabContent>
             <Row />
