@@ -72,10 +72,8 @@ const AssetSelect = (props) => {
           {poolFactory.finalArray &&
             props.whiteList &&
             poolFactory.finalArray
-              .filter(
-                (asset) =>
-                  props.whiteList.find((item) => item === asset.tokenAddress) >
-                  0,
+              .filter((asset) =>
+                props.whiteList.find((item) => item === asset.tokenAddress),
               )
               .sort((a, b) => b.balanceTokens - a.balanceTokens)
               .map((asset) => (
