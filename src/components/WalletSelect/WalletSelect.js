@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { changeNetwork, getNetwork, getAddresses } from '../../utils/web3'
-import { addNetwork, watchAsset } from '../../store/web3'
+import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
 
 const addr = getAddresses()
 
@@ -24,7 +24,8 @@ const WalletSelect = (props) => {
 
   const onChangeNetwork = (net) => {
     setNetwork(changeNetwork(net))
-    dispatch(addNetwork())
+    dispatch(addNetworkMM())
+    dispatch(addNetworkBC())
   }
 
   //   const [modalMini, setModalMini] = React.useState(false)

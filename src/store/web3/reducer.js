@@ -1,7 +1,8 @@
 import * as Types from './types'
 
 const initialState = {
-  addedNetwork: {},
+  addedNetworkMM: {},
+  addedNetworkBC: {},
   approval: false,
   allowance: {},
   watchingAsset: false,
@@ -12,10 +13,19 @@ const initialState = {
 
 export const web3Reducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.ADD_NETWORK: {
+    case Types.ADD_NETWORK_MM: {
       return {
         ...state,
-        addedNetwork: action.payload,
+        addedNetworkMM: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.ADD_NETWORK_BC: {
+      return {
+        ...state,
+        addedNetworkBC: action.payload,
         loading: false,
         error: null,
       }

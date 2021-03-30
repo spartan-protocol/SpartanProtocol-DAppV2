@@ -16,24 +16,19 @@ export const web3Loading = () => ({
 })
 
 /**
- * Prompt the user to add BSC as a network on Metamask, or switch to BSC if the wallet is on a different network
- * @returns {boolean} true if the setup succeeded, false otherwise
- */
-/**
- * Check which network selected is selected in the wallet and prompt to add or change if available
+ * Check which network is selected in the MetaMask and prompt to add or change if available
  * @param {string} network - Whether it is 'mainnet' or 'testnet'
  * @returns {boolean} true if succeeds
  */
-export const addNetwork = () => async (dispatch) => {
+export const addNetworkMM = () => async (dispatch) => {
   dispatch(web3Loading())
   const providerETH = window.ethereum ? window.ethereum : null
-  const providerBC = window.BinanceChain ? window.BinanceChain : null
   const network = getNetwork()
+  const chainId = parseInt(network.chainId, 10)
 
   if (providerETH) {
-    const chainId = parseInt(network.chainId, 10)
     try {
-      const addedNetwork = await providerETH.request({
+      const addedNetworkMM = await providerETH.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
@@ -49,17 +44,7 @@ export const addNetwork = () => async (dispatch) => {
           },
         ],
       })
-      dispatch(payloadToDispatch(Types.ADD_NETWORK, addedNetwork))
-    } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
-    }
-  }
-
-  if (providerBC) {
-    const chainId = network.net === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
-    try {
-      const addedNetwork = await providerBC.switchNetwork(chainId)
-      dispatch(payloadToDispatch(Types.ADD_NETWORK, addedNetwork))
+      dispatch(payloadToDispatch(Types.ADD_NETWORK_MM, addedNetworkMM))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
@@ -68,6 +53,37 @@ export const addNetwork = () => async (dispatch) => {
       errorToDispatch(
         Types.WEB3_ERROR,
         'There was an issue adding the network; do you have metamask installed?',
+      ),
+    )
+  }
+}
+
+/**
+ * Check which network is selected in BC-wallet and prompt to add or change if available
+ * @param {string} network - Whether it is 'mainnet' or 'testnet'
+ * @returns {boolean} true if succeeds
+ */
+export const addNetworkBC = () => async (dispatch) => {
+  dispatch(web3Loading())
+  const providerBC = window.BinanceChain ? window.BinanceChain : null
+  const network = getNetwork()
+  const chainId = parseInt(network.chainId, 10)
+
+  if (parseInt(providerBC?.chainId, 16) !== chainId) {
+    const chainIdString =
+      network.net === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
+    try {
+      console.log(parseInt(providerBC.chainId, 16), chainId)
+      const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
+      dispatch(payloadToDispatch(Types.ADD_NETWORK_BC, addedNetworkBC))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    }
+  } else {
+    dispatch(
+      errorToDispatch(
+        Types.WEB3_ERROR,
+        'There was an issue adding the network; do you have BinanceChain wallet installed?',
       ),
     )
   }
