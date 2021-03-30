@@ -1,4 +1,5 @@
-export const ADD_NETWORK = 'ADD_NETWORK'
+export const ADD_NETWORK_MM = 'ADD_NETWORK_MM'
+export const ADD_NETWORK_BC = 'ADD_NETWORK_BC'
 export const GET_APPROVAL = 'GET_APPROVAL'
 export const GET_ALLOWANCE = 'GET_ALLOWANCE'
 export const WATCH_ASSET = 'WATCH_ASSET'
