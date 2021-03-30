@@ -11,19 +11,28 @@ import {
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
-import { getSpartaPrice } from '../../store/web3'
-import { getAddresses, getNetwork } from '../../utils/web3'
+import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
+import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
+import { changeNetwork, getAddresses } from '../../utils/web3'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
-  const wallet = useWallet()
   const addr = getAddresses()
+  const wallet = useWallet()
 
   useEffect(() => {
+    const tempNetwork = JSON.parse(window.localStorage.getItem('network'))
     const checkNetwork = () => {
-      dispatch(getNetwork)
-      console.log(wallet)
+      if (tempNetwork.net === 'mainnet' || tempNetwork.net === 'testnet') {
+        changeNetwork(tempNetwork.net)
+        dispatch(addNetworkMM())
+        dispatch(addNetworkBC())
+      } else {
+        changeNetwork('testnet')
+        dispatch(addNetworkMM())
+        dispatch(addNetworkBC())
+      } // CHANGE TO MAINNET AFTER DEPLOY
     }
 
     checkNetwork()
@@ -33,7 +42,7 @@ const DataManager = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(getSpartaPrice())
-    }, 5000)
+    }, 7500)
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -75,22 +84,6 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenCount])
 
-  // const [prevPoolArray, setPrevPoolArray] = useState(poolFactory.poolArray)
-
-  // useEffect(() => {
-  //   const { tokenArray } = poolFactory
-  //   const checkPoolArray = () => {
-  //     if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-  //       dispatch(getPoolFactoryArray(tokenArray))
-  //       setPrevPoolArray(poolFactory.poolArray)
-  //       console.log(prevPoolArray)
-  //     }
-  //   }
-
-  //   checkPoolArray()
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [poolFactory.tokenArray])
-
   const [prevDetailedArray, setPrevDetailedArray] = useState(
     poolFactory.detailedArray,
   )
@@ -120,13 +113,29 @@ const DataManager = () => {
           getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
         )
         setPrevFinalArray(poolFactory.finalArray)
-        console.log(prevFinalArray)
       }
     }
 
     checkFinalArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
+
+  useEffect(() => {
+    const { finalArray } = poolFactory
+    const checkFinalArrayForLP = () => {
+      if (
+        wallet.account &&
+        finalArray !== prevFinalArray &&
+        finalArray?.length > 0
+      ) {
+        dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
+        setPrevFinalArray(poolFactory.finalArray)
+      }
+    }
+
+    checkFinalArrayForLP()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolFactory.finalArray])
 
   return <></>
 }

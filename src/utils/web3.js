@@ -217,15 +217,33 @@ export const bscRpcsMN = [
 ]
 
 /**
+ * Format long string into a string with '...' separator (ideally for anchor text)
+ * @param {string} longString
+ * @returns {string} shortString
+ */
+export const formatShortString = (longString) => {
+  const addr = longString || '0x000000000000000'
+  const shortString = `${addr.substring(0, 5)}...${addr?.substring(
+    addr.length - 3,
+    addr.length,
+  )}`
+  return shortString
+}
+
+/**
  * Filter finalArray (or any array) to the scope of the assetAddress
  * @param {string} assetAddress
  * @param {string} finalArray
  * @returns {Object} item from finalArray
  */
-export const getItemFromArray = (assetAddress, finalArray) => {
-  const arrayItem = finalArray?.filter(
-    (asset) => asset.tokenAddress === assetAddress,
-  )
+export const getItemFromArray = (asset, finalArray) => {
+  let arrayItem = finalArray.filter((item) => item.symbol === 'SPARTA')
+  if (finalArray.find((item) => item.tokenAddress === asset.tokenAddress)) {
+    arrayItem = finalArray.filter(
+      (item) => item.tokenAddress === asset.tokenAddress,
+    )
+  }
+  ;[arrayItem] = arrayItem
   return arrayItem
 }
 

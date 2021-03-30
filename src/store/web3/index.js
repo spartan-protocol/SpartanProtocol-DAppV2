@@ -1,6 +1,7 @@
 export { useWeb3 } from './selector'
 export { web3Reducer } from './reducer'
-export { addNetwork } from './actions'
+export { addNetworkMM } from './actions'
+export { addNetworkBC } from './actions'
 export { getApproval } from './actions'
 export { getAllowance } from './actions'
 export { watchAsset } from './actions'
