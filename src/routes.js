@@ -13,9 +13,11 @@ import Panels from './views/pages/Samples/Panels'
 import Tiles from './views/pages/Samples/Tiles'
 import Utils from './utils/Utils'
 import Tabs from './views/pages/Samples/Tabs'
-import Overview from './views/pages/Pools/Overview'
+import PoolsOverview from './views/pages/Pools/Overview'
+import DaoOverview from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Pools/Bond'
+import Swap from './views/pages/Pools/Swap'
 
 const routes = [
   {
@@ -30,7 +32,7 @@ const routes = [
     path: '/pools/overview',
     name: 'Pools',
     icon: 'icon-medium icon-swords icon-dark',
-    component: Overview,
+    component: PoolsOverview,
     layout: '/dapp',
   },
 
@@ -50,9 +52,24 @@ const routes = [
     layout: '/dapp',
   },
 
+  {
+    path: '/pools/dao',
+    name: 'Dao',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: DaoOverview,
+    layout: '/dapp',
+  },
+  {
+    path: '/pools/swap',
+    name: 'Swap',
+    icon: 'icon-medium icon-sword icon-dark',
+    component: Swap,
+    layout: '/dapp',
+  },
+
   // {
   //   collapse: true,
-  //   name: 'Pools',
+  //   name: 'Overview',
   //   icon: 'icon-medium icon-info icon-dark',
   //   state: 'pagesCollapse',
   //   views: [

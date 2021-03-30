@@ -1,5 +1,4 @@
-/* eslint-disable global-require */
-/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable */
 import React from 'react'
 // react plugin for creating notifications over the dashboard
 
@@ -24,7 +23,6 @@ const BondTable = () => {
 
   return (
     <>
-      <Col md={10}>
         <Card className="card-body" style={{ backgroundColor: '#1D171F' }}>
           <div
             aria-multiselectable
@@ -118,7 +116,6 @@ const BondTable = () => {
             </Card>
           </div>
         </Card>
-      </Col>
     </>
   )
 }

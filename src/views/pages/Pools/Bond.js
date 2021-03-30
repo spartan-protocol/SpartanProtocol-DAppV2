@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+/* eslint-disable */
+
+import React, { useState } from "react"
 import {
   Breadcrumb,
   Col,
@@ -11,17 +13,17 @@ import {
   Button,
   Card,
   UncontrolledAlert,
-  Progress,
-} from 'reactstrap'
-import classnames from 'classnames'
-import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
-import coinSparta from '../../../assets/icons/coin_sparta.svg'
+  Progress
+} from "reactstrap"
+import classnames from "classnames"
+import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
+import coinSparta from "../../../assets/icons/coin_sparta.svg"
 
-import BondTable from '../BondTable'
-import coinBnb from '../../../assets/icons/coin_bnb.svg'
+import BondTable from "../BondTable"
+import coinBnb from "../../../assets/icons/coin_bnb.svg"
 
 const Bond = () => {
-  const [activeTab, setActiveTab] = useState('1')
+  const [activeTab, setActiveTab] = useState("1")
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -32,15 +34,15 @@ const Bond = () => {
       <div className="content">
         <Breadcrumb>Bond & Mint</Breadcrumb>
         <Row>
-          <Col lg={12}>
+          <Col md={10}>
             <Row>
-              <Col md={8} className="ml-4">
+              <Col md={9}>
                 <Nav tabs className="nav-tabs-custom">
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === '1' })}
+                      className={classnames({ active: activeTab === "1" })}
                       onClick={() => {
-                        toggle('1')
+                        toggle("1")
                       }}
                     >
                       <span className="d-none d-sm-block">Your Bonds</span>
@@ -48,9 +50,9 @@ const Bond = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === '2' })}
+                      className={classnames({ active: activeTab === "2" })}
                       onClick={() => {
-                        toggle('2')
+                        toggle("2")
                       }}
                     >
                       <span className="d-none d-sm-block">New Bond</span>
@@ -58,7 +60,7 @@ const Bond = () => {
                   </NavItem>
                 </Nav>
               </Col>
-              <Col>
+              <Col className="ml-5">
                 <Button type="Button" className="btn btn-danger ml-lg-n5">
                   Proposals
                 </Button>
@@ -70,14 +72,15 @@ const Bond = () => {
 
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1" className="p-3">
-                <BondTable />
+                <Row> <BondTable/>
+                </Row>
               </TabPane>
               <TabPane tabId="2" className="p-3">
                 <Row>
-                  <Col md={6}>
+                  <Col md={8}>
                     <Card className="card-body ">
                       <Card
-                        style={{ backgroundColor: '#25212D' }}
+                        style={{ backgroundColor: "#25212D" }}
                         className="card-body "
                       >
                         <Row>
@@ -185,7 +188,7 @@ const Bond = () => {
                           </div>
                           <br />
                           <div className="amount">
-                            Estimated output{' '}
+                            Estimated output{" "}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipAddBase"
@@ -222,7 +225,7 @@ const Bond = () => {
                   <Col md={4}>
                     <Card className="card-body ">
                       <Card
-                        style={{ backgroundColor: '#25212D' }}
+                        style={{ backgroundColor: "#25212D" }}
                         className="card-body "
                       >
                         <Row>
