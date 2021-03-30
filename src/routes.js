@@ -17,6 +17,7 @@ import PoolsOverview from './views/pages/Pools/Overview'
 import DaoOverview from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Pools/Bond'
+import Swap from './views/pages/Pools/Swap'
 
 const routes = [
   {
@@ -56,6 +57,13 @@ const routes = [
     name: 'Dao',
     icon: 'icon-medium icon-colosseum icon-dark',
     component: DaoOverview,
+    layout: '/dapp',
+  },
+  {
+    path: '/pools/swap',
+    name: 'Swap',
+    icon: 'icon-medium icon-sword icon-dark',
+    component: Swap,
     layout: '/dapp',
   },
 
