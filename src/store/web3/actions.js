@@ -26,12 +26,14 @@ export const web3Loading = () => ({
  */
 export const addNetwork = () => async (dispatch) => {
   dispatch(web3Loading())
-  const provider = window.ethereum ? window.ethereum : window.BinanceChain
+  const providerETH = window.ethereum ? window.ethereum : null
+  const providerBC = window.BinanceChain ? window.BinanceChain : null
   const network = getNetwork()
-  if (provider === window.ethereum) {
+
+  if (providerETH) {
     const chainId = parseInt(network.chainId, 10)
     try {
-      const addedNetwork = await provider.request({
+      const addedNetwork = await providerETH.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
@@ -47,6 +49,16 @@ export const addNetwork = () => async (dispatch) => {
           },
         ],
       })
+      dispatch(payloadToDispatch(Types.ADD_NETWORK, addedNetwork))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    }
+  }
+
+  if (providerBC) {
+    const chainId = network.net === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
+    try {
+      const addedNetwork = await providerBC.switchNetwork(chainId)
       dispatch(payloadToDispatch(Types.ADD_NETWORK, addedNetwork))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, error))
