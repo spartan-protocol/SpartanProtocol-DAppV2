@@ -56,6 +56,8 @@ import {
   routerRemoveLiqAsym,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
+import RecentTxns from '../../../components/RecentTxns/RecentTxns'
+import { getRouterContract } from '../../../utils/web3Router'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -101,7 +103,7 @@ const Liquidity = () => {
             : { tokenAddress: addr.sparta }
         asset5 =
           asset5 && asset5.tokenAddress !== addr.sparta
-            ? asset1
+            ? asset5
             : { tokenAddress: addr.wbnb }
         asset7 =
           asset7 && asset7.tokenAddress !== addr.sparta
@@ -1377,6 +1379,14 @@ const Liquidity = () => {
             {' '}
             <Card className="card-body">
               <PoolsPaneSide />
+            </Card>
+          </Col>
+          <Col md={12}>
+            <Card className="card-body">
+              <RecentTxns
+                contract={getRouterContract()}
+                walletAddr={wallet.account}
+              />
             </Card>
           </Col>
         </Row>
