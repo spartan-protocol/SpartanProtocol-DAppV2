@@ -26,6 +26,7 @@ const Swap = () => {
   const poolFactory = usePoolFactory()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
+  const [zapMode, setZapMode] = useState(false)
 
   useEffect(() => {
     const { finalArray } = poolFactory
@@ -43,8 +44,13 @@ const Swap = () => {
             ? asset2
             : { tokenAddress: addr.sparta }
 
-        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-        asset2 = getItemFromArray(asset2, poolFactory.finalArray)
+        if (poolFactory.finalLpArray) {
+          asset1 = getItemFromArray(asset1, poolFactory.finalLpArray)
+          asset2 = getItemFromArray(asset2, poolFactory.finalLpArray)
+        } else {
+          asset1 = getItemFromArray(asset1, poolFactory.finalArray)
+          asset2 = getItemFromArray(asset2, poolFactory.finalArray)
+        }
 
         setAssetSwap1(asset1)
         setAssetSwap2(asset2)
@@ -58,6 +64,7 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     poolFactory.finalArray,
+    poolFactory.finalLpArray,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,7 +203,16 @@ const Swap = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Swap</Col>
+          <Col md={10}>
+            Swap{' '}
+            <Button
+              className="btn-rounded btn-icon"
+              color="primary"
+              onClick={() => setZapMode(!zapMode)}
+            >
+              Zap Mode
+            </Button>
+          </Col>
           <Col md={2}>
             {' '}
             <Wallet />
@@ -216,16 +232,27 @@ const Swap = () => {
                         <div className="title-card">From</div>
                         <br />
                         <div className="output-card">
-                          <AssetSelect
-                            priority="1"
-                            blackList={[assetSwap2?.tokenAddress]}
-                          />
+                          {!zapMode && (
+                            <AssetSelect
+                              priority="1"
+                              blackList={[assetSwap2?.tokenAddress]}
+                            />
+                          )}
+                          {zapMode && (
+                            <AssetSelect
+                              priority="1"
+                              type="pools"
+                              blackList={[assetSwap2?.tokenAddress]}
+                            />
+                          )}
                         </div>
                       </Col>
                       <Col className="text-right">
                         <br />
                         <div className="output-card">
-                          Balance {formatFromWei(assetSwap1?.balanceTokens)}
+                          Balance{' '}
+                          {!zapMode && formatFromWei(assetSwap1?.balanceTokens)}
+                          {zapMode && formatFromWei(assetSwap1?.balanceLPs)}
                         </div>
                         <FormGroup>
                           <Input
@@ -265,16 +292,27 @@ const Swap = () => {
                         <div className="title-card">To</div>
                         <br />
                         <div className="output-card">
-                          <AssetSelect
-                            priority="2"
-                            blackList={[assetSwap1?.tokenAddress]}
-                          />
+                          {!zapMode && (
+                            <AssetSelect
+                              priority="2"
+                              blackList={[assetSwap1?.tokenAddress]}
+                            />
+                          )}
+                          {zapMode && (
+                            <AssetSelect
+                              priority="2"
+                              type="pools"
+                              blackList={[assetSwap1?.tokenAddress]}
+                            />
+                          )}
                         </div>
                       </Col>
                       <Col className="text-right">
                         <br />
                         <div className="output-card">
-                          Balance {formatFromWei(assetSwap2?.balanceTokens)}
+                          Balance{' '}
+                          {!zapMode && formatFromWei(assetSwap2?.balanceTokens)}
+                          {zapMode && formatFromWei(assetSwap2?.balanceLPs)}
                         </div>
                         <br />
                         <FormGroup>
