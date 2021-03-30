@@ -92,11 +92,11 @@ const Liquidity = () => {
         asset1 =
           asset1 && asset1.tokenAddress !== addr.sparta
             ? asset1
-            : { tokenAddress: addr.wbnb }
+            : { tokenAddress: addr.bnb }
         asset3 =
           asset3 && asset3.tokenAddress !== addr.sparta
             ? asset3
-            : { tokenAddress: addr.wbnb }
+            : { tokenAddress: addr.bnb }
         asset4 =
           asset3 && asset4 && asset3.tokenAddress === asset4.tokenAddress
             ? asset3
@@ -104,11 +104,11 @@ const Liquidity = () => {
         asset5 =
           asset5 && asset5.tokenAddress !== addr.sparta
             ? asset5
-            : { tokenAddress: addr.wbnb }
+            : { tokenAddress: addr.bnb }
         asset7 =
           asset7 && asset7.tokenAddress !== addr.sparta
             ? asset7
-            : { tokenAddress: addr.wbnb }
+            : { tokenAddress: addr.bnb }
         asset8 =
           asset7 && asset8 && asset7.tokenAddress === asset8.tokenAddress
             ? asset7
@@ -587,8 +587,6 @@ const Liquidity = () => {
                                   type="text"
                                   placeholder="0"
                                   id="addInput2"
-                                  // onFocus={() => setFocused('asset2')}
-                                  // onBlur={() => setFocused(null)}
                                   onInput={(event) =>
                                     handleInputChange(event.target.value)
                                   }
@@ -615,6 +613,7 @@ const Liquidity = () => {
                   <Row>
                     <Col>
                       {assetAdd1?.tokenAddress &&
+                        assetAdd1?.tokenAddress !== addr.bnb &&
                         wallet?.account &&
                         addInput1?.value && (
                           <Approval
@@ -630,6 +629,7 @@ const Liquidity = () => {
                   <Row>
                     <Col>
                       {assetAdd2?.tokenAddress &&
+                        assetAdd2?.tokenAddress !== addr.bnb &&
                         wallet?.account &&
                         addInput2?.value && (
                           <Approval
@@ -647,21 +647,6 @@ const Liquidity = () => {
                     <Col md={6}>
                       <div className="text-card">
                         Input{' '}
-                        <i
-                          className="icon-small icon-info icon-dark ml-2"
-                          id="tooltipAddBase"
-                          role="button"
-                        />
-                        <UncontrolledTooltip
-                          placement="right"
-                          target="tooltipAddBase"
-                        >
-                          The quantity of & SPARTA you are adding to the pool.
-                        </UncontrolledTooltip>
-                      </div>
-                      <br />
-                      <div className="text-card">
-                        Share{' '}
                         <i
                           className="icon-small icon-info icon-dark ml-2"
                           id="tooltipAddBase"
@@ -711,17 +696,6 @@ const Liquidity = () => {
                           formatFromWei(assetAdd2?.balanceTokens)}{' '}
                         SPARTA
                       </div>
-                      <div className="output-card">
-                        {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          formatFromUnits(getAddBothOutputLP(), 4)}{' '}
-                        of {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          formatFromWei(assetAdd1?.poolUnits)}{' '}
-                        SPT2-
-                        {assetAdd1?.symbol}
-                      </div>
-                      <br />
                       <br />
                       <div className="subtitle-amount">
                         {!poolFactory.finalArray && '...'}
@@ -765,11 +739,7 @@ const Liquidity = () => {
                       <Row>
                         <Col className="text-left">
                           <div className="title-card">Select pool</div>
-                          <AssetSelect
-                            priority="3"
-                            type="pools"
-                            blackList={[addr.sparta]}
-                          />
+                          <AssetSelect priority="3" blackList={[addr.sparta]} />
                         </Col>
                         <Col className="text-right">
                           <div className="output-card">
@@ -884,7 +854,7 @@ const Liquidity = () => {
                     </div>
                     <br />
                     <div className="text-card">
-                      Share{' '}
+                      Add{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1351,7 +1321,7 @@ const Liquidity = () => {
                   }
                   block
                 >
-                  Add to pool
+                  Redeem LP Tokens
                 </Button>
                 <br />
                 <UncontrolledAlert
@@ -1365,10 +1335,10 @@ const Liquidity = () => {
                   />
                   <span data-notify="message">
                     Please ensure you understand the risks related to this
-                    asymmetric add! 50% of the input BNB will be swapped to
-                    SPARTA before adding both to the pool. This is subject to
-                    the usual swap fees and may have unfavourable impermanent
-                    loss vs hodling your assets!
+                    asymmetric remove! Assets will be removed equally from the
+                    pool like usual, however 100% of the non-preferred asset
+                    will be swapped into your preferred asset. This is subject
+                    to the usual swap fees!
                   </span>
                 </UncontrolledAlert>
               </TabPane>
