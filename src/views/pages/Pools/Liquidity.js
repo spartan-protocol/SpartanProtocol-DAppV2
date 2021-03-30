@@ -56,6 +56,8 @@ import {
   routerRemoveLiqAsym,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
+import RecentTxns from '../../../components/RecentTxns/RecentTxns'
+import { getRouterContract } from '../../../utils/web3Router'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -87,7 +89,10 @@ const Liquidity = () => {
         let asset7 = JSON.parse(window.localStorage.getItem('assetSelected7'))
         let asset8 = JSON.parse(window.localStorage.getItem('assetSelected8'))
 
-        asset1 = asset1 || { tokenAddress: addr.wbnb }
+        asset1 =
+          asset1 && asset1.tokenAddress !== addr.sparta
+            ? asset1
+            : { tokenAddress: addr.wbnb }
         asset3 =
           asset3 && asset3.tokenAddress !== addr.sparta
             ? asset3
@@ -96,7 +101,10 @@ const Liquidity = () => {
           asset3 && asset4 && asset3.tokenAddress === asset4.tokenAddress
             ? asset3
             : { tokenAddress: addr.sparta }
-        asset5 = asset5 || { tokenAddress: addr.wbnb }
+        asset5 =
+          asset5 && asset5.tokenAddress !== addr.sparta
+            ? asset5
+            : { tokenAddress: addr.wbnb }
         asset7 =
           asset7 && asset7.tokenAddress !== addr.sparta
             ? asset7
@@ -1371,6 +1379,14 @@ const Liquidity = () => {
             {' '}
             <Card className="card-body">
               <PoolsPaneSide />
+            </Card>
+          </Col>
+          <Col md={12}>
+            <Card className="card-body">
+              <RecentTxns
+                contract={getRouterContract()}
+                walletAddr={wallet.account}
+              />
             </Card>
           </Col>
         </Row>
