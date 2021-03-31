@@ -70,7 +70,7 @@ const DataManager = () => {
     const tokenCount = poolFactory.tokenCount.toString()
     const checkArrays = () => {
       if (tokenCount !== prevTokenCount && tokenCount > 0) {
-        dispatch(getPoolFactoryTokenArray(tokenCount))
+        dispatch(getPoolFactoryTokenArray(tokenCount, addr.wbnb))
         setPrevTokenArray(poolFactory.tokenArray)
       }
       const curatedCount = poolFactory.curatedPoolCount.toString()
@@ -92,9 +92,7 @@ const DataManager = () => {
     const { tokenArray } = poolFactory
     const checkDetailedArray = () => {
       if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-        dispatch(
-          getPoolFactoryDetailedArray(tokenArray, addr.wbnb, addr.sparta),
-        )
+        dispatch(getPoolFactoryDetailedArray(tokenArray, addr.sparta))
         setPrevDetailedArray(poolFactory.detailedArray)
       }
     }
@@ -129,7 +127,7 @@ const DataManager = () => {
         finalArray?.length > 0
       ) {
         dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
-        setPrevFinalArray(poolFactory.finalArray)
+        // setPrevFinalArray(poolFactory.finalArray)
       }
     }
 
