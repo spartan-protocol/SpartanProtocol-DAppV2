@@ -138,10 +138,10 @@ export const bondBurn = () => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.burnBond()
+    // const gLimit = await contract.estimateGas.burnBond()
     const bondBurned = await contract.burnBond({
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.BOND_BURN, bondBurned))
   } catch (error) {
@@ -161,10 +161,12 @@ export const bondDeposit = (asset, amount) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.deposit(asset, amount)
+    // const gLimit = await contract.estimateGas.deposit(asset, amount)
     const deposit = await contract.deposit(asset, amount, {
+      value:
+        asset === '0x0000000000000000000000000000000000000000' ? amount : null,
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.BOND_DEPOSIT, deposit))
   } catch (error) {
@@ -183,10 +185,10 @@ export const bondClaimAll = (member) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.claimAllForMember(member)
+    // const gLimit = await contract.estimateGas.claimAllForMember(member)
     const bondClaimedAll = await contract.claimAllForMember(member, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimedAll))

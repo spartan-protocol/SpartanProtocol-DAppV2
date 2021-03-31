@@ -46,10 +46,10 @@ export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
       claimed = await contract.callStatic.claim(assetAddress, amount)
     } else {
       const gPrice = await provider.getGasPrice()
-      const gLimit = await contract.estimateGas.claim(assetAddress, amount)
+      // const gLimit = await contract.estimateGas.claim(assetAddress, amount)
       claimed = await contract.claim(assetAddress, amount, {
         gasPrice: gPrice,
-        gasLimit: gLimit,
+        // gasLimit: gLimit,
       })
     }
     dispatch(payloadToDispatch(Types.CLAIM, claimed))
