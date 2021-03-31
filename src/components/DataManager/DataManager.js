@@ -121,11 +121,7 @@ const DataManager = () => {
   useEffect(() => {
     const { finalArray } = poolFactory
     const checkFinalArrayForLP = () => {
-      if (
-        wallet.account &&
-        finalArray !== prevFinalArray &&
-        finalArray?.length > 0
-      ) {
+      if (finalArray !== prevFinalArray && finalArray?.length > 0) {
         dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
         // setPrevFinalArray(poolFactory.finalArray)
       }

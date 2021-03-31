@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
   Button,
   Card,
@@ -16,31 +17,10 @@ import {
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import bnbSparta from '../../assets/icons/bnb_sparta.png'
 import bnb from '../../assets/icons/BNB.svg'
+import { usePoolFactory } from '../../store/poolFactory'
 
 const Poolstable = () => {
-  // const slider1Ref = React.useRef(null)
-  // const slider2Ref = React.useRef(null)
-
-  // React.useEffect(() => {
-  //   const slider1 = slider1Ref.current
-  //   const slider2 = slider2Ref.current
-  //   if (slider1.className === 'slider') {
-  //     Slider.create(slider1, {
-  //       start: [40],
-  //       connect: [true, false],
-  //       step: 1,
-  //       range: { min: 0, max: 100 },
-  //     })
-  //   }
-  //   if (slider2.className === 'slider slider-primary mb-3') {
-  //     Slider.create(slider2, {
-  //       start: [20, 60],
-  //       connect: [false, true, false],
-  //       step: 1,
-  //       range: { min: 0, max: 100 },
-  //     })
-  //   }
-  // }, [])
+  const poolFactory = usePoolFactory()
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('harvest')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -57,6 +37,7 @@ const Poolstable = () => {
 
   return (
     <>
+      {poolFactory?.finalLpArray}
       <Col md={10}>
         <Card className="card-body" style={{ backgroundColor: '#1D171F' }}>
           <div
