@@ -8,18 +8,27 @@ import Wallet from '../../../components/Wallet/Wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
-import { convertToWei, formatFromWei } from '../../../utils/bigNumber'
+import { BN, convertToWei, formatFromWei } from '../../../utils/bigNumber'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import {
   calcDoubleSwapOutput,
   calcDoubleSwapInput,
   calcSwapOutput,
   getSwapInput,
+  calcSwapFee,
+  calcDoubleSwapFee,
+  calcValueInBase,
 } from '../../../utils/web3Utils'
-import { routerSwapAssets } from '../../../store/router/actions'
+import {
+  routerSwapAssets,
+  routerZapLiquidity,
+} from '../../../store/router/actions'
 import { getRouterContract } from '../../../utils/web3Router'
+import Approval from '../../../components/Approval/Approval'
+import { useWeb3 } from '../../../store/web3'
 
 const Swap = () => {
+  const web3 = useWeb3()
   const wallet = useWallet()
   const dispatch = useDispatch()
   const addr = getAddresses()
@@ -35,14 +44,27 @@ const Swap = () => {
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
 
-        asset1 =
-          asset1 && asset1.tokenAddress !== asset2.tokenAddress
-            ? asset1
-            : { tokenAddress: addr.bnb }
-        asset2 =
-          asset2 && asset2.tokenAddress !== asset1.tokenAddress
-            ? asset2
-            : { tokenAddress: addr.sparta }
+        if (zapMode) {
+          asset1 =
+            asset1?.symbol !== 'SPARTA' &&
+            asset1.tokenAddress !== asset2.tokenAddress
+              ? asset1
+              : { tokenAddress: addr.bnb }
+          asset2 =
+            asset2?.symbol !== 'SPARTA' &&
+            asset2.tokenAddress !== asset1.tokenAddress
+              ? asset2
+              : { tokenAddress: addr.bnb }
+        } else {
+          asset1 =
+            asset1 && asset1.tokenAddress !== asset2.tokenAddress
+              ? asset1
+              : { tokenAddress: addr.bnb }
+          asset2 =
+            asset2 && asset2.tokenAddress !== asset1.tokenAddress
+              ? asset2
+              : { tokenAddress: addr.sparta }
+        }
 
         if (poolFactory.finalLpArray) {
           asset1 = getItemFromArray(asset1, poolFactory.finalLpArray)
@@ -63,6 +85,7 @@ const Swap = () => {
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    zapMode,
     poolFactory.finalArray,
     poolFactory.finalLpArray,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,7 +105,39 @@ const Swap = () => {
   }
 
   //= =================================================================================//
-  // Functions swap calculations
+  // Functions SWAP calculations
+
+  const getInput1USD = () => {
+    if (assetSwap1?.symbol === 'SPARTA' && swapInput1?.value) {
+      return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
+    }
+    if (assetSwap1?.symbol !== 'SPARTA' && swapInput1?.value) {
+      return BN(
+        calcValueInBase(
+          assetSwap1?.tokenAmount,
+          assetSwap1?.baseAmount,
+          convertToWei(swapInput1?.value),
+        ),
+      ).times(web3.spartaPrice)
+    }
+    return '0'
+  }
+
+  const getInput2USD = () => {
+    if (assetSwap2?.symbol === 'SPARTA' && swapInput2?.value) {
+      return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
+    }
+    if (assetSwap2?.symbol !== 'SPARTA' && swapInput2?.value) {
+      return BN(
+        calcValueInBase(
+          assetSwap2?.tokenAmount,
+          assetSwap2?.baseAmount,
+          convertToWei(swapInput2?.value),
+        ),
+      ).times(web3.spartaPrice)
+    }
+    return '0'
+  }
 
   const getSwapOutput = () => {
     if (assetSwap1?.symbol === 'SPARTA') {
@@ -109,8 +164,44 @@ const Swap = () => {
     )
   }
 
+  const getSwapFee = () => {
+    // Fee in SPARTA via fee in TOKEN (Swap from SPARTA)
+    if (assetSwap1?.symbol === 'SPARTA') {
+      return calcValueInBase(
+        assetSwap2?.tokenAmount,
+        assetSwap2?.baseAmount,
+        calcSwapFee(
+          convertToWei(swapInput1?.value),
+          assetSwap2?.tokenAmount,
+          assetSwap2?.baseAmount,
+        ),
+      )
+    }
+    // Fee in SPARTA (Swap to SPARTA)
+    if (assetSwap2?.symbol === 'SPARTA') {
+      return calcSwapFee(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
+    }
+    // Fee in SPARTA via fee in token2 (swap token1 to token2)
+    return calcValueInBase(
+      assetSwap2?.tokenAmount,
+      assetSwap2?.baseAmount,
+      calcDoubleSwapFee(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        assetSwap2?.tokenAmount,
+        assetSwap2?.baseAmount,
+      ),
+    )
+  }
+
   //= =================================================================================//
-  // Functions for input handling
+  // Functions for SWAP input handling
 
   const handleInputChange = (input, focusInput1) => {
     if (assetSwap1?.symbol === 'SPARTA') {
@@ -198,6 +289,112 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assetSwap2])
 
+  //= =================================================================================//
+  // Functions ZAP calculations
+
+  // UPDATE THIS WITH ASSET VALUES CALCS
+  const getInputZap1USD = () => {
+    if (assetSwap1?.symbol === 'SPARTA' && swapInput1?.value) {
+      return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
+    }
+    if (assetSwap1?.symbol !== 'SPARTA' && swapInput1?.value) {
+      return BN(
+        calcValueInBase(
+          assetSwap1?.tokenAmount,
+          assetSwap1?.baseAmount,
+          convertToWei(swapInput1?.value),
+        ),
+      ).times(web3.spartaPrice)
+    }
+    return '0'
+  }
+
+  // UPDATE THIS WITH ASSET VALUES CALCS
+  const getInputZap2USD = () => {
+    if (assetSwap2?.symbol === 'SPARTA' && swapInput2?.value) {
+      return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
+    }
+    if (assetSwap2?.symbol !== 'SPARTA' && swapInput2?.value) {
+      return BN(
+        calcValueInBase(
+          assetSwap2?.tokenAmount,
+          assetSwap2?.baseAmount,
+          convertToWei(swapInput2?.value),
+        ),
+      ).times(web3.spartaPrice)
+    }
+    return '0'
+  }
+
+  //= =================================================================================//
+  // Functions for ZAP input handling
+
+  const handleZapInputChange = (input, focusInput1) => {
+    if (!zapMode) {
+      handleInputChange(input, focusInput1)
+    } else if (assetSwap1?.symbol === 'SPARTA') {
+      if (focusInput1 === true) {
+        swapInput2.value = formatFromWei(
+          calcSwapOutput(
+            convertToWei(input),
+            assetSwap2.tokenAmount,
+            assetSwap2.baseAmount,
+            false,
+          ),
+        )
+      } else {
+        swapInput1.value = formatFromWei(
+          getSwapInput(
+            convertToWei(input),
+            assetSwap2.tokenAmount,
+            assetSwap2.baseAmount,
+            false,
+          ),
+        )
+      }
+    } else if (assetSwap2?.symbol === 'SPARTA') {
+      if (focusInput1 === true) {
+        swapInput2.value = formatFromWei(
+          calcSwapOutput(
+            convertToWei(input),
+            assetSwap1.tokenAmount,
+            assetSwap1.baseAmount,
+            true,
+          ),
+        )
+      } else {
+        swapInput1.value = formatFromWei(
+          getSwapInput(
+            convertToWei(input),
+            assetSwap1.tokenAmount,
+            assetSwap1.baseAmount,
+            true,
+          ),
+        )
+      }
+    } else if (focusInput1 === true) {
+      swapInput2.value = formatFromWei(
+        calcDoubleSwapOutput(
+          convertToWei(input),
+          assetSwap1.tokenAmount,
+          assetSwap1.baseAmount,
+          assetSwap2.tokenAmount,
+          assetSwap2.baseAmount,
+        ),
+      )
+    } else {
+      swapInput1.value = formatFromWei(
+        calcDoubleSwapInput(
+          convertToWei(input),
+          assetSwap2.tokenAmount,
+          assetSwap2.baseAmount,
+          assetSwap1.tokenAmount,
+          assetSwap1.baseAmount,
+        ),
+      )
+    }
+  }
+
   return (
     <>
       <div className="content">
@@ -219,13 +416,15 @@ const Swap = () => {
           </Col>
         </Breadcrumb>
         <Row>
-          <Col md={8}>
+          <Col xl={8}>
             <Card className="card-body">
+              {/* Top 'Input' Row */}
               <Row>
+                {/* 'From' input box */}
                 <Col md={5}>
                   <Card
                     style={{ backgroundColor: '#25212D' }}
-                    className="card-body "
+                    className="card-body"
                   >
                     <Row>
                       <Col className="text-left">
@@ -242,7 +441,10 @@ const Swap = () => {
                             <AssetSelect
                               priority="1"
                               type="pools"
-                              blackList={[assetSwap2?.tokenAddress]}
+                              blackList={[
+                                assetSwap2?.tokenAddress,
+                                addr.sparta,
+                              ]}
                             />
                           )}
                         </div>
@@ -261,17 +463,21 @@ const Swap = () => {
                             placeholder="0"
                             id="swapInput1"
                             onInput={(event) =>
-                              handleInputChange(event.target.value, true)
+                              handleZapInputChange(event.target.value, true)
                             }
                           />
                         </FormGroup>
-                        <div className="output-card">~$XX.XX</div>
+                        <div className="output-card">
+                          ~${!zapMode && formatFromWei(getInput1USD())}
+                          {zapMode && formatFromWei(getInputZap1USD())}
+                        </div>
                       </Col>
                     </Row>
                   </Card>
                 </Col>
-                <Col>
-                  <div className="card-body ml-5 mt-4">
+                {/* 'Reverse' selected assets */}
+                <Col md={2}>
+                  <div className="card-body mt-4 text-center">
                     <Button
                       className="btn-rounded btn-icon"
                       color="primary"
@@ -281,7 +487,7 @@ const Swap = () => {
                     </Button>
                   </div>
                 </Col>
-
+                {/* 'To' input box */}
                 <Col md={5}>
                   <Card
                     style={{ backgroundColor: '#25212D' }}
@@ -302,7 +508,10 @@ const Swap = () => {
                             <AssetSelect
                               priority="2"
                               type="pools"
-                              blackList={[assetSwap1?.tokenAddress]}
+                              blackList={[
+                                addr?.sparta,
+                                assetSwap1?.tokenAddress,
+                              ]}
                             />
                           )}
                         </div>
@@ -314,7 +523,6 @@ const Swap = () => {
                           {!zapMode && formatFromWei(assetSwap2?.balanceTokens)}
                           {zapMode && formatFromWei(assetSwap2?.balanceLPs)}
                         </div>
-                        <br />
                         <FormGroup>
                           <Input
                             className="text-right"
@@ -322,91 +530,251 @@ const Swap = () => {
                             placeholder="0"
                             id="swapInput2"
                             onInput={(event) =>
-                              handleInputChange(event.target.value, false)
+                              handleZapInputChange(event.target.value, false)
                             }
                           />
                         </FormGroup>
+                        <div className="output-card">
+                          ~${!zapMode && formatFromWei(getInput2USD())}
+                          {zapMode && formatFromWei(getInputZap2USD())}
+                        </div>
                       </Col>
                     </Row>
                   </Card>
                 </Col>
               </Row>
+              {/* 'Approval/Allowance' row */}
               <Row>
                 <Col>
-                  <div className="text-card">
-                    Input{' '}
-                    <i
-                      className="icon-small icon-info icon-dark ml-2"
-                      id="tooltipAddBase"
-                      role="button"
-                    />
-                    <UncontrolledTooltip
-                      placement="right"
-                      target="tooltipAddBase"
-                    >
-                      The quantity of & SPARTA you are adding to the pool.
-                    </UncontrolledTooltip>
-                  </div>
-                  <br />
-                  <div className="text-card">
-                    Slip{' '}
-                    <i
-                      className="icon-small icon-info icon-dark ml-2"
-                      id="tooltipAddBase"
-                      role="button"
-                    />
-                    <UncontrolledTooltip
-                      placement="right"
-                      target="tooltipAddBase"
-                    >
-                      The quantity of & SPARTA you are adding to the pool.
-                    </UncontrolledTooltip>
-                  </div>
-                  <br />
-                  <div className="amount">
-                    Output{' '}
-                    <i
-                      className="icon-small icon-info icon-dark ml-2"
-                      id="tooltipAddBase"
-                      role="button"
-                    />
-                    <UncontrolledTooltip
-                      placement="right"
-                      target="tooltipAddBase"
-                    >
-                      The quantity of & SPARTA you are adding to the pool.
-                    </UncontrolledTooltip>
-                  </div>
-                  <br />
-                </Col>
-                <Col className="text-right">
-                  <div className="output-card">
-                    {swapInput1?.value} {assetSwap1?.symbol}
-                  </div>
-                  <br />
-                  <div className="output-card">0,000 %</div>
-                  <br />
-                  <div className="subtitle-amount">
-                    {formatFromWei(getSwapOutput())} {assetSwap2?.symbol}
-                  </div>
+                  {!zapMode &&
+                    assetSwap1?.tokenAddress !== addr.bnb &&
+                    wallet?.account &&
+                    swapInput1?.value && (
+                      <Approval
+                        tokenAddress={assetSwap1?.tokenAddress}
+                        walletAddress={wallet?.account}
+                        contractAddress={addr.router}
+                        txnAmount={swapInput1?.value}
+                      />
+                    )}
                 </Col>
               </Row>
-              <Button
-                color="primary"
-                size="lg"
-                onClick={() =>
-                  dispatch(
-                    routerSwapAssets(
-                      convertToWei(swapInput1?.value),
-                      assetSwap1.tokenAddress,
-                      assetSwap2.tokenAddress,
-                    ),
-                  )
-                }
-                block
-              >
-                Swap
-              </Button>
+              {/* Bottom 'swap' txnDetails row */}
+              {!zapMode && (
+                <Row>
+                  {/* TextLeft 'txnDetails' col */}
+                  <Col>
+                    <div className="text-card">
+                      Input{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="text-card">
+                      Swap Fee{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="amount">
+                      Output{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                  </Col>
+                  {/* TextRight 'txnDetails' col */}
+                  <Col className="text-right">
+                    <div className="output-card">
+                      {swapInput1?.value} {assetSwap1?.symbol}
+                    </div>
+                    <br />
+                    <div className="output-card">
+                      {formatFromWei(getSwapFee())} SPARTA
+                    </div>
+                    <br />
+                    <div className="subtitle-amount">
+                      {formatFromWei(getSwapOutput())} {assetSwap2?.symbol}
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              {/* Bottom 'zap' txnDetails row */}
+              {zapMode && (
+                <Row>
+                  {/* TextLeft 'zap' txnDetails col */}
+                  <Col>
+                    <div className="text-card">
+                      Input{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="text-card">
+                      Remove{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="text-card">
+                      Swap{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="text-card">
+                      Add{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                    <div className="amount">
+                      Output{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
+                    </div>
+                    <br />
+                  </Col>
+                  {/* TextRight zap txnDetails col */}
+                  <Col className="text-right">
+                    <div className="output-card">
+                      input {swapInput1?.value} SPT2-{assetSwap1?.symbol}
+                    </div>
+                    <br />
+                    <div className="output-card">
+                      remove {formatFromWei(getSwapFee())} SPARTA + XXX{' '}
+                      {assetSwap1?.symbol}
+                    </div>
+                    <br />
+                    <div className="output-card">
+                      swap {formatFromWei(getSwapFee())} {assetSwap1?.symbol}{' '}
+                      for XXX SPARTA
+                    </div>
+                    <div className="output-card">
+                      then swap {formatFromWei(getSwapFee())} SPARTA for XXX
+                      {assetSwap2?.symbol}
+                    </div>
+                    <br />
+                    <div className="output-card">
+                      add {formatFromWei(getSwapFee())} SPARTA + XXX{' '}
+                      {assetSwap2?.symbol}
+                    </div>
+                    <br />
+                    <div className="subtitle-amount">
+                      output {formatFromWei(getSwapOutput())} SPT2-
+                      {assetSwap2?.symbol}
+                    </div>
+                  </Col>
+                </Row>
+              )}
+              {!zapMode && (
+                <Button
+                  color="primary"
+                  size="lg"
+                  onClick={() =>
+                    dispatch(
+                      routerSwapAssets(
+                        convertToWei(swapInput1?.value),
+                        assetSwap1.tokenAddress,
+                        assetSwap2.tokenAddress,
+                      ),
+                    )
+                  }
+                  block
+                >
+                  Swap
+                </Button>
+              )}
+              {zapMode && (
+                <Button
+                  color="primary"
+                  size="lg"
+                  onClick={() =>
+                    dispatch(
+                      routerZapLiquidity(
+                        convertToWei(swapInput1?.value),
+                        assetSwap1.tokenAddress,
+                        assetSwap2.tokenAddress,
+                      ),
+                    )
+                  }
+                  block
+                >
+                  Swap
+                </Button>
+              )}
             </Card>
           </Col>
         </Row>

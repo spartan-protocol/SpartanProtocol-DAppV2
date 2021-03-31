@@ -1,15 +1,17 @@
 import React from 'react'
 // import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
-import { getRouterContract } from '../../utils/web3Router'
+import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
+// import { getRouterContract } from '../../utils/web3Router'
 // import { getPoolFactoryArray } from '../../store/poolFactory'
 // import { getUtilsContract } from '../../utils/web3Utils'
 // import { getPoolFactoryTokenArray } from '../../store/poolFactory'
 // import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 // import { getListedPools } from '../../store/utils/actions'
 // import { getDaoTotalWeight } from '../../store/dao/actions'
-// import { getAddresses } from '../../utils/web3'
-// const addr = getAddresses()
+import { getAddresses } from '../../utils/web3'
+
+const addr = getAddresses()
 
 const Dashboard = () => {
   // const dispatch = useDispatch()
@@ -21,11 +23,7 @@ const Dashboard = () => {
   // ]
 
   const getPoolArray = async () => {
-    const temp = await getRouterContract().callStatic.swap(
-      '10000000000000000000',
-      '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
-      '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee',
-    )
+    const temp = await getPoolFactoryContract().callStatic.getPool(addr.bnb)
     console.log(temp)
   }
 

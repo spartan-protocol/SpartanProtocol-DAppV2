@@ -127,7 +127,7 @@ const DataManager = () => {
         finalArray?.length > 0
       ) {
         dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
-        setPrevFinalArray(poolFactory.finalArray)
+        // setPrevFinalArray(poolFactory.finalArray)
       }
     }
 

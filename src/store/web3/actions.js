@@ -73,7 +73,6 @@ export const addNetworkBC = () => async (dispatch) => {
     const chainIdString =
       network.net === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
     try {
-      console.log(parseInt(providerBC.chainId, 16), chainId)
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(payloadToDispatch(Types.ADD_NETWORK_BC, addedNetworkBC))
     } catch (error) {

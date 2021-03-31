@@ -26,7 +26,6 @@ const Approval = ({
   useEffect(() => {
     const checkAllowance = () => {
       if (tokenAddress && walletAddress && contractAddress) {
-        console.log('getting allowance')
         dispatch(getAllowance(tokenAddress, walletAddress, contractAddress))
       }
     }
@@ -91,7 +90,7 @@ const Approval = ({
                 color="primary"
                 onClick={warningWithConfirmMessage}
               >
-                Approve *TOKEN1*
+                Approve *TOKEN*
               </Button>
             </CardBody>
           </Card>

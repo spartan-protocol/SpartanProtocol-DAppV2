@@ -217,12 +217,20 @@ const Liquidity = () => {
 
   const getAddOneSwapFee = () => {
     if (addInput4 && assetAdd3 && assetAdd4) {
-      return calcSwapFee(
+      let swapFee = calcSwapFee(
         getAddOneSwapInput(),
         assetAdd3.tokenAmount,
         assetAdd3.baseAmount,
         assetAdd4.symbol !== 'SPARTA',
       )
+      if (assetAdd4?.symbol === 'SPARTA') {
+        swapFee = calcValueInBase(
+          assetAdd3?.tokenAmount,
+          assetAdd3?.baseAmount,
+          swapFee,
+        )
+      }
+      return swapFee
     }
     return '0'
   }
@@ -611,7 +619,7 @@ const Liquidity = () => {
                   </Row>
 
                   <Row>
-                    <Col>
+                    <Col md={6}>
                       {assetAdd1?.tokenAddress &&
                         assetAdd1?.tokenAddress !== addr.bnb &&
                         wallet?.account &&
@@ -624,10 +632,7 @@ const Liquidity = () => {
                           />
                         )}
                     </Col>
-                  </Row>
-
-                  <Row>
-                    <Col>
+                    <Col md={6}>
                       {assetAdd2?.tokenAddress &&
                         assetAdd2?.tokenAddress !== addr.bnb &&
                         wallet?.account &&
@@ -808,6 +813,7 @@ const Liquidity = () => {
                 <Row>
                   <Col>
                     {assetAdd4?.tokenAddress &&
+                      assetAdd4?.tokenAddress !== addr.bnb &&
                       wallet?.account &&
                       addInput4?.value && (
                         <Approval
@@ -905,10 +911,11 @@ const Liquidity = () => {
                         : 'SPARTA'}
                     </div>
                     <div className="output-card">
+                      inc slip fee:{' '}
                       {assetAdd4 &&
                         addInput4 &&
                         formatFromWei(getAddOneSwapFee())}{' '}
-                      (Slip Fee)
+                      SPARTA
                     </div>
                     <br />
                     <div className="output-card">
@@ -1294,7 +1301,8 @@ const Liquidity = () => {
                         : assetRemove3?.symbol}
                     </div>
                     <div className="output-card">
-                      {formatFromWei(getRemoveOneSwapFee())} SPARTA (Swap Fee)
+                      inc slip fee: {formatFromWei(getRemoveOneSwapFee())}{' '}
+                      SPARTA
                     </div>
                     <br />
                     <div className="subtitle-amount">
@@ -1353,10 +1361,12 @@ const Liquidity = () => {
           </Col>
           <Col md={12}>
             <Card className="card-body">
-              <RecentTxns
-                contract={getRouterContract()}
-                walletAddr={wallet.account}
-              />
+              {poolFactory.finalArray && (
+                <RecentTxns
+                  contract={getRouterContract()}
+                  walletAddr={wallet.account}
+                />
+              )}
             </Card>
           </Col>
         </Row>

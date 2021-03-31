@@ -90,8 +90,11 @@ const AssetSelect = (props) => {
           {poolFactory.finalArray &&
             props.blackList &&
             poolFactory.finalArray
-              .filter((asset) =>
-                props.blackList.find((item) => item !== asset.tokenAddress),
+              .filter(
+                (asset) =>
+                  props.blackList.find(
+                    (item) => asset.tokenAddress === item,
+                  ) === undefined,
               )
               .sort((a, b) => b.balanceTokens - a.balanceTokens)
               .map((asset) => (

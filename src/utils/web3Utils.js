@@ -232,12 +232,11 @@ export const calcDoubleSwapFee = (
   pools2BaseAmount,
 ) => {
   // formula: getSwapFee1 + getSwapFee2
-  const fee1 = calcSwapFee(inputAmount, pool1TokenAmount, pool1BaseAmount, true)
-  const x = calcSwapOutput(inputAmount, pool1TokenAmount, pool1BaseAmount, true)
-  const fee2 = calcSwapFee(x, pool2TokenAmount, pools2BaseAmount, false)
-  const fee1Token = calcValueInToken(pool2TokenAmount, pools2BaseAmount, fee1)
-  const result = fee2.plus(fee1Token)
-  console.log(result)
+  const fee1 = calcSwapFee(inputAmount, pool1TokenAmount, pool1BaseAmount, true) // Fee in SPARTA?
+  const x = calcSwapOutput(inputAmount, pool1TokenAmount, pool1BaseAmount, true) // Output in SPARTA
+  const fee2 = calcSwapFee(x, pool2TokenAmount, pools2BaseAmount, false) // Fee in targetToken?
+  const fee1Token = calcValueInToken(pool2TokenAmount, pools2BaseAmount, fee1) // SPARTA fee in targetToken value?
+  const result = fee2.plus(fee1Token) // Total fee in targetToken
   return result
 }
 
