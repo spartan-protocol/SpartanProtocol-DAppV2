@@ -443,6 +443,7 @@ const Liquidity = () => {
           <Col md={8}>
             <Row>
               <Col md={12}>
+                {/* ----- NAV TABS ----- */}
                 <Nav tabs className="nav-tabs-custom">
                   <NavItem>
                     <NavLink
@@ -510,6 +511,7 @@ const Liquidity = () => {
             </Row>
 
             <TabContent className="tab-space" activeTab={horizontalTabs}>
+              {/* ----- ADD BOTH ----- */}
               <TabPane tabId="addBoth">
                 <Card className="card-body">
                   <Row>
@@ -734,6 +736,7 @@ const Liquidity = () => {
                   </Button>
                 </Card>
               </TabPane>
+              {/* ----- ADD SINGLE ----- */}
               <TabPane tabId="addSingle">
                 <Row>
                   <Col md={6}>
@@ -976,7 +979,9 @@ const Liquidity = () => {
                   </span>
                 </UncontrolledAlert>
               </TabPane>
+              {/* ----- REMOVE BOTH ----- */}
               <TabPane tabId="removeBoth">
+                {/* ----- Remove both INPUT PANE ----- */}
                 <Row>
                   <Col md={12}>
                     <Card
@@ -994,8 +999,11 @@ const Liquidity = () => {
                         </Col>
                         <Col className="text-right">
                           <div className="title-card">
-                            Balance {formatFromWei(assetRemove1?.balanceLPs)}{' '}
+                            Balance: {formatFromWei(assetRemove1?.balanceLPs)}{' '}
                             STP2-{assetRemove1?.symbol}
+                          </div>
+                          <div className="title-card">
+                            Locked: XXX.XX STP2-{assetRemove1?.symbol}
                           </div>
                           <FormGroup>
                             <Input
@@ -1015,6 +1023,7 @@ const Liquidity = () => {
                 </Row>
 
                 <br />
+                {/* ----- Remove both TXN DETAILS PANE ----- */}
                 <Row>
                   <Col md={6}>
                     <div className="text-card">
@@ -1033,38 +1042,7 @@ const Liquidity = () => {
                     </div>
                     <br />
                     <div className="text-card">
-                      Receive{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <br />
-                    <div className="text-card">
-                      Staked LP Tokens{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Projected output{' '}
+                      Est. Output{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -1091,10 +1069,6 @@ const Liquidity = () => {
                     <div className="output-card">
                       {formatFromWei(getRemBothOutputBase())} SPARTA
                     </div>
-                    <br />
-                    <div className="subtitle-amount">XX.XX</div>
-                    <br />
-                    <div className="subtitle-amount">XX.XX</div>
                   </Col>
                 </Row>
                 <br />
@@ -1117,6 +1091,7 @@ const Liquidity = () => {
                   Redeem LP Tokens
                 </Button>
               </TabPane>
+              {/* ----- REMOVE SINGLE ----- */}
               <TabPane tabId="removeSingle">
                 <Row>
                   <Col md={6}>

@@ -1,9 +1,4 @@
-/* eslint-disable global-require */
-/* eslint-disable react/no-unescaped-entities */
 import React from 'react'
-// react plugin for creating notifications over the dashboard
-
-// reactstrap components
 import {
   Button,
   Card,

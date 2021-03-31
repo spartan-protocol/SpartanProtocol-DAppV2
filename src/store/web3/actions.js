@@ -102,10 +102,10 @@ export const getApproval = (tokenAddress, contractAddress) => async (
   try {
     const supply = await contract.totalSupply()
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.approve(contractAddress, supply)
+    // const gLimit = await contract.estimateGas.approve(contractAddress, supply)
     const approval = await contract.approve(contractAddress, supply, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
 
     dispatch(payloadToDispatch(Types.GET_APPROVAL, approval))

@@ -96,10 +96,10 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
       deposit = await contract.callStatic.deposit(pool, amount)
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.deposit(pool, amount)
+      // const gLimit = await contract.estimateGas.deposit(pool, amount)
       deposit = await contract.deposit(pool, amount, {
         gasPrice: gPrice,
-        gasLimit: gLimit,
+        // gasLimit: gLimit,
       })
     }
     dispatch(payloadToDispatch(Types.DAO_DEPOSIT, deposit))
@@ -123,10 +123,10 @@ export const daoWithdraw = (pool, amount, justCheck) => async (dispatch) => {
       withdraw = await contract.callStatic.withdraw(pool, amount)
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.withdraw(pool, amount)
+      // const gLimit = await contract.estimateGas.withdraw(pool, amount)
       withdraw = await contract.withdraw(pool, amount, {
         gasPrice: gPrice,
-        gasLimit: gLimit,
+        // gasLimit: gLimit,
       })
     }
     dispatch(payloadToDispatch(Types.DAO_WITHDRAW, withdraw))
@@ -148,10 +148,10 @@ export const daoHarvest = (justCheck) => async (dispatch) => {
       harvest = await contract.callStatic.harvest()
     } else {
       const gPrice = await getProviderGasPrice()
-      const gLimit = await contract.estimateGas.harvest()
+      // const gLimit = await contract.estimateGas.harvest()
       harvest = await contract.harvest({
         gasPrice: gPrice,
-        gasLimit: gLimit,
+        // gasLimit: gLimit,
       })
     }
     dispatch(payloadToDispatch(Types.DAO_HARVEST, harvest))
@@ -258,10 +258,10 @@ export const daoProposalNewAction = (typeStr) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.newActionProposal(typeStr)
+    // const gLimit = await contract.estimateGas.newActionProposal(typeStr)
     const proposalID = await contract.newActionProposal(typeStr, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_ACTION, proposalID))
   } catch (error) {
@@ -281,10 +281,10 @@ export const daoProposalNewParam = (param, typeStr) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.newParamProposal(param, typeStr)
+    // const gLimit = await contract.estimateGas.newParamProposal(param, typeStr)
     const proposalID = await contract.newParamProposal(param, typeStr, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_PARAM, proposalID))
   } catch (error) {
@@ -306,16 +306,16 @@ export const daoProposalNewAddress = (proposedAddress, typeStr) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.newAddressProposal(
-      proposedAddress,
-      typeStr,
-    )
+    // const gLimit = await contract.estimateGas.newAddressProposal(
+    //   proposedAddress,
+    //   typeStr,
+    // )
     const proposalID = await contract.newAddressProposal(
       proposedAddress,
       typeStr,
       {
         gasPrice: gPrice,
-        gasLimit: gLimit,
+        // gasLimit: gLimit,
       },
     )
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_ADDRESS, proposalID))
@@ -336,13 +336,13 @@ export const daoProposalNewGrant = (recipient, amount) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.newGrantProposal(
-      recipient,
-      amount,
-    )
+    // const gLimit = await contract.estimateGas.newGrantProposal(
+    //   recipient,
+    //   amount,
+    // )
     const proposalID = await contract.newGrantProposal(recipient, amount, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_GRANT, proposalID))
   } catch (error) {
@@ -361,10 +361,10 @@ export const daoProposalVote = (proposalID) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.voteProposal(proposalID)
+    // const gLimit = await contract.estimateGas.voteProposal(proposalID)
     const voteWeight = await contract.voteProposal(proposalID, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_VOTE, voteWeight))
   } catch (error) {
@@ -383,10 +383,10 @@ export const daoProposalRemoveVote = (proposalID) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.removeVote(proposalID)
+    // const gLimit = await contract.estimateGas.removeVote(proposalID)
     const voteWeightRemoved = await contract.removeVote(proposalID, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
     dispatch(
       payloadToDispatch(Types.DAO_PROPOSAL_REMOTE_VOTE, voteWeightRemoved),
@@ -412,16 +412,16 @@ export const daoProposalCancel = (oldProposalID, newProposalID) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.cancelProposal(
-      oldProposalID,
-      newProposalID,
-    )
+    // const gLimit = await contract.estimateGas.cancelProposal(
+    //   oldProposalID,
+    //   newProposalID,
+    // )
     const proposal = await contract.cancelProposal(
       oldProposalID,
       newProposalID,
       {
         gasPrice: gPrice,
-        gasLimit: gLimit,
+        // gasLimit: gLimit,
       },
     )
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_CANCEL, proposal))
@@ -441,10 +441,10 @@ export const daoProposalFinalise = (proposalID) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const gLimit = await contract.estimateGas.finaliseProposal(proposalID)
+    // const gLimit = await contract.estimateGas.finaliseProposal(proposalID)
     const proposal = await contract.finaliseProposal(proposalID, {
       gasPrice: gPrice,
-      gasLimit: gLimit,
+      // gasLimit: gLimit,
     })
 
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_FINALISE, proposal))
