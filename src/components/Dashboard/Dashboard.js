@@ -1,7 +1,9 @@
+// import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 // import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
-import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
+// import { useWeb3 } from '../../store/web3'
+// import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 // import { getRouterContract } from '../../utils/web3Router'
 // import { getPoolFactoryArray } from '../../store/poolFactory'
 // import { getUtilsContract } from '../../utils/web3Utils'
@@ -9,11 +11,12 @@ import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 // import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 // import { getListedPools } from '../../store/utils/actions'
 // import { getDaoTotalWeight } from '../../store/dao/actions'
-import { getAddresses } from '../../utils/web3'
+import { getWbnbContract } from '../../utils/web3'
 
-const addr = getAddresses()
+// const addr = getAddresses()
 
 const Dashboard = () => {
+  // const wallet = useWallet()
   // const dispatch = useDispatch()
   // // const hello = 'test'
   // const tokenArray = [
@@ -23,7 +26,11 @@ const Dashboard = () => {
   // ]
 
   const getPoolArray = async () => {
-    const temp = await getPoolFactoryContract().callStatic.getPool(addr.bnb)
+    const temp = await getWbnbContract()
+    // .deposit(
+    //   wallet.account,
+    //   '10000000000000000000',
+    // )
     console.log(temp)
   }
 

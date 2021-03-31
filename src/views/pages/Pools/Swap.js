@@ -18,6 +18,8 @@ import {
   calcSwapFee,
   calcDoubleSwapFee,
   calcValueInBase,
+  calcLiquidityHoldings,
+  calcLiquidityUnits,
 } from '../../../utils/web3Utils'
 import {
   routerSwapAssets,
@@ -292,36 +294,128 @@ const Swap = () => {
   //= =================================================================================//
   // Functions ZAP calculations
 
+  const getZapRemoveBase = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return calcLiquidityHoldings(
+        assetSwap1.baseAmount,
+        convertToWei(swapInput1.value),
+        assetSwap1.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getZapRemoveToken = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return calcLiquidityHoldings(
+        assetSwap1.tokenAmount,
+        convertToWei(swapInput1.value),
+        assetSwap1.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getZapOtherRemoveBase = () => {
+    if (assetSwap2 && swapInput2?.value) {
+      return calcLiquidityHoldings(
+        assetSwap2.baseAmount,
+        convertToWei(swapInput2.value),
+        assetSwap2.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getZapOtherRemoveToken = () => {
+    if (assetSwap2 && swapInput2?.value) {
+      return calcLiquidityHoldings(
+        assetSwap2.tokenAmount,
+        convertToWei(swapInput2.value),
+        assetSwap2.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getZapSwap1 = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return calcSwapOutput(
+        getZapRemoveToken(),
+        assetSwap1.tokenAmount,
+        assetSwap1.baseAmount,
+        true,
+      )
+    }
+    return '0'
+  }
+
+  const getZapSwap2 = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return calcSwapOutput(
+        getZapSwap1(),
+        assetSwap2.tokenAmount,
+        assetSwap2.baseAmount,
+        false,
+      )
+    }
+    return '0'
+  }
+
+  const getZapDoubleSwapFee = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return calcDoubleSwapFee(
+        getZapRemoveToken(),
+        assetSwap1.tokenAmount,
+        assetSwap1.baseAmount,
+        assetSwap2.tokenAmount,
+        assetSwap2.baseAmount,
+      )
+    }
+    return '0'
+  }
+
+  const getZapOutput = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return calcLiquidityUnits(
+        getZapRemoveBase(),
+        getZapSwap2(),
+        assetSwap2.baseAmount,
+        assetSwap2.tokenAmount,
+        assetSwap2.poolUnits,
+      )
+    }
+    return '0'
+  }
+
   // UPDATE THIS WITH ASSET VALUES CALCS
   const getInputZap1USD = () => {
-    if (assetSwap1?.symbol === 'SPARTA' && swapInput1?.value) {
-      return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
-    }
-    if (assetSwap1?.symbol !== 'SPARTA' && swapInput1?.value) {
+    if (assetSwap1 && swapInput1?.value) {
       return BN(
         calcValueInBase(
           assetSwap1?.tokenAmount,
           assetSwap1?.baseAmount,
-          convertToWei(swapInput1?.value),
+          getZapRemoveToken(),
         ),
-      ).times(web3.spartaPrice)
+      )
+        .plus(getZapRemoveBase())
+        .times(web3.spartaPrice)
     }
     return '0'
   }
 
   // UPDATE THIS WITH ASSET VALUES CALCS
   const getInputZap2USD = () => {
-    if (assetSwap2?.symbol === 'SPARTA' && swapInput2?.value) {
-      return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
-    }
-    if (assetSwap2?.symbol !== 'SPARTA' && swapInput2?.value) {
+    if (assetSwap2 && swapInput2?.value) {
       return BN(
         calcValueInBase(
           assetSwap2?.tokenAmount,
           assetSwap2?.baseAmount,
-          convertToWei(swapInput2?.value),
+          getZapOtherRemoveToken(),
         ),
-      ).times(web3.spartaPrice)
+      )
+        .plus(getZapOtherRemoveBase())
+        .times(web3.spartaPrice)
     }
     return '0'
   }
@@ -714,26 +808,32 @@ const Swap = () => {
                     </div>
                     <br />
                     <div className="output-card">
-                      remove {formatFromWei(getSwapFee())} SPARTA + XXX{' '}
-                      {assetSwap1?.symbol}
+                      remove {formatFromWei(getZapRemoveBase())} SPARTA +{' '}
+                      {formatFromWei(getZapRemoveToken())} {assetSwap1?.symbol}
                     </div>
                     <br />
                     <div className="output-card">
-                      swap {formatFromWei(getSwapFee())} {assetSwap1?.symbol}{' '}
-                      for XXX SPARTA
+                      swap {formatFromWei(getZapRemoveToken())}{' '}
+                      {assetSwap1?.symbol} for {formatFromWei(getZapSwap1())}{' '}
+                      SPARTA
                     </div>
                     <div className="output-card">
-                      then swap {formatFromWei(getSwapFee())} SPARTA for XXX
+                      then swap {formatFromWei(getZapSwap1())} SPARTA for{' '}
+                      {formatFromWei(getZapSwap2())}
                       {assetSwap2?.symbol}
+                    </div>
+                    <div className="output-card">
+                      inc slip fee: {formatFromWei(getZapDoubleSwapFee())}{' '}
+                      SPARTA
                     </div>
                     <br />
                     <div className="output-card">
-                      add {formatFromWei(getSwapFee())} SPARTA + XXX{' '}
-                      {assetSwap2?.symbol}
+                      add {formatFromWei(getZapRemoveBase())} SPARTA +{' '}
+                      {formatFromWei(getZapSwap2())} {assetSwap2?.symbol}
                     </div>
                     <br />
                     <div className="subtitle-amount">
-                      output {formatFromWei(getSwapOutput())} SPT2-
+                      output {formatFromWei(getZapOutput())} SPT2-
                       {assetSwap2?.symbol}
                     </div>
                   </Col>

@@ -365,6 +365,14 @@ export const getTokenContract = (tokenAddress) => {
   return contract
 }
 
+// GET WBNB CONTRACT
+export const getWbnbContract = () => {
+  const abiWbnb = getAbis().wbnb
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(getAddresses().wbnb, abiWbnb, provider)
+  return contract
+}
+
 /**
  * Get the 'window' object of the connected walletType
  * @param {} - uses localStorage
