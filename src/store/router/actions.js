@@ -123,7 +123,6 @@ export const routerAddLiqAsym = (input, fromBase, token) => async (
   const contract = getRouterContract()
 
   try {
-    console.log(contract)
     const gPrice = await getProviderGasPrice()
     // const gLimit = await contract.estimateGas.addLiquidityAsym(
     //   input,
