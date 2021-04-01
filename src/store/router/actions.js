@@ -7,6 +7,47 @@ export const routerLoading = () => ({
   type: Types.ROUTER_LOADING,
 })
 
+/**
+ * Get last full month's dividends revenue by pool (not fees; just divis)
+ * @param {address} tokenAddress
+ * @returns {unit} lastMonthDivis
+ */
+export const getPastMonthDivis = (tokenAddress) => async (dispatch) => {
+  dispatch(routerLoading())
+  const contract = getRouterContract()
+
+  try {
+    const lastMonthDivis = await contract.callStatic.mapPast30DPoolRevenue(
+      tokenAddress,
+    )
+
+    dispatch(payloadToDispatch(Types.ROUTER_LAST_MONTH_DIVIS, lastMonthDivis))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+  }
+}
+
+/**
+ * Get the current month's dividends revenue by pool (not fees; just divis)
+ * THIS IS NOT ROLLING; ONLY PARTIAL-MONTH UNTIL THE ARRAY IS COMPLETE THEN PURGES
+ * @param {address} tokenAddress
+ * @returns {unit} thisMonthDivis
+ */
+export const getThisMonthDivis = (tokenAddress) => async (dispatch) => {
+  dispatch(routerLoading())
+  const contract = getRouterContract()
+
+  try {
+    const thisMonthDivis = await contract.callStatic.map30DPoolRevenue(
+      tokenAddress,
+    )
+
+    dispatch(payloadToDispatch(Types.ROUTER_THIS_MONTH_DIVIS, thisMonthDivis))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+  }
+}
+
 export const routerAddLiq = (inputBase, inputToken, token, justCheck) => async (
   dispatch,
 ) => {
