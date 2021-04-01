@@ -34,7 +34,9 @@ const Share = () => {
     location.pathname,
     location.host,
     location.search,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected2'),
   ])
 
