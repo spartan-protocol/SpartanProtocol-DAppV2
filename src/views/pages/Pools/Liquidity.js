@@ -58,6 +58,8 @@ import {
 import Approval from '../../../components/Approval/Approval'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import { getRouterContract } from '../../../utils/web3Router'
+import SharePool from '../../../components/Share/SharePool'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -433,907 +435,944 @@ const Liquidity = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Liquidity</Col>
+          <Col md={8}>Liquidity</Col>
           <Col md={2}>
-            {' '}
+            <SharePool />
+          </Col>
+          <Col md={2}>
             <Wallet />
           </Col>
         </Breadcrumb>
         <Row>
-          <Col md={8}>
-            <Row>
-              <Col md={12}>
-                {/* ----- NAV TABS ----- */}
-                <Nav tabs className="nav-tabs-custom">
-                  <NavItem>
-                    <NavLink
-                      data-toggle="tab"
-                      href="#"
-                      className={horizontalTabs === 'addBoth' ? 'active' : ''}
-                      onClick={(e) =>
-                        changeActiveTab(e, 'horizontalTabs', 'addBoth')
-                      }
-                    >
-                      <div className="text-center">
-                        <div className="output-card">Add both</div>
-                      </div>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      data-toggle="tab"
-                      href="#"
-                      className={horizontalTabs === 'addSingle' ? 'active' : ''}
-                      onClick={(e) =>
-                        changeActiveTab(e, 'horizontalTabs', 'addSingle')
-                      }
-                    >
-                      <div className="text-center">
-                        <div className="output-card">Add single</div>
-                      </div>
-                    </NavLink>
-                  </NavItem>
-
-                  <NavItem>
-                    <NavLink
-                      data-toggle="tab"
-                      href="#"
-                      className={
-                        horizontalTabs === 'removeBoth' ? 'active' : ''
-                      }
-                      onClick={(e) =>
-                        changeActiveTab(e, 'horizontalTabs', 'removeBoth')
-                      }
-                    >
-                      <div className="text-center">
-                        <div className="output-card">Remove both</div>
-                      </div>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      data-toggle="tab"
-                      href="#"
-                      className={
-                        horizontalTabs === 'removeSingle' ? 'active' : ''
-                      }
-                      onClick={(e) =>
-                        changeActiveTab(e, 'horizontalTabs', 'removeSingle')
-                      }
-                    >
-                      <div className="text-center">
-                        <div className="output-card">Remove single</div>
-                      </div>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-              </Col>
-            </Row>
-
-            <TabContent className="tab-space" activeTab={horizontalTabs}>
-              {/* ----- ADD BOTH ----- */}
-              <TabPane tabId="addBoth">
-                <Card className="card-body">
-                  <Row>
-                    <Col md={6}>
-                      <Card
-                        style={{ backgroundColor: '#25212D' }}
-                        className="card-body "
-                      >
-                        <Row>
-                          <Col className="text-left">
-                            <div className="title-card">Input</div>
-                            <AssetSelect
-                              priority="1"
-                              blackList={[addr.sparta]}
-                            />
-                          </Col>
-                          <Col className="text-right">
-                            <div className="title-card">
-                              Balance{' '}
-                              {assetAdd1 !== '...' &&
-                                formatFromWei(assetAdd1?.balanceTokens)}
-                            </div>
-                            <div className="output-card">
-                              <FormGroup>
-                                <Input
-                                  className="text-right"
-                                  type="text"
-                                  placeholder="0"
-                                  id="addInput1"
-                                  onInput={(event) =>
-                                    handleInputChange(event.target.value, true)
-                                  }
-                                />
-                              </FormGroup>
-                            </div>
-                            <div className="title-card">
-                              ~$
-                              {addInput2 &&
-                                web3.spartaPrice &&
-                                addInput2.value > 0 &&
-                                formatFromUnits(
-                                  BN(addInput2?.value).times(web3.spartaPrice),
-                                  2,
-                                )}
-                              {!addInput2 ||
-                                !web3.spartaPrice ||
-                                (addInput2?.value <= 0 && '0')}
-                            </div>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Col>
-
-                    <Col md={6}>
-                      <Card
-                        style={{ backgroundColor: '#25212D' }}
-                        className="card-body "
-                      >
-                        <Row>
-                          <Col className="text-left">
-                            <div className="title-card">Input</div>
-                            <div className="output-card">
-                              <img
-                                className="mr-2"
-                                src={coinSparta}
-                                alt="SPARTA"
-                              />
-                              SPARTA
-                            </div>
-                          </Col>
-                          <Col className="text-right">
-                            <div className="title-card">
-                              {' '}
-                              Balance{' '}
-                              {assetAdd2 !== '...' &&
-                                formatFromWei(assetAdd2?.balanceTokens)}
-                            </div>
-                            <div className="output-card">
-                              {' '}
-                              <FormGroup>
-                                <Input
-                                  className="text-right"
-                                  type="text"
-                                  placeholder="0"
-                                  id="addInput2"
-                                  onInput={(event) =>
-                                    handleInputChange(event.target.value)
-                                  }
-                                />
-                              </FormGroup>
-                            </div>
-                            <div className="title-card">
-                              1 {assetAdd1?.symbol} ={' '}
-                              {poolFactory.finalArray &&
-                                formatFromUnits(
-                                  BN(assetAdd1?.baseAmount).div(
-                                    BN(assetAdd1?.tokenAmount),
-                                  ),
-                                  2,
-                                )}
-                              {!poolFactory.finalArray && '...'} SPARTA
-                            </div>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col md={6}>
-                      {assetAdd1?.tokenAddress &&
-                        assetAdd1?.tokenAddress !== addr.bnb &&
-                        wallet?.account &&
-                        addInput1?.value && (
-                          <Approval
-                            tokenAddress={assetAdd1?.tokenAddress}
-                            walletAddress={wallet?.account}
-                            contractAddress={addr.router}
-                            txnAmount={addInput1?.value}
-                          />
-                        )}
-                    </Col>
-                    <Col md={6}>
-                      {assetAdd2?.tokenAddress &&
-                        assetAdd2?.tokenAddress !== addr.bnb &&
-                        wallet?.account &&
-                        addInput2?.value && (
-                          <Approval
-                            tokenAddress={assetAdd2?.tokenAddress}
-                            walletAddress={wallet?.account}
-                            contractAddress={addr.router}
-                            txnAmount={addInput2?.value}
-                          />
-                        )}
-                    </Col>
-                  </Row>
-
-                  <br />
-                  <Row>
-                    <Col md={6}>
-                      <div className="text-card">
-                        Input{' '}
-                        <i
-                          className="icon-small icon-info icon-dark ml-2"
-                          id="tooltipAddBase"
-                          role="button"
-                        />
-                        <UncontrolledTooltip
-                          placement="right"
-                          target="tooltipAddBase"
-                        >
-                          The quantity of & SPARTA you are adding to the pool.
-                        </UncontrolledTooltip>
-                      </div>
-                      <br />
-
-                      <div className="amount">
-                        Estimated output{' '}
-                        <i
-                          className="icon-small icon-info icon-dark ml-2"
-                          id="tooltipAddBase"
-                          role="button"
-                        />
-                        <UncontrolledTooltip
-                          placement="right"
-                          target="tooltipAddBase"
-                        >
-                          The quantity of & SPARTA you are adding to the pool.
-                        </UncontrolledTooltip>
-                      </div>
-                    </Col>
-                    <Col md={6} className="text-right">
-                      <div className="output-card">
-                        {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          formatFromUnits(addInput1?.value, 4)}{' '}
-                        of {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          formatFromWei(assetAdd1?.balanceTokens)}{' '}
-                        {assetAdd1?.symbol}
-                      </div>
-                      <div className="output-card">
-                        {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          addInput2?.value > 0 &&
-                          formatFromUnits(addInput2?.value, 4)}{' '}
-                        of {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          formatFromWei(assetAdd2?.balanceTokens)}{' '}
-                        SPARTA
-                      </div>
-                      <br />
-                      <div className="subtitle-amount">
-                        {!poolFactory.finalArray && '...'}
-                        {poolFactory.finalArray &&
-                          formatFromUnits(getAddBothOutputLP(), 4)}{' '}
-                        SPT2-{assetAdd1?.symbol}
-                      </div>
-                    </Col>
-                  </Row>
-                  <br />
-                  <Button
-                    color="primary"
-                    size="lg"
-                    block
-                    onClick={() => {
-                      console.log(
-                        convertToWei(addInput2?.value),
-                        convertToWei(addInput1?.value),
-                        assetAdd1?.tokenAddress,
-                      )
-                      dispatch(
-                        routerAddLiq(
-                          convertToWei(addInput2?.value),
-                          convertToWei(addInput1?.value),
-                          assetAdd1?.tokenAddress,
-                        ),
-                      )
-                    }}
-                  >
-                    Add to pool
-                  </Button>
-                </Card>
-              </TabPane>
-              {/* ----- ADD SINGLE ----- */}
-              <TabPane tabId="addSingle">
-                <Row>
-                  <Col md={6}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body"
-                    >
-                      <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Select pool</div>
-                          <AssetSelect priority="3" blackList={[addr.sparta]} />
-                        </Col>
-                        <Col className="text-right">
-                          <div className="output-card">
-                            <img
-                              className="mr-2"
-                              src={bnbSparta}
-                              alt="Logo"
-                              height="25"
-                            />
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card>
-                  </Col>
-
-                  <Col md={6}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    >
-                      <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Input</div>
-                          <AssetSelect
-                            priority="4"
-                            whiteList={[assetAdd3?.tokenAddress, addr.sparta]}
-                          />
-                        </Col>
-                        <Col className="text-right">
-                          <div className="title-card">
-                            Balance{' '}
-                            {assetAdd4 !== '...' &&
-                              formatFromWei(assetAdd4?.balanceTokens)}
-                          </div>
-                          <div className="output-card">
-                            <FormGroup>
-                              <Input
-                                className="text-right"
-                                type="text"
-                                placeholder="0"
-                                id="addInput4"
-                              />
-                            </FormGroup>
-                          </div>
-                          <div className="title-card">
-                            ~$
-                            {addInput4 &&
-                              web3.spartaPrice &&
-                              addInput4.value > 0 &&
-                              formatFromUnits(
-                                BN(assetAdd3?.baseAmount)
-                                  .div(BN(assetAdd3?.tokenAmount))
-                                  .times(BN(addInput4?.value)),
-                                2,
-                              )}
-                            {!addInput4 ||
-                              !web3.spartaPrice ||
-                              (addInput4?.value <= 0 && '0')}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card>
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col>
-                    {assetAdd4?.tokenAddress &&
-                      assetAdd4?.tokenAddress !== addr.bnb &&
-                      wallet?.account &&
-                      addInput4?.value && (
-                        <Approval
-                          tokenAddress={assetAdd4?.tokenAddress}
-                          walletAddress={wallet?.account}
-                          contractAddress={addr.router}
-                          txnAmount={addInput4?.value}
-                        />
-                      )}
-                  </Col>
-                </Row>
-
-                <br />
-                <Row>
-                  <Col md={6}>
-                    <div className="text-card">
-                      Input{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Swap{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Add{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-
-                    <br />
-                    <div className="amount">
-                      Estimated output{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                  </Col>
-                  <Col md={6} className="text-right">
-                    <div className="output-card">
-                      {addInput4 && formatFromUnits(addInput4?.value, 4)} of{' '}
-                      {assetAdd4 !== '...' &&
-                        formatFromWei(assetAdd4?.balanceTokens)}
-                      {assetAdd4?.symbol}
-                    </div>
-                    <br />
-                    <div className="output-card">
-                      {assetAdd4 &&
-                        addInput4 &&
-                        formatFromWei(getAddOneSwapInput())}{' '}
-                      {assetAdd4?.symbol} to{' '}
-                      {assetAdd4 &&
-                        addInput4 &&
-                        formatFromWei(getAddOneSwapOutput())}{' '}
-                      {assetAdd4?.symbol === 'SPARTA'
-                        ? assetAdd3?.symbol
-                        : 'SPARTA'}
-                    </div>
-                    <div className="output-card">
-                      inc slip fee:{' '}
-                      {assetAdd4 &&
-                        addInput4 &&
-                        formatFromWei(getAddOneSwapFee())}{' '}
-                      SPARTA
-                    </div>
-                    <br />
-                    <div className="output-card">
-                      {assetAdd4 &&
-                        addInput4 &&
-                        formatFromWei(getAddOneSwapOutput())}{' '}
-                      {assetAdd4?.symbol === 'SPARTA'
-                        ? assetAdd3?.symbol
-                        : 'SPARTA'}{' '}
-                      +{' '}
-                      {assetAdd4 &&
-                        addInput4 &&
-                        formatFromWei(getAddOneSwapInput(), 4)}{' '}
-                      {assetAdd4?.symbol}
-                    </div>
-                    <br />
-                    <div className="subtitle-amount">
-                      {poolFactory.finalArray &&
-                        formatFromWei(getAddOneOutputLP())}{' '}
-                      SPT2-{assetAdd3?.symbol}
-                    </div>
-                    <br />
-                  </Col>
-                </Row>
-                <br />
-                <Button
-                  color="primary"
-                  size="lg"
-                  onClick={() =>
-                    dispatch(
-                      routerAddLiqAsym(
-                        convertToWei(BN(addInput4?.value)),
-                        assetAdd4?.symbol === 'SPARTA',
-                        assetAdd3?.tokenAddress,
-                      ),
-                    )
-                  }
-                  block
-                >
-                  Add to pool
-                </Button>
-                <br />
-                <UncontrolledAlert
-                  className="alert-with-icon"
-                  color="danger"
-                  fade={false}
-                >
-                  <span
-                    data-notify="icon"
-                    className="icon-medium icon-info icon-dark mb-5"
-                  />
-                  <span data-notify="message">
-                    Please ensure you understand the risks related to this
-                    asymmetric add! 50% of the input BNB will be swapped to
-                    SPARTA before adding both to the pool. This is subject to
-                    the usual swap fees and may have unfavourable impermanent
-                    loss vs hodling your assets!
-                  </span>
-                </UncontrolledAlert>
-              </TabPane>
-              {/* ----- REMOVE BOTH ----- */}
-              <TabPane tabId="removeBoth">
-                {/* ----- Remove both INPUT PANE ----- */}
+          {!poolFactory.finalArray && (
+            <div className="m-auto">
+              <HelmetLoading height={300} width={300} />
+            </div>
+          )}
+          {poolFactory.finalArray?.length > 0 && (
+            <>
+              <Col md={8}>
                 <Row>
                   <Col md={12}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    >
-                      <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Redeem</div>
-                          <AssetSelect
-                            priority="5"
-                            type="pools"
-                            blackList={[addr.sparta]}
-                          />
-                        </Col>
-                        <Col className="text-right">
-                          <div className="title-card">
-                            Balance: {formatFromWei(assetRemove1?.balanceLPs)}{' '}
-                            STP2-{assetRemove1?.symbol}
+                    {/* ----- NAV TABS ----- */}
+                    <Nav tabs className="nav-tabs-custom">
+                      <NavItem>
+                        <NavLink
+                          data-toggle="tab"
+                          href="#"
+                          className={
+                            horizontalTabs === 'addBoth' ? 'active' : ''
+                          }
+                          onClick={(e) =>
+                            changeActiveTab(e, 'horizontalTabs', 'addBoth')
+                          }
+                        >
+                          <div className="text-center">
+                            <div className="output-card">Add both</div>
                           </div>
-                          <div className="title-card">
-                            Locked: XXX.XX STP2-{assetRemove1?.symbol}
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          data-toggle="tab"
+                          href="#"
+                          className={
+                            horizontalTabs === 'addSingle' ? 'active' : ''
+                          }
+                          onClick={(e) =>
+                            changeActiveTab(e, 'horizontalTabs', 'addSingle')
+                          }
+                        >
+                          <div className="text-center">
+                            <div className="output-card">Add single</div>
                           </div>
-                          <FormGroup>
-                            <Input
-                              className="text-right"
-                              type="text"
-                              placeholder="0"
-                              id="removeInput2"
-                            />
-                          </FormGroup>
-                          <div className="output-card">
-                            ~${formatFromWei(getRemBothInputValue()).toString()}
+                        </NavLink>
+                      </NavItem>
+
+                      <NavItem>
+                        <NavLink
+                          data-toggle="tab"
+                          href="#"
+                          className={
+                            horizontalTabs === 'removeBoth' ? 'active' : ''
+                          }
+                          onClick={(e) =>
+                            changeActiveTab(e, 'horizontalTabs', 'removeBoth')
+                          }
+                        >
+                          <div className="text-center">
+                            <div className="output-card">Remove both</div>
                           </div>
-                        </Col>
-                      </Row>
-                    </Card>
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          data-toggle="tab"
+                          href="#"
+                          className={
+                            horizontalTabs === 'removeSingle' ? 'active' : ''
+                          }
+                          onClick={(e) =>
+                            changeActiveTab(e, 'horizontalTabs', 'removeSingle')
+                          }
+                        >
+                          <div className="text-center">
+                            <div className="output-card">Remove single</div>
+                          </div>
+                        </NavLink>
+                      </NavItem>
+                    </Nav>
                   </Col>
                 </Row>
 
-                <br />
-                {/* ----- Remove both TXN DETAILS PANE ----- */}
-                <Row>
-                  <Col md={6}>
-                    <div className="text-card">
-                      Redeem LP Tokens{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Est. Output{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                  </Col>
-                  <Col md={6} className="text-right">
-                    <div className="output-card">
-                      {formatFromUnits(removeInput2?.value, 4)} of{' '}
-                      {formatFromWei(assetRemove1?.balanceLPs)}
-                    </div>
-                    <br />
-                    <div className="output-card">
-                      {formatFromWei(getRemBothOutputToken())}{' '}
-                      {assetRemove1?.symbol}
-                    </div>
-                    <div className="output-card">
-                      {formatFromWei(getRemBothOutputBase())} SPARTA
-                    </div>
-                  </Col>
-                </Row>
-                <br />
-                <Button
-                  color="primary"
-                  size="lg"
-                  onClick={() =>
-                    dispatch(
-                      routerRemoveLiq(
-                        BN(convertToWei(removeInput2.value))
-                          .div(BN(assetRemove1?.balanceLPs))
-                          .times('10000')
-                          .toFixed(0),
-                        assetRemove1?.tokenAddress,
-                      ),
-                    )
-                  }
-                  block
-                >
-                  Redeem LP Tokens
-                </Button>
-              </TabPane>
-              {/* ----- REMOVE SINGLE ----- */}
-              <TabPane tabId="removeSingle">
-                <Row>
-                  <Col md={6}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body"
-                    >
+                <TabContent className="tab-space" activeTab={horizontalTabs}>
+                  {/* ----- ADD BOTH ----- */}
+                  <TabPane tabId="addBoth">
+                    <Card className="card-body">
                       <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Select pool</div>
-                          <AssetSelect
-                            priority="7"
-                            type="pools"
-                            blackList={[addr.sparta]}
-                          />
+                        <Col md={6}>
+                          <Card
+                            style={{ backgroundColor: '#25212D' }}
+                            className="card-body "
+                          >
+                            <Row>
+                              <Col className="text-left">
+                                <div className="title-card">Input</div>
+                                <AssetSelect
+                                  priority="1"
+                                  blackList={[addr.sparta]}
+                                />
+                              </Col>
+                              <Col className="text-right">
+                                <div className="title-card">
+                                  Balance{' '}
+                                  {assetAdd1 !== '...' &&
+                                    formatFromWei(assetAdd1?.balanceTokens)}
+                                </div>
+                                <div className="output-card">
+                                  <FormGroup>
+                                    <Input
+                                      className="text-right"
+                                      type="text"
+                                      placeholder="0"
+                                      id="addInput1"
+                                      onInput={(event) =>
+                                        handleInputChange(
+                                          event.target.value,
+                                          true,
+                                        )
+                                      }
+                                    />
+                                  </FormGroup>
+                                </div>
+                                <div className="title-card">
+                                  ~$
+                                  {addInput2 &&
+                                    web3.spartaPrice &&
+                                    addInput2.value > 0 &&
+                                    formatFromUnits(
+                                      BN(addInput2?.value).times(
+                                        web3.spartaPrice,
+                                      ),
+                                      2,
+                                    )}
+                                  {!addInput2 ||
+                                    !web3.spartaPrice ||
+                                    (addInput2?.value <= 0 && '0')}
+                                </div>
+                              </Col>
+                            </Row>
+                          </Card>
                         </Col>
-                        <Col className="text-right">
-                          <div className="output-card">
-                            <img
-                              className="mr-2"
-                              src={bnbSparta}
-                              alt="Logo"
-                              height="25"
-                            />
-                          </div>
+
+                        <Col md={6}>
+                          <Card
+                            style={{ backgroundColor: '#25212D' }}
+                            className="card-body "
+                          >
+                            <Row>
+                              <Col className="text-left">
+                                <div className="title-card">Input</div>
+                                <div className="output-card">
+                                  <img
+                                    className="mr-2"
+                                    src={coinSparta}
+                                    alt="SPARTA"
+                                  />
+                                  SPARTA
+                                </div>
+                              </Col>
+                              <Col className="text-right">
+                                <div className="title-card">
+                                  {' '}
+                                  Balance{' '}
+                                  {assetAdd2 !== '...' &&
+                                    formatFromWei(assetAdd2?.balanceTokens)}
+                                </div>
+                                <div className="output-card">
+                                  {' '}
+                                  <FormGroup>
+                                    <Input
+                                      className="text-right"
+                                      type="text"
+                                      placeholder="0"
+                                      id="addInput2"
+                                      onInput={(event) =>
+                                        handleInputChange(event.target.value)
+                                      }
+                                    />
+                                  </FormGroup>
+                                </div>
+                                <div className="title-card">
+                                  1 {assetAdd1?.symbol} ={' '}
+                                  {poolFactory.finalArray &&
+                                    formatFromUnits(
+                                      BN(assetAdd1?.baseAmount).div(
+                                        BN(assetAdd1?.tokenAmount),
+                                      ),
+                                      2,
+                                    )}
+                                  {!poolFactory.finalArray && '...'} SPARTA
+                                </div>
+                              </Col>
+                            </Row>
+                          </Card>
                         </Col>
                       </Row>
-                    </Card>
-                  </Col>
 
-                  <Col md={6}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    >
                       <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Output</div>
-                          <AssetSelect
-                            priority="8"
-                            whiteList={[
-                              assetRemove3?.tokenAddress,
-                              addr.sparta,
-                            ]}
-                          />
-                        </Col>
-                        <Col className="text-right">
-                          <div className="title-card">
-                            Balance{' '}
-                            {assetRemove4 !== '...' &&
-                              formatFromWei(assetRemove3?.balanceLPs)}{' '}
-                            SPT2-{assetRemove3?.symbol}
-                          </div>
-                          <div className="output-card">
-                            <FormGroup>
-                              <Input
-                                className="text-right"
-                                type="text"
-                                placeholder="0"
-                                id="removeInput4"
+                        <Col md={6}>
+                          {assetAdd1?.tokenAddress &&
+                            assetAdd1?.tokenAddress !== addr.bnb &&
+                            wallet?.account &&
+                            addInput1?.value && (
+                              <Approval
+                                tokenAddress={assetAdd1?.tokenAddress}
+                                walletAddress={wallet?.account}
+                                contractAddress={addr.router}
+                                txnAmount={addInput1?.value}
                               />
-                            </FormGroup>
+                            )}
+                        </Col>
+                        <Col md={6}>
+                          {assetAdd2?.tokenAddress &&
+                            assetAdd2?.tokenAddress !== addr.bnb &&
+                            wallet?.account &&
+                            addInput2?.value && (
+                              <Approval
+                                tokenAddress={assetAdd2?.tokenAddress}
+                                walletAddress={wallet?.account}
+                                contractAddress={addr.router}
+                                txnAmount={addInput2?.value}
+                              />
+                            )}
+                        </Col>
+                      </Row>
+
+                      <br />
+                      <Row>
+                        <Col md={6}>
+                          <div className="text-card">
+                            Input{' '}
+                            <i
+                              className="icon-small icon-info icon-dark ml-2"
+                              id="tooltipAddBase"
+                              role="button"
+                            />
+                            <UncontrolledTooltip
+                              placement="right"
+                              target="tooltipAddBase"
+                            >
+                              The quantity of & SPARTA you are adding to the
+                              pool.
+                            </UncontrolledTooltip>
                           </div>
-                          <div className="title-card">
-                            ~${formatFromWei(getRemOneInputValue()).toString()}
+                          <br />
+
+                          <div className="amount">
+                            Estimated output{' '}
+                            <i
+                              className="icon-small icon-info icon-dark ml-2"
+                              id="tooltipAddBase"
+                              role="button"
+                            />
+                            <UncontrolledTooltip
+                              placement="right"
+                              target="tooltipAddBase"
+                            >
+                              The quantity of & SPARTA you are adding to the
+                              pool.
+                            </UncontrolledTooltip>
+                          </div>
+                        </Col>
+                        <Col md={6} className="text-right">
+                          <div className="output-card">
+                            {!poolFactory.finalArray && '...'}
+                            {poolFactory.finalArray &&
+                              formatFromUnits(addInput1?.value, 4)}{' '}
+                            of {!poolFactory.finalArray && '...'}
+                            {poolFactory.finalArray &&
+                              formatFromWei(assetAdd1?.balanceTokens)}{' '}
+                            {assetAdd1?.symbol}
+                          </div>
+                          <div className="output-card">
+                            {!poolFactory.finalArray && '...'}
+                            {poolFactory.finalArray &&
+                              addInput2?.value > 0 &&
+                              formatFromUnits(addInput2?.value, 4)}{' '}
+                            of {!poolFactory.finalArray && '...'}
+                            {poolFactory.finalArray &&
+                              formatFromWei(assetAdd2?.balanceTokens)}{' '}
+                            SPARTA
+                          </div>
+                          <br />
+                          <div className="subtitle-amount">
+                            {!poolFactory.finalArray && '...'}
+                            {poolFactory.finalArray &&
+                              formatFromUnits(getAddBothOutputLP(), 4)}{' '}
+                            SPT2-{assetAdd1?.symbol}
                           </div>
                         </Col>
                       </Row>
+                      <br />
+                      <Button
+                        color="primary"
+                        size="lg"
+                        block
+                        onClick={() => {
+                          console.log(
+                            convertToWei(addInput2?.value),
+                            convertToWei(addInput1?.value),
+                            assetAdd1?.tokenAddress,
+                          )
+                          dispatch(
+                            routerAddLiq(
+                              convertToWei(addInput2?.value),
+                              convertToWei(addInput1?.value),
+                              assetAdd1?.tokenAddress,
+                            ),
+                          )
+                        }}
+                      >
+                        Add to pool
+                      </Button>
                     </Card>
-                  </Col>
-                </Row>
+                  </TabPane>
+                  {/* ----- ADD SINGLE ----- */}
+                  <TabPane tabId="addSingle">
+                    <Row>
+                      <Col md={6}>
+                        <Card
+                          style={{ backgroundColor: '#25212D' }}
+                          className="card-body"
+                        >
+                          <Row>
+                            <Col className="text-left">
+                              <div className="title-card">Select pool</div>
+                              <AssetSelect
+                                priority="3"
+                                blackList={[addr.sparta]}
+                              />
+                            </Col>
+                            <Col className="text-right">
+                              <div className="output-card">
+                                <img
+                                  className="mr-2"
+                                  src={bnbSparta}
+                                  alt="Logo"
+                                  height="25"
+                                />
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
 
-                <br />
-                <Row>
-                  <Col md={6}>
-                    <div className="text-card">
-                      Input{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Remove{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Swap{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <div className="text-card">
-                      Share{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
+                      <Col md={6}>
+                        <Card
+                          style={{ backgroundColor: '#25212D' }}
+                          className="card-body "
+                        >
+                          <Row>
+                            <Col className="text-left">
+                              <div className="title-card">Input</div>
+                              <AssetSelect
+                                priority="4"
+                                whiteList={[
+                                  assetAdd3?.tokenAddress,
+                                  addr.sparta,
+                                ]}
+                              />
+                            </Col>
+                            <Col className="text-right">
+                              <div className="title-card">
+                                Balance{' '}
+                                {assetAdd4 !== '...' &&
+                                  formatFromWei(assetAdd4?.balanceTokens)}
+                              </div>
+                              <div className="output-card">
+                                <FormGroup>
+                                  <Input
+                                    className="text-right"
+                                    type="text"
+                                    placeholder="0"
+                                    id="addInput4"
+                                  />
+                                </FormGroup>
+                              </div>
+                              <div className="title-card">
+                                ~$
+                                {addInput4 &&
+                                  web3.spartaPrice &&
+                                  addInput4.value > 0 &&
+                                  formatFromUnits(
+                                    BN(assetAdd3?.baseAmount)
+                                      .div(BN(assetAdd3?.tokenAmount))
+                                      .times(BN(addInput4?.value)),
+                                    2,
+                                  )}
+                                {!addInput4 ||
+                                  !web3.spartaPrice ||
+                                  (addInput4?.value <= 0 && '0')}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col>
+                        {assetAdd4?.tokenAddress &&
+                          assetAdd4?.tokenAddress !== addr.bnb &&
+                          wallet?.account &&
+                          addInput4?.value && (
+                            <Approval
+                              tokenAddress={assetAdd4?.tokenAddress}
+                              walletAddress={wallet?.account}
+                              contractAddress={addr.router}
+                              txnAmount={addInput4?.value}
+                            />
+                          )}
+                      </Col>
+                    </Row>
 
                     <br />
-                    <div className="amount">
-                      Estimated output{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
+                    <Row>
+                      <Col md={6}>
+                        <div className="text-card">
+                          Input{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                        <br />
+                        <div className="text-card">
+                          Swap{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                        <br />
+                        <div className="text-card">
+                          Add{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+
+                        <br />
+                        <div className="amount">
+                          Estimated output{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                      </Col>
+                      <Col md={6} className="text-right">
+                        <div className="output-card">
+                          {addInput4 && formatFromUnits(addInput4?.value, 4)} of{' '}
+                          {assetAdd4 !== '...' &&
+                            formatFromWei(assetAdd4?.balanceTokens)}
+                          {assetAdd4?.symbol}
+                        </div>
+                        <br />
+                        <div className="output-card">
+                          {assetAdd4 &&
+                            addInput4 &&
+                            formatFromWei(getAddOneSwapInput())}{' '}
+                          {assetAdd4?.symbol} to{' '}
+                          {assetAdd4 &&
+                            addInput4 &&
+                            formatFromWei(getAddOneSwapOutput())}{' '}
+                          {assetAdd4?.symbol === 'SPARTA'
+                            ? assetAdd3?.symbol
+                            : 'SPARTA'}
+                        </div>
+                        <div className="output-card">
+                          inc slip fee:{' '}
+                          {assetAdd4 &&
+                            addInput4 &&
+                            formatFromWei(getAddOneSwapFee())}{' '}
+                          SPARTA
+                        </div>
+                        <br />
+                        <div className="output-card">
+                          {assetAdd4 &&
+                            addInput4 &&
+                            formatFromWei(getAddOneSwapOutput())}{' '}
+                          {assetAdd4?.symbol === 'SPARTA'
+                            ? assetAdd3?.symbol
+                            : 'SPARTA'}{' '}
+                          +{' '}
+                          {assetAdd4 &&
+                            addInput4 &&
+                            formatFromWei(getAddOneSwapInput(), 4)}{' '}
+                          {assetAdd4?.symbol}
+                        </div>
+                        <br />
+                        <div className="subtitle-amount">
+                          {poolFactory.finalArray &&
+                            formatFromWei(getAddOneOutputLP())}{' '}
+                          SPT2-{assetAdd3?.symbol}
+                        </div>
+                        <br />
+                      </Col>
+                    </Row>
+                    <br />
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onClick={() =>
+                        dispatch(
+                          routerAddLiqAsym(
+                            convertToWei(BN(addInput4?.value)),
+                            assetAdd4?.symbol === 'SPARTA',
+                            assetAdd3?.tokenAddress,
+                          ),
+                        )
+                      }
+                      block
+                    >
+                      Add to pool
+                    </Button>
+                    <br />
+                    <UncontrolledAlert
+                      className="alert-with-icon"
+                      color="danger"
+                      fade={false}
+                    >
+                      <span
+                        data-notify="icon"
+                        className="icon-medium icon-info icon-dark mb-5"
                       />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
-                      >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                  </Col>
-                  <Col md={6} className="text-right">
-                    <div className="output-card">
-                      {removeInput4 && formatFromUnits(removeInput4?.value, 4)}{' '}
-                      of{' '}
-                      {assetRemove4 !== '...' &&
-                        formatFromWei(assetRemove3?.balanceLPs)}{' '}
-                      SPT2-{assetRemove3?.symbol}
-                    </div>
+                      <span data-notify="message">
+                        Please ensure you understand the risks related to this
+                        asymmetric add! 50% of the input BNB will be swapped to
+                        SPARTA before adding both to the pool. This is subject
+                        to the usual swap fees and may have unfavourable
+                        impermanent loss vs hodling your assets!
+                      </span>
+                    </UncontrolledAlert>
+                  </TabPane>
+                  {/* ----- REMOVE BOTH ----- */}
+                  <TabPane tabId="removeBoth">
+                    {/* ----- Remove both INPUT PANE ----- */}
+                    <Row>
+                      <Col md={12}>
+                        <Card
+                          style={{ backgroundColor: '#25212D' }}
+                          className="card-body "
+                        >
+                          <Row>
+                            <Col className="text-left">
+                              <div className="title-card">Redeem</div>
+                              <AssetSelect
+                                priority="5"
+                                type="pools"
+                                blackList={[addr.sparta]}
+                              />
+                            </Col>
+                            <Col className="text-right">
+                              <div className="title-card">
+                                Balance:{' '}
+                                {formatFromWei(assetRemove1?.balanceLPs)} STP2-
+                                {assetRemove1?.symbol}
+                              </div>
+                              <div className="title-card">
+                                Locked: XXX.XX STP2-{assetRemove1?.symbol}
+                              </div>
+                              <FormGroup>
+                                <Input
+                                  className="text-right"
+                                  type="text"
+                                  placeholder="0"
+                                  id="removeInput2"
+                                />
+                              </FormGroup>
+                              <div className="output-card">
+                                ~$
+                                {formatFromWei(
+                                  getRemBothInputValue(),
+                                ).toString()}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
+                    </Row>
+
                     <br />
-                    <div className="output-card">
-                      {assetRemove4 &&
-                        removeInput4 &&
-                        formatFromWei(getRemOneOutputToken())}{' '}
-                      {assetRemove3?.symbol}
-                    </div>
-                    <div className="output-card">
-                      {assetRemove4 &&
-                        removeInput4 &&
-                        formatFromWei(getRemOneOutputBase())}{' '}
-                      SPARTA
-                    </div>
+                    {/* ----- Remove both TXN DETAILS PANE ----- */}
+                    <Row>
+                      <Col md={6}>
+                        <div className="text-card">
+                          Redeem LP Tokens{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                        <br />
+                        <div className="text-card">
+                          Est. Output{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                      </Col>
+                      <Col md={6} className="text-right">
+                        <div className="output-card">
+                          {formatFromUnits(removeInput2?.value, 4)} of{' '}
+                          {formatFromWei(assetRemove1?.balanceLPs)}
+                        </div>
+                        <br />
+                        <div className="output-card">
+                          {formatFromWei(getRemBothOutputToken())}{' '}
+                          {assetRemove1?.symbol}
+                        </div>
+                        <div className="output-card">
+                          {formatFromWei(getRemBothOutputBase())} SPARTA
+                        </div>
+                      </Col>
+                    </Row>
                     <br />
-                    <div className="output-card">
-                      {formatFromWei(getRemoveOneSwapInput())}{' '}
-                      {assetRemove4?.symbol === 'SPARTA'
-                        ? assetRemove3?.symbol
-                        : 'SPARTA'}{' '}
-                      to {formatFromWei(getRemoveOneSwapOutput())}{' '}
-                      {assetRemove4?.symbol === 'SPARTA'
-                        ? 'SPARTA'
-                        : assetRemove3?.symbol}
-                    </div>
-                    <div className="output-card">
-                      inc slip fee: {formatFromWei(getRemoveOneSwapFee())}{' '}
-                      SPARTA
-                    </div>
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onClick={() =>
+                        dispatch(
+                          routerRemoveLiq(
+                            BN(convertToWei(removeInput2.value))
+                              .div(BN(assetRemove1?.balanceLPs))
+                              .times('10000')
+                              .toFixed(0),
+                            assetRemove1?.tokenAddress,
+                          ),
+                        )
+                      }
+                      block
+                    >
+                      Redeem LP Tokens
+                    </Button>
+                  </TabPane>
+                  {/* ----- REMOVE SINGLE ----- */}
+                  <TabPane tabId="removeSingle">
+                    <Row>
+                      <Col md={6}>
+                        <Card
+                          style={{ backgroundColor: '#25212D' }}
+                          className="card-body"
+                        >
+                          <Row>
+                            <Col className="text-left">
+                              <div className="title-card">Select pool</div>
+                              <AssetSelect
+                                priority="7"
+                                type="pools"
+                                blackList={[addr.sparta]}
+                              />
+                            </Col>
+                            <Col className="text-right">
+                              <div className="output-card">
+                                <img
+                                  className="mr-2"
+                                  src={bnbSparta}
+                                  alt="Logo"
+                                  height="25"
+                                />
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
+
+                      <Col md={6}>
+                        <Card
+                          style={{ backgroundColor: '#25212D' }}
+                          className="card-body "
+                        >
+                          <Row>
+                            <Col className="text-left">
+                              <div className="title-card">Output</div>
+                              <AssetSelect
+                                priority="8"
+                                whiteList={[
+                                  assetRemove3?.tokenAddress,
+                                  addr.sparta,
+                                ]}
+                              />
+                            </Col>
+                            <Col className="text-right">
+                              <div className="title-card">
+                                Balance{' '}
+                                {assetRemove4 !== '...' &&
+                                  formatFromWei(assetRemove3?.balanceLPs)}{' '}
+                                SPT2-{assetRemove3?.symbol}
+                              </div>
+                              <div className="output-card">
+                                <FormGroup>
+                                  <Input
+                                    className="text-right"
+                                    type="text"
+                                    placeholder="0"
+                                    id="removeInput4"
+                                  />
+                                </FormGroup>
+                              </div>
+                              <div className="title-card">
+                                ~$
+                                {formatFromWei(
+                                  getRemOneInputValue(),
+                                ).toString()}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
+                    </Row>
+
                     <br />
-                    <div className="subtitle-amount">
-                      {poolFactory.finalArray &&
-                        formatFromWei(getRemoveOneFinalOutput())}{' '}
-                      {assetRemove4?.symbol}
-                    </div>
+                    <Row>
+                      <Col md={6}>
+                        <div className="text-card">
+                          Input{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                        <br />
+                        <div className="text-card">
+                          Remove{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                        <br />
+                        <div className="text-card">
+                          Swap{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                        <br />
+                        <div className="text-card">
+                          Share{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+
+                        <br />
+                        <div className="amount">
+                          Estimated output{' '}
+                          <i
+                            className="icon-small icon-info icon-dark ml-2"
+                            id="tooltipAddBase"
+                            role="button"
+                          />
+                          <UncontrolledTooltip
+                            placement="right"
+                            target="tooltipAddBase"
+                          >
+                            The quantity of & SPARTA you are adding to the pool.
+                          </UncontrolledTooltip>
+                        </div>
+                      </Col>
+                      <Col md={6} className="text-right">
+                        <div className="output-card">
+                          {removeInput4 &&
+                            formatFromUnits(removeInput4?.value, 4)}{' '}
+                          of{' '}
+                          {assetRemove4 !== '...' &&
+                            formatFromWei(assetRemove3?.balanceLPs)}{' '}
+                          SPT2-{assetRemove3?.symbol}
+                        </div>
+                        <br />
+                        <div className="output-card">
+                          {assetRemove4 &&
+                            removeInput4 &&
+                            formatFromWei(getRemOneOutputToken())}{' '}
+                          {assetRemove3?.symbol}
+                        </div>
+                        <div className="output-card">
+                          {assetRemove4 &&
+                            removeInput4 &&
+                            formatFromWei(getRemOneOutputBase())}{' '}
+                          SPARTA
+                        </div>
+                        <br />
+                        <div className="output-card">
+                          {formatFromWei(getRemoveOneSwapInput())}{' '}
+                          {assetRemove4?.symbol === 'SPARTA'
+                            ? assetRemove3?.symbol
+                            : 'SPARTA'}{' '}
+                          to {formatFromWei(getRemoveOneSwapOutput())}{' '}
+                          {assetRemove4?.symbol === 'SPARTA'
+                            ? 'SPARTA'
+                            : assetRemove3?.symbol}
+                        </div>
+                        <div className="output-card">
+                          inc slip fee: {formatFromWei(getRemoveOneSwapFee())}{' '}
+                          SPARTA
+                        </div>
+                        <br />
+                        <div className="subtitle-amount">
+                          {poolFactory.finalArray &&
+                            formatFromWei(getRemoveOneFinalOutput())}{' '}
+                          {assetRemove4?.symbol}
+                        </div>
+                        <br />
+                        <br />
+                      </Col>
+                    </Row>
                     <br />
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onClick={() =>
+                        dispatch(
+                          routerRemoveLiqAsym(
+                            convertToWei(BN(removeInput4?.value)),
+                            assetRemove4?.symbol === 'SPARTA',
+                            assetRemove3?.tokenAddress,
+                          ),
+                        )
+                      }
+                      block
+                    >
+                      Redeem LP Tokens
+                    </Button>
                     <br />
-                  </Col>
-                </Row>
-                <br />
-                <Button
-                  color="primary"
-                  size="lg"
-                  onClick={() =>
-                    dispatch(
-                      routerRemoveLiqAsym(
-                        convertToWei(BN(removeInput4?.value)),
-                        assetRemove4?.symbol === 'SPARTA',
-                        assetRemove3?.tokenAddress,
-                      ),
-                    )
-                  }
-                  block
-                >
-                  Redeem LP Tokens
-                </Button>
-                <br />
-                <UncontrolledAlert
-                  className="alert-with-icon"
-                  color="danger"
-                  fade={false}
-                >
-                  <span
-                    data-notify="icon"
-                    className="icon-medium icon-info icon-dark mb-5"
-                  />
-                  <span data-notify="message">
-                    Please ensure you understand the risks related to this
-                    asymmetric remove! Assets will be removed equally from the
-                    pool like usual, however 100% of the non-preferred asset
-                    will be swapped into your preferred asset. This is subject
-                    to the usual swap fees!
-                  </span>
-                </UncontrolledAlert>
-              </TabPane>
-            </TabContent>
-            <Row />
-          </Col>
-          <Col md={4}>
-            {' '}
-            <Card className="card-body">
-              <PoolsPaneSide />
-            </Card>
-          </Col>
+                    <UncontrolledAlert
+                      className="alert-with-icon"
+                      color="danger"
+                      fade={false}
+                    >
+                      <span
+                        data-notify="icon"
+                        className="icon-medium icon-info icon-dark mb-5"
+                      />
+                      <span data-notify="message">
+                        Please ensure you understand the risks related to this
+                        asymmetric remove! Assets will be removed equally from
+                        the pool like usual, however 100% of the non-preferred
+                        asset will be swapped into your preferred asset. This is
+                        subject to the usual swap fees!
+                      </span>
+                    </UncontrolledAlert>
+                  </TabPane>
+                </TabContent>
+                <Row />
+              </Col>
+              <Col md={4}>
+                {' '}
+                <Card className="card-body">
+                  <PoolsPaneSide />
+                </Card>
+              </Col>
+            </>
+          )}
+
           <Col md={12}>
             <Card className="card-body">
               {poolFactory.finalArray && (

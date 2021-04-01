@@ -17,6 +17,7 @@ import PoolsOverview from './views/pages/Pools/Overview'
 import DaoOverview from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Pools/Bond'
+import Share from './views/pages/Samples/Share'
 import Swap from './views/pages/Pools/Swap'
 
 const routes = [
@@ -166,6 +167,13 @@ const routes = [
         name: 'Notificaions',
         mini: 'NO',
         component: Notifications,
+        layout: '/dapp',
+      },
+      {
+        path: '/share',
+        name: 'Share',
+        mini: 'SH',
+        component: Share,
         layout: '/dapp',
       },
       {

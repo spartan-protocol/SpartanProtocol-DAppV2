@@ -7,8 +7,8 @@ import {
   getBondSpartaRemaining,
   getBondBurnReady,
   getBondListedCount,
-  getBondMemberCount,
-  getBondMembers,
+  // getBondMemberCount,
+  // getBondMembers,
 } from './actions'
 import * as Types from './types'
 
@@ -74,15 +74,15 @@ describe('Bond actions', () => {
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
-  test('should get bond member count', async () => {
-    await getBondMemberCount()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBER_COUNT)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
+  // test('should get bond member count', async () => {
+  //   await getBondMemberCount()(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBER_COUNT)
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  // })
 
-  test('should get bond members', async () => {
-    await getBondMembers()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBERS)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
+  // test('should get bond members', async () => {
+  //   await getBondMembers()(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_BOND_MEMBERS)
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  // })
 })
