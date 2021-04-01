@@ -259,14 +259,20 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
   dispatch(poolFactoryLoading())
 
   try {
-    const tempArray = await Promise.all(
-      finalArray.map((i) => {
-        const contract =
-          i.symbol === 'SPARTA' ? null : getTokenContract(i.poolAddress)
+    let tempArray = []
+    if (walletAddress) {
+      tempArray = await Promise.all(
+        finalArray.map((i) => {
+          const contract =
+            i.symbol === 'SPARTA' ? null : getTokenContract(i.poolAddress)
 
-        return i.symbol === 'SPARTA' ? '0' : contract.balanceOf(walletAddress)
-      }),
-    )
+          return i.symbol === 'SPARTA' ? '0' : contract.balanceOf(walletAddress)
+        }),
+      )
+    } else {
+      // eslint-disable-next-line no-unused-vars
+      tempArray = finalArray.map((i) => '0')
+    }
     const finalLpArray = []
     for (let i = 0; i < finalArray.length; i++) {
       const tempItem = {

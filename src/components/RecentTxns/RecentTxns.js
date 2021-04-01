@@ -15,7 +15,7 @@ const RecentTxns = ({ contract }) => {
         //   console.log(logs)
         await contract.on('*', (eventObject) => {
           setTxnArray((oldArray) => [...oldArray, eventObject])
-          console.log(txnArray)
+          console.log(eventObject)
         })
       }
     }
