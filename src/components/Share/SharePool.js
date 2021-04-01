@@ -15,24 +15,30 @@ const Share = () => {
 
   useEffect(() => {
     const assetSelected1 = JSON.parse(
-      window.localStorage.getItem('assetSelected1'),
+      window.localStorage?.getItem('assetSelected1'),
     )
     const assetSelected2 = JSON.parse(
-      window.localStorage.getItem('assetSelected2'),
+      window.localStorage?.getItem('assetSelected2'),
     )
 
     setUrl(
-      `https://${window.location.host}${location.pathname}?assetSelected1=${
-        assetSelected1 ? encodeURIComponent(JSON.stringify(assetSelected1)) : ''
+      `https://${window.location.host}${location.pathname}?asset1=${
+        assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
       }${
         assetSelected2
-          ? `&assetSelected2=${encodeURIComponent(
-              JSON.stringify(assetSelected2),
-            )}`
+          ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
           : ''
       }`,
     )
-  }, [location.pathname, location.host, location.search])
+  }, [
+    location.pathname,
+    location.host,
+    location.search,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetSelected1'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetSelected2'),
+  ])
 
   return (
     <>

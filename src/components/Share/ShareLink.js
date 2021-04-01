@@ -1,5 +1,5 @@
 import React from 'react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import CopyToClipboard from 'react-copy-to-clipboard'
 import NotificationAlert from 'react-notification-alert'
 
 const ShareLink = (props) => {
