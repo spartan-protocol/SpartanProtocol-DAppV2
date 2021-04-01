@@ -115,7 +115,7 @@ const AssetSelect = (props) => {
               .filter(
                 (asset) =>
                   props.blackList.find(
-                    (item) => item === asset.tokenAddress,
+                    (item) => asset.tokenAddress === item,
                   ) === undefined,
               )
               .sort((a, b) => b.balanceTokens - a.balanceTokens)

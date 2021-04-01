@@ -102,7 +102,7 @@ export const addressesTN = {
   bondVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
   daov2: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
   daoVaultv1: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
-  routerv3: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  routerv3: '0x9984E702E4229709A94cD648451e0ebCEE6464a9',
   utilsv2: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   // CURRENT ADDRESSES
   poolFactory: '0x31c93aEb245f069D1caB9aac87603aE941E34e31',
@@ -111,7 +111,7 @@ export const addressesTN = {
   bondVault: '0x59A661418BdEA413B4a40725468FcBA940827962',
   dao: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
   daoVault: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
-  router: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  router: '0x9984E702E4229709A94cD648451e0ebCEE6464a9',
   utils: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
   // TOKEN ADDRESSES
@@ -140,7 +140,7 @@ export const addressesMN = {
   bondVaultv1: '0x59A661418BdEA413B4a40725468FcBA940827962',
   daov2: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
   daoVaultv1: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
-  routerv3: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  routerv3: '0x9984E702E4229709A94cD648451e0ebCEE6464a9',
   utilsv2: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   // CURRENT ADDRESSES
   poolFactory: '0x31c93aEb245f069D1caB9aac87603aE941E34e31',
@@ -149,7 +149,7 @@ export const addressesMN = {
   bondVault: '0x59A661418BdEA413B4a40725468FcBA940827962',
   dao: '0xCB7d64f9f9DE91290A105e8968cd05ec1E617eD3',
   daoVault: '0x0226425f78F35BEC46A96B7B26D02D6394298284',
-  router: '0x79acCD8d7c3347121D28325FB18626101eF3a2ab',
+  router: '0x9984E702E4229709A94cD648451e0ebCEE6464a9',
   utils: '0x287Cc14cE73b9E6fbA8C4fbED6670F5CF4451E81',
   migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
   // TOKEN ADDRESSES
@@ -362,6 +362,14 @@ export const getTokenContract = (tokenAddress) => {
   const abi = getAbis().erc20
   const provider = getWalletProvider()
   const contract = new ethers.Contract(tokenAddress, abi, provider)
+  return contract
+}
+
+// GET WBNB CONTRACT
+export const getWbnbContract = () => {
+  const abiWbnb = getAbis().wbnb
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(getAddresses().wbnb, abiWbnb, provider)
   return contract
 }
 

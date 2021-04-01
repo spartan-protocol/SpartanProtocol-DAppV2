@@ -8,18 +8,20 @@ const RecentTxns = ({ contract }) => {
   const [txnArray, setTxnArray] = useState([])
   useEffect(() => {
     const listen = async () => {
-      //   const filter = contract.filters
-      //   console.log(contract)
-      //   const logs = await contract.queryFilter(filter, 0, 'latest')
-      //   console.log(logs)
-      await contract.on('*', (eventObject) => {
-        setTxnArray((oldArray) => [...oldArray, eventObject])
-        console.log(txnArray)
-      })
+      if (contract) {
+        //   const filter = contract.filters
+        //   console.log(contract)
+        //   const logs = await contract.queryFilter(filter, 0, 'latest')
+        //   console.log(logs)
+        await contract.on('*', (eventObject) => {
+          setTxnArray((oldArray) => [...oldArray, eventObject])
+          console.log(txnArray)
+        })
+      }
     }
     listen()
     return () => {
-      contract.removeAllListeners()
+      contract?.removeAllListeners()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

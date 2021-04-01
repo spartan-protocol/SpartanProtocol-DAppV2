@@ -232,21 +232,25 @@ export const calcDoubleSwapFee = (
   pools2BaseAmount,
 ) => {
   // formula: getSwapFee1 + getSwapFee2
-  const fee1 = calcSwapFee(inputAmount, pool1TokenAmount, pool1BaseAmount, true)
-  const x = calcSwapOutput(inputAmount, pool1TokenAmount, pool1BaseAmount, true)
-  const fee2 = calcSwapFee(x, pool2TokenAmount, pools2BaseAmount, false)
-  const fee1Token = calcValueInToken(pool2TokenAmount, pools2BaseAmount, fee1)
-  const result = fee2.plus(fee1Token)
-  console.log(result)
+  const fee1 = calcSwapFee(inputAmount, pool1TokenAmount, pool1BaseAmount, true) // Fee in SPARTA
+  const x = calcSwapOutput(inputAmount, pool1TokenAmount, pool1BaseAmount, true) // Output in SPARTA
+  const fee2 = calcSwapFee(x, pool2TokenAmount, pools2BaseAmount, false) // Fee in targetToken
+  const fee2Sparta = calcValueInBase(pool2TokenAmount, pools2BaseAmount, fee2) // targetToken fee converted to SPARTA
+  const result = fee1.plus(fee2Sparta) // Total fee in SPARTA
   return result
 }
 
 // Calculate double-swap output
-export const calcDoubleSwapOutput = (inputAmount, pool1, pool2) => {
+export const calcDoubleSwapOutput = (
+  inputAmount,
+  pool1Token,
+  pool1Sparta,
+  pool2Token,
+  pool2Sparta,
+) => {
   // formula: calcSwapOutput(pool1) => calcSwapOutput(pool2)
-  const x = calcSwapOutput(inputAmount, pool1, true)
-  const output = calcSwapOutput(x, pool2, false)
-  console.log(output)
+  const x = calcSwapOutput(inputAmount, pool1Token, pool1Sparta, false)
+  const output = calcSwapOutput(x, pool2Token, pool2Sparta, true)
   return output
 }
 
@@ -272,14 +276,28 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
 }
 
 // Calculate swap input
-export const getSwapInput = (outputAmount, pool, toBase) => {
+export const getSwapInput = (outputAmount, tokenAmount, baseAmount, toBase) => {
   // formula: (((X*Y)/y - 2*X) - sqrt(((X*Y)/y - 2*X)^2 - 4*X^2))/2
   // (part1 - sqrt(part1 - part2))/2
   const y = BN(outputAmount) // Output amount
-  const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
-  const Y = toBase ? BN(pool.baseAmount) : BN(pool.tokenAmount) // if toBase; baseAmount
+  const X = toBase ? BN(tokenAmount) : BN(baseAmount) // if toBase; tokenAmount
+  const Y = toBase ? BN(baseAmount) : BN(tokenAmount) // if toBase; baseAmount
   const part1 = X.times(Y).div(y).minus(X.times(2))
   const part2 = X.pow(2).times(4)
   const result = part1.minus(part1.pow(2).minus(part2).sqrt()).div(2)
   return result
+}
+
+// Calculate double-swap input
+export const calcDoubleSwapInput = (
+  outputAmount,
+  pool1Token,
+  pool1Sparta,
+  pool2Token,
+  pool2Sparta,
+) => {
+  // formula: calcSwapOutput(pool1) => calcSwapOutput(pool2)
+  const x = getSwapInput(outputAmount, pool1Token, pool1Sparta, true)
+  const output = getSwapInput(x, pool2Token, pool2Sparta, false)
+  return output
 }

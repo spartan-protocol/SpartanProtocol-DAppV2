@@ -62,7 +62,9 @@ export const getPoolFactoryTokenCount = () => async (dispatch) => {
  * @param {uint} tokenCount
  * @returns {array} tokenArray
  */
-export const getPoolFactoryTokenArray = (tokenCount) => async (dispatch) => {
+export const getPoolFactoryTokenArray = (tokenCount, wbnbAddr) => async (
+  dispatch,
+) => {
   dispatch(poolFactoryLoading())
   const contract = getPoolFactoryContract()
 
@@ -74,6 +76,9 @@ export const getPoolFactoryTokenArray = (tokenCount) => async (dispatch) => {
     const tokenArray = await Promise.all(
       tempArray.map((token) => contract.callStatic.getToken(token)),
     )
+    const wbnbIndex = tokenArray.findIndex((i) => i === wbnbAddr)
+    if (wbnbIndex > -1)
+      tokenArray[wbnbIndex] = '0x0000000000000000000000000000000000000000'
     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_TOKEN_ARRAY, tokenArray))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
@@ -157,11 +162,9 @@ export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (
-  tokenArray,
-  wbnbAddr,
-  spartaAddr,
-) => async (dispatch) => {
+export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
+  dispatch,
+) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
@@ -170,13 +173,7 @@ export const getPoolFactoryDetailedArray = (
       tokenArray.unshift(spartaAddr)
     }
     const tempArray = await Promise.all(
-      tokenArray.map((i) =>
-        i === wbnbAddr
-          ? contract.callStatic.getTokenDetails(
-              '0x0000000000000000000000000000000000000000',
-            )
-          : contract.callStatic.getTokenDetails(i),
-      ),
+      tokenArray.map((i) => contract.callStatic.getTokenDetails(i)),
     )
     const detailedArray = []
     for (let i = 0; i < tokenArray.length; i++) {

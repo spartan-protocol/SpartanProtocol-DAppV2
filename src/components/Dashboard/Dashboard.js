@@ -1,16 +1,22 @@
+// import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 // import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
+// import { useWeb3 } from '../../store/web3'
+// import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
+// import { getRouterContract } from '../../utils/web3Router'
 // import { getPoolFactoryArray } from '../../store/poolFactory'
-import { getUtilsContract } from '../../utils/web3Utils'
+// import { getUtilsContract } from '../../utils/web3Utils'
 // import { getPoolFactoryTokenArray } from '../../store/poolFactory'
 // import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
 // import { getListedPools } from '../../store/utils/actions'
 // import { getDaoTotalWeight } from '../../store/dao/actions'
-// import { getAddresses } from '../../utils/web3'
+import { getWbnbContract } from '../../utils/web3'
+
 // const addr = getAddresses()
 
 const Dashboard = () => {
+  // const wallet = useWallet()
   // const dispatch = useDispatch()
   // // const hello = 'test'
   // const tokenArray = [
@@ -20,9 +26,11 @@ const Dashboard = () => {
   // ]
 
   const getPoolArray = async () => {
-    const temp = await getUtilsContract().callStatic.getTokenDetails(
-      '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
-    )
+    const temp = await getWbnbContract()
+    // .deposit(
+    //   wallet.account,
+    //   '10000000000000000000',
+    // )
     console.log(temp)
   }
 
