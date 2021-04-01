@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap'
-import { useLocation, withRouter } from 'react-router-dom'
 import { usePoolFactory } from '../../store/poolFactory'
 // import { formatFromWei } from '../../utils/bigNumber'
 import coinBnb from '../../assets/icons/coin_bnb.svg'
@@ -22,38 +21,17 @@ import coinSparta from '../../assets/icons/coin_sparta.svg'
  */
 const AssetSelect = (props) => {
   const poolFactory = usePoolFactory()
-  const location = useLocation()
-  let selectedItem
-  const assetParam = new URLSearchParams(location.search).get(
-    `assetSelected${props.priority}`,
-  )
 
   const addSelection = (asset) => {
     window.localStorage.setItem(
       `assetSelected${props.priority}`,
       JSON.stringify(asset),
     )
-
-    location.search = `?assetSelected${props.priority}=${encodeURIComponent(
-      JSON.stringify(asset),
-    )}`
-    props.history.push({
-      pathname: location.pathname,
-      search: location.search,
-    })
   }
 
-  if (assetParam) {
-    selectedItem = JSON.parse(decodeURIComponent(assetParam))
-    window.localStorage.setItem(
-      `assetSelected${props.priority}`,
-      JSON.stringify(selectedItem),
-    )
-  } else {
-    selectedItem = JSON.parse(
-      window.localStorage.getItem(`assetSelected${props.priority}`),
-    )
-  }
+  const selectedItem = JSON.parse(
+    window.localStorage.getItem(`assetSelected${props.priority}`),
+  )
 
   return (
     <>
@@ -139,6 +117,4 @@ const AssetSelect = (props) => {
   )
 }
 
-const AssetSelectComponent = withRouter(AssetSelect)
-
-export default AssetSelectComponent
+export default AssetSelect
