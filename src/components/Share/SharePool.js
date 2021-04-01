@@ -1,14 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
 import { Card, CardBody, Row, Col } from 'reactstrap'
+import { useLocation } from 'react-router-dom'
 import ShareLink from './ShareLink'
 import ShareIcon from '../../assets/icons/icon-share.svg'
 import SpartaIcon from '../../assets/icons/SPARTA.svg'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
 
-const Share = (props) => {
+const Share = () => {
   const [showShare, setShowShare] = useState(false)
+  const location = useLocation()
+  const [url, setUrl] = useState('')
+
+  useEffect(() => {
+    const assetSelected1 = JSON.parse(
+      window.localStorage.getItem('assetSelected1'),
+    )
+    const assetSelected2 = JSON.parse(
+      window.localStorage.getItem('assetSelected2'),
+    )
+
+    setUrl(
+      `https://${window.location.host}${location.pathname}?assetSelected1=${
+        assetSelected1 ? encodeURIComponent(JSON.stringify(assetSelected1)) : ''
+      }${
+        assetSelected2
+          ? `&assetSelected2=${encodeURIComponent(
+              JSON.stringify(assetSelected2),
+            )}`
+          : ''
+      }`,
+    )
+  }, [location.pathname, location.host, location.search])
 
   return (
     <>
@@ -67,10 +91,12 @@ const Share = (props) => {
                 <CardBody className="py-3">
                   <Row>
                     <Col xs="10">
-                      <span className="card-title">{props.url}</span>
+                      <span className="card-title">
+                        {url.length > 50 ? `${url.substr(0, 50)}...` : url}
+                      </span>
                     </Col>
                     <Col xs="2">
-                      <ShareLink url={props.url}>
+                      <ShareLink url={url}>
                         <img src={CopyIcon} alt="Copy icon" />
                       </ShareLink>
                     </Col>
@@ -84,10 +110,7 @@ const Share = (props) => {
                       <span className="card-title">Share via Twitter</span>
                     </Col>
                     <Col xs="2">
-                      <TwitterShareButton
-                        url={props.url}
-                        title="Sparta Protocol"
-                      >
+                      <TwitterShareButton url={url} title="Sparta Protocol">
                         <TwitterIcon size={32} round />
                       </TwitterShareButton>
                     </Col>

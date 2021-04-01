@@ -6,7 +6,7 @@ const Share = () => (
   <div className="content">
     <Row>
       <Col xs="12">
-        <SharePool url="https://spartanprotocol.org" />
+        <SharePool />
       </Col>
     </Row>
   </div>

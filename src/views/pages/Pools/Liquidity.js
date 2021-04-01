@@ -58,6 +58,7 @@ import {
 import Approval from '../../../components/Approval/Approval'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import { getRouterContract } from '../../../utils/web3Router'
+import SharePool from '../../../components/Share/SharePool'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -425,9 +426,11 @@ const Liquidity = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Liquidity</Col>
+          <Col md={8}>Liquidity</Col>
           <Col md={2}>
-            {' '}
+            <SharePool />
+          </Col>
+          <Col md={2}>
             <Wallet />
           </Col>
         </Breadcrumb>
