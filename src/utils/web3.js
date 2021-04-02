@@ -310,12 +310,12 @@ export const changeRpc = (_network) => {
  */
 export const changeNetwork = (_network) => {
   console.log(_network)
-  const tempNetwork = 'testnet' // remove this after mainnet is deployed; have the below 'tempNetworks' all changed to '_network'
-  const rpcUrl = changeRpc(tempNetwork)
-  changeAbis(tempNetwork)
-  changeAddresses(tempNetwork)
+  // const tempNetwork = 'testnet' // remove this after mainnet is deployed; have the below 'tempNetworks' all changed to '_network'
+  const rpcUrl = changeRpc(_network)
+  changeAbis(_network)
+  changeAddresses(_network)
   const network =
-    tempNetwork === 'testnet'
+    _network === 'testnet'
       ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
       : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
   window.localStorage.setItem('network', JSON.stringify(network))
