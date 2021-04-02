@@ -22,5 +22,4 @@ describe('Synth actions', () => {
   test('placehodler test', async () => {
     expect('1').not.toEqual('3')
   })
-
 })
