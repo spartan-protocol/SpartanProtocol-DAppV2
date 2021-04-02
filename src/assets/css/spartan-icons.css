@@ -31,6 +31,17 @@
     background-repeat: no-repeat;
 }
 
+/* Spinner */
+.icon-spinner.icon-dark{
+    background-image: url('/src/assets/icons/loader.svg#dark');
+}
+
+
+/* Lang */
+.icon-lang.icon-dark{
+    background-image: url('/src/assets/icons/icon-lang-dark.svg#dark');
+}
+
 
 
 /* Lang */
