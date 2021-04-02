@@ -14,6 +14,7 @@ const AddressConn = () => {
           onKeyPress={() => setWalletModalShow(true)}
           role="button"
           tabIndex="0"
+          className="align-self-center"
         >
           <img
             src={walletHeaderIcon}

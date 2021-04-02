@@ -55,7 +55,11 @@ const LanguageDropdown = () => {
   //               </Button> //
   return (
     <>
-      <Dropdown isOpen={menu} toggle={toggle} className="d-inline-block mr-5">
+      <Dropdown
+        isOpen={menu}
+        toggle={toggle}
+        className="d-inline-block mr-5 align-self-center"
+      >
         <DropdownToggle
           aria-expanded={false}
           aria-haspopup
