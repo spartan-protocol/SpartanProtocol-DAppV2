@@ -1,6 +1,6 @@
 import * as Types from './types'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getDaoVaultContract } from '../../utils/web3DaoVault'
+import { getDaoVaultContract } from '../../utils/web3Dao'
 
 export const daoVaultLoading = () => ({
   type: Types.DAOVAULT_LOADING,

@@ -3,16 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
   usePoolFactory,
-  getPoolFactoryTokenCount,
   getPoolFactoryTokenArray,
-  // getPoolFactoryArray,
-  getPoolFactoryCuratedCount,
   getPoolFactoryCuratedArray,
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
 import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
+// import { getSynthArray } from '../../store/synth/actions'
 import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
+// import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
 
 const DataManager = () => {
@@ -20,21 +19,27 @@ const DataManager = () => {
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
   const wallet = useWallet()
+  const [prevNetwork, setPrevNetwork] = useState(
+    JSON.parse(window.localStorage.getItem('network')),
+  )
+  // const prevNetwork = usePrevious(network)
 
   useEffect(() => {
-    const tempNetwork = JSON.parse(window.localStorage.getItem('network'))
     const checkNetwork = () => {
-      if (tempNetwork.net === 'mainnet' || tempNetwork.net === 'testnet') {
-        changeNetwork(tempNetwork.net)
+      if (prevNetwork.net === 'mainnet' || prevNetwork.net === 'testnet') {
+        changeNetwork(prevNetwork.net)
         dispatch(addNetworkMM())
         dispatch(addNetworkBC())
+        dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
+        dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
       } else {
-        changeNetwork('testnet')
+        changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
         dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-      } // CHANGE TO MAINNET AFTER DEPLOY
+        dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
+        dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
+      }
     }
-
     checkNetwork()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -47,42 +52,24 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [prevTokenCount, setPrevTokenCount] = useState(poolFactory.tokenCount)
-  const [prevCuratedCount, setPrevCuratedCount] = useState(
-    poolFactory.curatedPoolCount,
-  )
-
-  useEffect(() => {
-    const checkCounts = () => {
-      dispatch(getPoolFactoryTokenCount())
-      setPrevTokenCount(poolFactory.tokenCount)
-      dispatch(getPoolFactoryCuratedCount())
-      setPrevCuratedCount(poolFactory.curatedPoolCount)
-    }
-
-    checkCounts()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.localStorage.getItem('network')])
-
   const [prevTokenArray, setPrevTokenArray] = useState(poolFactory.tokenArray)
 
   useEffect(() => {
-    const tokenCount = poolFactory.tokenCount.toString()
     const checkArrays = () => {
-      if (tokenCount !== prevTokenCount && tokenCount > 0) {
-        dispatch(getPoolFactoryTokenArray(tokenCount, addr.wbnb))
+      if (
+        JSON.parse(window.localStorage.getItem('network')).net !==
+        prevNetwork.net
+      ) {
+        setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
+        dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         setPrevTokenArray(poolFactory.tokenArray)
-      }
-      const curatedCount = poolFactory.curatedPoolCount.toString()
-      if (curatedCount !== prevCuratedCount && curatedCount > 0) {
-        dispatch(getPoolFactoryCuratedArray(curatedCount))
+        dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         setPrevTokenArray(poolFactory.curatedPoolCount)
       }
     }
-
     checkArrays()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenCount])
+  }, [window.localStorage.getItem('network')])
 
   const [prevDetailedArray, setPrevDetailedArray] = useState(
     poolFactory.detailedArray,

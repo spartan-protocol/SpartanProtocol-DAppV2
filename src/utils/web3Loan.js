@@ -18,6 +18,14 @@ export const getLoanContract = () => {
   return contract
 }
 
+// GET DAO CONTRACT
+export const getLoanVaultContract = () => {
+  const abiLoanVault = getAbis().daoLoanVault
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(addr.loanVault, abiLoanVault, provider)
+  return contract
+}
+
 // ---------------- ASYNC FUNCTIONS FOR STORE (WAIT FOR PHASE 2 BEFORE CREATING THE STORE) ---------------
 
 /**

@@ -21,3 +21,11 @@ export const getBondContract = () => {
   const contract = new ethers.Contract(addr.bond, abiBond, provider)
   return contract
 }
+
+// GET CURRENT BONDVAULT CONTRACT
+export const getBondVaultContract = () => {
+  const abiBondVault = getAbis().bondVault
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(addr.bondVault, abiBondVault, provider)
+  return contract
+}
