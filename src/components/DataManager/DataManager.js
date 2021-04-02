@@ -9,7 +9,7 @@ import {
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
 import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
-// import { getSynthArray } from '../../store/synth/actions'
+import { getSynthArray } from '../../store/synth/actions'
 import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
 // import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
@@ -32,12 +32,14 @@ const DataManager = () => {
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
+        dispatch(getSynthArray()) // SYNTH ARRAY
       } else {
         changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
         dispatch(addNetworkMM())
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
+        dispatch(getSynthArray()) // SYNTH ARRAY
       }
     }
     checkNetwork()
@@ -62,9 +64,9 @@ const DataManager = () => {
       ) {
         setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
-        setPrevTokenArray(poolFactory.tokenArray)
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        setPrevTokenArray(poolFactory.curatedPoolCount)
+        dispatch(getSynthArray()) // SYNTH ARRAY
+        setPrevTokenArray(poolFactory.tokenArray)
       }
     }
     checkArrays()
@@ -92,11 +94,10 @@ const DataManager = () => {
 
   useEffect(() => {
     const { detailedArray } = poolFactory
+    const { curatedPoolArray } = poolFactory
     const checkFinalArray = () => {
       if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
-        dispatch(
-          getPoolFactoryFinalArray(detailedArray, poolFactory.curatedPoolArray),
-        )
+        dispatch(getPoolFactoryFinalArray(detailedArray, curatedPoolArray))
         setPrevFinalArray(poolFactory.finalArray)
       }
     }

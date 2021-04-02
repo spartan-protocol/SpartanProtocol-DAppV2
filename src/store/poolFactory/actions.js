@@ -230,7 +230,8 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
-        curated: curatedArray.find((item) => item === tokenAddr) > 0,
+        curated:
+          curatedArray.find((item) => item === tempArray[i].poolAddress) > 0,
         symbolUrl: 'placeholder for icon',
       }
       finalArray.push(tempItem)
