@@ -25,17 +25,17 @@ const DataManager = () => {
   // const prevNetwork = usePrevious(network)
 
   useEffect(() => {
-    const checkNetwork = () => {
+    const checkNetwork = async () => {
       if (prevNetwork.net === 'mainnet' || prevNetwork.net === 'testnet') {
         changeNetwork(prevNetwork.net)
-        dispatch(addNetworkMM())
+        await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         dispatch(getSynthArray()) // SYNTH ARRAY
       } else {
         changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
-        dispatch(addNetworkMM())
+        await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
