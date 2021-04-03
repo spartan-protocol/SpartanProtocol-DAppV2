@@ -6,12 +6,10 @@ import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from 'perfect-scrollbar'
+// import PerfectScrollbar from 'perfect-scrollbar'
 
 // reactstrap components
 import { Nav, Collapse } from 'reactstrap'
-
-let ps
 
 const Sidebar = (props) => {
   const [state, setState] = React.useState({})
@@ -50,25 +48,25 @@ const Sidebar = (props) => {
     [getCollapseInitialState],
   )
 
-  React.useEffect(() => {
-    setState(getCollapseStates(props.routes))
-  }, [getCollapseStates, props.routes])
-  React.useEffect(() => {
-    // if you are using a Windows Machine, the scrollbars will have a Mac look
-    if (navigator.platform.indexOf('Win') > -1) {
-      ps = new PerfectScrollbar(sidebarRef.current, {
-        suppressScrollX: true,
-        suppressScrollY: false,
-      })
-    }
-    return function cleanup() {
-      // we need to destroy the false scrollbar when we navigate
-      // to a page that doesn't have this component rendered
-      if (navigator.platform.indexOf('Win') > -1) {
-        ps.destroy()
-      }
-    }
-  })
+  // React.useEffect(() => {
+  //   setState(getCollapseStates(props.routes))
+  // }, [getCollapseStates, props.routes])
+  // React.useEffect(() => {
+  //   // if you are using a Windows Machine, the scrollbars will have a Mac look
+  //   if (navigator.platform.indexOf('Win') > -1) {
+  //     ps = new PerfectScrollbar(sidebarRef.current, {
+  //       suppressScrollX: true,
+  //       suppressScrollY: false,
+  //     })
+  //   }
+  //   return function cleanup() {
+  //     // we need to destroy the false scrollbar when we navigate
+  //     // to a page that doesn't have this component rendered
+  //     if (navigator.platform.indexOf('Win') > -1) {
+  //       ps.destroy()
+  //     }
+  //   }
+  // })
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
     const { rtlActive } = props

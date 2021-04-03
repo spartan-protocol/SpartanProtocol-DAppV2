@@ -7,7 +7,7 @@
 import React from 'react'
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from 'perfect-scrollbar'
+// import PerfectScrollbar from 'perfect-scrollbar'
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from 'react-notification-alert'
 
@@ -53,35 +53,35 @@ const Common = (props) => {
       setOpacity(0)
     }
   }
-  React.useEffect(() => {
-    const innerMainPanelRef = mainPanelRef
-    if (navigator.platform.indexOf('Win') > -1) {
-      document.documentElement.classList.add('perfect-scrollbar-on')
-      document.documentElement.classList.remove('perfect-scrollbar-off')
-      ps = new PerfectScrollbar(mainPanelRef.current)
-      mainPanelRef.current &&
-        mainPanelRef.current.addEventListener('ps-scroll-y', showNavbarButton)
-      const tables = document.querySelectorAll('.table-responsive')
-      for (let i = 0; i < tables.length; i++) {
-        ps = new PerfectScrollbar(tables[i])
-      }
-    }
-    window.addEventListener('scroll', showNavbarButton)
+  // React.useEffect(() => {
+  //   const innerMainPanelRef = mainPanelRef
+  //   if (navigator.platform.indexOf('Win') > -1) {
+  //     document.documentElement.classList.add('perfect-scrollbar-on')
+  //     document.documentElement.classList.remove('perfect-scrollbar-off')
+  //     ps = new PerfectScrollbar(mainPanelRef.current)
+  //     mainPanelRef.current &&
+  //       mainPanelRef.current.addEventListener('ps-scroll-y', showNavbarButton)
+  //     const tables = document.querySelectorAll('.table-responsive')
+  //     for (let i = 0; i < tables.length; i++) {
+  //       ps = new PerfectScrollbar(tables[i])
+  //     }
+  //   }
+  //   window.addEventListener('scroll', showNavbarButton)
 
-    return function cleanup() {
-      if (navigator.platform.indexOf('Win') > -1) {
-        ps.destroy()
-        document.documentElement.classList.add('perfect-scrollbar-off')
-        document.documentElement.classList.remove('perfect-scrollbar-on')
-        innerMainPanelRef.current &&
-          innerMainPanelRef.current.removeEventListener(
-            'ps-scroll-y',
-            showNavbarButton,
-          )
-      }
-      window.removeEventListener('scroll', showNavbarButton)
-    }
-  }, [])
+  //   return function cleanup() {
+  //     if (navigator.platform.indexOf('Win') > -1) {
+  //       ps.destroy()
+  //       document.documentElement.classList.add('perfect-scrollbar-off')
+  //       document.documentElement.classList.remove('perfect-scrollbar-on')
+  //       innerMainPanelRef.current &&
+  //         innerMainPanelRef.current.removeEventListener(
+  //           'ps-scroll-y',
+  //           showNavbarButton,
+  //         )
+  //     }
+  //     window.removeEventListener('scroll', showNavbarButton)
+  //   }
+  // }, [])
   const getRoutes = (routes) =>
     routes.map((prop, key) => {
       if (prop.collapse) {

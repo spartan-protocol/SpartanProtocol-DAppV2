@@ -1,30 +1,36 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
-import Image from 'react-bootstrap/Image'
-import Col from 'react-bootstrap/Col'
 import { ethers } from 'ethers'
 
-import { Alert } from 'reactstrap'
 import { useDispatch } from 'react-redux'
+import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { changeNetwork, getNetwork, getAddresses } from '../../utils/web3'
 import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
+import { usePoolFactory } from '../../store/poolFactory/selector'
+import HelmetLoading from '../Loaders/HelmetLoading'
 
 const addr = getAddresses()
 
 const WalletSelect = (props) => {
+  const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
   const wallet = useWallet()
   const [walletIcon, setWalletIcon] = useState('')
   const [network, setNetwork] = useState(getNetwork)
 
-  const onChangeNetwork = (net) => {
-    setNetwork(changeNetwork(net))
-    dispatch(addNetworkMM())
+  const onChangeNetwork = async (net) => {
+    if (net.target.checked === true) {
+      setNetwork(changeNetwork('mainnet'))
+    }
+    if (net.target.checked === false) {
+      setNetwork(changeNetwork('testnet'))
+    } else {
+      setNetwork(changeNetwork(net))
+    }
+    await dispatch(addNetworkMM())
     dispatch(addNetworkBC())
   }
 
@@ -62,7 +68,7 @@ const WalletSelect = (props) => {
   }, [wallet.status])
 
   const connectWallet = async (x) => {
-    wallet.reset()
+    // wallet.reset()
     console.log('reset')
     if (x.inject === '') {
       console.log('no inject')
@@ -96,116 +102,120 @@ const WalletSelect = (props) => {
               <i className="icon-large icon-wallet icon-dark text-center " />
             </div>
             <h1 className="modal-title text-center" id="myModalLabel">
-              Connect to {network.net}
+              Connect to wallet
             </h1>
           </Col>
         </div>
 
-        <Modal.Body className="center-text">
-          {wallet.status === 'error' && (
-            <Alert color="warning">
-              <span>
-                {' '}
-                Wallet connection failed! Check the network in your wallet
-                matches the selection in the DApp.
-              </span>
-            </Alert>
-          )}
+        {poolFactory.loading && <HelmetLoading height="300px" width="300px" />}
 
-          <div>
-            <button
-              type="button"
-              className="btn btn-success w-50 mx-0 px-1"
-              onClick={() => onChangeNetwork('mainnet')}
-            >
-              <Col>
-                <div className="">Mainnet</div>
+        {!poolFactory.loading && (
+          <Modal.Body className="center-text">
+            {wallet.status === 'error' && (
+              <Alert color="warning">
+                <span>
+                  {' '}
+                  Wallet connection failed! Check the network in your wallet
+                  matches the selection in the DApp.
+                </span>
+              </Alert>
+            )}
+            <Row className="align-middle">
+              <Col xs={5} className="text-right">
+                TestNet
               </Col>
-            </button>
-            <button
-              type="button"
-              className="btn btn-success w-50 mx-0 px-1"
-              onClick={() => onChangeNetwork('testnet')}
-            >
-              <Col>
-                <div className="">Testnet</div>
+              <Col xs={2}>
+                <Form>
+                  <Form.Check
+                    type="switch"
+                    id="custom-switch"
+                    checked={network?.net === 'mainnet'}
+                    onChange={(value) => onChangeNetwork(value)}
+                    style={{ top: '-10px' }}
+                  />
+                </Form>
               </Col>
-            </button>
-          </div>
-          <br />
+              <Col xs={5} className="text-left">
+                MainNet
+              </Col>
+            </Row>
+            <br />
 
-          {wallet.status === 'connected' ? (
-            <div>
-              <Image
-                src={walletIcon}
-                className="wallet-modal-icon"
-                roundedCircle
-              />
-              <div>Wallet: {window.sessionStorage.getItem('lastWallet')}</div>
-              <div>Chain ID: {wallet.chainId}</div>
-              <div>Account: {wallet.account}</div>
-              <div>BNB Balance: {ethers.utils.formatEther(wallet.balance)}</div>
-              <div>RPC: {network.rpc}</div>
-              <Button
-                variant="danger"
-                onClick={() => navigator.clipboard.writeText(wallet.account)}
-              >
-                Copy Address
-              </Button>
-              <Button
-                variant="primary"
-                onClick={() => {
-                  dispatch(watchAsset(addr.sparta, 'SPARTA', 18))
-                }}
-              >
-                Add to Wallet
-              </Button>
-              <Button
-                variant="primary"
-                href={getExplorerWallet(wallet.account)}
-                target="_blank"
-              >
-                View on BscScan
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  wallet.reset()
-                }}
-              >
-                Disconnect
-              </Button>
-            </div>
-          ) : (
-            <div>
-              {walletTypes.map((x) => (
-                <div key={x.id}>
-                  <button
-                    size="lg"
-                    color="success"
-                    type="button"
-                    className="btn btn-danger btn-block mt-n3"
-                    onClick={() => connectWallet(x)}
-                  >
-                    <Col>
-                      <div className="float-left mt-2 ">{x.title}</div>
-                      <div className="float-right">
-                        {x.icon.map((i) => (
-                          <Image
-                            key={`${x.id}icon${i}`}
-                            src={i}
-                            className="px-1 wallet-icons"
-                          />
-                        ))}
-                      </div>
-                    </Col>
-                  </button>
-                  <br />
+            {wallet.status === 'connected' ? (
+              <div>
+                <Image
+                  src={walletIcon}
+                  className="wallet-modal-icon"
+                  roundedCircle
+                />
+                <div>Wallet: {window.sessionStorage.getItem('lastWallet')}</div>
+                <div>Chain ID: {wallet.chainId}</div>
+                <div>Account: {wallet.account}</div>
+                <div>
+                  BNB Balance: {ethers.utils.formatEther(wallet.balance)}
                 </div>
-              ))}
-            </div>
-          )}
-        </Modal.Body>
+                <div>RPC: {network.rpc}</div>
+                <Button
+                  variant="danger"
+                  onClick={() => navigator.clipboard.writeText(wallet.account)}
+                >
+                  Copy Address
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    dispatch(watchAsset(addr.sparta, 'SPARTA', 18))
+                  }}
+                >
+                  Add to Wallet
+                </Button>
+                <Button
+                  variant="primary"
+                  href={getExplorerWallet(wallet.account)}
+                  target="_blank"
+                >
+                  View on BscScan
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    wallet.reset()
+                  }}
+                >
+                  Disconnect
+                </Button>
+              </div>
+            ) : (
+              <div>
+                {walletTypes.map((x) => (
+                  <div key={x.id}>
+                    <button
+                      size="lg"
+                      color="success"
+                      type="button"
+                      className="btn btn-danger btn-block mt-n3"
+                      onClick={() => connectWallet(x)}
+                    >
+                      <Col>
+                        <div className="float-left mt-2 ">{x.title}</div>
+                        <div className="float-right">
+                          {x.icon.map((i) => (
+                            <Image
+                              key={`${x.id}icon${i}`}
+                              src={i}
+                              className="px-1 wallet-icons"
+                            />
+                          ))}
+                        </div>
+                      </Col>
+                    </button>
+                    <br />
+                  </div>
+                ))}
+              </div>
+            )}
+          </Modal.Body>
+        )}
         <div className="ml-4 mr-4 mb-3">
           <Button
             className="btn-round btn-block "

@@ -2,22 +2,24 @@
   border-radius: 50%;
   width: 30px;
 }
-.perfect-scrollbar-on {
-  .sidebar {
-    height: 80%;
-  }
-}
+// .perfect-scrollbar-on {
+//   .sidebar {
+//     height: 80%;
+//   }
+// }
+
 @include media-breakpoint-down(sm) {
   .sidebar {
     height: 100%;
   }
 }
+
 @include media-breakpoint-down(md) {
-  .perfect-scrollbar-on {
-    .sidebar {
-      height: 100%;
-    }
-  }
+  // .perfect-scrollbar-on {
+  //   .sidebar {
+  //     height: 100%;
+  //   }
+  // }
   html.nav-open body {
     position: relative;
     overflow-x: hidden;
