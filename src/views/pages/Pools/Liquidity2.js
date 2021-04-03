@@ -115,7 +115,7 @@ const Liquidity2 = () => {
                 <AddLiquidity />
               </TabPane>
               <TabPane tabId="2" className="p-3">
-                <RemoveLiquidity /> />
+                <RemoveLiquidity />
               </TabPane>
               <TabPane tabId="3" className="p-3">
                 <AddLiquidity />

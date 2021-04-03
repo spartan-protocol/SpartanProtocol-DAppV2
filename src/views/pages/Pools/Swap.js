@@ -1,7 +1,14 @@
-/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from 'react-bootstrap/Breadcrumb'
-import { Button, Card, Col, Row, Input, FormGroup, CustomInput } from "reactstrap"
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Input,
+  FormGroup,
+  CustomInput,
+} from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -518,9 +525,7 @@ const Swap = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>
-            Swap{' '}
-          </Col>
+          <Col md={10}>Swap </Col>
           <Col md={2}>
             {' '}
             <Wallet />
@@ -528,7 +533,6 @@ const Swap = () => {
         </Breadcrumb>
         {poolFactory.finalArray?.length > 0 && (
           <Row>
-
             <Col xl={8}>
               <Card className="card-body">
                 <div className="d-flex align-items-center">
@@ -540,8 +544,8 @@ const Swap = () => {
                     onClick={() => setZapMode(!zapMode)}
                   />
                 </div>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 {/* Top 'Input' Row */}
                 <Row>
                   {/* 'From' input box */}
