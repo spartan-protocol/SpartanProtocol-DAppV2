@@ -18,10 +18,13 @@ import bnbSparta from '../../assets/icons/bnb_sparta.png'
 import bnb from '../../assets/icons/BNB.svg'
 import { usePoolFactory } from '../../store/poolFactory'
 import HelmetLoading from '../../components/Loaders/HelmetLoading'
+import { calcAPY } from '../../utils/web3Utils'
+import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
+import { useWeb3 } from '../../store/web3'
 
 const Poolstable = () => {
-  // eslint-disable-next-line no-unused-vars
   const poolFactory = usePoolFactory()
+  const web3 = useWeb3()
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('harvest')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -63,11 +66,26 @@ const Poolstable = () => {
                     </Col>
                     <Col md="2">
                       <div className="title-card">APY</div>
-                      <div className="subtitle-card">XXX.XX%</div>
+                      <div className="subtitle-card">
+                        {formatFromUnits(
+                          calcAPY(
+                            asset.recentDivis,
+                            asset.recentFees,
+                            asset.baseAmount,
+                          ),
+                        )}
+                        %
+                      </div>
                     </Col>
                     <Col md="2">
-                      <div className="title-card">Liquidity</div>
-                      <div className="subtitle-card">$X,XXX.XX</div>
+                      <div className="title-card">Depth</div>
+                      <div className="subtitle-card">
+                        $
+                        {formatFromWei(
+                          BN(asset.baseAmount).times(web3?.spartaPrice),
+                          2,
+                        )}
+                      </div>
                     </Col>
                     <Col md="2">
                       <div className="title-card">Volume (24hrs)</div>
