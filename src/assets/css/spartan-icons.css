@@ -31,6 +31,13 @@
     background-repeat: no-repeat;
 }
 
+
+/* Close */
+.icon-close.icon-dark{
+    background-image: url('/src/assets/icons/close.svg#dark');
+}
+
+
 /* New */
 .icon-new.icon-dark{
     background-image: url('/src/assets/icons/new.svg#dark');

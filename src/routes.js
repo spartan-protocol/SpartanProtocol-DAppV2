@@ -20,6 +20,7 @@ import Liquidity2 from './views/pages/Pools/Liquidity2'
 import Bond from './views/pages/Pools/Bond'
 import Share from './views/pages/Samples/Share'
 import Swap from './views/pages/Pools/Swap'
+import SearchModal from './views/pages/Samples/SearchModal'
 
 const routes = [
   {
@@ -161,6 +162,13 @@ const routes = [
         name: 'Tiles',
         mini: 'CR',
         component: Tiles,
+        layout: '/dapp',
+      },
+      {
+        path: '/search',
+        name: 'Search modal',
+        mini: 'BU',
+        component: SearchModal,
         layout: '/dapp',
       },
       {
