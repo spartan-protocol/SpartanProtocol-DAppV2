@@ -19,6 +19,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup"
 import LockEarn from "./LockEarn"
 import bnbSparta from "../../../assets/icons/bnb_sparta.png"
 import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
+import Proposals from "./Proposals"
 
 const Overview = () => {
   const [activeTab, setActiveTab] = useState("1")
@@ -133,21 +134,7 @@ const Overview = () => {
                 <LockEarn />
               </TabPane>
               <TabPane tabId="2" className="p-3">
-                <Row>
-                  <Col className="text-right">
-                    <ButtonGroup>
-                      <Button color="danger">
-                        <i className="bd-icons icon-check-2 mr-2" /> List
-                      </Button>
-                      <Button color="danger">
-                        <i className="bd-icons icon-check-2 mr-2" /> Delist
-                      </Button>
-                      <Button color="danger">
-                        <i className="bd-icons icon-check-2 mr-2" /> Allocate
-                      </Button>
-                    </ButtonGroup>
-                  </Col>
-                </Row>
+                <Proposals/>
               </TabPane>
             </TabContent>
           </Col>

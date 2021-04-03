@@ -75,7 +75,7 @@ const LockEarn = () => {
             </Col>
             <Col md={2} className="ml-auto mr-2 mt-2">
               <Button type="Button" className="btn btn-primary">
-                Unlock
+                Lock
               </Button></Col>
           </Row>
           <Row>
