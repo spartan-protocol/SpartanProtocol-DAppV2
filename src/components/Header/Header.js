@@ -1,5 +1,4 @@
 import React from 'react'
-// nodejs library that concatenates classes
 import classNames from 'classnames'
 import {
   Button,
@@ -19,10 +18,6 @@ import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
 import { useWeb3 } from '../../store/web3'
-
-// import components
-
-// reactstrap components
 
 const Header = (props) => {
   const web3 = useWeb3()

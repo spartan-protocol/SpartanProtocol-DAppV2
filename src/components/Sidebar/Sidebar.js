@@ -1,14 +1,7 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/forbid-prop-types */
-
 import React, { useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-// javascript plugin used to create scrollbars on windows
-// import PerfectScrollbar from 'perfect-scrollbar'
-
-// reactstrap components
 import { Nav, Collapse } from 'reactstrap'
 
 const Sidebar = (props) => {
@@ -48,29 +41,10 @@ const Sidebar = (props) => {
     [getCollapseInitialState],
   )
 
-  // React.useEffect(() => {
-  //   setState(getCollapseStates(props.routes))
-  // }, [getCollapseStates, props.routes])
-  // React.useEffect(() => {
-  //   // if you are using a Windows Machine, the scrollbars will have a Mac look
-  //   if (navigator.platform.indexOf('Win') > -1) {
-  //     ps = new PerfectScrollbar(sidebarRef.current, {
-  //       suppressScrollX: true,
-  //       suppressScrollY: false,
-  //     })
-  //   }
-  //   return function cleanup() {
-  //     // we need to destroy the false scrollbar when we navigate
-  //     // to a page that doesn't have this component rendered
-  //     if (navigator.platform.indexOf('Win') > -1) {
-  //       ps.destroy()
-  //     }
-  //   }
-  // })
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes) => {
     const { rtlActive } = props
-    return routes.map((prop, key) => {
+    return routes.map((prop) => {
       if (prop.redirect) {
         return null
       }
@@ -80,7 +54,7 @@ const Sidebar = (props) => {
         return (
           <li
             className={getCollapseInitialState(prop.views) ? 'active' : ''}
-            key={key}
+            key={prop.path + prop.name}
           >
             <div
               role="button"
@@ -127,7 +101,10 @@ const Sidebar = (props) => {
       const activeRoute = (routeName) =>
         location.pathname === routeName ? 'active' : ''
       return (
-        <li className={activeRoute(prop.layout + prop.path)} key={key}>
+        <li
+          className={activeRoute(prop.layout + prop.path)}
+          key={prop.path + prop.name}
+        >
           <NavLink
             to={prop.layout + prop.path}
             activeClassName=""
@@ -163,8 +140,6 @@ const Sidebar = (props) => {
         <a
           href={logo.outterLink}
           className="simple-text logo-mini"
-          target="_blank"
-          rel="noreferrer"
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
@@ -176,8 +151,6 @@ const Sidebar = (props) => {
         <a
           href={logo.outterLink}
           className="simple-text logo-normal"
-          target="_blank"
-          rel="noreferrer"
           onClick={props.closeSidebar}
         >
           {logo.text}
@@ -224,6 +197,7 @@ const Sidebar = (props) => {
 Sidebar.propTypes = {
   activeColor: PropTypes.oneOf(['primary', 'blue', 'green', 'orange', 'red']),
   rtlActive: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
   routes: PropTypes.array.isRequired,
   logo: PropTypes.oneOfType([
     PropTypes.shape({
