@@ -711,9 +711,9 @@ button.rbc-input::-moz-focus-inner {
     min-height: unset;
   }
 }
-.perfect-scrollbar-on .rbc-calendar .rbc-row-content {
-  min-height: 115px;
-}
+// .perfect-scrollbar-on .rbc-calendar .rbc-row-content {
+//   min-height: 115px;
+// }
 @include media-breakpoint-down(sm) {
   .rbc-calendar .rbc-row-content {
     min-height: 45px;
