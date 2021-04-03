@@ -120,7 +120,7 @@ const WalletSelect = (props) => {
                 </span>
               </Alert>
             )}
-            <Row className="align-middle">
+            <Row className="align-middle mb-3">
               <Col xs={5} className="text-right">
                 TestNet
               </Col>
