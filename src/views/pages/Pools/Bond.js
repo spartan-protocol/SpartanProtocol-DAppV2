@@ -45,7 +45,7 @@ const Bond = () => {
                         toggle("1")
                       }}
                     >
-                      <span className="d-none d-sm-block">Your Bonds</span>
+                      <span className="d-none d-sm-block">Single token</span>
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -55,7 +55,7 @@ const Bond = () => {
                         toggle("2")
                       }}
                     >
-                      <span className="d-none d-sm-block">New Bond</span>
+                      <span className="d-none d-sm-block">Both tokens</span>
                     </NavLink>
                   </NavItem>
                 </Nav>
