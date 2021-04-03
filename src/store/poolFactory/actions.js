@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
+import { getPoolFactoryContract } from '../../utils/web3Pool'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getTokenContract } from '../../utils/web3'
@@ -25,57 +25,54 @@ export const getPoolFactoryPool = (tokenAddr) => async (dispatch) => {
   }
 }
 
-/**
- * Get listed pools count
- * @returns {uint} poolCount
- */
-export const getPoolFactoryCount = () => async (dispatch) => {
-  dispatch(poolFactoryLoading())
-  const contract = getPoolFactoryContract()
+// /**
+//  * Get listed pools count
+//  * @returns {uint} poolCount
+//  */
+// export const getPoolFactoryCount = () => async (dispatch) => {
+//   dispatch(poolFactoryLoading())
+//   const contract = getPoolFactoryContract()
 
-  try {
-    const poolCount = await contract.callStatic.poolCount()
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_COUNT, poolCount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-  }
-}
+//   try {
+//     const poolCount = await contract.callStatic.poolCount()
+//     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_COUNT, poolCount))
+//   } catch (error) {
+//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+//   }
+// }
+
+// /**
+//  * Get listed tokens count
+//  * @returns {uint} tokenCount
+//  */
+// export const getPoolFactoryTokenCount = () => async (dispatch) => {
+//   dispatch(poolFactoryLoading())
+//   const contract = getPoolFactoryContract()
+
+//   try {
+//     const tokenCount = await contract.callStatic.tokenCount()
+//     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_TOKEN_COUNT, tokenCount))
+//   } catch (error) {
+//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+//   }
+// }
 
 /**
- * Get listed tokens count
- * @returns {uint} tokenCount
+ * Get array of all listed token addresses
+ * @param {address} wbnbAddr
+ * @returns {array} tokenArray
  */
-export const getPoolFactoryTokenCount = () => async (dispatch) => {
+export const getPoolFactoryTokenArray = (wbnbAddr) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getPoolFactoryContract()
 
   try {
     const tokenCount = await contract.callStatic.tokenCount()
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_TOKEN_COUNT, tokenCount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-  }
-}
-
-/**
- * Get array of all listed token addresses
- * @param {uint} tokenCount
- * @returns {array} tokenArray
- */
-export const getPoolFactoryTokenArray = (tokenCount, wbnbAddr) => async (
-  dispatch,
-) => {
-  dispatch(poolFactoryLoading())
-  const contract = getPoolFactoryContract()
-
-  try {
     const tempArray = []
     for (let i = 0; i < tokenCount; i++) {
-      tempArray.push(i)
+      tempArray.push(contract.callStatic.getToken(i))
     }
-    const tokenArray = await Promise.all(
-      tempArray.map((token) => contract.callStatic.getToken(token)),
-    )
+    const tokenArray = await Promise.all(tempArray)
     const wbnbIndex = tokenArray.findIndex((i) => i === wbnbAddr)
     if (wbnbIndex > -1)
       tokenArray[wbnbIndex] = '0x0000000000000000000000000000000000000000'
@@ -85,43 +82,39 @@ export const getPoolFactoryTokenArray = (tokenCount, wbnbAddr) => async (
   }
 }
 
+// /**
+//  * Get curated pools count
+//  * @returns {uint} curatedPoolCount
+//  */
+// export const getPoolFactoryCuratedCount = () => async (dispatch) => {
+//   dispatch(poolFactoryLoading())
+//   const contract = getPoolFactoryContract()
+
+//   try {
+//     const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
+//     dispatch(
+//       payloadToDispatch(Types.POOLFACTORY_GET_CURATED_COUNT, curatedPoolCount),
+//     )
+//   } catch (error) {
+//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+//   }
+// }
+
 /**
- * Get curated pools count
- * @returns {uint} curatedPoolCount
+ * Get array of curated pool addresses
+ * @returns {array} curatedPoolArray
  */
-export const getPoolFactoryCuratedCount = () => async (dispatch) => {
+export const getPoolFactoryCuratedArray = () => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getPoolFactoryContract()
 
   try {
     const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
-    dispatch(
-      payloadToDispatch(Types.POOLFACTORY_GET_CURATED_COUNT, curatedPoolCount),
-    )
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-  }
-}
-
-/**
- * Get array of curated pool addresses
- * @param {uint} curatedPoolCount
- * @returns {array} curatedPoolArray
- */
-export const getPoolFactoryCuratedArray = (curatedPoolCount) => async (
-  dispatch,
-) => {
-  dispatch(poolFactoryLoading())
-  const contract = getPoolFactoryContract()
-
-  try {
     const tempArray = []
     for (let i = 0; i < curatedPoolCount; i++) {
-      tempArray.push(i)
+      tempArray.push(contract.callStatic.getCuratedPool(i))
     }
-    const curatedPoolArray = await Promise.all(
-      tempArray.map((pool) => contract.callStatic.getCuratedPool(pool)),
-    )
+    const curatedPoolArray = await Promise.all(tempArray)
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_CURATED_ARRAY, curatedPoolArray),
     )
@@ -130,32 +123,32 @@ export const getPoolFactoryCuratedArray = (curatedPoolCount) => async (
   }
 }
 
-/**
- * Get array of tokenAddresses grouped with poolAddresses
- * @param {array} tokenArray
- * @returns {array} poolArray
- */
-export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
-  dispatch(poolFactoryLoading())
-  const contract = getPoolFactoryContract()
+// /**
+//  * Get array of tokenAddresses grouped with poolAddresses
+//  * @param {array} tokenArray
+//  * @returns {array} poolArray
+//  */
+// export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
+//   dispatch(poolFactoryLoading())
+//   const contract = getPoolFactoryContract()
 
-  try {
-    const tempArray = await Promise.all(
-      tokenArray.map((token) => contract.callStatic.getPool(token)),
-    )
-    const poolArray = []
-    for (let i = 0; i < tokenArray.length; i++) {
-      const tempItem = {
-        tokenAddress: tokenArray[i],
-        poolAddress: tempArray[i],
-      }
-      poolArray.push(tempItem)
-    }
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_ARRAY, poolArray))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-  }
-}
+//   try {
+//     const tempArray = await Promise.all(
+//       tokenArray.map((token) => contract.callStatic.getPool(token)),
+//     )
+//     const poolArray = []
+//     for (let i = 0; i < tokenArray.length; i++) {
+//       const tempItem = {
+//         tokenAddress: tokenArray[i],
+//         poolAddress: tempArray[i],
+//       }
+//       poolArray.push(tempItem)
+//     }
+//     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_ARRAY, poolArray))
+//   } catch (error) {
+//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+//   }
+// }
 
 /**
  * Get detailed array of token/pool information
@@ -237,7 +230,8 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
-        curated: curatedArray.find((item) => item === tokenAddr) > 0,
+        curated:
+          curatedArray.find((item) => item === tempArray[i].poolAddress) > 0,
         symbolUrl: 'placeholder for icon',
       }
       finalArray.push(tempItem)

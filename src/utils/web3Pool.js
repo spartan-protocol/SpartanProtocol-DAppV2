@@ -12,3 +12,15 @@ export const getPoolContract = () => {
   const contract = new ethers.Contract(addr.pool, abiPool, provider)
   return contract
 }
+
+// GET DAO CONTRACT
+export const getPoolFactoryContract = () => {
+  const abiPoolFactory = getAbis().poolFactory
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(
+    addr.poolFactory,
+    abiPoolFactory,
+    provider,
+  )
+  return contract
+}

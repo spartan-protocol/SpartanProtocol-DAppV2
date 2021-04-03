@@ -69,7 +69,8 @@ export const addNetworkBC = () => async (dispatch) => {
   const network = getNetwork()
   const chainId = parseInt(network.chainId, 10)
 
-  if (parseInt(providerBC?.chainId, 16) !== chainId) {
+  if (providerBC && parseInt(providerBC?.chainId, 16) !== chainId) {
+    console.log(providerBC, chainId)
     const chainIdString =
       network.net === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
     try {
@@ -82,7 +83,7 @@ export const addNetworkBC = () => async (dispatch) => {
     dispatch(
       errorToDispatch(
         Types.WEB3_ERROR,
-        'There was an issue adding the network; do you have BinanceChain wallet installed?',
+        'Do you have BinanceChain wallet installed?',
       ),
     )
   }

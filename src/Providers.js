@@ -15,6 +15,7 @@ import { daoVaultReducer } from './store/daoVault'
 import { poolFactoryReducer } from './store/poolFactory'
 import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
+import { synthReducer } from './store/synth'
 import { utilsReducer } from './store/utils'
 import { utilsMathReducer } from './store/utilsMath'
 import { utilsPricingReducer } from './store/utilsPricing'
@@ -42,6 +43,7 @@ const reducers = combineReducers({
   poolFactory: poolFactoryReducer,
   router: routerReducer,
   sparta: spartaReducer,
+  synth: synthReducer,
   utils: utilsReducer,
   utilsMath: utilsMathReducer,
   utilsPricing: utilsPricingReducer,

@@ -1,5 +1,4 @@
 import React from 'react'
-// nodejs library that concatenates classes
 import classNames from 'classnames'
 import {
   Button,
@@ -18,12 +17,10 @@ import { ReactComponent as SpartanLogoBlackSmall } from '../../assets/img/sparta
 import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
-
-// import components
-
-// reactstrap components
+import { useWeb3 } from '../../store/web3'
 
 const Header = (props) => {
+  const web3 = useWeb3()
   const [collapseOpen, setCollapseOpen] = React.useState(false)
   const [color, setColor] = React.useState('navbar-transparent')
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
@@ -126,7 +123,7 @@ const Header = (props) => {
                   nav
                 >
                   <Button type="Button" className="mx-1 btn btn-primary">
-                    <SpartanLogoBlackSmall /> $ Sparta price
+                    <SpartanLogoBlackSmall /> ${web3.spartaPrice}
                   </Button>
                   <p className="d-lg-none">Notifications</p>
                 </DropdownToggle>

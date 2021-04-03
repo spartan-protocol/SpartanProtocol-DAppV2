@@ -12,3 +12,15 @@ export const getSynthContract = () => {
   const contract = new ethers.Contract(addr.synth, abiSynth, provider)
   return contract
 }
+
+// GET DAO CONTRACT
+export const getSynthFactoryContract = () => {
+  const abiSynthFactory = getAbis().synthFactory
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(
+    addr.synthFactory,
+    abiSynthFactory,
+    provider,
+  )
+  return contract
+}

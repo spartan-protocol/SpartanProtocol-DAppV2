@@ -16,6 +16,7 @@ import Tabs from './views/pages/Samples/Tabs'
 import PoolsOverview from './views/pages/Pools/Overview'
 import DaoOverview from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
+import Liquidity2 from './views/pages/Pools/Liquidity2'
 import Bond from './views/pages/Pools/Bond'
 import Share from './views/pages/Samples/Share'
 import Swap from './views/pages/Pools/Swap'
@@ -42,6 +43,13 @@ const routes = [
     name: 'Join',
     icon: 'icon-medium icon-sword icon-dark',
     component: Liquidity,
+    layout: '/dapp',
+  },
+  {
+    path: '/pools/liquidity2',
+    name: 'Join2',
+    icon: 'icon-medium icon-sword icon-dark',
+    component: Liquidity2,
     layout: '/dapp',
   },
 

@@ -2,11 +2,11 @@ export { usePoolFactory } from './selector'
 export { poolFactoryReducer } from './reducer'
 export {
   getPoolFactoryPool,
-  getPoolFactoryCount,
-  getPoolFactoryTokenCount,
+  // getPoolFactoryCount,
+  // getPoolFactoryTokenCount,
   getPoolFactoryTokenArray,
-  getPoolFactoryArray,
-  getPoolFactoryCuratedCount,
+  // getPoolFactoryArray,
+  // getPoolFactoryCuratedCount,
   getPoolFactoryCuratedArray,
   getPoolFactoryDetailedArray,
   getPoolFactoryFinalArray,

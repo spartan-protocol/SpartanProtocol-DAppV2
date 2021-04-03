@@ -1,0 +1,3 @@
+export const GET_SYNTH_ARRAY = 'GET_SYNTH_ARRAY'
+export const SYNTH_LOADING = 'SYNTH_LOADING'
+export const SYNTH_ERROR = 'SYNTH_ERROR'

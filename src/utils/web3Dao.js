@@ -12,3 +12,11 @@ export const getDaoContract = () => {
   const contract = new ethers.Contract(addr.dao, abiDao, provider)
   return contract
 }
+
+// GET DAO CONTRACT
+export const getDaoVaultContract = () => {
+  const abiDaoVault = getAbis().daoVault
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(addr.daoVault, abiDaoVault, provider)
+  return contract
+}
