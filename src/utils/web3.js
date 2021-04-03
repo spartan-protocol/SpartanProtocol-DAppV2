@@ -7,7 +7,7 @@ import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
-// import abiTnPool from '../ABI/TN/Pool.json'
+import abiTnPool from '../ABI/TN/Pool.json'
 import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
 // import abiTnRecover from '../ABI/TN/Recover.json'
 import abiTnRouter from '../ABI/TN/Router.json'
@@ -26,7 +26,7 @@ import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnDaoVault from '../ABI/MN/DaoVault.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
-// import abiMnPool from '../ABI/MN/Pool.json'
+import abiMnPool from '../ABI/MN/Pool.json'
 import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
 // import abiMnRecover from '../ABI/MN/Recover.json'
 import abiMnRouter from '../ABI/MN/Router.json'
@@ -45,7 +45,7 @@ export const abisTN = {
   dao: abiTnDao.abi,
   daoVault: abiTnDaoVault.abi,
   erc20: abiTnErc20.abi,
-  // pool: abiTnPool.abi, // Confirm this one?
+  pool: abiTnPool.abi,
   poolFactory: abiTnPoolFactory.abi,
   // recover: abiTnRecover.abi, // Confirm this one?
   router: abiTnRouter.abi,
@@ -65,7 +65,7 @@ export const abisMN = {
   dao: abiMnDao.abi,
   daoVault: abiMnDaoVault.abi,
   erc20: abiMnErc20.abi,
-  // pool: abiMnPool.abi, // Confirm this one?
+  pool: abiMnPool.abi,
   poolFactory: abiMnPoolFactory.abi,
   // recover: abiMnRecover.abi, // Confirm this one?
   router: abiMnRouter.abi,

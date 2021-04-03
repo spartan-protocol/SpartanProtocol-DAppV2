@@ -301,3 +301,16 @@ export const calcDoubleSwapInput = (
   const output = getSwapInput(x, pool2Token, pool2Sparta, false)
   return output
 }
+
+/**
+ * Calculate APY using full month divis + fees and pool's depth
+ * @param {uint} dividends
+ * @param {uint} fees
+ * @param {uint} baseDepth
+ * @returns {uint} apy
+ */
+export const calcAPY = (dividends, fees, baseDepth) => {
+  const actualDepth = BN(baseDepth).times(2)
+  const apy = BN(dividends).plus(fees).times(12).div(actualDepth).times(100)
+  return apy
+}

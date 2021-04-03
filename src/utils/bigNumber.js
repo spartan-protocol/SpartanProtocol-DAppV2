@@ -17,8 +17,8 @@ export const convertToWei = (units) => {
  * @param {string} weiString
  * @returns {string} units
  */
-export const formatFromWei = (weiString) => {
-  const units = BN(weiString).shiftedBy(-18).toFormat(4)
+export const formatFromWei = (weiString, decs = 4) => {
+  const units = BN(weiString).shiftedBy(-18).toFormat(decs)
   return units
 }
 

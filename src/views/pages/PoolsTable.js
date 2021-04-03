@@ -1,5 +1,4 @@
 import React from 'react'
-
 import {
   Button,
   Card,
@@ -18,9 +17,14 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import bnbSparta from '../../assets/icons/bnb_sparta.png'
 import bnb from '../../assets/icons/BNB.svg'
 import { usePoolFactory } from '../../store/poolFactory'
+import HelmetLoading from '../../components/Loaders/HelmetLoading'
+import { calcAPY } from '../../utils/web3Utils'
+import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
+import { useWeb3 } from '../../store/web3'
 
 const Poolstable = () => {
   const poolFactory = usePoolFactory()
+  const web3 = useWeb3()
 
   const [horizontalTabs, sethorizontalTabs] = React.useState('harvest')
   const changeActiveTab = (e, tabState, tabName) => {
@@ -37,113 +41,136 @@ const Poolstable = () => {
 
   return (
     <>
-      {poolFactory?.finalLpArray}
-      <Col md={10}>
-        <Card className="card-body" style={{ backgroundColor: '#1D171F' }}>
-          <div
-            aria-multiselectable
-            className="card-collapse"
-            id="accordion"
-            role="tablist"
-          >
-            <Card>
-              <Row>
-                <Col md="2">
-                  <h2>
-                    <img className="mr-2" src={bnb} alt="Logo" />
-                    BNB
-                  </h2>
-                </Col>
-                <Col className="mr-4">
-                  <div className="title-card">APY</div>
-                  <div className="subtitle-card">188.25%</div>
-                </Col>
-                <Col className="mr-">
-                  <div className="title-card">Liquidity</div>
-                  <div className="subtitle-card">$22.584.633</div>
-                </Col>
-                <Col className="mr-3">
-                  <div className="title-card">Volume (24hrs)</div>
-                  <div className="subtitle-card">218.988,784 SPARTA</div>
-                </Col>
-                <Col md="0" className="mr-5">
-                  <div className="title-card">Locked LP</div>
-                  <div className="subtitle-amount">0.00</div>
-                </Col>
-                <Col md="0" className="ml-auto mr-2">
-                  <Button type="Button" className="btn btn-primary">
-                    Bond
-                  </Button>
-                  <Button type="Button" className="btn btn-primary">
-                    Swap
-                  </Button>
-                  <Button type="Button" className="btn btn-primary">
-                    Join
-                  </Button>
-                </Col>
-                <Col className="ml-auto" md="1">
-                  {/* ADD ARROW ICON */}
-                  <div
-                    aria-expanded={openedCollapseThree}
-                    role="button"
-                    tabIndex={-1}
-                    data-parent="#accordion"
-                    data-toggle="collapse"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setopenedCollapseThree(!openedCollapseThree)
-                    }}
-                    onKeyPress={(e) => {
-                      e.preventDefault()
-                      setopenedCollapseThree(!openedCollapseThree)
-                    }}
-                  >
-                    <i
-                      className="bd-icons icon-minimal-down mt-3"
-                      style={{ color: '#FFF' }}
-                    />
-                  </div>
-                </Col>
-              </Row>
+      {!poolFactory.finalLpArray && <HelmetLoading height={300} width={300} />}
+      {poolFactory?.finalLpArray && (
+        <Col md={12}>
+          {poolFactory?.finalLpArray.map((asset) => (
+            <Card
+              key={asset.tokenAddress}
+              className="card-body"
+              style={{ backgroundColor: '#1D171F' }}
+            >
+              <div
+                aria-multiselectable
+                className="card-collapse"
+                id="accordion"
+                role="tablist"
+              >
+                <Card>
+                  <Row>
+                    <Col md="2">
+                      <h2>
+                        <img className="mr-2" src={bnb} alt="Logo" />
+                        {asset.symbol}
+                      </h2>
+                    </Col>
+                    <Col md="2">
+                      <div className="title-card">APY</div>
+                      <div className="subtitle-card">
+                        {formatFromUnits(
+                          calcAPY(
+                            asset.recentDivis,
+                            asset.recentFees,
+                            asset.baseAmount,
+                          ),
+                        )}
+                        %
+                      </div>
+                    </Col>
+                    <Col md="2">
+                      <div className="title-card">Depth</div>
+                      <div className="subtitle-card">
+                        $
+                        {formatFromWei(
+                          BN(asset.baseAmount).times(web3?.spartaPrice),
+                          2,
+                        )}
+                      </div>
+                    </Col>
+                    <Col md="2">
+                      <div className="title-card">Volume (24hrs)</div>
+                      <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
+                    </Col>
+                    <Col md="2">
+                      <div className="title-card">Locked LP</div>
+                      <div className="subtitle-amount">0.00</div>
+                    </Col>
+                    <Col md="2" className="m-auto">
+                      <Button type="Button" className="btn btn-primary">
+                        Bond
+                      </Button>
+                      <Button type="Button" className="btn btn-primary">
+                        Swap
+                      </Button>
+                      <Button type="Button" className="btn btn-primary">
+                        Join
+                      </Button>
+                    </Col>
+                    <Col className="ml-auto" md="1">
+                      {/* ADD ARROW ICON */}
+                      <div
+                        aria-expanded={openedCollapseThree}
+                        role="button"
+                        tabIndex={-1}
+                        data-parent="#accordion"
+                        data-toggle="collapse"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setopenedCollapseThree(!openedCollapseThree)
+                        }}
+                        onKeyPress={(e) => {
+                          e.preventDefault()
+                          setopenedCollapseThree(!openedCollapseThree)
+                        }}
+                      >
+                        <i
+                          className="bd-icons icon-minimal-down mt-3"
+                          style={{ color: '#FFF' }}
+                        />
+                      </div>
+                    </Col>
+                  </Row>
 
-              <Card style={{ backgroundColor: '#25212D' }}>
-                <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                  <CardBody>
-                    <Row>
-                      <Col md="7">
-                        <h3>
-                          <img
-                            className="mr-2"
-                            src={bnbSparta}
-                            alt="Logo"
-                            height="32"
-                          />
-                          WBNB-SPARTA LP
-                        </h3>
-                      </Col>
-                      <Col md="1">
-                        <div className="title-card ml-n1">Available LP</div>
-                        <div className="subtitle-card">0.00</div>
-                      </Col>
-                      <Col md="4">
-                        <Button type="Button" className="btn btn-success">
-                          Lock
-                        </Button>
-                        <Button type="Button" className="btn btn-success">
-                          Unlock
-                        </Button>
-                        <Button color="success" onClick={toggleModalNotice}>
-                          Manage LP
-                        </Button>
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Collapse>
-              </Card>
+                  <Card style={{ backgroundColor: '#25212D' }}>
+                    <Collapse role="tabpanel" isOpen={openedCollapseThree}>
+                      <CardBody>
+                        <Row>
+                          <Col md="7">
+                            <h3>
+                              <img
+                                className="mr-2"
+                                src={bnbSparta}
+                                alt="Logo"
+                                height="32"
+                              />
+                              WBNB-SPARTA LP
+                            </h3>
+                          </Col>
+                          <Col md="1">
+                            <div className="title-card ml-n1">Available LP</div>
+                            <div className="subtitle-card">0.00</div>
+                          </Col>
+                          <Col md="4">
+                            <Button type="Button" className="btn btn-success">
+                              Lock
+                            </Button>
+                            <Button type="Button" className="btn btn-success">
+                              Unlock
+                            </Button>
+                            <Button color="success" onClick={toggleModalNotice}>
+                              Manage LP
+                            </Button>
+                          </Col>
+                        </Row>
+                      </CardBody>
+                    </Collapse>
+                  </Card>
+                </Card>
+              </div>
             </Card>
-          </div>
-        </Card>
-      </Col>
+          ))}
+        </Col>
+      )}
 
       {/* Harvest modal> */}
 

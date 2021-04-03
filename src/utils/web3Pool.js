@@ -6,10 +6,10 @@ const addr = getAddresses()
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
 // GET DAO CONTRACT
-export const getPoolContract = () => {
+export const getPoolContract = (poolAddress) => {
   const abiPool = getAbis().pool
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(addr.pool, abiPool, provider)
+  const contract = new ethers.Contract(poolAddress, abiPool, provider)
   return contract
 }
 
