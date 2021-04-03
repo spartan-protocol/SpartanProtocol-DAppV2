@@ -79,159 +79,159 @@ const Notifications = () => {
       </div>
       <div className="content">
         <Row>
-          {/*<Col md="6">*/}
-          {/*  <Card>*/}
-          {/*    <CardHeader>*/}
-          {/*      <CardTitle tag="h4">Notifications Style</CardTitle>*/}
-          {/*    </CardHeader>*/}
-          {/*    <CardBody>*/}
-          {/*      <Alert color="primary">*/}
-          {/*        <span>This is a plain notification</span>*/}
-          {/*      </Alert>*/}
-          {/*      <UncontrolledAlert color="primary" fade={false}>*/}
-          {/*        <span>This is a notification with close button.</span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*      <UncontrolledAlert*/}
-          {/*        className="alert-with-icon"*/}
-          {/*        color="primary"*/}
-          {/*        fade={false}*/}
-          {/*      >*/}
-          {/*        <span data-notify="icon" className="bd-icons icon-bell-55" />*/}
-          {/*        <span>*/}
-          {/*          This is a notification with close button and icon.*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*      <UncontrolledAlert*/}
-          {/*        className="alert-with-icon"*/}
-          {/*        color="primary"*/}
-          {/*        fade={false}*/}
-          {/*      >*/}
-          {/*        <span data-notify="icon" className="bd-icons icon-bell-55" />*/}
-          {/*        <span data-notify="message">*/}
-          {/*          This is a notification with close button and icon and have*/}
-          {/*          many lines. You can see that the icon and the close button*/}
-          {/*          are always vertically aligned. This is a beautiful*/}
-          {/*          notification. So you don't have to worry about the style.*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*    </CardBody>*/}
-          {/*  </Card>*/}
-          {/*</Col>*/}
-          {/*<Col md="6">*/}
-          {/*  <Card>*/}
-          {/*    <CardHeader>*/}
-          {/*      <CardTitle tag="h4">Notification states</CardTitle>*/}
-          {/*    </CardHeader>*/}
-          {/*    <CardBody>*/}
-          {/*      <UncontrolledAlert color="primary" fade={false}>*/}
-          {/*        <span>*/}
-          {/*          <b>Primary - </b>*/}
-          {/*          This is a regular notification made with ".alert-primary"*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*      <UncontrolledAlert color="info" fade={false}>*/}
-          {/*        <span>*/}
-          {/*          <b>Info - </b>*/}
-          {/*          This is a regular notification made with ".alert-info"*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*      <UncontrolledAlert color="success" fade={false}>*/}
-          {/*        <span>*/}
-          {/*          <b>Success - </b>*/}
-          {/*          This is a regular notification made with ".alert-success"*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*      <UncontrolledAlert color="warning" fade={false}>*/}
-          {/*        <span>*/}
-          {/*          <b>Warning - </b>*/}
-          {/*          This is a regular notification made with ".alert-warning"*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*      <UncontrolledAlert color="danger" fade={false}>*/}
-          {/*        <span>*/}
-          {/*          <b>Danger - </b>*/}
-          {/*          This is a regular notification made with ".alert-danger"*/}
-          {/*        </span>*/}
-          {/*      </UncontrolledAlert>*/}
-          {/*    </CardBody>*/}
-          {/*  </Card>*/}
-          {/*</Col>*/}
+          <Col md="6">
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">Notifications Style</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <Alert color="primary">
+                  <span>This is a plain notification</span>
+                </Alert>
+                <UncontrolledAlert color="primary" fade={false}>
+                  <span>This is a notification with close button.</span>
+                </UncontrolledAlert>
+                <UncontrolledAlert
+                  className="alert-with-icon"
+                  color="primary"
+                  fade={false}
+                >
+                  <span data-notify="icon" className="bd-icons icon-bell-55" />
+                  <span>
+                    This is a notification with close button and icon.
+                  </span>
+                </UncontrolledAlert>
+                <UncontrolledAlert
+                  className="alert-with-icon"
+                  color="primary"
+                  fade={false}
+                >
+                  <span data-notify="icon" className="bd-icons icon-bell-55" />
+                  <span data-notify="message">
+                    This is a notification with close button and icon and have
+                    many lines. You can see that the icon and the close button
+                    are always vertically aligned. This is a beautiful
+                    notification. So you don't have to worry about the style.
+                  </span>
+                </UncontrolledAlert>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card>
+              <CardHeader>
+                <CardTitle tag="h4">Notification states</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <UncontrolledAlert color="primary" fade={false}>
+                  <span>
+                    <b>Primary - </b>
+                    This is a regular notification made with ".alert-primary"
+                  </span>
+                </UncontrolledAlert>
+                <UncontrolledAlert color="info" fade={false}>
+                  <span>
+                    <b>Info - </b>
+                    This is a regular notification made with ".alert-info"
+                  </span>
+                </UncontrolledAlert>
+                <UncontrolledAlert color="success" fade={false}>
+                  <span>
+                    <b>Success - </b>
+                    This is a regular notification made with ".alert-success"
+                  </span>
+                </UncontrolledAlert>
+                <UncontrolledAlert color="warning" fade={false}>
+                  <span>
+                    <b>Warning - </b>
+                    This is a regular notification made with ".alert-warning"
+                  </span>
+                </UncontrolledAlert>
+                <UncontrolledAlert color="danger" fade={false}>
+                  <span>
+                    <b>Danger - </b>
+                    This is a regular notification made with ".alert-danger"
+                  </span>
+                </UncontrolledAlert>
+              </CardBody>
+            </Card>
+          </Col>
           <Col md="12">
             <Card>
               <CardBody>
                 <div className="places-buttons">
-                  {/*<Row>*/}
-                  {/*  <Col className="ml-auto mr-auto text-center" md="6">*/}
-                  {/*    <CardTitle tag="h4">Notifications Places</CardTitle>*/}
-                  {/*    <p className="category mb-3">*/}
-                  {/*      Click to view notifications*/}
-                  {/*    </p>*/}
-                  {/*  </Col>*/}
-                  {/*</Row>*/}
-                  {/*<Row>*/}
-                  {/*  <Col className="ml-auto mr-auto" lg="8">*/}
-                  {/*    <Row>*/}
-                  {/*      <Col md="4">*/}
-                  {/*        <Button*/}
-                  {/*          block*/}
-                  {/*          color="info"*/}
-                  {/*          onClick={() => notify('tl')}*/}
-                  {/*        >*/}
-                  {/*          Top Left*/}
-                  {/*        </Button>*/}
-                  {/*      </Col>*/}
-                  {/*      <Col md="4">*/}
-                  {/*        <Button*/}
-                  {/*          block*/}
-                  {/*          color="info"*/}
-                  {/*          onClick={() => notify('tc')}*/}
-                  {/*        >*/}
-                  {/*          Top Center*/}
-                  {/*        </Button>*/}
-                  {/*      </Col>*/}
-                  {/*      <Col md="4">*/}
-                  {/*        <Button*/}
-                  {/*          block*/}
-                  {/*          color="info"*/}
-                  {/*          onClick={() => notify('tr')}*/}
-                  {/*        >*/}
-                  {/*          Top Right*/}
-                  {/*        </Button>*/}
-                  {/*      </Col>*/}
-                  {/*    </Row>*/}
-                  {/*  </Col>*/}
-                  {/*</Row>*/}
+                  <Row>
+                    <Col className="ml-auto mr-auto text-center" md="6">
+                      <CardTitle tag="h4">Notifications Places</CardTitle>
+                      <p className="category mb-3">
+                        Click to view notifications
+                      </p>
+                    </Col>
+                  </Row>
                   <Row>
                     <Col className="ml-auto mr-auto" lg="8">
-                      {/*<Row>*/}
-                      {/*  <Col md="4">*/}
-                      {/*    <Button*/}
-                      {/*      block*/}
-                      {/*      color="info"*/}
-                      {/*      onClick={() => notify('bl')}*/}
-                      {/*    >*/}
-                      {/*      Bottom Left*/}
-                      {/*    </Button>*/}
-                      {/*  </Col>*/}
-                      {/*  <Col md="4">*/}
-                      {/*    <Button*/}
-                      {/*      block*/}
-                      {/*      color="info"*/}
-                      {/*      onClick={() => notify('bc')}*/}
-                      {/*    >*/}
-                      {/*      Bottom Center*/}
-                      {/*    </Button>*/}
-                      {/*  </Col>*/}
-                      {/*  <Col md="4">*/}
-                      {/*    <Button*/}
-                      {/*      block*/}
-                      {/*      color="info"*/}
-                      {/*      onClick={() => notify('br')}*/}
-                      {/*    >*/}
-                      {/*      Bottom Right*/}
-                      {/*    </Button>*/}
-                      {/*  </Col>*/}
-                      {/*</Row>*/}
+                      <Row>
+                        <Col md="4">
+                          <Button
+                            block
+                            color="info"
+                            onClick={() => notify('tl')}
+                          >
+                            Top Left
+                          </Button>
+                        </Col>
+                        <Col md="4">
+                          <Button
+                            block
+                            color="info"
+                            onClick={() => notify('tc')}
+                          >
+                            Top Center
+                          </Button>
+                        </Col>
+                        <Col md="4">
+                          <Button
+                            block
+                            color="info"
+                            onClick={() => notify('tr')}
+                          >
+                            Top Right
+                          </Button>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className="ml-auto mr-auto" lg="8">
+                      <Row>
+                        <Col md="4">
+                          <Button
+                            block
+                            color="info"
+                            onClick={() => notify('bl')}
+                          >
+                            Bottom Left
+                          </Button>
+                        </Col>
+                        <Col md="4">
+                          <Button
+                            block
+                            color="info"
+                            onClick={() => notify('bc')}
+                          >
+                            Bottom Center
+                          </Button>
+                        </Col>
+                        <Col md="4">
+                          <Button
+                            block
+                            color="info"
+                            onClick={() => notify('br')}
+                          >
+                            Bottom Right
+                          </Button>
+                        </Col>
+                      </Row>
                     </Col>
                   </Row>
                 </div>

@@ -20,25 +20,25 @@ import coinBnb from "../../../assets/icons/coin_bnb.svg"
 import btc from "../../../assets/icons/BTC.svg"
 
 
-// const dataTable = [
-//
-//   ["BNB", "125.84"],
-//   ["SPARTA", "125.84"],
-//   ["BNB-SPARTA LP", "125.84"],
-//   ["BTC", "125.84"],
-//   ["DAI", "125.84"],
-//
-// ];
-
 const dataTable = [
 
-  [<div><img className="mr-2" src={coinBnb} alt="BNB" />BNB</div>, "125.84"],
-  [<div><img  className="mr-2" src={coinSparta} alt="BNB" />SPARTA</div>, "125.84"],
-  [<div><img height="25" width="38" className="mr-2" src={bnbSparta} alt="BNB" />BNB-SPARTA LP</div>, "125.84"],
-  [<div><img height="25" width="25"className="mr-2" src={btc} alt="BNB" />BTC</div>, "125.84"],
-  [<div><img className="mr-2" src={coinBnb} alt="DAI" />DAI</div>, "125.84"],
+  ["BNB", "125.84"],
+  ["SPARTA", "125.84"],
+  ["BNB-SPARTA LP", "125.84"],
+  ["BTC", "125.84"],
+  ["DAI", "125.84"],
 
 ];
+
+// const dataTable = [
+//
+//   [<div><img className="mr-2" src={coinBnb} alt="BNB" />BNB</div>, "125.84"],
+//   [<div><img  className="mr-2" src={coinSparta} alt="BNB" />SPARTA</div>, "125.84"],
+//   [<div><img height="25" width="38" className="mr-2" src={bnbSparta} alt="BNB" />BNB-SPARTA LP</div>, "125.84"],
+//   [<div><img height="25" width="25"className="mr-2" src={btc} alt="BNB" />BTC</div>, "125.84"],
+//   [<div><img className="mr-2" src={coinBnb} alt="DAI" />DAI</div>, "125.84"],
+//
+// ];
 
 
 

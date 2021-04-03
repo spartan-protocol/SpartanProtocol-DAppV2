@@ -37,7 +37,7 @@ const Bond = () => {
           <Col md={10}>
             <Row>
               <Col md={9}>
-                <Nav tabs className="nav-tabs-custom">
+                <Nav className="nav-tabs-custom card-body" pills>
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === "1" })}
@@ -45,7 +45,7 @@ const Bond = () => {
                         toggle("1")
                       }}
                     >
-                      <span className="d-none d-sm-block">Single token</span>
+                      Single token
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -55,7 +55,7 @@ const Bond = () => {
                         toggle("2")
                       }}
                     >
-                      <span className="d-none d-sm-block">Both tokens</span>
+                      Both tokens
                     </NavLink>
                   </NavItem>
                 </Nav>

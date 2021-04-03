@@ -64,7 +64,7 @@ const Overview = () => {
         <Breadcrumb>Pools</Breadcrumb>
         <Row>
           <Col lg={12}>
-            <Nav tabs className="nav-tabs-custom">
+            <Nav className="nav-tabs-custom card-body" pills>
               <NavItem>
                 <NavLink
                   style={{ cursor: 'pointer' }}
@@ -75,7 +75,7 @@ const Overview = () => {
                     toggleCustom('1')
                   }}
                 >
-                  <span className="d-none d-sm-block">Pools overview</span>
+                  Pools overview
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -88,7 +88,7 @@ const Overview = () => {
                     toggleCustom('2')
                   }}
                 >
-                  <span className="d-none d-sm-block">Positions</span>
+                  Positions
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -114,7 +114,7 @@ const Overview = () => {
                     toggleCustom('4')
                   }}
                 >
-                  <span className="d-none d-sm-block">Pairs</span>
+                  Pairs
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -127,7 +127,7 @@ const Overview = () => {
                     toggleCustom('5')
                   }}
                 >
-                  <span className="d-none d-sm-block">Tokens</span>
+                  Tokens
                 </NavLink>
               </NavItem>
             </Nav>
