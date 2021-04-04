@@ -17,7 +17,7 @@ const Footer = (props) => (
           <ul className="nav">
             <li className="nav-item">
               <a className="nav-link" href="#">
-                © {new Date().getFullYear()} Spartan Protocol. All rights reserved{" "}
+                A Spartan Community Project{" "}
               </a>
             </li>
             {" "}
