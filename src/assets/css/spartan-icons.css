@@ -302,5 +302,10 @@
     background-image: url('/src/assets/icons/icon-world-dark.svg#dark');
 }
 
+.icon-close {
+    background-image: url('/src/assets/icons/icon-close.svg#light');
+}
 
-
+.icon-scan {
+    background-image: url('/src/assets/icons/icon-scan.svg');
+}

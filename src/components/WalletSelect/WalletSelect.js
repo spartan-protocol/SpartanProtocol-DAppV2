@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { ethers } from 'ethers'
 
 import { useDispatch } from 'react-redux'
 import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
@@ -18,7 +17,6 @@ const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
   const wallet = useWallet()
-  const [walletIcon, setWalletIcon] = useState('')
   const [network, setNetwork] = useState(getNetwork)
 
   const onChangeNetwork = async (net) => {
@@ -80,7 +78,6 @@ const WalletSelect = (props) => {
       wallet.connect(x.inject)
     }
     window.sessionStorage.setItem('lastWallet', x.id)
-    setWalletIcon(x.icon[0])
     // props.setWalletHeaderIcon(x.icon[0])
   }
 
@@ -97,14 +94,16 @@ const WalletSelect = (props) => {
           {/* > */}
           {/*  <i className="bd-icons icon-simple-remove" /> */}
           {/* </button> */}
-          <Col>
-            <div className="small-4 medium-4 large-4 columns text-center">
-              <i className="icon-large icon-wallet icon-dark text-center " />
-            </div>
-            <h1 className="modal-title text-center" id="myModalLabel">
-              Connect to wallet
-            </h1>
-          </Col>
+          {wallet.status !== 'connected' && (
+            <Col>
+              <div className="small-4 medium-4 large-4 columns text-center">
+                <i className="icon-large icon-wallet icon-dark text-center " />
+              </div>
+              <h1 className="modal-title text-center" id="myModalLabel">
+                Connect to wallet
+              </h1>
+            </Col>
+          )}
         </div>
 
         {poolFactory.loading && <HelmetLoading height="300px" width="300px" />}
@@ -120,41 +119,69 @@ const WalletSelect = (props) => {
                 </span>
               </Alert>
             )}
-            <Row className="align-middle mb-3">
-              <Col xs={5} className="text-right">
-                TestNet
-              </Col>
-              <Col xs={2}>
-                <Form>
-                  <Form.Check
-                    type="switch"
-                    id="custom-switch"
-                    checked={network?.net === 'mainnet'}
-                    onChange={(value) => onChangeNetwork(value)}
-                    style={{ top: '-10px' }}
-                  />
-                </Form>
-              </Col>
-              <Col xs={5} className="text-left">
-                MainNet
-              </Col>
-            </Row>
-            <br />
+            {wallet.status !== 'connected' && (
+              <>
+                <Row className="align-middle mb-3">
+                  <Col xs={5} className="text-right">
+                    TestNet
+                  </Col>
+                  <Col xs={2}>
+                    <Form>
+                      <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        checked={network?.net === 'mainnet'}
+                        onChange={(value) => onChangeNetwork(value)}
+                        style={{ top: '-10px' }}
+                      />
+                    </Form>
+                  </Col>
+                  <Col xs={5} className="text-left">
+                    MainNet
+                  </Col>
+                </Row>
+                <br />
+              </>
+            )}
 
             {wallet.status === 'connected' ? (
               <div>
-                <Image
-                  src={walletIcon}
-                  className="wallet-modal-icon"
-                  roundedCircle
-                />
-                <div>Wallet: {window.sessionStorage.getItem('lastWallet')}</div>
-                <div>Chain ID: {wallet.chainId}</div>
-                <div>Account: {wallet.account}</div>
-                <div>
-                  BNB Balance: {ethers.utils.formatEther(wallet.balance)}
-                </div>
-                <div>RPC: {network.rpc}</div>
+                <Row>
+                  <Col xs="11">
+                    <h2>Wallet</h2>
+                  </Col>
+                  <Col xs="1">
+                    <Button
+                      onClick={props.onHide}
+                      className="btn btn-transparent"
+                    >
+                      <i className="icon-medium icon-close" />
+                    </Button>
+                  </Col>
+                </Row>
+                {wallet.account && (
+                  <Row>
+                    <Col xl="5">
+                      <span className="description">
+                        View on BSC Scan{' '}
+                        <a
+                          href={getExplorerWallet(wallet.account)}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            marginLeft: '2px',
+                          }}
+                        >
+                          <i className="icon-extra-small icon-scan" />
+                        </a>
+                      </span>
+                      <span className="title">
+                        {wallet.account.substr(0, 5)}...
+                        {wallet.account.slice(-5)}
+                      </span>
+                    </Col>
+                  </Row>
+                )}
                 <Button
                   variant="danger"
                   onClick={() => navigator.clipboard.writeText(wallet.account)}
