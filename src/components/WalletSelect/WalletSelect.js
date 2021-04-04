@@ -4,20 +4,26 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 
 import { useDispatch } from 'react-redux'
 import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
+import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import { changeNetwork, getNetwork, getAddresses } from '../../utils/web3'
-import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
+import { changeNetwork, getNetwork } from '../../utils/web3'
+import { addNetworkMM, addNetworkBC } from '../../store/web3'
 import { usePoolFactory } from '../../store/poolFactory/selector'
 import HelmetLoading from '../Loaders/HelmetLoading'
-
-const addr = getAddresses()
+import ShareLink from '../Share/ShareLink'
 
 const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
   const wallet = useWallet()
   const [network, setNetwork] = useState(getNetwork)
+  const [horizontalTabs, sethorizontalTabs] = useState('assets')
+
+  const changeActiveTab = (e, tabState, tabName) => {
+    e.preventDefault()
+    sethorizontalTabs(tabName)
+  }
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
@@ -152,6 +158,9 @@ const WalletSelect = (props) => {
                   </Col>
                   <Col xs="1">
                     <Button
+                      style={{
+                        right: '16px',
+                      }}
                       onClick={props.onHide}
                       className="btn btn-transparent"
                     >
@@ -160,57 +169,153 @@ const WalletSelect = (props) => {
                   </Col>
                 </Row>
                 {wallet.account && (
-                  <Row>
-                    <Col xl="5">
-                      <span className="description">
-                        View on BSC Scan{' '}
-                        <a
-                          href={getExplorerWallet(wallet.account)}
-                          target="_blank"
-                          rel="noreferrer"
+                  <>
+                    <Row>
+                      <Col xl="5">
+                        <span className="description">
+                          View on BSC Scan{' '}
+                          <a
+                            href={getExplorerWallet(wallet.account)}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              marginLeft: '2px',
+                            }}
+                          >
+                            <i className="icon-extra-small icon-scan" />
+                          </a>
+                        </span>
+                        <span className="title">
+                          {wallet.account.substr(0, 5)}...
+                          {wallet.account.slice(-5)}
+                        </span>
+                      </Col>
+                      <Col xl="2">
+                        <ShareLink
+                          url={wallet.account}
+                          notificationLocation="tc"
+                        >
+                          <Button className="btn btn-sm btn-neutral">
+                            <i className="icon-medium icon-copy" />
+                          </Button>
+                        </ShareLink>
+                      </Col>
+                      <Col xl="5">
+                        <Button
+                          block
+                          className="btn btn-md btn-neutral"
                           style={{
-                            marginLeft: '2px',
+                            padding: '14px',
+                          }}
+                          onClick={() => {
+                            wallet.reset()
                           }}
                         >
-                          <i className="icon-extra-small icon-scan" />
-                        </a>
-                      </span>
-                      <span className="title">
-                        {wallet.account.substr(0, 5)}...
-                        {wallet.account.slice(-5)}
-                      </span>
-                    </Col>
-                  </Row>
+                          Change wallet
+                        </Button>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Nav pills className="nav-tabs-custom">
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={
+                              horizontalTabs === 'assets' ? 'active' : ''
+                            }
+                            onClick={(e) =>
+                              changeActiveTab(e, 'horizontalTabs', 'assets')
+                            }
+                          >
+                            Assets
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={horizontalTabs === 'lp' ? 'active' : ''}
+                            onClick={(e) =>
+                              changeActiveTab(e, 'horizontalTabs', 'lp')
+                            }
+                          >
+                            Lp Shares
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={
+                              horizontalTabs === 'synths' ? 'active' : ''
+                            }
+                            onClick={(e) =>
+                              changeActiveTab(e, 'horizontalTabs', 'synths')
+                            }
+                          >
+                            Synths
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                    </Row>
+                    <TabContent
+                      className="tab-space"
+                      activeTab={horizontalTabs}
+                    >
+                      <TabPane tabId="assets">
+                        <Row>
+                          <Col xl="6">Assets</Col>
+                          <Col
+                            xl="6"
+                            style={{
+                              textAlign: 'right',
+                            }}
+                          >
+                            Balance
+                          </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="lp">
+                        <Row>
+                          <Col xl="6">Locked LP in DAO</Col>
+                          <Col
+                            xl="6"
+                            style={{
+                              textAlign: 'right',
+                            }}
+                          >
+                            Balance
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col xl="6">Available LP Shares</Col>
+                          <Col
+                            xl="6"
+                            style={{
+                              textAlign: 'right',
+                            }}
+                          >
+                            Balance
+                          </Col>
+                        </Row>
+                      </TabPane>
+                      <TabPane tabId="synths">
+                        <Row>
+                          <Col xl="6">Synths</Col>
+                          <Col
+                            xl="6"
+                            style={{
+                              textAlign: 'right',
+                            }}
+                          >
+                            Balance
+                          </Col>
+                        </Row>
+                      </TabPane>
+                    </TabContent>
+                  </>
                 )}
-                <Button
-                  variant="danger"
-                  onClick={() => navigator.clipboard.writeText(wallet.account)}
-                >
-                  Copy Address
-                </Button>
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    dispatch(watchAsset(addr.sparta, 'SPARTA', 18))
-                  }}
-                >
-                  Add to Wallet
-                </Button>
-                <Button
-                  variant="primary"
-                  href={getExplorerWallet(wallet.account)}
-                  target="_blank"
-                >
-                  View on BscScan
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    wallet.reset()
-                  }}
-                >
-                  Disconnect
-                </Button>
               </div>
             ) : (
               <div>
@@ -243,18 +348,6 @@ const WalletSelect = (props) => {
             )}
           </Modal.Body>
         )}
-        <div className="ml-4 mr-4 mb-3">
-          <Button
-            className="btn-round btn-block "
-            color="info"
-            data-dismiss="modal"
-            type="button"
-            size="lg"
-            onClick={props.onHide}
-          >
-            Cancel
-          </Button>
-        </div>
       </Modal>
     </>
   )
