@@ -83,7 +83,7 @@ const Providers = () => {
         <BrowserRouter>
           <Switch>
             <Route path="/" render={(props) => <AdminLayout {...props} />} />
-            <Redirect from="/" to="/dapp/buttons/" />
+            <Redirect from="/" to="/dapp/home" />
           </Switch>
         </BrowserRouter>
       </UseWalletProvider>
