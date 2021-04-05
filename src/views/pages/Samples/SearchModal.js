@@ -1,6 +1,4 @@
-/* eslint-disable */
-import React, { useState } from "react"
-import classNames from "classnames";
+import React, { useState } from 'react'
 
 import {
   Card,
@@ -9,26 +7,21 @@ import {
   CardTitle,
   Row,
   Col,
-  Button, NavItem, NavLink, Nav
-} from "reactstrap"
+  NavItem,
+  NavLink,
+  Nav,
+} from 'reactstrap'
 
-import ReactTable from "../../../components/SearchModal/SearchModal";
-import classnames from "classnames"
-import bnbSparta from "../../../assets/icons/bnb_sparta.png"
-import coinSparta from "../../../assets/icons/coin_sparta.svg"
-import coinBnb from "../../../assets/icons/coin_bnb.svg"
-import btc from "../../../assets/icons/BTC.svg"
-
+import classnames from 'classnames'
+import ReactTable from '../../../components/SearchModal/SearchModal'
 
 const dataTable = [
-
-  ["BNB", "125.84"],
-  ["SPARTA", "125.84"],
-  ["BNB-SPARTA LP", "125.84"],
-  ["BTC", "125.84"],
-  ["DAI", "125.84"],
-
-];
+  ['BNB', '125.84'],
+  ['SPARTA', '125.84'],
+  ['BNB-SPARTA LP', '125.84'],
+  ['BTC', '125.84'],
+  ['DAI', '125.84'],
+]
 
 // const dataTable = [
 //
@@ -40,26 +33,20 @@ const dataTable = [
 //
 // ];
 
-
-
 const SeachModal = () => {
-  const [data, setData] = React.useState(
-    dataTable.map((prop, key) => {
-      return {
-        id: key,
-        token: prop[0],
-        balance: prop[1],
-      };
-    })
-  );
+  const [data] = React.useState(
+    dataTable.map((prop, key) => ({
+      id: key,
+      token: prop[0],
+      balance: prop[1],
+    })),
+  )
 
-  const [activeTab, setActiveTab] = useState("1")
+  const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
-
-
 
   return (
     <>
@@ -73,9 +60,9 @@ const SeachModal = () => {
               <Nav tabs className="nav-tabs-custom">
                 <NavItem>
                   <NavLink
-                    className={classnames({ active: activeTab === "1" })}
+                    className={classnames({ active: activeTab === '1' })}
                     onClick={() => {
-                      toggle("1")
+                      toggle('1')
                     }}
                   >
                     <span className="d-none d-sm-block">All</span>
@@ -83,9 +70,9 @@ const SeachModal = () => {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    className={classnames({ active: activeTab === "2" })}
+                    className={classnames({ active: activeTab === '2' })}
                     onClick={() => {
-                      toggle("2")
+                      toggle('2')
                     }}
                   >
                     <span className="d-none d-sm-block">Tokens</span>
@@ -93,9 +80,9 @@ const SeachModal = () => {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    className={classnames({ active: activeTab === "3" })}
+                    className={classnames({ active: activeTab === '3' })}
                     onClick={() => {
-                      toggle("3")
+                      toggle('3')
                     }}
                   >
                     <span className="d-none d-sm-block">LP Tokens</span>
@@ -103,9 +90,9 @@ const SeachModal = () => {
                 </NavItem>
                 <NavItem>
                   <NavLink
-                    className={classnames({ active: activeTab === "4" })}
+                    className={classnames({ active: activeTab === '4' })}
                     onClick={() => {
-                      toggle("4")
+                      toggle('4')
                     }}
                   >
                     <span className="d-none d-sm-block">Synths</span>
@@ -119,14 +106,13 @@ const SeachModal = () => {
                   resizable={false}
                   columns={[
                     {
-                       // Header: "Token",
-                      accessor: "token",
+                      // Header: "Token",
+                      accessor: 'token',
                     },
                     {
-                       // Header: "Balance",
-                      accessor: "balance",
+                      // Header: "Balance",
+                      accessor: 'balance',
                     },
-
                   ]}
                   defaultPageSize={10}
                   showPaginationTop
@@ -139,7 +125,7 @@ const SeachModal = () => {
         </Row>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default SeachModal;
+export default SeachModal

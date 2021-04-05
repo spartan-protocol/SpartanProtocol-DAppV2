@@ -1,13 +1,10 @@
-/* eslint-disable */
-import React from "react";
+import React from 'react'
 
-// reactstrap components
 import {
   Card,
   CardHeader,
   CardBody,
   CardTitle,
-  Collapse,
   NavItem,
   NavLink,
   Nav,
@@ -15,31 +12,31 @@ import {
   TabPane,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap'
 
 const Tabs = () => {
-  const [horizontalTabs, sethorizontalTabs] = React.useState("profile");
+  const [horizontalTabs, sethorizontalTabs] = React.useState('profile')
 
   // with this function we change the active tab for all the tabs in this page
   const changeActiveTab = (e, tabState, tabName) => {
-    e.preventDefault();
+    e.preventDefault()
     switch (tabState) {
-      case "horizontalTabs":
-        sethorizontalTabs(tabName);
-        break;
-      case "verticalTabsIcons":
-        setverticalTabsIcons(tabName);
-        break;
-      case "pageTabs":
-        setpageTabs(tabName);
-        break;
-      case "verticalTabs":
-        setverticalTabs(tabName);
-        break;
+      case 'horizontalTabs':
+        sethorizontalTabs(tabName)
+        break
+      // case 'verticalTabsIcons':
+      //   setverticalTabsIcons(tabName)
+      //   break
+      // case 'pageTabs':
+      //   setpageTabs(tabName)
+      //   break
+      // case 'verticalTabs':
+      //   setverticalTabs(tabName)
+      //   break
       default:
-        break;
+        break
     }
-  };
+  }
   return (
     <>
       <div className="content">
@@ -56,9 +53,9 @@ const Tabs = () => {
                     <NavLink
                       data-toggle="tab"
                       href="#pablo"
-                      className={horizontalTabs === "profile" ? "active" : ""}
+                      className={horizontalTabs === 'profile' ? 'active' : ''}
                       onClick={(e) =>
-                        changeActiveTab(e, "horizontalTabs", "profile")
+                        changeActiveTab(e, 'horizontalTabs', 'profile')
                       }
                     >
                       Profile
@@ -68,9 +65,9 @@ const Tabs = () => {
                     <NavLink
                       data-toggle="tab"
                       href="#pablo"
-                      className={horizontalTabs === "settings" ? "active" : ""}
+                      className={horizontalTabs === 'settings' ? 'active' : ''}
                       onClick={(e) =>
-                        changeActiveTab(e, "horizontalTabs", "settings")
+                        changeActiveTab(e, 'horizontalTabs', 'settings')
                       }
                     >
                       Settings
@@ -80,9 +77,9 @@ const Tabs = () => {
                     <NavLink
                       data-toggle="tab"
                       href="#pablo"
-                      className={horizontalTabs === "options" ? "active" : ""}
+                      className={horizontalTabs === 'options' ? 'active' : ''}
                       onClick={(e) =>
-                        changeActiveTab(e, "horizontalTabs", "options")
+                        changeActiveTab(e, 'horizontalTabs', 'options')
                       }
                     >
                       Options
@@ -121,7 +118,7 @@ const Tabs = () => {
         </Row>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Tabs;
+export default Tabs

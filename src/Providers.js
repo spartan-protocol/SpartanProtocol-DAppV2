@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
@@ -82,7 +81,7 @@ const Providers = () => {
       >
         <BrowserRouter>
           <Switch>
-            <Route path="/" render={(props) => <AdminLayout {...props} />} />
+            <Route path="/" render={() => <AdminLayout />} />
             <Redirect from="/" to="/dapp/home" />
           </Switch>
         </BrowserRouter>

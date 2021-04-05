@@ -1,28 +1,27 @@
-/* eslint-disable */
-import React, { useState } from "react"
+import React, { useState } from 'react'
 
-// reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
-  CardText,
   Row,
-  Col, Breadcrumb, Nav, NavItem, NavLink, TabContent, TabPane, UncontrolledAlert, Progress, Alert, CardTitle
-} from "reactstrap"
-import classnames from "classnames"
+  Col,
+  Breadcrumb,
+  Nav,
+  NavItem,
+  NavLink,
+  TabContent,
+  TabPane,
+  Alert,
+} from 'reactstrap'
+import classnames from 'classnames'
 
-import coinBnb from "../../../assets/icons/coin_bnb.svg"
-import ButtonGroup from "react-bootstrap/ButtonGroup"
-import LockEarn from "./LockEarn"
-import bnbSparta from "../../../assets/icons/bnb_sparta.png"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
-import Proposals from "./Proposals"
+import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import LockEarn from './LockEarn'
+import Proposals from './Proposals'
 
 const Overview = () => {
-  const [activeTab, setActiveTab] = useState("1")
+  const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -33,12 +32,15 @@ const Overview = () => {
       <div className="content">
         <Row>
           <Col md={2}>
-          <Breadcrumb>Dao</Breadcrumb>
-        </Col>
-          <Col md={6} className="mt-3 ml-n5" >
+            <Breadcrumb>Dao</Breadcrumb>
+          </Col>
+          <Col md={6} className="mt-3 ml-n5">
             <Alert color="primary">
-          <span>By adding liquidity to the pools you receive LP tokens. Earn extra SPARTA by locking these LP tokens in the DAO</span>
-        </Alert>
+              <span>
+                By adding liquidity to the pools you receive LP tokens. Earn
+                extra SPARTA by locking these LP tokens in the DAO
+              </span>
+            </Alert>
           </Col>
         </Row>
 
@@ -50,9 +52,9 @@ const Overview = () => {
                 <Nav className="nav-tabs-custom card-body" pills>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "1" })}
+                      className={classnames({ active: activeTab === '1' })}
                       onClick={() => {
-                        toggle("1")
+                        toggle('1')
                       }}
                     >
                       Lock & earn
@@ -60,9 +62,9 @@ const Overview = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "2" })}
+                      className={classnames({ active: activeTab === '2' })}
                       onClick={() => {
-                        toggle("2")
+                        toggle('2')
                       }}
                     >
                       Proposals
@@ -75,7 +77,10 @@ const Overview = () => {
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1" className="p-3">
                 <br />
-                <Card className="card-body" style={{ backgroundColor: "#1D171F" }}>
+                <Card
+                  className="card-body"
+                  style={{ backgroundColor: '#1D171F' }}
+                >
                   <CardBody>
                     <Row>
                       <Col md={3} xs={12} className="mb-n4">
@@ -90,10 +95,10 @@ const Overview = () => {
                             placement="right"
                             target="tooltipAddBase"
                           >
-                            The quantity of & SPARTA you are adding to the
-                            pool.
+                            The quantity of & SPARTA you are adding to the pool.
                           </UncontrolledTooltip>
-                        </h2></Col>
+                        </h2>
+                      </Col>
                       <Col md={2}>
                         <div className="card-text">Rewards</div>
                       </Col>
@@ -106,15 +111,17 @@ const Overview = () => {
                       <Col md={2} className="ml-auto mr-2 mt-2">
                         <Button type="Button" className="btn btn-primary">
                           Harvest
-                        </Button></Col>
+                        </Button>
+                      </Col>
                     </Row>
                     <Row>
-                      <Col md={3}>
-                      </Col>
+                      <Col md={3} />
                       <Col md={2}>
                         <div className="title-card mt-n2 ">
-                          <div className="subtitle-amount mt-n4">1,025 SPARTA<i
-                            className="icon-extra-small icon-spinner icon-dark ml-1" /></div>
+                          <div className="subtitle-amount mt-n4">
+                            1,025 SPARTA
+                            <i className="icon-extra-small icon-spinner icon-dark ml-1" />
+                          </div>
                         </div>
                       </Col>
                       <Col md={2}>
@@ -126,18 +133,20 @@ const Overview = () => {
                     </Row>
                   </CardBody>
                 </Card>
-                <div className="page-header">Lock & earn <i
-                  className="icon-small icon-info icon-dark ml-2"
-                  id="tooltipAddBase"
-                  role="button"
-                />
+                <div className="page-header">
+                  Lock & earn{' '}
+                  <i
+                    className="icon-small icon-info icon-dark ml-2"
+                    id="tooltipAddBase"
+                    role="button"
+                  />
                   <UncontrolledTooltip
                     placement="right"
                     target="tooltipAddBase"
                   >
-                    The quantity of & SPARTA you are adding to the
-                    pool.
-                  </UncontrolledTooltip></div>
+                    The quantity of & SPARTA you are adding to the pool.
+                  </UncontrolledTooltip>
+                </div>
                 <br />
                 <LockEarn />
               </TabPane>

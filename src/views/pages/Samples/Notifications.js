@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react'
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from 'react-notification-alert'
@@ -13,26 +12,25 @@ import {
   CardBody,
   CardTitle,
   Modal,
-  ModalBody,
   Row,
   Col,
 } from 'reactstrap'
-import SeachModal from "./SearchModal"
+import SeachModal from './SearchModal'
 
 const Notifications = () => {
-  const [modalMini, setModalMini] = React.useState(false)
+  // const [modalMini, setModalMini] = React.useState(false)
   const [modalClassic, setModalClassic] = React.useState(false)
-  const [modalNotice, setModalNotice] = React.useState(false)
+  // const [modalNotice, setModalNotice] = React.useState(false)
   const notificationAlertRef = React.useRef(null)
   const toggleModalClassic = () => {
     setModalClassic(!modalClassic)
   }
-  const toggleModalNotice = () => {
-    setModalNotice(!modalNotice)
-  }
-  const toggleModalMini = () => {
-    setModalMini(!modalMini)
-  }
+  // const toggleModalNotice = () => {
+  //   setModalNotice(!modalNotice)
+  // }
+  // const toggleModalMini = () => {
+  //   setModalMini(!modalMini)
+  // }
 
   const notify = (place) => {
     const color = Math.floor(Math.random() * 5 + 1)
@@ -111,7 +109,7 @@ const Notifications = () => {
                     This is a notification with close button and icon and have
                     many lines. You can see that the icon and the close button
                     are always vertically aligned. This is a beautiful
-                    notification. So you don't have to worry about the style.
+                    notification. So you dont have to worry about the style.
                   </span>
                 </UncontrolledAlert>
               </CardBody>
@@ -126,31 +124,31 @@ const Notifications = () => {
                 <UncontrolledAlert color="primary" fade={false}>
                   <span>
                     <b>Primary - </b>
-                    This is a regular notification made with ".alert-primary"
+                    This is a regular notification made with .alert-primary
                   </span>
                 </UncontrolledAlert>
                 <UncontrolledAlert color="info" fade={false}>
                   <span>
                     <b>Info - </b>
-                    This is a regular notification made with ".alert-info"
+                    This is a regular notification made with .alert-info
                   </span>
                 </UncontrolledAlert>
                 <UncontrolledAlert color="success" fade={false}>
                   <span>
                     <b>Success - </b>
-                    This is a regular notification made with ".alert-success"
+                    This is a regular notification made with .alert-success
                   </span>
                 </UncontrolledAlert>
                 <UncontrolledAlert color="warning" fade={false}>
                   <span>
                     <b>Warning - </b>
-                    This is a regular notification made with ".alert-warning"
+                    This is a regular notification made with .alert-warning
                   </span>
                 </UncontrolledAlert>
                 <UncontrolledAlert color="danger" fade={false}>
                   <span>
                     <b>Danger - </b>
-                    This is a regular notification made with ".alert-danger"
+                    This is a regular notification made with .alert-danger
                   </span>
                 </UncontrolledAlert>
               </CardBody>
@@ -243,22 +241,12 @@ const Notifications = () => {
                     <Button color="primary" onClick={toggleModalClassic}>
                       Tokens modal
                     </Button>
-                    {/*<Button color="success" onClick={toggleModalNotice}>*/}
-                    {/*  Notice modal*/}
-                    {/*</Button>*/}
-                    {/*<Button color="default" onClick={toggleModalMini}>*/}
-                    {/*  Small alert modal*/}
-                    {/*</Button>*/}
-
-
-
-
-
-
-
-
-
-
+                    {/* <Button color="success" onClick={toggleModalNotice}> */}
+                    {/*  Notice modal */}
+                    {/* </Button> */}
+                    {/* <Button color="default" onClick={toggleModalMini}> */}
+                    {/*  Small alert modal */}
+                    {/* </Button> */}
 
                     {/* Token Search Modal */}
                     <Modal isOpen={modalClassic} toggle={toggleModalClassic}>
@@ -273,109 +261,93 @@ const Notifications = () => {
                           <i className="icon-small icon-close icon-dark" />
                         </button>
                       </div>
-                      <SeachModal/>
+                      <SeachModal />
                     </Modal>
                     {/* End Classic Modal */}
 
-
-
-
-
                     {/* Notice Modal */}
-                    {/*<Modal isOpen={modalNotice} toggle={toggleModalNotice}>*/}
-                    {/*  <div className="modal-header">*/}
-                    {/*    <button*/}
-                    {/*      aria-hidden*/}
-                    {/*      className="close"*/}
-                    {/*      data-dismiss="modal"*/}
-                    {/*      type="button"*/}
-                    {/*      onClick={toggleModalNotice}*/}
-                    {/*    >*/}
-                    {/*      <i className="bd-icons icon-simple-remove" />*/}
-                    {/*    </button>*/}
-                    {/*  </div>*/}
-                    {/*  <ModalBody className="text-center">*/}
+                    {/* <Modal isOpen={modalNotice} toggle={toggleModalNotice}> */}
+                    {/*  <div className="modal-header"> */}
+                    {/*    <button */}
+                    {/*      aria-hidden */}
+                    {/*      className="close" */}
+                    {/*      data-dismiss="modal" */}
+                    {/*      type="button" */}
+                    {/*      onClick={toggleModalNotice} */}
+                    {/*    > */}
+                    {/*      <i className="bd-icons icon-simple-remove" /> */}
+                    {/*    </button> */}
+                    {/*  </div> */}
+                    {/*  <ModalBody className="text-center"> */}
 
-                    {/*    <div className="instruction">*/}
-                    {/*      <Row>*/}
+                    {/*    <div className="instruction"> */}
+                    {/*      <Row> */}
 
-                    {/*      </Row>*/}
-                    {/*    </div>*/}
-                    {/*    <p>*/}
-                    {/*      If you have more questions, don't hesitate to contact*/}
-                    {/*      us or send us a tweet {`. We're `}*/}
-                    {/*      here to help!*/}
-                    {/*    </p>*/}
-                    {/*  </ModalBody>*/}
-                    {/*  <div className="modal-footer justify-content-center">*/}
-                    {/*    <Button*/}
-                    {/*      className="btn-round"*/}
-                    {/*      color="info"*/}
-                    {/*      data-dismiss="modal"*/}
-                    {/*      type="button"*/}
-                    {/*      onClick={toggleModalNotice}*/}
-                    {/*    >*/}
-                    {/*      Close*/}
-                    {/*    </Button>*/}
-                    {/*  </div>*/}
-                    {/*</Modal>*/}
-
-
-
-
-
-
-
-
-
-
-
-
+                    {/*      </Row> */}
+                    {/*    </div> */}
+                    {/*    <p> */}
+                    {/*      If you have more questions, don't hesitate to contact */}
+                    {/*      us or send us a tweet {`. We're `} */}
+                    {/*      here to help! */}
+                    {/*    </p> */}
+                    {/*  </ModalBody> */}
+                    {/*  <div className="modal-footer justify-content-center"> */}
+                    {/*    <Button */}
+                    {/*      className="btn-round" */}
+                    {/*      color="info" */}
+                    {/*      data-dismiss="modal" */}
+                    {/*      type="button" */}
+                    {/*      onClick={toggleModalNotice} */}
+                    {/*    > */}
+                    {/*      Close */}
+                    {/*    </Button> */}
+                    {/*  </div> */}
+                    {/* </Modal> */}
 
                     {/* End Notice Modal */}
                     {/* Small Modal */}
-                    {/*<Modal*/}
-                    {/*  modalClassName="modal-mini modal-primary"*/}
-                    {/*  isOpen={modalMini}*/}
-                    {/*  toggle={toggleModalMini}*/}
-                    {/*>*/}
-                    {/*  <div className="modal-header justify-content-center">*/}
-                    {/*    <button*/}
-                    {/*      aria-hidden*/}
-                    {/*      className="close"*/}
-                    {/*      data-dismiss="modal"*/}
-                    {/*      type="button"*/}
-                    {/*      onClick={toggleModalMini}*/}
-                    {/*    >*/}
-                    {/*      <i className="bd-icons icon-simple-remove text-white" />*/}
-                    {/*    </button>*/}
-                    {/*    <div className="modal-profile">*/}
-                    {/*      <i className="bd-icons icon-single-02" />*/}
-                    {/*    </div>*/}
-                    {/*  </div>*/}
-                    {/*  <ModalBody className="text-center">*/}
-                    {/*    <p>Message here..</p>*/}
-                    {/*  </ModalBody>*/}
-                    {/*  <div className="modal-footer">*/}
-                    {/*    <Button*/}
-                    {/*      className="btn-neutral"*/}
-                    {/*      color="link"*/}
-                    {/*      type="button"*/}
-                    {/*      onClick={toggleModalMini}*/}
-                    {/*    >*/}
-                    {/*      Back*/}
-                    {/*    </Button>*/}
-                    {/*    <Button*/}
-                    {/*      className="btn-neutral"*/}
-                    {/*      color="link"*/}
-                    {/*      data-dismiss="modal"*/}
-                    {/*      type="button"*/}
-                    {/*      onClick={toggleModalMini}*/}
-                    {/*    >*/}
-                    {/*      Accept*/}
-                    {/*    </Button>*/}
-                    {/*  </div>*/}
-                    {/*</Modal>*/}
+                    {/* <Modal */}
+                    {/*  modalClassName="modal-mini modal-primary" */}
+                    {/*  isOpen={modalMini} */}
+                    {/*  toggle={toggleModalMini} */}
+                    {/* > */}
+                    {/*  <div className="modal-header justify-content-center"> */}
+                    {/*    <button */}
+                    {/*      aria-hidden */}
+                    {/*      className="close" */}
+                    {/*      data-dismiss="modal" */}
+                    {/*      type="button" */}
+                    {/*      onClick={toggleModalMini} */}
+                    {/*    > */}
+                    {/*      <i className="bd-icons icon-simple-remove text-white" /> */}
+                    {/*    </button> */}
+                    {/*    <div className="modal-profile"> */}
+                    {/*      <i className="bd-icons icon-single-02" /> */}
+                    {/*    </div> */}
+                    {/*  </div> */}
+                    {/*  <ModalBody className="text-center"> */}
+                    {/*    <p>Message here..</p> */}
+                    {/*  </ModalBody> */}
+                    {/*  <div className="modal-footer"> */}
+                    {/*    <Button */}
+                    {/*      className="btn-neutral" */}
+                    {/*      color="link" */}
+                    {/*      type="button" */}
+                    {/*      onClick={toggleModalMini} */}
+                    {/*    > */}
+                    {/*      Back */}
+                    {/*    </Button> */}
+                    {/*    <Button */}
+                    {/*      className="btn-neutral" */}
+                    {/*      color="link" */}
+                    {/*      data-dismiss="modal" */}
+                    {/*      type="button" */}
+                    {/*      onClick={toggleModalMini} */}
+                    {/*    > */}
+                    {/*      Accept */}
+                    {/*    </Button> */}
+                    {/*  </div> */}
+                    {/* </Modal> */}
                     {/* End Small Modal */}
                   </Col>
                 </Row>

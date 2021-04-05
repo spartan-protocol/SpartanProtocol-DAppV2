@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Dashboard from './components/Dashboard/Dashboard'
 import Loaders from './views/pages/Samples/Loaders'
 import Icons from './views/pages/Samples/Icons'
