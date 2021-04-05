@@ -1,27 +1,27 @@
-import React, { useState } from 'react'
-import WalletSelect from '../WalletSelect/WalletSelect'
-import walletTypes from '../WalletSelect/walletTypes'
+/* eslint-disable*/
+
+
+import React, { useState } from "react"
+import WalletSelect from "../WalletSelect/WalletSelect"
+import walletTypes from "../WalletSelect/walletTypes"
+import {
+  Button
+} from "reactstrap"
 
 const AddressConn = () => {
   const [walletModalShow, setWalletModalShow] = useState(false)
-  const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
+  // const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
   return (
     <>
       <>
-        <div
+        <Button
+          type="button"
+          className="btn-round btn-icon mt-2 ml-n5 mr-4"
           onClick={() => setWalletModalShow(true)}
-          onKeyPress={() => setWalletModalShow(true)}
-          role="button"
-          tabIndex="0"
-          className="align-self-center"
-        >
-          <img
-            src={walletHeaderIcon}
-            alt="Spartan Protocol SpartanIcons"
-            className="logo text-center icon-medium"
-          />
-        </div>
+          onKeyPress={() => setWalletModalShow(true)}>
+          <i className="icon-small icon-wallet icon-dark mt-1" />
+        </Button>
         <WalletSelect
           show={walletModalShow}
           onHide={() => setWalletModalShow(false)}
