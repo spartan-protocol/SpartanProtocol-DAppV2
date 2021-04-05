@@ -3,6 +3,7 @@ import { getPoolContract, getPoolFactoryContract } from '../../utils/web3Pool'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
+import { getDaoVaultContract } from '../../utils/web3Dao'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -259,6 +260,7 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
     let tempArray = []
     for (let i = 0; i < finalArray.length; i++) {
       const routerContract = getRouterContract()
+      const daoVaultContract = getDaoVaultContract()
       const contract =
         finalArray[i].symbol === 'SPARTA'
           ? null
@@ -292,15 +294,29 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           ? '0'
           : contract.callStatic.balanceOf(walletAddress),
       )
+      console.log('before', i)
+      tempArray.push(
+        '0',
+        // finalArray[i].symbol === 'SPARTA' || !walletAddress
+        //   ? '0'
+        //   : daoVaultContract.callStatic.mapMemberPool_balance(
+        //       walletAddress,
+        //       finalArray[i].poolAddress,
+        //     ),
+      )
+      console.log(daoVaultContract)
     }
+    console.log(tempArray)
     tempArray = await Promise.all(tempArray)
+    console.log(tempArray)
     const finalLpArray = finalArray
-    for (let i = 0; i < tempArray.length - 4; i += 5) {
-      finalLpArray[i / 5].recentDivis = tempArray[i].toString()
-      finalLpArray[i / 5].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / 5].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / 5].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / 5].balanceLPs = tempArray[i + 4].toString()
+    for (let i = 0; i < tempArray.length - 5; i += 6) {
+      finalLpArray[i / 6].recentDivis = tempArray[i].toString()
+      finalLpArray[i / 6].lastMonthDivis = tempArray[i + 1].toString()
+      finalLpArray[i / 6].recentFees = tempArray[i + 2].toString()
+      finalLpArray[i / 6].lastMonthFees = tempArray[i + 3].toString()
+      finalLpArray[i / 6].balanceLPs = tempArray[i + 4].toString()
+      finalLpArray[i / 6].lockedLPs = tempArray[i + 5].toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),

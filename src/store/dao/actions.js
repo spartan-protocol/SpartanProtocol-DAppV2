@@ -28,7 +28,7 @@ export const getDaoIsMember = (member) => async (dispatch) => {
 
 /**
  * Get the count of DAO members
- * @returns {unit} dao
+ * @returns {unit} memberCount
  */
 export const getDaoMemberCount = () => async (dispatch) => {
   dispatch(daoLoading())

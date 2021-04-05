@@ -41,7 +41,7 @@ const RecentTxns = ({ contract }) => {
           <tbody>
             {txnArray?.length > 0 &&
               txnArray?.map((txn) => (
-                <tr key={txn.transactionHash + txn.event}>
+                <tr key={txn.transactionHash + txn.event + txn.logIndex}>
                   <td>{txn.blockNumber}</td>
                   <td>{txn.event}</td>
                   <td>

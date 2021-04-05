@@ -730,7 +730,7 @@ const Liquidity = () => {
                             {!poolFactory.finalArray && '...'}
                             {poolFactory.finalArray &&
                               formatFromUnits(getAddBothOutputLP(), 4)}{' '}
-                            SPT2-{assetAdd1?.symbol}
+                            SP-p{assetAdd1?.symbol}
                           </div>
                         </Col>
                       </Row>
@@ -966,7 +966,7 @@ const Liquidity = () => {
                         <div className="subtitle-amount">
                           {poolFactory.finalArray &&
                             formatFromWei(getAddOneOutputLP())}{' '}
-                          SPT2-{assetAdd3?.symbol}
+                          SP-p{assetAdd3?.symbol}
                         </div>
                         <br />
                       </Col>
@@ -1175,7 +1175,7 @@ const Liquidity = () => {
                                 Balance{' '}
                                 {assetRemove4 !== '...' &&
                                   formatFromWei(assetRemove3?.balanceLPs)}{' '}
-                                SPT2-{assetRemove3?.symbol}
+                                SP-p{assetRemove3?.symbol}
                               </div>
                               <div className="output-card">
                                 <FormGroup>
@@ -1285,7 +1285,7 @@ const Liquidity = () => {
                           of{' '}
                           {assetRemove4 !== '...' &&
                             formatFromWei(assetRemove3?.balanceLPs)}{' '}
-                          SPT2-{assetRemove3?.symbol}
+                          SP-p{assetRemove3?.symbol}
                         </div>
                         <br />
                         <div className="output-card">
