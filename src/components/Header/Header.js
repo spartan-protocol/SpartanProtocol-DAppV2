@@ -20,6 +20,7 @@ import LanguageDropdown from "../Common/LanguageDropdown"
 import AddressConn from "../Common/AddressConn"
 import { useWeb3 } from "../../store/web3"
 import IconLogo from "../../assets/img/spartan_black_small.svg"
+import Connection from "../Common/Connection"
 
 const Header = (props) => {
   const web3 = useWeb3()
@@ -118,6 +119,7 @@ const Header = (props) => {
                 connectedTokens={props.connectedTokens}
                 connectingTokens={props.connectingTokens}
               />
+              <Connection />
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret

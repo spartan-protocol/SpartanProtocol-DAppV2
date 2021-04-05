@@ -17,7 +17,7 @@ const AddressConn = () => {
       <>
         <Button
           type="button"
-          className="btn-round btn-icon mt-2 ml-n5 mr-4"
+          className="btn-round btn-icon mt-2 ml-n4"
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}>
           <i className="icon-small icon-wallet icon-dark mt-1" />
