@@ -1,6 +1,4 @@
-/* eslint-disable */
-
-import React, { useState } from "react"
+import React, { useState } from 'react'
 import {
   Breadcrumb,
   Col,
@@ -11,19 +9,14 @@ import {
   TabContent,
   TabPane,
   Button,
-  Card,
-  UncontrolledAlert,
-  Progress
-} from "reactstrap"
-import classnames from "classnames"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
-import coinSparta from "../../../assets/icons/coin_sparta.svg"
+} from 'reactstrap'
+import classnames from 'classnames'
 
-import BondTable from "../BondTable"
-import NewBond from "./NewBond"
+import BondTable from '../BondTable'
+import NewBond from './NewBond'
 
 const Bond = () => {
-  const [activeTab, setActiveTab] = useState("1")
+  const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -37,25 +30,25 @@ const Bond = () => {
           <Col md={10}>
             <Row>
               <Col md={9}>
-                <Nav tabs className="nav-tabs-custom">
+                <Nav className="nav-tabs-custom card-body" pills>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "1" })}
+                      className={classnames({ active: activeTab === '1' })}
                       onClick={() => {
-                        toggle("1")
+                        toggle('1')
                       }}
                     >
-                      <span className="d-none d-sm-block">Single token</span>
+                      Single token
                     </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "2" })}
+                      className={classnames({ active: activeTab === '2' })}
                       onClick={() => {
-                        toggle("2")
+                        toggle('2')
                       }}
                     >
-                      <span className="d-none d-sm-block">Both tokens</span>
+                      Both tokens
                     </NavLink>
                   </NavItem>
                 </Nav>

@@ -313,3 +313,37 @@ hr {
     margin-top: -10px;
   }
 }
+
+
+.page-header{
+  /* Headline 3 */
+
+  font-family: Kreon;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 32px;
+  /* identical to box height, or 133% */
+
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #FFFFFF;
+}
+
+
+.text-footer{
+  font-family: Kreon;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 32px;
+  /* identical to box height, or 133% */
+
+  font-feature-settings: 'liga' off;
+
+  /* Light Grey */
+
+  color: #F5F8FC;
+}

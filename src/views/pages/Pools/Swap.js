@@ -840,7 +840,7 @@ const Swap = () => {
                     {/* TextRight zap txnDetails col */}
                     <Col className="text-right">
                       <div className="output-card">
-                        input {swapInput1?.value} SPT2-{assetSwap1?.symbol}
+                        input {swapInput1?.value} SP-p{assetSwap1?.symbol}
                       </div>
                       <br />
                       <div className="output-card">
@@ -870,7 +870,7 @@ const Swap = () => {
                       </div>
                       <br />
                       <div className="subtitle-amount">
-                        output {formatFromWei(getZapOutput())} SPT2-
+                        output {formatFromWei(getZapOutput())} SP-p
                         {assetSwap2?.symbol}
                       </div>
                     </Col>
