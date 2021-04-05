@@ -1,3 +1,15 @@
+.icon-button {
+    display: inline-block;
+    width: 24px;
+    margin-bottom: -5px;
+    height: 24px;
+    background-size: 24px auto;
+    background-repeat: no-repeat;
+}
+
+
+
+
 .icon-extra-small {
     display: inline-block;
     width: 18px;
@@ -31,98 +43,115 @@
     background-repeat: no-repeat;
 }
 
+
+/* Delist */
+.icon-delist.icon-dark {
+    background-image: url('/src/assets/icons/delist.svg#dark');
+}
+
+
+/* List */
+.icon-list.icon-dark {
+    background-image: url('/src/assets/icons/list.svg#dark');
+}
+
+/* Allocate */
+.icon-allocate.icon-dark {
+    background-image: url('/src/assets/icons/allocate.svg#dark');
+}
+
+
+/* Close */
+.icon-close.icon-dark {
+    background-image: url('/src/assets/icons/close.svg#dark');
+}
+
+
 /* New */
-.icon-new.icon-dark{
+.icon-new.icon-dark {
     background-image: url('/src/assets/icons/new.svg#dark');
 }
 
 
-
 /* Spinner */
-.icon-spinner.icon-dark{
+.icon-spinner.icon-dark {
     background-image: url('/src/assets/icons/loader.svg#dark');
 }
 
 
 /* Lang */
-.icon-lang.icon-dark{
+.icon-lang.icon-dark {
     background-image: url('/src/assets/icons/icon-lang-dark.svg#dark');
 }
 
 
-
 /* Lang */
-.icon-lang.icon-dark{
+.icon-lang.icon-dark {
     background-image: url('/src/assets/icons/icon-lang-dark.svg#dark');
 }
 
 
 /* Remove */
-.icon-remove.icon-dark{
+.icon-remove.icon-dark {
     background-image: url('/src/assets/icons/icon-removeboth.svg#dark');
 }
 
 
-
 /* Add single */
-.icon-add-single.icon-dark{
+.icon-add-single.icon-dark {
     background-image: url('/src/assets/icons/icon-addsingle.svg#dark');
 }
 
 
-
 /* Add both */
-.icon-add-both.icon-dark{
+.icon-add-both.icon-dark {
     background-image: url('/src/assets/icons/icon-addboth.svg#dark');
 }
 
 
 /* Gear */
-.icon-gear.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-gear.svg#dark');
+.icon-gear.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-gear.svg#dark');
 }
 
 /* Swords */
-.icon-swords.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-swords.svg#dark');
+.icon-swords.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-swords.svg#dark');
 }
-
 
 
 /* Sword */
-.icon-sword.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-sword.svg#dark');
+.icon-sword.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-sword.svg#dark');
 }
 
 
-
 /* Home */
-.icon-home.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-spartan.svg');
+.icon-home.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-spartan.svg');
 }
 
 
 /* Helmet */
-.icon-helmet.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-helmet.svg#dark');
+.icon-helmet.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-helmet.svg#dark');
 }
 
 
 /* Coloseum */
-.icon-colosseum.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-colosseum.svg#dark');
+.icon-colosseum.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-colosseum.svg#dark');
 }
 
 
-
 /* Circle */
-.icon-circle.icon-dark{
-     background-image: url('/src/assets/icons/icon-menu-circle.svg#dark');
+.icon-circle.icon-dark {
+    background-image: url('/src/assets/icons/icon-menu-circle.svg#dark');
 }
 
 
 /* Lock */
-.icon-lock.icon-dark{
+.icon-lock.icon-dark {
     background-image: url('/src/assets/icons/icon-lock-dark.svg#dark');
 }
 
@@ -150,12 +179,10 @@
 }
 
 
-
 /* Menu open */
 .icon-menu-open.icon-light {
     background-image: url('/src/assets/icons/icon-menu-open.svg#light');
 }
-
 
 
 /* PoolsTable */

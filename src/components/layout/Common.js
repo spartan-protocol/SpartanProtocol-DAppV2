@@ -12,7 +12,7 @@ import routes from '../../routes'
 import logo from '../../assets/img/spartan_red_medium.svg'
 import DataManager from '../DataManager/DataManager'
 
-const Common = (props) => {
+const Common = () => {
   const [activeColor] = React.useState('blue')
   const [, setSidebarMini] = React.useState(true)
   const [opacity] = React.useState(0)
@@ -137,11 +137,11 @@ const Common = (props) => {
         />
         <Switch>
           {getRoutes(routes)}
-          <Redirect from="*" to="/dapp/buttons" />
+          <Redirect from="*" to="/dapp/home" />
         </Switch>
         {
           // we don't want the Footer to be rendered on full screen maps page
-          props.location.pathname.indexOf('full-screen-map') !== -1 ? null : (
+          location.pathname.indexOf('full-screen-map') !== -1 ? null : (
             <Footer fluid />
           )
         }

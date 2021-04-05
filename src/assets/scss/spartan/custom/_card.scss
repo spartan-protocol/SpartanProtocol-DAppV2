@@ -333,6 +333,26 @@
   color: #AACDFF;;
 }
 
+.accent{
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 32px;
+  /* identical to box height, or 267% */
+  margin-top: 40px ;
+  text-align: right;
+  font-feature-settings: 'liga' off;
+
+  /* Blue 100 */
+
+  color: #AACDFF;
+}
+
+
+
+
 .card-collaps {
   float: right;
   position: relative;
