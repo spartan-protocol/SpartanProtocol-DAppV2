@@ -4,8 +4,8 @@ import React from "react"
 
 // reactstrap components
 import { Button, Card, CardBody, Row, Col, Collapse } from "reactstrap"
-import bnbSparta from "../../assets/icons/bnb_sparta.png"
-import bnb from "../../assets/icons/BNB.svg"
+import bnbSparta from "../../../assets/icons/bnb_sparta.png"
+import bnb from "../../../assets/icons/BNB.svg"
 
 const BondTable = () => {
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)

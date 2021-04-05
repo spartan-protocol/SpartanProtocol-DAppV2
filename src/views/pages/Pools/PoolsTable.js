@@ -14,13 +14,13 @@ import {
   Collapse,
 } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
-import bnbSparta from '../../assets/icons/bnb_sparta.png'
-import bnb from '../../assets/icons/BNB.svg'
-import { usePoolFactory } from '../../store/poolFactory'
-import HelmetLoading from '../../components/Loaders/HelmetLoading'
-import { calcAPY } from '../../utils/web3Utils'
-import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
-import { useWeb3 } from '../../store/web3'
+import bnbSparta from '../../../assets/icons/bnb_sparta.png'
+import bnb from '../../../assets/icons/BNB.svg'
+import { usePoolFactory } from '../../../store/poolFactory'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { calcAPY } from '../../../utils/web3Utils'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { useWeb3 } from '../../../store/web3'
 
 const Poolstable = () => {
   const poolFactory = usePoolFactory()
