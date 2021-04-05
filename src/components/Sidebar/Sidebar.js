@@ -1,8 +1,11 @@
-import React, { useCallback } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
-import PropTypes from 'prop-types'
+/* eslint-disable*/
+import React, { useCallback } from "react"
+import { NavLink, useLocation } from "react-router-dom"
+import PropTypes from "prop-types"
 
-import { Nav, Collapse } from 'reactstrap'
+import { Nav, Collapse, Row, Col } from "reactstrap"
+import AddressConn from "../Common/AddressConn"
+import Connection from "../Common/Connection"
 
 const Sidebar = (props) => {
   const [state, setState] = React.useState({})
@@ -31,14 +34,14 @@ const Sidebar = (props) => {
           initialState = {
             [prop.state]: getCollapseInitialState(prop.views),
             ...getCollapseStates(prop.views),
-            ...initialState,
+            ...initialState
           }
         }
         return null
       })
       return initialState
     },
-    [getCollapseInitialState],
+    [getCollapseInitialState]
   )
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
@@ -53,7 +56,7 @@ const Sidebar = (props) => {
         st[prop.state] = !state[prop.state]
         return (
           <li
-            className={getCollapseInitialState(prop.views) ? 'active' : ''}
+            className={getCollapseInitialState(prop.views) ? "active" : ""}
             key={prop.path + prop.name}
           >
             <div
@@ -99,7 +102,7 @@ const Sidebar = (props) => {
       }
       // verifies if routeName is the one active (in browser input)
       const activeRoute = (routeName) =>
-        location.pathname === routeName ? 'active' : ''
+        location.pathname === routeName ? "active" : ""
       return (
         <li
           className={activeRoute(prop.layout + prop.path)}
@@ -182,12 +185,25 @@ const Sidebar = (props) => {
   return (
     <div className="sidebar" data={activeColor}>
       <div className="sidebar-wrapper" ref={sidebarRef}>
+        <Row className="d-block d-sm-none">
+          <span></span>
+          <Col className="text-center d-inline-block">
+            <AddressConn
+            changeStates={props.changeStates}
+            changeNotification={props.changeNotification}
+            connectedTokens={props.connectedTokens}
+            connectingTokens={props.connectingTokens} />
+            <Connection/>
+          </Col>
+
+        </Row>
         {logoImg !== null || logoText !== null ? (
           <div className="logo">
             {logoImg}
             {logoText}
           </div>
         ) : null}
+
         <Nav>{createLinks(props.routes)}</Nav>
       </div>
     </div>
@@ -195,7 +211,7 @@ const Sidebar = (props) => {
 }
 
 Sidebar.propTypes = {
-  activeColor: PropTypes.oneOf(['primary', 'blue', 'green', 'orange', 'red']),
+  activeColor: PropTypes.oneOf(["primary", "blue", "green", "orange", "red"]),
   rtlActive: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types
   routes: PropTypes.array.isRequired,
@@ -203,16 +219,16 @@ Sidebar.propTypes = {
     PropTypes.shape({
       innerLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired
     }),
     PropTypes.shape({
       outterLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    }),
+      text: PropTypes.string.isRequired
+    })
   ]),
   // this is used on responsive to close the sidebar on route navigation
-  closeSidebar: PropTypes.func,
+  closeSidebar: PropTypes.func
 }
 
 export default Sidebar
