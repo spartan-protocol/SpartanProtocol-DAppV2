@@ -15,7 +15,7 @@ import coinSparta from '../../assets/icons/coin_sparta.svg'
  * depending on the 'priority' prop handed over.
  * Can be extended out with 'assetSelected3' etc in the future but the current views will only handle '1' and '2' for now
  * @param {uint} priority '1' or '2'
- * @param {string} type 'pools' (Shows SPT2-related fields)
+ * @param {string} type 'pools' (Shows SP-p related fields)
  * @param {array} whiteList tokenAddresses [array]
  * @param {array} blackList tokenAddresses [array]
  */
@@ -48,7 +48,7 @@ const AssetSelect = (props) => {
         >
           {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
           <img className="mr-2" src={coinBnb} alt="BNB" />
-          {props.type === 'pools' && 'SPT2-'}
+          {props.type === 'pools' && 'SP-p'}
           {selectedItem && selectedItem.symbol}
         </DropdownToggle>
         <DropdownMenu aria-labelledby="dropdownMenuButton">
@@ -65,7 +65,7 @@ const AssetSelect = (props) => {
                 >
                   {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
                   <img className="mr-2" src={coinBnb} alt="BNB" />{' '}
-                  {props.type === 'pools' && 'SPT2-'}
+                  {props.type === 'pools' && 'SP-p'}
                   {asset.symbol}
                 </DropdownItem>
               ))}
@@ -83,7 +83,7 @@ const AssetSelect = (props) => {
                 >
                   {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
                   <img className="mr-2" src={coinBnb} alt="BNB" />{' '}
-                  {props.type === 'pools' && 'SPT2-'}
+                  {props.type === 'pools' && 'SP-p'}
                   {asset.symbol}
                 </DropdownItem>
               ))}
@@ -104,7 +104,7 @@ const AssetSelect = (props) => {
                 >
                   {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
                   <img className="mr-2" src={coinBnb} alt="BNB" />{' '}
-                  {props.type === 'pools' && 'SPT2-'}
+                  {props.type === 'pools' && 'SP-p'}
                   {asset.symbol}
                 </DropdownItem>
               ))}

@@ -21,8 +21,13 @@ import { useDispatch } from 'react-redux'
 import LockEarn from './LockEarn'
 import Proposals from './Proposals'
 import { daoHarvest } from '../../../store/dao/actions'
+import { useDao } from '../../../store/dao/selector'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { useDaoVault } from '../../../store/daoVault/selector'
 
 const Overview = () => {
+  const daoVault = useDaoVault()
+  const dao = useDao()
   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState('1')
 
@@ -126,13 +131,22 @@ const Overview = () => {
                       <Col md={2}>
                         <div className="title-card mt-n2 ">
                           <div className="subtitle-amount mt-n4">
-                            1,025 SPARTA
+                            {formatFromWei(dao.harvestAmount)}
                             <i className="icon-extra-small icon-spinner icon-dark ml-1" />
                           </div>
                         </div>
                       </Col>
                       <Col md={2}>
-                        <div className="title-card mt-n4">0,15%</div>
+                        <div className="title-card mt-n4">
+                          {BN(daoVault.memberWeight).comparedTo(0) === 1 &&
+                            formatFromUnits(
+                              BN(daoVault.memberWeight)
+                                .div(daoVault.daoTotalWeight)
+                                .times(100),
+                            )}
+                          {BN(daoVault.memberWeight).comparedTo(0) !== 1 &&
+                            'Not a DAO member'}
+                        </div>
                       </Col>
                       <Col md={2}>
                         <div className="title-card mt-n4">2 days ago</div>
