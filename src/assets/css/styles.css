@@ -58,21 +58,25 @@
 }
 
 
-
 element.style {
 }
+
 #root > div > div.main-panel.ps.ps--active-y > nav > div > div.collapse.navbar-collapse > ul > div.d-inline-block.dropdown > button {
     background-color: #fc5d50;
 }
+
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
 }
+
 .navbar .btn {
     margin: 0 5px 0 10px;
 }
+
 button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
     cursor: pointer;
 }
+
 .btn {
     cursor: pointer;
 }
@@ -92,11 +96,28 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 
-.group-75 {
+.price-notificaiton {
     align-items: flex-start;
     display: flex;
     width: 263px;
+
+
 }
+
+
+.price-notificaiton:hover {
+    box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+    transform: translateY(-1px);
+    -webkit-transform: translateY(-1px);
+}
+
+.price-notificaiton:active {
+    box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+    transform: translateY(1px);
+    -webkit-transform: translateY(1px);
+}
+
+
 .overlap-group {
     align-items: center;
     background-color: var(--ship-gray);
@@ -106,6 +127,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     min-width: 250px;
     padding: 0 16px;
 }
+
 .wallet {
     height: 20px;
     letter-spacing: 0.00px;
@@ -114,13 +136,15 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     min-width: 131px;
     white-space: nowrap;
 }
-.roboto-bold-white-14px {
+
+.wallet-text {
     color: white;
     font-family: "Roboto-Bold", Helvetica;
     font-size: 14px;
     font-style: normal;
     font-weight: 700;
 }
+
 :root {
     --ship-gray: rgba(63, 57, 75, 1);
 }
@@ -142,7 +166,8 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     padding: 8px 14px;
     min-width: 120px;
 }
-.buy-now {
+
+.wallet-price {
     align-self: center;
     letter-spacing: 0.00px;
     line-height: 20px;
@@ -158,18 +183,13 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     height: 24px;
     width: 24px;
 }
+
 .frame-1 {
     align-items: flex-start;
     display: flex;
     width: 24px;
 }
-.roboto-regular-normal-white-14px {
-    color: white;
-    font-family: "Roboto-Regular", Helvetica;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-}
+
 :root {
     --scarlet: rgba(251, 39, 21, 1);
 }

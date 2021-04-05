@@ -1,7 +1,7 @@
 /* eslint-disable*/
 
-import React from 'react'
-import classNames from 'classnames'
+import React from "react"
+import classNames from "classnames"
 import {
   Button,
   Collapse,
@@ -13,39 +13,39 @@ import {
   Navbar,
   NavLink,
   Nav,
-  Container,
-} from 'reactstrap'
-import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
-import LanguageDropdown from '../Common/LanguageDropdown'
-import AddressConn from '../Common/AddressConn'
-import { useWeb3 } from '../../store/web3'
+  Container
+} from "reactstrap"
+import { ReactComponent as SpartanLogo } from "../../assets/img/logo.svg"
+import LanguageDropdown from "../Common/LanguageDropdown"
+import AddressConn from "../Common/AddressConn"
+import { useWeb3 } from "../../store/web3"
 import IconLogo from "../../assets/img/spartan_black_small.svg"
 
 const Header = (props) => {
   const web3 = useWeb3()
   const [collapseOpen, setCollapseOpen] = React.useState(false)
-  const [color, setColor] = React.useState('navbar-transparent')
+  const [color, setColor] = React.useState("navbar-transparent")
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && collapseOpen) {
-      setColor('bg-white')
+      setColor("bg-white")
     } else {
-      setColor('navbar-transparent')
+      setColor("navbar-transparent")
     }
   }
   React.useEffect(() => {
-    window.addEventListener('resize', updateColor)
+    window.addEventListener("resize", updateColor)
     return function cleanup() {
-      window.removeEventListener('resize', updateColor)
+      window.removeEventListener("resize", updateColor)
     }
   })
 
   // this function opens and closes the collapse on small devices
   const toggleCollapse = () => {
     if (collapseOpen) {
-      setColor('navbar-transparent')
+      setColor("navbar-transparent")
     } else {
-      setColor('bg-white')
+      setColor("bg-white")
     }
     setCollapseOpen(!collapseOpen)
   }
@@ -55,8 +55,8 @@ const Header = (props) => {
   return (
     <>
       <Navbar
-        className={classNames('navbar-absolute', {
-          [color]: props.location.pathname.indexOf('full-screen-map') === -1,
+        className={classNames("navbar-absolute", {
+          [color]: props.location.pathname.indexOf("full-screen-map") === -1
         })}
         expand="lg"
       >
@@ -74,8 +74,8 @@ const Header = (props) => {
               </Button>
             </div>
             <div
-              className={classNames('navbar-toggle d-inline', {
-                toggled: props.sidebarOpened,
+              className={classNames("navbar-toggle d-inline", {
+                toggled: props.sidebarOpened
               })}
             >
               <button
@@ -89,7 +89,7 @@ const Header = (props) => {
               </button>
             </div>
             <NavbarBrand href="./">
-              {/* {props.brandText} +*/} <SpartanLogo className="mr-2" />{' '}
+              {/* {props.brandText} +*/} <SpartanLogo className="mr-2" />{" "}
               Spartan Protocol
             </NavbarBrand>
           </div>
@@ -111,7 +111,6 @@ const Header = (props) => {
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <li className="separator d-lg-none" />
-
               <LanguageDropdown />
               <AddressConn
                 changeStates={props.changeStates}
@@ -127,28 +126,21 @@ const Header = (props) => {
                   nav
                 >
 
-                  <div className="group-75">
-                    <div className="overlap-group">
-                      <div className="wallet roboto-bold-white-14px">0xe4ae305ebe...</div>
-                      <div className="adjustable-primary-medium">
-                        <div className="frame-1">
-                          <div className="frame"></div>
+                    <div className="price-notificaiton">
+                      <div className="overlap-group">
+                        <div className="wallet wallet-text">0xe4ae305ebe...</div>
+                        <div className="adjustable-primary-medium">
+                          <div className="frame-1">
+                            <div className="frame"></div>
+                          </div>
+                          <div className="wallet-price wallet-text">
+                            <img className="mr-3"
+                                 src={IconLogo}
+                                 alt="share icon"
+                            />${web3.spartaPrice}</div>
                         </div>
-                        <div className="buy-now roboto-bold-white-14px">
-                          <img className="mr-3"
-                          src={IconLogo}
-                          alt="share icon"
-                        />${web3.spartaPrice}</div>
                       </div>
                     </div>
-                  </div>
-
-
-
-
-                  {/*<Button type="Button" className="mx-1 btn btn-primary">*/}
-                  {/*  <SpartanLogoBlackSmall /> ${web3.spartaPrice}*/}
-                  {/*</Button>*/}
 
 
 
