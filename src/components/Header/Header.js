@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React from 'react'
 import classNames from 'classnames'
 import {
@@ -13,11 +15,11 @@ import {
   Nav,
   Container,
 } from 'reactstrap'
-import { ReactComponent as SpartanLogoBlackSmall } from '../../assets/img/spartan_black_small.svg'
 import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
 import { useWeb3 } from '../../store/web3'
+import IconLogo from "../../assets/img/spartan_black_small.svg"
 
 const Header = (props) => {
   const web3 = useWeb3()
@@ -91,19 +93,21 @@ const Header = (props) => {
               Spartan Protocol
             </NavbarBrand>
           </div>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navigation"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-            onClick={toggleCollapse}
-          >
-            <span className="navbar-toggler-bar navbar-kebab" />
-            <span className="navbar-toggler-bar navbar-kebab" />
-            <span className="navbar-toggler-bar navbar-kebab" />
-          </button>
+          {/* TODO Show info on mobile header*/}
+
+          {/*<button*/}
+          {/*  className="navbar-toggler"*/}
+          {/*  type="button"*/}
+          {/*  data-toggle="collapse"*/}
+          {/*  data-target="#navigation"*/}
+          {/*  aria-expanded="false"*/}
+          {/*  aria-label="Toggle navigation"*/}
+          {/*  onClick={toggleCollapse}*/}
+          {/*>*/}
+          {/*  <span className="navbar-toggler-bar navbar-kebab" />*/}
+          {/*  <span className="navbar-toggler-bar navbar-kebab" />*/}
+          {/*  <span className="navbar-toggler-bar navbar-kebab" />*/}
+          {/*</button>*/}
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <li className="separator d-lg-none" />
@@ -122,9 +126,32 @@ const Header = (props) => {
                   data-toggle="dropdown"
                   nav
                 >
-                  <Button type="Button" className="mx-1 btn btn-primary">
-                    <SpartanLogoBlackSmall /> ${web3.spartaPrice}
-                  </Button>
+
+                  <div className="group-75">
+                    <div className="overlap-group">
+                      <div className="wallet roboto-bold-white-14px">0xe4ae305ebe...</div>
+                      <div className="adjustable-primary-medium">
+                        <div className="frame-1">
+                          <div className="frame"></div>
+                        </div>
+                        <div className="buy-now roboto-bold-white-14px">
+                          <img className="mr-3"
+                          src={IconLogo}
+                          alt="share icon"
+                        />${web3.spartaPrice}</div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+
+                  {/*<Button type="Button" className="mx-1 btn btn-primary">*/}
+                  {/*  <SpartanLogoBlackSmall /> ${web3.spartaPrice}*/}
+                  {/*</Button>*/}
+
+
+
                   <p className="d-lg-none">Notifications</p>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">

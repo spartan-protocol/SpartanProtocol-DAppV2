@@ -90,3 +90,86 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     border-color: #605e68;
     box-shadow: 0 4px 6px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
 }
+
+
+.group-75 {
+    align-items: flex-start;
+    display: flex;
+    width: 263px;
+}
+.overlap-group {
+    align-items: center;
+    background-color: var(--ship-gray);
+    border-radius: 12px;
+    display: flex;
+    height: 40px;
+    min-width: 250px;
+    padding: 0 16px;
+}
+.wallet {
+    height: 20px;
+    letter-spacing: 0.00px;
+    line-height: 20px;
+    min-height: 20px;
+    min-width: 131px;
+    white-space: nowrap;
+}
+.roboto-bold-white-14px {
+    color: white;
+    font-family: "Roboto-Bold", Helvetica;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+}
+:root {
+    --ship-gray: rgba(63, 57, 75, 1);
+}
+
+.valign-text-middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.adjustable-primary-medium {
+    align-items: flex-start;
+    background-color: var(--scarlet);
+    border-radius: 8px;
+    display: flex;
+    height: 40px;
+    overflow: hidden;
+    padding: 8px 14px;
+    min-width: 120px;
+}
+.buy-now {
+    align-self: center;
+    letter-spacing: 0.00px;
+    line-height: 20px;
+    margin-left: -25px;
+    min-height: 20px;
+    min-width: 38px;
+    white-space: nowrap;
+}
+
+.frame {
+    background-image: url(../../assets/img/logo.svg);
+    background-size: 100% 100%;
+    height: 24px;
+    width: 24px;
+}
+.frame-1 {
+    align-items: flex-start;
+    display: flex;
+    width: 24px;
+}
+.roboto-regular-normal-white-14px {
+    color: white;
+    font-family: "Roboto-Regular", Helvetica;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+}
+:root {
+    --scarlet: rgba(251, 39, 21, 1);
+}
