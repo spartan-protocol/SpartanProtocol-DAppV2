@@ -12,6 +12,7 @@ import { addNetworkMM, addNetworkBC } from '../../store/web3'
 import { usePoolFactory } from '../../store/poolFactory/selector'
 import HelmetLoading from '../Loaders/HelmetLoading'
 import ShareLink from '../Share/ShareLink'
+import { formatFromWei } from '../../utils/bigNumber'
 
 const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
@@ -275,21 +276,25 @@ const WalletSelect = (props) => {
                             Balance
                           </Col>
                         </Row>
-                        {poolFactory.finalLpArray.map((asset) => (
-                          <Row>
-                            <Col xl="6">{asset.name}</Col>
-                            <Col
-                              xl="6"
-                              style={{
-                                textAlign: 'right',
-                              }}
-                            >
-                              <span className="amount">
-                                {asset.balanceTokens}
-                              </span>
-                            </Col>
-                          </Row>
-                        ))}
+                        {poolFactory.detailedArray &&
+                          poolFactory.detailedArray.length &&
+                          poolFactory.detailedArray.map((asset) => (
+                            <Row>
+                              <Col xl="6">{asset.name}</Col>
+                              <Col
+                                xl="6"
+                                style={{
+                                  textAlign: 'right',
+                                }}
+                              >
+                                <span className="amount">
+                                  {parseFloat(
+                                    formatFromWei(asset.balanceTokens),
+                                  ).toFixed(2)}
+                                </span>
+                              </Col>
+                            </Row>
+                          ))}
                       </TabPane>
                       <TabPane tabId="lp">
                         <Row>
@@ -314,6 +319,30 @@ const WalletSelect = (props) => {
                             Balance
                           </Col>
                         </Row>
+                        {poolFactory.detailedArray &&
+                          poolFactory.detailedArray.length &&
+                          poolFactory.detailedArray
+                            .filter(
+                              (asset) =>
+                                asset.name !== 'SPARTAN PROTOCOL TOKEN',
+                            )
+                            .map((asset) => (
+                              <Row>
+                                <Col xl="6">{asset.name}</Col>
+                                <Col
+                                  xl="6"
+                                  style={{
+                                    textAlign: 'right',
+                                  }}
+                                >
+                                  <span className="amount">
+                                    {parseFloat(
+                                      formatFromWei(asset.balanceLPs),
+                                    ).toFixed(2)}
+                                  </span>
+                                </Col>
+                              </Row>
+                            ))}
                       </TabPane>
                       <TabPane tabId="synths">
                         <Row>
