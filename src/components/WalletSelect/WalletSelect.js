@@ -275,6 +275,21 @@ const WalletSelect = (props) => {
                             Balance
                           </Col>
                         </Row>
+                        {poolFactory.finalLpArray.map((asset) => (
+                          <Row>
+                            <Col xl="6">{asset.name}</Col>
+                            <Col
+                              xl="6"
+                              style={{
+                                textAlign: 'right',
+                              }}
+                            >
+                              <span className="amount">
+                                {asset.balanceTokens}
+                              </span>
+                            </Col>
+                          </Row>
+                        ))}
                       </TabPane>
                       <TabPane tabId="lp">
                         <Row>
