@@ -24,8 +24,8 @@ const Footer = (props) => (
             Spartan Protocol
           </div>
         </Col>
-        <Col md={2} sm={12}>
-          <div className="copyright">
+        <Col md={2} sm={12} >
+          <div className="copyright ml-4">
             <a
               href="https://twitter.com/SpartanProtocol"
               target="_blank"
