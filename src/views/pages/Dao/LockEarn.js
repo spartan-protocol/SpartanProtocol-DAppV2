@@ -1,98 +1,87 @@
-/* eslint-disable */
-import React from "react"
-// react plugin for creating notifications over the dashboard
+import React from 'react'
+import { useDispatch } from 'react-redux'
 
-// reactstrap components
-import { Button, Card, CardBody, Row, Col, Collapse } from "reactstrap"
-import bnbSparta from "../../../assets/icons/bnb_sparta.png"
-import bnb from "../../../assets/icons/BNB.svg"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
+import { Button, Card, CardBody, Row, Col } from 'reactstrap'
+import bnbSparta from '../../../assets/icons/bnb_sparta.png'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { daoDeposit, daoWithdraw } from '../../../store/dao/actions'
+import { usePoolFactory } from '../../../store/poolFactory'
+import { formatFromWei } from '../../../utils/bigNumber'
 
 const LockEarn = () => {
+  const poolFactory = usePoolFactory()
+  const dispatch = useDispatch()
+
   return (
     <>
-      <Card className="card-body" style={{ backgroundColor: "#1D171F" }}>
-        <CardBody>
-          <Row>
-            <Col md={3} xs={12} className="mb-n4">
-              <h2 className="mt-3">
-                <img
-                  className="mr-2"
-                  src={bnbSparta}
-                  alt="Logo"
-                  height="32"
-                />
-                BNB-SPARTA LP
-              </h2></Col>
-            <Col md={2}>
-            </Col>
-            <Col md={2}>
-              <div className="card-text">Locked</div>
-            </Col>
-            <Col md={2}>
-              <div className="card-text">Unlocked</div>
-            </Col>
-            <Col md={2} className="ml-auto mr-2 mt-2">
-              <Button type="Button" className="btn btn-primary">
-                Unlock
-              </Button></Col>
-          </Row>
-          <Row>
-            <Col md={3}>
-            </Col>
-            <Col md={2}>
-            </Col>
-            <Col md={2}>
-              <div className="title-card mt-n4">250,87</div>
-            </Col>
-            <Col md={2}>
-              <div className="title-card mt-n4">0.00</div>
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-      <br/>
-      <Card className="card-body" style={{ backgroundColor: "#1D171F" }}>
-        <CardBody>
-          <Row>
-            <Col md={3} xs={12} className="mb-n4">
-              <h2 className="mt-3">
-                <img
-                  className="mr-2"
-                  src={bnbSparta}
-                  alt="Logo"
-                  height="32"
-                />
-                BNB-SPARTA LP
-              </h2></Col>
-            <Col md={2}>
-            </Col>
-            <Col md={2}>
-              <div className="card-text">Locked</div>
-            </Col>
-            <Col md={2}>
-              <div className="card-text">Unlocked</div>
-            </Col>
-            <Col md={2} className="ml-auto mr-2 mt-2">
-              <Button type="Button" className="btn btn-primary">
-                Lock
-              </Button></Col>
-          </Row>
-          <Row>
-            <Col md={3}>
-            </Col>
-            <Col md={2}>
-            </Col>
-            <Col md={2}>
-              <div className="title-card mt-n4">250,87</div>
-            </Col>
-            <Col md={2}>
-              <div className="title-card mt-n4">0.00</div>
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
-
+      {!poolFactory.finalLpArray && (
+        <HelmetLoading height="300px" width="300px" />
+      )}
+      {poolFactory.finalLpArray &&
+        poolFactory.finalLpArray.map((asset) => (
+          <Card
+            className="card-body"
+            style={{ backgroundColor: '#1D171F' }}
+            key={asset.tokenAddress}
+          >
+            <CardBody>
+              <Row>
+                <Col md={3} xs={12} className="mb-n4">
+                  <h2 className="mt-3">
+                    <img
+                      className="mr-2"
+                      src={bnbSparta}
+                      alt="Logo"
+                      height="32"
+                    />
+                    SP-p{asset.symbol}
+                  </h2>
+                </Col>
+                <Col md={2} />
+                <Col md={2}>
+                  <div className="card-text">Locked</div>
+                </Col>
+                <Col md={2}>
+                  <div className="card-text">Unlocked</div>
+                </Col>
+                <Col md={2} className="ml-auto mr-2 mt-2">
+                  <Button
+                    type="Button"
+                    className="btn btn-primary"
+                    onClick={() =>
+                      dispatch(daoDeposit(asset.poolAddress, asset.balanceLPs))
+                    }
+                  >
+                    Lock
+                  </Button>
+                  <Button
+                    type="Button"
+                    className="btn btn-primary"
+                    onClick={() =>
+                      dispatch(daoWithdraw(asset.poolAddress, asset.balanceLPs))
+                    }
+                  >
+                    Unlock
+                  </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col md={3} />
+                <Col md={2} />
+                <Col md={2}>
+                  <div className="title-card mt-n4">
+                    {formatFromWei(asset.lockedLPs)}
+                  </div>
+                </Col>
+                <Col md={2}>
+                  <div className="title-card mt-n4">
+                    {formatFromWei(asset.balanceLPs)}
+                  </div>
+                </Col>
+              </Row>
+            </CardBody>
+          </Card>
+        ))}
     </>
   )
 }

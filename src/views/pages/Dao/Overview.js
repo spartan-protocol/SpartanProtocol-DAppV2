@@ -17,10 +17,13 @@ import {
 import classnames from 'classnames'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import { useDispatch } from 'react-redux'
 import LockEarn from './LockEarn'
 import Proposals from './Proposals'
+import { daoHarvest } from '../../../store/dao/actions'
 
 const Overview = () => {
+  const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
@@ -109,7 +112,11 @@ const Overview = () => {
                         <div className="card-text">Latest harvest</div>
                       </Col>
                       <Col md={2} className="ml-auto mr-2 mt-2">
-                        <Button type="Button" className="btn btn-primary">
+                        <Button
+                          type="Button"
+                          className="btn btn-primary"
+                          onClick={() => dispatch(daoHarvest())}
+                        >
                           Harvest
                         </Button>
                       </Col>
