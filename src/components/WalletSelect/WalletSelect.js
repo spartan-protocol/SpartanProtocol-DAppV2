@@ -279,7 +279,7 @@ const WalletSelect = (props) => {
                         {poolFactory.detailedArray &&
                           poolFactory.detailedArray.length &&
                           poolFactory.detailedArray.map((asset) => (
-                            <Row>
+                            <Row key={`${asset.name}-asset`}>
                               <Col xl="6">{asset.name}</Col>
                               <Col
                                 xl="6"
@@ -327,7 +327,7 @@ const WalletSelect = (props) => {
                                 asset.name !== 'SPARTAN PROTOCOL TOKEN',
                             )
                             .map((asset) => (
-                              <Row>
+                              <Row key={`${asset.name}-lp`}>
                                 <Col xl="6">{asset.name}</Col>
                                 <Col
                                   xl="6"
