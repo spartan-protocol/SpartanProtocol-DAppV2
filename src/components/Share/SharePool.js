@@ -44,7 +44,12 @@ const Share = () => {
     <>
       <Button
         variant="secondary"
-        className="btn-block"
+        className="btn-block btn-md"
+        style={{
+          padding: '10px',
+          marginLeft: '9px',
+          top: '-4px',
+        }}
         onClick={() => setShowShare(true)}
       >
         <img
@@ -93,36 +98,40 @@ const Share = () => {
               >
                 Copy link
               </span>
-              <Card className="card-link">
-                <CardBody className="py-3">
-                  <Row>
-                    <Col xs="10">
-                      <span className="card-title">
-                        {url.length > 50 ? `${url.substr(0, 50)}...` : url}
-                      </span>
-                    </Col>
-                    <Col xs="2">
-                      <ShareLink url={url}>
+              <ShareLink url={url}>
+                <Card className="card-link">
+                  <CardBody className="py-3">
+                    <Row>
+                      <Col xs="10">
+                        <span className="card-title">
+                          {url.length > 50 ? `${url.substr(0, 50)}...` : url}
+                        </span>
+                      </Col>
+                      <Col xs="2">
                         <img src={CopyIcon} alt="Copy icon" />
-                      </ShareLink>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-              <Card className="card-share">
-                <CardBody className="py-3">
-                  <Row>
-                    <Col xs="10">
-                      <span className="card-title">Share via Twitter</span>
-                    </Col>
-                    <Col xs="2">
-                      <TwitterShareButton url={url} title="Sparta Protocol">
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </ShareLink>
+              <TwitterShareButton
+                url={url}
+                title="Sparta Protocol"
+                style={{ width: '100%' }}
+              >
+                <Card className="card-share">
+                  <CardBody className="py-3">
+                    <Row>
+                      <Col xs="10">
+                        <span className="card-title">Share via Twitter</span>
+                      </Col>
+                      <Col xs="2">
                         <TwitterIcon size={32} round />
-                      </TwitterShareButton>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </TwitterShareButton>
             </Col>
           </Row>
           <Row>
