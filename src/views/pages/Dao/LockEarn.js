@@ -68,7 +68,7 @@ const LockEarn = () => {
                       className="btn btn-primary"
                       onClick={() =>
                         dispatch(
-                          daoWithdraw(asset.poolAddress, asset.balanceLPs),
+                          daoWithdraw(asset.poolAddress, asset.lockedLPs),
                         )
                       }
                     >

@@ -2,7 +2,10 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { getDaoHarvestAmount } from '../../store/dao/actions'
-import { getDaoVaultTotalWeight } from '../../store/daoVault/actions'
+import {
+  getDaoVaultMemberWeight,
+  getDaoVaultTotalWeight,
+} from '../../store/daoVault/actions'
 import {
   usePoolFactory,
   getPoolFactoryTokenArray,
@@ -60,6 +63,7 @@ const DataManager = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (wallet.account) {
+        dispatch(getDaoVaultMemberWeight(wallet.account))
         dispatch(getDaoHarvestAmount(wallet.account))
       }
     }, 7500)
@@ -92,14 +96,13 @@ const DataManager = () => {
 
   useEffect(() => {
     const { tokenArray } = poolFactory
-    const checkDetailedArray = () => {
+    const interval = setInterval(() => {
       if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
         dispatch(getPoolFactoryDetailedArray(tokenArray, addr.sparta))
         setPrevDetailedArray(poolFactory.detailedArray)
       }
-    }
-
-    checkDetailedArray()
+    }, 7500)
+    return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
 
