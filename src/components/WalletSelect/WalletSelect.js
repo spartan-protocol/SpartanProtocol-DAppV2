@@ -172,7 +172,7 @@ const WalletSelect = (props) => {
                 {wallet.account && (
                   <>
                     <Row>
-                      <Col xl="5">
+                      <Col xs="5">
                         <span className="description">
                           View on BSC Scan{' '}
                           <a
@@ -191,7 +191,7 @@ const WalletSelect = (props) => {
                           {wallet.account.slice(-5)}
                         </span>
                       </Col>
-                      <Col xl="2">
+                      <Col xs="2">
                         <ShareLink
                           url={wallet.account}
                           notificationLocation="tc"
@@ -201,7 +201,7 @@ const WalletSelect = (props) => {
                           </Button>
                         </ShareLink>
                       </Col>
-                      <Col xl="5">
+                      <Col xs="5">
                         <Button
                           block
                           className="btn btn-md btn-neutral"
@@ -266,9 +266,9 @@ const WalletSelect = (props) => {
                     >
                       <TabPane tabId="assets">
                         <Row>
-                          <Col xl="6">Assets</Col>
+                          <Col xs="6">Assets</Col>
                           <Col
-                            xl="6"
+                            xs="6"
                             style={{
                               textAlign: 'right',
                             }}
@@ -280,9 +280,9 @@ const WalletSelect = (props) => {
                           poolFactory.detailedArray.length &&
                           poolFactory.detailedArray.map((asset) => (
                             <Row key={`${asset.name}-asset`}>
-                              <Col xl="6">{asset.name}</Col>
+                              <Col xs="6">{asset.name}</Col>
                               <Col
-                                xl="6"
+                                xs="6"
                                 style={{
                                   textAlign: 'right',
                                 }}
@@ -298,9 +298,9 @@ const WalletSelect = (props) => {
                       </TabPane>
                       <TabPane tabId="lp">
                         <Row>
-                          <Col xl="6">Locked LP in DAO</Col>
+                          <Col xs="6">Locked LP in DAO</Col>
                           <Col
-                            xl="6"
+                            xs="6"
                             style={{
                               textAlign: 'right',
                             }}
@@ -309,9 +309,9 @@ const WalletSelect = (props) => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col xl="6">Available LP Shares</Col>
+                          <Col xs="6">Available LP Shares</Col>
                           <Col
-                            xl="6"
+                            xs="6"
                             style={{
                               textAlign: 'right',
                             }}
@@ -328,9 +328,9 @@ const WalletSelect = (props) => {
                             )
                             .map((asset) => (
                               <Row key={`${asset.name}-lp`}>
-                                <Col xl="6">{asset.name}</Col>
+                                <Col xs="6">{asset.name}</Col>
                                 <Col
-                                  xl="6"
+                                  xs="6"
                                   style={{
                                     textAlign: 'right',
                                   }}
@@ -346,9 +346,9 @@ const WalletSelect = (props) => {
                       </TabPane>
                       <TabPane tabId="synths">
                         <Row>
-                          <Col xl="6">Synths</Col>
+                          <Col xs="6">Synths</Col>
                           <Col
-                            xl="6"
+                            xs="6"
                             style={{
                               textAlign: 'right',
                             }}
