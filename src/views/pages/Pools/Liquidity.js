@@ -1001,12 +1001,12 @@ const Liquidity = () => {
                             <Col className="text-right">
                               <div className="title-card">
                                 Balance:{' '}
-                                {formatFromWei(assetRemove1?.balanceLPs)} STP2-
+                                {formatFromWei(assetRemove1?.balanceLPs)} SP-p
                                 {assetRemove1?.symbol}
                               </div>
                               <div className="title-card">
                                 Locked: {formatFromWei(assetRemove1?.lockedLPs)}{' '}
-                                STP2-{assetRemove1?.symbol}
+                                SP-p{assetRemove1?.symbol}
                               </div>
                               <FormGroup>
                                 <Input
