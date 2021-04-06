@@ -4,6 +4,8 @@ import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
+import { checkValidURL } from '../../utils/helpers'
+import fallbackImg from '../../assets/icons/close.svg'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -156,9 +158,11 @@ export const getPoolFactoryCuratedArray = () => async (dispatch) => {
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
-  dispatch,
-) => {
+export const getPoolFactoryDetailedArray = (
+  tokenArray,
+  spartaAddr,
+  wallet,
+) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
@@ -167,20 +171,26 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
       tokenArray.unshift(spartaAddr)
     }
     const tempArray = await Promise.all(
-      tokenArray.map((i) => contract.callStatic.getTokenDetails(i)),
+      tokenArray.map((i) =>
+        contract.callStatic.getTokenDetailsWithMember(
+          i,
+          wallet || '0x0000000000000000000000000000000000000000',
+        ),
+      ),
     )
     const detailedArray = []
     for (let i = 0; i < tokenArray.length; i++) {
+      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${tokenArray[i]}/logo.png`
       const tempItem = {
         // Layer1 Asset Details
         tokenAddress: tokenArray[i],
-        balanceTokens: tempArray[i].balance.toString(),
+        balanceTokens: wallet ? tempArray[i].balance.toString() : '0',
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
         curated: '',
-        symbolUrl: '',
+        symbolUrl: checkValidURL(url) === true ? url : fallbackImg,
         // SP-pTOKEN Details
         poolAddress: '',
         balanceLPs: '0',
@@ -294,21 +304,16 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           ? '0'
           : contract.callStatic.balanceOf(walletAddress),
       )
-      console.log('before', i)
       tempArray.push(
-        '0',
-        // finalArray[i].symbol === 'SPARTA' || !walletAddress
-        //   ? '0'
-        //   : daoVaultContract.callStatic.mapMemberPool_balance(
-        //       walletAddress,
-        //       finalArray[i].poolAddress,
-        //     ),
+        finalArray[i].symbol === 'SPARTA' || !walletAddress
+          ? '0'
+          : daoVaultContract.callStatic.mapMemberPool_balance(
+              walletAddress,
+              finalArray[i].poolAddress,
+            ),
       )
-      console.log(daoVaultContract)
     }
-    console.log(tempArray)
     tempArray = await Promise.all(tempArray)
-    console.log(tempArray)
     const finalLpArray = finalArray
     for (let i = 0; i < tempArray.length - 5; i += 6) {
       finalLpArray[i / 6].recentDivis = tempArray[i].toString()

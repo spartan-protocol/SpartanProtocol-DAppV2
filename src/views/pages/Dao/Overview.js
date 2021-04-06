@@ -149,7 +149,7 @@ const Overview = () => {
                         </div>
                       </Col>
                       <Col md={2}>
-                        <div className="title-card mt-n4">2 days ago</div>
+                        <div className="title-card mt-n4">XXX</div>
                       </Col>
                     </Row>
                   </CardBody>

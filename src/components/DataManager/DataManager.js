@@ -2,7 +2,10 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { getDaoHarvestAmount } from '../../store/dao/actions'
-import { getDaoVaultTotalWeight } from '../../store/daoVault/actions'
+import {
+  getDaoVaultMemberWeight,
+  getDaoVaultTotalWeight,
+} from '../../store/daoVault/actions'
 import {
   usePoolFactory,
   getPoolFactoryTokenArray,
@@ -60,14 +63,13 @@ const DataManager = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (wallet.account) {
+        dispatch(getDaoVaultMemberWeight(wallet.account))
         dispatch(getDaoHarvestAmount(wallet.account))
       }
     }, 7500)
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet.account])
-
-  const [prevTokenArray, setPrevTokenArray] = useState(poolFactory.tokenArray)
 
   useEffect(() => {
     const checkArrays = () => {
@@ -79,7 +81,6 @@ const DataManager = () => {
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         dispatch(getSynthArray()) // SYNTH ARRAY
-        setPrevTokenArray(poolFactory.tokenArray)
       }
     }
     checkArrays()
@@ -90,18 +91,25 @@ const DataManager = () => {
     poolFactory.detailedArray,
   )
 
+  const [arrayTrigger, setArrayTrigger] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setArrayTrigger(arrayTrigger + 1)
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [arrayTrigger])
+
   useEffect(() => {
     const { tokenArray } = poolFactory
-    const checkDetailedArray = () => {
-      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-        dispatch(getPoolFactoryDetailedArray(tokenArray, addr.sparta))
-        setPrevDetailedArray(poolFactory.detailedArray)
-      }
+    if (tokenArray.length > 0) {
+      dispatch(
+        getPoolFactoryDetailedArray(tokenArray, addr.sparta, wallet.account),
+      )
+      setPrevDetailedArray(poolFactory.detailedArray)
     }
-
-    checkDetailedArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
+  }, [poolFactory.tokenArray, wallet.account, arrayTrigger])
 
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
 

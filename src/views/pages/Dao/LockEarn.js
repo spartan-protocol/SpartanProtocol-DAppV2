@@ -66,11 +66,7 @@ const LockEarn = () => {
                     <Button
                       type="Button"
                       className="btn btn-primary"
-                      onClick={() =>
-                        dispatch(
-                          daoWithdraw(asset.poolAddress, asset.balanceLPs),
-                        )
-                      }
+                      onClick={() => dispatch(daoWithdraw(asset.poolAddress))}
                     >
                       Unlock
                     </Button>
