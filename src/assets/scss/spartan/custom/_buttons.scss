@@ -199,6 +199,18 @@
   }
 }
 
+.btn-transparent {
+  background: transparent;
+  padding: 2px;
+
+  &.btn:hover,
+  &.btn-primary:hover{
+    background: transparent;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none;
+  }
+}
 
 .btn-group.select .btn{
     text-align: left;

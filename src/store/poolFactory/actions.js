@@ -4,6 +4,8 @@ import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
+import { checkValidURL } from '../../utils/helpers'
+import fallbackImg from '../../assets/icons/close.svg'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -171,6 +173,7 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
     )
     const detailedArray = []
     for (let i = 0; i < tokenArray.length; i++) {
+      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${tokenArray[i]}/logo.png`
       const tempItem = {
         // Layer1 Asset Details
         tokenAddress: tokenArray[i],
@@ -180,7 +183,7 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
         curated: '',
-        symbolUrl: '',
+        symbolUrl: checkValidURL(url) === true ? url : fallbackImg,
         // SP-pTOKEN Details
         poolAddress: '',
         balanceLPs: '0',
@@ -296,13 +299,12 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
       )
       console.log('before', i)
       tempArray.push(
-        '0',
-        // finalArray[i].symbol === 'SPARTA' || !walletAddress
-        //   ? '0'
-        //   : daoVaultContract.callStatic.mapMemberPool_balance(
-        //       walletAddress,
-        //       finalArray[i].poolAddress,
-        //     ),
+        finalArray[i].symbol === 'SPARTA' || !walletAddress
+          ? '0'
+          : daoVaultContract.callStatic.mapMemberPool_balance(
+              walletAddress,
+              finalArray[i].poolAddress,
+            ),
       )
       console.log(daoVaultContract)
     }
