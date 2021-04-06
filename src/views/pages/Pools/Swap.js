@@ -34,10 +34,10 @@ import {
   routerSwapAssets,
   routerZapLiquidity,
 } from '../../../store/router/actions'
-import { getRouterContract } from '../../../utils/web3Router'
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { getPoolContract } from '../../../utils/web3Pool'
 
 const Swap = () => {
   const web3 = useWeb3()
@@ -57,21 +57,21 @@ const Swap = () => {
   )
 
   useEffect(() => {
-    const { finalArray } = poolFactory
+    const { finalLpArray } = poolFactory
 
     const getAssetDetails = () => {
-      if (finalArray) {
+      if (finalLpArray) {
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
 
-        if (finalArray.find((asset) => asset.tokenAddress === assetParam1)) {
-          ;[asset1] = finalArray.filter(
+        if (finalLpArray.find((asset) => asset.tokenAddress === assetParam1)) {
+          ;[asset1] = finalLpArray.filter(
             (asset) => asset.tokenAddress === assetParam1,
           )
           setAssetParam1('')
         }
-        if (finalArray.find((asset) => asset.tokenAddress === assetParam2)) {
-          ;[asset2] = finalArray.filter(
+        if (finalLpArray.find((asset) => asset.tokenAddress === assetParam2)) {
+          ;[asset2] = finalLpArray.filter(
             (asset) => asset.tokenAddress === assetParam2,
           )
           setAssetParam2('')
@@ -99,13 +99,8 @@ const Swap = () => {
               : { tokenAddress: addr.sparta }
         }
 
-        if (poolFactory.finalLpArray) {
-          asset1 = getItemFromArray(asset1, poolFactory.finalLpArray)
-          asset2 = getItemFromArray(asset2, poolFactory.finalLpArray)
-        } else {
-          asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-          asset2 = getItemFromArray(asset2, poolFactory.finalArray)
-        }
+        asset1 = getItemFromArray(asset1, finalLpArray)
+        asset2 = getItemFromArray(asset2, finalLpArray)
 
         setAssetSwap1(asset1)
         setAssetSwap2(asset2)
@@ -299,28 +294,6 @@ const Swap = () => {
       )
     }
   }
-
-  useEffect(() => {
-    const clearInputs = () => {
-      if (swapInput1) {
-        swapInput1.value = ''
-      }
-    }
-
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap1])
-
-  useEffect(() => {
-    const clearInputs = () => {
-      if (swapInput2) {
-        swapInput2.value = ''
-      }
-    }
-
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap2])
 
   //= =================================================================================//
   // Functions ZAP calculations
@@ -924,7 +897,9 @@ const Swap = () => {
         <Row>
           <Col>
             <RecentTxns
-              contract={getRouterContract()}
+              contracts={poolFactory.finalArray
+                ?.filter((asset) => asset.symbol !== 'SPARTA')
+                .map((asset) => getPoolContract(asset.poolAddress))}
               walletAddr={wallet.account}
             />
           </Col>

@@ -71,8 +71,6 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet.account])
 
-  const [prevTokenArray, setPrevTokenArray] = useState(poolFactory.tokenArray)
-
   useEffect(() => {
     const checkArrays = () => {
       if (
@@ -83,7 +81,6 @@ const DataManager = () => {
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         dispatch(getSynthArray()) // SYNTH ARRAY
-        setPrevTokenArray(poolFactory.tokenArray)
       }
     }
     checkArrays()
@@ -94,17 +91,25 @@ const DataManager = () => {
     poolFactory.detailedArray,
   )
 
+  const [arrayTrigger, setArrayTrigger] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setArrayTrigger(arrayTrigger + 1)
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [arrayTrigger])
+
   useEffect(() => {
     const { tokenArray } = poolFactory
-    const interval = setInterval(() => {
-      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-        dispatch(getPoolFactoryDetailedArray(tokenArray, addr.sparta))
-        setPrevDetailedArray(poolFactory.detailedArray)
-      }
-    }, 7500)
-    return () => clearInterval(interval)
+    if (tokenArray.length > 0) {
+      dispatch(
+        getPoolFactoryDetailedArray(tokenArray, addr.sparta, wallet.account),
+      )
+      setPrevDetailedArray(poolFactory.detailedArray)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
+  }, [poolFactory.tokenArray, wallet.account, arrayTrigger])
 
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
 
