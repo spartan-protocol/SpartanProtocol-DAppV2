@@ -172,7 +172,10 @@ export const routerAddLiqAsym = (input, fromBase, token) => async (
     // )
     const units = await contract.addLiquidityAsym(input, fromBase, token, {
       value:
-        token === '0x0000000000000000000000000000000000000000' ? input : null,
+        token === '0x0000000000000000000000000000000000000000' &&
+        fromBase !== true
+          ? input
+          : null,
       gasPrice: gPrice,
       // gasLimit: gLimit,
     })

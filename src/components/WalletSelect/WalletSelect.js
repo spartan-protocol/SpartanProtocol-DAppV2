@@ -265,95 +265,106 @@ const WalletSelect = (props) => {
                       activeTab={horizontalTabs}
                     >
                       <TabPane tabId="assets">
-                        <Row>
-                          <Col xs="6">Assets</Col>
-                          <Col
-                            xs="6"
-                            style={{
-                              textAlign: 'right',
-                            }}
-                          >
-                            Balance
+                        <Row className="h6">
+                          <Col xs="2">Icon</Col>
+                          <Col xs="4">Asset</Col>
+                          <Col xs="4" className="text-right">
+                            Wallet Balance
                           </Col>
                         </Row>
-                        {poolFactory.detailedArray &&
-                          poolFactory.detailedArray.length &&
-                          poolFactory.detailedArray.map((asset) => (
-                            <Row key={`${asset.name}-asset`}>
-                              <Col xs="6">{asset.name}</Col>
-                              <Col
-                                xs="6"
-                                style={{
-                                  textAlign: 'right',
-                                }}
-                              >
+                        {poolFactory.detailedArray
+                          ?.filter((asset) => asset.balanceTokens > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-asset`}
+                              className="align-items-center"
+                            >
+                              <Col xs="2" className="m-1">
+                                <img
+                                  width="90%"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                />
+                              </Col>
+                              <Col xs="4">{asset.symbol}</Col>
+                              <Col xs="4" className="text-right">
                                 <span className="amount">
-                                  {parseFloat(
-                                    formatFromWei(asset.balanceTokens),
-                                  ).toFixed(2)}
+                                  {formatFromWei(asset.balanceTokens)}
                                 </span>
                               </Col>
                             </Row>
                           ))}
                       </TabPane>
                       <TabPane tabId="lp">
-                        <Row>
-                          <Col xs="6">Locked LP in DAO</Col>
-                          <Col
-                            xs="6"
-                            style={{
-                              textAlign: 'right',
-                            }}
-                          >
-                            Balance
+                        {poolFactory.finalLpArray?.filter(
+                          (asset) => asset.lockedLPs > 0,
+                        ).length > 0 && (
+                          <Row className="h6">
+                            <Col xs="2">Icon</Col>
+                            <Col xs="4">LP Asset</Col>
+                            <Col xs="4" className="text-right">
+                              Locked in DAO
+                            </Col>
+                          </Row>
+                        )}
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.lockedLPs > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.name}-lp`}
+                              className="align-items-center"
+                            >
+                              <Col xs="2" className="m-1">
+                                <img
+                                  width="90%"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                />
+                              </Col>
+                              <Col xs="4">{asset.symbol}</Col>
+                              <Col xs="4" className="text-right">
+                                <span className="amount">
+                                  {formatFromWei(asset.lockedLPs)}
+                                </span>
+                              </Col>
+                            </Row>
+                          ))}
+                        <Row className="h6 mt-2">
+                          <Col xs="2">Icon</Col>
+                          <Col xs="4">LP Asset</Col>
+                          <Col xs="4" className="text-right">
+                            Wallet Balance
                           </Col>
                         </Row>
-                        <Row>
-                          <Col xs="6">Available LP Shares</Col>
-                          <Col
-                            xs="6"
-                            style={{
-                              textAlign: 'right',
-                            }}
-                          >
-                            Balance
-                          </Col>
-                        </Row>
-                        {poolFactory.detailedArray &&
-                          poolFactory.detailedArray.length &&
-                          poolFactory.detailedArray
-                            .filter(
-                              (asset) =>
-                                asset.name !== 'SPARTAN PROTOCOL TOKEN',
-                            )
-                            .map((asset) => (
-                              <Row key={`${asset.name}-lp`}>
-                                <Col xs="6">{asset.name}</Col>
-                                <Col
-                                  xs="6"
-                                  style={{
-                                    textAlign: 'right',
-                                  }}
-                                >
-                                  <span className="amount">
-                                    {parseFloat(
-                                      formatFromWei(asset.balanceLPs),
-                                    ).toFixed(2)}
-                                  </span>
-                                </Col>
-                              </Row>
-                            ))}
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.balanceLPs > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.name}-lp`}
+                              className="align-items-center"
+                            >
+                              <Col xs="2" className="m-1">
+                                <img
+                                  width="90%"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                />
+                              </Col>
+                              <Col xs="4">{asset.name}</Col>
+                              <Col xs="4" className="text-right">
+                                <span className="amount">
+                                  {formatFromWei(asset.balanceLPs)}
+                                </span>
+                              </Col>
+                            </Row>
+                          ))}
                       </TabPane>
                       <TabPane tabId="synths">
                         <Row>
-                          <Col xs="6">Synths</Col>
-                          <Col
-                            xs="6"
-                            style={{
-                              textAlign: 'right',
-                            }}
-                          >
-                            Balance
+                          <Col xs="2">Icon</Col>
+                          <Col xs="4">Synthetic Asset</Col>
+                          <Col xs="4" className="text-right">
+                            Wallet Balance
                           </Col>
                         </Row>
                       </TabPane>
