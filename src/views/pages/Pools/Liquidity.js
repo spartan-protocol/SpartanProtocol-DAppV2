@@ -402,28 +402,6 @@ const Liquidity = () => {
     }
   }
 
-  useEffect(() => {
-    const clearInputs = () => {
-      if (addInput1) {
-        addInput1.value = ''
-      }
-    }
-
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetAdd1])
-
-  useEffect(() => {
-    const clearInputs = () => {
-      if (addInput2) {
-        addInput2.value = ''
-      }
-    }
-
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetAdd2])
-
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
