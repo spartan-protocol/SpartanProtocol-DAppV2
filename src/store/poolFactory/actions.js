@@ -158,9 +158,11 @@ export const getPoolFactoryCuratedArray = () => async (dispatch) => {
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
-  dispatch,
-) => {
+export const getPoolFactoryDetailedArray = (
+  tokenArray,
+  spartaAddr,
+  wallet,
+) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
@@ -169,7 +171,12 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
       tokenArray.unshift(spartaAddr)
     }
     const tempArray = await Promise.all(
-      tokenArray.map((i) => contract.callStatic.getTokenDetails(i)),
+      tokenArray.map((i) =>
+        contract.callStatic.getTokenDetailsWithMember(
+          i,
+          wallet || '0x0000000000000000000000000000000000000000',
+        ),
+      ),
     )
     const detailedArray = []
     for (let i = 0; i < tokenArray.length; i++) {
@@ -177,7 +184,7 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
       const tempItem = {
         // Layer1 Asset Details
         tokenAddress: tokenArray[i],
-        balanceTokens: tempArray[i].balance.toString(),
+        balanceTokens: wallet ? tempArray[i].balance.toString() : '0',
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
@@ -297,7 +304,6 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           ? '0'
           : contract.callStatic.balanceOf(walletAddress),
       )
-      console.log('before', i)
       tempArray.push(
         finalArray[i].symbol === 'SPARTA' || !walletAddress
           ? '0'
@@ -306,11 +312,8 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
               finalArray[i].poolAddress,
             ),
       )
-      console.log(daoVaultContract)
     }
-    console.log(tempArray)
     tempArray = await Promise.all(tempArray)
-    console.log(tempArray)
     const finalLpArray = finalArray
     for (let i = 0; i < tempArray.length - 5; i += 6) {
       finalLpArray[i / 6].recentDivis = tempArray[i].toString()
