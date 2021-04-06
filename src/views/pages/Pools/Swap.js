@@ -34,10 +34,10 @@ import {
   routerSwapAssets,
   routerZapLiquidity,
 } from '../../../store/router/actions'
-import { getRouterContract } from '../../../utils/web3Router'
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { getPoolContract } from '../../../utils/web3Pool'
 
 const Swap = () => {
   const web3 = useWeb3()
@@ -897,7 +897,9 @@ const Swap = () => {
         <Row>
           <Col>
             <RecentTxns
-              contract={getRouterContract()}
+              contracts={poolFactory.finalArray
+                ?.filter((asset) => asset.symbol !== 'SPARTA')
+                .map((asset) => getPoolContract(asset.poolAddress))}
               walletAddr={wallet.account}
             />
           </Col>

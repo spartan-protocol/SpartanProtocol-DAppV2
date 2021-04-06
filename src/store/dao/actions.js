@@ -111,20 +111,19 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
 /**
  * Withdraw / Unstake LP Tokens (Unlock them from the DAO)
  * @param {address} pool
- * @param {uint} amount
  */
-export const daoWithdraw = (pool, amount, justCheck) => async (dispatch) => {
+export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract()
 
   try {
     let withdraw = {}
     if (justCheck) {
-      withdraw = await contract.callStatic.withdraw(pool, amount)
+      withdraw = await contract.callStatic.withdraw(pool)
     } else {
       const gPrice = await getProviderGasPrice()
       // const gLimit = await contract.estimateGas.withdraw(pool, amount)
-      withdraw = await contract.withdraw(pool, amount, {
+      withdraw = await contract.withdraw(pool, {
         gasPrice: gPrice,
         // gasLimit: gLimit,
       })

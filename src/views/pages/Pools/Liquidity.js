@@ -57,9 +57,9 @@ import {
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getRouterContract } from '../../../utils/web3Router'
 import SharePool from '../../../components/Share/SharePool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { getPoolContract } from '../../../utils/web3Pool'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -718,11 +718,6 @@ const Liquidity = () => {
                         size="lg"
                         block
                         onClick={() => {
-                          console.log(
-                            convertToWei(addInput2?.value),
-                            convertToWei(addInput1?.value),
-                            assetAdd1?.tokenAddress,
-                          )
                           dispatch(
                             routerAddLiq(
                               convertToWei(addInput2?.value),
@@ -1010,7 +1005,8 @@ const Liquidity = () => {
                                 {assetRemove1?.symbol}
                               </div>
                               <div className="title-card">
-                                Locked: XXX.XX STP2-{assetRemove1?.symbol}
+                                Locked: {formatFromWei(assetRemove1?.lockedLPs)}{' '}
+                                STP2-{assetRemove1?.symbol}
                               </div>
                               <FormGroup>
                                 <Input
@@ -1355,7 +1351,9 @@ const Liquidity = () => {
             <Card className="card-body">
               {poolFactory.finalArray && (
                 <RecentTxns
-                  contract={getRouterContract()}
+                  contracts={poolFactory.finalArray
+                    ?.filter((asset) => asset.symbol !== 'SPARTA')
+                    .map((asset) => getPoolContract(asset.poolAddress))}
                   walletAddr={wallet.account}
                 />
               )}
