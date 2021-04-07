@@ -61,11 +61,9 @@ const WalletSelect = (props) => {
       }
       if (wallet.status === 'disconnected') {
         window.sessionStorage.removeItem('walletConnected')
-        window.sessionStorage.removeItem('lastWallet')
       }
       if (wallet.status === 'error') {
         window.sessionStorage.removeItem('walletConnected')
-        window.sessionStorage.removeItem('lastWallet')
       }
     }
 
@@ -84,9 +82,26 @@ const WalletSelect = (props) => {
     } else {
       wallet.connect(x.inject)
     }
-    window.sessionStorage.setItem('lastWallet', x.id)
+    window.localStorage.setItem('lastWallet', x.id)
     // props.setWalletHeaderIcon(x.icon[0])
   }
+
+  useEffect(() => {
+    async function sleep() {
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+      if (window.localStorage.getItem('lastWallet') === 'BC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'MM') {
+        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'WC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'OOT') {
+        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
+      }
+    }
+    sleep()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
