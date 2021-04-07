@@ -82,6 +82,14 @@ const Liquidity = () => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
       if (finalArray) {
+        window.localStorage.setItem('assetType1', 'token')
+        window.localStorage.setItem('assetType2', 'token')
+        window.localStorage.setItem('assetType3', 'pool')
+        window.localStorage.setItem('assetType4', 'token')
+        window.localStorage.setItem('assetType5', 'pool')
+        window.localStorage.setItem('assetType7', 'pool')
+        window.localStorage.setItem('assetType8', 'token')
+
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
@@ -519,7 +527,7 @@ const Liquidity = () => {
                                 <AssetSelect
                                   priority="1"
                                   blackList={[addr.sparta]}
-                                  types={['token']}
+                                  type="token"
                                 />
                               </Col>
                               <Col className="text-right">
@@ -746,7 +754,7 @@ const Liquidity = () => {
                               <AssetSelect
                                 priority="3"
                                 blackList={[addr.sparta]}
-                                types={['pool']}
+                                type="pool"
                               />
                             </Col>
                             <Col className="text-right">
@@ -777,7 +785,7 @@ const Liquidity = () => {
                                   assetAdd3?.tokenAddress,
                                   addr.sparta,
                                 ]}
-                                types={['token']}
+                                type="token"
                               />
                             </Col>
                             <Col className="text-right">
@@ -997,7 +1005,7 @@ const Liquidity = () => {
                               <div className="title-card">Redeem</div>
                               <AssetSelect
                                 priority="5"
-                                types={['pool']}
+                                type="pool"
                                 blackList={[addr.sparta]}
                               />
                             </Col>
@@ -1113,7 +1121,7 @@ const Liquidity = () => {
                               <div className="title-card">Select pool</div>
                               <AssetSelect
                                 priority="7"
-                                types={['pool']}
+                                type="pool"
                                 blackList={[addr.sparta]}
                               />
                             </Col>
@@ -1141,7 +1149,7 @@ const Liquidity = () => {
                               <div className="title-card">Output</div>
                               <AssetSelect
                                 priority="8"
-                                types={['token']}
+                                type="token"
                                 whiteList={[
                                   assetRemove3?.tokenAddress,
                                   addr.sparta,

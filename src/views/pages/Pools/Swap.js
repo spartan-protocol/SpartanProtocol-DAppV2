@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from 'react-bootstrap/Breadcrumb'
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Input,
-  FormGroup,
-  CustomInput,
-} from 'reactstrap'
+import { Button, Card, Col, Row, Input, FormGroup } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -48,7 +40,7 @@ const Swap = () => {
   const location = useLocation()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
-  const [zapMode, setZapMode] = useState(false)
+  const [mode, setMode] = useState(false)
   const [assetParam1, setAssetParam1] = useState(
     new URLSearchParams(location.search).get(`asset1`),
   )
@@ -60,9 +52,10 @@ const Swap = () => {
     const { finalLpArray } = poolFactory
 
     const getAssetDetails = () => {
-      if (finalLpArray) {
+      if (finalLpArray?.length > 0) {
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
+        const type1 = window.localStorage.getItem('assetType1')
 
         if (finalLpArray.find((asset) => asset.tokenAddress === assetParam1)) {
           ;[asset1] = finalLpArray.filter(
@@ -77,26 +70,42 @@ const Swap = () => {
           setAssetParam2('')
         }
 
-        if (zapMode) {
-          asset1 =
-            asset1?.symbol !== 'SPARTA' &&
-            asset1.tokenAddress !== asset2.tokenAddress
-              ? asset1
-              : { tokenAddress: addr.bnb }
-          asset2 =
-            asset2?.symbol !== 'SPARTA' &&
-            asset2.tokenAddress !== asset1.tokenAddress
-              ? asset2
-              : { tokenAddress: addr.bnb }
+        if (type1 === 'pool') {
+          setMode('pool')
+          window.localStorage.setItem('assetType1', 'pool')
+          window.localStorage.setItem('assetType2', 'pool')
+          if (asset2?.symbol === 'SPARTA') {
+            asset2 =
+              asset1?.tokenAddress !== finalLpArray[1].tokenAddress
+                ? { tokenAddress: finalLpArray[1].tokenAddress }
+                : { tokenAddress: finalLpArray[2].tokenAddress }
+          }
+        } else if (type1 === 'synth') {
+          setMode('synth')
+          window.localStorage.setItem('assetType1', 'synth')
+          window.localStorage.setItem('assetType2', 'token')
+        } else if (asset1?.symbol !== 'SPARTA' && type1 === 'token') {
+          setMode('token')
+          window.localStorage.setItem('assetType1', 'token')
+          window.localStorage.setItem('assetType2', 'token')
         } else {
-          asset1 =
-            asset1 && asset1.tokenAddress !== asset2.tokenAddress
-              ? asset1
-              : { tokenAddress: addr.bnb }
+          setMode('sparta')
+          window.localStorage.setItem('assetType1', 'token')
+        }
+
+        if (asset2?.tokenAddress === asset1?.tokenAddress) {
           asset2 =
-            asset2 && asset2.tokenAddress !== asset1.tokenAddress
-              ? asset2
-              : { tokenAddress: addr.sparta }
+            asset1?.tokenAddress !== finalLpArray[1].tokenAddress
+              ? { tokenAddress: finalLpArray[1].tokenAddress }
+              : { tokenAddress: finalLpArray[2].tokenAddress }
+        }
+
+        if (!asset1) {
+          asset1 = { tokenAddress: addr.sparta }
+        }
+
+        if (!asset2) {
+          asset2 = { tokenAddress: addr.bnb }
         }
 
         asset1 = getItemFromArray(asset1, finalLpArray)
@@ -113,13 +122,17 @@ const Swap = () => {
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    zapMode,
+    mode,
     poolFactory.finalArray,
     poolFactory.finalLpArray,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected2'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetType1'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetType2'),
   ])
 
   const swapInput1 = document.getElementById('swapInput1')
@@ -428,7 +441,7 @@ const Swap = () => {
   // Functions for ZAP input handling
 
   const handleZapInputChange = (input, focusInput1) => {
-    if (!zapMode) {
+    if (mode !== 'pool') {
       handleInputChange(input, focusInput1)
     } else if (assetSwap1?.symbol === 'SPARTA') {
       if (focusInput1 === true) {
@@ -508,15 +521,6 @@ const Swap = () => {
           <Row>
             <Col xl={8}>
               <Card className="card-body">
-                <div className="d-flex align-items-center">
-                  <span className="mr-2 category">Zap Mode</span>
-                  <CustomInput
-                    type="switch"
-                    id="switch-5"
-                    className="mt-n4"
-                    onClick={() => setZapMode(!zapMode)}
-                  />
-                </div>
                 <br />
                 <br />
                 {/* Top 'Input' Row */}
@@ -532,31 +536,17 @@ const Swap = () => {
                           <div className="title-card">From</div>
                           <br />
                           <div className="output-card">
-                            {!zapMode && (
-                              <AssetSelect
-                                priority="1"
-                                blackList={[assetSwap2?.tokenAddress]}
-                              />
-                            )}
-                            {zapMode && (
-                              <AssetSelect
-                                priority="1"
-                                type="pools"
-                                blackList={[
-                                  assetSwap2?.tokenAddress,
-                                  addr.sparta,
-                                ]}
-                              />
-                            )}
+                            <AssetSelect priority="1" type="all" />
                           </div>
                         </Col>
                         <Col className="text-right">
                           <br />
                           <div className="output-card">
                             Balance{' '}
-                            {!zapMode &&
+                            {mode !== 'pool' &&
                               formatFromWei(assetSwap1?.balanceTokens)}
-                            {zapMode && formatFromWei(assetSwap1?.balanceLPs)}
+                            {mode === 'pool' &&
+                              formatFromWei(assetSwap1?.balanceLPs)}
                           </div>
                           <FormGroup>
                             <Input
@@ -570,8 +560,9 @@ const Swap = () => {
                             />
                           </FormGroup>
                           <div className="output-card">
-                            ~${!zapMode && formatFromWei(getInput1USD())}
-                            {zapMode && formatFromWei(getInputZap1USD())}
+                            ~${mode !== 'pool' && formatFromWei(getInput1USD())}
+                            {mode === 'pool' &&
+                              formatFromWei(getInputZap1USD())}
                           </div>
                         </Col>
                       </Row>
@@ -600,31 +591,21 @@ const Swap = () => {
                           <div className="title-card">To</div>
                           <br />
                           <div className="output-card">
-                            {!zapMode && (
-                              <AssetSelect
-                                priority="2"
-                                blackList={[assetSwap1?.tokenAddress]}
-                              />
-                            )}
-                            {zapMode && (
-                              <AssetSelect
-                                priority="2"
-                                type="pools"
-                                blackList={[
-                                  addr?.sparta,
-                                  assetSwap1?.tokenAddress,
-                                ]}
-                              />
-                            )}
+                            <AssetSelect
+                              priority="2"
+                              type={mode}
+                              blackList={[assetSwap1?.tokenAddress]}
+                            />
                           </div>
                         </Col>
                         <Col className="text-right">
                           <br />
                           <div className="output-card">
                             Balance{' '}
-                            {!zapMode &&
+                            {mode !== 'pool' &&
                               formatFromWei(assetSwap2?.balanceTokens)}
-                            {zapMode && formatFromWei(assetSwap2?.balanceLPs)}
+                            {mode === 'pool' &&
+                              formatFromWei(assetSwap2?.balanceLPs)}
                           </div>
                           <FormGroup>
                             <Input
@@ -638,8 +619,9 @@ const Swap = () => {
                             />
                           </FormGroup>
                           <div className="output-card">
-                            ~${!zapMode && formatFromWei(getInput2USD())}
-                            {zapMode && formatFromWei(getInputZap2USD())}
+                            ~${mode !== 'pool' && formatFromWei(getInput2USD())}
+                            {mode === 'pool' &&
+                              formatFromWei(getInputZap2USD())}
                           </div>
                         </Col>
                       </Row>
@@ -649,7 +631,7 @@ const Swap = () => {
                 {/* 'Approval/Allowance' row */}
                 <Row>
                   <Col>
-                    {!zapMode &&
+                    {mode !== 'pool' &&
                       assetSwap1?.tokenAddress !== addr.bnb &&
                       wallet?.account &&
                       swapInput1?.value && (
@@ -663,7 +645,7 @@ const Swap = () => {
                   </Col>
                 </Row>
                 {/* Bottom 'swap' txnDetails row */}
-                {!zapMode && (
+                {mode !== 'pool' && (
                   <Row>
                     {/* TextLeft 'txnDetails' col */}
                     <Col>
@@ -730,7 +712,7 @@ const Swap = () => {
                   </Row>
                 )}
                 {/* Bottom 'zap' txnDetails row */}
-                {zapMode && (
+                {mode === 'pool' && (
                   <Row>
                     {/* TextLeft 'zap' txnDetails col */}
                     <Col>
@@ -849,7 +831,7 @@ const Swap = () => {
                     </Col>
                   </Row>
                 )}
-                {!zapMode && (
+                {mode !== 'pool' && (
                   <Button
                     color="primary"
                     size="lg"
@@ -867,7 +849,7 @@ const Swap = () => {
                     Swap
                   </Button>
                 )}
-                {zapMode && (
+                {mode === 'pool' && (
                   <Button
                     color="primary"
                     size="lg"

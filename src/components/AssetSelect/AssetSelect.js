@@ -29,13 +29,15 @@ const AssetSelect = (props) => {
   const [showModal, setShowModal] = useState(false)
 
   const getInitTab = () => {
-    if (props.types?.length !== 1) {
-      return 'all'
+    if (props.type === 'token') {
+      return props.type
     }
-    return props.types[0]
+    if (props.type === 'pool') {
+      return props.type
+    }
+    return 'all'
   }
 
-  const [mode, setMode] = useState(getInitTab())
   const [activeTab, setActiveTab] = useState(getInitTab())
   const poolFactory = usePoolFactory()
 
@@ -48,21 +50,21 @@ const AssetSelect = (props) => {
   }
 
   const addSelection = (asset) => {
-    console.log(asset)
-    console.log(poolFactory.finalLpArray)
     const tempAsset = poolFactory.finalLpArray.filter(
       (i) => i.tokenAddress === asset.address,
     )
-    console.log(tempAsset)
     window.localStorage.setItem(
       `assetSelected${props.priority}`,
       JSON.stringify(tempAsset[0]),
     )
+    window.localStorage.setItem(`assetType${props.priority}`, asset.type)
   }
 
   const selectedItem = JSON.parse(
     window.localStorage.getItem(`assetSelected${props.priority}`),
   )
+
+  const selectedType = window.localStorage.getItem(`assetType${props.priority}`)
 
   const [assetArray, setAssetArray] = useState([])
 
@@ -88,37 +90,61 @@ const AssetSelect = (props) => {
 
         for (let i = 0; i < tempArray.length; i++) {
           // Add asset to array
-          finalArray.push({
-            type: 'token',
-            icon: (
-              <img
-                src={tempArray[i].symbolUrl}
-                alt={`${tempArray[i].symbol} asset icon`}
-                className="mr-1"
-              />
-            ),
-            symbol: tempArray[i].symbol,
-            balance: tempArray[i].balanceTokens,
-            address: tempArray[i].tokenAddress,
-          })
+          if (
+            props.type === 'token' ||
+            props.type === 'sparta' ||
+            props.type === 'all'
+          ) {
+            finalArray.push({
+              type: 'token',
+              icon: (
+                <img
+                  src={tempArray[i].symbolUrl}
+                  alt={`${tempArray[i].symbol} asset icon`}
+                  className="mr-1"
+                />
+              ),
+              symbol: tempArray[i].symbol,
+              balance: tempArray[i].balanceTokens,
+              address: tempArray[i].tokenAddress,
+            })
+          }
           // Add LP token to array
-          finalArray.push({
-            type: 'pool',
-            icon: (
-              <img
-                src={tempArray[i].symbolUrl}
-                alt={`${tempArray[i].symbol} LP token icon`}
-                className="mr-1"
-              />
-            ),
-            symbol: `SP-p${tempArray[i].symbol}`,
-            balance: tempArray[i].balanceLPs,
-            address: tempArray[i].tokenAddress,
-          })
-        }
-
-        if (activeTab !== 'all') {
-          finalArray = finalArray.filter((asset) => asset.type === activeTab)
+          if (props.type === 'pool' || props.type === 'all') {
+            if (tempArray[i].poolAddress) {
+              finalArray.push({
+                type: 'pool',
+                icon: (
+                  <img
+                    src={tempArray[i].symbolUrl}
+                    alt={`${tempArray[i].symbol} LP token icon`}
+                    className="mr-1"
+                  />
+                ),
+                symbol: `SP-p${tempArray[i].symbol}`,
+                balance: tempArray[i].balanceLPs,
+                address: tempArray[i].tokenAddress,
+              })
+            }
+          }
+          // Add synth to array
+          // if (props.type === 'sparta' || props.type === 'all') {
+          // if (tempArray[i].synthAddress) {
+          //   finalArray.push({
+          //     type: 'synth',
+          //     icon: (
+          //       <img
+          //         src={tempArray[i].symbolUrl}
+          //         alt={`${tempArray[i].symbol} synth icon`}
+          //         className="mr-1"
+          //       />
+          //     ),
+          //     symbol: `SP-s${tempArray[i].symbol}`,
+          //     balance: tempArray[i].balanceSynths,
+          //     address: tempArray[i].tokenAddress,
+          //   })
+          // }
+          // }
         }
 
         finalArray = finalArray.sort((a, b) => b.balance - a.balance)
@@ -126,18 +152,19 @@ const AssetSelect = (props) => {
       }
     }
     getArray()
-  }, [activeTab, poolFactory.finalLpArray, props.blackList, props.whiteList])
+  }, [poolFactory.finalLpArray, props.blackList, props.type, props.whiteList])
 
   return (
     <>
       <Button color="primary" onClick={toggleModal}>
         <img
           className="mr-2"
-          src={selectedItem.symbolUrl}
-          alt={`${selectedItem.symbol}icon`}
+          src={selectedItem?.symbolUrl}
+          alt={`${selectedItem?.symbol}icon`}
         />
-        {mode === 'pool' && 'SP-p'}
-        {selectedItem && selectedItem.symbol}
+        {selectedType === 'pool' && 'SP-p'}
+        {selectedType === 'synth' && 'SP-s'}
+        {selectedItem && selectedItem?.symbol}
       </Button>
 
       <Modal isOpen={showModal} toggle={toggleModal}>
@@ -160,19 +187,20 @@ const AssetSelect = (props) => {
                 <CardTitle tag="h2">Select an asset</CardTitle>
               </CardHeader>
               <Nav tabs className="nav-tabs-custom">
-                {props.types?.length > 1 && (
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === 'all' })}
-                      onClick={() => {
-                        changeTab('all')
-                      }}
-                    >
-                      <span className="d-none d-sm-block">All</span>
-                    </NavLink>
-                  </NavItem>
-                )}
-                {props.types?.find((i) => i === 'token') && (
+                <NavItem>
+                  <NavLink
+                    className={classnames({
+                      active: activeTab === 'all',
+                    })}
+                    onClick={() => {
+                      changeTab('all')
+                    }}
+                  >
+                    <span className="d-none d-sm-block">All</span>
+                  </NavLink>
+                </NavItem>
+                {assetArray.filter((asset) => asset.type === 'token').length >
+                  0 && (
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === 'token' })}
@@ -184,10 +212,13 @@ const AssetSelect = (props) => {
                     </NavLink>
                   </NavItem>
                 )}
-                {props.types?.find((i) => i === 'pool') && (
+                {assetArray.filter((asset) => asset.type === 'pool').length >
+                  0 && (
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === 'pool' })}
+                      className={classnames({
+                        active: activeTab === 'pool',
+                      })}
                       onClick={() => {
                         changeTab('pool')
                       }}
@@ -196,7 +227,8 @@ const AssetSelect = (props) => {
                     </NavLink>
                   </NavItem>
                 )}
-                {props.types?.find((i) => i === 'synth') && (
+                {assetArray.filter((asset) => asset.type === 'synth').length >
+                  0 && (
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === 'synth' })}
@@ -210,22 +242,50 @@ const AssetSelect = (props) => {
                 )}
               </Nav>
               <CardBody>
-                {assetArray.map((asset) => (
-                  <Row
-                    key={asset.symbol}
-                    className="mb-1"
-                    onClick={() => {
-                      addSelection(asset)
-                      setMode(asset.type)
-                    }}
-                  >
-                    <Col xs="6">
-                      {asset.icon}
-                      {asset.symbol}
-                    </Col>
-                    <Col xs="6">{formatFromWei(asset.balance)}</Col>
-                  </Row>
-                ))}
+                <Row>
+                  <Col xs="6">
+                    <p>Asset</p>
+                  </Col>
+                  <Col xs="6">
+                    <p>Balance</p>
+                  </Col>
+                </Row>
+                {activeTab === 'all' &&
+                  assetArray.map((asset) => (
+                    <Row
+                      key={asset.symbol}
+                      className="mb-1"
+                      onClick={() => {
+                        addSelection(asset)
+                        toggleModal()
+                      }}
+                    >
+                      <Col xs="6">
+                        {asset.icon}
+                        {asset.symbol}
+                      </Col>
+                      <Col xs="6">{formatFromWei(asset.balance)}</Col>
+                    </Row>
+                  ))}
+                {activeTab !== 'all' &&
+                  assetArray
+                    .filter((asset) => asset.type === activeTab)
+                    .map((asset) => (
+                      <Row
+                        key={asset.symbol}
+                        className="mb-1"
+                        onClick={() => {
+                          addSelection(asset)
+                          toggleModal()
+                        }}
+                      >
+                        <Col xs="6">
+                          {asset.icon}
+                          {asset.symbol}
+                        </Col>
+                        <Col xs="6">{formatFromWei(asset.balance)}</Col>
+                      </Row>
+                    ))}
               </CardBody>
             </Card>
           </Col>
