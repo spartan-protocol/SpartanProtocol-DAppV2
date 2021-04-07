@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -53,53 +53,80 @@ const AssetSelect = (props) => {
     window.localStorage.getItem(`assetSelected${props.priority}`),
   )
 
-  const getData = () => {
-    console.log('hello')
-    if (poolFactory.finalArray) {
-      if (!props.whiteList && !props.blackList) {
-        poolFactory.finalArray
-          .sort((a, b) => b.balanceTokens - a.balanceTokens)
-          .map((asset) => ({
-            id: asset.tokenAddress,
-            token: asset.symbol,
-            balance: formatFromWei(asset.balanceTokens),
-            // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
-          }))
-      }
-      if (props.whiteList) {
-        poolFactory.finalArray
-          .filter((asset) =>
-            props.whiteList.find((item) => item === asset.tokenAddress),
-          )
-          .sort((a, b) => b.balanceTokens - a.balanceTokens)
-          .map((asset) => ({
-            id: asset.tokenAddress,
-            token: asset.symbol,
-            balance: formatFromWei(asset.balanceTokens),
-            // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
-          }))
-      }
-      if (props.blackList) {
-        poolFactory.finalArray
-          .filter(
-            (asset) =>
-              props.blackList.find((item) => asset.tokenAddress === item) ===
-              undefined,
-          )
-          .sort((a, b) => b.balanceTokens - a.balanceTokens)
-          .map((asset) => ({
-            id: asset.tokenAddress,
-            token: asset.symbol,
-            balance: formatFromWei(asset.balanceTokens),
-            // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
-          }))
+  const [data, setData] = useState({})
+
+  useEffect(() => {
+    const getData = () => {
+      if (poolFactory.finalArray) {
+        let tempData = {}
+        if (!props.whiteList && !props.blackList) {
+          tempData = poolFactory.finalArray
+            .sort((a, b) => b.balanceTokens - a.balanceTokens)
+            .map((asset) => ({
+              id: asset.tokenAddress,
+              token: (
+                <div>
+                  <img
+                    src={asset.symbolUrl}
+                    alt={`${asset.symbol} token icon`}
+                    className="mr-2"
+                  />{' '}
+                  {asset.symbol}
+                </div>
+              ),
+              balance: formatFromWei(asset.balanceTokens),
+              // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
+            }))
+        } else if (props.whiteList) {
+          tempData = poolFactory.finalArray
+            .filter((asset) =>
+              props.whiteList.find((item) => item === asset.tokenAddress),
+            )
+            .sort((a, b) => b.balanceTokens - a.balanceTokens)
+            .map((asset) => ({
+              id: asset.tokenAddress,
+              token: (
+                <div>
+                  <img
+                    src={asset.symbolUrl}
+                    alt={`${asset.symbol} token icon`}
+                    className="mr-2"
+                  />{' '}
+                  {asset.symbol}
+                </div>
+              ),
+              balance: formatFromWei(asset.balanceTokens),
+              // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
+            }))
+        } else if (props.blackList) {
+          tempData = poolFactory.finalArray
+            .filter(
+              (asset) =>
+                props.blackList.find((item) => asset.tokenAddress === item) ===
+                undefined,
+            )
+            .sort((a, b) => b.balanceTokens - a.balanceTokens)
+            .map((asset) => ({
+              id: asset.tokenAddress,
+              token: (
+                <div>
+                  <img
+                    src={asset.symbolUrl}
+                    alt={`${asset.symbol} token icon`}
+                    className="mr-2"
+                  />{' '}
+                  {asset.symbol}
+                </div>
+              ),
+              balance: formatFromWei(asset.balanceTokens),
+              // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
+            }))
+        }
+        setData(tempData)
       }
     }
-  }
-
-  const [data] = useState(getData())
-
-  console.log(data)
+    getData()
+  }, [poolFactory.finalArray, props.blackList, props.whiteList])
 
   return (
     <>
@@ -177,10 +204,6 @@ const AssetSelect = (props) => {
                   filterable
                   resizable={false}
                   columns={[
-                    // {
-                    //   // Header: "Symbol",
-                    //   accessor: 'symbol',
-                    // },
                     {
                       // Header: "Token",
                       accessor: 'token',
