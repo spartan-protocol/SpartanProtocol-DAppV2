@@ -519,6 +519,7 @@ const Liquidity = () => {
                                 <AssetSelect
                                   priority="1"
                                   blackList={[addr.sparta]}
+                                  types={['token']}
                                 />
                               </Col>
                               <Col className="text-right">
@@ -745,6 +746,7 @@ const Liquidity = () => {
                               <AssetSelect
                                 priority="3"
                                 blackList={[addr.sparta]}
+                                types={['pool']}
                               />
                             </Col>
                             <Col className="text-right">
@@ -775,6 +777,7 @@ const Liquidity = () => {
                                   assetAdd3?.tokenAddress,
                                   addr.sparta,
                                 ]}
+                                types={['token']}
                               />
                             </Col>
                             <Col className="text-right">
@@ -994,7 +997,7 @@ const Liquidity = () => {
                               <div className="title-card">Redeem</div>
                               <AssetSelect
                                 priority="5"
-                                type="pools"
+                                types={['pool']}
                                 blackList={[addr.sparta]}
                               />
                             </Col>
@@ -1110,7 +1113,7 @@ const Liquidity = () => {
                               <div className="title-card">Select pool</div>
                               <AssetSelect
                                 priority="7"
-                                type="pools"
+                                types={['pool']}
                                 blackList={[addr.sparta]}
                               />
                             </Col>
@@ -1138,6 +1141,7 @@ const Liquidity = () => {
                               <div className="title-card">Output</div>
                               <AssetSelect
                                 priority="8"
+                                types={['token']}
                                 whiteList={[
                                   assetRemove3?.tokenAddress,
                                   addr.sparta,

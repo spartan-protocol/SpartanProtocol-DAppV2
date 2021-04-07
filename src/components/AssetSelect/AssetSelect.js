@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   Modal,
@@ -14,10 +14,6 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 import { usePoolFactory } from '../../store/poolFactory'
-// import { formatFromWei } from '../../utils/bigNumber'
-import coinBnb from '../../assets/icons/coin_bnb.svg'
-import coinSparta from '../../assets/icons/coin_sparta.svg'
-import ReactTable from '../ReactTable/ReactTable'
 import { formatFromWei } from '../../utils/bigNumber'
 
 /**
@@ -31,7 +27,16 @@ import { formatFromWei } from '../../utils/bigNumber'
  */
 const AssetSelect = (props) => {
   const [showModal, setShowModal] = useState(false)
-  const [activeTab, setActiveTab] = useState('1')
+
+  const getInitTab = () => {
+    if (props.types?.length !== 1) {
+      return 'all'
+    }
+    return props.types[0]
+  }
+
+  const [mode, setMode] = useState(getInitTab())
+  const [activeTab, setActiveTab] = useState(getInitTab())
   const poolFactory = usePoolFactory()
 
   const toggleModal = () => {
@@ -42,98 +47,96 @@ const AssetSelect = (props) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
 
-  // const addSelection = (asset) => {
-  //   window.localStorage.setItem(
-  //     `assetSelected${props.priority}`,
-  //     JSON.stringify(asset),
-  //   )
-  // }
+  const addSelection = (asset) => {
+    console.log(asset)
+    console.log(poolFactory.finalLpArray)
+    const tempAsset = poolFactory.finalLpArray.filter(
+      (i) => i.tokenAddress === asset.address,
+    )
+    console.log(tempAsset)
+    window.localStorage.setItem(
+      `assetSelected${props.priority}`,
+      JSON.stringify(tempAsset[0]),
+    )
+  }
 
   const selectedItem = JSON.parse(
     window.localStorage.getItem(`assetSelected${props.priority}`),
   )
 
-  const [data, setData] = useState({})
+  const [assetArray, setAssetArray] = useState([])
 
   useEffect(() => {
-    const getData = () => {
-      if (poolFactory.finalArray) {
-        let tempData = {}
-        if (!props.whiteList && !props.blackList) {
-          tempData = poolFactory.finalArray
-            .sort((a, b) => b.balanceTokens - a.balanceTokens)
-            .map((asset) => ({
-              id: asset.tokenAddress,
-              token: (
-                <div>
-                  <img
-                    src={asset.symbolUrl}
-                    alt={`${asset.symbol} token icon`}
-                    className="mr-2"
-                  />{' '}
-                  {asset.symbol}
-                </div>
-              ),
-              balance: formatFromWei(asset.balanceTokens),
-              // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
-            }))
-        } else if (props.whiteList) {
-          tempData = poolFactory.finalArray
-            .filter((asset) =>
-              props.whiteList.find((item) => item === asset.tokenAddress),
-            )
-            .sort((a, b) => b.balanceTokens - a.balanceTokens)
-            .map((asset) => ({
-              id: asset.tokenAddress,
-              token: (
-                <div>
-                  <img
-                    src={asset.symbolUrl}
-                    alt={`${asset.symbol} token icon`}
-                    className="mr-2"
-                  />{' '}
-                  {asset.symbol}
-                </div>
-              ),
-              balance: formatFromWei(asset.balanceTokens),
-              // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
-            }))
-        } else if (props.blackList) {
-          tempData = poolFactory.finalArray
-            .filter(
-              (asset) =>
-                props.blackList.find((item) => asset.tokenAddress === item) ===
-                undefined,
-            )
-            .sort((a, b) => b.balanceTokens - a.balanceTokens)
-            .map((asset) => ({
-              id: asset.tokenAddress,
-              token: (
-                <div>
-                  <img
-                    src={asset.symbolUrl}
-                    alt={`${asset.symbol} token icon`}
-                    className="mr-2"
-                  />{' '}
-                  {asset.symbol}
-                </div>
-              ),
-              balance: formatFromWei(asset.balanceTokens),
-              // action: <Button onClick={() => addSelection(asset)}>Select</Button>,
-            }))
+    let finalArray = []
+    const getArray = () => {
+      if (poolFactory.finalLpArray) {
+        let tempArray = poolFactory.finalLpArray
+
+        if (props.whiteList) {
+          tempArray = tempArray.filter((asset) =>
+            props.whiteList.find((item) => item === asset.tokenAddress),
+          )
         }
-        setData(tempData)
+
+        if (props.blackList) {
+          tempArray = tempArray.filter(
+            (asset) =>
+              props.blackList.find((item) => asset.tokenAddress === item) ===
+              undefined,
+          )
+        }
+
+        for (let i = 0; i < tempArray.length; i++) {
+          // Add asset to array
+          finalArray.push({
+            type: 'token',
+            icon: (
+              <img
+                src={tempArray[i].symbolUrl}
+                alt={`${tempArray[i].symbol} asset icon`}
+                className="mr-1"
+              />
+            ),
+            symbol: tempArray[i].symbol,
+            balance: tempArray[i].balanceTokens,
+            address: tempArray[i].tokenAddress,
+          })
+          // Add LP token to array
+          finalArray.push({
+            type: 'pool',
+            icon: (
+              <img
+                src={tempArray[i].symbolUrl}
+                alt={`${tempArray[i].symbol} LP token icon`}
+                className="mr-1"
+              />
+            ),
+            symbol: `SP-p${tempArray[i].symbol}`,
+            balance: tempArray[i].balanceLPs,
+            address: tempArray[i].tokenAddress,
+          })
+        }
+
+        if (activeTab !== 'all') {
+          finalArray = finalArray.filter((asset) => asset.type === activeTab)
+        }
+
+        finalArray = finalArray.sort((a, b) => b.balance - a.balance)
+        setAssetArray(finalArray)
       }
     }
-    getData()
-  }, [poolFactory.finalArray, props.blackList, props.whiteList])
+    getArray()
+  }, [activeTab, poolFactory.finalLpArray, props.blackList, props.whiteList])
 
   return (
     <>
       <Button color="primary" onClick={toggleModal}>
-        {props.type === 'pools' && <img src={coinSparta} alt="BNB" />}
-        <img className="mr-2" src={coinBnb} alt="BNB" />
-        {props.type === 'pools' && 'SP-p'}
+        <img
+          className="mr-2"
+          src={selectedItem.symbolUrl}
+          alt={`${selectedItem.symbol}icon`}
+        />
+        {mode === 'pool' && 'SP-p'}
         {selectedItem && selectedItem.symbol}
       </Button>
 
@@ -154,74 +157,75 @@ const AssetSelect = (props) => {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h2">Select a token</CardTitle>
+                <CardTitle tag="h2">Select an asset</CardTitle>
               </CardHeader>
               <Nav tabs className="nav-tabs-custom">
-                <NavItem>
-                  <NavLink
-                    className={classnames({ active: activeTab === '1' })}
-                    onClick={() => {
-                      changeTab('1')
-                    }}
-                  >
-                    <span className="d-none d-sm-block">All</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className={classnames({ active: activeTab === '2' })}
-                    onClick={() => {
-                      changeTab('2')
-                    }}
-                  >
-                    <span className="d-none d-sm-block">Tokens</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className={classnames({ active: activeTab === '3' })}
-                    onClick={() => {
-                      changeTab('3')
-                    }}
-                  >
-                    <span className="d-none d-sm-block">LP Tokens</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className={classnames({ active: activeTab === '4' })}
-                    onClick={() => {
-                      changeTab('4')
-                    }}
-                  >
-                    <span className="d-none d-sm-block">Synths</span>
-                  </NavLink>
-                </NavItem>
+                {props.types?.length > 1 && (
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: activeTab === 'all' })}
+                      onClick={() => {
+                        changeTab('all')
+                      }}
+                    >
+                      <span className="d-none d-sm-block">All</span>
+                    </NavLink>
+                  </NavItem>
+                )}
+                {props.types?.find((i) => i === 'token') && (
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: activeTab === 'token' })}
+                      onClick={() => {
+                        changeTab('token')
+                      }}
+                    >
+                      <span className="d-none d-sm-block">Tokens</span>
+                    </NavLink>
+                  </NavItem>
+                )}
+                {props.types?.find((i) => i === 'pool') && (
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: activeTab === 'pool' })}
+                      onClick={() => {
+                        changeTab('pool')
+                      }}
+                    >
+                      <span className="d-none d-sm-block">LP Tokens</span>
+                    </NavLink>
+                  </NavItem>
+                )}
+                {props.types?.find((i) => i === 'synth') && (
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: activeTab === 'synth' })}
+                      onClick={() => {
+                        changeTab('synth')
+                      }}
+                    >
+                      <span className="d-none d-sm-block">Synths</span>
+                    </NavLink>
+                  </NavItem>
+                )}
               </Nav>
               <CardBody>
-                <ReactTable
-                  data={data}
-                  filterable
-                  resizable={false}
-                  columns={[
-                    {
-                      // Header: "Token",
-                      accessor: 'token',
-                    },
-                    {
-                      // Header: "Balance",
-                      accessor: 'balance',
-                    },
-                    // {
-                    //   // Header: "Balance",
-                    //   accessor: 'action',
-                    // },
-                  ]}
-                  defaultPageSize={10}
-                  showPaginationTop
-                  showPaginationBottom={false}
-                  className="-striped -highlight"
-                />
+                {assetArray.map((asset) => (
+                  <Row
+                    key={asset.symbol}
+                    className="mb-1"
+                    onClick={() => {
+                      addSelection(asset)
+                      setMode(asset.type)
+                    }}
+                  >
+                    <Col xs="6">
+                      {asset.icon}
+                      {asset.symbol}
+                    </Col>
+                    <Col xs="6">{formatFromWei(asset.balance)}</Col>
+                  </Row>
+                ))}
               </CardBody>
             </Card>
           </Col>
