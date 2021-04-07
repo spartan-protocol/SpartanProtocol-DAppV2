@@ -21,7 +21,7 @@ describe('Utils', () => {
 
   test('should get wallet provider from binance chain if it was previously connected with binance', () => {
     window.sessionStorage.setItem('walletConnected', true)
-    window.sessionStorage.setItem('lastWallet', 'BC')
+    window.localStorage.setItem('lastWallet', 'BC')
 
     const { provider } = getWalletProvider()
 

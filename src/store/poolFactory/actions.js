@@ -5,7 +5,7 @@ import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
 import { checkValidURL } from '../../utils/helpers'
-import fallbackImg from '../../assets/icons/close.svg'
+import fallbackImg from '../../assets/icons/Logo-unknown.svg'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,

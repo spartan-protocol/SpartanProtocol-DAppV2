@@ -138,14 +138,13 @@ const Overview = () => {
                       </Col>
                       <Col md={2}>
                         <div className="title-card mt-n4">
-                          {BN(daoVault.memberWeight).comparedTo(0) === 1 &&
+                          {daoVault.memberWeight > 0 &&
                             formatFromUnits(
                               BN(daoVault.memberWeight)
                                 .div(daoVault.daoTotalWeight)
                                 .times(100),
                             )}
-                          {BN(daoVault.memberWeight).comparedTo(0) !== 1 &&
-                            'Not a DAO member'}
+                          {daoVault.memberWeight <= 0 && 'Not a DAO member'}
                         </div>
                       </Col>
                       <Col md={2}>

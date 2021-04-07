@@ -338,7 +338,7 @@ export const getWalletProvider = () => {
   const network = getNetwork()
   let provider = new ethers.providers.JsonRpcProvider(network.rpc)
   let connectedWalletType = ''
-  if (window.sessionStorage.getItem('lastWallet') === 'BC') {
+  if (window.localStorage.getItem('lastWallet') === 'BC') {
     connectedWalletType = window.BinanceChain
   } else {
     connectedWalletType = window.ethereum
