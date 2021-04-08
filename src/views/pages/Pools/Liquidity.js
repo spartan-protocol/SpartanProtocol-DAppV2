@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -579,16 +579,16 @@ const Liquidity = () => {
                           >
                             <Row>
                               <Col className="text-left">
-                                <div className="title-card">Input</div>
-                                <div className="output-card">
-                                  <img
-                                    className="mr-2"
-                                    src={coinSparta}
-                                    alt="SPARTA"
-                                  />
-                                  SPARTA
-                                </div>
-                              </Col>
+                              <div className="title-card">Input</div>
+                              <div className="output-card">
+                                <img
+                                  className="mr-2"
+                                  src={coinSparta}
+                                  alt="SPARTA"
+                                />
+                                SPARTA
+                              </div>
+                            </Col>
                               <Col className="text-right">
                                 <div className="title-card">
                                   {' '}

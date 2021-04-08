@@ -58,21 +58,25 @@
 }
 
 
-
 element.style {
 }
+
 #root > div > div.main-panel.ps.ps--active-y > nav > div > div.collapse.navbar-collapse > ul > div.d-inline-block.dropdown > button {
     background-color: #fc5d50;
 }
+
 .btn:not(:disabled):not(.disabled) {
     cursor: pointer;
 }
+
 .navbar .btn {
     margin: 0 5px 0 10px;
 }
+
 button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
     cursor: pointer;
 }
+
 .btn {
     cursor: pointer;
 }
@@ -89,4 +93,65 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     background-color: #605e68;
     border-color: #605e68;
     box-shadow: 0 4px 6px rgb(50 50 93 / 11%), 0 1px 3px rgb(0 0 0 / 8%);
+}
+
+
+.custom-select {
+    color: white;
+    border-radius: 12px;
+    border-color: #403743;
+
+}
+
+.custom-select:focus {
+    border-color: #403743;
+}
+
+.custom-select:after {
+    position: absolute;
+    content: "";
+    top: 14px;
+    right: 10px;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+    border-color: #fff transparent transparent transparent;
+}
+
+
+
+
+
+
+.form-control{
+
+    border-color: #2B222E;
+
+}
+
+
+
+.input-group-append{
+
+    border-color: #2B222E;
+
+}
+
+
+
+.input-group-text{
+
+    border-color: #2B222E;
+
+}
+
+
+.input-group-prepend{
+    border-color: #2B222E;
+
+}
+
+.input-group{
+    background: #25212D;
+    border-radius: 12px;
 }
