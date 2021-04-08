@@ -286,9 +286,10 @@ export const routerSwapBaseToSynth = (inputAmount, synthOut) => async (
  * Swap synthetic assets for SPARTA
  * @param {uint} inputAmount
  * @param {address} synthIn
+ * @param {bool} safe
  * @returns {unit} output
  */
-export const routerSwapSynthToBase = (inputAmount, synthIn) => async (
+export const routerSwapSynthToBase = (inputAmount, synthIn, safe) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -300,7 +301,7 @@ export const routerSwapSynthToBase = (inputAmount, synthIn) => async (
     //   inputAmount,
     //   synthIn,
     // )
-    const output = await contract.swapSynthToBase(inputAmount, synthIn, {
+    const output = await contract.swapSynthToBase(inputAmount, synthIn, safe, {
       gasPrice: gPrice,
       // gasLimit: gLimit,
     })

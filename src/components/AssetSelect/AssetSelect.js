@@ -40,11 +40,11 @@ const AssetSelect = (props) => {
   const [showModal, setShowModal] = useState(false)
 
   const getInitTab = () => {
-    if (props.type === 'token') {
-      return props.type
+    if (props.filter?.includes('token')) {
+      return 'token'
     }
-    if (props.type === 'pool') {
-      return props.type
+    if (props.filter?.includes('pool')) {
+      return 'pool'
     }
     return 'all'
   }
@@ -106,12 +106,28 @@ const AssetSelect = (props) => {
         }
 
         for (let i = 0; i < tempArray.length; i++) {
+          // Add only sparta
+          if (props.filter?.includes('sparta')) {
+            if (tempArray[i].symbol === 'SPARTA') {
+              finalArray.push({
+                type: 'token',
+                icon: (
+                  <img
+                    src={tempArray[i].symbolUrl}
+                    alt={`${tempArray[i].symbol} asset icon`}
+                    className="mr-1"
+                  />
+                ),
+                iconUrl: tempArray[i].symbolUrl,
+                symbol: tempArray[i].symbol,
+                balance: tempArray[i].balanceTokens,
+                address: tempArray[i].tokenAddress,
+                actualAddr: tempArray[i].tokenAddress,
+              })
+            }
+          }
           // Add asset to array
-          if (
-            props.type === 'token' ||
-            props.type === 'sparta' ||
-            props.type === 'all'
-          ) {
+          if (props.filter?.includes('token')) {
             finalArray.push({
               type: 'token',
               icon: (
@@ -129,7 +145,7 @@ const AssetSelect = (props) => {
             })
           }
           // Add LP token to array
-          if (props.type === 'pool' || props.type === 'all') {
+          if (props.filter?.includes('pool')) {
             if (tempArray[i].poolAddress) {
               finalArray.push({
                 type: 'pool',
@@ -149,7 +165,7 @@ const AssetSelect = (props) => {
             }
           }
           // Add synth to array
-          if (props.type === 'sparta' || props.type === 'all') {
+          if (props.filter?.includes('synth')) {
             if (tempArray[i].synthAddress) {
               finalArray.push({
                 type: 'synth',
@@ -184,7 +200,7 @@ const AssetSelect = (props) => {
   }, [
     poolFactory.finalLpArray,
     props.blackList,
-    props.type,
+    props.filter,
     props.whiteList,
     searchInput?.value,
   ])
