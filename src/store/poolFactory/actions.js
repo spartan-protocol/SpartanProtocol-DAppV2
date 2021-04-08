@@ -211,6 +211,9 @@ export const getPoolFactoryDetailedArray = (
         lastMonthDivis: '',
         genesis: '',
         // SP-sTOKEN Details
+        synthAddress: '',
+        balanceSynths: '',
+        totalCollateral: '',
       }
       detailedArray.push(tempItem)
     }
