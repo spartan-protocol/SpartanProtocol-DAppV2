@@ -6,10 +6,10 @@ const addr = getAddresses()
 // --------------------------------------- HANDLE CONTRACTS ---------------------------------------
 
 // GET DAO CONTRACT
-export const getSynthContract = () => {
+export const getSynthContract = (synthAddress) => {
   const abiSynth = getAbis().synth
   const provider = getWalletProvider()
-  const contract = new ethers.Contract(addr.synth, abiSynth, provider)
+  const contract = new ethers.Contract(synthAddress, abiSynth, provider)
   return contract
 }
 

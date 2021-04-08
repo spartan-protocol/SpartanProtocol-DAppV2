@@ -149,25 +149,25 @@ const AssetSelect = (props) => {
             }
           }
           // Add synth to array
-          // if (props.type === 'sparta' || props.type === 'all') {
-          // if (tempArray[i].synthAddress) {
-          //   finalArray.push({
-          //     type: 'synth',
-          //     iconUrl: tempArray[i].symbolUrl,
-          //     icon: (
-          //       <img
-          //         src={tempArray[i].symbolUrl}
-          //         alt={`${tempArray[i].symbol} synth icon`}
-          //         className="mr-1"
-          //       />
-          //     ),
-          //     symbol: `SP-s${tempArray[i].symbol}`,
-          //     balance: tempArray[i].balanceSynths,
-          //     address: tempArray[i].tokenAddress,
-          //     actualAddr: tempArray[i].synthAddress,
-          //   })
-          // }
-          // }
+          if (props.type === 'sparta' || props.type === 'all') {
+            if (tempArray[i].synthAddress) {
+              finalArray.push({
+                type: 'synth',
+                iconUrl: tempArray[i].symbolUrl,
+                icon: (
+                  <img
+                    src={tempArray[i].symbolUrl}
+                    alt={`${tempArray[i].symbol} synth icon`}
+                    className="mr-1"
+                  />
+                ),
+                symbol: `SP-s${tempArray[i].symbol}`,
+                balance: tempArray[i].balanceSynths,
+                address: tempArray[i].tokenAddress,
+                actualAddr: tempArray[i].synthAddress,
+              })
+            }
+          }
         }
         if (searchInput?.value) {
           finalArray = finalArray.filter((asset) =>

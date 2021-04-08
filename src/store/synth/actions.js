@@ -10,17 +10,26 @@ export const synthLoading = () => ({
  * Get the array of synthAddresses
  * @returns {array} synthArray
  */
-export const getSynthArray = () => async (dispatch) => {
+export const getSynthArray = (tokenArray) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthFactoryContract()
 
   try {
-    const synthCount = await contract.callStatic.synthCount()
-    const tempArray = []
-    for (let i = 0; i < synthCount; i++) {
-      tempArray.push(contract.callStatic.arraySynths(i))
+    let tempArray = []
+    for (let i = 0; i < tokenArray.length; i++) {
+      tempArray.push(contract.callStatic.getSynth(tokenArray[i]))
     }
-    const synthArray = await Promise.all(tempArray)
+    const synthArray = []
+    tempArray = await Promise.all(tempArray)
+    for (let i = 0; i < tempArray.length; i++) {
+      synthArray.push({
+        tokenAddress: tokenArray[i],
+        synthAddress:
+          tempArray[i] === '0x0000000000000000000000000000000000000000'
+            ? false
+            : tempArray[i],
+      })
+    }
     dispatch(payloadToDispatch(Types.GET_SYNTH_ARRAY, synthArray))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))

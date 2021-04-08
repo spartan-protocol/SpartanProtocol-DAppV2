@@ -15,11 +15,13 @@ import {
 } from '../../store/poolFactory'
 import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
 import { getSynthArray } from '../../store/synth/actions'
+import { useSynth } from '../../store/synth/selector'
 import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
 // import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
 
 const DataManager = () => {
+  const synth = useSynth()
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
@@ -37,14 +39,14 @@ const DataManager = () => {
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        dispatch(getSynthArray()) // SYNTH ARRAY
+        // dispatch(getSynthArray()) // SYNTH ARRAY
       } else {
         changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        dispatch(getSynthArray()) // SYNTH ARRAY
+        // dispatch(getSynthArray()) // SYNTH ARRAY
       }
     }
     checkNetwork()
@@ -80,7 +82,7 @@ const DataManager = () => {
         setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        dispatch(getSynthArray()) // SYNTH ARRAY
+        // dispatch(getSynthArray()) // SYNTH ARRAY
       }
     }
     checkArrays()
@@ -103,6 +105,7 @@ const DataManager = () => {
   useEffect(() => {
     const { tokenArray } = poolFactory
     if (tokenArray.length > 0) {
+      dispatch(getSynthArray(tokenArray)) // SYNTH ARRAY
       dispatch(
         getPoolFactoryDetailedArray(tokenArray, addr.sparta, wallet.account),
       )
@@ -116,13 +119,15 @@ const DataManager = () => {
   useEffect(() => {
     const { detailedArray } = poolFactory
     const { curatedPoolArray } = poolFactory
+    const { synthArray } = synth
     const checkFinalArray = () => {
       if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
-        dispatch(getPoolFactoryFinalArray(detailedArray, curatedPoolArray))
+        dispatch(
+          getPoolFactoryFinalArray(detailedArray, curatedPoolArray, synthArray),
+        )
         setPrevFinalArray(poolFactory.finalArray)
       }
     }
-
     checkFinalArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
@@ -135,7 +140,6 @@ const DataManager = () => {
         // setPrevFinalArray(poolFactory.finalArray)
       }
     }
-
     checkFinalArrayForLP()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalArray])
