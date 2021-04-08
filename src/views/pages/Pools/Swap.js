@@ -40,6 +40,7 @@ const Swap = () => {
   const location = useLocation()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
+  const [filter, setFilter] = useState([])
   const [mode, setMode] = useState(false)
   const [assetParam1, setAssetParam1] = useState(
     new URLSearchParams(location.search).get(`asset1`),
@@ -72,6 +73,7 @@ const Swap = () => {
         }
 
         if (type1 === 'pool') {
+          setFilter(['pool'])
           setMode('pool')
           window.localStorage.setItem('assetType1', 'pool')
           window.localStorage.setItem('assetType2', 'pool')
@@ -82,15 +84,23 @@ const Swap = () => {
                 : { tokenAddress: finalLpArray[2].tokenAddress }
           }
         } else if (type1 === 'synth') {
+          setFilter(['sparta'])
           setMode('synth')
+          asset2 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
         } else if (asset1?.symbol !== 'SPARTA' && type1 === 'token') {
+          setFilter(['token'])
           setMode('token')
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
+        } else if (asset1?.symbol === 'SPARTA' && type2 === 'synth') {
+          setMode('synth')
+          window.localStorage.setItem('assetType1', 'token')
+          window.localStorage.setItem('assetType2', 'synth')
         } else {
-          setMode('sparta')
+          setFilter(['token', 'synth'])
+          setMode('token')
           window.localStorage.setItem('assetType1', 'token')
           if (type2 === 'pool') {
             window.localStorage.setItem('assetType2', 'token')
@@ -145,8 +155,12 @@ const Swap = () => {
   const handleReverseAssets = async () => {
     const asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
     const asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
+    const type1 = window.localStorage.getItem('assetType1')
+    const type2 = window.localStorage.getItem('assetType2')
     window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
     window.localStorage.setItem('assetSelected2', JSON.stringify(asset1))
+    window.localStorage.setItem('assetType1', type2)
+    window.localStorage.setItem('assetType2', type1)
   }
 
   //= =================================================================================//
@@ -515,7 +529,7 @@ const Swap = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Swap </Col>
+          <Col md={10}>Swap {mode} </Col>
           <Col md={2}>
             {' '}
             <Wallet />
@@ -540,7 +554,10 @@ const Swap = () => {
                           <div className="title-card">From</div>
                           <br />
                           <div className="output-card">
-                            <AssetSelect priority="1" type="all" />
+                            <AssetSelect
+                              priority="1"
+                              filter={['token', 'pool', 'synth']}
+                            />
                           </div>
                         </Col>
                         <Col className="text-right">
@@ -598,6 +615,7 @@ const Swap = () => {
                             <AssetSelect
                               priority="2"
                               type={mode}
+                              filter={filter}
                               blackList={[assetSwap1?.tokenAddress]}
                             />
                           </div>
