@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
 import {
   Button,
@@ -11,10 +13,18 @@ import {
   NavItem,
   NavLink,
   CardBody,
+  InputGroup,
+  Input,
+  InputGroupAddon,
+  InputGroupText,
 } from 'reactstrap'
 import classnames from 'classnames'
+import { useDispatch } from 'react-redux'
 import { usePoolFactory } from '../../store/poolFactory'
 import { formatFromWei } from '../../utils/bigNumber'
+import { watchAsset } from '../../store/web3'
+import ShareLink from '../Share/ShareLink'
+import MetaMask from '../../assets/icons/MetaMask.svg'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -26,6 +36,7 @@ import { formatFromWei } from '../../utils/bigNumber'
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
+  const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
 
   const getInitTab = () => {
@@ -47,6 +58,12 @@ const AssetSelect = (props) => {
 
   const changeTab = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
+  }
+
+  const searchInput = document.getElementById('searchInput')
+
+  const clearSearch = () => {
+    searchInput.value = ''
   }
 
   const addSelection = (asset) => {
@@ -104,9 +121,11 @@ const AssetSelect = (props) => {
                   className="mr-1"
                 />
               ),
+              iconUrl: tempArray[i].symbolUrl,
               symbol: tempArray[i].symbol,
               balance: tempArray[i].balanceTokens,
               address: tempArray[i].tokenAddress,
+              actualAddr: tempArray[i].tokenAddress,
             })
           }
           // Add LP token to array
@@ -121,9 +140,11 @@ const AssetSelect = (props) => {
                     className="mr-1"
                   />
                 ),
+                iconUrl: tempArray[i].symbolUrl,
                 symbol: `SP-p${tempArray[i].symbol}`,
                 balance: tempArray[i].balanceLPs,
                 address: tempArray[i].tokenAddress,
+                actualAddr: tempArray[i].poolAddress,
               })
             }
           }
@@ -132,6 +153,7 @@ const AssetSelect = (props) => {
           // if (tempArray[i].synthAddress) {
           //   finalArray.push({
           //     type: 'synth',
+          //     iconUrl: tempArray[i].symbolUrl,
           //     icon: (
           //       <img
           //         src={tempArray[i].symbolUrl}
@@ -142,17 +164,30 @@ const AssetSelect = (props) => {
           //     symbol: `SP-s${tempArray[i].symbol}`,
           //     balance: tempArray[i].balanceSynths,
           //     address: tempArray[i].tokenAddress,
+          //     actualAddr: tempArray[i].synthAddress,
           //   })
           // }
           // }
         }
-
+        if (searchInput?.value) {
+          finalArray = finalArray.filter((asset) =>
+            asset.symbol
+              .toLowerCase()
+              .includes(searchInput.value.toLowerCase()),
+          )
+        }
         finalArray = finalArray.sort((a, b) => b.balance - a.balance)
         setAssetArray(finalArray)
       }
     }
     getArray()
-  }, [poolFactory.finalLpArray, props.blackList, props.type, props.whiteList])
+  }, [
+    poolFactory.finalLpArray,
+    props.blackList,
+    props.type,
+    props.whiteList,
+    searchInput?.value,
+  ])
 
   return (
     <>
@@ -180,7 +215,7 @@ const AssetSelect = (props) => {
           </button>
         </div>
 
-        <Row className="mt-5">
+        <Row className="mt-1">
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
@@ -243,47 +278,122 @@ const AssetSelect = (props) => {
               </Nav>
               <CardBody>
                 <Row>
-                  <Col xs="6">
+                  <Col xs="12" className="m-auto">
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>
+                          <i
+                            className="icon-small icon-close icon-light"
+                            role="button"
+                            tabIndex={-1}
+                            onKeyPress={() => clearSearch()}
+                            onClick={() => clearSearch()}
+                          />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                      <Input
+                        placeholder="Search assets..."
+                        type="text"
+                        className="card-text"
+                        id="searchInput"
+                      />
+                      <InputGroupAddon addonType="append">
+                        <InputGroupText>
+                          <i className="icon-small icon-cycle icon-light" />
+                        </InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="5">
                     <p>Asset</p>
                   </Col>
-                  <Col xs="6">
+                  <Col xs="5">
                     <p>Balance</p>
                   </Col>
+                  <Col xs="2" />
                 </Row>
                 {activeTab === 'all' &&
                   assetArray.map((asset) => (
-                    <Row
-                      key={asset.symbol}
-                      className="mb-1"
-                      onClick={() => {
-                        addSelection(asset)
-                        toggleModal()
-                      }}
-                    >
-                      <Col xs="6">
+                    <Row key={asset.symbol} className="mb-1">
+                      <Col
+                        xs="5"
+                        onClick={() => {
+                          addSelection(asset)
+                          toggleModal()
+                        }}
+                      >
                         {asset.icon}
                         {asset.symbol}
                       </Col>
-                      <Col xs="6">{formatFromWei(asset.balance)}</Col>
+                      <Col
+                        xs="5"
+                        onClick={() => {
+                          addSelection(asset)
+                          toggleModal()
+                        }}
+                      >
+                        {formatFromWei(asset.balance)}
+                      </Col>
+                      <Col xs="2" className="d-flex">
+                        <ShareLink
+                          url={asset.actualAddr}
+                          notificationLocation="tc"
+                        >
+                          <i className="icon-small icon-copy" />
+                        </ShareLink>
+                        <div
+                          role="button"
+                          onClick={() => {
+                            dispatch(
+                              watchAsset(
+                                asset.actualAddr,
+                                asset.symbol.substring(
+                                  asset.symbol.indexOf('-') + 1,
+                                ),
+                                '18',
+                                asset.symbolUrl,
+                              ),
+                            )
+                          }}
+                        >
+                          <img
+                            src={MetaMask}
+                            alt="add asset to metamask"
+                            height="24px"
+                          />
+                        </div>
+                      </Col>
                     </Row>
                   ))}
                 {activeTab !== 'all' &&
                   assetArray
                     .filter((asset) => asset.type === activeTab)
                     .map((asset) => (
-                      <Row
-                        key={asset.symbol}
-                        className="mb-1"
-                        onClick={() => {
-                          addSelection(asset)
-                          toggleModal()
-                        }}
-                      >
-                        <Col xs="6">
+                      <Row key={asset.symbol} className="mb-1">
+                        <Col
+                          xs="5"
+                          onClick={() => {
+                            addSelection(asset)
+                            toggleModal()
+                          }}
+                        >
                           {asset.icon}
                           {asset.symbol}
                         </Col>
-                        <Col xs="6">{formatFromWei(asset.balance)}</Col>
+                        <Col
+                          xs="5"
+                          onClick={() => {
+                            addSelection(asset)
+                            toggleModal()
+                          }}
+                        >
+                          {formatFromWei(asset.balance)}
+                        </Col>
+                        <Col xs="2">
+                          <i className="icon-small icon-copy" />
+                        </Col>
                       </Row>
                     ))}
               </CardBody>

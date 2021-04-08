@@ -56,6 +56,7 @@ const Swap = () => {
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         const type1 = window.localStorage.getItem('assetType1')
+        const type2 = window.localStorage.getItem('assetType2')
 
         if (finalLpArray.find((asset) => asset.tokenAddress === assetParam1)) {
           ;[asset1] = finalLpArray.filter(
@@ -91,6 +92,9 @@ const Swap = () => {
         } else {
           setMode('sparta')
           window.localStorage.setItem('assetType1', 'token')
+          if (type2 === 'pool') {
+            window.localStorage.setItem('assetType2', 'token')
+          }
         }
 
         if (asset2?.tokenAddress === asset1?.tokenAddress) {
