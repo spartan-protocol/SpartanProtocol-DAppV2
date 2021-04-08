@@ -338,23 +338,23 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           ? '0'
           : synthContract.callStatic.balanceOf(walletAddress),
       )
-      tempArray.push(
-        finalArray[i].synthAddress === false
-          ? '0'
-          : synthContract.callStatic.totalCollateral(),
-      )
+      // tempArray.push(
+      //   finalArray[i].synthAddress === false
+      //     ? '0'
+      //     : synthContract.callStatic.totalCollateral(),
+      // )
     }
     tempArray = await Promise.all(tempArray)
     const finalLpArray = finalArray
-    for (let i = 0; i < tempArray.length - 7; i += 8) {
-      finalLpArray[i / 8].recentDivis = tempArray[i].toString()
-      finalLpArray[i / 8].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / 8].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / 8].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / 8].balanceLPs = tempArray[i + 4].toString()
-      finalLpArray[i / 8].lockedLPs = tempArray[i + 5].toString()
-      finalLpArray[i / 8].balanceSynths = tempArray[i + 6].toString()
-      finalLpArray[i / 8].totalCollateral = tempArray[i + 7].toString()
+    for (let i = 0; i < tempArray.length - 6; i += 7) {
+      finalLpArray[i / 7].recentDivis = tempArray[i].toString()
+      finalLpArray[i / 7].lastMonthDivis = tempArray[i + 1].toString()
+      finalLpArray[i / 7].recentFees = tempArray[i + 2].toString()
+      finalLpArray[i / 7].lastMonthFees = tempArray[i + 3].toString()
+      finalLpArray[i / 7].balanceLPs = tempArray[i + 4].toString()
+      finalLpArray[i / 7].lockedLPs = tempArray[i + 5].toString()
+      finalLpArray[i / 7].balanceSynths = tempArray[i + 6].toString()
+      // finalLpArray[i / 8].totalCollateral = tempArray[i + 7].toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),
