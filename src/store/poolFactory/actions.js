@@ -1,10 +1,10 @@
+import axios from 'axios'
 import * as Types from './types'
 import { getPoolContract, getPoolFactoryContract } from '../../utils/web3Pool'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
-import { checkValidURL } from '../../utils/helpers'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
 
 export const poolFactoryLoading = () => ({
@@ -165,6 +165,9 @@ export const getPoolFactoryDetailedArray = (
 ) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
+  const trustWalletIndex = await axios.get(
+    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
+  )
 
   try {
     if (tokenArray[0] !== spartaAddr) {
@@ -190,7 +193,11 @@ export const getPoolFactoryDetailedArray = (
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
         curated: '',
-        symbolUrl: checkValidURL(url) === true ? url : fallbackImg,
+        symbolUrl:
+          trustWalletIndex.data.filter((asset) => asset === tokenArray[i])
+            .length > 0
+            ? url
+            : fallbackImg,
         // SP-pTOKEN Details
         poolAddress: '',
         balanceLPs: '0',
