@@ -1,48 +1,36 @@
-/* eslint-disable*/
-import React, { Component, useEffect, useState } from "react"
-import Select from "react-select"
+import React, { useState } from 'react'
+import Select from 'react-select'
 
-import classnames from "classnames"
+import classnames from 'classnames'
 import {
-  Breadcrumb,
   Card,
   CardBody,
-  CardSubtitle,
-  CardText,
-  CardTitle,
-  Col, FormGroup, Input,
+  Col,
   Nav,
   NavItem,
   NavLink,
   Row,
   TabContent,
-  TabPane
-} from "reactstrap"
-import ShareIcon from "../../../assets/icons/new.svg"
-
+  TabPane,
+} from 'reactstrap'
+import ShareIcon from '../../../assets/icons/new.svg'
 
 const RemoveLiquidity = () => {
-  const [singleSelect, setsingleSelect] = React.useState(null)
+  // const [singleSelect, setsingleSelect] = React.useState(null)
   const [singleSelect1, setsingleSelect1] = React.useState(null)
-  const [activeTab, setActiveTab] = useState("1")
+  const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
 
-
-
   return (
     <>
       <Row>
-
         <Card>
           <CardBody>
-            <Card
-              style={{ backgroundColor: "#25212D" }}
-              className="card-body "
-            >
-              <Row >
+            <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
+              <Row>
                 <Col className="text-left">
                   <div className="title-card">Select pool</div>
                   <br />
@@ -54,25 +42,23 @@ const RemoveLiquidity = () => {
                     onChange={(value) => setsingleSelect1(value)}
                     options={[
                       {
-                        value: "",
-                        label: "Single Option",
-                        isDisabled: true
+                        value: '',
+                        label: 'Single Option',
+                        isDisabled: true,
                       },
                     ]}
                     placeholder="Select a pool"
                   />
                 </Col>
               </Row>
-
             </Card>
-
 
             <Nav tabs className="nav-tabs-custom">
               <NavItem>
                 <NavLink
-                  className={classnames({ active: activeTab === "1" })}
+                  className={classnames({ active: activeTab === '1' })}
                   onClick={() => {
-                    toggle("1")
+                    toggle('1')
                   }}
                 >
                   <span className="d-none d-sm-block">Single token</span>
@@ -80,9 +66,9 @@ const RemoveLiquidity = () => {
               </NavItem>
               <NavItem>
                 <NavLink
-                  className={classnames({ active: activeTab === "2" })}
+                  className={classnames({ active: activeTab === '2' })}
                   onClick={() => {
-                    toggle("2")
+                    toggle('2')
                   }}
                 >
                   <span className="d-none d-sm-block">Both tokens</span>
@@ -93,21 +79,24 @@ const RemoveLiquidity = () => {
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1" className="p-3">
                 <Row>
-                  <Col className="card-body"> <img
-                    src={ShareIcon}
-                    alt="share icon"
-                    style={{
-                      height: "19px",
-                      verticalAlign: "bottom",
-                      marginRight: "5px"
-                    }}
-                  />
-                    You can now swap your BEP20 tokens, LP tokens & Synths</Col>
+                  <Col className="card-body">
+                    {' '}
+                    <img
+                      src={ShareIcon}
+                      alt="share icon"
+                      style={{
+                        height: '19px',
+                        verticalAlign: 'bottom',
+                        marginRight: '5px',
+                      }}
+                    />
+                    You can now swap your BEP20 tokens, LP tokens & Synths
+                  </Col>
                 </Row>
                 <Row>
                   <Col md={12}>
                     <Card
-                      style={{ backgroundColor: "#25212D" }}
+                      style={{ backgroundColor: '#25212D' }}
                       className="card-body "
                     >
                       <Row>
@@ -116,10 +105,7 @@ const RemoveLiquidity = () => {
                           <br />
                           <div className="title-card">From</div>
                           <br />
-                          <div className="output-card">
-
-
-                          </div>
+                          <div className="output-card" />
                         </Col>
                       </Row>
                     </Card>
@@ -132,11 +118,9 @@ const RemoveLiquidity = () => {
             </TabContent>
           </CardBody>
         </Card>
-
       </Row>
     </>
   )
-
 }
 
 export default RemoveLiquidity

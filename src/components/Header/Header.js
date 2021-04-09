@@ -1,7 +1,5 @@
-/* eslint-disable*/
-
-import React from "react"
-import classNames from "classnames"
+import React from 'react'
+import classNames from 'classnames'
 import {
   Button,
   Collapse,
@@ -13,53 +11,51 @@ import {
   Navbar,
   NavLink,
   Nav,
-  Container
-} from "reactstrap"
-import { ReactComponent as SpartanLogo } from "../../assets/img/logo.svg"
-import LanguageDropdown from "../Common/LanguageDropdown"
-import AddressConn from "../Common/AddressConn"
-import { useWeb3 } from "../../store/web3"
-import IconLogo from "../../assets/img/spartan_black_small.svg"
-import Connection from "../Common/Connection"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
+  Container,
+} from 'reactstrap'
+import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
+import LanguageDropdown from '../Common/LanguageDropdown'
+import AddressConn from '../Common/AddressConn'
+import { useWeb3 } from '../../store/web3'
+import IconLogo from '../../assets/img/spartan_black_small.svg'
+import Connection from '../Common/Connection'
 
 const Header = (props) => {
   const web3 = useWeb3()
-  const [collapseOpen, setCollapseOpen] = React.useState(false)
-  const [color, setColor] = React.useState("navbar-transparent")
+  const [collapseOpen] = React.useState(false)
+  const [color, setColor] = React.useState('navbar-transparent')
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
   const updateColor = () => {
     if (window.innerWidth < 993 && collapseOpen) {
-      setColor("bg-white")
+      setColor('bg-white')
     } else {
-      setColor("navbar-transparent")
+      setColor('navbar-transparent')
     }
   }
   React.useEffect(() => {
-    window.addEventListener("resize", updateColor)
+    window.addEventListener('resize', updateColor)
     return function cleanup() {
-      window.removeEventListener("resize", updateColor)
+      window.removeEventListener('resize', updateColor)
     }
   })
 
-  // this function opens and closes the collapse on small devices
-  const toggleCollapse = () => {
-    if (collapseOpen) {
-      setColor("navbar-transparent")
-    } else {
-      setColor("bg-white")
-    }
-    setCollapseOpen(!collapseOpen)
-  }
+  // // this function opens and closes the collapse on small devices
+  // const toggleCollapse = () => {
+  //   if (collapseOpen) {
+  //     setColor('navbar-transparent')
+  //   } else {
+  //     setColor('bg-white')
+  //   }
+  //   setCollapseOpen(!collapseOpen)
+  // }
 
   // Wallet functions
 
   return (
     <>
       <Navbar
-        className={classNames("navbar-absolute", {
-          [color]: props.location.pathname.indexOf("full-screen-map") === -1
+        className={classNames('navbar-absolute', {
+          [color]: props.location.pathname.indexOf('full-screen-map') === -1,
         })}
         expand="lg"
       >
@@ -77,8 +73,8 @@ const Header = (props) => {
               </Button>
             </div>
             <div
-              className={classNames("navbar-toggle d-inline", {
-                toggled: props.sidebarOpened
+              className={classNames('navbar-toggle d-inline', {
+                toggled: props.sidebarOpened,
               })}
             >
               <button
@@ -89,30 +85,26 @@ const Header = (props) => {
                 <span className="navbar-toggler-bar bar1" />
                 <span className="navbar-toggler-bar bar2" />
                 <span className="navbar-toggler-bar bar3" />
-
               </button>
             </div>
             <NavbarBrand className="d-none d-md-block" href="./">
-              <SpartanLogo className="mr-2" />{" "}
-              Spartan Protocol
+              <SpartanLogo className="mr-2" /> Spartan Protocol
             </NavbarBrand>
             <div className="d-md-none price-notificaiton">
               <div className="overlap-group">
                 <div className="wallet wallet-text">0xe4ae305ebe...</div>
                 <div className="adjustable-primary-medium">
                   <div className="frame-1">
-                    <div className="frame"></div>
+                    <div className="frame" />
                   </div>
                   <div className="wallet-price wallet-text">
-                    <img className="mr-3"
-                         src={IconLogo}
-                         alt="share icon"
-                    />${web3.spartaPrice}</div>
+                    <img className="mr-3" src={IconLogo} alt="share icon" />$
+                    {web3.spartaPrice}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
 
           <button
             className="navbar-toggler"
@@ -122,8 +114,7 @@ const Header = (props) => {
             aria-expanded="false"
             aria-label="Toggle navigation"
             // onClick={toggleCollapse}
-          >
-          </button>
+          />
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <li className="separator d-lg-none" />
@@ -147,13 +138,16 @@ const Header = (props) => {
                       <div className="wallet wallet-text">0xe4ae305ebe...</div>
                       <div className="adjustable-primary-medium">
                         <div className="frame-1">
-                          <div className="frame"></div>
+                          <div className="frame" />
                         </div>
                         <div className="wallet-price wallet-text">
-                          <img className="mr-3"
-                               src={IconLogo}
-                               alt="share icon"
-                          />${web3.spartaPrice}</div>
+                          <img
+                            className="mr-3"
+                            src={IconLogo}
+                            alt="share icon"
+                          />
+                          ${web3.spartaPrice}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,21 +1,21 @@
-/* eslint-disable*/
-
-import React from "react"
-import { Container } from "reactstrap"
+import React from 'react'
+import { Container } from 'reactstrap'
 // used for making the prop types of this component
-import PropTypes from "prop-types"
-import Row from "react-bootstrap/Row"
-import Col from "react-bootstrap/Col"
+import PropTypes from 'prop-types'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 // import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
-import Sparta from "../../assets/icons/coin_sparta.svg"
+import Sparta from '../../assets/icons/coin_sparta.svg'
 
 const Footer = (props) => (
-  <footer className={`footer${props.default ? " footer-default" : ""}`}>
+  <footer className={`footer${props.default ? ' footer-default' : ''}`}>
     <Container fluid={!!props.fluid}>
       <Row>
-        <Col md={2} sm={12} >
+        <Col md={2} sm={12}>
           <ul className="nav">
-            <li className="nav-item mt-3 mb-3 mb-md-0">A Spartan Community Project</li>
+            <li className="nav-item mt-3 mb-3 mb-md-0">
+              A Spartan Community Project
+            </li>
           </ul>
         </Col>
         <Col md={8} sm={12} className="text-center">
@@ -24,7 +24,7 @@ const Footer = (props) => (
             Spartan Protocol
           </div>
         </Col>
-        <Col md={2} sm={12} >
+        <Col md={2} sm={12}>
           <div className="copyright ml-4">
             <a
               href="https://twitter.com/SpartanProtocol"
@@ -45,7 +45,7 @@ const Footer = (props) => (
               target="_blank"
               rel="noreferrer"
             >
-              {" "}
+              {' '}
               <i className="icon-small icon-github icon-light mr-3" />
             </a>
             <a
@@ -71,12 +71,12 @@ const Footer = (props) => (
 
 Footer.propTypes = {
   default: PropTypes.bool,
-  fluid: PropTypes.bool
+  fluid: PropTypes.bool,
 }
 
 Footer.defaultProps = {
   default: true,
-  fluid: true
+  fluid: true,
 }
 
 export default Footer
