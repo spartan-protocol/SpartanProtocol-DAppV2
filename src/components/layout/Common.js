@@ -101,8 +101,31 @@ const Common = () => {
     setSidebarOpened(false)
     document.documentElement.classList.remove('nav-open')
   }
+
+  const clickOutSidebar = (e) => {
+    const sidebar = document.body.getElementsByClassName('sidebar-wrapper')[0]
+    if (
+      !sidebar.contains(e.target) &&
+      !e.target.className.includes('icon-menu-open') &&
+      !e.target.className.includes('icon-menu-closed')
+    ) {
+      setSidebarOpened(false)
+      document.body.classList.add('sidebar-mini')
+    }
+  }
+
   return (
-    <div className="wrapper">
+    <div
+      className="wrapper"
+      onClick={clickOutSidebar}
+      onKeyDown={(e) => {
+        if (e.key === 32) {
+          clickOutSidebar(e)
+        }
+      }}
+      role="tree"
+      tabIndex={0}
+    >
       <div className="rna-container">
         <DataManager />
         <NotificationAlert ref={notificationAlertRef} />
