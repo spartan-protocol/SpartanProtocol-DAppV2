@@ -105,6 +105,7 @@
 // .btn-default { @include btn-styles($default-color, $default-states-color); }
 .btn-primary { @include btn-styles($primary, $primary-states);
 
+
               }
 .btn-success { @include btn-styles($success, $success-states);
 
@@ -121,6 +122,9 @@
 
               }
 .btn-neutral { @include btn-styles(#25212D, #25212D); }
+
+.btn-neutral { @include btn-styles(#0c0305, #0c0305); }
+
 
 .btn{
      &:disabled,
@@ -324,3 +328,15 @@ color: #0A0001;
   box-shadow: none;
 }
 
+
+.btn-transparant {
+  border-width: 0;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  margin:-800px;
+  border-radius: 0;
+  cursor: pointer;
+
+
+}

@@ -17,9 +17,9 @@ import PoolsOverview from './views/pages/Pools/Overview'
 import DaoOverview from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Liquidity2 from './views/pages/Pools/Liquidity2'
-import Bond from './views/pages/Pools/Bond'
+import Bond from './views/pages/Bond/Bond'
 import Share from './views/pages/Samples/Share'
-import Swap from './views/pages/Pools/Swap'
+import Swap from './views/pages/Swap/Swap'
 import SearchModal from './views/pages/Samples/SearchModal'
 
 const routes = [
