@@ -50,9 +50,7 @@ const LanguageDropdown = () => {
   const toggle = () => {
     setMenu(!menu)
   }
-  // <Button className="btn-round btn-icon" color="primary">
-  //                 <i className="bi-lg bi bi-wallet" />
-  //               </Button> //
+
   return (
     <>
       <Dropdown

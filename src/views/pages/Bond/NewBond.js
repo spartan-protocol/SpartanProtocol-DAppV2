@@ -1,17 +1,14 @@
-/* eslint-disable */
-import React from "react"
+import React from 'react'
 // react plugin for creating notifications over the dashboard
 
 // reactstrap components
-import { Button, Card, CardBody, Row, Col, Collapse, UncontrolledAlert, Progress, TabPane } from "reactstrap"
-import bnbSparta from "../../../assets/icons/bnb_sparta.png"
-import bnb from "../../../assets/icons/BNB.svg"
-import coinBnb from "../../../assets/icons/coin_bnb.svg"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
-import coinSparta from "../../../assets/icons/coin_sparta.svg"
+import { Button, Card, Row, Col, UncontrolledAlert, Progress } from 'reactstrap'
+import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import coinBnb from '../../../assets/icons/coin_bnb.svg'
+import coinSparta from '../../../assets/icons/coin_sparta.svg'
 
 const NewBond = () => {
-
+  // eslint-disable-next-line no-unused-vars
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
 
   return (
@@ -19,21 +16,14 @@ const NewBond = () => {
       <Row>
         <Col md={8}>
           <Card className="card-body ">
-            <Card
-              style={{ backgroundColor: "#25212D" }}
-              className="card-body "
-            >
+            <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
               <Row>
                 <Col>
-                  <div className="title-card text-left">
-                    Bond Input
-                  </div>
+                  <div className="title-card text-left">Bond Input</div>
                   <div className="output-card text-left">52.23</div>
                 </Col>
                 <Col>
-                  <div className="output-card text-right">
-                    Balance 52.23
-                  </div>
+                  <div className="output-card text-right">Balance 52.23</div>
                   <div className="output-card text-right">
                     BNB
                     <img className="ml-2" src={coinBnb} alt="BNB" />
@@ -49,16 +39,16 @@ const NewBond = () => {
               color="danger"
               fade={false}
             >
-                        <span
-                          data-notify="icon"
-                          className="icon-small icon-info icon-dark mb-5"
-                        />
+              <span
+                data-notify="icon"
+                className="icon-small icon-info icon-dark mb-5"
+              />
               <span data-notify="message">
-                          The equivalent purchasing power in SPARTA is minted
-                          with both assets added symmetrically to the BNB:SPARTA
-                          liquidity pool. LP tokens will be issued as usual and
-                          vested to you over a 12 month period.
-                        </span>
+                The equivalent purchasing power in SPARTA is minted with both
+                assets added symmetrically to the BNB:SPARTA liquidity pool. LP
+                tokens will be issued as usual and vested to you over a 12 month
+                period.
+              </span>
             </UncontrolledAlert>
             <br />
             <Row>
@@ -74,14 +64,11 @@ const NewBond = () => {
                     placement="right"
                     target="tooltipAddBase"
                   >
-                    The quantity of & SPARTA you are adding to the
-                    pool.
+                    The quantity of & SPARTA you are adding to the pool.
                   </UncontrolledTooltip>
                 </div>
               </Col>
-              <Col className="output-card text-right">
-                150.265 Remaining
-              </Col>
+              <Col className="output-card text-right">150.265 Remaining</Col>
             </Row>
 
             <br />
@@ -104,8 +91,7 @@ const NewBond = () => {
                       placement="right"
                       target="tooltipAddBase"
                     >
-                      The quantity of & SPARTA you are adding to the
-                      pool.
+                      The quantity of & SPARTA you are adding to the pool.
                     </UncontrolledTooltip>
                   </div>
                 </div>
@@ -121,14 +107,13 @@ const NewBond = () => {
                       placement="right"
                       target="tooltipAddBase"
                     >
-                      The quantity of & SPARTA you are adding to the
-                      pool.
+                      The quantity of & SPARTA you are adding to the pool.
                     </UncontrolledTooltip>
                   </div>
                 </div>
                 <br />
                 <div className="amount">
-                  Estimated output{" "}
+                  Estimated output{' '}
                   <i
                     className="icon-small icon-info icon-dark ml-2"
                     id="tooltipAddBase"
@@ -138,15 +123,12 @@ const NewBond = () => {
                     placement="right"
                     target="tooltipAddBase"
                   >
-                    The quantity of & SPARTA you are adding to the
-                    pool.
+                    The quantity of & SPARTA you are adding to the pool.
                   </UncontrolledTooltip>
                 </div>
               </Col>
               <Col>
-                <div className="output-card text-right">
-                  52.23 of 52.23 BNB
-                </div>
+                <div className="output-card text-right">52.23 of 52.23 BNB</div>
                 <div className="output-card text-right">2.10 %</div>
                 <br />
                 <br />
@@ -164,26 +146,17 @@ const NewBond = () => {
         </Col>
         <Col md={4}>
           <Card className="card-body ">
-            <Card
-              style={{ backgroundColor: "#25212D" }}
-              className="card-body "
-            >
+            <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
               <Row>
                 <Col>
-                  <div className="title-card text-left">
-                    Bond Input
-                  </div>
+                  <div className="title-card text-left">Bond Input</div>
                   <div className="output-card text-left">52.23</div>
                 </Col>
                 <Col>
                   <br />
                   <div className="output-card text-right">
                     SPARTA
-                    <img
-                      className="ml-2"
-                      src={coinSparta}
-                      alt="SPARTA"
-                    />
+                    <img className="ml-2" src={coinSparta} alt="SPARTA" />
                   </div>
                 </Col>
               </Row>
@@ -194,15 +167,14 @@ const NewBond = () => {
               color="danger"
               fade={false}
             >
-                        <span
-                          data-notify="icon"
-                          className="icon-small icon-info icon-dark mb-5"
-                        />
+              <span
+                data-notify="icon"
+                className="icon-small icon-info icon-dark mb-5"
+              />
               <span data-notify="message">
-                          Bond BNB to get SPARTA LP Tokens. Claim your vested LP
-                          tokens.Your BNB-SPARTA LP tokens remain in time-locked
-                          contract
-                        </span>
+                Bond BNB to get SPARTA LP Tokens. Claim your vested LP
+                tokens.Your BNB-SPARTA LP tokens remain in time-locked contract
+              </span>
             </UncontrolledAlert>
             <br />
 
@@ -213,12 +185,8 @@ const NewBond = () => {
                   Remaining BNB-SPARTA LP
                 </div>
                 <div className="text-card text-left">Duration</div>
-                <div className="text-card text-leftt">
-                  Redemption date
-                </div>
-                <div className="text-card text-leftt">
-                  Redemption date
-                </div>
+                <div className="text-card text-leftt">Redemption date</div>
+                <div className="text-card text-leftt">Redemption date</div>
               </Col>
               <Col>
                 <div className="output-card text-right">0.00B</div>

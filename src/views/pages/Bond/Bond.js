@@ -12,7 +12,7 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 
-import BondTable from '../BondTable'
+import BondTable from './BondTable'
 import NewBond from './NewBond'
 
 const Bond = () => {

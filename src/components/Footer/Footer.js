@@ -11,19 +11,21 @@ const Footer = (props) => (
   <footer className={`footer${props.default ? ' footer-default' : ''}`}>
     <Container fluid={!!props.fluid}>
       <Row>
-        <Col>
+        <Col md={2} sm={12}>
           <ul className="nav">
-            <li className="nav-item">A Spartan Community Project</li>{' '}
+            <li className="nav-item mt-3 mb-3 mb-md-0">
+              A Spartan Community Project
+            </li>
           </ul>
         </Col>
-        <Col className="text-center">
-          <div className="text-footer">
-            <img className="mr-2" src={Sparta} alt="Logo" height="32" />
+        <Col md={8} sm={12} className="text-center">
+          <div className="text-footer mb-3 mb-md-0">
+            <img className="mr-2 " src={Sparta} alt="Logo" height="32" />
             Spartan Protocol
           </div>
         </Col>
-        <Col>
-          <div className="copyright">
+        <Col md={2} sm={12}>
+          <div className="copyright ml-4">
             <a
               href="https://twitter.com/SpartanProtocol"
               target="_blank"

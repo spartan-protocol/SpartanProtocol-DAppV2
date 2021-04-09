@@ -18,7 +18,8 @@ import Card from 'react-bootstrap/Card'
 import CardBody from 'reactstrap/es/CardBody'
 import { Line } from 'react-chartjs-2'
 import CardTitle from 'reactstrap/es/CardTitle'
-import PoolsTable from '../PoolsTable'
+import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import PoolsTable from './PoolsTable'
 
 const Overview = () => {
   const [customActiveTab, setCustomActiveTab] = useState('1')
@@ -102,12 +103,12 @@ const Overview = () => {
             barPercentage: 1.6,
             gridLines: {
               drawBorder: true,
-              color: '#2C292D',
-              zeroLineColor: '#2C292D',
+              color: '#1D171F',
+              zeroLineColor: '#1D171F',
             },
             ticks: {
-              padding: 20,
-              fontColor: '#9e9e9e',
+              padding: -10,
+              fontColor: '#1D171F',
             },
           },
         ],
@@ -139,7 +140,7 @@ const Overview = () => {
             pointHoverRadius: 4,
             pointHoverBorderWidth: 15,
             pointRadius: 0,
-            data: [612758, 512758, 712758, 812758, 912758, 1212758],
+            data: [412758, 512758, 712758, 812758, 912758, 1212758],
           },
         ],
       }
@@ -182,12 +183,12 @@ const Overview = () => {
             barPercentage: 1.6,
             gridLines: {
               drawBorder: true,
-              color: '#2C292D',
-              zeroLineColor: '#2C292D',
+              color: '#1D171F',
+              zeroLineColor: '#1D171F',
             },
             ticks: {
-              padding: 20,
-              fontColor: '#9e9e9e',
+              padding: -10,
+              fontColor: '#1D171F',
             },
           },
         ],
@@ -224,14 +225,29 @@ const Overview = () => {
           <Col md>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Monthly</h5>
-                <CardTitle tag="h3">
+                <CardTitle tag="h2">
                   <Row>
                     <Col>
-                      <div className="text-left">Total volume</div>
+                      <div className="text-left">
+                        Total volume{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
                     </Col>
-                    <Col className="text-right">
-                      <div className="subtitle-amount  d-inline">
+                    <Col className="text-right fade-in">
+                      <div
+                        className="subtitle-amount  d-inline"
+                        style={{ fontSize: 22 }}
+                      >
                         138.582.485
                       </div>
                       <div className="accent ml-1 d-inline">SPARTA</div>
@@ -240,8 +256,9 @@ const Overview = () => {
                 </CardTitle>
               </CardHeader>
               <CardBody>
-                <div className="chart-area">
+                <div className="chart-area" style={{ pointerEvents: 'none' }}>
                   <Line
+                    style={{ pointerEvents: 'none' }}
                     data={chartTotalVolume.data}
                     options={chartTotalVolume.options}
                   />
@@ -252,14 +269,29 @@ const Overview = () => {
           <Col>
             <Card className="card-chart">
               <CardHeader>
-                <h5 className="card-category">Monthly</h5>
-                <CardTitle tag="h3">
+                <CardTitle tag="h2">
                   <Row>
                     <Col>
-                      <div className="text-left">Total pooled</div>
+                      <div className="text-left">
+                        Total volume{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
                     </Col>
-                    <Col className="text-right">
-                      <div className="subtitle-amount  d-inline">
+                    <Col className="text-right fade-in">
+                      <div
+                        className="subtitle-amount  d-inline"
+                        style={{ fontSize: 22 }}
+                      >
                         $6.127.587
                       </div>
                       <div className="accent ml-1 d-inline">USD</div>
@@ -268,8 +300,9 @@ const Overview = () => {
                 </CardTitle>
               </CardHeader>
               <CardBody>
-                <div className="chart-area">
+                <div className="chart-area" style={{ pointerEvents: 'none' }}>
                   <Line
+                    style={{ pointerEvents: 'none' }}
                     data={chartTotalPooled.data}
                     options={chartTotalPooled.options}
                   />
