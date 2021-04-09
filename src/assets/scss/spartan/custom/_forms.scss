@@ -1,5 +1,5 @@
 /* Form controls */
-@include form-control-placeholder(#6c757c, 1);
+@include form-control-placeholder(#FFFFF, 1);
 
 .form-control {
   border-color: lighten($black,5%);
@@ -9,7 +9,7 @@
 
 
   &:focus {
-    border-color: #FFFFFF;
+    border-color: #2B222E;
     background-color: $input-bg;
     @include box-shadow(none);
 
@@ -17,7 +17,7 @@
     & ~ .input-group-append .input-group-text,
     & + .input-group-prepend .input-group-text,
     & ~ .input-group-prepend .input-group-text {
-        border: 1px solid $primary;
+        border: 1px solid #2B222E;
         border-left: none;
         background-color: $transparent-bg;
     }

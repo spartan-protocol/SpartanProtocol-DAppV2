@@ -127,6 +127,7 @@ const AssetSelect = (props) => {
             }
           }
           // Add asset to array
+
           if (props.filter?.includes('token')) {
             finalArray.push({
               type: 'token',
@@ -207,35 +208,45 @@ const AssetSelect = (props) => {
 
   return (
     <>
-      <Button color="primary" onClick={toggleModal}>
-        <img
-          className="mr-2"
+      <div onClick={toggleModal} role="button">
+        <select
           src={selectedItem?.symbolUrl}
           alt={`${selectedItem?.symbol}icon`}
-        />
-        {selectedType === 'pool' && 'SP-p'}
-        {selectedType === 'synth' && 'SP-s'}
-        {selectedItem && selectedItem?.symbol}
-      </Button>
+          className="custom-select"
+          name="singleSelect"
+          placeholder="Select your BEP20 token"
+        >
+          <option hidden value="0">
+            {' '}
+            {selectedType === 'pool' && 'SP-p'}
+            {selectedType === 'synth' && 'SP-s'}
+            {selectedItem && selectedItem?.symbol}
+          </option>
+        </select>
+      </div>
 
       <Modal isOpen={showModal} toggle={toggleModal}>
-        <div className="modal-header justify-content-center">
-          <button
-            aria-hidden
-            className="close"
-            data-dismiss="modal"
-            type="button"
-            onClick={toggleModal}
-          >
-            <i className="icon-small icon-close icon-dark" />
-          </button>
-        </div>
-
         <Row className="mt-1">
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <CardTitle tag="h2">Select an asset</CardTitle>
+                <CardTitle tag="h2" />
+                <Row>
+                  <Col xs="11">
+                    <h2 className="ml-2">Select an asset</h2>
+                  </Col>
+                  <Col xs="1">
+                    <Button
+                      style={{
+                        right: '16px',
+                      }}
+                      onClick={toggleModal}
+                      className="btn btn-transparent"
+                    >
+                      <i className="icon-medium icon-close" />
+                    </Button>
+                  </Col>
+                </Row>
               </CardHeader>
               <Nav tabs className="nav-tabs-custom">
                 <NavItem>
@@ -292,14 +303,14 @@ const AssetSelect = (props) => {
                   </NavItem>
                 )}
               </Nav>
-              <CardBody>
+              <CardBody className="ml-2 mr-2">
                 <Row>
                   <Col xs="12" className="m-auto">
                     <InputGroup>
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
                           <i
-                            className="icon-small icon-close icon-light"
+                            className="icon-search-bar icon-close icon-light"
                             role="button"
                             tabIndex={-1}
                             onKeyPress={() => clearSearch()}
@@ -308,31 +319,34 @@ const AssetSelect = (props) => {
                         </InputGroupText>
                       </InputGroupAddon>
                       <Input
+                        className="ml-n3 text-card"
                         placeholder="Search assets..."
                         type="text"
-                        className="card-text"
                         id="searchInput"
                       />
                       <InputGroupAddon addonType="append">
                         <InputGroupText>
-                          <i className="icon-small icon-cycle icon-light" />
+                          <i
+                            className="icon-search-bar icon-search icon-light"
+                            role="button"
+                          />
                         </InputGroupText>
                       </InputGroupAddon>
                     </InputGroup>
                   </Col>
                 </Row>
-                <Row>
-                  <Col xs="5">
-                    <p>Asset</p>
+                <Row c>
+                  <Col xs="5" className="mt-3 mb-3">
+                    <p className="text-card">Asset</p>
                   </Col>
-                  <Col xs="5">
-                    <p>Balance</p>
+                  <Col xs="5" className="mt-3 mb-3">
+                    <p className="text-card">Balance</p>
                   </Col>
                   <Col xs="2" />
                 </Row>
                 {activeTab === 'all' &&
                   assetArray.map((asset) => (
-                    <Row key={asset.symbol} className="mb-1">
+                    <Row key={asset.symbol} className="mb-1 output-card">
                       <Col
                         xs="5"
                         onClick={() => {
@@ -387,7 +401,7 @@ const AssetSelect = (props) => {
                   assetArray
                     .filter((asset) => asset.type === activeTab)
                     .map((asset) => (
-                      <Row key={asset.symbol} className="mb-1">
+                      <Row key={asset.symbol} className="mb-1 output-card">
                         <Col
                           xs="5"
                           onClick={() => {

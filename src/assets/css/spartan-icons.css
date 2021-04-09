@@ -8,6 +8,13 @@
 }
 
 
+.icon-search-bar {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-size: 15px auto;
+    background-repeat: no-repeat;
+}
 
 
 .icon-extra-small {
@@ -42,6 +49,13 @@
     background-size: 64px auto;
     background-repeat: no-repeat;
 }
+
+
+/* Search */
+.icon-search.icon-light {
+    background-image: url('/src/assets/icons/search.svg#light');
+}
+
 
 
 /* Delist */
