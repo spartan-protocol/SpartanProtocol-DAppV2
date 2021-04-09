@@ -57,10 +57,6 @@
 
 }
 
-
-element.style {
-}
-
 #root > div > div.main-panel.ps.ps--active-y > nav > div > div.collapse.navbar-collapse > ul > div.d-inline-block.dropdown > button {
     background-color: #fc5d50;
 }
