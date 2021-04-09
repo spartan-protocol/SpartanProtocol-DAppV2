@@ -1,6 +1,11 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { getDaoHarvestAmount } from '../../store/dao/actions'
+import {
+  getDaoVaultMemberWeight,
+  getDaoVaultTotalWeight,
+} from '../../store/daoVault/actions'
 import {
   usePoolFactory,
   getPoolFactoryTokenArray,
@@ -10,11 +15,13 @@ import {
 } from '../../store/poolFactory'
 import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
 import { getSynthArray } from '../../store/synth/actions'
+import { useSynth } from '../../store/synth/selector'
 import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
 // import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
 
 const DataManager = () => {
+  const synth = useSynth()
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
@@ -32,14 +39,14 @@ const DataManager = () => {
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        dispatch(getSynthArray()) // SYNTH ARRAY
+        // dispatch(getSynthArray()) // SYNTH ARRAY
       } else {
         changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        dispatch(getSynthArray()) // SYNTH ARRAY
+        // dispatch(getSynthArray()) // SYNTH ARRAY
       }
     }
     checkNetwork()
@@ -49,12 +56,22 @@ const DataManager = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(getSpartaPrice())
+      dispatch(getDaoVaultTotalWeight())
     }, 7500)
     return () => clearInterval(interval)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [prevTokenArray, setPrevTokenArray] = useState(poolFactory.tokenArray)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (wallet.account) {
+        dispatch(getDaoVaultMemberWeight(wallet.account))
+        dispatch(getDaoHarvestAmount(wallet.account))
+      }
+    }, 7500)
+    return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet.account])
 
   useEffect(() => {
     const checkArrays = () => {
@@ -65,8 +82,7 @@ const DataManager = () => {
         setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
         dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        dispatch(getSynthArray()) // SYNTH ARRAY
-        setPrevTokenArray(poolFactory.tokenArray)
+        // dispatch(getSynthArray()) // SYNTH ARRAY
       }
     }
     checkArrays()
@@ -77,31 +93,41 @@ const DataManager = () => {
     poolFactory.detailedArray,
   )
 
+  const [arrayTrigger, setArrayTrigger] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setArrayTrigger(arrayTrigger + 1)
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [arrayTrigger])
+
   useEffect(() => {
     const { tokenArray } = poolFactory
-    const checkDetailedArray = () => {
-      if (tokenArray !== prevTokenArray && tokenArray.length > 0) {
-        dispatch(getPoolFactoryDetailedArray(tokenArray, addr.sparta))
-        setPrevDetailedArray(poolFactory.detailedArray)
-      }
+    if (tokenArray.length > 0) {
+      dispatch(getSynthArray(tokenArray)) // SYNTH ARRAY
+      dispatch(
+        getPoolFactoryDetailedArray(tokenArray, addr.sparta, wallet.account),
+      )
+      setPrevDetailedArray(poolFactory.detailedArray)
     }
-
-    checkDetailedArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenArray, window.sessionStorage.getItem('walletConnected')])
+  }, [poolFactory.tokenArray, wallet.account, arrayTrigger])
 
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
 
   useEffect(() => {
     const { detailedArray } = poolFactory
     const { curatedPoolArray } = poolFactory
+    const { synthArray } = synth
     const checkFinalArray = () => {
       if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
-        dispatch(getPoolFactoryFinalArray(detailedArray, curatedPoolArray))
+        dispatch(
+          getPoolFactoryFinalArray(detailedArray, curatedPoolArray, synthArray),
+        )
         setPrevFinalArray(poolFactory.finalArray)
       }
     }
-
     checkFinalArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
@@ -114,7 +140,6 @@ const DataManager = () => {
         // setPrevFinalArray(poolFactory.finalArray)
       }
     }
-
     checkFinalArrayForLP()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalArray])

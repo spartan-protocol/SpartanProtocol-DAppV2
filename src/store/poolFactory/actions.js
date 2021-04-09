@@ -1,8 +1,12 @@
+import axios from 'axios'
 import * as Types from './types'
 import { getPoolContract, getPoolFactoryContract } from '../../utils/web3Pool'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
+import { getDaoVaultContract } from '../../utils/web3Dao'
+import fallbackImg from '../../assets/icons/Logo-unknown.svg'
+import { getSynthContract } from '../../utils/web3Synth'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -155,31 +159,46 @@ export const getPoolFactoryCuratedArray = () => async (dispatch) => {
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
-  dispatch,
-) => {
+export const getPoolFactoryDetailedArray = (
+  tokenArray,
+  spartaAddr,
+  wallet,
+) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
+  const trustWalletIndex = await axios.get(
+    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
+  )
 
   try {
     if (tokenArray[0] !== spartaAddr) {
       tokenArray.unshift(spartaAddr)
     }
     const tempArray = await Promise.all(
-      tokenArray.map((i) => contract.callStatic.getTokenDetails(i)),
+      tokenArray.map((i) =>
+        contract.callStatic.getTokenDetailsWithMember(
+          i,
+          wallet || '0x0000000000000000000000000000000000000000',
+        ),
+      ),
     )
     const detailedArray = []
     for (let i = 0; i < tokenArray.length; i++) {
+      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${tokenArray[i]}/logo.png`
       const tempItem = {
         // Layer1 Asset Details
         tokenAddress: tokenArray[i],
-        balanceTokens: tempArray[i].balance.toString(),
+        balanceTokens: wallet ? tempArray[i].balance.toString() : '0',
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
         curated: '',
-        symbolUrl: '',
+        symbolUrl:
+          trustWalletIndex.data.filter((asset) => asset === tokenArray[i])
+            .length > 0
+            ? url
+            : fallbackImg,
         // SP-pTOKEN Details
         poolAddress: '',
         balanceLPs: '0',
@@ -193,6 +212,9 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
         lastMonthDivis: '',
         genesis: '',
         // SP-sTOKEN Details
+        synthAddress: false,
+        balanceSynths: '',
+        totalCollateral: '',
       }
       detailedArray.push(tempItem)
     }
@@ -210,9 +232,11 @@ export const getPoolFactoryDetailedArray = (tokenArray, spartaAddr) => async (
  * @param {array} curatedArray
  * @returns {array} finalArray
  */
-export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
-  dispatch,
-) => {
+export const getPoolFactoryFinalArray = (
+  detailedArray,
+  curatedArray,
+  synthArray,
+) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
 
@@ -231,6 +255,9 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
     )
     const finalArray = detailedArray
     for (let i = 0; i < detailedArray.length; i++) {
+      const synthAddr = synthArray.filter(
+        (synth) => synth.tokenAddress === detailedArray[i].tokenAddress,
+      )[0]?.synthAddress
       finalArray[i].poolAddress = tempArray[i].poolAddress
       finalArray[i].genesis = tempArray[i].genesis.toString()
       finalArray[i].baseAmount = tempArray[i].baseAmount.toString()
@@ -238,10 +265,11 @@ export const getPoolFactoryFinalArray = (detailedArray, curatedArray) => async (
       finalArray[i].poolUnits = tempArray[i].poolUnits.toString()
       finalArray[i].curated =
         curatedArray.find((item) => item === tempArray[i].poolAddress) > 0
+      finalArray[i].synthAddress = synthAddr || false
     }
     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_FINAL_ARRAY, finalArray))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error} `))
   }
 }
 
@@ -259,10 +287,15 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
     let tempArray = []
     for (let i = 0; i < finalArray.length; i++) {
       const routerContract = getRouterContract()
-      const contract =
+      const daoVaultContract = getDaoVaultContract()
+      const poolContract =
         finalArray[i].symbol === 'SPARTA'
           ? null
           : getPoolContract(finalArray[i].poolAddress)
+      const synthContract =
+        finalArray[i].synthAddress === false || !walletAddress
+          ? null
+          : getSynthContract(finalArray[i].synthAddress)
       tempArray.push(
         finalArray[i].symbol === 'SPARTA'
           ? '0'
@@ -280,27 +313,48 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
       tempArray.push(
         finalArray[i].symbol === 'SPARTA'
           ? '0'
-          : contract.callStatic.map30DPoolRevenue(),
+          : poolContract.callStatic.map30DPoolRevenue(),
       )
       tempArray.push(
         finalArray[i].symbol === 'SPARTA'
           ? '0'
-          : contract.callStatic.mapPast30DPoolRevenue(),
+          : poolContract.callStatic.mapPast30DPoolRevenue(),
       )
       tempArray.push(
         finalArray[i].symbol === 'SPARTA' || !walletAddress
           ? '0'
-          : contract.callStatic.balanceOf(walletAddress),
+          : poolContract.callStatic.balanceOf(walletAddress),
       )
+      tempArray.push(
+        finalArray[i].symbol === 'SPARTA' || !walletAddress
+          ? '0'
+          : daoVaultContract.callStatic.mapMemberPool_balance(
+              walletAddress,
+              finalArray[i].poolAddress,
+            ),
+      )
+      tempArray.push(
+        finalArray[i].synthAddress === false || !walletAddress
+          ? '0'
+          : synthContract.callStatic.balanceOf(walletAddress),
+      )
+      // tempArray.push(
+      //   finalArray[i].synthAddress === false
+      //     ? '0'
+      //     : synthContract.callStatic.totalCollateral(),
+      // )
     }
     tempArray = await Promise.all(tempArray)
     const finalLpArray = finalArray
-    for (let i = 0; i < tempArray.length - 4; i += 5) {
-      finalLpArray[i / 5].recentDivis = tempArray[i].toString()
-      finalLpArray[i / 5].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / 5].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / 5].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / 5].balanceLPs = tempArray[i + 4].toString()
+    for (let i = 0; i < tempArray.length - 6; i += 7) {
+      finalLpArray[i / 7].recentDivis = tempArray[i].toString()
+      finalLpArray[i / 7].lastMonthDivis = tempArray[i + 1].toString()
+      finalLpArray[i / 7].recentFees = tempArray[i + 2].toString()
+      finalLpArray[i / 7].lastMonthFees = tempArray[i + 3].toString()
+      finalLpArray[i / 7].balanceLPs = tempArray[i + 4].toString()
+      finalLpArray[i / 7].lockedLPs = tempArray[i + 5].toString()
+      finalLpArray[i / 7].balanceSynths = tempArray[i + 6].toString()
+      // finalLpArray[i / 8].totalCollateral = tempArray[i + 7].toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),

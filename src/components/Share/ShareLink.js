@@ -49,7 +49,7 @@ const ShareLink = (props) => {
       <CopyToClipboard
         text={props.url}
         onCopy={() => {
-          notify('bc', 'primary')
+          notify(props.notificationLocation || 'bc', 'primary')
         }}
       >
         {props.children}

@@ -84,13 +84,11 @@ describe('Dao actions', () => {
   })
 
   test('should withdraw LPS from DAO for member', async () => {
-    await daoWithdraw(TEST_POOL, 1, true)(dispatchMock)
+    await daoWithdraw(TEST_POOL, true)(dispatchMock)
     if (dispatchMock.mock.calls[1][0].type === Types.DAO_WITHDRAW) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
-        'SafeMath: subtraction overflow',
-      )
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!balance')
     }
   })
 

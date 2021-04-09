@@ -57,9 +57,9 @@ import {
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getRouterContract } from '../../../utils/web3Router'
 import SharePool from '../../../components/Share/SharePool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { getPoolContract } from '../../../utils/web3Pool'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -82,6 +82,14 @@ const Liquidity = () => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
       if (finalArray) {
+        window.localStorage.setItem('assetType1', 'token')
+        window.localStorage.setItem('assetType2', 'token')
+        window.localStorage.setItem('assetType3', 'pool')
+        window.localStorage.setItem('assetType4', 'token')
+        window.localStorage.setItem('assetType5', 'pool')
+        window.localStorage.setItem('assetType7', 'pool')
+        window.localStorage.setItem('assetType8', 'token')
+
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
@@ -402,28 +410,6 @@ const Liquidity = () => {
     }
   }
 
-  useEffect(() => {
-    const clearInputs = () => {
-      if (addInput1) {
-        addInput1.value = ''
-      }
-    }
-
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetAdd1])
-
-  useEffect(() => {
-    const clearInputs = () => {
-      if (addInput2) {
-        addInput2.value = ''
-      }
-    }
-
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetAdd2])
-
   const [horizontalTabs, sethorizontalTabs] = React.useState('addBoth')
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
@@ -541,6 +527,7 @@ const Liquidity = () => {
                                 <AssetSelect
                                   priority="1"
                                   blackList={[addr.sparta]}
+                                  filter={['token']}
                                 />
                               </Col>
                               <Col className="text-right">
@@ -730,7 +717,7 @@ const Liquidity = () => {
                             {!poolFactory.finalArray && '...'}
                             {poolFactory.finalArray &&
                               formatFromUnits(getAddBothOutputLP(), 4)}{' '}
-                            SPT2-{assetAdd1?.symbol}
+                            SP-p{assetAdd1?.symbol}
                           </div>
                         </Col>
                       </Row>
@@ -740,11 +727,6 @@ const Liquidity = () => {
                         size="lg"
                         block
                         onClick={() => {
-                          console.log(
-                            convertToWei(addInput2?.value),
-                            convertToWei(addInput1?.value),
-                            assetAdd1?.tokenAddress,
-                          )
                           dispatch(
                             routerAddLiq(
                               convertToWei(addInput2?.value),
@@ -772,6 +754,7 @@ const Liquidity = () => {
                               <AssetSelect
                                 priority="3"
                                 blackList={[addr.sparta]}
+                                filter={['pool']}
                               />
                             </Col>
                             <Col className="text-right">
@@ -802,6 +785,7 @@ const Liquidity = () => {
                                   assetAdd3?.tokenAddress,
                                   addr.sparta,
                                 ]}
+                                filter={['token']}
                               />
                             </Col>
                             <Col className="text-right">
@@ -966,7 +950,7 @@ const Liquidity = () => {
                         <div className="subtitle-amount">
                           {poolFactory.finalArray &&
                             formatFromWei(getAddOneOutputLP())}{' '}
-                          SPT2-{assetAdd3?.symbol}
+                          SP-p{assetAdd3?.symbol}
                         </div>
                         <br />
                       </Col>
@@ -1021,18 +1005,19 @@ const Liquidity = () => {
                               <div className="title-card">Redeem</div>
                               <AssetSelect
                                 priority="5"
-                                type="pools"
+                                filter={['pool']}
                                 blackList={[addr.sparta]}
                               />
                             </Col>
                             <Col className="text-right">
                               <div className="title-card">
                                 Balance:{' '}
-                                {formatFromWei(assetRemove1?.balanceLPs)} STP2-
+                                {formatFromWei(assetRemove1?.balanceLPs)} SP-p
                                 {assetRemove1?.symbol}
                               </div>
                               <div className="title-card">
-                                Locked: XXX.XX STP2-{assetRemove1?.symbol}
+                                Locked: {formatFromWei(assetRemove1?.lockedLPs)}{' '}
+                                SP-p{assetRemove1?.symbol}
                               </div>
                               <FormGroup>
                                 <Input
@@ -1136,7 +1121,7 @@ const Liquidity = () => {
                               <div className="title-card">Select pool</div>
                               <AssetSelect
                                 priority="7"
-                                type="pools"
+                                filter={['pool']}
                                 blackList={[addr.sparta]}
                               />
                             </Col>
@@ -1164,6 +1149,7 @@ const Liquidity = () => {
                               <div className="title-card">Output</div>
                               <AssetSelect
                                 priority="8"
+                                filter={['token']}
                                 whiteList={[
                                   assetRemove3?.tokenAddress,
                                   addr.sparta,
@@ -1175,7 +1161,7 @@ const Liquidity = () => {
                                 Balance{' '}
                                 {assetRemove4 !== '...' &&
                                   formatFromWei(assetRemove3?.balanceLPs)}{' '}
-                                SPT2-{assetRemove3?.symbol}
+                                SP-p{assetRemove3?.symbol}
                               </div>
                               <div className="output-card">
                                 <FormGroup>
@@ -1285,7 +1271,7 @@ const Liquidity = () => {
                           of{' '}
                           {assetRemove4 !== '...' &&
                             formatFromWei(assetRemove3?.balanceLPs)}{' '}
-                          SPT2-{assetRemove3?.symbol}
+                          SP-p{assetRemove3?.symbol}
                         </div>
                         <br />
                         <div className="output-card">
@@ -1377,7 +1363,9 @@ const Liquidity = () => {
             <Card className="card-body">
               {poolFactory.finalArray && (
                 <RecentTxns
-                  contract={getRouterContract()}
+                  contracts={poolFactory.finalArray
+                    ?.filter((asset) => asset.symbol !== 'SPARTA')
+                    .map((asset) => getPoolContract(asset.poolAddress))}
                   walletAddr={wallet.account}
                 />
               )}

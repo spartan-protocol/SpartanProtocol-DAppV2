@@ -4,24 +4,34 @@ import { Row, Table } from 'reactstrap'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString } from '../../utils/web3'
 
-const RecentTxns = ({ contract }) => {
+const RecentTxns = ({ contracts }) => {
   const [txnArray, setTxnArray] = useState([])
   useEffect(() => {
-    const listen = async () => {
-      if (contract) {
+    const listen = async (contract) => {
+      await contract.on('*', (eventObject) => {
+        setTxnArray((oldArray) => [...oldArray, eventObject])
+        console.log(eventObject)
+      })
+    }
+
+    const mapOut = () => {
+      if (contracts) {
         //   const filter = contract.filters
         //   console.log(contract)
         //   const logs = await contract.queryFilter(filter, 0, 'latest')
         //   console.log(logs)
-        await contract.on('*', (eventObject) => {
-          setTxnArray((oldArray) => [...oldArray, eventObject])
-          console.log(eventObject)
-        })
+        for (let i = 0; i < contracts.length; i++) {
+          listen(contracts[i])
+        }
       }
     }
-    listen()
+    mapOut()
     return () => {
-      contract?.removeAllListeners()
+      if (contracts) {
+        for (let i = 0; i < contracts.length; i++) {
+          contracts[i]?.removeAllListeners()
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -41,7 +51,7 @@ const RecentTxns = ({ contract }) => {
           <tbody>
             {txnArray?.length > 0 &&
               txnArray?.map((txn) => (
-                <tr key={txn.transactionHash + txn.event}>
+                <tr key={txn.transactionHash + txn.event + txn.logIndex}>
                   <td>{txn.blockNumber}</td>
                   <td>{txn.event}</td>
                   <td>
