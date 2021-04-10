@@ -1,3 +1,5 @@
+/* eslint-disable*/
+
 import React, { useState } from 'react'
 import {
   CardText,
@@ -312,7 +314,7 @@ const Overview = () => {
           </Col>
         </Row>
         <Row>
-          <Col lg={12}>
+          <Col md={12}>
             <Nav className="nav-tabs-custom card-body" pills>
               <NavItem>
                 <NavLink
@@ -389,18 +391,8 @@ const Overview = () => {
               <TabPane tabId="3" className="p-3" />
               <TabPane tabId="4" className="p-3" />
               <TabPane tabId="5" className="p-3">
-                <Row>
-                  <Col sm="12">
-                    <CardText>X</CardText>
-                  </Col>
-                </Row>
               </TabPane>
               <TabPane tabId="6" className="p-3">
-                <Row>
-                  <Col sm="12">
-                    <CardText>X</CardText>
-                  </Col>
-                </Row>
               </TabPane>
             </TabContent>
           </Col>
