@@ -1,5 +1,3 @@
-/* eslint-disable*/
-
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from 'react-bootstrap/Breadcrumb'
 import { Button, Card, Col, Row, Input, FormGroup } from 'reactstrap'
@@ -34,8 +32,8 @@ import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getPoolContract } from '../../../utils/web3Pool'
-import ShareIcon from "../../../assets/icons/new.svg"
-import SwapPair from "./SwapPair"
+import ShareIcon from '../../../assets/icons/new.svg'
+import SwapPair from './SwapPair'
 
 const Swap = () => {
   const web3 = useWeb3()
@@ -535,7 +533,7 @@ const Swap = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Swap {mode} </Col>
+          <Col md={10}>Swap {mode !== 'token' && mode} tokens </Col>
           <Col md={2}>
             {' '}
             <Wallet />
@@ -547,16 +545,19 @@ const Swap = () => {
             <Col xl={8}>
               <Card className="card-body">
                 <Row>
-                  <Col className="card-body"> <img
-                    src={ShareIcon}
-                    alt="share icon"
-                    style={{
-                      height: "19px",
-                      verticalAlign: "bottom",
-                      marginRight: "5px"
-                    }}
-                  />{" "}
-                    You can now swap your BEP20 tokens, LP tokens & Synths</Col>
+                  <Col className="card-body">
+                    {' '}
+                    <img
+                      src={ShareIcon}
+                      alt="share icon"
+                      style={{
+                        height: '19px',
+                        verticalAlign: 'bottom',
+                        marginRight: '5px',
+                      }}
+                    />{' '}
+                    You can now swap your BEP20 tokens, LP tokens & Synths
+                  </Col>
                 </Row>
                 {/* Top 'Input' Row */}
                 <Row>
@@ -890,7 +891,7 @@ const Swap = () => {
                 )}
                 {mode === 'token' && (
                   <Button
-                    color="default"
+                    color="primary"
                     size="lg"
                     onClick={() =>
                       dispatch(
@@ -966,7 +967,9 @@ const Swap = () => {
                   )}
               </Card>
             </Col>
-            <Col><SwapPair/></Col>
+            <Col>
+              <SwapPair />
+            </Col>
           </Row>
         )}
         {!poolFactory.finalArray && (

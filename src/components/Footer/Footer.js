@@ -11,20 +11,20 @@ const Footer = (props) => (
   <footer className={`footer${props.default ? ' footer-default' : ''}`}>
     <Container fluid={!!props.fluid}>
       <Row>
-        <Col md={2} sm={12}>
+        <Col xs={12} sm={4}>
           <ul className="nav">
             <li className="nav-item mt-3 mb-3 mb-md-0">
               A Spartan Community Project
             </li>
           </ul>
         </Col>
-        <Col md={8} sm={12} className="text-center">
+        <Col xs={12} sm={4} className="text-center">
           <div className="text-footer mb-3 mb-md-0">
             <img className="mr-2 " src={Sparta} alt="Logo" height="32" />
             Spartan Protocol
           </div>
         </Col>
-        <Col md={2} sm={12}>
+        <Col xs={12} sm={4}>
           <div className="copyright ml-4">
             <a
               href="https://twitter.com/SpartanProtocol"
