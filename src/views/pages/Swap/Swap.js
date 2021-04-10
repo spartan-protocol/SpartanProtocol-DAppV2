@@ -26,6 +26,8 @@ import {
 } from '../../../utils/web3Utils'
 import {
   routerSwapAssets,
+  routerSwapBaseToSynth,
+  routerSwapSynthToBase,
   routerZapLiquidity,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -44,6 +46,7 @@ const Swap = () => {
   const location = useLocation()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
+  const [filter, setFilter] = useState([])
   const [mode, setMode] = useState(false)
   const [assetParam1, setAssetParam1] = useState(
     new URLSearchParams(location.search).get(`asset1`),
@@ -76,6 +79,7 @@ const Swap = () => {
         }
 
         if (type1 === 'pool') {
+          setFilter(['pool'])
           setMode('pool')
           window.localStorage.setItem('assetType1', 'pool')
           window.localStorage.setItem('assetType2', 'pool')
@@ -86,15 +90,23 @@ const Swap = () => {
                 : { tokenAddress: finalLpArray[2].tokenAddress }
           }
         } else if (type1 === 'synth') {
+          setFilter(['sparta'])
           setMode('synth')
+          asset2 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
         } else if (asset1?.symbol !== 'SPARTA' && type1 === 'token') {
+          setFilter(['token'])
           setMode('token')
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
+        } else if (asset1?.symbol === 'SPARTA' && type2 === 'synth') {
+          setMode('synth')
+          window.localStorage.setItem('assetType1', 'token')
+          window.localStorage.setItem('assetType2', 'synth')
         } else {
-          setMode('sparta')
+          setFilter(['token', 'synth'])
+          setMode('token')
           window.localStorage.setItem('assetType1', 'token')
           if (type2 === 'pool') {
             window.localStorage.setItem('assetType2', 'token')
@@ -149,8 +161,12 @@ const Swap = () => {
   const handleReverseAssets = async () => {
     const asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
     const asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
+    const type1 = window.localStorage.getItem('assetType1')
+    const type2 = window.localStorage.getItem('assetType2')
     window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
     window.localStorage.setItem('assetSelected2', JSON.stringify(asset1))
+    window.localStorage.setItem('assetType1', type2)
+    window.localStorage.setItem('assetType2', type1)
   }
 
   //= =================================================================================//
@@ -449,7 +465,7 @@ const Swap = () => {
   // Functions for ZAP input handling
 
   const handleZapInputChange = (input, focusInput1) => {
-    if (mode !== 'pool') {
+    if (mode === 'token') {
       handleInputChange(input, focusInput1)
     } else if (assetSwap1?.symbol === 'SPARTA') {
       if (focusInput1 === true) {
@@ -519,7 +535,7 @@ const Swap = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Swap </Col>
+          <Col md={10}>Swap {mode} </Col>
           <Col md={2}>
             {' '}
             <Wallet />
@@ -555,17 +571,28 @@ const Swap = () => {
                           <div className="title-card">From</div>
                           <br />
                           <div className="output-card">
-                            <AssetSelect priority="1" type="all" />
+                            <AssetSelect
+                              priority="1"
+                              filter={['token', 'pool', 'synth']}
+                            />
                           </div>
                         </Col>
                         <Col className="text-right">
                           <br />
                           <div className="output-card mb-2">
                             Balance{' '}
-                            {mode !== 'pool' &&
+                            {mode === 'token' &&
                               formatFromWei(assetSwap1?.balanceTokens)}
                             {mode === 'pool' &&
                               formatFromWei(assetSwap1?.balanceLPs)}
+                            {window.localStorage.getItem('assetType1') ===
+                              'synth' &&
+                              formatFromWei(assetSwap1?.balanceSynths)}
+                            {mode === 'synth' &&
+                              JSON.parse(
+                                window.localStorage.getItem('assetSelected1'),
+                              ).symbol === 'SPARTA' &&
+                              formatFromWei(assetSwap1?.balanceTokens)}
                           </div>
                           <FormGroup>
                             <Input
@@ -579,7 +606,8 @@ const Swap = () => {
                             />
                           </FormGroup>
                           <div className="output-card">
-                            ~${mode !== 'pool' && formatFromWei(getInput1USD())}
+                            ~$
+                            {mode === 'token' && formatFromWei(getInput1USD())}
                             {mode === 'pool' &&
                               formatFromWei(getInputZap1USD())}
                           </div>
@@ -613,6 +641,7 @@ const Swap = () => {
                             <AssetSelect
                               priority="2"
                               type={mode}
+                              filter={filter}
                               blackList={[assetSwap1?.tokenAddress]}
                             />
                           </div>
@@ -621,10 +650,18 @@ const Swap = () => {
                           <br />
                           <div className="output-card mb-2">
                             Balance{' '}
-                            {mode !== 'pool' &&
+                            {mode === 'token' &&
                               formatFromWei(assetSwap2?.balanceTokens)}
                             {mode === 'pool' &&
                               formatFromWei(assetSwap2?.balanceLPs)}
+                            {window.localStorage.getItem('assetType2') ===
+                              'synth' &&
+                              formatFromWei(assetSwap2?.balanceSynths)}
+                            {mode === 'synth' &&
+                              JSON.parse(
+                                window.localStorage.getItem('assetSelected2'),
+                              ).symbol === 'SPARTA' &&
+                              formatFromWei(assetSwap2?.balanceTokens)}
                           </div>
                           <FormGroup>
                             <Input
@@ -638,7 +675,8 @@ const Swap = () => {
                             />
                           </FormGroup>
                           <div className="output-card">
-                            ~${mode !== 'pool' && formatFromWei(getInput2USD())}
+                            ~$
+                            {mode === 'token' && formatFromWei(getInput2USD())}
                             {mode === 'pool' &&
                               formatFromWei(getInputZap2USD())}
                           </div>
@@ -650,7 +688,7 @@ const Swap = () => {
                 {/* 'Approval/Allowance' row */}
                 <Row>
                   <Col>
-                    {mode !== 'pool' &&
+                    {mode === 'token' &&
                       assetSwap1?.tokenAddress !== addr.bnb &&
                       wallet?.account &&
                       swapInput1?.value && (
@@ -664,7 +702,7 @@ const Swap = () => {
                   </Col>
                 </Row>
                 {/* Bottom 'swap' txnDetails row */}
-                {mode !== 'pool' && (
+                {mode === 'token' && (
                   <Row>
                     {/* TextLeft 'txnDetails' col */}
                     <Col>
@@ -850,7 +888,7 @@ const Swap = () => {
                     </Col>
                   </Row>
                 )}
-                {mode !== 'pool' && (
+                {mode === 'token' && (
                   <Button
                     color="default"
                     size="lg"
@@ -886,6 +924,46 @@ const Swap = () => {
                     Swap
                   </Button>
                 )}
+                {mode === 'synth' &&
+                  JSON.parse(window.localStorage.getItem('assetSelected1'))
+                    .symbol === 'SPARTA' && (
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onClick={() =>
+                        dispatch(
+                          routerSwapBaseToSynth(
+                            convertToWei(swapInput1?.value),
+                            assetSwap2.synthAddress,
+                          ),
+                        )
+                      }
+                      block
+                    >
+                      Swap
+                    </Button>
+                  )}
+
+                {mode === 'synth' &&
+                  JSON.parse(window.localStorage.getItem('assetSelected2'))
+                    .symbol === 'SPARTA' && (
+                    <Button
+                      color="primary"
+                      size="lg"
+                      onClick={() =>
+                        dispatch(
+                          routerSwapSynthToBase(
+                            convertToWei(swapInput1?.value),
+                            assetSwap1.synthAddress,
+                            false,
+                          ),
+                        )
+                      }
+                      block
+                    >
+                      Swap
+                    </Button>
+                  )}
               </Card>
             </Col>
             <Col><SwapPair/></Col>

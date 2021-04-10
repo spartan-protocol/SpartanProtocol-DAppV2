@@ -1,53 +1,28 @@
-/* eslint-disable*/
-import React, { Component, useEffect, useState } from "react"
-import { useDispatch } from 'react-redux'
+import React, { useState } from 'react'
 
 import {
-  Breadcrumb, Button,
-  Card,
-  CardBody,
-  CardSubtitle,
-  CardText,
-  CardTitle,
+  Breadcrumb,
   Col,
   Nav,
   NavItem,
   NavLink,
   Row,
   TabContent,
-  TabPane
-} from "reactstrap"
+  TabPane,
+} from 'reactstrap'
 
-import classnames from "classnames"
-import SharePool from "../../../components/Share/SharePool"
-import Wallet from "../../../components/Wallet/Wallet"
-import AddLiquidity from "./AddLiquidity"
-import BondTable from "../BondTable"
-import NewBond from "./NewBond"
-import { useWallet } from "@binance-chain/bsc-use-wallet"
-import { getAddresses, getItemFromArray } from "../../../utils/web3"
-import { usePoolFactory } from "../../../store/poolFactory"
-import { useWeb3 } from "../../../store/web3"
-import {
-  calcLiquidityHoldings,
-  calcLiquidityUnits,
-  calcSwapFee,
-  calcSwapOutput,
-  calcValueInBase, calcValueInToken
-} from "../../../utils/web3Utils"
-import { BN, convertToWei } from "../../../utils/bigNumber"
-import RemoveLiquidity from "./RemoveLiquidity"
+import classnames from 'classnames'
+import SharePool from '../../../components/Share/SharePool'
+import Wallet from '../../../components/Wallet/Wallet'
+import AddLiquidity from './AddLiquidity'
+import RemoveLiquidity from './RemoveLiquidity'
 
 const Liquidity2 = () => {
-
-  const [activeTab, setActiveTab] = useState("1")
+  const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
-
-
-
 
   return (
     <>
@@ -69,9 +44,9 @@ const Liquidity2 = () => {
                 <Nav tabs className="nav-tabs-custom">
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "1" })}
+                      className={classnames({ active: activeTab === '1' })}
                       onClick={() => {
-                        toggle("1")
+                        toggle('1')
                       }}
                     >
                       <span className="d-none d-sm-block">Add</span>
@@ -79,9 +54,9 @@ const Liquidity2 = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "2" })}
+                      className={classnames({ active: activeTab === '2' })}
                       onClick={() => {
-                        toggle("2")
+                        toggle('2')
                       }}
                     >
                       <span className="d-none d-sm-block">Remove</span>
@@ -89,9 +64,9 @@ const Liquidity2 = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "3" })}
+                      className={classnames({ active: activeTab === '3' })}
                       onClick={() => {
-                        toggle("3")
+                        toggle('3')
                       }}
                     >
                       <span className="d-none d-sm-block">Transfer pool</span>
@@ -99,9 +74,9 @@ const Liquidity2 = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === "4" })}
+                      className={classnames({ active: activeTab === '4' })}
                       onClick={() => {
-                        toggle("4")
+                        toggle('4')
                       }}
                     >
                       <span className="d-none d-sm-block">Bond</span>
@@ -126,11 +101,9 @@ const Liquidity2 = () => {
             </TabContent>
           </Col>
         </Row>
-
       </div>
     </>
   )
-
 }
 
 export default Liquidity2

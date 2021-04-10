@@ -97,12 +97,40 @@ const Common = () => {
     setSidebarOpened(!sidebarOpened)
     document.documentElement.classList.toggle('nav-open')
   }
+
   const closeSidebar = () => {
     setSidebarOpened(false)
     document.documentElement.classList.remove('nav-open')
   }
+
+  const clickOutSidebar = (e) => {
+    const sidebar = document.body.getElementsByClassName('sidebar-wrapper')[0]
+    if (
+      !sidebar.contains(e.target) &&
+      !e.target.className.includes('icon-menu-open') &&
+      !e.target.className.includes('icon-menu-closed') &&
+      !e.target.className.includes('navbar-toggler')
+    ) {
+      setSidebarOpened(false)
+      document.body.classList.add('sidebar-mini')
+      closeSidebar()
+    }
+  }
+
   return (
-    <div className="wrapper">
+    <div
+      className="wrapper"
+      onClick={(e) => {
+        clickOutSidebar(e)
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 32) {
+          clickOutSidebar(e)
+        }
+      }}
+      role="tree"
+      tabIndex={0}
+    >
       <div className="rna-container">
         <DataManager />
         <NotificationAlert ref={notificationAlertRef} />
