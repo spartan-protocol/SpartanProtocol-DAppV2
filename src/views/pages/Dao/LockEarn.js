@@ -41,7 +41,7 @@ const LockEarn = () => {
                         alt="Logo"
                         height="32"
                       />
-                      SP-p{asset.symbol}
+                      {asset.symbol}-SPP
                     </h2>
                   </Col>
                   <Col md={2} />
