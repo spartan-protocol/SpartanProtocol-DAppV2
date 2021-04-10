@@ -205,7 +205,6 @@ const AssetSelect = (props) => {
           alt={`${selectedItem?.symbol}icon`}
           className="custom-select"
           name="singleSelect"
-          placeholder="Select your BEP20 token"
         >
           <option hidden value="0"> {selectedType === "pool" && "SP-p"}
             {selectedType === "synth" && "SP-s"}
@@ -301,7 +300,7 @@ const AssetSelect = (props) => {
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>
                           <i
-                            className="icon-search-bar icon-close icon-light"
+                            className=""
                             role="button"
                             tabIndex={-1}
                             onKeyPress={() => clearSearch()}
