@@ -853,7 +853,7 @@ const Swap = () => {
                     {/* TextRight zap txnDetails col */}
                     <Col className="text-right">
                       <div className="output-card">
-                        input {swapInput1?.value} SP-p{assetSwap1?.symbol}
+                        input {swapInput1?.value} {assetSwap1?.symbol}-SPP
                       </div>
                       <br />
                       <div className="output-card">
@@ -869,8 +869,7 @@ const Swap = () => {
                       </div>
                       <div className="output-card">
                         then swap {formatFromWei(getZapSwap1())} SPARTA for{' '}
-                        {formatFromWei(getZapSwap2())}
-                        {assetSwap2?.symbol}
+                        {formatFromWei(getZapSwap2())} {assetSwap2?.symbol}
                       </div>
                       <div className="output-card">
                         inc slip fee: {formatFromWei(getZapDoubleSwapFee())}{' '}
@@ -883,8 +882,8 @@ const Swap = () => {
                       </div>
                       <br />
                       <div className="subtitle-amount">
-                        output {formatFromWei(getZapOutput())} SP-p
-                        {assetSwap2?.symbol}
+                        output {formatFromWei(getZapOutput())}{' '}
+                        {assetSwap2?.symbol}-SPP
                       </div>
                     </Col>
                   </Row>

@@ -131,7 +131,7 @@ const Overview = () => {
                       <Col md={2}>
                         <div className="title-card mt-n2 ">
                           <div className="subtitle-amount mt-n4">
-                            {formatFromWei(dao.harvestAmount)}
+                            {formatFromWei(dao.harvestAmount.toString())}
                             <i className="icon-extra-small icon-spinner icon-dark ml-1" />
                           </div>
                         </div>
@@ -140,8 +140,8 @@ const Overview = () => {
                         <div className="title-card mt-n4">
                           {daoVault.memberWeight > 0 &&
                             formatFromUnits(
-                              BN(daoVault.memberWeight)
-                                .div(daoVault.daoTotalWeight)
+                              BN(daoVault.memberWeight.toString())
+                                .div(daoVault.daoTotalWeight.toString())
                                 .times(100),
                             )}
                           {daoVault.memberWeight <= 0 && 'Not a DAO member'}
