@@ -8,11 +8,12 @@ import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { changeNetwork, getNetwork } from '../../utils/web3'
-import { addNetworkMM, addNetworkBC } from '../../store/web3'
+import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
 import { usePoolFactory } from '../../store/poolFactory/selector'
 // import HelmetLoading from '../Loaders/HelmetLoading'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
+import MetaMask from '../../assets/icons/MetaMask.svg'
 
 const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
@@ -293,7 +294,57 @@ const WalletSelect = (props) => {
                                 alt={asset.name}
                               />
                             </Col>
-                            <Col xs="4">{asset.symbol}</Col>
+                            <Col xs="2">{asset.symbol}</Col>
+                            <Col xs="2" className="d-flex">
+                              <ShareLink
+                                url={asset.tokenAddress}
+                                notificationLocation="tc"
+                              >
+                                <i
+                                  style={{
+                                    cursor: 'pointer',
+                                    verticalAlign: 'bottom',
+                                  }}
+                                  className="icon-small icon-copy"
+                                />
+                              </ShareLink>
+                              <div
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key === 32) {
+                                    dispatch(
+                                      watchAsset(
+                                        asset.tokenAddress,
+                                        asset.symbol.substring(
+                                          asset.symbol.indexOf('-') + 1,
+                                        ),
+                                        '18',
+                                        asset.symbolUrl,
+                                      ),
+                                    )
+                                  }
+                                }}
+                                onClick={() => {
+                                  dispatch(
+                                    watchAsset(
+                                      asset.tokenAddress,
+                                      asset.symbol.substring(
+                                        asset.symbol.indexOf('-') + 1,
+                                      ),
+                                      '18',
+                                      asset.symbolUrl,
+                                    ),
+                                  )
+                                }}
+                              >
+                                <img
+                                  src={MetaMask}
+                                  alt="add asset to metamask"
+                                  height="24px"
+                                />
+                              </div>
+                            </Col>
                             <Col xs="4" className="text-right">
                               <span className="amount">
                                 {formatFromWei(asset.balanceTokens)}
