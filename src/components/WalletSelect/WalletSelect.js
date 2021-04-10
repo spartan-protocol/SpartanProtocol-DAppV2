@@ -380,7 +380,7 @@ const WalletSelect = (props) => {
                                 alt="SPARTA"
                                 className="mr-1"
                               />
-                              {`p${asset.symbol}`}
+                              {`${asset.symbol}-SPP`}
                               <ShareLink
                                 url={asset.poolAddress}
                                 notificationLocation="tc"
@@ -398,7 +398,7 @@ const WalletSelect = (props) => {
                                     dispatch(
                                       watchAsset(
                                         asset.poolAddress,
-                                        `p${asset.symbol}`,
+                                        `${asset.symbol}-SPP`,
                                         '18',
                                         asset.symbolUrl,
                                       ),
@@ -409,7 +409,7 @@ const WalletSelect = (props) => {
                                   dispatch(
                                     watchAsset(
                                       asset.poolAddress,
-                                      `p${asset.symbol}`,
+                                      `${asset.symbol}-SPP`,
                                       '18',
                                       asset.symbolUrl,
                                     ),
@@ -458,7 +458,7 @@ const WalletSelect = (props) => {
                                 alt="SPARTA"
                                 className="mr-1"
                               />
-                              {`p${asset.symbol}`}
+                              {`${asset.symbol}-SPP`}
                               <ShareLink
                                 url={asset.poolAddress}
                                 notificationLocation="tc"
@@ -476,7 +476,7 @@ const WalletSelect = (props) => {
                                     dispatch(
                                       watchAsset(
                                         asset.poolAddress,
-                                        `p${asset.symbol}`,
+                                        `${asset.symbol}-SPP`,
                                         '18',
                                         asset.symbolUrl,
                                       ),
@@ -487,7 +487,7 @@ const WalletSelect = (props) => {
                                   dispatch(
                                     watchAsset(
                                       asset.poolAddress,
-                                      `p${asset.symbol}`,
+                                      `${asset.symbol}-SPP`,
                                       '18',
                                       asset.symbolUrl,
                                     ),
@@ -538,7 +538,7 @@ const WalletSelect = (props) => {
                                 alt="SPARTA"
                                 className="mr-1"
                               />
-                              <span>{`s${asset.symbol}`}</span>
+                              <span>{`${asset.symbol}-SPS`}</span>
                               <ShareLink
                                 url={asset.synthAddress}
                                 notificationLocation="tc"
@@ -556,7 +556,7 @@ const WalletSelect = (props) => {
                                     dispatch(
                                       watchAsset(
                                         asset.synthAddress,
-                                        `s${asset.symbol}`,
+                                        `${asset.symbol}-SPS`,
                                         '18',
                                         asset.symbolUrl,
                                       ),
@@ -567,7 +567,7 @@ const WalletSelect = (props) => {
                                   dispatch(
                                     watchAsset(
                                       asset.synthAddress,
-                                      `s${asset.symbol}`,
+                                      `${asset.symbol}-SPS`,
                                       '18',
                                       asset.symbolUrl,
                                     ),

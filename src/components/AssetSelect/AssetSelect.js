@@ -162,7 +162,7 @@ const AssetSelect = (props) => {
                   </>
                 ),
                 iconUrl: tempArray[i].symbolUrl,
-                symbol: `p${tempArray[i].symbol}`,
+                symbol: `${tempArray[i].symbol}-SPP`,
                 balance: tempArray[i].balanceLPs,
                 address: tempArray[i].tokenAddress,
                 actualAddr: tempArray[i].poolAddress,
@@ -192,7 +192,7 @@ const AssetSelect = (props) => {
                     />
                   </>
                 ),
-                symbol: `s${tempArray[i].symbol}`,
+                symbol: `${tempArray[i].symbol}-SPS`,
                 balance: tempArray[i].balanceSynths,
                 address: tempArray[i].tokenAddress,
                 actualAddr: tempArray[i].synthAddress,
@@ -269,9 +269,9 @@ const AssetSelect = (props) => {
             </>
           )}
 
-          {selectedType === 'pool' && 'p'}
-          {selectedType === 'synth' && 's'}
           {selectedItem && selectedItem?.symbol}
+          {selectedType === 'pool' && '-SPP'}
+          {selectedType === 'synth' && '-SPS'}
         </div>
       </div>
 
