@@ -44,8 +44,8 @@ const Swap = () => {
   const location = useLocation()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
-  const [filter, setFilter] = useState([])
-  const [mode, setMode] = useState(false)
+  const [filter, setFilter] = useState(['token'])
+  const [mode, setMode] = useState('token')
   const [assetParam1, setAssetParam1] = useState(
     new URLSearchParams(location.search).get(`asset1`),
   )
@@ -99,6 +99,7 @@ const Swap = () => {
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
         } else if (asset1?.symbol === 'SPARTA' && type2 === 'synth') {
+          setFilter(['token', 'synth'])
           setMode('synth')
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'synth')
@@ -641,7 +642,6 @@ const Swap = () => {
                           <div className="output-card">
                             <AssetSelect
                               priority="2"
-                              type={mode}
                               filter={filter}
                               blackList={[assetSwap1?.tokenAddress]}
                             />
