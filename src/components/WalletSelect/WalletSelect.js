@@ -380,6 +380,56 @@ const WalletSelect = (props) => {
                               />
                             </Col>
                             <Col xs="4">{asset.symbol}</Col>
+                            <Col xs="2" className="d-flex">
+                              <ShareLink
+                                url={asset.poolAddress}
+                                notificationLocation="tc"
+                              >
+                                <i
+                                  style={{
+                                    cursor: 'pointer',
+                                    verticalAlign: 'bottom',
+                                  }}
+                                  className="icon-small icon-copy"
+                                />
+                              </ShareLink>
+                              <div
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                  if (e.key === 32) {
+                                    dispatch(
+                                      watchAsset(
+                                        asset.poolAddress,
+                                        asset.symbol.substring(
+                                          asset.symbol.indexOf('-') + 1,
+                                        ),
+                                        '18',
+                                        asset.symbolUrl,
+                                      ),
+                                    )
+                                  }
+                                }}
+                                onClick={() => {
+                                  dispatch(
+                                    watchAsset(
+                                      asset.poolAddress,
+                                      asset.symbol.substring(
+                                        asset.symbol.indexOf('-') + 1,
+                                      ),
+                                      '18',
+                                      asset.symbolUrl,
+                                    ),
+                                  )
+                                }}
+                              >
+                                <img
+                                  src={MetaMask}
+                                  alt="add asset to metamask"
+                                  height="24px"
+                                />
+                              </div>
+                            </Col>
                             <Col xs="4" className="text-right">
                               <span className="amount">
                                 {formatFromWei(asset.lockedLPs)}
