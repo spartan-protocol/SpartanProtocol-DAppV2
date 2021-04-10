@@ -42,7 +42,7 @@ const ShareLink = (props) => {
   }
 
   return (
-    <div>
+    <>
       <div className="rna-container share-notification">
         <NotificationAlert ref={notificationAlertRef} />
       </div>
@@ -54,7 +54,7 @@ const ShareLink = (props) => {
       >
         {props.children}
       </CopyToClipboard>
-    </div>
+    </>
   )
 }
 
