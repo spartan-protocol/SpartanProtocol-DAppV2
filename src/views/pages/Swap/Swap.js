@@ -32,6 +32,8 @@ import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getPoolContract } from '../../../utils/web3Pool'
+import ShareIcon from '../../../assets/icons/new.svg'
+import SwapPair from './SwapPair'
 
 const Swap = () => {
   const web3 = useWeb3()
@@ -531,18 +533,32 @@ const Swap = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={10}>Swap {mode} </Col>
+          <Col md={10}>Swap {mode !== 'token' && mode} tokens </Col>
           <Col md={2}>
             {' '}
             <Wallet />
           </Col>
         </Breadcrumb>
+
         {poolFactory.finalArray?.length > 0 && (
           <Row>
             <Col xl={8}>
               <Card className="card-body">
-                <br />
-                <br />
+                <Row>
+                  <Col className="card-body">
+                    {' '}
+                    <img
+                      src={ShareIcon}
+                      alt="share icon"
+                      style={{
+                        height: '19px',
+                        verticalAlign: 'bottom',
+                        marginRight: '5px',
+                      }}
+                    />{' '}
+                    You can now swap your BEP20 tokens, LP tokens & Synths
+                  </Col>
+                </Row>
                 {/* Top 'Input' Row */}
                 <Row>
                   {/* 'From' input box */}
@@ -564,7 +580,7 @@ const Swap = () => {
                         </Col>
                         <Col className="text-right">
                           <br />
-                          <div className="output-card">
+                          <div className="output-card mb-2">
                             Balance{' '}
                             {mode === 'token' &&
                               formatFromWei(assetSwap1?.balanceTokens)}
@@ -633,7 +649,7 @@ const Swap = () => {
                         </Col>
                         <Col className="text-right">
                           <br />
-                          <div className="output-card">
+                          <div className="output-card mb-2">
                             Balance{' '}
                             {mode === 'token' &&
                               formatFromWei(assetSwap2?.balanceTokens)}
@@ -692,7 +708,7 @@ const Swap = () => {
                     {/* TextLeft 'txnDetails' col */}
                     <Col>
                       <div className="text-card">
-                        Input{' '}
+                        Fee{' '}
                         <i
                           className="icon-small icon-info icon-dark ml-2"
                           id="tooltipAddBase"
@@ -707,7 +723,7 @@ const Swap = () => {
                       </div>
                       <br />
                       <div className="text-card">
-                        Swap Fee{' '}
+                        Slip{' '}
                         <i
                           className="icon-small icon-info icon-dark ml-2"
                           id="tooltipAddBase"
@@ -950,6 +966,9 @@ const Swap = () => {
                     </Button>
                   )}
               </Card>
+            </Col>
+            <Col>
+              <SwapPair />
             </Col>
           </Row>
         )}

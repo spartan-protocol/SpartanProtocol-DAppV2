@@ -365,6 +365,13 @@ const AssetSelect = (props) => {
                         onClick={() => clearSearch()}
                       >
                         <InputGroupText>
+                          <i
+                            className=""
+                            role="button"
+                            tabIndex={-1}
+                            onKeyPress={() => clearSearch()}
+                            onClick={() => clearSearch()}
+                          />
                           <i className="icon-search-bar icon-close icon-light" />
                         </InputGroupText>
                       </InputGroupAddon>
