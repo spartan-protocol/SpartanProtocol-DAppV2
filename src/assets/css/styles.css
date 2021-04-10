@@ -101,16 +101,16 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     border-color: #403743;
 }
 
-.custom-select:after {
+/* .custom-select:after {
     position: absolute;
     content: "";
-    top: 14px;
-    right: 10px;
+    bottom: 30px;
+    right: 25px;
     width: 0;
     height: 0;
     border: 6px solid transparent;
     border-color: #fff transparent transparent transparent;
-}
+} */
 
 
 .form-control{
