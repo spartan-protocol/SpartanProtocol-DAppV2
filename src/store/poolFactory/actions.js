@@ -341,7 +341,16 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
       // tempArray.push(
       //   finalArray[i].synthAddress === false
       //     ? '0'
-      //     : synthContract.callStatic.totalCollateral(),
+      //     : synthContract.callStatic._collateralBalance(
+      //         finalArray[i].poolAddress,
+      //       ),
+      // )
+      // tempArray.push(
+      //   finalArray[i].synthAddress === false
+      //     ? '0'
+      //     : synthContract.callStatic._synthDebtFromLP(
+      //         finalArray[i].poolAddress,
+      //       ),
       // )
     }
     tempArray = await Promise.all(tempArray)
@@ -354,7 +363,8 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
       finalLpArray[i / 7].balanceLPs = tempArray[i + 4].toString()
       finalLpArray[i / 7].lockedLPs = tempArray[i + 5].toString()
       finalLpArray[i / 7].balanceSynths = tempArray[i + 6].toString()
-      // finalLpArray[i / 8].totalCollateral = tempArray[i + 7].toString()
+      // finalLpArray[i / 9].synthLpBalance = tempArray[i + 7].toString()
+      // finalLpArray[i / 9].synthLpDebt = tempArray[i + 8].toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),
