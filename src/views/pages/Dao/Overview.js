@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import {
   Button,
@@ -30,11 +30,6 @@ const Overview = () => {
   const dao = useDao()
   const dispatch = useDispatch()
   const [activeTab, setActiveTab] = useState('1')
-
-  useEffect(() => {
-    console.log(formatFromWei(dao.harvestAmount.toString()))
-    console.log(formatFromWei(daoVault.memberWeight.toString()))
-  }, [dao.harvestAmount, daoVault.memberWeight])
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
