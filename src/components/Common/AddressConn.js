@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import { Button } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import WalletSelect from '../WalletSelect/WalletSelect'
+import { usePoolFactory } from '../../store/poolFactory/selector'
 // import walletTypes from '../WalletSelect/walletTypes'
 
 const AddressConn = () => {
   const wallet = useWallet()
+  const poolFactory = usePoolFactory()
   const [walletModalShow, setWalletModalShow] = useState(false)
   // const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
@@ -37,7 +39,8 @@ const AddressConn = () => {
         </>
       )}
 
-      {wallet?.status === 'connecting' && (
+      {/* {wallet?.status === 'connecting' && ( */}
+      {poolFactory.loadingFinal === true && (
         <>
           <Button
             type="button"
@@ -50,7 +53,7 @@ const AddressConn = () => {
         </>
       )}
 
-      {wallet?.status === 'connected' && (
+      {poolFactory.loadingFinal === false && wallet?.status === 'connected' && (
         <>
           <Button
             type="button"

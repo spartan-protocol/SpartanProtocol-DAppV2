@@ -12,6 +12,10 @@ export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
 })
 
+export const poolFactoryFinalArrayLoading = () => ({
+  type: Types.POOLFACTORY_FINALARRAY_LOADING,
+})
+
 /**
  * Get address of pool via token address
  * @param {address} tokenAddr
@@ -281,7 +285,7 @@ export const getPoolFactoryFinalArray = (
 export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
   dispatch,
 ) => {
-  dispatch(poolFactoryLoading())
+  dispatch(poolFactoryFinalArrayLoading())
 
   try {
     let tempArray = []
