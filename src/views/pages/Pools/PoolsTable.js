@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Button,
   Card,
@@ -37,7 +37,20 @@ const Poolstable = () => {
     setModalNotice(!modalNotice)
   }
 
-  const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
+  const [openedCollapseThree, setopenedCollapseThree] = React.useState([])
+
+  useEffect(() => {
+    const collapseThree = []
+    if (
+      poolFactory &&
+      poolFactory.finalLpArray &&
+      poolFactory.finalLpArray.lenght
+    ) {
+      poolFactory.finalLpArray.forEach(() => {
+        collapseThree.push(false)
+      })
+    }
+  }, [poolFactory])
 
   return (
     <>
@@ -47,7 +60,7 @@ const Poolstable = () => {
           {poolFactory?.finalLpArray
             .filter((asset) => asset.symbol !== 'SPARTA')
             .sort((a, b) => b.baseAmount - a.baseAmount)
-            .map((asset) => (
+            .map((asset, index) => (
               <Card
                 key={asset.tokenAddress}
                 className="card-body"
@@ -67,7 +80,7 @@ const Poolstable = () => {
                           {asset.symbol}
                         </h2>
                       </Col>
-                      <Col md="2">
+                      <Col md="1">
                         <div className="title-card">APY</div>
                         <div className="subtitle-card">
                           {formatFromUnits(
@@ -80,7 +93,7 @@ const Poolstable = () => {
                           %
                         </div>
                       </Col>
-                      <Col md="2">
+                      <Col md="1">
                         <div className="title-card">Depth</div>
                         <div className="subtitle-card">
                           $
@@ -94,12 +107,16 @@ const Poolstable = () => {
                         <div className="title-card">Volume (24hrs)</div>
                         <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
                       </Col>
-                      <Col md="2">
+                      <Col md="1">
                         <div className="title-card">Locked LP</div>
                         <div className="subtitle-amount">0.00</div>
                       </Col>
-                      <Col md="2" className="m-auto">
-                        <Button type="Button" className="btn btn-primary">
+                      <Col
+                        md="4"
+                        className="m-auto"
+                        style={{ textAlign: 'right' }}
+                      >
+                        <Button type="Button" className="btn btn btn-primary">
                           Bond
                         </Button>
                         <Button type="Button" className="btn btn-primary">
@@ -112,18 +129,20 @@ const Poolstable = () => {
                       <Col className="ml-auto" md="1">
                         {/* ADD ARROW ICON */}
                         <div
-                          aria-expanded={openedCollapseThree}
+                          aria-expanded={openedCollapseThree[index]}
                           role="button"
                           tabIndex={-1}
                           data-parent="#accordion"
                           data-toggle="collapse"
                           onClick={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            const collapseThree = [...openedCollapseThree]
+                            collapseThree[index] = !collapseThree[index]
+                            setopenedCollapseThree(collapseThree)
                           }}
                           onKeyPress={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                         >
                           <i
@@ -135,7 +154,10 @@ const Poolstable = () => {
                     </Row>
 
                     <Card style={{ backgroundColor: '#25212D' }}>
-                      <Collapse role="tabpanel" isOpen={openedCollapseThree}>
+                      <Collapse
+                        role="tabpanel"
+                        isOpen={openedCollapseThree[index]}
+                      >
                         <CardBody>
                           <Row>
                             <Col md="7">
