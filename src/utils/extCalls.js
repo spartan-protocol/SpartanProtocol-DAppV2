@@ -1,6 +1,16 @@
 import axios from 'axios'
 import { getNetwork } from './web3'
 
+// GET BSCSCAN URL BY CONTRACT ADDRESS
+export const getExplorerContract = (contractAddr) => {
+  const { net } = getNetwork()
+  let link = `https://bscscan.com/address/${contractAddr}#code`
+  if (net === 'testnet') {
+    link = `https://${net}.bscscan.com/address/${contractAddr}#code`
+  }
+  return link
+}
+
 // GET BSCSCAN URL BY WALLET ADDRESS
 export const getExplorerWallet = (wallet) => {
   const { net } = getNetwork()

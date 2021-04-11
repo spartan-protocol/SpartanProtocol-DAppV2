@@ -13,6 +13,7 @@ const initialState = {
   finalLpArray: null,
   loading: false,
   error: null,
+  loadingFinal: false,
 }
 
 export const poolFactoryReducer = (state = initialState, action) => {
@@ -103,7 +104,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
         ...state,
         finalLpArray: action.payload,
         error: null,
-        loading: false,
+        loadingFinal: false,
       }
     }
 
@@ -120,6 +121,14 @@ export const poolFactoryReducer = (state = initialState, action) => {
         ...state,
         error: action.error,
         loading: false,
+      }
+    }
+
+    case Types.POOLFACTORY_FINALARRAY_LOADING: {
+      return {
+        ...state,
+        loadingFinal: true,
+        error: null,
       }
     }
     default:

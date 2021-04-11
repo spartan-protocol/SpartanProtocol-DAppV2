@@ -2,9 +2,7 @@ import React, { useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
-import { Nav, Collapse, Row, Col } from 'reactstrap'
-import AddressConn from '../Common/AddressConn'
-import Connection from '../Common/Connection'
+import { Nav, Collapse } from 'reactstrap'
 
 const Sidebar = (props) => {
   const [state, setState] = React.useState({})
@@ -184,18 +182,6 @@ const Sidebar = (props) => {
   return (
     <div className="sidebar" data={activeColor}>
       <div className="sidebar-wrapper" ref={sidebarRef}>
-        <Row className="d-block d-sm-none">
-          <span />
-          <Col className="text-center d-inline-block">
-            <AddressConn
-              changeStates={props.changeStates}
-              changeNotification={props.changeNotification}
-              connectedTokens={props.connectedTokens}
-              connectingTokens={props.connectingTokens}
-            />
-            <Connection />
-          </Col>
-        </Row>
         {logoImg !== null || logoText !== null ? (
           <div className="logo">
             {logoImg}

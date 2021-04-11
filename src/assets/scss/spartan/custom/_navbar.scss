@@ -176,10 +176,11 @@
       }
 
       .navbar-nav{
+        display: block;
 
         .btn{
           margin-left: -3px;
-          display: flex;
+          display: inline-block;
 
           i {
             margin-right: 12px;
@@ -244,7 +245,7 @@
 
       .dropdown.show .dropdown-menu,
       .dropdown .dropdown-menu{
-          background-color: transparent;
+          background-color: #1D171F;
           border: 0;
           transition: none;
           -webkit-box-shadow: none;
