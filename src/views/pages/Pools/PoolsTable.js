@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Button,
   Card,
@@ -37,7 +37,16 @@ const Poolstable = () => {
     setModalNotice(!modalNotice)
   }
 
-  const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
+  const [openedCollapseThree, setopenedCollapseThree] = React.useState([])
+
+  useEffect(() => {
+    const collapseThree = []
+    if (poolFactory && poolFactory.finalLpArray) {
+      poolFactory.finalLpArray.forEach(() => {
+        collapseThree.push(false)
+      })
+    }
+  }, [poolFactory])
 
   return (
     <>
@@ -47,7 +56,7 @@ const Poolstable = () => {
           {poolFactory?.finalLpArray
             .filter((asset) => asset.symbol !== 'SPARTA')
             .sort((a, b) => b.baseAmount - a.baseAmount)
-            .map((asset) => (
+            .map((asset, index) => (
               <Card
                 key={asset.tokenAddress}
                 className="card-body"
@@ -71,18 +80,18 @@ const Poolstable = () => {
                       <Col className="text-right mr-2">
                         {' '}
                         <div
-                          aria-expanded={openedCollapseThree}
+                          aria-expanded={openedCollapseThree[index]}
                           role="button"
                           tabIndex={-1}
                           data-parent="#accordion"
                           data-toggle="collapse"
                           onClick={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                           onKeyPress={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                         >
                           <i
@@ -129,7 +138,7 @@ const Poolstable = () => {
                         <div className="title-card">Volume (24hrs)</div>
                         <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
                       </Col>
-                      <Col md="2">
+                      <Col md="1">
                         <div className="title-card">Locked LP</div>
                         <div className="subtitle-amount">0.00</div>
                       </Col>
@@ -171,18 +180,20 @@ const Poolstable = () => {
                       <Col className="ml-auto mt-2 d-none d-sm-block" md="1">
                         {/* ADD ARROW ICON */}
                         <div
-                          aria-expanded={openedCollapseThree}
+                          aria-expanded={openedCollapseThree[index]}
                           role="button"
                           tabIndex={-1}
                           data-parent="#accordion"
                           data-toggle="collapse"
                           onClick={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            const collapseThree = [...openedCollapseThree]
+                            collapseThree[index] = !collapseThree[index]
+                            setopenedCollapseThree(collapseThree)
                           }}
                           onKeyPress={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                         >
                           <i
@@ -192,7 +203,10 @@ const Poolstable = () => {
                         </div>
                       </Col>
                     </Row>
-                    <Collapse role="tabpanel" isOpen={openedCollapseThree}>
+                    <Collapse
+                      role="tabpanel"
+                      isOpen={openedCollapseThree[index]}
+                    >
                       <Row>
                         <Col md="6">
                           <h3>
