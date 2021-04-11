@@ -297,7 +297,6 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 
-
 @media screen and (min-width: 1200px) {
     .sidebar {
         margin-top: 5px;
@@ -308,27 +307,11 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 }
 
-
-@media screen and (max-width: 1200px) {
-    #root > div > div.sidebar {
-        width: 60%;
-    }
-}
-
-
-
-@media (max-width: 991.98px){
-    .sidebar{
-        width: 10%;
-    }
-}
-
-
 @media (min-width: 992px){
     .sidebar-mini .sidebar:hover {
         width: 10%;
     }
-    
+
 }
 
 
