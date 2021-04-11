@@ -202,8 +202,8 @@ const WalletSelect = (props) => {
                         </a>
                       </span>
                       <span className="title">
-                        {wallet.account.substr(0, 5)}...
-                        {wallet.account.slice(-5)}
+                        {wallet.account?.substr(0, 5)}...
+                        {wallet.account?.slice(-5)}
                       </span>
                     </Col>
                     <Col xs="2">

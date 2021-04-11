@@ -56,18 +56,18 @@ const LanguageDropdown = () => {
       <Dropdown
         isOpen={menu}
         toggle={toggle}
-        className="d-inline-block mr-5 align-self-center"
+        className="d-inline-block mr-2 align-self-center"
       >
         <DropdownToggle
           aria-expanded={false}
           aria-haspopup
-          className="btn-round btn-icon mr-n5"
+          className="btn-round btn-icon"
           color="default"
           data-toggle="dropdown"
           id="dropdownMenuButton"
           type="button"
         >
-          <i className="icon-small icon-lang icon-dark mt-1" />
+          <i className="icon-small icon-lang icon-dark m-0 mt-1" />
         </DropdownToggle>
         <DropdownMenu className="language-switch" right>
           <DropdownItem

@@ -11,59 +11,54 @@ const AddressConn = () => {
   const [walletModalShow, setWalletModalShow] = useState(false)
   // const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
+  const btnClass = 'btn-round btn-icon align-self-center mr-2'
+  const iconClass = ' icon-small icon-dark m-0'
+
   return (
     <>
       {wallet?.status === 'disconnected' && (
-        <>
-          <Button
-            type="button"
-            className="btn-round btn-icon mt-2 mr-n1"
-            onClick={() => setWalletModalShow(true)}
-            onKeyPress={() => setWalletModalShow(true)}
-          >
-            <i className="icon-small icon-wallet-red icon-dark mt-1" />
-          </Button>
-        </>
+        <Button
+          type="button"
+          className={btnClass}
+          onClick={() => setWalletModalShow(true)}
+          onKeyPress={() => setWalletModalShow(true)}
+        >
+          <i className={`icon-wallet-red${iconClass}`} />
+        </Button>
       )}
 
       {wallet?.status === 'error' && (
-        <>
-          <Button
-            type="button"
-            className="btn-round btn-icon mt-2 mr-n1"
-            onClick={() => setWalletModalShow(true)}
-            onKeyPress={() => setWalletModalShow(true)}
-          >
-            <i className="icon-small icon-wallet-red icon-dark mt-1" />
-          </Button>
-        </>
+        <Button
+          type="button"
+          className={btnClass}
+          onClick={() => setWalletModalShow(true)}
+          onKeyPress={() => setWalletModalShow(true)}
+        >
+          <i className={`icon-wallet-red${iconClass}`} />
+        </Button>
       )}
 
       {/* {wallet?.status === 'connecting' && ( */}
       {poolFactory.loadingFinal === true && (
-        <>
-          <Button
-            type="button"
-            className="btn-round btn-icon mt-2 mr-n1"
-            onClick={() => setWalletModalShow(true)}
-            onKeyPress={() => setWalletModalShow(true)}
-          >
-            <i className="icon-small icon-wallet-yellow icon-dark mt-1" />
-          </Button>
-        </>
+        <Button
+          type="button"
+          className={btnClass}
+          onClick={() => setWalletModalShow(true)}
+          onKeyPress={() => setWalletModalShow(true)}
+        >
+          <i className={`icon-wallet-yellow${iconClass}`} />
+        </Button>
       )}
 
       {poolFactory.loadingFinal === false && wallet?.status === 'connected' && (
-        <>
-          <Button
-            type="button"
-            className="btn-round btn-icon mt-2 mr-n1"
-            onClick={() => setWalletModalShow(true)}
-            onKeyPress={() => setWalletModalShow(true)}
-          >
-            <i className="icon-small icon-wallet-green icon-dark mt-1" />
-          </Button>
-        </>
+        <Button
+          type="button"
+          className={btnClass}
+          onClick={() => setWalletModalShow(true)}
+          onKeyPress={() => setWalletModalShow(true)}
+        >
+          <i className={`icon-wallet-green${iconClass}`} />
+        </Button>
       )}
 
       <WalletSelect
