@@ -41,11 +41,7 @@ const Poolstable = () => {
 
   useEffect(() => {
     const collapseThree = []
-    if (
-      poolFactory &&
-      poolFactory.finalLpArray &&
-      poolFactory.finalLpArray.lenght
-    ) {
+    if (poolFactory && poolFactory.finalLpArray) {
       poolFactory.finalLpArray.forEach(() => {
         collapseThree.push(false)
       })
@@ -84,18 +80,18 @@ const Poolstable = () => {
                       <Col className="text-right mr-2">
                         {' '}
                         <div
-                          aria-expanded={openedCollapseThree}
+                          aria-expanded={openedCollapseThree[index]}
                           role="button"
                           tabIndex={-1}
                           data-parent="#accordion"
                           data-toggle="collapse"
                           onClick={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                           onKeyPress={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                         >
                           <i
@@ -207,7 +203,10 @@ const Poolstable = () => {
                         </div>
                       </Col>
                     </Row>
-                    <Collapse role="tabpanel" isOpen={openedCollapseThree}>
+                    <Collapse
+                      role="tabpanel"
+                      isOpen={openedCollapseThree[index]}
+                    >
                       <Row>
                         <Col md="6">
                           <h3>
