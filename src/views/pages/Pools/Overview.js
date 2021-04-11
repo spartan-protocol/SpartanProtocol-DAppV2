@@ -326,7 +326,7 @@ const Overview = () => {
                     toggleCustom("1")
                   }}
                 >
-                  Pools overview
+                  Pools
                 </NavLink>
               </NavItem>
               <NavItem>

@@ -54,7 +54,7 @@ const Header = (props) => {
   return (
     <>
       <Navbar
-        className={classNames('navbar-absolute', {
+        className={classNames('navbar sticky-top', {
           color: 'navbar-transparent',
         })}
         expand="lg"
@@ -68,8 +68,8 @@ const Header = (props) => {
                 id="tooltip209599"
                 onClick={props.handleMiniClick}
               >
-                <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular mr-4" />
-                <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini mr-4" />
+                <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n2 mr-4" />
+                <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n2 mr-4" />
               </Button>
             </div>
             <div
@@ -111,7 +111,7 @@ const Header = (props) => {
             />
             <Button
               type="Button"
-              className="mx-1 btn-sm btn-primary"
+              className="mx-1 btn btn-primary"
               href="#"
               id="headerPriceTooltip"
             >
