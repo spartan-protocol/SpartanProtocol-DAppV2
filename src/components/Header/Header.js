@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import React from 'react'
 import classNames from 'classnames'
 import {
@@ -18,7 +19,6 @@ import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
 import { useWeb3 } from '../../store/web3'
 import IconLogo from '../../assets/img/spartan_black_small.svg'
-import Connection from '../Common/Connection'
 
 const Header = (props) => {
   const web3 = useWeb3()
@@ -117,7 +117,6 @@ const Header = (props) => {
           />
           <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
-              <li className="separator d-lg-none" />
               <LanguageDropdown />
               <AddressConn
                 changeStates={props.changeStates}
@@ -125,7 +124,6 @@ const Header = (props) => {
                 connectedTokens={props.connectedTokens}
                 connectingTokens={props.connectingTokens}
               />
-              <Connection />
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -133,24 +131,13 @@ const Header = (props) => {
                   data-toggle="dropdown"
                   nav
                 >
-                  <div className="price-notificaiton">
-                    <div className="overlap-group">
-                      <div className="wallet wallet-text">0xe4ae305ebe...</div>
-                      <div className="adjustable-primary-medium">
-                        <div className="frame-1">
-                          <div className="frame" />
-                        </div>
-                        <div className="wallet-price wallet-text">
+                        <Button type="Button" className="mx-1 btn-sm btn-primary">
                           <img
-                            className="mr-3"
+                            className="mr-1"
                             src={IconLogo}
                             alt="share icon"
-                          />
-                          ${web3.spartaPrice}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                          /> ${web3.spartaPrice}
+                        </Button>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">
