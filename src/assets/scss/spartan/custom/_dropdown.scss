@@ -8,8 +8,8 @@
 
     &.dropdown-menu-right {
       &:before, &:after {
-        left:auto;
-        right: 10px;
+        right: 98px;
+        left: auto;
       }
     }
 
@@ -127,7 +127,7 @@
 
         &.dropdown-menu-right {
           &:after, &:before {
-            right: 10px;
+            right: 98px;
             left: auto;
           }
         }
@@ -143,7 +143,7 @@
       vertical-align: middle;
       content: "";
       top: -5px;
-      left: 10px;
+      left: 24px;
       right: auto;
       color: $white;
       border-bottom: .4em solid;
@@ -154,7 +154,7 @@
 
 
     &.dropdown-menu-right {
-      right: 0 !important;
+      right: -20% !important;
       left: auto !important;
     }
 
@@ -223,7 +223,6 @@
         visibility: hidden;
         display: block;
         @include opacity(0);
-        top: 100% !important;
     }
 
     &.bootstrap-datetimepicker-widget.top {

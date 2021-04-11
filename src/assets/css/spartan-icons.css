@@ -51,6 +51,25 @@
 }
 
 
+/* Wallet red */
+.icon-wallet-red.icon-dark {
+    background-image: url('/src/assets/icons/wallet-red.svg#light');
+}
+
+
+
+/* Wallet yellow */
+.icon-wallet-yellow.icon-dark {
+    background-image: url('/src/assets/icons/wallet-yellow.svg#light');
+}
+
+
+/* Wallet green */
+.icon-wallet-green.icon-dark {
+    background-image: url('/src/assets/icons/wallet-green.svg#light');
+}
+
+
 /* Search */
 .icon-search.icon-light {
     background-image: url('/src/assets/icons/search.svg#light');

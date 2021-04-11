@@ -60,57 +60,16 @@ const Poolstable = () => {
                   role="tablist"
                 >
                   <Card>
-                    <Row>
-                      <Col md="2">
+                    {/* MOBILE */}
+                    <Row className="d-md-none d-lg-none">
+                      <Col>
                         <h2>
                           <img className="mr-2" src={bnb} alt="Logo" />
                           {asset.symbol}
                         </h2>
                       </Col>
-                      <Col md="2">
-                        <div className="title-card">APY</div>
-                        <div className="subtitle-card">
-                          {formatFromUnits(
-                            calcAPY(
-                              asset.recentDivis,
-                              asset.recentFees,
-                              asset.baseAmount,
-                            ),
-                          )}
-                          %
-                        </div>
-                      </Col>
-                      <Col md="2">
-                        <div className="title-card">Depth</div>
-                        <div className="subtitle-card">
-                          $
-                          {formatFromWei(
-                            BN(asset.baseAmount).times(web3?.spartaPrice),
-                            2,
-                          )}
-                        </div>
-                      </Col>
-                      <Col md="2">
-                        <div className="title-card">Volume (24hrs)</div>
-                        <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
-                      </Col>
-                      <Col md="2">
-                        <div className="title-card">Locked LP</div>
-                        <div className="subtitle-amount">0.00</div>
-                      </Col>
-                      <Col md="2" className="m-auto">
-                        <Button type="Button" className="btn btn-primary">
-                          Bond
-                        </Button>
-                        <Button type="Button" className="btn btn-primary">
-                          Swap
-                        </Button>
-                        <Button type="Button" className="btn btn-primary">
-                          Join
-                        </Button>
-                      </Col>
-                      <Col className="ml-auto" md="1">
-                        {/* ADD ARROW ICON */}
+                      <Col className="text-right mr-2">
+                        {' '}
                         <div
                           aria-expanded={openedCollapseThree}
                           role="button"
@@ -134,45 +93,178 @@ const Poolstable = () => {
                       </Col>
                     </Row>
 
-                    <Card style={{ backgroundColor: '#25212D' }}>
-                      <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                        <CardBody>
-                          <Row>
-                            <Col md="7">
-                              <h3>
-                                <img
-                                  className="mr-2"
-                                  src={bnbSparta}
-                                  alt="Logo"
-                                  height="32"
-                                />
-                                WBNB-SPARTA LP
-                              </h3>
-                            </Col>
-                            <Col md="1">
-                              <div className="title-card ml-n1">
-                                Available LP
-                              </div>
-                              <div className="subtitle-card">0.00</div>
-                            </Col>
-                            <Col md="4">
-                              <Button type="Button" className="btn btn-success">
-                                Lock
-                              </Button>
-                              <Button type="Button" className="btn btn-success">
-                                Unlock
-                              </Button>
-                              <Button
-                                color="success"
-                                onClick={toggleModalNotice}
-                              >
-                                Manage LP
-                              </Button>
-                            </Col>
-                          </Row>
-                        </CardBody>
-                      </Collapse>
-                    </Card>
+                    {/* MOBILE */}
+                    <Row>
+                      <Col md="2" sm="0" className="d-none d-sm-block mt-1">
+                        <h2>
+                          <img className="mr-2" src={bnb} alt="Logo" />
+                          {asset.symbol}
+                        </h2>
+                      </Col>
+                      <Col className="d-md-none" md="1" sm="6" />
+                      <Col md="1" sm="10">
+                        <div className="title-card ">APY</div>
+                        <div className="subtitle-card">
+                          {formatFromUnits(
+                            calcAPY(
+                              asset.recentDivis,
+                              asset.recentFees,
+                              asset.baseAmount,
+                            ),
+                          )}
+                          %
+                        </div>
+                      </Col>
+                      <Col md="1">
+                        <div className="title-card">Depth</div>
+                        <div className="subtitle-card">
+                          $
+                          {formatFromWei(
+                            BN(asset.baseAmount).times(web3?.spartaPrice),
+                            2,
+                          )}
+                        </div>
+                      </Col>
+                      <Col md="2">
+                        <div className="title-card">Volume (24hrs)</div>
+                        <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
+                      </Col>
+                      <Col md="2">
+                        <div className="title-card">Locked LP</div>
+                        <div className="subtitle-amount">0.00</div>
+                      </Col>
+
+                      <Col md="3" className="m-auto d-none d-sm-block">
+                        <Button type="Button" className="btn btn-primary mb-2">
+                          Bond
+                        </Button>
+                        <Button type="Button" className="btn btn-primary mb-2">
+                          Swap
+                        </Button>
+                        <Button type="Button" className="btn btn-primary mb-2">
+                          Join
+                        </Button>
+                      </Col>
+
+                      <Col className="d-block d-sm-none">
+                        <br />
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Bond
+                        </Button>
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Swap
+                        </Button>
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Join
+                        </Button>
+                      </Col>
+
+                      <Col className="ml-auto mt-2 d-none d-sm-block" md="1">
+                        {/* ADD ARROW ICON */}
+                        <div
+                          aria-expanded={openedCollapseThree}
+                          role="button"
+                          tabIndex={-1}
+                          data-parent="#accordion"
+                          data-toggle="collapse"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            setopenedCollapseThree(!openedCollapseThree)
+                          }}
+                          onKeyPress={(e) => {
+                            e.preventDefault()
+                            setopenedCollapseThree(!openedCollapseThree)
+                          }}
+                        >
+                          <i
+                            className="bd-icons icon-minimal-down mt-3"
+                            style={{ color: '#FFF' }}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                    <Collapse role="tabpanel" isOpen={openedCollapseThree}>
+                      <Row>
+                        <Col md="6">
+                          <h3>
+                            <img
+                              className="mr-2"
+                              src={bnbSparta}
+                              alt="Logo"
+                              height="32"
+                            />
+                            WBNB-SPARTA LP
+                          </h3>
+                        </Col>
+                        <Col md="6">
+                          <Card style={{ backgroundColor: '#25212D' }}>
+                            <CardBody>
+                              <Row>
+                                <Col md="4">
+                                  <div className="title-card ml-n1">
+                                    Available LP
+                                  </div>
+                                  <div className="subtitle-card">0.00</div>
+                                </Col>
+
+                                {/* Mobile */}
+                                <Col className="ml-n1 d-block d-sm-none">
+                                  <Button
+                                    type="Button"
+                                    className="btn-sm btn-success"
+                                  >
+                                    Lock
+                                  </Button>
+                                  <Button
+                                    type="Button"
+                                    className="btn-sm btn-success"
+                                  >
+                                    Unlock
+                                  </Button>
+                                  <Button
+                                    className="btn-sm btn-success"
+                                    color="success"
+                                    onClick={toggleModalNotice}
+                                  >
+                                    LP
+                                  </Button>
+                                </Col>
+
+                                <Col md="8" className="ml-n1 d-none d-sm-block">
+                                  <Button
+                                    type="Button"
+                                    className="btn btn-success"
+                                  >
+                                    Lock
+                                  </Button>
+                                  <Button
+                                    type="Button"
+                                    className="btn btn-success"
+                                  >
+                                    Unlock
+                                  </Button>
+                                  <Button
+                                    color="success"
+                                    onClick={toggleModalNotice}
+                                  >
+                                    Manage LP
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </CardBody>
+                          </Card>
+                        </Col>
+                      </Row>
+                    </Collapse>
                   </Card>
                 </div>
               </Card>
