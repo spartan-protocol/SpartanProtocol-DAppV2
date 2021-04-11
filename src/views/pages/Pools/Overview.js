@@ -1,8 +1,5 @@
-/* eslint-disable*/
-
 import React, { useState } from 'react'
 import {
-  CardText,
   Breadcrumb,
   Col,
   Nav,
@@ -390,10 +387,8 @@ const Overview = () => {
               <TabPane tabId="2" className="p-3" />
               <TabPane tabId="3" className="p-3" />
               <TabPane tabId="4" className="p-3" />
-              <TabPane tabId="5" className="p-3">
-              </TabPane>
-              <TabPane tabId="6" className="p-3">
-              </TabPane>
+              <TabPane tabId="5" className="p-3" />
+              <TabPane tabId="6" className="p-3" />
             </TabContent>
           </Col>
         </Row>

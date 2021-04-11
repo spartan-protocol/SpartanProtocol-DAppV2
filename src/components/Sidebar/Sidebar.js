@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 
 import { Nav, Collapse, Row, Col } from 'reactstrap'
 import AddressConn from '../Common/AddressConn'
-import Connection from '../Common/Connection'
 
 const Sidebar = (props) => {
   const [state, setState] = React.useState({})
@@ -193,7 +192,6 @@ const Sidebar = (props) => {
               connectedTokens={props.connectedTokens}
               connectingTokens={props.connectingTokens}
             />
-            <Connection />
           </Col>
         </Row>
         {logoImg !== null || logoText !== null ? (

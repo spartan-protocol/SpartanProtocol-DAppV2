@@ -1,4 +1,3 @@
-/* eslint-disable*/
 import React from 'react'
 import classNames from 'classnames'
 import {
@@ -131,13 +130,10 @@ const Header = (props) => {
                   data-toggle="dropdown"
                   nav
                 >
-                        <Button type="Button" className="mx-1 btn-sm btn-primary">
-                          <img
-                            className="mr-1"
-                            src={IconLogo}
-                            alt="share icon"
-                          /> ${web3.spartaPrice}
-                        </Button>
+                  <Button type="Button" className="mx-1 btn-sm btn-primary">
+                    <img className="mr-1" src={IconLogo} alt="share icon" /> $
+                    {web3.spartaPrice}
+                  </Button>
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   <NavLink tag="li">

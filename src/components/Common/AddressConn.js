@@ -1,8 +1,7 @@
-/* eslint-disable*/
 import React, { useState } from 'react'
 import { Button } from 'reactstrap'
-import WalletSelect from '../WalletSelect/WalletSelect'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import WalletSelect from '../WalletSelect/WalletSelect'
 // import walletTypes from '../WalletSelect/walletTypes'
 
 const AddressConn = () => {
@@ -11,9 +10,8 @@ const AddressConn = () => {
   // const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
   return (
-      <>
-
-        {wallet?.status === 'disconnected' &&
+    <>
+      {wallet?.status === 'disconnected' && (
         <>
           <Button
             type="button"
@@ -24,9 +22,9 @@ const AddressConn = () => {
             <i className="icon-small icon-wallet-red icon-dark mt-1" />
           </Button>
         </>
-        }
+      )}
 
-        {wallet?.status === 'error' &&
+      {wallet?.status === 'error' && (
         <>
           <Button
             type="button"
@@ -37,9 +35,9 @@ const AddressConn = () => {
             <i className="icon-small icon-wallet-red icon-dark mt-1" />
           </Button>
         </>
-        }
+      )}
 
-        {wallet?.status === 'connecting' &&
+      {wallet?.status === 'connecting' && (
         <>
           <Button
             type="button"
@@ -50,9 +48,9 @@ const AddressConn = () => {
             <i className="icon-small icon-wallet-yellow icon-dark mt-1" />
           </Button>
         </>
-        }
+      )}
 
-        {wallet?.status === 'connected' &&
+      {wallet?.status === 'connected' && (
         <>
           <Button
             type="button"
@@ -63,15 +61,14 @@ const AddressConn = () => {
             <i className="icon-small icon-wallet-green icon-dark mt-1" />
           </Button>
         </>
-        }
+      )}
 
-
-        <WalletSelect
-          show={walletModalShow}
-          onHide={() => setWalletModalShow(false)}
-          // setWalletHeaderIcon={setWalletHeaderIcon}
-        />
-      </>
+      <WalletSelect
+        show={walletModalShow}
+        onHide={() => setWalletModalShow(false)}
+        // setWalletHeaderIcon={setWalletHeaderIcon}
+      />
+    </>
   )
 }
 export default AddressConn

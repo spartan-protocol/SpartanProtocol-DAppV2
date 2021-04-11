@@ -1,6 +1,4 @@
-/* eslint-disable*/
-
-import React from "react"
+import React from 'react'
 import {
   Button,
   Card,
@@ -13,22 +11,22 @@ import {
   NavLink,
   TabContent,
   TabPane,
-  Collapse
-} from "reactstrap"
-import UncontrolledTooltip from "reactstrap/lib/UncontrolledTooltip"
-import bnbSparta from "../../../assets/icons/bnb_sparta.png"
-import bnb from "../../../assets/icons/BNB.svg"
-import { usePoolFactory } from "../../../store/poolFactory"
-import HelmetLoading from "../../../components/Loaders/HelmetLoading"
-import { calcAPY } from "../../../utils/web3Utils"
-import { BN, formatFromUnits, formatFromWei } from "../../../utils/bigNumber"
-import { useWeb3 } from "../../../store/web3"
+  Collapse,
+} from 'reactstrap'
+import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import bnbSparta from '../../../assets/icons/bnb_sparta.png'
+import bnb from '../../../assets/icons/BNB.svg'
+import { usePoolFactory } from '../../../store/poolFactory'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { calcAPY } from '../../../utils/web3Utils'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { useWeb3 } from '../../../store/web3'
 
 const Poolstable = () => {
   const poolFactory = usePoolFactory()
   const web3 = useWeb3()
 
-  const [horizontalTabs, sethorizontalTabs] = React.useState("harvest")
+  const [horizontalTabs, sethorizontalTabs] = React.useState('harvest')
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
     sethorizontalTabs(tabName)
@@ -47,13 +45,13 @@ const Poolstable = () => {
       {poolFactory?.finalLpArray && (
         <Col md={12}>
           {poolFactory?.finalLpArray
-            .filter((asset) => asset.symbol !== "SPARTA")
+            .filter((asset) => asset.symbol !== 'SPARTA')
             .sort((a, b) => b.baseAmount - a.baseAmount)
             .map((asset) => (
               <Card
                 key={asset.tokenAddress}
                 className="card-body"
-                style={{ backgroundColor: "#1D171F" }}
+                style={{ backgroundColor: '#1D171F' }}
               >
                 <div
                   aria-multiselectable
@@ -62,37 +60,38 @@ const Poolstable = () => {
                   role="tablist"
                 >
                   <Card>
-
                     {/* MOBILE */}
                     <Row className="d-md-none d-lg-none">
-                      <Col >
+                      <Col>
                         <h2>
-                        <img className="mr-2" src={bnb} alt="Logo" />
-                        {asset.symbol}
-                      </h2></Col>
-                      <Col className="text-right mr-2">  <div
-                        aria-expanded={openedCollapseThree}
-                        role="button"
-                        tabIndex={-1}
-                        data-parent="#accordion"
-                        data-toggle="collapse"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setopenedCollapseThree(!openedCollapseThree)
-                        }}
-                        onKeyPress={(e) => {
-                          e.preventDefault()
-                          setopenedCollapseThree(!openedCollapseThree)
-                        }}
-                      >
-                        <i
-                          className="bd-icons icon-minimal-down mt-3"
-                          style={{ color: "#FFF" }}
-                        />
-                      </div>
+                          <img className="mr-2" src={bnb} alt="Logo" />
+                          {asset.symbol}
+                        </h2>
+                      </Col>
+                      <Col className="text-right mr-2">
+                        {' '}
+                        <div
+                          aria-expanded={openedCollapseThree}
+                          role="button"
+                          tabIndex={-1}
+                          data-parent="#accordion"
+                          data-toggle="collapse"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            setopenedCollapseThree(!openedCollapseThree)
+                          }}
+                          onKeyPress={(e) => {
+                            e.preventDefault()
+                            setopenedCollapseThree(!openedCollapseThree)
+                          }}
+                        >
+                          <i
+                            className="bd-icons icon-minimal-down mt-3"
+                            style={{ color: '#FFF' }}
+                          />
+                        </div>
                       </Col>
                     </Row>
-
 
                     {/* MOBILE */}
                     <Row>
@@ -102,8 +101,7 @@ const Poolstable = () => {
                           {asset.symbol}
                         </h2>
                       </Col>
-                      <Col className="d-md-none" md="1" sm="6">
-                      </Col>
+                      <Col className="d-md-none" md="1" sm="6" />
                       <Col md="1" sm="10">
                         <div className="title-card ">APY</div>
                         <div className="subtitle-card">
@@ -111,8 +109,8 @@ const Poolstable = () => {
                             calcAPY(
                               asset.recentDivis,
                               asset.recentFees,
-                              asset.baseAmount
-                            )
+                              asset.baseAmount,
+                            ),
                           )}
                           %
                         </div>
@@ -123,7 +121,7 @@ const Poolstable = () => {
                           $
                           {formatFromWei(
                             BN(asset.baseAmount).times(web3?.spartaPrice),
-                            2
+                            2,
                           )}
                         </div>
                       </Col>
@@ -136,7 +134,7 @@ const Poolstable = () => {
                         <div className="subtitle-amount">0.00</div>
                       </Col>
 
-                      <Col md="3"  className="m-auto d-none d-sm-block">
+                      <Col md="3" className="m-auto d-none d-sm-block">
                         <Button type="Button" className="btn btn-primary mb-2">
                           Bond
                         </Button>
@@ -148,21 +146,27 @@ const Poolstable = () => {
                         </Button>
                       </Col>
 
-
-                        <Col  className="d-block d-sm-none">
-                          <br/>
-                          <Button type="Button" className="btn-sm btn-primary mb-2">
-                            Bond
-                          </Button>
-                          <Button type="Button" className="btn-sm btn-primary mb-2">
-                            Swap
-                          </Button>
-                          <Button type="Button" className="btn-sm btn-primary mb-2">
-                            Join
-                          </Button>
-                        </Col>
-
-
+                      <Col className="d-block d-sm-none">
+                        <br />
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Bond
+                        </Button>
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Swap
+                        </Button>
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Join
+                        </Button>
+                      </Col>
 
                       <Col className="ml-auto mt-2 d-none d-sm-block" md="1">
                         {/* ADD ARROW ICON */}
@@ -183,63 +187,69 @@ const Poolstable = () => {
                         >
                           <i
                             className="bd-icons icon-minimal-down mt-3"
-                            style={{ color: "#FFF" }}
+                            style={{ color: '#FFF' }}
                           />
                         </div>
                       </Col>
                     </Row>
                     <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                    <Row>
-                      <Col md="6">
-                        <h3>
-                          <img
-                            className="mr-2"
-                            src={bnbSparta}
-                            alt="Logo"
-                            height="32"
-                          />
-                          WBNB-SPARTA LP
-                        </h3>
-                      </Col>
-                      <Col md="6">
-                        <Card style={{ backgroundColor: "#25212D" }}>
+                      <Row>
+                        <Col md="6">
+                          <h3>
+                            <img
+                              className="mr-2"
+                              src={bnbSparta}
+                              alt="Logo"
+                              height="32"
+                            />
+                            WBNB-SPARTA LP
+                          </h3>
+                        </Col>
+                        <Col md="6">
+                          <Card style={{ backgroundColor: '#25212D' }}>
                             <CardBody>
                               <Row>
-                                <Col md="4" >
+                                <Col md="4">
                                   <div className="title-card ml-n1">
                                     Available LP
                                   </div>
                                   <div className="subtitle-card">0.00</div>
                                 </Col>
 
-
-
-
-                                {/*Mobile*/}
+                                {/* Mobile */}
                                 <Col className="ml-n1 d-block d-sm-none">
-
-                                  <Button type="Button" className="btn-sm btn-success">
+                                  <Button
+                                    type="Button"
+                                    className="btn-sm btn-success"
+                                  >
                                     Lock
                                   </Button>
-                                  <Button type="Button" className="btn-sm btn-success">
+                                  <Button
+                                    type="Button"
+                                    className="btn-sm btn-success"
+                                  >
                                     Unlock
                                   </Button>
                                   <Button
                                     className="btn-sm btn-success"
                                     color="success"
                                     onClick={toggleModalNotice}
-                                  >LP
+                                  >
+                                    LP
                                   </Button>
                                 </Col>
 
-
-
-
                                 <Col md="8" className="ml-n1 d-none d-sm-block">
-                                  <Button type="Button" className="btn btn-success">
+                                  <Button
+                                    type="Button"
+                                    className="btn btn-success"
+                                  >
                                     Lock
                                   </Button>
-                                  <Button type="Button" className="btn btn-success">
+                                  <Button
+                                    type="Button"
+                                    className="btn btn-success"
+                                  >
                                     Unlock
                                   </Button>
                                   <Button
@@ -249,12 +259,11 @@ const Poolstable = () => {
                                     Manage LP
                                   </Button>
                                 </Col>
-
                               </Row>
                             </CardBody>
-                        </Card>
-                      </Col>
-                    </Row>
+                          </Card>
+                        </Col>
+                      </Row>
                     </Collapse>
                   </Card>
                 </div>
@@ -282,16 +291,16 @@ const Poolstable = () => {
             <Row>
               <Col md={6} className="justify-content-center">
                 <Card
-                  style={{ backgroundColor: "#25212D" }}
+                  style={{ backgroundColor: '#25212D' }}
                   className="card-body "
                 >
-                  <NavItem style={{ listStyleType: "none" }}>
+                  <NavItem style={{ listStyleType: 'none' }}>
                     <NavLink
                       data-toggle="tab"
                       href="#"
-                      className={horizontalTabs === "harvest" ? "active" : ""}
+                      className={horizontalTabs === 'harvest' ? 'active' : ''}
                       onClick={(e) =>
-                        changeActiveTab(e, "horizontalTabs", "harvest")
+                        changeActiveTab(e, 'horizontalTabs', 'harvest')
                       }
                     >
                       <div className="text-center">
@@ -307,16 +316,16 @@ const Poolstable = () => {
               </Col>
               <Col md={6} className="justify-content-center">
                 <Card
-                  style={{ backgroundColor: "#25212D" }}
+                  style={{ backgroundColor: '#25212D' }}
                   className="card-body "
                 >
-                  <NavItem style={{ listStyleType: "none" }}>
+                  <NavItem style={{ listStyleType: 'none' }}>
                     <NavLink
                       data-toggle="tab"
                       href="#"
-                      className={horizontalTabs === "remove" ? "active" : ""}
+                      className={horizontalTabs === 'remove' ? 'active' : ''}
                       onClick={(e) =>
-                        changeActiveTab(e, "horizontalTabs", "remove")
+                        changeActiveTab(e, 'horizontalTabs', 'remove')
                       }
                     >
                       <div className="text-center">
@@ -336,7 +345,7 @@ const Poolstable = () => {
                 <Row>
                   <Col md={12}>
                     <Card
-                      style={{ backgroundColor: "#25212D" }}
+                      style={{ backgroundColor: '#25212D' }}
                       className="card-body"
                     >
                       <Col>
@@ -347,7 +356,7 @@ const Poolstable = () => {
                     <Row>
                       <Col>
                         <div className="text-card">
-                          DAO weight{" "}
+                          DAO weight{' '}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -384,7 +393,7 @@ const Poolstable = () => {
                 <Row>
                   <Col md={12}>
                     <Card
-                      style={{ backgroundColor: "#25212D" }}
+                      style={{ backgroundColor: '#25212D' }}
                       className="card-body"
                     >
                       <Row>
@@ -397,7 +406,7 @@ const Poolstable = () => {
                             Locked LP 678.23
                           </div>
                           <div className="output-card text-right">
-                            WBNB-SPARTA LP{" "}
+                            WBNB-SPARTA LP{' '}
                             <img
                               className="mr-2"
                               src={bnbSparta}
@@ -424,7 +433,7 @@ const Poolstable = () => {
                     <Row>
                       <Col>
                         <div className="text-card">
-                          DAO Redeem LP Tokens{" "}
+                          DAO Redeem LP Tokens{' '}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -439,7 +448,7 @@ const Poolstable = () => {
                         </div>
                         <br />
                         <div className="text-card">
-                          Receive{" "}
+                          Receive{' '}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -454,7 +463,7 @@ const Poolstable = () => {
                         </div>
                         <br />
                         <div className="text-card">
-                          Staked LP Tokens{" "}
+                          Staked LP Tokens{' '}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -469,7 +478,7 @@ const Poolstable = () => {
                         </div>
                         <br />
                         <div className="text-card">
-                          Staked LP Tokens{" "}
+                          Staked LP Tokens{' '}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
