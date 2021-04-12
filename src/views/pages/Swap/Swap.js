@@ -888,6 +888,132 @@ const Swap = () => {
                     </Col>
                   </Row>
                 )}
+                {/* Bottom 'synth' txnDetails row */}
+                {mode === 'synth' && (
+                  <Row>
+                    {/* TextLeft 'synth' txnDetails col */}
+                    <Col>
+                      <div className="text-card">
+                        Input{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
+                      <br />
+                      <div className="text-card">
+                        {assetSwap1?.symbol === 'SPARTA'
+                          ? 'Swap'
+                          : 'Release Collateral'}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
+                      <br />
+                      <div className="text-card">
+                        {assetSwap1?.symbol === 'SPARTA'
+                          ? 'Add Liquidity'
+                          : 'Remove Liquidity'}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
+                      <br />
+                      <div className="text-card">
+                        {assetSwap1?.symbol === 'SPARTA'
+                          ? 'Add Collateral'
+                          : 'Swap'}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
+                      <br />
+                      <div className="amount">
+                        Output{' '}
+                        <i
+                          className="icon-small icon-info icon-dark ml-2"
+                          id="tooltipAddBase"
+                          role="button"
+                        />
+                        <UncontrolledTooltip
+                          placement="right"
+                          target="tooltipAddBase"
+                        >
+                          The quantity of & SPARTA you are adding to the pool.
+                        </UncontrolledTooltip>
+                      </div>
+                      <br />
+                    </Col>
+                    {/* TextRight synth txnDetails col */}
+                    <Col className="text-right">
+                      <div className="output-card">
+                        input {swapInput1?.value} {assetSwap1?.symbol}
+                        {assetSwap1?.symbol !== 'SPARTA' && '-SPS'}
+                      </div>
+                      <br />
+                      <div className="output-card">
+                        remove {formatFromWei(getZapRemoveBase())} SPARTA +{' '}
+                        {formatFromWei(getZapRemoveToken())}{' '}
+                        {assetSwap1?.symbol}
+                      </div>
+                      <br />
+                      <div className="output-card">
+                        swap {formatFromWei(getZapRemoveToken())}{' '}
+                        {assetSwap1?.symbol} for {formatFromWei(getZapSwap1())}{' '}
+                        SPARTA
+                      </div>
+                      <div className="output-card">
+                        then swap {formatFromWei(getZapSwap1())} SPARTA for{' '}
+                        {formatFromWei(getZapSwap2())} {assetSwap2?.symbol}
+                      </div>
+                      <div className="output-card">
+                        inc slip fee: {formatFromWei(getZapDoubleSwapFee())}{' '}
+                        SPARTA
+                      </div>
+                      <br />
+                      <div className="output-card">
+                        add {formatFromWei(getZapRemoveBase())} SPARTA +{' '}
+                        {formatFromWei(getZapSwap2())} {assetSwap2?.symbol}
+                      </div>
+                      <br />
+                      <div className="subtitle-amount">
+                        output {formatFromWei(getZapOutput())}{' '}
+                        {assetSwap2?.symbol}-SPP
+                      </div>
+                    </Col>
+                  </Row>
+                )}
                 {mode === 'token' && (
                   <Button
                     color="primary"
