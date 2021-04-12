@@ -1,7 +1,7 @@
 @include media-breakpoint-down(md) {
-  .navbar .dropdown.show .dropdown-menu {
-    position: static !important;
-  }
+  // .navbar .dropdown.show .dropdown-menu {
+  //   position: static !important;
+  // }
   .navbar:not(.bg-white) {
     .dropdown.show .dropdown-menu .dropdown-item {
       color: $opacity-8;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Button,
   Card,
@@ -37,7 +37,16 @@ const Poolstable = () => {
     setModalNotice(!modalNotice)
   }
 
-  const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
+  const [openedCollapseThree, setopenedCollapseThree] = React.useState([])
+
+  useEffect(() => {
+    const collapseThree = []
+    if (poolFactory && poolFactory.finalLpArray) {
+      poolFactory.finalLpArray.forEach(() => {
+        collapseThree.push(false)
+      })
+    }
+  }, [poolFactory])
 
   return (
     <>
@@ -47,7 +56,7 @@ const Poolstable = () => {
           {poolFactory?.finalLpArray
             .filter((asset) => asset.symbol !== 'SPARTA')
             .sort((a, b) => b.baseAmount - a.baseAmount)
-            .map((asset) => (
+            .map((asset, index) => (
               <Card
                 key={asset.tokenAddress}
                 className="card-body"
@@ -60,15 +69,50 @@ const Poolstable = () => {
                   role="tablist"
                 >
                   <Card>
-                    <Row>
-                      <Col md="2">
+                    {/* MOBILE */}
+                    <Row className="d-md-none d-lg-none">
+                      <Col>
                         <h2>
                           <img className="mr-2" src={bnb} alt="Logo" />
                           {asset.symbol}
                         </h2>
                       </Col>
-                      <Col md="2">
-                        <div className="title-card">APY</div>
+                      <Col className="text-right mr-2">
+                        {' '}
+                        <div
+                          aria-expanded={openedCollapseThree[index]}
+                          role="button"
+                          tabIndex={-1}
+                          data-parent="#accordion"
+                          data-toggle="collapse"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            setopenedCollapseThree(!openedCollapseThree[index])
+                          }}
+                          onKeyPress={(e) => {
+                            e.preventDefault()
+                            setopenedCollapseThree(!openedCollapseThree[index])
+                          }}
+                        >
+                          <i
+                            className="bd-icons icon-minimal-down mt-3"
+                            style={{ color: '#FFF' }}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+
+                    {/* MOBILE */}
+                    <Row>
+                      <Col md="2" sm="0" className="d-none d-sm-block mt-1">
+                        <h2>
+                          <img className="mr-2" src={bnb} alt="Logo" />
+                          {asset.symbol}
+                        </h2>
+                      </Col>
+                      <Col className="d-md-none" md="1" sm="6" />
+                      <Col md="1" sm="10">
+                        <div className="title-card ">APY</div>
                         <div className="subtitle-card">
                           {formatFromUnits(
                             calcAPY(
@@ -80,7 +124,7 @@ const Poolstable = () => {
                           %
                         </div>
                       </Col>
-                      <Col md="2">
+                      <Col md="1">
                         <div className="title-card">Depth</div>
                         <div className="subtitle-card">
                           $
@@ -94,36 +138,62 @@ const Poolstable = () => {
                         <div className="title-card">Volume (24hrs)</div>
                         <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
                       </Col>
-                      <Col md="2">
+                      <Col md="1">
                         <div className="title-card">Locked LP</div>
                         <div className="subtitle-amount">0.00</div>
                       </Col>
-                      <Col md="2" className="m-auto">
-                        <Button type="Button" className="btn btn-primary">
+
+                      <Col md="3" className="m-auto d-none d-sm-block">
+                        <Button type="Button" className="btn btn-primary mb-2">
                           Bond
                         </Button>
-                        <Button type="Button" className="btn btn-primary">
+                        <Button type="Button" className="btn btn-primary mb-2">
                           Swap
                         </Button>
-                        <Button type="Button" className="btn btn-primary">
+                        <Button type="Button" className="btn btn-primary mb-2">
                           Join
                         </Button>
                       </Col>
-                      <Col className="ml-auto" md="1">
+
+                      <Col className="d-block d-sm-none">
+                        <br />
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Bond
+                        </Button>
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Swap
+                        </Button>
+                        <Button
+                          type="Button"
+                          className="btn-sm btn-primary mb-2"
+                        >
+                          Join
+                        </Button>
+                      </Col>
+
+                      <Col className="ml-auto mt-2 d-none d-sm-block" md="1">
                         {/* ADD ARROW ICON */}
                         <div
-                          aria-expanded={openedCollapseThree}
+                          aria-expanded={openedCollapseThree[index]}
                           role="button"
                           tabIndex={-1}
                           data-parent="#accordion"
                           data-toggle="collapse"
                           onClick={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            const collapseThree = [...openedCollapseThree]
+                            collapseThree[index] = !collapseThree[index]
+                            setopenedCollapseThree(collapseThree)
                           }}
                           onKeyPress={(e) => {
                             e.preventDefault()
-                            setopenedCollapseThree(!openedCollapseThree)
+                            setopenedCollapseThree(!openedCollapseThree[index])
                           }}
                         >
                           <i
@@ -133,46 +203,82 @@ const Poolstable = () => {
                         </div>
                       </Col>
                     </Row>
+                    <Collapse
+                      role="tabpanel"
+                      isOpen={openedCollapseThree[index]}
+                    >
+                      <Row>
+                        <Col md="6">
+                          <h3>
+                            <img
+                              className="mr-2"
+                              src={bnbSparta}
+                              alt="Logo"
+                              height="32"
+                            />
+                            WBNB-SPARTA LP
+                          </h3>
+                        </Col>
+                        <Col md="6">
+                          <Card style={{ backgroundColor: '#25212D' }}>
+                            <CardBody>
+                              <Row>
+                                <Col md="4">
+                                  <div className="title-card ml-n1">
+                                    Available LP
+                                  </div>
+                                  <div className="subtitle-card">0.00</div>
+                                </Col>
 
-                    <Card style={{ backgroundColor: '#25212D' }}>
-                      <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                        <CardBody>
-                          <Row>
-                            <Col md="7">
-                              <h3>
-                                <img
-                                  className="mr-2"
-                                  src={bnbSparta}
-                                  alt="Logo"
-                                  height="32"
-                                />
-                                WBNB-SPARTA LP
-                              </h3>
-                            </Col>
-                            <Col md="1">
-                              <div className="title-card ml-n1">
-                                Available LP
-                              </div>
-                              <div className="subtitle-card">0.00</div>
-                            </Col>
-                            <Col md="4">
-                              <Button type="Button" className="btn btn-success">
-                                Lock
-                              </Button>
-                              <Button type="Button" className="btn btn-success">
-                                Unlock
-                              </Button>
-                              <Button
-                                color="success"
-                                onClick={toggleModalNotice}
-                              >
-                                Manage LP
-                              </Button>
-                            </Col>
-                          </Row>
-                        </CardBody>
-                      </Collapse>
-                    </Card>
+                                {/* Mobile */}
+                                <Col className="ml-n1 d-block d-sm-none">
+                                  <Button
+                                    type="Button"
+                                    className="btn-sm btn-success"
+                                  >
+                                    Lock
+                                  </Button>
+                                  <Button
+                                    type="Button"
+                                    className="btn-sm btn-success"
+                                  >
+                                    Unlock
+                                  </Button>
+                                  <Button
+                                    className="btn-sm btn-success"
+                                    color="success"
+                                    onClick={toggleModalNotice}
+                                  >
+                                    LP
+                                  </Button>
+                                </Col>
+
+                                <Col md="8" className="ml-n1 d-none d-sm-block">
+                                  <Button
+                                    type="Button"
+                                    className="btn btn-success"
+                                  >
+                                    Lock
+                                  </Button>
+                                  <Button
+                                    type="Button"
+                                    className="btn btn-success"
+                                  >
+                                    Unlock
+                                  </Button>
+                                  <Button
+                                    color="success"
+                                    onClick={toggleModalNotice}
+                                  >
+                                    Manage LP
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </CardBody>
+                          </Card>
+                        </Col>
+                      </Row>
+                    </Collapse>
                   </Card>
                 </div>
               </Card>

@@ -2,42 +2,42 @@ import React from 'react'
 import classNames from 'classnames'
 import {
   Button,
-  Collapse,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
   NavbarBrand,
   Navbar,
-  NavLink,
   Nav,
+  Row,
+  Col,
   Container,
+  UncontrolledPopover,
+  PopoverHeader,
+  PopoverBody,
 } from 'reactstrap'
 import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
 import { useWeb3 } from '../../store/web3'
-import IconLogo from '../../assets/img/spartan_black_small.svg'
-import Connection from '../Common/Connection'
+import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
+import { getExplorerContract } from '../../utils/extCalls'
+import { getAddresses } from '../../utils/web3'
 
 const Header = (props) => {
   const web3 = useWeb3()
-  const [collapseOpen] = React.useState(false)
-  const [color, setColor] = React.useState('navbar-transparent')
+  const addr = getAddresses()
+  // const [color, setColor] = React.useState('navbar-transparent')
   // function that adds color white/transparent to the navbar on resize (this is for the collapse)
-  const updateColor = () => {
-    if (window.innerWidth < 993 && collapseOpen) {
-      setColor('bg-white')
-    } else {
-      setColor('navbar-transparent')
-    }
-  }
-  React.useEffect(() => {
-    window.addEventListener('resize', updateColor)
-    return function cleanup() {
-      window.removeEventListener('resize', updateColor)
-    }
-  })
+  // const updateColor = () => {
+  //   if (window.innerWidth < 993 && collapseOpen) {
+  //     setColor('bg-white')
+  //   } else {
+  //     setColor('navbar-transparent')
+  //   }
+  // }
+  // React.useEffect(() => {
+  //   window.addEventListener('resize', updateColor)
+  //   return function cleanup() {
+  //     window.removeEventListener('resize', updateColor)
+  //   }
+  // })
 
   // // this function opens and closes the collapse on small devices
   // const toggleCollapse = () => {
@@ -54,12 +54,12 @@ const Header = (props) => {
   return (
     <>
       <Navbar
-        className={classNames('navbar-absolute', {
-          [color]: props.location.pathname.indexOf('full-screen-map') === -1,
+        className={classNames('navbar sticky-top', {
+          color: 'navbar-transparent',
         })}
         expand="lg"
       >
-        <Container fluid>
+        <Container fluid className="px-1">
           <div className="navbar-wrapper ml-n2">
             <div className="navbar-minimize d-inline">
               <Button
@@ -68,8 +68,8 @@ const Header = (props) => {
                 id="tooltip209599"
                 onClick={props.handleMiniClick}
               >
-                <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular mr-4" />
-                <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini mr-4" />
+                <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n2 mr-4" />
+                <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n2 mr-4" />
               </Button>
             </div>
             <div
@@ -90,23 +90,9 @@ const Header = (props) => {
             <NavbarBrand className="d-none d-md-block" href="./">
               <SpartanLogo className="mr-2" /> Spartan Protocol
             </NavbarBrand>
-            <div className="d-md-none price-notificaiton">
-              <div className="overlap-group">
-                <div className="wallet wallet-text">0xe4ae305ebe...</div>
-                <div className="adjustable-primary-medium">
-                  <div className="frame-1">
-                    <div className="frame" />
-                  </div>
-                  <div className="wallet-price wallet-text">
-                    <img className="mr-3" src={IconLogo} alt="share icon" />$
-                    {web3.spartaPrice}
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <button
+          {/* <button
             className="navbar-toggler"
             type="button"
             data-toggle="collapse"
@@ -114,88 +100,150 @@ const Header = (props) => {
             aria-expanded="false"
             aria-label="Toggle navigation"
             // onClick={toggleCollapse}
-          />
-          <Collapse navbar isOpen={collapseOpen}>
-            <Nav className="ml-auto" navbar>
-              <li className="separator d-lg-none" />
-              <LanguageDropdown />
-              <AddressConn
-                changeStates={props.changeStates}
-                changeNotification={props.changeNotification}
-                connectedTokens={props.connectedTokens}
-                connectingTokens={props.connectingTokens}
-              />
-              <Connection />
-              <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  nav
-                >
-                  <div className="price-notificaiton">
-                    <div className="overlap-group">
-                      <div className="wallet wallet-text">0xe4ae305ebe...</div>
-                      <div className="adjustable-primary-medium">
-                        <div className="frame-1">
-                          <div className="frame" />
-                        </div>
-                        <div className="wallet-price wallet-text">
-                          <img
-                            className="mr-3"
-                            src={IconLogo}
-                            alt="share icon"
-                          />
-                          ${web3.spartaPrice}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-navbar" right tag="ul">
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Total Supply:
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Circulating:
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Max Supply: 300,000,000
-                    </DropdownItem>
-                  </NavLink>
-                  <NavLink tag="li">
-                    <DropdownItem className="nav-item">
-                      Market Cap:
-                    </DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem disabled>
-                      <div className="text-center">
-                        <i className="bx bx-edit text-success mr-1" />
-                        Contracts
-                      </div>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <div>SPARTA</div>
-                      <div>UTILS</div>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <div>DAO</div>
-                      <div>ROUTER</div>
-                    </DropdownItem>
-                    <DropdownItem>
-                      <div>BONDv2</div>
-                      <div>BONDv3</div>
-                    </DropdownItem>
-                  </NavLink>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
-          </Collapse>
+          /> */}
+          <Nav className="ml-auto" navbar>
+            <LanguageDropdown />
+            <AddressConn
+              changeStates={props.changeStates}
+              changeNotification={props.changeNotification}
+              connectedTokens={props.connectedTokens}
+              connectingTokens={props.connectingTokens}
+            />
+            <Button
+              type="Button"
+              className="mx-2 btn btn-primary px-4 py-2"
+              href="#"
+              id="headerPriceTooltip"
+            >
+              <img
+                className="mr-1"
+                src={IconLogo}
+                height="25px"
+                alt="share icon"
+              />{' '}
+              ${web3.spartaPrice}
+            </Button>
+            <UncontrolledPopover
+              placement="bottom"
+              target="headerPriceTooltip"
+              className="text-center"
+              data-html="true"
+            >
+              <PopoverHeader className="text-center">
+                Token Supply
+              </PopoverHeader>
+              <PopoverBody>
+                <Row className="text-center">
+                  <Col xs="6">Total Supply:</Col>
+                  <Col xs="6">123,456,789</Col>
+                  <Col xs="6">Circulating: </Col>
+                  <Col xs="6">123,456,789</Col>
+                  <Col xs="6">Max Supply: </Col>
+                  <Col xs="6">300,000,000</Col>
+                  <Col xs="6">Market Cap: </Col>
+                  <Col xs="6">123,456,789</Col>
+                </Row>
+              </PopoverBody>
+              <PopoverHeader className="text-center">
+                Token Contracts
+              </PopoverHeader>
+              <PopoverBody>
+                <Row className="text-center">
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.sparta)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      SPARTA
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    {' '}
+                    <a
+                      href={getExplorerContract(addr.poolFactory)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      PoolFactory
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.synthFactory)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      SynthFactory
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.bond)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Bond
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.bondVault)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      BondVault
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.dao)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Dao
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.daoVault)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      DaoVault
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.router)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Router
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.utils)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Utils
+                    </a>
+                  </Col>
+                  <Col xs="6">
+                    <a
+                      href={getExplorerContract(addr.migrate)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Migrate
+                    </a>
+                  </Col>
+                </Row>
+              </PopoverBody>
+            </UncontrolledPopover>
+          </Nav>
         </Container>
       </Navbar>
     </>

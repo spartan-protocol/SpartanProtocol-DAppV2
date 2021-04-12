@@ -113,36 +113,37 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 } */
 
 
-.form-control{
+.form-control {
 
     border-color: #2B222E;
 
 }
 
 
-.input-group-append{
+.input-group-append {
 
     border-color: #2B222E;
 
 }
 
 
-.input-group-text{
+.input-group-text {
 
     border-color: #2B222E;
 
 }
 
 
-.input-group-prepend{
+.input-group-prepend {
     border-color: #2B222E;
 
 }
 
-.input-group{
+.input-group {
     background: #25212D;
     border-radius: 12px;
 }
+
 .price-notificaiton {
     align-items: flex-start;
     display: flex;
@@ -153,13 +154,13 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 
 .price-notificaiton:hover {
-    box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
     transform: translateY(-1px);
     -webkit-transform: translateY(-1px);
 }
 
 .price-notificaiton:active {
-    box-shadow: 2px 2px 6px rgba(0,0,0,.4);
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, .4);
     transform: translateY(1px);
     -webkit-transform: translateY(1px);
 }
@@ -249,39 +250,40 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     -o-animation: fadeIn ease 3s;
     -ms-animation: fadeIn ease 3s;
 }
+
 @keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
 @-moz-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
 @-webkit-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
 @-o-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:1;
+        opacity: 1;
     }
 }
 
@@ -293,5 +295,24 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         opacity: 1;
     }
 }
+
+
+@media screen and (min-width: 1200px) {
+    .sidebar {
+        margin-top: 5px;
+        margin-left: -2px;
+        width: 10%;
+        height: 100%;
+
+    }
+}
+
+@media (min-width: 992px){
+    .sidebar-mini .sidebar:hover {
+        width: 10%;
+    }
+
+}
+
 
 

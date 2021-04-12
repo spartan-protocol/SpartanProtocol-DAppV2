@@ -118,7 +118,7 @@ const WalletSelect = (props) => {
           {/* > */}
           {/*  <i className="bd-icons icon-simple-remove" /> */}
           {/* </button> */}
-          {!wallet.account && (
+          {wallet.status !== 'connected' && (
             <Col>
               <div className="small-4 medium-4 large-4 columns text-center">
                 <i className="icon-large icon-wallet icon-dark text-center " />
@@ -141,7 +141,7 @@ const WalletSelect = (props) => {
             </Alert>
           )}
 
-          {!wallet.account && (
+          {wallet.status !== 'connected' && (
             <>
               <Row className="align-middle mb-3">
                 <Col xs={5} className="text-right">
@@ -166,7 +166,7 @@ const WalletSelect = (props) => {
             </>
           )}
 
-          {wallet.account ? (
+          {wallet.status === 'connected' ? (
             <div>
               <Row>
                 <Col xs="11">
@@ -184,7 +184,7 @@ const WalletSelect = (props) => {
                   </Button>
                 </Col>
               </Row>
-              {wallet.account && (
+              {wallet.status === 'connected' && (
                 <>
                   <Row>
                     <Col xs="5">
@@ -202,8 +202,8 @@ const WalletSelect = (props) => {
                         </a>
                       </span>
                       <span className="title">
-                        {wallet.account.substr(0, 5)}...
-                        {wallet.account.slice(-5)}
+                        {wallet.account?.substr(0, 5)}...
+                        {wallet.account?.slice(-5)}
                       </span>
                     </Col>
                     <Col xs="2">
