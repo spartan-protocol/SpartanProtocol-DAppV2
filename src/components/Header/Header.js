@@ -93,7 +93,6 @@ const Header = (props) => {
               <SpartanLogo className="mr-2" /> Spartan Protocol
             </NavbarBrand>
           </div>
-
           {/* <button
             className="navbar-toggler"
             type="button"
