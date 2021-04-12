@@ -16,7 +16,7 @@ import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
 import { useWeb3 } from '../../store/web3'
-import IconLogo from '../../assets/img/spartan_black_small.svg'
+import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses } from '../../utils/web3'
 
@@ -54,7 +54,7 @@ const Header = (props) => {
   return (
     <>
       <Navbar
-        className={classNames('navbar-absolute', {
+        className={classNames('navbar sticky-top', {
           color: 'navbar-transparent',
         })}
         expand="lg"
@@ -68,8 +68,8 @@ const Header = (props) => {
                 id="tooltip209599"
                 onClick={props.handleMiniClick}
               >
-                <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular mr-4" />
-                <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini mr-4" />
+                <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n2 mr-4" />
+                <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n2 mr-4" />
               </Button>
             </div>
             <div
@@ -111,12 +111,17 @@ const Header = (props) => {
             />
             <Button
               type="Button"
-              className="mx-1 btn-sm btn-primary"
+              className="mx-2 btn btn-primary px-4 py-2"
               href="#"
               id="headerPriceTooltip"
             >
-              <img className="mr-1" src={IconLogo} alt="share icon" /> $
-              {web3.spartaPrice}
+              <img
+                className="mr-1"
+                src={IconLogo}
+                height="25px"
+                alt="share icon"
+              />{' '}
+              ${web3.spartaPrice}
             </Button>
             <UncontrolledPopover
               placement="bottom"

@@ -8,7 +8,6 @@ import {
   Row,
   TabContent,
   TabPane,
-  UncontrolledAlert,
 } from 'reactstrap'
 
 import classnames from 'classnames'
@@ -18,6 +17,7 @@ import CardBody from 'reactstrap/es/CardBody'
 import { Line } from 'react-chartjs-2'
 import CardTitle from 'reactstrap/es/CardTitle'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import Alert from 'react-bootstrap/Alert'
 import PoolsTable from './PoolsTable'
 
 const Overview = () => {
@@ -202,12 +202,10 @@ const Overview = () => {
           <Col md={1}>
             <Breadcrumb>Pools</Breadcrumb>
           </Col>
-          <Col md={8} sm={12} className="float-left mt-3">
-            <UncontrolledAlert
-              className="alert-with-icon"
-              color="danger"
-              fade={false}
-            >
+        </Row>
+        <Row className="card-body">
+          <Col>
+            <Alert className="alert-with-icon" color="danger" fade={false}>
               <span
                 data-notify="icon"
                 className="icon-small icon-info icon-dark"
@@ -216,33 +214,31 @@ const Overview = () => {
                 The liquidity pools are facilitated by an automated-market-maker
                 (AMM) algorithm with liquidity-sensitive fees.
               </span>
-            </UncontrolledAlert>
+            </Alert>
           </Col>
         </Row>
-
         <Row className="card-body">
-          <Col md>
+          <Col md={6} sm={12}>
             <Card className="card-chart">
               <CardHeader>
                 <CardTitle tag="h2">
-                  <Row>
-                    <Col>
-                      <div className="text-left">
-                        Total volume{' '}
-                        <i
-                          className="icon-small icon-info icon-dark ml-2"
-                          id="tooltipAddBase"
-                          role="button"
-                        />
-                        <UncontrolledTooltip
-                          placement="right"
-                          target="tooltipAddBase"
-                        >
-                          The quantity of & SPARTA you are adding to the pool.
-                        </UncontrolledTooltip>
-                      </div>
+                  <Row className="fade-in">
+                    <Col md={12} sm={12}>
+                      Total volume{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
                     </Col>
-                    <Col className="text-right fade-in">
+
+                    <Col md={12} sm={12} className="ml-auto">
                       <div
                         className="subtitle-amount  d-inline"
                         style={{ fontSize: 22 }}
@@ -265,28 +261,27 @@ const Overview = () => {
               </CardBody>
             </Card>
           </Col>
-          <Col>
+          <Col md={6} sm={12}>
             <Card className="card-chart">
               <CardHeader>
                 <CardTitle tag="h2">
-                  <Row>
-                    <Col>
-                      <div className="text-left">
-                        Total volume{' '}
-                        <i
-                          className="icon-small icon-info icon-dark ml-2"
-                          id="tooltipAddBase"
-                          role="button"
-                        />
-                        <UncontrolledTooltip
-                          placement="right"
-                          target="tooltipAddBase"
-                        >
-                          The quantity of & SPARTA you are adding to the pool.
-                        </UncontrolledTooltip>
-                      </div>
+                  <Row className="fade-in">
+                    <Col md={12} sm={12}>
+                      Total volume{' '}
+                      <i
+                        className="icon-small icon-info icon-dark ml-2"
+                        id="tooltipAddBase"
+                        role="button"
+                      />
+                      <UncontrolledTooltip
+                        placement="right"
+                        target="tooltipAddBase"
+                      >
+                        The quantity of & SPARTA you are adding to the pool.
+                      </UncontrolledTooltip>
                     </Col>
-                    <Col className="text-right fade-in">
+
+                    <Col md={12} sm={12} className="ml-auto">
                       <div
                         className="subtitle-amount  d-inline"
                         style={{ fontSize: 22 }}
@@ -323,7 +318,7 @@ const Overview = () => {
                     toggleCustom('1')
                   }}
                 >
-                  Pools overview
+                  Pools
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -339,45 +334,45 @@ const Overview = () => {
                   Positions
                 </NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink
-                  style={{ cursor: 'pointer' }}
-                  className={classnames({
-                    active: customActiveTab === '3',
-                  })}
-                  onClick={() => {
-                    toggleCustom('3')
-                  }}
-                >
-                  <span className="d-none d-sm-block">Analysis</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  style={{ cursor: 'pointer' }}
-                  className={classnames({
-                    active: customActiveTab === '4',
-                  })}
-                  onClick={() => {
-                    toggleCustom('4')
-                  }}
-                >
-                  Pairs
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  style={{ cursor: 'pointer' }}
-                  className={classnames({
-                    active: customActiveTab === '5',
-                  })}
-                  onClick={() => {
-                    toggleCustom('5')
-                  }}
-                >
-                  Tokens
-                </NavLink>
-              </NavItem>
+              {/* <NavItem> */}
+              {/*  <NavLink */}
+              {/*    style={{ cursor: "pointer" }} */}
+              {/*    className={classnames({ */}
+              {/*      active: customActiveTab === "3" */}
+              {/*    })} */}
+              {/*    onClick={() => { */}
+              {/*      toggleCustom("3") */}
+              {/*    }} */}
+              {/*  > */}
+              {/*    <span className="d-none d-sm-block">Analysis</span> */}
+              {/*  </NavLink> */}
+              {/* </NavItem> */}
+              {/* <NavItem> */}
+              {/*  <NavLink */}
+              {/*    style={{ cursor: "pointer" }} */}
+              {/*    className={classnames({ */}
+              {/*      active: customActiveTab === "4" */}
+              {/*    })} */}
+              {/*    onClick={() => { */}
+              {/*      toggleCustom("4") */}
+              {/*    }} */}
+              {/*  > */}
+              {/*    Pairs */}
+              {/*  </NavLink> */}
+              {/* </NavItem> */}
+              {/* <NavItem> */}
+              {/*  <NavLink */}
+              {/*    style={{ cursor: "pointer" }} */}
+              {/*    className={classnames({ */}
+              {/*      active: customActiveTab === "5" */}
+              {/*    })} */}
+              {/*    onClick={() => { */}
+              {/*      toggleCustom("5") */}
+              {/*    }} */}
+              {/*  > */}
+              {/*    Tokens */}
+              {/*  </NavLink> */}
+              {/* </NavItem> */}
             </Nav>
 
             <TabContent activeTab={customActiveTab}>

@@ -57,7 +57,7 @@ const Samples = () => (
             </Card.Header>
             <Card.Body>
               <Button color="default">
-                <SpartanLogoBlackSmall /> $1.52
+                <SpartanLogoBlackSmall /> $1.50
               </Button>
 
               <Button type="Button" className="mx-1 btn btn-danger">

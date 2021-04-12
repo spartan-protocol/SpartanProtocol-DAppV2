@@ -106,10 +106,10 @@ const Common = () => {
   const clickOutSidebar = (e) => {
     const sidebar = document.body.getElementsByClassName('sidebar-wrapper')[0]
     if (
-      !sidebar.contains(e.target) &&
-      !e.target.className.includes('icon-menu-open') &&
-      !e.target.className.includes('icon-menu-closed') &&
-      !e.target.className.includes('navbar-toggler')
+      !sidebar?.contains(e.target) &&
+      !e.target.className?.includes('icon-menu-open') &&
+      !e.target.className?.includes('icon-menu-closed') &&
+      !e.target.className?.includes('navbar-toggler')
     ) {
       setSidebarOpened(false)
       document.body.classList.add('sidebar-mini')
