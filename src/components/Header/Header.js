@@ -1,5 +1,6 @@
-import React from 'react'
-import classNames from 'classnames'
+/* eslint-disable*/
+import React from "react"
+import classNames from "classnames"
 import {
   Button,
   NavbarBrand,
@@ -10,15 +11,16 @@ import {
   Container,
   UncontrolledPopover,
   PopoverHeader,
-  PopoverBody,
-} from 'reactstrap'
-import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
-import LanguageDropdown from '../Common/LanguageDropdown'
-import AddressConn from '../Common/AddressConn'
-import { useWeb3 } from '../../store/web3'
-import IconLogo from '../../assets/img/spartan_black_small.svg'
-import { getExplorerContract } from '../../utils/extCalls'
-import { getAddresses } from '../../utils/web3'
+  PopoverBody
+} from "reactstrap"
+import { ReactComponent as SpartanLogo } from "../../assets/img/logo.svg"
+import LanguageDropdown from "../Common/LanguageDropdown"
+import AddressConn from "../Common/AddressConn"
+import { useWeb3 } from "../../store/web3"
+import IconLogo from "../../assets/img/spartan_black_small.svg"
+import { getExplorerContract } from "../../utils/extCalls"
+import { getAddresses } from "../../utils/web3"
+import Card from "react-bootstrap/Card"
 
 const Header = (props) => {
   const web3 = useWeb3()
@@ -54,8 +56,8 @@ const Header = (props) => {
   return (
     <>
       <Navbar
-        className={classNames('navbar sticky-top', {
-          color: 'navbar-transparent',
+        className={classNames("navbar sticky-top", {
+          color: "navbar-transparent"
         })}
         expand="lg"
       >
@@ -73,8 +75,8 @@ const Header = (props) => {
               </Button>
             </div>
             <div
-              className={classNames('navbar-toggle d-inline', {
-                toggled: props.sidebarOpened,
+              className={classNames("navbar-toggle d-inline", {
+                toggled: props.sidebarOpened
               })}
             >
               <button
@@ -101,7 +103,7 @@ const Header = (props) => {
             aria-label="Toggle navigation"
             // onClick={toggleCollapse}
           /> */}
-          <Nav className="ml-auto" navbar>
+          <Nav className="ml-auto">
             <LanguageDropdown />
             <AddressConn
               changeStates={props.changeStates}
@@ -129,14 +131,18 @@ const Header = (props) => {
               </PopoverHeader>
               <PopoverBody>
                 <Row className="text-center">
-                  <Col xs="6">Total Supply:</Col>
-                  <Col xs="6">123,456,789</Col>
-                  <Col xs="6">Circulating: </Col>
-                  <Col xs="6">123,456,789</Col>
-                  <Col xs="6">Max Supply: </Col>
-                  <Col xs="6">300,000,000</Col>
-                  <Col xs="6">Market Cap: </Col>
-                  <Col xs="6">123,456,789</Col>
+                  <Col xs="6 mb-1" className="title-popover"> <i
+                    className="icon-extra-small icon-pools icon-dark mr-2" /> Total Supply:</Col>
+                  <Col xs="6 mb-1" className="amount-popover">123,456,789</Col>
+                  <Col xs="6 mb-1 " className="title-popover"><i
+                    className="icon-extra-small icon-cycle icon-dark mr-2" />Circulating: </Col>
+                  <Col xs="6 mb-1" className="amount-popover">123,456,789</Col>
+                  <Col xs="6 mb-1" className="title-popover"><i className="icon-extra-small icon-down icon-dark mr-2" />Max
+                    Supply: </Col>
+                  <Col xs="6 mb-1" className="amount-popover">300,000,000</Col>
+                  <Col xs="6 mb-1" className="title-popover"><i
+                    className="icon-extra-small icon-analysis icon-dark mr-2" />Market Cap: </Col>
+                  <Col xs="6 mb-1" className="amount-popover">123,456,789</Col>
                 </Row>
               </PopoverBody>
               <PopoverHeader className="text-center">
@@ -154,7 +160,7 @@ const Header = (props) => {
                     </a>
                   </Col>
                   <Col xs="6">
-                    {' '}
+                    {" "}
                     <a
                       href={getExplorerContract(addr.poolFactory)}
                       target="_blank"
