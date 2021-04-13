@@ -29,7 +29,7 @@
 
 .noUi-horizontal .noUi-handle {
     border-radius: 50%;
-    background-color: #fb2715;
+    background-color: #A80005;
     box-shadow: 0 1px 13px 0 rgb(0 0 0 / 20%);
     height: 15px;
     width: 15px;
@@ -39,7 +39,7 @@
 }
 
 .noUi-connect {
-    background: #fb2715;
+    background: #A80005;
     border-radius: 3px;
     transition: background 450ms;
 

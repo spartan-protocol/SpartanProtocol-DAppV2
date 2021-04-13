@@ -28,7 +28,8 @@ import {
   calcDoubleSwapFee,
   calcValueInBase,
   calcLiquidityHoldings,
-  calcLiquidityUnits,
+  calcShare,
+  calcLiquidityUnitsAsym,
 } from '../../../utils/web3Utils'
 import {
   routerSwapAssets,
@@ -410,38 +411,25 @@ const Swap = () => {
     return '0'
   }
 
-  const getZapSwap1 = () => {
+  const getZapSwap = () => {
     if (assetSwap1 && swapInput1?.value) {
       return calcSwapOutput(
         getZapRemoveToken(),
-        assetSwap1.tokenAmount,
-        assetSwap1.baseAmount,
+        BN(assetSwap1.tokenAmount).minus(getZapRemoveToken()),
+        BN(assetSwap1.baseAmount).minus(getZapRemoveBase()),
         true,
       )
     }
     return '0'
   }
 
-  const getZapSwap2 = () => {
+  const getZapSwapFee = () => {
     if (assetSwap1 && swapInput1?.value) {
-      return calcSwapOutput(
-        getZapSwap1(),
-        assetSwap2.tokenAmount,
-        assetSwap2.baseAmount,
-        false,
-      )
-    }
-    return '0'
-  }
-
-  const getZapDoubleSwapFee = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return calcDoubleSwapFee(
+      return calcSwapFee(
         getZapRemoveToken(),
-        assetSwap1.tokenAmount,
-        assetSwap1.baseAmount,
-        assetSwap2.tokenAmount,
-        assetSwap2.baseAmount,
+        BN(assetSwap1.tokenAmount).minus(getZapRemoveToken()),
+        BN(assetSwap1.baseAmount).minus(getZapRemoveBase()),
+        true,
       )
     }
     return '0'
@@ -449,11 +437,9 @@ const Swap = () => {
 
   const getZapOutput = () => {
     if (assetSwap1 && swapInput1?.value) {
-      return calcLiquidityUnits(
-        getZapRemoveBase(),
-        getZapSwap2(),
+      return calcLiquidityUnitsAsym(
+        BN(getZapRemoveBase()).plus(getZapSwap()),
         assetSwap2.baseAmount,
-        assetSwap2.tokenAmount,
         assetSwap2.poolUnits,
       )
     }
@@ -505,6 +491,49 @@ const Swap = () => {
         swapInput1.value = convertFromWei()
       }
     }
+  }
+
+  //= =================================================================================//
+  // Functions SYNTHS calculations
+
+  const getSynthLPsFromBase = () => {
+    const temp = calcLiquidityUnitsAsym(
+      convertToWei(swapInput1.value),
+      assetSwap2.baseAmount,
+      assetSwap2.poolUnits,
+    )
+    return temp
+  }
+
+  const getSynthFeeFromBase = () => {
+    let temp = calcSwapFee(
+      convertToWei(swapInput1.value),
+      assetSwap2.baseAmount,
+      assetSwap2.tokenAmount,
+    )
+    temp = calcValueInBase(assetSwap2.tokenAmount, assetSwap2.baseAmount, temp)
+    return temp
+  }
+
+  const getSynthOutputFromBase = () => {
+    const lpUnits = getSynthLPsFromBase()
+    const baseAmount = calcShare(
+      lpUnits,
+      BN(assetSwap2.poolUnits).plus(lpUnits),
+      BN(assetSwap2.baseAmount).plus(BN(swapInput1.value)),
+    )
+    const tokenAmount = calcShare(
+      lpUnits,
+      BN(assetSwap2.poolUnits).plus(lpUnits),
+      assetSwap2.tokenAmount,
+    )
+    const baseSwapped = calcSwapOutput(
+      baseAmount,
+      assetSwap2.tokenAmount,
+      BN(assetSwap2.baseAmount).plus(BN(swapInput1.value)),
+    )
+    const tokenValue = BN(tokenAmount).plus(baseSwapped)
+    return tokenValue
   }
 
   return (
@@ -825,64 +854,6 @@ const Swap = () => {
                     <Row className="mb-3">
                       <Col xs="5">
                         <div className="text-card">
-                          Remove{' '}
-                          <i
-                            className="icon-small icon-info icon-dark ml-2"
-                            id="tooltipZapRemove"
-                            role="button"
-                          />
-                          <UncontrolledTooltip
-                            placement="right"
-                            target="tooltipZapRemove"
-                          >
-                            The remove-liquidity step being processed in this
-                            transaction
-                          </UncontrolledTooltip>
-                        </div>
-                      </Col>
-                      <Col xs="7" className="text-right">
-                        <div className="output-card">
-                          {formatFromWei(getZapRemoveBase())} SPARTA +{' '}
-                          {formatFromWei(getZapRemoveToken())}{' '}
-                          {assetSwap1?.symbol}
-                        </div>
-                      </Col>
-                    </Row>
-
-                    <Row className="mb-3">
-                      <Col xs="5">
-                        <div className="text-card">
-                          Swaps{' '}
-                          <i
-                            className="icon-small icon-info icon-dark ml-2"
-                            id="tooltipZapSwaps"
-                            role="button"
-                          />
-                          <UncontrolledTooltip
-                            placement="right"
-                            target="tooltipZapSwaps"
-                          >
-                            The swaps taking place to accomodate your
-                            transaction
-                          </UncontrolledTooltip>
-                        </div>
-                      </Col>
-                      <Col xs="7" className="text-right">
-                        <div className="output-card">
-                          {formatFromWei(getZapRemoveToken())}{' '}
-                          {assetSwap1?.symbol} for{' '}
-                          {formatFromWei(getZapSwap1())} SPARTA
-                        </div>
-                        <div className="output-card">
-                          & {formatFromWei(getZapSwap1())} SPARTA for{' '}
-                          {formatFromWei(getZapSwap2())} {assetSwap2?.symbol}
-                        </div>
-                      </Col>
-                    </Row>
-
-                    <Row className="mb-3">
-                      <Col xs="5">
-                        <div className="text-card">
                           Fee{' '}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
@@ -900,33 +871,7 @@ const Swap = () => {
                       </Col>
                       <Col xs="7" className="text-right">
                         <div className="output-card">
-                          {formatFromWei(getZapDoubleSwapFee())} SPARTA
-                        </div>
-                      </Col>
-                    </Row>
-
-                    <Row className="mb-3">
-                      <Col xs="5">
-                        <div className="text-card">
-                          Add{' '}
-                          <i
-                            className="icon-small icon-info icon-dark ml-2"
-                            id="tooltipZapAdd"
-                            role="button"
-                          />
-                          <UncontrolledTooltip
-                            placement="right"
-                            target="tooltipZapAdd"
-                          >
-                            The amount of each asset being added to the
-                            liquidity pool
-                          </UncontrolledTooltip>
-                        </div>
-                      </Col>
-                      <Col xs="7" className="text-right">
-                        <div className="output-card">
-                          {formatFromWei(getZapRemoveBase())} SPARTA +{' '}
-                          {formatFromWei(getZapSwap2())} {assetSwap2?.symbol}
+                          {formatFromWei(getZapSwapFee())} SPARTA
                         </div>
                       </Col>
                     </Row>
@@ -1006,7 +951,7 @@ const Swap = () => {
                       </Col>
                       <Col xs="7" className="text-right">
                         <div className="output-card">
-                          {formatFromWei(getZapDoubleSwapFee())} SPARTA
+                          {formatFromWei(getSynthFeeFromBase(), 10)} SPARTA
                         </div>
                       </Col>
                     </Row>
@@ -1030,7 +975,8 @@ const Swap = () => {
                       </Col>
                       <Col xs="7" className="text-right">
                         <div className="subtitle-amount">
-                          {formatFromWei(getZapOutput())} {assetSwap2?.symbol}
+                          {formatFromWei(getSynthOutputFromBase(), 10)}{' '}
+                          {assetSwap2?.symbol}
                           -SPP
                         </div>
                       </Col>
