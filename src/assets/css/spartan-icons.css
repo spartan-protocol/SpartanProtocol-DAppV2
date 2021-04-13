@@ -51,6 +51,14 @@
 }
 
 
+/* Contracts*/
+.icon-contracts.icon-light{
+    background-image: url('/src/assets/icons/icon-contratcs.svg#light');
+}
+
+
+
+
 /* Wallet red */
 .icon-wallet-red.icon-dark {
     background-image: url('/src/assets/icons/wallet-red.svg#light');

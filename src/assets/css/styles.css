@@ -316,3 +316,26 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 
 
+.dot-burn {
+    height: 8px;
+    width: 8px;
+    background-color: #FB2715;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-bond{
+    height: 8px;
+    width: 8px;
+    background-color: #F5BC17;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot-emission {
+    height: 8px;
+    width: 8px;
+    background-color: #AACDFF;
+    border-radius: 50%;
+    display: inline-block;
+}

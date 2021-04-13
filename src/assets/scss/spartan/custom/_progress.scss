@@ -36,7 +36,7 @@
       box-shadow: 0px 0px 0px 3px rgba(0, 0, 0, 0.3);
 
         .progress-bar {
-          border-radius:$border-radius-xl;
+          border-radius:$border-radius-sm;
           box-shadow: none;
           background: $default;
 
@@ -54,15 +54,15 @@
         }
     }
 
-    &.progress-neutral{
-        .progress{
-            background: rgba(255, 255, 255, .3);
-        }
-
-        .progress-bar{
-            background: $white;
-        }
+  &.progress-neutral{
+    .progress{
+      background: rgba(255, 255, 255, .3);
     }
+
+    .progress-bar{
+      background: $white;
+    }
+  }
 
     &.progress-primary{
       .progress-bar{
@@ -93,6 +93,8 @@
         @include diagonal-gradient($danger-states, $danger);
       }
     }
+
+
 }
 
 .card-chart {

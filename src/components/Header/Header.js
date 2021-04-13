@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import classNames from 'classnames'
 import {
@@ -19,6 +20,7 @@ import { useWeb3 } from '../../store/web3'
 import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses } from '../../utils/web3'
+import Supply from "../Supply/Supply"
 
 const Header = (props) => {
   const web3 = useWeb3()
@@ -91,15 +93,6 @@ const Header = (props) => {
               <SpartanLogo className="mr-2" /> Spartan Protocol
             </NavbarBrand>
           </div>
-          {/* <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navigation"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-            // onClick={toggleCollapse}
-          /> */}
           <Nav className="ml-auto">
             <LanguageDropdown />
             <AddressConn
@@ -108,161 +101,7 @@ const Header = (props) => {
               connectedTokens={props.connectedTokens}
               connectingTokens={props.connectingTokens}
             />
-            <Button
-              type="Button"
-              className="mx-2 btn btn-primary px-4 py-2"
-              href="#"
-              id="headerPriceTooltip"
-            >
-              <img
-                className="mr-1"
-                src={IconLogo}
-                height="25px"
-                alt="share icon"
-              />{' '}
-              ${web3.spartaPrice}
-            </Button>
-            <UncontrolledPopover
-              placement="bottom"
-              target="headerPriceTooltip"
-              className="text-center"
-              data-html="true"
-            >
-              <PopoverHeader className="text-center">
-                Token Supply
-              </PopoverHeader>
-              <PopoverBody>
-                <Row className="text-center">
-                  <Col xs="6 mb-1" className="title-popover">
-                    {' '}
-                    <i className="icon-extra-small icon-pools icon-dark mr-2" />{' '}
-                    Total Supply:
-                  </Col>
-                  <Col xs="6 mb-1" className="amount-popover">
-                    123,456,789
-                  </Col>
-                  <Col xs="6 mb-1 " className="title-popover">
-                    <i className="icon-extra-small icon-cycle icon-dark mr-2" />
-                    Circulating:{' '}
-                  </Col>
-                  <Col xs="6 mb-1" className="amount-popover">
-                    123,456,789
-                  </Col>
-                  <Col xs="6 mb-1" className="title-popover">
-                    <i className="icon-extra-small icon-down icon-dark mr-2" />
-                    Max Supply:{' '}
-                  </Col>
-                  <Col xs="6 mb-1" className="amount-popover">
-                    300,000,000
-                  </Col>
-                  <Col xs="6 mb-1" className="title-popover">
-                    <i className="icon-extra-small icon-analysis icon-dark mr-2" />
-                    Market Cap:{' '}
-                  </Col>
-                  <Col xs="6 mb-1" className="amount-popover">
-                    123,456,789
-                  </Col>
-                </Row>
-              </PopoverBody>
-              <PopoverHeader className="text-center">
-                Token Contracts
-              </PopoverHeader>
-              <PopoverBody>
-                <Row className="text-center">
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.sparta)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      SPARTA
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    {' '}
-                    <a
-                      href={getExplorerContract(addr.poolFactory)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      PoolFactory
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.synthFactory)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      SynthFactory
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.bond)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Bond
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.bondVault)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      BondVault
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.dao)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Dao
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.daoVault)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      DaoVault
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.router)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Router
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.utils)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Utils
-                    </a>
-                  </Col>
-                  <Col xs="6">
-                    <a
-                      href={getExplorerContract(addr.migrate)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Migrate
-                    </a>
-                  </Col>
-                </Row>
-              </PopoverBody>
-            </UncontrolledPopover>
+            <Supply/>
           </Nav>
         </Container>
       </Navbar>

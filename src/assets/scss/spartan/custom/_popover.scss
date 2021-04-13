@@ -2,6 +2,7 @@
   position: absolute;
   top: 0;
   left: 0;
+
   z-index: $zindex-popover;
   display: block;
   max-width: $popover-max-width;
@@ -11,7 +12,7 @@
   @include font-size($popover-font-size);
   // Allow breaking very long words so they don't overflow the popover's bounds
   word-wrap: break-word;
-  background: #403A4B;
+  background: #1D171F;
   background-clip: padding-box;
   border: $popover-border-width solid $popover-border-color;
   @include border-radius($popover-border-radius);
@@ -106,7 +107,7 @@
     width: $popover-arrow-width;
     margin-left: -$popover-arrow-width / 2;
     content: "";
-    border-bottom: $popover-border-width solid $popover-header-bg;
+    border-bottom: $popover-border-width solid #1D171F;
   }
 }
 
@@ -151,13 +152,15 @@
 
 // Offset the popover to account for the popover arrow
 .popover-header {
+  font: $font-family-headers;
   padding: $popover-header-padding-y $popover-header-padding-x;
   margin-bottom: 0; // Reset the default from Reboot
   @include font-size($font-size-base);
   color: $popover-header-color;
-  background-color: #403A4B;
-  border-bottom: $popover-border-width solid darken($popover-header-bg, 5%);
+  background-color: #1D171F;
+  border-bottom: 0;
   @include border-top-radius($popover-inner-border-radius);
+
 
   &:empty {
     display: none;
@@ -166,12 +169,12 @@
 
 
 
-
 .popover-body {
+  margin-left: 2px;
   font-family: $font-family-base;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   padding: $popover-body-padding-y $popover-body-padding-x;
   color: #ffffff;
@@ -182,7 +185,7 @@
   font-family: $font-family-base;
   font-style: normal;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   padding: $popover-body-padding-y $popover-body-padding-x;
   color: #ffffff;
@@ -190,7 +193,7 @@
 
 
 
-.title-popover{
+.popover-text{
   font-family: $font-family-base;
   font-style: normal;
   font-weight: 400;
@@ -201,7 +204,7 @@
   display: flex;
   align-items: center;
 
-  color: #A5ADAF;
+  color: #ffffff;
 
 }
 
@@ -210,15 +213,13 @@
   font-family: $font-family-base;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  /* identical to box height, or 125% */
+  font-size: 16px;
+  line-height: 24px;
+  /* or 150% */
 
   display: flex;
   align-items: center;
-  text-align: right;
-
-  color: #FFFFFF;
+  font-feature-settings: 'liga' off;
 
 
 }
@@ -228,11 +229,21 @@
 }
 
 .popover-header {
-  font-family: $font-family-base;
+  font-family: Kreon;
   font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 20px;
+  font-weight: bold;
+  font-size: 22px;
+  line-height: 32px;
+  /* identical to box height, or 133% */
+
+  display: flex;
+  align-items: center;
+  font-feature-settings: 'liga' off;
+
+  /* White */
+
+  color: #FFFFFF;
+
 }
 
 // Alternative colors
