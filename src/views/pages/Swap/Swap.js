@@ -302,7 +302,7 @@ const Swap = () => {
   const handleInputChange = (input, focusInput1) => {
     if (assetSwap1?.symbol === 'SPARTA') {
       if (focusInput1 === true) {
-        swapInput2.value = formatFromWei(
+        swapInput2.value = convertFromWei(
           calcSwapOutput(
             convertToWei(input),
             assetSwap2.tokenAmount,
@@ -311,7 +311,7 @@ const Swap = () => {
           ),
         )
       } else {
-        swapInput1.value = formatFromWei(
+        swapInput1.value = convertFromWei(
           getSwapInput(
             convertToWei(input),
             assetSwap2.tokenAmount,
@@ -322,7 +322,7 @@ const Swap = () => {
       }
     } else if (assetSwap2?.symbol === 'SPARTA') {
       if (focusInput1 === true) {
-        swapInput2.value = formatFromWei(
+        swapInput2.value = convertFromWei(
           calcSwapOutput(
             convertToWei(input),
             assetSwap1.tokenAmount,
@@ -331,7 +331,7 @@ const Swap = () => {
           ),
         )
       } else {
-        swapInput1.value = formatFromWei(
+        swapInput1.value = convertFromWei(
           getSwapInput(
             convertToWei(input),
             assetSwap1.tokenAmount,
@@ -341,7 +341,7 @@ const Swap = () => {
         )
       }
     } else if (focusInput1 === true) {
-      swapInput2.value = formatFromWei(
+      swapInput2.value = convertFromWei(
         calcDoubleSwapOutput(
           convertToWei(input),
           assetSwap1.tokenAmount,
@@ -351,7 +351,7 @@ const Swap = () => {
         ),
       )
     } else {
-      swapInput1.value = formatFromWei(
+      swapInput1.value = convertFromWei(
         calcDoubleSwapInput(
           convertToWei(input),
           assetSwap2.tokenAmount,
@@ -500,9 +500,9 @@ const Swap = () => {
       handleInputChange(input, focusInput1)
     } else if (mode === 'pool') {
       if (focusInput1 === true) {
-        swapInput2.value = formatFromWei(getZapOutput(), 18)
+        swapInput2.value = convertFromWei(getZapOutput(), 18)
       } else {
-        swapInput1.value = formatFromWei()
+        swapInput1.value = convertFromWei()
       }
     }
   }
@@ -591,12 +591,14 @@ const Swap = () => {
                       <Row>
                         <Col xs="6">
                           <div className="output-card">
-                            1 {assetSwap1?.symbol} ={' '}
+                            1 {assetSwap1?.symbol}
+                            {mode === 'pool' && '-SPP'} ={' '}
                             {formatFromUnits(
                               BN(swapInput2?.value).div(BN(swapInput1?.value)),
                               6,
                             )}{' '}
                             {assetSwap2?.symbol}
+                            {mode === 'pool' && '-SPP'}
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
@@ -675,12 +677,14 @@ const Swap = () => {
                       <Row>
                         <Col xs="6">
                           <div className="output-card">
-                            1 {assetSwap2?.symbol} ={' '}
+                            1 {assetSwap2?.symbol}
+                            {mode === 'pool' && '-SPP'} ={' '}
                             {formatFromUnits(
                               BN(swapInput1?.value).div(BN(swapInput2?.value)),
                               6,
                             )}{' '}
                             {assetSwap1?.symbol}
+                            {mode === 'pool' && '-SPP'}
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
@@ -976,7 +980,8 @@ const Swap = () => {
                       </Col>
                       <Col xs="7" className="text-right">
                         <div className="output-card">
-                          {swapInput1?.value} {assetSwap1?.symbol}-SPS
+                          {swapInput1?.value} {assetSwap1?.symbol}
+                          {assetSwap1?.symbol !== 'SPARTA' && '-SPS'}
                         </div>
                       </Col>
                     </Row>
