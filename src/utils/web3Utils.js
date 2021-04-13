@@ -6,6 +6,7 @@ const BigNumber = require('bignumber.js')
 const addr = getAddresses()
 
 export const BN = (x) => new BigNumber(x)
+export const one = BN(1).times(10).pow(18)
 
 // GET UTILS CONTRACT
 export const getUtilsContract = () => {
@@ -93,8 +94,8 @@ export const calcSlipAdjustment = (b, B, t, T) => {
     numerator = part2.minus(part1)
   }
   const denominator = part3.times(part4)
-  const result = BN(1).minus(numerator.div(denominator))
-  return result.times(BN(1).pow(18))
+  const result = BN(one).minus(numerator.times(one).div(denominator))
+  return result
 }
 
 // Calculate liquidity units
@@ -119,7 +120,8 @@ export const calcLiquidityUnits = (
   const part1 = t.times(B)
   const part2 = T.times(b)
   const part3 = T.times(B).times(2)
-  const result = P.times(part1.plus(part2)).div(part3).times(slipAdjustment)
+  const part4 = P.times(part1.plus(part2)).div(part3)
+  const result = BN(part4).times(slipAdjustment).div(one)
   return result
 }
 
@@ -170,6 +172,18 @@ export const calcSwapOutput = (
   const denominator = x.plus(X).times(x.plus(X))
   const result = numerator.div(denominator)
   return result
+}
+
+// synthUnits += (P b)/(2 (b + B))
+export const calcLiquidityUnitsAsym = (
+  inputAmount,
+  pooledSparta,
+  poolSupply,
+) => {
+  const temp = BN(poolSupply)
+    .times(BN(inputAmount))
+    .div(BN(2).times(BN(inputAmount).plus(pooledSparta)))
+  return temp
 }
 
 /**

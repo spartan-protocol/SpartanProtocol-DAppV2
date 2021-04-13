@@ -423,9 +423,8 @@ const AssetSelect = (props) => {
                             dispatch(
                               watchAsset(
                                 asset.actualAddr,
-                                asset.symbol.substring(
-                                  asset.symbol.indexOf('-') + 1,
-                                ),
+                                asset.symbol.split('-')[0] +
+                                  asset.symbol.slice(-1),
                                 '18',
                                 asset.symbolUrl,
                               ),
@@ -480,9 +479,8 @@ const AssetSelect = (props) => {
                               dispatch(
                                 watchAsset(
                                   asset.actualAddr,
-                                  asset.symbol.substring(
-                                    asset.symbol.indexOf('-') + 1,
-                                  ),
+                                  asset.symbol.split('-')[0] +
+                                    asset.symbol.slice(-1),
                                   '18',
                                   asset.symbolUrl,
                                 ),

@@ -97,7 +97,7 @@ nav.nav-link {
 
       &::after {
         content: "";
-        background: #fb2715;
+        background: #A80005;
         height: 4px;
         position: absolute;
         width: 100%;
@@ -108,7 +108,7 @@ nav.nav-link {
       }
 
       &.active{
-        color: #fb2715;
+        color: #A80005;
         &:after{
           transform: scale(1);
         }

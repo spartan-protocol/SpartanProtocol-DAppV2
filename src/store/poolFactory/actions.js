@@ -218,7 +218,8 @@ export const getPoolFactoryDetailedArray = (
         // SP-sTOKEN Details
         synthAddress: false,
         balanceSynths: '',
-        totalCollateral: '',
+        synthLpBalance: '',
+        synthLpDebt: '',
       }
       detailedArray.push(tempItem)
     }
@@ -342,23 +343,29 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           ? '0'
           : synthContract.callStatic.balanceOf(walletAddress),
       )
-      // tempArray.push(
-      //   finalArray[i].synthAddress === false
-      //     ? '0'
-      //     : synthContract.callStatic.totalCollateral(),
-      // )
+      tempArray.push(
+        finalArray[i].synthAddress === false
+          ? '0'
+          : synthContract.callStatic.getlpBalance(finalArray[i].poolAddress),
+      )
+      tempArray.push(
+        finalArray[i].synthAddress === false
+          ? '0'
+          : synthContract.callStatic.getlpDebt(finalArray[i].poolAddress),
+      )
     }
     tempArray = await Promise.all(tempArray)
     const finalLpArray = finalArray
-    for (let i = 0; i < tempArray.length - 6; i += 7) {
-      finalLpArray[i / 7].recentDivis = tempArray[i].toString()
-      finalLpArray[i / 7].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / 7].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / 7].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / 7].balanceLPs = tempArray[i + 4].toString()
-      finalLpArray[i / 7].lockedLPs = tempArray[i + 5].toString()
-      finalLpArray[i / 7].balanceSynths = tempArray[i + 6].toString()
-      // finalLpArray[i / 8].totalCollateral = tempArray[i + 7].toString()
+    for (let i = 0; i < tempArray.length - 8; i += 9) {
+      finalLpArray[i / 9].recentDivis = tempArray[i].toString()
+      finalLpArray[i / 9].lastMonthDivis = tempArray[i + 1].toString()
+      finalLpArray[i / 9].recentFees = tempArray[i + 2].toString()
+      finalLpArray[i / 9].lastMonthFees = tempArray[i + 3].toString()
+      finalLpArray[i / 9].balanceLPs = tempArray[i + 4].toString()
+      finalLpArray[i / 9].lockedLPs = tempArray[i + 5].toString()
+      finalLpArray[i / 9].balanceSynths = tempArray[i + 6].toString()
+      finalLpArray[i / 9].synthLpBalance = tempArray[i + 7].toString()
+      finalLpArray[i / 9].synthLpDebt = tempArray[i + 8].toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),
