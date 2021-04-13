@@ -91,7 +91,6 @@ const Header = (props) => {
               <SpartanLogo className="mr-2" /> Spartan Protocol
             </NavbarBrand>
           </div>
-
           {/* <button
             className="navbar-toggler"
             type="button"
@@ -101,7 +100,7 @@ const Header = (props) => {
             aria-label="Toggle navigation"
             // onClick={toggleCollapse}
           /> */}
-          <Nav className="ml-auto" navbar>
+          <Nav className="ml-auto">
             <LanguageDropdown />
             <AddressConn
               changeStates={props.changeStates}
@@ -134,14 +133,35 @@ const Header = (props) => {
               </PopoverHeader>
               <PopoverBody>
                 <Row className="text-center">
-                  <Col xs="6">Total Supply:</Col>
-                  <Col xs="6">123,456,789</Col>
-                  <Col xs="6">Circulating: </Col>
-                  <Col xs="6">123,456,789</Col>
-                  <Col xs="6">Max Supply: </Col>
-                  <Col xs="6">300,000,000</Col>
-                  <Col xs="6">Market Cap: </Col>
-                  <Col xs="6">123,456,789</Col>
+                  <Col xs="6 mb-1" className="title-popover">
+                    {' '}
+                    <i className="icon-extra-small icon-pools icon-dark mr-2" />{' '}
+                    Total Supply:
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    123,456,789
+                  </Col>
+                  <Col xs="6 mb-1 " className="title-popover">
+                    <i className="icon-extra-small icon-cycle icon-dark mr-2" />
+                    Circulating:{' '}
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    123,456,789
+                  </Col>
+                  <Col xs="6 mb-1" className="title-popover">
+                    <i className="icon-extra-small icon-down icon-dark mr-2" />
+                    Max Supply:{' '}
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    300,000,000
+                  </Col>
+                  <Col xs="6 mb-1" className="title-popover">
+                    <i className="icon-extra-small icon-analysis icon-dark mr-2" />
+                    Market Cap:{' '}
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    123,456,789
+                  </Col>
                 </Row>
               </PopoverBody>
               <PopoverHeader className="text-center">
