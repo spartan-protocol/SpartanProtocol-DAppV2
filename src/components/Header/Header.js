@@ -1,6 +1,5 @@
-/* eslint-disable*/
-import React from "react"
-import classNames from "classnames"
+import React from 'react'
+import classNames from 'classnames'
 import {
   Button,
   NavbarBrand,
@@ -55,8 +54,8 @@ const Header = (props) => {
   return (
     <>
       <Navbar
-        className={classNames("navbar sticky-top", {
-          color: "navbar-transparent"
+        className={classNames('navbar sticky-top', {
+          color: 'navbar-transparent',
         })}
         expand="lg"
       >
@@ -74,8 +73,8 @@ const Header = (props) => {
               </Button>
             </div>
             <div
-              className={classNames("navbar-toggle d-inline", {
-                toggled: props.sidebarOpened
+              className={classNames('navbar-toggle d-inline', {
+                toggled: props.sidebarOpened,
               })}
             >
               <button
@@ -134,18 +133,35 @@ const Header = (props) => {
               </PopoverHeader>
               <PopoverBody>
                 <Row className="text-center">
-                  <Col xs="6 mb-1" className="title-popover"> <i
-                    className="icon-extra-small icon-pools icon-dark mr-2" /> Total Supply:</Col>
-                  <Col xs="6 mb-1" className="amount-popover">123,456,789</Col>
-                  <Col xs="6 mb-1 " className="title-popover"><i
-                    className="icon-extra-small icon-cycle icon-dark mr-2" />Circulating: </Col>
-                  <Col xs="6 mb-1" className="amount-popover">123,456,789</Col>
-                  <Col xs="6 mb-1" className="title-popover"><i className="icon-extra-small icon-down icon-dark mr-2" />Max
-                    Supply: </Col>
-                  <Col xs="6 mb-1" className="amount-popover">300,000,000</Col>
-                  <Col xs="6 mb-1" className="title-popover"><i
-                    className="icon-extra-small icon-analysis icon-dark mr-2" />Market Cap: </Col>
-                  <Col xs="6 mb-1" className="amount-popover">123,456,789</Col>
+                  <Col xs="6 mb-1" className="title-popover">
+                    {' '}
+                    <i className="icon-extra-small icon-pools icon-dark mr-2" />{' '}
+                    Total Supply:
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    123,456,789
+                  </Col>
+                  <Col xs="6 mb-1 " className="title-popover">
+                    <i className="icon-extra-small icon-cycle icon-dark mr-2" />
+                    Circulating:{' '}
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    123,456,789
+                  </Col>
+                  <Col xs="6 mb-1" className="title-popover">
+                    <i className="icon-extra-small icon-down icon-dark mr-2" />
+                    Max Supply:{' '}
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    300,000,000
+                  </Col>
+                  <Col xs="6 mb-1" className="title-popover">
+                    <i className="icon-extra-small icon-analysis icon-dark mr-2" />
+                    Market Cap:{' '}
+                  </Col>
+                  <Col xs="6 mb-1" className="amount-popover">
+                    123,456,789
+                  </Col>
                 </Row>
               </PopoverBody>
               <PopoverHeader className="text-center">
@@ -163,7 +179,7 @@ const Header = (props) => {
                     </a>
                   </Col>
                   <Col xs="6">
-                    {" "}
+                    {' '}
                     <a
                       href={getExplorerContract(addr.poolFactory)}
                       target="_blank"
