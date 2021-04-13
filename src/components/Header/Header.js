@@ -11,16 +11,15 @@ import {
   Container,
   UncontrolledPopover,
   PopoverHeader,
-  PopoverBody
-} from "reactstrap"
-import { ReactComponent as SpartanLogo } from "../../assets/img/logo.svg"
-import LanguageDropdown from "../Common/LanguageDropdown"
-import AddressConn from "../Common/AddressConn"
-import { useWeb3 } from "../../store/web3"
-import IconLogo from "../../assets/img/spartan_black_small.svg"
-import { getExplorerContract } from "../../utils/extCalls"
-import { getAddresses } from "../../utils/web3"
-import Card from "react-bootstrap/Card"
+  PopoverBody,
+} from 'reactstrap'
+import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
+import LanguageDropdown from '../Common/LanguageDropdown'
+import AddressConn from '../Common/AddressConn'
+import { useWeb3 } from '../../store/web3'
+import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
+import { getExplorerContract } from '../../utils/extCalls'
+import { getAddresses } from '../../utils/web3'
 
 const Header = (props) => {
   const web3 = useWeb3()
@@ -112,12 +111,17 @@ const Header = (props) => {
             />
             <Button
               type="Button"
-              className="mx-1 btn btn-primary"
+              className="mx-2 btn btn-primary px-4 py-2"
               href="#"
               id="headerPriceTooltip"
             >
-              <img className="mr-1" src={IconLogo} alt="share icon" /> $
-              {web3.spartaPrice}
+              <img
+                className="mr-1"
+                src={IconLogo}
+                height="25px"
+                alt="share icon"
+              />{' '}
+              ${web3.spartaPrice}
             </Button>
             <UncontrolledPopover
               placement="bottom"
