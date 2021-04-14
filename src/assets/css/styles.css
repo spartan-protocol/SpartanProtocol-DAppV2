@@ -406,8 +406,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     .active nav-link {
         width: 200px;
     }
-
-
+    
     .form-control {
         color: white;
         border-radius: 12px;
