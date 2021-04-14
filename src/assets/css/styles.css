@@ -307,13 +307,12 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 }
 
-@media (min-width: 992px){
+@media (min-width: 992px) {
     .sidebar-mini .sidebar:hover {
         width: 10%;
     }
 
 }
-
 
 
 .dot-burn {
@@ -324,7 +323,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     display: inline-block;
 }
 
-.dot-bond{
+.dot-bond {
     height: 8px;
     width: 8px;
     background-color: #F5BC17;
@@ -339,3 +338,50 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     border-radius: 50%;
     display: inline-block;
 }
+
+
+.input-pane {
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #211e24;
+    border: 1px solid #2F2D2D;
+    border-radius: 12px;
+
+}
+
+.custom-select{
+        color: white;
+        border-radius: 12px;
+        border-color: transparent;
+
+}
+
+
+.form-control {
+    color: white;
+    border-radius: 12px;
+    border-color: transparent;
+    margin-left: 10px;
+    z-index:-1;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+
+
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: #211e24;
+    color: #ffffff;
+    cursor: not-allowed;
+}
+
+
+
+* .form-group:not(.has-danger):not(.has-success) .form-control:focus, * .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus, .login-page .form-group:not(.has-danger):not(.has-success) .form-control:focus, .login-page .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus, .card-login.card-white .form-group:not(.has-danger):not(.has-success) .form-control:focus, .card-login.card-white .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus {
+    border-color: #211e24;
+}
+
+
