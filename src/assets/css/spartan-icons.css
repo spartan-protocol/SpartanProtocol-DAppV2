@@ -35,10 +35,18 @@
 }
 
 .icon-medium {
+     display: inline-block;
+     width: 32px;
+     height: 32px;
+     background-size: 32px auto;
+     background-repeat: no-repeat;
+ }
+
+.icon-medium-1 {
     display: inline-block;
-    width: 32px;
-    height: 32px;
-    background-size: 32px auto;
+    width: 40px;
+    height: 40px;
+    background-size: 40px auto;
     background-repeat: no-repeat;
 }
 
@@ -49,6 +57,13 @@
     background-size: 64px auto;
     background-repeat: no-repeat;
 }
+
+
+/* Max */
+.icon-max.icon-light{
+    background-image: url('/src/assets/icons/max.svg#light');
+}
+
 
 
 /* Contracts*/
