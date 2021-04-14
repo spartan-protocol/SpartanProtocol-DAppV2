@@ -479,21 +479,6 @@ const Swap = () => {
   }
 
   //= =================================================================================//
-  // Functions for ZAP input handling
-
-  const handleZapInputChange = (input, focusInput1) => {
-    if (mode === 'token') {
-      handleInputChange(input, focusInput1)
-    } else if (mode === 'pool') {
-      if (focusInput1 === true) {
-        swapInput2.value = convertFromWei(getZapOutput(), 18)
-      } else {
-        swapInput1.value = convertFromWei()
-      }
-    }
-  }
-
-  //= =================================================================================//
   // Functions SYNTHS calculations
 
   const getSynthLPsFromBase = () => {
@@ -507,9 +492,9 @@ const Swap = () => {
 
   const getSynthFeeFromBase = () => {
     let temp = calcSwapFee(
-      convertToWei(swapInput1.value),
-      assetSwap2.baseAmount,
-      assetSwap2.tokenAmount,
+      convertToWei(swapInput1?.value),
+      assetSwap2?.baseAmount,
+      assetSwap2?.tokenAmount,
     )
     temp = calcValueInBase(assetSwap2.tokenAmount, assetSwap2.baseAmount, temp)
     return temp
@@ -534,6 +519,84 @@ const Swap = () => {
     )
     const tokenValue = BN(tokenAmount).plus(baseSwapped)
     return tokenValue
+  }
+
+  const getSynthFeeToBase = () => {
+    const fee = calcSwapFee(
+      convertToWei(swapInput1.value),
+      assetSwap1.baseAmount,
+      assetSwap1.tokenAmount,
+      true,
+    )
+    return fee
+  }
+
+  const getSynthOutputToBase = () => {
+    const inputSynth = convertToWei(swapInput1?.value)
+    const baseOutput = calcSwapOutput(
+      inputSynth,
+      assetSwap1.tokenAmount,
+      assetSwap1.baseAmount,
+      true,
+    )
+    return baseOutput
+  }
+
+  const getSynthInputInUSD = () => {
+    let inputInUsd = ''
+    if (assetSwap1?.symbol === 'SPARTA') {
+      inputInUsd = BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
+    } else {
+      inputInUsd = calcValueInBase(
+        assetSwap1.tokenAmount,
+        assetSwap1.baseAmount,
+        convertToWei(swapInput1?.value),
+      )
+      inputInUsd = BN(inputInUsd).times(web3.spartaPrice)
+    }
+    return inputInUsd
+  }
+
+  const getSynthOutputInUSD = () => {
+    let outputInUsd = ''
+    if (assetSwap1?.symbol === 'SPARTA') {
+      outputInUsd = calcValueInBase(
+        assetSwap2?.tokenAmount,
+        assetSwap2?.baseAmount,
+        getSynthOutputFromBase(),
+      )
+      outputInUsd = BN(outputInUsd).times(web3.spartaPrice)
+    } else {
+      outputInUsd = BN(getSynthOutputToBase()).times(web3.spartaPrice)
+    }
+    return outputInUsd
+  }
+
+  //= =================================================================================//
+  // Functions for input handling
+
+  const handleZapInputChange = (input, focusInput1) => {
+    if (mode === 'token') {
+      handleInputChange(input, focusInput1)
+    } else if (mode === 'pool') {
+      if (focusInput1 === true) {
+        swapInput2.value = convertFromWei(getZapOutput(), 18)
+      } else {
+        swapInput1.value = convertFromWei()
+      }
+    } else if (mode === 'synth' && assetSwap1?.symbol === 'SPARTA') {
+      if (focusInput1 === true) {
+        swapInput2.value = convertFromWei(getSynthOutputFromBase(), 18)
+      } else {
+        swapInput1.value = convertFromWei()
+      }
+    } else if (mode === 'synth' && assetSwap1?.symbol !== 'SPARTA') {
+      if (focusInput1 === true) {
+        swapInput2.value = convertFromWei(getSynthOutputToBase(), 18)
+      } else {
+        swapInput1.value = convertFromWei()
+      }
+    }
   }
 
   return (
@@ -621,13 +684,20 @@ const Swap = () => {
                         <Col xs="6">
                           <div className="output-card">
                             1 {assetSwap1?.symbol}
-                            {mode === 'pool' && '-SPP'} ={' '}
+                            {mode === 'pool' && '-SPP'}
+                            {mode === 'synth' &&
+                              assetSwap1?.symbol !== 'SPARTA' &&
+                              '-SPS'}{' '}
+                            ={' '}
                             {formatFromUnits(
                               BN(swapInput2?.value).div(BN(swapInput1?.value)),
                               6,
                             )}{' '}
                             {assetSwap2?.symbol}
                             {mode === 'pool' && '-SPP'}
+                            {mode === 'synth' &&
+                              assetSwap1?.symbol === 'SPARTA' &&
+                              '-SPS'}
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
@@ -636,6 +706,8 @@ const Swap = () => {
                             {mode === 'token' && formatFromWei(getInput1USD())}
                             {mode === 'pool' &&
                               formatFromWei(getInputZap1USD())}
+                            {mode === 'synth' &&
+                              formatFromWei(getSynthInputInUSD())}
                           </div>
                         </Col>
                       </Row>
@@ -696,6 +768,7 @@ const Swap = () => {
                               type="text"
                               placeholder="0"
                               id="swapInput2"
+                              readOnly={mode !== 'token'}
                               onInput={(event) =>
                                 handleZapInputChange(event.target.value, false)
                               }
@@ -707,13 +780,20 @@ const Swap = () => {
                         <Col xs="6">
                           <div className="output-card">
                             1 {assetSwap2?.symbol}
-                            {mode === 'pool' && '-SPP'} ={' '}
+                            {mode === 'pool' && '-SPP'}
+                            {mode === 'synth' &&
+                              assetSwap1?.symbol === 'SPARTA' &&
+                              '-SPS'}{' '}
+                            ={' '}
                             {formatFromUnits(
                               BN(swapInput1?.value).div(BN(swapInput2?.value)),
                               6,
                             )}{' '}
                             {assetSwap1?.symbol}
                             {mode === 'pool' && '-SPP'}
+                            {mode === 'synth' &&
+                              assetSwap1?.symbol !== 'SPARTA' &&
+                              '-SPS'}
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
@@ -722,6 +802,8 @@ const Swap = () => {
                             {mode === 'token' && formatFromWei(getInput2USD())}
                             {mode === 'pool' &&
                               formatFromWei(getInputZap2USD())}
+                            {mode === 'synth' &&
+                              formatFromWei(getSynthOutputInUSD())}
                           </div>
                         </Col>
                       </Row>
@@ -951,7 +1033,11 @@ const Swap = () => {
                       </Col>
                       <Col xs="7" className="text-right">
                         <div className="output-card">
-                          {formatFromWei(getSynthFeeFromBase(), 10)} SPARTA
+                          {assetSwap1?.symbol === 'SPARTA' &&
+                            formatFromWei(getSynthFeeFromBase(), 10)}
+                          {assetSwap1?.symbol !== 'SPARTA' &&
+                            formatFromWei(getSynthFeeToBase(), 10)}{' '}
+                          SPARTA
                         </div>
                       </Col>
                     </Row>
@@ -975,9 +1061,13 @@ const Swap = () => {
                       </Col>
                       <Col xs="7" className="text-right">
                         <div className="subtitle-amount">
-                          {formatFromWei(getSynthOutputFromBase(), 10)}{' '}
-                          {assetSwap2?.symbol}
-                          -SPP
+                          {assetSwap1?.symbol === 'SPARTA' &&
+                            `${formatFromWei(getSynthOutputFromBase(), 10)} ${
+                              assetSwap2?.symbol
+                            }-SPP`}
+                          {assetSwap1?.symbol !== 'SPARTA' &&
+                            `${formatFromWei(getSynthOutputToBase(), 10)} ` +
+                              `SPARTA`}
                         </div>
                       </Col>
                     </Row>
@@ -1040,8 +1130,8 @@ const Swap = () => {
                   )}
 
                 {mode === 'synth' &&
-                  JSON.parse(window.localStorage.getItem('assetSelected2'))
-                    .symbol === 'SPARTA' && (
+                  JSON.parse(window.localStorage.getItem('assetSelected1'))
+                    .symbol !== 'SPARTA' && (
                     <Button
                       color="primary"
                       size="lg"
@@ -1050,7 +1140,6 @@ const Swap = () => {
                           routerSwapSynthToBase(
                             convertToWei(swapInput1?.value),
                             assetSwap1.synthAddress,
-                            false,
                           ),
                         )
                       }
