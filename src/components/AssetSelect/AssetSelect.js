@@ -298,7 +298,7 @@ const AssetSelect = (props) => {
                   </Col>
                 </Row>
               </CardHeader>
-              <Nav tabs className="nav-tabs-custom">
+              <Nav className="nav-tabs-custom card-body" pills>
                 <NavItem>
                   <NavLink
                     className={classnames({
@@ -308,7 +308,7 @@ const AssetSelect = (props) => {
                       changeTab('all')
                     }}
                   >
-                    <span className="d-none d-sm-block">All</span>
+                    All
                   </NavLink>
                 </NavItem>
                 {assetArray.filter((asset) => asset.type === 'token').length >
@@ -320,7 +320,7 @@ const AssetSelect = (props) => {
                         changeTab('token')
                       }}
                     >
-                      <span className="d-none d-sm-block">Tokens</span>
+                      Tokens
                     </NavLink>
                   </NavItem>
                 )}
@@ -335,7 +335,7 @@ const AssetSelect = (props) => {
                         changeTab('pool')
                       }}
                     >
-                      <span className="d-none d-sm-block">LP Tokens</span>
+                      LP Tokens
                     </NavLink>
                   </NavItem>
                 )}
@@ -348,7 +348,7 @@ const AssetSelect = (props) => {
                         changeTab('synth')
                       }}
                     >
-                      <span className="d-none d-sm-block">Synths</span>
+                      Synths
                     </NavLink>
                   </NavItem>
                 )}

@@ -670,7 +670,7 @@ const Swap = () => {
                           </div>
                         </Col>
 
-                        <Col className="text-right" xs="4">
+                        <Col className="text-right" xs="6">
                           <FormGroup className="h-100">
                             <Input
                               className="text-right h-100"
@@ -683,14 +683,9 @@ const Swap = () => {
                             />
                           </FormGroup>
                         </Col>
-                        <Col xs="2 mt-2 ml-2">
-                          <Button type="Button" className="mx-1 btn-sm btn-round btn-danger ">
-                            <div className="d-none d-sm-inline-block">MAX</div>
-                          </Button>
-                        </Col>
                       </Row>
                       <Row className="card-body">
-                        <Col xs="7" className="">
+                        <Col >
                           <div className="output-card" style={{ fontSize: 14 }}>Price 1 {assetSwap1?.symbol}
                             {mode === "pool" && "-SPP"}
                             {mode === "synth" &&
@@ -760,7 +755,7 @@ const Swap = () => {
                         </Col>
                       </Row>
                       <Row className="my-3 input-pane">
-                        <Col xs="5">
+                        <Col xs="6">
                           <div className="output-card">
                             <AssetSelect
                               priority="2"
@@ -770,7 +765,7 @@ const Swap = () => {
                           </div>
                         </Col>
 
-                        <Col className="text-right" xs="4">
+                        <Col className="text-right" xs="6">
                           <FormGroup className="h-100">
                             <Input
                               className="text-right h-100"
@@ -783,11 +778,6 @@ const Swap = () => {
                               }
                             />
                           </FormGroup>
-                        </Col>
-                        <Col xs="2 mt-2 ml-2">
-                          <Button type="Button" className="mx-1 btn-sm btn-round btn-danger ">
-                            <div className="d-none d-sm-inline-block">MAX</div>
-                          </Button>
                         </Col>
                       </Row>
                       <Row className="card-body">
