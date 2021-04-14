@@ -16,6 +16,8 @@ import SharePool from '../../../components/Share/SharePool'
 import Wallet from '../../../components/Wallet/Wallet'
 import AddLiquidity from './AddLiquidity'
 import RemoveLiquidity from './RemoveLiquidity'
+import ZapLiquidity from './ZapLiquidity'
+import BondLiquidity from './BondLiquidity'
 
 const Liquidity2 = () => {
   const [activeTab, setActiveTab] = useState('1')
@@ -93,10 +95,10 @@ const Liquidity2 = () => {
                 <RemoveLiquidity />
               </TabPane>
               <TabPane tabId="3" className="p-3">
-                <AddLiquidity />
+                <ZapLiquidity />
               </TabPane>
               <TabPane tabId="4" className="p-3">
-                <AddLiquidity />
+                <BondLiquidity />
               </TabPane>
             </TabContent>
           </Col>
