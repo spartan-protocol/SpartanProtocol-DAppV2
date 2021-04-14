@@ -223,7 +223,7 @@ const AssetSelect = (props) => {
   return (
     <>
       <div onClick={toggleModal} role="button">
-        <div className="custom-select h-auto" name="singleSelect">
+        <div className="select-box ml-1 mt-2 h-auto" name="singleSelect">
           {selectedType === 'token' && (
             <img
               height="35px"
@@ -272,6 +272,7 @@ const AssetSelect = (props) => {
           {selectedItem && selectedItem?.symbol}
           {selectedType === 'pool' && '-SPP'}
           {selectedType === 'synth' && '-SPS'}
+          <i className="bd-icons icon-minimal-down mb-1 ml-2" />
         </div>
       </div>
 
@@ -400,7 +401,7 @@ const AssetSelect = (props) => {
                 {activeTab === 'all' &&
                   assetArray.map((asset) => (
                     <Row key={asset.symbol} className="mb-3 output-card">
-                      <Col xs="7" className="d-flex align-items-center">
+                      <Col xs="8" className="d-flex align-items-center">
                         <div
                           role="button"
                           onClick={() => {
@@ -439,7 +440,7 @@ const AssetSelect = (props) => {
                         </div>
                       </Col>
                       <Col
-                        xs="5"
+                        xs="4"
                         className="text-right"
                         style={{ lineHeight: '35px' }}
                         onClick={() => {
@@ -456,7 +457,7 @@ const AssetSelect = (props) => {
                     .filter((asset) => asset.type === activeTab)
                     .map((asset) => (
                       <Row key={asset.symbol} className="mb-3 output-card">
-                        <Col xs="7" className="d-flex align-items-center">
+                        <Col xs="9" className="d-flex align-items-center">
                           <div
                             role="button"
                             onClick={() => {
@@ -495,7 +496,7 @@ const AssetSelect = (props) => {
                           </div>
                         </Col>
                         <Col
-                          xs="5"
+                          xs="3"
                           className="text-right"
                           style={{ lineHeight: '35px' }}
                           onClick={() => {

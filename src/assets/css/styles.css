@@ -349,10 +349,13 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 }
 
-.custom-select{
-        color: white;
-        border-radius: 12px;
-        border-color: transparent;
+.select-box {
+    color: white;
+    border-radius: 12px;
+    border-color: transparent;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
 
 }
 
@@ -361,15 +364,13 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     color: white;
     border-radius: 12px;
     border-color: transparent;
-    margin-left: 10px;
-    z-index:-1;
+    z-index: -1;
+
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
 }
-
-
 
 
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
@@ -379,9 +380,153 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 
-
 * .form-group:not(.has-danger):not(.has-success) .form-control:focus, * .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus, .login-page .form-group:not(.has-danger):not(.has-success) .form-control:focus, .login-page .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus, .card-login.card-white .form-group:not(.has-danger):not(.has-success) .form-control:focus, .card-login.card-white .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus {
     border-color: #211e24;
+}
+
+
+
+
+/*Mobile small*/
+
+@media (max-width: 568px) {
+    .output-card {
+        font-size: 12px;
+    }
+
+    .subtitle-amount {
+        font-size: 14px;
+    }
+
+    .nav-item {
+        font-size: 12px;
+        margin: -20px;
+    }
+
+    .active nav-link {
+        width: 200px;
+    }
+
+
+    .form-control {
+        color: white;
+        border-radius: 12px;
+        border-color: transparent;
+        z-index: -1;
+        width: 80px;
+        margin-left: -40px;
+        font-style: normal;
+        font-size: 12px;
+        line-height: 24px;
+        font-family: Roboto, serif;
+        font-weight: bold;
+    }
+
+    .select-box {
+        color: white;
+        border-radius: 12px;
+        border-color: transparent;
+        font-size: 10px;
+        font-family: Roboto, serif;
+        font-weight: bold;
+        margin-right: -18px;
+
+    }
+
+
+    .nav-tabs-custom {
+        border-bottom: 0px solid #495057;
+    }
+    .nav-tabs-custom .nav-item {
+        position: relative;
+        color: #495057;
+    }
+    .nav-tabs-custom .nav-item .nav-link {
+        border: none;
+    }
+    .nav-tabs-custom .nav-item .nav-link::after {
+        content: "";
+        background: #a80005;
+        height: 3px;
+        position: absolute;
+        width: 35%;
+        margin-left: -20px;
+        margin-bottom: 10px;
+        left: 45px;
+        bottom: -1px;
+        transition: all 250ms ease 0s;
+    }
+
+    .nav-tabs-custom .nav-item .nav-link.active:after {
+        transform: scale(1);
+    }
+
+
+
+}
+
+
+/*Mobile medium*/
+
+@media (min-width: 544px) and (max-width: 768px) {
+    .output-card {
+        font-size: 14px;
+    }
+
+    .form-control {
+        color: white;
+        border-radius: 12px;
+        border-color: transparent;
+        z-index: -1;
+        width: 80px;
+        margin-left: -20px;
+        font-style: normal;
+        font-size: 16px;
+        line-height: 24px;
+        font-family: Roboto, serif;
+        font-weight: bold;
+    }
+
+    .select-box {
+        color: white;
+        border-radius: 14px;
+        border-color: transparent;
+        font-size: 10px;
+        font-family: Roboto, serif;
+        font-weight: bold;
+
+    }
+
+    .nav-tabs-custom {
+        border-bottom: 0px solid #495057;
+    }
+    .nav-tabs-custom .nav-item {
+        position: relative;
+        color: #495057;
+    }
+    .nav-tabs-custom .nav-item .nav-link {
+        border: none;
+    }
+    .nav-tabs-custom .nav-item .nav-link::after {
+        content: "";
+        background: #a80005;
+        height: 4px;
+        position: absolute;
+        width: 20%;
+        left: 20px;
+        bottom: -1px;
+        transition: all 250ms ease 0s;
+        transform: scale(0);
+    }
+    .nav-tabs-custom .nav-item .nav-link.active {
+        color: #a80005;
+    }
+    .nav-tabs-custom .nav-item .nav-link.active:after {
+        transform: scale(1);
+    }
+
+
+
 }
 
 

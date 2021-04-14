@@ -645,7 +645,7 @@ const Swap = () => {
                           <div className="title-card">From</div>
                         </Col>
                         <Col className="text-right" xs="6">
-                          <div style={{ fontSize: 16 }}
+                          <div
                             className="output-card mb-2"
                             role="button"
                             onClick={() => {
@@ -661,8 +661,8 @@ const Swap = () => {
                         </Col>
                       </Row>
                       <Row className="my-3 input-pane">
-                        <Col xs="6">
-                          <div className="output-card ">
+                        <Col xs="8">
+                          <div className="output-card ml-n1">
                             <AssetSelect
                               priority="1"
                               filter={["token", "pool", "synth"]}
@@ -670,7 +670,7 @@ const Swap = () => {
                           </div>
                         </Col>
 
-                        <Col className="text-right" xs="6">
+                        <Col className="text-right" xs="4">
                           <FormGroup className="h-100">
                             <Input
                               className="text-right h-100"
@@ -686,7 +686,7 @@ const Swap = () => {
                       </Row>
                       <Row className="card-body">
                         <Col xs="6">
-                          <div className="output-card" style={{ fontSize: 14 }}>Price 1 {assetSwap1?.symbol}
+                          <div className="output-card" >Price 1 {assetSwap1?.symbol}
                             {mode === "pool" && "-SPP"}
                             {mode === "synth" &&
                             assetSwap1?.symbol !== "SPARTA" &&
@@ -704,7 +704,7 @@ const Swap = () => {
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
-                          <div className="output-card" style={{ fontSize: 16 }}>
+                          <div className="output-card" >
                             ~$
                             {mode === "token" && formatFromWei(getInput1USD())}
                             {mode === "pool" &&
@@ -718,7 +718,7 @@ const Swap = () => {
                   </Col>
                   {/* 'Reverse' selected assets */}
                   <Col md={2}>
-                    <div className="card-body mt-4 text-center">
+                    <div className="card-body m-4 text-center">
                       <Button
                         className="btn-lg btn-rounded btn-icon"
                         color="primary"
@@ -739,7 +739,7 @@ const Swap = () => {
                           <div className="title-card">To</div>
                         </Col>
                         <Col className="text-right" xs="6">
-                          <div style={{ fontSize: 16 }}
+                          <div
                             className="output-card mb-2"
                             role="button"
                             onClick={() => {
@@ -755,8 +755,8 @@ const Swap = () => {
                         </Col>
                       </Row>
                       <Row className="my-3 input-pane">
-                        <Col xs="6">
-                          <div className="output-card">
+                        <Col xs="8">
+                          <div className="output-card ml-n1">
                             <AssetSelect
                               priority="2"
                               filter={filter}
@@ -765,10 +765,10 @@ const Swap = () => {
                           </div>
                         </Col>
 
-                        <Col className="text-right" xs="6">
+                        <Col className="text-right" xs="4">
                           <FormGroup className="h-100">
                             <Input
-                              className="text-right h-100"
+                              className="text-right h-100 mr-n5 px-2"
                               type="text"
                               placeholder="0"
                               id="swapInput2"
@@ -782,7 +782,7 @@ const Swap = () => {
                       </Row>
                       <Row className="card-body">
                         <Col xs="7">
-                          <div className="output-card" style={{ fontSize: 14 }}>
+                          <div className="output-card">
                             Price 1 {assetSwap2?.symbol}
                             {mode === "pool" && "-SPP"}
                             {mode === "synth" &&
@@ -801,7 +801,7 @@ const Swap = () => {
                           </div>
                         </Col>
                         <Col className="text-right" xs="5">
-                          <div className="output-card" style={{ fontSize: 16 }}>
+                          <div className="output-card">
                             ~$
                             {mode === "token" && formatFromWei(getInput2USD())}
                             {mode === "pool" &&
