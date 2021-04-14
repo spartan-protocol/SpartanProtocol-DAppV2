@@ -2,17 +2,7 @@ import React, { useState } from 'react'
 import Select from 'react-select'
 
 import classnames from 'classnames'
-import {
-  Card,
-  CardBody,
-  Col,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
-} from 'reactstrap'
+import { Card, CardBody, Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
 import ShareIcon from '../../../assets/icons/new.svg'
 
 const AddLiquidity = () => {
@@ -52,108 +42,65 @@ const AddLiquidity = () => {
               </NavItem>
             </Nav>
 
-            <TabContent activeTab={activeTab}>
-              <TabPane tabId="1" className="p-3">
-                <Row>
-                  <Col className="card-body">
-                    {' '}
-                    <img
-                      src={ShareIcon}
-                      alt="share icon"
-                      style={{
-                        height: '19px',
-                        verticalAlign: 'bottom',
-                        marginRight: '5px',
-                      }}
-                    />{' '}
-                    You can now swap your BEP20 tokens, LP tokens & Synths
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={12}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    >
-                      <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Input</div>
-                          <br />
-                          <div className="title-card">From</div>
-                          <br />
-                          <div className="output-card" />
-                        </Col>
-                      </Row>
-                    </Card>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    >
-                      <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Select pool</div>
-                          <br />
-                          <Select
-                            className="react-select info"
-                            classNamePrefix="react-select"
-                            name="singleSelect1"
-                            value={singleSelect1}
-                            onChange={(value) => setsingleSelect1(value)}
-                            options={[
-                              {
-                                value: '',
-                                label: 'Single Option',
-                                isDisabled: true,
-                              },
-                            ]}
-                            placeholder="Select a pool"
-                          />
-                        </Col>
-                      </Row>
-                    </Card>
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tabId="2" className="p-3">
-                <Row>
-                  <Col className="card-body">
-                    {' '}
-                    <img
-                      src={ShareIcon}
-                      alt="share icon"
-                      style={{
-                        height: '19px',
-                        verticalAlign: 'bottom',
-                        marginRight: '5px',
-                      }}
-                    />{' '}
-                    You can now swap your BEP20 tokens, LP tokens & Synths
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={12}>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    >
-                      <Row>
-                        <Col className="text-left">
-                          <div className="title-card">Input</div>
-                          <br />
-                          <div className="title-card">From</div>
-                          <br />
-                          <div className="output-card" />
-                        </Col>
-                      </Row>
-                    </Card>
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body "
-                    />
-                  </Col>
-                </Row>
-              </TabPane>
-            </TabContent>
+            <Row>
+              <Col className="card-body">
+                {' '}
+                <img
+                  src={ShareIcon}
+                  alt="share icon"
+                  style={{
+                    height: '19px',
+                    verticalAlign: 'bottom',
+                    marginRight: '5px',
+                  }}
+                />{' '}
+                You can now swap your BEP20 tokens, LP tokens & Synths
+              </Col>
+            </Row>
+            <Row>
+              <Col md={12}>
+                <Card
+                  style={{ backgroundColor: '#25212D' }}
+                  className="card-body "
+                >
+                  <Row>
+                    <Col className="text-left">
+                      <div className="title-card">Input</div>
+                      <br />
+                      <div className="title-card">From</div>
+                      <br />
+                      <div className="output-card" />
+                    </Col>
+                  </Row>
+                </Card>
+                <Card
+                  style={{ backgroundColor: '#25212D' }}
+                  className="card-body "
+                >
+                  <Row>
+                    <Col className="text-left">
+                      <div className="title-card">Select pool</div>
+                      <br />
+                      <Select
+                        className="react-select info"
+                        classNamePrefix="react-select"
+                        name="singleSelect1"
+                        value={singleSelect1}
+                        onChange={(value) => setsingleSelect1(value)}
+                        options={[
+                          {
+                            value: '',
+                            label: 'Single Option',
+                            isDisabled: true,
+                          },
+                        ]}
+                        placeholder="Select a pool"
+                      />
+                    </Col>
+                  </Row>
+                </Card>
+              </Col>
+            </Row>
           </CardBody>
         </Card>
       </Row>
