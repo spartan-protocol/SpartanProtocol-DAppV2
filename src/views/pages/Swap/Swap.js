@@ -661,7 +661,7 @@ const Swap = () => {
                         </Col>
                       </Row>
                       <Row className="my-3 input-pane">
-                        <Col xs="5">
+                        <Col xs="6">
                           <div className="output-card ">
                             <AssetSelect
                               priority="1"
@@ -685,7 +685,7 @@ const Swap = () => {
                         </Col>
                       </Row>
                       <Row className="card-body">
-                        <Col >
+                        <Col xs="6">
                           <div className="output-card" style={{ fontSize: 14 }}>Price 1 {assetSwap1?.symbol}
                             {mode === "pool" && "-SPP"}
                             {mode === "synth" &&
@@ -703,7 +703,7 @@ const Swap = () => {
                             "-SPS"}
                           </div>
                         </Col>
-                        <Col className="text-right" xs="5">
+                        <Col className="text-right" xs="6">
                           <div className="output-card" style={{ fontSize: 16 }}>
                             ~$
                             {mode === "token" && formatFromWei(getInput1USD())}

@@ -282,10 +282,10 @@ const AssetSelect = (props) => {
               <CardHeader>
                 <CardTitle tag="h2" />
                 <Row>
-                  <Col xs="11">
+                  <Col xs="10">
                     <h2 className="ml-2">Select an asset</h2>
                   </Col>
-                  <Col xs="1">
+                  <Col xs="2">
                     <Button
                       style={{
                         right: '16px',
