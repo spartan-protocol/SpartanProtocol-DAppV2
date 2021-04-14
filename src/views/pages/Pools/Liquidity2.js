@@ -27,6 +27,7 @@ const Liquidity2 = () => {
   return (
     <>
       <div className="content">
+        <br />
         <Breadcrumb>
           <Col md={8}>Liquidity</Col>
           <Col md={2}>

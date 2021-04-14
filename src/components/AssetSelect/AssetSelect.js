@@ -282,10 +282,10 @@ const AssetSelect = (props) => {
               <CardHeader>
                 <CardTitle tag="h2" />
                 <Row>
-                  <Col xs="10">
+                  <Col xs="11">
                     <h2 className="ml-2">Select an asset</h2>
                   </Col>
-                  <Col xs="2">
+                  <Col xs="1">
                     <Button
                       style={{
                         right: '16px',
@@ -298,7 +298,7 @@ const AssetSelect = (props) => {
                   </Col>
                 </Row>
               </CardHeader>
-              <Nav className="nav-tabs-custom card-body" pills>
+              <Nav tabs className="nav-tabs-custom">
                 <NavItem>
                   <NavLink
                     className={classnames({
@@ -308,7 +308,7 @@ const AssetSelect = (props) => {
                       changeTab('all')
                     }}
                   >
-                    All
+                    <span className="d-none d-sm-block">All</span>
                   </NavLink>
                 </NavItem>
                 {assetArray.filter((asset) => asset.type === 'token').length >
@@ -320,7 +320,7 @@ const AssetSelect = (props) => {
                         changeTab('token')
                       }}
                     >
-                      Tokens
+                      <span className="d-none d-sm-block">Tokens</span>
                     </NavLink>
                   </NavItem>
                 )}
@@ -335,7 +335,7 @@ const AssetSelect = (props) => {
                         changeTab('pool')
                       }}
                     >
-                      LP Tokens
+                      <span className="d-none d-sm-block">LP Tokens</span>
                     </NavLink>
                   </NavItem>
                 )}
@@ -348,7 +348,7 @@ const AssetSelect = (props) => {
                         changeTab('synth')
                       }}
                     >
-                      Synths
+                      <span className="d-none d-sm-block">Synths</span>
                     </NavLink>
                   </NavItem>
                 )}
