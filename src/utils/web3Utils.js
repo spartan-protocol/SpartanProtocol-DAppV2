@@ -188,12 +188,9 @@ export const calcLiquidityUnitsAsym = (
 
 /**
  * Calculate value of synthetic assets
- * @param amount uint - amount of TOKENS or SPARTA held by the pool
- * @param pool uint - amount of TOKENS or SPARTA held by the pool
- * @param pool uint - amount of TOKENS or SPARTA held by the pool
- * @param pool uint - amount of TOKENS or SPARTA held by the pool
- * @param pool uint - amount of TOKENS or SPARTA held by the pool
- * @param units uint - amount of LP TOKENS being calculated from (input)
+ * @param amount uint - amount of synths?
+ * @param tokensInPool uint - amount of TOKENS held by the pool
+ * @param spartaInPool uint - amount of SPARTA held by the pool
  * @param poolTotalSupply uint - total supply of LP tokens
  * @returns {uint} share
  */

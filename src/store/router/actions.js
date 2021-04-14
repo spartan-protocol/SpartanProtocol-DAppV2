@@ -289,7 +289,7 @@ export const routerSwapBaseToSynth = (inputAmount, synthOut) => async (
  * @param {bool} safe
  * @returns {unit} output
  */
-export const routerSwapSynthToBase = (inputAmount, synthIn, safe) => async (
+export const routerSwapSynthToBase = (inputAmount, synthIn) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -301,7 +301,7 @@ export const routerSwapSynthToBase = (inputAmount, synthIn, safe) => async (
     //   inputAmount,
     //   synthIn,
     // )
-    const output = await contract.swapSynthToBase(inputAmount, synthIn, safe, {
+    const output = await contract.swapSynthToBase(inputAmount, synthIn, {
       gasPrice: gPrice,
       // gasLimit: gLimit,
     })
