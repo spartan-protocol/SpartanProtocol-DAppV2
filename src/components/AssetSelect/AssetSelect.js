@@ -223,7 +223,7 @@ const AssetSelect = (props) => {
   return (
     <>
       <div onClick={toggleModal} role="button">
-        <div className="select-box ml-1 mt-2 h-auto" name="singleSelect">
+        <div className="select-box ml-1  h-auto" name="singleSelect">
           {selectedType === 'token' && (
             <img
               height="35px"
@@ -272,7 +272,7 @@ const AssetSelect = (props) => {
           {selectedItem && selectedItem?.symbol}
           {selectedType === 'pool' && '-SPP'}
           {selectedType === 'synth' && '-SPS'}
-          <i className="bd-icons icon-minimal-down mb-1 ml-2" />
+          <i className="icon-extra-small icon-arrow icon-light mb-n1 ml-1" />
         </div>
       </div>
 

@@ -361,11 +361,21 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 .input-pane {
     margin-left: 10px;
     margin-right: 10px;
-    background-color: #211e24;
-    border: 1px solid #2F2D2D;
     border-radius: 12px;
 
 }
+
+
+.balance {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+
+    color: #A5ADAF;
+}
+
 
 .select-box {
     color: white;
@@ -383,7 +393,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     border-radius: 12px;
     border-color: transparent;
     z-index: -1;
-
+    display: inline-block;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -392,14 +402,15 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
-    background-color: #211e24;
+    background-color: #25212d;
     color: #ffffff;
     cursor: not-allowed;
 }
 
 
 * .form-group:not(.has-danger):not(.has-success) .form-control:focus, * .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus, .login-page .form-group:not(.has-danger):not(.has-success) .form-control:focus, .login-page .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus, .card-login.card-white .form-group:not(.has-danger):not(.has-success) .form-control:focus, .card-login.card-white .input-group-focus:not(.has-danger):not(.has-success) .form-control:focus {
-    border-color: #211e24;
+    border-color: #25212d;
+
 }
 
 
@@ -425,7 +436,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 
     .output-card {
-        font-size: 12px;
+        font-size: 14px;
     }
 
 
@@ -470,10 +481,8 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         border-radius: 12px;
         border-color: transparent;
         z-index: -1;
-        width: 80px;
-        margin-left: -40px;
         font-style: normal;
-        font-size: 12px;
+        font-size: 16px;
         line-height: 24px;
         font-family: Roboto, serif;
         font-weight: bold;
@@ -483,7 +492,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         color: white;
         border-radius: 12px;
         border-color: transparent;
-        font-size: 10px;
+        font-size: 12px;
         font-family: Roboto, serif;
         font-weight: bold;
         margin-right: -18px;
@@ -595,3 +604,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 
+#root > div > div.main-panel > div > div:nth-child(3) > div.col-md-6 > div > div:nth-child(1) > div.col-md-2 > div.d-block.d-sm-none.card-body.text-center > button
+{
+    z-index: 9999;
+}

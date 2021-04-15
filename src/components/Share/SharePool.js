@@ -45,7 +45,7 @@ const Share = () => {
 
   return (
     <>
-      <Button className="d-inline float-right btn btn-info" onClick={() => setShowShare(true)}>
+      <Button className="d-inline float-right btn btn-info mt-2 mr-2" onClick={() => setShowShare(true)}>
         <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />Share
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)}>
