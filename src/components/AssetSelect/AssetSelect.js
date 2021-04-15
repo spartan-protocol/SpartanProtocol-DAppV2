@@ -222,7 +222,12 @@ const AssetSelect = (props) => {
 
   return (
     <>
-      <div onClick={toggleModal} role="button">
+      <div
+        onClick={() =>
+          !props.disabled ? toggleModal() : console.log('button disabled')
+        }
+        role="button"
+      >
         <div className="select-box ml-1 mt-2 h-auto" name="singleSelect">
           {selectedType === 'token' && (
             <img
@@ -272,7 +277,9 @@ const AssetSelect = (props) => {
           {selectedItem && selectedItem?.symbol}
           {selectedType === 'pool' && '-SPP'}
           {selectedType === 'synth' && '-SPS'}
-          <i className="bd-icons icon-minimal-down mb-1 ml-2" />
+          {!props.disabled && (
+            <i className="bd-icons icon-minimal-down mb-1 ml-2" />
+          )}
         </div>
       </div>
 
