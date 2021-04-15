@@ -386,37 +386,54 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 
 
-/*@media (max-width: 991.98px){*/
-/*    .navbar .navbar-toggler-bar{*/
-/*        display: block;*/
-/*        position: relative;*/
-/*        width: 22px;*/
-/*        height: 1.5px;*/
-/*        border-radius: 2px;*/
-/*        background: #e4e3f2;*/
-/*    }*/
-
-/*}*/
+.output-card-description{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 20px;
+    font-feature-settings: 'liga' off;
+    color: #A5ADAF;
+}
 
 
-
-
-
-
+/*-------------------------------------------------*/
 /*Mobile small I5*/
 
 @media (max-width: 568px) {
 
+    .output-card {
+        font-size: 12px;
+    }
 
+
+
+
+    .output-card-description{
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 9px;
+        line-height: 20px;
+        font-feature-settings: 'liga' off;
+        color: #A5ADAF;
+    }
+
+
+
+
+    .navbar {
+        width: 100%;
+        z-index: 1050;
+        background: black;
+    }
 
 
     .navbar-toggler{
         margin-left: 20px;
     }
 
-    .output-card {
-        font-size: 12px;
-    }
+
 
     .subtitle-amount {
         font-size: 14px;
@@ -489,9 +506,20 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 
+
+
+
+
+
+
+
+
+
 /*Mobile medium*/
 
 @media (min-width: 544px) and (max-width: 768px) {
+
+
     .output-card {
         font-size: 14px;
     }

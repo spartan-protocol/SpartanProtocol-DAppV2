@@ -1,6 +1,9 @@
-import React from 'react'
-import CopyToClipboard from 'react-copy-to-clipboard'
-import NotificationAlert from 'react-notification-alert'
+/* eslint-disable*/
+
+
+import React from "react"
+import CopyToClipboard from "react-copy-to-clipboard"
+import NotificationAlert from "react-notification-alert"
 
 const ShareLink = (props) => {
   const notificationAlertRef = React.useRef(null)
@@ -9,23 +12,24 @@ const ShareLink = (props) => {
     let type
     switch (color) {
       case 1:
-        type = 'primary'
+        type = "primary"
         break
       case 2:
-        type = 'success'
+        type = "success"
         break
       case 3:
-        type = 'danger'
+        type = "danger"
         break
       case 4:
-        type = 'warning'
+        type = "warning"
         break
       case 5:
-        type = 'info'
+        type = "info"
         break
       default:
         break
     }
+
     let options = {}
     options = {
       place,
@@ -35,8 +39,8 @@ const ShareLink = (props) => {
         </div>
       ),
       type,
-      icon: 'bd-icons icon-bell-55',
-      autoDismiss: 2,
+      icon: "icon-extra-small icon-scan",
+      autoDismiss: 2
     }
     notificationAlertRef.current.notificationAlert(options)
   }
@@ -49,7 +53,7 @@ const ShareLink = (props) => {
       <CopyToClipboard
         text={props.url}
         onCopy={() => {
-          notify(props.notificationLocation || 'bc', 'primary')
+          notify(props.notificationLocation || "tr", "primary")
         }}
       >
         {props.children}

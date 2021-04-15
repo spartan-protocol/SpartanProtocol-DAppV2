@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import React, { useEffect, useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
@@ -42,30 +43,12 @@ const Share = () => {
 
   return (
     <>
-      <Button
-        variant="secondary"
-        className="btn-block btn-md"
-        style={{
-          padding: '10px',
-          marginLeft: '9px',
-          top: '-4px',
-        }}
-        onClick={() => setShowShare(true)}
-      >
-        <img
-          src={ShareIcon}
-          alt="share icon"
-          style={{
-            height: '19px',
-            verticalAlign: 'bottom',
-            marginRight: '5px',
-          }}
-        />{' '}
-        Show share
+      <Button type="Button" className="mx-1 btn-sm btn-danger btn-round" onClick={() => setShowShare(true)}>
+        <i className="icon-small icon-pools icon-dark mr-1 mt-1" />
       </Button>
+
       <Modal show={showShare} onHide={() => setShowShare(false)}>
-        <Modal.Body>
-          <Row>
+          <Row className="mt-1">
             <Col xs="12" className="text-center py-5">
               <img src={ShareIcon} alt="Share icon" />
             </Col>
@@ -146,7 +129,6 @@ const Share = () => {
               </Button>
             </Col>
           </Row>
-        </Modal.Body>
       </Modal>
     </>
   )
