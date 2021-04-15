@@ -55,7 +55,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
 
         <Row className="m-2">
           <Col xs={6} className="text-card">
-            Spot price
+            Spot Price
           </Col>
           <Col xs={6} className="output-card text-right">
             {formatFromUnits(spotPrice, 4)} SPARTA
@@ -85,12 +85,14 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
             Recent Divis
           </Col>
           <Col xs={6} className="output-card text-right">
-            {formatFromWei(recentDivis, 0)} SPARTA
+            {assetSwap.curated === true
+              ? `${formatFromWei(recentDivis, 0)} SPARTA`
+              : 'Not Curated'}
           </Col>
         </Row>
         <Row className="m-2">
           <Col xs={6} className="text-card">
-            Deph
+            Depth
           </Col>
           <Col xs={6} className="output-card text-right">
             {formatFromWei(assetSwap.tokenAmount, 4)} {assetSwap.symbol} <br />
