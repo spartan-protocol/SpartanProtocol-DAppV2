@@ -44,6 +44,7 @@ import { getPoolContract } from "../../../utils/web3Pool"
 import NewIcon from "../../../assets/icons/new.svg"
 import SwapPair from "./SwapPair"
 import SharePool from "../../../components/Share/SharePool"
+import WalletSelect from "../../../components/WalletSelect/WalletSelect"
 
 const Swap = () => {
   const web3 = useWeb3()
@@ -602,22 +603,22 @@ const Swap = () => {
 
   return (
     <>
-      <div className="content">
-        <Breadcrumb>
-          <Col xs={5} className="mr-1">Swap</Col>
-          <Col xs={3} className="mr-2"><SharePool /></Col>
-          <Col xs={3}><SharePool /></Col>
-          {/*<Col  xs={2}>Swap {mode !== 'token' && mode} tokens </Col>*/}
-          {/*<Col md={2}>*/}
-          {/*  {' '}*/}
-          {/*  <Wallet />*/}
-          {/*</Col>*/}
-        </Breadcrumb>
-
+      <div className="content mt-n5">
         {poolFactory.finalArray?.length > 0 && (
           <>
+              {/*titlebar*/}
+              <Row className="card-body">
+                <div className="container-fluid p-0 m-0">
+                  <div className="text-left">
+                    <h2 className="d-inline text-title">Swap</h2>
+                    <SharePool/>
+                  </div>
+                </div>
+              </Row>
+
+
             <Row>
-              <Col xl={8}>
+              <Col md={8}>
                 <Card className="card-body">
                   <Row>
                     <Col className="card-body d-inline-block">
@@ -1171,28 +1172,32 @@ const Swap = () => {
                     </Button>
                   )}
                 </Card>
+
               </Col>
-            </Row>
-            <Row className="justify-content-center">
-              {assetSwap1.symbol !== "SPARTA" && (
-                <Col xs="12" md="6" xl="4">
+
+              <Col md={4}>
+                {assetSwap1.symbol !== "SPARTA" && (
+
                   <SwapPair
                     assetSwap={assetSwap1}
                     finalLpArray={poolFactory.finalLpArray}
                     web3={web3}
                   />
-                </Col>
-              )}
-              {assetSwap2.symbol !== "SPARTA" && (
-                <Col xs="12" md="6" xl="4">
+
+                )}
+                {assetSwap2.symbol !== "SPARTA" && (
                   <SwapPair
                     assetSwap={assetSwap2}
                     finalLpArray={poolFactory.finalLpArray}
                     web3={web3}
                   />
-                </Col>
-              )}
+
+                )}
+
+              </Col>
             </Row>
+
+
           </>
         )}
         {!poolFactory.finalArray && (

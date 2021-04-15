@@ -121,7 +121,7 @@ const Samples = () => (
               <Button className="btn-round" color="primary">
                 round
               </Button>
-              <Button className="btn-round" color="primary">
+              <Button className="btn-round" color="danger">
                 <i className="bi-lg bi bi-wallet" /> with icon
               </Button>
               <Button className="btn-round btn-icon" color="primary">

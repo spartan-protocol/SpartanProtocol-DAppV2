@@ -294,7 +294,7 @@ const AssetSelect = (props) => {
                       onClick={toggleModal}
                       className="btn btn-transparent"
                     >
-                      <i className="icon-medium icon-close" />
+                      <i className="icon-small icon-close" />
                     </Button>
                   </Col>
                 </Row>

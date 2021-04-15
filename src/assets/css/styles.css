@@ -251,6 +251,24 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     -ms-animation: fadeIn ease 3s;
 }
 
+
+.text-title {
+    font-family: Kreon;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 48px;
+    line-height: 64px;
+    /* identical to box height, or 133% */
+
+    font-feature-settings: 'liga' off;
+
+    /* White */
+
+    color: #FFFFFF;
+
+}
+
+
 @keyframes fadeIn {
     0% {
         opacity: 0;
@@ -385,8 +403,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 
-
-.output-card-description{
+.output-card-description {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
@@ -402,14 +419,17 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 @media (max-width: 568px) {
 
+
+    .amount {
+        font-size: 14px;
+    }
+
     .output-card {
         font-size: 12px;
     }
 
 
-
-
-    .output-card-description{
+    .output-card-description {
         font-family: Roboto;
         font-style: normal;
         font-weight: normal;
@@ -420,8 +440,6 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 
 
-
-
     .navbar {
         width: 100%;
         z-index: 1050;
@@ -429,10 +447,9 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 
 
-    .navbar-toggler{
+    .navbar-toggler {
         margin-left: 20px;
     }
-
 
 
     .subtitle-amount {
@@ -477,13 +494,16 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     .nav-tabs-custom {
         border-bottom: 0px solid #495057;
     }
+
     .nav-tabs-custom .nav-item {
         position: relative;
         color: #495057;
     }
+
     .nav-tabs-custom .nav-item .nav-link {
         border: none;
     }
+
     .nav-tabs-custom .nav-item .nav-link::after {
         content: "";
         background: #a80005;
@@ -502,17 +522,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 
 
-
 }
-
-
-
-
-
-
-
-
-
 
 
 /*Mobile medium*/
@@ -551,13 +561,16 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     .nav-tabs-custom {
         border-bottom: 0px solid #495057;
     }
+
     .nav-tabs-custom .nav-item {
         position: relative;
         color: #495057;
     }
+
     .nav-tabs-custom .nav-item .nav-link {
         border: none;
     }
+
     .nav-tabs-custom .nav-item .nav-link::after {
         content: "";
         background: #a80005;
@@ -569,13 +582,14 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         transition: all 250ms ease 0s;
         transform: scale(0);
     }
+
     .nav-tabs-custom .nav-item .nav-link.active {
         color: #a80005;
     }
+
     .nav-tabs-custom .nav-item .nav-link.active:after {
         transform: scale(1);
     }
-
 
 
 }

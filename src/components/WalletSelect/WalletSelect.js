@@ -114,10 +114,7 @@ const WalletSelect = (props) => {
     <>
 
       <Modal {...props}>
-
         <Card className="card-body">
-
-
           {wallet.status !== "connected" && (
             <CardHeader>
               <CardTitle tag="h2" />
@@ -185,7 +182,7 @@ const WalletSelect = (props) => {
                     onClick={props.onHide}
                     className="btn btn-transparent"
                   >
-                    <i className="icon-medium icon-close" />
+                    <i className="icon-small icon-close" />
                   </Button>
                 </Col>
               </Row>
@@ -197,9 +194,9 @@ const WalletSelect = (props) => {
 
                     <Col xs={5}>
                       <Row>
-                      <Col>
+                        <Col>
                         <span className="output-card-description">
-                        View on BSC Scan{" "}<br/>
+                        View on BSC Scan{" "}<br />
                       <a
                         href={getExplorerWallet(wallet.account)}
                         target="_blank"
@@ -214,28 +211,24 @@ const WalletSelect = (props) => {
                             <i className="icon-small icon-copy" />
                         </ShareLink>
                       </span>
-                      </Col>
+                        </Col>
                         <Col> <span className="title">
                         {wallet.account?.substr(0, 5)}...
-                      {wallet.account?.slice(-5)}
+                          {wallet.account?.slice(-5)}
                       </span></Col></Row></Col>
                     <Col xs={7}>
+
                       <Button
-                      className="mx-1 btn-sm btn-danger btn-round mt-3"
-                      onClick={() => {
-                        wallet.reset()
-                      }}
-                    >Change wallet
-                      </Button></Col>
-
+                        className="mx-1 btn-sm btn-danger btn-round mt-3"
+                        onClick={() => {
+                          wallet.reset()
+                        }}
+                      >Change wallet
+                      </Button>
+                    </Col>
                   </Row>
-
-
                   <br />
-
                   <br />
-
-
                   <Row className="card-body">
                     <Nav pills className="nav-tabs-custom">
                       <NavItem>
@@ -297,7 +290,7 @@ const WalletSelect = (props) => {
                         .map((asset) => (
                           <Row
                             key={`${asset.tokenAddress}-asset`}
-                            className="align-items-center mb-3"
+                            className="align-items-center mb-3 output-card"
                           >
                             <Col xs="7" className="d-flex align-items-center">
                               <img
@@ -361,7 +354,7 @@ const WalletSelect = (props) => {
                       {poolFactory.finalLpArray?.filter(
                         (asset) => asset.lockedLPs > 0
                       ).length > 0 && (
-                        <Row className="h6 mt-3 mb-3">
+                        <Row className="h6 mt-3 mb-3 output-card">
                           <Col xs="7" className="pl-4">
                             LP Asset
                           </Col>
@@ -453,7 +446,7 @@ const WalletSelect = (props) => {
                         .map((asset) => (
                           <Row
                             key={`${asset.tokenAddress}-lp`}
-                            className="align-items-center mb-3"
+                            className="align-items-center mb-3 output-card"
                           >
                             <Col xs="7" className="d-flex align-items-center">
                               <img
