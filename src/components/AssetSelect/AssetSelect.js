@@ -223,7 +223,7 @@ const AssetSelect = (props) => {
   return (
     <>
       <div onClick={toggleModal} role="button">
-        <div className="custom-select h-auto" name="singleSelect">
+        <div className="select-box ml-1 mt-2 h-auto" name="singleSelect">
           {selectedType === 'token' && (
             <img
               height="35px"
@@ -272,6 +272,7 @@ const AssetSelect = (props) => {
           {selectedItem && selectedItem?.symbol}
           {selectedType === 'pool' && '-SPP'}
           {selectedType === 'synth' && '-SPS'}
+          <i className="bd-icons icon-minimal-down mb-1 ml-2" />
         </div>
       </div>
 
@@ -282,10 +283,10 @@ const AssetSelect = (props) => {
               <CardHeader>
                 <CardTitle tag="h2" />
                 <Row>
-                  <Col xs="11">
+                  <Col xs="10">
                     <h2 className="ml-2">Select an asset</h2>
                   </Col>
-                  <Col xs="1">
+                  <Col xs="2">
                     <Button
                       style={{
                         right: '16px',
@@ -298,7 +299,7 @@ const AssetSelect = (props) => {
                   </Col>
                 </Row>
               </CardHeader>
-              <Nav tabs className="nav-tabs-custom">
+              <Nav className="nav-tabs-custom card-body" pills>
                 <NavItem>
                   <NavLink
                     className={classnames({
@@ -308,7 +309,7 @@ const AssetSelect = (props) => {
                       changeTab('all')
                     }}
                   >
-                    <span className="d-none d-sm-block">All</span>
+                    All
                   </NavLink>
                 </NavItem>
                 {assetArray.filter((asset) => asset.type === 'token').length >
@@ -320,7 +321,7 @@ const AssetSelect = (props) => {
                         changeTab('token')
                       }}
                     >
-                      <span className="d-none d-sm-block">Tokens</span>
+                      Tokens
                     </NavLink>
                   </NavItem>
                 )}
@@ -335,7 +336,7 @@ const AssetSelect = (props) => {
                         changeTab('pool')
                       }}
                     >
-                      <span className="d-none d-sm-block">LP Tokens</span>
+                      LP Tokens
                     </NavLink>
                   </NavItem>
                 )}
@@ -348,7 +349,7 @@ const AssetSelect = (props) => {
                         changeTab('synth')
                       }}
                     >
-                      <span className="d-none d-sm-block">Synths</span>
+                      Synths
                     </NavLink>
                   </NavItem>
                 )}
@@ -400,7 +401,7 @@ const AssetSelect = (props) => {
                 {activeTab === 'all' &&
                   assetArray.map((asset) => (
                     <Row key={asset.symbol} className="mb-3 output-card">
-                      <Col xs="7" className="d-flex align-items-center">
+                      <Col xs="8" className="d-flex align-items-center">
                         <div
                           role="button"
                           onClick={() => {
@@ -439,7 +440,7 @@ const AssetSelect = (props) => {
                         </div>
                       </Col>
                       <Col
-                        xs="5"
+                        xs="4"
                         className="text-right"
                         style={{ lineHeight: '35px' }}
                         onClick={() => {
@@ -456,7 +457,7 @@ const AssetSelect = (props) => {
                     .filter((asset) => asset.type === activeTab)
                     .map((asset) => (
                       <Row key={asset.symbol} className="mb-3 output-card">
-                        <Col xs="7" className="d-flex align-items-center">
+                        <Col xs="9" className="d-flex align-items-center">
                           <div
                             role="button"
                             onClick={() => {
@@ -495,7 +496,7 @@ const AssetSelect = (props) => {
                           </div>
                         </Col>
                         <Col
-                          xs="5"
+                          xs="3"
                           className="text-right"
                           style={{ lineHeight: '35px' }}
                           onClick={() => {

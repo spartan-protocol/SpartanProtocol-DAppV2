@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useEffect } from 'react'
 import ReactBSAlert from 'react-bootstrap-sweetalert'
 import { useDispatch } from 'react-redux'
@@ -80,9 +82,9 @@ const Approval = ({
     <>
       {BN(web3.allowance._hex).comparedTo(BN(convertToWei(txnAmount))) ===
         -1 && (
-        <Card>
+        <div>
           {alert}
-          <Card>
+          <Card  style={{ backgroundColor: "#25212D" }}>
             <CardBody className="text-center">
               <CardText>You need to approve *TOKEN* first!</CardText>
               <Button
@@ -94,7 +96,7 @@ const Approval = ({
               </Button>
             </CardBody>
           </Card>
-        </Card>
+        </div>
       )}
     </>
   )
