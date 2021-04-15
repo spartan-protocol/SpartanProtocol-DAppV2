@@ -631,7 +631,6 @@ const Swap = () => {
                   </span>
               </UncontrolledAlert></Col>
             </Row>
-
             <Row>
               <Col md={6}>
 
