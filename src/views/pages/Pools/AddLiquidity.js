@@ -2,8 +2,19 @@ import React, { useState } from 'react'
 import Select from 'react-select'
 
 import classnames from 'classnames'
-import { Card, CardBody, Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
+import {
+  Card,
+  CardBody,
+  Col,
+  FormGroup,
+  Input,
+  Nav,
+  NavItem,
+  NavLink,
+  Row,
+} from 'reactstrap'
 import ShareIcon from '../../../assets/icons/new.svg'
+import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 
 const AddLiquidity = () => {
   // const [singleSelect, setsingleSelect] = React.useState(null)
@@ -64,12 +75,26 @@ const AddLiquidity = () => {
                   className="card-body "
                 >
                   <Row>
-                    <Col className="text-left">
+                    <Col xs="12" className="text-left">
                       <div className="title-card">Input</div>
-                      <br />
-                      <div className="title-card">From</div>
-                      <br />
-                      <div className="output-card" />
+                    </Col>
+                  </Row>
+                  <Row className="my-3">
+                    <Col xs="6">
+                      <div className="output-card">
+                        <AssetSelect priority="1" filter={['token']} />
+                      </div>
+                    </Col>
+                    <Col className="text-right" xs="6">
+                      <FormGroup className="h-100">
+                        <Input
+                          className="text-right h-100"
+                          type="text"
+                          placeholder="0"
+                          id="addInput1"
+                          onInput={(event) => console.log(event)}
+                        />
+                      </FormGroup>
                     </Col>
                   </Row>
                 </Card>
