@@ -20,15 +20,22 @@ import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import MaxBadge from '../../../assets/icons/max.svg'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
-import { convertToWei, formatFromWei } from '../../../utils/bigNumber'
+import {
+  convertFromWei,
+  convertToWei,
+  formatFromWei,
+} from '../../../utils/bigNumber'
 import {
   calcLiquidityUnits,
+  calcLiquidityUnitsAsym,
   calcValueInBase,
   calcValueInToken,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
-import { routerAddLiq } from '../../../store/router/actions'
+import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
+import RecentTxns from '../../../components/RecentTxns/RecentTxns'
+import { getPoolContract } from '../../../utils/web3Pool'
 
 const AddLiquidity = () => {
   const dispatch = useDispatch()
@@ -43,7 +50,7 @@ const AddLiquidity = () => {
   useEffect(() => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
-      if (finalArray) {
+      if (finalArray && activeTab === '1') {
         window.localStorage.setItem('assetType1', 'token')
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'pool')
@@ -57,7 +64,10 @@ const AddLiquidity = () => {
             ? asset1
             : { tokenAddress: addr.bnb }
         asset2 = { tokenAddress: addr.sparta }
-        asset3 = asset1 !== addr.sparta ? asset1 : { tokenAddress: addr.bnb }
+        asset3 =
+          asset1.tokenAddress !== addr.sparta
+            ? asset1
+            : { tokenAddress: addr.bnb }
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
         asset2 = getItemFromArray(asset2, poolFactory.finalArray)
@@ -70,6 +80,27 @@ const AddLiquidity = () => {
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
+      } else if (finalArray && activeTab === '2') {
+        window.localStorage.setItem('assetType1', 'token')
+        window.localStorage.setItem('assetType3', 'pool')
+
+        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
+        let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
+
+        asset1 = asset1 || { tokenAddress: addr.bnb }
+        asset3 =
+          asset1.tokenAddress !== addr.sparta
+            ? asset1
+            : { tokenAddress: addr.bnb }
+
+        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
+        asset3 = getItemFromArray(asset3, poolFactory.finalArray)
+
+        setAssetAdd1(asset1)
+        setPoolAdd1(asset3)
+
+        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+        window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
       }
     }
 
@@ -80,6 +111,7 @@ const AddLiquidity = () => {
     poolFactory.finalLpArray,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected2'),
+    activeTab,
   ])
 
   const addInput1 = document.getElementById('addInput1')
@@ -95,12 +127,32 @@ const AddLiquidity = () => {
 
   const getAddBothOutputLP = () => {
     if (addInput1 && addInput2 && assetAdd1) {
-      return calcLiquidityUnits(
-        addInput2?.value,
-        addInput1?.value,
-        assetAdd1?.baseAmount,
-        assetAdd1?.tokenAmount,
-        assetAdd1?.poolUnits,
+      return convertFromWei(
+        calcLiquidityUnits(
+          convertToWei(addInput2?.value),
+          convertToWei(addInput1?.value),
+          assetAdd1?.baseAmount,
+          assetAdd1?.tokenAmount,
+          assetAdd1?.poolUnits,
+        ),
+      )
+    }
+    return '0'
+  }
+
+  //= =================================================================================//
+  // 'Add Single' Functions (Re-Factor)
+
+  const getAddSingleOutputLP = () => {
+    if (addInput1 && assetAdd1) {
+      return convertFromWei(
+        calcLiquidityUnitsAsym(
+          convertToWei(addInput1?.value),
+          assetAdd1.tokenAddress === addr.sparta
+            ? poolAdd1?.baseAmount
+            : poolAdd1?.tokenAmount,
+          poolAdd1?.poolUnits,
+        ),
       )
     }
     return '0'
@@ -123,22 +175,44 @@ const AddLiquidity = () => {
         input,
       )
     }
-    if (addInput1 && addInput2 && addInput3) {
+    if (activeTab === '1' && addInput1 && addInput2 && addInput3) {
       addInput3.value = getAddBothOutputLP()
+    }
+    if (activeTab === '2' && addInput1 && addInput3) {
+      addInput3.value = getAddSingleOutputLP()
     }
   }
 
   useEffect(() => {
-    if (document.activeElement.id === 'addInput2' && addInput2?.value !== '') {
-      handleInputChange(addInput2?.value, false)
-    } else if (addInput1?.value === '' || addInput2?.value === '') {
-      addInput1.value = '0'
-      addInput2.value = '0'
-      handleInputChange(addInput1?.value, true)
-    } else {
-      handleInputChange(addInput1?.value, true)
+    if (activeTab === '1') {
+      if (
+        document.activeElement.id === 'addInput2' &&
+        addInput2?.value !== ''
+      ) {
+        handleInputChange(addInput2?.value, false)
+      } else if (
+        (addInput1 && addInput2 && addInput1?.value === '') ||
+        (addInput1 && addInput2 && addInput2?.value === '')
+      ) {
+        addInput1.value = '0'
+        addInput2.value = '0'
+      } else {
+        handleInputChange(addInput1?.value, true)
+      }
     }
-  }, [addInput1?.value, addInput2?.value, assetAdd1, assetAdd2])
+
+    if (activeTab === '2') {
+      if (addInput1?.value !== '') {
+        handleInputChange()
+      } else {
+        addInput1.value = '0'
+        handleInputChange()
+      }
+      if (addInput2) {
+        addInput2.value = '0'
+      }
+    }
+  }, [addInput1?.value, addInput2?.value, assetAdd1, assetAdd2, activeTab])
 
   return (
     <>
@@ -163,7 +237,7 @@ const AddLiquidity = () => {
                     toggle('2')
                   }}
                 >
-                  <span className="d-none d-sm-block">Swap+Add</span>
+                  <span className="d-none d-sm-block">Add Single</span>
                 </NavLink>
               </NavItem>
             </Nav>
@@ -272,7 +346,8 @@ const AddLiquidity = () => {
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="title-card">
-                        Balance: {formatFromWei(poolAdd1.balanceLPs)}-SPP
+                        Balance: {formatFromWei(poolAdd1.balanceLPs)}{' '}
+                        {poolAdd1?.symbol}-SPP
                       </div>
                     </Col>
                   </Row>
@@ -283,7 +358,10 @@ const AddLiquidity = () => {
                         <AssetSelect
                           priority="3"
                           filter={['pool']}
-                          disabled={activeTab === '1'}
+                          disabled={
+                            activeTab === '1' ||
+                            assetAdd1.tokenAddress !== addr.sparta
+                          }
                         />
                       </div>
                     </Col>
@@ -294,7 +372,7 @@ const AddLiquidity = () => {
                           type="text"
                           placeholder="0"
                           id="addInput3"
-                          disabled={activeTab === '1'}
+                          disabled
                         />
                       </FormGroup>
                     </Col>
@@ -306,8 +384,14 @@ const AddLiquidity = () => {
                     <div className="title-card">Add Liq</div>
                   </Col>
                   <Col xs="8" className="text-right">
-                    <div className="title-card">{addInput1?.value} SYMBOL</div>
-                    <div className="title-card">{addInput2?.value} SYMBOL</div>
+                    <div className="title-card">
+                      {addInput1?.value} {assetAdd1?.symbol}
+                    </div>
+                    {activeTab === '1' && (
+                      <div className="title-card">
+                        {addInput2?.value} {assetAdd2?.symbol}
+                      </div>
+                    )}
                   </Col>
                 </Row>
 
@@ -328,7 +412,7 @@ const AddLiquidity = () => {
                   </Col>
                   <Col xs="8" className="text-right">
                     <div className="title-card">
-                      {addInput3?.value} SYMBOL-SPP
+                      {addInput3?.value} {poolAdd1?.symbol}-SPP
                     </div>
                   </Col>
                 </Row>
@@ -345,13 +429,21 @@ const AddLiquidity = () => {
                 <Button
                   className="w-100 h-100 btn-primary"
                   onClick={() =>
-                    dispatch(
-                      routerAddLiq(
-                        convertToWei(addInput2.value),
-                        convertToWei(addInput1.value),
-                        assetAdd1.tokenAddress,
-                      ),
-                    )
+                    activeTab === '1'
+                      ? dispatch(
+                          routerAddLiq(
+                            convertToWei(addInput2.value),
+                            convertToWei(addInput1.value),
+                            assetAdd1.tokenAddress,
+                          ),
+                        )
+                      : dispatch(
+                          routerAddLiqAsym(
+                            convertToWei(addInput1.value),
+                            assetAdd1.tokenAddress === addr.sparta,
+                            poolAdd1.tokenAddress,
+                          ),
+                        )
                   }
                 >
                   Join Pool
@@ -361,13 +453,22 @@ const AddLiquidity = () => {
           </CardBody>
         </Card>
       </Row>
-      <Col xs="12">
-        <SwapPair
-          assetSwap={assetAdd1}
-          finalLpArray={poolFactory.finalLpArray}
-          web3={web3}
-        />
-      </Col>
+      <Row>
+        <Col xs="12">
+          <SwapPair
+            assetSwap={poolAdd1}
+            finalLpArray={poolFactory.finalLpArray}
+            web3={web3}
+          />
+        </Col>
+        <Col xs="12">
+          <RecentTxns
+            contracts={poolFactory.finalArray
+              ?.filter((asset) => asset.symbol !== 'SPARTA')
+              .map((asset) => getPoolContract(asset.poolAddress))}
+          />
+        </Col>
+      </Row>
     </>
   )
 }

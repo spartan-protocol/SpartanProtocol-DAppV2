@@ -71,7 +71,7 @@ const Liquidity2 = () => {
                         toggle('3')
                       }}
                     >
-                      <span className="d-none d-sm-block">Transfer pool</span>
+                      <span className="d-none d-sm-block">Zap</span>
                     </NavLink>
                   </NavItem>
                   <NavItem>

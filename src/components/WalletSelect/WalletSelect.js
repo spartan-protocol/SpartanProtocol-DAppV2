@@ -13,8 +13,8 @@ import { usePoolFactory } from '../../store/poolFactory/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
 import MetaMask from '../../assets/icons/MetaMask.svg'
-import spartaIcon from '../../assets/img/spartan_red_small.svg'
-import spartaIconAlt from '../../assets/img/spartan_white_small.svg'
+import spartaIcon from '../../assets/img/spartan_blue_small.svg'
+import spartaIconAlt from '../../assets/img/spartan_gold_small.svg'
 
 const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
@@ -375,10 +375,10 @@ const WalletSelect = (props) => {
                                 className="mr-n3"
                               />
                               <img
-                                height="20px"
+                                height="27px"
                                 src={spartaIcon}
                                 alt="SPARTA"
-                                className="mr-1"
+                                className="mr-2"
                               />
                               {`${asset.symbol}-SPP`}
                               <ShareLink
@@ -453,10 +453,10 @@ const WalletSelect = (props) => {
                                 className="mr-n3"
                               />
                               <img
-                                height="20px"
+                                height="27px"
                                 src={spartaIcon}
                                 alt="SPARTA"
-                                className="mr-1"
+                                className="mr-2"
                               />
                               {`${asset.symbol}-SPP`}
                               <ShareLink
@@ -533,10 +533,10 @@ const WalletSelect = (props) => {
                                 className="mr-n3"
                               />
                               <img
-                                height="20px"
+                                height="27px"
                                 src={spartaIconAlt}
                                 alt="SPARTA"
-                                className="mr-1"
+                                className="mr-2"
                               />
                               <span>{`${asset.symbol}-SPS`}</span>
                               <ShareLink
