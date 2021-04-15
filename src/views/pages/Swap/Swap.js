@@ -1162,7 +1162,7 @@ const Swap = () => {
               </Card>
             </Col>
           </Row>
-          <Row>
+          <Row className="justify-content-center">
               {assetSwap1.symbol !== 'SPARTA' && (
                 <Col xs="12" md="6" xl="4">
                   <SwapPair
