@@ -205,7 +205,7 @@ const Overview = () => {
         </Row>
         <Row className="card-body">
           <Col>
-            <Alert className="alert-with-icon" color="danger" fade={false}>
+            <Alert className="alert-with-icon" color="danger" fade="false">
               <span
                 data-notify="icon"
                 className="icon-small icon-info icon-dark"

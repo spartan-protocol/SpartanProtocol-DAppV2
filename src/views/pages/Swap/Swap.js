@@ -612,8 +612,9 @@ const Swap = () => {
         </Breadcrumb>
 
         {poolFactory.finalArray?.length > 0 && (
+          <>
           <Row>
-            <Col xl={9}>
+            <Col xl={8}>
               <Card className="card-body">
                 <Row>
                   <Col className="card-body d-inline-block">
@@ -1160,27 +1161,28 @@ const Swap = () => {
                   )}
               </Card>
             </Col>
-            <Col>
+          </Row>
+          <Row>
               {assetSwap1.symbol !== 'SPARTA' && (
-                <Row>
+                <Col xs="12" md="6" xl="4">
                   <SwapPair
                     assetSwap={assetSwap1}
                     finalLpArray={poolFactory.finalLpArray}
                     web3={web3}
                   />
-                </Row>
+                  </Col>
               )}
               {assetSwap2.symbol !== 'SPARTA' && (
-                <Row>
+                <Col xs="12" md="6" xl="4">
                   <SwapPair
                     assetSwap={assetSwap2}
                     finalLpArray={poolFactory.finalLpArray}
                     web3={web3}
                   />
-                </Row>
+                  </Col>
               )}
-            </Col>
           </Row>
+          </>
         )}
         {!poolFactory.finalArray && (
           <div>

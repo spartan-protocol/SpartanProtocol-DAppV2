@@ -1,8 +1,8 @@
 import React from 'react'
-import { Card, Col, Row, Table } from 'reactstrap'
+import { Card, Col, Row } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import coinSparta from '../../../assets/icons/coin_sparta.svg'
-import { formatFromWei, formatFromUnits } from '../../../utils/bigNumber'
+import { formatFromWei, formatFromUnits, BN } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
 
 const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
@@ -10,11 +10,12 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
     finalLpArray && finalLpArray.length
       ? finalLpArray.find((lp) => lp.symbol === assetSwap.symbol)
       : 0
-  const tokenPrice =
-    (assetSwap?.baseAmount / assetSwap?.tokenAmount) * web3?.spartaPrice
-  const spotPrice = assetSwap?.baseAmount / assetSwap?.tokenAmount
-  const recentFees = asset ? formatFromWei(asset.recentFees, 0) : 0
-  const recentDivis = asset ? formatFromWei(asset.recentDivis, 0) : 0
+  const tokenPrice = BN(assetSwap?.baseAmount)
+    .div(assetSwap?.tokenAmount)
+    .times(web3?.spartaPrice)
+  const spotPrice = BN(assetSwap?.baseAmount).div(assetSwap?.tokenAmount)
+  const recentFees = asset ? asset.recentFees : 0
+  const recentDivis = asset ? asset.recentDivis : 0
   const APY =
     recentFees && recentDivis
       ? formatFromUnits(calcAPY(recentDivis, recentFees, assetSwap.baseAmount))
@@ -23,85 +24,81 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
   return (
     <>
       <Card className="card-body">
-        <Row>
-          <Table borderless className="ml-2 mr-5">
-            <tbody>
-              <tr>
-                <td>
-                  <div className="output-card">
-                    <img
-                      className="mr-2"
-                      src={assetSwap.symbolUrl}
-                      alt="Logo"
-                      height="32"
-                    />
-                    {assetSwap?.symbol}
-                  </div>
-                </td>
-                <th className="output-card text-right">
-                  ${parseFloat(tokenPrice).toFixed(4)}
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <div className="output-card">
-                    <img
-                      className="mr-2"
-                      src={coinSparta}
-                      alt="Logo"
-                      height="32"
-                    />
-                    SPARTA
-                  </div>
-                </td>
-                <th className="output-card text-right">${web3?.spartaPrice}</th>
-              </tr>
-            </tbody>
-          </Table>
+        <Row className="m-2">
+          <Col xs="6" className="">
+            <div className="output-card">
+              <img
+                className="mr-2"
+                src={assetSwap.symbolUrl}
+                alt="Logo"
+                height="32"
+              />
+              {assetSwap?.symbol}
+            </div>
+          </Col>
+          <Col xs="6" className="output-card text-right">
+            ${formatFromUnits(tokenPrice, 6)}
+          </Col>
         </Row>
-        <Row className="mr-4">
-          <Col xl={6} className="text-card">
+
+        <Row className="m-2">
+          <Col xs="6">
+            <div className="output-card">
+              <img className="mr-2" src={coinSparta} alt="Logo" height="32" />
+              SPARTA
+            </div>
+          </Col>
+          <Col xs="6" className="output-card text-right">
+            ${web3?.spartaPrice}
+          </Col>
+        </Row>
+
+        <Row className="m-2">
+          <Col xs={6} className="text-card">
             Spot price
           </Col>
-          <Col xl={6} className="output-card text-right">
-            {parseFloat(spotPrice).toFixed(4)} SPARTA
+          <Col xs={6} className="output-card text-right">
+            {formatFromUnits(spotPrice, 4)} SPARTA
           </Col>
         </Row>
-        <Row className="mr-4">
-          <Col xl={6} className="text-card">
+
+        {/* <Row className="m-2">
+          <Col xs={6} className="text-card">
             Volume
           </Col>
-          <Col xl={6} className="output-card text-right">
-            $
+          <Col xs={6} className="output-card text-right">
+            ### SPARTA
           </Col>
-        </Row>
-        <Row className="mr-4">
-          <Col xl={6} className="text-card">
+        </Row> */}
+
+        <Row className="m-2">
+          <Col xs={6} className="text-card">
             Recent Fees
           </Col>
-          <Col xl={6} className="output-card text-right">
-            {recentFees} SPARTA
+          <Col xs={6} className="output-card text-right">
+            {formatFromWei(recentFees, 0)} SPARTA
           </Col>
         </Row>
-        <Row className="mr-4">
-          <Col xl={6} className="text-card">
+
+        <Row className="m-2">
+          <Col xs={6} className="text-card">
             Recent Divis
           </Col>
-          <Col xl={6} className="output-card text-right">
-            {recentDivis} SPARTA
+          <Col xs={6} className="output-card text-right">
+            {formatFromWei(recentDivis, 0)} SPARTA
           </Col>
         </Row>
-        <Row className="mr-4">
-          <Col xl={6} className="text-card">
+        <Row className="m-2">
+          <Col xs={6} className="text-card">
             Deph
           </Col>
-          <Col xl={6} className="output-card text-right">
-            {formatFromWei(assetSwap.tokenAmount, 0)} {assetSwap.symbol} <br />
-            {formatFromWei(assetSwap.baseAmount, 0)} SPARTA
+          <Col xs={6} className="output-card text-right">
+            {formatFromWei(assetSwap.tokenAmount, 4)} {assetSwap.symbol} <br />
+            {formatFromWei(assetSwap.baseAmount, 4)} SPARTA
           </Col>
         </Row>
-        <Row className="mr-4">
-          <Col xl={6} className="text-card">
+        <Row className="m-2">
+          <Col xs={6} className="text-card">
             APY{' '}
             <i
               className="icon-small icon-info icon-dark ml-2"
@@ -112,7 +109,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
               dividend per year
             </UncontrolledTooltip>
           </Col>
-          <Col xl={6} className="output-card text-right">
+          <Col xs={6} className="output-card text-right">
             {APY}%
           </Col>
         </Row>
