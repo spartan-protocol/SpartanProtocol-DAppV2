@@ -1,13 +1,13 @@
-// import axios from 'axios'
+import axios from 'axios'
 import * as Types from './types'
 import { getPoolContract, getPoolFactoryContract } from '../../utils/web3Pool'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getUtilsContract } from '../../utils/web3Utils'
 import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
-// import fallbackImg from '../../assets/icons/Logo-unknown.svg'
+import fallbackImg from '../../assets/icons/Logo-unknown.svg'
 import { getSynthContract } from '../../utils/web3Synth'
-import { listedTokensTN } from '../../utils/web3'
+// import { listedTokensTN } from '../../utils/web3'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -171,9 +171,9 @@ export const getPoolFactoryDetailedArray = (
 ) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
-  // const trustWalletIndex = await axios.get(
-  //   'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
-  // )
+  const trustWalletIndex = await axios.get(
+    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
+  )
 
   try {
     if (tokenArray[0] !== spartaAddr) {
@@ -189,11 +189,7 @@ export const getPoolFactoryDetailedArray = (
     )
     const detailedArray = []
     for (let i = 0; i < tokenArray.length; i++) {
-      console.log(
-        listedTokensTN.filter((asset) => asset.address === tokenArray[i])[0]
-          .icon,
-      )
-      // const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${tokenArray[i]}/logo.png`
+      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${tokenArray[i]}/logo.png`
       const tempItem = {
         // Layer1 Asset Details
         tokenAddress: tokenArray[i],
@@ -203,13 +199,14 @@ export const getPoolFactoryDetailedArray = (
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
         curated: '',
-        symbolUrl: listedTokensTN.filter(
-          (asset) => asset.address === tokenArray[i],
-        )[0].icon,
-        // trustWalletIndex.data.filter((asset) => asset === tokenArray[i])
-        //   .length > 0
-        //   ? url
-        //   : fallbackImg,
+        // symbolUrl: listedTokensTN.filter(
+        //   (asset) => asset.address === tokenArray[i],
+        // )[0].icon,
+        symbolUrl:
+          trustWalletIndex.data.filter((asset) => asset === tokenArray[i])
+            .length > 0
+            ? url
+            : fallbackImg,
         // SP-pTOKEN Details
         poolAddress: '',
         balanceLPs: '0',
