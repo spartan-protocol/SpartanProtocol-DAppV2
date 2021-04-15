@@ -38,10 +38,10 @@ import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 
-import spartaIcon from '../assets/tokens/coin_sparta.svg'
-import bnbIcon from '../assets/tokens/coin_bnb.svg'
-import busdIcon from '../assets/tokens/BUSD.png'
-import daiIcon from '../assets/tokens/DAI.png'
+// import spartaIcon from '../assets/tokens/coin_sparta.svg'
+// import bnbIcon from '../assets/tokens/coin_bnb.svg'
+// import busdIcon from '../assets/tokens/BUSD.png'
+// import daiIcon from '../assets/tokens/DAI.png'
 
 export const abisTN = {
   base: abiTnBase.abi,
@@ -170,28 +170,28 @@ export const listedTokensTN = [
     symbol: 'SPARTA',
     decimals: '18',
     address: addressesTN.sparta,
-    icon: spartaIcon,
+    // icon: spartaIcon,
   },
   {
     name: 'Binance Coin',
     symbol: 'BNB',
     decimals: '18',
     address: addressesTN.bnb,
-    icon: bnbIcon,
+    // icon: bnbIcon,
   },
   {
     name: 'Binance USD',
     symbol: 'BUSD',
     decimals: '18',
     address: '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee',
-    icon: busdIcon,
+    // icon: busdIcon,
   },
   {
     name: 'DAI StableCoin',
     symbol: 'DAI',
     decimals: '18',
     address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
-    icon: daiIcon,
+    // icon: daiIcon,
   },
 ]
 
