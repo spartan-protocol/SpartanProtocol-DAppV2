@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react'
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
 // react plugin for creating notifications over the dashboard

@@ -386,10 +386,34 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 
 
+/*@media (max-width: 991.98px){*/
+/*    .navbar .navbar-toggler-bar{*/
+/*        display: block;*/
+/*        position: relative;*/
+/*        width: 22px;*/
+/*        height: 1.5px;*/
+/*        border-radius: 2px;*/
+/*        background: #e4e3f2;*/
+/*    }*/
 
-/*Mobile small*/
+/*}*/
+
+
+
+
+
+
+/*Mobile small I5*/
 
 @media (max-width: 568px) {
+
+
+
+
+    .navbar-toggler{
+        margin-left: 20px;
+    }
+
     .output-card {
         font-size: 12px;
     }
@@ -406,7 +430,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     .active nav-link {
         width: 200px;
     }
-    
+
     .form-control {
         color: white;
         border-radius: 12px;

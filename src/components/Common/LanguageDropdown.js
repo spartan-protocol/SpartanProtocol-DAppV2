@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState } from 'react'
 import {
   Dropdown,
@@ -56,7 +57,7 @@ const LanguageDropdown = () => {
       <Dropdown
         isOpen={menu}
         toggle={toggle}
-        className="d-inline-block mr-2 align-self-center"
+        className="d-inline-block align-self-center ml-2"
       >
         <DropdownToggle
           aria-expanded={false}

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react'
 import classNames from 'classnames'
 import { Button, NavbarBrand, Navbar, Nav, Container } from 'reactstrap'
@@ -34,8 +35,6 @@ const Header = (props) => (
   // }
 
   // Wallet functions
-
-  <Navbar>
     <Navbar
       className={classNames('navbar sticky-top', {
         color: 'navbar-transparent',
@@ -43,16 +42,16 @@ const Header = (props) => (
       expand="lg"
     >
       <Container fluid className="px-1">
-        <div className="navbar-wrapper ml-n2">
-          <div className="navbar-minimize d-inline">
+        <div className="navbar-wrapper ">
+          <div className="navbar-minimize d-inline mr-n4">
             <Button
               className="minimize-sidebar btn-just-icon"
               color="link"
               id="tooltip209599"
               onClick={props.handleMiniClick}
             >
-              <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n2 mr-4" />
-              <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n2 mr-4" />
+              <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n3" />
+              <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n3" />
             </Button>
           </div>
           <div
@@ -61,7 +60,7 @@ const Header = (props) => (
             })}
           >
             <button
-              className="navbar-toggler"
+              className="navbar-toggler ml-2"
               type="button"
               onClick={props.toggleSidebar}
             >
@@ -86,7 +85,6 @@ const Header = (props) => (
         </Nav>
       </Container>
     </Navbar>
-  </Navbar>
 )
 
 export default Header
