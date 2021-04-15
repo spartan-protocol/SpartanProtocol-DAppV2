@@ -25,8 +25,8 @@ import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
 import ShareLink from '../Share/ShareLink'
 import MetaMask from '../../assets/icons/MetaMask.svg'
-import spartaIcon from '../../assets/img/spartan_red_small.svg'
-import spartaIconAlt from '../../assets/img/spartan_white_small.svg'
+import spartaIcon from '../../assets/img/spartan_blue_small.svg'
+import spartaIconAlt from '../../assets/img/spartan_gold_small.svg'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -154,10 +154,10 @@ const AssetSelect = (props) => {
                       className="mr-n3"
                     />
                     <img
-                      height="20px"
+                      height="27px"
                       src={spartaIcon}
                       alt={`${tempArray[i].symbol} LP token icon`}
-                      className="mr-1"
+                      className="mr-2"
                     />
                   </>
                 ),
@@ -185,10 +185,10 @@ const AssetSelect = (props) => {
                       className="mr-n3"
                     />
                     <img
-                      height="20px"
+                      height="27px"
                       src={spartaIconAlt}
                       alt={`${tempArray[i].symbol} synth icon`}
-                      className="mr-1"
+                      className="mr-2"
                     />
                   </>
                 ),
@@ -222,14 +222,19 @@ const AssetSelect = (props) => {
 
   return (
     <>
-      <div onClick={toggleModal} role="button">
+      <div
+        onClick={() =>
+          !props.disabled ? toggleModal() : console.log('button disabled')
+        }
+        role="button"
+      >
         <div className="select-box ml-1 mt-2 h-auto" name="singleSelect">
           {selectedType === 'token' && (
             <img
               height="35px"
               src={selectedItem?.symbolUrl}
               alt={`${selectedItem?.symbol}icon`}
-              className="mr-1"
+              className="mr-2"
             />
           )}
 
@@ -243,10 +248,10 @@ const AssetSelect = (props) => {
               />
 
               <img
-                height="20px"
+                height="27px"
                 src={spartaIcon}
                 alt="Sparta LP token icon"
-                className="mr-1"
+                className="mr-2"
               />
             </>
           )}
@@ -261,10 +266,10 @@ const AssetSelect = (props) => {
               />
 
               <img
-                height="20px"
+                height="27px"
                 src={spartaIconAlt}
                 alt="Sparta LP token icon"
-                className="mr-1"
+                className="mr-2"
               />
             </>
           )}
@@ -272,7 +277,9 @@ const AssetSelect = (props) => {
           {selectedItem && selectedItem?.symbol}
           {selectedType === 'pool' && '-SPP'}
           {selectedType === 'synth' && '-SPS'}
-          <i className="bd-icons icon-minimal-down mb-1 ml-2" />
+          {!props.disabled && (
+            <i className="bd-icons icon-minimal-down mb-1 ml-2" />
+          )}
         </div>
       </div>
 

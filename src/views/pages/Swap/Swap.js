@@ -603,7 +603,7 @@ const Swap = () => {
     <>
       <div className="content">
         <Breadcrumb>
-          <Col md={10}>Swap {mode !== 'token' && mode} tokens </Col>
+          <Col md={10}>Swap {mode !== 'token' && mode}</Col>
           <Col md={2}>
             {' '}
             <Wallet />

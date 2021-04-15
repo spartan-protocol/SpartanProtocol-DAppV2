@@ -38,6 +38,11 @@ import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 
+import spartaIcon from '../assets/tokens/coin_sparta.svg'
+import bnbIcon from '../assets/tokens/coin_bnb.svg'
+import busdIcon from '../assets/tokens/BUSD.png'
+import daiIcon from '../assets/tokens/DAI.png'
+
 export const abisTN = {
   base: abiTnBase.abi,
   bond: abiTnBond.abi,
@@ -111,7 +116,7 @@ export const addressesTN = {
   bondVault: '0xA247cCb9B1531aDa3B1953c784CAb40E328d055a',
   dao: '0xA247cCb9B1531aDa3B1953c784CAb40E328d055a',
   daoVault: '0x4BaE8AFF6F68c7222998b3581bb38E66AD277960',
-  router: '0x4013c064299e4D68fD0059f0816ebf3215d1D30d',
+  router: '0x728F992aF7fF6E8303224Bb0Cd5fc13dF6118292',
   utils: '0x7c0E0707B13C6ee101133b6e0EBEe17900d956C4',
   migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
   // TOKEN ADDRESSES
@@ -161,25 +166,32 @@ export const addressesMN = {
 // Listed tokens on testNet
 export const listedTokensTN = [
   {
+    name: 'Sparta',
+    symbol: 'SPARTA',
+    decimals: '18',
+    address: addressesTN.sparta,
+    icon: spartaIcon,
+  },
+  {
     name: 'Binance Coin',
     symbol: 'BNB',
     decimals: '18',
-    address: addressesTN.wbnb,
-    icon: 'filename',
+    address: addressesTN.bnb,
+    icon: bnbIcon,
   },
   {
     name: 'Binance USD',
     symbol: 'BUSD',
     decimals: '18',
-    address: '0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee',
-    icon: 'filename',
+    address: '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee',
+    icon: busdIcon,
   },
   {
     name: 'DAI StableCoin',
     symbol: 'DAI',
     decimals: '18',
     address: '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867',
-    icon: 'filename',
+    icon: daiIcon,
   },
 ]
 
