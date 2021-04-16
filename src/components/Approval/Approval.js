@@ -1,22 +1,22 @@
-/* eslint-disable */
-
 import React, { useEffect } from 'react'
 import ReactBSAlert from 'react-bootstrap-sweetalert'
 import { useDispatch } from 'react-redux'
-import { Button, Card, CardText, CardBody } from 'reactstrap'
+import { Button } from 'reactstrap'
 import { getAllowance, getApproval, useWeb3 } from '../../store/web3'
-import { BN, convertToWei } from '../../utils/bigNumber'
+import { BN } from '../../utils/bigNumber'
 // import { usePoolFactory } from '../../store/poolFactory'
 
 /**
  * An approval/allowance check + actioner
  * @param {address} tokenAddress
+ * @param {address} symbol
  * @param {address} walletAddress
  * @param {address} contractAddress
  * @param {string} txnAmount
  */
 const Approval = ({
   tokenAddress,
+  symbol,
   walletAddress,
   contractAddress,
   txnAmount,
@@ -73,30 +73,37 @@ const Approval = ({
         showCancel
         btnSize=""
       >
-        Proceed to approve *TOKEN*
+        Proceed to approve {symbol}
       </ReactBSAlert>,
     )
   }
 
   return (
     <>
-      {BN(web3.allowance._hex).comparedTo(BN(convertToWei(txnAmount))) ===
-        -1 && (
-        <div>
+      {BN(web3.allowance._hex).comparedTo(txnAmount) === -1 && (
+        <>
           {alert}
-          <Card  style={{ backgroundColor: "#25212D" }}>
-            <CardBody className="text-center">
-              <CardText>You need to approve *TOKEN* first!</CardText>
-              <Button
-                className="btn-fill"
-                color="primary"
-                onClick={warningWithConfirmMessage}
-              >
-                Approve *TOKEN*
-              </Button>
-            </CardBody>
-          </Card>
-        </div>
+          <Button
+            className="btn-fill w-100 h-100"
+            color="primary"
+            onClick={warningWithConfirmMessage}
+          >
+            <i className="icon-extra-small icon-lock icon-dark align-middle" />
+            <i className="icon-extra-small icon-close icon-light align-middle" />
+            <br />
+            {symbol} Allow!
+          </Button>
+        </>
+      )}
+      {BN(web3.allowance._hex).comparedTo(txnAmount) === 1 && (
+        <>
+          <Button className="btn-fill w-100 h-100" color="secondary">
+            <i className="icon-extra-small icon-lock icon-dark align-middle" />
+            <i className="icon-extra-small icon-check icon-light align-middle" />
+            <br />
+            {symbol} Ready
+          </Button>
+        </>
       )}
     </>
   )

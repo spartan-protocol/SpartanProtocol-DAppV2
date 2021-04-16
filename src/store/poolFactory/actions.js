@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios'
 import * as Types from './types'
 import { getPoolContract, getPoolFactoryContract } from '../../utils/web3Pool'
@@ -7,7 +8,7 @@ import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
 import { getSynthContract } from '../../utils/web3Synth'
-// import { listedTokensTN } from '../../utils/web3'
+import { listedTokensTN } from '../../utils/web3'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
