@@ -230,7 +230,7 @@ const AssetSelect = (props) => {
         className="justify-content-left"
       >
         <Row className="select-box h-auto" name="singleSelect">
-          <Col xs="auto">
+          <Col xs="12">
             {selectedType === 'token' && (
               <img
                 height="35px"
@@ -275,11 +275,18 @@ const AssetSelect = (props) => {
                 />
               </>
             )}
+
+            <span className="d-none d-lg-inline-block mr-2">
+              {selectedItem && selectedItem?.symbol}
+              {selectedType === 'pool' && '-SPP'}
+              {selectedType === 'synth' && '-SPS'}
+            </span>
+
             {!props.disabled && (
               <i className="icon-extra-small icon-arrow icon-light align-middle" />
             )}
           </Col>
-          <Col xs="12" className="ml-3">
+          <Col xs="12" className="d-block d-lg-none ml-3">
             {selectedItem && selectedItem?.symbol}
             {selectedType === 'pool' && '-SPP'}
             {selectedType === 'synth' && '-SPS'}
@@ -392,6 +399,7 @@ const AssetSelect = (props) => {
                         placeholder="Search assets..."
                         type="text"
                         id="searchInput"
+                        onChange={() => console.log('hello')}
                       />
                       <InputGroupAddon addonType="append">
                         <InputGroupText>

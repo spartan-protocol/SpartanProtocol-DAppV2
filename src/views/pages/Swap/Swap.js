@@ -10,7 +10,10 @@ import {
   Row,
   Input,
   FormGroup,
+  InputGroup,
   UncontrolledAlert,
+  InputGroupAddon,
+  InputGroupText,
 } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
@@ -184,8 +187,13 @@ const Swap = () => {
     window.localStorage.setItem('assetSelected2', JSON.stringify(asset1))
     window.localStorage.setItem('assetType1', type2)
     window.localStorage.setItem('assetType2', type1)
-    swapInput1.value = ''
-    swapInput2.value = ''
+    swapInput1.value = '0'
+    swapInput2.value = '0'
+  }
+
+  const clearInputs = async () => {
+    swapInput1.value = '0'
+    swapInput2.value = '0'
   }
 
   //= =================================================================================//
@@ -653,7 +661,7 @@ const Swap = () => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col xs="6" sm="4">
+                          <Col xs="4">
                             <div>
                               <AssetSelect
                                 priority="1"
@@ -661,23 +669,27 @@ const Swap = () => {
                               />
                             </div>
                           </Col>
-                          <Col xs="6" sm="8">
-                            <div className="float-right">
-                              <FormGroup>
-                                <Input
-                                  className="text-right ml-3"
-                                  type="text"
-                                  placeholder="0"
-                                  id="swapInput1"
-                                  onInput={(event) =>
-                                    handleZapInputChange(
-                                      event.target.value,
-                                      true,
-                                    )
-                                  }
-                                />
-                              </FormGroup>
-                            </div>
+                          <Col xs="8">
+                            <InputGroup>
+                              <Input
+                                className="text-right"
+                                type="text"
+                                placeholder="0"
+                                id="swapInput1"
+                                onInput={(event) =>
+                                  handleZapInputChange(event.target.value, true)
+                                }
+                              />
+                              <InputGroupAddon
+                                addonType="append"
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs()}
+                                onClick={() => clearInputs()}
+                              >
+                                <i className="icon-search-bar icon-close icon-light my-auto" />
+                              </InputGroupAddon>
+                            </InputGroup>
                           </Col>
                         </Row>
                       </Card>
@@ -738,7 +750,7 @@ const Swap = () => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col xs={6}>
+                          <Col xs="4">
                             <div>
                               <AssetSelect
                                 priority="2"
@@ -747,11 +759,11 @@ const Swap = () => {
                               />
                             </div>
                           </Col>
-                          <Col xs={6}>
+                          <Col xs="8">
                             <div className="float-right">
-                              <FormGroup>
+                              <InputGroup>
                                 <Input
-                                  className="text-right ml-3"
+                                  className="text-right"
                                   type="text"
                                   placeholder="0"
                                   id="swapInput2"
@@ -763,7 +775,16 @@ const Swap = () => {
                                     )
                                   }
                                 />
-                              </FormGroup>
+                                <InputGroupAddon
+                                  addonType="append"
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs()}
+                                  onClick={() => clearInputs()}
+                                >
+                                  <i className="icon-search-bar icon-close icon-light my-auto" />
+                                </InputGroupAddon>
+                              </InputGroup>
                             </div>
                           </Col>
                         </Row>
