@@ -710,11 +710,11 @@ const Swap = () => {
                         style={{ marginTop: '-50px' }}
                       >
                         <Button
-                          className="btn-md btn-rounded btn-icon"
+                          className="btn-sm btn-rounded btn-icon z-index"
                           color="primary"
                           onClick={() => handleReverseAssets()}
                         >
-                          <i className="icon-small icon-swap icon-light mt-1" />
+                          <i className="icon-swap-size icon-swap icon-light mt-1" />
                         </Button>
                       </div>
                       <div className="d-none d-md-block card-body text-center">
@@ -879,9 +879,9 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="amount align-items-center">
-                            <span className="mr-2">Output</span>
+                            Output{' '}
                             <i
-                              className="icon-small icon-info icon-dark ml-2"
+                              className="icon-small icon-info icon-dark mb-n1"
                               id="tooltipOutput"
                               role="button"
                             />
