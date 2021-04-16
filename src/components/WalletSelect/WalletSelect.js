@@ -256,7 +256,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'lp')
                           }
                         >
-                          Lp Shares
+                          LP Shares
                         </NavLink>
                       </NavItem>
                       <NavItem>
@@ -280,74 +280,73 @@ const WalletSelect = (props) => {
                   <TabContent className="tab-space" activeTab={horizontalTabs}>
                     <TabPane tabId="assets">
                       <Row className="mt-3 mb-3">
-                        <Col xs="7">
+                        <Col xs="5" md='4'>
                           <p className="text-card">Asset</p>
                         </Col>
                         <Col xs="5">
-                          <p className="text-card float-right">Balance</p>
+                          <p className="text-card float-right mr-1">Actions</p>
                         </Col>
                       </Row>
                       {poolFactory.detailedArray
                         ?.filter((asset) => asset.balanceTokens > 0)
                         .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-asset`}
-                            className="align-items-center mb-3 output-card"
-                          >
-                            <Col xs="7" className="d-flex align-items-center">
+                          <Row key={`${asset.tokenAddress}-asset`} className="mb-3 output-card mr-2">
+                            <Col xs="4" md="3" >
                               <img
                                 height="35px"
                                 src={asset.symbolUrl}
                                 alt={asset.name}
                                 className="mr-1"
                               />
-                              {asset.symbol}
-                              <ShareLink
-                                url={asset.tokenAddress}
-                                notificationLocation="tc"
-                              >
-                                <i
-                                  role="button"
-                                  className="icon-small icon-copy ml-2 align-middle"
-                                />
-                              </ShareLink>
-                              <div
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(e) => {
-                                  if (e.key === 32) {
-                                    dispatch(
-                                      watchAsset(
-                                        asset.tokenAddress,
-                                        asset.symbol,
-                                        '18',
-                                        asset.symbolUrl,
-                                      ),
-                                    )
-                                  }
-                                }}
-                                onClick={() => {
-                                  dispatch(
-                                    watchAsset(
-                                      asset.tokenAddress,
-                                      asset.symbol,
-                                      '18',
-                                      asset.symbolUrl,
-                                    ),
-                                  )
-                                }}
-                              >
-                                <img
-                                  src={MetaMask}
-                                  alt="add asset to metamask"
-                                  height="24px"
-                                />
-                              </div>
-                            </Col>
-                            <Col xs="5" className="text-right">
-                              <span className="amount">
-                                {formatFromWei(asset.balanceTokens)}
-                              </span>
+                              </Col>
+                            <Col xs="6" md="6" className="align-items-center">
+                              <Row>
+                                <Col xs="10" className="float-left ml-n5">
+                                  {asset.symbol}
+                                  <div className="description"> {formatFromWei(asset.balanceTokens)}</div>
+                                </Col>
+                                <Col xs="2" className="mt-1">
+                                  <ShareLink
+                                    url={asset.tokenAddress}
+                                    notificationLocation="tc"
+                                  >
+                                    <i
+                                      role="button"
+                                      className="icon-small icon-copy ml-2 align-middle"
+                                    />
+                                  </ShareLink>
+                                </Col>
+                                <Col xs="2" className="mt-1">
+                                  <div
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 32) {
+                                        dispatch(
+                                          watchAsset(
+                                            asset.tokenAddress,
+                                            asset.symbol,
+                                            '18',
+                                            asset.symbolUrl,
+                                          ),
+                                        )
+                                      }
+                                    }}
+                                    onClick={() => {
+                                      dispatch(
+                                        watchAsset(
+                                          asset.tokenAddress,
+                                          asset.symbol,
+                                          '18',
+                                          asset.symbolUrl,
+                                        ),
+                                      )
+                                    }}
+                                  >
+                                    <i className="icon-small icon-metamask icon-light ml-2" />
+                                  </div>
+                                </Col>
+                              </Row>
                             </Col>
                           </Row>
                         ))}
@@ -435,6 +434,7 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         ))}
+
                       <Row className="mt-3 mb-3">
                         <Col xs="7">
                           <p className="text-card">Asset</p>
