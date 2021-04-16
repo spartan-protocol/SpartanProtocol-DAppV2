@@ -661,7 +661,7 @@ const Swap = () => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col xs="4">
+                          <Col xs="4" lg="5" xl="6">
                             <div>
                               <AssetSelect
                                 priority="1"
@@ -669,12 +669,12 @@ const Swap = () => {
                               />
                             </div>
                           </Col>
-                          <Col xs="8">
-                            <InputGroup>
+                          <Col xs="8" lg="7" xl="6">
+                            <InputGroup className="m-0">
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="0"
+                                placeholder="Input amount..."
                                 id="swapInput1"
                                 onInput={(event) =>
                                   handleZapInputChange(event.target.value, true)
@@ -690,6 +690,15 @@ const Swap = () => {
                                 <i className="icon-search-bar icon-close icon-light my-auto" />
                               </InputGroupAddon>
                             </InputGroup>
+                            <div className="text-right">
+                              ~$
+                              {mode === 'token' &&
+                                formatFromWei(getInput1USD())}
+                              {mode === 'pool' &&
+                                formatFromWei(getInputZap1USD())}
+                              {mode === 'synth' &&
+                                formatFromWei(getSynthInputInUSD())}
+                            </div>
                           </Col>
                         </Row>
                       </Card>
@@ -750,7 +759,7 @@ const Swap = () => {
                           </Col>
                         </Row>
                         <Row>
-                          <Col xs="4">
+                          <Col xs="4" lg="5" xl="6">
                             <div>
                               <AssetSelect
                                 priority="2"
@@ -759,32 +768,39 @@ const Swap = () => {
                               />
                             </div>
                           </Col>
-                          <Col xs="8">
-                            <div className="float-right">
-                              <InputGroup>
-                                <Input
-                                  className="text-right"
-                                  type="text"
-                                  placeholder="0"
-                                  id="swapInput2"
-                                  readOnly={mode !== 'token'}
-                                  onInput={(event) =>
-                                    handleZapInputChange(
-                                      event.target.value,
-                                      false,
-                                    )
-                                  }
-                                />
-                                <InputGroupAddon
-                                  addonType="append"
-                                  role="button"
-                                  tabIndex={-1}
-                                  onKeyPress={() => clearInputs()}
-                                  onClick={() => clearInputs()}
-                                >
-                                  <i className="icon-search-bar icon-close icon-light my-auto" />
-                                </InputGroupAddon>
-                              </InputGroup>
+                          <Col xs="8" lg="7" xl="6">
+                            <InputGroup className="m-0">
+                              <Input
+                                className="text-right"
+                                type="text"
+                                placeholder="Output amount..."
+                                id="swapInput2"
+                                readOnly={mode !== 'token'}
+                                onInput={(event) =>
+                                  handleZapInputChange(
+                                    event.target.value,
+                                    false,
+                                  )
+                                }
+                              />
+                              <InputGroupAddon
+                                addonType="append"
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs()}
+                                onClick={() => clearInputs()}
+                              >
+                                <i className="icon-search-bar icon-close icon-light my-auto" />
+                              </InputGroupAddon>
+                            </InputGroup>
+                            <div className="text-right">
+                              ~$
+                              {mode === 'token' &&
+                                formatFromWei(getInput2USD())}
+                              {mode === 'pool' &&
+                                formatFromWei(getInputZap2USD())}
+                              {mode === 'synth' &&
+                                formatFromWei(getSynthOutputInUSD())}
                             </div>
                           </Col>
                         </Row>
@@ -863,7 +879,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="amount align-items-center">
-                            Output{' '}
+                            <span className="mr-2">Output</span>
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipOutput"
