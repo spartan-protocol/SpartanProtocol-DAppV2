@@ -46,6 +46,14 @@
     background-repeat: no-repeat;
 }
 
+.icon-swap-size {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background-size: 22px auto;
+    background-repeat: no-repeat;
+}
+
 
 .icon-small {
     display: inline-block;
