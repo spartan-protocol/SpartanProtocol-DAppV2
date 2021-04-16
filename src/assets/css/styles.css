@@ -418,9 +418,19 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 20px;
     font-feature-settings: 'liga' off;
+    color: #A5ADAF;
+}
+
+
+.output-wallet-description {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 20px;
     color: #A5ADAF;
 }
 

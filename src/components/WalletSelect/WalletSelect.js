@@ -1,4 +1,4 @@
-/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable*/
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 
@@ -186,49 +186,48 @@ const WalletSelect = (props) => {
 
               {wallet.status === 'connected' && (
                 <>
-                  <Row>
-                    <Col xs={5}>
                       <Row>
-                        <Col>
-                          <span className="output-card-description">
-                            View on BSC Scan <br />
-                            <a
-                              href={getExplorerWallet(wallet.account)}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={{
-                                marginLeft: '2px',
-                              }}
-                            >
-                              <i className="icon-extra-small icon-scan mr-2 mb-1" />
-                            </a>
-                            <ShareLink
-                              url={wallet.account}
-                              notificationLocation="tc"
-                            >
-                              <i className="icon-small icon-copy" />
-                            </ShareLink>
-                          </span>
-                        </Col>
-                        <Col>
-                          {' '}
+                        <Col xs={6}>
+                          <div className="output-wallet-description">View on BSC Scan  <a
+                            href={getExplorerWallet(wallet.account)}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              marginLeft: '2px',
+                            }}
+                          >
+                            <i className="icon-extra-small icon-scan" />
+                          </a>
+                          </div>
                           <span className="title">
                             {wallet.account?.substr(0, 5)}...
-                            {wallet.account?.slice(-5)}
+                            {wallet.account?.slice(-5)}<ShareLink
+                            url={wallet.account}
+                            notificationLocation="tc"
+                          >
+                            <i className="icon-small icon-copy" />
+                          </ShareLink>
                           </span>
                         </Col>
-                      </Row>
-                    </Col>
-                    <Col xs={7}>
-                      <Button
-                        className="mx-1 btn-sm btn-danger btn-round mt-3"
-                        onClick={() => {
-                          wallet.reset()
-                        }}
-                      >
-                        Change wallet
-                      </Button>
-                    </Col>
+                          <Col xs={6}>
+                            <Button
+                            className="mx-1 btn-sm btn-danger btn-round d-block d-sm-none"
+                            onClick={() => {
+                              wallet.reset()
+                            }}
+                          >
+                            Change wallet
+                          </Button>
+
+                            <Button
+                              className="float-right mx-1 btn-md btn-danger btn-round d-none d-sm-block"
+                              onClick={() => {
+                                wallet.reset()
+                              }}
+                            >
+                              Change wallet
+                            </Button>
+                          </Col>
                   </Row>
                   <br />
                   <br />
