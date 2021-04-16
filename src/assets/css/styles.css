@@ -392,7 +392,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     color: white;
     border-radius: 12px;
     border-color: transparent;
-    z-index: -1;
+    z-index: 1;
     display: inline-block;
     font-style: normal;
     font-weight: 500;
@@ -480,7 +480,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         color: white;
         border-radius: 12px;
         border-color: transparent;
-        z-index: -1;
+        z-index: 1;
         font-style: normal;
         font-size: 16px;
         line-height: 24px;
@@ -547,7 +547,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         color: white;
         border-radius: 12px;
         border-color: transparent;
-        z-index: -1;
+        z-index: 1;
         width: 80px;
         margin-left: -20px;
         font-style: normal;
