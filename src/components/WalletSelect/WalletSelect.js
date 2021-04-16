@@ -1,31 +1,30 @@
 /* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable*/
-import React, { useEffect, useState } from "react"
-import { useWallet } from "@binance-chain/bsc-use-wallet"
+import React, { useEffect, useState } from 'react'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 
-import { useDispatch } from "react-redux"
-import { Alert, Form, Row, Modal, Button, Image, Col } from "react-bootstrap"
-import { Nav, NavLink, NavItem, TabContent, TabPane } from "reactstrap"
-import walletTypes from "./walletTypes"
-import { getExplorerWallet } from "../../utils/extCalls"
-import { changeNetwork, getNetwork } from "../../utils/web3"
-import { addNetworkMM, addNetworkBC, watchAsset } from "../../store/web3"
-import { usePoolFactory } from "../../store/poolFactory/selector"
-import ShareLink from "../Share/ShareLink"
-import { formatFromWei } from "../../utils/bigNumber"
-import MetaMask from "../../assets/icons/MetaMask.svg"
-import spartaIcon from "../../assets/img/spartan_red_small.svg"
-import spartaIconAlt from "../../assets/img/spartan_white_small.svg"
-import Card from "react-bootstrap/Card"
-import CardHeader from "reactstrap/es/CardHeader"
-import CardTitle from "reactstrap/es/CardTitle"
+import { useDispatch } from 'react-redux'
+import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
+import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
+import Card from 'react-bootstrap/Card'
+import CardHeader from 'reactstrap/es/CardHeader'
+import CardTitle from 'reactstrap/es/CardTitle'
+import walletTypes from './walletTypes'
+import { getExplorerWallet } from '../../utils/extCalls'
+import { changeNetwork, getNetwork } from '../../utils/web3'
+import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
+import { usePoolFactory } from '../../store/poolFactory/selector'
+import ShareLink from '../Share/ShareLink'
+import { formatFromWei } from '../../utils/bigNumber'
+import MetaMask from '../../assets/icons/MetaMask.svg'
+import spartaIcon from '../../assets/img/spartan_red_small.svg'
+import spartaIconAlt from '../../assets/img/spartan_white_small.svg'
 
 const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
   const wallet = useWallet()
   const [network, setNetwork] = useState(getNetwork)
-  const [horizontalTabs, sethorizontalTabs] = useState("assets")
+  const [horizontalTabs, sethorizontalTabs] = useState('assets')
 
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
@@ -34,10 +33,10 @@ const WalletSelect = (props) => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setNetwork(changeNetwork("mainnet"))
+      setNetwork(changeNetwork('mainnet'))
     }
     if (net.target.checked === false) {
-      setNetwork(changeNetwork("testnet"))
+      setNetwork(changeNetwork('testnet'))
     } else {
       setNetwork(changeNetwork(net))
     }
@@ -61,15 +60,15 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     const checkWallet = () => {
-      console.log("Wallet Status:", wallet.status)
-      if (wallet.status === "connected") {
-        window.sessionStorage.setItem("walletConnected", "1")
+      console.log('Wallet Status:', wallet.status)
+      if (wallet.status === 'connected') {
+        window.sessionStorage.setItem('walletConnected', '1')
       }
-      if (wallet.status === "disconnected") {
-        window.sessionStorage.removeItem("walletConnected")
+      if (wallet.status === 'disconnected') {
+        window.sessionStorage.removeItem('walletConnected')
       }
-      if (wallet.status === "error") {
-        window.sessionStorage.removeItem("walletConnected")
+      if (wallet.status === 'error') {
+        window.sessionStorage.removeItem('walletConnected')
       }
     }
 
@@ -78,31 +77,31 @@ const WalletSelect = (props) => {
 
   const connectWallet = async (x) => {
     wallet.reset()
-    console.log("reset")
-    if (x.inject === "") {
-      console.log("no inject")
+    console.log('reset')
+    if (x.inject === '') {
+      console.log('no inject')
       wallet.connect()
-    } else if (x.inject === "walletconnect") {
+    } else if (x.inject === 'walletconnect') {
       wallet.connectors.walletconnect.rpcUrl = network.rpc
       await wallet.connect(x.inject)
     } else {
       wallet.connect(x.inject)
     }
-    window.localStorage.setItem("lastWallet", x.id)
+    window.localStorage.setItem('lastWallet', x.id)
     // props.setWalletHeaderIcon(x.icon[0])
   }
 
   useEffect(() => {
     async function sleep() {
       await new Promise((resolve) => setTimeout(resolve, 3000))
-      if (window.localStorage.getItem("lastWallet") === "BC") {
-        connectWallet(walletTypes.filter((x) => x.id === "BC")[0])
-      } else if (window.localStorage.getItem("lastWallet") === "MM") {
-        connectWallet(walletTypes.filter((x) => x.id === "MM")[0])
-      } else if (window.localStorage.getItem("lastWallet") === "WC") {
-        connectWallet(walletTypes.filter((x) => x.id === "WC")[0])
-      } else if (window.localStorage.getItem("lastWallet") === "OOT") {
-        connectWallet(walletTypes.filter((x) => x.id === "OOT")[0])
+      if (window.localStorage.getItem('lastWallet') === 'BC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'MM') {
+        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'WC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'OOT') {
+        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
       }
     }
 
@@ -112,10 +111,9 @@ const WalletSelect = (props) => {
 
   return (
     <>
-
       <Modal {...props}>
         <Card className="card-body">
-          {wallet.status !== "connected" && (
+          {wallet.status !== 'connected' && (
             <CardHeader>
               <CardTitle tag="h2" />
               <Row>
@@ -129,19 +127,19 @@ const WalletSelect = (props) => {
                 </Col>
               </Row>
             </CardHeader>
-
           )}
 
-          {wallet.status === "error" && (
+          {wallet.status === 'error' && (
             <Alert color="warning">
               <span>
-                {" "}
-                Check if the network in your wallet matches the selection in the DApp.
+                {' '}
+                Check if the network in your wallet matches the selection in the
+                DApp.
               </span>
             </Alert>
           )}
 
-          {wallet.status !== "connected" && (
+          {wallet.status !== 'connected' && (
             <>
               <Row className="align-middle mb-3">
                 <Col xs={5} className="text-right">
@@ -152,9 +150,9 @@ const WalletSelect = (props) => {
                     <Form.Check
                       type="switch"
                       id="custom-switch"
-                      checked={network?.net === "mainnet"}
+                      checked={network?.net === 'mainnet'}
                       onChange={(value) => onChangeNetwork(value)}
-                      style={{ top: "-10px" }}
+                      style={{ top: '-10px' }}
                     />
                   </Form>
                 </Col>
@@ -166,9 +164,8 @@ const WalletSelect = (props) => {
             </>
           )}
 
-
-          {/*Wallet overview */}
-          {wallet.status === "connected" ? (
+          {/* Wallet overview */}
+          {wallet.status === 'connected' ? (
             <div>
               <Row>
                 <Col xs="10">
@@ -177,7 +174,7 @@ const WalletSelect = (props) => {
                 <Col xs="2">
                   <Button
                     style={{
-                      right: "16px"
+                      right: '16px',
                     }}
                     onClick={props.onHide}
                     className="btn btn-transparent"
@@ -187,43 +184,49 @@ const WalletSelect = (props) => {
                 </Col>
               </Row>
 
-
-              {wallet.status === "connected" && (
+              {wallet.status === 'connected' && (
                 <>
                   <Row>
-
                     <Col xs={5}>
                       <Row>
                         <Col>
-                        <span className="output-card-description">
-                        View on BSC Scan{" "}<br />
-                      <a
-                        href={getExplorerWallet(wallet.account)}
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                          marginLeft: "2px"
-                        }}
-                      >
-                          <i className="icon-extra-small icon-scan mr-2 mb-1" />
-                        </a>
-                           <ShareLink url={wallet.account} notificationLocation="tc">
-                            <i className="icon-small icon-copy" />
-                        </ShareLink>
-                      </span>
+                          <span className="output-card-description">
+                            View on BSC Scan <br />
+                            <a
+                              href={getExplorerWallet(wallet.account)}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                marginLeft: '2px',
+                              }}
+                            >
+                              <i className="icon-extra-small icon-scan mr-2 mb-1" />
+                            </a>
+                            <ShareLink
+                              url={wallet.account}
+                              notificationLocation="tc"
+                            >
+                              <i className="icon-small icon-copy" />
+                            </ShareLink>
+                          </span>
                         </Col>
-                        <Col> <span className="title">
-                        {wallet.account?.substr(0, 5)}...
-                          {wallet.account?.slice(-5)}
-                      </span></Col></Row></Col>
+                        <Col>
+                          {' '}
+                          <span className="title">
+                            {wallet.account?.substr(0, 5)}...
+                            {wallet.account?.slice(-5)}
+                          </span>
+                        </Col>
+                      </Row>
+                    </Col>
                     <Col xs={7}>
-
                       <Button
                         className="mx-1 btn-sm btn-danger btn-round mt-3"
                         onClick={() => {
                           wallet.reset()
                         }}
-                      >Change wallet
+                      >
+                        Change wallet
                       </Button>
                     </Col>
                   </Row>
@@ -236,10 +239,10 @@ const WalletSelect = (props) => {
                           data-toggle="tab"
                           href="#"
                           className={
-                            horizontalTabs === "assets" ? "active" : ""
+                            horizontalTabs === 'assets' ? 'active' : ''
                           }
                           onClick={(e) =>
-                            changeActiveTab(e, "horizontalTabs", "assets")
+                            changeActiveTab(e, 'horizontalTabs', 'assets')
                           }
                         >
                           Assets
@@ -249,9 +252,9 @@ const WalletSelect = (props) => {
                         <NavLink
                           data-toggle="tab"
                           href="#"
-                          className={horizontalTabs === "lp" ? "active" : ""}
+                          className={horizontalTabs === 'lp' ? 'active' : ''}
                           onClick={(e) =>
-                            changeActiveTab(e, "horizontalTabs", "lp")
+                            changeActiveTab(e, 'horizontalTabs', 'lp')
                           }
                         >
                           Lp Shares
@@ -262,10 +265,10 @@ const WalletSelect = (props) => {
                           data-toggle="tab"
                           href="#"
                           className={
-                            horizontalTabs === "synths" ? "active" : ""
+                            horizontalTabs === 'synths' ? 'active' : ''
                           }
                           onClick={(e) =>
-                            changeActiveTab(e, "horizontalTabs", "synths")
+                            changeActiveTab(e, 'horizontalTabs', 'synths')
                           }
                         >
                           Synths
@@ -274,7 +277,7 @@ const WalletSelect = (props) => {
                     </Nav>
                   </Row>
 
-                  {/*Asset tabs*/}
+                  {/* Asset tabs */}
                   <TabContent className="tab-space" activeTab={horizontalTabs}>
                     <TabPane tabId="assets">
                       <Row className="mt-3 mb-3">
@@ -318,9 +321,9 @@ const WalletSelect = (props) => {
                                       watchAsset(
                                         asset.tokenAddress,
                                         asset.symbol,
-                                        "18",
-                                        asset.symbolUrl
-                                      )
+                                        '18',
+                                        asset.symbolUrl,
+                                      ),
                                     )
                                   }
                                 }}
@@ -329,9 +332,9 @@ const WalletSelect = (props) => {
                                     watchAsset(
                                       asset.tokenAddress,
                                       asset.symbol,
-                                      "18",
-                                      asset.symbolUrl
-                                    )
+                                      '18',
+                                      asset.symbolUrl,
+                                    ),
                                   )
                                 }}
                               >
@@ -352,7 +355,7 @@ const WalletSelect = (props) => {
                     </TabPane>
                     <TabPane tabId="lp">
                       {poolFactory.finalLpArray?.filter(
-                        (asset) => asset.lockedLPs > 0
+                        (asset) => asset.lockedLPs > 0,
                       ).length > 0 && (
                         <Row className="h6 mt-3 mb-3 output-card">
                           <Col xs="7" className="pl-4">
@@ -402,9 +405,9 @@ const WalletSelect = (props) => {
                                       watchAsset(
                                         asset.poolAddress,
                                         `${asset.symbol}-SPP`,
-                                        "18",
-                                        asset.symbolUrl
-                                      )
+                                        '18',
+                                        asset.symbolUrl,
+                                      ),
                                     )
                                   }
                                 }}
@@ -413,9 +416,9 @@ const WalletSelect = (props) => {
                                     watchAsset(
                                       asset.poolAddress,
                                       `${asset.symbol}-SPP`,
-                                      "18",
-                                      asset.symbolUrl
-                                    )
+                                      '18',
+                                      asset.symbolUrl,
+                                    ),
                                   )
                                 }}
                               >
@@ -480,9 +483,9 @@ const WalletSelect = (props) => {
                                       watchAsset(
                                         asset.poolAddress,
                                         `${asset.symbol}-SPP`,
-                                        "18",
-                                        asset.symbolUrl
-                                      )
+                                        '18',
+                                        asset.symbolUrl,
+                                      ),
                                     )
                                   }
                                 }}
@@ -491,9 +494,9 @@ const WalletSelect = (props) => {
                                     watchAsset(
                                       asset.poolAddress,
                                       `${asset.symbol}-SPP`,
-                                      "18",
-                                      asset.symbolUrl
-                                    )
+                                      '18',
+                                      asset.symbolUrl,
+                                    ),
                                   )
                                 }}
                               >
@@ -560,9 +563,9 @@ const WalletSelect = (props) => {
                                       watchAsset(
                                         asset.synthAddress,
                                         `${asset.symbol}-SPS`,
-                                        "18",
-                                        asset.symbolUrl
-                                      )
+                                        '18',
+                                        asset.symbolUrl,
+                                      ),
                                     )
                                   }
                                 }}
@@ -571,9 +574,9 @@ const WalletSelect = (props) => {
                                     watchAsset(
                                       asset.synthAddress,
                                       `${asset.symbol}-SPS`,
-                                      "18",
-                                      asset.symbolUrl
-                                    )
+                                      '18',
+                                      asset.symbolUrl,
+                                    ),
                                   )
                                 }}
                               >
