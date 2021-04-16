@@ -1,4 +1,3 @@
-/* eslint-disable*/
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 
@@ -111,7 +110,7 @@ const WalletSelect = (props) => {
 
   return (
     <>
-      <Modal {...props}>
+      <Modal show={props.show} onHide={props.onHide}>
         <Card className="card-body">
           {wallet.status !== 'connected' && (
             <CardHeader>
@@ -186,48 +185,51 @@ const WalletSelect = (props) => {
 
               {wallet.status === 'connected' && (
                 <>
-                      <Row>
-                        <Col xs={6}>
-                          <div className="output-wallet-description">View on BSC Scan  <a
-                            href={getExplorerWallet(wallet.account)}
-                            target="_blank"
-                            rel="noreferrer"
-                            style={{
-                              marginLeft: '2px',
-                            }}
-                          >
-                            <i className="icon-extra-small icon-scan" />
-                          </a>
-                          </div>
-                          <span className="title">
-                            {wallet.account?.substr(0, 5)}...
-                            {wallet.account?.slice(-5)}<ShareLink
-                            url={wallet.account}
-                            notificationLocation="tc"
-                          >
-                            <i className="icon-small icon-copy" />
-                          </ShareLink>
-                          </span>
-                        </Col>
-                          <Col xs={6}>
-                            <Button
-                            className="mx-1 btn-sm btn-danger btn-round d-block d-sm-none"
-                            onClick={() => {
-                              wallet.reset()
-                            }}
-                          >
-                            Change wallet
-                          </Button>
+                  <Row>
+                    <Col xs={6}>
+                      <div className="output-wallet-description">
+                        View on BSC Scan{' '}
+                        <a
+                          href={getExplorerWallet(wallet.account)}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            marginLeft: '2px',
+                          }}
+                        >
+                          <i className="icon-extra-small icon-scan" />
+                        </a>
+                      </div>
+                      <span className="title">
+                        {wallet.account?.substr(0, 5)}...
+                        {wallet.account?.slice(-5)}
+                        <ShareLink
+                          url={wallet.account}
+                          notificationLocation="tc"
+                        >
+                          <i className="icon-small icon-copy" />
+                        </ShareLink>
+                      </span>
+                    </Col>
+                    <Col xs={6}>
+                      <Button
+                        className="mx-1 btn-sm btn-danger btn-round d-block d-sm-none"
+                        onClick={() => {
+                          wallet.reset()
+                        }}
+                      >
+                        Change wallet
+                      </Button>
 
-                            <Button
-                              className="float-right mx-1 btn-md btn-danger btn-round d-none d-sm-block"
-                              onClick={() => {
-                                wallet.reset()
-                              }}
-                            >
-                              Change wallet
-                            </Button>
-                          </Col>
+                      <Button
+                        className="float-right mx-1 btn-md btn-danger btn-round d-none d-sm-block"
+                        onClick={() => {
+                          wallet.reset()
+                        }}
+                      >
+                        Change wallet
+                      </Button>
+                    </Col>
                   </Row>
                   <br />
                   <br />
