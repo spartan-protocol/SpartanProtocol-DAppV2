@@ -378,10 +378,10 @@ const WalletSelect = (props) => {
                                 className="mr-n3"
                               />
                               <img
-                                height="20px"
+                                height="27px"
                                 src={spartaIcon}
                                 alt="SPARTA"
-                                className="mr-1"
+                                className="mr-2"
                               />
                               {`${asset.symbol}-SPP`}
                               <ShareLink
@@ -456,10 +456,10 @@ const WalletSelect = (props) => {
                                 className="mr-n3"
                               />
                               <img
-                                height="20px"
+                                height="27px"
                                 src={spartaIcon}
                                 alt="SPARTA"
-                                className="mr-1"
+                                className="mr-2"
                               />
                               {`${asset.symbol}-SPP`}
                               <ShareLink
@@ -536,10 +536,10 @@ const WalletSelect = (props) => {
                                 className="mr-n3"
                               />
                               <img
-                                height="20px"
+                                height="27px"
                                 src={spartaIconAlt}
                                 alt="SPARTA"
-                                className="mr-1"
+                                className="mr-2"
                               />
                               <span>{`${asset.symbol}-SPS`}</span>
                               <ShareLink

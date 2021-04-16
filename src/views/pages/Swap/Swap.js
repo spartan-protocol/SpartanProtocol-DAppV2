@@ -606,7 +606,15 @@ const Swap = () => {
 
   return (
     <>
-      <div className="content mt-n5">
+      <div className="content">
+        <Breadcrumb>
+          <Col md={10}>Swap {mode !== 'token' && mode}</Col>
+          <Col md={2}>
+            {' '}
+            <Wallet />
+          </Col>
+        </Breadcrumb>
+
         {poolFactory.finalArray?.length > 0 && (
           <>
             <Row>

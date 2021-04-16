@@ -7,6 +7,7 @@ import { getRouterContract } from '../../utils/web3Router'
 import { getDaoVaultContract } from '../../utils/web3Dao'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
 import { getSynthContract } from '../../utils/web3Synth'
+// import { listedTokensTN } from '../../utils/web3'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -198,6 +199,9 @@ export const getPoolFactoryDetailedArray = (
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
         curated: '',
+        // symbolUrl: listedTokensTN.filter(
+        //   (asset) => asset.address === tokenArray[i],
+        // )[0].icon,
         symbolUrl:
           trustWalletIndex.data.filter((asset) => asset === tokenArray[i])
             .length > 0
