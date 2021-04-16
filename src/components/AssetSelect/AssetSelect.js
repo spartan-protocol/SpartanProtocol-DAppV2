@@ -222,66 +222,70 @@ const AssetSelect = (props) => {
 
   return (
     <>
-      <div
+      <Row
         onClick={() =>
           !props.disabled ? toggleModal() : console.log('button disabled')
         }
         role="button"
+        className="justify-content-left"
       >
-        <div className="select-box ml-1 mt-2 h-auto" name="singleSelect">
-          {selectedType === 'token' && (
-            <img
-              height="35px"
-              src={selectedItem?.symbolUrl}
-              alt={`${selectedItem?.symbol}icon`}
-              className="mr-2"
-            />
-          )}
-
-          {selectedType === 'pool' && (
-            <>
+        <Row className="select-box h-auto" name="singleSelect">
+          <Col xs="auto">
+            {selectedType === 'token' && (
               <img
                 height="35px"
                 src={selectedItem?.symbolUrl}
                 alt={`${selectedItem?.symbol}icon`}
-                className="mr-n3"
-              />
-
-              <img
-                height="27px"
-                src={spartaIcon}
-                alt="Sparta LP token icon"
                 className="mr-2"
               />
-            </>
-          )}
+            )}
 
-          {selectedType === 'synth' && (
-            <>
-              <img
-                height="35px"
-                src={selectedItem?.symbolUrl}
-                alt={`${selectedItem?.symbol}icon`}
-                className="mr-n3"
-              />
+            {selectedType === 'pool' && (
+              <>
+                <img
+                  height="35px"
+                  src={selectedItem?.symbolUrl}
+                  alt={`${selectedItem?.symbol}icon`}
+                  className="mr-n3"
+                />
 
-              <img
-                height="27px"
-                src={spartaIconAlt}
-                alt="Sparta LP token icon"
-                className="mr-2"
-              />
-            </>
-          )}
+                <img
+                  height="27px"
+                  src={spartaIcon}
+                  alt="Sparta LP token icon"
+                  className="mr-2"
+                />
+              </>
+            )}
 
-          {selectedItem && selectedItem?.symbol}
-          {selectedType === 'pool' && '-SPP'}
-          {selectedType === 'synth' && '-SPS'}
-          {!props.disabled && (
-            <i className="bd-icons icon-minimal-down mb-1 ml-2" />
-          )}
-        </div>
-      </div>
+            {selectedType === 'synth' && (
+              <>
+                <img
+                  height="35px"
+                  src={selectedItem?.symbolUrl}
+                  alt={`${selectedItem?.symbol}icon`}
+                  className="mr-n3"
+                />
+
+                <img
+                  height="27px"
+                  src={spartaIconAlt}
+                  alt="Sparta LP token icon"
+                  className="mr-2"
+                />
+              </>
+            )}
+            {!props.disabled && (
+              <i className="icon-extra-small icon-arrow icon-light align-middle" />
+            )}
+          </Col>
+          <Col xs="12" className="ml-3">
+            {selectedItem && selectedItem?.symbol}
+            {selectedType === 'pool' && '-SPP'}
+            {selectedType === 'synth' && '-SPS'}
+          </Col>
+        </Row>
+      </Row>
 
       <Modal isOpen={showModal} toggle={toggleModal}>
         <Row className="mt-1">
@@ -301,7 +305,7 @@ const AssetSelect = (props) => {
                       onClick={toggleModal}
                       className="btn btn-transparent"
                     >
-                      <i className="icon-medium icon-close" />
+                      <i className="icon-small icon-close" />
                     </Button>
                   </Col>
                 </Row>

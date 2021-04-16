@@ -1,8 +1,17 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from 'react-bootstrap/Breadcrumb'
-import { Button, Card, Col, Row, Input, FormGroup } from 'reactstrap'
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Input,
+  FormGroup,
+  UncontrolledAlert,
+} from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -41,8 +50,8 @@ import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getPoolContract } from '../../../utils/web3Pool'
-import NewIcon from '../../../assets/icons/new.svg'
 import SwapPair from './SwapPair'
+import SharePool from '../../../components/Share/SharePool'
 
 const Swap = () => {
   const web3 = useWeb3()
@@ -602,54 +611,34 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        <Breadcrumb>
-          <Col md={10}>Swap {mode !== 'token' && mode}</Col>
-          <Col md={2}>
-            {' '}
-            <Wallet />
-          </Col>
-        </Breadcrumb>
-
         {poolFactory.finalArray?.length > 0 && (
           <>
-            <Row>
-              <Col xl={8}>
+            <Row className="card-body justify-content-center">
+              <Col xs="6" xl="5">
+                <h2 className="d-inline text-title ml-1">Swap</h2>
+              </Col>
+              <Col xs="6" xl="4">
+                <SharePool />
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col xs="12" xl="9">
                 <Card className="card-body">
-                  <Row>
-                    <Col className="card-body d-inline-block">
-                      <div
-                        style={{ color: '#FFFFFF' }}
-                        className="title-card mb-4"
-                      >
-                        <img
-                          src={NewIcon}
-                          className="mb-1"
-                          alt="new badge"
-                          style={{
-                            height: '19px',
-                            verticalAlign: 'bottom',
-                            marginRight: '5px',
-                          }}
-                        />{' '}
-                        You can now swap your BEP20 tokens, LP tokens & Synths
-                      </div>
-                    </Col>
-                  </Row>
                   {/* Top 'Input' Row */}
                   <Row>
                     {/* 'From' input box */}
-                    <Col md={5}>
+                    <Col xs="12" md="5">
                       <Card
                         style={{ backgroundColor: '#25212D' }}
                         className="card-body"
                       >
-                        <Row className="card-body">
-                          <Col xs="6">
-                            <div className="title-card">From</div>
+                        <Row>
+                          <Col xs={4} className="mt-md-1">
+                            <div className="title-card">Input</div>
                           </Col>
-                          <Col className="text-right" xs="6">
+                          <Col xs={8} className="text-right">
                             <div
-                              className="output-card mb-2"
+                              className="balance"
                               role="button"
                               onClick={() => {
                                 swapInput1.value = convertFromWei(getBalance(1))
@@ -663,71 +652,53 @@ const Swap = () => {
                             </div>
                           </Col>
                         </Row>
-                        <Row className="my-3 input-pane">
-                          <Col xs="8">
-                            <div className="output-card ml-n1">
+                        <Row>
+                          <Col xs="6" sm="4">
+                            <div>
                               <AssetSelect
                                 priority="1"
                                 filter={['token', 'pool', 'synth']}
                               />
                             </div>
                           </Col>
-
-                          <Col className="text-right" xs="4">
-                            <FormGroup className="h-100">
-                              <Input
-                                className="text-right h-100"
-                                type="text"
-                                placeholder="0"
-                                id="swapInput1"
-                                onInput={(event) =>
-                                  handleZapInputChange(event.target.value, true)
-                                }
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="card-body">
-                          <Col xs="6">
-                            <div className="output-card">
-                              Price 1 {assetSwap1?.symbol}
-                              {mode === 'pool' && '-SPP'}
-                              {mode === 'synth' &&
-                                assetSwap1?.symbol !== 'SPARTA' &&
-                                '-SPS'}{' '}
-                              ={' '}
-                              {formatFromUnits(
-                                BN(swapInput2?.value).div(
-                                  BN(swapInput1?.value),
-                                ),
-                                6,
-                              )}{' '}
-                              {assetSwap2?.symbol}
-                              {mode === 'pool' && '-SPP'}
-                              {mode === 'synth' &&
-                                assetSwap1?.symbol === 'SPARTA' &&
-                                '-SPS'}
-                            </div>
-                          </Col>
-                          <Col className="text-right" xs="6">
-                            <div className="output-card">
-                              ~$
-                              {mode === 'token' &&
-                                formatFromWei(getInput1USD())}
-                              {mode === 'pool' &&
-                                formatFromWei(getInputZap1USD())}
-                              {mode === 'synth' &&
-                                formatFromWei(getSynthInputInUSD())}
+                          <Col xs="6" sm="8">
+                            <div className="float-right">
+                              <FormGroup>
+                                <Input
+                                  className="text-right ml-3"
+                                  type="text"
+                                  placeholder="0"
+                                  id="swapInput1"
+                                  onInput={(event) =>
+                                    handleZapInputChange(
+                                      event.target.value,
+                                      true,
+                                    )
+                                  }
+                                />
+                              </FormGroup>
                             </div>
                           </Col>
                         </Row>
                       </Card>
                     </Col>
-                    {/* 'Reverse' selected assets */}
-                    <Col md={2}>
-                      <div className="card-body m-4 text-center">
+
+                    <Col xs="12" md="2" className="h-auto">
+                      <div
+                        className="d-block d-md-none text-center"
+                        style={{ marginTop: '-50px' }}
+                      >
                         <Button
-                          className="btn-lg btn-rounded btn-icon"
+                          className="btn-md btn-rounded btn-icon"
+                          color="primary"
+                          onClick={() => handleReverseAssets()}
+                        >
+                          <i className="icon-small icon-swap icon-light mt-1" />
+                        </Button>
+                      </div>
+                      <div className="d-none d-md-block card-body text-center">
+                        <Button
+                          className="btn-lg btn-rounded btn-icon mt-3"
                           color="primary"
                           onClick={() => handleReverseAssets()}
                         >
@@ -736,18 +707,23 @@ const Swap = () => {
                       </div>
                     </Col>
                     {/* 'To' input box */}
-                    <Col md={5}>
+                    <Col
+                      xs="12"
+                      md="5"
+                      style={{ marginTop: '-25px' }}
+                      className="mt-md-1"
+                    >
                       <Card
                         style={{ backgroundColor: '#25212D' }}
                         className="card-body "
                       >
-                        <Row className="card-body">
-                          <Col xs="6">
-                            <div className="title-card">To</div>
+                        <Row>
+                          <Col xs={4}>
+                            <div className="title-card">Output</div>
                           </Col>
-                          <Col className="text-right" xs="6">
+                          <Col xs={8} className="text-right">
                             <div
-                              className="output-card mb-2"
+                              className="balance"
                               role="button"
                               onClick={() => {
                                 swapInput2.value = convertFromWei(getBalance(2))
@@ -761,9 +737,9 @@ const Swap = () => {
                             </div>
                           </Col>
                         </Row>
-                        <Row className="my-3 input-pane">
-                          <Col xs="8">
-                            <div className="output-card ml-n1">
+                        <Row>
+                          <Col xs={6}>
+                            <div>
                               <AssetSelect
                                 priority="2"
                                 filter={filter}
@@ -771,56 +747,23 @@ const Swap = () => {
                               />
                             </div>
                           </Col>
-
-                          <Col className="text-right" xs="4">
-                            <FormGroup className="h-100">
-                              <Input
-                                className="text-right h-100 mr-n5 px-2"
-                                type="text"
-                                placeholder="0"
-                                id="swapInput2"
-                                readOnly={mode !== 'token'}
-                                onInput={(event) =>
-                                  handleZapInputChange(
-                                    event.target.value,
-                                    false,
-                                  )
-                                }
-                              />
-                            </FormGroup>
-                          </Col>
-                        </Row>
-                        <Row className="card-body">
-                          <Col xs="7">
-                            <div className="output-card">
-                              Price 1 {assetSwap2?.symbol}
-                              {mode === 'pool' && '-SPP'}
-                              {mode === 'synth' &&
-                                assetSwap1?.symbol === 'SPARTA' &&
-                                '-SPS'}{' '}
-                              ={' '}
-                              {formatFromUnits(
-                                BN(swapInput1?.value).div(
-                                  BN(swapInput2?.value),
-                                ),
-                                6,
-                              )}{' '}
-                              {assetSwap1?.symbol}
-                              {mode === 'pool' && '-SPP'}
-                              {mode === 'synth' &&
-                                assetSwap1?.symbol !== 'SPARTA' &&
-                                '-SPS'}
-                            </div>
-                          </Col>
-                          <Col className="text-right" xs="5">
-                            <div className="output-card">
-                              ~$
-                              {mode === 'token' &&
-                                formatFromWei(getInput2USD())}
-                              {mode === 'pool' &&
-                                formatFromWei(getInputZap2USD())}
-                              {mode === 'synth' &&
-                                formatFromWei(getSynthOutputInUSD())}
+                          <Col xs={6}>
+                            <div className="float-right">
+                              <FormGroup>
+                                <Input
+                                  className="text-right ml-3"
+                                  type="text"
+                                  placeholder="0"
+                                  id="swapInput2"
+                                  readOnly={mode !== 'token'}
+                                  onInput={(event) =>
+                                    handleZapInputChange(
+                                      event.target.value,
+                                      false,
+                                    )
+                                  }
+                                />
+                              </FormGroup>
                             </div>
                           </Col>
                         </Row>
@@ -1168,26 +1111,28 @@ const Swap = () => {
                     )}
                 </Card>
               </Col>
-            </Row>
-            <Row className="justify-content-center">
-              {assetSwap1.symbol !== 'SPARTA' && (
-                <Col xs="12" md="6" xl="4">
-                  <SwapPair
-                    assetSwap={assetSwap1}
-                    finalLpArray={poolFactory.finalLpArray}
-                    web3={web3}
-                  />
-                </Col>
-              )}
-              {assetSwap2.symbol !== 'SPARTA' && (
-                <Col xs="12" md="6" xl="4">
-                  <SwapPair
-                    assetSwap={assetSwap2}
-                    finalLpArray={poolFactory.finalLpArray}
-                    web3={web3}
-                  />
-                </Col>
-              )}
+              <Col xs="12" xl="9">
+                <Row>
+                  <Col xs="12" md="6">
+                    {assetSwap1.symbol !== 'SPARTA' && (
+                      <SwapPair
+                        assetSwap={assetSwap1}
+                        finalLpArray={poolFactory.finalLpArray}
+                        web3={web3}
+                      />
+                    )}
+                  </Col>
+                  <Col xs="12" md="6">
+                    {assetSwap2.symbol !== 'SPARTA' && (
+                      <SwapPair
+                        assetSwap={assetSwap2}
+                        finalLpArray={poolFactory.finalLpArray}
+                        web3={web3}
+                      />
+                    )}
+                  </Col>
+                </Row>
+              </Col>
             </Row>
           </>
         )}
@@ -1196,7 +1141,7 @@ const Swap = () => {
             <HelmetLoading height={300} width={300} />
           </div>
         )}
-        <Row>
+        <Row className="justify-content-center">
           <Col>
             <RecentTxns
               contracts={poolFactory.finalArray

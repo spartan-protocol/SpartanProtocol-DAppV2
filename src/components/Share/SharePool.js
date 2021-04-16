@@ -3,8 +3,9 @@ import { Modal, Button } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
 import { Card, CardBody, Row, Col } from 'reactstrap'
 import { useLocation } from 'react-router-dom'
+import CardHeader from 'reactstrap/es/CardHeader'
+import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
-import ShareIcon from '../../assets/icons/icon-share.svg'
 import SpartaIcon from '../../assets/icons/SPARTA.svg'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
 
@@ -43,34 +44,34 @@ const Share = () => {
   return (
     <>
       <Button
-        variant="secondary"
-        className="btn-block btn-md"
-        style={{
-          padding: '10px',
-          marginLeft: '9px',
-          top: '-4px',
-        }}
+        className="d-inline float-right btn btn-info mt-2 mr-2"
         onClick={() => setShowShare(true)}
       >
-        <img
-          src={ShareIcon}
-          alt="share icon"
-          style={{
-            height: '19px',
-            verticalAlign: 'bottom',
-            marginRight: '5px',
-          }}
-        />{' '}
-        Show share
+        <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
+        Share
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)}>
-        <Modal.Body>
-          <Row>
-            <Col xs="12" className="text-center py-5">
-              <img src={ShareIcon} alt="Share icon" />
-            </Col>
-          </Row>
-          <Row>
+        <Card>
+          <CardHeader>
+            <CardTitle tag="h2" />
+            <Row>
+              <Col xs="10">
+                <h2>Share</h2>
+              </Col>
+              <Col xs="2">
+                <Button
+                  style={{
+                    right: '16px',
+                  }}
+                  onClick={() => setShowShare(false)}
+                  className="btn btn-transparent"
+                >
+                  <i className="icon-small icon-close" />
+                </Button>
+              </Col>
+            </Row>
+          </CardHeader>
+          <Row className="card-body">
             <Col xs="12">
               <Card className="card-share">
                 <CardBody className="py-3">
@@ -146,7 +147,7 @@ const Share = () => {
               </Button>
             </Col>
           </Row>
-        </Modal.Body>
+        </Card>
       </Modal>
     </>
   )

@@ -215,7 +215,7 @@ const Notifications = () => {
                           <Button
                             block
                             color="info"
-                            onClick={() => notify('bc')}
+                            onClick={() => notify('bc', 'primary')}
                           >
                             Bottom Center
                           </Button>

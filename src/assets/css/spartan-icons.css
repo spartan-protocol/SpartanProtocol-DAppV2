@@ -1,3 +1,15 @@
+.spartan-icons {
+    display: inline-block;
+    font: normal normal normal 1em/1 'Nucleo';
+    vertical-align: middle;
+    speak: none;
+    text-transform: none;
+    /* Better Font Rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
 .icon-button {
     display: inline-block;
     width: 24px;
@@ -7,6 +19,15 @@
     background-repeat: no-repeat;
 }
 
+
+.icon-new{
+    display: inline-block;
+    width: 40px;
+    margin-bottom: -5px;
+    height: 40px;
+    background-size: 40px auto;
+    background-repeat: no-repeat;
+}
 
 .icon-search-bar {
     display: inline-block;
@@ -57,6 +78,13 @@
     background-size: 64px auto;
     background-repeat: no-repeat;
 }
+
+
+/* Max */
+.icon-arrow.icon-light{
+    background-image: url('/src/assets/icons/arrow.svg#light');
+}
+
 
 
 /* Max */

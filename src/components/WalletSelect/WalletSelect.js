@@ -5,6 +5,9 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
 import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
 import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
+import Card from 'react-bootstrap/Card'
+import CardHeader from 'reactstrap/es/CardHeader'
+import CardTitle from 'reactstrap/es/CardTitle'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { changeNetwork, getNetwork } from '../../utils/web3'
@@ -13,8 +16,8 @@ import { usePoolFactory } from '../../store/poolFactory/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
 import MetaMask from '../../assets/icons/MetaMask.svg'
-import spartaIcon from '../../assets/img/spartan_blue_small.svg'
-import spartaIconAlt from '../../assets/img/spartan_gold_small.svg'
+import spartaIcon from '../../assets/img/spartan_red_small.svg'
+import spartaIconAlt from '../../assets/img/spartan_white_small.svg'
 
 const WalletSelect = (props) => {
   const poolFactory = usePoolFactory()
@@ -101,6 +104,7 @@ const WalletSelect = (props) => {
         connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
       }
     }
+
     sleep()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -108,35 +112,29 @@ const WalletSelect = (props) => {
   return (
     <>
       <Modal {...props}>
-        <div className="modal-header ">
-          {/* <button */}
-          {/*  aria-hidden */}
-          {/*  className="close" */}
-          {/*  data-dismiss="modal" */}
-          {/*  type="button" */}
-          {/*  onClick={props.onHide} */}
-          {/* > */}
-          {/*  <i className="bd-icons icon-simple-remove" /> */}
-          {/* </button> */}
+        <Card className="card-body">
           {wallet.status !== 'connected' && (
-            <Col>
-              <div className="small-4 medium-4 large-4 columns text-center">
-                <i className="icon-large icon-wallet icon-dark text-center " />
-              </div>
-              <h1 className="modal-title text-center" id="myModalLabel">
-                Connect to wallet
-              </h1>
-            </Col>
+            <CardHeader>
+              <CardTitle tag="h2" />
+              <Row>
+                <Col>
+                  <div className="small-4 medium-4 large-4 columns text-center">
+                    <i className="icon-large icon-wallet icon-dark text-center " />
+                  </div>
+                  <h1 className="text-center" id="myModalLabel">
+                    Connect to wallet
+                  </h1>
+                </Col>
+              </Row>
+            </CardHeader>
           )}
-        </div>
 
-        <Modal.Body className="center-text">
           {wallet.status === 'error' && (
             <Alert color="warning">
               <span>
                 {' '}
-                Wallet connection failed! Check the network in your wallet
-                matches the selection in the DApp.
+                Check if the network in your wallet matches the selection in the
+                DApp.
               </span>
             </Alert>
           )}
@@ -166,13 +164,14 @@ const WalletSelect = (props) => {
             </>
           )}
 
+          {/* Wallet overview */}
           {wallet.status === 'connected' ? (
             <div>
               <Row>
-                <Col xs="11">
+                <Col xs="10">
                   <h2>Wallet</h2>
                 </Col>
-                <Col xs="1">
+                <Col xs="2">
                   <Button
                     style={{
                       right: '16px',
@@ -180,46 +179,49 @@ const WalletSelect = (props) => {
                     onClick={props.onHide}
                     className="btn btn-transparent"
                   >
-                    <i className="icon-medium icon-close" />
+                    <i className="icon-small icon-close" />
                   </Button>
                 </Col>
               </Row>
+
               {wallet.status === 'connected' && (
                 <>
                   <Row>
-                    <Col xs="5">
-                      <span className="description">
-                        View on BSC Scan{' '}
-                        <a
-                          href={getExplorerWallet(wallet.account)}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            marginLeft: '2px',
-                          }}
-                        >
-                          <i className="icon-extra-small icon-scan" />
-                        </a>
-                      </span>
-                      <span className="title">
-                        {wallet.account?.substr(0, 5)}...
-                        {wallet.account?.slice(-5)}
-                      </span>
+                    <Col xs={5}>
+                      <Row>
+                        <Col>
+                          <span className="output-card-description">
+                            View on BSC Scan <br />
+                            <a
+                              href={getExplorerWallet(wallet.account)}
+                              target="_blank"
+                              rel="noreferrer"
+                              style={{
+                                marginLeft: '2px',
+                              }}
+                            >
+                              <i className="icon-extra-small icon-scan mr-2 mb-1" />
+                            </a>
+                            <ShareLink
+                              url={wallet.account}
+                              notificationLocation="tc"
+                            >
+                              <i className="icon-small icon-copy" />
+                            </ShareLink>
+                          </span>
+                        </Col>
+                        <Col>
+                          {' '}
+                          <span className="title">
+                            {wallet.account?.substr(0, 5)}...
+                            {wallet.account?.slice(-5)}
+                          </span>
+                        </Col>
+                      </Row>
                     </Col>
-                    <Col xs="2">
-                      <ShareLink url={wallet.account} notificationLocation="tc">
-                        <Button className="btn btn-sm btn-neutral">
-                          <i className="icon-medium icon-copy" />
-                        </Button>
-                      </ShareLink>
-                    </Col>
-                    <Col xs="5">
+                    <Col xs={7}>
                       <Button
-                        block
-                        className="btn btn-md btn-neutral"
-                        style={{
-                          padding: '14px',
-                        }}
+                        className="mx-1 btn-sm btn-danger btn-round mt-3"
                         onClick={() => {
                           wallet.reset()
                         }}
@@ -228,7 +230,9 @@ const WalletSelect = (props) => {
                       </Button>
                     </Col>
                   </Row>
-                  <Row>
+                  <br />
+                  <br />
+                  <Row className="card-body">
                     <Nav pills className="nav-tabs-custom">
                       <NavItem>
                         <NavLink
@@ -272,14 +276,16 @@ const WalletSelect = (props) => {
                       </NavItem>
                     </Nav>
                   </Row>
+
+                  {/* Asset tabs */}
                   <TabContent className="tab-space" activeTab={horizontalTabs}>
                     <TabPane tabId="assets">
-                      <Row className="h6 mt-3 mb-3">
-                        <Col xs="7" className="pl-4">
-                          Asset
+                      <Row className="mt-3 mb-3">
+                        <Col xs="7">
+                          <p className="text-card">Asset</p>
                         </Col>
-                        <Col xs="5" className="text-right">
-                          Wallet Balance
+                        <Col xs="5">
+                          <p className="text-card float-right">Balance</p>
                         </Col>
                       </Row>
                       {poolFactory.detailedArray
@@ -287,7 +293,7 @@ const WalletSelect = (props) => {
                         .map((asset) => (
                           <Row
                             key={`${asset.tokenAddress}-asset`}
-                            className="align-items-center mb-3"
+                            className="align-items-center mb-3 output-card"
                           >
                             <Col xs="7" className="d-flex align-items-center">
                               <img
@@ -351,7 +357,7 @@ const WalletSelect = (props) => {
                       {poolFactory.finalLpArray?.filter(
                         (asset) => asset.lockedLPs > 0,
                       ).length > 0 && (
-                        <Row className="h6 mt-3 mb-3">
+                        <Row className="h6 mt-3 mb-3 output-card">
                           <Col xs="7" className="pl-4">
                             LP Asset
                           </Col>
@@ -430,12 +436,12 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         ))}
-                      <Row className="h6 mt-3 mb-3">
-                        <Col xs="7" className="pl-4">
-                          LP Asset
+                      <Row className="mt-3 mb-3">
+                        <Col xs="7">
+                          <p className="text-card">Asset</p>
                         </Col>
-                        <Col xs="5" className="text-right">
-                          Wallet Balance
+                        <Col xs="5">
+                          <p className="text-card float-right">Balance</p>
                         </Col>
                       </Row>
                       {poolFactory.finalLpArray
@@ -443,7 +449,7 @@ const WalletSelect = (props) => {
                         .map((asset) => (
                           <Row
                             key={`${asset.tokenAddress}-lp`}
-                            className="align-items-center mb-3"
+                            className="align-items-center mb-3 output-card"
                           >
                             <Col xs="7" className="d-flex align-items-center">
                               <img
@@ -510,12 +516,12 @@ const WalletSelect = (props) => {
                         ))}
                     </TabPane>
                     <TabPane tabId="synths">
-                      <Row className="h6 mt-3 mb-3">
-                        <Col xs="7" className="pl-4">
-                          Synth Asset
+                      <Row className="mt-3 mb-3">
+                        <Col xs="7">
+                          <p className="text-card">Asset</p>
                         </Col>
-                        <Col xs="5" className="text-right">
-                          Wallet Balance
+                        <Col xs="5">
+                          <p className="text-card float-right">Balance</p>
                         </Col>
                       </Row>
                       {poolFactory.finalLpArray
@@ -622,7 +628,7 @@ const WalletSelect = (props) => {
               ))}
             </div>
           )}
-        </Modal.Body>
+        </Card>
       </Modal>
     </>
   )
