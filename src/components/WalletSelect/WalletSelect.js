@@ -165,16 +165,13 @@ const WalletSelect = (props) => {
 
           {/* Wallet overview */}
           {wallet.status === 'connected' ? (
-            <div>
-              <Row>
+            <div className="ml-2 mt-2">
+              <Row class="card-body">
                 <Col xs="10">
                   <h2>Wallet</h2>
                 </Col>
                 <Col xs="2">
                   <Button
-                    style={{
-                      right: '16px',
-                    }}
                     onClick={props.onHide}
                     className="btn btn-transparent"
                   >
