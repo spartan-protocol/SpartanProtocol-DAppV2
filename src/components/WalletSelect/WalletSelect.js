@@ -14,7 +14,7 @@ import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
 import { usePoolFactory } from '../../store/poolFactory/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
-import MetaMask from '../../assets/icons/MetaMask.svg'
+import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_red_small.svg'
 import spartaIconAlt from '../../assets/img/spartan_white_small.svg'
 
@@ -282,7 +282,7 @@ const WalletSelect = (props) => {
                   <TabContent className="tab-space" activeTab={horizontalTabs}>
                     <TabPane tabId="assets">
                       <Row className="mt-3 mb-3">
-                        <Col xs="5" md='4'>
+                        <Col xs="5" md="4">
                           <p className="text-card">Asset</p>
                         </Col>
                         <Col xs="5">
@@ -292,20 +292,26 @@ const WalletSelect = (props) => {
                       {poolFactory.detailedArray
                         ?.filter((asset) => asset.balanceTokens > 0)
                         .map((asset) => (
-                          <Row key={`${asset.tokenAddress}-asset`} className="mb-3 output-card mr-2">
-                            <Col xs="4" md="3" >
+                          <Row
+                            key={`${asset.tokenAddress}-asset`}
+                            className="mb-3 output-card mr-2"
+                          >
+                            <Col xs="4" md="3">
                               <img
                                 height="35px"
                                 src={asset.symbolUrl}
                                 alt={asset.name}
                                 className="mr-1"
                               />
-                              </Col>
+                            </Col>
                             <Col xs="6" md="6" className="align-items-center">
                               <Row>
                                 <Col xs="10" className="float-left ml-n5">
                                   {asset.symbol}
-                                  <div className="description"> {formatFromWei(asset.balanceTokens)}</div>
+                                  <div className="description">
+                                    {' '}
+                                    {formatFromWei(asset.balanceTokens)}
+                                  </div>
                                 </Col>
                                 <Col xs="2" className="mt-1">
                                   <ShareLink
