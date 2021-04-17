@@ -410,17 +410,17 @@ const AssetSelect = (props) => {
                   </Col>
                 </Row>
                 <Row className="mt-3 mb-3">
-                  <Col xs="4" md="4">
+                  <Col xs="9" md="9">
                     <p className="text-card">Asset</p>
                   </Col>
-                  <Col xs="6">
+                  <Col xs="3" md="3">
                     <p className="text-card float-right mr-1">Actions</p>
                   </Col>
                 </Row>
                 {activeTab === 'all' &&
                   assetArray.map((asset) => (
                     <Row key={asset.symbol} className="mb-3 output-card mr-2">
-                      <Col xs="4" md="3">
+                      <Col xs="4" md="4" className="p-0 pl-2">
                         <div
                           role="button"
                           onClick={() => {
@@ -431,11 +431,11 @@ const AssetSelect = (props) => {
                           {asset.icon}
                         </div>
                       </Col>
-                      <Col xs="6" md="8" className="align-items-center">
+
+                      <Col xs="5" md="5" className="align-items-center p-0">
                         <Row>
-                          <Col xs="8" className="float-left ml-n4">
+                          <Col xs="12" className="float-left ml-n4">
                             <div
-                              className="ml-n2"
                               role="button"
                               onClick={() => {
                                 addSelection(asset)
@@ -444,11 +444,16 @@ const AssetSelect = (props) => {
                             >
                               {asset.symbol}
                             </div>
-                            <div className="description ml-n2">
+                            <div className="description">
                               {formatFromWei(asset.balance)}
                             </div>
                           </Col>
-                          <Col xs="2" className="mt-1">
+                        </Row>
+                      </Col>
+
+                      <Col xs="3" md="3" className="text-right p-0 pr-2">
+                        <Row>
+                          <Col xs="6">
                             <ShareLink
                               url={asset.actualAddr}
                               notificationLocation="tc"
@@ -456,15 +461,20 @@ const AssetSelect = (props) => {
                               <i className="icon-small icon-copy ml-2" />
                             </ShareLink>
                           </Col>
-                          <Col xs="2" className="mt-1">
+                          <Col xs="6">
                             <div
                               role="button"
                               onClick={() => {
                                 dispatch(
                                   watchAsset(
                                     asset.actualAddr,
-                                    asset.symbol.split('-')[0] +
-                                      asset.symbol.slice(-1),
+                                    asset.symbol.includes('-')
+                                      ? asset.symbol.split('-')[0] +
+                                          asset.symbol
+                                            .split('-')[1]
+                                            .slice(-1)
+                                            .toLowerCase()
+                                      : asset.symbol,
                                     '18',
                                     asset.symbolUrl,
                                   ),
@@ -483,7 +493,7 @@ const AssetSelect = (props) => {
                     .filter((asset) => asset.type === activeTab)
                     .map((asset) => (
                       <Row key={asset.symbol} className="mb-3 output-card mr-2">
-                        <Col xs="4" md="3">
+                        <Col xs="4" md="4" className="p-0 pl-2">
                           <div
                             role="button"
                             onClick={() => {
@@ -494,11 +504,11 @@ const AssetSelect = (props) => {
                             {asset.icon}
                           </div>
                         </Col>
-                        <Col xs="6" md="8" className="align-items-center">
+
+                        <Col xs="5" md="5" className="align-items-center p-0">
                           <Row>
-                            <Col xs="8" className="float-left ml-n4">
+                            <Col xs="12" className="float-left ml-n4">
                               <div
-                                className="ml-n2"
                                 role="button"
                                 onClick={() => {
                                   addSelection(asset)
@@ -507,11 +517,16 @@ const AssetSelect = (props) => {
                               >
                                 {asset.symbol}
                               </div>
-                              <div className="description ml-n2">
+                              <div className="description">
                                 {formatFromWei(asset.balance)}
                               </div>
                             </Col>
-                            <Col xs="2" className="mt-1">
+                          </Row>
+                        </Col>
+
+                        <Col xs="3" md="3" className="text-right p-0 pr-2">
+                          <Row>
+                            <Col xs="6">
                               <ShareLink
                                 url={asset.actualAddr}
                                 notificationLocation="tc"
@@ -519,15 +534,20 @@ const AssetSelect = (props) => {
                                 <i className="icon-small icon-copy ml-2" />
                               </ShareLink>
                             </Col>
-                            <Col xs="2" className="mt-1">
+                            <Col xs="6">
                               <div
                                 role="button"
                                 onClick={() => {
                                   dispatch(
                                     watchAsset(
                                       asset.actualAddr,
-                                      asset.symbol.split('-')[0] +
-                                        asset.symbol.slice(-1),
+                                      asset.symbol.includes('-')
+                                        ? asset.symbol.split('-')[0] +
+                                            asset.symbol
+                                              .split('-')[1]
+                                              .slice(-1)
+                                              .toLowerCase()
+                                        : asset.symbol,
                                       '18',
                                       asset.symbolUrl,
                                     ),
