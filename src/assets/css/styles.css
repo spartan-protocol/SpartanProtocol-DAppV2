@@ -123,6 +123,10 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 }
 
+input:focus, textarea:focus, select:focus{
+    outline: none;
+    border-color: #2F2D2D;
+}
 
 .input-group-prepend {
     border: 0;
@@ -131,14 +135,18 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 }
 
 .input-group {
-    border: 0;
     background: #25212D;
-    border-radius: 12px;
+    border-radius: 20px;
+    outline: none;
 }
 
-.input-group:focus {
-    border: 0;
+.input-group .form-control:first-child, .input-group-btn:first-child > .dropdown-toggle, .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-right: 0 none;
+    border-color: #25212D;
+}
 
+.form-control:focus{
+    outline: none;
 }
 
 

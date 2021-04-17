@@ -203,7 +203,7 @@ const Overview = () => {
 
         <Row className="card-body justify-content-center">
           <Col xs="6" xl="5">
-            <h2 className="d-inline text-title ml-1">Swap</h2>
+            <h2 className="d-inline text-title ml-1">Pools</h2>
           </Col>
           <Col xs="6" xl="4">
             {/*Buttons?*/}

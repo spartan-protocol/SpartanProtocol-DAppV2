@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react'
 // react plugin for creating notifications over the dashboard
 
@@ -13,8 +14,7 @@ const NewBond = () => {
 
   return (
     <>
-      <Row>
-        <Col md={8}>
+      <Row >
           <Card className="card-body ">
             <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
               <Row>
@@ -143,7 +143,6 @@ const NewBond = () => {
               Return to DAO
             </Button>
           </Card>
-        </Col>
         <Col md={4}>
           <Card className="card-body ">
             <Card style={{ backgroundColor: '#25212D' }} className="card-body ">

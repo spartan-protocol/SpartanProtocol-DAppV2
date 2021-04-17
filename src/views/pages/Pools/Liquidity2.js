@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/*eslint-disable*/
+import React, { useState } from "react"
 
 import {
   Breadcrumb,
@@ -8,19 +9,19 @@ import {
   NavLink,
   Row,
   TabContent,
-  TabPane,
-} from 'reactstrap'
+  TabPane
+} from "reactstrap"
 
-import classnames from 'classnames'
-import SharePool from '../../../components/Share/SharePool'
-import Wallet from '../../../components/Wallet/Wallet'
-import AddLiquidity from './AddLiquidity'
-import RemoveLiquidity from './RemoveLiquidity'
-import ZapLiquidity from './ZapLiquidity'
-import BondLiquidity from './BondLiquidity'
+import classnames from "classnames"
+import SharePool from "../../../components/Share/SharePool"
+import Wallet from "../../../components/Wallet/Wallet"
+import AddLiquidity from "./AddLiquidity"
+import RemoveLiquidity from "./RemoveLiquidity"
+import ZapLiquidity from "./ZapLiquidity"
+import BondLiquidity from "./BondLiquidity"
 
 const Liquidity2 = () => {
-  const [activeTab, setActiveTab] = useState('1')
+  const [activeTab, setActiveTab] = useState("1")
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -29,26 +30,24 @@ const Liquidity2 = () => {
   return (
     <>
       <div className="content">
-        <Breadcrumb>
-          <Col md={8}>Liquidity</Col>
-          <Col md={2}>
-            <SharePool />
+        <Row className="card-body justify-content-center">
+          <Col xs="6" xl="5">
+            <h2 className="d-inline text-title ml-1">Liquidity</h2>
           </Col>
-          <Col md={2}>
-            <Wallet />
+          <Col xs="6" xl="4">
           </Col>
-        </Breadcrumb>
+        </Row>
 
-        <Row>
-          <Col md={8}>
+        <Row className="justify-content-center">
+          <Col xs="12" xl="9">
             <Row>
               <Col md={9}>
                 <Nav tabs className="nav-tabs-custom">
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === '1' })}
+                      className={classnames({ active: activeTab === "1" })}
                       onClick={() => {
-                        toggle('1')
+                        toggle("1")
                       }}
                     >
                       <span className="d-none d-sm-block">Add</span>
@@ -56,9 +55,9 @@ const Liquidity2 = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === '2' })}
+                      className={classnames({ active: activeTab === "2" })}
                       onClick={() => {
-                        toggle('2')
+                        toggle("2")
                       }}
                     >
                       <span className="d-none d-sm-block">Remove</span>
@@ -66,9 +65,9 @@ const Liquidity2 = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === '3' })}
+                      className={classnames({ active: activeTab === "3" })}
                       onClick={() => {
-                        toggle('3')
+                        toggle("3")
                       }}
                     >
                       <span className="d-none d-sm-block">Zap</span>
@@ -76,9 +75,9 @@ const Liquidity2 = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: activeTab === '4' })}
+                      className={classnames({ active: activeTab === "4" })}
                       onClick={() => {
-                        toggle('4')
+                        toggle("4")
                       }}
                     >
                       <span className="d-none d-sm-block">Bond</span>

@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import React, { useState } from 'react'
+import React, { useState } from "react"
 import {
   Breadcrumb,
   Col,
@@ -9,15 +9,15 @@ import {
   Row,
   TabContent,
   TabPane,
-  Button,
-} from 'reactstrap'
-import classnames from 'classnames'
+  Button
+} from "reactstrap"
+import classnames from "classnames"
 
-import BondTable from './BondTable'
-import NewBond from './NewBond'
+import BondTable from "./BondTable"
+import NewBond from "./NewBond"
 
 const Bond = () => {
-  const [activeTab, setActiveTab] = useState('1')
+  const [activeTab, setActiveTab] = useState("1")
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -31,49 +31,49 @@ const Bond = () => {
             <h2 className="d-inline text-title ml-1">Bond</h2>
           </Col>
           <Col xs="6" xl="4">
-            <Button
-              className="d-inline float-right btn btn-info mt-2 mr-2"
-            >
-              <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
-              Proposal
-            </Button>
-            <Button
-              className="d-inline float-right btn btn-info mt-2 mr-2"
-
-            >
-              <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
-              Claim all
-            </Button>
           </Col>
         </Row>
         <Row className="justify-content-center">
           <Col xs="12" xl="9">
             <Row>
-              <Col md={10}>
+              <Col md={12}>
                 <Row>
-                  <Col md={9}>
+                  <Col md={8}>
                     <Nav className="nav-tabs-custom card-body" pills>
                       <NavItem>
                         <NavLink
-                          className={classnames({ active: activeTab === '1' })}
+                          className={classnames({ active: activeTab === "1" })}
                           onClick={() => {
-                            toggle('1')
+                            toggle("1")
                           }}
                         >
-                          Single token
+                          Your bonds
                         </NavLink>
                       </NavItem>
                       <NavItem>
                         <NavLink
-                          className={classnames({ active: activeTab === '2' })}
+                          className={classnames({ active: activeTab === "2" })}
                           onClick={() => {
-                            toggle('2')
+                            toggle("2")
                           }}
                         >
-                          Both tokens
+                          New bond
                         </NavLink>
                       </NavItem>
                     </Nav>
+                  </Col>
+                  <Col xs="6" xl="4">
+                    <Button
+                      className="d-inline float-right btn btn-primary mt-3 "
+                    >
+                     Claim all (2)
+                    </Button>
+                    <Button
+                      className="d-inline float-right btn btn-success mt-3 mr-2"
+
+                    >
+                      Proposals
+                    </Button>
                   </Col>
                 </Row>
                 <TabContent activeTab={activeTab}>
