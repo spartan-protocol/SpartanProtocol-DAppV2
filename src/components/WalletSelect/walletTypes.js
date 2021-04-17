@@ -1,5 +1,5 @@
 import BinanceChain from '../../assets/icons/BinanceChain.svg'
-import MetaMask from '../../assets/icons/MetaMask.svg'
+import MetaMask from '../../assets/icons/metamask.svg'
 import WalletConnect from '../../assets/icons/WalletConnect.svg'
 import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
