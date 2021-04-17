@@ -47,7 +47,7 @@ const AddLiquidity = () => {
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
-  const [activeTab, setActiveTab] = useState('1')
+  const [activeTab, setActiveTab] = useState('addTab1')
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [poolAdd1, setPoolAdd1] = useState('...')
@@ -55,7 +55,7 @@ const AddLiquidity = () => {
   useEffect(() => {
     const { finalArray } = poolFactory
     const getAssetDetails = () => {
-      if (finalArray && activeTab === '1') {
+      if (finalArray && activeTab === 'addTab1') {
         window.localStorage.setItem('assetType1', 'token')
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'pool')
@@ -85,7 +85,7 @@ const AddLiquidity = () => {
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-      } else if (finalArray && activeTab === '2') {
+      } else if (finalArray && activeTab === 'addTab2') {
         window.localStorage.setItem('assetType1', 'token')
         window.localStorage.setItem('assetType3', 'pool')
 
@@ -199,16 +199,16 @@ const AddLiquidity = () => {
         input,
       )
     }
-    if (activeTab === '1' && addInput1 && addInput2 && addInput3) {
+    if (activeTab === 'addTab1' && addInput1 && addInput2 && addInput3) {
       addInput3.value = getAddBothOutputLP()
     }
-    if (activeTab === '2' && addInput1 && addInput3) {
+    if (activeTab === 'addTab2' && addInput1 && addInput3) {
       addInput3.value = getAddSingleOutputLP()
     }
   }
 
   useEffect(() => {
-    if (activeTab === '1') {
+    if (activeTab === 'addTab1') {
       if (
         document.activeElement.id === 'addInput2' &&
         addInput2?.value !== ''
@@ -225,7 +225,7 @@ const AddLiquidity = () => {
       }
     }
 
-    if (activeTab === '2') {
+    if (activeTab === 'addTab2') {
       if (addInput1?.value !== '') {
         handleInputChange()
       } else {
@@ -246,9 +246,9 @@ const AddLiquidity = () => {
             <Nav tabs className="nav-tabs-custom">
               <NavItem>
                 <NavLink
-                  className={classnames({ active: activeTab === '1' })}
+                  className={classnames({ active: activeTab === 'addTab1' })}
                   onClick={() => {
-                    toggle('1')
+                    toggle('addTab1')
                   }}
                 >
                   <span className="d-none d-sm-block">Add Both</span>
@@ -256,9 +256,9 @@ const AddLiquidity = () => {
               </NavItem>
               <NavItem>
                 <NavLink
-                  className={classnames({ active: activeTab === '2' })}
+                  className={classnames({ active: activeTab === 'addTab2' })}
                   onClick={() => {
-                    toggle('2')
+                    toggle('addTab2')
                   }}
                 >
                   <span className="d-none d-sm-block">Add Single</span>
@@ -289,7 +289,9 @@ const AddLiquidity = () => {
                         <AssetSelect
                           priority="1"
                           filter={['token']}
-                          blackList={[activeTab === '1' ? addr.sparta : '']}
+                          blackList={[
+                            activeTab === 'addTab1' ? addr.sparta : '',
+                          ]}
                         />
                       </div>
                     </Col>
@@ -314,7 +316,7 @@ const AddLiquidity = () => {
                     </Col>
                   </Row>
 
-                  {activeTab === '1' && (
+                  {activeTab === 'addTab1' && (
                     <>
                       <Row className="my-2">
                         <Col xs="4" className="">
@@ -333,7 +335,7 @@ const AddLiquidity = () => {
                               priority="2"
                               filter={['token']}
                               whiteList={[addr.sparta]}
-                              disabled={activeTab === '1'}
+                              disabled={activeTab === 'addTab1'}
                             />
                           </div>
                         </Col>
@@ -384,7 +386,7 @@ const AddLiquidity = () => {
                           priority="3"
                           filter={['pool']}
                           disabled={
-                            activeTab === '1' ||
+                            activeTab === 'addTab1' ||
                             assetAdd1.tokenAddress !== addr.sparta
                           }
                         />
@@ -421,7 +423,7 @@ const AddLiquidity = () => {
                     <div className="title-card">
                       {addInput1?.value} {assetAdd1?.symbol}
                     </div>
-                    {activeTab === '1' && (
+                    {activeTab === 'addTab1' && (
                       <div className="title-card">
                         {addInput2?.value} {assetAdd2?.symbol}
                       </div>
@@ -429,7 +431,7 @@ const AddLiquidity = () => {
                   </Col>
                 </Row>
 
-                {activeTab === '2' && (
+                {activeTab === 'addTab2' && (
                   <Row className="mb-2">
                     <Col xs="4" className="">
                       <div className="title-card">Fee</div>
@@ -474,7 +476,7 @@ const AddLiquidity = () => {
                 <Button
                   className="w-100 h-100 btn-primary"
                   onClick={() =>
-                    activeTab === '1'
+                    activeTab === 'addTab1'
                       ? dispatch(
                           routerAddLiq(
                             convertToWei(addInput2.value),

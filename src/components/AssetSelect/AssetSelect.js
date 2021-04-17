@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
@@ -69,11 +70,22 @@ const AssetSelect = (props) => {
     window.localStorage.setItem(`assetType${props.priority}`, asset.type)
   }
 
-  const selectedItem = JSON.parse(
-    window.localStorage.getItem(`assetSelected${props.priority}`),
+  const [selectedItem, setSelectedItem] = useState(
+    JSON.parse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+  )
+  const [selectedType, setSelectedType] = useState(
+    window.localStorage.getItem(`assetType${props.priority}`),
   )
 
-  const selectedType = window.localStorage.getItem(`assetType${props.priority}`)
+  useEffect(() => {
+    setSelectedItem(
+      JSON.parse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+    )
+    setSelectedType(window.localStorage.getItem(`assetType${props.priority}`))
+  }, [
+    window.localStorage.getItem(`assetType${props.priority}`),
+    window.localStorage.getItem(`assetSelected${props.priority}`),
+  ])
 
   const [assetArray, setAssetArray] = useState([])
 

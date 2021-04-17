@@ -85,18 +85,26 @@ const Liquidity2 = () => {
               </Col>
             </Row>
             <TabContent activeTab={activeTab}>
-              <TabPane tabId="1" className="p-3">
-                <AddLiquidity />
-              </TabPane>
-              <TabPane tabId="2" className="p-3">
-                <RemoveLiquidity />
-              </TabPane>
-              <TabPane tabId="3" className="p-3">
-                <ZapLiquidity />
-              </TabPane>
-              <TabPane tabId="4" className="p-3">
-                <BondLiquidity />
-              </TabPane>
+              {activeTab === '1' && (
+                <TabPane tabId="1" className="p-3">
+                  <AddLiquidity />
+                </TabPane>
+              )}
+              {activeTab === '2' && (
+                <TabPane tabId="2" className="p-3">
+                  <RemoveLiquidity />
+                </TabPane>
+              )}
+              {activeTab === '3' && (
+                <TabPane tabId="3" className="p-3">
+                  <ZapLiquidity />
+                </TabPane>
+              )}
+              {activeTab === '4' && (
+                <TabPane tabId="4" className="p-3">
+                  <BondLiquidity />
+                </TabPane>
+              )}
             </TabContent>
           </Col>
         </Row>
