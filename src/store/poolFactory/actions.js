@@ -309,14 +309,14 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
       tempArray.push(
         finalArray[i].symbol === 'SPARTA'
           ? '0'
-          : routerContract.callStatic.map30DPoolRevenue(
+          : routerContract.callStatic.currentPoolRevenue(
               finalArray[i].poolAddress,
             ),
       )
       tempArray.push(
         finalArray[i].symbol === 'SPARTA'
           ? '0'
-          : routerContract.callStatic.mapPast30DPoolRevenue(
+          : routerContract.callStatic.pastPoolRevenue(
               finalArray[i].poolAddress,
             ),
       )
