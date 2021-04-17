@@ -611,11 +611,12 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
     }
 
 
+
+
 }
 
-
-.z-index{
-   z-index: 999;
+.z-index {
+    z-index: 999;
 }
 
 .main-panel > .content {
@@ -628,3 +629,73 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
         padding-left: 70px;
     }
 }
+
+
+
+
+
+@media (min-width: 320px) and (max-width: 320px) {
+    .modal-dialog {
+
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0;
+        margin: -110px 0px 0px;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }
+
+
+}
+
+
+
+@media (min-width: 375px) and (max-width: 375px) {
+    .modal-dialog {
+
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0;
+        margin: -140px 0px 0px;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }
+
+
+}
+
+
+@media (min-width: 414px) and (max-width: 414px) {
+    .modal-dialog {
+
+        width: 100% !important;
+        height: 100% !important;
+        padding: 0;
+        margin: -160px 0px 0px;
+    }
+
+    .modal-content {
+        height: auto;
+        min-height: 100%;
+        border-radius: 0;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+

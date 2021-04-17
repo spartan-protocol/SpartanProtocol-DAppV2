@@ -293,9 +293,8 @@ const AssetSelect = (props) => {
           </Col>
         </Row>
       </Row>
-
       <Modal isOpen={showModal} toggle={toggleModal}>
-        <Row className="mt-1">
+        <Row className="mt-1 ">
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
