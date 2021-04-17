@@ -409,7 +409,7 @@ const AssetSelect = (props) => {
                     </InputGroup>
                   </Col>
                 </Row>
-                <Row className="mt-3 mb-3">
+                <Row className="my-3">
                   <Col xs="9" md="9">
                     <p className="text-card">Asset</p>
                   </Col>

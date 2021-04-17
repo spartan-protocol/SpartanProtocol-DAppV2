@@ -625,6 +625,6 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 @media (min-width: 992px) {
     .sidebar-mini .main-panel > .content {
-        padding-left: 0px;
+        padding-left: 70px;
     }
 }
