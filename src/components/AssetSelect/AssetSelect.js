@@ -17,17 +17,17 @@ import {
   InputGroup,
   Input,
   InputGroupAddon,
-  InputGroupText
-} from "reactstrap"
-import classnames from "classnames"
-import { useDispatch } from "react-redux"
-import { usePoolFactory } from "../../store/poolFactory"
-import { formatFromWei } from "../../utils/bigNumber"
-import { watchAsset } from "../../store/web3"
-import ShareLink from "../Share/ShareLink"
-import MetaMask from "../../assets/icons/MetaMask.svg"
-import spartaIcon from "../../assets/img/spartan_blue_small.svg"
-import spartaIconAlt from "../../assets/img/spartan_gold_small.svg"
+  InputGroupText,
+} from 'reactstrap'
+import classnames from 'classnames'
+import { useDispatch } from 'react-redux'
+import { usePoolFactory } from '../../store/poolFactory'
+import { formatFromWei } from '../../utils/bigNumber'
+import { watchAsset } from '../../store/web3'
+import ShareLink from '../Share/ShareLink'
+import MetaMask from '../../assets/icons/MetaMask.svg'
+import spartaIcon from '../../assets/img/spartan_lp.svg'
+import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -155,10 +155,10 @@ const AssetSelect = (props) => {
                       className="mr-n3"
                     />
                     <img
-                      height="27px"
+                      height="20px"
                       src={spartaIcon}
                       alt={`${tempArray[i].symbol} LP token icon`}
-                      className="mr-2"
+                      className="mr-2 mt-3"
                     />
                   </>
                 ),
@@ -186,10 +186,10 @@ const AssetSelect = (props) => {
                       className="mr-n3"
                     />
                     <img
-                      height="27px"
+                      height="20px"
                       src={spartaIconAlt}
                       alt={`${tempArray[i].symbol} synth icon`}
-                      className="mr-2"
+                      className="mr-2 mt-3"
                     />
                   </>
                 ),
@@ -251,10 +251,10 @@ const AssetSelect = (props) => {
                 />
 
                 <img
-                  height="27px"
+                  height="20px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="mr-2"
+                  className="mr-2 mt-3"
                 />
               </>
             )}

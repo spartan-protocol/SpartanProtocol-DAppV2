@@ -7,20 +7,22 @@ import {
   Card,
   CardBody,
   Col,
-  FormGroup,
   Input,
+  InputGroup,
+  InputGroupAddon,
   Nav,
   NavItem,
   NavLink,
   Row,
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
-import ShareIcon from '../../../assets/icons/new.svg'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import MaxBadge from '../../../assets/icons/max.svg'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import {
+  BN,
   convertFromWei,
   convertToWei,
   formatFromWei,
@@ -28,6 +30,7 @@ import {
 import {
   calcLiquidityUnits,
   calcLiquidityUnitsAsym,
+  calcSwapFee,
   calcValueInBase,
   calcValueInToken,
 } from '../../../utils/web3Utils'
@@ -36,8 +39,10 @@ import { useWeb3 } from '../../../store/web3'
 import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import { getPoolContract } from '../../../utils/web3Pool'
+import Approval from '../../../components/Approval/Approval'
 
 const AddLiquidity = () => {
+  const wallet = useWallet()
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
@@ -122,6 +127,12 @@ const AddLiquidity = () => {
     if (activeTab !== tab) setActiveTab(tab)
   }
 
+  const clearInputs = () => {
+    addInput1.value = '0'
+    addInput2.value = '0'
+    addInput3.value = '0'
+  }
+
   //= =================================================================================//
   // 'Add Both' Functions (Re-Factor)
 
@@ -154,6 +165,19 @@ const AddLiquidity = () => {
           poolAdd1?.poolUnits,
         ),
       )
+    }
+    return '0'
+  }
+
+  const getAddSingleSwapFee = () => {
+    if (addInput1 && assetAdd1) {
+      const swapFee = calcSwapFee(
+        convertToWei(BN(addInput1?.value).div(2)),
+        poolAdd1.tokenAmount,
+        poolAdd1.baseAmount,
+        assetAdd1.symbol !== 'SPARTA',
+      )
+      return swapFee
     }
     return '0'
   }
@@ -241,22 +265,6 @@ const AddLiquidity = () => {
                 </NavLink>
               </NavItem>
             </Nav>
-
-            <Row>
-              <Col className="card-body">
-                {' '}
-                <img
-                  src={ShareIcon}
-                  alt="share icon"
-                  style={{
-                    height: '19px',
-                    verticalAlign: 'bottom',
-                    marginRight: '5px',
-                  }}
-                />{' '}
-                You can now swap your BEP20 tokens, LP tokens & Synths
-              </Col>
-            </Row>
             <Row>
               <Col md={12}>
                 <Card
@@ -286,20 +294,39 @@ const AddLiquidity = () => {
                       </div>
                     </Col>
                     <Col className="text-right" xs="6">
-                      <FormGroup className="h-100">
+                      <InputGroup className="h-100">
                         <Input
                           className="text-right h-100 ml-0"
                           type="text"
                           placeholder="0"
                           id="addInput1"
                         />
-                      </FormGroup>
+                        <InputGroupAddon
+                          addonType="append"
+                          role="button"
+                          tabIndex={-1}
+                          onKeyPress={() => clearInputs()}
+                          onClick={() => clearInputs()}
+                        >
+                          <i className="icon-search-bar icon-close icon-light my-auto" />
+                        </InputGroupAddon>
+                      </InputGroup>
                     </Col>
                   </Row>
 
                   {activeTab === '1' && (
                     <>
-                      <Row className="my-3 input-pane">
+                      <Row className="my-2">
+                        <Col xs="4" className="">
+                          <div className="title-card">Input SPARTA</div>
+                        </Col>
+                        <Col xs="8" className="text-right">
+                          <div className="title-card">
+                            Balance: {formatFromWei(assetAdd2.balanceTokens)}
+                          </div>
+                        </Col>
+                      </Row>
+                      <Row className="input-pane">
                         <Col xs="6">
                           <div className="output-card">
                             <AssetSelect
@@ -311,25 +338,23 @@ const AddLiquidity = () => {
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
-                          <FormGroup className="h-100">
+                          <InputGroup className="h-100">
                             <Input
                               className="text-right h-100 ml-0"
                               type="text"
                               placeholder="0"
                               id="addInput2"
                             />
-                          </FormGroup>
-                        </Col>
-                      </Row>
-
-                      <Row>
-                        <Col xs="4" className="">
-                          <div className="title-card">Input SPARTA</div>
-                        </Col>
-                        <Col xs="8" className="text-right">
-                          <div className="title-card">
-                            Balance: {formatFromWei(assetAdd2.balanceTokens)}
-                          </div>
+                            <InputGroupAddon
+                              addonType="append"
+                              role="button"
+                              tabIndex={-1}
+                              onKeyPress={() => clearInputs()}
+                              onClick={() => clearInputs()}
+                            >
+                              <i className="icon-search-bar icon-close icon-light my-auto" />
+                            </InputGroupAddon>
+                          </InputGroup>
                         </Col>
                       </Row>
                     </>
@@ -366,7 +391,7 @@ const AddLiquidity = () => {
                       </div>
                     </Col>
                     <Col className="text-right" xs="6">
-                      <FormGroup className="h-100">
+                      <InputGroup className="h-100">
                         <Input
                           className="text-right h-100 ml-0"
                           type="text"
@@ -374,7 +399,16 @@ const AddLiquidity = () => {
                           id="addInput3"
                           disabled
                         />
-                      </FormGroup>
+                        <InputGroupAddon
+                          addonType="append"
+                          role="button"
+                          tabIndex={-1}
+                          onKeyPress={() => clearInputs()}
+                          onClick={() => clearInputs()}
+                        >
+                          <i className="icon-search-bar icon-close icon-light my-auto" />
+                        </InputGroupAddon>
+                      </InputGroup>
                     </Col>
                   </Row>
                 </Card>
@@ -401,7 +435,10 @@ const AddLiquidity = () => {
                       <div className="title-card">Fee</div>
                     </Col>
                     <Col xs="8" className="text-right">
-                      <div className="title-card">###.## SPARTA</div>
+                      <div className="title-card">
+                        {assetAdd1 && formatFromWei(getAddSingleSwapFee())}{' '}
+                        SPARTA
+                      </div>
                     </Col>
                   </Row>
                 )}
@@ -420,10 +457,18 @@ const AddLiquidity = () => {
             </Row>
             <Row className="text-center">
               <Col xs="12" sm="4">
-                <Button className="w-100 h-100">Approve TOKEN1</Button>
-              </Col>
-              <Col xs="12" sm="4">
-                <Button className="w-100 h-100">Approve TOKEN2</Button>
+                {assetAdd1?.tokenAddress &&
+                  assetAdd1?.tokenAddress !== addr.bnb &&
+                  wallet?.account &&
+                  addInput1?.value && (
+                    <Approval
+                      tokenAddress={assetAdd1?.tokenAddress}
+                      symbol={assetAdd1?.symbol}
+                      walletAddress={wallet?.account}
+                      contractAddress={addr.router}
+                      txnAmount={convertToWei(addInput1?.value)}
+                    />
+                  )}
               </Col>
               <Col xs="12" sm="4">
                 <Button
@@ -448,6 +493,20 @@ const AddLiquidity = () => {
                 >
                   Join Pool
                 </Button>
+              </Col>
+              <Col xs="12" sm="4">
+                {assetAdd2?.tokenAddress &&
+                  assetAdd2?.tokenAddress !== addr.bnb &&
+                  wallet?.account &&
+                  addInput2?.value && (
+                    <Approval
+                      tokenAddress={assetAdd2?.tokenAddress}
+                      symbol={assetAdd2?.symbol}
+                      walletAddress={wallet?.account}
+                      contractAddress={addr.router}
+                      txnAmount={convertToWei(addInput2?.value)}
+                    />
+                  )}
               </Col>
             </Row>
           </CardBody>
