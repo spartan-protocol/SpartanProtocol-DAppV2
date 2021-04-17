@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 import {
-  Breadcrumb,
   Col,
   Nav,
   NavItem,
@@ -13,7 +12,6 @@ import {
 
 import classnames from 'classnames'
 import SharePool from '../../../components/Share/SharePool'
-import Wallet from '../../../components/Wallet/Wallet'
 import AddLiquidity from './AddLiquidity'
 import RemoveLiquidity from './RemoveLiquidity'
 import ZapLiquidity from './ZapLiquidity'
@@ -29,20 +27,19 @@ const Liquidity2 = () => {
   return (
     <>
       <div className="content">
-        <Breadcrumb>
-          <Col md={8}>Liquidity</Col>
-          <Col md={2}>
+        <Row className="card-body justify-content-center">
+          <Col xs="6" xl="5">
+            <h2 className="d-inline text-title ml-1">Liquidity</h2>
+          </Col>
+          <Col xs="6" xl="4">
             <SharePool />
           </Col>
-          <Col md={2}>
-            <Wallet />
-          </Col>
-        </Breadcrumb>
+        </Row>
 
-        <Row>
-          <Col md={8}>
+        <Row className="justify-content-center">
+          <Col xs="12" xl="9">
             <Row>
-              <Col md={9}>
+              <Col xs="12">
                 <Nav tabs className="nav-tabs-custom">
                   <NavItem>
                     <NavLink
@@ -51,7 +48,7 @@ const Liquidity2 = () => {
                         toggle('1')
                       }}
                     >
-                      <span className="d-none d-sm-block">Add</span>
+                      <span className="">Add</span>
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -61,7 +58,7 @@ const Liquidity2 = () => {
                         toggle('2')
                       }}
                     >
-                      <span className="d-none d-sm-block">Remove</span>
+                      <span className="">Remove</span>
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -71,7 +68,7 @@ const Liquidity2 = () => {
                         toggle('3')
                       }}
                     >
-                      <span className="d-none d-sm-block">Zap</span>
+                      <span className="">Zap</span>
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -81,7 +78,7 @@ const Liquidity2 = () => {
                         toggle('4')
                       }}
                     >
-                      <span className="d-none d-sm-block">Bond</span>
+                      <span className="">Bond</span>
                     </NavLink>
                   </NavItem>
                 </Nav>
