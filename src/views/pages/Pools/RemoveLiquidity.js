@@ -27,15 +27,16 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
-  calcLiquidityUnits,
-  calcLiquidityUnitsAsym,
+  calcLiquidityHoldings,
   calcSwapFee,
-  calcValueInBase,
-  calcValueInToken,
+  calcSwapOutput,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
-import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
+import {
+  routerRemoveLiq,
+  routerRemoveLiqAsym,
+} from '../../../store/router/actions'
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import { getPoolContract } from '../../../utils/web3Pool'
 
@@ -132,16 +133,27 @@ const AddLiquidity = () => {
   }
 
   //= =================================================================================//
-  // 'Add Both' Functions (Re-Factor)
+  // 'Remove Both' Functions (Re-Factor to just getOutput)
 
-  const getAddBothOutputLP = () => {
+  const getRemoveTokenOutput = () => {
     if (removeInput1 && removeInput2 && assetRemove1) {
       return convertFromWei(
-        calcLiquidityUnits(
-          convertToWei(removeInput2?.value),
-          convertToWei(removeInput1?.value),
-          assetRemove1?.baseAmount,
+        calcLiquidityHoldings(
           assetRemove1?.tokenAmount,
+          convertToWei(removeInput1?.value),
+          assetRemove1?.poolUnits,
+        ),
+      )
+    }
+    return '0'
+  }
+
+  const getRemoveSpartaOutput = () => {
+    if (removeInput1 && removeInput2 && assetRemove1) {
+      return convertFromWei(
+        calcLiquidityHoldings(
+          assetRemove1?.baseAmount,
+          convertToWei(removeInput1?.value),
           assetRemove1?.poolUnits,
         ),
       )
@@ -150,32 +162,49 @@ const AddLiquidity = () => {
   }
 
   //= =================================================================================//
-  // 'Add Single' Functions (Re-Factor)
+  // 'Remove Single' Functions (Re-Factor)
 
-  const getAddSingleOutputLP = () => {
+  const getRemoveOneSwapFee = () => {
     if (removeInput1 && assetRemove1) {
-      return convertFromWei(
-        calcLiquidityUnitsAsym(
-          convertToWei(removeInput1?.value),
-          assetRemove1.tokenAddress === addr.sparta
-            ? poolRemove1?.baseAmount
-            : poolRemove1?.tokenAmount,
-          poolRemove1?.poolUnits,
+      const swapFee = calcSwapFee(
+        assetRemove1?.tokenAddress === addr.sparta
+          ? convertToWei(getRemoveTokenOutput())
+          : convertToWei(getRemoveSpartaOutput()),
+        BN(poolRemove1?.tokenAmount).minus(
+          convertToWei(getRemoveTokenOutput()),
         ),
+        BN(poolRemove1?.baseAmount).minus(
+          convertToWei(getRemoveSpartaOutput()),
+        ),
+        assetRemove1?.symbol === 'SPARTA',
+      )
+      return swapFee
+    }
+    return '0'
+  }
+
+  const getRemoveOneSwapOutput = () => {
+    if (removeInput1 && assetRemove1) {
+      return calcSwapOutput(
+        assetRemove1?.tokenAddress === addr.sparta
+          ? convertToWei(getRemoveTokenOutput())
+          : convertToWei(getRemoveSpartaOutput()),
+        poolRemove1?.tokenAmount,
+        poolRemove1?.baseAmount,
+        assetRemove1?.symbol === 'SPARTA',
       )
     }
     return '0'
   }
 
-  const getAddSingleSwapFee = () => {
+  const getRemoveOneFinalOutput = () => {
     if (removeInput1 && assetRemove1) {
-      const swapFee = calcSwapFee(
-        convertToWei(BN(removeInput1?.value).div(2)),
-        poolRemove1.tokenAmount,
-        poolRemove1.baseAmount,
-        assetRemove1.symbol !== 'SPARTA',
+      const result = BN(getRemoveOneSwapOutput()).plus(
+        assetRemove1?.symbol === 'SPARTA'
+          ? BN(convertToWei(getRemoveSpartaOutput()))
+          : BN(convertToWei(getRemoveTokenOutput())),
       )
-      return swapFee
+      return result
     }
     return '0'
   }
@@ -183,25 +212,13 @@ const AddLiquidity = () => {
   //= =================================================================================//
   // General Functions
 
-  const handleInputChange = (input, toBase) => {
-    if (toBase && removeInput1 && removeInput2) {
-      removeInput2.value = calcValueInBase(
-        assetRemove1.tokenAmount,
-        assetRemove1.baseAmount,
-        input,
-      )
-    } else if (removeInput1 && removeInput2) {
-      removeInput1.value = calcValueInToken(
-        assetRemove1.tokenAmount,
-        assetRemove1.baseAmount,
-        input,
-      )
-    }
+  const handleInputChange = () => {
     if (activeTab === '1' && removeInput1 && removeInput2 && removeInput3) {
-      removeInput3.value = getAddBothOutputLP()
+      removeInput2.value = getRemoveTokenOutput()
+      removeInput3.value = getRemoveSpartaOutput()
     }
-    if (activeTab === '2' && removeInput1 && removeInput3) {
-      removeInput3.value = getAddSingleOutputLP()
+    if (activeTab === '2' && removeInput1 && removeInput2) {
+      removeInput2.value = convertFromWei(getRemoveOneFinalOutput())
     }
   }
 
@@ -229,9 +246,6 @@ const AddLiquidity = () => {
       } else {
         removeInput1.value = '0'
         handleInputChange()
-      }
-      if (removeInput2) {
-        removeInput2.value = '0'
       }
     }
   }, [
@@ -321,7 +335,7 @@ const AddLiquidity = () => {
                   <Row>
                     <Col xs="4" className="">
                       <div className="title-card">
-                        Input {assetRemove1.symbol}
+                        Output {assetRemove1.symbol}
                       </div>
                     </Col>
                     <Col xs="8" className="text-right">
@@ -420,17 +434,12 @@ const AddLiquidity = () => {
 
                 <Row className="mb-2">
                   <Col xs="4" className="">
-                    <div className="title-card">Add Liq</div>
+                    <div className="title-card">Remove Liq</div>
                   </Col>
                   <Col xs="8" className="text-right">
                     <div className="title-card">
-                      {removeInput1?.value} {assetRemove1?.symbol}
+                      ~{removeInput1?.value} {poolRemove1?.symbol}-SPP
                     </div>
-                    {activeTab === '1' && (
-                      <div className="title-card">
-                        {removeInput2?.value} {assetRemove2?.symbol}
-                      </div>
-                    )}
                   </Col>
                 </Row>
 
@@ -441,8 +450,7 @@ const AddLiquidity = () => {
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="title-card">
-                        {assetRemove1 && formatFromWei(getAddSingleSwapFee())}{' '}
-                        SPARTA
+                        {formatFromWei(getRemoveOneSwapFee())} SPARTA
                       </div>
                     </Col>
                   </Row>
@@ -454,8 +462,13 @@ const AddLiquidity = () => {
                   </Col>
                   <Col xs="8" className="text-right">
                     <div className="title-card">
-                      {removeInput3?.value} {poolRemove1?.symbol}-SPP
+                      ~{removeInput2?.value} {assetRemove1?.symbol}
                     </div>
+                    {activeTab === '1' && (
+                      <div className="title-card">
+                        ~{removeInput3?.value} SPARTA
+                      </div>
+                    )}
                   </Col>
                 </Row>
               </Col>
@@ -468,22 +481,21 @@ const AddLiquidity = () => {
                   onClick={() =>
                     activeTab === '1'
                       ? dispatch(
-                          routerAddLiq(
-                            convertToWei(removeInput2.value),
+                          routerRemoveLiq(
                             convertToWei(removeInput1.value),
-                            assetRemove1.tokenAddress,
+                            poolRemove1.tokenAddress,
                           ),
                         )
                       : dispatch(
-                          routerAddLiqAsym(
+                          routerRemoveLiqAsym(
                             convertToWei(removeInput1.value),
-                            assetRemove1.tokenAddress === addr.sparta,
+                            assetRemove2.tokenAddress === addr.sparta,
                             poolRemove1.tokenAddress,
                           ),
                         )
                   }
                 >
-                  Join Pool
+                  Remove Liq
                 </Button>
               </Col>
               <Col xs="12" sm="4" />

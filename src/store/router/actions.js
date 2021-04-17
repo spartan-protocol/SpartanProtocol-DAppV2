@@ -84,7 +84,7 @@ export const routerAddLiq = (inputBase, inputToken, token, justCheck) => async (
   }
 }
 
-export const routerRemoveLiq = (basisPoints, token, justCheck) => async (
+export const routerRemoveLiq = (units, token, justCheck) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -93,14 +93,14 @@ export const routerRemoveLiq = (basisPoints, token, justCheck) => async (
   try {
     let liquidity = {}
     if (justCheck) {
-      liquidity = await contract.callStatic.removeLiquidity(basisPoints, token)
+      liquidity = await contract.callStatic.removeLiquidityExact(units, token)
     } else {
       const gPrice = await getProviderGasPrice()
       // const gLimit = await contract.estimateGas.removeLiquidity(
       //   basisPoints,
       //   token,
       // )
-      liquidity = await contract.removeLiquidity(basisPoints, token, {
+      liquidity = await contract.removeLiquidityExact(units, token, {
         gasPrice: gPrice,
         // gasLimit: gLimit,
       })
