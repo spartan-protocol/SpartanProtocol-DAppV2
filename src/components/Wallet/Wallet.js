@@ -35,31 +35,22 @@ const Wallet = ({ coins }) => (
       >
         <DropdownItem
           className="text-center"
-          href="#pablo"
+          href="#"
           onClick={(e) => e.preventDefault()}
         >
           Available Balance
           <DropdownItem divider />
         </DropdownItem>
-        {coins
-          ?.filter((coin) => Math.floor(coin.tokenAmount))
-          .map((coin) => (
-            <>
-              <DropdownItem href="">
-                {coin.symbol} :{' '}
-                <span className="float-right">
-                  {formatFromWei(coin.tokenAmount)}
-                </span>
-              </DropdownItem>
-            </>
-          ))}
-        <DropdownItem divider />
-        <DropdownItem
-          className="text-primary text-center"
-          onClick={(e) => e.preventDefault()}
-        >
-          View all assets
-        </DropdownItem>
+        {coins?.map((coin) => (
+          <>
+            <DropdownItem href="">
+              {coin.symbol} :{' '}
+              <span className="float-right">
+                {formatFromWei(coin.balanceTokens)}
+              </span>
+            </DropdownItem>
+          </>
+        ))}
       </DropdownMenu>
     </UncontrolledButtonDropdown>
   </>

@@ -776,7 +776,6 @@
     -webkit-overflow-scrolling: touch;
   }
 
-
   .sidebar-mini {
     .visible-on-sidebar-regular {
       display: none !important;
@@ -853,7 +852,11 @@
         opacity: 0;
       }
 
-
+      + .main-panel {
+        > .content {
+          padding-left: 280px;
+        }
+      }
     }
 
     .main-panel {
