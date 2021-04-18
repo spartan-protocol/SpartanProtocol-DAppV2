@@ -758,7 +758,7 @@
     width: 100%;
 
     .content {
-      padding-left: 30px;
+      padding-left: 70px;
     }
   }
 }
@@ -850,12 +850,6 @@
 
       .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-mini-icon {
         opacity: 0;
-      }
-
-      + .main-panel {
-        > .content {
-          padding-left: 280px;
-        }
       }
     }
 

@@ -85,13 +85,13 @@ const Approval = ({
           {alert}
           <Button
             className="btn-fill w-100 h-100"
-            color="primary"
+            color="default"
             onClick={warningWithConfirmMessage}
           >
             <i className="icon-extra-small icon-lock icon-dark align-middle" />
             <i className="icon-extra-small icon-close icon-light align-middle" />
             <br />
-            {symbol} Allow!
+            Approve {symbol}
           </Button>
         </>
       )}

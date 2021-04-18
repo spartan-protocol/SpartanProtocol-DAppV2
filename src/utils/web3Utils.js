@@ -66,8 +66,8 @@ export const calcAsymmetricShare = (input, pool, toBase) => {
   const part4 = u.times(u)
   const numerator = part1.times(part2.minus(part3).plus(part4))
   const part5 = U.times(U).times(U)
-  const globalDetails = numerator.div(part5)
-  return globalDetails
+  const result = numerator.div(part5)
+  return result
 }
 
 // Calculate liquidity share
