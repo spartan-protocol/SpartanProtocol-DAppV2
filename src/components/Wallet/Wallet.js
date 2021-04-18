@@ -31,6 +31,7 @@ const Wallet = ({ coins }) => (
         style={{
           width: '100%',
           top: '30px !important',
+          backgroundColor: '#000',
         }}
       >
         <DropdownItem
