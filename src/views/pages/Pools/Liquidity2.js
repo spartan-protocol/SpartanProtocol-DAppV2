@@ -14,7 +14,7 @@ import classnames from 'classnames'
 import SharePool from '../../../components/Share/SharePool'
 import AddLiquidity from './AddLiquidity'
 import RemoveLiquidity from './RemoveLiquidity'
-import ZapLiquidity from './ZapLiquidity'
+// import ZapLiquidity from './ZapLiquidity'
 import BondLiquidity from './BondLiquidity'
 
 const Liquidity2 = () => {
@@ -61,7 +61,7 @@ const Liquidity2 = () => {
                       <span className="">Remove</span>
                     </NavLink>
                   </NavItem>
-                  <NavItem>
+                  {/* <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === '3' })}
                       onClick={() => {
@@ -70,7 +70,7 @@ const Liquidity2 = () => {
                     >
                       <span className="">Zap</span>
                     </NavLink>
-                  </NavItem>
+                  </NavItem> */}
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === '4' })}
@@ -95,11 +95,11 @@ const Liquidity2 = () => {
                   <RemoveLiquidity />
                 </TabPane>
               )}
-              {activeTab === '3' && (
+              {/* {activeTab === '3' && (
                 <TabPane tabId="3" className="p-3">
                   <ZapLiquidity />
                 </TabPane>
-              )}
+              )} */}
               {activeTab === '4' && (
                 <TabPane tabId="4" className="p-3">
                   <BondLiquidity />
