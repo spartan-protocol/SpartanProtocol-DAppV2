@@ -128,9 +128,15 @@ const AddLiquidity = () => {
   }
 
   const clearInputs = () => {
-    addInput1.value = '0'
-    addInput2.value = '0'
-    addInput3.value = '0'
+    if (addInput1) {
+      addInput1.value = '0'
+    }
+    if (addInput2) {
+      addInput2.value = '0'
+    }
+    if (addInput3) {
+      addInput3.value = '0'
+    }
   }
 
   //= =================================================================================//

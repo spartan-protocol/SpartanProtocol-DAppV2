@@ -94,7 +94,11 @@ const AddLiquidity = () => {
           asset1 && asset1.tokenAddress !== addr.sparta
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset2 = asset2 || { tokenAddress: addr.sparta }
+        asset2 =
+          asset2.tokenAddress === asset1.tokenAddress ||
+          asset2.tokenAddress === addr.sparta
+            ? asset2
+            : { tokenAddress: addr.sparta }
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
         asset2 = getItemFromArray(asset2, poolFactory.finalArray)
@@ -127,21 +131,27 @@ const AddLiquidity = () => {
   }
 
   const clearInputs = () => {
-    removeInput1.value = '0'
-    removeInput2.value = '0'
-    removeInput3.value = '0'
+    if (removeInput1) {
+      removeInput1.value = '0'
+    }
+    if (removeInput2) {
+      removeInput2.value = '0'
+    }
+    if (removeInput3) {
+      removeInput3.value = '0'
+    }
   }
 
   //= =================================================================================//
   // 'Remove Both' Functions (Re-Factor to just getOutput)
 
   const getRemoveTokenOutput = () => {
-    if (removeInput1 && removeInput2 && assetRemove1) {
+    if (removeInput1 && removeInput2 && poolRemove1) {
       return convertFromWei(
         calcLiquidityHoldings(
-          assetRemove1?.tokenAmount,
+          poolRemove1?.tokenAmount,
           convertToWei(removeInput1?.value),
-          assetRemove1?.poolUnits,
+          poolRemove1?.poolUnits,
         ),
       )
     }
@@ -149,12 +159,12 @@ const AddLiquidity = () => {
   }
 
   const getRemoveSpartaOutput = () => {
-    if (removeInput1 && removeInput2 && assetRemove1) {
+    if (removeInput1 && removeInput2 && poolRemove1) {
       return convertFromWei(
         calcLiquidityHoldings(
-          assetRemove1?.baseAmount,
+          poolRemove1?.baseAmount,
           convertToWei(removeInput1?.value),
-          assetRemove1?.poolUnits,
+          poolRemove1?.poolUnits,
         ),
       )
     }
@@ -176,7 +186,7 @@ const AddLiquidity = () => {
         BN(poolRemove1?.baseAmount).minus(
           convertToWei(getRemoveSpartaOutput()),
         ),
-        assetRemove1?.symbol === 'SPARTA',
+        assetRemove1?.tokenAddress === addr.sparta,
       )
       return swapFee
     }
@@ -189,9 +199,13 @@ const AddLiquidity = () => {
         assetRemove1?.tokenAddress === addr.sparta
           ? convertToWei(getRemoveTokenOutput())
           : convertToWei(getRemoveSpartaOutput()),
-        poolRemove1?.tokenAmount,
-        poolRemove1?.baseAmount,
-        assetRemove1?.symbol === 'SPARTA',
+        BN(poolRemove1?.tokenAmount).minus(
+          convertToWei(getRemoveTokenOutput()),
+        ),
+        BN(poolRemove1?.baseAmount).minus(
+          convertToWei(getRemoveSpartaOutput()),
+        ),
+        assetRemove1?.tokenAddress === addr.sparta,
       )
     }
     return '0'
@@ -200,7 +214,7 @@ const AddLiquidity = () => {
   const getRemoveOneFinalOutput = () => {
     if (removeInput1 && assetRemove1) {
       const result = BN(getRemoveOneSwapOutput()).plus(
-        assetRemove1?.symbol === 'SPARTA'
+        assetRemove1?.tokenAddress === addr.sparta
           ? BN(convertToWei(getRemoveSpartaOutput()))
           : BN(convertToWei(getRemoveTokenOutput())),
       )
@@ -489,7 +503,7 @@ const AddLiquidity = () => {
                       : dispatch(
                           routerRemoveLiqAsym(
                             convertToWei(removeInput1.value),
-                            assetRemove2.tokenAddress === addr.sparta,
+                            assetRemove1.tokenAddress === addr.sparta,
                             poolRemove1.tokenAddress,
                           ),
                         )
