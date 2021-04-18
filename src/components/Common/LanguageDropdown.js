@@ -71,6 +71,8 @@ const LanguageDropdown = () => {
           <i className="icon-small icon-lang icon-dark m-0 mt-1" />
         </DropdownToggle>
         <DropdownMenu className="language-switch" right>
+          <DropdownItem header >Language</DropdownItem>
+
           <DropdownItem
             tag="a"
             href="#"

@@ -630,3 +630,14 @@ input:focus, textarea:focus, select:focus{
     }
 
 }
+
+.language-switch{
+    background-color: #1D171F;
+}
+
+.dropdown-header{
+    font-family: Kreon;
+    color: white !important;
+    text-transform: capitalize;
+
+}
