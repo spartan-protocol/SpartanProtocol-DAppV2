@@ -88,10 +88,10 @@ const Approval = ({
             color="default"
             onClick={warningWithConfirmMessage}
           >
-            <i className="icon-extra-small icon-world icon-dark align-middle" />
+            <i className="icon-extra-small icon-lock icon-dark align-middle" />
             <i className="icon-extra-small icon-close icon-light align-middle" />
             <br />
-            {symbol} Approve transaction
+            Approve {symbol}
           </Button>
         </>
       )}

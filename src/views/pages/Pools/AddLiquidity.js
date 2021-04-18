@@ -93,10 +93,7 @@ const AddLiquidity = () => {
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
 
         asset1 = asset1 || { tokenAddress: addr.bnb }
-        asset3 =
-          asset1.tokenAddress !== addr.sparta
-            ? asset1
-            : { tokenAddress: addr.bnb }
+        asset3 = asset1.tokenAddress !== addr.sparta ? asset1 : asset3
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
         asset3 = getItemFromArray(asset3, poolFactory.finalArray)
