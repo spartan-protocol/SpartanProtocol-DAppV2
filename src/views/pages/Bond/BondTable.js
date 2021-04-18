@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from 'react'
 // react plugin for creating notifications over the dashboard
 

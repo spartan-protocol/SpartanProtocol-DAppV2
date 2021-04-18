@@ -1,26 +1,25 @@
-/* eslint-disable*/
-import Dashboard from './components/Dashboard/Dashboard'
+// import Dashboard from './components/Dashboard/Dashboard'
 import PoolsOverview from './views/pages/Pools/Overview'
 import Dao from './views/pages/Dao/Overview'
 import Liquidity2 from './views/pages/Pools/Liquidity2'
 import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
-import Loaders from './views/pages/Samples/Loaders'
-import Icons from './views/pages/Samples/Icons'
-import Notifications from './views/pages/Samples/Notifications'
-import Buttons from './views/pages/Samples/Buttons'
-import Alerts from './views/pages/Samples/Alerts'
-import Typography from './views/pages/Samples/Typography'
-import Grid from './views/pages/Samples/Grid'
-import ReactTables from './views/pages/Samples/ReactTables'
-import Forms from './views/pages/Samples/Forms'
-import ExtendedForms from './views/pages/Samples/ExtendedForms'
-import Panels from './views/pages/Samples/Panels'
-import Tiles from './views/pages/Samples/Tiles'
-import Utils from './utils/Utils'
-import Tabs from './views/pages/Samples/Tabs'
-import Share from './views/pages/Samples/Share'
-import SearchModal from './views/pages/Samples/SearchModal'
+// import Loaders from './views/pages/Samples/Loaders'
+// import Icons from './views/pages/Samples/Icons'
+// import Notifications from './views/pages/Samples/Notifications'
+// import Buttons from './views/pages/Samples/Buttons'
+// import Alerts from './views/pages/Samples/Alerts'
+// import Typography from './views/pages/Samples/Typography'
+// import Grid from './views/pages/Samples/Grid'
+// import ReactTables from './views/pages/Samples/ReactTables'
+// import Forms from './views/pages/Samples/Forms'
+// import ExtendedForms from './views/pages/Samples/ExtendedForms'
+// import Panels from './views/pages/Samples/Panels'
+// import Tiles from './views/pages/Samples/Tiles'
+// import Utils from './utils/Utils'
+// import Tabs from './views/pages/Samples/Tabs'
+// import Share from './views/pages/Samples/Share'
+// import SearchModal from './views/pages/Samples/SearchModal'
 
 const routes = [
   // {
@@ -69,7 +68,6 @@ const routes = [
     component: Dao,
     layout: '/dapp',
   },
-
 
   // {
   //   collapse: true,

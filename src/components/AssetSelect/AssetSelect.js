@@ -1,36 +1,28 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable*/
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 import {
   Button,
   Modal,
   Row,
   Col,
-  Card,
-  CardHeader,
-  CardTitle,
   Nav,
   NavItem,
   NavLink,
-  CardBody,
   InputGroup,
   Input,
   InputGroupAddon,
-  InputGroupText
-} from "reactstrap"
-import classnames from "classnames"
-import { useDispatch } from "react-redux"
-import { usePoolFactory } from "../../store/poolFactory"
-import { formatFromWei } from "../../utils/bigNumber"
-import { watchAsset } from "../../store/web3"
-import ShareLink from "../Share/ShareLink"
+  InputGroupText,
+} from 'reactstrap'
+import classnames from 'classnames'
+import { useDispatch } from 'react-redux'
+import { usePoolFactory } from '../../store/poolFactory'
+import { formatFromWei } from '../../utils/bigNumber'
+import { watchAsset } from '../../store/web3'
+import ShareLink from '../Share/ShareLink'
 // import MetaMask from '../../assets/icons/metamask.svg'
-import spartaIcon from "../../assets/img/spartan_lp.svg"
-import spartaIconAlt from "../../assets/img/spartan_synth.svg"
-import ModalHeader from "react-bootstrap/ModalHeader"
-import ModalBody from "reactstrap/es/ModalBody"
-import ModalFooter from "reactstrap/es/ModalFooter"
+import spartaIcon from '../../assets/img/spartan_lp.svg'
+import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -45,7 +37,7 @@ const AssetSelect = (props) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
 
-  const [activeTab, setActiveTab] = useState("all")
+  const [activeTab, setActiveTab] = useState('all')
   const poolFactory = usePoolFactory()
 
   const toggleModal = () => {
@@ -56,25 +48,25 @@ const AssetSelect = (props) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
 
-  const searchInput = document.getElementById("searchInput")
+  const searchInput = document.getElementById('searchInput')
 
   const clearSearch = () => {
-    searchInput.value = ""
+    searchInput.value = ''
   }
 
   const addSelection = (asset) => {
     const tempAsset = poolFactory.finalLpArray.filter(
-      (i) => i.tokenAddress === asset.address
+      (i) => i.tokenAddress === asset.address,
     )
     window.localStorage.setItem(
       `assetSelected${props.priority}`,
-      JSON.stringify(tempAsset[0])
+      JSON.stringify(tempAsset[0]),
     )
     window.localStorage.setItem(`assetType${props.priority}`, asset.type)
   }
 
   const selectedItem = JSON.parse(
-    window.localStorage.getItem(`assetSelected${props.priority}`)
+    window.localStorage.getItem(`assetSelected${props.priority}`),
   )
 
   const selectedType = window.localStorage.getItem(`assetType${props.priority}`)
@@ -89,7 +81,7 @@ const AssetSelect = (props) => {
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
-            props.whiteList.find((item) => item === asset.tokenAddress)
+            props.whiteList.find((item) => item === asset.tokenAddress),
           )
         }
 
@@ -97,16 +89,16 @@ const AssetSelect = (props) => {
           tempArray = tempArray.filter(
             (asset) =>
               props.blackList.find((item) => asset.tokenAddress === item) ===
-              undefined
+              undefined,
           )
         }
 
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
-          if (props.filter?.includes("sparta")) {
-            if (tempArray[i].symbol === "SPARTA") {
+          if (props.filter?.includes('sparta')) {
+            if (tempArray[i].symbol === 'SPARTA') {
               finalArray.push({
-                type: "token",
+                type: 'token',
                 icon: (
                   <img
                     height="35px"
@@ -119,15 +111,15 @@ const AssetSelect = (props) => {
                 symbol: tempArray[i].symbol,
                 balance: tempArray[i].balanceTokens,
                 address: tempArray[i].tokenAddress,
-                actualAddr: tempArray[i].tokenAddress
+                actualAddr: tempArray[i].tokenAddress,
               })
             }
           }
 
           // Add asset to array
-          if (props.filter?.includes("token")) {
+          if (props.filter?.includes('token')) {
             finalArray.push({
-              type: "token",
+              type: 'token',
               icon: (
                 <img
                   height="35px"
@@ -140,15 +132,15 @@ const AssetSelect = (props) => {
               symbol: tempArray[i].symbol,
               balance: tempArray[i].balanceTokens,
               address: tempArray[i].tokenAddress,
-              actualAddr: tempArray[i].tokenAddress
+              actualAddr: tempArray[i].tokenAddress,
             })
           }
 
           // Add LP token to array
-          if (props.filter?.includes("pool")) {
+          if (props.filter?.includes('pool')) {
             if (tempArray[i].poolAddress) {
               finalArray.push({
-                type: "pool",
+                type: 'pool',
                 icon: (
                   <>
                     <img
@@ -169,16 +161,16 @@ const AssetSelect = (props) => {
                 symbol: `${tempArray[i].symbol}-SPP`,
                 balance: tempArray[i].balanceLPs,
                 address: tempArray[i].tokenAddress,
-                actualAddr: tempArray[i].poolAddress
+                actualAddr: tempArray[i].poolAddress,
               })
             }
           }
 
           // Add synth to array
-          if (props.filter?.includes("synth")) {
+          if (props.filter?.includes('synth')) {
             if (tempArray[i].synthAddress) {
               finalArray.push({
-                type: "synth",
+                type: 'synth',
                 iconUrl: tempArray[i].symbolUrl,
                 icon: (
                   <>
@@ -199,7 +191,7 @@ const AssetSelect = (props) => {
                 symbol: `${tempArray[i].symbol}-SPS`,
                 balance: tempArray[i].balanceSynths,
                 address: tempArray[i].tokenAddress,
-                actualAddr: tempArray[i].synthAddress
+                actualAddr: tempArray[i].synthAddress,
               })
             }
           }
@@ -208,7 +200,7 @@ const AssetSelect = (props) => {
           finalArray = finalArray.filter((asset) =>
             asset.symbol
               .toLowerCase()
-              .includes(searchInput.value.toLowerCase())
+              .includes(searchInput.value.toLowerCase()),
           )
         }
         finalArray = finalArray.sort((a, b) => b.balance - a.balance)
@@ -221,21 +213,21 @@ const AssetSelect = (props) => {
     props.blackList,
     props.filter,
     props.whiteList,
-    searchInput?.value
+    searchInput?.value,
   ])
 
   return (
     <>
       <Row
         onClick={() =>
-          !props.disabled ? toggleModal() : console.log("button disabled")
+          !props.disabled ? toggleModal() : console.log('button disabled')
         }
         role="button"
         className="justify-content-left"
       >
         <Row className="select-box h-auto" name="singleSelect">
           <Col xs="12">
-            {selectedType === "token" && (
+            {selectedType === 'token' && (
               <img
                 height="35px"
                 src={selectedItem?.symbolUrl}
@@ -244,7 +236,7 @@ const AssetSelect = (props) => {
               />
             )}
 
-            {selectedType === "pool" && (
+            {selectedType === 'pool' && (
               <>
                 <img
                   height="35px"
@@ -262,7 +254,7 @@ const AssetSelect = (props) => {
               </>
             )}
 
-            {selectedType === "synth" && (
+            {selectedType === 'synth' && (
               <>
                 <img
                   height="35px"
@@ -282,8 +274,8 @@ const AssetSelect = (props) => {
 
             <span className="d-none d-lg-inline-block mr-2">
               {selectedItem && selectedItem?.symbol}
-              {selectedType === "pool" && "-SPP"}
-              {selectedType === "synth" && "-SPS"}
+              {selectedType === 'pool' && '-SPP'}
+              {selectedType === 'synth' && '-SPS'}
             </span>
 
             {!props.disabled && (
@@ -292,26 +284,22 @@ const AssetSelect = (props) => {
           </Col>
           <Col xs="12" className="d-block d-lg-none ml-3">
             {selectedItem && selectedItem?.symbol}
-            {selectedType === "pool" && "-SPP"}
-            {selectedType === "synth" && "-SPS"}
+            {selectedType === 'pool' && '-SPP'}
+            {selectedType === 'synth' && '-SPS'}
           </Col>
         </Row>
       </Row>
       <Modal isOpen={showModal} toggle={toggleModal}>
-          <Row className="card-body">
-            <Col  xs="10">
-              <h3 className="ml-2 modal-title">Select an asset</h3>
-            </Col>
-            <Col xs="2">
-              <Button
-
-                onClick={toggleModal}
-                className="btn btn-transparent mt-4"
-              >
-                <i className="icon-small icon-close" />
-              </Button>
-            </Col>
-          </Row>
+        <Row className="card-body">
+          <Col xs="10">
+            <h3 className="ml-2 modal-title">Select an asset</h3>
+          </Col>
+          <Col xs="2">
+            <Button onClick={toggleModal} className="btn btn-transparent mt-4">
+              <i className="icon-small icon-close" />
+            </Button>
+          </Col>
+        </Row>
         <Nav className="nav-tabs-custom card-body" pills>
           <NavItem>
             <NavLink
@@ -325,8 +313,7 @@ const AssetSelect = (props) => {
               All
             </NavLink>
           </NavItem>
-          {assetArray.filter((asset) => asset.type === 'token').length >
-          0 && (
+          {assetArray.filter((asset) => asset.type === 'token').length > 0 && (
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === 'token' })}
@@ -338,8 +325,7 @@ const AssetSelect = (props) => {
               </NavLink>
             </NavItem>
           )}
-          {assetArray.filter((asset) => asset.type === 'pool').length >
-          0 && (
+          {assetArray.filter((asset) => asset.type === 'pool').length > 0 && (
             <NavItem>
               <NavLink
                 className={classnames({
@@ -353,8 +339,7 @@ const AssetSelect = (props) => {
               </NavLink>
             </NavItem>
           )}
-          {assetArray.filter((asset) => asset.type === 'synth').length >
-          0 && (
+          {assetArray.filter((asset) => asset.type === 'synth').length > 0 && (
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === 'synth' })}
@@ -404,7 +389,7 @@ const AssetSelect = (props) => {
             </InputGroup>
           </Col>
         </Row>
-        <div class="modal-body">
+        <div className="modal-body">
           <Row className="mt-n5">
             <Col xs="9" md="9">
               <p className="text-card">Asset</p>
@@ -414,80 +399,7 @@ const AssetSelect = (props) => {
             </Col>
           </Row>
           {activeTab === 'all' &&
-          assetArray.map((asset) => (
-            <Row key={asset.symbol} className="mb-3 output-card mr-2">
-              <Col xs="4" md="3" className="p-0 pl-2">
-                <div
-                  role="button"
-                  onClick={() => {
-                    addSelection(asset)
-                    toggleModal()
-                  }}
-                >
-                  {asset.icon}
-                </div>
-              </Col>
-
-              <Col xs="5" md="5" className="align-items-center p-0">
-                <Row>
-                  <Col xs="12" className="float-left ml-n4">
-                    <div
-                      role="button"
-                      onClick={() => {
-                        addSelection(asset)
-                        toggleModal()
-                      }}
-                    >
-                      {asset.symbol}
-                    </div>
-                    <div className="description">
-                      {formatFromWei(asset.balance)}
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-
-              <Col xs="3" md="3" className="text-right p-0 pr-2">
-                <Row>
-                  <Col xs="6">
-                    <ShareLink
-                      url={asset.actualAddr}
-                      notificationLocation="tc"
-                    >
-                      <i className="icon-small icon-copy ml-2" />
-                    </ShareLink>
-                  </Col>
-                  <Col xs="6">
-                    <div
-                      role="button"
-                      onClick={() => {
-                        dispatch(
-                          watchAsset(
-                            asset.actualAddr,
-                            asset.symbol.includes('-')
-                              ? asset.symbol.split('-')[0] +
-                              asset.symbol
-                                .split('-')[1]
-                                .slice(-1)
-                                .toLowerCase()
-                              : asset.symbol,
-                            '18',
-                            asset.symbolUrl,
-                          ),
-                        )
-                      }}
-                    >
-                      <i className="icon-small icon-metamask icon-light ml-2" />
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          ))}
-          {activeTab !== 'all' &&
-          assetArray
-            .filter((asset) => asset.type === activeTab)
-            .map((asset) => (
+            assetArray.map((asset) => (
               <Row key={asset.symbol} className="mb-3 output-card mr-2">
                 <Col xs="4" md="3" className="p-0 pl-2">
                   <div
@@ -539,10 +451,10 @@ const AssetSelect = (props) => {
                               asset.actualAddr,
                               asset.symbol.includes('-')
                                 ? asset.symbol.split('-')[0] +
-                                asset.symbol
-                                  .split('-')[1]
-                                  .slice(-1)
-                                  .toLowerCase()
+                                    asset.symbol
+                                      .split('-')[1]
+                                      .slice(-1)
+                                      .toLowerCase()
                                 : asset.symbol,
                               '18',
                               asset.symbolUrl,
@@ -557,12 +469,80 @@ const AssetSelect = (props) => {
                 </Col>
               </Row>
             ))}
+          {activeTab !== 'all' &&
+            assetArray
+              .filter((asset) => asset.type === activeTab)
+              .map((asset) => (
+                <Row key={asset.symbol} className="mb-3 output-card mr-2">
+                  <Col xs="4" md="3" className="p-0 pl-2">
+                    <div
+                      role="button"
+                      onClick={() => {
+                        addSelection(asset)
+                        toggleModal()
+                      }}
+                    >
+                      {asset.icon}
+                    </div>
+                  </Col>
 
+                  <Col xs="5" md="5" className="align-items-center p-0">
+                    <Row>
+                      <Col xs="12" className="float-left ml-n4">
+                        <div
+                          role="button"
+                          onClick={() => {
+                            addSelection(asset)
+                            toggleModal()
+                          }}
+                        >
+                          {asset.symbol}
+                        </div>
+                        <div className="description">
+                          {formatFromWei(asset.balance)}
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
 
+                  <Col xs="3" md="3" className="text-right p-0 pr-2">
+                    <Row>
+                      <Col xs="6">
+                        <ShareLink
+                          url={asset.actualAddr}
+                          notificationLocation="tc"
+                        >
+                          <i className="icon-small icon-copy ml-2" />
+                        </ShareLink>
+                      </Col>
+                      <Col xs="6">
+                        <div
+                          role="button"
+                          onClick={() => {
+                            dispatch(
+                              watchAsset(
+                                asset.actualAddr,
+                                asset.symbol.includes('-')
+                                  ? asset.symbol.split('-')[0] +
+                                      asset.symbol
+                                        .split('-')[1]
+                                        .slice(-1)
+                                        .toLowerCase()
+                                  : asset.symbol,
+                                '18',
+                                asset.symbolUrl,
+                              ),
+                            )
+                          }}
+                        >
+                          <i className="icon-small icon-metamask icon-light ml-2" />
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              ))}
         </div>
-
-
-
       </Modal>
     </>
   )

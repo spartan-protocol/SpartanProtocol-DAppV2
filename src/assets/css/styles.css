@@ -98,7 +98,7 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
 
 }
 
-.custom-select:focus {;
+.custom-select:focus {
     border: 0;
 
 }
@@ -630,7 +630,3 @@ input:focus, textarea:focus, select:focus{
     }
 
 }
-
-
-
-
