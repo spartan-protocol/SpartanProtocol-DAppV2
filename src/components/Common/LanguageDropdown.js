@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React, { useState } from 'react'
 import {
   Dropdown,
@@ -62,7 +61,7 @@ const LanguageDropdown = () => {
         <DropdownToggle
           aria-expanded={false}
           aria-haspopup
-          className="btn-round btn-icon"
+          className="btn-round btn-icon ml-n1"
           color="default"
           data-toggle="dropdown"
           id="dropdownMenuButton"
@@ -71,6 +70,8 @@ const LanguageDropdown = () => {
           <i className="icon-small icon-lang icon-dark m-0 mt-1" />
         </DropdownToggle>
         <DropdownMenu className="language-switch" right>
+          <DropdownItem header>Language</DropdownItem>
+
           <DropdownItem
             tag="a"
             href="#"
