@@ -618,13 +618,17 @@ button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disab
    z-index: 999;
 }
 
-.main-panel > .content {
-    padding: 10px 10px 30px 10px;
-    min-height: calc(100vh - 70px);
+.breadcrumb {
+    padding: 0;
 }
 
-@media (min-width: 992px) {
+/* /* .main-panel > .content {
+    padding: 10px 10px 30px 10px;
+    min-height: calc(100vh - 70px);
+} */
+
+/* @media (min-width: 992px) {
     .sidebar-mini .main-panel > .content {
         padding-left: 70px;
     }
-}
+} */

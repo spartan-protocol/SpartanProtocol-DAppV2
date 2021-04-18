@@ -421,12 +421,14 @@ const Liquidity = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={8}>Liquidity</Col>
+          <Col md={10}>Liquidity</Col>
           <Col md={2}>
-            <SharePool />
-          </Col>
-          <Col md={2}>
-            <Wallet />
+            <Row>
+              <SharePool />
+            </Row>
+            <Row>
+              <Wallet coins={poolFactory.finalArray} />
+            </Row>
           </Col>
         </Breadcrumb>
         <Row>

@@ -2,13 +2,18 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  UncontrolledDropdown,
+  UncontrolledButtonDropdown,
 } from 'reactstrap'
 import React from 'react'
+import { formatFromWei } from '../../utils/bigNumber'
 
-const Wallet = () => (
+const Wallet = ({ coins }) => (
   <>
-    <UncontrolledDropdown>
+    <UncontrolledButtonDropdown
+      style={{
+        width: '100%',
+      }}
+    >
       <DropdownToggle
         aria-expanded={false}
         aria-haspopup
@@ -21,7 +26,13 @@ const Wallet = () => (
       >
         Wallet
       </DropdownToggle>
-      <DropdownMenu aria-labelledby="dropdownMenuButton">
+      <DropdownMenu
+        aria-labelledby="dropdownMenuButton"
+        style={{
+          width: '100%',
+          top: '30px !important',
+        }}
+      >
         <DropdownItem
           className="text-center"
           href="#pablo"
@@ -30,12 +41,18 @@ const Wallet = () => (
           Available Balance
           <DropdownItem divider />
         </DropdownItem>
-        <DropdownItem href="">
-          SPARTA : <span className="float-right">XXX</span>
-        </DropdownItem>
-        <DropdownItem href="">
-          BNB: <span className="float-right">XXX</span>
-        </DropdownItem>
+        {coins
+          ?.filter((coin) => Math.floor(coin.tokenAmount))
+          .map((coin) => (
+            <>
+              <DropdownItem href="">
+                {coin.symbol} :{' '}
+                <span className="float-right">
+                  {formatFromWei(coin.tokenAmount)}
+                </span>
+              </DropdownItem>
+            </>
+          ))}
         <DropdownItem divider />
         <DropdownItem
           className="text-primary text-center"
@@ -44,7 +61,7 @@ const Wallet = () => (
           View all assets
         </DropdownItem>
       </DropdownMenu>
-    </UncontrolledDropdown>
+    </UncontrolledButtonDropdown>
   </>
 )
 export default Wallet
