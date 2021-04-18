@@ -280,7 +280,7 @@ const AddLiquidity = () => {
             </Col>
           </Row>
         </Card>
-        <Col md={4}>
+        {/* <Col md={4}>
           <Card className="card-body ">
             <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
               <Row>
@@ -336,7 +336,7 @@ const AddLiquidity = () => {
               Claim LP Tokens
             </Button>
           </Card>
-        </Col>
+        </Col> */}
       </Row>
     </>
   )
