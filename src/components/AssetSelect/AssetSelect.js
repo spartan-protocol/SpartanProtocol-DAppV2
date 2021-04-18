@@ -401,7 +401,7 @@ const AssetSelect = (props) => {
           {activeTab === 'all' &&
             assetArray.map((asset) => (
               <Row key={asset.symbol} className="mb-3 output-card mr-2">
-                <Col xs="4" md="3" className="p-0 pl-2">
+                <Col xs="4" sm="2" className="p-0 pl-2">
                   <div
                     role="button"
                     onClick={() => {
@@ -413,7 +413,7 @@ const AssetSelect = (props) => {
                   </div>
                 </Col>
 
-                <Col xs="5" md="5" className="align-items-center p-0">
+                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
                   <Row>
                     <Col xs="12" className="float-left ml-n4">
                       <div
@@ -474,7 +474,7 @@ const AssetSelect = (props) => {
               .filter((asset) => asset.type === activeTab)
               .map((asset) => (
                 <Row key={asset.symbol} className="mb-3 output-card mr-2">
-                  <Col xs="4" md="3" className="p-0 pl-2">
+                  <Col xs="4" sm="2" className="p-0 pl-2">
                     <div
                       role="button"
                       onClick={() => {
@@ -486,7 +486,7 @@ const AssetSelect = (props) => {
                     </div>
                   </Col>
 
-                  <Col xs="5" md="5" className="align-items-center p-0">
+                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
                     <Row>
                       <Col xs="12" className="float-left ml-n4">
                         <div
