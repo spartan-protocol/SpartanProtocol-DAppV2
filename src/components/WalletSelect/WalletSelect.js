@@ -165,16 +165,13 @@ const WalletSelect = (props) => {
 
           {/* Wallet overview */}
           {wallet.status === 'connected' ? (
-            <div>
-              <Row>
+            <div className="ml-2 mt-2">
+              <Row class="card-body">
                 <Col xs="10">
                   <h2>Wallet</h2>
                 </Col>
                 <Col xs="2">
                   <Button
-                    style={{
-                      right: '16px',
-                    }}
                     onClick={props.onHide}
                     className="btn btn-transparent"
                   >
@@ -296,7 +293,7 @@ const WalletSelect = (props) => {
                             key={`${asset.tokenAddress}-asset`}
                             className="mb-3 output-card mr-2"
                           >
-                            <Col xs="4" md="4" className="p-0 pl-2">
+                            <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
                                 src={asset.symbolUrl}
@@ -304,7 +301,11 @@ const WalletSelect = (props) => {
                                 className="mr-1"
                               />
                             </Col>
-                            <Col xs="5" className="align-items-center p-0">
+                            <Col
+                              xs="5"
+                              sm="7"
+                              className="align-items-center p-0 pl-sm-3"
+                            >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
                                   {asset.symbol}
@@ -385,7 +386,7 @@ const WalletSelect = (props) => {
                             key={`${asset.tokenAddress}-lp`}
                             className="mb-3 output-card mr-2"
                           >
-                            <Col xs="4" md="4" className="p-0 pl-2">
+                            <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
                                 src={asset.symbolUrl}
@@ -399,7 +400,11 @@ const WalletSelect = (props) => {
                                 className="mr-2 mt-3"
                               />
                             </Col>
-                            <Col xs="5" className="align-items-center p-0">
+                            <Col
+                              xs="5"
+                              sm="7"
+                              className="align-items-center p-0 pl-sm-3"
+                            >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
                                   {`${asset.symbol}-SPP`}
@@ -474,7 +479,7 @@ const WalletSelect = (props) => {
                             key={`${asset.tokenAddress}-lp`}
                             className="mb-3 output-card mr-2"
                           >
-                            <Col xs="4" md="4" className="p-0 pl-2">
+                            <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
                                 src={asset.symbolUrl}
@@ -488,7 +493,11 @@ const WalletSelect = (props) => {
                                 className="mr-2 mt-3"
                               />
                             </Col>
-                            <Col xs="5" className="align-items-center p-0">
+                            <Col
+                              xs="5"
+                              sm="7"
+                              className="align-items-center p-0 pl-sm-3"
+                            >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
                                   {`${asset.symbol}-SPP`}
@@ -563,7 +572,7 @@ const WalletSelect = (props) => {
                             key={`${asset.tokenAddress}-synth`}
                             className="mb-3 output-card mr-2"
                           >
-                            <Col xs="4" md="4" className="p-0 pl-2">
+                            <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
                                 src={asset.symbolUrl}
@@ -578,7 +587,11 @@ const WalletSelect = (props) => {
                               />
                             </Col>
 
-                            <Col xs="5" className="align-items-center p-0">
+                            <Col
+                              xs="5"
+                              sm="7"
+                              className="align-items-center p-0 pl-sm-3"
+                            >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
                                   {`${asset.symbol}-SPS`}

@@ -6,13 +6,9 @@ import {
   Modal,
   Row,
   Col,
-  Card,
-  CardHeader,
-  CardTitle,
   Nav,
   NavItem,
   NavLink,
-  CardBody,
   InputGroup,
   Input,
   InputGroupAddon,
@@ -293,134 +289,206 @@ const AssetSelect = (props) => {
           </Col>
         </Row>
       </Row>
-
       <Modal isOpen={showModal} toggle={toggleModal}>
-        <Row className="mt-1">
-          <Col xs={12} md={12}>
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h2" />
-                <Row>
-                  <Col xs="10">
-                    <h2 className="ml-2">Select an asset</h2>
-                  </Col>
-                  <Col xs="2">
-                    <Button
-                      style={{
-                        right: '16px',
-                      }}
-                      onClick={toggleModal}
-                      className="btn btn-transparent"
-                    >
-                      <i className="icon-small icon-close" />
-                    </Button>
-                  </Col>
-                </Row>
-              </CardHeader>
-              <Nav className="nav-tabs-custom card-body" pills>
-                <NavItem>
-                  <NavLink
-                    className={classnames({
-                      active: activeTab === 'all',
-                    })}
+        <Row className="card-body">
+          <Col xs="10">
+            <h3 className="ml-2 modal-title">Select an asset</h3>
+          </Col>
+          <Col xs="2">
+            <Button onClick={toggleModal} className="btn btn-transparent mt-4">
+              <i className="icon-small icon-close" />
+            </Button>
+          </Col>
+        </Row>
+        <Nav className="nav-tabs-custom card-body" pills>
+          <NavItem>
+            <NavLink
+              className={classnames({
+                active: activeTab === 'all',
+              })}
+              onClick={() => {
+                changeTab('all')
+              }}
+            >
+              All
+            </NavLink>
+          </NavItem>
+          {assetArray.filter((asset) => asset.type === 'token').length > 0 && (
+            <NavItem>
+              <NavLink
+                className={classnames({ active: activeTab === 'token' })}
+                onClick={() => {
+                  changeTab('token')
+                }}
+              >
+                Tokens
+              </NavLink>
+            </NavItem>
+          )}
+          {assetArray.filter((asset) => asset.type === 'pool').length > 0 && (
+            <NavItem>
+              <NavLink
+                className={classnames({
+                  active: activeTab === 'pool',
+                })}
+                onClick={() => {
+                  changeTab('pool')
+                }}
+              >
+                LP Tokens
+              </NavLink>
+            </NavItem>
+          )}
+          {assetArray.filter((asset) => asset.type === 'synth').length > 0 && (
+            <NavItem>
+              <NavLink
+                className={classnames({ active: activeTab === 'synth' })}
+                onClick={() => {
+                  changeTab('synth')
+                }}
+              >
+                Synths
+              </NavLink>
+            </NavItem>
+          )}
+        </Nav>
+
+        <Row className="card-body">
+          <Col xs="12" className="m-auto">
+            <InputGroup>
+              <InputGroupAddon
+                addonType="prepend"
+                role="button"
+                tabIndex={-1}
+                onKeyPress={() => clearSearch()}
+                onClick={() => clearSearch()}
+              >
+                <InputGroupText>
+                  <i
+                    className=""
+                    role="button"
+                    tabIndex={-1}
+                    onKeyPress={() => clearSearch()}
+                    onClick={() => clearSearch()}
+                  />
+                  <i className="icon-search-bar icon-close icon-light ml-n3 mt-1" />
+                </InputGroupText>
+              </InputGroupAddon>
+              <Input
+                className="text-card mt-1"
+                placeholder="Search assets..."
+                type="text"
+                id="searchInput"
+                onChange={() => console.log('hello')}
+              />
+              <InputGroupAddon addonType="append">
+                <InputGroupText>
+                  <i className="icon-search-bar icon-search icon-light" />
+                </InputGroupText>
+              </InputGroupAddon>
+            </InputGroup>
+          </Col>
+        </Row>
+        <div className="modal-body">
+          <Row className="mt-n5">
+            <Col xs="9" md="9">
+              <p className="text-card">Asset</p>
+            </Col>
+            <Col xs="3" md="3">
+              <p className="text-card float-right mr-1">Actions</p>
+            </Col>
+          </Row>
+          {activeTab === 'all' &&
+            assetArray.map((asset) => (
+              <Row key={asset.symbol} className="mb-3 output-card mr-2">
+                <Col xs="4" sm="2" className="p-0 pl-2">
+                  <div
+                    role="button"
                     onClick={() => {
-                      changeTab('all')
+                      addSelection(asset)
+                      toggleModal()
                     }}
                   >
-                    All
-                  </NavLink>
-                </NavItem>
-                {assetArray.filter((asset) => asset.type === 'token').length >
-                  0 && (
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === 'token' })}
-                      onClick={() => {
-                        changeTab('token')
-                      }}
-                    >
-                      Tokens
-                    </NavLink>
-                  </NavItem>
-                )}
-                {assetArray.filter((asset) => asset.type === 'pool').length >
-                  0 && (
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: activeTab === 'pool',
-                      })}
-                      onClick={() => {
-                        changeTab('pool')
-                      }}
-                    >
-                      LP Tokens
-                    </NavLink>
-                  </NavItem>
-                )}
-                {assetArray.filter((asset) => asset.type === 'synth').length >
-                  0 && (
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === 'synth' })}
-                      onClick={() => {
-                        changeTab('synth')
-                      }}
-                    >
-                      Synths
-                    </NavLink>
-                  </NavItem>
-                )}
-              </Nav>
-              <CardBody className="ml-2 mr-2">
-                <Row>
-                  <Col xs="12" className="m-auto">
-                    <InputGroup>
-                      <InputGroupAddon
-                        addonType="prepend"
+                    {asset.icon}
+                  </div>
+                </Col>
+
+                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
+                  <Row>
+                    <Col xs="12" className="float-left ml-n4">
+                      <div
                         role="button"
-                        tabIndex={-1}
-                        onKeyPress={() => clearSearch()}
-                        onClick={() => clearSearch()}
+                        onClick={() => {
+                          addSelection(asset)
+                          toggleModal()
+                        }}
                       >
-                        <InputGroupText>
-                          <i
-                            className=""
-                            role="button"
-                            tabIndex={-1}
-                            onKeyPress={() => clearSearch()}
-                            onClick={() => clearSearch()}
-                          />
-                          <i className="icon-search-bar icon-close icon-light" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        className="text-card"
-                        placeholder="Search assets..."
-                        type="text"
-                        id="searchInput"
-                        onChange={() => console.log('hello')}
-                      />
-                      <InputGroupAddon addonType="append">
-                        <InputGroupText>
-                          <i className="icon-search-bar icon-search icon-light" />
-                        </InputGroupText>
-                      </InputGroupAddon>
-                    </InputGroup>
+                        {asset.symbol}
+                      </div>
+                      <div className="description">
+                        {formatFromWei(asset.balance)}
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col xs="3" md="3" className="text-right p-0 pr-2">
+                  <Row>
+                    <Col xs="6">
+                      <ShareLink
+                        url={asset.actualAddr}
+                        notificationLocation="tc"
+                      >
+                        <i className="icon-small icon-copy ml-2" />
+                      </ShareLink>
+                    </Col>
+                    <Col xs="6">
+                      <div
+                        role="button"
+                        onClick={() => {
+                          dispatch(
+                            watchAsset(
+                              asset.actualAddr,
+                              asset.symbol.includes('-')
+                                ? asset.symbol.split('-')[0] +
+                                    asset.symbol
+                                      .split('-')[1]
+                                      .slice(-1)
+                                      .toLowerCase()
+                                : asset.symbol,
+                              '18',
+                              asset.symbolUrl,
+                            ),
+                          )
+                        }}
+                      >
+                        <i className="icon-small icon-metamask icon-light ml-2" />
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            ))}
+          {activeTab !== 'all' &&
+            assetArray
+              .filter((asset) => asset.type === activeTab)
+              .map((asset) => (
+                <Row key={asset.symbol} className="mb-3 output-card mr-2">
+                  <Col xs="4" sm="2" className="p-0 pl-2">
+                    <div
+                      role="button"
+                      onClick={() => {
+                        addSelection(asset)
+                        toggleModal()
+                      }}
+                    >
+                      {asset.icon}
+                    </div>
                   </Col>
-                </Row>
-                <Row className="my-3">
-                  <Col xs="9" md="9">
-                    <p className="text-card">Asset</p>
-                  </Col>
-                  <Col xs="3" md="3">
-                    <p className="text-card float-right mr-1">Actions</p>
-                  </Col>
-                </Row>
-                {activeTab === 'all' &&
-                  assetArray.map((asset) => (
-                    <Row key={asset.symbol} className="mb-3 output-card mr-2">
-                      <Col xs="4" md="4" className="p-0 pl-2">
+
+                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
+                    <Row>
+                      <Col xs="12" className="float-left ml-n4">
                         <div
                           role="button"
                           onClick={() => {
@@ -428,143 +496,53 @@ const AssetSelect = (props) => {
                             toggleModal()
                           }}
                         >
-                          {asset.icon}
+                          {asset.symbol}
+                        </div>
+                        <div className="description">
+                          {formatFromWei(asset.balance)}
                         </div>
                       </Col>
+                    </Row>
+                  </Col>
 
-                      <Col xs="5" md="5" className="align-items-center p-0">
-                        <Row>
-                          <Col xs="12" className="float-left ml-n4">
-                            <div
-                              role="button"
-                              onClick={() => {
-                                addSelection(asset)
-                                toggleModal()
-                              }}
-                            >
-                              {asset.symbol}
-                            </div>
-                            <div className="description">
-                              {formatFromWei(asset.balance)}
-                            </div>
-                          </Col>
-                        </Row>
+                  <Col xs="3" md="3" className="text-right p-0 pr-2">
+                    <Row>
+                      <Col xs="6">
+                        <ShareLink
+                          url={asset.actualAddr}
+                          notificationLocation="tc"
+                        >
+                          <i className="icon-small icon-copy ml-2" />
+                        </ShareLink>
                       </Col>
-
-                      <Col xs="3" md="3" className="text-right p-0 pr-2">
-                        <Row>
-                          <Col xs="6">
-                            <ShareLink
-                              url={asset.actualAddr}
-                              notificationLocation="tc"
-                            >
-                              <i className="icon-small icon-copy ml-2" />
-                            </ShareLink>
-                          </Col>
-                          <Col xs="6">
-                            <div
-                              role="button"
-                              onClick={() => {
-                                dispatch(
-                                  watchAsset(
-                                    asset.actualAddr,
-                                    asset.symbol.includes('-')
-                                      ? asset.symbol.split('-')[0] +
-                                          asset.symbol
-                                            .split('-')[1]
-                                            .slice(-1)
-                                            .toLowerCase()
-                                      : asset.symbol,
-                                    '18',
-                                    asset.symbolUrl,
-                                  ),
-                                )
-                              }}
-                            >
-                              <i className="icon-small icon-metamask icon-light ml-2" />
-                            </div>
-                          </Col>
-                        </Row>
+                      <Col xs="6">
+                        <div
+                          role="button"
+                          onClick={() => {
+                            dispatch(
+                              watchAsset(
+                                asset.actualAddr,
+                                asset.symbol.includes('-')
+                                  ? asset.symbol.split('-')[0] +
+                                      asset.symbol
+                                        .split('-')[1]
+                                        .slice(-1)
+                                        .toLowerCase()
+                                  : asset.symbol,
+                                '18',
+                                asset.symbolUrl,
+                              ),
+                            )
+                          }}
+                        >
+                          <i className="icon-small icon-metamask icon-light ml-2" />
+                        </div>
                       </Col>
                     </Row>
-                  ))}
-                {activeTab !== 'all' &&
-                  assetArray
-                    .filter((asset) => asset.type === activeTab)
-                    .map((asset) => (
-                      <Row key={asset.symbol} className="mb-3 output-card mr-2">
-                        <Col xs="4" md="4" className="p-0 pl-2">
-                          <div
-                            role="button"
-                            onClick={() => {
-                              addSelection(asset)
-                              toggleModal()
-                            }}
-                          >
-                            {asset.icon}
-                          </div>
-                        </Col>
-
-                        <Col xs="5" md="5" className="align-items-center p-0">
-                          <Row>
-                            <Col xs="12" className="float-left ml-n4">
-                              <div
-                                role="button"
-                                onClick={() => {
-                                  addSelection(asset)
-                                  toggleModal()
-                                }}
-                              >
-                                {asset.symbol}
-                              </div>
-                              <div className="description">
-                                {formatFromWei(asset.balance)}
-                              </div>
-                            </Col>
-                          </Row>
-                        </Col>
-
-                        <Col xs="3" md="3" className="text-right p-0 pr-2">
-                          <Row>
-                            <Col xs="6">
-                              <ShareLink
-                                url={asset.actualAddr}
-                                notificationLocation="tc"
-                              >
-                                <i className="icon-small icon-copy ml-2" />
-                              </ShareLink>
-                            </Col>
-                            <Col xs="6">
-                              <div
-                                role="button"
-                                onClick={() => {
-                                  dispatch(
-                                    watchAsset(
-                                      asset.actualAddr,
-                                      asset.symbol.includes('-')
-                                        ? asset.symbol.split('-')[0] +
-                                            asset.symbol
-                                              .split('-')[1]
-                                              .slice(-1)
-                                              .toLowerCase()
-                                        : asset.symbol,
-                                      '18',
-                                      asset.symbolUrl,
-                                    ),
-                                  )
-                                }}
-                              >
-                                <i className="icon-small icon-metamask icon-light ml-2" />
-                              </div>
-                            </Col>
-                          </Row>
-                        </Col>
-                      </Row>
-                    ))}
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
+                  </Col>
+                </Row>
+              ))}
+        </div>
       </Modal>
     </>
   )
