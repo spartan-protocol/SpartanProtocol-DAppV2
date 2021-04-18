@@ -20,6 +20,7 @@ import {
   Row,
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -38,14 +39,20 @@ import {
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import { getPoolContract } from '../../../utils/web3Pool'
 import { useBond } from '../../../store/bond/selector'
+import { calcLiquidityUnits, calcSwapOutput } from '../../../utils/web3Utils'
+import Approval from '../../../components/Approval/Approval'
+import { bondDeposit } from '../../../store/bond/actions'
 
 const AddLiquidity = () => {
+  const wallet = useWallet()
   const bond = useBond()
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
   const [assetBond1, setAssetBond1] = useState('...')
+  const [spartaMinted, setSpartaMinted] = useState('0')
+  const [lpOutput, setLpOutput] = useState('0')
 
   useEffect(() => {
     const { finalArray } = poolFactory
@@ -83,6 +90,47 @@ const AddLiquidity = () => {
       bondInput1.value = '0'
     }
   }
+
+  // Bond Functions
+  const calcSpartaMinted = () => {
+    if (bondInput1) {
+      const minted = calcSwapOutput(
+        convertToWei(bondInput1.value),
+        assetBond1.tokenAmount,
+        assetBond1.baseAmount,
+        true,
+      )
+      setSpartaMinted(minted)
+      return minted
+    }
+    return '0'
+  }
+
+  const calcOutput = () => {
+    if (bondInput1) {
+      const output = calcLiquidityUnits(
+        calcSpartaMinted(),
+        convertToWei(bondInput1.value),
+        assetBond1.baseAmount,
+        assetBond1.tokenAmount,
+        assetBond1.poolUnits,
+      )
+      setLpOutput(output)
+      return output
+    }
+    return '0'
+  }
+
+  useEffect(() => {
+    if (
+      document.activeElement.id === 'bondInput1' &&
+      bondInput1?.value !== ''
+    ) {
+      calcOutput()
+    } else if (bondInput1 && bondInput1?.value === '') {
+      bondInput1.value = '0'
+    }
+  }, [bondInput1?.value, assetBond1])
 
   return (
     <>
@@ -179,7 +227,7 @@ const AddLiquidity = () => {
             </Col>
             <Col xs="8" className="text-right">
               <div className="title-card">
-                {bondInput1?.value} {bondInput1?.symbol}
+                {bondInput1?.value} {assetBond1?.symbol}
               </div>
             </Col>
           </Row>
@@ -188,7 +236,9 @@ const AddLiquidity = () => {
               <div className="title-card">Minted</div>
             </Col>
             <Col xs="8" className="text-right">
-              <div className="title-card">#,###.## SPARTA</div>
+              <div className="title-card">
+                {formatFromWei(spartaMinted)} SPARTA
+              </div>
             </Col>
           </Row>
           <Row className="mb-2">
@@ -196,15 +246,39 @@ const AddLiquidity = () => {
               <div className="title-card">Output</div>
             </Col>
             <Col xs="8" className="text-right">
-              <div className="title-card">#,###.## -SPP</div>
+              <div className="title-card">
+                {formatFromWei(lpOutput)} {assetBond1?.symbol}-SPP
+              </div>
             </Col>
           </Row>
-          <Button color="primary" size="lg" block>
-            Bond BNB
-          </Button>
-          <Button color="danger" size="lg" block>
-            Return to DAO
-          </Button>
+          <Row>
+            <Col xs="6">
+              <Approval
+                tokenAddress={assetBond1?.tokenAddress}
+                symbol={assetBond1?.symbol}
+                walletAddress={wallet?.account}
+                contractAddress={addr.bond}
+                txnAmount={convertToWei(bondInput1?.value)}
+              />
+            </Col>
+            <Col xs="6">
+              <Button
+                color="primary"
+                size="lg"
+                block
+                onClick={() =>
+                  dispatch(
+                    bondDeposit(
+                      assetBond1?.tokenAddress,
+                      convertToWei(bondInput1?.value),
+                    ),
+                  )
+                }
+              >
+                Bond BNB
+              </Button>
+            </Col>
+          </Row>
         </Card>
         <Col md={4}>
           <Card className="card-body ">
