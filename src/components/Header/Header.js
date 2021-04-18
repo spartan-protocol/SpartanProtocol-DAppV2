@@ -1,11 +1,10 @@
-/*eslint-disable*/
-import React from "react"
-import classNames from "classnames"
-import { Button, NavbarBrand, Navbar, Nav, Container } from "reactstrap"
-import { ReactComponent as SpartanLogo } from "../../assets/img/logo.svg"
-import LanguageDropdown from "../Common/LanguageDropdown"
-import AddressConn from "../Common/AddressConn"
-import Supply from "../Supply/Supply"
+import React from 'react'
+import classNames from 'classnames'
+import { Button, NavbarBrand, Navbar, Nav, Container } from 'reactstrap'
+import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
+import LanguageDropdown from '../Common/LanguageDropdown'
+import AddressConn from '../Common/AddressConn'
+import Supply from '../Supply/Supply'
 
 const Header = (props) => (
   // const [color, setColor] = React.useState('navbar-transparent')
@@ -36,8 +35,8 @@ const Header = (props) => (
 
   // Wallet functions
   <Navbar
-    className={classNames("navbar sticky-top", {
-      color: "navbar-transparent"
+    className={classNames('navbar sticky-top', {
+      color: 'navbar-transparent',
     })}
     expand="lg"
   >
@@ -55,8 +54,8 @@ const Header = (props) => (
           </Button>
         </div>
         <div
-          className={classNames("navbar-toggle d-inline", {
-            toggled: props.sidebarOpened
+          className={classNames('navbar-toggle d-inline', {
+            toggled: props.sidebarOpened,
           })}
         >
           <button
@@ -73,7 +72,6 @@ const Header = (props) => (
         </NavbarBrand>
       </div>
       <Nav className="ml-auto">
-
         <AddressConn
           changeStates={props.changeStates}
           changeNotification={props.changeNotification}
