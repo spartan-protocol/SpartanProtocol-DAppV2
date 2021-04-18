@@ -1,5 +1,4 @@
 // import Dashboard from './components/Dashboard/Dashboard'
-/*eslint-disable*/
 import PoolsOverview from './views/pages/Pools/Overview'
 import Dao from './views/pages/Dao/Overview'
 import Liquidity2 from './views/pages/Pools/Liquidity2'
@@ -16,7 +15,7 @@ import Swap from './views/pages/Swap/Swap'
 // import Forms from './views/pages/Samples/Forms'
 // import ExtendedForms from './views/pages/Samples/ExtendedForms'
 // import Panels from './views/pages/Samples/Panels'
-import Tiles from './views/pages/Samples/Tiles'
+// import Tiles from './views/pages/Samples/Tiles'
 // import Utils from './utils/Utils'
 // import Tabs from './views/pages/Samples/Tabs'
 // import Share from './views/pages/Samples/Share'
@@ -69,13 +68,6 @@ const routes = [
     component: Dao,
     layout: '/dapp',
   },
-  {
-        path: '/cards',
-        name: 'Tiles',
-        mini: 'CR',
-        component: Tiles,
-        layout: '/dapp',
-      },
 
   // {
   //   collapse: true,

@@ -62,7 +62,7 @@ const LanguageDropdown = () => {
         <DropdownToggle
           aria-expanded={false}
           aria-haspopup
-          className="btn-round btn-icon"
+          className="btn-round btn-icon ml-n1"
           color="default"
           data-toggle="dropdown"
           id="dropdownMenuButton"
