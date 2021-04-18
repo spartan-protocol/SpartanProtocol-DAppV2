@@ -47,9 +47,7 @@ describe('Router actions', () => {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.ROUTER_ERROR)
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe(
-        'iBEP20: transfer from the zero address',
-      )
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('BalanceErr')
     }
   })
 

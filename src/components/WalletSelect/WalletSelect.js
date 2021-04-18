@@ -166,7 +166,7 @@ const WalletSelect = (props) => {
           {/* Wallet overview */}
           {wallet.status === 'connected' ? (
             <div className="ml-2 mt-2">
-              <Row class="card-body">
+              <Row className="card-body">
                 <Col xs="10">
                   <h2>Wallet</h2>
                 </Col>
