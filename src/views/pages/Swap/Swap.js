@@ -681,7 +681,7 @@ const Swap = () => {
                                 onKeyPress={() => clearInputs()}
                                 onClick={() => clearInputs()}
                               >
-                                <i className="icon-search-bar icon-close icon-light my-auto" />
+                                <i className="icon-search-bar icon-close icon-light my-auto mt-1" />
                               </InputGroupAddon>
                             </InputGroup>
                             <div className="text-right">
@@ -784,7 +784,7 @@ const Swap = () => {
                                 onKeyPress={() => clearInputs()}
                                 onClick={() => clearInputs()}
                               >
-                                <i className="icon-search-bar icon-close icon-light my-auto" />
+                                <i className="icon-search-bar icon-close icon-light my-auto mt-1" />
                               </InputGroupAddon>
                             </InputGroup>
                             <div className="text-right">
