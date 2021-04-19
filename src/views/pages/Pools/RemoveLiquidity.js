@@ -37,8 +37,6 @@ import {
   routerRemoveLiq,
   routerRemoveLiqAsym,
 } from '../../../store/router/actions'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getPoolContract } from '../../../utils/web3Pool'
 
 const RemoveLiquidity = () => {
   const dispatch = useDispatch()
@@ -523,13 +521,6 @@ const RemoveLiquidity = () => {
             assetSwap={poolRemove1}
             finalLpArray={poolFactory.finalLpArray}
             web3={web3}
-          />
-        </Col>
-        <Col xs="12">
-          <RecentTxns
-            contracts={poolFactory.finalArray
-              ?.filter((asset) => asset.symbol !== 'SPARTA')
-              .map((asset) => getPoolContract(asset.poolAddress))}
           />
         </Col>
       </Row>

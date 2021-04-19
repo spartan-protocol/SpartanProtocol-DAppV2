@@ -37,8 +37,6 @@ import {
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getPoolContract } from '../../../utils/web3Pool'
 import Approval from '../../../components/Approval/Approval'
 
 const AddLiquidity = () => {
@@ -525,13 +523,6 @@ const AddLiquidity = () => {
             assetSwap={poolAdd1}
             finalLpArray={poolFactory.finalLpArray}
             web3={web3}
-          />
-        </Col>
-        <Col xs="12">
-          <RecentTxns
-            contracts={poolFactory.finalArray
-              ?.filter((asset) => asset.symbol !== 'SPARTA')
-              .map((asset) => getPoolContract(asset.poolAddress))}
           />
         </Col>
       </Row>

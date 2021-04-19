@@ -8,6 +8,7 @@ const initialState = {
   allowance2: {},
   watchingAsset: false,
   spartaPrice: 0,
+  eventArray: {},
   loading: false,
   error: null,
 }
@@ -72,6 +73,15 @@ export const web3Reducer = (state = initialState, action) => {
       return {
         ...state,
         spartaPrice: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.EVENT_ARRAY: {
+      return {
+        ...state,
+        eventArray: action.payload,
         loading: false,
         error: null,
       }

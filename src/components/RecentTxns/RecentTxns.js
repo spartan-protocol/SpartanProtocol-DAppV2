@@ -1,45 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { Row, Table } from 'reactstrap'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'
 import { formatFromWei } from '../../utils/bigNumber'
 import { usePoolFactory } from '../../store/poolFactory'
+import { useWeb3 } from '../../store/web3'
 
-const RecentTxns = ({ contracts }) => {
-  const [txnArray, setTxnArray] = useState([])
+const RecentTxns = () => {
+  const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
-
-  useEffect(() => {
-    const listen = async (contract) => {
-      await contract.on('*', (eventObject) => {
-        setTxnArray((oldArray) => [...oldArray, eventObject])
-        console.log(eventObject)
-      })
-    }
-
-    const mapOut = () => {
-      if (contracts) {
-        //   const filter = contract.filters
-        //   console.log(contract)
-        //   const logs = await contract.queryFilter(filter, 0, 'latest')
-        //   console.log(logs)
-        for (let i = 0; i < contracts.length; i++) {
-          listen(contracts[i])
-        }
-      }
-    }
-    mapOut()
-    return () => {
-      if (contracts) {
-        for (let i = 0; i < contracts.length; i++) {
-          contracts[i]?.removeAllListeners()
-        }
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <>
@@ -56,8 +27,8 @@ const RecentTxns = ({ contracts }) => {
             </tr>
           </thead>
           <tbody>
-            {txnArray?.length > 0 &&
-              txnArray
+            {web3.eventArray?.length > 0 &&
+              web3.eventArray
                 ?.filter((e) => e.event !== 'Transfer')
                 .map((txn) => (
                   <tr key={txn.transactionHash + txn.event + txn.logIndex}>

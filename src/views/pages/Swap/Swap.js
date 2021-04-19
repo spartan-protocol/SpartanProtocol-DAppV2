@@ -24,7 +24,6 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import {
   calcDoubleSwapOutput,
   calcSwapOutput,
@@ -44,7 +43,6 @@ import {
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { getPoolContract } from '../../../utils/web3Pool'
 import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 
@@ -1106,16 +1104,6 @@ const Swap = () => {
             <HelmetLoading height={300} width={300} />
           </div>
         )}
-        <Row className="justify-content-center">
-          <Col>
-            <RecentTxns
-              contracts={poolFactory.finalArray
-                ?.filter((asset) => asset.symbol !== 'SPARTA')
-                .map((asset) => getPoolContract(asset.poolAddress))}
-              walletAddr={wallet.account}
-            />
-          </Col>
-        </Row>
       </div>
     </>
   )

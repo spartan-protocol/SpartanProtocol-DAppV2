@@ -225,3 +225,17 @@ export const getSpartaPrice = () => async (dispatch) => {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }
+
+/**
+ * Add the event txn array
+ * @returns {array} eventArray
+ */
+export const getEventArray = (array) => async (dispatch) => {
+  dispatch(web3Loading())
+  try {
+    const eventArray = array
+    dispatch(payloadToDispatch(Types.EVENT_ARRAY, eventArray))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+  }
+}
