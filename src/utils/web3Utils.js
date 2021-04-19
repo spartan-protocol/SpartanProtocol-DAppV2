@@ -260,8 +260,8 @@ export const calcDoubleSwapOutput = (
   pool2Sparta,
 ) => {
   // formula: calcSwapOutput(pool1) => calcSwapOutput(pool2)
-  const x = calcSwapOutput(inputAmount, pool1Token, pool1Sparta, false)
-  const output = calcSwapOutput(x, pool2Token, pool2Sparta, true)
+  const x = calcSwapOutput(inputAmount, pool1Token, pool1Sparta, true)
+  const output = calcSwapOutput(x, pool2Token, pool2Sparta, false)
   return output
 }
 
