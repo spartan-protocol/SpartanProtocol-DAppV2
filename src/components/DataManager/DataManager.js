@@ -16,9 +16,19 @@ import {
 import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
 import { getSynthArray } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
-import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
+import {
+  addNetworkMM,
+  addNetworkBC,
+  getSpartaPrice,
+  getEventArray,
+} from '../../store/web3'
 // import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
+import { getBondContract } from '../../utils/web3Bond'
+import { getDaoContract } from '../../utils/web3Dao'
+import { getPoolContract } from '../../utils/web3Pool'
+import { getRouterContract } from '../../utils/web3Router'
+import { getSynthContract } from '../../utils/web3Synth'
 
 const DataManager = () => {
   const synth = useSynth()
@@ -132,17 +142,65 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.detailedArray])
 
+  const [prevFinalLpArray, setPrevFinalLpArray] = useState(
+    poolFactory.finalLpArray,
+  )
+
   useEffect(() => {
     const { finalArray } = poolFactory
     const checkFinalArrayForLP = () => {
       if (finalArray !== prevFinalArray && finalArray?.length > 0) {
         dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
-        // setPrevFinalArray(poolFactory.finalArray)
+        setPrevFinalLpArray(poolFactory.finalLpArray)
       }
     }
     checkFinalArrayForLP()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalArray])
+
+  const [eventArray, setEventArray] = useState([])
+
+  useEffect(() => {
+    const { finalLpArray } = poolFactory
+    const contracts = [getRouterContract(), getDaoContract(), getBondContract()]
+
+    const listen = async (contract) => {
+      await contract.on('*', (eventObject) => {
+        setEventArray((oldArray) => [...oldArray, eventObject])
+        console.log(eventObject)
+      })
+    }
+
+    const mapOut = () => {
+      if (
+        finalLpArray?.length !== prevFinalLpArray?.length &&
+        finalLpArray?.length > 0
+      ) {
+        for (let i = 0; i < contracts.length; i++) {
+          contracts[i]?.removeAllListeners()
+        }
+        for (let i = 0; i < finalLpArray.length; i++) {
+          if (finalLpArray[i]?.poolAddress) {
+            contracts.push(getPoolContract(finalLpArray[i].poolAddress))
+          }
+          if (finalLpArray[i]?.synthAddress) {
+            contracts.push(getSynthContract(finalLpArray[i].synthAddress))
+          }
+        }
+
+        for (let i = 0; i < contracts.length; i++) {
+          listen(contracts[i])
+        }
+      }
+    }
+    mapOut()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolFactory.finalLpArray])
+
+  useEffect(() => {
+    dispatch(getEventArray(eventArray))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [eventArray])
 
   return <></>
 }
