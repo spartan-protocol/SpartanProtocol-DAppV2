@@ -472,6 +472,7 @@ const AddLiquidity = () => {
                       walletAddress={wallet?.account}
                       contractAddress={addr.router}
                       txnAmount={convertToWei(addInput1?.value)}
+                      assetNumber="1"
                     />
                   )}
               </Col>
@@ -510,6 +511,7 @@ const AddLiquidity = () => {
                       walletAddress={wallet?.account}
                       contractAddress={addr.router}
                       txnAmount={convertToWei(addInput2?.value)}
+                      assetNumber="2"
                     />
                   )}
               </Col>

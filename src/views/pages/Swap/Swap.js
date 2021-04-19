@@ -982,9 +982,11 @@ const Swap = () => {
                         swapInput1?.value && (
                           <Approval
                             tokenAddress={assetSwap1?.tokenAddress}
+                            symbol={assetSwap1?.symbol}
                             walletAddress={wallet?.account}
                             contractAddress={addr.router}
-                            txnAmount={swapInput1?.value}
+                            txnAmount={convertToWei(swapInput1?.value)}
+                            assetNumber="1"
                           />
                         )}
                     </Col>
