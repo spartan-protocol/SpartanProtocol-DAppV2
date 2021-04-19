@@ -758,7 +758,7 @@
     width: 100%;
 
     .content {
-      padding-left: 30px;
+      padding-left: 70px;
     }
   }
 }
@@ -775,7 +775,6 @@
     transition-timing-function: linear, linear, ease;
     -webkit-overflow-scrolling: touch;
   }
-
 
   .sidebar-mini {
     .visible-on-sidebar-regular {
@@ -852,8 +851,6 @@
       .nav [data-toggle="collapse"] ~ div > ul > li > a .sidebar-mini-icon {
         opacity: 0;
       }
-
-
     }
 
     .main-panel {

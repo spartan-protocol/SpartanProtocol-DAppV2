@@ -563,6 +563,11 @@ input:focus, textarea:focus, select:focus{
     z-index: 999;
 }
 
+.breadcrumb {
+    padding: 0;
+}
+
+
 
 
 .main-panel > .content {
@@ -575,7 +580,6 @@ input:focus, textarea:focus, select:focus{
         padding-left: 70px;
     }
 }
-
 
 @media (min-width: 320px) and (max-width: 320px) {
     .modal-dialog {

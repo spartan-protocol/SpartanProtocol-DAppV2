@@ -44,7 +44,10 @@ const Share = () => {
   return (
     <>
       <Button
-        className="d-inline float-right btn btn-info mt-2 mr-2"
+        className="d-inline float-right btn btn-info"
+        style={{
+          width: '100%',
+        }}
         onClick={() => setShowShare(true)}
       >
         <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
