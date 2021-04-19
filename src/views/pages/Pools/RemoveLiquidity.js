@@ -40,7 +40,7 @@ import {
 import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import { getPoolContract } from '../../../utils/web3Pool'
 
-const AddLiquidity = () => {
+const RemoveLiquidity = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
@@ -537,4 +537,4 @@ const AddLiquidity = () => {
   )
 }
 
-export default AddLiquidity
+export default RemoveLiquidity

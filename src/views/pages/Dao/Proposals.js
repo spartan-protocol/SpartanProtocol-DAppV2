@@ -5,7 +5,7 @@ import React from 'react'
 import { Button, Card, Row, Col, Progress, Table } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 
-const LockEarn = () => (
+const Proposals = () => (
   <>
     <Row>
       <Col className="text-right">
@@ -178,4 +178,4 @@ const LockEarn = () => (
   </>
 )
 
-export default LockEarn
+export default Proposals
