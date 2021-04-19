@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Row, Table } from 'reactstrap'
+import { Row, Col, Table } from 'reactstrap'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -11,10 +11,33 @@ const RecentTxns = () => {
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
+  // const [selectedFilter, setselectedFilter] = useState(false)
+
+  // const handleFilter = (formFilter) => {
+  //   setselectedFilter(formFilter)
+  // }
 
   return (
     <>
-      <h4>Recent Txns</h4>
+      <Row>
+        {/* <Col>
+          <FormGroup>
+            <Input
+              type="select"
+              name="select"
+              id="exampleSelect"
+              onChange={(event) => handleFilter(event.target.value)}
+            >
+              <option>User</option>
+              <option>Router</option>
+              <option>Dao</option>
+            </Input>
+          </FormGroup>
+        </Col> */}
+        <Col>
+          <h4>Recent Txns</h4>
+        </Col>
+      </Row>
       <Row>
         <Table borderless className="m-3">
           <thead className="text-primary">
