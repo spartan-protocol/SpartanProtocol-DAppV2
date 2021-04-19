@@ -4,7 +4,8 @@ const initialState = {
   addedNetworkMM: {},
   addedNetworkBC: {},
   approval: false,
-  allowance: {},
+  allowance1: {},
+  allowance2: {},
   watchingAsset: false,
   spartaPrice: 0,
   loading: false,
@@ -40,10 +41,19 @@ export const web3Reducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_ALLOWANCE: {
+    case Types.GET_ALLOWANCE1: {
       return {
         ...state,
-        allowance: action.payload,
+        allowance1: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.GET_ALLOWANCE2: {
+      return {
+        ...state,
+        allowance2: action.payload,
         loading: false,
         error: null,
       }

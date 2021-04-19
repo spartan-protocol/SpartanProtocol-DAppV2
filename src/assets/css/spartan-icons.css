@@ -250,6 +250,10 @@
 
 
 /* Lock */
+.icon-lock.icon-light {
+    background-image: url('/src/assets/icons/icon-lock-light.svg#light');
+}
+
 .icon-lock.icon-dark {
     background-image: url('/src/assets/icons/icon-lock-dark.svg#dark');
 }

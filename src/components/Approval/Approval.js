@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react'
-import ReactBSAlert from 'react-bootstrap-sweetalert'
 import { useDispatch } from 'react-redux'
 import { Button } from 'reactstrap'
-import { getAllowance, getApproval, useWeb3 } from '../../store/web3'
+import {
+  getAllowance1,
+  getAllowance2,
+  getApproval,
+  useWeb3,
+} from '../../store/web3'
 import { BN } from '../../utils/bigNumber'
+
 // import { usePoolFactory } from '../../store/poolFactory'
 
 /**
@@ -13,6 +18,7 @@ import { BN } from '../../utils/bigNumber'
  * @param {address} walletAddress
  * @param {address} contractAddress
  * @param {string} txnAmount
+ * @param {string} assetNumber (1 or 2)
  */
 const Approval = ({
   tokenAddress,
@@ -20,89 +26,97 @@ const Approval = ({
   walletAddress,
   contractAddress,
   txnAmount,
+  assetNumber,
 }) => {
   const dispatch = useDispatch()
-  const [alert, setAlert] = React.useState(null)
   const web3 = useWeb3()
 
-  useEffect(() => {
-    const checkAllowance = () => {
-      if (tokenAddress && walletAddress && contractAddress) {
-        dispatch(getAllowance(tokenAddress, walletAddress, contractAddress))
+  const getAllowance = () => {
+    if (tokenAddress && walletAddress && contractAddress) {
+      if (assetNumber === '1') {
+        dispatch(getAllowance1(tokenAddress, walletAddress, contractAddress))
+      } else if (assetNumber === '2') {
+        dispatch(getAllowance2(tokenAddress, walletAddress, contractAddress))
       }
     }
-    checkAllowance()
-  }, [contractAddress, tokenAddress, walletAddress, dispatch, web3.approval])
-
-  const hideAlert = () => {
-    setAlert(null)
   }
 
-  const successDelete = () => {
-    dispatch(getApproval(tokenAddress, contractAddress))
-    setAlert(
-      <ReactBSAlert
-        success
-        style={{ display: 'block', marginTop: '-100px' }}
-        title="Transaction successfully!"
-        onConfirm={() => hideAlert()}
-        onCancel={() => hideAlert()}
-        confirmBtnBsStyle="info"
-        btnSize=""
-      >
-        0xce2fd7544e0b2cc94692d4a704debef7bcb61328 <br />
-        <br />
-        Copy
-        <span data-notify="icon" className="bd-icons icon-single-copy-04" />
-      </ReactBSAlert>,
-    )
+  const handleApproval = async () => {
+    await dispatch(getApproval(tokenAddress, contractAddress))
+    getAllowance()
   }
 
-  const warningWithConfirmMessage = () => {
-    setAlert(
-      <ReactBSAlert
-        warning
-        style={{ display: 'block', marginTop: '-100px' }}
-        title="Are you sure?"
-        onConfirm={() => successDelete()}
-        onCancel={() => hideAlert()}
-        confirmBtnBsStyle="primary"
-        cancelBtnBsStyle="danger"
-        confirmBtnText="Approve"
-        cancelBtnText="Cancel"
-        showCancel
-        btnSize=""
-      >
-        Proceed to approve {symbol}
-      </ReactBSAlert>,
-    )
-  }
+  useEffect(() => {
+    getAllowance()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    tokenAddress,
+    symbol,
+    walletAddress,
+    contractAddress,
+    txnAmount,
+    assetNumber,
+    web3.approval,
+  ])
 
   return (
     <>
-      {BN(web3.allowance._hex).comparedTo(txnAmount) === -1 && (
+      {assetNumber === '1' && (
         <>
-          {alert}
-          <Button
-            className="btn-fill w-100 h-100"
-            color="default"
-            onClick={warningWithConfirmMessage}
-          >
-            <i className="icon-extra-small icon-lock icon-dark align-middle" />
-            <i className="icon-extra-small icon-close icon-light align-middle" />
-            <br />
-            Approve {symbol}
-          </Button>
+          {BN(web3.allowance1.toString()).comparedTo(txnAmount) === -1 && (
+            <>
+              <Button
+                className="btn-fill w-100 h-100"
+                color="neutral"
+                onClick={() => {
+                  handleApproval()
+                }}
+              >
+                <i className="icon-extra-small icon-lock icon-light align-middle" />
+                <br />
+                Approve {symbol}
+              </Button>
+            </>
+          )}
+          {BN(web3.allowance1.toString()).comparedTo(txnAmount) === 1 && (
+            <>
+              <Button className="btn-fill w-100 h-100" color="success">
+                <i className="icon-extra-small icon-lock icon-dark align-middle" />
+                <i className="icon-extra-small icon-check icon-light align-middle" />
+                <br />
+                {symbol} Ready
+              </Button>
+            </>
+          )}
         </>
       )}
-      {BN(web3.allowance._hex).comparedTo(txnAmount) === 1 && (
+      {assetNumber === '2' && (
         <>
-          <Button className="btn-fill w-100 h-100" color="secondary">
-            <i className="icon-extra-small icon-lock icon-dark align-middle" />
-            <i className="icon-extra-small icon-check icon-light align-middle" />
-            <br />
-            {symbol} Ready
-          </Button>
+          {BN(web3.allowance2.toString()).comparedTo(txnAmount) === -1 && (
+            <>
+              <Button
+                className="btn-fill w-100 h-100"
+                color="neutral"
+                onClick={async () => {
+                  handleApproval()
+                }}
+              >
+                <i className="icon-extra-small icon-lock icon-light align-middle" />
+                <br />
+                Approve {symbol}
+              </Button>
+            </>
+          )}
+          {BN(web3.allowance2.toString()).comparedTo(txnAmount) === 1 && (
+            <>
+              <Button className="btn-fill w-100 h-100" color="success">
+                <i className="icon-extra-small icon-lock icon-dark align-middle" />
+                <i className="icon-extra-small icon-check icon-light align-middle" />
+                <br />
+                {symbol} Ready
+              </Button>
+            </>
+          )}
         </>
       )}
     </>
