@@ -43,7 +43,7 @@ import { calcLiquidityUnits, calcSwapOutput } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
 import { bondDeposit } from '../../../store/bond/actions'
 
-const AddLiquidity = () => {
+const BondLiquidity = () => {
   const wallet = useWallet()
   const bond = useBond()
   const dispatch = useDispatch()
@@ -342,4 +342,4 @@ const AddLiquidity = () => {
   )
 }
 
-export default AddLiquidity
+export default BondLiquidity
