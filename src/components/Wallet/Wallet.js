@@ -43,14 +43,14 @@ const Wallet = ({ coins }) => (
           <DropdownItem divider />
         </DropdownItem>
         {coins?.map((coin) => (
-          <>
-            <DropdownItem href="">
+          <DropdownItem key={coin.symbol}>
+            <div>
               {coin.symbol} :{' '}
               <span className="float-right">
                 {formatFromWei(coin.balanceTokens)}
               </span>
-            </DropdownItem>
-          </>
+            </div>
+          </DropdownItem>
         ))}
       </DropdownMenu>
     </UncontrolledButtonDropdown>

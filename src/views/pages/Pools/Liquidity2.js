@@ -16,11 +16,8 @@ import AddLiquidity from './AddLiquidity'
 import RemoveLiquidity from './RemoveLiquidity'
 // import ZapLiquidity from './ZapLiquidity'
 import BondLiquidity from './BondLiquidity'
-import Wallet from '../../../components/Wallet/Wallet'
-import { usePoolFactory } from '../../../store/poolFactory'
 
 const Liquidity2 = () => {
-  const poolFactory = usePoolFactory()
   const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
@@ -31,16 +28,11 @@ const Liquidity2 = () => {
     <>
       <div className="content">
         <Row className="card-body justify-content-center">
-          <Col xs="12" xl="5">
+          <Col>
             <h2 className="d-inline text-title ml-1">Liquidity</h2>
           </Col>
-          <Col xs="12" xl="4">
-            <Row>
-              <SharePool />
-            </Row>
-            <Row>
-              <Wallet coins={poolFactory.finalArray} />
-            </Row>
+          <Col xs="6" md="3">
+            <SharePool />
           </Col>
         </Row>
 
