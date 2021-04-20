@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState } from 'react'
 import {
   Col,
@@ -9,6 +10,8 @@ import {
   TabPane,
 } from 'reactstrap'
 
+import {withNamespaces} from "react-i18next";
+import withRouter from "react-router-dom/es/withRouter";
 import classnames from 'classnames'
 import CardHeader from 'reactstrap/es/CardHeader'
 import Card from 'react-bootstrap/Card'
@@ -19,7 +22,7 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import Alert from 'react-bootstrap/Alert'
 import PoolsTable from './PoolsTable'
 
-const Overview = () => {
+export const Overview = (props) => {
   const [customActiveTab, setCustomActiveTab] = useState('1')
 
   const toggleCustom = (tab) => {
@@ -199,7 +202,7 @@ const Overview = () => {
       <div className="content">
         <Row className="card-body justify-content-center">
           <Col xs="6" xl="5">
-            <h2 className="d-inline text-title ml-1">Pools</h2>
+            <h2 className="d-inline text-title ml-1">{props.t("Pools")}</h2>
           </Col>
           <Col xs="6" xl="4">
             {/* Buttons? */}
@@ -216,9 +219,7 @@ const Overview = () => {
                     className="icon-small icon-info icon-dark"
                   />
                   <span data-notify="message" className="ml-n2">
-                    The liquidity pools are facilitated by an
-                    automated-market-maker (AMM) algorithm with
-                    liquidity-sensitive fees.
+                    {props.t("The liquidity pools are facilitated by an automated-market-maker (AMM) algorithm with liquidity-sensitive fees.")}
                   </span>
                 </Alert>
               </Col>
@@ -230,7 +231,7 @@ const Overview = () => {
                     <CardTitle tag="h2">
                       <Row className="fade-in">
                         <Col md={12} sm={12}>
-                          Total volume{' '}
+                          {props.t("Total pooled")}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -276,7 +277,7 @@ const Overview = () => {
                     <CardTitle tag="h2">
                       <Row className="fade-in">
                         <Col md={12} sm={12}>
-                          Total volume{' '}
+                          {props.t("Total volume")}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -405,4 +406,4 @@ const Overview = () => {
   )
 }
 
-export default Overview
+export default withRouter(withNamespaces()(Overview));

@@ -1,5 +1,8 @@
+/*eslint-disable*/
 import React from 'react'
 
+import {withNamespaces} from "react-i18next";
+import withRouter from "react-router-dom/es/withRouter";
 import {
   Button,
   Row,
@@ -18,7 +21,7 @@ import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses } from '../../utils/web3'
 
-const Supply = () => {
+export const Supply = (props) => {
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
@@ -45,7 +48,8 @@ const Supply = () => {
         <PopoverBody>
           <Row>
             <Col xs="6" className="popover-text mb-4">
-              Market cap
+              {props.t("Marketcap")}
+
             </Col>
             <Col xs="6 mb-2" className="popover-text mb-4">
               $
@@ -60,7 +64,8 @@ const Supply = () => {
             </Col>
 
             <Col xs="6 mb-2" className="popover-text">
-              Circulating supply
+              {props.t("Circulating supply")}
+
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(
@@ -78,7 +83,8 @@ const Supply = () => {
             </Col>
 
             <Col xs="6" className="popover-text mb-2">
-              Total supply
+              {props.t("Total supply")}
+
             </Col>
             <Col xs="6" className="popover-text mb-2">
               {formatFromWei(
@@ -133,7 +139,8 @@ const Supply = () => {
                   <Col xs={8} className="ml-n2 ">
                     <div className="text-left text-card">
                       <i className="icon-small icon-contracts icon-light mr-1" />{' '}
-                      Select contracts
+                      {props.t("Contracts")}
+
                     </div>
                   </Col>
                   <Col className="ml-auto">
@@ -299,4 +306,5 @@ const Supply = () => {
   )
 }
 
-export default Supply
+export default withRouter(withNamespaces()(Supply));
+

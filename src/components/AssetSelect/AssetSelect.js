@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+/*eslint-disable*/
 import React, { useEffect, useState } from 'react'
 import {
   Button,
@@ -24,7 +25,8 @@ import ShareLink from '../Share/ShareLink'
 // import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
-
+import {withNamespaces} from "react-i18next";
+import withRouter from "react-router-dom/es/withRouter";
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
  * depending on the 'priority' prop handed over.
@@ -34,7 +36,7 @@ import spartaIconAlt from '../../assets/img/spartan_synth.svg'
  * @param {array} whiteList tokenAddresses [array]
  * @param {array} blackList tokenAddresses [array]
  */
-const AssetSelect = (props) => {
+export const AssetSelect = (props) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
 
@@ -304,7 +306,7 @@ const AssetSelect = (props) => {
       <Modal isOpen={showModal} toggle={toggleModal}>
         <Row className="card-body">
           <Col xs="10">
-            <h3 className="ml-2 modal-title">Select an asset</h3>
+            <h3 className="ml-2 modal-title">{props.t("Select an asset")}</h3>
           </Col>
           <Col xs="2">
             <Button onClick={toggleModal} className="btn btn-transparent mt-4">
@@ -322,7 +324,7 @@ const AssetSelect = (props) => {
                 changeTab('all')
               }}
             >
-              All
+              {props.t("All")}
             </NavLink>
           </NavItem>
           {assetArray.filter((asset) => asset.type === 'token').length > 0 && (
@@ -332,8 +334,8 @@ const AssetSelect = (props) => {
                 onClick={() => {
                   changeTab('token')
                 }}
-              >
-                Tokens
+              > {props.t("Tokens")}
+
               </NavLink>
             </NavItem>
           )}
@@ -347,7 +349,7 @@ const AssetSelect = (props) => {
                   changeTab('pool')
                 }}
               >
-                LP Tokens
+                {props.t("LP Tokens")}
               </NavLink>
             </NavItem>
           )}
@@ -359,7 +361,7 @@ const AssetSelect = (props) => {
                   changeTab('synth')
                 }}
               >
-                Synths
+                {props.t("Synths")}
               </NavLink>
             </NavItem>
           )}
@@ -388,7 +390,7 @@ const AssetSelect = (props) => {
               </InputGroupAddon>
               <Input
                 className="text-card mt-1"
-                placeholder="Search assets..."
+                placeholder={props.t("Search assets...")}
                 type="text"
                 id="searchInput"
                 onChange={() => console.log('hello')}
@@ -560,4 +562,5 @@ const AssetSelect = (props) => {
   )
 }
 
-export default AssetSelect
+export default withRouter(withNamespaces()(AssetSelect));
+

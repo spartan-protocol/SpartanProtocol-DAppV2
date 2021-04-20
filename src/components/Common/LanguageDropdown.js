@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState } from 'react'
 import {
   Dropdown,
@@ -11,11 +12,8 @@ import { withNamespaces } from 'react-i18next'
 import i18n from '../../i18n'
 
 // flags
-import usFlag from '../../assets/img/flags/united-states.png'
-import china from '../../assets/img/flags/china.png'
-import russia from '../../assets/img/flags/russia.png'
-import turkey from '../../assets/img/flags/turkey.png'
-import vietnam from '../../assets/img/flags/vietnam.png'
+import enFlag from '../../assets/img/flags/en.png'
+import nlFlag from '../../assets/img/flags/nl.png'
 
 const LanguageDropdown = () => {
   const [menu, setMenu] = useState(false)
@@ -26,27 +24,13 @@ const LanguageDropdown = () => {
     // set language as i18n
     i18n.changeLanguage(lang)
 
-    if (lang === 'sp') {
-      // setFlag(china);
-      setLng('Chinese')
-    } else if (lang === 'gr') {
-      // setFlag(russia);
-      setLng('Russian')
-    } else if (lang === 'rs') {
-      // setFlag(russia);
-      setLng('Russian')
-    } else if (lang === 'it') {
-      // setFlag(turkey);
-      setLng('Turkish')
-    } else if (lang === 'eng') {
-      // setFlag(usFlag);
+    if (lang === 'eng') {
       setLng('English')
-    } else if (lang === 'vi') {
+    } else if (lang === 'nl') {
       // setFlag(vietnam);
-      setLng('Vietnamese')
+      setLng('Dutch')
     }
   }
-
   const toggle = () => {
     setMenu(!menu)
   }
@@ -78,46 +62,19 @@ const LanguageDropdown = () => {
             onClick={() => changeLanguageAction('eng')}
             className={`notify-item ${lng === 'English' ? 'active' : 'none'}`}
           >
-            <img src={usFlag} alt="Spartan" height="12" />
+            <img src={enFlag} alt="Spartan" height="12" />
             <span className="align-middle ml-1 output-card">English</span>
           </DropdownItem>
           <DropdownItem
             tag="a"
             href="#"
-            onClick={() => changeLanguageAction('sp')}
-            className={`notify-item ${lng === 'Chinese' ? 'active' : 'none'}`}
-          >
-            <img src={china} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Chinese</span>
-          </DropdownItem>
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('gr')}
-            className={`notify-item ${lng === 'German' ? 'active' : 'none'}`}
-          >
-            <img src={russia} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Russian</span>
-          </DropdownItem>
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('it')}
-            className={`notify-item ${lng === 'Italian' ? 'active' : 'none'}`}
-          >
-            <img src={turkey} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Turkish</span>
-          </DropdownItem>
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('vi')}
+            onClick={() => changeLanguageAction('nl')}
             className={`notify-item ${
-              lng === 'Vietnamese' ? 'active' : 'none'
+              lng === 'Dutch' ? 'active' : 'none'
             }`}
           >
-            <img src={vietnam} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Vietnamese</span>
+            <img src={nlFlag} alt="Spartan" height="12" />
+            <span className="align-middle ml-1 output-card">Nederlands</span>
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

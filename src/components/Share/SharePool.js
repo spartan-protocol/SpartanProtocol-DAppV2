@@ -124,7 +124,7 @@ const Share = () => {
                   <CardBody className="py-3">
                     <Row>
                       <Col xs="10">
-                        <span className="card-title">Share via Twitter</span>
+                        <span className="card-title">Share via Facebook</span>
                       </Col>
                       <Col xs="2">
                         <TwitterIcon size={32} round />

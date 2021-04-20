@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
@@ -49,8 +51,9 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getPoolContract } from '../../../utils/web3Pool'
 import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
-
-const Swap = () => {
+import {withNamespaces} from "react-i18next";
+import withRouter from "react-router-dom/es/withRouter";
+export const Swap = (props) => {
   const web3 = useWeb3()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -617,7 +620,7 @@ const Swap = () => {
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
-                <h2 className="d-inline text-title ml-1">Swap</h2>
+                <h2 className="d-inline text-title ml-1">{props.t("Ruilen")}</h2>
               </Col>
               <Col xs="6" xl="4">
                 <SharePool />
@@ -650,7 +653,7 @@ const Swap = () => {
                                 )
                               }}
                             >
-                              Balance {formatFromWei(getBalance(1), 4)}
+                               {props.t("Balance ")}{formatFromWei(getBalance(1), 4)}
                             </div>
                           </Col>
                         </Row>
@@ -668,7 +671,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="Input amount..."
+                                placeholder={props.t("Input amount...")}
                                 id="swapInput1"
                                 onInput={(event) =>
                                   handleZapInputChange(event.target.value, true)
@@ -734,7 +737,7 @@ const Swap = () => {
                       >
                         <Row>
                           <Col xs={4}>
-                            <div className="title-card">Output</div>
+                            <div className="title-card">{props.t("Ouput")}</div>
                           </Col>
                           <Col xs={8} className="text-right">
                             <div
@@ -767,7 +770,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="Output amount..."
+                                placeholder={props.t("Output amount...")}
                                 id="swapInput2"
                                 readOnly={mode !== 'token'}
                                 onInput={(event) =>
@@ -833,7 +836,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipInput"
                             >
-                              Your input amount.
+                              {props.t("Your input amount.")}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -848,7 +851,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Fee{' '}
+                            {props.t("Fee")}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipFee"
@@ -904,7 +907,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Input{' '}
+                            {props.t("Input")}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapInput"
@@ -914,7 +917,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapInput"
                             >
-                              Your input amount.
+                              {props.t("Your input amount.")}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -928,7 +931,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Fee{' '}
+                            {props.t("Fee")}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapFee"
@@ -938,8 +941,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapFee"
                             >
-                              The slip fee being injected into the pool to
-                              reward the liquidity providers
+                              {props.t("The slip fee being injected into the pool to reward the liquidity providers")}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -953,7 +955,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="amount">
-                            Output{' '}
+                            {props.t("Output")}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapOutput"
@@ -983,7 +985,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Input{' '}
+                            {props.t("Input")}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipSynthInput"
@@ -1080,7 +1082,7 @@ const Swap = () => {
                       }
                       block
                     >
-                      Swap
+                      {props.t("Swap")}
                     </Button>
                   )}
                   {mode === 'pool' && (
@@ -1187,4 +1189,5 @@ const Swap = () => {
   )
 }
 
-export default Swap
+export default withRouter(withNamespaces()(Swap));
+
