@@ -681,3 +681,7 @@ body::-webkit-scrollbar {
     background-color: #970303;
     outline: 1px solid #1D171F;
 }
+
+.swal2-radio {
+    display: grid !important;
+}
