@@ -2,11 +2,12 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Card, CardBody, Row, Col } from 'reactstrap'
-import bnbSparta from '../../../assets/icons/bnb_sparta.png'
+import { Link } from 'react-router-dom'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { daoDeposit, daoWithdraw } from '../../../store/dao/actions'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
+import spartaIcon from '../../../assets/img/spartan_lp.svg'
 
 const LockEarn = () => {
   const poolFactory = usePoolFactory()
@@ -14,81 +15,114 @@ const LockEarn = () => {
 
   return (
     <>
-      {!poolFactory.finalLpArray && (
-        <HelmetLoading height="300px" width="300px" />
-      )}
-      {poolFactory.finalLpArray &&
-        poolFactory.finalLpArray
-          .filter((i) => i.curated === true)
-          .sort(
-            (a, b) =>
-              BN(b.balanceLPs).plus(b.lockedLPs) -
-              BN(a.balanceLPs).plus(a.lockedLPs),
-          )
-          .map((asset) => (
-            <Card
-              className="card-body"
-              style={{ backgroundColor: '#1D171F' }}
-              key={asset.tokenAddress}
-            >
-              <CardBody>
-                <Row>
-                  <Col md={3} xs={12} className="mb-n4">
-                    <h2 className="mt-3">
-                      <img
-                        className="mr-2"
-                        src={bnbSparta}
-                        alt="Logo"
-                        height="32"
-                      />
-                      {asset.symbol}-SPP
-                    </h2>
-                  </Col>
-                  <Col md={2} />
-                  <Col md={2}>
-                    <div className="card-text">Locked</div>
-                  </Col>
-                  <Col md={2}>
-                    <div className="card-text">Unlocked</div>
-                  </Col>
-                  <Col md={2} className="ml-auto mr-2 mt-2">
-                    <Button
-                      type="Button"
-                      className="btn btn-primary"
-                      onClick={() =>
-                        dispatch(
-                          daoDeposit(asset.poolAddress, asset.balanceLPs),
-                        )
-                      }
-                    >
-                      Lock
-                    </Button>
-                    <Button
-                      type="Button"
-                      className="btn btn-primary"
-                      onClick={() => dispatch(daoWithdraw(asset.poolAddress))}
-                    >
-                      Unlock
-                    </Button>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col md={3} />
-                  <Col md={2} />
-                  <Col md={2}>
-                    <div className="title-card mt-n4">
-                      {formatFromWei(asset.lockedLPs)}
-                    </div>
-                  </Col>
-                  <Col md={2}>
-                    <div className="title-card mt-n4">
-                      {formatFromWei(asset.balanceLPs)}
-                    </div>
-                  </Col>
-                </Row>
-              </CardBody>
-            </Card>
-          ))}
+      <Row>
+        {!poolFactory.finalLpArray && (
+          <HelmetLoading height="300px" width="300px" />
+        )}
+        {poolFactory.finalLpArray &&
+          poolFactory.finalLpArray
+            .filter((i) => i.curated === true)
+            .sort(
+              (a, b) =>
+                BN(b.balanceLPs).plus(b.lockedLPs) -
+                BN(a.balanceLPs).plus(a.lockedLPs),
+            )
+            .map((asset) => (
+              <Col xs="12" lg="6" key={asset.tokenAddress}>
+                <Card
+                  className="card-body"
+                  style={{ backgroundColor: '#1D171F' }}
+                >
+                  <CardBody>
+                    <Row>
+                      <Col xs="12" sm="6">
+                        <Row>
+                          <Col xs="auto" className="pr-0">
+                            <img
+                              height="45px"
+                              src={asset.symbolUrl}
+                              alt={asset.name}
+                              className="mr-n3"
+                            />
+                            <img
+                              height="25px"
+                              src={spartaIcon}
+                              alt="SPARTA"
+                              className="mr-2 mt-4"
+                            />
+                          </Col>
+                          <Col>
+                            <h3 className="d-inline">
+                              {asset.symbol}-SPP
+                              <br />
+                            </h3>
+                            Buy / Swap
+                            <Link
+                              to="/dapp/pools/swap"
+                              onClick={() =>
+                                window.localStorage.setItem(
+                                  'assetSelected1',
+                                  JSON.stringify(asset),
+                                )
+                              }
+                            >
+                              <i className="icon-extra-small icon-scan ml-2" />
+                            </Link>
+                          </Col>
+                        </Row>
+                      </Col>
+                      <Col xs="6" sm="3">
+                        <div className="card-text">Locked</div>
+                        <div className="subtitle-amount d-none d-sm-block">
+                          {formatFromWei(asset.lockedLPs)}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-sm-none">
+                        <div className="subtitle-amount text-right">
+                          {formatFromWei(asset.lockedLPs)}
+                        </div>
+                      </Col>
+                      <Col xs="6" sm="3">
+                        <div className="card-text">Unlocked</div>
+                        <div className="subtitle-amount d-none d-sm-block">
+                          {formatFromWei(asset.balanceLPs)}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-sm-none">
+                        <div className="subtitle-amount text-right">
+                          {formatFromWei(asset.balanceLPs)}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="mt-2">
+                        <Button
+                          type="Button"
+                          className="btn btn-primary w-100 p-3"
+                          onClick={() =>
+                            dispatch(daoWithdraw(asset.poolAddress))
+                          }
+                        >
+                          Unlock
+                        </Button>
+                      </Col>
+                      <Col xs="6" className="mt-2">
+                        <Button
+                          type="Button"
+                          className="btn btn-primary w-100 p-3"
+                          onClick={() =>
+                            dispatch(
+                              daoDeposit(asset.poolAddress, asset.balanceLPs),
+                            )
+                          }
+                        >
+                          Lock
+                        </Button>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+            ))}
+      </Row>
     </>
   )
 }

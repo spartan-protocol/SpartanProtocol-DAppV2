@@ -744,7 +744,8 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="output-card">
-                            {formatFromUnits(swapInput1?.value, 10)}{' '}
+                            {swapInput1?.value &&
+                              formatFromUnits(swapInput1?.value, 10)}{' '}
                             {assetSwap1?.symbol}
                           </div>
                         </Col>
@@ -770,7 +771,9 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="output-card">
-                            {formatFromWei(getSwapFee(), 10)} SPARTA
+                            {swapInput1?.value &&
+                              formatFromWei(getSwapFee(), 10)}{' '}
+                            SPARTA
                           </div>
                         </Col>
                       </Row>
@@ -795,7 +798,8 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="subtitle-amount">
-                            {formatFromWei(getSwapOutput(), 10)}{' '}
+                            {swapInput1?.value &&
+                              formatFromWei(getSwapOutput(), 10)}{' '}
                             {assetSwap2?.symbol}
                           </div>
                         </Col>
@@ -825,7 +829,8 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="output-card">
-                            {swapInput1?.value} {assetSwap1?.symbol}-SPP
+                            {swapInput1?.value && swapInput1?.value}{' '}
+                            {assetSwap1?.symbol}-SPP
                           </div>
                         </Col>
                       </Row>
@@ -850,7 +855,9 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="output-card">
-                            {formatFromWei(getZapSwapFee(), 10)} SPARTA
+                            {swapInput1?.value &&
+                              formatFromWei(getZapSwapFee(), 10)}{' '}
+                            SPARTA
                           </div>
                         </Col>
                       </Row>
@@ -874,7 +881,8 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="subtitle-amount">
-                            {formatFromWei(getZapOutput(), 10)}{' '}
+                            {swapInput1?.value &&
+                              formatFromWei(getZapOutput(), 10)}{' '}
                             {assetSwap2?.symbol}
                             -SPP
                           </div>
@@ -905,7 +913,8 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="output-card">
-                            {swapInput1?.value} {assetSwap1?.symbol}
+                            {swapInput1?.value && swapInput1?.value}{' '}
+                            {assetSwap1?.symbol}
                             {assetSwap1?.symbol !== 'SPARTA' && '-SPS'}
                           </div>
                         </Col>
@@ -931,9 +940,11 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="output-card">
-                            {assetSwap1?.symbol === 'SPARTA' &&
+                            {swapInput1?.value &&
+                              assetSwap1?.symbol === 'SPARTA' &&
                               formatFromWei(getSynthFeeFromBase(), 10)}
-                            {assetSwap1?.symbol !== 'SPARTA' &&
+                            {swapInput1?.value &&
+                              assetSwap1?.symbol !== 'SPARTA' &&
                               formatFromWei(getSynthFeeToBase(), 10)}{' '}
                             SPARTA
                           </div>
@@ -959,11 +970,13 @@ const Swap = () => {
                         </Col>
                         <Col xs="7" className="text-right">
                           <div className="subtitle-amount">
-                            {assetSwap1?.symbol === 'SPARTA' &&
+                            {swapInput1?.value &&
+                              assetSwap1?.symbol === 'SPARTA' &&
                               `${formatFromWei(getSynthOutputFromBase(), 10)} ${
                                 assetSwap2?.symbol
                               }-SPP`}
-                            {assetSwap1?.symbol !== 'SPARTA' &&
+                            {swapInput1?.value &&
+                              assetSwap1?.symbol !== 'SPARTA' &&
                               `${formatFromWei(getSynthOutputToBase(), 10)} ` +
                                 `SPARTA`}
                           </div>

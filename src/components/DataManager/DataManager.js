@@ -1,6 +1,7 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { getBondVaultMemberDetails } from '../../store/bondVault/actions'
 import { getDaoHarvestAmount } from '../../store/dao/actions'
 import {
   getDaoVaultMemberWeight,
@@ -39,8 +40,10 @@ const DataManager = () => {
   const [prevNetwork, setPrevNetwork] = useState(
     JSON.parse(window.localStorage.getItem('network')),
   )
-  // const prevNetwork = usePrevious(network)
 
+  /**
+   * On DApp load check network and get the party started
+   */
   useEffect(() => {
     const checkNetwork = async () => {
       if (prevNetwork.net === 'mainnet' || prevNetwork.net === 'testnet') {
@@ -63,6 +66,10 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /**
+   * Check SPARTA token price
+   * We should change this to use 'await' of a Promise (Pause) instead to avoid overlapping calls
+   */
   useEffect(() => {
     const interval = setInterval(() => {
       dispatch(getSpartaPrice())
@@ -72,6 +79,10 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /**
+   * Check DAO member weight & harvestable on interval timer
+   * We should change this to use 'await' of a Promise (Pause) instead to avoid overlapping calls
+   */
   useEffect(() => {
     const interval = setInterval(() => {
       if (wallet.account) {
@@ -83,6 +94,9 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet.account])
 
+  /**
+   * Trigger array refresh on network change
+   */
   useEffect(() => {
     const checkArrays = () => {
       if (
@@ -99,12 +113,10 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem('network')])
 
-  const [prevDetailedArray, setPrevDetailedArray] = useState(
-    poolFactory.detailedArray,
-  )
-
+  /**
+   * Interval timer trigger to update arrays
+   */
   const [arrayTrigger, setArrayTrigger] = useState(0)
-
   useEffect(() => {
     const interval = setInterval(() => {
       setArrayTrigger(arrayTrigger + 1)
@@ -112,6 +124,12 @@ const DataManager = () => {
     return () => clearInterval(interval)
   }, [arrayTrigger])
 
+  /**
+   * Update Detailed Array
+   */
+  const [prevDetailedArray, setPrevDetailedArray] = useState(
+    poolFactory.detailedArray,
+  )
   useEffect(() => {
     const { tokenArray } = poolFactory
     if (tokenArray.length > 0) {
@@ -124,8 +142,10 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenArray, wallet.account, arrayTrigger])
 
+  /**
+   * Update Final Array (Not actually final :) )
+   */
   const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
-
   useEffect(() => {
     const { detailedArray } = poolFactory
     const { curatedPoolArray } = poolFactory
@@ -146,6 +166,9 @@ const DataManager = () => {
     poolFactory.finalLpArray,
   )
 
+  /**
+   * Update Final LP Array
+   */
   useEffect(() => {
     const { finalArray } = poolFactory
     const checkFinalArrayForLP = () => {
@@ -158,8 +181,25 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalArray])
 
-  const [eventArray, setEventArray] = useState([])
+  /**
+   * Update bondVault member details
+   */
+  useEffect(() => {
+    const { finalLpArray } = poolFactory
+    const checkBondArray = () => {
+      if (finalLpArray !== prevFinalLpArray && finalLpArray?.length > 0) {
+        dispatch(getBondVaultMemberDetails(wallet.account, finalLpArray))
+        setPrevFinalLpArray(poolFactory.finalLpArray)
+      }
+    }
+    checkBondArray()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolFactory.finalLpArray])
 
+  /**
+   * Listen to all contracts
+   */
+  const [eventArray, setEventArray] = useState([])
   useEffect(() => {
     const { finalLpArray } = poolFactory
     const contracts = [getRouterContract(), getDaoContract(), getBondContract()]
@@ -197,6 +237,9 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.finalLpArray])
 
+  /**
+   * Update store whenever a new txn is picked up
+   */
   useEffect(() => {
     dispatch(getEventArray(eventArray))
     // eslint-disable-next-line react-hooks/exhaustive-deps
