@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React, { useState } from 'react'
 import {
   Button,
@@ -6,20 +5,18 @@ import {
   CardBody,
   Row,
   Col,
-  Breadcrumb,
   Nav,
   NavItem,
   NavLink,
   TabContent,
   TabPane,
-  Alert,
 } from 'reactstrap'
 import classnames from 'classnames'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import LockEarn from './LockEarn'
-import Proposals from './Proposals'
+// import Proposals from './Proposals'
 import { daoHarvest } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
@@ -38,20 +35,17 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-
         <Row className="card-body justify-content-center">
           <Col xs="6" xl="5">
             <h2 className="d-inline text-title ml-1">Dao</h2>
           </Col>
-          <Col xs="6" xl="4">
-
-          </Col>
+          <Col xs="6" xl="4" />
         </Row>
 
         <Row className="justify-content-center">
           <Col xs="12" xl="9">
             <Row>
-              <Col sm={10}>
+              <Col xs="12">
                 <Row>
                   <Col sm={12}>
                     <Nav className="nav-tabs-custom card-body" pills>
@@ -65,7 +59,7 @@ const Overview = () => {
                           Lock & earn
                         </NavLink>
                       </NavItem>
-                      <NavItem>
+                      {/* <NavItem>
                         <NavLink
                           className={classnames({ active: activeTab === '2' })}
                           onClick={() => {
@@ -74,22 +68,21 @@ const Overview = () => {
                         >
                           Proposals
                         </NavLink>
-                      </NavItem>
+                      </NavItem> */}
                     </Nav>
                   </Col>
                 </Row>
 
                 <TabContent activeTab={activeTab}>
                   <TabPane tabId="1" className="p-3">
-                    <br />
                     <Card
                       className="card-body"
                       style={{ backgroundColor: '#1D171F' }}
                     >
                       <CardBody>
                         <Row>
-                          <Col md={3} xs={12} className="mb-n4">
-                            <h2 className="mt-3">
+                          <Col xs="12" md="5" lg="4">
+                            <h2>
                               Claim rewards
                               <i
                                 className="icon-small icon-info icon-dark ml-2"
@@ -100,52 +93,75 @@ const Overview = () => {
                                 placement="right"
                                 target="tooltipAddBase"
                               >
-                                The quantity of & SPARTA you are adding to the pool.
+                                The quantity of & SPARTA you are adding to the
+                                pool.
                               </UncontrolledTooltip>
                             </h2>
                           </Col>
-                          <Col md={2}>
-                            <div className="card-text">Rewards</div>
+
+                          <Col xs="6" md="2" lg="2">
+                            <div className="card-text">Rewards:</div>
+                            <div className="subtitle-amount d-none d-md-block">
+                              {formatFromWei(dao.harvestAmount.toString())}
+                              {/* <i className="icon-extra-small icon-spinner icon-dark ml-1" /> */}
+                            </div>
                           </Col>
-                          <Col md={2}>
-                            <div className="card-text">DAO weight</div>
+                          <Col xs="6" className="d-block d-md-none">
+                            <div className="subtitle-amount text-right">
+                              {formatFromWei(dao.harvestAmount.toString())}
+                              {/* <i className="icon-extra-small icon-spinner icon-dark ml-1" /> */}
+                            </div>
                           </Col>
-                          <Col md={2}>
-                            <div className="card-text">Latest harvest</div>
+
+                          <Col xs="6" md="2" lg="2">
+                            <div className="card-text">DAO Weight:</div>
+                            <div className="subtitle-amount d-none d-md-block">
+                              {daoVault.memberWeight > 0 &&
+                                `${formatFromUnits(
+                                  BN(daoVault.memberWeight.toString())
+                                    .div(daoVault.daoTotalWeight.toString())
+                                    .times(100),
+                                )}%`}
+                              {daoVault.memberWeight <= 0 && 'Not a DAO member'}
+                            </div>
                           </Col>
-                          <Col md={2} className="ml-auto mr-2 mt-2">
+                          <Col xs="6" className="d-block d-md-none">
+                            <div className="subtitle-amount text-right">
+                              {daoVault.memberWeight > 0 &&
+                                `${formatFromUnits(
+                                  BN(daoVault.memberWeight.toString())
+                                    .div(daoVault.daoTotalWeight.toString())
+                                    .times(100),
+                                )}%`}
+                              {daoVault.memberWeight <= 0 && 'Not a DAO member'}
+                            </div>
+                          </Col>
+
+                          <Col xs="6" md="3" lg="2">
+                            <div className="card-text">Last Harvest:</div>
+                            <div className="subtitle-amount d-none d-md-block">
+                              XXX
+                            </div>
+                          </Col>
+                          <Col xs="6" className="d-block d-md-none">
+                            <div className="subtitle-amount text-right">
+                              XXX
+                            </div>
+                          </Col>
+
+                          <Col
+                            xs="9"
+                            sm="6"
+                            lg="2"
+                            className="mx-auto my-lg-auto mt-2 p-0"
+                          >
                             <Button
                               type="Button"
-                              className="btn btn-primary"
+                              className="btn btn-primary w-100"
                               onClick={() => dispatch(daoHarvest())}
                             >
                               Harvest
                             </Button>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col md={3} />
-                          <Col md={2}>
-                            <div className="title-card mt-n2 ">
-                              <div className="subtitle-amount mt-n4">
-                                {formatFromWei(dao.harvestAmount.toString())}
-                                <i className="icon-extra-small icon-spinner icon-dark ml-1" />
-                              </div>
-                            </div>
-                          </Col>
-                          <Col md={2}>
-                            <div className="title-card mt-n4">
-                              {daoVault.memberWeight > 0 &&
-                              formatFromUnits(
-                                BN(daoVault.memberWeight.toString())
-                                  .div(daoVault.daoTotalWeight.toString())
-                                  .times(100),
-                              )}
-                              {daoVault.memberWeight <= 0 && 'Not a DAO member'}
-                            </div>
-                          </Col>
-                          <Col md={2}>
-                            <div className="title-card mt-n4">XXX</div>
                           </Col>
                         </Row>
                       </CardBody>
@@ -167,17 +183,14 @@ const Overview = () => {
                     <br />
                     <LockEarn />
                   </TabPane>
-                  <TabPane tabId="2" className="p-3">
+                  {/* <TabPane tabId="2" className="p-3">
                     <Proposals />
-                  </TabPane>
+                  </TabPane> */}
                 </TabContent>
               </Col>
             </Row>
           </Col>
         </Row>
-
-
-
       </div>
     </>
   )
