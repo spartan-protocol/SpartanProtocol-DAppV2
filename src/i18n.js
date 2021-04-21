@@ -1,43 +1,45 @@
 import i18n from 'i18next'
 import detector from 'i18next-browser-languagedetector'
-import { reactI18nextModule } from 'react-i18next'
-
-import translationSP from './locales/ch/translation.json'
-import translationENG from './locales/en/translation.json'
-import translationRS from './locales/rs/translation.json'
-import translationIT from './locales/tu/translation.json'
-import translationVI from './locales/vi/translation.json'
-// import translationGr from './locales/gr/translation.json'
+import { initReactI18next } from 'react-i18next'
+import translationEN from './locales/en/translation.json'
+import translationHI from './locales/hi/translation.json'
+import translationES from './locales/es/translation.json'
+import translationFR from './locales/fr/translation.json'
+import translationBN from './locales/bn/translation.json'
+import translationRU from './locales/ru/translation.json'
+import translationNL from './locales/nl/translation.json'
 
 // the translations
 const resources = {
-  // gr: {
-  //   translation: translationGr,
-  // },
-  it: {
-    translation: translationIT,
+  en: {
+    translation: translationEN,
   },
-  rs: {
-    translation: translationRS,
+  hi: {
+    translation: translationHI,
   },
-  sp: {
-    translation: translationSP,
+  es: {
+    translation: translationES,
   },
-  eng: {
-    translation: translationENG,
+  fr: {
+    translation: translationFR,
   },
-  vi: {
-    translation: translationVI,
+  bn: {
+    translation: translationBN,
+  },
+  ru: {
+    translation: translationRU,
+  },
+  nl: {
+    translation: translationNL,
   },
 }
 
 i18n
   .use(detector)
-  .use(reactI18nextModule) // passes i18n down to react-i18next
+  .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     resources,
     lng: 'en',
-    fallbackLng: 'en', // use en if detected lng is not available
 
     keySeparator: false, // we do not use keys in form messages.welcome
 

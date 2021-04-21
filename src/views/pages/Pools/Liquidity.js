@@ -17,7 +17,6 @@ import {
   Nav,
 } from 'reactstrap'
 
-// import { withNamespaces } from 'react-i18next'
 // import InputGroup from 'reactstrap/es/InputGroup'
 // import InputGroupAddon from 'reactstrap/es/InputGroupAddon'
 // import Slider from 'nouislider'

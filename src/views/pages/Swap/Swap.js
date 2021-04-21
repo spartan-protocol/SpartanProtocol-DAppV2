@@ -14,6 +14,7 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
@@ -47,6 +48,7 @@ import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 
 const Swap = () => {
+  const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -558,7 +560,7 @@ const Swap = () => {
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
-                <h2 className="d-inline text-title ml-1">Swap</h2>
+                <h2 className="d-inline text-title ml-1">{t('Swap')}</h2>
               </Col>
               <Col xs="6" xl="4">
                 <SharePool />
@@ -591,7 +593,8 @@ const Swap = () => {
                                 )
                               }}
                             >
-                              Balance {formatFromWei(getBalance(1), 4)}
+                              {t('Balance ')}
+                              {formatFromWei(getBalance(1), 4)}
                             </div>
                           </Col>
                         </Row>
@@ -609,7 +612,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="Input amount..."
+                                placeholder={t('Input amount...')}
                                 id="swapInput1"
                                 onInput={(event) =>
                                   handleZapInputChange(event.target.value, true)
@@ -671,7 +674,7 @@ const Swap = () => {
                       >
                         <Row>
                           <Col xs={4}>
-                            <div className="title-card">Output</div>
+                            <div className="title-card">{t('Ouput')}</div>
                           </Col>
                           <Col xs={8} className="text-right">
                             <div>Balance {formatFromWei(getBalance(2), 4)}</div>
@@ -692,7 +695,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="Output amount..."
+                                placeholder={t('Output amount...')}
                                 id="swapInput2"
                                 readOnly
                                 onInput={(event) =>
@@ -738,7 +741,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipInput"
                             >
-                              Your input amount.
+                              {t('Your input amount.')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -754,7 +757,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Fee{' '}
+                            {t('Fee')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipFee"
@@ -813,7 +816,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Input{' '}
+                            {t('Input')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapInput"
@@ -823,7 +826,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapInput"
                             >
-                              Your input amount.
+                              {t('Your input amount.')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -838,7 +841,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Fee{' '}
+                            {t('Fee')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapFee"
@@ -848,8 +851,9 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapFee"
                             >
-                              The slip fee being injected into the pool to
-                              reward the liquidity providers
+                              {t(
+                                'The slip fee being injected into the pool to reward the liquidity providers',
+                              )}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -865,7 +869,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="amount">
-                            Output{' '}
+                            {t('Output')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapOutput"
@@ -897,7 +901,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            Input{' '}
+                            {t('Input')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipSynthInput"

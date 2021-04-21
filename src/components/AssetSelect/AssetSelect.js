@@ -17,6 +17,7 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { usePoolFactory } from '../../store/poolFactory'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
@@ -24,7 +25,6 @@ import ShareLink from '../Share/ShareLink'
 // import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
-
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
  * depending on the 'priority' prop handed over.
@@ -35,6 +35,7 @@ import spartaIconAlt from '../../assets/img/spartan_synth.svg'
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
 
@@ -304,7 +305,7 @@ const AssetSelect = (props) => {
       <Modal isOpen={showModal} toggle={toggleModal}>
         <Row className="card-body">
           <Col xs="10">
-            <h3 className="ml-2 modal-title">Select an asset</h3>
+            <h3 className="ml-2 modal-title">{t('Select an asset')}</h3>
           </Col>
           <Col xs="2">
             <Button onClick={toggleModal} className="btn btn-transparent mt-4">
@@ -322,7 +323,7 @@ const AssetSelect = (props) => {
                 changeTab('all')
               }}
             >
-              All
+              {t('All')}
             </NavLink>
           </NavItem>
           {assetArray.filter((asset) => asset.type === 'token').length > 0 && (
@@ -333,7 +334,8 @@ const AssetSelect = (props) => {
                   changeTab('token')
                 }}
               >
-                Tokens
+                {' '}
+                {t('Tokens')}
               </NavLink>
             </NavItem>
           )}
@@ -347,7 +349,7 @@ const AssetSelect = (props) => {
                   changeTab('pool')
                 }}
               >
-                LP Tokens
+                {t('LP Tokens')}
               </NavLink>
             </NavItem>
           )}
@@ -359,7 +361,7 @@ const AssetSelect = (props) => {
                   changeTab('synth')
                 }}
               >
-                Synths
+                {t('Synths')}
               </NavLink>
             </NavItem>
           )}
@@ -388,7 +390,7 @@ const AssetSelect = (props) => {
               </InputGroupAddon>
               <Input
                 className="text-card mt-1"
-                placeholder="Search assets..."
+                placeholder={t('Search assets...')}
                 type="text"
                 id="searchInput"
                 onChange={() => console.log('hello')}

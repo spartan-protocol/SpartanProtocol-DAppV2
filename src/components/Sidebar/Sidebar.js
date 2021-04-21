@@ -3,8 +3,10 @@ import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { Nav, Collapse } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 
 const Sidebar = (props) => {
+  const { t } = useTranslation()
   const [state, setState] = React.useState({})
   const sidebarRef = React.useRef(null)
   const location = useLocation()
@@ -75,7 +77,7 @@ const Sidebar = (props) => {
                 <>
                   <i className={prop.icon} />
                   <p>
-                    {rtlActive ? prop.rtlName : prop.name}
+                    {rtlActive ? t(prop.rtlName) : t(prop.name)}
                     <b className="caret" />
                   </p>
                 </>
@@ -113,7 +115,7 @@ const Sidebar = (props) => {
             {prop.icon !== undefined ? (
               <>
                 <i className={prop.icon} />
-                <p>{rtlActive ? prop.rtlName : prop.name}</p>
+                <p>{rtlActive ? t(prop.rtlName) : t(prop.name)}</p>
               </>
             ) : (
               <>
@@ -121,7 +123,7 @@ const Sidebar = (props) => {
                   {rtlActive ? prop.rtlMini : prop.mini}
                 </span>
                 <span className="sidebar-normal">
-                  {rtlActive ? prop.rtlName : prop.name}
+                  {rtlActive ? t(prop.rtlName) : t(prop.name)}
                 </span>
               </>
             )}
