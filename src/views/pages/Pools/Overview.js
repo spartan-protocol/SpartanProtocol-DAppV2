@@ -20,7 +20,7 @@ import Alert from 'react-bootstrap/Alert'
 import { useTranslation } from 'react-i18next'
 import PoolsTable from './PoolsTable'
 
-export const Overview = () => {
+const Overview = () => {
   const { t } = useTranslation()
   const [customActiveTab, setCustomActiveTab] = useState('1')
 

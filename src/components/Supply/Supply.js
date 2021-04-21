@@ -19,7 +19,7 @@ import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses } from '../../utils/web3'
 
-export const Supply = () => {
+const Supply = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()

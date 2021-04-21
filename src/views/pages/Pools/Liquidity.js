@@ -30,7 +30,7 @@ import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
 import PoolsPaneSide from './PoolsPaneSide'
 import Wallet from '../../../components/Wallet/Wallet'
-import { AssetSelect } from '../../../components/AssetSelect/AssetSelect'
+import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
 import {

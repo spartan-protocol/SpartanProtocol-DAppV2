@@ -34,7 +34,7 @@ import spartaIconAlt from '../../assets/img/spartan_synth.svg'
  * @param {array} whiteList tokenAddresses [array]
  * @param {array} blackList tokenAddresses [array]
  */
-export const AssetSelect = (props) => {
+const AssetSelect = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)

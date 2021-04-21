@@ -1,19 +1,13 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
-import classnames from 'classnames'
 import {
   Button,
   Card,
-  CardBody,
   Col,
   Input,
   InputGroup,
   InputGroupAddon,
-  Nav,
-  NavItem,
-  NavLink,
   UncontrolledAlert,
   UncontrolledTooltip,
   Progress,
@@ -24,20 +18,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
-import {
-  BN,
-  convertFromWei,
-  convertToWei,
-  formatFromWei,
-} from '../../../utils/bigNumber'
-import SwapPair from '../Swap/SwapPair'
-import { useWeb3 } from '../../../store/web3'
-import {
-  routerRemoveLiq,
-  routerRemoveLiqAsym,
-} from '../../../store/router/actions'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getPoolContract } from '../../../utils/web3Pool'
+import { convertToWei, formatFromWei } from '../../../utils/bigNumber'
 import { useBond } from '../../../store/bond/selector'
 import { calcLiquidityUnits, calcSwapOutput } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
@@ -47,7 +28,6 @@ const BondLiquidity = () => {
   const wallet = useWallet()
   const bond = useBond()
   const dispatch = useDispatch()
-  const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
   const [assetBond1, setAssetBond1] = useState('...')

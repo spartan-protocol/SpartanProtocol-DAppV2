@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AssetSelect } from '../../../components/AssetSelect/AssetSelect'
+import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
 import {
@@ -47,7 +47,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 
-export const Swap = () => {
+const Swap = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()

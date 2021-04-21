@@ -16,7 +16,7 @@ import {
   Row,
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
-import { AssetSelect } from '../../../components/AssetSelect/AssetSelect'
+import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import MaxBadge from '../../../assets/icons/max.svg'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
