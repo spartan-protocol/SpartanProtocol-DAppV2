@@ -14,11 +14,22 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
     .div(assetSwap?.tokenAmount)
     .times(web3?.spartaPrice)
   const spotPrice = BN(assetSwap?.baseAmount).div(assetSwap?.tokenAmount)
-  const recentFees = asset ? asset.recentFees : 0
   const recentDivis = asset ? asset.recentDivis : 0
+  const lastMonthDivis = asset ? asset.lastMonthDivis : 0
+  const recentFees = asset ? asset.recentFees : 0
+  const lastMonthFees = asset ? asset.lastMonthFees : 0
   const APY =
     recentFees && recentDivis
-      ? formatFromUnits(calcAPY(recentDivis, recentFees, assetSwap.baseAmount))
+      ? formatFromUnits(
+          calcAPY(
+            recentDivis,
+            lastMonthDivis,
+            recentFees,
+            lastMonthFees,
+            assetSwap.genesis,
+            assetSwap.baseAmount,
+          ),
+        )
       : 0
 
   return (

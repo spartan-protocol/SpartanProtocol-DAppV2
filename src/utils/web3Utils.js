@@ -315,13 +315,37 @@ export const calcDoubleSwapInput = (
 
 /**
  * Calculate APY using full month divis + fees and pool's depth
- * @param {uint} dividends
- * @param {uint} fees
- * @param {uint} baseDepth
+ * @param {uint} recentDivis
+ * @param {uint} lastMonthDivis
+ * @param {uint} recentFees
+ * @param {uint} lastMonthFees
+ * @param {uint} poolGenesis
+ * @param {uint} poolBaseDepth
  * @returns {uint} apy
  */
-export const calcAPY = (dividends, fees, baseDepth) => {
-  const actualDepth = BN(baseDepth).times(2)
-  const apy = BN(dividends).plus(fees).times(12).div(actualDepth).times(100)
+export const calcAPY = (
+  recentDivis,
+  lastMonthDivis,
+  recentFees,
+  lastMonthFees,
+  poolGenesis,
+  poolBaseDepth,
+) => {
+  let apy = '0'
+  const actualDepth = BN(poolBaseDepth).times(2)
+  const monthFraction = ((Date.now() / 1000).toFixed() - poolGenesis) / 2592000
+  if (monthFraction > 1) {
+    apy = BN(lastMonthDivis > 0 ? lastMonthDivis : recentDivis)
+      .plus(lastMonthFees > 0 ? lastMonthFees : recentFees)
+      .times(12)
+      .div(actualDepth)
+      .times(100)
+  } else {
+    apy = BN(recentDivis)
+      .plus(recentFees)
+      .times(12 / monthFraction)
+      .div(actualDepth)
+      .times(100)
+  }
   return apy
 }
