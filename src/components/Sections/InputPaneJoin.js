@@ -1,7 +1,5 @@
 import React from 'react'
 
-import { withNamespaces } from 'react-i18next'
-
 import {
   Col,
   Row,
@@ -11,7 +9,6 @@ import {
   InputGroup,
   InputGroupAddon,
 } from 'reactstrap'
-import { withRouter } from 'react-router-dom'
 import { PercentSlider } from '../Common/common'
 
 export const InputPaneJoin = (props) => {
@@ -35,7 +32,7 @@ export const InputPaneJoin = (props) => {
           <Col sm="12">
             <InputGroup className="mb-3">
               <InputGroupAddon addonType="prepend">
-                <Label className="input-group-text">{props.t('Input')}</Label>
+                <Label className="input-group-text">{t('Input')}</Label>
               </InputGroupAddon>
               <Input
                 type="text"
@@ -64,4 +61,4 @@ export const InputPaneJoin = (props) => {
   )
 }
 
-export default withRouter(withNamespaces()(InputPaneJoin))
+export default InputPaneJoin

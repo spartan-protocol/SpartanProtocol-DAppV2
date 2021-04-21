@@ -1,5 +1,3 @@
-/*eslint-disable*/
-
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
@@ -16,7 +14,8 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
-import AssetSelect from '../../../components/AssetSelect/AssetSelect'
+import { useTranslation } from 'react-i18next'
+import { AssetSelect } from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
 import {
@@ -51,9 +50,9 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getPoolContract } from '../../../utils/web3Pool'
 import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
-import {withNamespaces} from "react-i18next";
-import withRouter from "react-router-dom/es/withRouter";
-export const Swap = (props) => {
+
+export const Swap = () => {
+  const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -620,7 +619,7 @@ export const Swap = (props) => {
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
-                <h2 className="d-inline text-title ml-1">{props.t("Ruilen")}</h2>
+                <h2 className="d-inline text-title ml-1">{t('Swap')}</h2>
               </Col>
               <Col xs="6" xl="4">
                 <SharePool />
@@ -653,7 +652,8 @@ export const Swap = (props) => {
                                 )
                               }}
                             >
-                               {props.t("Balance ")}{formatFromWei(getBalance(1), 4)}
+                              {t('Balance ')}
+                              {formatFromWei(getBalance(1), 4)}
                             </div>
                           </Col>
                         </Row>
@@ -671,7 +671,7 @@ export const Swap = (props) => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder={props.t("Input amount...")}
+                                placeholder={t('Input amount...')}
                                 id="swapInput1"
                                 onInput={(event) =>
                                   handleZapInputChange(event.target.value, true)
@@ -737,7 +737,7 @@ export const Swap = (props) => {
                       >
                         <Row>
                           <Col xs={4}>
-                            <div className="title-card">{props.t("Ouput")}</div>
+                            <div className="title-card">{t('Ouput')}</div>
                           </Col>
                           <Col xs={8} className="text-right">
                             <div
@@ -770,7 +770,7 @@ export const Swap = (props) => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder={props.t("Output amount...")}
+                                placeholder={t('Output amount...')}
                                 id="swapInput2"
                                 readOnly={mode !== 'token'}
                                 onInput={(event) =>
@@ -836,7 +836,7 @@ export const Swap = (props) => {
                               placement="right"
                               target="tooltipInput"
                             >
-                              {props.t("Your input amount.")}
+                              {t('Your input amount.')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -851,7 +851,7 @@ export const Swap = (props) => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {props.t("Fee")}
+                            {t('Fee')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipFee"
@@ -907,7 +907,7 @@ export const Swap = (props) => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {props.t("Input")}
+                            {t('Input')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapInput"
@@ -917,7 +917,7 @@ export const Swap = (props) => {
                               placement="right"
                               target="tooltipZapInput"
                             >
-                              {props.t("Your input amount.")}
+                              {t('Your input amount.')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -931,7 +931,7 @@ export const Swap = (props) => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {props.t("Fee")}
+                            {t('Fee')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapFee"
@@ -941,7 +941,9 @@ export const Swap = (props) => {
                               placement="right"
                               target="tooltipZapFee"
                             >
-                              {props.t("The slip fee being injected into the pool to reward the liquidity providers")}
+                              {t(
+                                'The slip fee being injected into the pool to reward the liquidity providers',
+                              )}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -955,7 +957,7 @@ export const Swap = (props) => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="amount">
-                            {props.t("Output")}
+                            {t('Output')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapOutput"
@@ -985,7 +987,7 @@ export const Swap = (props) => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {props.t("Input")}
+                            {t('Input')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipSynthInput"
@@ -1082,7 +1084,7 @@ export const Swap = (props) => {
                       }
                       block
                     >
-                      {props.t("Swap")}
+                      {t('Swap')}
                     </Button>
                   )}
                   {mode === 'pool' && (
@@ -1189,5 +1191,4 @@ export const Swap = (props) => {
   )
 }
 
-export default withRouter(withNamespaces()(Swap));
-
+export default Swap

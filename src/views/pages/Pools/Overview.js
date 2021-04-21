@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React, { useState } from 'react'
 import {
   Col,
@@ -10,8 +9,6 @@ import {
   TabPane,
 } from 'reactstrap'
 
-import {withNamespaces} from "react-i18next";
-import withRouter from "react-router-dom/es/withRouter";
 import classnames from 'classnames'
 import CardHeader from 'reactstrap/es/CardHeader'
 import Card from 'react-bootstrap/Card'
@@ -20,9 +17,11 @@ import { Line } from 'react-chartjs-2'
 import CardTitle from 'reactstrap/es/CardTitle'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import Alert from 'react-bootstrap/Alert'
+import { useTranslation } from 'react-i18next'
 import PoolsTable from './PoolsTable'
 
-export const Overview = (props) => {
+export const Overview = () => {
+  const { t } = useTranslation()
   const [customActiveTab, setCustomActiveTab] = useState('1')
 
   const toggleCustom = (tab) => {
@@ -202,7 +201,7 @@ export const Overview = (props) => {
       <div className="content">
         <Row className="card-body justify-content-center">
           <Col xs="6" xl="5">
-            <h2 className="d-inline text-title ml-1">{props.t("Pools")}</h2>
+            <h2 className="d-inline text-title ml-1">{t('Pools')}</h2>
           </Col>
           <Col xs="6" xl="4">
             {/* Buttons? */}
@@ -219,7 +218,9 @@ export const Overview = (props) => {
                     className="icon-small icon-info icon-dark"
                   />
                   <span data-notify="message" className="ml-n2">
-                    {props.t("The liquidity pools are facilitated by an automated-market-maker (AMM) algorithm with liquidity-sensitive fees.")}
+                    {t(
+                      'The liquidity pools are facilitated by an automated-market-maker (AMM) algorithm with liquidity-sensitive fees.',
+                    )}
                   </span>
                 </Alert>
               </Col>
@@ -231,7 +232,7 @@ export const Overview = (props) => {
                     <CardTitle tag="h2">
                       <Row className="fade-in">
                         <Col md={12} sm={12}>
-                          {props.t("Total pooled")}
+                          {t('Total pooled')}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -277,7 +278,7 @@ export const Overview = (props) => {
                     <CardTitle tag="h2">
                       <Row className="fade-in">
                         <Col md={12} sm={12}>
-                          {props.t("Total volume")}
+                          {t('Total volume')}
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -406,4 +407,4 @@ export const Overview = (props) => {
   )
 }
 
-export default withRouter(withNamespaces()(Overview));
+export default Overview

@@ -1,8 +1,6 @@
-/*eslint-disable*/
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-import {withNamespaces} from "react-i18next";
-import withRouter from "react-router-dom/es/withRouter";
 import {
   Button,
   Row,
@@ -21,7 +19,8 @@ import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses } from '../../utils/web3'
 
-export const Supply = (props) => {
+export const Supply = () => {
+  const { t } = useTranslation()
   const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
@@ -48,8 +47,7 @@ export const Supply = (props) => {
         <PopoverBody>
           <Row>
             <Col xs="6" className="popover-text mb-4">
-              {props.t("Marketcap")}
-
+              {t('Marketcap')}
             </Col>
             <Col xs="6 mb-2" className="popover-text mb-4">
               $
@@ -64,8 +62,7 @@ export const Supply = (props) => {
             </Col>
 
             <Col xs="6 mb-2" className="popover-text">
-              {props.t("Circulating supply")}
-
+              {t('Circulating supply')}
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(
@@ -83,8 +80,7 @@ export const Supply = (props) => {
             </Col>
 
             <Col xs="6" className="popover-text mb-2">
-              {props.t("Total supply")}
-
+              {t('Total supply')}
             </Col>
             <Col xs="6" className="popover-text mb-2">
               {formatFromWei(
@@ -139,8 +135,7 @@ export const Supply = (props) => {
                   <Col xs={8} className="ml-n2 ">
                     <div className="text-left text-card">
                       <i className="icon-small icon-contracts icon-light mr-1" />{' '}
-                      {props.t("Contracts")}
-
+                      {t('Contracts')}
                     </div>
                   </Col>
                   <Col className="ml-auto">
@@ -306,5 +301,4 @@ export const Supply = (props) => {
   )
 }
 
-export default withRouter(withNamespaces()(Supply));
-
+export default Supply
