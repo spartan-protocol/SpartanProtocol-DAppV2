@@ -28,10 +28,10 @@ const Liquidity2 = () => {
     <>
       <div className="content">
         <Row className="card-body justify-content-center">
-          <Col xs="6" xl="5">
+          <Col>
             <h2 className="d-inline text-title ml-1">Liquidity</h2>
           </Col>
-          <Col xs="6" xl="4">
+          <Col xs="6" md="3">
             <SharePool />
           </Col>
         </Row>

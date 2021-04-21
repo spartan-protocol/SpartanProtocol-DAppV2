@@ -55,7 +55,7 @@ const routes = [
 
   {
     path: '/pools/bond',
-    name: 'Bond & Mint',
+    name: 'Bond',
     icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
     layout: '/dapp',

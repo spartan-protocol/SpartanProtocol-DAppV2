@@ -8,6 +8,7 @@ import {
   bscRpcsTN,
   getNetwork,
   getProviderGasPrice,
+  getWalletProvider,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 
@@ -99,16 +100,20 @@ export const getApproval = (tokenAddress, contractAddress) => async (
 ) => {
   dispatch(web3Loading())
   const contract = getTokenContract(tokenAddress)
+  let provider = getWalletProvider()
+  if (provider._isSigner === true) {
+    provider = provider.provider
+  }
 
   try {
     const supply = await contract.totalSupply()
     const gPrice = await getProviderGasPrice()
     // const gLimit = await contract.estimateGas.approve(contractAddress, supply)
-    const approval = await contract.approve(contractAddress, supply, {
+    let approval = await contract.approve(contractAddress, supply, {
       gasPrice: gPrice,
       // gasLimit: gLimit,
     })
-
+    approval = await provider.waitForTransaction(approval.hash, 1)
     dispatch(payloadToDispatch(Types.GET_APPROVAL, approval))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
@@ -120,7 +125,7 @@ export const getApproval = (tokenAddress, contractAddress) => async (
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */
-export const getAllowance = (
+export const getAllowance1 = (
   tokenAddress,
   userAddress,
   contractAddress,
@@ -129,9 +134,29 @@ export const getAllowance = (
   const contract = getTokenContract(tokenAddress)
 
   try {
-    const allowance = await contract.allowance(userAddress, contractAddress)
+    const allowance1 = await contract.allowance(userAddress, contractAddress)
+    dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+  }
+}
 
-    dispatch(payloadToDispatch(Types.GET_ALLOWANCE, allowance))
+/**
+ * Get the current allowance-limit for a smart contract to handle transferring a token on behlf of a wallet
+ * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
+ * @returns {BigNumber?}
+ */
+export const getAllowance2 = (
+  tokenAddress,
+  userAddress,
+  contractAddress,
+) => async (dispatch) => {
+  dispatch(web3Loading())
+  const contract = getTokenContract(tokenAddress)
+
+  try {
+    const allowance2 = await contract.allowance(userAddress, contractAddress)
+    dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
@@ -196,6 +221,20 @@ export const getSpartaPrice = () => async (dispatch) => {
         spartaPrice.data['spartan-protocol-token'].usd,
       ),
     )
+  } catch (error) {
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+  }
+}
+
+/**
+ * Add the event txn array
+ * @returns {array} eventArray
+ */
+export const getEventArray = (array) => async (dispatch) => {
+  dispatch(web3Loading())
+  try {
+    const eventArray = array
+    dispatch(payloadToDispatch(Types.EVENT_ARRAY, eventArray))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }

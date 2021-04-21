@@ -55,10 +55,8 @@ import {
   routerRemoveLiqAsym,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
 import SharePool from '../../../components/Share/SharePool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { getPoolContract } from '../../../utils/web3Pool'
 // import bnb_sparta from '../../../assets/icons/bnb_sparta.png'
 // import { manageBodyClass } from '../../../components/Common/common'
 
@@ -420,12 +418,14 @@ const Liquidity = () => {
       <div className="content">
         <br />
         <Breadcrumb>
-          <Col md={8}>Liquidity</Col>
+          <Col md={10}>Liquidity</Col>
           <Col md={2}>
-            <SharePool />
-          </Col>
-          <Col md={2}>
-            <Wallet />
+            <Row>
+              <SharePool />
+            </Row>
+            <Row>
+              <Wallet coins={poolFactory.finalArray} />
+            </Row>
           </Col>
         </Breadcrumb>
         <Row>
@@ -1357,19 +1357,6 @@ const Liquidity = () => {
               </Col>
             </>
           )}
-
-          <Col md={12}>
-            <Card className="card-body">
-              {poolFactory.finalArray && (
-                <RecentTxns
-                  contracts={poolFactory.finalArray
-                    ?.filter((asset) => asset.symbol !== 'SPARTA')
-                    .map((asset) => getPoolContract(asset.poolAddress))}
-                  walletAddr={wallet.account}
-                />
-              )}
-            </Card>
-          </Col>
         </Row>
       </div>
     </>

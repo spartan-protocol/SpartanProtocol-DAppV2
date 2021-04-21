@@ -17,14 +17,14 @@ import {
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { AssetSelect } from '../../../components/AssetSelect/AssetSelect'
-import MaxBadge from '../../../assets/icons/max.svg'
+import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import {
   BN,
   convertFromWei,
   convertToWei,
+  formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
@@ -37,8 +37,6 @@ import {
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getPoolContract } from '../../../utils/web3Pool'
 import Approval from '../../../components/Approval/Approval'
 
 const AddLiquidity = () => {
@@ -93,10 +91,7 @@ const AddLiquidity = () => {
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
 
         asset1 = asset1 || { tokenAddress: addr.bnb }
-        asset3 =
-          asset1.tokenAddress !== addr.sparta
-            ? asset1
-            : { tokenAddress: addr.bnb }
+        asset3 = asset1.tokenAddress !== addr.sparta ? asset1 : asset3
 
         asset1 = getItemFromArray(asset1, poolFactory.finalArray)
         asset3 = getItemFromArray(asset3, poolFactory.finalArray)
@@ -275,21 +270,20 @@ const AddLiquidity = () => {
               <Col md={12}>
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="card-body "
+                  className="px-4 py-3 mb-2"
                 >
                   <Row>
                     <Col xs="4" className="">
-                      <div className="title-card">Input {assetAdd1.symbol}</div>
+                      <div className="">Input</div>
                     </Col>
                     <Col xs="8" className="text-right">
-                      <div className="title-card">
-                        Balance: {formatFromWei(assetAdd1.balanceTokens)}{' '}
-                        <img src={MaxBadge} alt="Max Button" />
+                      <div className="">
+                        Balance {formatFromWei(assetAdd1.balanceTokens)}{' '}
                       </div>
                     </Col>
                   </Row>
 
-                  <Row className="my-3 input-pane">
+                  <Row className="my-3">
                     <Col xs="6">
                       <div className="output-card">
                         <AssetSelect
@@ -326,15 +320,15 @@ const AddLiquidity = () => {
                     <>
                       <Row className="my-2">
                         <Col xs="4" className="">
-                          <div className="title-card">Input SPARTA</div>
+                          <div className="">Input</div>
                         </Col>
                         <Col xs="8" className="text-right">
-                          <div className="title-card">
-                            Balance: {formatFromWei(assetAdd2.balanceTokens)}
+                          <div className="">
+                            Balance {formatFromWei(assetAdd2.balanceTokens)}
                           </div>
                         </Col>
                       </Row>
-                      <Row className="input-pane">
+                      <Row className="">
                         <Col xs="6">
                           <div className="output-card">
                             <AssetSelect
@@ -371,21 +365,20 @@ const AddLiquidity = () => {
 
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="card-body "
+                  className="px-4 py-3 mb-2"
                 >
                   <Row>
                     <Col xs="4" className="">
-                      <div className="title-card">Pool</div>
+                      <div className="">Pool</div>
                     </Col>
                     <Col xs="8" className="text-right">
-                      <div className="title-card">
-                        Balance: {formatFromWei(poolAdd1.balanceLPs)}{' '}
-                        {poolAdd1?.symbol}-SPP
+                      <div className="">
+                        Balance {formatFromWei(poolAdd1.balanceLPs)}
                       </div>
                     </Col>
                   </Row>
 
-                  <Row className="my-3 input-pane">
+                  <Row className="my-3">
                     <Col xs="6">
                       <div className="output-card">
                         <AssetSelect
@@ -423,15 +416,16 @@ const AddLiquidity = () => {
 
                 <Row className="mb-2">
                   <Col xs="4" className="">
-                    <div className="title-card">Add Liq</div>
+                    <div className="">Add Liq</div>
                   </Col>
                   <Col xs="8" className="text-right">
-                    <div className="title-card">
-                      {addInput1?.value} {assetAdd1?.symbol}
+                    <div className="">
+                      {formatFromUnits(addInput1?.value, 8)} {assetAdd1?.symbol}
                     </div>
                     {activeTab === 'addTab1' && (
-                      <div className="title-card">
-                        {addInput2?.value} {assetAdd2?.symbol}
+                      <div className="">
+                        {formatFromUnits(addInput2?.value, 8)}{' '}
+                        {assetAdd2?.symbol}
                       </div>
                     )}
                   </Col>
@@ -440,11 +434,11 @@ const AddLiquidity = () => {
                 {activeTab === 'addTab2' && (
                   <Row className="mb-2">
                     <Col xs="4" className="">
-                      <div className="title-card">Fee</div>
+                      <div className="">Fee</div>
                     </Col>
                     <Col xs="8" className="text-right">
-                      <div className="title-card">
-                        {assetAdd1 && formatFromWei(getAddSingleSwapFee())}{' '}
+                      <div className="">
+                        {assetAdd1 && formatFromWei(getAddSingleSwapFee(), 8)}{' '}
                         SPARTA
                       </div>
                     </Col>
@@ -453,11 +447,12 @@ const AddLiquidity = () => {
 
                 <Row className="mb-2">
                   <Col xs="4" className="">
-                    <div className="title-card">Output</div>
+                    <div className="">Output</div>
                   </Col>
                   <Col xs="8" className="text-right">
-                    <div className="title-card">
-                      {addInput3?.value} {poolAdd1?.symbol}-SPP
+                    <div className="">
+                      {formatFromUnits(addInput3?.value, 8)} {poolAdd1?.symbol}
+                      -SPP
                     </div>
                   </Col>
                 </Row>
@@ -475,6 +470,7 @@ const AddLiquidity = () => {
                       walletAddress={wallet?.account}
                       contractAddress={addr.router}
                       txnAmount={convertToWei(addInput1?.value)}
+                      assetNumber="1"
                     />
                   )}
               </Col>
@@ -513,6 +509,7 @@ const AddLiquidity = () => {
                       walletAddress={wallet?.account}
                       contractAddress={addr.router}
                       txnAmount={convertToWei(addInput2?.value)}
+                      assetNumber="2"
                     />
                   )}
               </Col>
@@ -526,13 +523,6 @@ const AddLiquidity = () => {
             assetSwap={poolAdd1}
             finalLpArray={poolFactory.finalLpArray}
             web3={web3}
-          />
-        </Col>
-        <Col xs="12">
-          <RecentTxns
-            contracts={poolFactory.finalArray
-              ?.filter((asset) => asset.symbol !== 'SPARTA')
-              .map((asset) => getPoolContract(asset.poolAddress))}
           />
         </Col>
       </Row>
