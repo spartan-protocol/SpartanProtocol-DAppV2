@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   Col,
@@ -12,6 +13,7 @@ import {
 import { PercentSlider } from '../Common/common'
 
 export const InputPaneJoin = (props) => {
+  const { t } = useTranslation()
   const slider = document.getElementById(`percentSlider-${props.name}`)
   let symbol = props.paneData?.symbol
   if (props.name === 'remove') {
