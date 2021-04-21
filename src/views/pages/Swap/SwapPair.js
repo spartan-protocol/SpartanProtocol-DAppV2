@@ -24,7 +24,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
   return (
     <>
       <Card className="card-body">
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs="6" className="">
             <div className="output-card">
               <img
@@ -41,7 +41,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
           </Col>
         </Row>
 
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs="6">
             <div className="output-card">
               <img className="mr-2" src={coinSparta} alt="Logo" height="32" />
@@ -53,7 +53,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
           </Col>
         </Row>
 
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs={6} className="text-card">
             Spot Price
           </Col>
@@ -62,7 +62,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
           </Col>
         </Row>
 
-        {/* <Row className="m-2">
+        {/* <Row className="my-2">
           <Col xs={6} className="text-card">
             Volume
           </Col>
@@ -71,7 +71,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
           </Col>
         </Row> */}
 
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs={6} className="text-card">
             Recent Fees
           </Col>
@@ -80,7 +80,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
           </Col>
         </Row>
 
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs={6} className="text-card">
             Recent Divis
           </Col>
@@ -90,7 +90,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
               : 'Not Curated'}
           </Col>
         </Row>
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs={6} className="text-card">
             Depth
           </Col>
@@ -99,7 +99,7 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
             {formatFromWei(assetSwap.baseAmount, 4)} SPARTA
           </Col>
         </Row>
-        <Row className="m-2">
+        <Row className="my-2">
           <Col xs={6} className="text-card">
             APY{' '}
             <i

@@ -676,8 +676,12 @@ const Swap = () => {
                           <Col xs={4}>
                             <div className="title-card">{t('Ouput')}</div>
                           </Col>
-                          <Col xs={8} className="text-right">
-                            <div>Balance {formatFromWei(getBalance(2), 4)}</div>
+                          <Col xs={8} className="text-right balance">
+                            <div>
+                              Balance{' '}
+                              {poolFactory.finalLpArray &&
+                                formatFromWei(getBalance(2), 4)}
+                            </div>
                           </Col>
                         </Row>
                         <Row>
@@ -1094,22 +1098,24 @@ const Swap = () => {
               <Col xs="12" xl="9">
                 <Row>
                   <Col xs="12" md="6">
-                    {assetSwap1.symbol !== 'SPARTA' && (
-                      <SwapPair
-                        assetSwap={assetSwap1}
-                        finalLpArray={poolFactory.finalLpArray}
-                        web3={web3}
-                      />
-                    )}
+                    {poolFactory.finalLpArray &&
+                      assetSwap1.symbol !== 'SPARTA' && (
+                        <SwapPair
+                          assetSwap={assetSwap1}
+                          finalLpArray={poolFactory.finalLpArray}
+                          web3={web3}
+                        />
+                      )}
                   </Col>
                   <Col xs="12" md="6">
-                    {assetSwap2.symbol !== 'SPARTA' && (
-                      <SwapPair
-                        assetSwap={assetSwap2}
-                        finalLpArray={poolFactory.finalLpArray}
-                        web3={web3}
-                      />
-                    )}
+                    {poolFactory.finalLpArray &&
+                      assetSwap2.symbol !== 'SPARTA' && (
+                        <SwapPair
+                          assetSwap={assetSwap2}
+                          finalLpArray={poolFactory.finalLpArray}
+                          web3={web3}
+                        />
+                      )}
                   </Col>
                 </Row>
               </Col>

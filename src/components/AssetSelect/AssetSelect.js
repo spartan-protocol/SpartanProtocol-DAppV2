@@ -295,7 +295,7 @@ const AssetSelect = (props) => {
               <i className="icon-extra-small icon-arrow icon-light align-middle" />
             )}
           </Col>
-          <Col xs="12" className="d-block d-lg-none ml-3">
+          <Col xs="12" className="d-block d-lg-none ml-2 mt-1">
             {selectedItem && selectedItem?.symbol}
             {selectedType === 'pool' && '-SPP'}
             {selectedType === 'synth' && '-SPS'}

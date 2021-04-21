@@ -28,6 +28,7 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
+  calcLiquidityHoldings,
   calcLiquidityUnits,
   calcLiquidityUnitsAsym,
   calcSwapFee,
@@ -38,6 +39,7 @@ import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const AddLiquidity = () => {
   const wallet = useWallet()
@@ -183,28 +185,93 @@ const AddLiquidity = () => {
     return '0'
   }
 
+  const getInput1ValueUSD = () => {
+    if (assetAdd1 && addInput1?.value) {
+      return calcValueInBase(
+        poolAdd1.tokenAmount,
+        poolAdd1.baseAmount,
+        convertToWei(addInput1.value),
+      ).times(web3.spartaPrice)
+    }
+    return '0'
+  }
+
+  const getInput2ValueUSD = () => {
+    if (assetAdd2 && addInput2?.value) {
+      return BN(convertToWei(addInput2.value)).times(web3.spartaPrice)
+    }
+    return '0'
+  }
+
+  const getLpValueBase = () => {
+    if (assetAdd1 && addInput1?.value) {
+      return calcLiquidityHoldings(
+        poolAdd1.baseAmount,
+        convertToWei(addInput3.value),
+        poolAdd1.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getLpValueToken = () => {
+    if (assetAdd1 && addInput1?.value) {
+      return calcLiquidityHoldings(
+        poolAdd1.tokenAmount,
+        convertToWei(addInput3.value),
+        poolAdd1.poolUnits,
+      )
+    }
+    return '0'
+  }
+
+  const getLpValueUSD = () => {
+    if (assetAdd1 && addInput1?.value) {
+      return BN(
+        calcValueInBase(
+          poolAdd1?.tokenAmount,
+          poolAdd1?.baseAmount,
+          getLpValueToken(),
+        ),
+      )
+        .plus(getLpValueBase())
+        .times(web3.spartaPrice)
+    }
+
+    return '0'
+  }
+
   //= =================================================================================//
   // General Functions
 
   const handleInputChange = (input, toBase) => {
-    if (toBase && addInput1 && addInput2) {
+    if (toBase && addInput1?.value > 0 && addInput2) {
       addInput2.value = calcValueInBase(
         assetAdd1.tokenAmount,
         assetAdd1.baseAmount,
         input,
       )
-    } else if (addInput1 && addInput2) {
+    } else if (addInput1?.value > 0 && addInput2) {
       addInput1.value = calcValueInToken(
         assetAdd1.tokenAmount,
         assetAdd1.baseAmount,
         input,
       )
     }
-    if (activeTab === 'addTab1' && addInput1 && addInput2 && addInput3) {
+    if (
+      activeTab === 'addTab1' &&
+      addInput1?.value > 0 &&
+      addInput2 &&
+      addInput3
+    ) {
       addInput3.value = getAddBothOutputLP()
+    } else if (activeTab === 'addTab1') {
+      clearInputs()
     }
-    if (activeTab === 'addTab2' && addInput1 && addInput3) {
+    if (activeTab === 'addTab2' && addInput1?.value > 0 && addInput3) {
       addInput3.value = getAddSingleOutputLP()
+    } else if (activeTab === 'addTab2') {
+      clearInputs()
     }
   }
 
@@ -270,7 +337,7 @@ const AddLiquidity = () => {
               <Col md={12}>
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="px-4 py-3 mb-2"
+                  className="card-body"
                 >
                   <Row>
                     <Col xs="4" className="">
@@ -278,14 +345,16 @@ const AddLiquidity = () => {
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="">
-                        Balance {formatFromWei(assetAdd1.balanceTokens)}{' '}
+                        Balance{' '}
+                        {poolFactory.finalLpArray &&
+                          formatFromWei(assetAdd1.balanceTokens)}{' '}
                       </div>
                     </Col>
                   </Row>
 
-                  <Row className="my-3">
+                  <Row className="my-2">
                     <Col xs="6">
-                      <div className="output-card">
+                      <div className="output-card ml-2">
                         <AssetSelect
                           priority="1"
                           filter={['token']}
@@ -296,7 +365,7 @@ const AddLiquidity = () => {
                       </div>
                     </Col>
                     <Col className="text-right" xs="6">
-                      <InputGroup className="h-100">
+                      <InputGroup className="m-0">
                         <Input
                           className="text-right h-100 ml-0"
                           type="text"
@@ -313,24 +382,32 @@ const AddLiquidity = () => {
                           <i className="icon-search-bar icon-close icon-light my-auto" />
                         </InputGroupAddon>
                       </InputGroup>
+                      <div className="text-right">
+                        ~$
+                        {addInput1?.value &&
+                          formatFromWei(getInput1ValueUSD(), 2)}
+                      </div>
                     </Col>
                   </Row>
 
                   {activeTab === 'addTab1' && (
                     <>
+                      <hr className="m-1" />
                       <Row className="my-2">
                         <Col xs="4" className="">
                           <div className="">Input</div>
                         </Col>
                         <Col xs="8" className="text-right">
                           <div className="">
-                            Balance {formatFromWei(assetAdd2.balanceTokens)}
+                            Balance{' '}
+                            {poolFactory.finalLpArray &&
+                              formatFromWei(assetAdd2.balanceTokens)}
                           </div>
                         </Col>
                       </Row>
                       <Row className="">
                         <Col xs="6">
-                          <div className="output-card">
+                          <div className="output-card ml-2">
                             <AssetSelect
                               priority="2"
                               filter={['token']}
@@ -340,7 +417,7 @@ const AddLiquidity = () => {
                           </div>
                         </Col>
                         <Col className="text-right" xs="6">
-                          <InputGroup className="h-100">
+                          <InputGroup className="m-0">
                             <Input
                               className="text-right h-100 ml-0"
                               type="text"
@@ -357,6 +434,11 @@ const AddLiquidity = () => {
                               <i className="icon-search-bar icon-close icon-light my-auto" />
                             </InputGroupAddon>
                           </InputGroup>
+                          <div className="text-right">
+                            ~$
+                            {addInput2?.value &&
+                              formatFromWei(getInput2ValueUSD(), 2)}
+                          </div>
                         </Col>
                       </Row>
                     </>
@@ -365,7 +447,7 @@ const AddLiquidity = () => {
 
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="px-4 py-3 mb-2"
+                  className="card-body"
                 >
                   <Row>
                     <Col xs="4" className="">
@@ -373,14 +455,16 @@ const AddLiquidity = () => {
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="">
-                        Balance {formatFromWei(poolAdd1.balanceLPs)}
+                        Balance{' '}
+                        {poolFactory.finalLpArray &&
+                          formatFromWei(poolAdd1.balanceLPs)}
                       </div>
                     </Col>
                   </Row>
 
                   <Row className="my-3">
                     <Col xs="6">
-                      <div className="output-card">
+                      <div className="output-card ml-2">
                         <AssetSelect
                           priority="3"
                           filter={['pool']}
@@ -392,7 +476,7 @@ const AddLiquidity = () => {
                       </div>
                     </Col>
                     <Col className="text-right" xs="6">
-                      <InputGroup className="h-100">
+                      <InputGroup className="m-0">
                         <Input
                           className="text-right h-100 ml-0"
                           type="text"
@@ -400,62 +484,67 @@ const AddLiquidity = () => {
                           id="addInput3"
                           disabled
                         />
-                        <InputGroupAddon
-                          addonType="append"
-                          role="button"
-                          tabIndex={-1}
-                          onKeyPress={() => clearInputs()}
-                          onClick={() => clearInputs()}
-                        >
-                          <i className="icon-search-bar icon-close icon-light my-auto" />
-                        </InputGroupAddon>
                       </InputGroup>
+                      <div className="text-right">
+                        ~$
+                        {addInput1?.value && formatFromWei(getLpValueUSD(), 2)}
+                      </div>
                     </Col>
                   </Row>
                 </Card>
 
-                <Row className="mb-2">
-                  <Col xs="4" className="">
-                    <div className="">Add Liq</div>
-                  </Col>
-                  <Col xs="8" className="text-right">
-                    <div className="">
-                      {formatFromUnits(addInput1?.value, 8)} {assetAdd1?.symbol}
-                    </div>
-                    {activeTab === 'addTab1' && (
-                      <div className="">
-                        {formatFromUnits(addInput2?.value, 8)}{' '}
-                        {assetAdd2?.symbol}
-                      </div>
+                {poolFactory.finalLpArray && (
+                  <>
+                    <Row className="mb-2">
+                      <Col xs="4" className="">
+                        <div className="">Input</div>
+                      </Col>
+                      <Col xs="8" className="text-right">
+                        <div className="">
+                          {formatFromUnits(addInput1?.value, 8)}{' '}
+                          {assetAdd1?.symbol}
+                        </div>
+                        {activeTab === 'addTab1' && (
+                          <div className="">
+                            {formatFromUnits(addInput2?.value, 8)}{' '}
+                            {assetAdd2?.symbol}
+                          </div>
+                        )}
+                      </Col>
+                    </Row>
+
+                    {activeTab === 'addTab2' && (
+                      <Row className="mb-2">
+                        <Col xs="4" className="">
+                          <div className="">Fee</div>
+                        </Col>
+                        <Col xs="8" className="text-right">
+                          <div className="">
+                            {assetAdd1 &&
+                              formatFromWei(getAddSingleSwapFee(), 8)}{' '}
+                            SPARTA
+                          </div>
+                        </Col>
+                      </Row>
                     )}
-                  </Col>
-                </Row>
 
-                {activeTab === 'addTab2' && (
-                  <Row className="mb-2">
-                    <Col xs="4" className="">
-                      <div className="">Fee</div>
-                    </Col>
-                    <Col xs="8" className="text-right">
-                      <div className="">
-                        {assetAdd1 && formatFromWei(getAddSingleSwapFee(), 8)}{' '}
-                        SPARTA
-                      </div>
-                    </Col>
-                  </Row>
+                    <Row className="mb-2">
+                      <Col xs="4" className="">
+                        <div className="">Output</div>
+                      </Col>
+                      <Col xs="8" className="text-right">
+                        <div className="">
+                          {formatFromUnits(addInput3?.value, 8)}{' '}
+                          {poolAdd1?.symbol}
+                          -SPP
+                        </div>
+                      </Col>
+                    </Row>
+                  </>
                 )}
-
-                <Row className="mb-2">
-                  <Col xs="4" className="">
-                    <div className="">Output</div>
-                  </Col>
-                  <Col xs="8" className="text-right">
-                    <div className="">
-                      {formatFromUnits(addInput3?.value, 8)} {poolAdd1?.symbol}
-                      -SPP
-                    </div>
-                  </Col>
-                </Row>
+                {!poolFactory.finalLpArray && (
+                  <HelmetLoading height="150px" width="150px" />
+                )}
               </Col>
             </Row>
             <Row className="text-center">
@@ -517,15 +606,17 @@ const AddLiquidity = () => {
           </CardBody>
         </Card>
       </Row>
-      <Row>
-        <Col xs="12">
-          <SwapPair
-            assetSwap={poolAdd1}
-            finalLpArray={poolFactory.finalLpArray}
-            web3={web3}
-          />
-        </Col>
-      </Row>
+      {poolFactory.finalLpArray && (
+        <Row>
+          <Col xs="12">
+            <SwapPair
+              assetSwap={poolAdd1}
+              finalLpArray={poolFactory.finalLpArray}
+              web3={web3}
+            />
+          </Col>
+        </Row>
+      )}
     </>
   )
 }
