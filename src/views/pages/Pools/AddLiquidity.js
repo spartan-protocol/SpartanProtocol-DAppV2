@@ -186,12 +186,15 @@ const AddLiquidity = () => {
   }
 
   const getInput1ValueUSD = () => {
-    if (assetAdd1 && addInput1?.value) {
+    if (assetAdd1?.tokenAddress !== addr.sparta && addInput1?.value) {
       return calcValueInBase(
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
         convertToWei(addInput1.value),
       ).times(web3.spartaPrice)
+    }
+    if (assetAdd1?.tokenAddress === addr.sparta && addInput1?.value) {
+      return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
     }
     return '0'
   }
