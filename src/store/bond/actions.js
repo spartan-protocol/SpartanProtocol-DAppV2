@@ -61,7 +61,8 @@ export const getBondSpartaRemaining = () => async (dispatch) => {
   const contract = getSpartaContract()
 
   try {
-    const bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)
+    let bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)
+    bondSpartaRemaining = bondSpartaRemaining.toString()
     dispatch(
       payloadToDispatch(Types.GET_BOND_SPARTA_REMAINING, bondSpartaRemaining),
     )
@@ -195,6 +196,29 @@ export const bondClaimAll = (member) => async (dispatch) => {
     })
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimedAll))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+  }
+}
+
+/**
+ * Claim bond by asset
+ * @param {address} assetAddr
+ * @returns {boolean}
+ */
+export const bondClaim = (assetAddr) => async (dispatch) => {
+  dispatch(bondLoading())
+  const contract = getBondContract()
+
+  try {
+    const gPrice = await getProviderGasPrice()
+    // const gLimit = await contract.estimateGas.claimAllForMember(member)
+    const bondClaimed = await contract.claimForMember(assetAddr, {
+      gasPrice: gPrice,
+      // gasLimit: gLimit,
+    })
+
+    dispatch(payloadToDispatch(Types.BOND_CLAIM, bondClaimed))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }

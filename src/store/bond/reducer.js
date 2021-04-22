@@ -7,7 +7,8 @@ const initialState = {
   bondSpartaRemaining: 0,
   bondBurnReady: 0,
   bondBurn: 0,
-  bondClaimAll: 0,
+  bondClaimedAll: 0,
+  bondClaimed: 0,
   bondCoolOffPeriod: {},
   bondListedCount: 0,
   bondMemberCount: 0,
@@ -84,7 +85,16 @@ export const bondReducer = (state = initialState, action) => {
     case Types.BOND_CLAIM_ALL: {
       return {
         ...state,
-        bondClaimAll: action.payload,
+        bondClaimedAll: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.BOND_CLAIM: {
+      return {
+        ...state,
+        bondClaimed: action.payload,
         loading: false,
         error: null,
       }

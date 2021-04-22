@@ -25,7 +25,13 @@ import {
 } from '../../store/web3'
 // import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
-import { getBondContract, getDaoContract, getPoolContract, getRouterContract, getSynthContract } from '../../utils/web3Contracts'
+import {
+  getBondContract,
+  getDaoContract,
+  getPoolContract,
+  getRouterContract,
+  getSynthContract,
+} from '../../utils/web3Contracts'
 
 const DataManager = () => {
   const synth = useSynth()

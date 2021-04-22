@@ -383,7 +383,7 @@ const WalletSelect = (props) => {
                         ?.filter((asset) => asset.lockedLPs > 0)
                         .map((asset) => (
                           <Row
-                            key={`${asset.tokenAddress}-lp`}
+                            key={`${asset.tokenAddress}-lpdao`}
                             className="mb-3 output-card mr-2"
                           >
                             <Col xs="4" sm="2" className="p-0 pl-2">
@@ -503,6 +503,104 @@ const WalletSelect = (props) => {
                                   {`${asset.symbol}-SPP`}
                                   <div className="description">
                                     {formatFromWei(asset.balanceLPs)}
+                                  </div>
+                                </Col>
+                              </Row>
+                            </Col>
+
+                            <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Row>
+                                <Col xs="6" className="mt-1">
+                                  <ShareLink
+                                    url={asset.tokenAddress}
+                                    notificationLocation="tc"
+                                  >
+                                    <i
+                                      role="button"
+                                      className="icon-small icon-copy ml-2 align-middle"
+                                    />
+                                  </ShareLink>
+                                </Col>
+                                <Col xs="6" className="mt-1">
+                                  <div
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 32) {
+                                        dispatch(
+                                          watchAsset(
+                                            asset.tokenAddress,
+                                            `${asset.symbol}p`,
+                                            '18',
+                                            asset.symbolUrl,
+                                          ),
+                                        )
+                                      }
+                                    }}
+                                    onClick={() => {
+                                      dispatch(
+                                        watchAsset(
+                                          asset.tokenAddress,
+                                          `${asset.symbol}p`,
+                                          '18',
+                                          asset.symbolUrl,
+                                        ),
+                                      )
+                                    }}
+                                  >
+                                    <i className="icon-small icon-metamask icon-light ml-2" />
+                                  </div>
+                                </Col>
+                              </Row>
+                            </Col>
+                          </Row>
+                        ))}
+
+                      {poolFactory.finalLpArray?.filter(
+                        (asset) => asset.bondedLPs > 0,
+                      ).length > 0 && (
+                        <Row className="my-3">
+                          <Col xs="9" md="9">
+                            <p className="text-card">LPs Locked in BOND</p>
+                          </Col>
+                          <Col xs="3" md="3">
+                            <p className="text-card float-right mr-1">
+                              Actions
+                            </p>
+                          </Col>
+                        </Row>
+                      )}
+                      {poolFactory.finalLpArray
+                        ?.filter((asset) => asset.bondedLPs > 0)
+                        .map((asset) => (
+                          <Row
+                            key={`${asset.tokenAddress}-lpbond`}
+                            className="mb-3 output-card mr-2"
+                          >
+                            <Col xs="4" sm="2" className="p-0 pl-2">
+                              <img
+                                height="35px"
+                                src={asset.symbolUrl}
+                                alt={asset.name}
+                                className="mr-n3"
+                              />
+                              <img
+                                height="20px"
+                                src={spartaIcon}
+                                alt="SPARTA"
+                                className="mr-2 mt-3"
+                              />
+                            </Col>
+                            <Col
+                              xs="5"
+                              sm="7"
+                              className="align-items-center p-0 pl-sm-3"
+                            >
+                              <Row>
+                                <Col xs="12" className="float-left ml-n4">
+                                  {`${asset.symbol}-SPP`}
+                                  <div className="description">
+                                    {formatFromWei(asset.bondedLPs)}
                                   </div>
                                 </Col>
                               </Row>
