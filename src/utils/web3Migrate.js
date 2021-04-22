@@ -1,22 +1,5 @@
-import { ethers } from 'ethers'
-import {
-  getAbis,
-  getAddresses,
-  getProviderGasPrice,
-  getWalletProvider,
-} from './web3'
-
-const addr = getAddresses()
-
-// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
-
-// GET DAO CONTRACT
-export const getMigrateContract = () => {
-  const abiMigrate = getAbis().migrate
-  const provider = getWalletProvider()
-  const contract = new ethers.Contract(addr.migrate, abiMigrate, provider)
-  return contract
-}
+import { getProviderGasPrice } from './web3'
+import { getMigrateContract } from './web3Contracts'
 
 // ---------------- ASYNC FUNCTIONS FOR STORE (WAIT FOR PHASE 2 BEFORE CREATING THE STORE, DAPPV1 WILL HANDLE MIGRATION FOR NOW) ---------------
 

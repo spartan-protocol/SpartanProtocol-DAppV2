@@ -1,6 +1,9 @@
 import * as Types from './types'
-import { getBondContract, getOldBondContract } from '../../utils/web3Bond'
-import { getSpartaContract } from '../../utils/web3Sparta'
+import {
+  getBondContract,
+  getOldBondContract,
+  getSpartaContract,
+} from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getProviderGasPrice, getAddresses } from '../../utils/web3'
 

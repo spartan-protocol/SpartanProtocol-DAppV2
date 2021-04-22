@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getUtilsContract } from '../../utils/web3Utils'
+import { getUtilsContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
 export const utilsLoading = () => ({

@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getBondVaultContract } from '../../utils/web3Bond'
+import { getBondVaultContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getAddresses } from '../../utils/web3'
 

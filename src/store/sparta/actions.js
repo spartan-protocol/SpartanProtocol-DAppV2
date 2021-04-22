@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getSpartaContract } from '../../utils/web3Sparta'
+import { getSpartaContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getWalletProvider } from '../../utils/web3'
 
