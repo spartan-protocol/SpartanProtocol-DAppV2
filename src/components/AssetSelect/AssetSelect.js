@@ -277,10 +277,10 @@ const AssetSelect = (props) => {
                 />
 
                 <img
-                  height="27px"
+                  height="20px"
                   src={spartaIconAlt}
                   alt="Sparta LP token icon"
-                  className="mr-2"
+                  className="mr-2 mt-3"
                 />
               </>
             )}
