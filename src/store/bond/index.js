@@ -10,6 +10,7 @@ export {
   bondBurn,
   bondDeposit,
   bondClaimAll,
+  bondClaim,
   getBondMembers,
   getBondMemberCount,
   getBondListedCount,

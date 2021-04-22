@@ -19,6 +19,8 @@ import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import {
+  BN,
+  convertFromWei,
   convertToWei,
   formatFromUnits,
   formatFromWei,
@@ -30,7 +32,11 @@ import {
   calcValueInBase,
 } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
-import { bondDeposit } from '../../../store/bond/actions'
+import {
+  bondDeposit,
+  getBondListed,
+  getBondSpartaRemaining,
+} from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 
@@ -41,9 +47,19 @@ const BondLiquidity = () => {
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [assetBond1, setAssetBond1] = useState('...')
-  const [spartaMinted, setSpartaMinted] = useState('0')
-  const [lpOutput, setLpOutput] = useState('0')
+
+  const spartaRemainingLoop = async () => {
+    dispatch(getBondSpartaRemaining())
+    dispatch(getBondListed())
+    await pause(10000)
+    spartaRemainingLoop()
+  }
+
+  useEffect(() => {
+    spartaRemainingLoop()
+  }, [])
 
   useEffect(() => {
     const { finalArray } = poolFactory
@@ -91,7 +107,6 @@ const BondLiquidity = () => {
         assetBond1.baseAmount,
         true,
       )
-      setSpartaMinted(minted)
       return minted
     }
     return '0'
@@ -106,7 +121,6 @@ const BondLiquidity = () => {
         assetBond1.tokenAmount,
         assetBond1.poolUnits,
       )
-      setLpOutput(output)
       return output
     }
     return '0'
@@ -155,7 +169,7 @@ const BondLiquidity = () => {
                   <AssetSelect
                     priority="1"
                     filter={['token']}
-                    blackList={[addr.sparta]}
+                    whiteList={bond.bondListed}
                   />
                 </div>
               </Col>
@@ -218,17 +232,23 @@ const BondLiquidity = () => {
               </div>
             </Col>
             <Col className="output-card text-right">
-              {formatFromWei(bond.bondSpartaRemaining)} Remaining
+              {formatFromWei(bond.bondSpartaRemaining, 0)} Remaining
             </Col>
           </Row>
 
           <br />
           <div className="progress-container progress-primary">
-            <span className="progress-badge" />
             <Progress
               max="2500000"
-              value={formatFromWei(bond.bondSpartaRemaining)}
-            />
+              value={convertFromWei(bond.bondSpartaRemaining)}
+              className=""
+            >
+              {formatFromUnits(
+                BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
+                2,
+              )}
+              % Remaining
+            </Progress>
           </div>
           <Row className="mb-2">
             <Col xs="4" className="">
@@ -245,7 +265,9 @@ const BondLiquidity = () => {
               <div className="title-card">Minted</div>
             </Col>
             <Col xs="8" className="text-right">
-              <div className="">{formatFromWei(spartaMinted, 8)} SPARTA</div>
+              <div className="">
+                {formatFromWei(calcSpartaMinted(), 8)} SPARTA
+              </div>
             </Col>
           </Row>
           <Row className="mb-2">
@@ -254,7 +276,7 @@ const BondLiquidity = () => {
             </Col>
             <Col xs="8" className="text-right">
               <div className="">
-                {formatFromWei(lpOutput, 8)} {assetBond1?.symbol}-SPP
+                {formatFromWei(calcOutput(), 8)} {assetBond1?.symbol}-SPP
               </div>
             </Col>
           </Row>
@@ -283,7 +305,7 @@ const BondLiquidity = () => {
                   )
                 }
               >
-                Bond BNB
+                Bond {assetBond1?.symbol}
               </Button>
             </Col>
           </Row>

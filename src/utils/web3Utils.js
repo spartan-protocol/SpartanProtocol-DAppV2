@@ -1,20 +1,7 @@
-import { ethers } from 'ethers'
-import { getAbis, getAddresses, getWalletProvider } from './web3'
-
 const BigNumber = require('bignumber.js')
-
-const addr = getAddresses()
 
 export const BN = (x) => new BigNumber(x)
 export const one = BN(1).times(10).pow(18)
-
-// GET UTILS CONTRACT
-export const getUtilsContract = () => {
-  const abiUtils = getAbis().utils
-  const provider = getWalletProvider()
-  const contract = new ethers.Contract(addr.utils, abiUtils, provider)
-  return contract
-}
 
 // ************** CORE MATHEMATICS (USE THESE IN UI WHERE NEAR-INSTANT-RETURN IS REQUIRED) ************** //
 

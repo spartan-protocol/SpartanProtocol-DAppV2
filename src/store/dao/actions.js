@@ -1,7 +1,7 @@
 import * as Types from './types'
 import { getProviderGasPrice } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getDaoContract } from '../../utils/web3Dao'
+import { getDaoContract } from '../../utils/web3Contracts'
 
 export const daoLoading = () => ({
   type: Types.DAO_LOADING,

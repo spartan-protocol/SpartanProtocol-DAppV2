@@ -1,6 +1,6 @@
 import * as Types from './types'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getSynthFactoryContract } from '../../utils/web3Synth'
+import { getSynthFactoryContract } from '../../utils/web3Contracts'
 
 export const synthLoading = () => ({
   type: Types.SYNTH_LOADING,

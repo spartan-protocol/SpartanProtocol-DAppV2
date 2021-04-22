@@ -1,30 +1,5 @@
-import { ethers } from 'ethers'
-import {
-  getAbis,
-  getAddresses,
-  getProviderGasPrice,
-  getWalletProvider,
-} from './web3'
-
-const addr = getAddresses()
-
-// --------------------------------------- HANDLE CONTRACTS ---------------------------------------
-
-// GET DAO CONTRACT
-export const getLoanContract = () => {
-  const abiLoan = getAbis().daoLoan
-  const provider = getWalletProvider()
-  const contract = new ethers.Contract(addr.loan, abiLoan, provider)
-  return contract
-}
-
-// GET DAO CONTRACT
-export const getLoanVaultContract = () => {
-  const abiLoanVault = getAbis().daoLoanVault
-  const provider = getWalletProvider()
-  const contract = new ethers.Contract(addr.loanVault, abiLoanVault, provider)
-  return contract
-}
+import { getProviderGasPrice } from './web3'
+import { getLoanContract } from './web3Contracts'
 
 // ---------------- ASYNC FUNCTIONS FOR STORE (WAIT FOR PHASE 2 BEFORE CREATING THE STORE) ---------------
 
