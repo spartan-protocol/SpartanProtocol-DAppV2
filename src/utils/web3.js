@@ -7,15 +7,16 @@ import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
-import abiTnPool from '../ABI/TN/Pool.json'
-import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
-// import abiTnRecover from '../ABI/TN/Recover.json'
-import abiTnRouter from '../ABI/TN/Router.json'
 import abiTnLoan from '../ABI/TN/SpartanLoan.json'
 import abiTnLoanVault from '../ABI/TN/SpartanLoanVault.json'
 import abiTnMigrate from '../ABI/TN/SPARTANUPGRADE.json'
+import abiTnPool from '../ABI/TN/Pool.json'
+import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
+import abiTnReserve from '../ABI/TN/Reserve.json'
+import abiTnRouter from '../ABI/TN/Router.json'
 import abiTnSynth from '../ABI/TN/Synth.json'
 import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
+import abiTnSynthVault from '../ABI/TN/SynthVault.json'
 import abiTnUtils from '../ABI/TN/Utils.json'
 import abiTnWbnb from '../ABI/TN/WBNB.json'
 
@@ -26,15 +27,16 @@ import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnDaoVault from '../ABI/MN/DaoVault.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
-import abiMnPool from '../ABI/MN/Pool.json'
-import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
-// import abiMnRecover from '../ABI/MN/Recover.json'
-import abiMnRouter from '../ABI/MN/Router.json'
 import abiMnLoan from '../ABI/MN/SpartanLoan.json'
 import abiMnLoanVault from '../ABI/MN/SpartanLoanVault.json'
 import abiMnMigrate from '../ABI/MN/SPARTANUPGRADE.json'
+import abiMnPool from '../ABI/MN/Pool.json'
+import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
+import abiMnReserve from '../ABI/MN/Reserve.json'
+import abiMnRouter from '../ABI/MN/Router.json'
 import abiMnSynth from '../ABI/MN/Synth.json'
 import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
+import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 
@@ -50,15 +52,16 @@ export const abisTN = {
   dao: abiTnDao.abi,
   daoVault: abiTnDaoVault.abi,
   erc20: abiTnErc20.abi,
-  pool: abiTnPool.abi,
-  poolFactory: abiTnPoolFactory.abi,
-  // recover: abiTnRecover.abi, // Confirm this one?
-  router: abiTnRouter.abi,
   loan: abiTnLoan.abi,
   loanVault: abiTnLoanVault.abi,
   migrate: abiTnMigrate.abi,
+  pool: abiTnPool.abi,
+  poolFactory: abiTnPoolFactory.abi,
+  reserve: abiTnReserve.abi,
+  router: abiTnRouter.abi,
   synth: abiTnSynth.abi,
   synthFactory: abiTnSynthFactory.abi,
+  synthVault: abiTnSynthVault.abi,
   utils: abiTnUtils.abi,
   wbnb: abiTnWbnb.abi,
 }
@@ -70,15 +73,16 @@ export const abisMN = {
   dao: abiMnDao.abi,
   daoVault: abiMnDaoVault.abi,
   erc20: abiMnErc20.abi,
-  pool: abiMnPool.abi,
-  poolFactory: abiMnPoolFactory.abi,
-  // recover: abiMnRecover.abi, // Confirm this one?
-  router: abiMnRouter.abi,
   loan: abiMnLoan.abi,
   loanVault: abiMnLoanVault.abi,
   migrate: abiMnMigrate.abi,
+  pool: abiMnPool.abi,
+  poolFactory: abiMnPoolFactory.abi,
+  reserve: abiMnReserve.abi,
+  router: abiMnRouter.abi,
   synth: abiMnSynth.abi,
   synthFactory: abiMnSynthFactory.abi,
+  synthVault: abiMnSynthVault.abi,
   utils: abiMnUtils.abi,
   wbnb: abiMnWbnb.abi,
 }
@@ -101,24 +105,29 @@ export const addressesTN = {
   routerv2c: '0x772E6dE5165A70B9a6aBe33fa20ddB78C28E6f50',
   utilsv1: '0x4029A4173F9431763Ee68F5BfCF0C6aA703B1653',
   // OLD ADDRESSES SPV2
-  poolFactoryv1: '0xba61353518Cc14CE6E42d906133337392c6E5043',
-  synthFactoryv1: '0x6f57cF51D0A47393F013370b2FbdE07d2a82eb93',
-  bondv4: '0xF7b2A8dBC9AfeD0946117b80c06Dd3c4BfBF9C56',
-  bondVaultv1: '0xA5318BC088E41E3DE6E3cEfa58b7649Ea9e5D748',
-  daov2: '0x795C41d615232B60BBf989C555684AD653A7E534',
-  daoVaultv1: '0xb5B6B5d19dd4EE5Abaa169E246FcAB95911c2EF4',
-  routerv3: '0xc3037c875adD19Ead3Bb94Eb5cb8aDA6766618eA',
-  utilsv2: '0x1767e026dD1E295201218c4De2d48835D4a89Fe5',
+  bondv4: '0x282b3dd35Ee21E88462A83F690128Ac63Ca9374D',
+  bondVaultv1: '0x8Ac286897c186912A6Fe1eBAE83B8F719bF47213',
+  daov2: '0xefA343c4281e1f75F51E20541d3dce0F089c1808',
+  daoVaultv1: '0xa72983b757f1d2a4A944d6c774cfd3b712Cd2f2D',
+  migratev1: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
+  poolFactoryv1: '0x52C454F99Af4afB46688519cb3A019b6C56341D6',
+  reservev1: '0xdCa1015b1C5e62F52DE9042ED5976B8a45099CfA',
+  routerv3: '0x28966D04A20CEC5B91FC5d55CA62C15DE878d3bD',
+  synthFactoryv1: '0x05E09b9ae888171e733576671609D3A068937083',
+  synthVaultv1: '0x75A772CcDf23256A2d88F05AeD3D7b9a7Dd0E33f',
+  utilsv2: '0x7c5bBc0A7E21c22936f3788F5d58fB732659B76E',
   // CURRENT ADDRESSES
-  poolFactory: '0xf51C9ED1ec6C77340c01c52cFC371Ff72699af6a',
-  synthFactory: '0x1CdcfD81e85ba00f0D7Fafd07aD7bd4EA83c4e84',
-  bond: '0x4b58263Ff4c209373dB71516B2e803c1b7F8F73d',
-  bondVault: '0xA247cCb9B1531aDa3B1953c784CAb40E328d055a',
-  dao: '0xA247cCb9B1531aDa3B1953c784CAb40E328d055a',
-  daoVault: '0x4BaE8AFF6F68c7222998b3581bb38E66AD277960',
-  router: '0x728F992aF7fF6E8303224Bb0Cd5fc13dF6118292',
-  utils: '0x7c0E0707B13C6ee101133b6e0EBEe17900d956C4',
-  migrate: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
+  bond: '0x282b3dd35Ee21E88462A83F690128Ac63Ca9374D',
+  bondVault: '0x8Ac286897c186912A6Fe1eBAE83B8F719bF47213',
+  dao: '0xefA343c4281e1f75F51E20541d3dce0F089c1808',
+  daoVault: '0xa72983b757f1d2a4A944d6c774cfd3b712Cd2f2D',
+  migrate: '0x197C0fc4Ea92b58f375De66647368862677C95B7',
+  poolFactory: '0x52C454F99Af4afB46688519cb3A019b6C56341D6',
+  reserve: '0xdCa1015b1C5e62F52DE9042ED5976B8a45099CfA',
+  router: '0x28966D04A20CEC5B91FC5d55CA62C15DE878d3bD',
+  synthFactory: '0x05E09b9ae888171e733576671609D3A068937083',
+  synthVault: '0x75A772CcDf23256A2d88F05AeD3D7b9a7Dd0E33f',
+  utils: '0x7c5bBc0A7E21c22936f3788F5d58fB732659B76E',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -139,24 +148,29 @@ export const addressesMN = {
   routerv2c: '0x6239891FC4030dc050fB9F7083aa68a2E4Fe426D',
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
   // OLD ADDRESSES SPV2
-  poolFactoryv1: addressesTN.poolFactoryv1,
-  synthFactoryv1: addressesTN.synthFactoryv1,
   bondv4: addressesTN.bondv4,
   bondVaultv1: addressesTN.bondVaultv1,
   daov2: addressesTN.daov2,
   daoVaultv1: addressesTN.daoVaultv1,
+  migratev1: addressesTN.migratev1,
+  poolFactoryv1: addressesTN.poolFactoryv1,
+  reservev1: addressesTN.reservev1,
   routerv3: addressesTN.routerv3,
+  synthFactoryv1: addressesTN.synthFactoryv1,
+  synthVaultv1: addressesTN.synthVaultv1,
   utilsv2: addressesTN.utilsv2,
   // CURRENT ADDRESSES
-  poolFactory: addressesTN.poolFactory,
-  synthFactory: addressesTN.synthFactory,
   bond: addressesTN.bond,
   bondVault: addressesTN.bondVault,
   dao: addressesTN.dao,
   daoVault: addressesTN.daoVault,
-  router: addressesTN.router,
-  utils: addressesTN.utils,
+  poolFactory: addressesTN.poolFactory,
   migrate: addressesTN.migrate,
+  reserve: addressesTN.reserve,
+  router: addressesTN.router,
+  synthFactory: addressesTN.synthFactory,
+  synthVault: addressesTN.synthVault,
+  utils: addressesTN.utils,
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',

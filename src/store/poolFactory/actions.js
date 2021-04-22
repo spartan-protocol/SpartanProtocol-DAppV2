@@ -351,12 +351,16 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
       tempArray.push(
         finalArray[i].synthAddress === false
           ? '0'
-          : synthContract.callStatic.getlpBalance(finalArray[i].poolAddress),
+          : synthContract.callStatic.getmapAddress_LPBalance(
+              finalArray[i].poolAddress,
+            ),
       )
       tempArray.push(
         finalArray[i].synthAddress === false
           ? '0'
-          : synthContract.callStatic.getlpDebt(finalArray[i].poolAddress),
+          : synthContract.callStatic.getmapAddress_LPDebt(
+              finalArray[i].poolAddress,
+            ),
       )
     }
     tempArray = await Promise.all(tempArray)
