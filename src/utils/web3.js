@@ -1,11 +1,5 @@
 import { ethers } from 'ethers'
 
-// reserve: '0xdCa1015b1C5e62F52DE9042ED5976B8a45099CfA',
-// router: '0x28966D04A20CEC5B91FC5d55CA62C15DE878d3bD',
-// synthFactory: '0x05E09b9ae888171e733576671609D3A068937083',
-// synthVault: '0x75A772CcDf23256A2d88F05AeD3D7b9a7Dd0E33f',
-// utils: '0x7c5bBc0A7E21c22936f3788F5d58fB732659B76E',
-
 // Testnet ABI Imports
 import abiTnBase from '../ABI/TN/Base.json'
 import abiTnBond from '../ABI/TN/Bond.json'
@@ -18,10 +12,11 @@ import abiTnLoanVault from '../ABI/TN/SpartanLoanVault.json'
 import abiTnMigrate from '../ABI/TN/SPARTANUPGRADE.json'
 import abiTnPool from '../ABI/TN/Pool.json'
 import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
-// import abiTnReserve from '../ABI/TN/Reserve.json'
+import abiTnReserve from '../ABI/TN/Reserve.json'
 import abiTnRouter from '../ABI/TN/Router.json'
 import abiTnSynth from '../ABI/TN/Synth.json'
 import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
+import abiTnSynthVault from '../ABI/TN/SynthVault.json'
 import abiTnUtils from '../ABI/TN/Utils.json'
 import abiTnWbnb from '../ABI/TN/WBNB.json'
 
@@ -37,9 +32,11 @@ import abiMnLoanVault from '../ABI/MN/SpartanLoanVault.json'
 import abiMnMigrate from '../ABI/MN/SPARTANUPGRADE.json'
 import abiMnPool from '../ABI/MN/Pool.json'
 import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
+import abiMnReserve from '../ABI/MN/Reserve.json'
 import abiMnRouter from '../ABI/MN/Router.json'
 import abiMnSynth from '../ABI/MN/Synth.json'
 import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
+import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 
@@ -60,9 +57,11 @@ export const abisTN = {
   migrate: abiTnMigrate.abi,
   pool: abiTnPool.abi,
   poolFactory: abiTnPoolFactory.abi,
+  reserve: abiTnReserve.abi,
   router: abiTnRouter.abi,
   synth: abiTnSynth.abi,
   synthFactory: abiTnSynthFactory.abi,
+  synthVault: abiTnSynthVault.abi,
   utils: abiTnUtils.abi,
   wbnb: abiTnWbnb.abi,
 }
@@ -79,9 +78,11 @@ export const abisMN = {
   migrate: abiMnMigrate.abi,
   pool: abiMnPool.abi,
   poolFactory: abiMnPoolFactory.abi,
+  reserve: abiMnReserve.abi,
   router: abiMnRouter.abi,
   synth: abiMnSynth.abi,
   synthFactory: abiMnSynthFactory.abi,
+  synthVault: abiMnSynthVault.abi,
   utils: abiMnUtils.abi,
   wbnb: abiMnWbnb.abi,
 }
