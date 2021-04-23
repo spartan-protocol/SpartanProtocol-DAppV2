@@ -31,6 +31,7 @@ const Overview = () => {
   const dispatch = useDispatch()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [activeTab, setActiveTab] = useState('1')
+  const [trigger, settrigger] = useState(0)
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
@@ -41,15 +42,11 @@ const Overview = () => {
     return date.toLocaleDateString()
   }
 
-  const lastHarvestLoop = async () => {
+  useEffect(async () => {
     dispatch(getDaoMemberLastHarvest(wallet.account))
-    await pause(10000)
-    lastHarvestLoop()
-  }
-
-  useEffect(() => {
-    lastHarvestLoop()
-  }, [])
+    await pause(7500)
+    settrigger(trigger + 1)
+  }, [trigger])
 
   return (
     <>
@@ -159,12 +156,14 @@ const Overview = () => {
                           <Col xs="6" md="3" lg="2">
                             <div className="card-text">Last Harvest:</div>
                             <div className="subtitle-amount d-none d-md-block">
-                              {formatDate(dao.lastHarvest)}
+                              {dao.lastHarvest > 0 &&
+                                formatDate(dao.lastHarvest)}
                             </div>
                           </Col>
                           <Col xs="6" className="d-block d-md-none">
                             <div className="subtitle-amount text-right">
-                              {formatDate(dao.lastHarvest)}
+                              {dao.lastHarvest > 0 &&
+                                formatDate(dao.lastHarvest)}
                             </div>
                           </Col>
 
