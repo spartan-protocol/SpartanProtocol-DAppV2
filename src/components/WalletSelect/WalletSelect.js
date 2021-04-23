@@ -61,6 +61,9 @@ const WalletSelect = (props) => {
     const checkWallet = () => {
       console.log('Wallet Status:', wallet.status)
       if (wallet.status === 'connected') {
+        if (wallet.account === null) {
+          wallet.connect()
+        }
         window.sessionStorage.setItem('walletConnected', '1')
       }
       if (wallet.status === 'disconnected') {
@@ -72,13 +75,13 @@ const WalletSelect = (props) => {
     }
 
     checkWallet()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet.status])
 
   const connectWallet = async (x) => {
     wallet.reset()
-    console.log('reset')
+    console.log('Wallet Status: cleared')
     if (x.inject === '') {
-      console.log('no inject')
       wallet.connect()
     } else if (x.inject === 'walletconnect') {
       wallet.connectors.walletconnect.rpcUrl = network.rpc

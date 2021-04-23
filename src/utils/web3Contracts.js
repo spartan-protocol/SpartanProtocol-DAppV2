@@ -175,6 +175,17 @@ export const getSynthFactoryContract = () => {
 }
 
 /**
+ * Get the current synthVault contract with signer/provider injected
+ * @returns {uint} contract
+ */
+export const getSynthVaultContract = () => {
+  const abiSynthVault = getAbis().synthVault
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(addr.synthVault, abiSynthVault, provider)
+  return contract
+}
+
+/**
  * Get the current utils contract with signer/provider injected
  * @returns {uint} contract
  */
