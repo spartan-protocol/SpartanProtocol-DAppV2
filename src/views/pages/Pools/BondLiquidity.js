@@ -288,6 +288,7 @@ const BondLiquidity = () => {
                 walletAddress={wallet?.account}
                 contractAddress={addr.bond}
                 txnAmount={convertToWei(bondInput1?.value)}
+                assetNumber="1"
               />
             </Col>
             <Col xs="6">

@@ -4,6 +4,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
 import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
 import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import Card from 'react-bootstrap/Card'
 import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
@@ -24,6 +25,7 @@ const WalletSelect = (props) => {
   const wallet = useWallet()
   const [network, setNetwork] = useState(getNetwork)
   const [horizontalTabs, sethorizontalTabs] = useState('assets')
+  const { t } = useTranslation()
 
   const changeActiveTab = (e, tabState, tabName) => {
     e.preventDefault()
@@ -124,7 +126,7 @@ const WalletSelect = (props) => {
                     <i className="icon-large icon-wallet icon-dark text-center " />
                   </div>
                   <h1 className="text-center" id="myModalLabel">
-                    Connect to wallet
+                    {t('wallet')}
                   </h1>
                 </Col>
               </Row>
@@ -171,7 +173,7 @@ const WalletSelect = (props) => {
             <div className="ml-2 mt-2">
               <Row className="card-body">
                 <Col xs="10">
-                  <h2>Wallet</h2>
+                  <h2>{t('wallet')}</h2>
                 </Col>
                 <Col xs="2">
                   <Button
@@ -188,7 +190,7 @@ const WalletSelect = (props) => {
                   <Row>
                     <Col xs={6}>
                       <div className="output-wallet-description">
-                        View on BSC Scan{' '}
+                        {t('viewBscScan')}{' '}
                         <a
                           href={getExplorerWallet(wallet.account)}
                           target="_blank"
@@ -218,7 +220,7 @@ const WalletSelect = (props) => {
                           wallet.reset()
                         }}
                       >
-                        Change wallet
+                        {t('changeWallet')}
                       </Button>
 
                       <Button
@@ -227,7 +229,7 @@ const WalletSelect = (props) => {
                           wallet.reset()
                         }}
                       >
-                        Change wallet
+                        {t('changeWallet')}
                       </Button>
                     </Col>
                   </Row>
@@ -246,7 +248,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'assets')
                           }
                         >
-                          Assets
+                          {t('assets')}
                         </NavLink>
                       </NavItem>
                       <NavItem>
@@ -258,7 +260,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'lp')
                           }
                         >
-                          LP Shares
+                          LP Tokens
                         </NavLink>
                       </NavItem>
                       <NavItem>
@@ -272,7 +274,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'synths')
                           }
                         >
-                          Synths
+                          {t('synths')}
                         </NavLink>
                       </NavItem>
                     </Nav>
@@ -283,10 +285,12 @@ const WalletSelect = (props) => {
                     <TabPane tabId="assets">
                       <Row className="mt-3 mb-3">
                         <Col xs="9" md="9">
-                          <p className="text-card">Asset</p>
+                          <p className="text-card">{t('assets')}</p>
                         </Col>
                         <Col xs="3" md="3">
-                          <p className="text-card float-right mr-1">Actions</p>
+                          <p className="text-card float-right mr-1">
+                            {t('actions')}
+                          </p>
                         </Col>
                       </Row>
                       {poolFactory.detailedArray
@@ -468,10 +472,12 @@ const WalletSelect = (props) => {
 
                       <Row className="my-3">
                         <Col xs="9" md="9">
-                          <p className="text-card">Available LPs</p>
+                          <p className="text-card">{t('availableLPs')}</p>
                         </Col>
                         <Col xs="3" md="3">
-                          <p className="text-card float-right mr-1">Actions</p>
+                          <p className="text-card float-right mr-1">
+                            {t('actions')}
+                          </p>
                         </Col>
                       </Row>
 
@@ -660,10 +666,12 @@ const WalletSelect = (props) => {
                     <TabPane tabId="synths">
                       <Row className="my-3">
                         <Col xs="9" md="9">
-                          <p className="text-card">Synths</p>
+                          <p className="text-card">{t('synths')}</p>
                         </Col>
                         <Col xs="3" md="3">
-                          <p className="text-card float-right mr-1">Actions</p>
+                          <p className="text-card float-right mr-1">
+                            {t('actions')}
+                          </p>
                         </Col>
                       </Row>
                       {poolFactory.finalLpArray
@@ -767,7 +775,9 @@ const WalletSelect = (props) => {
                     onClick={() => connectWallet(x)}
                   >
                     <Col>
-                      <div className="float-left mt-2 ">{x.title}</div>
+                      <div className="float-left mt-2 ">
+                        {x.title === 'Others' ? t('others') : x.title}
+                      </div>
                       <div className="float-right">
                         {x.icon.map((i) => (
                           <Image

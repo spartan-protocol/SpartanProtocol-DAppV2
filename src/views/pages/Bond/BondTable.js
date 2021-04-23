@@ -4,7 +4,7 @@ import { Button, Card, CardBody, Row, Col } from 'reactstrap'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
 import { bondClaim } from '../../../store/bond/actions'
 import { usePoolFactory } from '../../../store/poolFactory'
-import { convertFromWei, formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromWei } from '../../../utils/bigNumber'
 
 const BondTable = () => {
   const dispatch = useDispatch()
@@ -15,22 +15,28 @@ const BondTable = () => {
     return date.toLocaleDateString()
   }
 
-  const getClaimable = (bondedLP, lastClaim, claimRate) => {
-    const secondsSince = (Date.now() / 1000).toFixed() - lastClaim
-    const claimAmount = secondsSince * claimRate
-    if (claimAmount > bondedLP) {
+  const getClaimable = (_bondedLP, _lastClaim, _claimRate) => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const bondedLP = BN(_bondedLP)
+    const lastClaim = BN(_lastClaim)
+    const claimRate = BN(_claimRate)
+    const secondsSince = timeStamp.minus(lastClaim)
+    const claimAmount = secondsSince.times(claimRate)
+    if (claimAmount.isGreaterThan(bondedLP)) {
       return bondedLP
     }
     return claimAmount
   }
 
-  const getEndDate = (bondedLP, lastClaim, claimRate) => {
-    const secondsSince = (Date.now() / 1000).toFixed() - lastClaim
-    const secondsUntil =
-      (convertFromWei(bondedLP) / convertFromWei(claimRate)).toFixed() -
-      secondsSince
-    const endDate = (Date.now() / 1000).toFixed() * 1 + secondsUntil
-    return endDate
+  const getEndDate = (_bondedLP, _lastClaim, _claimRate) => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const bondedLP = BN(_bondedLP)
+    const lastClaim = BN(_lastClaim)
+    const claimRate = BN(_claimRate)
+    const secondsSince = timeStamp.minus(lastClaim)
+    const secondsUntil = bondedLP.div(claimRate)
+    const endDate = timeStamp.plus(secondsUntil.minus(secondsSince))
+    return endDate.toFixed(0)
   }
 
   return (

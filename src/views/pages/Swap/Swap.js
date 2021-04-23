@@ -560,7 +560,7 @@ const Swap = () => {
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
-                <h2 className="d-inline text-title ml-1">{t('Swap')}</h2>
+                <h2 className="d-inline text-title ml-1">{t('swap')}</h2>
               </Col>
               <Col xs="6" xl="4">
                 <SharePool />
@@ -593,7 +593,7 @@ const Swap = () => {
                                 )
                               }}
                             >
-                              {t('Balance ')}
+                              {t('balance ')}
                               {formatFromWei(getBalance(1), 4)}
                             </div>
                           </Col>
@@ -612,7 +612,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder={t('Input amount...')}
+                                placeholder="Input amount..."
                                 id="swapInput1"
                                 onInput={(event) =>
                                   handleZapInputChange(event.target.value, true)
@@ -674,7 +674,7 @@ const Swap = () => {
                       >
                         <Row>
                           <Col xs={4}>
-                            <div className="title-card">{t('Ouput')}</div>
+                            <div className="title-card">{t('output')}</div>
                           </Col>
                           <Col xs={8} className="text-right balance">
                             <div>
@@ -699,7 +699,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder={t('Output amount...')}
+                                placeholder="Output amount..."
                                 id="swapInput2"
                                 readOnly
                                 onInput={(event) =>
@@ -745,7 +745,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipInput"
                             >
-                              {t('Your input amount.')}
+                              Your input amount.
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -761,7 +761,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {t('Fee')}
+                            {t('fee')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipFee"
@@ -820,7 +820,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {t('Input')}
+                            {t('input')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapInput"
@@ -830,7 +830,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapInput"
                             >
-                              {t('Your input amount.')}
+                              Your input amount.
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -845,7 +845,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {t('Fee')}
+                            {t('fee')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapFee"
@@ -873,7 +873,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="amount">
-                            {t('Output')}
+                            {t('output')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipZapOutput"
@@ -905,7 +905,7 @@ const Swap = () => {
                       <Row className="mb-3">
                         <Col xs="5">
                           <div className="text-card">
-                            {t('Input')}
+                            {t('input')}
                             <i
                               className="icon-small icon-info icon-dark ml-2"
                               id="tooltipSynthInput"
