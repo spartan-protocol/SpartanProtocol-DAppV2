@@ -12,8 +12,10 @@ import {
   synthHarvest,
   synthWithdraw,
 } from '../../../store/synth/actions'
+// import { getAddresses } from '../../../utils/web3'
 
 const Stake = () => {
+  // const addr = getAddresses()
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
 
@@ -63,12 +65,16 @@ const Stake = () => {
                             Buy / Swap
                             <Link
                               to="/dapp/pools/swap"
-                              onClick={() =>
+                              onClick={() => {
+                                window.localStorage.setItem(
+                                  'assetType1',
+                                  'synth',
+                                )
                                 window.localStorage.setItem(
                                   'assetSelected1',
                                   JSON.stringify(asset),
                                 )
-                              }
+                              }}
                             >
                               <i className="icon-extra-small icon-scan ml-2" />
                             </Link>

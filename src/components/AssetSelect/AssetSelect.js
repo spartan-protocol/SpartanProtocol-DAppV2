@@ -115,7 +115,7 @@ const AssetSelect = (props) => {
                 icon: (
                   <img
                     height="35px"
-                    src={spartaIcon}
+                    src={tempArray[i].symbolUrl}
                     alt={`${tempArray[i].symbol} asset icon`}
                     className="mr-1"
                   />
