@@ -10,6 +10,23 @@ export const daoLoading = () => ({
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
 /**
+ * Get the member's last harvest time
+ * @param {address} member
+ * @returns {uint} lastHarvest
+ */
+export const getDaoMemberLastHarvest = (member) => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoContract()
+
+  try {
+    const lastHarvest = await contract.callStatic.mapMember_lastTime(member)
+    dispatch(payloadToDispatch(Types.LAST_HARVEST, lastHarvest))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+  }
+}
+
+/**
  * Check if the wallet is a member of the DAO
  * @param {address} member
  * @returns {boolean} isMember

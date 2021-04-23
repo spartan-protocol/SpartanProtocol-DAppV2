@@ -15,10 +15,14 @@ const BondTable = () => {
     return date.toLocaleDateString()
   }
 
-  const getClaimable = (bondedLP, lastClaim, claimRate) => {
-    const secondsSince = (Date.now() / 1000).toFixed() - lastClaim
-    const claimAmount = secondsSince * claimRate
-    if (claimAmount > bondedLP) {
+  const getClaimable = (_bondedLP, _lastClaim, _claimRate) => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const bondedLP = BN(_bondedLP)
+    const lastClaim = BN(_lastClaim)
+    const claimRate = BN(_claimRate)
+    const secondsSince = timeStamp.minus(lastClaim)
+    const claimAmount = secondsSince.times(claimRate)
+    if (claimAmount.isGreaterThan(bondedLP)) {
       return bondedLP
     }
     return claimAmount

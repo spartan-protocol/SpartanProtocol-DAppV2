@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Card,
@@ -15,22 +16,40 @@ import classnames from 'classnames'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import LockEarn from './LockEarn'
 // import Proposals from './Proposals'
-import { daoHarvest } from '../../../store/dao/actions'
+import { daoHarvest, getDaoMemberLastHarvest } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { useDaoVault } from '../../../store/daoVault/selector'
 
 const Overview = () => {
+  const wallet = useWallet()
   const daoVault = useDaoVault()
   const dao = useDao()
   const dispatch = useDispatch()
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [activeTab, setActiveTab] = useState('1')
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
+
+  const formatDate = (unixTime) => {
+    const date = new Date(unixTime * 1000)
+    return date.toLocaleDateString()
+  }
+
+  const lastHarvestLoop = async () => {
+    dispatch(getDaoMemberLastHarvest(wallet.account))
+    await pause(10000)
+    lastHarvestLoop()
+  }
+
+  useEffect(() => {
+    lastHarvestLoop()
+  }, [])
 
   return (
     <>
@@ -140,12 +159,12 @@ const Overview = () => {
                           <Col xs="6" md="3" lg="2">
                             <div className="card-text">Last Harvest:</div>
                             <div className="subtitle-amount d-none d-md-block">
-                              XXX
+                              {formatDate(dao.lastHarvest)}
                             </div>
                           </Col>
                           <Col xs="6" className="d-block d-md-none">
                             <div className="subtitle-amount text-right">
-                              XXX
+                              {formatDate(dao.lastHarvest)}
                             </div>
                           </Col>
 
