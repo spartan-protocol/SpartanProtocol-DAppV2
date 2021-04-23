@@ -11,6 +11,7 @@ import {
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
+import { getAddresses } from '../../utils/web3'
 
 export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
@@ -174,6 +175,7 @@ export const getPoolFactoryDetailedArray = (
 ) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
+  const addr = getAddresses()
   const trustWalletIndex = await axios.get(
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
   )
@@ -184,10 +186,7 @@ export const getPoolFactoryDetailedArray = (
     }
     const tempArray = await Promise.all(
       tokenArray.map((i) =>
-        contract.callStatic.getTokenDetailsWithMember(
-          i,
-          wallet || '0x0000000000000000000000000000000000000000',
-        ),
+        contract.callStatic.getTokenDetailsWithMember(i, wallet || addr.bnb),
       ),
     )
     const detailedArray = []
@@ -311,7 +310,7 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           ? null
           : getPoolContract(finalArray[i].poolAddress)
       const synthContract =
-        finalArray[i].synthAddress === false || !walletAddress
+        finalArray[i].synthAddress === false
           ? null
           : getSynthContract(finalArray[i].synthAddress)
       tempArray.push(
@@ -371,7 +370,7 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
             ),
       )
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA'
+        finalArray[i].symbol === 'SPARTA' || !walletAddress
           ? {
               isMember: false,
               bondedLP: '0',
