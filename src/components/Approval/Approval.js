@@ -87,7 +87,7 @@ const Approval = ({
                 <i className="icon-extra-small icon-lock icon-dark align-middle" />
                 <i className="icon-extra-small icon-check icon-light align-middle" />
                 <br />
-                {symbol} {t('Ready')}
+                {symbol} {t('ready')}
               </Button>
             </>
           )}
@@ -116,7 +116,7 @@ const Approval = ({
                 <i className="icon-extra-small icon-lock icon-dark align-middle" />
                 <i className="icon-extra-small icon-check icon-light align-middle" />
                 <br />
-                {symbol} ${t('Ready')}
+                {symbol} ${t('ready')}
               </Button>
             </>
           )}

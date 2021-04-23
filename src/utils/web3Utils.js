@@ -1,6 +1,5 @@
-const BigNumber = require('bignumber.js')
+import { BN } from './bigNumber'
 
-export const BN = (x) => new BigNumber(x)
 export const one = BN(1).times(10).pow(18)
 
 // ************** CORE MATHEMATICS (USE THESE IN UI WHERE NEAR-INSTANT-RETURN IS REQUIRED) ************** //
@@ -67,22 +66,27 @@ export const calcLiquidityShare = (input, pool) => {
   return result
 }
 
-export const calcSlipAdjustment = (b, B, t, T) => {
+export const calcSlipAdjustment = (_b, _B, _t, _T) => {
   // slipAdjustment = (1 - ABS((B t - b T)/((2 b + B) (t + T))))
   // 1 - ABS(part1 - part2)/(part3 * part4))
-  const part1 = BN(B).times(t)
-  const part2 = BN(b).times(T)
-  const part3 = BN(b).times(2).plus(B)
-  const part4 = BN(t).plus(T)
+  const b = BN(_b)
+  const B = BN(_B)
+  const t = BN(_t)
+  const T = BN(_T)
+
+  const part1 = B.times(t)
+  const part2 = b.times(T)
+  const part3 = b.times(2).plus(B)
+  const part4 = t.plus(T)
+
   let numerator = ''
-  if (part1.lt(part2) === true) {
+  if (part1.isGreaterThan(part2)) {
     numerator = part1.minus(part2)
   } else {
     numerator = part2.minus(part1)
   }
   const denominator = part3.times(part4)
-  const result = BN(one).minus(numerator.times(one).div(denominator))
-  return result
+  return one.minus(numerator.times(one).div(denominator)).toFixed(0) // Multiply by 10**18
 }
 
 // Calculate liquidity units
