@@ -34,7 +34,7 @@ export const InputPaneJoin = (props) => {
           <Col sm="12">
             <InputGroup className="mb-3">
               <InputGroupAddon addonType="prepend">
-                <Label className="input-group-text">{t('Input')}</Label>
+                <Label className="input-group-text">{t('input')}</Label>
               </InputGroupAddon>
               <Input
                 type="text"

@@ -126,7 +126,7 @@ const WalletSelect = (props) => {
                     <i className="icon-large icon-wallet icon-dark text-center " />
                   </div>
                   <h1 className="text-center" id="myModalLabel">
-                    {t('Wallet')}
+                    {t('wallet')}
                   </h1>
                 </Col>
               </Row>
@@ -173,7 +173,7 @@ const WalletSelect = (props) => {
             <div className="ml-2 mt-2">
               <Row className="card-body">
                 <Col xs="10">
-                  <h2>{t('Wallet')}</h2>
+                  <h2>{t('wallet')}</h2>
                 </Col>
                 <Col xs="2">
                   <Button
@@ -190,7 +190,7 @@ const WalletSelect = (props) => {
                   <Row>
                     <Col xs={6}>
                       <div className="output-wallet-description">
-                        {t('ViewBSCScan')}{' '}
+                        {t('viewBscScan')}{' '}
                         <a
                           href={getExplorerWallet(wallet.account)}
                           target="_blank"
@@ -220,7 +220,7 @@ const WalletSelect = (props) => {
                           wallet.reset()
                         }}
                       >
-                        {t('ChangeWallet')}
+                        {t('changeWallet')}
                       </Button>
 
                       <Button
@@ -229,7 +229,7 @@ const WalletSelect = (props) => {
                           wallet.reset()
                         }}
                       >
-                        {t('ChangeWallet')}
+                        {t('changeWallet')}
                       </Button>
                     </Col>
                   </Row>
@@ -248,7 +248,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'assets')
                           }
                         >
-                          {t('Assets')}
+                          {t('assets')}
                         </NavLink>
                       </NavItem>
                       <NavItem>
@@ -260,7 +260,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'lp')
                           }
                         >
-                          {t('LPShares')}
+                          LP Tokens
                         </NavLink>
                       </NavItem>
                       <NavItem>
@@ -274,7 +274,7 @@ const WalletSelect = (props) => {
                             changeActiveTab(e, 'horizontalTabs', 'synths')
                           }
                         >
-                          {t('Synths')}
+                          {t('synths')}
                         </NavLink>
                       </NavItem>
                     </Nav>
@@ -285,11 +285,11 @@ const WalletSelect = (props) => {
                     <TabPane tabId="assets">
                       <Row className="mt-3 mb-3">
                         <Col xs="9" md="9">
-                          <p className="text-card">{t('Assets')}</p>
+                          <p className="text-card">{t('assets')}</p>
                         </Col>
                         <Col xs="3" md="3">
                           <p className="text-card float-right mr-1">
-                            {t('Actions')}
+                            {t('actions')}
                           </p>
                         </Col>
                       </Row>
@@ -472,11 +472,11 @@ const WalletSelect = (props) => {
 
                       <Row className="my-3">
                         <Col xs="9" md="9">
-                          <p className="text-card">{t('AvailableLPs')}</p>
+                          <p className="text-card">{t('availableLPs')}</p>
                         </Col>
                         <Col xs="3" md="3">
                           <p className="text-card float-right mr-1">
-                            {t('Actions')}
+                            {t('actions')}
                           </p>
                         </Col>
                       </Row>
@@ -666,11 +666,11 @@ const WalletSelect = (props) => {
                     <TabPane tabId="synths">
                       <Row className="my-3">
                         <Col xs="9" md="9">
-                          <p className="text-card">{t('Synths')}</p>
+                          <p className="text-card">{t('synths')}</p>
                         </Col>
                         <Col xs="3" md="3">
                           <p className="text-card float-right mr-1">
-                            {t('Actions')}
+                            {t('actions')}
                           </p>
                         </Col>
                       </Row>
@@ -776,7 +776,7 @@ const WalletSelect = (props) => {
                   >
                     <Col>
                       <div className="float-left mt-2 ">
-                        {x.title === 'Others' ? t('Others') : x.title}
+                        {x.title === 'Others' ? t('others') : x.title}
                       </div>
                       <div className="float-right">
                         {x.icon.map((i) => (

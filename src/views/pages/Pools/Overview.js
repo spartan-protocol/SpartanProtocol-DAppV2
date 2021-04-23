@@ -201,7 +201,7 @@ const Overview = () => {
       <div className="content">
         <Row className="card-body justify-content-center">
           <Col xs="6" xl="5">
-            <h2 className="d-inline text-title ml-1">{t('Pools')}</h2>
+            <h2 className="d-inline text-title ml-1">{t('pools')}</h2>
           </Col>
           <Col xs="6" xl="4">
             {/* Buttons? */}
@@ -232,7 +232,7 @@ const Overview = () => {
                     <CardTitle tag="h2">
                       <Row className="fade-in">
                         <Col md={12} sm={12}>
-                          {t('Total pooled')}
+                          Total pooled
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"
@@ -278,7 +278,7 @@ const Overview = () => {
                     <CardTitle tag="h2">
                       <Row className="fade-in">
                         <Col md={12} sm={12}>
-                          {t('Total volume')}
+                          Total volume
                           <i
                             className="icon-small icon-info icon-dark ml-2"
                             id="tooltipAddBase"

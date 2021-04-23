@@ -47,7 +47,7 @@ const Supply = () => {
         <PopoverBody>
           <Row>
             <Col xs="6" className="popover-text mb-4">
-              {t('Marketcap')}
+              Marketcap
             </Col>
             <Col xs="6 mb-2" className="popover-text mb-4">
               $
@@ -62,7 +62,7 @@ const Supply = () => {
             </Col>
 
             <Col xs="6 mb-2" className="popover-text">
-              {t('Circulating supply')}
+              {`${t('circulating')} ${t('supply')}`}
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(
@@ -80,7 +80,7 @@ const Supply = () => {
             </Col>
 
             <Col xs="6" className="popover-text mb-2">
-              {t('Total supply')}
+              {`Total ${t('supply')}`}
             </Col>
             <Col xs="6" className="popover-text mb-2">
               {formatFromWei(
@@ -135,7 +135,7 @@ const Supply = () => {
                   <Col xs={8} className="ml-n2 ">
                     <div className="text-left text-card">
                       <i className="icon-small icon-contracts icon-light mr-1" />{' '}
-                      {t('Contracts')}
+                      Contracts
                     </div>
                   </Col>
                   <Col className="ml-auto">
