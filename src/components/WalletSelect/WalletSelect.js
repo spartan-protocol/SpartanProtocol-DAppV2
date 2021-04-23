@@ -772,7 +772,9 @@ const WalletSelect = (props) => {
                     onClick={() => connectWallet(x)}
                   >
                     <Col>
-                      <div className="float-left mt-2 ">{x.title}</div>
+                      <div className="float-left mt-2 ">
+                        {x.title === 'Others' ? t('Others') : x.title}
+                      </div>
                       <div className="float-right">
                         {x.icon.map((i) => (
                           <Image
