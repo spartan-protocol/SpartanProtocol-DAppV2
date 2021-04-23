@@ -4,10 +4,14 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, CardBody, Row, Col } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { daoDeposit, daoWithdraw } from '../../../store/dao/actions'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/img/spartan_synth.svg'
+import {
+  synthDeposit,
+  synthHarvest,
+  synthWithdraw,
+} from '../../../store/synth/actions'
 
 const Stake = () => {
   const poolFactory = usePoolFactory()
@@ -98,10 +102,10 @@ const Stake = () => {
                           type="Button"
                           className="btn btn-primary w-100 p-3"
                           onClick={() =>
-                            dispatch(daoWithdraw(asset.poolAddress))
+                            dispatch(synthWithdraw(asset.synthAddress, '10000'))
                           }
                         >
-                          Unlock
+                          Unstake
                         </Button>
                       </Col>
                       <Col xs="6" className="mt-2">
@@ -110,14 +114,25 @@ const Stake = () => {
                           className="btn btn-primary w-100 p-3"
                           onClick={() =>
                             dispatch(
-                              daoDeposit(
-                                asset.poolAddress,
+                              synthDeposit(
+                                asset.synthAddress,
                                 asset.balanceSynths,
                               ),
                             )
                           }
                         >
-                          Lock
+                          Stake
+                        </Button>
+                      </Col>
+                      <Col xs="6" className="mt-2">
+                        <Button
+                          type="Button"
+                          className="btn btn-primary w-100 p-3"
+                          onClick={() =>
+                            dispatch(synthHarvest(asset.synthAddress))
+                          }
+                        >
+                          Harvest
                         </Button>
                       </Col>
                     </Row>

@@ -101,7 +101,7 @@ const Stake = () => {
                             dispatch(daoWithdraw(asset.poolAddress))
                           }
                         >
-                          Unlock
+                          Unstake
                         </Button>
                       </Col>
                       <Col xs="6" className="mt-2">
@@ -114,7 +114,7 @@ const Stake = () => {
                             )
                           }
                         >
-                          Lock
+                          Stake
                         </Button>
                       </Col>
                     </Row>
