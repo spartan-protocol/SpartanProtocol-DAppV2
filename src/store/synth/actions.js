@@ -77,7 +77,7 @@ export const synthHarvest = (synth) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     // const gLimit = await contract.estimateGas.deposit(asset, amount)
-    const harvestAmount = await contract.withdraw(synth, {
+    const harvestAmount = await contract.harvest(synth, {
       gasPrice: gPrice,
       // gasLimit: gLimit,
     })
@@ -151,7 +151,7 @@ export const getSynthMemberWeight = (member) => async (dispatch) => {
 }
 
 /**
- * Returns the total weight in the DAO (via mapping)
+ * Returns the total weight in the synthVault (via mapping)
  * @returns {uint}
  */
 export const getSynthTotalWeight = () => async (dispatch) => {

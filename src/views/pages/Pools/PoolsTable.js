@@ -139,7 +139,7 @@ const Poolstable = () => {
                         <div className="subtitle-card">XXX,XXX.XX SPARTA</div>
                       </Col>
                       <Col md="1">
-                        <div className="title-card">Locked LP</div>
+                        <div className="title-card">Staked LP</div>
                         <div className="subtitle-amount">0.00</div>
                       </Col>
 

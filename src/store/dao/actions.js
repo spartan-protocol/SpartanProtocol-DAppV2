@@ -61,7 +61,7 @@ export const getDaoMemberCount = () => async (dispatch) => {
 
 /**
  * DAO HELPER -
- * Get the current harvestable amount of SPARTA from Lock+Earn
+ * Get the current harvestable amount of SPARTA from DaoVault staking
  * Uses getDaoHarvestEraAmount() but works out what portion of an era/s the member can claim
  * @returns unit
  */

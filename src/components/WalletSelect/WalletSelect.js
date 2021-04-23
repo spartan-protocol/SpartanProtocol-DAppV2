@@ -373,11 +373,11 @@ const WalletSelect = (props) => {
                     </TabPane>
                     <TabPane tabId="lp">
                       {poolFactory.finalLpArray?.filter(
-                        (asset) => asset.lockedLPs > 0,
+                        (asset) => asset.stakedLPs > 0,
                       ).length > 0 && (
                         <Row className="my-3">
                           <Col xs="9" md="9">
-                            <p className="text-card">LPs Locked in DAO</p>
+                            <p className="text-card">LPs Staked in DAO</p>
                           </Col>
                           <Col xs="3" md="3">
                             <p className="text-card float-right mr-1">
@@ -387,7 +387,7 @@ const WalletSelect = (props) => {
                         </Row>
                       )}
                       {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.lockedLPs > 0)
+                        ?.filter((asset) => asset.stakedLPs > 0)
                         .map((asset) => (
                           <Row
                             key={`${asset.tokenAddress}-lpdao`}
@@ -416,7 +416,7 @@ const WalletSelect = (props) => {
                                 <Col xs="12" className="float-left ml-n4">
                                   {`${asset.symbol}-SPP`}
                                   <div className="description">
-                                    {formatFromWei(asset.lockedLPs)}
+                                    {formatFromWei(asset.stakedLPs)}
                                   </div>
                                 </Col>
                               </Row>
