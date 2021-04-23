@@ -1,9 +1,10 @@
 // import Dashboard from './components/Dashboard/Dashboard'
 import PoolsOverview from './views/pages/Pools/Overview'
 import Dao from './views/pages/Dao/Overview'
-import Liquidity2 from './views/pages/Pools/Liquidity2'
+import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
+import Synth from './views/pages/Synth/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
@@ -39,10 +40,10 @@ const routes = [
   },
 
   {
-    path: '/pools/liquidity2',
+    path: '/pools/liquidity',
     name: 'Liquidity',
     icon: 'icon-medium icon-sword icon-dark',
-    component: Liquidity2,
+    component: Liquidity,
     layout: '/dapp',
   },
   {
@@ -54,18 +55,26 @@ const routes = [
   },
 
   {
-    path: '/pools/bond',
-    name: 'Bond',
+    path: '/bondVault',
+    name: 'BondVault',
     icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
     layout: '/dapp',
   },
 
   {
-    path: '/pools/dao',
-    name: 'Dao',
+    path: '/daoVault',
+    name: 'DaoVault',
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Dao,
+    layout: '/dapp',
+  },
+
+  {
+    path: '/synthVault',
+    name: 'SynthVault',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: Synth,
     layout: '/dapp',
   },
 

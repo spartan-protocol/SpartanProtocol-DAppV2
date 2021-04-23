@@ -8,6 +8,7 @@ import {
   getDaoVaultContract,
   getSynthContract,
   getBondVaultContract,
+  getSynthVaultContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
@@ -212,7 +213,7 @@ export const getPoolFactoryDetailedArray = (
         // SP-pTOKEN Details
         poolAddress: '',
         balanceLPs: '0',
-        lockedLPs: '0',
+        stakedLPs: '0',
         baseAmount: '',
         tokenAmount: '',
         poolUnits: '',
@@ -224,6 +225,7 @@ export const getPoolFactoryDetailedArray = (
         // SP-sTOKEN Details
         synthAddress: false,
         balanceSynths: '',
+        stakedSynths: '',
         synthLpBalance: '',
         synthLpDebt: '',
         // Bond Details
@@ -313,6 +315,10 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
         finalArray[i].synthAddress === false
           ? null
           : getSynthContract(finalArray[i].synthAddress)
+      const synthVaultContract =
+        finalArray[i].synthAddress === false
+          ? null
+          : getSynthVaultContract(finalArray[i].synthAddress)
       tempArray.push(
         finalArray[i].symbol === 'SPARTA'
           ? '0'
@@ -356,6 +362,14 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           : synthContract.callStatic.balanceOf(walletAddress),
       )
       tempArray.push(
+        finalArray[i].synthAddress === false || !walletAddress
+          ? '0'
+          : synthVaultContract.callStatic.getMemberDeposit(
+              finalArray[i].synthAddress,
+              walletAddress,
+            ),
+      )
+      tempArray.push(
         finalArray[i].synthAddress === false
           ? '0'
           : synthContract.callStatic.getmapAddress_LPBalance(
@@ -385,21 +399,22 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
     }
     tempArray = await Promise.all(tempArray)
     const finalLpArray = finalArray
-    for (let i = 0; i < tempArray.length - 9; i += 10) {
-      const bondDetails = tempArray[i + 9]
-      finalLpArray[i / 10].recentDivis = tempArray[i].toString()
-      finalLpArray[i / 10].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / 10].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / 10].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / 10].balanceLPs = tempArray[i + 4].toString()
-      finalLpArray[i / 10].lockedLPs = tempArray[i + 5].toString()
-      finalLpArray[i / 10].balanceSynths = tempArray[i + 6].toString()
-      finalLpArray[i / 10].synthLpBalance = tempArray[i + 7].toString()
-      finalLpArray[i / 10].synthLpDebt = tempArray[i + 8].toString()
-      finalLpArray[i / 10].bondMember = bondDetails.isMember
-      finalLpArray[i / 10].bondedLPs = bondDetails.bondedLP.toString()
-      finalLpArray[i / 10].bondClaimRate = bondDetails.claimRate.toString()
-      finalLpArray[i / 10].bondLastClaim = bondDetails.lastBlockTime.toString()
+    for (let i = 0; i < tempArray.length - 10; i += 11) {
+      const bondDetails = tempArray[i + 10]
+      finalLpArray[i / 11].recentDivis = tempArray[i].toString()
+      finalLpArray[i / 11].lastMonthDivis = tempArray[i + 1].toString()
+      finalLpArray[i / 11].recentFees = tempArray[i + 2].toString()
+      finalLpArray[i / 11].lastMonthFees = tempArray[i + 3].toString()
+      finalLpArray[i / 11].balanceLPs = tempArray[i + 4].toString()
+      finalLpArray[i / 11].stakedLPs = tempArray[i + 5].toString()
+      finalLpArray[i / 11].balanceSynths = tempArray[i + 6].toString()
+      finalLpArray[i / 11].stakedSynths = tempArray[i + 7].toString()
+      finalLpArray[i / 11].synthLpBalance = tempArray[i + 8].toString()
+      finalLpArray[i / 11].synthLpDebt = tempArray[i + 9].toString()
+      finalLpArray[i / 11].bondMember = bondDetails.isMember
+      finalLpArray[i / 11].bondedLPs = bondDetails.bondedLP.toString()
+      finalLpArray[i / 11].bondClaimRate = bondDetails.claimRate.toString()
+      finalLpArray[i / 11].bondLastClaim = bondDetails.lastBlockTime.toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),

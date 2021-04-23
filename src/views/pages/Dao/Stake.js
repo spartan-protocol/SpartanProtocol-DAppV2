@@ -9,7 +9,7 @@ import { usePoolFactory } from '../../../store/poolFactory'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/img/spartan_lp.svg'
 
-const LockEarn = () => {
+const Stake = () => {
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
 
@@ -24,8 +24,8 @@ const LockEarn = () => {
             .filter((i) => i.curated === true)
             .sort(
               (a, b) =>
-                BN(b.balanceLPs).plus(b.lockedLPs) -
-                BN(a.balanceLPs).plus(a.lockedLPs),
+                BN(b.balanceLPs).plus(b.stakedLPs) -
+                BN(a.balanceLPs).plus(a.stakedLPs),
             )
             .map((asset) => (
               <Col xs="12" lg="6" key={asset.tokenAddress}>
@@ -72,18 +72,18 @@ const LockEarn = () => {
                         </Row>
                       </Col>
                       <Col xs="6" sm="3">
-                        <div className="card-text">Locked</div>
+                        <div className="card-text">Staked</div>
                         <div className="subtitle-amount d-none d-sm-block">
-                          {formatFromWei(asset.lockedLPs)}
+                          {formatFromWei(asset.stakedLPs)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-sm-none">
                         <div className="subtitle-amount text-right">
-                          {formatFromWei(asset.lockedLPs)}
+                          {formatFromWei(asset.stakedLPs)}
                         </div>
                       </Col>
                       <Col xs="6" sm="3">
-                        <div className="card-text">Unlocked</div>
+                        <div className="card-text">Wallet</div>
                         <div className="subtitle-amount d-none d-sm-block">
                           {formatFromWei(asset.balanceLPs)}
                         </div>
@@ -127,4 +127,4 @@ const LockEarn = () => {
   )
 }
 
-export default LockEarn
+export default Stake
