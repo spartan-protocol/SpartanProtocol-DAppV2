@@ -1,7 +1,6 @@
 import * as Types from './types'
 
 const initialState = {
-  memberPoolWeight: 0,
   daoTotalWeight: 0,
   memberWeight: 0,
   error: null,
@@ -10,15 +9,6 @@ const initialState = {
 
 export const daoVaultReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_DAOVAULT_MEMBER_POOL_WEIGHT: {
-      return {
-        ...state,
-        memberPoolWeight: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
     case Types.GET_DAOVAULT_TOTAL_WEIGHT: {
       return {
         ...state,
