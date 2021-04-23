@@ -40,5 +40,14 @@
   "Proposal":"Proposal",
   "Rewards":"Rewards",
   "Weight":"Weight",
-  "Unlocked":"Unlocked"
+  "Unlocked":"Unlocked",
+  "Wallet": "Wallet",
+  "Ready": "Ready",
+  "ChangeWallet": "Change Wallet",
+  "Assets": "Assets",
+  "Actions": "Actions",
+  "AvailableLPs": "Available LPs",
+  "ViewBSCScan": "View on BSC Scan",
+  "LPShares": "LP Shares",
+  "Synths": "Synths"
 }

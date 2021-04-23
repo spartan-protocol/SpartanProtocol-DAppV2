@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import {
   getAllowance1,
   getAllowance2,
   getApproval,
   useWeb3,
 } from '../../store/web3'
+
 import { BN } from '../../utils/bigNumber'
 
 // import { usePoolFactory } from '../../store/poolFactory'
@@ -28,6 +30,7 @@ const Approval = ({
   txnAmount,
   assetNumber,
 }) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const web3 = useWeb3()
 
@@ -84,7 +87,7 @@ const Approval = ({
                 <i className="icon-extra-small icon-lock icon-dark align-middle" />
                 <i className="icon-extra-small icon-check icon-light align-middle" />
                 <br />
-                {symbol} Ready
+                {symbol} {t('Ready')}
               </Button>
             </>
           )}
@@ -113,7 +116,7 @@ const Approval = ({
                 <i className="icon-extra-small icon-lock icon-dark align-middle" />
                 <i className="icon-extra-small icon-check icon-light align-middle" />
                 <br />
-                {symbol} Ready
+                {symbol} ${t('Ready')}
               </Button>
             </>
           )}
