@@ -119,7 +119,7 @@ const WalletSelect = (props) => {
       <Modal show={props.show} onHide={props.onHide}>
         <div className="card-body">
           {wallet.status !== 'connected' && (
-            <CardHeader>
+            <CardHeader style={{ backgroundColor: '#1D171F' }}>
               <CardTitle tag="h2" />
               <Row>
                 <Col>
