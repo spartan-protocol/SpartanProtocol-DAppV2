@@ -24,6 +24,16 @@ const Stake = () => {
     return date.toLocaleDateString()
   }
 
+  const getLastHarvestDate = (tokenAddress) => {
+    if (synth.synthArrayFinal.length > 0) {
+      return formatDate(
+        synth.synthArrayFinal.filter((i) => i.tokenAddress === tokenAddress)[0]
+          ?.lastHarvest,
+      )
+    }
+    return '0'
+  }
+
   return (
     <>
       <Row>
@@ -126,20 +136,12 @@ const Stake = () => {
                       <Col xs="6" sm="3">
                         <div className="card-text">Last Harvest</div>
                         <div className="subtitle-amount d-none d-sm-block">
-                          {formatDate(
-                            synth.synthArrayFinal?.filter(
-                              (i) => i.tokenAddress === asset.tokenAddress,
-                            )[0].lastHarvest,
-                          )}
+                          {getLastHarvestDate(asset.tokenAddress)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-sm-none">
                         <div className="subtitle-amount text-right">
-                          {formatDate(
-                            synth.synthArrayFinal?.filter(
-                              (i) => i.tokenAddress === asset.tokenAddress,
-                            )[0].lastHarvest,
-                          )}
+                          {getLastHarvestDate(asset.tokenAddress)}
                         </div>
                       </Col>
 
