@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
 import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
-import Card from 'react-bootstrap/Card'
 import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import walletTypes from './walletTypes'
@@ -15,7 +14,6 @@ import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
 import { usePoolFactory } from '../../store/poolFactory/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
-// import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 
@@ -116,7 +114,7 @@ const WalletSelect = (props) => {
   return (
     <>
       <Modal show={props.show} onHide={props.onHide}>
-        <Card className="card-body">
+        <div className="card-body">
           {wallet.status !== 'connected' && (
             <CardHeader>
               <CardTitle tag="h2" />
@@ -170,17 +168,17 @@ const WalletSelect = (props) => {
 
           {/* Wallet overview */}
           {wallet.status === 'connected' ? (
-            <div className="ml-2 mt-2">
+            <div className="ml-2 mt-n3">
               <Row className="card-body">
                 <Col xs="10">
-                  <h2>{t('wallet')}</h2>
+                  <h3 className="ml-n4 modal-title">{t('wallet')}</h3>
                 </Col>
                 <Col xs="2">
                   <Button
                     onClick={props.onHide}
                     className="btn btn-transparent"
                   >
-                    <i className="icon-small icon-close" />
+                    <i className="icon-small icon-close mt-3" />
                   </Button>
                 </Col>
               </Row>
@@ -188,8 +186,8 @@ const WalletSelect = (props) => {
               {wallet.status === 'connected' && (
                 <>
                   <Row>
-                    <Col xs={6}>
-                      <div className="output-wallet-description">
+                    <Col xs={6} className="ml-n1">
+                      <div className="output-wallet-description ">
                         {t('viewBscScan')}{' '}
                         <a
                           href={getExplorerWallet(wallet.account)}
@@ -234,114 +232,133 @@ const WalletSelect = (props) => {
                     </Col>
                   </Row>
                   <br />
-                  <br />
-                  <Row className="card-body">
-                    <Nav pills className="nav-tabs-custom">
-                      <NavItem>
-                        <NavLink
-                          data-toggle="tab"
-                          href="#"
-                          className={
-                            horizontalTabs === 'assets' ? 'active' : ''
-                          }
-                          onClick={(e) =>
-                            changeActiveTab(e, 'horizontalTabs', 'assets')
-                          }
-                        >
-                          {t('assets')}
-                        </NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          data-toggle="tab"
-                          href="#"
-                          className={horizontalTabs === 'lp' ? 'active' : ''}
-                          onClick={(e) =>
-                            changeActiveTab(e, 'horizontalTabs', 'lp')
-                          }
-                        >
-                          LP Tokens
-                        </NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          data-toggle="tab"
-                          href="#"
-                          className={
-                            horizontalTabs === 'synths' ? 'active' : ''
-                          }
-                          onClick={(e) =>
-                            changeActiveTab(e, 'horizontalTabs', 'synths')
-                          }
-                        >
-                          {t('synths')}
-                        </NavLink>
-                      </NavItem>
-                    </Nav>
-                  </Row>
-
-                  {/* Asset tabs */}
-                  <TabContent className="tab-space" activeTab={horizontalTabs}>
-                    <TabPane tabId="assets">
-                      <Row className="mt-3 mb-3">
-                        <Col xs="9" md="9">
-                          <p className="text-card">{t('wallet')}</p>
-                        </Col>
-                        <Col xs="3" md="3">
-                          <p className="text-card float-right mr-1">
-                            {t('actions')}
-                          </p>
-                        </Col>
-                      </Row>
-                      {poolFactory.detailedArray
-                        ?.filter((asset) => asset.balanceTokens > 0)
-                        .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-asset`}
-                            className="mb-3 output-card mr-2"
+                  {/* wallet navigation tabs */}
+                  <div className="modal-body ml-n3">
+                    <Row>
+                      <Nav pills className="nav-tabs-custom">
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={
+                              horizontalTabs === 'assets' ? 'active' : ''
+                            }
+                            onClick={(e) =>
+                              changeActiveTab(e, 'horizontalTabs', 'assets')
+                            }
                           >
-                            <Col xs="4" sm="2" className="p-0 pl-2">
-                              <img
-                                height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
-                                className="mr-1"
-                              />
-                            </Col>
-                            <Col
-                              xs="5"
-                              sm="7"
-                              className="align-items-center p-0 pl-sm-3"
-                            >
-                              <Row>
-                                <Col xs="12" className="float-left ml-n4">
-                                  {asset.symbol}
-                                  <div className="description">
-                                    {formatFromWei(asset.balanceTokens)}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
+                            {t('assets')}
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={horizontalTabs === 'lp' ? 'active' : ''}
+                            onClick={(e) =>
+                              changeActiveTab(e, 'horizontalTabs', 'lp')
+                            }
+                          >
+                            LP Tokens
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            data-toggle="tab"
+                            href="#"
+                            className={
+                              horizontalTabs === 'synths' ? 'active' : ''
+                            }
+                            onClick={(e) =>
+                              changeActiveTab(e, 'horizontalTabs', 'synths')
+                            }
+                          >
+                            {t('synths')}
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                    </Row>
 
-                            <Col xs="3" md="3" className="text-right p-0 pr-2">
-                              <Row>
-                                <Col xs="6" className="mt-1">
-                                  <ShareLink
-                                    url={asset.tokenAddress}
-                                    notificationLocation="tc"
-                                  >
-                                    <i
+                    {/* Asset tabs */}
+                    <TabContent
+                      className="tab-space"
+                      activeTab={horizontalTabs}
+                    >
+                      <TabPane tabId="assets" className="ml-n2">
+                        <Row className="mt-3 mb-3">
+                          <Col xs="9" md="9" className="ml-n1">
+                            <div className="text-card">{t('wallet')}</div>
+                          </Col>
+                          <Col xs="3" md="3">
+                            <div className="text-card float-right mr-1">
+                              {t('actions')}
+                            </div>
+                          </Col>
+                        </Row>
+                        {poolFactory.detailedArray
+                          ?.filter((asset) => asset.balanceTokens > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-asset`}
+                              className="mb-3 output-card mr-2"
+                            >
+                              <Col xs="4" sm="2" className="p-0 pl-2">
+                                <img
+                                  height="35px"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                  className="mr-1"
+                                />
+                              </Col>
+                              <Col
+                                xs="5"
+                                sm="7"
+                                className="align-items-center p-0 pl-sm-3"
+                              >
+                                <Row>
+                                  <Col xs="12" className="float-left ml-n4">
+                                    {asset.symbol}
+                                    <div className="description">
+                                      {formatFromWei(asset.balanceTokens)}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
+                                <Row>
+                                  <Col xs="6" className="mt-1">
+                                    <ShareLink
+                                      url={asset.tokenAddress}
+                                      notificationLocation="tc"
+                                    >
+                                      <i
+                                        role="button"
+                                        className="icon-small icon-copy ml-2 align-middle"
+                                      />
+                                    </ShareLink>
+                                  </Col>
+                                  <Col xs="6" className="mt-1">
+                                    <div
                                       role="button"
-                                      className="icon-small icon-copy ml-2 align-middle"
-                                    />
-                                  </ShareLink>
-                                </Col>
-                                <Col xs="6" className="mt-1">
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 32) {
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 32) {
+                                          dispatch(
+                                            watchAsset(
+                                              asset.tokenAddress,
+                                              asset.symbol,
+                                              '18',
+                                              asset.symbolUrl,
+                                            ),
+                                          )
+                                        }
+                                      }}
+                                      onClick={() => {
                                         dispatch(
                                           watchAsset(
                                             asset.tokenAddress,
@@ -350,97 +367,101 @@ const WalletSelect = (props) => {
                                             asset.symbolUrl,
                                           ),
                                         )
-                                      }
-                                    }}
-                                    onClick={() => {
-                                      dispatch(
-                                        watchAsset(
-                                          asset.tokenAddress,
-                                          asset.symbol,
-                                          '18',
-                                          asset.symbolUrl,
-                                        ),
-                                      )
-                                    }}
-                                  >
-                                    <i className="icon-small icon-metamask icon-light ml-2" />
-                                  </div>
-                                </Col>
-                              </Row>
+                                      }}
+                                    >
+                                      <i className="icon-small icon-metamask icon-light ml-2" />
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          ))}
+                      </TabPane>
+                      <TabPane tabId="lp" className="ml-n2">
+                        {poolFactory.finalLpArray?.filter(
+                          (asset) => asset.stakedLPs > 0,
+                        ).length > 0 && (
+                          <Row className="my-3">
+                            <Col xs="9" md="9">
+                              <div className="text-card">Staked</div>
+                            </Col>
+                            <Col xs="3" md="3">
+                              <div className="text-card float-right mr-1">
+                                Actions
+                              </div>
                             </Col>
                           </Row>
-                        ))}
-                    </TabPane>
-                    <TabPane tabId="lp">
-                      {poolFactory.finalLpArray?.filter(
-                        (asset) => asset.stakedLPs > 0,
-                      ).length > 0 && (
-                        <Row className="my-3">
-                          <Col xs="9" md="9">
-                            <p className="text-card">Staked</p>
-                          </Col>
-                          <Col xs="3" md="3">
-                            <p className="text-card float-right mr-1">
-                              Actions
-                            </p>
-                          </Col>
-                        </Row>
-                      )}
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.stakedLPs > 0)
-                        .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-lpdao`}
-                            className="mb-3 output-card mr-2"
-                          >
-                            <Col xs="4" sm="2" className="p-0 pl-2">
-                              <img
-                                height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
-                                className="mr-n3"
-                              />
-                              <img
-                                height="20px"
-                                src={spartaIcon}
-                                alt="SPARTA"
-                                className="mr-2 mt-3"
-                              />
-                            </Col>
-                            <Col
-                              xs="5"
-                              sm="7"
-                              className="align-items-center p-0 pl-sm-3"
+                        )}
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.stakedLPs > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-lpdao`}
+                              className="mb-3 output-card mr-2"
                             >
-                              <Row>
-                                <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPP`}
-                                  <div className="description">
-                                    {formatFromWei(asset.stakedLPs)}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
+                              <Col xs="4" sm="2" className="p-0 pl-2">
+                                <img
+                                  height="35px"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                  className="mr-n3"
+                                />
+                                <img
+                                  height="20px"
+                                  src={spartaIcon}
+                                  alt="SPARTA"
+                                  className="mr-2 mt-3"
+                                />
+                              </Col>
+                              <Col
+                                xs="5"
+                                sm="7"
+                                className="align-items-center p-0 pl-sm-3"
+                              >
+                                <Row>
+                                  <Col xs="12" className="float-left ml-n4">
+                                    {`${asset.symbol}-SPP`}
+                                    <div className="description">
+                                      {formatFromWei(asset.stakedLPs)}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
 
-                            <Col xs="3" md="3" className="text-right p-0 pr-2">
-                              <Row>
-                                <Col xs="6" className="mt-1">
-                                  <ShareLink
-                                    url={asset.poolAddress}
-                                    notificationLocation="tc"
-                                  >
-                                    <i
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
+                                <Row>
+                                  <Col xs="6" className="mt-1">
+                                    <ShareLink
+                                      url={asset.poolAddress}
+                                      notificationLocation="tc"
+                                    >
+                                      <i
+                                        role="button"
+                                        className="icon-small icon-copy ml-2 align-middle"
+                                      />
+                                    </ShareLink>
+                                  </Col>
+                                  <Col xs="6" className="mt-1">
+                                    <div
                                       role="button"
-                                      className="icon-small icon-copy ml-2 align-middle"
-                                    />
-                                  </ShareLink>
-                                </Col>
-                                <Col xs="6" className="mt-1">
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 32) {
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 32) {
+                                          dispatch(
+                                            watchAsset(
+                                              asset.poolAddress,
+                                              `${asset.symbol}p`,
+                                              '18',
+                                              asset.symbolUrl,
+                                            ),
+                                          )
+                                        }
+                                      }}
+                                      onClick={() => {
                                         dispatch(
                                           watchAsset(
                                             asset.poolAddress,
@@ -449,93 +470,97 @@ const WalletSelect = (props) => {
                                             asset.symbolUrl,
                                           ),
                                         )
-                                      }
-                                    }}
-                                    onClick={() => {
-                                      dispatch(
-                                        watchAsset(
-                                          asset.poolAddress,
-                                          `${asset.symbol}p`,
-                                          '18',
-                                          asset.symbolUrl,
-                                        ),
-                                      )
-                                    }}
-                                  >
-                                    <i className="icon-small icon-metamask icon-light ml-2" />
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        ))}
+                                      }}
+                                    >
+                                      <i className="icon-small icon-metamask icon-light ml-2" />
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          ))}
 
-                      <Row className="my-3">
-                        <Col xs="9" md="9">
-                          <p className="text-card">{t('wallet')}</p>
-                        </Col>
-                        <Col xs="3" md="3">
-                          <p className="text-card float-right mr-1">
-                            {t('actions')}
-                          </p>
-                        </Col>
-                      </Row>
+                        <Row className="my-3">
+                          <Col xs="9" md="9" className="ml-n1">
+                            <div className="text-card">{t('wallet')}</div>
+                          </Col>
+                          <Col xs="3" md="3">
+                            <div className="text-card float-right mr-1">
+                              {t('actions')}
+                            </div>
+                          </Col>
+                        </Row>
 
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.balanceLPs > 0)
-                        .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-lp`}
-                            className="mb-3 output-card mr-2"
-                          >
-                            <Col xs="4" sm="2" className="p-0 pl-2">
-                              <img
-                                height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
-                                className="mr-n3"
-                              />
-                              <img
-                                height="20px"
-                                src={spartaIcon}
-                                alt="SPARTA"
-                                className="mr-2 mt-3"
-                              />
-                            </Col>
-                            <Col
-                              xs="5"
-                              sm="7"
-                              className="align-items-center p-0 pl-sm-3"
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.balanceLPs > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-lp`}
+                              className="mb-3 output-card mr-2"
                             >
-                              <Row>
-                                <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPP`}
-                                  <div className="description">
-                                    {formatFromWei(asset.balanceLPs)}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
+                              <Col xs="4" sm="2" className="p-0 pl-2">
+                                <img
+                                  height="35px"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                  className="mr-n3"
+                                />
+                                <img
+                                  height="20px"
+                                  src={spartaIcon}
+                                  alt="SPARTA"
+                                  className="mr-2 mt-3"
+                                />
+                              </Col>
+                              <Col
+                                xs="5"
+                                sm="7"
+                                className="align-items-center p-0 pl-sm-3"
+                              >
+                                <Row>
+                                  <Col xs="12" className="float-left ml-n4">
+                                    {`${asset.symbol}-SPP`}
+                                    <div className="description">
+                                      {formatFromWei(asset.balanceLPs)}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
 
-                            <Col xs="3" md="3" className="text-right p-0 pr-2">
-                              <Row>
-                                <Col xs="6" className="mt-1">
-                                  <ShareLink
-                                    url={asset.poolAddress}
-                                    notificationLocation="tc"
-                                  >
-                                    <i
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
+                                <Row>
+                                  <Col xs="6" className="mt-1">
+                                    <ShareLink
+                                      url={asset.poolAddress}
+                                      notificationLocation="tc"
+                                    >
+                                      <i
+                                        role="button"
+                                        className="icon-small icon-copy ml-2 align-middle"
+                                      />
+                                    </ShareLink>
+                                  </Col>
+                                  <Col xs="6" className="mt-1">
+                                    <div
                                       role="button"
-                                      className="icon-small icon-copy ml-2 align-middle"
-                                    />
-                                  </ShareLink>
-                                </Col>
-                                <Col xs="6" className="mt-1">
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 32) {
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 32) {
+                                          dispatch(
+                                            watchAsset(
+                                              asset.poolAddress,
+                                              `${asset.symbol}p`,
+                                              '18',
+                                              asset.symbolUrl,
+                                            ),
+                                          )
+                                        }
+                                      }}
+                                      onClick={() => {
                                         dispatch(
                                           watchAsset(
                                             asset.poolAddress,
@@ -544,96 +569,100 @@ const WalletSelect = (props) => {
                                             asset.symbolUrl,
                                           ),
                                         )
-                                      }
-                                    }}
-                                    onClick={() => {
-                                      dispatch(
-                                        watchAsset(
-                                          asset.poolAddress,
-                                          `${asset.symbol}p`,
-                                          '18',
-                                          asset.symbolUrl,
-                                        ),
-                                      )
-                                    }}
-                                  >
-                                    <i className="icon-small icon-metamask icon-light ml-2" />
-                                  </div>
-                                </Col>
-                              </Row>
+                                      }}
+                                    >
+                                      <i className="icon-small icon-metamask icon-light ml-2" />
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          ))}
+
+                        {poolFactory.finalLpArray?.filter(
+                          (asset) => asset.bondedLPs > 0,
+                        ).length > 0 && (
+                          <Row className="my-3">
+                            <Col xs="9" md="9">
+                              <div className="text-card">Bonded</div>
+                            </Col>
+                            <Col xs="3" md="3">
+                              <div className="text-card float-right mr-1">
+                                Actions
+                              </div>
                             </Col>
                           </Row>
-                        ))}
-
-                      {poolFactory.finalLpArray?.filter(
-                        (asset) => asset.bondedLPs > 0,
-                      ).length > 0 && (
-                        <Row className="my-3">
-                          <Col xs="9" md="9">
-                            <p className="text-card">Bonded</p>
-                          </Col>
-                          <Col xs="3" md="3">
-                            <p className="text-card float-right mr-1">
-                              Actions
-                            </p>
-                          </Col>
-                        </Row>
-                      )}
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.bondedLPs > 0)
-                        .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-lpbond`}
-                            className="mb-3 output-card mr-2"
-                          >
-                            <Col xs="4" sm="2" className="p-0 pl-2">
-                              <img
-                                height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
-                                className="mr-n3"
-                              />
-                              <img
-                                height="20px"
-                                src={spartaIcon}
-                                alt="SPARTA"
-                                className="mr-2 mt-3"
-                              />
-                            </Col>
-                            <Col
-                              xs="5"
-                              sm="7"
-                              className="align-items-center p-0 pl-sm-3"
+                        )}
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.bondedLPs > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-lpbond`}
+                              className="mb-3 output-card mr-2"
                             >
-                              <Row>
-                                <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPP`}
-                                  <div className="description">
-                                    {formatFromWei(asset.bondedLPs)}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
+                              <Col xs="4" sm="2" className="p-0 pl-2">
+                                <img
+                                  height="35px"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                  className="mr-n3"
+                                />
+                                <img
+                                  height="20px"
+                                  src={spartaIcon}
+                                  alt="SPARTA"
+                                  className="mr-2 mt-3"
+                                />
+                              </Col>
+                              <Col
+                                xs="5"
+                                sm="7"
+                                className="align-items-center p-0 pl-sm-3"
+                              >
+                                <Row>
+                                  <Col xs="12" className="float-left ml-n4">
+                                    {`${asset.symbol}-SPP`}
+                                    <div className="description">
+                                      {formatFromWei(asset.bondedLPs)}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
 
-                            <Col xs="3" md="3" className="text-right p-0 pr-2">
-                              <Row>
-                                <Col xs="6" className="mt-1">
-                                  <ShareLink
-                                    url={asset.poolAddress}
-                                    notificationLocation="tc"
-                                  >
-                                    <i
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
+                                <Row>
+                                  <Col xs="6" className="mt-1">
+                                    <ShareLink
+                                      url={asset.poolAddress}
+                                      notificationLocation="tc"
+                                    >
+                                      <i
+                                        role="button"
+                                        className="icon-small icon-copy ml-2 align-middle"
+                                      />
+                                    </ShareLink>
+                                  </Col>
+                                  <Col xs="6" className="mt-1">
+                                    <div
                                       role="button"
-                                      className="icon-small icon-copy ml-2 align-middle"
-                                    />
-                                  </ShareLink>
-                                </Col>
-                                <Col xs="6" className="mt-1">
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 32) {
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 32) {
+                                          dispatch(
+                                            watchAsset(
+                                              asset.poolAddress,
+                                              `${asset.symbol}p`,
+                                              '18',
+                                              asset.symbolUrl,
+                                            ),
+                                          )
+                                        }
+                                      }}
+                                      onClick={() => {
                                         dispatch(
                                           watchAsset(
                                             asset.poolAddress,
@@ -642,97 +671,101 @@ const WalletSelect = (props) => {
                                             asset.symbolUrl,
                                           ),
                                         )
-                                      }
-                                    }}
-                                    onClick={() => {
-                                      dispatch(
-                                        watchAsset(
-                                          asset.poolAddress,
-                                          `${asset.symbol}p`,
-                                          '18',
-                                          asset.symbolUrl,
-                                        ),
-                                      )
-                                    }}
-                                  >
-                                    <i className="icon-small icon-metamask icon-light ml-2" />
-                                  </div>
-                                </Col>
-                              </Row>
+                                      }}
+                                    >
+                                      <i className="icon-small icon-metamask icon-light ml-2" />
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          ))}
+                      </TabPane>
+                      <TabPane tabId="synths" className="ml-n2">
+                        {poolFactory.finalLpArray?.filter(
+                          (asset) => asset.stakedSynths > 0,
+                        ).length > 0 && (
+                          <Row className="my-3">
+                            <Col xs="9" md="9">
+                              <div className="text-card">Staked</div>
+                            </Col>
+                            <Col xs="3" md="3">
+                              <div className="text-card float-right mr-1">
+                                Actions
+                              </div>
                             </Col>
                           </Row>
-                        ))}
-                    </TabPane>
-                    <TabPane tabId="synths">
-                      {poolFactory.finalLpArray?.filter(
-                        (asset) => asset.stakedSynths > 0,
-                      ).length > 0 && (
-                        <Row className="my-3">
-                          <Col xs="9" md="9">
-                            <p className="text-card">Staked</p>
-                          </Col>
-                          <Col xs="3" md="3">
-                            <p className="text-card float-right mr-1">
-                              Actions
-                            </p>
-                          </Col>
-                        </Row>
-                      )}
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.stakedSynths > 0)
-                        .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-synthstake`}
-                            className="mb-3 output-card mr-2"
-                          >
-                            <Col xs="4" sm="2" className="p-0 pl-2">
-                              <img
-                                height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
-                                className="mr-n3"
-                              />
-                              <img
-                                height="20px"
-                                src={spartaIconAlt}
-                                alt="SPARTA"
-                                className="mr-2 mt-3"
-                              />
-                            </Col>
-                            <Col
-                              xs="5"
-                              sm="7"
-                              className="align-items-center p-0 pl-sm-3"
+                        )}
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.stakedSynths > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-synthstake`}
+                              className="mb-3 output-card mr-2"
                             >
-                              <Row>
-                                <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPS`}
-                                  <div className="description">
-                                    {formatFromWei(asset.stakedSynths)}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
+                              <Col xs="4" sm="2" className="p-0 pl-2">
+                                <img
+                                  height="35px"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                  className="mr-n3"
+                                />
+                                <img
+                                  height="20px"
+                                  src={spartaIconAlt}
+                                  alt="SPARTA"
+                                  className="mr-2 mt-3"
+                                />
+                              </Col>
+                              <Col
+                                xs="5"
+                                sm="7"
+                                className="align-items-center p-0 pl-sm-3"
+                              >
+                                <Row>
+                                  <Col xs="12" className="float-left ml-n4">
+                                    {`${asset.symbol}-SPS`}
+                                    <div className="description">
+                                      {formatFromWei(asset.stakedSynths)}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
 
-                            <Col xs="3" md="3" className="text-right p-0 pr-2">
-                              <Row>
-                                <Col xs="6" className="mt-1">
-                                  <ShareLink
-                                    url={asset.synthAddress}
-                                    notificationLocation="tc"
-                                  >
-                                    <i
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
+                                <Row>
+                                  <Col xs="6" className="mt-1">
+                                    <ShareLink
+                                      url={asset.synthAddress}
+                                      notificationLocation="tc"
+                                    >
+                                      <i
+                                        role="button"
+                                        className="icon-small icon-copy ml-2 align-middle"
+                                      />
+                                    </ShareLink>
+                                  </Col>
+                                  <Col xs="6" className="mt-1">
+                                    <div
                                       role="button"
-                                      className="icon-small icon-copy ml-2 align-middle"
-                                    />
-                                  </ShareLink>
-                                </Col>
-                                <Col xs="6" className="mt-1">
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 32) {
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 32) {
+                                          dispatch(
+                                            watchAsset(
+                                              asset.synthAddress,
+                                              `${asset.symbol}s`,
+                                              '18',
+                                              asset.symbolUrl,
+                                            ),
+                                          )
+                                        }
+                                      }}
+                                      onClick={() => {
                                         dispatch(
                                           watchAsset(
                                             asset.synthAddress,
@@ -741,92 +774,96 @@ const WalletSelect = (props) => {
                                             asset.symbolUrl,
                                           ),
                                         )
-                                      }
-                                    }}
-                                    onClick={() => {
-                                      dispatch(
-                                        watchAsset(
-                                          asset.synthAddress,
-                                          `${asset.symbol}s`,
-                                          '18',
-                                          asset.symbolUrl,
-                                        ),
-                                      )
-                                    }}
-                                  >
-                                    <i className="icon-small icon-metamask icon-light ml-2" />
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        ))}
-                      <Row className="my-3">
-                        <Col xs="9" md="9">
-                          <p className="text-card">{t('wallet')}</p>
-                        </Col>
-                        <Col xs="3" md="3">
-                          <p className="text-card float-right mr-1">
-                            {t('actions')}
-                          </p>
-                        </Col>
-                      </Row>
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.balanceSynths > 0)
-                        .map((asset) => (
-                          <Row
-                            key={`${asset.tokenAddress}-synth`}
-                            className="mb-3 output-card mr-2"
-                          >
-                            <Col xs="4" sm="2" className="p-0 pl-2">
-                              <img
-                                height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
-                                className="mr-n3"
-                              />
-                              <img
-                                height="20px"
-                                src={spartaIconAlt}
-                                alt="SPARTA"
-                                className="mr-2 mt-3"
-                              />
-                            </Col>
-
-                            <Col
-                              xs="5"
-                              sm="7"
-                              className="align-items-center p-0 pl-sm-3"
+                                      }}
+                                    >
+                                      <i className="icon-small icon-metamask icon-light ml-2" />
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          ))}
+                        <Row className="my-3">
+                          <Col xs="9" md="9" className="ml-n1">
+                            <div className="text-card">{t('wallet')}</div>
+                          </Col>
+                          <Col xs="3" md="3">
+                            <div className="text-card float-right mr-1">
+                              {t('actions')}
+                            </div>
+                          </Col>
+                        </Row>
+                        {poolFactory.finalLpArray
+                          ?.filter((asset) => asset.balanceSynths > 0)
+                          .map((asset) => (
+                            <Row
+                              key={`${asset.tokenAddress}-synth`}
+                              className="mb-3 output-card mr-2"
                             >
-                              <Row>
-                                <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPS`}
-                                  <div className="description">
-                                    {formatFromWei(asset.balanceSynths)}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
+                              <Col xs="4" sm="2" className="p-0 pl-2">
+                                <img
+                                  height="35px"
+                                  src={asset.symbolUrl}
+                                  alt={asset.name}
+                                  className="mr-n3"
+                                />
+                                <img
+                                  height="20px"
+                                  src={spartaIconAlt}
+                                  alt="SPARTA"
+                                  className="mr-2 mt-3"
+                                />
+                              </Col>
 
-                            <Col xs="3" md="3" className="text-right p-0 pr-2">
-                              <Row>
-                                <Col xs="6" className="mt-1">
-                                  <ShareLink
-                                    url={asset.synthAddress}
-                                    notificationLocation="tc"
-                                  >
-                                    <i
+                              <Col
+                                xs="5"
+                                sm="7"
+                                className="align-items-center p-0 pl-sm-3"
+                              >
+                                <Row>
+                                  <Col xs="12" className="float-left ml-n4">
+                                    {`${asset.symbol}-SPS`}
+                                    <div className="description">
+                                      {formatFromWei(asset.balanceSynths)}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
+                                <Row>
+                                  <Col xs="6" className="mt-1">
+                                    <ShareLink
+                                      url={asset.synthAddress}
+                                      notificationLocation="tc"
+                                    >
+                                      <i
+                                        role="button"
+                                        className="icon-small icon-copy ml-2 align-middle"
+                                      />
+                                    </ShareLink>
+                                  </Col>
+                                  <Col xs="6" className="mt-1">
+                                    <div
                                       role="button"
-                                      className="icon-small icon-copy ml-2 align-middle"
-                                    />
-                                  </ShareLink>
-                                </Col>
-                                <Col xs="6" className="mt-1">
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 32) {
+                                      tabIndex={0}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 32) {
+                                          dispatch(
+                                            watchAsset(
+                                              asset.synthAddress,
+                                              `${asset.symbol}s`,
+                                              '18',
+                                              asset.symbolUrl,
+                                            ),
+                                          )
+                                        }
+                                      }}
+                                      onClick={() => {
                                         dispatch(
                                           watchAsset(
                                             asset.synthAddress,
@@ -835,28 +872,18 @@ const WalletSelect = (props) => {
                                             asset.symbolUrl,
                                           ),
                                         )
-                                      }
-                                    }}
-                                    onClick={() => {
-                                      dispatch(
-                                        watchAsset(
-                                          asset.synthAddress,
-                                          `${asset.symbol}s`,
-                                          '18',
-                                          asset.symbolUrl,
-                                        ),
-                                      )
-                                    }}
-                                  >
-                                    <i className="icon-small icon-metamask icon-light ml-2" />
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        ))}
-                    </TabPane>
-                  </TabContent>
+                                      }}
+                                    >
+                                      <i className="icon-small icon-metamask icon-light ml-2" />
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Col>
+                            </Row>
+                          ))}
+                      </TabPane>
+                    </TabContent>
+                  </div>
                 </>
               )}
             </div>
@@ -891,7 +918,7 @@ const WalletSelect = (props) => {
               ))}
             </div>
           )}
-        </Card>
+        </div>
       </Modal>
     </>
   )
