@@ -188,9 +188,9 @@ const WalletSelect = (props) => {
 
               {wallet.status === 'connected' && (
                 <>
-                  <Row>
-                    <Col xs={6}>
-                      <div className="output-wallet-description">
+                  <Row >
+                    <Col xs={6} className="ml-n1">
+                      <div className="output-wallet-description ">
                         {t('viewBscScan')}{' '}
                         <a
                           href={getExplorerWallet(wallet.account)}
@@ -236,7 +236,7 @@ const WalletSelect = (props) => {
                   </Row>
                   <br />
                   {/*wallet navigation tabs*/}
-                  <div className="modal-body">
+                  <div className="modal-body ml-n3">
                     <Row >
                       <Nav pills className="nav-tabs-custom">
                         <NavItem>
@@ -284,9 +284,9 @@ const WalletSelect = (props) => {
 
                     {/* Asset tabs */}
                     <TabContent className="tab-space" activeTab={horizontalTabs}>
-                      <TabPane tabId="assets">
+                      <TabPane tabId="assets" className="ml-n2">
                         <Row className="mt-3 mb-3">
-                          <Col xs="9" md="9">
+                          <Col xs="9" md="9" className="ml-n1" >
                             <div className="text-card">{t('wallet')}</div>
                           </Col>
                           <Col xs="3" md="3">
@@ -373,7 +373,7 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
                       </TabPane>
-                      <TabPane tabId="lp">
+                      <TabPane tabId="lp" className="ml-n2">
                         {poolFactory.finalLpArray?.filter(
                           (asset) => asset.stakedLPs > 0,
                         ).length > 0 && (
@@ -473,7 +473,7 @@ const WalletSelect = (props) => {
                           ))}
 
                         <Row className="my-3">
-                          <Col xs="9" md="9">
+                          <Col xs="9" md="9" className="ml-n1" >
                             <div className="text-card">{t('wallet')}</div>
                           </Col>
                           <Col xs="3" md="3">
@@ -665,7 +665,7 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
                       </TabPane>
-                      <TabPane tabId="synths">
+                      <TabPane tabId="synths"  className="ml-n2">
                         {poolFactory.finalLpArray?.filter(
                           (asset) => asset.stakedSynths > 0,
                         ).length > 0 && (
@@ -764,7 +764,7 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
                         <Row className="my-3">
-                          <Col xs="9" md="9">
+                          <Col xs="9" md="9" className="ml-n1" >
                             <div className="text-card">{t('wallet')}</div>
                           </Col>
                           <Col xs="3" md="3">
