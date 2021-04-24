@@ -551,21 +551,19 @@ const AddLiquidity = () => {
               </Col>
             </Row>
             <Row className="text-center">
-              <Col xs="12" sm="4">
-                {assetAdd1?.tokenAddress &&
-                  assetAdd1?.tokenAddress !== addr.bnb &&
-                  wallet?.account &&
-                  addInput1?.value && (
-                    <Approval
-                      tokenAddress={assetAdd1?.tokenAddress}
-                      symbol={assetAdd1?.symbol}
-                      walletAddress={wallet?.account}
-                      contractAddress={addr.router}
-                      txnAmount={convertToWei(addInput1?.value)}
-                      assetNumber="1"
-                    />
-                  )}
-              </Col>
+              {assetAdd1?.tokenAddress &&
+                assetAdd1?.tokenAddress !== addr.bnb &&
+                wallet?.account &&
+                addInput1?.value && (
+                  <Approval
+                    tokenAddress={assetAdd1?.tokenAddress}
+                    symbol={assetAdd1?.symbol}
+                    walletAddress={wallet?.account}
+                    contractAddress={addr.router}
+                    txnAmount={convertToWei(addInput1?.value)}
+                    assetNumber="1"
+                  />
+                )}
               <Col xs="12" sm="4">
                 <Button
                   className="w-100 h-100 btn-primary"
@@ -590,21 +588,19 @@ const AddLiquidity = () => {
                   Join Pool
                 </Button>
               </Col>
-              <Col xs="12" sm="4">
-                {assetAdd2?.tokenAddress &&
-                  assetAdd2?.tokenAddress !== addr.bnb &&
-                  wallet?.account &&
-                  addInput2?.value && (
-                    <Approval
-                      tokenAddress={assetAdd2?.tokenAddress}
-                      symbol={assetAdd2?.symbol}
-                      walletAddress={wallet?.account}
-                      contractAddress={addr.router}
-                      txnAmount={convertToWei(addInput2?.value)}
-                      assetNumber="2"
-                    />
-                  )}
-              </Col>
+              {assetAdd2?.tokenAddress &&
+                assetAdd2?.tokenAddress !== addr.bnb &&
+                wallet?.account &&
+                addInput2?.value && (
+                  <Approval
+                    tokenAddress={assetAdd2?.tokenAddress}
+                    symbol={assetAdd2?.symbol}
+                    walletAddress={wallet?.account}
+                    contractAddress={addr.router}
+                    txnAmount={convertToWei(addInput2?.value)}
+                    assetNumber="2"
+                  />
+                )}
             </Row>
           </CardBody>
         </Card>
