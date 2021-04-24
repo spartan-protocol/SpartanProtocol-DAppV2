@@ -38,6 +38,16 @@
 }
 
 
+.icon-mini {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-size: 15px auto;
+    background-repeat: no-repeat;
+}
+
+
+
 .icon-extra-small {
     display: inline-block;
     width: 18px;
