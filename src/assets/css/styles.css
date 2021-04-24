@@ -386,6 +386,9 @@ input:focus, textarea:focus, select:focus{
 
 @media (max-width: 568px) {
 
+    #notification-message{
+        font-size: 14px;
+    }
 
     .amount {
         font-size: 14px;

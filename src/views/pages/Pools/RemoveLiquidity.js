@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable*/
 import React, { useState, useEffect } from 'react'
 
 import classnames from 'classnames'
@@ -333,8 +333,7 @@ const RemoveLiquidity = () => {
   return (
     <>
       <Row>
-        <Card>
-          <CardBody>
+        <Card className="card-body">
             <Row>
               <Col md={12}>
                 <Card
@@ -386,7 +385,7 @@ const RemoveLiquidity = () => {
                     </Col>
                   </Row>
                 </Card>
-                <Nav tabs className="nav-tabs-custom">
+                <Nav pills className="nav-tabs-custom  mt-2 mb-4">
                   <NavItem>
                     <NavLink
                       className={classnames({ active: activeTab === '1' })}
@@ -394,7 +393,7 @@ const RemoveLiquidity = () => {
                         toggle('1')
                       }}
                     >
-                      <span className="d-none d-sm-block">Remove Both</span>
+                      Remove Both
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -404,7 +403,7 @@ const RemoveLiquidity = () => {
                         toggle('2')
                       }}
                     >
-                      <span className="d-none d-sm-block">Remove Single</span>
+                      Remove Single
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -508,46 +507,49 @@ const RemoveLiquidity = () => {
 
                 {poolFactory.finalLpArray && (
                   <>
-                    <Row className="mb-2">
-                      <Col xs="4" className="">
-                        <div className="title-card">Input</div>
-                      </Col>
-                      <Col xs="8" className="text-right">
-                        <div className="">
-                          {removeInput1?.value} {poolRemove1?.symbol}-SPP
-                        </div>
-                      </Col>
-                    </Row>
-
-                    {activeTab === '2' && (
+                    <div className="card-body">
                       <Row className="mb-2">
                         <Col xs="4" className="">
-                          <div className="title-card">Fee</div>
+                          <div className="title-card">Input</div>
                         </Col>
                         <Col xs="8" className="text-right">
                           <div className="">
-                            {formatFromWei(getRemoveOneSwapFee())} SPARTA
+                            {removeInput1?.value} {poolRemove1?.symbol}-SPP
                           </div>
                         </Col>
                       </Row>
-                    )}
 
-                    <Row className="mb-2">
-                      <Col xs="4" className="">
-                        <div className="title-card mt-2">Output</div>
-                      </Col>
-                      <Col xs="8" className="text-right">
-                        <div className="">
-                          {formatFromUnits(removeInput2?.value, 8)}{' '}
-                          {assetRemove1?.symbol}
-                        </div>
-                        {activeTab === '1' && (
+                      {activeTab === '2' && (
+                        <Row className="mb-2">
+                          <Col xs="4" className="">
+                            <div className="title-card">Fee</div>
+                          </Col>
+                          <Col xs="8" className="text-right">
+                            <div className="">
+                              {formatFromWei(getRemoveOneSwapFee())} SPARTA
+                            </div>
+                          </Col>
+                        </Row>
+                      )}
+
+                      <Row className="mb-2">
+                        <Col xs="4" className="">
+                          <div className="title-card mt-2">Output</div>
+                        </Col>
+                        <Col xs="8" className="text-right">
                           <div className="">
-                            {formatFromUnits(removeInput3?.value, 8)} SPARTA
+                            {formatFromUnits(removeInput2?.value, 8)}{' '}
+                            {assetRemove1?.symbol}
                           </div>
-                        )}
-                      </Col>
-                    </Row>
+                          {activeTab === '1' && (
+                            <div className="">
+                              {formatFromUnits(removeInput3?.value, 8)} SPARTA
+                            </div>
+                          )}
+                        </Col>
+                      </Row>
+                    </div>
+
                   </>
                 )}
 
@@ -583,7 +585,6 @@ const RemoveLiquidity = () => {
               </Col>
               <Col xs="12" sm="4" />
             </Row>
-          </CardBody>
         </Card>
       </Row>
       {poolFactory.finalLpArray && (

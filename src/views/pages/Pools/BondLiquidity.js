@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable*/
 import React, { useState, useEffect } from 'react'
 
 import {
@@ -207,7 +207,7 @@ const BondLiquidity = () => {
               data-notify="icon"
               className="icon-small icon-info icon-dark mb-5"
             />
-            <span data-notify="message" className="p-0">
+            <span id="notification-message" data-notify="message" className="p-0">
               The equivalent purchasing power in SPARTA is minted with both
               assets added symmetrically to the BNB:SPARTA liquidity pool. LP
               tokens will be issued as usual and vested to you over a 12 month
@@ -215,7 +215,7 @@ const BondLiquidity = () => {
             </span>
           </UncontrolledAlert>
           <br />
-          <Row>
+          <Row className="card-body">
             <Col>
               <div className="text-card">
                 Allocation
@@ -236,50 +236,53 @@ const BondLiquidity = () => {
             </Col>
           </Row>
 
-          <br />
-          <div className="progress-container progress-primary">
-            <Progress
-              max="2500000"
-              value={convertFromWei(bond.bondSpartaRemaining)}
-              className=""
-            >
-              {formatFromUnits(
-                BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
-                2,
-              )}
-              % Remaining
-            </Progress>
+          <div className="card-body">
+            <br />
+            <div className="progress-container progress-primary">
+              <Progress
+                max="2500000"
+                value={convertFromWei(bond.bondSpartaRemaining)}
+                className=""
+              >
+                {formatFromUnits(
+                  BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
+                  2,
+                )}
+                % Remaining
+              </Progress>
+            </div>
+            <Row className="mb-2">
+              <Col xs="4" className="">
+                <div className="title-card">Input</div>
+              </Col>
+              <Col xs="8" className="text-right">
+                <div className="">
+                  {formatFromUnits(bondInput1?.value, 8)} {assetBond1?.symbol}
+                </div>
+              </Col>
+            </Row>
+            <Row className="mb-2">
+              <Col xs="4" className="">
+                <div className="title-card">Minted</div>
+              </Col>
+              <Col xs="8" className="text-right">
+                <div className="">
+                  {formatFromWei(calcSpartaMinted(), 8)} SPARTA
+                </div>
+              </Col>
+            </Row>
+            <Row className="mb-2">
+              <Col xs="4" className="">
+                <div className="title-card">Output</div>
+              </Col>
+              <Col xs="8" className="text-right">
+                <div className="">
+                  {formatFromWei(calcOutput(), 8)} {assetBond1?.symbol}-SPP
+                </div>
+              </Col>
+            </Row>
           </div>
-          <Row className="mb-2">
-            <Col xs="4" className="">
-              <div className="title-card">Input</div>
-            </Col>
-            <Col xs="8" className="text-right">
-              <div className="">
-                {formatFromUnits(bondInput1?.value, 8)} {assetBond1?.symbol}
-              </div>
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col xs="4" className="">
-              <div className="title-card">Minted</div>
-            </Col>
-            <Col xs="8" className="text-right">
-              <div className="">
-                {formatFromWei(calcSpartaMinted(), 8)} SPARTA
-              </div>
-            </Col>
-          </Row>
-          <Row className="mb-2">
-            <Col xs="4" className="">
-              <div className="title-card">Output</div>
-            </Col>
-            <Col xs="8" className="text-right">
-              <div className="">
-                {formatFromWei(calcOutput(), 8)} {assetBond1?.symbol}-SPP
-              </div>
-            </Col>
-          </Row>
+
           <Row>
             <Approval
               tokenAddress={assetBond1?.tokenAddress}
@@ -289,7 +292,7 @@ const BondLiquidity = () => {
               txnAmount={convertToWei(bondInput1?.value)}
               assetNumber="1"
             />
-            <Col xs="6">
+            <Col xs="12">
               <Button
                 color="primary"
                 size="lg"
