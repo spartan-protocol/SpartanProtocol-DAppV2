@@ -281,16 +281,14 @@ const BondLiquidity = () => {
             </Col>
           </Row>
           <Row>
-            <Col xs="6">
-              <Approval
-                tokenAddress={assetBond1?.tokenAddress}
-                symbol={assetBond1?.symbol}
-                walletAddress={wallet?.account}
-                contractAddress={addr.bond}
-                txnAmount={convertToWei(bondInput1?.value)}
-                assetNumber="1"
-              />
-            </Col>
+            <Approval
+              tokenAddress={assetBond1?.tokenAddress}
+              symbol={assetBond1?.symbol}
+              walletAddress={wallet?.account}
+              contractAddress={addr.bond}
+              txnAmount={convertToWei(bondInput1?.value)}
+              assetNumber="1"
+            />
             <Col xs="6">
               <Button
                 color="primary"

@@ -930,16 +930,14 @@ const Swap = () => {
                       assetSwap1?.tokenAddress !== addr.bnb &&
                       wallet?.account &&
                       swapInput1?.value && (
-                        <Col>
-                          <Approval
-                            tokenAddress={assetSwap1?.tokenAddress}
-                            symbol={assetSwap1?.symbol}
-                            walletAddress={wallet?.account}
-                            contractAddress={addr.router}
-                            txnAmount={convertToWei(swapInput1?.value)}
-                            assetNumber="1"
-                          />
-                        </Col>
+                        <Approval
+                          tokenAddress={assetSwap1?.tokenAddress}
+                          symbol={assetSwap1?.symbol}
+                          walletAddress={wallet?.account}
+                          contractAddress={addr.router}
+                          txnAmount={convertToWei(swapInput1?.value)}
+                          assetNumber="1"
+                        />
                       )}
                     {mode === 'token' && (
                       <Col>
