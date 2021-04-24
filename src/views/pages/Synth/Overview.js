@@ -1,42 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react'
-import {
-  Row,
-  Col,
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
-} from 'reactstrap'
-import classnames from 'classnames'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { Row, Col, Button, Card, CardBody } from 'reactstrap'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
-// import { useDispatch } from 'react-redux'
-// import { useWallet } from '@binance-chain/bsc-use-wallet'
+import {
+  getSynthTotalWeight,
+  getSynthMemberWeight,
+  getSynthArrayFinal,
+} from '../../../store/synth/actions'
+import { useSynth } from '../../../store/synth/selector'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import Stake from './Stake'
 
 const Overview = () => {
-  // const wallet = useWallet()
-  // const dispatch = useDispatch()
-  // const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-  const [activeTab, setActiveTab] = useState('1')
-  // const [trigger, settrigger] = useState(0)
+  const synth = useSynth()
+  const wallet = useWallet()
+  const dispatch = useDispatch()
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+  const [trigger, settrigger] = useState(0)
 
-  const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab)
-  }
-
-  // const formatDate = (unixTime) => {
-  //   const date = new Date(unixTime * 1000)
-  //   return date.toLocaleDateString()
-  // }
-
-  // useEffect(async () => {
-  //   dispatch(getSynthMemberLastHarvest(wallet.account))
-  //   await pause(7500)
-  //   settrigger(trigger + 1)
-  // }, [trigger])
+  useEffect(async () => {
+    dispatch(getSynthArrayFinal(synth.synthArray, wallet.account))
+    dispatch(getSynthMemberWeight(wallet.account))
+    dispatch(getSynthTotalWeight())
+    await pause(7500)
+    settrigger(trigger + 1)
+  }, [trigger])
 
   return (
     <>
@@ -52,56 +43,96 @@ const Overview = () => {
           <Col xs="12" xl="9">
             <Row>
               <Col xs="12">
-                <Row>
-                  <Col sm={12}>
-                    <Nav className="nav-tabs-custom card-body" pills>
-                      <NavItem>
-                        <NavLink
-                          className={classnames({ active: activeTab === '1' })}
-                          onClick={() => {
-                            toggle('1')
-                          }}
-                        >
-                          Stake
-                        </NavLink>
-                      </NavItem>
-                      {/* <NavItem>
-                        <NavLink
-                          className={classnames({ active: activeTab === '2' })}
-                          onClick={() => {
-                            toggle('2')
-                          }}
-                        >
-                          Proposals
-                        </NavLink>
-                      </NavItem> */}
-                    </Nav>
-                  </Col>
-                </Row>
+                <Card
+                  className="card-body"
+                  style={{ backgroundColor: '#1D171F' }}
+                >
+                  <CardBody>
+                    <Row>
+                      <Col xs="12" md="5" lg="4">
+                        <h2>Claim rewards</h2>
+                      </Col>
 
-                <TabContent activeTab={activeTab}>
-                  <TabPane tabId="1" className="p-3">
-                    <div className="page-header">
-                      Stake{' '}
-                      <i
-                        className="icon-small icon-info icon-dark ml-2"
-                        id="tooltipAddBase"
-                        role="button"
-                      />
-                      <UncontrolledTooltip
-                        placement="right"
-                        target="tooltipAddBase"
+                      <Col xs="6" md="2" lg="2">
+                        <div className="card-text">Your Weight:</div>
+                        <div className="subtitle-amount d-none d-md-block">
+                          {formatFromWei(synth.memberWeight.toString())}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-md-none">
+                        <div className="subtitle-amount text-right">
+                          {formatFromWei(synth.memberWeight.toString())}
+                        </div>
+                      </Col>
+
+                      <Col xs="6" md="2" lg="2">
+                        <div className="card-text">Total Weight:</div>
+                        <div className="subtitle-amount d-none d-md-block">
+                          {formatFromWei(synth.totalWeight.toString())}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-md-none">
+                        <div className="subtitle-amount text-right">
+                          {formatFromWei(synth.totalWeight.toString())}
+                        </div>
+                      </Col>
+
+                      <Col xs="6" md="2" lg="2">
+                        <div className="card-text">Your %:</div>
+                        <div className="subtitle-amount d-none d-md-block">
+                          {synth.memberWeight > 0 &&
+                            `${formatFromUnits(
+                              BN(synth.memberWeight.toString())
+                                .div(synth.totalWeight.toString())
+                                .times(100),
+                            )}%`}
+                          {synth.memberWeight <= 0 && 'Not a DAO member'}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-md-none">
+                        <div className="subtitle-amount text-right">
+                          {' '}
+                          {synth.memberWeight > 0 &&
+                            `${formatFromUnits(
+                              BN(synth.memberWeight.toString())
+                                .div(synth.totalWeight.toString())
+                                .times(100),
+                            )}%`}
+                          {synth.memberWeight <= 0 && 'Not a DAO member'}
+                        </div>
+                      </Col>
+
+                      <Col
+                        xs="9"
+                        sm="6"
+                        lg="2"
+                        className="mx-auto my-lg-auto mt-2 p-0"
                       >
-                        The quantity of & SPARTA you are adding to the pool.
-                      </UncontrolledTooltip>
-                    </div>
-                    <br />
-                    <Stake />
-                  </TabPane>
-                  {/* <TabPane tabId="2" className="p-3">
-                    <Proposals />
-                  </TabPane> */}
-                </TabContent>
+                        <Button
+                          className="btn btn-primary align-middle w-100"
+                          // onClick={() => dispatch(synthClaimAll(wallet.account))}
+                        >
+                          Harvest All
+                        </Button>
+                      </Col>
+                    </Row>
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col xs="12">
+                <div className="page-header">
+                  Stake{' '}
+                  <i
+                    className="icon-small icon-info icon-dark ml-2"
+                    id="ttStakeHeader"
+                    role="button"
+                  />
+                  <UncontrolledTooltip placement="left" target="ttStakeHeader">
+                    Stake your synths in the vault to harvest more synths!
+                  </UncontrolledTooltip>
+                </div>
+                <br />
+                <Stake />
               </Col>
             </Row>
           </Col>

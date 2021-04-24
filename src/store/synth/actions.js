@@ -32,9 +32,45 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
           tempArray[i] === '0x0000000000000000000000000000000000000000'
             ? false
             : tempArray[i],
+        lastHarvest: '0',
       })
     }
     dispatch(payloadToDispatch(Types.GET_SYNTH_ARRAY, synthArray))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+  }
+}
+
+/**
+ * Get the array of synthAddresses
+ * @param {array} synthArray
+ * @param {address} memberAddr
+ * @returns {array} synthArrayFinal
+ */
+export const getSynthArrayFinal = (synthArray, memberAddr) => async (
+  dispatch,
+) => {
+  dispatch(synthLoading())
+  const contract = getSynthVaultContract()
+
+  try {
+    let awaitArray = []
+    for (let i = 0; i < synthArray.length; i++) {
+      if (synthArray[i].synthAddress !== false) {
+        awaitArray.push(
+          contract.callStatic.getMemberLastTime(
+            synthArray[i].synthAddress,
+            memberAddr,
+          ),
+        )
+      } else awaitArray.push('0')
+    }
+    const synthArrayFinal = synthArray
+    awaitArray = await Promise.all(awaitArray)
+    for (let i = 0; i < awaitArray.length; i++) {
+      synthArrayFinal[i].lastHarvest = awaitArray[i].toString()
+    }
+    dispatch(payloadToDispatch(Types.SYNTH_ARRAY_FINAL, synthArrayFinal))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
@@ -134,6 +170,29 @@ export const getSynthMemberStaked = (synth, member) => async (dispatch) => {
 }
 
 /**
+ * Returns the member's last synthVault harvest (via helper)
+ * @param {address} synth
+ * @param {address} member
+ * @returns {uint}
+ */
+export const getSynthMemberLastHarvest = (synth, member) => async (
+  dispatch,
+) => {
+  dispatch(synthLoading())
+  const contract = getSynthVaultContract()
+
+  try {
+    const memberLastHarvest = await contract.callStatic.getMemberLastTime(
+      synth,
+      member,
+    )
+    dispatch(payloadToDispatch(Types.MEMBER_LAST_HARVEST, memberLastHarvest))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+  }
+}
+
+/**
  * Returns the member's weight in the DAO (via helper)
  * @param {address} member
  * @returns {uint}
@@ -161,29 +220,6 @@ export const getSynthTotalWeight = () => async (dispatch) => {
   try {
     const totalWeight = await contract.callStatic.totalWeight()
     dispatch(payloadToDispatch(Types.TOTAL_WEIGHT, totalWeight))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
-  }
-}
-
-/**
- * Returns the member's last synthVault harvest (via helper)
- * @param {address} synth
- * @param {address} member
- * @returns {uint}
- */
-export const getSynthMemberLastHarvest = (synth, member) => async (
-  dispatch,
-) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract()
-
-  try {
-    const memberLastHarvest = await contract.callStatic.getMemberLastTime(
-      synth,
-      member,
-    )
-    dispatch(payloadToDispatch(Types.MEMBER_LAST_HARVEST, memberLastHarvest))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
