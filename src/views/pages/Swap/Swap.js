@@ -702,7 +702,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="Output amount..."
+                                placeholder="'Buy' amount..."
                                 id="swapInput2"
                                 readOnly
                                 onInput={(event) =>
