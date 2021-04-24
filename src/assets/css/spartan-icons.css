@@ -88,6 +88,24 @@
 }
 
 
+
+
+/* Checked */
+.icon-checked.icon-light{
+    background-image: url('/src/assets/icons/checked.svg#light');
+}
+
+
+
+/* Warning */
+.icon-warning.icon-light{
+    background-image: url('/src/assets/icons/warning.svg#light');
+}
+
+
+
+
+
 /* Metamask */
 .icon-metamask.icon-light{
     background-image: url('/src/assets/icons/metamask.svg#light');

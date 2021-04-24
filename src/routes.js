@@ -9,7 +9,7 @@ import Synth from './views/pages/Synth/Overview'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
 // import Buttons from './views/pages/Samples/Buttons'
-// import Alerts from './views/pages/Samples/Alerts'
+import Alerts from './views/pages/Samples/Alerts'
 // import Typography from './views/pages/Samples/Typography'
 // import Grid from './views/pages/Samples/Grid'
 // import ReactTables from './views/pages/Samples/ReactTables'
@@ -23,13 +23,13 @@ import Synth from './views/pages/Synth/Overview'
 // import SearchModal from './views/pages/Samples/SearchModal'
 
 const routes = [
-  // {
-  //   path: '/home',
-  //   name: 'Home',
-  //   icon: 'icon-medium icon-home icon-dark',
-  //   component: Dashboard,
-  //   layout: '/dapp',
-  // },
+  {
+    path: '/home',
+    name: 'Home',
+    icon: 'icon-medium icon-home icon-dark',
+    component: Alerts,
+    layout: '/dapp',
+  },
 
   {
     path: '/pools/overview',
