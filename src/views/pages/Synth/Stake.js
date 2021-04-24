@@ -7,11 +7,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/img/spartan_synth.svg'
-import {
-  synthDeposit,
-  synthHarvest,
-  synthWithdraw,
-} from '../../../store/synth/actions'
+import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 
 const Stake = () => {
@@ -170,17 +166,6 @@ const Stake = () => {
                           }
                         >
                           Stake
-                        </Button>
-                      </Col>
-                      <Col xs="6" className="mt-2">
-                        <Button
-                          type="Button"
-                          className="btn btn-primary w-100 p-3"
-                          onClick={() =>
-                            dispatch(synthHarvest(asset.synthAddress))
-                          }
-                        >
-                          Harvest
                         </Button>
                       </Col>
                     </Row>

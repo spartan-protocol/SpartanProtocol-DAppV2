@@ -9,6 +9,7 @@ import {
   getSynthTotalWeight,
   getSynthMemberWeight,
   getSynthArrayFinal,
+  synthHarvest,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
@@ -110,7 +111,7 @@ const Overview = () => {
                       >
                         <Button
                           className="btn btn-primary align-middle w-100"
-                          // onClick={() => dispatch(synthClaimAll(wallet.account))}
+                          onClick={() => dispatch(synthHarvest())}
                         >
                           Harvest All
                         </Button>

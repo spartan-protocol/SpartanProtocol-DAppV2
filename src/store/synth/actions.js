@@ -58,7 +58,7 @@ export const getSynthArrayFinal = (synthArray, memberAddr) => async (
     for (let i = 0; i < synthArray.length; i++) {
       if (synthArray[i].synthAddress !== false) {
         awaitArray.push(
-          contract.callStatic.getMemberLastTime(
+          contract.callStatic.getMemberLastSynthTime(
             synthArray[i].synthAddress,
             memberAddr,
           ),
@@ -66,7 +66,9 @@ export const getSynthArrayFinal = (synthArray, memberAddr) => async (
       } else awaitArray.push('0')
     }
     const synthArrayFinal = synthArray
+    console.log(awaitArray)
     awaitArray = await Promise.all(awaitArray)
+    console.log(awaitArray)
     for (let i = 0; i < awaitArray.length; i++) {
       synthArrayFinal[i].lastHarvest = awaitArray[i].toString()
     }
@@ -106,14 +108,14 @@ export const synthDeposit = (synth, amount) => async (dispatch) => {
  * @param {address} synth
  * @returns {uint256} harvestAmount
  */
-export const synthHarvest = (synth) => async (dispatch) => {
+export const synthHarvest = () => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract()
 
   try {
     const gPrice = await getProviderGasPrice()
     // const gLimit = await contract.estimateGas.deposit(asset, amount)
-    const harvestAmount = await contract.harvest(synth, {
+    const harvestAmount = await contract.harvest({
       gasPrice: gPrice,
       // gasLimit: gLimit,
     })
