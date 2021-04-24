@@ -14,6 +14,7 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePoolFactory } from '../../../store/poolFactory'
@@ -47,6 +48,7 @@ import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 
 const Swap = () => {
+  const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -169,8 +171,9 @@ const Swap = () => {
   const swapInput2 = document.getElementById('swapInput2')
 
   const clearInputs = async () => {
-    swapInput1.value = '0'
-    swapInput2.value = '0'
+    swapInput1.value = ''
+    swapInput2.value = ''
+    swapInput1.focus()
   }
 
   const handleReverseAssets = async () => {
@@ -285,8 +288,6 @@ const Swap = () => {
             false,
           ),
         )
-      } else {
-        clearInputs()
       }
     } else if (assetSwap2?.symbol === 'SPARTA') {
       if (swapInput1?.value) {
@@ -298,8 +299,6 @@ const Swap = () => {
             true,
           ),
         )
-      } else {
-        clearInputs()
       }
     } else if (swapInput1?.value) {
       swapInput2.value = convertFromWei(
@@ -311,8 +310,6 @@ const Swap = () => {
           assetSwap2.baseAmount,
         ),
       )
-    } else {
-      clearInputs()
     }
   }
 
@@ -551,6 +548,13 @@ const Swap = () => {
     return '0'
   }
 
+  const getRateSlip = () => {
+    if (assetSwap1 && swapInput1?.value > 0 && swapInput2?.value > 0) {
+      return BN(getInput2USD()).div(getInput1USD()).minus('1').times('100')
+    }
+    return '0'
+  }
+
   return (
     <>
       <div className="content">
@@ -558,7 +562,7 @@ const Swap = () => {
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
-                <h2 className="d-inline text-title ml-1">Swap</h2>
+                <h2 className="d-inline text-title ml-1">{t('swap')}</h2>
               </Col>
               <Col xs="6" xl="4">
                 <SharePool />
@@ -577,7 +581,7 @@ const Swap = () => {
                       >
                         <Row>
                           <Col xs={4} className="mt-md-1">
-                            <div className="title-card">Input</div>
+                            <div className="title-card">Sell</div>
                           </Col>
                           <Col xs={8} className="text-right">
                             <div
@@ -591,13 +595,15 @@ const Swap = () => {
                                 )
                               }}
                             >
-                              Balance {formatFromWei(getBalance(1), 4)}
+                              {t('balance')}
+                              {': '}
+                              {formatFromWei(getBalance(1), 4)}
                             </div>
                           </Col>
                         </Row>
                         <Row>
                           <Col xs="4" lg="5" xl="6">
-                            <div>
+                            <div className="ml-2">
                               <AssetSelect
                                 priority="1"
                                 filter={['token', 'pool', 'synth']}
@@ -609,7 +615,7 @@ const Swap = () => {
                               <Input
                                 className="text-right"
                                 type="text"
-                                placeholder="Input amount..."
+                                placeholder="'Sell' amount..."
                                 id="swapInput1"
                                 onInput={(event) =>
                                   handleZapInputChange(event.target.value, true)
@@ -628,7 +634,7 @@ const Swap = () => {
                             <div className="text-right">
                               ~$
                               {swapInput1?.value &&
-                                formatFromWei(getInput1USD())}
+                                formatFromWei(getInput1USD(), 2)}
                             </div>
                           </Col>
                         </Row>
@@ -671,15 +677,19 @@ const Swap = () => {
                       >
                         <Row>
                           <Col xs={4}>
-                            <div className="title-card">Output</div>
+                            <div className="title-card">Buy</div>
                           </Col>
-                          <Col xs={8} className="text-right">
-                            <div>Balance {formatFromWei(getBalance(2), 4)}</div>
+                          <Col xs={8} className="text-right balance">
+                            <div>
+                              Balance{': '}
+                              {poolFactory.finalLpArray &&
+                                formatFromWei(getBalance(2), 4)}
+                            </div>
                           </Col>
                         </Row>
                         <Row>
                           <Col xs="4" lg="5" xl="6">
-                            <div>
+                            <div className="ml-2">
                               <AssetSelect
                                 priority="2"
                                 filter={filter}
@@ -715,7 +725,11 @@ const Swap = () => {
                             <div className="text-right">
                               ~$
                               {swapInput2?.value &&
-                                formatFromWei(getInput2USD())}
+                                formatFromWei(getInput2USD(), 2)}
+                              {' ('}
+                              {swapInput1?.value &&
+                                formatFromUnits(getRateSlip())}
+                              {'%)'}
                             </div>
                           </Col>
                         </Row>
@@ -726,37 +740,24 @@ const Swap = () => {
                   {mode === 'token' && (
                     <>
                       <Row className="mb-3">
-                        <Col xs="5">
-                          <div className="text-card">
-                            Input{' '}
-                            <i
-                              className="icon-small icon-info icon-dark ml-2"
-                              id="tooltipInput"
-                              role="button"
-                            />
-                            <UncontrolledTooltip
-                              placement="right"
-                              target="tooltipInput"
-                            >
-                              Your input amount.
-                            </UncontrolledTooltip>
-                          </div>
+                        <Col xs="auto">
+                          <div className="text-card">Input</div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="output-card">
                             {swapInput1?.value &&
-                              formatFromUnits(swapInput1?.value, 10)}{' '}
+                              formatFromUnits(swapInput1?.value, 6)}{' '}
                             {assetSwap1?.symbol}
                           </div>
                         </Col>
                       </Row>
 
                       <Row className="mb-3">
-                        <Col xs="5">
+                        <Col xs="auto">
                           <div className="text-card">
-                            Fee{' '}
+                            {t('fee')}
                             <i
-                              className="icon-small icon-info icon-dark ml-2"
+                              className="icon-small icon-info icon-dark ml-2 mt-n1"
                               id="tooltipFee"
                               role="button"
                             />
@@ -769,37 +770,25 @@ const Swap = () => {
                             </UncontrolledTooltip>
                           </div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="output-card">
                             {swapInput1?.value &&
-                              formatFromWei(getSwapFee(), 10)}{' '}
+                              formatFromWei(getSwapFee(), 6)}{' '}
                             SPARTA
                           </div>
                         </Col>
                       </Row>
 
                       <Row className="mb-3">
-                        <Col xs="5">
+                        <Col xs="auto">
                           <div className="amount align-items-center">
-                            Output{' '}
-                            <i
-                              className="icon-small icon-info icon-dark mb-n1"
-                              id="tooltipOutput"
-                              role="button"
-                            />
-                            <UncontrolledTooltip
-                              placement="right"
-                              target="tooltipOutput"
-                            >
-                              The estimated unit qty of the to/output asset to
-                              be received from this transaction.
-                            </UncontrolledTooltip>
+                            Output
                           </div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="subtitle-amount">
                             {swapInput1?.value &&
-                              formatFromWei(getSwapOutput(), 10)}{' '}
+                              formatFromWei(getSwapOutput(), 6)}{' '}
                             {assetSwap2?.symbol}
                           </div>
                         </Col>
@@ -811,36 +800,24 @@ const Swap = () => {
                   {mode === 'pool' && (
                     <>
                       <Row className="mb-3">
-                        <Col xs="5">
-                          <div className="text-card">
-                            Input{' '}
-                            <i
-                              className="icon-small icon-info icon-dark ml-2"
-                              id="tooltipZapInput"
-                              role="button"
-                            />
-                            <UncontrolledTooltip
-                              placement="right"
-                              target="tooltipZapInput"
-                            >
-                              Your input amount.
-                            </UncontrolledTooltip>
-                          </div>
+                        <Col xs="auto">
+                          <div className="text-card">{t('input')}</div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="output-card">
-                            {swapInput1?.value && swapInput1?.value}{' '}
+                            {swapInput1?.value &&
+                              formatFromUnits(swapInput1?.value, 6)}{' '}
                             {assetSwap1?.symbol}-SPP
                           </div>
                         </Col>
                       </Row>
 
                       <Row className="mb-3">
-                        <Col xs="5">
+                        <Col xs="auto">
                           <div className="text-card">
-                            Fee{' '}
+                            {t('fee')}
                             <i
-                              className="icon-small icon-info icon-dark ml-2"
+                              className="icon-small icon-info icon-dark ml-2 mt-n1"
                               id="tooltipZapFee"
                               role="button"
                             />
@@ -848,41 +825,29 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapFee"
                             >
-                              The slip fee being injected into the pool to
-                              reward the liquidity providers
+                              {t(
+                                'The slip fee being injected into the pool to reward the liquidity providers',
+                              )}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="output-card">
                             {swapInput1?.value &&
-                              formatFromWei(getZapSwapFee(), 10)}{' '}
+                              formatFromWei(getZapSwapFee(), 6)}{' '}
                             SPARTA
                           </div>
                         </Col>
                       </Row>
 
                       <Row className="mb-3">
-                        <Col xs="5">
-                          <div className="amount">
-                            Output{' '}
-                            <i
-                              className="icon-small icon-info icon-dark ml-2"
-                              id="tooltipZapOutput"
-                              role="button"
-                            />
-                            <UncontrolledTooltip
-                              placement="right"
-                              target="tooltipZapOutput"
-                            >
-                              The estimated output
-                            </UncontrolledTooltip>
-                          </div>
+                        <Col xs="auto">
+                          <div className="amount">{t('output')}</div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="subtitle-amount">
                             {swapInput1?.value &&
-                              formatFromWei(getZapOutput(), 10)}{' '}
+                              formatFromWei(getZapOutput(), 6)}{' '}
                             {assetSwap2?.symbol}
                             -SPP
                           </div>
@@ -895,25 +860,13 @@ const Swap = () => {
                   {mode === 'synth' && (
                     <>
                       <Row className="mb-3">
-                        <Col xs="5">
-                          <div className="text-card">
-                            Input{' '}
-                            <i
-                              className="icon-small icon-info icon-dark ml-2"
-                              id="tooltipSynthInput"
-                              role="button"
-                            />
-                            <UncontrolledTooltip
-                              placement="right"
-                              target="tooltipSynthInput"
-                            >
-                              Your input amount.
-                            </UncontrolledTooltip>
-                          </div>
+                        <Col xs="auto">
+                          <div className="text-card">{t('input')}</div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="output-card">
-                            {swapInput1?.value && swapInput1?.value}{' '}
+                            {swapInput1?.value &&
+                              formatFromUnits(swapInput1?.value, 6)}{' '}
                             {assetSwap1?.symbol}
                             {assetSwap1?.symbol !== 'SPARTA' && '-SPS'}
                           </div>
@@ -921,11 +874,11 @@ const Swap = () => {
                       </Row>
 
                       <Row className="mb-3">
-                        <Col xs="5">
+                        <Col xs="auto">
                           <div className="text-card">
                             Fee{' '}
                             <i
-                              className="icon-small icon-info icon-dark ml-2"
+                              className="icon-small icon-info icon-dark ml-2 mt-n1"
                               id="tooltipSynthFee"
                               role="button"
                             />
@@ -938,37 +891,24 @@ const Swap = () => {
                             </UncontrolledTooltip>
                           </div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="output-card">
                             {swapInput1?.value &&
                               assetSwap1?.symbol === 'SPARTA' &&
-                              formatFromWei(getSynthFeeFromBase(), 10)}
+                              formatFromWei(getSynthFeeFromBase(), 6)}
                             {swapInput1?.value &&
                               assetSwap1?.symbol !== 'SPARTA' &&
-                              formatFromWei(getSynthFeeToBase(), 10)}{' '}
+                              formatFromWei(getSynthFeeToBase(), 6)}{' '}
                             SPARTA
                           </div>
                         </Col>
                       </Row>
 
                       <Row className="mb-3">
-                        <Col xs="5">
-                          <div className="amount">
-                            Output{' '}
-                            <i
-                              className="icon-small icon-info icon-dark ml-2"
-                              id="tooltipSynthOutput"
-                              role="button"
-                            />
-                            <UncontrolledTooltip
-                              placement="right"
-                              target="tooltipSynthOutput"
-                            >
-                              The estimated output
-                            </UncontrolledTooltip>
-                          </div>
+                        <Col xs="auto">
+                          <div className="amount">Output</div>
                         </Col>
-                        <Col xs="7" className="text-right">
+                        <Col className="text-right">
                           <div className="subtitle-amount">
                             {swapInput1?.value &&
                               assetSwap1?.symbol === 'SPARTA' &&
@@ -986,21 +926,19 @@ const Swap = () => {
                   )}
                   {/* 'Approval/Allowance' row */}
                   <Row>
-                    <Col>
-                      {mode === 'token' &&
-                        assetSwap1?.tokenAddress !== addr.bnb &&
-                        wallet?.account &&
-                        swapInput1?.value && (
-                          <Approval
-                            tokenAddress={assetSwap1?.tokenAddress}
-                            symbol={assetSwap1?.symbol}
-                            walletAddress={wallet?.account}
-                            contractAddress={addr.router}
-                            txnAmount={convertToWei(swapInput1?.value)}
-                            assetNumber="1"
-                          />
-                        )}
-                    </Col>
+                    {mode === 'token' &&
+                      assetSwap1?.tokenAddress !== addr.bnb &&
+                      wallet?.account &&
+                      swapInput1?.value && (
+                        <Approval
+                          tokenAddress={assetSwap1?.tokenAddress}
+                          symbol={assetSwap1?.symbol}
+                          walletAddress={wallet?.account}
+                          contractAddress={addr.router}
+                          txnAmount={convertToWei(swapInput1?.value)}
+                          assetNumber="1"
+                        />
+                      )}
                     {mode === 'token' && (
                       <Col>
                         <Button
@@ -1017,7 +955,7 @@ const Swap = () => {
                           }
                           block
                         >
-                          Swap
+                          Sell {assetSwap1?.symbol}
                         </Button>
                       </Col>
                     )}
@@ -1037,7 +975,7 @@ const Swap = () => {
                           }
                           block
                         >
-                          Swap
+                          Sell {assetSwap1?.symbol}-SPP
                         </Button>
                       </Col>
                     )}
@@ -1058,7 +996,7 @@ const Swap = () => {
                             }
                             block
                           >
-                            Swap
+                            Sell SPARTA
                           </Button>
                         </Col>
                       )}
@@ -1080,7 +1018,7 @@ const Swap = () => {
                             }
                             block
                           >
-                            Swap
+                            Sell {assetSwap1?.symbol}-SPS
                           </Button>
                         </Col>
                       )}
@@ -1090,22 +1028,24 @@ const Swap = () => {
               <Col xs="12" xl="9">
                 <Row>
                   <Col xs="12" md="6">
-                    {assetSwap1.symbol !== 'SPARTA' && (
-                      <SwapPair
-                        assetSwap={assetSwap1}
-                        finalLpArray={poolFactory.finalLpArray}
-                        web3={web3}
-                      />
-                    )}
+                    {poolFactory.finalLpArray &&
+                      assetSwap1.symbol !== 'SPARTA' && (
+                        <SwapPair
+                          assetSwap={assetSwap1}
+                          finalLpArray={poolFactory.finalLpArray}
+                          web3={web3}
+                        />
+                      )}
                   </Col>
                   <Col xs="12" md="6">
-                    {assetSwap2.symbol !== 'SPARTA' && (
-                      <SwapPair
-                        assetSwap={assetSwap2}
-                        finalLpArray={poolFactory.finalLpArray}
-                        web3={web3}
-                      />
-                    )}
+                    {poolFactory.finalLpArray &&
+                      assetSwap2.symbol !== 'SPARTA' && (
+                        <SwapPair
+                          assetSwap={assetSwap2}
+                          finalLpArray={poolFactory.finalLpArray}
+                          web3={web3}
+                        />
+                      )}
                   </Col>
                 </Row>
               </Col>

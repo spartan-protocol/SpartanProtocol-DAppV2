@@ -1,13 +1,30 @@
 import * as Types from './types'
 import { getProviderGasPrice } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getDaoContract } from '../../utils/web3Dao'
+import { getDaoContract } from '../../utils/web3Contracts'
 
 export const daoLoading = () => ({
   type: Types.DAO_LOADING,
 })
 
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
+
+/**
+ * Get the member's last harvest time
+ * @param {address} member
+ * @returns {uint} lastHarvest
+ */
+export const getDaoMemberLastHarvest = (member) => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoContract()
+
+  try {
+    const lastHarvest = await contract.callStatic.mapMember_lastTime(member)
+    dispatch(payloadToDispatch(Types.LAST_HARVEST, lastHarvest))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+  }
+}
 
 /**
  * Check if the wallet is a member of the DAO
@@ -44,7 +61,7 @@ export const getDaoMemberCount = () => async (dispatch) => {
 
 /**
  * DAO HELPER -
- * Get the current harvestable amount of SPARTA from Lock+Earn
+ * Get the current harvestable amount of SPARTA from DaoVault staking
  * Uses getDaoHarvestEraAmount() but works out what portion of an era/s the member can claim
  * @returns unit
  */

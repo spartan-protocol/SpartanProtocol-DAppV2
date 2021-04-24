@@ -1,19 +1,13 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
-import classnames from 'classnames'
 import {
   Button,
   Card,
-  CardBody,
   Col,
   Input,
   InputGroup,
   InputGroupAddon,
-  Nav,
-  NavItem,
-  NavLink,
   UncontrolledAlert,
   UncontrolledTooltip,
   Progress,
@@ -28,31 +22,44 @@ import {
   BN,
   convertFromWei,
   convertToWei,
+  formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
+import { useBond } from '../../../store/bond/selector'
+import {
+  calcLiquidityUnits,
+  calcSwapOutput,
+  calcValueInBase,
+} from '../../../utils/web3Utils'
+import Approval from '../../../components/Approval/Approval'
+import {
+  bondDeposit,
+  getBondListed,
+  getBondSpartaRemaining,
+} from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
-import {
-  routerRemoveLiq,
-  routerRemoveLiqAsym,
-} from '../../../store/router/actions'
-import RecentTxns from '../../../components/RecentTxns/RecentTxns'
-import { getPoolContract } from '../../../utils/web3Pool'
-import { useBond } from '../../../store/bond/selector'
-import { calcLiquidityUnits, calcSwapOutput } from '../../../utils/web3Utils'
-import Approval from '../../../components/Approval/Approval'
-import { bondDeposit } from '../../../store/bond/actions'
 
 const BondLiquidity = () => {
+  const web3 = useWeb3()
   const wallet = useWallet()
   const bond = useBond()
   const dispatch = useDispatch()
-  const web3 = useWeb3()
   const poolFactory = usePoolFactory()
   const addr = getAddresses()
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [assetBond1, setAssetBond1] = useState('...')
-  const [spartaMinted, setSpartaMinted] = useState('0')
-  const [lpOutput, setLpOutput] = useState('0')
+
+  const spartaRemainingLoop = async () => {
+    dispatch(getBondSpartaRemaining())
+    dispatch(getBondListed())
+    await pause(10000)
+    spartaRemainingLoop()
+  }
+
+  useEffect(() => {
+    spartaRemainingLoop()
+  }, [])
 
   useEffect(() => {
     const { finalArray } = poolFactory
@@ -100,7 +107,6 @@ const BondLiquidity = () => {
         assetBond1.baseAmount,
         true,
       )
-      setSpartaMinted(minted)
       return minted
     }
     return '0'
@@ -115,8 +121,18 @@ const BondLiquidity = () => {
         assetBond1.tokenAmount,
         assetBond1.poolUnits,
       )
-      setLpOutput(output)
       return output
+    }
+    return '0'
+  }
+
+  const getInput1ValueUSD = () => {
+    if (assetBond1 && bondInput1?.value) {
+      return calcValueInBase(
+        assetBond1.tokenAmount,
+        assetBond1.baseAmount,
+        convertToWei(bondInput1.value),
+      ).times(web3.spartaPrice)
     }
     return '0'
   }
@@ -135,31 +151,32 @@ const BondLiquidity = () => {
   return (
     <>
       <Row>
-        <Card className="card-body ">
-          <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
+        <Card className="card-body">
+          <Card style={{ backgroundColor: '#25212D' }} className="card-body">
             <Row>
               <Col xs="4" className="">
-                <div className="title-card">Bond Input</div>
+                <div className="">Input</div>
               </Col>
               <Col xs="8" className="text-right">
-                <div className="title-card">
-                  Balance:{' '}
-                  {`${formatFromWei(assetBond1.balanceTokens)} ${
-                    assetBond1.symbol
-                  }`}
+                <div className="">
+                  Balance {formatFromWei(assetBond1.balanceTokens)}
                 </div>
               </Col>
             </Row>
-            <Row className="my-3 input-pane">
+            <Row className="my-3">
               <Col xs="6">
-                <div className="output-card">
-                  <AssetSelect priority="1" filter={['token']} />
+                <div className="output-card ml-2">
+                  <AssetSelect
+                    priority="1"
+                    filter={['token']}
+                    whiteList={bond.bondListed}
+                  />
                 </div>
               </Col>
               <Col className="text-right" xs="6">
-                <InputGroup className="h-100">
+                <InputGroup className="">
                   <Input
-                    className="text-right h-100 ml-0"
+                    className="text-right ml-0"
                     type="text"
                     placeholder="0"
                     id="bondInput1"
@@ -174,6 +191,10 @@ const BondLiquidity = () => {
                     <i className="icon-search-bar icon-close icon-light my-auto" />
                   </InputGroupAddon>
                 </InputGroup>
+                <div className="text-right">
+                  ~$
+                  {bondInput1?.value && formatFromWei(getInput1ValueUSD(), 2)}
+                </div>
               </Col>
             </Row>
           </Card>
@@ -186,7 +207,7 @@ const BondLiquidity = () => {
               data-notify="icon"
               className="icon-small icon-info icon-dark mb-5"
             />
-            <span data-notify="message">
+            <span data-notify="message" className="p-0">
               The equivalent purchasing power in SPARTA is minted with both
               assets added symmetrically to the BNB:SPARTA liquidity pool. LP
               tokens will be issued as usual and vested to you over a 12 month
@@ -197,37 +218,45 @@ const BondLiquidity = () => {
           <Row>
             <Col>
               <div className="text-card">
-                SPARTA allocation
+                Allocation
                 <i
                   className="icon-small icon-info icon-dark ml-2"
                   id="tooltipAddBase"
                   role="button"
                 />
                 <UncontrolledTooltip placement="right" target="tooltipAddBase">
-                  The quantity of & SPARTA you are adding to the pool.
+                  The amount of SPARTA remaining in the Bond+Mint program. This
+                  can be topped up by 2.5M SPARTA by proposals in the DAO when
+                  it runs out.
                 </UncontrolledTooltip>
               </div>
             </Col>
             <Col className="output-card text-right">
-              {formatFromWei(bond.bondSpartaRemaining)} Remaining
+              {formatFromWei(bond.bondSpartaRemaining, 0)} Remaining
             </Col>
           </Row>
 
           <br />
           <div className="progress-container progress-primary">
-            <span className="progress-badge" />
             <Progress
               max="2500000"
-              value={formatFromWei(bond.bondSpartaRemaining)}
-            />
+              value={convertFromWei(bond.bondSpartaRemaining)}
+              className=""
+            >
+              {formatFromUnits(
+                BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
+                2,
+              )}
+              % Remaining
+            </Progress>
           </div>
           <Row className="mb-2">
             <Col xs="4" className="">
               <div className="title-card">Input</div>
             </Col>
             <Col xs="8" className="text-right">
-              <div className="title-card">
-                {bondInput1?.value} {assetBond1?.symbol}
+              <div className="">
+                {formatFromUnits(bondInput1?.value, 8)} {assetBond1?.symbol}
               </div>
             </Col>
           </Row>
@@ -236,8 +265,8 @@ const BondLiquidity = () => {
               <div className="title-card">Minted</div>
             </Col>
             <Col xs="8" className="text-right">
-              <div className="title-card">
-                {formatFromWei(spartaMinted)} SPARTA
+              <div className="">
+                {formatFromWei(calcSpartaMinted(), 8)} SPARTA
               </div>
             </Col>
           </Row>
@@ -246,25 +275,25 @@ const BondLiquidity = () => {
               <div className="title-card">Output</div>
             </Col>
             <Col xs="8" className="text-right">
-              <div className="title-card">
-                {formatFromWei(lpOutput)} {assetBond1?.symbol}-SPP
+              <div className="">
+                {formatFromWei(calcOutput(), 8)} {assetBond1?.symbol}-SPP
               </div>
             </Col>
           </Row>
           <Row>
-            <Col xs="6">
-              <Approval
-                tokenAddress={assetBond1?.tokenAddress}
-                symbol={assetBond1?.symbol}
-                walletAddress={wallet?.account}
-                contractAddress={addr.bond}
-                txnAmount={convertToWei(bondInput1?.value)}
-              />
-            </Col>
+            <Approval
+              tokenAddress={assetBond1?.tokenAddress}
+              symbol={assetBond1?.symbol}
+              walletAddress={wallet?.account}
+              contractAddress={addr.bond}
+              txnAmount={convertToWei(bondInput1?.value)}
+              assetNumber="1"
+            />
             <Col xs="6">
               <Button
                 color="primary"
                 size="lg"
+                className="p-3"
                 block
                 onClick={() =>
                   dispatch(
@@ -275,69 +304,23 @@ const BondLiquidity = () => {
                   )
                 }
               >
-                Bond BNB
+                Bond {assetBond1?.symbol}
               </Button>
             </Col>
           </Row>
         </Card>
-        {/* <Col md={4}>
-          <Card className="card-body ">
-            <Card style={{ backgroundColor: '#25212D' }} className="card-body ">
-              <Row>
-                <Col>
-                  <div className="title-card text-left">Bond Input</div>
-                  <div className="output-card text-left">52.23</div>
-                </Col>
-                <Col>
-                  <br />
-                  <div className="output-card text-right">
-                    SPARTA
-                    <img className="ml-2" src="" alt="SPARTA" />
-                  </div>
-                </Col>
-              </Row>
-              <br />
-            </Card>
-            <UncontrolledAlert
-              className="alert-with-icon"
-              color="danger"
-              fade={false}
-            >
-              <span
-                data-notify="icon"
-                className="icon-small icon-info icon-dark mb-5"
-              />
-              <span data-notify="message">
-                Bond BNB to get SPARTA LP Tokens. Claim your vested LP
-                tokens.Your BNB-SPARTA LP tokens remain in time-locked contract
-              </span>
-            </UncontrolledAlert>
-            <br />
-
-            <br />
-            <Row>
-              <Col>
-                <div className="text-card text-left">
-                  Remaining BNB-SPARTA LP
-                </div>
-                <div className="text-card text-left">Duration</div>
-                <div className="text-card text-leftt">Redemption date</div>
-                <div className="text-card text-leftt">Redemption date</div>
-              </Col>
-              <Col>
-                <div className="output-card text-right">0.00B</div>
-                <div className="output-card text-right">0 days</div>
-                <div className="output-card text-right">-</div>
-                <div className="output-card text-right">-</div>
-              </Col>
-            </Row>
-            <br />
-            <Button color="danger" size="lg" block>
-              Claim LP Tokens
-            </Button>
-          </Card>
-        </Col> */}
       </Row>
+      {poolFactory.finalLpArray && (
+        <Row>
+          <Col xs="12" className="p-0">
+            <SwapPair
+              assetSwap={assetBond1}
+              finalLpArray={poolFactory.finalLpArray}
+              web3={web3}
+            />
+          </Col>
+        </Row>
+      )}
     </>
   )
 }

@@ -16,6 +16,28 @@ const AddressConn = () => {
 
   return (
     <>
+      {!wallet && (
+        <Button
+          type="button"
+          className={btnClass}
+          onClick={() => setWalletModalShow(true)}
+          onKeyPress={() => setWalletModalShow(true)}
+        >
+          <i className={`icon-wallet-red${iconClass}`} />
+        </Button>
+      )}
+
+      {wallet?.status === 'connecting' && (
+        <Button
+          type="button"
+          className={btnClass}
+          onClick={() => setWalletModalShow(true)}
+          onKeyPress={() => setWalletModalShow(true)}
+        >
+          <i className={`icon-wallet-red${iconClass}`} />
+        </Button>
+      )}
+
       {wallet?.status === 'disconnected' && (
         <Button
           type="button"
@@ -38,8 +60,7 @@ const AddressConn = () => {
         </Button>
       )}
 
-      {/* {wallet?.status === 'connecting' && ( */}
-      {poolFactory.loadingFinal === true && (
+      {poolFactory.loadingFinal === true && wallet?.status === 'connected' && (
         <Button
           type="button"
           className={btnClass}

@@ -17,6 +17,7 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { usePoolFactory } from '../../store/poolFactory'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
@@ -24,7 +25,6 @@ import ShareLink from '../Share/ShareLink'
 // import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
-
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
  * depending on the 'priority' prop handed over.
@@ -35,6 +35,7 @@ import spartaIconAlt from '../../assets/img/spartan_synth.svg'
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
 
@@ -114,7 +115,7 @@ const AssetSelect = (props) => {
                 icon: (
                   <img
                     height="35px"
-                    src={spartaIcon}
+                    src={tempArray[i].symbolUrl}
                     alt={`${tempArray[i].symbol} asset icon`}
                     className="mr-1"
                   />
@@ -276,10 +277,10 @@ const AssetSelect = (props) => {
                 />
 
                 <img
-                  height="27px"
+                  height="20px"
                   src={spartaIconAlt}
                   alt="Sparta LP token icon"
-                  className="mr-2"
+                  className="mr-2 mt-3"
                 />
               </>
             )}
@@ -294,7 +295,7 @@ const AssetSelect = (props) => {
               <i className="icon-extra-small icon-arrow icon-light align-middle" />
             )}
           </Col>
-          <Col xs="12" className="d-block d-lg-none ml-3">
+          <Col xs="12" className="d-block d-lg-none ml-2 mt-1">
             {selectedItem && selectedItem?.symbol}
             {selectedType === 'pool' && '-SPP'}
             {selectedType === 'synth' && '-SPS'}
@@ -304,7 +305,7 @@ const AssetSelect = (props) => {
       <Modal isOpen={showModal} toggle={toggleModal}>
         <Row className="card-body">
           <Col xs="10">
-            <h3 className="ml-2 modal-title">Select an asset</h3>
+            <h3 className="ml-2 modal-title">Select An Asset</h3>
           </Col>
           <Col xs="2">
             <Button onClick={toggleModal} className="btn btn-transparent mt-4">
@@ -333,6 +334,7 @@ const AssetSelect = (props) => {
                   changeTab('token')
                 }}
               >
+                {' '}
                 Tokens
               </NavLink>
             </NavItem>
@@ -359,7 +361,7 @@ const AssetSelect = (props) => {
                   changeTab('synth')
                 }}
               >
-                Synths
+                {t('synths')}
               </NavLink>
             </NavItem>
           )}

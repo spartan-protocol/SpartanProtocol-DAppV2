@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button } from 'reactstrap'
+import { Button, Col } from 'reactstrap'
 import {
   getAllowance1,
   getAllowance2,
   getApproval,
   useWeb3,
 } from '../../store/web3'
+
 import { BN } from '../../utils/bigNumber'
 
 // import { usePoolFactory } from '../../store/poolFactory'
@@ -61,64 +62,38 @@ const Approval = ({
 
   return (
     <>
-      {assetNumber === '1' && (
-        <>
-          {BN(web3.allowance1.toString()).comparedTo(txnAmount) === -1 && (
-            <>
-              <Button
-                className="btn-fill w-100 h-100"
-                color="neutral"
-                onClick={() => {
-                  handleApproval()
-                }}
-              >
-                <i className="icon-extra-small icon-lock icon-light align-middle" />
-                <br />
-                Approve {symbol}
-              </Button>
-            </>
-          )}
-          {BN(web3.allowance1.toString()).comparedTo(txnAmount) === 1 && (
-            <>
-              <Button className="btn-fill w-100 h-100" color="success">
-                <i className="icon-extra-small icon-lock icon-dark align-middle" />
-                <i className="icon-extra-small icon-check icon-light align-middle" />
-                <br />
-                {symbol} Ready
-              </Button>
-            </>
-          )}
-        </>
-      )}
-      {assetNumber === '2' && (
-        <>
-          {BN(web3.allowance2.toString()).comparedTo(txnAmount) === -1 && (
-            <>
-              <Button
-                className="btn-fill w-100 h-100"
-                color="neutral"
-                onClick={async () => {
-                  handleApproval()
-                }}
-              >
-                <i className="icon-extra-small icon-lock icon-light align-middle" />
-                <br />
-                Approve {symbol}
-              </Button>
-            </>
-          )}
-          {BN(web3.allowance2.toString()).comparedTo(txnAmount) === 1 && (
-            <>
-              <Button className="btn-fill w-100 h-100" color="success">
-                <i className="icon-extra-small icon-lock icon-dark align-middle" />
-                <i className="icon-extra-small icon-check icon-light align-middle" />
-                <br />
-                {symbol} Ready
-              </Button>
-            </>
-          )}
-        </>
-      )}
+      {assetNumber === '1' &&
+        BN(web3.allowance1.toString()).comparedTo(txnAmount) === -1 && (
+          <Col>
+            <Button
+              className="btn-fill w-100 h-100"
+              color="neutral"
+              onClick={() => {
+                handleApproval()
+              }}
+            >
+              <i className="icon-extra-small icon-lock icon-light align-middle" />
+              <br />
+              Approve {symbol}
+            </Button>
+          </Col>
+        )}
+      {assetNumber === '2' &&
+        BN(web3.allowance2.toString()).comparedTo(txnAmount) === -1 && (
+          <Col>
+            <Button
+              className="btn-fill w-100 h-100"
+              color="neutral"
+              onClick={async () => {
+                handleApproval()
+              }}
+            >
+              <i className="icon-extra-small icon-lock icon-light align-middle" />
+              <br />
+              Approve {symbol}
+            </Button>
+          </Col>
+        )}
     </>
   )
 }

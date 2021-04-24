@@ -1,5 +1,5 @@
 import { getProviderGasPrice } from './web3'
-import { getLoanVaultContract } from './web3Loan'
+import { getLoanVaultContract } from './web3Contracts'
 
 // ---------------- ASYNC FUNCTIONS FOR STORE (WAIT FOR PHASE 2 BEFORE CREATING THE STORE THEN DELETE THIS FILE) ---------------
 

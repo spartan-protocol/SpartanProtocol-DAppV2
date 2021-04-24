@@ -56,7 +56,7 @@ describe('Dao actions', () => {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!member')
+      expect(dispatchMock.mock.calls[1][0].error.reason).not.toEqual('')
     }
   })
 
@@ -98,7 +98,7 @@ describe('Dao actions', () => {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!member')
+      expect(dispatchMock.mock.calls[1][0].error.reason).not.toEqual('')
     }
   })
 

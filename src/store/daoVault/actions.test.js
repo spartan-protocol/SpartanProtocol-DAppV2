@@ -25,15 +25,6 @@ describe('Dao vault actions', () => {
     expect('0').not.toBe('2')
   })
 
-  // COME BACK TO THIS ONE LATER
-  // test('should get members weight within specific pool', async () => {
-  //   await getDaoVaultMemberPoolWeight(TEST_WALLET, TEST_POOL)(dispatchMock)
-  //   expect(dispatchMock.mock.calls[1][0].type).toBe(
-  //     Types.GET_DAOVAULT_MEMBER_POOL_WEIGHT,
-  //   )
-  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  // })
-
   // test('should get DAOs total weight', async () => {
   //   await getDaoVaultTotalWeight()(dispatchMock)
   //   expect(dispatchMock.mock.calls[1][0].type).toBe(

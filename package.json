@@ -38,7 +38,7 @@
     "react-copy-to-clipboard": "^5.0.3",
     "react-datetime": "3.0.4",
     "react-dom": "17.0.1",
-    "react-i18next": "^9.0.10",
+    "react-i18next": "^11.8.13",
     "react-jvectormap": "0.0.16",
     "react-lottie": "^1.2.3",
     "react-notification-alert": "0.0.13",

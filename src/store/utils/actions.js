@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getUtilsContract } from '../../utils/web3Utils'
+import { getUtilsContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
 export const utilsLoading = () => ({
@@ -92,7 +92,7 @@ export const getPoolDetails = (pool) => async (dispatch) => {
 }
 
 /**
- * Get share of pool by member (using tokenAddr) (doesn't include LP tokens locked in DAO)
+ * Get share of pool by member (using tokenAddr) (doesn't include LP tokens staked in DAO)
  * @returns [ uint baseAmount | uint tokenAmount ]
  */
 export const getMemberShare = (token, member) => async (dispatch) => {
@@ -126,7 +126,7 @@ export const getPoolShare = (token, units) => async (dispatch) => {
 
 /**
  * UTILS HELPER -
- * Returns the SPARTA share of a pool based on member's holdings (doesn't include LP tokens locked in DAO nor the TOKEN share)
+ * Returns the SPARTA share of a pool based on member's holdings (doesn't include LP tokens staked in DAO nor the TOKEN share)
  * @returns uint baseAmount
  */
 export const getShareOfBaseAmount = (token, member) => async (dispatch) => {
@@ -148,7 +148,7 @@ export const getShareOfBaseAmount = (token, member) => async (dispatch) => {
 
 /**
  * UTILS HELPER -
- * Returns the TOKEN share of a pool based on member's holdings (doesn't include LP tokens locked in DAO nor the SPARTA share)
+ * Returns the TOKEN share of a pool based on member's holdings (doesn't include LP tokens staked in DAO nor the SPARTA share)
  * @returns uint tokenAmount
  */
 export const getShareOfTokenAmount = (token, member) => async (dispatch) => {
@@ -263,7 +263,7 @@ export const getPoolCount = () => async (dispatch) => {
 
 /**
  * Get share of pool by member (using poolAddr)
- * (doesn't include LP tokens locked in DAO)
+ * (doesn't include LP tokens staked in DAO)
  * @param {address} pool
  * @param {address} member
  * @returns {uint} baseAmount

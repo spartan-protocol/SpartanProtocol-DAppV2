@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Card,
@@ -15,29 +16,44 @@ import classnames from 'classnames'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
-import LockEarn from './LockEarn'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+import Stake from './Stake'
 // import Proposals from './Proposals'
-import { daoHarvest } from '../../../store/dao/actions'
+import { daoHarvest, getDaoMemberLastHarvest } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { useDaoVault } from '../../../store/daoVault/selector'
 
 const Overview = () => {
+  const wallet = useWallet()
   const daoVault = useDaoVault()
   const dao = useDao()
   const dispatch = useDispatch()
+  const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [activeTab, setActiveTab] = useState('1')
+  const [trigger, settrigger] = useState(0)
 
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
+
+  const formatDate = (unixTime) => {
+    const date = new Date(unixTime * 1000)
+    return date.toLocaleDateString()
+  }
+
+  useEffect(async () => {
+    dispatch(getDaoMemberLastHarvest(wallet.account))
+    await pause(7500)
+    settrigger(trigger + 1)
+  }, [trigger])
 
   return (
     <>
       <div className="content">
         <Row className="card-body justify-content-center">
           <Col xs="6" xl="5">
-            <h2 className="d-inline text-title ml-1">Dao</h2>
+            <h2 className="d-inline text-title ml-1">DaoVault</h2>
           </Col>
           <Col xs="6" xl="4" />
         </Row>
@@ -56,7 +72,7 @@ const Overview = () => {
                             toggle('1')
                           }}
                         >
-                          Lock & earn
+                          Stake
                         </NavLink>
                       </NavItem>
                       {/* <NavItem>
@@ -140,12 +156,14 @@ const Overview = () => {
                           <Col xs="6" md="3" lg="2">
                             <div className="card-text">Last Harvest:</div>
                             <div className="subtitle-amount d-none d-md-block">
-                              XXX
+                              {dao.lastHarvest > 0 &&
+                                formatDate(dao.lastHarvest)}
                             </div>
                           </Col>
                           <Col xs="6" className="d-block d-md-none">
                             <div className="subtitle-amount text-right">
-                              XXX
+                              {dao.lastHarvest > 0 &&
+                                formatDate(dao.lastHarvest)}
                             </div>
                           </Col>
 
@@ -167,7 +185,7 @@ const Overview = () => {
                       </CardBody>
                     </Card>
                     <div className="page-header">
-                      Lock & earn{' '}
+                      Stake{' '}
                       <i
                         className="icon-small icon-info icon-dark ml-2"
                         id="tooltipAddBase"
@@ -181,7 +199,7 @@ const Overview = () => {
                       </UncontrolledTooltip>
                     </div>
                     <br />
-                    <LockEarn />
+                    <Stake />
                   </TabPane>
                   {/* <TabPane tabId="2" className="p-3">
                     <Proposals />
