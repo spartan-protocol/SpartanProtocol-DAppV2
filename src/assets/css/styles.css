@@ -578,7 +578,6 @@ input:focus, textarea:focus, select:focus{
     padding: 0;
 }
 
-
 .main-panel > .content {
     padding: 10px 10px 30px 10px;
     min-height: calc(100vh - 70px);
@@ -604,7 +603,6 @@ input:focus, textarea:focus, select:focus{
         min-height: 100%;
         border-radius: 0;
     }
-
 
 }
 
