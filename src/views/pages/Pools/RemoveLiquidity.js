@@ -1,11 +1,10 @@
-/* eslint-disable*/
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
 import classnames from 'classnames'
 import {
   Button,
   Card,
-  CardBody,
   Col,
   Input,
   InputGroup,
@@ -112,7 +111,6 @@ const RemoveLiquidity = () => {
     }
 
     getAssetDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     poolFactory.finalArray,
     poolFactory.finalLpArray,
@@ -334,257 +332,255 @@ const RemoveLiquidity = () => {
     <>
       <Row>
         <Card className="card-body">
-            <Row>
-              <Col md={12}>
-                <Card
-                  style={{ backgroundColor: '#25212D' }}
-                  className="card-body"
-                >
-                  <Row>
-                    <Col xs="4" className="">
-                      <div className="">Pool</div>
-                    </Col>
-                    <Col xs="8" className="text-right">
-                      <div className="">
-                        Balance{' '}
-                        {poolFactory.finalLpArray &&
-                          formatFromWei(poolRemove1.balanceLPs)}
-                      </div>
-                    </Col>
-                  </Row>
-
-                  <Row className="my-3">
-                    <Col xs="6">
-                      <div className="output-card ml-2">
-                        <AssetSelect priority="1" filter={['pool']} />
-                      </div>
-                    </Col>
-                    <Col className="text-right" xs="6">
-                      <InputGroup className="">
-                        <Input
-                          className="text-right ml-0"
-                          type="text"
-                          placeholder="0"
-                          id="removeInput1"
-                        />
-                        <InputGroupAddon
-                          addonType="append"
-                          role="button"
-                          tabIndex={-1}
-                          onKeyPress={() => clearInputs()}
-                          onClick={() => clearInputs()}
-                        >
-                          <i className="icon-search-bar icon-close icon-light my-auto" />
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <div className="text-right">
-                        ~$
-                        {removeInput1?.value &&
-                          formatFromWei(getLpValueUSD(), 2)}
-                      </div>
-                    </Col>
-                  </Row>
-                </Card>
-                <Nav pills className="nav-tabs-custom  mt-2 mb-4">
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '1' })}
-                      onClick={() => {
-                        toggle('1')
-                      }}
-                    >
-                      Remove Both
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({ active: activeTab === '2' })}
-                      onClick={() => {
-                        toggle('2')
-                      }}
-                    >
-                      Remove Single
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <Card
-                  style={{ backgroundColor: '#25212D' }}
-                  className="card-body "
-                >
-                  <Row>
-                    <Col xs="4" className="">
-                      <div className="">Output</div>
-                    </Col>
-                    <Col xs="8" className="text-right">
-                      <div className="">
-                        Balance{' '}
-                        {poolFactory.finalLpArray &&
-                          formatFromWei(assetRemove1.balanceTokens)}
-                      </div>
-                    </Col>
-                  </Row>
-
-                  <Row className="my-3">
-                    <Col xs="6">
-                      <div className="output-card ml-2">
-                        <AssetSelect
-                          priority="2"
-                          filter={['token']}
-                          blackList={[activeTab === '1' ? addr.sparta : '']}
-                          whiteList={
-                            activeTab === '2'
-                              ? [addr.sparta, poolRemove1.tokenAddress]
-                              : ['']
-                          }
-                          disabled={activeTab === '1'}
-                        />
-                      </div>
-                    </Col>
-                    <Col className="text-right" xs="6">
-                      <InputGroup className="">
-                        <Input
-                          className="text-right ml-0"
-                          type="text"
-                          placeholder="0"
-                          id="removeInput2"
-                          disabled
-                        />
-                      </InputGroup>
-                      <div className="text-right">
-                        ~$
-                        {removeInput2?.value &&
-                          formatFromWei(getOutput1ValueUSD(), 2)}
-                      </div>
-                    </Col>
-                  </Row>
-
-                  {activeTab === '1' && (
-                    <>
-                      <hr className="m-1" />
-                      <Row className="my-2">
-                        <Col xs="4" className="">
-                          <div className="">Output</div>
-                        </Col>
-                        <Col xs="8" className="text-right">
-                          <div className="">
-                            Balance{' '}
-                            {poolFactory.finalLpArray &&
-                              formatFromWei(assetRemove2.balanceTokens)}
-                          </div>
-                        </Col>
-                      </Row>
-                      <Row className="">
-                        <Col xs="6">
-                          <div className="output-card ml-2">
-                            <AssetSelect
-                              priority="3"
-                              filter={['token']}
-                              whiteList={[addr.sparta]}
-                              disabled
-                            />
-                          </div>
-                        </Col>
-                        <Col className="text-right" xs="6">
-                          <InputGroup className="">
-                            <Input
-                              className="text-right ml-0"
-                              type="text"
-                              placeholder="0"
-                              id="removeInput3"
-                              disabled
-                            />
-                          </InputGroup>
-                          <div className="text-right">
-                            ~$
-                            {removeInput3?.value &&
-                              formatFromWei(getOutput2ValueUSD(), 2)}
-                          </div>
-                        </Col>
-                      </Row>
-                    </>
-                  )}
-                </Card>
-
-                {poolFactory.finalLpArray && (
-                  <>
-                    <div className="card-body">
-                      <Row className="mb-2">
-                        <Col xs="4" className="">
-                          <div className="title-card">Input</div>
-                        </Col>
-                        <Col xs="8" className="text-right">
-                          <div className="">
-                            {removeInput1?.value} {poolRemove1?.symbol}-SPP
-                          </div>
-                        </Col>
-                      </Row>
-
-                      {activeTab === '2' && (
-                        <Row className="mb-2">
-                          <Col xs="4" className="">
-                            <div className="title-card">Fee</div>
-                          </Col>
-                          <Col xs="8" className="text-right">
-                            <div className="">
-                              {formatFromWei(getRemoveOneSwapFee())} SPARTA
-                            </div>
-                          </Col>
-                        </Row>
-                      )}
-
-                      <Row className="mb-2">
-                        <Col xs="4" className="">
-                          <div className="title-card mt-2">Output</div>
-                        </Col>
-                        <Col xs="8" className="text-right">
-                          <div className="">
-                            {formatFromUnits(removeInput2?.value, 8)}{' '}
-                            {assetRemove1?.symbol}
-                          </div>
-                          {activeTab === '1' && (
-                            <div className="">
-                              {formatFromUnits(removeInput3?.value, 8)} SPARTA
-                            </div>
-                          )}
-                        </Col>
-                      </Row>
+          <Row>
+            <Col md={12}>
+              <Card
+                style={{ backgroundColor: '#25212D' }}
+                className="card-body"
+              >
+                <Row>
+                  <Col xs="4" className="">
+                    <div className="">Pool</div>
+                  </Col>
+                  <Col xs="8" className="text-right">
+                    <div className="">
+                      Balance{' '}
+                      {poolFactory.finalLpArray &&
+                        formatFromWei(poolRemove1.balanceLPs)}
                     </div>
+                  </Col>
+                </Row>
 
+                <Row className="my-3">
+                  <Col xs="6">
+                    <div className="output-card ml-2">
+                      <AssetSelect priority="1" filter={['pool']} />
+                    </div>
+                  </Col>
+                  <Col className="text-right" xs="6">
+                    <InputGroup className="">
+                      <Input
+                        className="text-right ml-0"
+                        type="text"
+                        placeholder="0"
+                        id="removeInput1"
+                      />
+                      <InputGroupAddon
+                        addonType="append"
+                        role="button"
+                        tabIndex={-1}
+                        onKeyPress={() => clearInputs()}
+                        onClick={() => clearInputs()}
+                      >
+                        <i className="icon-search-bar icon-close icon-light my-auto" />
+                      </InputGroupAddon>
+                    </InputGroup>
+                    <div className="text-right">
+                      ~$
+                      {removeInput1?.value && formatFromWei(getLpValueUSD(), 2)}
+                    </div>
+                  </Col>
+                </Row>
+              </Card>
+              <Nav pills className="nav-tabs-custom  mt-2 mb-4">
+                <NavItem>
+                  <NavLink
+                    className={classnames({ active: activeTab === '1' })}
+                    onClick={() => {
+                      toggle('1')
+                    }}
+                  >
+                    Remove Both
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    className={classnames({ active: activeTab === '2' })}
+                    onClick={() => {
+                      toggle('2')
+                    }}
+                  >
+                    Remove Single
+                  </NavLink>
+                </NavItem>
+              </Nav>
+              <Card
+                style={{ backgroundColor: '#25212D' }}
+                className="card-body "
+              >
+                <Row>
+                  <Col xs="4" className="">
+                    <div className="">Output</div>
+                  </Col>
+                  <Col xs="8" className="text-right">
+                    <div className="">
+                      Balance{' '}
+                      {poolFactory.finalLpArray &&
+                        formatFromWei(assetRemove1.balanceTokens)}
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="my-3">
+                  <Col xs="6">
+                    <div className="output-card ml-2">
+                      <AssetSelect
+                        priority="2"
+                        filter={['token']}
+                        blackList={[activeTab === '1' ? addr.sparta : '']}
+                        whiteList={
+                          activeTab === '2'
+                            ? [addr.sparta, poolRemove1.tokenAddress]
+                            : ['']
+                        }
+                        disabled={activeTab === '1'}
+                      />
+                    </div>
+                  </Col>
+                  <Col className="text-right" xs="6">
+                    <InputGroup className="">
+                      <Input
+                        className="text-right ml-0"
+                        type="text"
+                        placeholder="0"
+                        id="removeInput2"
+                        disabled
+                      />
+                    </InputGroup>
+                    <div className="text-right">
+                      ~$
+                      {removeInput2?.value &&
+                        formatFromWei(getOutput1ValueUSD(), 2)}
+                    </div>
+                  </Col>
+                </Row>
+
+                {activeTab === '1' && (
+                  <>
+                    <hr className="m-1" />
+                    <Row className="my-2">
+                      <Col xs="4" className="">
+                        <div className="">Output</div>
+                      </Col>
+                      <Col xs="8" className="text-right">
+                        <div className="">
+                          Balance{' '}
+                          {poolFactory.finalLpArray &&
+                            formatFromWei(assetRemove2.balanceTokens)}
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row className="">
+                      <Col xs="6">
+                        <div className="output-card ml-2">
+                          <AssetSelect
+                            priority="3"
+                            filter={['token']}
+                            whiteList={[addr.sparta]}
+                            disabled
+                          />
+                        </div>
+                      </Col>
+                      <Col className="text-right" xs="6">
+                        <InputGroup className="">
+                          <Input
+                            className="text-right ml-0"
+                            type="text"
+                            placeholder="0"
+                            id="removeInput3"
+                            disabled
+                          />
+                        </InputGroup>
+                        <div className="text-right">
+                          ~$
+                          {removeInput3?.value &&
+                            formatFromWei(getOutput2ValueUSD(), 2)}
+                        </div>
+                      </Col>
+                    </Row>
                   </>
                 )}
+              </Card>
 
-                {!poolFactory.finalLpArray && (
-                  <HelmetLoading height="150px" width="150px" />
-                )}
-              </Col>
-            </Row>
-            <Row className="text-center">
-              <Col xs="12" sm="4" />
-              <Col xs="12" sm="4">
-                <Button
-                  className="w-100 h-100 btn-primary"
-                  onClick={() =>
-                    activeTab === '1'
-                      ? dispatch(
-                          routerRemoveLiq(
-                            convertToWei(removeInput1.value),
-                            poolRemove1.tokenAddress,
-                          ),
-                        )
-                      : dispatch(
-                          routerRemoveLiqAsym(
-                            convertToWei(removeInput1.value),
-                            assetRemove1.tokenAddress === addr.sparta,
-                            poolRemove1.tokenAddress,
-                          ),
-                        )
-                  }
-                >
-                  Remove Liq
-                </Button>
-              </Col>
-              <Col xs="12" sm="4" />
-            </Row>
+              {poolFactory.finalLpArray && (
+                <>
+                  <div className="card-body">
+                    <Row className="mb-2">
+                      <Col xs="4" className="">
+                        <div className="title-card">Input</div>
+                      </Col>
+                      <Col xs="8" className="text-right">
+                        <div className="">
+                          {removeInput1?.value} {poolRemove1?.symbol}-SPP
+                        </div>
+                      </Col>
+                    </Row>
+
+                    {activeTab === '2' && (
+                      <Row className="mb-2">
+                        <Col xs="4" className="">
+                          <div className="title-card">Fee</div>
+                        </Col>
+                        <Col xs="8" className="text-right">
+                          <div className="">
+                            {formatFromWei(getRemoveOneSwapFee())} SPARTA
+                          </div>
+                        </Col>
+                      </Row>
+                    )}
+
+                    <Row className="mb-2">
+                      <Col xs="4" className="">
+                        <div className="title-card mt-2">Output</div>
+                      </Col>
+                      <Col xs="8" className="text-right">
+                        <div className="">
+                          {formatFromUnits(removeInput2?.value, 8)}{' '}
+                          {assetRemove1?.symbol}
+                        </div>
+                        {activeTab === '1' && (
+                          <div className="">
+                            {formatFromUnits(removeInput3?.value, 8)} SPARTA
+                          </div>
+                        )}
+                      </Col>
+                    </Row>
+                  </div>
+                </>
+              )}
+
+              {!poolFactory.finalLpArray && (
+                <HelmetLoading height="150px" width="150px" />
+              )}
+            </Col>
+          </Row>
+          <Row className="text-center">
+            <Col xs="12" sm="4" />
+            <Col xs="12" sm="4">
+              <Button
+                className="w-100 h-100 btn-primary"
+                onClick={() =>
+                  activeTab === '1'
+                    ? dispatch(
+                        routerRemoveLiq(
+                          convertToWei(removeInput1.value),
+                          poolRemove1.tokenAddress,
+                        ),
+                      )
+                    : dispatch(
+                        routerRemoveLiqAsym(
+                          convertToWei(removeInput1.value),
+                          assetRemove1.tokenAddress === addr.sparta,
+                          poolRemove1.tokenAddress,
+                        ),
+                      )
+                }
+              >
+                Remove Liq
+              </Button>
+            </Col>
+            <Col xs="12" sm="4" />
+          </Row>
         </Card>
       </Row>
       {poolFactory.finalLpArray && (

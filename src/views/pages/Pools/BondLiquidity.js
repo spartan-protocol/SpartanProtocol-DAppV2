@@ -1,4 +1,4 @@
-/* eslint-disable*/
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
 import {
@@ -207,7 +207,11 @@ const BondLiquidity = () => {
               data-notify="icon"
               className="icon-small icon-info icon-dark mb-5"
             />
-            <span id="notification-message" data-notify="message" className="p-0">
+            <span
+              id="notification-message"
+              data-notify="message"
+              className="p-0"
+            >
               The equivalent purchasing power in SPARTA is minted with both
               assets added symmetrically to the BNB:SPARTA liquidity pool. LP
               tokens will be issued as usual and vested to you over a 12 month
