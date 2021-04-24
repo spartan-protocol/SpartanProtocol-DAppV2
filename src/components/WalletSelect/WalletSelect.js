@@ -116,7 +116,7 @@ const WalletSelect = (props) => {
 
   return (
     <>
-      <Modal show={props.show} onHide={props.onHide}>
+      <Modal show={props.show} onHide={props.onHide} >
         <div className="card-body">
           {wallet.status !== 'connected' && (
             <CardHeader style={{ backgroundColor: '#1D171F' }}>
@@ -236,7 +236,7 @@ const WalletSelect = (props) => {
                   </Row>
                   <br />
                   {/*wallet navigation tabs*/}
-                  <div className="modal-body ml-n3">
+                  <div className="modal-body ml-n3 mb-4">
                     <Row >
                       <Nav pills className="nav-tabs-custom">
                         <NavItem>
