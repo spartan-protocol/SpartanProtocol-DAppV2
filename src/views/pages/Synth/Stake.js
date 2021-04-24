@@ -12,12 +12,17 @@ import {
   synthHarvest,
   synthWithdraw,
 } from '../../../store/synth/actions'
-// import { getAddresses } from '../../../utils/web3'
+import { useSynth } from '../../../store/synth/selector'
 
 const Stake = () => {
-  // const addr = getAddresses()
+  const synth = useSynth()
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
+
+  const formatDate = (unixTime) => {
+    const date = new Date(unixTime * 1000)
+    return date.toLocaleDateString()
+  }
 
   return (
     <>
@@ -81,6 +86,7 @@ const Stake = () => {
                           </Col>
                         </Row>
                       </Col>
+
                       <Col xs="6" sm="3">
                         <div className="card-text">Staked</div>
                         <div className="subtitle-amount d-none d-sm-block">
@@ -92,6 +98,7 @@ const Stake = () => {
                           {formatFromWei(asset.stakedSynths)}
                         </div>
                       </Col>
+
                       <Col xs="6" sm="3">
                         <div className="card-text">Wallet</div>
                         <div className="subtitle-amount d-none d-sm-block">
@@ -103,6 +110,39 @@ const Stake = () => {
                           {formatFromWei(asset.balanceSynths)}
                         </div>
                       </Col>
+
+                      <Col xs="6" sm="3">
+                        <div className="card-text">Harvestable</div>
+                        <div className="subtitle-amount d-none d-sm-block">
+                          #,###.##
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-sm-none">
+                        <div className="subtitle-amount text-right">
+                          #,###.##
+                        </div>
+                      </Col>
+
+                      <Col xs="6" sm="3">
+                        <div className="card-text">Last Harvest</div>
+                        <div className="subtitle-amount d-none d-sm-block">
+                          {formatDate(
+                            synth.synthArrayFinal?.filter(
+                              (i) => i.tokenAddress === asset.tokenAddress,
+                            )[0].lastHarvest,
+                          )}
+                        </div>
+                      </Col>
+                      <Col xs="6" className="d-block d-sm-none">
+                        <div className="subtitle-amount text-right">
+                          {formatDate(
+                            synth.synthArrayFinal?.filter(
+                              (i) => i.tokenAddress === asset.tokenAddress,
+                            )[0].lastHarvest,
+                          )}
+                        </div>
+                      </Col>
+
                       <Col xs="6" className="mt-2">
                         <Button
                           type="Button"

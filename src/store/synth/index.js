@@ -3,6 +3,7 @@ export { synthReducer } from './reducer'
 
 export {
   getSynthArray,
+  getSynthArrayFinal,
   synthDeposit,
   synthHarvest,
   synthWithdraw,
