@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable*/
 import React, { useState, useEffect } from 'react'
 
 import classnames from 'classnames'
@@ -311,10 +311,9 @@ const AddLiquidity = () => {
 
   return (
     <>
-      <Row>
-        <Card>
-          <CardBody>
-            <Nav tabs className="nav-tabs-custom">
+      <Row >
+        <Card className="card-body">
+            <Nav pills className="nav-tabs-custom mb-4">
               <NavItem>
                 <NavLink
                   className={classnames({ active: activeTab === 'addTab1' })}
@@ -322,7 +321,7 @@ const AddLiquidity = () => {
                     toggle('addTab1')
                   }}
                 >
-                  <span className="d-none d-sm-block">Add Both</span>
+                Add Both
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -332,8 +331,9 @@ const AddLiquidity = () => {
                     toggle('addTab2')
                   }}
                 >
-                  <span className="d-none d-sm-block">Add Single</span>
+                  Add Single
                 </NavLink>
+
               </NavItem>
             </Nav>
             <Row>
@@ -602,7 +602,6 @@ const AddLiquidity = () => {
                   />
                 )}
             </Row>
-          </CardBody>
         </Card>
       </Row>
       {poolFactory.finalLpArray && (
