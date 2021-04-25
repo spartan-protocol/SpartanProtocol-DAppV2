@@ -74,6 +74,8 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
         staked: '0',
         weight: '0',
         lastHarvest: '0',
+        lpBalance: '0',
+        lpDebt: '0',
       })
     }
     dispatch(payloadToDispatch(Types.SYNTH_ARRAY, synthArray))
@@ -106,10 +108,13 @@ export const getSynthMemberDetails = (wallet) => async (dispatch) => {
 /**
  * Get the synth details relevant to the member
  * @param {object} synthArray
+ * @param {object} listedPools
  * @param {address} wallet
  * @returns {array} synthDetails
  */
-export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
+export const getSynthDetails = (synthArray, listedPools, wallet) => async (
+  dispatch,
+) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract()
 
@@ -137,15 +142,32 @@ export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
           ),
         ) // lastHarvest
       }
+      if (synthArray[i].address === false) {
+        tempArray.push('0') // lpBalance
+        tempArray.push('0') // lpDebt
+      } else {
+        const pool = listedPools.filter(
+          (lp) => lp.tokenAddress === synthArray[i].tokenAddress,
+        )[0]
+        const synthContract = getSynthContract(synthArray[i].address)
+        tempArray.push(
+          synthContract.callStatic.getmapAddress_LPBalance(pool.address),
+        ) // lpBalance
+        tempArray.push(
+          synthContract.callStatic.getmapAddress_LPDebt(pool.address),
+        ) // lpDebt
+      }
     }
     const synthDetails = synthArray
     tempArray = await Promise.all(tempArray)
-    const varCount = 3
+    const varCount = 5
     for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
       synthDetails[i / varCount].balance = tempArray[i].toString()
       synthDetails[i / varCount].staked = tempArray[i + 1].toString()
       // synthDetails[i].weight = tempArray[i + 2].toString()
       synthDetails[i / varCount].lastHarvest = tempArray[i + 2].toString()
+      synthDetails[i / varCount].lpBalance = tempArray[i + 3].toString()
+      synthDetails[i / varCount].lpDebt = tempArray[i + 4].toString()
     }
     dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
   } catch (error) {

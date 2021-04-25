@@ -10,6 +10,10 @@ import { daoHarvest, getDaoMemberLastHarvest } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { useDaoVault } from '../../../store/daoVault/selector'
+import {
+  getDaoGlobalDetails,
+  getDaoMemberDetails,
+} from '../../../store/daoVault/actions'
 
 const Overview = () => {
   const wallet = useWallet()
@@ -24,10 +28,15 @@ const Overview = () => {
     return date.toLocaleDateString()
   }
 
-  useEffect(async () => {
-    dispatch(getDaoMemberLastHarvest(wallet.account))
-    await pause(7500)
-    settrigger(trigger + 1)
+  useEffect(() => {
+    const daoLoop = async () => {
+      dispatch(getDaoGlobalDetails())
+      dispatch(getDaoMemberDetails(wallet.account))
+      dispatch(getDaoMemberLastHarvest(wallet.account))
+      await pause(7500)
+      settrigger(trigger + 1)
+    }
+    daoLoop()
   }, [trigger])
 
   return (
@@ -51,20 +60,7 @@ const Overview = () => {
                   <CardBody>
                     <Row>
                       <Col xs="12" md="5" lg="4">
-                        <h2>
-                          Claim rewards
-                          <i
-                            className="icon-small icon-info icon-dark ml-2"
-                            id="tooltipAddBase"
-                            role="button"
-                          />
-                          <UncontrolledTooltip
-                            placement="right"
-                            target="tooltipAddBase"
-                          >
-                            The quantity of & SPARTA you are adding to the pool.
-                          </UncontrolledTooltip>
-                        </h2>
+                        <h2>Claim rewards</h2>
                       </Col>
 
                       <Col xs="6" md="2" lg="2">
@@ -84,24 +80,26 @@ const Overview = () => {
                       <Col xs="6" md="2" lg="2">
                         <div className="card-text">DAO Weight:</div>
                         <div className="subtitle-amount d-none d-md-block">
-                          {daoVault.memberWeight > 0 &&
+                          {daoVault.memberDetails.weight > 0 &&
                             `${formatFromUnits(
-                              BN(daoVault.memberWeight.toString())
-                                .div(daoVault.daoTotalWeight.toString())
+                              BN(daoVault.memberDetails.weight)
+                                .div(daoVault.globalDetails.totalWeight)
                                 .times(100),
                             )}%`}
-                          {daoVault.memberWeight <= 0 && 'Not a DAO member'}
+                          {daoVault.memberDetails.weight <= 0 &&
+                            'Not a DAO member'}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-md-none">
                         <div className="subtitle-amount text-right">
-                          {daoVault.memberWeight > 0 &&
+                          {daoVault.memberDetails.weight > 0 &&
                             `${formatFromUnits(
-                              BN(daoVault.memberWeight.toString())
-                                .div(daoVault.daoTotalWeight.toString())
+                              BN(daoVault.memberDetails.weight)
+                                .div(daoVault.globalDetails.totalWeight)
                                 .times(100),
                             )}%`}
-                          {daoVault.memberWeight <= 0 && 'Not a DAO member'}
+                          {daoVault.memberDetails.weight <= 0 &&
+                            'Not a DAO member'}
                         </div>
                       </Col>
 

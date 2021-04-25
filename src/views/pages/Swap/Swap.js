@@ -69,23 +69,23 @@ const Swap = () => {
   )
 
   useEffect(() => {
-    const { finalLpArray } = poolFactory
+    const { poolDetails } = poolFactory
 
     const getAssetDetails = () => {
-      if (finalLpArray?.length > 0) {
+      if (poolDetails?.length > 0) {
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         const type1 = window.localStorage.getItem('assetType1')
         const type2 = window.localStorage.getItem('assetType2')
 
-        if (finalLpArray.find((asset) => asset.tokenAddress === assetParam1)) {
-          ;[asset1] = finalLpArray.filter(
+        if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+          ;[asset1] = poolDetails.filter(
             (asset) => asset.tokenAddress === assetParam1,
           )
           setAssetParam1('')
         }
-        if (finalLpArray.find((asset) => asset.tokenAddress === assetParam2)) {
-          ;[asset2] = finalLpArray.filter(
+        if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
+          ;[asset2] = poolDetails.filter(
             (asset) => asset.tokenAddress === assetParam2,
           )
           setAssetParam2('')
@@ -98,9 +98,9 @@ const Swap = () => {
           window.localStorage.setItem('assetType2', 'pool')
           if (asset2?.symbol === 'SPARTA') {
             asset2 =
-              asset1?.tokenAddress !== finalLpArray[1].tokenAddress
-                ? { tokenAddress: finalLpArray[1].tokenAddress }
-                : { tokenAddress: finalLpArray[2].tokenAddress }
+              asset1?.tokenAddress !== poolDetails[1].tokenAddress
+                ? { tokenAddress: poolDetails[1].tokenAddress }
+                : { tokenAddress: poolDetails[2].tokenAddress }
           }
         } else if (type1 === 'synth') {
           setFilter(['sparta'])
@@ -129,9 +129,9 @@ const Swap = () => {
 
         if (asset2?.tokenAddress === asset1?.tokenAddress) {
           asset2 =
-            asset1?.tokenAddress !== finalLpArray[1].tokenAddress
-              ? { tokenAddress: finalLpArray[1].tokenAddress }
-              : { tokenAddress: finalLpArray[2].tokenAddress }
+            asset1?.tokenAddress !== poolDetails[1].tokenAddress
+              ? { tokenAddress: poolDetails[1].tokenAddress }
+              : { tokenAddress: poolDetails[2].tokenAddress }
         }
 
         if (!asset1) {
@@ -142,8 +142,8 @@ const Swap = () => {
           asset2 = { tokenAddress: addr.bnb }
         }
 
-        asset1 = getItemFromArray(asset1, finalLpArray)
-        asset2 = getItemFromArray(asset2, finalLpArray)
+        asset1 = getItemFromArray(asset1, poolDetails)
+        asset2 = getItemFromArray(asset2, poolDetails)
 
         setAssetSwap1(asset1)
         setAssetSwap2(asset2)
@@ -157,8 +157,7 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     mode,
-    poolFactory.finalArray,
-    poolFactory.finalLpArray,
+    poolFactory.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,6 +167,9 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetType2'),
   ])
+
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -207,10 +209,10 @@ const Swap = () => {
       type = window.localStorage.getItem('assetType2')
     }
     if (type === 'token') {
-      return item.balanceTokens
+      return getToken(item.tokenAddress)?.balance
     }
     if (type === 'pool') {
-      return item.balanceLPs
+      return item.balance
     }
     if (type === 'synth') {
       return getSynth(item.tokenAddress)?.balance
@@ -219,14 +221,14 @@ const Swap = () => {
   }
 
   const getSwapOutput = () => {
-    if (assetSwap1?.symbol === 'SPARTA') {
+    if (assetSwap1?.tokenAddress === addr.sparta) {
       return calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
       )
     }
-    if (assetSwap2?.symbol === 'SPARTA') {
+    if (assetSwap2?.tokenAddress === addr.sparta) {
       return calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
@@ -245,7 +247,7 @@ const Swap = () => {
 
   const getSwapFee = () => {
     // Fee in SPARTA via fee in TOKEN (Swap from SPARTA)
-    if (assetSwap1?.symbol === 'SPARTA') {
+    if (assetSwap1?.tokenAddress === addr.sparta) {
       return calcValueInBase(
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
@@ -257,7 +259,7 @@ const Swap = () => {
       )
     }
     // Fee in SPARTA (Swap to SPARTA)
-    if (assetSwap2?.symbol === 'SPARTA') {
+    if (assetSwap2?.tokenAddress === addr.sparta) {
       return calcSwapFee(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
@@ -283,7 +285,7 @@ const Swap = () => {
   // Functions for SWAP input handling
 
   const handleInputChange = () => {
-    if (assetSwap1?.symbol === 'SPARTA') {
+    if (assetSwap1?.tokenAddress === addr.sparta) {
       if (swapInput1?.value) {
         swapInput2.value = convertFromWei(
           calcSwapOutput(
@@ -294,7 +296,7 @@ const Swap = () => {
           ),
         )
       }
-    } else if (assetSwap2?.symbol === 'SPARTA') {
+    } else if (assetSwap2?.tokenAddress === addr.sparta) {
       if (swapInput1?.value) {
         swapInput2.value = convertFromWei(
           calcSwapOutput(
@@ -563,7 +565,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {poolFactory.finalArray?.length > 0 && (
+        {poolFactory.poolDetails?.length > 0 && (
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
@@ -752,7 +754,7 @@ const Swap = () => {
                           <div className="output-card">
                             {swapInput1?.value &&
                               formatFromUnits(swapInput1?.value, 6)}{' '}
-                            {assetSwap1?.symbol}
+                            {getToken(assetSwap1.tokenAddress)?.symbol}
                           </div>
                         </Col>
                       </Row>
@@ -794,7 +796,7 @@ const Swap = () => {
                           <div className="subtitle-amount">
                             {swapInput1?.value &&
                               formatFromWei(getSwapOutput(), 6)}{' '}
-                            {assetSwap2?.symbol}
+                            {getToken(assetSwap2.tokenAddress)?.symbol}
                           </div>
                         </Col>
                       </Row>
@@ -812,7 +814,7 @@ const Swap = () => {
                           <div className="output-card">
                             {swapInput1?.value &&
                               formatFromUnits(swapInput1?.value, 6)}{' '}
-                            {assetSwap1?.symbol}-SPP
+                            {getToken(assetSwap1.tokenAddress)?.symbol}-SPP
                           </div>
                         </Col>
                       </Row>
@@ -853,8 +855,7 @@ const Swap = () => {
                           <div className="subtitle-amount">
                             {swapInput1?.value &&
                               formatFromWei(getZapOutput(), 6)}{' '}
-                            {assetSwap2?.symbol}
-                            -SPP
+                            {getToken(assetSwap2.tokenAddress)?.symbol}-SPP
                           </div>
                         </Col>
                       </Row>
@@ -872,8 +873,8 @@ const Swap = () => {
                           <div className="output-card">
                             {swapInput1?.value &&
                               formatFromUnits(swapInput1?.value, 6)}{' '}
-                            {assetSwap1?.symbol}
-                            {assetSwap1?.symbol !== 'SPARTA' && '-SPS'}
+                            {getToken(assetSwap1.tokenAddress)?.symbol}
+                            {assetSwap1?.tokenAddress !== addr.sparta && '-SPS'}
                           </div>
                         </Col>
                       </Row>
@@ -899,10 +900,10 @@ const Swap = () => {
                         <Col className="text-right">
                           <div className="output-card">
                             {swapInput1?.value &&
-                              assetSwap1?.symbol === 'SPARTA' &&
+                              assetSwap1?.tokenAddress === addr.sparta &&
                               formatFromWei(getSynthFeeFromBase(), 6)}
                             {swapInput1?.value &&
-                              assetSwap1?.symbol !== 'SPARTA' &&
+                              assetSwap1?.tokenAddress !== addr.sparta &&
                               formatFromWei(getSynthFeeToBase(), 6)}{' '}
                             SPARTA
                           </div>
@@ -916,12 +917,12 @@ const Swap = () => {
                         <Col className="text-right">
                           <div className="subtitle-amount">
                             {swapInput1?.value &&
-                              assetSwap1?.symbol === 'SPARTA' &&
+                              assetSwap1?.tokenAddress === addr.sparta &&
                               `${formatFromWei(getSynthOutputFromBase(), 10)} ${
-                                assetSwap2?.symbol
+                                getToken(assetSwap2.tokenAddress)?.symbol
                               }-SPP`}
                             {swapInput1?.value &&
-                              assetSwap1?.symbol !== 'SPARTA' &&
+                              assetSwap1?.tokenAddress !== addr.sparta &&
                               `${formatFromWei(getSynthOutputToBase(), 10)} ` +
                                 `SPARTA`}
                           </div>
@@ -980,7 +981,7 @@ const Swap = () => {
                           }
                           block
                         >
-                          Sell {assetSwap1?.symbol}-SPP
+                          Sell {getToken(assetSwap1.tokenAddress)?.symbol}-SPP
                         </Button>
                       </Col>
                     )}
@@ -1023,7 +1024,7 @@ const Swap = () => {
                             }
                             block
                           >
-                            Sell {assetSwap1?.symbol}-SPS
+                            Sell {getToken(assetSwap1.tokenAddress)?.symbol}-SPS
                           </Button>
                         </Col>
                       )}
@@ -1033,21 +1034,21 @@ const Swap = () => {
               <Col xs="12" xl="9">
                 <Row>
                   <Col xs="12" md="6">
-                    {poolFactory.finalLpArray &&
-                      assetSwap1.symbol !== 'SPARTA' && (
+                    {poolFactory.poolDetails &&
+                      assetSwap1.tokenAddress !== addr.sparta && (
                         <SwapPair
                           assetSwap={assetSwap1}
-                          finalLpArray={poolFactory.finalLpArray}
+                          poolDetails={poolFactory.poolDetails}
                           web3={web3}
                         />
                       )}
                   </Col>
                   <Col xs="12" md="6">
-                    {poolFactory.finalLpArray &&
-                      assetSwap2.symbol !== 'SPARTA' && (
+                    {poolFactory.poolDetails &&
+                      assetSwap2.tokenAddress !== addr.sparta && (
                         <SwapPair
                           assetSwap={assetSwap2}
-                          finalLpArray={poolFactory.finalLpArray}
+                          poolDetails={poolFactory.poolDetails}
                           web3={web3}
                         />
                       )}
@@ -1057,7 +1058,7 @@ const Swap = () => {
             </Row>
           </>
         )}
-        {!poolFactory.finalArray && (
+        {!poolFactory.poolDetails && (
           <div>
             <HelmetLoading height={300} width={300} />
           </div>

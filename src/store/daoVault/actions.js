@@ -6,35 +6,43 @@ export const daoVaultLoading = () => ({
   type: Types.DAOVAULT_LOADING,
 })
 
-// --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
+// --------------------------------------- DAO VAULT Calls ---------------------------------------
 
 /**
- * Returns the total weight in the DAO
- * @returns unit
+ * Get the global dao vault details
+ * @returns {object} totalWeight
  */
-export const getDaoVaultTotalWeight = () => async (dispatch) => {
+export const getDaoGlobalDetails = () => async (dispatch) => {
   dispatch(daoVaultLoading())
   const contract = getDaoVaultContract()
 
   try {
-    const daoTotalWeight = await contract.callStatic.totalWeight()
-    dispatch(payloadToDispatch(Types.GET_DAOVAULT_TOTAL_WEIGHT, daoTotalWeight))
+    let awaitArray = [contract.callStatic.totalWeight()]
+    awaitArray = await Promise.all(awaitArray)
+    const globalDetails = {
+      totalWeight: awaitArray[0].toString(),
+    }
+    dispatch(payloadToDispatch(Types.GLOBAL_DETAILS, globalDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAOVAULT_ERROR, error))
   }
 }
 
 /**
- * Returns the member's weight in the DAO
- * @returns unit
+ * Get the dao vault member details
+ * @returns {object} weight
  */
-export const getDaoVaultMemberWeight = (member) => async (dispatch) => {
+export const getDaoMemberDetails = (member) => async (dispatch) => {
   dispatch(daoVaultLoading())
   const contract = getDaoVaultContract()
 
   try {
-    const memberWeight = await contract.callStatic.getMemberWeight(member)
-    dispatch(payloadToDispatch(Types.GET_DAOVAULT_MEMBER_WEIGHT, memberWeight))
+    let awaitArray = [contract.callStatic.getMemberWeight(member)]
+    awaitArray = await Promise.all(awaitArray)
+    const memberDetails = {
+      weight: awaitArray[0].toString(),
+    }
+    dispatch(payloadToDispatch(Types.MEMBER_DETAILS, memberDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAOVAULT_ERROR, error))
   }

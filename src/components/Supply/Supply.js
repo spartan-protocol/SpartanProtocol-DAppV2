@@ -66,7 +66,7 @@ const Supply = () => {
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(
-                poolFactory.detailedArray.filter(
+                poolFactory.detailedArray?.filter(
                   (asset) => asset.symbol === 'SPARTA',
                 )[0]?.totalSupply,
                 0,
@@ -84,7 +84,7 @@ const Supply = () => {
             </Col>
             <Col xs="6" className="popover-text mb-2">
               {formatFromWei(
-                poolFactory.detailedArray.filter(
+                poolFactory.detailedArray?.filter(
                   (asset) => asset.symbol === 'SPARTA',
                 )[0]?.totalSupply,
                 0,

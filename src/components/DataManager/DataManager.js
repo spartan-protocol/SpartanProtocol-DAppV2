@@ -2,19 +2,14 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { getBondVaultMemberDetails } from '../../store/bondVault/actions'
-// import { getDaoHarvestAmount } from '../../store/dao/actions'
 import {
-  getDaoVaultMemberWeight,
-  getDaoVaultTotalWeight,
-} from '../../store/daoVault/actions'
-import {
+  getCuratedPools,
+  getListedPools,
+  getListedTokens,
+  getPoolDetails,
+  getTokenDetails,
   usePoolFactory,
-  getPoolFactoryTokenArray,
-  getPoolFactoryCuratedArray,
-  getPoolFactoryDetailedArray,
-  getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
-import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
 import { getSynthArray, getSynthDetails } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
 import {
@@ -23,7 +18,7 @@ import {
   getSpartaPrice,
   getEventArray,
 } from '../../store/web3'
-import { changeNetwork, getAddresses } from '../../utils/web3'
+import { changeNetwork } from '../../utils/web3'
 import {
   getBondContract,
   getDaoContract,
@@ -36,7 +31,6 @@ const DataManager = () => {
   const synth = useSynth()
   const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
-  const addr = getAddresses()
   const wallet = useWallet()
   const [prevNetwork, setPrevNetwork] = useState(
     JSON.parse(window.localStorage.getItem('network')),
@@ -51,16 +45,14 @@ const DataManager = () => {
         changeNetwork(prevNetwork.net)
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-        dispatch(getPoolFactoryTokenArray(addr.wbnb, addr.sparta)) // TOKEN ARRAY
-        dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        // dispatch(getSynthArray()) // SYNTH ARRAY
+        dispatch(getListedTokens()) // TOKEN ARRAY
+        dispatch(getCuratedPools()) // CURATED ARRAY
       } else {
         changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-        dispatch(getPoolFactoryTokenArray(addr.wbnb, addr.sparta)) // TOKEN ARRAY
-        dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        // dispatch(getSynthArray()) // SYNTH ARRAY
+        dispatch(getListedTokens()) // TOKEN ARRAY
+        dispatch(getCuratedPools()) // CURATED ARRAY
       }
     }
     checkNetwork()
@@ -69,31 +61,19 @@ const DataManager = () => {
 
   /**
    * Check SPARTA token price
-   * We should change this to use 'await' of a Promise (Pause) instead to avoid overlapping calls
    */
+  const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (trigger1 === 0) {
       dispatch(getSpartaPrice())
-      dispatch(getDaoVaultTotalWeight())
-    }, 7500)
-    return () => clearInterval(interval)
+    }
+    const timer = setTimeout(() => {
+      dispatch(getSpartaPrice())
+      settrigger1(trigger1 + 1)
+    }, 10000)
+    return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  /**
-   * Check DAO member weight & harvestable on interval timer
-   * We should change this to use 'await' of a Promise (Pause) instead to avoid overlapping calls
-   */
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (wallet.account) {
-        dispatch(getDaoVaultMemberWeight(wallet.account))
-        // dispatch(getDaoHarvestAmount(wallet.account)) // ONLY IF WEIGHT > 0
-      }
-    }, 7500)
-    return () => clearInterval(interval)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet.account])
+  }, [trigger1])
 
   /**
    * Trigger array refresh on network change
@@ -105,9 +85,8 @@ const DataManager = () => {
         prevNetwork.net
       ) {
         setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
-        dispatch(getPoolFactoryTokenArray(addr.wbnb, addr.sparta)) // TOKEN ARRAY
-        dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
-        // dispatch(getSynthArray()) // SYNTH ARRAY
+        dispatch(getListedTokens()) // TOKEN ARRAY
+        dispatch(getCuratedPools()) // CURATED ARRAY
       }
     }
     checkArrays()
@@ -115,67 +94,62 @@ const DataManager = () => {
   }, [window.localStorage.getItem('network')])
 
   /**
-   * Interval timer trigger to update arrays
+   * Update synthArray & tokenDetails
    */
-  const [arrayTrigger, setArrayTrigger] = useState(0)
+  const [trigger2, settrigger2] = useState(0)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setArrayTrigger(arrayTrigger + 1)
+    const { listedTokens } = poolFactory
+    if (trigger2 === 0) {
+      dispatch(getSynthArray(listedTokens))
+      dispatch(getTokenDetails(listedTokens, wallet.account))
+    }
+    const timer = setTimeout(() => {
+      if (listedTokens.length > 0) {
+        dispatch(getSynthArray(listedTokens))
+        dispatch(getTokenDetails(listedTokens, wallet.account))
+        settrigger2(trigger2 + 1)
+      }
     }, 10000)
-    return () => clearInterval(interval)
-  }, [arrayTrigger])
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poolFactory.listedTokens, wallet.account, trigger2])
 
   /**
-   * Update Detailed Array
+   * Get listed pools details
    */
   useEffect(() => {
-    const { tokenArray } = poolFactory
-    if (tokenArray.length > 0) {
-      dispatch(getSynthArray(tokenArray)) // SYNTH ARRAY
-      dispatch(getPoolFactoryDetailedArray(tokenArray, wallet.account))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenArray, wallet.account, arrayTrigger])
-
-  /**
-   * Update Final Array (Not actually final :) )
-   */
-  // const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
-  useEffect(() => {
-    const { detailedArray } = poolFactory
-    const { curatedPoolArray } = poolFactory
-    const { synthArray } = synth
-    const checkFinalArray = () => {
-      if (detailedArray.length > 0) {
-        dispatch(
-          getPoolFactoryFinalArray(detailedArray, curatedPoolArray, synthArray),
-        )
-      }
-      if (synth.synthArray?.length > 0) {
-        dispatch(getSynthDetails(synth.synthArray, wallet.account))
+    const { tokenDetails } = poolFactory
+    const { curatedPools } = poolFactory
+    const checkListedPools = () => {
+      if (tokenDetails.length > 0) {
+        dispatch(getListedPools(tokenDetails, curatedPools))
       }
     }
-    checkFinalArray()
+    checkListedPools()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.detailedArray])
+  }, [poolFactory.tokenDetails])
 
   const [prevFinalLpArray, setPrevFinalLpArray] = useState(
     poolFactory.finalLpArray,
   )
 
   /**
-   * Update Final LP Array
+   * Get final pool details
    */
   useEffect(() => {
-    const { finalArray } = poolFactory
-    const checkFinalArrayForLP = () => {
-      if (finalArray?.length > 0) {
-        dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
+    const { listedPools } = poolFactory
+    const { synthArray } = synth
+    const checkDetails = () => {
+      if (listedPools?.length > 0) {
+        dispatch(getPoolDetails(listedPools, wallet.account))
+      }
+      if (synthArray?.length > 0 && listedPools?.length > 0) {
+        dispatch(getSynthDetails(synthArray, listedPools, wallet.account))
       }
     }
-    checkFinalArrayForLP()
+    checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.finalArray])
+  }, [poolFactory.listedPools])
 
   /**
    * Update bondVault member details

@@ -6,9 +6,7 @@ import {
   getUtilsContract,
   getRouterContract,
   getDaoVaultContract,
-  getSynthContract,
   getBondVaultContract,
-  getSynthVaultContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
@@ -23,32 +21,13 @@ export const poolFactoryFinalArrayLoading = () => ({
 })
 
 /**
- * Get address of pool via token address
- * @param {address} tokenAddr
- * @returns {address} poolAddr
- */
-export const getPoolFactoryPool = (tokenAddr) => async (dispatch) => {
-  dispatch(poolFactoryLoading())
-  const contract = getPoolFactoryContract()
-
-  try {
-    const poolAddr = await contract.callStatic.getPool(tokenAddr)
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_POOL, poolAddr))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-  }
-}
-
-/**
  * Get array of all listed token addresses
- * @param {address} wbnbAddr
  * @returns {array} tokenArray
  */
-export const getPoolFactoryTokenArray = (wbnbAddr, spartaAddr) => async (
-  dispatch,
-) => {
+export const getListedTokens = () => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getPoolFactoryContract()
+  const addr = getAddresses()
 
   try {
     const tokenCount = await contract.callStatic.tokenCount()
@@ -56,12 +35,12 @@ export const getPoolFactoryTokenArray = (wbnbAddr, spartaAddr) => async (
     for (let i = 0; i < tokenCount; i++) {
       tempArray.push(contract.callStatic.getToken(i))
     }
-    const tokenArray = await Promise.all(tempArray)
-    const wbnbIndex = tokenArray.findIndex((i) => i === wbnbAddr)
+    const listedTokens = await Promise.all(tempArray)
+    const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
     if (wbnbIndex > -1)
-      tokenArray[wbnbIndex] = '0x0000000000000000000000000000000000000000'
-    tokenArray.push(spartaAddr)
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_TOKEN_ARRAY, tokenArray))
+      listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
+    listedTokens.push(addr.sparta)
+    dispatch(payloadToDispatch(Types.LISTED_TOKENS, listedTokens))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }
@@ -71,7 +50,7 @@ export const getPoolFactoryTokenArray = (wbnbAddr, spartaAddr) => async (
  * Get array of curated pool addresses
  * @returns {array} curatedPoolArray
  */
-export const getPoolFactoryCuratedArray = () => async (dispatch) => {
+export const getCuratedPools = () => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getPoolFactoryContract()
 
@@ -81,23 +60,19 @@ export const getPoolFactoryCuratedArray = () => async (dispatch) => {
     for (let i = 0; i < curatedPoolCount; i++) {
       tempArray.push(contract.callStatic.getCuratedPool(i))
     }
-    const curatedPoolArray = await Promise.all(tempArray)
-    dispatch(
-      payloadToDispatch(Types.POOLFACTORY_GET_CURATED_ARRAY, curatedPoolArray),
-    )
+    const curatedPools = await Promise.all(tempArray)
+    dispatch(payloadToDispatch(Types.CURATED_POOLS, curatedPools))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }
 }
 
 /**
- * Get detailed array of token/pool information
- * @param {array} poolArray
- * @returns {array} detailedArray
+ * Get detailed array of token information
+ * @param {array} tokenArray
+ * @returns {array} tokenDetails
  */
-export const getPoolFactoryDetailedArray = (tokenArray, wallet) => async (
-  dispatch,
-) => {
+export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
   const addr = getAddresses()
@@ -107,111 +82,89 @@ export const getPoolFactoryDetailedArray = (tokenArray, wallet) => async (
 
   try {
     const tempArray = await Promise.all(
-      tokenArray.map((i) =>
+      listedTokens.map((i) =>
         contract.callStatic.getTokenDetailsWithMember(
           i,
           wallet !== null ? wallet : addr.bnb,
         ),
       ),
     )
-    const detailedArray = []
-    for (let i = 0; i < tokenArray.length; i++) {
-      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${tokenArray[i]}/logo.png`
+    const tokenDetails = []
+    for (let i = 0; i < listedTokens.length; i++) {
+      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
       const tempItem = {
-        // Layer1 Asset Details
-        tokenAddress: tokenArray[i],
+        address: listedTokens[i],
         balanceTokens: wallet !== null ? tempArray[i].balance.toString() : '0',
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
         totalSupply: tempArray[i].totalSupply.toString(),
-        curated: '',
-        // symbolUrl: listedTokensTN.filter(
-        //   (asset) => asset.address === tokenArray[i],
-        // )[0].icon,
         symbolUrl:
-          trustWalletIndex.data.filter((asset) => asset === tokenArray[i])
+          trustWalletIndex.data.filter((asset) => asset === listedTokens[i])
             .length > 0
             ? url
             : fallbackImg,
-        // SP-pTOKEN Details
-        poolAddress: '',
-        balanceLPs: '0',
-        stakedLPs: '0',
-        baseAmount: '',
-        tokenAmount: '',
-        poolUnits: '',
-        recentFees: '',
-        lastMonthFees: '',
-        recentDivis: '',
-        lastMonthDivis: '',
-        genesis: '',
-        // SP-sTOKEN Details
-        synthAddress: false,
-        balanceSynths: '',
-        stakedSynths: '',
-        synthLpBalance: '',
-        synthLpDebt: '',
-        // Bond Details
-        bondMember: false,
-        bondedLPs: '0',
-        bondClaimRate: '0',
-        bondLastClaim: '0',
       }
-      detailedArray.push(tempItem)
+      tokenDetails.push(tempItem)
     }
-    dispatch(
-      payloadToDispatch(Types.POOLFACTORY_GET_DETAILED_ARRAY, detailedArray),
-    )
+    dispatch(payloadToDispatch(Types.TOKEN_DETAILS, tokenDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }
 }
 
 /**
- * Get finalised/useable array of token/pool information
- * @param {array} detailedArray
+ * Get LP token addresses and setup the object
+ * @param {array} tokenDetails
  * @param {array} curatedArray
- * @returns {array} finalArray
+ * @returns {array} listedPools
  */
-export const getPoolFactoryFinalArray = (
-  detailedArray,
-  curatedArray,
-  synthArray,
-) => async (dispatch) => {
+export const getListedPools = (tokenDetails, curatedArray) => async (
+  dispatch,
+) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
-
+  const addr = getAddresses()
   try {
-    const tempArray = await Promise.all(
-      detailedArray.map((i) =>
-        i.symbol === 'SPARTA'
-          ? {
-              genesis: '0',
-              baseAmount: '0',
-              tokenAmount: '0',
-              poolUnits: '0',
-            }
-          : contract.callStatic.getPoolData(i.tokenAddress),
-      ),
-    )
-    const finalArray = detailedArray
-    for (let i = 0; i < detailedArray.length; i++) {
-      const synthAddr =
-        synthArray?.length > 0 &&
-        synthArray?.filter(
-          (synth) => synth.tokenAddress === detailedArray[i].tokenAddress,
-        )[0]?.Address
-      finalArray[i].poolAddress = tempArray[i].poolAddress
-      finalArray[i].genesis = tempArray[i].genesis.toString()
-      finalArray[i].baseAmount = tempArray[i].baseAmount.toString()
-      finalArray[i].tokenAmount = tempArray[i].tokenAmount.toString()
-      finalArray[i].poolUnits = tempArray[i].poolUnits.toString()
-      finalArray[i].curated =
-        curatedArray.find((item) => item === tempArray[i].poolAddress) > 0
-      finalArray[i].synthAddress = synthAddr || false
+    let tempArray = []
+    for (let i = 0; i < tokenDetails.length; i++) {
+      if (tokenDetails[i].address === addr.sparta) {
+        tempArray.push({
+          poolAddress: '',
+          baseAmount: '0',
+          tokenAmount: '0',
+          poolUnits: '0',
+          genesis: '0',
+        })
+      } else {
+        tempArray.push(contract.callStatic.getPoolData(tokenDetails[i].address))
+      }
     }
-    dispatch(payloadToDispatch(Types.POOLFACTORY_GET_FINAL_ARRAY, finalArray))
+    tempArray = await Promise.all(tempArray)
+    const listedPools = []
+    for (let i = 0; i < tempArray.length; i++) {
+      listedPools.push({
+        tokenAddress: tokenDetails[i].address,
+        address: tempArray[i].poolAddress,
+        curated:
+          curatedArray.find((item) => item === tempArray[i].poolAddress) > 0,
+        balance: '0',
+        staked: '0',
+        bonded: '0',
+        baseAmount: tempArray[i].baseAmount.toString(),
+        tokenAmount: tempArray[i].tokenAmount.toString(),
+        poolUnits: tempArray[i].poolUnits.toString(),
+        recentFees: '0',
+        lastMonthFees: '0',
+        recentDivis: '0',
+        lastMonthDivis: '0',
+        genesis: tempArray[i].genesis.toString(),
+        bondMember: false,
+        bondClaimRate: '0',
+        bondLastClaim: '0',
+      })
+    }
+    dispatch(payloadToDispatch(Types.LISTED_POOLS, listedPools))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error} `))
   }
@@ -219,98 +172,61 @@ export const getPoolFactoryFinalArray = (
 
 /**
  * Add LP holdings to final array (maybe add the other LP calls here too?)
- * @param {array} finalArray
- * @returns {array} finalLpArray
+ * @param {array} listedPools
+ * @param {array} wallet
+ * @returns {array} poolDetails
  */
-export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
-  dispatch,
-) => {
+export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
   dispatch(poolFactoryFinalArrayLoading())
+  const addr = getAddresses()
 
   try {
     let tempArray = []
-    for (let i = 0; i < finalArray.length; i++) {
+    for (let i = 0; i < listedPools.length; i++) {
       const routerContract = getRouterContract()
       const daoVaultContract = getDaoVaultContract()
       const bondVaultContract = getBondVaultContract()
       const poolContract =
-        finalArray[i].symbol === 'SPARTA'
+        listedPools[i].tokenAddress === addr.sparta
           ? null
-          : getPoolContract(finalArray[i].poolAddress)
-      const synthContract =
-        finalArray[i].synthAddress === false
-          ? null
-          : getSynthContract(finalArray[i].synthAddress)
-      const synthVaultContract =
-        finalArray[i].synthAddress === false
-          ? null
-          : getSynthVaultContract(finalArray[i].synthAddress)
+          : getPoolContract(listedPools[i].address)
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA'
+        listedPools[i].tokenAddress === addr.sparta || wallet === null
           ? '0'
-          : routerContract.callStatic.currentPoolRevenue(
-              finalArray[i].poolAddress,
-            ),
-      )
+          : poolContract.callStatic.balanceOf(wallet),
+      ) // balance
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA'
+        listedPools[i].tokenAddress === addr.sparta || wallet === null
           ? '0'
-          : routerContract.callStatic.pastPoolRevenue(
-              finalArray[i].poolAddress,
+          : daoVaultContract.callStatic.getMemberPoolBalance(
+              listedPools[i].address,
+              wallet,
             ),
-      )
+      ) // staked
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA'
+        listedPools[i].tokenAddress === addr.sparta
           ? '0'
           : poolContract.callStatic.map30DPoolRevenue(),
-      )
+      ) // recentFees
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA'
+        listedPools[i].tokenAddress === addr.sparta
           ? '0'
           : poolContract.callStatic.mapPast30DPoolRevenue(),
-      )
+      ) // lastMonthFees
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA' || walletAddress === null
+        listedPools[i].tokenAddress === addr.sparta
           ? '0'
-          : poolContract.callStatic.balanceOf(walletAddress),
-      )
-      tempArray.push(
-        finalArray[i].symbol === 'SPARTA' || walletAddress === null
-          ? '0'
-          : daoVaultContract.callStatic.mapMemberPool_balance(
-              walletAddress,
-              finalArray[i].poolAddress,
+          : routerContract.callStatic.currentPoolRevenue(
+              listedPools[i].address,
             ),
-      )
+      ) // recentDivis
       tempArray.push(
-        finalArray[i].synthAddress === false || walletAddress === null
+        listedPools[i].tokenAddress === addr.sparta
           ? '0'
-          : synthContract.callStatic.balanceOf(walletAddress),
-      )
+          : routerContract.callStatic.pastPoolRevenue(listedPools[i].address),
+      ) // lastMonthDivis
       tempArray.push(
-        finalArray[i].synthAddress === false || walletAddress === null
-          ? '0'
-          : synthVaultContract.callStatic.getMemberDeposit(
-              finalArray[i].synthAddress,
-              walletAddress,
-            ),
-      )
-      tempArray.push(
-        finalArray[i].synthAddress === false
-          ? '0'
-          : synthContract.callStatic.getmapAddress_LPBalance(
-              finalArray[i].poolAddress,
-            ),
-      )
-      tempArray.push(
-        finalArray[i].synthAddress === false
-          ? '0'
-          : synthContract.callStatic.getmapAddress_LPDebt(
-              finalArray[i].poolAddress,
-            ),
-      )
-      tempArray.push(
-        finalArray[i].symbol === 'SPARTA' || walletAddress === null
+        listedPools[i].tokenAddress === addr.sparta || wallet === null
           ? {
               isMember: false,
               bondedLP: '0',
@@ -318,38 +234,30 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
               lastBlockTime: '0',
             }
           : bondVaultContract.callStatic.getMemberDetails(
-              walletAddress,
-              finalArray[i].tokenAddress,
+              wallet,
+              listedPools[i].tokenAddress,
             ),
-      )
+      ) // bondDetails - bondMember, bondClaimRate, bondLastClaim
     }
     tempArray = await Promise.all(tempArray)
-    const finalLpArray = finalArray
-    const varCount = 11
+    const poolDetails = listedPools
+    const varCount = 7
     for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
-      const bondDetails = tempArray[i + 10]
-      finalLpArray[i / varCount].recentDivis = tempArray[i].toString()
-      finalLpArray[i / varCount].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / varCount].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / varCount].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / varCount].balanceLPs = tempArray[i + 4].toString()
-      finalLpArray[i / varCount].stakedLPs = tempArray[i + 5].toString()
-      finalLpArray[i / varCount].balanceSynths = tempArray[i + 6].toString()
-      finalLpArray[i / varCount].stakedSynths = tempArray[i + 7].toString()
-      finalLpArray[i / varCount].synthLpBalance = tempArray[i + 8].toString()
-      finalLpArray[i / varCount].synthLpDebt = tempArray[i + 9].toString()
-      finalLpArray[i / varCount].bondMember = bondDetails.isMember
-      finalLpArray[i / varCount].bondedLPs = bondDetails.bondedLP.toString()
-      finalLpArray[
-        i / varCount
-      ].bondClaimRate = bondDetails.claimRate.toString()
-      finalLpArray[
+      const bondDetails = tempArray[i + 6]
+      poolDetails[i / varCount].balance = tempArray[i].toString()
+      poolDetails[i / varCount].staked = tempArray[i + 1].toString()
+      poolDetails[i / varCount].bonded = bondDetails.bondedLP.toString()
+      poolDetails[i / varCount].recentFees = tempArray[i + 2].toString()
+      poolDetails[i / varCount].lastMonthFees = tempArray[i + 3].toString()
+      poolDetails[i / varCount].recentDivis = tempArray[i + 4].toString()
+      poolDetails[i / varCount].lastMonthDivis = tempArray[i + 5].toString()
+      poolDetails[i / varCount].bondMember = bondDetails.isMember
+      poolDetails[i / varCount].bondClaimRate = bondDetails.claimRate.toString()
+      poolDetails[
         i / varCount
       ].bondLastClaim = bondDetails.lastBlockTime.toString()
     }
-    dispatch(
-      payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),
-    )
+    dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }

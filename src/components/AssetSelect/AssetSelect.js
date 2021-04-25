@@ -26,6 +26,7 @@ import ShareLink from '../Share/ShareLink'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth/selector'
+import { getAddresses } from '../../utils/web3'
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
  * depending on the 'priority' prop handed over.
@@ -36,6 +37,7 @@ import { useSynth } from '../../store/synth/selector'
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
+  const addr = getAddresses()
   const synth = useSynth()
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -59,7 +61,7 @@ const AssetSelect = (props) => {
   }
 
   const addSelection = (asset) => {
-    const tempAsset = poolFactory.finalLpArray.filter(
+    const tempAsset = poolFactory.poolDetails.filter(
       (i) => i.tokenAddress === asset.address,
     )
     window.localStorage.setItem(
@@ -88,14 +90,17 @@ const AssetSelect = (props) => {
 
   const [assetArray, setAssetArray] = useState([])
 
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   useEffect(() => {
     let finalArray = []
     const getArray = () => {
-      if (poolFactory.finalLpArray) {
-        let tempArray = poolFactory.finalLpArray
+      if (poolFactory.poolDetails) {
+        let tempArray = poolFactory.poolDetails
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
@@ -114,20 +119,22 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].symbol === 'SPARTA') {
+            if (tempArray[i].tokenAddress === addr.sparta) {
               finalArray.push({
                 type: 'token',
                 icon: (
                   <img
                     height="35px"
-                    src={tempArray[i].symbolUrl}
-                    alt={`${tempArray[i].symbol} asset icon`}
+                    src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                    alt={`${
+                      getToken(tempArray[i].tokenAddress)?.symbol
+                    } asset icon`}
                     className="mr-1"
                   />
                 ),
-                iconUrl: tempArray[i].symbolUrl,
-                symbol: tempArray[i].symbol,
-                balance: tempArray[i].balanceTokens,
+                iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
+                symbol: getToken(tempArray[i].tokenAddress)?.symbol,
+                balance: getToken(tempArray[i].tokenAddress)?.balance,
                 address: tempArray[i].tokenAddress,
                 actualAddr: tempArray[i].tokenAddress,
               })
@@ -141,14 +148,16 @@ const AssetSelect = (props) => {
               icon: (
                 <img
                   height="35px"
-                  src={tempArray[i].symbolUrl}
-                  alt={`${tempArray[i].symbol} asset icon`}
+                  src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                  alt={`${
+                    getToken(tempArray[i].tokenAddress)?.symbol
+                  } asset icon`}
                   className="mr-1"
                 />
               ),
-              iconUrl: tempArray[i].symbolUrl,
-              symbol: tempArray[i].symbol,
-              balance: tempArray[i].balanceTokens,
+              iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
+              symbol: getToken(tempArray[i].tokenAddress)?.symbol,
+              balance: getToken(tempArray[i].tokenAddress)?.balance,
               address: tempArray[i].tokenAddress,
               actualAddr: tempArray[i].tokenAddress,
             })
@@ -156,57 +165,65 @@ const AssetSelect = (props) => {
 
           // Add LP token to array
           if (props.filter?.includes('pool')) {
-            if (tempArray[i].poolAddress) {
+            if (tempArray[i].address) {
               finalArray.push({
                 type: 'pool',
                 icon: (
                   <>
                     <img
                       height="35px"
-                      src={tempArray[i].symbolUrl}
-                      alt={`${tempArray[i].symbol} LP token icon`}
+                      src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                      alt={`${
+                        getToken(tempArray[i].tokenAddress)?.symbol
+                      } LP token icon`}
                       className="mr-n3"
                     />
                     <img
                       height="20px"
                       src={spartaIcon}
-                      alt={`${tempArray[i].symbol} LP token icon`}
+                      alt={`${
+                        getToken(tempArray[i].tokenAddress)?.symbol
+                      } LP token icon`}
                       className="mr-2 mt-3"
                     />
                   </>
                 ),
-                iconUrl: tempArray[i].symbolUrl,
-                symbol: `${tempArray[i].symbol}-SPP`,
-                balance: tempArray[i].balanceLPs,
+                iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
+                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}-SPP`,
+                balance: tempArray[i].balance,
                 address: tempArray[i].tokenAddress,
-                actualAddr: tempArray[i].poolAddress,
+                actualAddr: tempArray[i].address,
               })
             }
           }
 
           // Add synth to array
           if (props.filter?.includes('synth')) {
-            if (getSynth(tempArray[i].tokenAddress).address !== false) {
+            if (getSynth(tempArray[i].tokenAddress)?.address !== false) {
               finalArray.push({
                 type: 'synth',
-                iconUrl: tempArray[i].symbolUrl,
+                iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
                 icon: (
                   <>
                     <img
                       height="35px"
-                      src={tempArray[i].symbolUrl}
-                      alt={`${tempArray[i].symbol} synth icon`}
+                      src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                      alt={`${
+                        getToken(tempArray[i].tokenAddress)?.symbol
+                      } synth icon`}
                       className="mr-n3"
                     />
                     <img
                       height="20px"
                       src={spartaIconAlt}
-                      alt={`${tempArray[i].symbol} synth icon`}
+                      alt={`${
+                        getToken(tempArray[i].tokenAddress)?.symbol
+                      } synth icon`}
                       className="mr-2 mt-3"
                     />
                   </>
                 ),
-                symbol: `${tempArray[i].symbol}-SPS`,
+                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}-SPS`,
                 balance: getSynth(tempArray[i].tokenAddress)?.balance,
                 address: tempArray[i].tokenAddress,
                 actualAddr: getSynth(tempArray[i].tokenAddress)?.address,
@@ -227,7 +244,7 @@ const AssetSelect = (props) => {
     }
     getArray()
   }, [
-    poolFactory.finalLpArray,
+    poolFactory.poolDetails,
     props.blackList,
     props.filter,
     props.whiteList,
@@ -419,7 +436,7 @@ const AssetSelect = (props) => {
           </Row>
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <Row key={asset.symbol} className="mb-3 output-card mr-2">
+              <Row key={asset.actualAddr} className="mb-3 output-card mr-2">
                 <Col xs="4" sm="2" className="p-0 pl-2">
                   <div
                     role="button"
@@ -492,7 +509,7 @@ const AssetSelect = (props) => {
             assetArray
               .filter((asset) => asset.type === activeTab)
               .map((asset) => (
-                <Row key={asset.symbol} className="mb-3 output-card mr-2">
+                <Row key={asset.actualAddr} className="mb-3 output-card mr-2">
                   <Col xs="4" sm="2" className="p-0 pl-2">
                     <div
                       role="button"
