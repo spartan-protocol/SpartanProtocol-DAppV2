@@ -273,9 +273,11 @@ export const getPoolFactoryFinalArray = (
     )
     const finalArray = detailedArray
     for (let i = 0; i < detailedArray.length; i++) {
-      const synthAddr = synthArray.filter(
-        (synth) => synth.tokenAddress === detailedArray[i].tokenAddress,
-      )[0]?.synthAddress
+      const synthAddr =
+        synthArray?.length > 0 &&
+        synthArray?.filter(
+          (synth) => synth.tokenAddress === detailedArray[i].tokenAddress,
+        )[0]?.Address
       finalArray[i].poolAddress = tempArray[i].poolAddress
       finalArray[i].genesis = tempArray[i].genesis.toString()
       finalArray[i].baseAmount = tempArray[i].baseAmount.toString()
@@ -344,12 +346,12 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
           : poolContract.callStatic.mapPast30DPoolRevenue(),
       )
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA' || !walletAddress
+        finalArray[i].symbol === 'SPARTA' || walletAddress === null
           ? '0'
           : poolContract.callStatic.balanceOf(walletAddress),
       )
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA' || !walletAddress
+        finalArray[i].symbol === 'SPARTA' || walletAddress === null
           ? '0'
           : daoVaultContract.callStatic.mapMemberPool_balance(
               walletAddress,
@@ -357,12 +359,12 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
             ),
       )
       tempArray.push(
-        finalArray[i].synthAddress === false || !walletAddress
+        finalArray[i].synthAddress === false || walletAddress === null
           ? '0'
           : synthContract.callStatic.balanceOf(walletAddress),
       )
       tempArray.push(
-        finalArray[i].synthAddress === false || !walletAddress
+        finalArray[i].synthAddress === false || walletAddress === null
           ? '0'
           : synthVaultContract.callStatic.getMemberDeposit(
               finalArray[i].synthAddress,
@@ -384,7 +386,7 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
             ),
       )
       tempArray.push(
-        finalArray[i].symbol === 'SPARTA' || !walletAddress
+        finalArray[i].symbol === 'SPARTA' || walletAddress === null
           ? {
               isMember: false,
               bondedLP: '0',

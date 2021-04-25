@@ -20,32 +20,30 @@ const Stake = () => {
     return date.toLocaleDateString()
   }
 
-  const getLastHarvestDate = (tokenAddress) => {
-    if (synth.synthArrayFinal.length > 0) {
-      return formatDate(
-        synth.synthArrayFinal.filter((i) => i.tokenAddress === tokenAddress)[0]
-          ?.lastHarvest,
-      )
+  const getAsset = (tokenAddress) => {
+    if (poolFactory.finalLpArray.length > 0) {
+      return poolFactory.finalLpArray.filter(
+        (i) => i.tokenAddress === tokenAddress,
+      )[0]
     }
     return '0'
   }
 
+  // CREATE FUNCTION TO calcCurrentReward in plain-js
+  // MIGHT NEED SOME EXTRA GLOBAL DETAILS / MAPPINGS FIRST!
+
   return (
     <>
       <Row>
-        {!poolFactory.finalLpArray && (
-          <HelmetLoading height="300px" width="300px" />
-        )}
-        {poolFactory.finalLpArray &&
-          poolFactory.finalLpArray
-            .filter((i) => i.curated === true)
+        {!synth.synthDetails && <HelmetLoading height="300px" width="300px" />}
+        {synth.synthDetails?.length > 0 &&
+          synth.synthDetails
             .sort(
               (a, b) =>
-                BN(b.balanceSynths).plus(b.stakedSynths) -
-                BN(a.balanceSynths).plus(a.stakedSynths),
+                BN(b.balance).plus(b.staked) - BN(a.balance).plus(a.staked),
             )
             .map((asset) => (
-              <Col xs="12" lg="6" key={asset.tokenAddress}>
+              <Col xs="12" lg="6" key={asset.address}>
                 <Card
                   className="card-body"
                   style={{ backgroundColor: '#1D171F' }}
@@ -57,8 +55,8 @@ const Stake = () => {
                           <Col xs="auto" className="pr-0">
                             <img
                               height="45px"
-                              src={asset.symbolUrl}
-                              alt={asset.name}
+                              src={getAsset(asset.tokenAddress).symbolUrl}
+                              alt={getAsset(asset.tokenAddress).name}
                               className="mr-n3"
                             />
                             <img
@@ -70,7 +68,7 @@ const Stake = () => {
                           </Col>
                           <Col>
                             <h3 className="d-inline">
-                              {asset.symbol}-SPS
+                              {getAsset(asset.tokenAddress).symbol}-SPS
                               <br />
                             </h3>
                             Buy / Swap
@@ -83,7 +81,7 @@ const Stake = () => {
                                 )
                                 window.localStorage.setItem(
                                   'assetSelected1',
-                                  JSON.stringify(asset),
+                                  JSON.stringify(getAsset(asset.tokenAddress)),
                                 )
                               }}
                             >
@@ -96,24 +94,24 @@ const Stake = () => {
                       <Col xs="6" sm="3">
                         <div className="card-text">Staked</div>
                         <div className="subtitle-amount d-none d-sm-block">
-                          {formatFromWei(asset.stakedSynths)}
+                          {formatFromWei(asset.staked)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-sm-none">
                         <div className="subtitle-amount text-right">
-                          {formatFromWei(asset.stakedSynths)}
+                          {formatFromWei(asset.staked)}
                         </div>
                       </Col>
 
                       <Col xs="6" sm="3">
                         <div className="card-text">Wallet</div>
                         <div className="subtitle-amount d-none d-sm-block">
-                          {formatFromWei(asset.balanceSynths)}
+                          {formatFromWei(asset.balance)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-sm-none">
                         <div className="subtitle-amount text-right">
-                          {formatFromWei(asset.balanceSynths)}
+                          {formatFromWei(asset.balance)}
                         </div>
                       </Col>
 
@@ -132,12 +130,12 @@ const Stake = () => {
                       <Col xs="6" sm="3">
                         <div className="card-text">Last Harvest</div>
                         <div className="subtitle-amount d-none d-sm-block">
-                          {getLastHarvestDate(asset.tokenAddress)}
+                          {formatDate(asset.lastHarvest)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-sm-none">
                         <div className="subtitle-amount text-right">
-                          {getLastHarvestDate(asset.tokenAddress)}
+                          {formatDate(asset.lastHarvest)}
                         </div>
                       </Col>
 

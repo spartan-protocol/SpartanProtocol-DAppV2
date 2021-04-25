@@ -23,7 +23,6 @@ import {
   getSpartaPrice,
   getEventArray,
 } from '../../store/web3'
-// import { usePrevious } from '../../utils/helpers'
 import { changeNetwork, getAddresses } from '../../utils/web3'
 import {
   getBondContract,
@@ -147,7 +146,7 @@ const DataManager = () => {
   /**
    * Update Final Array (Not actually final :) )
    */
-  const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
+  // const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
   useEffect(() => {
     const { detailedArray } = poolFactory
     const { curatedPoolArray } = poolFactory
@@ -157,7 +156,7 @@ const DataManager = () => {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, curatedPoolArray, synthArray),
         )
-        setPrevFinalArray(poolFactory.finalArray)
+        // setPrevFinalArray(poolFactory.finalArray)
       }
     }
     checkFinalArray()
@@ -174,7 +173,7 @@ const DataManager = () => {
   useEffect(() => {
     const { finalArray } = poolFactory
     const checkFinalArrayForLP = () => {
-      if (finalArray !== prevFinalArray && finalArray?.length > 0) {
+      if (finalArray?.length > 0) {
         dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
         setPrevFinalLpArray(poolFactory.finalLpArray)
       }
@@ -189,7 +188,7 @@ const DataManager = () => {
   useEffect(() => {
     const { finalLpArray } = poolFactory
     const checkBondArray = () => {
-      if (finalLpArray !== prevFinalLpArray && finalLpArray?.length > 0) {
+      if (finalLpArray?.length > 0) {
         dispatch(getBondVaultMemberDetails(wallet.account, finalLpArray))
         setPrevFinalLpArray(poolFactory.finalLpArray)
       }

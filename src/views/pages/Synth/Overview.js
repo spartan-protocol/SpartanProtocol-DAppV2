@@ -6,10 +6,10 @@ import { Row, Col, Button, Card, CardBody } from 'reactstrap'
 
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import {
-  getSynthTotalWeight,
-  getSynthMemberWeight,
-  getSynthArrayFinal,
   synthHarvest,
+  getSynthGlobalDetails,
+  getSynthMemberDetails,
+  getSynthDetails,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
@@ -23,9 +23,11 @@ const Overview = () => {
   const [trigger, settrigger] = useState(0)
 
   useEffect(async () => {
-    dispatch(getSynthArrayFinal(synth.synthArray, wallet.account))
-    dispatch(getSynthMemberWeight(wallet.account))
-    dispatch(getSynthTotalWeight())
+    dispatch(getSynthGlobalDetails())
+    dispatch(getSynthMemberDetails(wallet.account))
+    if (synth.synthArray?.length > 0) {
+      dispatch(getSynthDetails(synth.synthArray, wallet.account))
+    }
     await pause(7500)
     settrigger(trigger + 1)
   }, [trigger])
@@ -57,24 +59,24 @@ const Overview = () => {
                       <Col xs="6" md="2" lg="2">
                         <div className="card-text">Your Weight:</div>
                         <div className="subtitle-amount d-none d-md-block">
-                          {formatFromWei(synth.memberWeight.toString())}
+                          {formatFromWei(synth.memberDetails.totalWeight)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-md-none">
                         <div className="subtitle-amount text-right">
-                          {formatFromWei(synth.memberWeight.toString())}
+                          {formatFromWei(synth.memberDetails.totalWeight)}
                         </div>
                       </Col>
 
                       <Col xs="6" md="2" lg="2">
                         <div className="card-text">Total Weight:</div>
                         <div className="subtitle-amount d-none d-md-block">
-                          {formatFromWei(synth.totalWeight.toString())}
+                          {formatFromWei(synth.globalDetails.totalWeight)}
                         </div>
                       </Col>
                       <Col xs="6" className="d-block d-md-none">
                         <div className="subtitle-amount text-right">
-                          {formatFromWei(synth.totalWeight.toString())}
+                          {formatFromWei(synth.globalDetails.totalWeight)}
                         </div>
                       </Col>
 
@@ -83,8 +85,8 @@ const Overview = () => {
                         <div className="subtitle-amount d-none d-md-block">
                           {synth.memberWeight > 0 &&
                             `${formatFromUnits(
-                              BN(synth.memberWeight.toString())
-                                .div(synth.totalWeight.toString())
+                              BN(synth.memberDetails.totalWeight)
+                                .div(synth.globalDetails.totalWeight)
                                 .times(100),
                             )}%`}
                           {synth.memberWeight <= 0 && 'Not a DAO member'}
@@ -95,8 +97,8 @@ const Overview = () => {
                           {' '}
                           {synth.memberWeight > 0 &&
                             `${formatFromUnits(
-                              BN(synth.memberWeight.toString())
-                                .div(synth.totalWeight.toString())
+                              BN(synth.memberDetails.totalWeight)
+                                .div(synth.globalDetails.totalWeight)
                                 .times(100),
                             )}%`}
                           {synth.memberWeight <= 0 && 'Not a DAO member'}
