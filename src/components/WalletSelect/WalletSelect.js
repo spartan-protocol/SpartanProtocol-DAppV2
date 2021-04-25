@@ -669,7 +669,7 @@ const WalletSelect = (props) => {
                         ))}
                     </TabPane>
                     <TabPane tabId="synths">
-                      {synth.synthDetails?.filter((asset) => asset.stake > 0)
+                      {synth.synthDetails?.filter((asset) => asset.staked > 0)
                         .length > 0 && (
                         <Row className="my-3">
                           <Col xs="9" md="9">
@@ -683,7 +683,7 @@ const WalletSelect = (props) => {
                         </Row>
                       )}
                       {synth.synthDetails
-                        ?.filter((asset) => asset.stake > 0)
+                        ?.filter((asset) => asset.staked > 0)
                         .map((asset) => (
                           <Row
                             key={`${asset.address}-synthstake`}
@@ -692,8 +692,8 @@ const WalletSelect = (props) => {
                             <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
-                                src={getAsset(asset.tokenAddress).symbolUrl}
-                                alt={getAsset(asset.tokenAddress).name}
+                                src={getAsset(asset.tokenAddress)?.symbolUrl}
+                                alt={getAsset(asset.tokenAddress)?.name}
                                 className="mr-n3"
                               />
                               <img
@@ -710,7 +710,9 @@ const WalletSelect = (props) => {
                             >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
-                                  {`${getAsset(asset.tokenAddress).symbol}-SPS`}
+                                  {`${
+                                    getAsset(asset.tokenAddress)?.symbol
+                                  }-SPS`}
                                   <div className="description">
                                     {formatFromWei(asset.staked)}
                                   </div>
@@ -742,11 +744,11 @@ const WalletSelect = (props) => {
                                             asset.address,
                                             `${
                                               getAsset(asset.tokenAddress)
-                                                .symbol
+                                                ?.symbol
                                             }s`,
                                             '18',
                                             getAsset(asset.tokenAddress)
-                                              .symbolUrl,
+                                              ?.symbolUrl,
                                           ),
                                         )
                                       }
@@ -756,11 +758,11 @@ const WalletSelect = (props) => {
                                         watchAsset(
                                           asset.address,
                                           `${
-                                            getAsset(asset.tokenAddress).symbol
+                                            getAsset(asset.tokenAddress)?.symbol
                                           }s`,
                                           '18',
                                           getAsset(asset.tokenAddress)
-                                            .symbolUrl,
+                                            ?.symbolUrl,
                                         ),
                                       )
                                     }}
