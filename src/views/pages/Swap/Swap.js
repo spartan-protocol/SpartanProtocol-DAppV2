@@ -46,8 +46,10 @@ import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
+import { useSynth } from '../../../store/synth/selector'
 
 const Swap = () => {
+  const synth = useSynth()
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
@@ -167,6 +169,9 @@ const Swap = () => {
     window.localStorage.getItem('assetType2'),
   ])
 
+  const getSynth = (tokenAddress) =>
+    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
@@ -208,7 +213,7 @@ const Swap = () => {
       return item.balanceLPs
     }
     if (type === 'synth') {
-      return item.balanceSynths
+      return getSynth(item.tokenAddress)?.balance
     }
     return item.balanceTokens
   }
@@ -990,7 +995,7 @@ const Swap = () => {
                               dispatch(
                                 routerSwapBaseToSynth(
                                   convertToWei(swapInput1?.value),
-                                  assetSwap2.synthAddress,
+                                  getSynth(assetSwap2.tokenAddress)?.address,
                                 ),
                               )
                             }
@@ -1012,7 +1017,7 @@ const Swap = () => {
                               dispatch(
                                 routerSwapSynthToBase(
                                   convertToWei(swapInput1?.value),
-                                  assetSwap1.synthAddress,
+                                  getSynth(assetSwap1.tokenAddress)?.address,
                                 ),
                               )
                             }

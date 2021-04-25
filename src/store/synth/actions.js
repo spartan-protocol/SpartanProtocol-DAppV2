@@ -32,7 +32,7 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
-      minimumDepositTime: awaitArray[0].toString(),
+      minTime: awaitArray[0].toString(),
       totalWeight: awaitArray[1].toString(),
       erasToEarn: awaitArray[2].toString(),
       blockDelay: awaitArray[3].toString(),
@@ -72,7 +72,7 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
         address: tempArray[i] === addr.bnb ? false : tempArray[i],
         balance: '0',
         staked: '0',
-        harvestAmnt: '0',
+        weight: '0',
         lastHarvest: '0',
       })
     }
@@ -116,17 +116,20 @@ export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
   try {
     let tempArray = []
     for (let i = 0; i < synthArray.length; i++) {
-      const synthContract = getSynthContract(synthArray[i].address)
       if (wallet === null || synthArray[i].address === false) {
         tempArray.push('0') // balance
         tempArray.push('0') // staked
-        tempArray.push('0') // harvestAmnt
+        // tempArray.push('0') // synthWeight ADD HERE ONCE MEMBER-SYNTH-WEIGHT IS ADDED TO CONTRACT
         tempArray.push('0') // lastHarvest
       } else {
+        const synthContract = getSynthContract(synthArray[i].address)
         tempArray.push(synthContract.callStatic.balanceOf(wallet)) // balance
         tempArray.push(
           contract.callStatic.getMemberDeposit(synthArray[i].address, wallet),
         ) // staked
+        // tempArray.push(
+        //   contract.callStatic.getMappedMemberSynthWeight(synthArray[i].address, wallet),
+        // ) // ADD HERE ONCE MEMBER-SYNTH-WEIGHT IS ADDED TO CONTRACT
         tempArray.push(
           contract.callStatic.getMemberLastSynthTime(
             synthArray[i].address,
@@ -135,18 +138,15 @@ export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
         ) // lastHarvest
       }
     }
-    console.log('we can move to here now')
     const synthDetails = synthArray
-    console.log(tempArray)
     tempArray = await Promise.all(tempArray)
-    console.log(tempArray)
-    for (let i = 0; i < tempArray.length - 3; i += 4) {
-      console.log([i])
-      synthDetails[i].balance = tempArray[i].toString()
-      synthDetails[i].staked = tempArray[i + 1].toString()
-      synthDetails[i].lastHarvest = tempArray[i + 3].toString()
+    const varCount = 3
+    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
+      synthDetails[i / varCount].balance = tempArray[i].toString()
+      synthDetails[i / varCount].staked = tempArray[i + 1].toString()
+      // synthDetails[i].weight = tempArray[i + 2].toString()
+      synthDetails[i / varCount].lastHarvest = tempArray[i + 2].toString()
     }
-    console.log('end')
     dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))

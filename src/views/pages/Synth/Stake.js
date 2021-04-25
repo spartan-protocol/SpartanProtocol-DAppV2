@@ -21,7 +21,7 @@ const Stake = () => {
   }
 
   const getAsset = (tokenAddress) => {
-    if (poolFactory.finalLpArray.length > 0) {
+    if (poolFactory.finalLpArray?.length > 0) {
       return poolFactory.finalLpArray.filter(
         (i) => i.tokenAddress === tokenAddress,
       )[0]
@@ -38,6 +38,7 @@ const Stake = () => {
         {!synth.synthDetails && <HelmetLoading height="300px" width="300px" />}
         {synth.synthDetails?.length > 0 &&
           synth.synthDetails
+            .filter((i) => i.address !== false)
             .sort(
               (a, b) =>
                 BN(b.balance).plus(b.staked) - BN(a.balance).plus(a.staked),
@@ -144,7 +145,7 @@ const Stake = () => {
                           type="Button"
                           className="btn btn-primary w-100 p-3"
                           onClick={() =>
-                            dispatch(synthWithdraw(asset.synthAddress, '10000'))
+                            dispatch(synthWithdraw(asset.address, '10000'))
                           }
                         >
                           Unstake
@@ -155,12 +156,7 @@ const Stake = () => {
                           type="Button"
                           className="btn btn-primary w-100 p-3"
                           onClick={() =>
-                            dispatch(
-                              synthDeposit(
-                                asset.synthAddress,
-                                asset.balanceSynths,
-                              ),
-                            )
+                            dispatch(synthDeposit(asset.address, asset.balance))
                           }
                         >
                           Stake

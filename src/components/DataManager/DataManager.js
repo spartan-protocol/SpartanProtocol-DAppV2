@@ -2,7 +2,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { getBondVaultMemberDetails } from '../../store/bondVault/actions'
-import { getDaoHarvestAmount } from '../../store/dao/actions'
+// import { getDaoHarvestAmount } from '../../store/dao/actions'
 import {
   getDaoVaultMemberWeight,
   getDaoVaultTotalWeight,
@@ -15,7 +15,7 @@ import {
   getPoolFactoryFinalArray,
 } from '../../store/poolFactory'
 import { getPoolFactoryFinalLpArray } from '../../store/poolFactory/actions'
-import { getSynthArray } from '../../store/synth/actions'
+import { getSynthArray, getSynthDetails } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
 import {
   addNetworkMM,
@@ -51,14 +51,14 @@ const DataManager = () => {
         changeNetwork(prevNetwork.net)
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-        dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
+        dispatch(getPoolFactoryTokenArray(addr.wbnb, addr.sparta)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         // dispatch(getSynthArray()) // SYNTH ARRAY
       } else {
         changeNetwork('testnet') // CHANGE TO MAINNET AFTER DEPLOY
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-        dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
+        dispatch(getPoolFactoryTokenArray(addr.wbnb, addr.sparta)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         // dispatch(getSynthArray()) // SYNTH ARRAY
       }
@@ -88,7 +88,7 @@ const DataManager = () => {
     const interval = setInterval(() => {
       if (wallet.account) {
         dispatch(getDaoVaultMemberWeight(wallet.account))
-        dispatch(getDaoHarvestAmount(wallet.account))
+        // dispatch(getDaoHarvestAmount(wallet.account)) // ONLY IF WEIGHT > 0
       }
     }, 7500)
     return () => clearInterval(interval)
@@ -105,7 +105,7 @@ const DataManager = () => {
         prevNetwork.net
       ) {
         setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
-        dispatch(getPoolFactoryTokenArray(addr.wbnb)) // TOKEN ARRAY
+        dispatch(getPoolFactoryTokenArray(addr.wbnb, addr.sparta)) // TOKEN ARRAY
         dispatch(getPoolFactoryCuratedArray()) // CURATED ARRAY
         // dispatch(getSynthArray()) // SYNTH ARRAY
       }
@@ -128,17 +128,11 @@ const DataManager = () => {
   /**
    * Update Detailed Array
    */
-  const [prevDetailedArray, setPrevDetailedArray] = useState(
-    poolFactory.detailedArray,
-  )
   useEffect(() => {
     const { tokenArray } = poolFactory
     if (tokenArray.length > 0) {
       dispatch(getSynthArray(tokenArray)) // SYNTH ARRAY
-      dispatch(
-        getPoolFactoryDetailedArray(tokenArray, addr.sparta, wallet.account),
-      )
-      setPrevDetailedArray(poolFactory.detailedArray)
+      dispatch(getPoolFactoryDetailedArray(tokenArray, wallet.account))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poolFactory.tokenArray, wallet.account, arrayTrigger])
@@ -152,11 +146,13 @@ const DataManager = () => {
     const { curatedPoolArray } = poolFactory
     const { synthArray } = synth
     const checkFinalArray = () => {
-      if (detailedArray !== prevDetailedArray && detailedArray.length > 0) {
+      if (detailedArray.length > 0) {
         dispatch(
           getPoolFactoryFinalArray(detailedArray, curatedPoolArray, synthArray),
         )
-        // setPrevFinalArray(poolFactory.finalArray)
+      }
+      if (synth.synthArray?.length > 0) {
+        dispatch(getSynthDetails(synth.synthArray, wallet.account))
       }
     }
     checkFinalArray()
@@ -175,7 +171,6 @@ const DataManager = () => {
     const checkFinalArrayForLP = () => {
       if (finalArray?.length > 0) {
         dispatch(getPoolFactoryFinalLpArray(finalArray, wallet.account))
-        setPrevFinalLpArray(poolFactory.finalLpArray)
       }
     }
     checkFinalArrayForLP()

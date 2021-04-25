@@ -18,8 +18,10 @@ import { formatFromWei } from '../../utils/bigNumber'
 // import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
+import { useSynth } from '../../store/synth/selector'
 
 const WalletSelect = (props) => {
+  const synth = useSynth()
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
   const wallet = useWallet()
@@ -112,6 +114,9 @@ const WalletSelect = (props) => {
     sleep()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const getAsset = (tokenAddress) =>
+    poolFactory.finalLpArray?.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   return (
     <>
@@ -664,9 +669,8 @@ const WalletSelect = (props) => {
                         ))}
                     </TabPane>
                     <TabPane tabId="synths">
-                      {poolFactory.finalLpArray?.filter(
-                        (asset) => asset.stakedSynths > 0,
-                      ).length > 0 && (
+                      {synth.synthDetails?.filter((asset) => asset.stake > 0)
+                        .length > 0 && (
                         <Row className="my-3">
                           <Col xs="9" md="9">
                             <p className="text-card">Staked</p>
@@ -678,18 +682,18 @@ const WalletSelect = (props) => {
                           </Col>
                         </Row>
                       )}
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.stakedSynths > 0)
+                      {synth.synthDetails
+                        ?.filter((asset) => asset.stake > 0)
                         .map((asset) => (
                           <Row
-                            key={`${asset.tokenAddress}-synthstake`}
+                            key={`${asset.address}-synthstake`}
                             className="mb-3 output-card mr-2"
                           >
                             <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
+                                src={getAsset(asset.tokenAddress).symbolUrl}
+                                alt={getAsset(asset.tokenAddress).name}
                                 className="mr-n3"
                               />
                               <img
@@ -706,9 +710,9 @@ const WalletSelect = (props) => {
                             >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPS`}
+                                  {`${getAsset(asset.tokenAddress).symbol}-SPS`}
                                   <div className="description">
-                                    {formatFromWei(asset.stakedSynths)}
+                                    {formatFromWei(asset.staked)}
                                   </div>
                                 </Col>
                               </Row>
@@ -718,7 +722,7 @@ const WalletSelect = (props) => {
                               <Row>
                                 <Col xs="6" className="mt-1">
                                   <ShareLink
-                                    url={asset.synthAddress}
+                                    url={asset.address}
                                     notificationLocation="tc"
                                   >
                                     <i
@@ -735,10 +739,14 @@ const WalletSelect = (props) => {
                                       if (e.key === 32) {
                                         dispatch(
                                           watchAsset(
-                                            asset.synthAddress,
-                                            `${asset.symbol}s`,
+                                            asset.address,
+                                            `${
+                                              getAsset(asset.tokenAddress)
+                                                .symbol
+                                            }s`,
                                             '18',
-                                            asset.symbolUrl,
+                                            getAsset(asset.tokenAddress)
+                                              .symbolUrl,
                                           ),
                                         )
                                       }
@@ -746,10 +754,13 @@ const WalletSelect = (props) => {
                                     onClick={() => {
                                       dispatch(
                                         watchAsset(
-                                          asset.synthAddress,
-                                          `${asset.symbol}s`,
+                                          asset.address,
+                                          `${
+                                            getAsset(asset.tokenAddress).symbol
+                                          }s`,
                                           '18',
-                                          asset.symbolUrl,
+                                          getAsset(asset.tokenAddress)
+                                            .symbolUrl,
                                         ),
                                       )
                                     }}
@@ -771,8 +782,8 @@ const WalletSelect = (props) => {
                           </p>
                         </Col>
                       </Row>
-                      {poolFactory.finalLpArray
-                        ?.filter((asset) => asset.balanceSynths > 0)
+                      {synth.synthDetails
+                        ?.filter((asset) => asset.balance > 0)
                         .map((asset) => (
                           <Row
                             key={`${asset.tokenAddress}-synth`}
@@ -781,8 +792,8 @@ const WalletSelect = (props) => {
                             <Col xs="4" sm="2" className="p-0 pl-2">
                               <img
                                 height="35px"
-                                src={asset.symbolUrl}
-                                alt={asset.name}
+                                src={getAsset(asset.tokenAddress)?.symbolUrl}
+                                alt={getAsset(asset.tokenAddress)?.name}
                                 className="mr-n3"
                               />
                               <img
@@ -800,9 +811,11 @@ const WalletSelect = (props) => {
                             >
                               <Row>
                                 <Col xs="12" className="float-left ml-n4">
-                                  {`${asset.symbol}-SPS`}
+                                  {`${
+                                    getAsset(asset.tokenAddress)?.symbol
+                                  }-SPS`}
                                   <div className="description">
-                                    {formatFromWei(asset.balanceSynths)}
+                                    {formatFromWei(asset.balance)}
                                   </div>
                                 </Col>
                               </Row>
@@ -812,7 +825,7 @@ const WalletSelect = (props) => {
                               <Row>
                                 <Col xs="6" className="mt-1">
                                   <ShareLink
-                                    url={asset.synthAddress}
+                                    url={asset.address}
                                     notificationLocation="tc"
                                   >
                                     <i
@@ -829,10 +842,14 @@ const WalletSelect = (props) => {
                                       if (e.key === 32) {
                                         dispatch(
                                           watchAsset(
-                                            asset.synthAddress,
-                                            `${asset.symbol}s`,
+                                            asset.address,
+                                            `${
+                                              getAsset(asset.tokenAddress)
+                                                ?.symbol
+                                            }s`,
                                             '18',
-                                            asset.symbolUrl,
+                                            getAsset(asset.tokenAddress)
+                                              ?.symbolUrl,
                                           ),
                                         )
                                       }
@@ -840,10 +857,13 @@ const WalletSelect = (props) => {
                                     onClick={() => {
                                       dispatch(
                                         watchAsset(
-                                          asset.synthAddress,
-                                          `${asset.symbol}s`,
+                                          asset.address,
+                                          `${
+                                            getAsset(asset.tokenAddress)?.symbol
+                                          }s`,
                                           '18',
-                                          asset.symbolUrl,
+                                          getAsset(asset.tokenAddress)
+                                            ?.symbolUrl,
                                         ),
                                       )
                                     }}

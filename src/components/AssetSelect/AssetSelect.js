@@ -25,6 +25,7 @@ import ShareLink from '../Share/ShareLink'
 // import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
+import { useSynth } from '../../store/synth/selector'
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
  * depending on the 'priority' prop handed over.
@@ -35,6 +36,7 @@ import spartaIconAlt from '../../assets/img/spartan_synth.svg'
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
+  const synth = useSynth()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -85,6 +87,9 @@ const AssetSelect = (props) => {
   ])
 
   const [assetArray, setAssetArray] = useState([])
+
+  const getSynth = (tokenAddress) =>
+    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   useEffect(() => {
     let finalArray = []
@@ -181,7 +186,7 @@ const AssetSelect = (props) => {
 
           // Add synth to array
           if (props.filter?.includes('synth')) {
-            if (tempArray[i].synthAddress) {
+            if (getSynth(tempArray[i].tokenAddress).address !== false) {
               finalArray.push({
                 type: 'synth',
                 iconUrl: tempArray[i].symbolUrl,
@@ -202,9 +207,9 @@ const AssetSelect = (props) => {
                   </>
                 ),
                 symbol: `${tempArray[i].symbol}-SPS`,
-                balance: tempArray[i].balanceSynths,
+                balance: getSynth(tempArray[i].tokenAddress)?.balance,
                 address: tempArray[i].tokenAddress,
-                actualAddr: tempArray[i].synthAddress,
+                actualAddr: getSynth(tempArray[i].tokenAddress)?.address,
               })
             }
           }

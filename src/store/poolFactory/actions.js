@@ -39,44 +39,14 @@ export const getPoolFactoryPool = (tokenAddr) => async (dispatch) => {
   }
 }
 
-// /**
-//  * Get listed pools count
-//  * @returns {uint} poolCount
-//  */
-// export const getPoolFactoryCount = () => async (dispatch) => {
-//   dispatch(poolFactoryLoading())
-//   const contract = getPoolFactoryContract()
-
-//   try {
-//     const poolCount = await contract.callStatic.poolCount()
-//     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_COUNT, poolCount))
-//   } catch (error) {
-//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-//   }
-// }
-
-// /**
-//  * Get listed tokens count
-//  * @returns {uint} tokenCount
-//  */
-// export const getPoolFactoryTokenCount = () => async (dispatch) => {
-//   dispatch(poolFactoryLoading())
-//   const contract = getPoolFactoryContract()
-
-//   try {
-//     const tokenCount = await contract.callStatic.tokenCount()
-//     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_TOKEN_COUNT, tokenCount))
-//   } catch (error) {
-//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-//   }
-// }
-
 /**
  * Get array of all listed token addresses
  * @param {address} wbnbAddr
  * @returns {array} tokenArray
  */
-export const getPoolFactoryTokenArray = (wbnbAddr) => async (dispatch) => {
+export const getPoolFactoryTokenArray = (wbnbAddr, spartaAddr) => async (
+  dispatch,
+) => {
   dispatch(poolFactoryLoading())
   const contract = getPoolFactoryContract()
 
@@ -90,29 +60,12 @@ export const getPoolFactoryTokenArray = (wbnbAddr) => async (dispatch) => {
     const wbnbIndex = tokenArray.findIndex((i) => i === wbnbAddr)
     if (wbnbIndex > -1)
       tokenArray[wbnbIndex] = '0x0000000000000000000000000000000000000000'
+    tokenArray.push(spartaAddr)
     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_TOKEN_ARRAY, tokenArray))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
   }
 }
-
-// /**
-//  * Get curated pools count
-//  * @returns {uint} curatedPoolCount
-//  */
-// export const getPoolFactoryCuratedCount = () => async (dispatch) => {
-//   dispatch(poolFactoryLoading())
-//   const contract = getPoolFactoryContract()
-
-//   try {
-//     const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
-//     dispatch(
-//       payloadToDispatch(Types.POOLFACTORY_GET_CURATED_COUNT, curatedPoolCount),
-//     )
-//   } catch (error) {
-//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-//   }
-// }
 
 /**
  * Get array of curated pool addresses
@@ -137,43 +90,14 @@ export const getPoolFactoryCuratedArray = () => async (dispatch) => {
   }
 }
 
-// /**
-//  * Get array of tokenAddresses grouped with poolAddresses
-//  * @param {array} tokenArray
-//  * @returns {array} poolArray
-//  */
-// export const getPoolFactoryArray = (tokenArray) => async (dispatch) => {
-//   dispatch(poolFactoryLoading())
-//   const contract = getPoolFactoryContract()
-
-//   try {
-//     const tempArray = await Promise.all(
-//       tokenArray.map((token) => contract.callStatic.getPool(token)),
-//     )
-//     const poolArray = []
-//     for (let i = 0; i < tokenArray.length; i++) {
-//       const tempItem = {
-//         tokenAddress: tokenArray[i],
-//         poolAddress: tempArray[i],
-//       }
-//       poolArray.push(tempItem)
-//     }
-//     dispatch(payloadToDispatch(Types.POOLFACTORY_GET_ARRAY, poolArray))
-//   } catch (error) {
-//     dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
-//   }
-// }
-
 /**
  * Get detailed array of token/pool information
  * @param {array} poolArray
  * @returns {array} detailedArray
  */
-export const getPoolFactoryDetailedArray = (
-  tokenArray,
-  spartaAddr,
-  wallet,
-) => async (dispatch) => {
+export const getPoolFactoryDetailedArray = (tokenArray, wallet) => async (
+  dispatch,
+) => {
   dispatch(poolFactoryLoading())
   const contract = getUtilsContract()
   const addr = getAddresses()
@@ -182,12 +106,12 @@ export const getPoolFactoryDetailedArray = (
   )
 
   try {
-    if (tokenArray[0] !== spartaAddr) {
-      tokenArray.unshift(spartaAddr)
-    }
     const tempArray = await Promise.all(
       tokenArray.map((i) =>
-        contract.callStatic.getTokenDetailsWithMember(i, wallet || addr.bnb),
+        contract.callStatic.getTokenDetailsWithMember(
+          i,
+          wallet !== null ? wallet : addr.bnb,
+        ),
       ),
     )
     const detailedArray = []
@@ -196,7 +120,7 @@ export const getPoolFactoryDetailedArray = (
       const tempItem = {
         // Layer1 Asset Details
         tokenAddress: tokenArray[i],
-        balanceTokens: wallet ? tempArray[i].balance.toString() : '0',
+        balanceTokens: wallet !== null ? tempArray[i].balance.toString() : '0',
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
@@ -401,22 +325,27 @@ export const getPoolFactoryFinalLpArray = (finalArray, walletAddress) => async (
     }
     tempArray = await Promise.all(tempArray)
     const finalLpArray = finalArray
-    for (let i = 0; i < tempArray.length - 10; i += 11) {
+    const varCount = 11
+    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
       const bondDetails = tempArray[i + 10]
-      finalLpArray[i / 11].recentDivis = tempArray[i].toString()
-      finalLpArray[i / 11].lastMonthDivis = tempArray[i + 1].toString()
-      finalLpArray[i / 11].recentFees = tempArray[i + 2].toString()
-      finalLpArray[i / 11].lastMonthFees = tempArray[i + 3].toString()
-      finalLpArray[i / 11].balanceLPs = tempArray[i + 4].toString()
-      finalLpArray[i / 11].stakedLPs = tempArray[i + 5].toString()
-      finalLpArray[i / 11].balanceSynths = tempArray[i + 6].toString()
-      finalLpArray[i / 11].stakedSynths = tempArray[i + 7].toString()
-      finalLpArray[i / 11].synthLpBalance = tempArray[i + 8].toString()
-      finalLpArray[i / 11].synthLpDebt = tempArray[i + 9].toString()
-      finalLpArray[i / 11].bondMember = bondDetails.isMember
-      finalLpArray[i / 11].bondedLPs = bondDetails.bondedLP.toString()
-      finalLpArray[i / 11].bondClaimRate = bondDetails.claimRate.toString()
-      finalLpArray[i / 11].bondLastClaim = bondDetails.lastBlockTime.toString()
+      finalLpArray[i / varCount].recentDivis = tempArray[i].toString()
+      finalLpArray[i / varCount].lastMonthDivis = tempArray[i + 1].toString()
+      finalLpArray[i / varCount].recentFees = tempArray[i + 2].toString()
+      finalLpArray[i / varCount].lastMonthFees = tempArray[i + 3].toString()
+      finalLpArray[i / varCount].balanceLPs = tempArray[i + 4].toString()
+      finalLpArray[i / varCount].stakedLPs = tempArray[i + 5].toString()
+      finalLpArray[i / varCount].balanceSynths = tempArray[i + 6].toString()
+      finalLpArray[i / varCount].stakedSynths = tempArray[i + 7].toString()
+      finalLpArray[i / varCount].synthLpBalance = tempArray[i + 8].toString()
+      finalLpArray[i / varCount].synthLpDebt = tempArray[i + 9].toString()
+      finalLpArray[i / varCount].bondMember = bondDetails.isMember
+      finalLpArray[i / varCount].bondedLPs = bondDetails.bondedLP.toString()
+      finalLpArray[
+        i / varCount
+      ].bondClaimRate = bondDetails.claimRate.toString()
+      finalLpArray[
+        i / varCount
+      ].bondLastClaim = bondDetails.lastBlockTime.toString()
     }
     dispatch(
       payloadToDispatch(Types.POOLFACTORY_GET_FINAL_LP_ARRAY, finalLpArray),
