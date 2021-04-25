@@ -147,7 +147,7 @@ const DataManager = () => {
   /**
    * Update Final Array (Not actually final :) )
    */
-  const [prevFinalArray, setPrevFinalArray] = useState(poolFactory.finalArray)
+  const [prevFinalArray, setPrevFinalArray] = useState('')
   useEffect(() => {
     const { detailedArray } = poolFactory
     const { curatedPoolArray } = poolFactory

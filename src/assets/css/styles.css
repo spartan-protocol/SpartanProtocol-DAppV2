@@ -373,9 +373,8 @@ input:focus, textarea:focus, select:focus{
 }
 
 .modal-body {
-
     overflow-y: auto;
-    height: 300px;
+    height: 40vh;
 }
 
 
