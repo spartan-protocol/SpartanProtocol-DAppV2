@@ -2,6 +2,14 @@ import * as Types from './types'
 
 const initialState = {
   synthArray: [],
+  synthArrayFinal: [],
+  depositAmount: '0',
+  harvestAmount: '0',
+  withdrawAmount: '0',
+  memberStaked: '0',
+  memberWeight: '0',
+  totalWeight: '0',
+  memberLastHarvest: '0',
 }
 
 export const synthReducer = (state = initialState, action) => {
@@ -10,6 +18,15 @@ export const synthReducer = (state = initialState, action) => {
       return {
         ...state,
         synthArray: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SYNTH_ARRAY_FINAL: {
+      return {
+        ...state,
+        synthArrayFinal: action.payload,
         error: null,
         loading: false,
       }

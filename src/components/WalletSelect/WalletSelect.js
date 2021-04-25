@@ -1,4 +1,3 @@
-/* eslint-disable*/
 import React, { useEffect, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 
@@ -6,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { Alert, Form, Row, Modal, Button, Image, Col } from 'react-bootstrap'
 import { Nav, NavLink, NavItem, TabContent, TabPane } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
-import Card from 'react-bootstrap/Card'
 import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import walletTypes from './walletTypes'
@@ -16,7 +14,6 @@ import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
 import { usePoolFactory } from '../../store/poolFactory/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
-// import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 
@@ -188,7 +185,7 @@ const WalletSelect = (props) => {
 
               {wallet.status === 'connected' && (
                 <>
-                  <Row >
+                  <Row>
                     <Col xs={6} className="ml-n1">
                       <div className="output-wallet-description ">
                         {t('viewBscScan')}{' '}
@@ -283,10 +280,13 @@ const WalletSelect = (props) => {
                     </Row>
 
                     {/* Asset tabs */}
-                    <TabContent className="tab-space" activeTab={horizontalTabs}>
+                    <TabContent
+                      className="tab-space"
+                      activeTab={horizontalTabs}
+                    >
                       <TabPane tabId="assets" className="ml-n2">
                         <Row className="mt-3 mb-3">
-                          <Col xs="9" md="9" className="ml-n1" >
+                          <Col xs="9" md="9" className="ml-n1">
                             <div className="text-card">{t('wallet')}</div>
                           </Col>
                           <Col xs="3" md="3">
@@ -325,7 +325,11 @@ const WalletSelect = (props) => {
                                 </Row>
                               </Col>
 
-                              <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
@@ -424,7 +428,11 @@ const WalletSelect = (props) => {
                                 </Row>
                               </Col>
 
-                              <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
@@ -473,7 +481,7 @@ const WalletSelect = (props) => {
                           ))}
 
                         <Row className="my-3">
-                          <Col xs="9" md="9" className="ml-n1" >
+                          <Col xs="9" md="9" className="ml-n1">
                             <div className="text-card">{t('wallet')}</div>
                           </Col>
                           <Col xs="3" md="3">
@@ -519,7 +527,11 @@ const WalletSelect = (props) => {
                                 </Row>
                               </Col>
 
-                              <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
@@ -617,7 +629,11 @@ const WalletSelect = (props) => {
                                 </Row>
                               </Col>
 
-                              <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
@@ -665,7 +681,7 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
                       </TabPane>
-                      <TabPane tabId="synths"  className="ml-n2">
+                      <TabPane tabId="synths" className="ml-n2">
                         {poolFactory.finalLpArray?.filter(
                           (asset) => asset.stakedSynths > 0,
                         ).length > 0 && (
@@ -716,7 +732,11 @@ const WalletSelect = (props) => {
                                 </Row>
                               </Col>
 
-                              <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
@@ -764,7 +784,7 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
                         <Row className="my-3">
-                          <Col xs="9" md="9" className="ml-n1" >
+                          <Col xs="9" md="9" className="ml-n1">
                             <div className="text-card">{t('wallet')}</div>
                           </Col>
                           <Col xs="3" md="3">
@@ -810,7 +830,11 @@ const WalletSelect = (props) => {
                                 </Row>
                               </Col>
 
-                              <Col xs="3" md="3" className="text-right p-0 pr-2">
+                              <Col
+                                xs="3"
+                                md="3"
+                                className="text-right p-0 pr-2"
+                              >
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
@@ -860,7 +884,6 @@ const WalletSelect = (props) => {
                       </TabPane>
                     </TabContent>
                   </div>
-
                 </>
               )}
             </div>

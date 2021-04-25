@@ -1,13 +1,10 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { Button, Card, CardBody, Row, Col } from 'reactstrap'
+import { Card, CardBody, Row, Col } from 'reactstrap'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
-import { bondClaim } from '../../../store/bond/actions'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 
 const BondTable = () => {
-  const dispatch = useDispatch()
   const poolFactory = usePoolFactory()
 
   const formatDate = (unixTime) => {
@@ -61,7 +58,7 @@ const BondTable = () => {
                   <Card className="mt-n2 mb-n2">
                     <CardBody>
                       <Row>
-                        <Col xs="9" className="mb-2">
+                        <Col xs="12" className="mb-2">
                           <h2 className="m-0">
                             <img
                               className="mr-2"
@@ -72,7 +69,7 @@ const BondTable = () => {
                             {asset.symbol}-SPP
                           </h2>
                         </Col>
-                        <Col
+                        {/* <Col
                           xs="3"
                           className="text-center d-none d-sm-block mb-2"
                         >
@@ -85,7 +82,7 @@ const BondTable = () => {
                           >
                             Claim
                           </Button>
-                        </Col>
+                        </Col> */}
                         <Col xs="6" md="3">
                           <div className="title-card">Remaining</div>
                           <div className="d-none d-md-block">
@@ -156,7 +153,7 @@ const BondTable = () => {
                             )}
                           </div>
                         </Col>
-                        <Col xs="12" className="d-sm-none text-center">
+                        {/* <Col xs="12" className="d-sm-none text-center">
                           <Button
                             type="Button"
                             className="btn btn-primary"
@@ -166,7 +163,7 @@ const BondTable = () => {
                           >
                             Claim
                           </Button>
-                        </Col>
+                        </Col> */}
                       </Row>
                     </CardBody>
                   </Card>

@@ -386,9 +386,8 @@ input:focus, textarea:focus, select:focus{
 
 @media (max-width: 568px) {
 
-    .modal-body {
-        overflow-y: auto;
-        height: 320px;
+    #notification-message{
+        font-size: 14px;
     }
 
     .amount {
@@ -492,7 +491,7 @@ input:focus, textarea:focus, select:focus{
 
     .modal-body {
         overflow-y: auto;
-        height: 260px;
+        height: 320px;
     }
 
 

@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -5,7 +7,6 @@ import classnames from 'classnames'
 import {
   Button,
   Card,
-  CardBody,
   Col,
   Input,
   InputGroup,
@@ -107,7 +108,6 @@ const AddLiquidity = () => {
     }
 
     getAssetDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     poolFactory.finalArray,
     poolFactory.finalLpArray,
@@ -309,198 +309,207 @@ const AddLiquidity = () => {
     }
   }, [addInput1?.value, addInput2?.value, assetAdd1, assetAdd2, activeTab])
 
+  const getBalance = () => formatFromWei(assetAdd1.balanceTokens)
+
   return (
     <>
       <Row>
-        <Card>
-          <CardBody>
-            <Nav tabs className="nav-tabs-custom">
-              <NavItem>
-                <NavLink
-                  className={classnames({ active: activeTab === 'addTab1' })}
-                  onClick={() => {
-                    toggle('addTab1')
-                  }}
-                >
-                  <span className="d-none d-sm-block">Add Both</span>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  className={classnames({ active: activeTab === 'addTab2' })}
-                  onClick={() => {
-                    toggle('addTab2')
-                  }}
-                >
-                  <span className="d-none d-sm-block">Add Single</span>
-                </NavLink>
-              </NavItem>
-            </Nav>
-            <Row>
-              <Col md={12}>
-                <Card
-                  style={{ backgroundColor: '#25212D' }}
-                  className="card-body"
-                >
-                  <Row>
-                    <Col xs="4" className="">
-                      <div className="">Input</div>
-                    </Col>
-                    <Col xs="8" className="text-right">
-                      <div className="">
-                        Balance{' '}
-                        {poolFactory.finalLpArray &&
-                          formatFromWei(assetAdd1.balanceTokens)}{' '}
-                      </div>
-                    </Col>
-                  </Row>
+        <Card className="card-body">
+          <Nav pills className="nav-tabs-custom  mt-2 mb-4">
+            <NavItem>
+              <NavLink
+                className={classnames({ active: activeTab === 'addTab1' })}
+                onClick={() => {
+                  toggle('addTab1')
+                }}
+              >
+                Add Both
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink
+                className={classnames({ active: activeTab === 'addTab2' })}
+                onClick={() => {
+                  toggle('addTab2')
+                }}
+              >
+                Add Single
+              </NavLink>
+            </NavItem>
+          </Nav>
+          <Row>
+            <Col md={12}>
+              <Card
+                style={{ backgroundColor: '#25212D' }}
+                className="card-body"
+              >
+                <Row>
+                  <Col xs="4" className="">
+                    <div className="">Input</div>
+                  </Col>
 
-                  <Row className="my-2">
-                    <Col xs="6">
-                      <div className="output-card ml-2">
-                        <AssetSelect
-                          priority="1"
-                          filter={['token']}
-                          blackList={[
-                            activeTab === 'addTab1' ? addr.sparta : '',
-                          ]}
-                        />
-                      </div>
-                    </Col>
-                    <Col className="text-right" xs="6">
-                      <InputGroup className="m-0">
-                        <Input
-                          className="text-right h-100 ml-0"
-                          type="text"
-                          placeholder="0"
-                          id="addInput1"
-                        />
-                        <InputGroupAddon
-                          addonType="append"
-                          role="button"
-                          tabIndex={-1}
-                          onKeyPress={() => clearInputs()}
-                          onClick={() => clearInputs()}
-                        >
-                          <i className="icon-search-bar icon-close icon-light my-auto" />
-                        </InputGroupAddon>
-                      </InputGroup>
-                      <div className="text-right">
-                        ~$
-                        {addInput1?.value &&
-                          formatFromWei(getInput1ValueUSD(), 2)}
-                      </div>
-                    </Col>
-                  </Row>
+                  {/** ******************* */}
+                  <Col xs={8} className="text-right">
+                    <div
+                      className="balance"
+                      role="button"
+                      onClick={() => {
+                        addInput1.value = getBalance()
+                      }}
+                    >
+                      Balance:{' '}
+                      {poolFactory.finalLpArray &&
+                        formatFromWei(assetAdd1.balanceTokens)}{' '}
+                    </div>
+                  </Col>
+                </Row>
 
-                  {activeTab === 'addTab1' && (
-                    <>
-                      <hr className="m-1" />
-                      <Row className="my-2">
-                        <Col xs="4" className="">
-                          <div className="">Input</div>
-                        </Col>
-                        <Col xs="8" className="text-right">
-                          <div className="">
-                            Balance{' '}
-                            {poolFactory.finalLpArray &&
-                              formatFromWei(assetAdd2.balanceTokens)}
-                          </div>
-                        </Col>
-                      </Row>
-                      <Row className="">
-                        <Col xs="6">
-                          <div className="output-card ml-2">
-                            <AssetSelect
-                              priority="2"
-                              filter={['token']}
-                              whiteList={[addr.sparta]}
-                              disabled={activeTab === 'addTab1'}
-                            />
-                          </div>
-                        </Col>
-                        <Col className="text-right" xs="6">
-                          <InputGroup className="m-0">
-                            <Input
-                              className="text-right h-100 ml-0"
-                              type="text"
-                              placeholder="0"
-                              id="addInput2"
-                            />
-                            <InputGroupAddon
-                              addonType="append"
-                              role="button"
-                              tabIndex={-1}
-                              onKeyPress={() => clearInputs()}
-                              onClick={() => clearInputs()}
-                            >
-                              <i className="icon-search-bar icon-close icon-light my-auto" />
-                            </InputGroupAddon>
-                          </InputGroup>
-                          <div className="text-right">
-                            ~$
-                            {addInput2?.value &&
-                              formatFromWei(getInput2ValueUSD(), 2)}
-                          </div>
-                        </Col>
-                      </Row>
-                    </>
-                  )}
-                </Card>
+                <Row className="my-2">
+                  <Col xs="6">
+                    <div className="output-card ml-2">
+                      <AssetSelect
+                        priority="1"
+                        filter={['token']}
+                        blackList={[activeTab === 'addTab1' ? addr.sparta : '']}
+                      />
+                    </div>
+                  </Col>
+                  <Col className="text-right" xs="6">
+                    <InputGroup className="m-0">
+                      <Input
+                        className="text-right h-100 ml-0"
+                        type="text"
+                        placeholder="'Input' amount..."
+                        id="addInput1"
+                        onInput={() => getBalance()}
+                      />
+                      <InputGroupAddon
+                        addonType="append"
+                        role="button"
+                        tabIndex={-1}
+                        onKeyPress={() => clearInputs()}
+                        onClick={() => clearInputs()}
+                      >
+                        <i className="icon-search-bar icon-close icon-light my-auto" />
+                      </InputGroupAddon>
+                    </InputGroup>
+                    <div className="text-right">
+                      ~$
+                      {addInput1?.value &&
+                        formatFromWei(getInput1ValueUSD(), 2)}
+                    </div>
+                  </Col>
+                </Row>
 
-                <Card
-                  style={{ backgroundColor: '#25212D' }}
-                  className="card-body"
-                >
-                  <Row>
-                    <Col xs="4" className="">
-                      <div className="">Pool</div>
-                    </Col>
-                    <Col xs="8" className="text-right">
-                      <div className="">
-                        Balance{' '}
-                        {poolFactory.finalLpArray &&
-                          formatFromWei(poolAdd1.balanceLPs)}
-                      </div>
-                    </Col>
-                  </Row>
-
-                  <Row className="my-3">
-                    <Col xs="6">
-                      <div className="output-card ml-2">
-                        <AssetSelect
-                          priority="3"
-                          filter={['pool']}
-                          disabled={
-                            activeTab === 'addTab1' ||
-                            assetAdd1.tokenAddress !== addr.sparta
-                          }
-                        />
-                      </div>
-                    </Col>
-                    <Col className="text-right" xs="6">
-                      <InputGroup className="m-0">
-                        <Input
-                          className="text-right h-100 ml-0"
-                          type="text"
-                          placeholder="0"
-                          id="addInput3"
-                          disabled
-                        />
-                      </InputGroup>
-                      <div className="text-right">
-                        ~$
-                        {addInput1?.value && formatFromWei(getLpValueUSD(), 2)}
-                      </div>
-                    </Col>
-                  </Row>
-                </Card>
-
-                {poolFactory.finalLpArray && (
+                {activeTab === 'addTab1' && (
                   <>
-                    <Row className="mb-2">
+                    <hr className="m-1" />
+                    <Row className="my-2">
                       <Col xs="4" className="">
                         <div className="">Input</div>
+                      </Col>
+                      <Col xs="8" className="text-right">
+                        <div className="balance">
+                          Balance:{' '}
+                          {poolFactory.finalLpArray &&
+                            formatFromWei(assetAdd2.balanceTokens)}
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row className="">
+                      <Col xs="6">
+                        <div className="output-card ml-2">
+                          <AssetSelect
+                            priority="2"
+                            filter={['token']}
+                            whiteList={[addr.sparta]}
+                            disabled={activeTab === 'addTab1'}
+                          />
+                        </div>
+                      </Col>
+                      <Col className="text-right" xs="6">
+                        <InputGroup className="m-0">
+                          <Input
+                            className="text-right h-100 ml-0"
+                            type="text"
+                            placeholder="0"
+                            id="addInput2"
+                          />
+                          <InputGroupAddon
+                            addonType="append"
+                            role="button"
+                            tabIndex={-1}
+                            onKeyPress={() => clearInputs()}
+                            onClick={() => clearInputs()}
+                          >
+                            <i className="icon-search-bar icon-close icon-light my-auto" />
+                          </InputGroupAddon>
+                        </InputGroup>
+                        <div className="text-right">
+                          ~$
+                          {addInput2?.value &&
+                            formatFromWei(getInput2ValueUSD(), 2)}
+                        </div>
+                      </Col>
+                    </Row>
+                  </>
+                )}
+              </Card>
+
+              <Card
+                style={{ backgroundColor: '#25212D' }}
+                className="card-body"
+              >
+                <Row>
+                  <Col xs="4" className="">
+                    <div className="">Pool</div>
+                  </Col>
+                  <Col xs="8" className="text-right">
+                    <div className="balance">
+                      Balance:{' '}
+                      {poolFactory.finalLpArray &&
+                        formatFromWei(poolAdd1.balanceLPs)}
+                    </div>
+                  </Col>
+                </Row>
+
+                <Row className="my-3">
+                  <Col xs="6">
+                    <div className="output-card ml-2">
+                      <AssetSelect
+                        priority="3"
+                        filter={['pool']}
+                        disabled={
+                          activeTab === 'addTab1' ||
+                          assetAdd1.tokenAddress !== addr.sparta
+                        }
+                      />
+                    </div>
+                  </Col>
+                  <Col className="text-right" xs="6">
+                    <InputGroup className="m-0">
+                      <Input
+                        className="text-right h-100 ml-0"
+                        type="text"
+                        placeholder="0"
+                        id="addInput3"
+                        disabled
+                      />
+                    </InputGroup>
+                    <div className="text-right">
+                      ~$
+                      {addInput1?.value && formatFromWei(getLpValueUSD(), 2)}
+                    </div>
+                  </Col>
+                </Row>
+              </Card>
+
+              {poolFactory.finalLpArray && (
+                <>
+                  <div className="card-body">
+                    <Row className="mb-2">
+                      <Col xs="4" className="">
+                        <div className="title-card">Input</div>
                       </Col>
                       <Col xs="8" className="text-right">
                         <div className="">
@@ -518,7 +527,7 @@ const AddLiquidity = () => {
 
                     {activeTab === 'addTab2' && (
                       <Row className="mb-2">
-                        <Col xs="4" className="">
+                        <Col xs="4" className="title-card">
                           <div className="">Fee</div>
                         </Col>
                         <Col xs="8" className="text-right">
@@ -532,7 +541,7 @@ const AddLiquidity = () => {
                     )}
 
                     <Row className="mb-2">
-                      <Col xs="4" className="">
+                      <Col xs="4" className="title-card">
                         <div className="">Output</div>
                       </Col>
                       <Col xs="8" className="text-right">
@@ -543,66 +552,66 @@ const AddLiquidity = () => {
                         </div>
                       </Col>
                     </Row>
-                  </>
-                )}
-                {!poolFactory.finalLpArray && (
-                  <HelmetLoading height="150px" width="150px" />
-                )}
-              </Col>
-            </Row>
-            <Row className="text-center">
-              {assetAdd1?.tokenAddress &&
-                assetAdd1?.tokenAddress !== addr.bnb &&
-                wallet?.account &&
-                addInput1?.value && (
-                  <Approval
-                    tokenAddress={assetAdd1?.tokenAddress}
-                    symbol={assetAdd1?.symbol}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.router}
-                    txnAmount={convertToWei(addInput1?.value)}
-                    assetNumber="1"
-                  />
-                )}
-              <Col xs="12" sm="4">
-                <Button
-                  className="w-100 h-100 btn-primary"
-                  onClick={() =>
-                    activeTab === 'addTab1'
-                      ? dispatch(
-                          routerAddLiq(
-                            convertToWei(addInput2.value),
-                            convertToWei(addInput1.value),
-                            assetAdd1.tokenAddress,
-                          ),
-                        )
-                      : dispatch(
-                          routerAddLiqAsym(
-                            convertToWei(addInput1.value),
-                            assetAdd1.tokenAddress === addr.sparta,
-                            poolAdd1.tokenAddress,
-                          ),
-                        )
-                  }
-                >
-                  Join Pool
-                </Button>
-              </Col>
-              {assetAdd2?.tokenAddress &&
-                assetAdd2?.tokenAddress !== addr.bnb &&
-                wallet?.account &&
-                addInput2?.value && (
-                  <Approval
-                    tokenAddress={assetAdd2?.tokenAddress}
-                    symbol={assetAdd2?.symbol}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.router}
-                    txnAmount={convertToWei(addInput2?.value)}
-                    assetNumber="2"
-                  />
-                )}
-            </Row>
-          </CardBody>
+                  </div>
+                </>
+              )}
+              {!poolFactory.finalLpArray && (
+                <HelmetLoading height="150px" width="150px" />
+              )}
+            </Col>
+          </Row>
+          <Row className="text-center">
+            {assetAdd1?.tokenAddress &&
+              assetAdd1?.tokenAddress !== addr.bnb &&
+              wallet?.account &&
+              addInput1?.value && (
+                <Approval
+                  tokenAddress={assetAdd1?.tokenAddress}
+                  symbol={assetAdd1?.symbol}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.router}
+                  txnAmount={convertToWei(addInput1?.value)}
+                  assetNumber="1"
+                />
+              )}
+            <Col xs="12" sm="4" md="12">
+              <Button
+                className="w-100 h-100 btn-primary"
+                onClick={() =>
+                  activeTab === 'addTab1'
+                    ? dispatch(
+                        routerAddLiq(
+                          convertToWei(addInput2.value),
+                          convertToWei(addInput1.value),
+                          assetAdd1.tokenAddress,
+                        ),
+                      )
+                    : dispatch(
+                        routerAddLiqAsym(
+                          convertToWei(addInput1.value),
+                          assetAdd1.tokenAddress === addr.sparta,
+                          poolAdd1.tokenAddress,
+                        ),
+                      )
+                }
+              >
+                Join Pool
+              </Button>
+            </Col>
+            {assetAdd2?.tokenAddress &&
+              assetAdd2?.tokenAddress !== addr.bnb &&
+              wallet?.account &&
+              addInput2?.value && (
+                <Approval
+                  tokenAddress={assetAdd2?.tokenAddress}
+                  symbol={assetAdd2?.symbol}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.router}
+                  txnAmount={convertToWei(addInput2?.value)}
+                  assetNumber="2"
+                />
+              )}
+          </Row>
         </Card>
       </Row>
       {poolFactory.finalLpArray && (

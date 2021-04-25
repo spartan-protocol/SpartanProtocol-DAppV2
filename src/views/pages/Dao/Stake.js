@@ -98,10 +98,12 @@ const Stake = () => {
                           type="Button"
                           className="btn btn-primary w-100 p-3"
                           onClick={() =>
-                            dispatch(daoWithdraw(asset.poolAddress))
+                            dispatch(
+                              daoDeposit(asset.poolAddress, asset.balanceLPs),
+                            )
                           }
                         >
-                          Unstake
+                          Stake
                         </Button>
                       </Col>
                       <Col xs="6" className="mt-2">
@@ -109,12 +111,10 @@ const Stake = () => {
                           type="Button"
                           className="btn btn-primary w-100 p-3"
                           onClick={() =>
-                            dispatch(
-                              daoDeposit(asset.poolAddress, asset.balanceLPs),
-                            )
+                            dispatch(daoWithdraw(asset.poolAddress))
                           }
                         >
-                          Stake
+                          Unstake
                         </Button>
                       </Col>
                     </Row>
