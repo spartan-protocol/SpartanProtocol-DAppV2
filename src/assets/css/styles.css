@@ -373,9 +373,8 @@ input:focus, textarea:focus, select:focus{
 }
 
 .modal-body {
-
     overflow-y: auto;
-    height: 280px;
+    height: 40vh;
 }
 
 
@@ -489,6 +488,12 @@ input:focus, textarea:focus, select:focus{
         transform: scale(1);
     }
 
+    .modal-body {
+        overflow-y: auto;
+        height: 320px;
+    }
+
+
 
 }
 
@@ -496,6 +501,7 @@ input:focus, textarea:focus, select:focus{
 /*Mobile medium*/
 
 @media (min-width: 544px) and (max-width: 768px) {
+
 
 
     .output-card {
@@ -570,9 +576,6 @@ input:focus, textarea:focus, select:focus{
     padding: 0;
 }
 
-
-
-
 .main-panel > .content {
     padding: 10px 10px 30px 10px;
     min-height: calc(100vh - 70px);
@@ -599,11 +602,16 @@ input:focus, textarea:focus, select:focus{
         border-radius: 0;
     }
 
-
 }
 
 
 @media (min-width: 375px) and (max-width: 375px) {
+
+    .modal-body {
+        overflow-y: auto;
+        height: 380px;
+    }
+
     .modal-dialog {
 
         width: 100% !important;
