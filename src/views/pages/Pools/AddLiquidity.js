@@ -111,6 +111,7 @@ const AddLiquidity = () => {
     poolFactory.poolDetails,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected2'),
+    window.localStorage.getItem('assetSelected3'),
     activeTab,
   ])
 
@@ -283,12 +284,12 @@ const AddLiquidity = () => {
           assetAdd1.baseAmount,
           addInput2.value,
         )
+        addInput3.value = getAddBothOutputLP()
       }
     } else if (activeTab === 'addTab2') {
-      addInput3.value = getAddBothOutputLP()
-    }
-    if (activeTab === 'addTab2' && addInput1?.value > 0 && addInput3) {
-      addInput3.value = getAddSingleOutputLP()
+      if (addInput1?.value) {
+        addInput3.value = getAddSingleOutputLP()
+      }
     }
   }
 
@@ -305,17 +306,21 @@ const AddLiquidity = () => {
     }
 
     if (activeTab === 'addTab2') {
-      if (addInput1?.value !== '') {
-        handleInputChange()
-      } else {
-        addInput1.value = '0'
+      if (addInput1?.value) {
         handleInputChange()
       }
       if (addInput2) {
         addInput2.value = '0'
       }
     }
-  }, [addInput1?.value, addInput2?.value, assetAdd1, assetAdd2, activeTab])
+  }, [
+    addInput1?.value,
+    addInput2?.value,
+    assetAdd1,
+    assetAdd2,
+    poolAdd1,
+    activeTab,
+  ])
 
   return (
     <>
@@ -354,7 +359,6 @@ const AddLiquidity = () => {
                     <div className="">Input</div>
                   </Col>
 
-                  {/** ******************* */}
                   <Col xs={8} className="text-right">
                     <div
                       className="balance"
@@ -386,7 +390,6 @@ const AddLiquidity = () => {
                         type="text"
                         placeholder="'Input' amount..."
                         id="addInput1"
-                        onInput={() => console.log('HANDLE INPUT CHANGE HERE')}
                       />
                       <InputGroupAddon
                         addonType="append"
@@ -414,7 +417,14 @@ const AddLiquidity = () => {
                         <div className="">Input</div>
                       </Col>
                       <Col xs="8" className="text-right">
-                        <div className="balance">
+                        <div
+                          className="balance"
+                          role="button"
+                          onClick={() => {
+                            addInput2.focus()
+                            addInput2.value = convertFromWei(getBalance(2))
+                          }}
+                        >
                           Balance:{' '}
                           {poolFactory.poolDetails &&
                             formatFromWei(getBalance(2))}
@@ -437,7 +447,7 @@ const AddLiquidity = () => {
                           <Input
                             className="text-right h-100 ml-0"
                             type="text"
-                            placeholder="0"
+                            placeholder="'Input' amount..."
                             id="addInput2"
                           />
                           <InputGroupAddon
@@ -495,7 +505,7 @@ const AddLiquidity = () => {
                       <Input
                         className="text-right h-100 ml-0"
                         type="text"
-                        placeholder="0"
+                        placeholder="'Output' amount..."
                         id="addInput3"
                         disabled
                       />
@@ -517,12 +527,12 @@ const AddLiquidity = () => {
                       </Col>
                       <Col xs="8" className="text-right">
                         <div className="">
-                          {formatFromUnits(addInput1?.value, 8)}{' '}
+                          {formatFromUnits(addInput1?.value, 6)}{' '}
                           {getToken(assetAdd1.tokenAddress)?.symbol}
                         </div>
                         {activeTab === 'addTab1' && (
                           <div className="">
-                            {formatFromUnits(addInput2?.value, 8)}{' '}
+                            {formatFromUnits(addInput2?.value, 6)}{' '}
                             {getToken(assetAdd2.tokenAddress)?.symbol}
                           </div>
                         )}
@@ -537,7 +547,7 @@ const AddLiquidity = () => {
                         <Col xs="8" className="text-right">
                           <div className="">
                             {assetAdd1 &&
-                              formatFromWei(getAddSingleSwapFee(), 8)}{' '}
+                              formatFromWei(getAddSingleSwapFee(), 6)}{' '}
                             SPARTA
                           </div>
                         </Col>
@@ -550,7 +560,7 @@ const AddLiquidity = () => {
                       </Col>
                       <Col xs="8" className="text-right">
                         <div className="">
-                          {formatFromUnits(addInput3?.value, 8)}{' '}
+                          {formatFromUnits(addInput3?.value, 6)}{' '}
                           {getToken(assetAdd1.tokenAddress)?.symbol}
                           -SPP
                         </div>
@@ -580,7 +590,7 @@ const AddLiquidity = () => {
               )}
             <Col xs="12" sm="4" md="12">
               <Button
-                className="w-100 h-100 btn-primary"
+                className="h-100 btn-primary"
                 onClick={() =>
                   activeTab === 'addTab1'
                     ? dispatch(

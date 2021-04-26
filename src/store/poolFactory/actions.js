@@ -16,8 +16,8 @@ export const poolFactoryLoading = () => ({
   type: Types.POOLFACTORY_LOADING,
 })
 
-export const poolFactoryFinalArrayLoading = () => ({
-  type: Types.POOLFACTORY_FINALARRAY_LOADING,
+export const poolDetailsLoading = () => ({
+  type: Types.POOL_DETAILS_LOADING,
 })
 
 /**
@@ -177,7 +177,7 @@ export const getListedPools = (tokenDetails, curatedArray) => async (
  * @returns {array} poolDetails
  */
 export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
-  dispatch(poolFactoryFinalArrayLoading())
+  dispatch(poolDetailsLoading())
   const addr = getAddresses()
 
   try {

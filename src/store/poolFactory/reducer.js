@@ -54,7 +54,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
         ...state,
         poolDetails: action.payload,
         error: null,
-        loading: false,
+        loadingFinal: false,
       }
     }
 
@@ -74,7 +74,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOLFACTORY_FINALARRAY_LOADING: {
+    case Types.POOL_DETAILS_LOADING: {
       return {
         ...state,
         loadingFinal: true,
