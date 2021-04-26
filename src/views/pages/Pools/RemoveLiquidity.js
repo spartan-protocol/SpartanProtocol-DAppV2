@@ -305,7 +305,7 @@ const RemoveLiquidity = () => {
 
   const handleInputChange = () => {
     if (activeTab === '1') {
-      if (removeInput1?.value) {
+      if (removeInput1?.value && removeInput2 && removeInput3) {
         removeInput2.value = getRemoveTokenOutput()
         removeInput3.value = getRemoveSpartaOutput()
       }
@@ -514,7 +514,9 @@ const RemoveLiquidity = () => {
                       </Col>
                       <Col className="text-right">
                         <div className="">
-                          {formatFromUnits(removeInput1?.value, 6)}{' '}
+                          {removeInput1?.value > 0
+                            ? formatFromUnits(removeInput1?.value, 6)
+                            : '0'}{' '}
                           {getToken(poolRemove1?.tokenAddress)?.symbol}-SPP
                         </div>
                       </Col>
@@ -527,7 +529,10 @@ const RemoveLiquidity = () => {
                         </Col>
                         <Col xs="8" className="text-right">
                           <div className="">
-                            {formatFromWei(getRemoveOneSwapFee())} SPARTA
+                            {getRemoveOneSwapFee() > 0
+                              ? formatFromWei(getRemoveOneSwapFee())
+                              : '0'}{' '}
+                            SPARTA
                           </div>
                         </Col>
                       </Row>
@@ -535,16 +540,26 @@ const RemoveLiquidity = () => {
 
                     <Row className="mb-2">
                       <Col xs="auto">
-                        <div className="title-card">Output</div>
+                        {activeTab === '1' && (
+                          <div className="title-card mt-2">Output</div>
+                        )}
+                        {activeTab === '2' && (
+                          <div className="title-card">Output</div>
+                        )}
                       </Col>
                       <Col className="text-right">
                         <div className="">
-                          {formatFromUnits(removeInput2?.value, 6)}{' '}
+                          {removeInput2?.value > 0
+                            ? formatFromUnits(removeInput2?.value, 6)
+                            : '0'}{' '}
                           {getToken(poolRemove1?.tokenAddress)?.symbol}
                         </div>
                         {activeTab === '1' && (
                           <div className="">
-                            {formatFromUnits(removeInput3?.value, 6)} SPARTA
+                            {removeInput3?.value > 0
+                              ? formatFromUnits(removeInput3?.value, 6)
+                              : '0'}{' '}
+                            SPARTA
                           </div>
                         )}
                       </Col>
