@@ -1,15 +1,16 @@
+/* eslint-disable*/
 // import Dashboard from './components/Dashboard/Dashboard'
-import PoolsOverview from './views/pages/Pools/Overview'
-import Dao from './views/pages/Dao/Overview'
-import Liquidity from './views/pages/Pools/Liquidity'
-import Bond from './views/pages/Bond/Bond'
-import Swap from './views/pages/Swap/Swap'
-import Synth from './views/pages/Synth/Overview'
+import PoolsOverview from "./views/pages/Pools/Overview"
+import Dao from "./views/pages/Dao/Overview"
+import Liquidity from "./views/pages/Pools/Liquidity"
+import Bond from "./views/pages/Bond/Bond"
+import Swap from "./views/pages/Swap/Swap"
+import Synth from "./views/pages/Synth/Overview"
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
-// import Notifications from './views/pages/Samples/Notifications'
+import Notifications from "./components/Notifications/Notifications"
 // import Buttons from './views/pages/Samples/Buttons'
-import Alerts from './views/pages/Samples/Alerts'
+import Alerts from "./views/pages/Samples/Alerts"
 // import Typography from './views/pages/Samples/Typography'
 // import Grid from './views/pages/Samples/Grid'
 // import ReactTables from './views/pages/Samples/ReactTables'
@@ -24,59 +25,66 @@ import Alerts from './views/pages/Samples/Alerts'
 
 const routes = (t) => [
   {
-    path: '/home',
-    name: t('home'),
-    icon: 'icon-medium icon-home icon-dark',
+    path: "/notificaions",
+    name: "Notificaions",
+    mini: "NO",
+    component: Notifications,
+    layout: "/dapp"
+  },
+  {
+    path: "/home",
+    name: t("home"),
+    icon: "icon-medium icon-home icon-dark",
     component: Alerts,
-    layout: '/dapp',
+    layout: "/dapp"
   },
 
   {
-    path: '/pools/overview',
-    name: t('pools'),
-    icon: 'icon-medium icon-home icon-dark',
+    path: "/pools/overview",
+    name: t("pools"),
+    icon: "icon-medium icon-home icon-dark",
     component: PoolsOverview,
-    layout: '/dapp',
+    layout: "/dapp"
   },
 
   {
-    path: '/pools/liquidity',
-    name: t('liquidity'),
-    icon: 'icon-medium icon-sword icon-dark',
+    path: "/pools/liquidity",
+    name: t("liquidity"),
+    icon: "icon-medium icon-sword icon-dark",
     component: Liquidity,
-    layout: '/dapp',
+    layout: "/dapp"
   },
   {
-    path: '/pools/swap',
-    name: t('swap'),
-    icon: 'icon-medium icon-swords icon-dark',
+    path: "/pools/swap",
+    name: t("swap"),
+    icon: "icon-medium icon-swords icon-dark",
     component: Swap,
-    layout: '/dapp',
+    layout: "/dapp"
   },
 
   {
-    path: '/bondVault',
-    name: t('bondVault'),
-    icon: 'icon-medium icon-helmet icon-dark',
+    path: "/bondVault",
+    name: t("bondVault"),
+    icon: "icon-medium icon-helmet icon-dark",
     component: Bond,
-    layout: '/dapp',
+    layout: "/dapp"
   },
 
   {
-    path: '/daoVault',
-    name: t('daoVault'),
-    icon: 'icon-medium icon-colosseum icon-dark',
+    path: "/daoVault",
+    name: t("daoVault"),
+    icon: "icon-medium icon-colosseum icon-dark",
     component: Dao,
-    layout: '/dapp',
+    layout: "/dapp"
   },
 
   {
-    path: '/synthVault',
-    name: t('synthVault'),
-    icon: 'icon-medium icon-colosseum icon-dark',
+    path: "/synthVault",
+    name: t("synthVault"),
+    icon: "icon-medium icon-colosseum icon-dark",
     component: Synth,
-    layout: '/dapp',
-  },
+    layout: "/dapp"
+  }
 
   // {
   //   collapse: true,
@@ -172,20 +180,8 @@ const routes = (t) => [
   //       component: SearchModal,
   //       layout: '/dapp',
   //     },
-  //     {
-  //       path: '/buttons',
-  //       name: 'Buttons',
-  //       mini: 'BU',
-  //       component: Buttons,
-  //       layout: '/dapp',
-  //     },
-  //     {
-  //       path: '/notificaions',
-  //       name: 'Notificaions',
-  //       mini: 'NO',
-  //       component: Notifications,
-  //       layout: '/dapp',
-  //     },
+
+  //
   //     {
   //       path: '/share',
   //       name: 'Share',
