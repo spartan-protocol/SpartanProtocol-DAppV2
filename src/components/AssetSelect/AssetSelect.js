@@ -305,7 +305,7 @@ const AssetSelect = (props) => {
       <Modal isOpen={showModal} toggle={toggleModal}>
         <Row className="card-body">
           <Col xs="10">
-            <h3 className="ml-2 modal-title">Select An Asset</h3>
+            <h3 className="ml-2 modal-title">{t('selectAnAsset')}</h3>
           </Col>
           <Col xs="2">
             <Button onClick={toggleModal} className="btn btn-transparent mt-4">
@@ -323,7 +323,7 @@ const AssetSelect = (props) => {
                 changeTab('all')
               }}
             >
-              All
+              {t('all')}
             </NavLink>
           </NavItem>
           {assetArray.filter((asset) => asset.type === 'token').length > 0 && (
@@ -335,7 +335,7 @@ const AssetSelect = (props) => {
                 }}
               >
                 {' '}
-                Tokens
+                {t('tokens')}
               </NavLink>
             </NavItem>
           )}
@@ -349,7 +349,7 @@ const AssetSelect = (props) => {
                   changeTab('pool')
                 }}
               >
-                LP Tokens
+                {t('lpTokens')}
               </NavLink>
             </NavItem>
           )}
@@ -390,7 +390,7 @@ const AssetSelect = (props) => {
               </InputGroupAddon>
               <Input
                 className="text-card mt-1"
-                placeholder="Search assets..."
+                placeholder={t('searchAssets')}
                 type="text"
                 id="searchInput"
                 onChange={() => console.log('hello')}

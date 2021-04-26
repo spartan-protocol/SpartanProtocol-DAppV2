@@ -43,7 +43,7 @@
     "wallet":"Cartera",
     "ready":"Listo",
     "changeWallet":"Cambiar cartera",
-    "assets":"Monedas",
+    "assets":"Activos",
     "actions":"Acciones",
     "availableLPs":"LPs disponibles",
     "viewBscScan":"Ver en BSC Scan",
@@ -52,6 +52,11 @@
     "others":"Otras Carteras",
     "home": "Inicio",
     "daoVault": "Votacion",
-    "synthVault": "Sinteticos",
-    "bondVault": "Vinculos"
+    "synthVault": "Sintéticos",
+    "bondVault": "Vinculos",
+    "all": "Todo",
+    "selectAnAsset": "Seleccionar tipo de activo",
+    "tokens": "Criptos",
+    "lpTokens": "Criptos LP",
+    "searchAssets": "Buscar activo..."
 }
