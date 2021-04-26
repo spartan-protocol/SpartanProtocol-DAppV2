@@ -53,7 +53,7 @@ const AddLiquidity = () => {
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [poolAdd1, setPoolAdd1] = useState('...')
-  const [outputLp, setOutputLp] = useState('0')
+  const [outputLp, setOutputLp] = useState('0.00')
 
   useEffect(() => {
     const { poolDetails } = poolFactory
@@ -125,11 +125,8 @@ const AddLiquidity = () => {
   const addInput2 = document.getElementById('addInput2')
   const addInput3 = document.getElementById('addInput3')
 
-  const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab)
-  }
-
   const clearInputs = (focusAfter) => {
+    setOutputLp('0.00')
     if (addInput1) {
       addInput1.value = ''
     }
@@ -145,6 +142,11 @@ const AddLiquidity = () => {
     if (focusAfter === 2) {
       addInput2.focus()
     }
+  }
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab)
+    clearInputs(1)
   }
 
   const getBalance = (asset) => {
@@ -172,7 +174,7 @@ const AddLiquidity = () => {
         ),
       )
     }
-    return '0'
+    return '0.00'
   }
 
   //= =================================================================================//
@@ -190,7 +192,7 @@ const AddLiquidity = () => {
         ),
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getAddSingleSwapFee = () => {
@@ -203,7 +205,7 @@ const AddLiquidity = () => {
       )
       return swapFee
     }
-    return '0'
+    return '0.00'
   }
 
   const getInput1ValueUSD = () => {
@@ -217,14 +219,14 @@ const AddLiquidity = () => {
     if (assetAdd1?.tokenAddress === addr.sparta && addInput1?.value) {
       return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
     }
-    return '0'
+    return '0.00'
   }
 
   const getInput2ValueUSD = () => {
     if (assetAdd2 && addInput2?.value) {
       return BN(convertToWei(addInput2.value)).times(web3.spartaPrice)
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueBase = () => {
@@ -235,7 +237,7 @@ const AddLiquidity = () => {
         poolAdd1.poolUnits,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueToken = () => {
@@ -246,7 +248,7 @@ const AddLiquidity = () => {
         poolAdd1.poolUnits,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueUSD = () => {
@@ -262,7 +264,7 @@ const AddLiquidity = () => {
         .times(web3.spartaPrice)
     }
 
-    return '0'
+    return '0.00'
   }
 
   //= =================================================================================//
@@ -304,7 +306,7 @@ const AddLiquidity = () => {
         .minus('1')
         .times('100')
     }
-    return '0'
+    return '0.00'
   }
 
   useEffect(() => {
@@ -320,8 +322,8 @@ const AddLiquidity = () => {
 
   return (
     <>
-      <Row>
-        <Card className="card-body" style={{ maxWidth: '500px' }}>
+      <Row className="justify-content-center">
+        <Card className="card-body" style={{ maxWidth: '480px' }}>
           <Nav pills className="nav-tabs-custom mt-2 mb-4">
             <NavItem>
               <NavLink
@@ -397,8 +399,9 @@ const AddLiquidity = () => {
                     </InputGroup>
                     <div className="text-right text-sm-label">
                       ~$
-                      {addInput1?.value &&
-                        formatFromWei(getInput1ValueUSD(), 2)}
+                      {addInput1?.value
+                        ? formatFromWei(getInput1ValueUSD(), 2)
+                        : '0.00'}
                     </div>
                   </Col>
                 </Row>
@@ -476,8 +479,9 @@ const AddLiquidity = () => {
                       </InputGroup>
                       <div className="text-right text-sm-label">
                         ~$
-                        {addInput2?.value &&
-                          formatFromWei(getInput2ValueUSD(), 2)}
+                        {addInput2?.value
+                          ? formatFromWei(getInput2ValueUSD(), 2)
+                          : '0.00'}
                       </div>
                     </Col>
                   </Row>
@@ -527,9 +531,13 @@ const AddLiquidity = () => {
                       </InputGroup>
                       <div className="text-right text-sm-label">
                         ~$
-                        {addInput1?.value && formatFromWei(getLpValueUSD(), 2)}
+                        {addInput1?.value
+                          ? formatFromWei(getLpValueUSD(), 2)
+                          : '0.00'}
                         {' ('}
-                        {addInput1?.value && formatFromUnits(getRateSlip())}
+                        {addInput1?.value
+                          ? formatFromUnits(getRateSlip())
+                          : '0.00'}
                         {'%)'}
                       </div>
                     </Col>
@@ -548,7 +556,7 @@ const AddLiquidity = () => {
                         <span className="output-card text-light">
                           {addInput1?.value > 0
                             ? formatFromUnits(addInput1?.value, 6)
-                            : '0'}{' '}
+                            : '0.00'}{' '}
                           {getToken(assetAdd1.tokenAddress)?.symbol}
                         </span>
                       </Col>
@@ -563,7 +571,7 @@ const AddLiquidity = () => {
                           <span className="output-card text-light">
                             {addInput2?.value > 0
                               ? formatFromUnits(addInput2?.value, 6)
-                              : '0'}{' '}
+                              : '0.00'}{' '}
                             <span className="">SPARTA</span>
                           </span>
                         </Col>
@@ -579,7 +587,7 @@ const AddLiquidity = () => {
                           <span className="output-card text-light">
                             {assetAdd1 && getAddSingleSwapFee() > 0
                               ? formatFromWei(getAddSingleSwapFee(), 6)
-                              : '0'}{' '}
+                              : '0.00'}{' '}
                             <span className="">SPARTA</span>
                           </span>
                         </Col>
@@ -592,7 +600,7 @@ const AddLiquidity = () => {
                       </Col>
                       <Col className="text-right">
                         <span className="subtitle-card">
-                          {outputLp > 0 ? formatFromWei(outputLp, 6) : '0'}{' '}
+                          {outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
                           <span className="output-card ml-1">
                             {getToken(assetAdd1.tokenAddress)?.symbol}-SPP
                           </span>

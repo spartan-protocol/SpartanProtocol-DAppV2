@@ -176,7 +176,7 @@ const RemoveLiquidity = () => {
         ),
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getRemoveSpartaOutput = () => {
@@ -189,7 +189,7 @@ const RemoveLiquidity = () => {
         ),
       )
     }
-    return '0'
+    return '0.00'
   }
 
   //= =================================================================================//
@@ -211,7 +211,7 @@ const RemoveLiquidity = () => {
       )
       return swapFee
     }
-    return '0'
+    return '0.00'
   }
 
   const getRemoveOneSwapOutput = () => {
@@ -229,7 +229,7 @@ const RemoveLiquidity = () => {
         assetRemove1?.tokenAddress === addr.sparta,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getRemoveOneFinalOutput = () => {
@@ -241,7 +241,7 @@ const RemoveLiquidity = () => {
       )
       return result
     }
-    return '0'
+    return '0.00'
   }
 
   //= =================================================================================//
@@ -255,14 +255,14 @@ const RemoveLiquidity = () => {
         convertToWei(removeInput2.value),
       ).times(web3.spartaPrice)
     }
-    return '0'
+    return '0.00'
   }
 
   const getOutput2ValueUSD = () => {
     if (assetRemove2 && removeInput3?.value) {
       return BN(convertToWei(removeInput3.value)).times(web3.spartaPrice)
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueBase = () => {
@@ -273,7 +273,7 @@ const RemoveLiquidity = () => {
         poolRemove1.poolUnits,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueToken = () => {
@@ -284,7 +284,7 @@ const RemoveLiquidity = () => {
         poolRemove1.poolUnits,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueUSD = () => {
@@ -300,7 +300,7 @@ const RemoveLiquidity = () => {
         .times(web3.spartaPrice)
     }
 
-    return '0'
+    return '0.00'
   }
 
   const handleInputChange = () => {
@@ -329,8 +329,8 @@ const RemoveLiquidity = () => {
 
   return (
     <>
-      <Row>
-        <Card className="card-body">
+      <Row className="justify-content-center">
+        <Card className="card-body" style={{ maxWidth: '480px' }}>
           <Row>
             <Col md={12}>
               <Card
@@ -366,7 +366,7 @@ const RemoveLiquidity = () => {
                       <Input
                         className="text-right ml-0"
                         type="text"
-                        placeholder="0"
+                        placeholder="0.00"
                         id="removeInput1"
                       />
                       <InputGroupAddon
@@ -381,7 +381,9 @@ const RemoveLiquidity = () => {
                     </InputGroup>
                     <div className="text-right">
                       ~$
-                      {removeInput1?.value && formatFromWei(getLpValueUSD(), 2)}
+                      {removeInput1?.value
+                        ? formatFromWei(getLpValueUSD(), 2)
+                        : '0.00'}
                     </div>
                   </Col>
                 </Row>
@@ -445,15 +447,16 @@ const RemoveLiquidity = () => {
                       <Input
                         className="text-right ml-0"
                         type="text"
-                        placeholder="0"
+                        placeholder="0.00"
                         id="removeInput2"
                         disabled
                       />
                     </InputGroup>
                     <div className="text-right">
                       ~$
-                      {removeInput2?.value &&
-                        formatFromWei(getOutput1ValueUSD(), 2)}
+                      {removeInput2?.value
+                        ? formatFromWei(getOutput1ValueUSD(), 2)
+                        : '0.00'}
                     </div>
                   </Col>
                 </Row>
@@ -489,15 +492,16 @@ const RemoveLiquidity = () => {
                           <Input
                             className="text-right ml-0"
                             type="text"
-                            placeholder="0"
+                            placeholder="0.00"
                             id="removeInput3"
                             disabled
                           />
                         </InputGroup>
                         <div className="text-right">
                           ~$
-                          {removeInput3?.value &&
-                            formatFromWei(getOutput2ValueUSD(), 2)}
+                          {removeInput3?.value
+                            ? formatFromWei(getOutput2ValueUSD(), 2)
+                            : '0.00'}
                         </div>
                       </Col>
                     </Row>
@@ -516,7 +520,7 @@ const RemoveLiquidity = () => {
                         <div className="">
                           {removeInput1?.value > 0
                             ? formatFromUnits(removeInput1?.value, 6)
-                            : '0'}{' '}
+                            : '0.00'}{' '}
                           {getToken(poolRemove1?.tokenAddress)?.symbol}-SPP
                         </div>
                       </Col>
@@ -531,7 +535,7 @@ const RemoveLiquidity = () => {
                           <div className="">
                             {getRemoveOneSwapFee() > 0
                               ? formatFromWei(getRemoveOneSwapFee())
-                              : '0'}{' '}
+                              : '0.00'}{' '}
                             SPARTA
                           </div>
                         </Col>
@@ -551,14 +555,14 @@ const RemoveLiquidity = () => {
                         <div className="">
                           {removeInput2?.value > 0
                             ? formatFromUnits(removeInput2?.value, 6)
-                            : '0'}{' '}
+                            : '0.00'}{' '}
                           {getToken(poolRemove1?.tokenAddress)?.symbol}
                         </div>
                         {activeTab === '1' && (
                           <div className="">
                             {removeInput3?.value > 0
                               ? formatFromUnits(removeInput3?.value, 6)
-                              : '0'}{' '}
+                              : '0.00'}{' '}
                             SPARTA
                           </div>
                         )}
@@ -574,10 +578,9 @@ const RemoveLiquidity = () => {
             </Col>
           </Row>
           <Row className="text-center">
-            <Col xs="12" sm="4" />
-            <Col xs="12" sm="4">
+            <Col>
               <Button
-                className="w-100 h-100 btn-primary"
+                className="w-75 h-100 btn-primary"
                 onClick={() =>
                   activeTab === '1'
                     ? dispatch(
@@ -598,7 +601,6 @@ const RemoveLiquidity = () => {
                 Remove Liq
               </Button>
             </Col>
-            <Col xs="12" sm="4" />
           </Row>
         </Card>
       </Row>

@@ -33,7 +33,7 @@ const Liquidity = () => {
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col xs="auto">
+          <Col xs="12">
             <Nav pills className="nav-tabs-custom card-body">
               <NavItem>
                 <NavLink

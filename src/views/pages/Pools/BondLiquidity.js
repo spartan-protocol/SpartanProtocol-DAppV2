@@ -141,8 +141,8 @@ const BondLiquidity = () => {
 
   return (
     <>
-      <Row>
-        <Card className="card-body">
+      <Row className="justify-content-center">
+        <Card className="card-body" style={{ maxWidth: '480px' }}>
           <Card style={{ backgroundColor: '#25212D' }} className="card-body">
             <Row>
               <Col xs="4" className="">
@@ -177,7 +177,7 @@ const BondLiquidity = () => {
                   <Input
                     className="text-right ml-0"
                     type="text"
-                    placeholder="0"
+                    placeholder="0.00"
                     id="bondInput1"
                   />
                   <InputGroupAddon
@@ -192,7 +192,9 @@ const BondLiquidity = () => {
                 </InputGroup>
                 <div className="text-right">
                   ~$
-                  {bondInput1?.value && formatFromWei(getInput1ValueUSD(), 2)}
+                  {bondInput1?.value
+                    ? formatFromWei(getInput1ValueUSD(), 2)
+                    : '0.00'}
                 </div>
               </Col>
             </Row>
@@ -261,7 +263,7 @@ const BondLiquidity = () => {
                 <div className="">
                   {bondInput1?.value > 0
                     ? formatFromUnits(bondInput1?.value, 6)
-                    : '0'}{' '}
+                    : '0.00'}{' '}
                   {getToken(assetBond1.tokenAddress)?.symbol}
                 </div>
               </Col>
@@ -274,7 +276,7 @@ const BondLiquidity = () => {
                 <div className="">
                   {calcSpartaMinted() > 0
                     ? formatFromWei(calcSpartaMinted(), 6)
-                    : '0'}{' '}
+                    : '0.00'}{' '}
                   SPARTA
                 </div>
               </Col>
@@ -285,7 +287,7 @@ const BondLiquidity = () => {
               </Col>
               <Col className="text-right">
                 <div className="">
-                  {calcOutput() > 0 ? formatFromWei(calcOutput(), 6) : '0'}{' '}
+                  {calcOutput() > 0 ? formatFromWei(calcOutput(), 6) : '0.00'}{' '}
                   {getToken(assetBond1.tokenAddress)?.symbol}-SPP
                 </div>
               </Col>
