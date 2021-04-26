@@ -96,7 +96,7 @@ const Swap = () => {
           setMode('pool')
           window.localStorage.setItem('assetType1', 'pool')
           window.localStorage.setItem('assetType2', 'pool')
-          if (asset2?.symbol === 'SPARTA') {
+          if (asset2?.tokenAddress === addr.sparta) {
             asset2 =
               asset1?.tokenAddress !== poolDetails[1].tokenAddress
                 ? { tokenAddress: poolDetails[1].tokenAddress }
@@ -108,12 +108,12 @@ const Swap = () => {
           asset2 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
-        } else if (asset1?.symbol !== 'SPARTA' && type1 === 'token') {
+        } else if (asset1?.tokenAddress !== addr.sparta && type1 === 'token') {
           setFilter(['token'])
           setMode('token')
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
-        } else if (asset1?.symbol === 'SPARTA' && type2 === 'synth') {
+        } else if (asset1?.tokenAddress === addr.sparta && type2 === 'synth') {
           setFilter(['token', 'synth'])
           setMode('synth')
           window.localStorage.setItem('assetType1', 'token')
@@ -689,7 +689,7 @@ const Swap = () => {
                           <Col xs={8} className="text-right balance">
                             <div>
                               Balance{': '}
-                              {poolFactory.finalLpArray &&
+                              {poolFactory.poolDetails &&
                                 formatFromWei(getBalance(2), 4)}
                             </div>
                           </Col>
@@ -987,7 +987,7 @@ const Swap = () => {
                     )}
                     {mode === 'synth' &&
                       JSON.parse(window.localStorage.getItem('assetSelected1'))
-                        .symbol === 'SPARTA' && (
+                        .tokenAddress === addr.sparta && (
                         <Col>
                           <Button
                             color="primary"
@@ -1009,7 +1009,7 @@ const Swap = () => {
 
                     {mode === 'synth' &&
                       JSON.parse(window.localStorage.getItem('assetSelected1'))
-                        .symbol !== 'SPARTA' && (
+                        .tokenAddress !== addr.sparta && (
                         <Col>
                           <Button
                             color="primary"

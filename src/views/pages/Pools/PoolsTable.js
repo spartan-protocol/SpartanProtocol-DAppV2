@@ -4,9 +4,11 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import bnb from '../../../assets/icons/BNB.svg'
 import { usePoolFactory } from '../../../store/poolFactory'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { getAddresses } from '../../../utils/web3'
 
 const Poolstable = () => {
   const poolFactory = usePoolFactory()
+  const addr = getAddresses()
 
   const [, sethorizontalTabs] = React.useState('harvest')
   // eslint-disable-next-line no-unused-vars
@@ -25,24 +27,27 @@ const Poolstable = () => {
 
   useEffect(() => {
     const collapseThree = []
-    if (poolFactory && poolFactory.finalLpArray) {
-      poolFactory.finalLpArray.forEach(() => {
+    if (poolFactory && poolFactory.poolDetails) {
+      poolFactory.poolDetails.forEach(() => {
         collapseThree.push(false)
       })
     }
   }, [poolFactory])
 
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
   return (
     <>
-      {!poolFactory.finalLpArray && <HelmetLoading height={300} width={300} />}
-      {poolFactory?.finalLpArray && (
+      {!poolFactory.poolDetails && <HelmetLoading height={300} width={300} />}
+      {poolFactory?.poolDetails && (
         <Col md={12}>
-          {poolFactory?.finalLpArray
-            .filter((asset) => asset.symbol !== 'SPARTA')
+          {poolFactory?.poolDetails
+            .filter((asset) => asset.tokenAddress !== addr.sparta)
             .sort((a, b) => b.baseAmount - a.baseAmount)
             .map((asset, index) => (
               <Card
-                key={asset.tokenAddress}
+                key={asset.address}
                 className="card-body"
                 style={{ backgroundColor: '#1D171F' }}
               >
@@ -62,7 +67,7 @@ const Poolstable = () => {
                       </Col>
                       <Col md={1} className="ml-n5 mr-n4">
                         <h4>
-                          {asset.symbol}
+                          {getToken(asset.tokenAddress)?.symbol}
                           <div className="output-card-description">$477,78</div>
                         </h4>
                       </Col>
@@ -218,7 +223,7 @@ const Poolstable = () => {
                       </Col>
                       <Col xs={4} className="ml-n4">
                         <h4>
-                          {asset.symbol}
+                          {getToken(asset.tokenAddress)?.symbol}
                           <div className="output-card-description">$477,78</div>
                         </h4>
                       </Col>
