@@ -1,6 +1,7 @@
 /*eslint-disable*/
 import React from 'react'
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from 'react-notification-alert'
 
@@ -14,6 +15,7 @@ import logo from '../../assets/img/spartan_red_medium.svg'
 import DataManager from '../DataManager/DataManager'
 
 const Common = () => {
+  const { t } = useTranslation()
   const [activeColor] = React.useState('blue')
   const [, setSidebarMini] = React.useState(true)
   const [opacity] = React.useState(0)
@@ -147,7 +149,7 @@ const Common = () => {
         </button>
       </div>
       <Sidebar
-        routes={routes}
+        routes={routes(t)}
         activeColor={activeColor}
         logo={{
           outterLink: './',
@@ -160,12 +162,12 @@ const Common = () => {
         <Header
           location={location}
           handleMiniClick={handleMiniClick}
-          brandText={getActiveRoute(routes)}
+          brandText={getActiveRoute(routes(t))}
           sidebarOpened={sidebarOpened}
           toggleSidebar={toggleSidebar}
         />
         <Switch>
-          {getRoutes(routes)}
+          {getRoutes(routes(t))}
           <Redirect from="*" to="/dapp/home" />
         </Switch>
         {
