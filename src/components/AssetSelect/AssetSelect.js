@@ -261,7 +261,7 @@ const AssetSelect = (props) => {
         className="justify-content-left"
       >
         <Row className="select-box h-auto" name="singleSelect">
-          <Col xs="12">
+          <Col xs="auto">
             {selectedType === 'token' && (
               <img
                 height="35px"
@@ -307,20 +307,14 @@ const AssetSelect = (props) => {
               </>
             )}
 
-            <span className="d-none d-lg-inline-block mr-2">
+            <span className="output-card mr-2">
               {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
               {selectedType === 'pool' && '-SPP'}
               {selectedType === 'synth' && '-SPS'}
             </span>
-
             {!props.disabled && (
               <i className="icon-extra-small icon-arrow icon-light align-middle" />
             )}
-          </Col>
-          <Col xs="12" className="d-block d-lg-none ml-2 mt-1">
-            {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
-            {selectedType === 'pool' && '-SPP'}
-            {selectedType === 'synth' && '-SPS'}
           </Col>
         </Row>
       </Row>

@@ -28,15 +28,12 @@ const Liquidity = () => {
     <>
       <div className="content">
         <Row className="card-body justify-content-center">
-          <Col xs="6" xl="5">
+          <Col xs="12">
             <h2 className="d-inline text-title ml-1">Liquidity</h2>
-          </Col>
-          <Col xs="6" xl="4">
-            {/* Buttons? */}
           </Col>
         </Row>
         <Row className="justify-content-center">
-          <Col xs="12" xl="9">
+          <Col xs="auto">
             <Nav pills className="nav-tabs-custom card-body">
               <NavItem>
                 <NavLink

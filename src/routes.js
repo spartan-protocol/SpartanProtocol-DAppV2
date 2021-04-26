@@ -1,10 +1,11 @@
 // import Dashboard from './components/Dashboard/Dashboard'
 import PoolsOverview from './views/pages/Pools/Overview'
-import Dao from './views/pages/Dao/Overview'
+// import Dao from './views/pages/Dao/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
-import Synth from './views/pages/Synth/Overview'
+import Synth from './views/pages/Farm/Overview'
+import Synths from './views/pages/Synths/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
@@ -55,26 +56,26 @@ const routes = (t) => [
   },
 
   {
-    path: '/bondVault',
-    name: t('bondVault'),
+    path: '/bond',
+    name: t('bond'),
     icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
     layout: '/dapp',
   },
 
   {
-    path: '/daoVault',
-    name: t('daoVault'),
+    path: '/farm',
+    name: 'Farm',
     icon: 'icon-medium icon-colosseum icon-dark',
-    component: Dao,
+    component: Synth,
     layout: '/dapp',
   },
 
   {
-    path: '/synthVault',
-    name: t('synthVault'),
+    path: '/synths',
+    name: 'Synths',
     icon: 'icon-medium icon-colosseum icon-dark',
-    component: Synth,
+    component: Synths,
     layout: '/dapp',
   },
 
