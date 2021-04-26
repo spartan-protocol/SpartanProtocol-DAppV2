@@ -49,5 +49,9 @@
     "viewBscScan":"Ver en BSC Scan",
     "lpShares":"Aportaciones LP",
     "synths":"Sintéticos",
-    "others":"Otras Carteras"
+    "others":"Otras Carteras",
+    "home": "Inicio",
+    "daoVault": "Votacion",
+    "synthVault": "Sinteticos",
+    "bondVault": "Vinculos"
 }
