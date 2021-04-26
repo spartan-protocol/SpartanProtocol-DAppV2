@@ -134,7 +134,7 @@ const routes = (t) => [
   //       mini: 'OVIEW',
   //       component: Tiles,
   //       layout: '/dapp',
-  //     },routes
+  //     },
   //     {
   //       path: '/dao/lockearn',
   //       name: 'Lock+Earn',
