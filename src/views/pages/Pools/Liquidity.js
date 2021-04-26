@@ -14,10 +14,12 @@ import classnames from 'classnames'
 import AddLiquidity from './AddLiquidity'
 import RemoveLiquidity from './RemoveLiquidity'
 import BondLiquidity from './BondLiquidity'
+import { usePoolFactory } from '../../../store/poolFactory'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Liquidity = () => {
   const [activeTab, setActiveTab] = useState('1')
-
+  const poolFactory = usePoolFactory()
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
@@ -77,28 +79,31 @@ const Liquidity = () => {
                 </NavLink>
               </NavItem>
             </Nav>
-            <TabContent activeTab={activeTab}>
-              {activeTab === '1' && (
-                <TabPane tabId="1" className="p-3">
-                  <AddLiquidity />
-                </TabPane>
-              )}
-              {activeTab === '2' && (
-                <TabPane tabId="2" className="p-3">
-                  <RemoveLiquidity />
-                </TabPane>
-              )}
-              {/* {activeTab === '3' && (
+            {poolFactory.poolDetails.length > 0 && (
+              <TabContent activeTab={activeTab}>
+                {activeTab === '1' && (
+                  <TabPane tabId="1" className="p-3">
+                    <AddLiquidity />
+                  </TabPane>
+                )}
+                {activeTab === '2' && (
+                  <TabPane tabId="2" className="p-3">
+                    <RemoveLiquidity />
+                  </TabPane>
+                )}
+                {/* {activeTab === '3' && (
                       <TabPane tabId="3" className="p-3">
                         <ZapLiquidity />
                       </TabPane>
                     )} */}
-              {activeTab === '4' && (
-                <TabPane tabId="4" className="p-3">
-                  <BondLiquidity />
-                </TabPane>
-              )}
-            </TabContent>
+                {activeTab === '4' && (
+                  <TabPane tabId="4" className="p-3">
+                    <BondLiquidity />
+                  </TabPane>
+                )}
+              </TabContent>
+            )}
+            {poolFactory.poolDetails.length <= 0 && <HelmetLoading />}
           </Col>
         </Row>
       </div>

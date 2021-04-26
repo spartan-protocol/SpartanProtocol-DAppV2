@@ -294,25 +294,7 @@ const AddLiquidity = () => {
   }
 
   useEffect(() => {
-    if (activeTab === 'addTab1') {
-      if (
-        document.activeElement.id === 'addInput2' &&
-        addInput2?.value !== ''
-      ) {
-        handleInputChange(addInput2?.value, false)
-      } else {
-        handleInputChange(addInput1?.value, true)
-      }
-    }
-
-    if (activeTab === 'addTab2') {
-      if (addInput1?.value) {
-        handleInputChange()
-      }
-      if (addInput2) {
-        addInput2.value = '0'
-      }
-    }
+    handleInputChange()
   }, [
     addInput1?.value,
     addInput2?.value,
@@ -352,11 +334,11 @@ const AddLiquidity = () => {
             <Col md={12}>
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body"
+                className="card-body mb-1"
               >
                 <Row>
-                  <Col xs="4" className="">
-                    <div className="">Input</div>
+                  <Col xs="4">
+                    <div>Input</div>
                   </Col>
 
                   <Col xs={8} className="text-right">
@@ -473,7 +455,7 @@ const AddLiquidity = () => {
 
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body"
+                className="card-body mb-0"
               >
                 <Row>
                   <Col xs="4" className="">
@@ -487,7 +469,7 @@ const AddLiquidity = () => {
                   </Col>
                 </Row>
 
-                <Row className="my-3">
+                <Row className="my-2">
                   <Col xs="6">
                     <div className="output-card ml-2">
                       <AssetSelect
@@ -522,17 +504,21 @@ const AddLiquidity = () => {
                 <>
                   <div className="card-body">
                     <Row className="mb-2">
-                      <Col xs="4" className="">
+                      <Col xs="auto">
                         <div className="title-card">Input</div>
                       </Col>
-                      <Col xs="8" className="text-right">
-                        <div className="">
-                          {formatFromUnits(addInput1?.value, 6)}{' '}
+                      <Col className="text-right">
+                        <div>
+                          {addInput1?.value > 0
+                            ? formatFromUnits(addInput1?.value, 6)
+                            : '0'}{' '}
                           {getToken(assetAdd1.tokenAddress)?.symbol}
                         </div>
                         {activeTab === 'addTab1' && (
                           <div className="">
-                            {formatFromUnits(addInput2?.value, 6)}{' '}
+                            {addInput2?.value > 0
+                              ? formatFromUnits(addInput2?.value, 6)
+                              : '0'}{' '}
                             {getToken(assetAdd2.tokenAddress)?.symbol}
                           </div>
                         )}
@@ -541,13 +527,14 @@ const AddLiquidity = () => {
 
                     {activeTab === 'addTab2' && (
                       <Row className="mb-2">
-                        <Col xs="4" className="title-card">
+                        <Col xs="auto" className="title-card">
                           <div className="">Fee</div>
                         </Col>
-                        <Col xs="8" className="text-right">
+                        <Col className="text-right">
                           <div className="">
-                            {assetAdd1 &&
-                              formatFromWei(getAddSingleSwapFee(), 6)}{' '}
+                            {assetAdd1 && getAddSingleSwapFee() > 0
+                              ? formatFromWei(getAddSingleSwapFee(), 6)
+                              : '0'}{' '}
                             SPARTA
                           </div>
                         </Col>
@@ -555,12 +542,14 @@ const AddLiquidity = () => {
                     )}
 
                     <Row className="mb-2">
-                      <Col xs="4" className="title-card">
+                      <Col xs="auto" className="title-card">
                         <div className="">Output</div>
                       </Col>
-                      <Col xs="8" className="text-right">
+                      <Col className="text-right">
                         <div className="">
-                          {formatFromUnits(addInput3?.value, 6)}{' '}
+                          {addInput3?.value > 0
+                            ? formatFromUnits(addInput3?.value, 6)
+                            : '0'}{' '}
                           {getToken(assetAdd1.tokenAddress)?.symbol}
                           -SPP
                         </div>
