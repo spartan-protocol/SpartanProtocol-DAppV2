@@ -608,11 +608,7 @@ const AddLiquidity = () => {
       {poolFactory.finalLpArray && (
         <Row>
           <Col xs="12">
-            <SwapPair
-              assetSwap={poolAdd1}
-              finalLpArray={poolFactory.finalLpArray}
-              web3={web3}
-            />
+            <SwapPair assetSwap={poolAdd1} />
           </Col>
         </Row>
       )}

@@ -91,7 +91,7 @@ const AssetSelect = (props) => {
   const [assetArray, setAssetArray] = useState([])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -265,8 +265,8 @@ const AssetSelect = (props) => {
             {selectedType === 'token' && (
               <img
                 height="35px"
-                src={selectedItem?.symbolUrl}
-                alt={`${selectedItem?.symbol}icon`}
+                src={getToken(selectedItem.tokenAddress)?.symbolUrl}
+                alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
                 className="mx-2"
               />
             )}
@@ -275,8 +275,8 @@ const AssetSelect = (props) => {
               <>
                 <img
                   height="35px"
-                  src={selectedItem?.symbolUrl}
-                  alt={`${selectedItem?.symbol}icon`}
+                  src={getToken(selectedItem.tokenAddress)?.symbolUrl}
+                  alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
                   className="ml-2 mr-n3"
                 />
 
@@ -293,8 +293,8 @@ const AssetSelect = (props) => {
               <>
                 <img
                   height="35px"
-                  src={selectedItem?.symbolUrl}
-                  alt={`${selectedItem?.symbol}icon`}
+                  src={getToken(selectedItem.tokenAddress)?.symbolUrl}
+                  alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
                   className="ml-2 mr-n3"
                 />
 
@@ -308,7 +308,7 @@ const AssetSelect = (props) => {
             )}
 
             <span className="d-none d-lg-inline-block mr-2">
-              {selectedItem && selectedItem?.symbol}
+              {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
               {selectedType === 'pool' && '-SPP'}
               {selectedType === 'synth' && '-SPS'}
             </span>
@@ -318,7 +318,7 @@ const AssetSelect = (props) => {
             )}
           </Col>
           <Col xs="12" className="d-block d-lg-none ml-2 mt-1">
-            {selectedItem && selectedItem?.symbol}
+            {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
             {selectedType === 'pool' && '-SPP'}
             {selectedType === 'synth' && '-SPS'}
           </Col>
@@ -436,7 +436,10 @@ const AssetSelect = (props) => {
           </Row>
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <Row key={asset.actualAddr} className="mb-3 output-card mr-2">
+              <Row
+                key={`${asset.actualAddr}-all`}
+                className="mb-3 output-card mr-2"
+              >
                 <Col xs="4" sm="2" className="p-0 pl-2">
                   <div
                     role="button"
@@ -509,7 +512,10 @@ const AssetSelect = (props) => {
             assetArray
               .filter((asset) => asset.type === activeTab)
               .map((asset) => (
-                <Row key={asset.actualAddr} className="mb-3 output-card mr-2">
+                <Row
+                  key={asset.actualAddr + activeTab}
+                  className="mb-3 output-card mr-2"
+                >
                   <Col xs="4" sm="2" className="p-0 pl-2">
                     <div
                       role="button"

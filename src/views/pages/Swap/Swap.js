@@ -169,7 +169,7 @@ const Swap = () => {
   ])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -1036,21 +1036,13 @@ const Swap = () => {
                   <Col xs="12" md="6">
                     {poolFactory.poolDetails &&
                       assetSwap1.tokenAddress !== addr.sparta && (
-                        <SwapPair
-                          assetSwap={assetSwap1}
-                          poolDetails={poolFactory.poolDetails}
-                          web3={web3}
-                        />
+                        <SwapPair assetSwap={assetSwap1} />
                       )}
                   </Col>
                   <Col xs="12" md="6">
                     {poolFactory.poolDetails &&
                       assetSwap2.tokenAddress !== addr.sparta && (
-                        <SwapPair
-                          assetSwap={assetSwap2}
-                          poolDetails={poolFactory.poolDetails}
-                          web3={web3}
-                        />
+                        <SwapPair assetSwap={assetSwap2} />
                       )}
                   </Col>
                 </Row>

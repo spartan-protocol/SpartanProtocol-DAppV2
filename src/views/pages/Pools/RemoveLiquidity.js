@@ -589,11 +589,7 @@ const RemoveLiquidity = () => {
       {poolFactory.finalLpArray && (
         <Row>
           <Col xs="12">
-            <SwapPair
-              assetSwap={poolRemove1}
-              finalLpArray={poolFactory.finalLpArray}
-              web3={web3}
-            />
+            <SwapPair assetSwap={poolRemove1} />
           </Col>
         </Row>
       )}

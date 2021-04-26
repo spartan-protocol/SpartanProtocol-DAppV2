@@ -313,11 +313,7 @@ const BondLiquidity = () => {
       {poolFactory.finalLpArray && (
         <Row>
           <Col xs="12" className="p-0">
-            <SwapPair
-              assetSwap={assetBond1}
-              finalLpArray={poolFactory.finalLpArray}
-              web3={web3}
-            />
+            <SwapPair assetSwap={assetBond1} />
           </Col>
         </Row>
       )}

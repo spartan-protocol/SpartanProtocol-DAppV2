@@ -3,9 +3,9 @@ import * as Types from './types'
 const initialState = {
   listedTokens: [],
   curatedPools: [],
-  tokenDetails: {},
-  listedPools: {},
-  poolDetails: {},
+  tokenDetails: [],
+  listedPools: [],
+  poolDetails: [],
   loading: false,
   error: null,
   loadingFinal: false,

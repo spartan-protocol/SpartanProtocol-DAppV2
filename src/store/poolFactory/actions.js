@@ -94,7 +94,7 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
       const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
       const tempItem = {
         address: listedTokens[i],
-        balanceTokens: wallet !== null ? tempArray[i].balance.toString() : '0',
+        balance: wallet !== null ? tempArray[i].balance.toString() : '0',
         name: tempArray[i].name,
         symbol: tempArray[i].symbol,
         decimals: tempArray[i].decimals.toString(),
