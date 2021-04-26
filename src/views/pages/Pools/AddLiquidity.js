@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
-
 import classnames from 'classnames'
 import {
   Button,
@@ -54,9 +53,9 @@ const AddLiquidity = () => {
   const [poolAdd1, setPoolAdd1] = useState('...')
 
   useEffect(() => {
-    const { finalArray } = poolFactory
+    const { poolDetails } = poolFactory
     const getAssetDetails = () => {
-      if (finalArray && activeTab === 'addTab1') {
+      if (poolDetails.length > 0 && activeTab === 'addTab1') {
         window.localStorage.setItem('assetType1', 'token')
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'pool')
@@ -75,9 +74,9 @@ const AddLiquidity = () => {
             ? asset1
             : { tokenAddress: addr.bnb }
 
-        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-        asset2 = getItemFromArray(asset2, poolFactory.finalArray)
-        asset3 = getItemFromArray(asset3, poolFactory.finalArray)
+        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
+        asset2 = getItemFromArray(asset2, poolFactory.poolDetails)
+        asset3 = getItemFromArray(asset3, poolFactory.poolDetails)
 
         setAssetAdd1(asset1)
         setAssetAdd2(asset2)
@@ -86,7 +85,7 @@ const AddLiquidity = () => {
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-      } else if (finalArray && activeTab === 'addTab2') {
+      } else if (poolDetails && activeTab === 'addTab2') {
         window.localStorage.setItem('assetType1', 'token')
         window.localStorage.setItem('assetType3', 'pool')
 
@@ -96,8 +95,8 @@ const AddLiquidity = () => {
         asset1 = asset1 || { tokenAddress: addr.bnb }
         asset3 = asset1.tokenAddress !== addr.sparta ? asset1 : asset3
 
-        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-        asset3 = getItemFromArray(asset3, poolFactory.finalArray)
+        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
+        asset3 = getItemFromArray(asset3, poolFactory.poolDetails)
 
         setAssetAdd1(asset1)
         setPoolAdd1(asset3)
@@ -109,12 +108,14 @@ const AddLiquidity = () => {
 
     getAssetDetails()
   }, [
-    poolFactory.finalArray,
-    poolFactory.finalLpArray,
+    poolFactory.poolDetails,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected2'),
     activeTab,
   ])
+
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const addInput1 = document.getElementById('addInput1')
   const addInput2 = document.getElementById('addInput2')
@@ -124,16 +125,32 @@ const AddLiquidity = () => {
     if (activeTab !== tab) setActiveTab(tab)
   }
 
-  const clearInputs = () => {
+  const clearInputs = (focusAfter) => {
     if (addInput1) {
-      addInput1.value = '0'
+      addInput1.value = ''
     }
     if (addInput2) {
-      addInput2.value = '0'
+      addInput2.value = ''
     }
     if (addInput3) {
-      addInput3.value = '0'
+      addInput3.value = ''
     }
+    if (focusAfter === 1) {
+      addInput1.focus()
+    }
+    if (focusAfter === 2) {
+      addInput2.focus()
+    }
+  }
+
+  const getBalance = (asset) => {
+    if (asset === 1) {
+      return getToken(assetAdd1?.tokenAddress)?.balance
+    }
+    if (asset === 2) {
+      return getToken(assetAdd2?.tokenAddress)?.balance
+    }
+    return poolAdd1?.balance
   }
 
   //= =================================================================================//
@@ -247,34 +264,31 @@ const AddLiquidity = () => {
   //= =================================================================================//
   // General Functions
 
-  const handleInputChange = (input, toBase) => {
-    if (toBase && addInput1?.value > 0 && addInput2) {
-      addInput2.value = calcValueInBase(
-        assetAdd1.tokenAmount,
-        assetAdd1.baseAmount,
-        input,
-      )
-    } else if (addInput1?.value > 0 && addInput2) {
-      addInput1.value = calcValueInToken(
-        assetAdd1.tokenAmount,
-        assetAdd1.baseAmount,
-        input,
-      )
-    }
-    if (
-      activeTab === 'addTab1' &&
-      addInput1?.value > 0 &&
-      addInput2 &&
-      addInput3
-    ) {
+  const handleInputChange = () => {
+    if (activeTab === 'addTab1') {
+      if (
+        addInput1?.value &&
+        addInput2 &&
+        addInput2 !== document.activeElement
+      ) {
+        addInput2.value = calcValueInBase(
+          assetAdd1.tokenAmount,
+          assetAdd1.baseAmount,
+          addInput1.value,
+        )
+        addInput3.value = getAddBothOutputLP()
+      } else if (addInput2?.value && addInput1) {
+        addInput1.value = calcValueInToken(
+          assetAdd1.tokenAmount,
+          assetAdd1.baseAmount,
+          addInput2.value,
+        )
+      }
+    } else if (activeTab === 'addTab2') {
       addInput3.value = getAddBothOutputLP()
-    } else if (activeTab === 'addTab1') {
-      clearInputs()
     }
     if (activeTab === 'addTab2' && addInput1?.value > 0 && addInput3) {
       addInput3.value = getAddSingleOutputLP()
-    } else if (activeTab === 'addTab2') {
-      clearInputs()
     }
   }
 
@@ -285,12 +299,6 @@ const AddLiquidity = () => {
         addInput2?.value !== ''
       ) {
         handleInputChange(addInput2?.value, false)
-      } else if (
-        (addInput1 && addInput2 && addInput1?.value === '') ||
-        (addInput1 && addInput2 && addInput2?.value === '')
-      ) {
-        addInput1.value = '0'
-        addInput2.value = '0'
       } else {
         handleInputChange(addInput1?.value, true)
       }
@@ -308,8 +316,6 @@ const AddLiquidity = () => {
       }
     }
   }, [addInput1?.value, addInput2?.value, assetAdd1, assetAdd2, activeTab])
-
-  const getBalance = () => formatFromWei(assetAdd1.balanceTokens)
 
   return (
     <>
@@ -354,12 +360,11 @@ const AddLiquidity = () => {
                       className="balance"
                       role="button"
                       onClick={() => {
-                        addInput1.value = getBalance()
+                        addInput1.value = convertFromWei(getBalance(1))
                       }}
                     >
                       Balance:{' '}
-                      {poolFactory.finalLpArray &&
-                        formatFromWei(assetAdd1.balanceTokens)}{' '}
+                      {poolFactory.poolDetails && formatFromWei(getBalance(1))}{' '}
                     </div>
                   </Col>
                 </Row>
@@ -381,14 +386,14 @@ const AddLiquidity = () => {
                         type="text"
                         placeholder="'Input' amount..."
                         id="addInput1"
-                        onInput={() => getBalance()}
+                        onInput={() => console.log('HANDLE INPUT CHANGE HERE')}
                       />
                       <InputGroupAddon
                         addonType="append"
                         role="button"
                         tabIndex={-1}
-                        onKeyPress={() => clearInputs()}
-                        onClick={() => clearInputs()}
+                        onKeyPress={() => clearInputs(1)}
+                        onClick={() => clearInputs(1)}
                       >
                         <i className="icon-search-bar icon-close icon-light my-auto" />
                       </InputGroupAddon>
@@ -411,8 +416,8 @@ const AddLiquidity = () => {
                       <Col xs="8" className="text-right">
                         <div className="balance">
                           Balance:{' '}
-                          {poolFactory.finalLpArray &&
-                            formatFromWei(assetAdd2.balanceTokens)}
+                          {poolFactory.poolDetails &&
+                            formatFromWei(getBalance(2))}
                         </div>
                       </Col>
                     </Row>
@@ -439,8 +444,8 @@ const AddLiquidity = () => {
                             addonType="append"
                             role="button"
                             tabIndex={-1}
-                            onKeyPress={() => clearInputs()}
-                            onClick={() => clearInputs()}
+                            onKeyPress={() => clearInputs(2)}
+                            onClick={() => clearInputs(2)}
                           >
                             <i className="icon-search-bar icon-close icon-light my-auto" />
                           </InputGroupAddon>
@@ -467,8 +472,7 @@ const AddLiquidity = () => {
                   <Col xs="8" className="text-right">
                     <div className="balance">
                       Balance:{' '}
-                      {poolFactory.finalLpArray &&
-                        formatFromWei(poolAdd1.balanceLPs)}
+                      {poolFactory.poolDetails && formatFromWei(getBalance(3))}
                     </div>
                   </Col>
                 </Row>
@@ -504,7 +508,7 @@ const AddLiquidity = () => {
                 </Row>
               </Card>
 
-              {poolFactory.finalLpArray && (
+              {poolFactory.poolDetails && (
                 <>
                   <div className="card-body">
                     <Row className="mb-2">
@@ -514,12 +518,12 @@ const AddLiquidity = () => {
                       <Col xs="8" className="text-right">
                         <div className="">
                           {formatFromUnits(addInput1?.value, 8)}{' '}
-                          {assetAdd1?.symbol}
+                          {getToken(assetAdd1.tokenAddress)?.symbol}
                         </div>
                         {activeTab === 'addTab1' && (
                           <div className="">
                             {formatFromUnits(addInput2?.value, 8)}{' '}
-                            {assetAdd2?.symbol}
+                            {getToken(assetAdd2.tokenAddress)?.symbol}
                           </div>
                         )}
                       </Col>
@@ -547,7 +551,7 @@ const AddLiquidity = () => {
                       <Col xs="8" className="text-right">
                         <div className="">
                           {formatFromUnits(addInput3?.value, 8)}{' '}
-                          {poolAdd1?.symbol}
+                          {getToken(assetAdd1.tokenAddress)?.symbol}
                           -SPP
                         </div>
                       </Col>
@@ -555,7 +559,7 @@ const AddLiquidity = () => {
                   </div>
                 </>
               )}
-              {!poolFactory.finalLpArray && (
+              {!poolFactory.poolDetails && (
                 <HelmetLoading height="150px" width="150px" />
               )}
             </Col>
@@ -567,7 +571,7 @@ const AddLiquidity = () => {
               addInput1?.value && (
                 <Approval
                   tokenAddress={assetAdd1?.tokenAddress}
-                  symbol={assetAdd1?.symbol}
+                  symbol={getToken(assetAdd1.tokenAddress)?.symbol}
                   walletAddress={wallet?.account}
                   contractAddress={addr.router}
                   txnAmount={convertToWei(addInput1?.value)}
@@ -604,7 +608,7 @@ const AddLiquidity = () => {
               addInput2?.value && (
                 <Approval
                   tokenAddress={assetAdd2?.tokenAddress}
-                  symbol={assetAdd2?.symbol}
+                  symbol={getToken(assetAdd2.tokenAddress)?.symbol}
                   walletAddress={wallet?.account}
                   contractAddress={addr.router}
                   txnAmount={convertToWei(addInput2?.value)}
@@ -614,7 +618,7 @@ const AddLiquidity = () => {
           </Row>
         </Card>
       </Row>
-      {poolFactory.finalLpArray && (
+      {poolFactory.poolDetails && (
         <Row>
           <Col xs="12">
             <SwapPair assetSwap={poolAdd1} />

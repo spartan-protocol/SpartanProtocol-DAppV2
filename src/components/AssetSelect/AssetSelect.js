@@ -265,8 +265,8 @@ const AssetSelect = (props) => {
             {selectedType === 'token' && (
               <img
                 height="35px"
-                src={getToken(selectedItem.tokenAddress)?.symbolUrl}
-                alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
+                src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
+                alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
                 className="mx-2"
               />
             )}
@@ -275,8 +275,8 @@ const AssetSelect = (props) => {
               <>
                 <img
                   height="35px"
-                  src={getToken(selectedItem.tokenAddress)?.symbolUrl}
-                  alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
+                  src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
+                  alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
                   className="ml-2 mr-n3"
                 />
 

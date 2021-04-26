@@ -177,13 +177,13 @@ const Swap = () => {
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
-  const clearInputs = async () => {
+  const clearInputs = () => {
     swapInput1.value = ''
     swapInput2.value = ''
     swapInput1.focus()
   }
 
-  const handleReverseAssets = async () => {
+  const handleReverseAssets = () => {
     const asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
     const asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
     const type1 = window.localStorage.getItem('assetType1')
