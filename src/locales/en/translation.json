@@ -49,5 +49,9 @@
   "viewBscScan":"View BscScan",
   "lpShares":"LP Shares",
   "synths":"Synths",
-  "others":"Others"
+  "others":"Others",
+  "home": "Home",
+  "daoVault": "Dao Vault",
+  "synthVault": "Synth Vault",
+  "bondVault": "Bond Vault"
 }

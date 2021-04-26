@@ -22,10 +22,10 @@ import Alerts from './views/pages/Samples/Alerts'
 // import Share from './views/pages/Samples/Share'
 // import SearchModal from './views/pages/Samples/SearchModal'
 
-const routes = [
+const routes = (t) => [
   {
     path: '/home',
-    name: 'Home',
+    name: t('home'),
     icon: 'icon-medium icon-home icon-dark',
     component: Alerts,
     layout: '/dapp',
@@ -33,7 +33,7 @@ const routes = [
 
   {
     path: '/pools/overview',
-    name: 'Pools',
+    name: t('pools'),
     icon: 'icon-medium icon-home icon-dark',
     component: PoolsOverview,
     layout: '/dapp',
@@ -41,14 +41,14 @@ const routes = [
 
   {
     path: '/pools/liquidity',
-    name: 'Liquidity',
+    name: t('liquidity'),
     icon: 'icon-medium icon-sword icon-dark',
     component: Liquidity,
     layout: '/dapp',
   },
   {
     path: '/pools/swap',
-    name: 'Swap',
+    name: t('swap'),
     icon: 'icon-medium icon-swords icon-dark',
     component: Swap,
     layout: '/dapp',
@@ -56,7 +56,7 @@ const routes = [
 
   {
     path: '/bondVault',
-    name: 'BondVault',
+    name: t('bondVault'),
     icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
     layout: '/dapp',
@@ -64,7 +64,7 @@ const routes = [
 
   {
     path: '/daoVault',
-    name: 'DaoVault',
+    name: t('daoVault'),
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Dao,
     layout: '/dapp',
@@ -72,7 +72,7 @@ const routes = [
 
   {
     path: '/synthVault',
-    name: 'SynthVault',
+    name: t('synthVault'),
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Synth,
     layout: '/dapp',
@@ -134,7 +134,7 @@ const routes = [
   //       mini: 'OVIEW',
   //       component: Tiles,
   //       layout: '/dapp',
-  //     },
+  //     },routes
   //     {
   //       path: '/dao/lockearn',
   //       name: 'Lock+Earn',
