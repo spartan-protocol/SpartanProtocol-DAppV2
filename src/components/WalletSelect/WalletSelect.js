@@ -285,11 +285,11 @@ const WalletSelect = (props) => {
                             </div>
                           </Col>
                         </Row>
-                        {poolFactory.detailedArray
-                          ?.filter((asset) => asset.balanceTokens > 0)
+                        {poolFactory.tokenDetails
+                          ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.tokenAddress}-asset`}
+                              key={`${asset.address}-asset`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
@@ -309,7 +309,7 @@ const WalletSelect = (props) => {
                                   <Col xs="12" className="float-left ml-n4">
                                     {asset.symbol}
                                     <div className="description">
-                                      {formatFromWei(asset.balanceTokens)}
+                                      {formatFromWei(asset.balance)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -323,7 +323,7 @@ const WalletSelect = (props) => {
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
-                                      url={asset.tokenAddress}
+                                      url={asset.address}
                                       notificationLocation="tc"
                                     >
                                       <i
@@ -340,7 +340,7 @@ const WalletSelect = (props) => {
                                         if (e.key === 32) {
                                           dispatch(
                                             watchAsset(
-                                              asset.tokenAddress,
+                                              asset.address,
                                               asset.symbol,
                                               '18',
                                               asset.symbolUrl,
@@ -368,8 +368,8 @@ const WalletSelect = (props) => {
                           ))}
                       </TabPane>
                       <TabPane tabId="lp" className="ml-n2">
-                        {poolFactory.finalLpArray?.filter(
-                          (asset) => asset.stakedLPs > 0,
+                        {poolFactory.poolDetails?.filter(
+                          (asset) => asset.staked > 0,
                         ).length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
@@ -382,18 +382,18 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         )}
-                        {poolFactory.finalLpArray
-                          ?.filter((asset) => asset.stakedLPs > 0)
+                        {poolFactory.poolDetails
+                          ?.filter((asset) => asset.staked > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.tokenAddress}-lpdao`}
+                              key={`${asset.address}-lpdao`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
                                 <img
                                   height="35px"
-                                  src={asset.symbolUrl}
-                                  alt={asset.name}
+                                  src={getToken(asset.tokenAddress)?.symbolUrl}
+                                  alt={getToken(asset.tokenAddress)?.name}
                                   className="mr-n3"
                                 />
                                 <img
@@ -410,9 +410,11 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${asset.symbol}-SPP`}
+                                    {`${
+                                      getToken(asset.tokenAddress)?.symbol
+                                    }-SPP`}
                                     <div className="description">
-                                      {formatFromWei(asset.stakedLPs)}
+                                      {formatFromWei(asset.staked)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -426,7 +428,7 @@ const WalletSelect = (props) => {
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
-                                      url={asset.poolAddress}
+                                      url={asset.address}
                                       notificationLocation="tc"
                                     >
                                       <i
@@ -443,10 +445,14 @@ const WalletSelect = (props) => {
                                         if (e.key === 32) {
                                           dispatch(
                                             watchAsset(
-                                              asset.poolAddress,
-                                              `${asset.symbol}p`,
+                                              asset.address,
+                                              `${
+                                                getToken(asset.tokenAddress)
+                                                  ?.symbol
+                                              }p`,
                                               '18',
-                                              asset.symbolUrl,
+                                              getToken(asset.tokenAddress)
+                                                ?.symbolUrl,
                                             ),
                                           )
                                         }
@@ -485,18 +491,18 @@ const WalletSelect = (props) => {
                           </Col>
                         </Row>
 
-                        {poolFactory.finalLpArray
-                          ?.filter((asset) => asset.balanceLPs > 0)
+                        {poolFactory.poolDetails
+                          ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.tokenAddress}-lp`}
+                              key={`${asset.address}-lp`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
                                 <img
                                   height="35px"
-                                  src={asset.symbolUrl}
-                                  alt={asset.name}
+                                  src={getToken(asset.tokenAddress)?.symbolUrl}
+                                  alt={getToken(asset.tokenAddress)?.name}
                                   className="mr-n3"
                                 />
                                 <img
@@ -513,9 +519,11 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${asset.symbol}-SPP`}
+                                    {`${
+                                      getToken(asset.tokenAddress)?.symbol
+                                    }-SPP`}
                                     <div className="description">
-                                      {formatFromWei(asset.balanceLPs)}
+                                      {formatFromWei(asset.balance)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -529,7 +537,7 @@ const WalletSelect = (props) => {
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
-                                      url={asset.poolAddress}
+                                      url={asset.address}
                                       notificationLocation="tc"
                                     >
                                       <i
@@ -546,10 +554,14 @@ const WalletSelect = (props) => {
                                         if (e.key === 32) {
                                           dispatch(
                                             watchAsset(
-                                              asset.poolAddress,
-                                              `${asset.symbol}p`,
+                                              asset.address,
+                                              `${
+                                                getToken(asset.tokenAddress)
+                                                  ?.symbol
+                                              }p`,
                                               '18',
-                                              asset.symbolUrl,
+                                              getToken(asset.tokenAddress)
+                                                ?.symbolUrl,
                                             ),
                                           )
                                         }
@@ -577,8 +589,8 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
 
-                        {poolFactory.finalLpArray?.filter(
-                          (asset) => asset.bondedLPs > 0,
+                        {poolFactory.poolDetails?.filter(
+                          (asset) => asset.bonded > 0,
                         ).length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
@@ -591,18 +603,18 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         )}
-                        {poolFactory.finalLpArray
-                          ?.filter((asset) => asset.bondedLPs > 0)
+                        {poolFactory.poolDetails
+                          ?.filter((asset) => asset.bonded > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.tokenAddress}-lpbond`}
+                              key={`${asset.address}-lpbond`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
                                 <img
                                   height="35px"
-                                  src={asset.symbolUrl}
-                                  alt={asset.name}
+                                  src={getToken(asset.tokenAddress)?.symbolUrl}
+                                  alt={getToken(asset.tokenAddress)?.name}
                                   className="mr-n3"
                                 />
                                 <img
@@ -619,9 +631,11 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${asset.symbol}-SPP`}
+                                    {`${
+                                      getToken(asset.tokenAddress)?.symbol
+                                    }-SPP`}
                                     <div className="description">
-                                      {formatFromWei(asset.bondedLPs)}
+                                      {formatFromWei(asset.bonded)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -635,7 +649,7 @@ const WalletSelect = (props) => {
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
-                                      url={asset.poolAddress}
+                                      url={asset.address}
                                       notificationLocation="tc"
                                     >
                                       <i
@@ -652,10 +666,14 @@ const WalletSelect = (props) => {
                                         if (e.key === 32) {
                                           dispatch(
                                             watchAsset(
-                                              asset.poolAddress,
-                                              `${asset.symbol}p`,
+                                              asset.address,
+                                              `${
+                                                getToken(asset.tokenAddress)
+                                                  ?.symbol
+                                              }p`,
                                               '18',
-                                              asset.symbolUrl,
+                                              getToken(asset.tokenAddress)
+                                                ?.symbolUrl,
                                             ),
                                           )
                                         }
@@ -684,9 +702,8 @@ const WalletSelect = (props) => {
                           ))}
                       </TabPane>
                       <TabPane tabId="synths" className="ml-n2">
-                        {poolFactory.finalLpArray?.filter(
-                          (asset) => asset.stakedSynths > 0,
-                        ).length > 0 && (
+                        {synth.synthDetails?.filter((asset) => asset.staked > 0)
+                          .length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
                               <div className="text-card">Staked</div>
@@ -698,18 +715,18 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         )}
-                        {poolFactory.finalLpArray
-                          ?.filter((asset) => asset.stakedSynths > 0)
+                        {synth.synthDetails
+                          ?.filter((asset) => asset.staked > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.tokenAddress}-synthstake`}
+                              key={`${asset.address}-synthstake`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
                                 <img
                                   height="35px"
-                                  src={asset.symbolUrl}
-                                  alt={asset.name}
+                                  src={getToken(asset.tokenAddress)?.symbolUrl}
+                                  alt={getToken(asset.tokenAddress)?.name}
                                   className="mr-n3"
                                 />
                                 <img
@@ -726,9 +743,11 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${asset.symbol}-SPS`}
+                                    {`${
+                                      getToken(asset.tokenAddress)?.symbol
+                                    }-SPS`}
                                     <div className="description">
-                                      {formatFromWei(asset.stakedSynths)}
+                                      {formatFromWei(asset.staked)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -742,7 +761,7 @@ const WalletSelect = (props) => {
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
-                                      url={asset.synthAddress}
+                                      url={asset.address}
                                       notificationLocation="tc"
                                     >
                                       <i
@@ -759,10 +778,14 @@ const WalletSelect = (props) => {
                                         if (e.key === 32) {
                                           dispatch(
                                             watchAsset(
-                                              asset.synthAddress,
-                                              `${asset.symbol}s`,
+                                              asset.address,
+                                              `${
+                                                getToken(asset.tokenAddress)
+                                                  ?.symbol
+                                              }s`,
                                               '18',
-                                              asset.symbolUrl,
+                                              getToken(asset.tokenAddress)
+                                                ?.symbolUrl,
                                             ),
                                           )
                                         }
@@ -799,18 +822,18 @@ const WalletSelect = (props) => {
                             </div>
                           </Col>
                         </Row>
-                        {poolFactory.finalLpArray
-                          ?.filter((asset) => asset.balanceSynths > 0)
+                        {synth.synthDetails
+                          ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.tokenAddress}-synth`}
+                              key={`${asset.address}-synth`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
                                 <img
                                   height="35px"
-                                  src={asset.symbolUrl}
-                                  alt={asset.name}
+                                  src={getToken(asset.tokenAddress)?.symbolUrl}
+                                  alt={getToken(asset.tokenAddress)?.name}
                                   className="mr-n3"
                                 />
                                 <img
@@ -828,9 +851,11 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${asset.symbol}-SPS`}
+                                    {`${
+                                      getToken(asset.tokenAddress)?.symbol
+                                    }-SPS`}
                                     <div className="description">
-                                      {formatFromWei(asset.balanceSynths)}
+                                      {formatFromWei(asset.balance)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -844,7 +869,7 @@ const WalletSelect = (props) => {
                                 <Row>
                                   <Col xs="6" className="mt-1">
                                     <ShareLink
-                                      url={asset.synthAddress}
+                                      url={asset.address}
                                       notificationLocation="tc"
                                     >
                                       <i
@@ -861,10 +886,14 @@ const WalletSelect = (props) => {
                                         if (e.key === 32) {
                                           dispatch(
                                             watchAsset(
-                                              asset.synthAddress,
-                                              `${asset.symbol}s`,
+                                              asset.address,
+                                              `${
+                                                getToken(asset.tokenAddress)
+                                                  ?.symbol
+                                              }s`,
                                               '18',
-                                              asset.symbolUrl,
+                                              getToken(asset.tokenAddress)
+                                                ?.symbolUrl,
                                             ),
                                           )
                                         }
