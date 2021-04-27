@@ -12,9 +12,9 @@ import {
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
-import Stake from './Stake'
+import Stake from './DaoVault'
 
-const Overview = () => {
+const Vault = () => {
   const synth = useSynth()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -235,4 +235,4 @@ const Overview = () => {
   )
 }
 
-export default Overview
+export default Vault

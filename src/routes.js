@@ -4,7 +4,7 @@ import PoolsOverview from './views/pages/Pools/Overview'
 import Liquidity from './views/pages/Pools/Liquidity'
 import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
-import Synth from './views/pages/Farm/Overview'
+import Vault from './views/pages/Vault/Overview'
 import Synths from './views/pages/Synths/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
@@ -64,10 +64,10 @@ const routes = (t) => [
   },
 
   {
-    path: '/farm',
-    name: 'Farm',
+    path: '/vault',
+    name: 'Vault',
     icon: 'icon-medium icon-colosseum icon-dark',
-    component: Synth,
+    component: Vault,
     layout: '/dapp',
   },
 
