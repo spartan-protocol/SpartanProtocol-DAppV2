@@ -7,6 +7,7 @@ const initialState = {
   synthDetails: [],
   deposit: '0',
   harvest: '0',
+  harvestSingle: '0',
   withdrawAmount: '0',
 }
 
@@ -61,6 +62,15 @@ export const synthReducer = (state = initialState, action) => {
       return {
         ...state,
         harvest: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.HARVEST_SINGLE: {
+      return {
+        ...state,
+        harvestSingle: action.payload,
         error: null,
         loading: false,
       }

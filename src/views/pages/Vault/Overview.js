@@ -9,13 +9,13 @@ const Vault = () => {
   return (
     <>
       <div className="content">
-        <Row className="card-body justify-content-center">
-          <Col xs="auto">
+        <Row className="card-body row-480">
+          <Col xs="12" lg="6" className="col-480">
             <div className="d-inline text-title-small ml-l">
               {mode}Vault Staking
             </div>
           </Col>
-          <Col>
+          <Col xs="12" lg="6" className="col-480">
             <ButtonGroup className="ml-2">
               <Button
                 color={mode === 'Dao' ? 'primary' : 'info'}

@@ -159,6 +159,20 @@ input:focus, textarea:focus, select:focus{
     -ms-animation: fadeIn ease 3s;
 }
 
+.card-480 {
+    max-width: 480px;
+}
+
+.col-480 {
+    justify-content: center;
+    display: flex;
+}
+
+.row-480 {
+    justify-content: center;
+    display: flex; 
+}
+
 
 .modal-title {
     font-family: Kreon;

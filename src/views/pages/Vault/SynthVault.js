@@ -2,14 +2,20 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Button, Card, CardBody, Row, Col } from 'reactstrap'
+import { Button, Card, CardBody, Row, Col, ButtonGroup } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { usePoolFactory } from '../../../store/poolFactory'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/img/spartan_synth.svg'
-import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
+import {
+  getSynthGlobalDetails,
+  getSynthMemberDetails,
+  synthDeposit,
+  synthHarvest,
+  synthWithdraw,
+} from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 
 const SynthVault = () => {
@@ -17,10 +23,13 @@ const SynthVault = () => {
   const synth = useSynth()
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
-
   const [trigger0, settrigger0] = useState(0)
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
   const getData = () => {
-    console.log('add the synth data dispatches here')
+    dispatch(getSynthGlobalDetails())
+    dispatch(getSynthMemberDetails(wallet.account))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -36,16 +45,76 @@ const SynthVault = () => {
 
   return (
     <>
-      <Row>
+      <Row className="justify-contents-center">
         <Col xs="12">
-          <Card>Global Synth Card</Card>
+          <Card>
+            <Col>
+              <h4>Global Details</h4>
+              <p>Min Time: {synth.globalDetails?.minTime}</p>
+              <p>
+                Total Weight: {formatFromWei(synth.globalDetails?.totalWeight)}
+              </p>
+              <p>Eras to Earn: {synth.globalDetails?.erasToEarn}</p>
+              <p>Block Delay: {synth.globalDetails?.blockDelay}</p>
+              <p>Vault Claim: {synth.globalDetails?.vaultClaim}</p>
+            </Col>
+          </Card>
         </Col>
         <Col xs="12">
-          <Card>Synth Member Card</Card>
+          <Card>
+            <Col>
+              <h4>SynthMember</h4>
+              <p>
+                Your Weight: {formatFromWei(synth.memberDetails?.totalWeight)}
+              </p>
+            </Col>
+            <Col xs="12" className="text-center">
+              <Button
+                color="primary"
+                type="Button"
+                onClick={() => dispatch(synthHarvest())}
+              >
+                Harvest
+              </Button>
+            </Col>
+          </Card>
         </Col>
-        <Col xs="12">
-          <Card>Map out staking tiles</Card>
-        </Col>
+        {synth?.synthDetails?.length > 0 &&
+          synth.synthDetails
+            .filter((i) => i.address !== false)
+            .map((i) => (
+              <Col key={i.address}>
+                <Card>
+                  <Col>
+                    <h4>{getToken(i.tokenAddress)?.symbol}-SPS</h4>
+                    <p>Balance: {formatFromWei(i.balance)}</p>
+                    <p>Staked: {formatFromWei(i.staked)}</p>
+                  </Col>
+                  <Col xs="12" className="text-center">
+                    <ButtonGroup>
+                      <Button
+                        color="primary"
+                        type="Button"
+                        onClick={() =>
+                          dispatch(synthDeposit(i.address, i.balance))
+                        }
+                      >
+                        Deposit
+                      </Button>
+                      <Button
+                        color="primary"
+                        type="Button"
+                        onClick={() =>
+                          dispatch(synthWithdraw(i.address, '10000'))
+                        }
+                      >
+                        Withdraw
+                      </Button>
+                    </ButtonGroup>
+                  </Col>
+                </Card>
+              </Col>
+            ))}
       </Row>
     </>
   )

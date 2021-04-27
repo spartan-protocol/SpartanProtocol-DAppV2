@@ -8,5 +8,6 @@ export {
   getSynthDetails,
   synthDeposit,
   synthHarvest,
+  synthHarvestSingle,
   synthWithdraw,
 } from './actions'

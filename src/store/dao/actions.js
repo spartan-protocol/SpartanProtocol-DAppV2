@@ -1,11 +1,60 @@
 import * as Types from './types'
 import { getProviderGasPrice } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getDaoContract } from '../../utils/web3Contracts'
+import { getDaoContract, getDaoVaultContract } from '../../utils/web3Contracts'
 
 export const daoLoading = () => ({
   type: Types.DAO_LOADING,
 })
+
+// --------------------------------------- FINAL DAO ACTIONS BELOW ---------------------------------------
+
+/**
+ * Get the global daoVault details
+ * @returns {object} totalWeight
+ */
+export const getDaoVaultGlobalDetails = () => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoVaultContract()
+  const daoContract = getDaoContract()
+
+  try {
+    let awaitArray = [
+      contract.callStatic.totalWeight(),
+      daoContract.callStatic.memberCount(),
+    ]
+    awaitArray = await Promise.all(awaitArray)
+    const globalDetails = {
+      totalWeight: awaitArray[0].toString(), // DaoVault totalWeight
+      memberCount: awaitArray[1].toString(), // DaoVault memberCount
+    }
+    dispatch(payloadToDispatch(Types.GLOBAL_DETAILS, globalDetails))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
+  }
+}
+
+/**
+ * Get the daoVault member details
+ * @returns {object} weight
+ */
+export const getDaoVaultMemberDetails = (member) => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoVaultContract()
+
+  try {
+    let awaitArray = [contract.callStatic.getMemberWeight(member)]
+    awaitArray = await Promise.all(awaitArray)
+    const memberDetails = {
+      weight: awaitArray[0].toString(),
+    }
+    dispatch(payloadToDispatch(Types.MEMBER_DETAILS, memberDetails))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
+  }
+}
+
+// --------------------------------------- FINAL DAO ACTIONS ABOVE ---------------------------------------
 
 // --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
 
@@ -22,7 +71,7 @@ export const getDaoMemberLastHarvest = (member) => async (dispatch) => {
     const lastHarvest = await contract.callStatic.mapMember_lastTime(member)
     dispatch(payloadToDispatch(Types.LAST_HARVEST, lastHarvest))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -39,7 +88,7 @@ export const getDaoIsMember = (member) => async (dispatch) => {
     const isMember = await contract.callStatic.isMember(member)
     dispatch(payloadToDispatch(Types.GET_DAO_IS_MEMBER, isMember))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -55,7 +104,7 @@ export const getDaoMemberCount = () => async (dispatch) => {
     const memberCount = await contract.callStatic.memberCount()
     dispatch(payloadToDispatch(Types.GET_DAO_MEMBER_COUNT, memberCount))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -73,7 +122,7 @@ export const getDaoHarvestAmount = (member) => async (dispatch) => {
     const harvestAmount = await contract.callStatic.calcCurrentReward(member)
     dispatch(payloadToDispatch(Types.GET_DAO_HARVEST_AMOUNT, harvestAmount))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -92,7 +141,7 @@ export const getDaoHarvestEraAmount = (member) => async (dispatch) => {
       payloadToDispatch(Types.GET_DAO_HARVEST_ERA_AMOUNT, harvestEraAmount),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -121,7 +170,7 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.DAO_DEPOSIT, deposit))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -147,7 +196,7 @@ export const daoWithdraw = (pool, justCheck) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.DAO_WITHDRAW, withdraw))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -172,7 +221,7 @@ export const daoHarvest = (justCheck) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.DAO_HARVEST, harvest))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -189,7 +238,7 @@ export const getDaoProposalMajority = (proposalID) => async (dispatch) => {
     const majority = await contract.callStatic.hasMajority(proposalID)
     dispatch(payloadToDispatch(Types.GET_DAO_PROPOSAL_MAJORITY, majority))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -206,7 +255,7 @@ export const getDaoProposalQuorum = (proposalID) => async (dispatch) => {
     const quorum = await contract.callStatic.hasQuorum(proposalID)
     dispatch(payloadToDispatch(Types.GET_DAO_PROPOSAL_QUORUM, quorum))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -223,7 +272,7 @@ export const getDaoProposalMinority = (proposalID) => async (dispatch) => {
     const minorty = await contract.callStatic.hasMinority(proposalID)
     dispatch(payloadToDispatch(Types.GET_DAO_PROPOSAL_MINORITY, minorty))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -242,7 +291,7 @@ export const getDaoProposalDetails = (proposalID) => async (dispatch) => {
     )
     dispatch(payloadToDispatch(Types.GET_DAO_PROPOSAL_DETAILS, proposalDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -259,7 +308,7 @@ export const getDaoGrantDetails = (proposalID) => async (dispatch) => {
     const grantDetails = await contract.callStatic.getGrantDetails(proposalID)
     dispatch(payloadToDispatch(Types.GET_DAO_GRANT_DETAILS, grantDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -281,7 +330,7 @@ export const daoProposalNewAction = (typeStr) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_ACTION, proposalID))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -304,7 +353,7 @@ export const daoProposalNewParam = (param, typeStr) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_PARAM, proposalID))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -336,7 +385,7 @@ export const daoProposalNewAddress = (proposedAddress, typeStr) => async (
     )
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_ADDRESS, proposalID))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -362,7 +411,7 @@ export const daoProposalNewGrant = (recipient, amount) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_GRANT, proposalID))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -384,7 +433,7 @@ export const daoProposalVote = (proposalID) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_VOTE, voteWeight))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -408,7 +457,7 @@ export const daoProposalRemoveVote = (proposalID) => async (dispatch) => {
       payloadToDispatch(Types.DAO_PROPOSAL_REMOTE_VOTE, voteWeightRemoved),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -442,7 +491,7 @@ export const daoProposalCancel = (oldProposalID, newProposalID) => async (
     )
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_CANCEL, proposal))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
@@ -465,6 +514,6 @@ export const daoProposalFinalise = (proposalID) => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.DAO_PROPOSAL_FINALISE, proposal))
   } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }

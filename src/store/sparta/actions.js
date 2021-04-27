@@ -15,7 +15,7 @@ export const getEmitting = () => async (dispatch) => {
     const emitting = await contract.callStatic.emitting()
     dispatch(payloadToDispatch(Types.GET_EMITTING, emitting))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }
 }
 
@@ -31,7 +31,7 @@ export const getAdjustedClaimRate = (assetAddress) => async (dispatch) => {
       payloadToDispatch(Types.GET_ADJUSTED_CLAIM_RATE, adjustedClaimRate),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }
 }
 
@@ -54,6 +54,6 @@ export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.CLAIM, claimed))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }
 }

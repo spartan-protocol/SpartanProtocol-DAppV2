@@ -42,7 +42,7 @@ export const getListedTokens = () => async (dispatch) => {
     listedTokens.push(addr.sparta)
     dispatch(payloadToDispatch(Types.LISTED_TOKENS, listedTokens))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
   }
 }
 
@@ -63,7 +63,7 @@ export const getCuratedPools = () => async (dispatch) => {
     const curatedPools = await Promise.all(tempArray)
     dispatch(payloadToDispatch(Types.CURATED_POOLS, curatedPools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
   }
 }
 
@@ -109,7 +109,7 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.TOKEN_DETAILS, tokenDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
   }
 }
 
@@ -259,6 +259,6 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, error))
+    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
   }
 }
