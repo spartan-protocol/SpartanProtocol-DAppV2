@@ -1,10 +1,5 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { Row, Col, Button, Card, CardBody, ButtonGroup } from 'reactstrap'
-import { useSynth } from '../../../store/synth/selector'
+import { Row, Col, Button, ButtonGroup } from 'reactstrap'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
 
@@ -39,10 +34,8 @@ const Vault = () => {
             </ButtonGroup>
           </Col>
         </Row>
-        <Row>
-          {mode === 'Dao' && <DaoVault />}
-          {mode === 'Dao' && <SynthVault />}
-        </Row>
+        {mode === 'Dao' && <DaoVault />}
+        {mode === 'Synth' && <SynthVault />}
       </div>
     </>
   )
