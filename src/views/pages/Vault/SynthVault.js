@@ -10,7 +10,7 @@ import spartaIcon from '../../../assets/img/spartan_synth.svg'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 
-const Stake = () => {
+const SynthVault = () => {
   const synth = useSynth()
   const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
@@ -172,4 +172,4 @@ const Stake = () => {
   )
 }
 
-export default Stake
+export default SynthVault

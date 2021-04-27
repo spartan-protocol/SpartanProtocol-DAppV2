@@ -176,6 +176,18 @@ input:focus, textarea:focus, select:focus{
 
 }
 
+.text-title-small {
+    font-family: Kreon;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 46px;
+    /* identical to box height, or 133% */
+    font-feature-settings: 'liga' off;
+    /* White */
+    color: #FFFFFF;
+}
+
 
 .text-title {
     font-family: Kreon;
