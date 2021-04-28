@@ -409,9 +409,7 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${
-                                      getToken(asset.tokenAddress)?.symbol
-                                    }-SPP`}
+                                    {`${getToken(asset.tokenAddress)?.symbol}p`}
                                     <div className="description">
                                       {formatFromWei(asset.staked)}
                                     </div>
@@ -518,9 +516,7 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${
-                                      getToken(asset.tokenAddress)?.symbol
-                                    }-SPP`}
+                                    {`${getToken(asset.tokenAddress)?.symbol}p`}
                                     <div className="description">
                                       {formatFromWei(asset.balance)}
                                     </div>
@@ -629,9 +625,7 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${
-                                      getToken(asset.tokenAddress)?.symbol
-                                    }-SPP`}
+                                    {`${getToken(asset.tokenAddress)?.symbol}p`}
                                     <div className="description">
                                       {formatFromWei(asset.bonded)}
                                     </div>
@@ -741,9 +735,7 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${
-                                      getToken(asset.tokenAddress)?.symbol
-                                    }-SPS`}
+                                    {`${getToken(asset.tokenAddress)?.symbol}s`}
                                     <div className="description">
                                       {formatFromWei(asset.staked)}
                                     </div>
@@ -849,9 +841,7 @@ const WalletSelect = (props) => {
                               >
                                 <Row>
                                   <Col xs="12" className="float-left ml-n4">
-                                    {`${
-                                      getToken(asset.tokenAddress)?.symbol
-                                    }-SPS`}
+                                    {`${getToken(asset.tokenAddress)?.symbol}s`}
                                     <div className="description">
                                       {formatFromWei(asset.balance)}
                                     </div>

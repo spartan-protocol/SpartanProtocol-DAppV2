@@ -281,7 +281,7 @@ const BondLiquidity = () => {
                   <span className="subtitle-card">
                     {calcOutput() > 0 ? formatFromWei(calcOutput(), 6) : '0.00'}{' '}
                     <span className="output-card ml-1">
-                      {getToken(assetBond1.tokenAddress)?.symbol}-SPP
+                      {getToken(assetBond1.tokenAddress)?.symbol}p
                     </span>
                   </span>
                 </Col>

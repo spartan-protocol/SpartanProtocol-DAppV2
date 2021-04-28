@@ -105,7 +105,7 @@ const DaoVault = () => {
               <Col xs="auto" key={i.address}>
                 <Card className="card-480">
                   <Col>
-                    <h4>{getToken(i.tokenAddress)?.symbol}-SPS</h4>
+                    <h4>{getToken(i.tokenAddress)?.symbol}p</h4>
                     <p>Balance: {formatFromWei(i.balance)}</p>
                     <p>Staked: {formatFromWei(i.staked)}</p>
                   </Col>
