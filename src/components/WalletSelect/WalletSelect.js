@@ -249,7 +249,7 @@ const WalletSelect = (props) => {
                               changeActiveTab(e, 'horizontalTabs', 'lp')
                             }
                           >
-                            LP Tokens
+                            {t('lpTokens')}
                           </NavLink>
                         </NavItem>
                         <NavItem>

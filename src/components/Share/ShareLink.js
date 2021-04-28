@@ -1,30 +1,31 @@
 /* eslint-disable*/
 
-
-import React from "react"
-import CopyToClipboard from "react-copy-to-clipboard"
-import NotificationAlert from "react-notification-alert"
+import React from 'react'
+import CopyToClipboard from 'react-copy-to-clipboard'
+import NotificationAlert from 'react-notification-alert'
+import { useTranslation } from 'react-i18next'
 
 const ShareLink = (props) => {
+  const { t } = useTranslation()
   const notificationAlertRef = React.useRef(null)
 
   const notify = (place, color) => {
     let type
     switch (color) {
       case 1:
-        type = "primary"
+        type = 'primary'
         break
       case 2:
-        type = "success"
+        type = 'success'
         break
       case 3:
-        type = "danger"
+        type = 'danger'
         break
       case 4:
-        type = "warning"
+        type = 'warning'
         break
       case 5:
-        type = "info"
+        type = 'info'
         break
       default:
         break
@@ -35,12 +36,12 @@ const ShareLink = (props) => {
       place,
       message: (
         <div>
-          <div>A link to this page has been copied to you clipboard!</div>
+          <div>{t('copyNotification')}</div>
         </div>
       ),
       type,
-      icon: "icon-extra-small icon-scan",
-      autoDismiss: 2
+      icon: 'icon-extra-small icon-scan',
+      autoDismiss: 2,
     }
     notificationAlertRef.current.notificationAlert(options)
   }
@@ -53,7 +54,7 @@ const ShareLink = (props) => {
       <CopyToClipboard
         text={props.url}
         onCopy={() => {
-          notify(props.notificationLocation || "tr", "primary")
+          notify(props.notificationLocation || 'tr', 'primary')
         }}
       >
         {props.children}
