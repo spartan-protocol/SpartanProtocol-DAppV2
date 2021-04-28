@@ -523,7 +523,7 @@ const RemoveLiquidity = () => {
                           {removeInput1?.value > 0
                             ? formatFromUnits(removeInput1?.value, 6)
                             : '0.00'}{' '}
-                          {getToken(poolRemove1?.tokenAddress)?.symbol}-SPP
+                          {getToken(poolRemove1?.tokenAddress)?.symbol}p
                         </div>
                       </Col>
                     </Row>
@@ -555,7 +555,7 @@ const RemoveLiquidity = () => {
                         <span className="subtitle-card">
                           {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
                           <span className="output-card ml-1">
-                            {getToken(poolRemove1?.tokenAddress)?.symbol}-SPP
+                            {getToken(poolRemove1?.tokenAddress)?.symbol}p
                           </span>
                         </span>
                         {activeTab === '1' && (

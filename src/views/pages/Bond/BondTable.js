@@ -66,7 +66,7 @@ const BondTable = () => {
                               alt="Logo"
                               height="32"
                             />
-                            {asset.symbol}-SPP
+                            {asset.symbol}p
                           </h2>
                         </Col>
                         {/* <Col

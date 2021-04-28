@@ -189,7 +189,7 @@ const AssetSelect = (props) => {
                   </>
                 ),
                 iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
-                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}-SPP`,
+                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}p`,
                 balance: tempArray[i].balance,
                 address: tempArray[i].tokenAddress,
                 actualAddr: tempArray[i].address,
@@ -223,7 +223,7 @@ const AssetSelect = (props) => {
                     />
                   </>
                 ),
-                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}-SPS`,
+                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}s`,
                 balance: getSynth(tempArray[i].tokenAddress)?.balance,
                 address: tempArray[i].tokenAddress,
                 actualAddr: getSynth(tempArray[i].tokenAddress)?.address,
@@ -309,8 +309,8 @@ const AssetSelect = (props) => {
 
             <span className="output-card mr-2">
               {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
-              {selectedType === 'pool' && '-SPP'}
-              {selectedType === 'synth' && '-SPS'}
+              {selectedType === 'pool' && 'p'}
+              {selectedType === 'synth' && 's'}
             </span>
             {!props.disabled && (
               <i className="icon-extra-small icon-arrow icon-light align-middle" />

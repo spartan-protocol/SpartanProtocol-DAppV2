@@ -74,7 +74,8 @@ const DaoVault = () => {
             <Col>
               <h4>DaoVault Details</h4>
               <p>
-                Total Weight: {formatFromWei(dao.globalDetails?.totalWeight)}
+                Total Weight: {formatFromWei(dao.globalDetails?.totalWeight, 0)}{' '}
+                SPARTA
               </p>
               <p>Member Count: {dao.globalDetails?.memberCount}</p>
             </Col>
@@ -84,7 +85,14 @@ const DaoVault = () => {
           <Card className="card-480">
             <Col>
               <h4>DaoMember</h4>
-              <p>Your Weight: {formatFromWei(dao.memberDetails?.weight)}</p>
+              <p>
+                Your Weight:{' '}
+                {BN(dao.memberDetails?.weight)
+                  .div(dao.globalDetails?.totalWeight)
+                  .times(100)
+                  .toFixed(4)}
+                %
+              </p>
               <p>Harvestable: {formatFromWei(getClaimable())} SPARTA</p>
             </Col>
             <Col xs="12" className="text-center">
@@ -105,7 +113,7 @@ const DaoVault = () => {
               <Col xs="auto" key={i.address}>
                 <Card className="card-480">
                   <Col>
-                    <h4>{getToken(i.tokenAddress)?.symbol}-SPS</h4>
+                    <h4>{getToken(i.tokenAddress)?.symbol}p</h4>
                     <p>Balance: {formatFromWei(i.balance)}</p>
                     <p>Staked: {formatFromWei(i.staked)}</p>
                   </Col>

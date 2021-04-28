@@ -89,7 +89,7 @@ const SynthVaultItem = ({ synthItem }) => {
       <Col xs="auto">
         <Card className="card-480">
           <Col>
-            <h4>{getToken(synthItem.tokenAddress)?.symbol}-SPS</h4>
+            <h4>{getToken(synthItem.tokenAddress)?.symbol}s</h4>
             <p>Balance: {formatFromWei(synthItem.balance)}</p>
             <p>Staked: {formatFromWei(synthItem.staked)}</p>
             <p>Harvestable: {formatFromWei(getSynthOutputFromBase())}</p>

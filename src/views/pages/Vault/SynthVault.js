@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
   getSynthMemberDetails,
@@ -43,7 +43,8 @@ const SynthVault = () => {
               <h4>SynthVault Details</h4>
               <p>Min Time: {synth.globalDetails?.minTime} second</p>
               <p>
-                Total Weight: {formatFromWei(synth.globalDetails?.totalWeight)}
+                Total Weight:{' '}
+                {formatFromWei(synth.globalDetails?.totalWeight, 0)} SPARTA
               </p>
               <p>Eras to Earn: {synth.globalDetails?.erasToEarn}</p>
               <p>Block Delay: {synth.globalDetails?.blockDelay}</p>
@@ -56,7 +57,12 @@ const SynthVault = () => {
             <Col>
               <h4>SynthMember</h4>
               <p>
-                Your Weight: {formatFromWei(synth.memberDetails?.totalWeight)}
+                Your Weight:{' '}
+                {BN(synth.memberDetails?.totalWeight)
+                  .div(synth.globalDetails?.totalWeight)
+                  .times(100)
+                  .toFixed(4)}
+                %
               </p>
             </Col>
             <Col xs="12" className="text-center">

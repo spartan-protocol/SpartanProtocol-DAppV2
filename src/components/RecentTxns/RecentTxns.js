@@ -79,7 +79,7 @@ const RecentTxns = () => {
                           pool.finalLpArray?.filter(
                             (asset) => asset.poolAddress === txn.address,
                           )[0]?.symbol
-                        }-SPP`}
+                        }p`}
                       {txn.event === 'Swapped' &&
                         `${formatFromWei(
                           txn.args?.inputAmount.toString(),
@@ -103,7 +103,7 @@ const RecentTxns = () => {
                           pool.finalLpArray?.filter(
                             (asset) => asset.poolAddress === txn.address,
                           )[0]?.symbol
-                        }-SPP`}
+                        }p`}
                       {txn.event === 'RemoveLiquidity' &&
                         `${formatFromWei(
                           txn.args?.outputBase.toString(),
