@@ -18,7 +18,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import {
   BN,
@@ -47,7 +47,7 @@ const AddLiquidity = () => {
   const wallet = useWallet()
   const dispatch = useDispatch()
   const web3 = useWeb3()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const addr = getAddresses()
   const [activeTab, setActiveTab] = useState('addTab1')
   const [assetAdd1, setAssetAdd1] = useState('...')
@@ -56,7 +56,7 @@ const AddLiquidity = () => {
   const [outputLp, setOutputLp] = useState('0.00')
 
   useEffect(() => {
-    const { poolDetails } = poolFactory
+    const { poolDetails } = pool
     const getAssetDetails = () => {
       if (poolDetails.length > 0 && activeTab === 'addTab1') {
         window.localStorage.setItem('assetType1', 'token')
@@ -77,9 +77,9 @@ const AddLiquidity = () => {
             ? asset1
             : { tokenAddress: addr.bnb }
 
-        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
-        asset2 = getItemFromArray(asset2, poolFactory.poolDetails)
-        asset3 = getItemFromArray(asset3, poolFactory.poolDetails)
+        asset1 = getItemFromArray(asset1, pool.poolDetails)
+        asset2 = getItemFromArray(asset2, pool.poolDetails)
+        asset3 = getItemFromArray(asset3, pool.poolDetails)
 
         setAssetAdd1(asset1)
         setAssetAdd2(asset2)
@@ -98,8 +98,8 @@ const AddLiquidity = () => {
         asset1 = asset1 || { tokenAddress: addr.bnb }
         asset3 = asset1.tokenAddress !== addr.sparta ? asset1 : asset3
 
-        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
-        asset3 = getItemFromArray(asset3, poolFactory.poolDetails)
+        asset1 = getItemFromArray(asset1, pool.poolDetails)
+        asset3 = getItemFromArray(asset3, pool.poolDetails)
 
         setAssetAdd1(asset1)
         setPoolAdd1(asset3)
@@ -111,7 +111,7 @@ const AddLiquidity = () => {
 
     getAssetDetails()
   }, [
-    poolFactory.poolDetails,
+    pool.poolDetails,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected2'),
     window.localStorage.getItem('assetSelected3'),
@@ -119,7 +119,7 @@ const AddLiquidity = () => {
   ])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const addInput1 = document.getElementById('addInput1')
   const addInput2 = document.getElementById('addInput2')
@@ -322,9 +322,12 @@ const AddLiquidity = () => {
 
   return (
     <>
-      <Row className="justify-content-center">
-        <Card className="card-body" style={{ maxWidth: '480px' }}>
-          <Nav pills className="nav-tabs-custom mt-2 mb-4">
+      <Col xs="auto">
+        <Card xs="auto" className="card-body card-480">
+          <Nav
+            pills
+            className="nav-tabs-custom mt-2 mb-4 justify-content-center"
+          >
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === 'addTab1' })}
@@ -366,7 +369,7 @@ const AddLiquidity = () => {
                       }}
                     >
                       Balance:{' '}
-                      {poolFactory.poolDetails && formatFromWei(getBalance(1))}{' '}
+                      {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
                     </div>
                   </Col>
                 </Row>
@@ -382,7 +385,7 @@ const AddLiquidity = () => {
                   <Col className="text-right">
                     <InputGroup className="m-0 mt-n1">
                       <Input
-                        className="text-right h-100 ml-0"
+                        className="text-right h-100 ml-0 p-2"
                         type="text"
                         placeholder="Add..."
                         id="addInput1"
@@ -394,7 +397,7 @@ const AddLiquidity = () => {
                         onKeyPress={() => clearInputs(1)}
                         onClick={() => clearInputs(1)}
                       >
-                        <i className="icon-search-bar icon-close icon-light my-auto" />
+                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
                       </InputGroupAddon>
                     </InputGroup>
                     <div className="text-right text-sm-label">
@@ -445,8 +448,7 @@ const AddLiquidity = () => {
                         }}
                       >
                         Balance:{' '}
-                        {poolFactory.poolDetails &&
-                          formatFromWei(getBalance(2))}
+                        {pool.poolDetails && formatFromWei(getBalance(2))}
                       </div>
                     </Col>
                   </Row>
@@ -462,7 +464,7 @@ const AddLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0">
                         <Input
-                          className="text-right h-100 ml-0 mt-n1"
+                          className="text-right h-100 ml-0 p-2"
                           type="text"
                           placeholder="Add..."
                           id="addInput2"
@@ -474,7 +476,7 @@ const AddLiquidity = () => {
                           onKeyPress={() => clearInputs(2)}
                           onClick={() => clearInputs(2)}
                         >
-                          <i className="icon-search-bar icon-close icon-light my-auto" />
+                          <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
                         </InputGroupAddon>
                       </InputGroup>
                       <div className="text-right text-sm-label">
@@ -493,20 +495,19 @@ const AddLiquidity = () => {
                   style={{ backgroundColor: '#25212D' }}
                   className="card-body mb-1"
                 >
-                  <Row>
+                  <Row className="my-2">
                     <Col xs="4" className="">
                       <div className="text-sm-label">Pool</div>
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="text-sm-label">
                         Balance:{' '}
-                        {poolFactory.poolDetails &&
-                          formatFromWei(getBalance(3))}
+                        {pool.poolDetails && formatFromWei(getBalance(3))}
                       </div>
                     </Col>
                   </Row>
 
-                  <Row className="my-2">
+                  <Row className="">
                     <Col xs="auto">
                       <div className="output-card ml-1">
                         <AssetSelect
@@ -522,7 +523,7 @@ const AddLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0 mt-n1">
                         <Input
-                          className="text-right h-100 ml-0 text-light"
+                          className="text-right h-100 ml-0 p-2 text-light"
                           type="text"
                           placeholder="0.00"
                           id="addInput3"
@@ -545,7 +546,7 @@ const AddLiquidity = () => {
                 </Card>
               )}
 
-              {poolFactory.poolDetails && (
+              {pool.poolDetails && (
                 <>
                   <Card className="card-body mb-1">
                     <Row className="mb-2">
@@ -610,7 +611,7 @@ const AddLiquidity = () => {
                   </Card>
                 </>
               )}
-              {!poolFactory.poolDetails && (
+              {!pool.poolDetails && (
                 <HelmetLoading height="150px" width="150px" />
               )}
             </Col>
@@ -668,13 +669,11 @@ const AddLiquidity = () => {
               )}
           </Row>
         </Card>
-      </Row>
-      {poolFactory.poolDetails && (
-        <Row>
-          <Col xs="12">
-            <SwapPair assetSwap={poolAdd1} />
-          </Col>
-        </Row>
+      </Col>
+      {pool.poolDetails && (
+        <Col xs="auto">
+          <SwapPair assetSwap={poolAdd1} />
+        </Col>
       )}
     </>
   )

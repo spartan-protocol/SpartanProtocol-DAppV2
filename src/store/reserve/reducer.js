@@ -1,28 +1,31 @@
 import * as Types from './types'
 
 const initialState = {
-  memberDetails: {},
+  globalDetails: [],
+  loading: false,
+  error: null,
 }
 
-export const bondVaultReducer = (state = initialState, action) => {
+export const reserveReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.BONDVAULT_MEMBER_DETAILS: {
+    case Types.RESERVE_GLOBAL_DETAILS: {
       return {
         ...state,
-        memberDetails: action.payload,
+        globalDetails: action.payload,
+        error: null,
         loading: false,
+      }
+    }
+
+    case Types.RESERVE_LOADING: {
+      return {
+        ...state,
+        loading: true,
         error: null,
       }
     }
 
-    case Types.BONDVAULT_LOADING: {
-      return {
-        ...state,
-        loading: true,
-      }
-    }
-
-    case Types.BONDVAULT_ERROR: {
+    case Types.RESERVE_ERROR: {
       return {
         ...state,
         error: action.error,

@@ -1,16 +1,5 @@
-// import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
-// import { useDispatch } from 'react-redux'
 import { Row, Button } from 'reactstrap'
-// import { useWeb3 } from '../../store/web3'
-// import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
-// import { getRouterContract } from '../../utils/web3Router'
-// import { getPoolFactoryArray } from '../../store/poolFactory'
-// import { getUtilsContract } from '../../utils/web3Utils'
-// import { getPoolFactoryTokenArray } from '../../store/poolFactory'
-// import { getPoolFactoryContract } from '../../utils/web3PoolFactory'
-// import { getListedPools } from '../../store/utils/actions'
-// import { getDaoTotalWeight } from '../../store/dao/actions'
 import { getWbnbContract } from '../../utils/web3'
 
 // const addr = getAddresses()

@@ -19,7 +19,7 @@ const initialState = {
 
 export const bondReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_BOND_LISTED: {
+    case Types.BOND_LISTED: {
       return {
         ...state,
         bondListed: action.payload,
@@ -28,7 +28,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_LISTED_ASSET: {
+    case Types.BOND_LISTED_ASSET: {
       return {
         ...state,
         bondListedAsset: action.payload,
@@ -37,7 +37,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_CLAIMABLE: {
+    case Types.BOND_CLAIMABLE: {
       return {
         ...state,
         bondClaimable: action.payload,
@@ -46,7 +46,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_SPARTA_REMAINING: {
+    case Types.BOND_SPARTA_REMAINING: {
       return {
         ...state,
         bondSpartaRemaining: action.payload,
@@ -55,7 +55,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_BURN_READY: {
+    case Types.BOND_BURN_READY: {
       return {
         ...state,
         bondBurnReady: action.payload,
@@ -100,7 +100,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_LISTED_COUNT: {
+    case Types.BOND_LISTED_COUNT: {
       return {
         ...state,
         bondListedCount: action.payload,
@@ -109,7 +109,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_MEMBER_COUNT: {
+    case Types.BOND_MEMBER_COUNT: {
       return {
         ...state,
         bondMemberCount: action.payload,
@@ -118,7 +118,7 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_BOND_MEMBERS: {
+    case Types.BOND_MEMBERS: {
       return {
         ...state,
         bondMembers: action.payload,

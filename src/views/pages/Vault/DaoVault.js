@@ -1,24 +1,10 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import {
-  Button,
-  Card,
-  CardBody,
-  Row,
-  Col,
-  ButtonGroup,
-  Container,
-} from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Button, Card, Row, Col, ButtonGroup } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
-import spartaIcon from '../../../assets/img/spartan_synth.svg'
-import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
-import { useSynth } from '../../../store/synth/selector'
 import { useDao } from '../../../store/dao/selector'
 import {
   daoDeposit,
@@ -28,14 +14,17 @@ import {
   getDaoVaultGlobalDetails,
   getDaoVaultMemberDetails,
 } from '../../../store/dao/actions'
+import { calcShare } from '../../../utils/web3Utils'
+import { useReserve } from '../../../store/reserve/selector'
 
 const DaoVault = () => {
+  const reserve = useReserve()
   const wallet = useWallet()
   const dao = useDao()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const dispatch = useDispatch()
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -55,30 +44,48 @@ const DaoVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
+  const getClaimable = () => {
+    // get seconds passed since last harvest
+    const timeStamp = BN(Date.now()).div(1000)
+    const lastHarvest = BN(dao.lastHarvest)
+    const secondsSince = timeStamp.minus(lastHarvest)
+    // get the members share
+    const weight = BN(dao.memberDetails.weight)
+    const reserveShare = BN(reserve.globalDetails.spartaBalance).div(
+      dao.globalDetails.erasToEarn,
+    )
+    const vaultShare = reserveShare
+      .times(dao.globalDetails.daoClaim)
+      .div('10000')
+    const totalWeight = BN(dao.globalDetails.totalWeight)
+    const share = calcShare(weight, totalWeight, vaultShare)
+    // get the members claimable amount
+    const claimAmount = share
+      .times(secondsSince)
+      .div(dao.globalDetails.secondsPerEra)
+    return claimAmount
+  }
+
   return (
     <>
       <Row className="row-480">
-        <Col xs="12" lg="6" className="col-480">
+        <Col xs="auto">
           <Card className="card-480">
             <Col>
-              <h4>Global Details</h4>
-              <p>Min Time: {dao.globalDetails?.minTime}</p>
+              <h4>DaoVault Details</h4>
               <p>
                 Total Weight: {formatFromWei(dao.globalDetails?.totalWeight)}
               </p>
-              <p>Eras to Earn: {dao.globalDetails?.erasToEarn}</p>
-              <p>Block Delay: {dao.globalDetails?.blockDelay}</p>
-              <p>Vault Claim: {dao.globalDetails?.vaultClaim}</p>
+              <p>Member Count: {dao.globalDetails?.memberCount}</p>
             </Col>
           </Card>
         </Col>
-        <Col xs="12" lg="6" className="col-480">
+        <Col xs="auto">
           <Card className="card-480">
             <Col>
               <h4>DaoMember</h4>
-              <p>
-                Your Weight: {formatFromWei(dao.memberDetails?.totalWeight)}
-              </p>
+              <p>Your Weight: {formatFromWei(dao.memberDetails?.weight)}</p>
+              <p>Harvestable: {formatFromWei(getClaimable())} SPARTA</p>
             </Col>
             <Col xs="12" className="text-center">
               <Button
@@ -91,11 +98,11 @@ const DaoVault = () => {
             </Col>
           </Card>
         </Col>
-        {poolFactory?.poolDetails?.length > 0 &&
-          poolFactory.poolDetails
+        {pool?.poolDetails?.length > 0 &&
+          pool.poolDetails
             .filter((i) => i.curated === true || i.staked > 0)
             .map((i) => (
-              <Col xs="12" lg="6" className="col-480" key={i.address}>
+              <Col xs="auto" key={i.address}>
                 <Card className="card-480">
                   <Col>
                     <h4>{getToken(i.tokenAddress)?.symbol}-SPS</h4>

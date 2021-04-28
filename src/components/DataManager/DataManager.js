@@ -8,8 +8,8 @@ import {
   getListedTokens,
   getPoolDetails,
   getTokenDetails,
-  usePoolFactory,
-} from '../../store/poolFactory'
+  usePool,
+} from '../../store/pool'
 import { getSynthArray, getSynthDetails } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
 import {
@@ -30,7 +30,7 @@ import {
 const DataManager = () => {
   const synth = useSynth()
   const dispatch = useDispatch()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const wallet = useWallet()
   const [prevNetwork, setPrevNetwork] = useState(
     JSON.parse(window.localStorage.getItem('network')),
@@ -98,7 +98,7 @@ const DataManager = () => {
    */
   const [trigger2, settrigger2] = useState(0)
   useEffect(() => {
-    const { listedTokens } = poolFactory
+    const { listedTokens } = pool
     if (trigger2 === 0) {
       dispatch(getSynthArray(listedTokens))
       dispatch(getTokenDetails(listedTokens, wallet.account))
@@ -112,14 +112,14 @@ const DataManager = () => {
     }, 10000)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.listedTokens, wallet.account, trigger2])
+  }, [pool.listedTokens, wallet.account, trigger2])
 
   /**
    * Get listed pools details
    */
   useEffect(() => {
-    const { tokenDetails } = poolFactory
-    const { curatedPools } = poolFactory
+    const { tokenDetails } = pool
+    const { curatedPools } = pool
     const checkListedPools = () => {
       if (tokenDetails.length > 0) {
         dispatch(getListedPools(tokenDetails, curatedPools))
@@ -127,17 +127,15 @@ const DataManager = () => {
     }
     checkListedPools()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.tokenDetails])
+  }, [pool.tokenDetails])
 
-  const [prevFinalLpArray, setPrevFinalLpArray] = useState(
-    poolFactory.finalLpArray,
-  )
+  const [prevFinalLpArray, setPrevFinalLpArray] = useState(pool.finalLpArray)
 
   /**
    * Get final pool details
    */
   useEffect(() => {
-    const { listedPools } = poolFactory
+    const { listedPools } = pool
     const { synthArray } = synth
     const checkDetails = () => {
       if (listedPools?.length > 0) {
@@ -149,29 +147,29 @@ const DataManager = () => {
     }
     checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.listedPools])
+  }, [pool.listedPools])
 
   /**
    * Update bondVault member details
    */
   useEffect(() => {
-    const { finalLpArray } = poolFactory
+    const { finalLpArray } = pool
     const checkBondArray = () => {
       if (finalLpArray?.length > 0) {
         dispatch(getBondVaultMemberDetails(wallet.account, finalLpArray))
-        setPrevFinalLpArray(poolFactory.finalLpArray)
+        setPrevFinalLpArray(pool.finalLpArray)
       }
     }
     checkBondArray()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.finalLpArray])
+  }, [pool.finalLpArray])
 
   /**
    * Listen to all contracts
    */
   const [eventArray, setEventArray] = useState([])
   useEffect(() => {
-    const { finalLpArray } = poolFactory
+    const { finalLpArray } = pool
     const contracts = [getRouterContract(), getDaoContract(), getBondContract()]
 
     const listen = async (contract) => {
@@ -205,7 +203,7 @@ const DataManager = () => {
     }
     mapOut()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.finalLpArray])
+  }, [pool.finalLpArray])
 
   /**
    * Update store whenever a new txn is picked up

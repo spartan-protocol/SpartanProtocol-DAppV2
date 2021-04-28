@@ -32,7 +32,7 @@ const initialState = {
 
 export const daoReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GLOBAL_DETAILS: {
+    case Types.DAO_GLOBAL_DETAILS: {
       return {
         ...state,
         globalDetails: action.payload,
@@ -41,7 +41,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.MEMBER_DETAILS: {
+    case Types.DAO_MEMBER_DETAILS: {
       return {
         ...state,
         memberDetails: action.payload,
@@ -50,7 +50,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.LAST_HARVEST: {
+    case Types.DAO_LAST_HARVEST: {
       return {
         ...state,
         lastHarvest: action.payload,
@@ -59,7 +59,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_IS_MEMBER: {
+    case Types.DAO_IS_MEMBER: {
       return {
         ...state,
         isMember: action.payload,
@@ -68,7 +68,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_MEMBER_COUNT: {
+    case Types.DAO_MEMBER_COUNT: {
       return {
         ...state,
         memberCount: action.payload,
@@ -77,7 +77,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_HARVEST_AMOUNT: {
+    case Types.DAO_HARVEST_AMOUNT: {
       return {
         ...state,
         harvestAmount: action.payload,
@@ -86,7 +86,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_HARVEST_ERA_AMOUNT: {
+    case Types.DAO_HARVEST_ERA_AMOUNT: {
       return {
         ...state,
         harvestEraAmount: action.payload,
@@ -122,7 +122,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_PROPOSAL_QUORUM: {
+    case Types.DAO_PROPOSAL_QUORUM: {
       return {
         ...state,
         proposalQuorum: action.payload,
@@ -131,7 +131,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_PROPOSAL_MAJORITY: {
+    case Types.DAO_PROPOSAL_MAJORITY: {
       return {
         ...state,
         proposalMajority: action.payload,
@@ -140,7 +140,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_PROPOSAL_MINORITY: {
+    case Types.DAO_PROPOSAL_MINORITY: {
       return {
         ...state,
         proposalMinority: action.payload,
@@ -149,7 +149,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_PROPOSAL_DETAILS: {
+    case Types.DAO_PROPOSAL_DETAILS: {
       return {
         ...state,
         proposalDetails: action.payload,
@@ -158,7 +158,7 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_DAO_GRANT_DETAILS: {
+    case Types.DAO_GRANT_DETAILS: {
       return {
         ...state,
         grantDetails: action.payload,

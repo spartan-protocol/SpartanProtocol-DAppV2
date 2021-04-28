@@ -2,12 +2,12 @@ import React, { useEffect } from 'react'
 import { Button, Card, Row, Col, Collapse, Table } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import bnb from '../../../assets/icons/BNB.svg'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getAddresses } from '../../../utils/web3'
 
 const Poolstable = () => {
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const addr = getAddresses()
 
   const [, sethorizontalTabs] = React.useState('harvest')
@@ -27,22 +27,22 @@ const Poolstable = () => {
 
   useEffect(() => {
     const collapseThree = []
-    if (poolFactory && poolFactory.poolDetails) {
-      poolFactory.poolDetails.forEach(() => {
+    if (pool && pool.poolDetails) {
+      pool.poolDetails.forEach(() => {
         collapseThree.push(false)
       })
     }
-  }, [poolFactory])
+  }, [pool])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   return (
     <>
-      {!poolFactory.poolDetails && <HelmetLoading height={300} width={300} />}
-      {poolFactory?.poolDetails && (
+      {!pool.poolDetails && <HelmetLoading height={300} width={300} />}
+      {pool?.poolDetails && (
         <Col md={12}>
-          {poolFactory?.poolDetails
+          {pool?.poolDetails
             .filter((asset) => asset.tokenAddress !== addr.sparta)
             .sort((a, b) => b.baseAmount - a.baseAmount)
             .map((asset, index) => (

@@ -11,7 +11,7 @@ import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { changeNetwork, getNetwork } from '../../utils/web3'
 import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
-import { usePoolFactory } from '../../store/poolFactory/selector'
+import { usePool } from '../../store/pool/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
@@ -20,7 +20,7 @@ import { useSynth } from '../../store/synth/selector'
 
 const WalletSelect = (props) => {
   const synth = useSynth()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWallet()
   const [network, setNetwork] = useState(getNetwork)
@@ -99,7 +99,7 @@ const WalletSelect = (props) => {
   }, [])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   return (
     <>
@@ -285,7 +285,7 @@ const WalletSelect = (props) => {
                             </div>
                           </Col>
                         </Row>
-                        {poolFactory.tokenDetails
+                        {pool.tokenDetails
                           ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
@@ -368,9 +368,8 @@ const WalletSelect = (props) => {
                           ))}
                       </TabPane>
                       <TabPane tabId="lp" className="ml-n2">
-                        {poolFactory.poolDetails?.filter(
-                          (asset) => asset.staked > 0,
-                        ).length > 0 && (
+                        {pool.poolDetails?.filter((asset) => asset.staked > 0)
+                          .length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
                               <div className="ml-n1">Staked</div>
@@ -382,7 +381,7 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         )}
-                        {poolFactory.poolDetails
+                        {pool.poolDetails
                           ?.filter((asset) => asset.staked > 0)
                           .map((asset) => (
                             <Row
@@ -491,7 +490,7 @@ const WalletSelect = (props) => {
                           </Col>
                         </Row>
 
-                        {poolFactory.poolDetails
+                        {pool.poolDetails
                           ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
@@ -589,9 +588,8 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
 
-                        {poolFactory.poolDetails?.filter(
-                          (asset) => asset.bonded > 0,
-                        ).length > 0 && (
+                        {pool.poolDetails?.filter((asset) => asset.bonded > 0)
+                          .length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
                               <div className="text-card">Bonded</div>
@@ -603,7 +601,7 @@ const WalletSelect = (props) => {
                             </Col>
                           </Row>
                         )}
-                        {poolFactory.poolDetails
+                        {pool.poolDetails
                           ?.filter((asset) => asset.bonded > 0)
                           .map((asset) => (
                             <Row

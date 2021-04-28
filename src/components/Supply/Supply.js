@@ -13,7 +13,7 @@ import {
   Collapse,
 } from 'reactstrap'
 import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
-import { usePoolFactory } from '../../store/poolFactory/selector'
+import { usePool } from '../../store/pool/selector'
 import { useWeb3 } from '../../store/web3'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
@@ -22,7 +22,7 @@ import { getAddresses } from '../../utils/web3'
 const Supply = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const addr = getAddresses()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
 
@@ -53,7 +53,7 @@ const Supply = () => {
               $
               {formatFromWei(
                 BN(
-                  poolFactory.tokenDetails?.filter(
+                  pool.tokenDetails?.filter(
                     (asset) => asset.address === addr.sparta,
                   )[0]?.totalSupply,
                 ).times(web3.spartaPrice),
@@ -66,7 +66,7 @@ const Supply = () => {
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(
-                poolFactory.tokenDetails?.filter(
+                pool.tokenDetails?.filter(
                   (asset) => asset.address === addr.sparta,
                 )[0]?.totalSupply,
                 0,
@@ -84,7 +84,7 @@ const Supply = () => {
             </Col>
             <Col xs="6" className="popover-text mb-2">
               {formatFromWei(
-                poolFactory.tokenDetails?.filter(
+                pool.tokenDetails?.filter(
                   (asset) => asset.address === addr.sparta,
                 )[0]?.totalSupply,
                 0,

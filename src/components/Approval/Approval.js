@@ -10,8 +10,6 @@ import {
 
 import { BN } from '../../utils/bigNumber'
 
-// import { usePoolFactory } from '../../store/poolFactory'
-
 /**
  * An approval/allowance check + actioner
  * @param {address} tokenAddress

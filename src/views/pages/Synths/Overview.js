@@ -20,8 +20,7 @@ import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
-import { usePoolFactory } from '../../../store/poolFactory'
-import swapIcon from '../../../assets/icons/swapadd.svg'
+import { usePool } from '../../../store/pool'
 import {
   BN,
   convertToWei,
@@ -51,7 +50,7 @@ const Swap = () => {
   const web3 = useWeb3()
   const dispatch = useDispatch()
   const addr = getAddresses()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const location = useLocation()
   const [activeTab, setActiveTab] = useState('mint')
   const [assetSwap1, setAssetSwap1] = useState('...')
@@ -64,7 +63,7 @@ const Swap = () => {
   )
 
   useEffect(() => {
-    const { poolDetails } = poolFactory
+    const { poolDetails } = pool
 
     const getAssetDetails = () => {
       if (poolDetails?.length > 0) {
@@ -123,7 +122,7 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activeTab,
-    poolFactory.poolDetails,
+    pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,7 +134,7 @@ const Swap = () => {
   ])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -307,7 +306,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {poolFactory.poolDetails?.length > 0 && (
+        {pool.poolDetails?.length > 0 && (
           <>
             <Row className="justify-content-center">
               <Col xs="6" xl="5">
@@ -503,9 +502,9 @@ const Swap = () => {
                           </Col>
                           <Col xs="8" className="text-right">
                             <div>
-                              Balance:{' '}
-                              {poolFactory.poolDetails &&
-                                formatFromWei(getBalance(2))}
+                              Balance{': '}
+                              {pool.poolDetails &&
+                                formatFromWei(getBalance(2), 4)}
                             </div>
                           </Col>
                         </Row>
@@ -662,7 +661,7 @@ const Swap = () => {
             </Row>
           </>
         )}
-        {!poolFactory.poolDetails && (
+        {!pool.poolDetails && (
           <div>
             <HelmetLoading height={300} width={300} />
           </div>

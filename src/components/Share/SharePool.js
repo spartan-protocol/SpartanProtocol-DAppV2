@@ -8,16 +8,16 @@ import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
-import { usePoolFactory } from '../../store/poolFactory'
+import { usePool } from '../../store/pool'
 
 const Share = () => {
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const [showShare, setShowShare] = useState(false)
   const location = useLocation()
   const [url, setUrl] = useState('')
   const { t } = useTranslation()
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const [asset1, setasset1] = useState('')
   const [asset2, setasset2] = useState('')
 
