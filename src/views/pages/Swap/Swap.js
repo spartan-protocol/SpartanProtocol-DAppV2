@@ -417,8 +417,8 @@ const Swap = () => {
   const getSynthFeeFromBase = () => {
     let temp = calcSwapFee(
       convertToWei(swapInput1?.value),
-      assetSwap2?.baseAmount,
       assetSwap2?.tokenAmount,
+      assetSwap2?.baseAmount,
     )
     temp = calcValueInBase(assetSwap2.tokenAmount, assetSwap2.baseAmount, temp)
     return temp
@@ -448,8 +448,8 @@ const Swap = () => {
   const getSynthFeeToBase = () => {
     const fee = calcSwapFee(
       convertToWei(swapInput1.value),
-      assetSwap1.baseAmount,
       assetSwap1.tokenAmount,
+      assetSwap1.baseAmount,
       true,
     )
     return fee
