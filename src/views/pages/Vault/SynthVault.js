@@ -36,11 +36,11 @@ const SynthVault = () => {
 
   return (
     <>
-      <Row className="justify-contents-center">
-        <Col xs="12">
-          <Card>
+      <Row className="row-480">
+        <Col xs="auto">
+          <Card className="card-480">
             <Col>
-              <h4>Global Details</h4>
+              <h4>SynthVault Details</h4>
               <p>Min Time: {synth.globalDetails?.minTime} second</p>
               <p>
                 Total Weight: {formatFromWei(synth.globalDetails?.totalWeight)}
@@ -51,8 +51,8 @@ const SynthVault = () => {
             </Col>
           </Card>
         </Col>
-        <Col xs="12">
-          <Card>
+        <Col xs="auto">
+          <Card className="card-480">
             <Col>
               <h4>SynthMember</h4>
               <p>

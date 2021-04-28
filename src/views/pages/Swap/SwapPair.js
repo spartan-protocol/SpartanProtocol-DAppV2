@@ -42,7 +42,7 @@ const SwapPair = ({ assetSwap }) => {
 
   return (
     <>
-      <Card className="card-body">
+      <Card className="card-body card-480">
         <Row className="my-2">
           <Col xs="auto">
             <div className="output-card">

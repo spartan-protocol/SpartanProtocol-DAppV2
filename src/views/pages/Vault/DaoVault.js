@@ -69,10 +69,10 @@ const DaoVault = () => {
   return (
     <>
       <Row className="row-480">
-        <Col xs="12" lg="6" className="col-480">
+        <Col xs="auto">
           <Card className="card-480">
             <Col>
-              <h4>Global Details</h4>
+              <h4>DaoVault Details</h4>
               <p>
                 Total Weight: {formatFromWei(dao.globalDetails?.totalWeight)}
               </p>
@@ -80,7 +80,7 @@ const DaoVault = () => {
             </Col>
           </Card>
         </Col>
-        <Col xs="12" lg="6" className="col-480">
+        <Col xs="auto">
           <Card className="card-480">
             <Col>
               <h4>DaoMember</h4>
@@ -102,7 +102,7 @@ const DaoVault = () => {
           pool.poolDetails
             .filter((i) => i.curated === true || i.staked > 0)
             .map((i) => (
-              <Col xs="12" lg="6" className="col-480" key={i.address}>
+              <Col xs="auto" key={i.address}>
                 <Card className="card-480">
                   <Col>
                     <h4>{getToken(i.tokenAddress)?.symbol}-SPS</h4>

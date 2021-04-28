@@ -1,14 +1,6 @@
 import React, { useState } from 'react'
 
-import {
-  Col,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
-} from 'reactstrap'
+import { Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
 
 import classnames from 'classnames'
 import AddLiquidity from './AddLiquidity'
@@ -27,14 +19,14 @@ const Liquidity = () => {
   return (
     <>
       <div className="content">
-        <Row className="card-body justify-content-center">
-          <Col xs="12">
-            <h2 className="d-inline text-title ml-1">Liquidity</h2>
+        <Row className="row-480">
+          <Col xs="auto">
+            <div className="card-body card-480">
+              <h2 className="text-title mb-0">Liquidity</h2>
+            </div>
           </Col>
-        </Row>
-        <Row className="justify-content-center">
-          <Col xs="12">
-            <Nav pills className="nav-tabs-custom card-body">
+          <Col xs="auto">
+            <Nav pills className="nav-tabs-custom card-body card-480">
               <NavItem>
                 <NavLink
                   className={classnames({ active: activeTab === '1' })}
@@ -76,32 +68,17 @@ const Liquidity = () => {
                 </NavLink>
               </NavItem>
             </Nav>
-            {pool.poolDetails.length > 0 && (
-              <TabContent activeTab={activeTab}>
-                {activeTab === '1' && (
-                  <TabPane tabId="1" className="p-3">
-                    <AddLiquidity />
-                  </TabPane>
-                )}
-                {activeTab === '2' && (
-                  <TabPane tabId="2" className="p-3">
-                    <RemoveLiquidity />
-                  </TabPane>
-                )}
-                {/* {activeTab === '3' && (
-                      <TabPane tabId="3" className="p-3">
-                        <ZapLiquidity />
-                      </TabPane>
-                    )} */}
-                {activeTab === '4' && (
-                  <TabPane tabId="4" className="p-3">
-                    <BondLiquidity />
-                  </TabPane>
-                )}
-              </TabContent>
-            )}
-            {pool.poolDetails.length <= 0 && <HelmetLoading />}
           </Col>
+        </Row>
+        <Row className="row-480">
+          {pool.poolDetails.length > 0 && (
+            <>
+              {activeTab === '1' && <AddLiquidity />}
+              {activeTab === '2' && <RemoveLiquidity />}
+              {activeTab === '4' && <BondLiquidity />}
+            </>
+          )}
+          {pool.poolDetails.length <= 0 && <HelmetLoading />}
         </Row>
       </div>
     </>

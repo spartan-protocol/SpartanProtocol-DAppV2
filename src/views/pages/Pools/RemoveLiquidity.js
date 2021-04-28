@@ -329,8 +329,8 @@ const RemoveLiquidity = () => {
 
   return (
     <>
-      <Row className="justify-content-center">
-        <Card className="card-body" style={{ maxWidth: '480px' }}>
+      <Col xs="auto">
+        <Card className="card-body card-480">
           <Row>
             <Col md={12}>
               <Card
@@ -364,7 +364,7 @@ const RemoveLiquidity = () => {
                   <Col className="text-right" xs="6">
                     <InputGroup className="">
                       <Input
-                        className="text-right ml-0"
+                        className="text-right h-100 ml-0 p-2"
                         type="text"
                         placeholder="0.00"
                         id="removeInput1"
@@ -376,7 +376,7 @@ const RemoveLiquidity = () => {
                         onKeyPress={() => clearInputs(1)}
                         onClick={() => clearInputs(1)}
                       >
-                        <i className="icon-search-bar icon-close icon-light my-auto" />
+                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
                       </InputGroupAddon>
                     </InputGroup>
                     <div className="text-right">
@@ -445,7 +445,7 @@ const RemoveLiquidity = () => {
                   <Col className="text-right" xs="6">
                     <InputGroup className="">
                       <Input
-                        className="text-right ml-0"
+                        className="text-right h-100 ml-0 p-2"
                         type="text"
                         placeholder="0.00"
                         id="removeInput2"
@@ -489,7 +489,7 @@ const RemoveLiquidity = () => {
                       <Col className="text-right" xs="6">
                         <InputGroup className="">
                           <Input
-                            className="text-right ml-0"
+                            className="text-right h-100 ml-0 p-2"
                             type="text"
                             placeholder="0.00"
                             id="removeInput3"
@@ -602,13 +602,11 @@ const RemoveLiquidity = () => {
             </Col>
           </Row>
         </Card>
-      </Row>
+      </Col>
       {pool.poolDetails && (
-        <Row>
-          <Col xs="12">
-            <SwapPair assetSwap={poolRemove1} />
-          </Col>
-        </Row>
+        <Col xs="auto">
+          <SwapPair assetSwap={poolRemove1} />
+        </Col>
       )}
     </>
   )
