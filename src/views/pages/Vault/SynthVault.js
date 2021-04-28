@@ -41,13 +41,13 @@ const SynthVault = () => {
           <Card>
             <Col>
               <h4>Global Details</h4>
-              <p>Min Time: {synth.globalDetails?.minTime}</p>
+              <p>Min Time: {synth.globalDetails?.minTime} second</p>
               <p>
                 Total Weight: {formatFromWei(synth.globalDetails?.totalWeight)}
               </p>
               <p>Eras to Earn: {synth.globalDetails?.erasToEarn}</p>
               <p>Block Delay: {synth.globalDetails?.blockDelay}</p>
-              <p>Vault Claim: {synth.globalDetails?.vaultClaim}</p>
+              <p>Vault Claim: {synth.globalDetails?.vaultClaim / 100}%</p>
             </Col>
           </Card>
         </Col>

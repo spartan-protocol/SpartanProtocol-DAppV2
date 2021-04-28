@@ -22,11 +22,17 @@ export const getDaoVaultGlobalDetails = () => async (dispatch) => {
     let awaitArray = [
       contract.callStatic.totalWeight(),
       daoContract.callStatic.memberCount(),
+      daoContract.callStatic.erasToEarn(),
+      daoContract.callStatic.daoClaim(),
+      daoContract.callStatic.secondsPerEra(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
-      totalWeight: awaitArray[0].toString(), // DaoVault totalWeight
-      memberCount: awaitArray[1].toString(), // DaoVault memberCount
+      totalWeight: awaitArray[0].toString(), // Dao totalWeight
+      memberCount: awaitArray[1].toString(), // Dao memberCount
+      erasToEarn: awaitArray[2].toString(), // Dao erasToEarn
+      daoClaim: awaitArray[3].toString(), // Dao daoClaim
+      secondsPerEra: awaitArray[4].toString(), // Dao secondsPerEra
     }
     dispatch(payloadToDispatch(Types.DAO_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
@@ -69,7 +75,7 @@ export const getDaoMemberLastHarvest = (member) => async (dispatch) => {
 
   try {
     const lastHarvest = await contract.callStatic.mapMember_lastTime(member)
-    dispatch(payloadToDispatch(Types.DAO_LAST_HARVEST, lastHarvest))
+    dispatch(payloadToDispatch(Types.DAO_LAST_HARVEST, lastHarvest.toString()))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
