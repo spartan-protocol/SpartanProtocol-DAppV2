@@ -1,7 +1,4 @@
 import React from 'react'
-// react plugin for creating notifications over the dashboard
-
-// reactstrap components
 import { Button, Card, Row, Col, Progress, Table } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 

@@ -14,7 +14,7 @@ export const getPart = (basisPoints, total) => async (dispatch) => {
     const part = await contract.callStatic.calcPart(basisPoints, total)
     dispatch(payloadToDispatch(Types.GET_PART, part))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -33,7 +33,7 @@ export const getLiquidityShare = (units, token, pool, member) => async (
     )
     dispatch(payloadToDispatch(Types.GET_LIQUIDITY_SHARE, liquidityShare))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -45,7 +45,7 @@ export const getShare = (part, total, amount) => async (dispatch) => {
     const share = await contract.callStatic.calcShare(part, total, amount)
     dispatch(payloadToDispatch(Types.GET_SHARE, share))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -57,7 +57,7 @@ export const getSwapOutput = (x, X, Y) => async (dispatch) => {
     const swapOutput = await contract.callStatic.calcSwapOutput(x, X, Y)
     dispatch(payloadToDispatch(Types.GET_SWAP_OUTPUT, swapOutput))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -69,7 +69,7 @@ export const getSwapFee = (x, X, Y) => async (dispatch) => {
     const swapFee = await contract.callStatic.calcSwapFee(x, X, Y)
     dispatch(payloadToDispatch(Types.GET_SWAP_FEE, swapFee))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -87,7 +87,7 @@ export const getLiquidityUnits = (b, B, t, T, P) => async (dispatch) => {
     )
     dispatch(payloadToDispatch(Types.GET_LIQUIDITY_UNITS, liquidityUnits))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -99,7 +99,7 @@ export const getSlipAdustment = (b, B, t, T) => async (dispatch) => {
     const slipAdustment = await contract.callStatic.getSlipAdustment(b, B, t, T)
     dispatch(payloadToDispatch(Types.GET_SLIP_ADUSTMENT, slipAdustment))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -116,7 +116,7 @@ export const getAsymmetricShare = (poolAddr, memberAddr) => async (
     )
     dispatch(payloadToDispatch(Types.GET_ASYMMETRICS_SHARE, asymmetricShare))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -134,7 +134,7 @@ export const getSynthsValue = (pool, amount) => async (dispatch) => {
     const units = await contract.callStatic.calcSynthsValue(pool, amount)
     dispatch(payloadToDispatch(Types.GET_SYNTHS_VALUE, units))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }
 
@@ -151,6 +151,6 @@ export const getCDPValue = (synth) => async (dispatch) => {
     const cdpValue = await contract.callStatic.calcCDPValue(synth)
     dispatch(payloadToDispatch(Types.GET_CDP_VALUE, cdpValue))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_MATH_ERROR, `${error}.`))
   }
 }

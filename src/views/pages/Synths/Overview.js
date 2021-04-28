@@ -44,9 +44,8 @@ import {
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import SwapPair from './SwapPair'
-import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
+import SwapPair from '../Swap/SwapPair'
 
 const Swap = () => {
   const synth = useSynth()
@@ -568,11 +567,12 @@ const Swap = () => {
         {poolFactory.poolDetails?.length > 0 && (
           <>
             <Row className="card-body justify-content-center">
-              <Col xs="6" xl="5">
-                <h2 className="d-inline text-title ml-1">{t('swap')}</h2>
-              </Col>
-              <Col xs="6" xl="4">
-                <SharePool />
+              <Col xs="12">
+                <h2 className="d-inline text-title ml-1">{t('synths')}</h2>
+                <h6>
+                  Rebuild this as a simple synths mint/burn interface for those
+                  who dont understand swapping for a synth
+                </h6>
               </Col>
             </Row>
             <Row className="justify-content-center">

@@ -1,23 +1,24 @@
 /* eslint-disable*/
 // import Dashboard from './components/Dashboard/Dashboard'
-import PoolsOverview from "./views/pages/Pools/Overview"
-import Dao from "./views/pages/Dao/Overview"
-import Liquidity from "./views/pages/Pools/Liquidity"
-import Bond from "./views/pages/Bond/Bond"
-import Swap from "./views/pages/Swap/Swap"
-import Synth from "./views/pages/Synth/Overview"
+import PoolsOverview from './views/pages/Pools/Overview'
+// import Dao from './views/pages/Dao/Overview'
+import Liquidity from './views/pages/Pools/Liquidity'
+import Bond from './views/pages/Bond/Bond'
+import Swap from './views/pages/Swap/Swap'
+import Vault from './views/pages/Vault/Overview'
+import Synths from './views/pages/Synths/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
-import Notifications from "./components/Notifications/Notifications"
-// import Buttons from './views/pages/Samples/Buttons'
-import Alerts from "./views/pages/Samples/Alerts"
-// import Typography from './views/pages/Samples/Typography'
+// import Notifications from './views/pages/Samples/Notifications'
+import Buttons from './views/pages/Samples/Buttons'
+// import Alerts from './views/pages/Samples/Alerts'
+import Typography from './views/pages/Samples/Typography'
 // import Grid from './views/pages/Samples/Grid'
 // import ReactTables from './views/pages/Samples/ReactTables'
 // import Forms from './views/pages/Samples/Forms'
 // import ExtendedForms from './views/pages/Samples/ExtendedForms'
-// import Panels from './views/pages/Samples/Panels'
-// import Tiles from './views/pages/Samples/Tiles'
+import Panels from './views/pages/Samples/Panels'
+import Tiles from './views/pages/Samples/Tiles'
 // import Utils from './utils/Utils'
 // import Tabs from './views/pages/Samples/Tabs'
 // import Share from './views/pages/Samples/Share'
@@ -32,11 +33,11 @@ const routes = (t) => [
     layout: "/dapp"
   },
   {
-    path: "/home",
-    name: t("home"),
-    icon: "icon-medium icon-home icon-dark",
-    component: Alerts,
-    layout: "/dapp"
+    path: '/home',
+    name: t('home'),
+    icon: 'icon-medium icon-home icon-dark',
+    component: Swap,
+    layout: '/dapp',
   },
 
   {
@@ -63,28 +64,28 @@ const routes = (t) => [
   },
 
   {
-    path: "/bondVault",
-    name: t("bondVault"),
-    icon: "icon-medium icon-helmet icon-dark",
+    path: '/bond',
+    name: t('bond'),
+    icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
     layout: "/dapp"
   },
 
   {
-    path: "/daoVault",
-    name: t("daoVault"),
-    icon: "icon-medium icon-colosseum icon-dark",
-    component: Dao,
-    layout: "/dapp"
+    path: '/vault',
+    name: 'Vault',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: Vault,
+    layout: '/dapp',
   },
 
   {
-    path: "/synthVault",
-    name: t("synthVault"),
-    icon: "icon-medium icon-colosseum icon-dark",
-    component: Synth,
-    layout: "/dapp"
-  }
+    path: '/synths',
+    name: 'Synths',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: Synths,
+    layout: '/dapp',
+  },
 
   // {
   //   collapse: true,
