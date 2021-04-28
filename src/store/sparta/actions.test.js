@@ -1,6 +1,6 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 import { getAddresses } from '../../utils/web3'
-import { getAdjustedClaimRate, getEmitting } from './actions'
+import { getAdjustedClaimRate } from './actions'
 import * as Types from './types'
 
 const addr = getAddresses()
@@ -19,16 +19,16 @@ describe('Sparta actions', () => {
     dispatchMock.mockRestore()
   })
 
-  test('should get emitting', async () => {
-    await getEmitting()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_EMITTING)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
+  // test('should get emitting', async () => {
+  //   await getEmitting()(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_EMITTING)
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  // })
 
   test('should get adjusted claim rate', async () => {
     await getAdjustedClaimRate(addr.bond)(dispatchMock)
     expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_ADJUSTED_CLAIM_RATE,
+      Types.SPARTA_ADJUSTED_CLAIM_RATE,
     )
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })

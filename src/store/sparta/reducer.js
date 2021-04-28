@@ -1,7 +1,7 @@
 import * as Types from './types'
 
 const initialState = {
-  emitting: {},
+  globalDetails: [],
   adjustedClaimRate: {},
   claim: {},
   error: null,
@@ -10,16 +10,16 @@ const initialState = {
 
 export const spartaReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_EMITTING: {
+    case Types.SPARTA_GLOBAL_DETAILS: {
       return {
         ...state,
-        emitting: action.payload,
+        globalDetails: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.GET_ADJUSTED_CLAIM_RATE: {
+    case Types.SPARTA_ADJUSTED_CLAIM_RATE: {
       return {
         ...state,
         adjustedClaimRate: action.payload,
@@ -28,7 +28,7 @@ export const spartaReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.CLAIM: {
+    case Types.SPARTA_CLAIM: {
       return {
         ...state,
         claim: action.payload,

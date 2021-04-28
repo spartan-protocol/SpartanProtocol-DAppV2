@@ -1,31 +1,22 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Button, Card, CardBody, Row, Col, ButtonGroup } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Button, Card, Row, Col } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { usePoolFactory } from '../../../store/poolFactory'
-import { BN, formatFromWei } from '../../../utils/bigNumber'
-import spartaIcon from '../../../assets/img/spartan_synth.svg'
+import { formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
   getSynthMemberDetails,
-  synthDeposit,
   synthHarvest,
-  synthWithdraw,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
+import SynthVaultItem from './SynthVaultItem'
 
 const SynthVault = () => {
   const wallet = useWallet()
   const synth = useSynth()
-  const poolFactory = usePoolFactory()
   const dispatch = useDispatch()
   const [trigger0, settrigger0] = useState(0)
-  const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getData = () => {
     dispatch(getSynthGlobalDetails())
@@ -82,39 +73,7 @@ const SynthVault = () => {
         {synth?.synthDetails?.length > 0 &&
           synth.synthDetails
             .filter((i) => i.address !== false)
-            .map((i) => (
-              <Col key={i.address}>
-                <Card>
-                  <Col>
-                    <h4>{getToken(i.tokenAddress)?.symbol}-SPS</h4>
-                    <p>Balance: {formatFromWei(i.balance)}</p>
-                    <p>Staked: {formatFromWei(i.staked)}</p>
-                  </Col>
-                  <Col xs="12" className="text-center">
-                    <ButtonGroup>
-                      <Button
-                        color="primary"
-                        type="Button"
-                        onClick={() =>
-                          dispatch(synthDeposit(i.address, i.balance))
-                        }
-                      >
-                        Deposit
-                      </Button>
-                      <Button
-                        color="primary"
-                        type="Button"
-                        onClick={() =>
-                          dispatch(synthWithdraw(i.address, '10000'))
-                        }
-                      >
-                        Withdraw
-                      </Button>
-                    </ButtonGroup>
-                  </Col>
-                </Card>
-              </Col>
-            ))}
+            .map((i) => <SynthVaultItem key={i.address} synthItem={i} />)}
       </Row>
     </>
   )

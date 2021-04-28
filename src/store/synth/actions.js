@@ -124,7 +124,7 @@ export const getSynthDetails = (synthArray, listedPools, wallet) => async (
       if (wallet === null || synthArray[i].address === false) {
         tempArray.push('0') // balance
         tempArray.push('0') // staked
-        // tempArray.push('0') // synthWeight ADD HERE ONCE MEMBER-SYNTH-WEIGHT IS ADDED TO CONTRACT
+        tempArray.push('0') // synthWeight
         tempArray.push('0') // lastHarvest
       } else {
         const synthContract = getSynthContract(synthArray[i].address)
@@ -132,9 +132,12 @@ export const getSynthDetails = (synthArray, listedPools, wallet) => async (
         tempArray.push(
           contract.callStatic.getMemberDeposit(synthArray[i].address, wallet),
         ) // staked
-        // tempArray.push(
-        //   contract.callStatic.getMappedMemberSynthWeight(synthArray[i].address, wallet),
-        // ) // ADD HERE ONCE MEMBER-SYNTH-WEIGHT IS ADDED TO CONTRACT
+        tempArray.push(
+          contract.callStatic.getMemberSynthWeight(
+            synthArray[i].address,
+            wallet,
+          ),
+        ) // synthWeight
         tempArray.push(
           contract.callStatic.getMemberLastSynthTime(
             synthArray[i].address,
@@ -160,14 +163,14 @@ export const getSynthDetails = (synthArray, listedPools, wallet) => async (
     }
     const synthDetails = synthArray
     tempArray = await Promise.all(tempArray)
-    const varCount = 5
+    const varCount = 6
     for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
       synthDetails[i / varCount].balance = tempArray[i].toString()
       synthDetails[i / varCount].staked = tempArray[i + 1].toString()
-      // synthDetails[i].weight = tempArray[i + 2].toString()
-      synthDetails[i / varCount].lastHarvest = tempArray[i + 2].toString()
-      synthDetails[i / varCount].lpBalance = tempArray[i + 3].toString()
-      synthDetails[i / varCount].lpDebt = tempArray[i + 4].toString()
+      synthDetails[i / varCount].weight = tempArray[i + 2].toString()
+      synthDetails[i / varCount].lastHarvest = tempArray[i + 3].toString()
+      synthDetails[i / varCount].lpBalance = tempArray[i + 4].toString()
+      synthDetails[i / varCount].lpDebt = tempArray[i + 5].toString()
     }
     dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
   } catch (error) {
