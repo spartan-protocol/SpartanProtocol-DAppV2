@@ -178,9 +178,13 @@ const Swap = () => {
   const swapInput2 = document.getElementById('swapInput2')
 
   const clearInputs = () => {
-    swapInput1.value = ''
-    swapInput2.value = ''
-    swapInput1.focus()
+    if (swapInput1) {
+      swapInput1.value = ''
+      swapInput1.focus()
+    }
+    if (swapInput2) {
+      swapInput2.value = ''
+    }
   }
 
   useEffect(() => {
