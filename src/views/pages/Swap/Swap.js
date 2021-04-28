@@ -572,7 +572,7 @@ const Swap = () => {
                 <h2 className="d-inline text-title ml-1">{t('swap')}</h2>
               </Col>
               <Col xs="6" xl="4">
-                <SharePool assetToSwap={assetSwap1} />
+                <SharePool />
               </Col>
             </Row>
             <Row className="justify-content-center">
