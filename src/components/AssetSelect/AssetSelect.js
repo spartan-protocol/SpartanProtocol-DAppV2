@@ -409,7 +409,6 @@ const AssetSelect = (props) => {
                 placeholder="Search assets..."
                 type="text"
                 id="searchInput"
-                onChange={() => console.log('hello')}
               />
               <InputGroupAddon addonType="append">
                 <InputGroupText>

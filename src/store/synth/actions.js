@@ -65,11 +65,8 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
       }
     }
     const synthArray = []
-    console.log(tempArray)
     tempArray = await Promise.all(tempArray)
-    console.log(tempArray)
     for (let i = 0; i < tempArray.length; i++) {
-      console.log([i])
       synthArray.push({
         tokenAddress: tokenArray[i],
         address: tempArray[i] === addr.bnb ? false : tempArray[i],
@@ -80,7 +77,6 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
         lpBalance: '0',
         lpDebt: '0',
       })
-      console.log([i])
     }
     dispatch(payloadToDispatch(Types.SYNTH_ARRAY, synthArray))
   } catch (error) {
