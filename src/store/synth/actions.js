@@ -39,7 +39,7 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
       vaultClaim: awaitArray[4].toString(),
       // stakedSynthLength: awaitArray[5].toString(),
     }
-    dispatch(payloadToDispatch(Types.GLOBAL_DETAILS, globalDetails))
+    dispatch(payloadToDispatch(Types.SYNTH_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
@@ -99,7 +99,7 @@ export const getSynthMemberDetails = (wallet) => async (dispatch) => {
     const memberDetails = {
       totalWeight: awaitArray[0].toString(),
     }
-    dispatch(payloadToDispatch(Types.MEMBER_DETAILS, memberDetails))
+    dispatch(payloadToDispatch(Types.SYNTH_MEMBER_DETAILS, memberDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
@@ -196,7 +196,7 @@ export const synthDeposit = (synth, amount) => async (dispatch) => {
       gasPrice: gPrice,
     })
     // Trace txnHash to get something relevant to dispatch
-    dispatch(payloadToDispatch(Types.DEPOSIT, deposit))
+    dispatch(payloadToDispatch(Types.SYNTH_DEPOSIT, deposit))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
@@ -215,7 +215,7 @@ export const synthHarvest = () => async (dispatch) => {
     const harvest = await contract.harvestAll({
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.HARVEST, harvest))
+    dispatch(payloadToDispatch(Types.SYNTH_HARVEST, harvest))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
@@ -235,7 +235,7 @@ export const synthHarvestSingle = (synth) => async (dispatch) => {
     const harvestSingle = await contract.harvestSingle(synth, {
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.HARVEST_SINGLE, harvestSingle))
+    dispatch(payloadToDispatch(Types.SYNTH_HARVEST_SINGLE, harvestSingle))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
@@ -256,7 +256,7 @@ export const synthWithdraw = (synth, basisPoints) => async (dispatch) => {
     const withdrawAmount = await contract.withdraw(synth, basisPoints, {
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.WITHDRAW_AMOUNT, withdrawAmount))
+    dispatch(payloadToDispatch(Types.SYNTH_WITHDRAW_AMOUNT, withdrawAmount))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
