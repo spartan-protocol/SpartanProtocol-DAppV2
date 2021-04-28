@@ -112,7 +112,7 @@ const SwapPair = ({ assetSwap }) => {
           <Col xs="auto" className="text-card">
             APY{' '}
             <i
-              className="icon-small icon-info icon-dark ml-2"
+              className="icon-extra-small icon-info icon-dark ml-2"
               id="tooltipInput"
               role="button"
             />
