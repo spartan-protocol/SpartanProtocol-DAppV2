@@ -8,12 +8,18 @@ import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
+import { usePoolFactory } from '../../store/poolFactory'
 
-const Share = ({ assetToSwap }) => {
+const Share = () => {
+  const poolFactory = usePoolFactory()
   const [showShare, setShowShare] = useState(false)
   const location = useLocation()
   const [url, setUrl] = useState('')
   const { t } = useTranslation()
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  const [asset1, setasset1] = useState('')
+  const [asset2, setasset2] = useState('')
 
   useEffect(() => {
     const assetSelected1 = JSON.parse(
@@ -22,6 +28,8 @@ const Share = ({ assetToSwap }) => {
     const assetSelected2 = JSON.parse(
       window.localStorage?.getItem('assetSelected2'),
     )
+    setasset1(assetSelected1)
+    setasset2(assetSelected2)
 
     setUrl(
       `https://${window.location.host}${location.pathname}?asset1=${
@@ -81,16 +89,28 @@ const Share = ({ assetToSwap }) => {
                 <CardBody className="py-3">
                   <h4 className="card-title">{t('swapSpartanProtocol')}</h4>
                   <Row>
-                    <Col xs="5">
+                    <Col>
                       <img
-                        src={assetToSwap.symbolUrl}
+                        src={getToken(asset1.tokenAddress)?.symbolUrl}
                         alt="coin to swap icon"
                       />
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
-                        {assetToSwap.symbol}
+                        {getToken(asset1.tokenAddress)?.symbol}
+                      </span>
+                    </Col>
+                    <Col>
+                      <img
+                        src={getToken(asset2.tokenAddress)?.symbolUrl}
+                        alt="coin to swap icon"
+                      />
+                      <span
+                        className="card-title"
+                        style={{ marginLeft: '7px' }}
+                      >
+                        {getToken(asset2.tokenAddress)?.symbol}
                       </span>
                     </Col>
                   </Row>
@@ -145,11 +165,10 @@ const Share = ({ assetToSwap }) => {
             </Col>
           </Row>
           <Row>
-            <Col xs="12">
+            <Col xs="12" className="text-center">
               <Button
                 type="Button"
                 className="btn btn-primary"
-                style={{ width: '100%' }}
                 onClick={() => setShowShare(false)}
               >
                 {t('cancel')}

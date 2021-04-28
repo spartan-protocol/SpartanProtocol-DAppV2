@@ -116,7 +116,8 @@ export function deprecated(propType, explanation) {
 }
 
 // Shim Element if needed (e.g. in Node environment)
-const Element = (typeof window === 'object' && window.Element) || function () {}
+const Element =
+  (typeof window === 'object' && window.Element) || console.log('nope')
 
 export function DOMElement(props, propName, componentName) {
   if (!(props[propName] instanceof Element)) {
