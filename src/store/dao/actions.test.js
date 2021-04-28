@@ -128,9 +128,7 @@ describe('Dao actions', () => {
 
   test('should get dao proposal details', async () => {
     await getDaoProposalDetails(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_DAO_PROPOSAL_DETAILS,
-    )
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_PROPOSAL_DETAILS)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
