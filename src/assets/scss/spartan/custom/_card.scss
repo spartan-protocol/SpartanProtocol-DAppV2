@@ -273,9 +273,9 @@
 .text-card{
   /* Small label */
 
-  font-family: Roboto;
+  font-family: $font-family-base;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 300;
   font-size: 14px;
   line-height: 20px;
   /* identical to box height, or 143% */
@@ -289,6 +289,30 @@
   color: #A5ADAF;
 }
 
+.text-xs-label{
+/* Extra small label */
+font-family: $font-family-base;
+font-style: normal;
+font-weight: normal;
+font-size: 10px;
+line-height: 20px;
+/* Grey 10 */
+color: #A5ADAF;
+}
+
+.text-sm-label{
+/* Small value */
+font-family: $font-family-base;
+font-style: normal;
+font-weight: 300;
+font-size: 12px;
+line-height: 20px;
+/* or 167% */
+align-items: center;
+font-feature-settings: 'liga' off;
+/* Grey 10 */
+color: #A5ADAF;
+}
 
 .output-card{
   font-family: $font-family-base;
@@ -299,21 +323,16 @@
   color: #FFFFFF;
 }
 
-
-
-
 .subtitle-card{
+  /* Large label */
   font-family: $font-family-base;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 16px;
-  line-height: 20px;
+  line-height: 24px;
   /* identical to box height, or 167% */
-
   font-feature-settings: 'liga' off;
-
   /* White */
-
   color: #FFFFFF;
 }
 
@@ -321,15 +340,12 @@
 .subtitle-amount{
   font-family: $font-family-base;
   font-style: normal;
-  font-weight: bold;
+  font-weight: 500;
   font-size: 16px;
   line-height: 20px;
   /* identical to box height, or 167% */
-
   font-feature-settings: 'liga' off;
-
   /* White */
-
   color: #AACDFF;;
 }
 
@@ -344,9 +360,7 @@
   margin-top: 40px ;
   text-align: right;
   font-feature-settings: 'liga' off;
-
   /* Blue 100 */
-
   color: #AACDFF;
 }
 

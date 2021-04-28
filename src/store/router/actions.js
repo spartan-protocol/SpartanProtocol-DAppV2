@@ -23,7 +23,7 @@ export const getPastMonthDivis = (tokenAddress) => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.ROUTER_LAST_MONTH_DIVIS, lastMonthDivis))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -44,7 +44,7 @@ export const getThisMonthDivis = (tokenAddress) => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.ROUTER_THIS_MONTH_DIVIS, thisMonthDivis))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -80,7 +80,7 @@ export const routerAddLiq = (inputBase, inputToken, token, justCheck) => async (
     }
     dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, liquidity))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -107,7 +107,7 @@ export const routerRemoveLiq = (units, token, justCheck) => async (
     }
     dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, liquidity))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -146,7 +146,7 @@ export const routerSwapAssets = (
     }
     dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSETS, assetsSwapped))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -181,7 +181,7 @@ export const routerAddLiqAsym = (input, fromBase, token) => async (
     })
     dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_ASYM, units))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -217,7 +217,7 @@ export const routerZapLiquidity = (unitsLP, fromToken, toToken) => async (
     )
     dispatch(payloadToDispatch(Types.ROUTER_ZAP_LIQUIDITY, proposalID))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -249,7 +249,7 @@ export const routerRemoveLiqAsym = (units, toBase, token) => async (
 
     dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ_ASYM, liquidity))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -278,7 +278,7 @@ export const routerSwapBaseToSynth = (inputAmount, synthOut) => async (
 
     dispatch(payloadToDispatch(Types.ROUTER_SWAP_BASE_TO_SYNTH, outputSynth))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
@@ -308,6 +308,6 @@ export const routerSwapSynthToBase = (inputAmount, synthIn) => async (
 
     dispatch(payloadToDispatch(Types.ROUTER_SWAP_SYNTH_TO_BASE, output))
   } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, error))
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }

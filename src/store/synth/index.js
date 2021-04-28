@@ -2,13 +2,12 @@ export { useSynth } from './selector'
 export { synthReducer } from './reducer'
 
 export {
+  getSynthGlobalDetails,
+  getSynthMemberDetails,
   getSynthArray,
-  getSynthArrayFinal,
+  getSynthDetails,
   synthDeposit,
   synthHarvest,
+  synthHarvestSingle,
   synthWithdraw,
-  getSynthMemberStaked,
-  getSynthMemberWeight,
-  getSynthTotalWeight,
-  getSynthMemberLastHarvest,
 } from './actions'

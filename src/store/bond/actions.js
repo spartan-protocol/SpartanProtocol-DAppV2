@@ -23,7 +23,7 @@ export const getBondListed = () => async (dispatch) => {
     const bondListed = await contract.callStatic.allListedAssets()
     dispatch(payloadToDispatch(Types.GET_BOND_LISTED, bondListed))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -35,7 +35,7 @@ export const getBondListedAsset = (asset) => async (dispatch) => {
     const isListed = await contract.callStatic.isListed(asset)
     dispatch(payloadToDispatch(Types.GET_BOND_LISTED_ASSET, isListed))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -52,7 +52,7 @@ export const getBondClaimable = (bondAddress, member, asset) => async (
     )
     dispatch(payloadToDispatch(Types.GET_BOND_CLAIMABLE, bondClaimable))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -67,7 +67,7 @@ export const getBondSpartaRemaining = () => async (dispatch) => {
       payloadToDispatch(Types.GET_BOND_SPARTA_REMAINING, bondSpartaRemaining),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -79,7 +79,7 @@ export const getBondBurnReady = () => async (dispatch) => {
     const bondBurnReady = await contract.callStatic.balanceOf(addr.bond)
     dispatch(payloadToDispatch(Types.GET_BOND_BURN_READY, bondBurnReady))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -96,7 +96,7 @@ export const getBondListedCount = () => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.GET_BOND_LISTED_COUNT, bondListedCount))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -113,7 +113,7 @@ export const getBondMemberCount = () => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.GET_BOND_MEMBER_COUNT, memberCount))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -130,7 +130,7 @@ export const getBondMembers = () => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.GET_BOND_MEMBERS, members))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -149,7 +149,7 @@ export const bondBurn = () => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.BOND_BURN, bondBurned))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -174,7 +174,7 @@ export const bondDeposit = (asset, amount) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.BOND_DEPOSIT, deposit))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -197,7 +197,7 @@ export const bondClaimAll = (member) => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimedAll))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }
 
@@ -220,6 +220,6 @@ export const bondClaim = (assetAddr) => async (dispatch) => {
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM, bondClaimed))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
 }

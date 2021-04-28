@@ -1,16 +1,11 @@
 import * as Types from './types'
 
 const initialState = {
-  poolAddr: {},
-  // poolCount: 0,
-  // poolArray: [],
-  // tokenCount: 0,
-  tokenArray: [],
-  // curatedPoolCount: 0,
-  curatedPoolArray: [],
-  detailedArray: [],
-  finalArray: null,
-  finalLpArray: null,
+  listedTokens: [],
+  curatedPools: [],
+  tokenDetails: [],
+  listedPools: [],
+  poolDetails: [],
   loading: false,
   error: null,
   loadingFinal: false,
@@ -18,91 +13,46 @@ const initialState = {
 
 export const poolFactoryReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.POOLFACTORY_GET_POOL: {
+    case Types.LISTED_TOKENS: {
       return {
         ...state,
-        poolAddr: action.payload,
+        listedTokens: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    // case Types.POOLFACTORY_GET_COUNT: {
-    //   return {
-    //     ...state,
-    //     poolCount: action.payload,
-    //     error: null,
-    //     loading: false,
-    //   }
-    // }
-
-    // case Types.POOLFACTORY_GET_TOKEN_COUNT: {
-    //   return {
-    //     ...state,
-    //     tokenCount: action.payload,
-    //     error: null,
-    //     loading: false,
-    //   }
-    // }
-
-    case Types.POOLFACTORY_GET_TOKEN_ARRAY: {
+    case Types.CURATED_POOLS: {
       return {
         ...state,
-        tokenArray: action.payload,
+        curatedPools: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    // case Types.POOLFACTORY_GET_ARRAY: {
-    //   return {
-    //     ...state,
-    //     poolArray: action.payload,
-    //     error: null,
-    //     loading: false,
-    //   }
-    // }
-
-    // case Types.POOLFACTORY_GET_CURATED_COUNT: {
-    //   return {
-    //     ...state,
-    //     curatedPoolCount: action.payload,
-    //     error: null,
-    //     loading: false,
-    //   }
-    // }
-
-    case Types.POOLFACTORY_GET_CURATED_ARRAY: {
+    case Types.TOKEN_DETAILS: {
       return {
         ...state,
-        curatedPoolArray: action.payload,
+        tokenDetails: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.POOLFACTORY_GET_DETAILED_ARRAY: {
+    case Types.LISTED_POOLS: {
       return {
         ...state,
-        detailedArray: action.payload,
+        listedPools: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.POOLFACTORY_GET_FINAL_ARRAY: {
+    case Types.POOL_DETAILS: {
       return {
         ...state,
-        finalArray: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.POOLFACTORY_GET_FINAL_LP_ARRAY: {
-      return {
-        ...state,
-        finalLpArray: action.payload,
+        poolDetails: action.payload,
         error: null,
         loadingFinal: false,
       }
@@ -124,7 +74,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOLFACTORY_FINALARRAY_LOADING: {
+    case Types.POOL_DETAILS_LOADING: {
       return {
         ...state,
         loadingFinal: true,

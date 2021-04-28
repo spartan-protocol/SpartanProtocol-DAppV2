@@ -1,6 +1,10 @@
 import * as Types from './types'
 
 const initialState = {
+  // FINAL AND READY BELOW
+  globalDetails: [],
+  memberDetails: [],
+  // PENDING REFACTOR BELOW
   lastHarvest: '0',
   isMember: false,
   memberCount: 0,
@@ -28,6 +32,24 @@ const initialState = {
 
 export const daoReducer = (state = initialState, action) => {
   switch (action.type) {
+    case Types.GLOBAL_DETAILS: {
+      return {
+        ...state,
+        globalDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.MEMBER_DETAILS: {
+      return {
+        ...state,
+        memberDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.LAST_HARVEST: {
       return {
         ...state,

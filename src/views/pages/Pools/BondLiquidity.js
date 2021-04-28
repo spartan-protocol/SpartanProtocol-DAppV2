@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -8,7 +10,7 @@ import {
   Input,
   InputGroup,
   InputGroupAddon,
-  UncontrolledAlert,
+  // UncontrolledAlert,
   UncontrolledTooltip,
   Progress,
   Row,
@@ -62,9 +64,9 @@ const BondLiquidity = () => {
   }, [])
 
   useEffect(() => {
-    const { finalArray } = poolFactory
+    const { poolDetails } = poolFactory
     const getAssetDetails = () => {
-      if (finalArray) {
+      if (poolDetails) {
         window.localStorage.setItem('assetType1', 'token')
 
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
@@ -74,7 +76,7 @@ const BondLiquidity = () => {
             ? asset1
             : { tokenAddress: addr.bnb }
 
-        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
+        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
 
         setAssetBond1(asset1)
 
@@ -84,17 +86,17 @@ const BondLiquidity = () => {
 
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    poolFactory.finalArray,
-    poolFactory.finalLpArray,
-    window.localStorage.getItem('assetSelected1'),
-  ])
+  }, [poolFactory.poolDetails, window.localStorage.getItem('assetSelected1')])
+
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const bondInput1 = document.getElementById('bondInput1')
 
   const clearInputs = () => {
     if (bondInput1) {
-      bondInput1.value = '0'
+      bondInput1.value = ''
+      bondInput1.focus()
     }
   }
 
@@ -137,29 +139,26 @@ const BondLiquidity = () => {
     return '0'
   }
 
-  useEffect(() => {
-    if (
-      document.activeElement.id === 'bondInput1' &&
-      bondInput1?.value !== ''
-    ) {
-      calcOutput()
-    } else if (bondInput1 && bondInput1?.value === '') {
-      bondInput1.value = '0'
-    }
-  }, [bondInput1?.value, assetBond1])
-
   return (
     <>
-      <Row>
-        <Card className="card-body">
+      <Row className="justify-content-center">
+        <Card className="card-body" style={{ maxWidth: '480px' }}>
           <Card style={{ backgroundColor: '#25212D' }} className="card-body">
             <Row>
               <Col xs="4" className="">
                 <div className="">Input</div>
               </Col>
               <Col xs="8" className="text-right">
-                <div className="">
-                  Balance {formatFromWei(assetBond1.balanceTokens)}
+                <div
+                  role="button"
+                  onClick={() => {
+                    bondInput1.value = convertFromWei(
+                      getToken(assetBond1.tokenAddress)?.balance,
+                    )
+                  }}
+                >
+                  Balance:{' '}
+                  {formatFromWei(getToken(assetBond1.tokenAddress)?.balance)}
                 </div>
               </Col>
             </Row>
@@ -178,7 +177,7 @@ const BondLiquidity = () => {
                   <Input
                     className="text-right ml-0"
                     type="text"
-                    placeholder="0"
+                    placeholder="0.00"
                     id="bondInput1"
                   />
                   <InputGroupAddon
@@ -193,12 +192,14 @@ const BondLiquidity = () => {
                 </InputGroup>
                 <div className="text-right">
                   ~$
-                  {bondInput1?.value && formatFromWei(getInput1ValueUSD(), 2)}
+                  {bondInput1?.value
+                    ? formatFromWei(getInput1ValueUSD(), 2)
+                    : '0.00'}
                 </div>
               </Col>
             </Row>
           </Card>
-          <UncontrolledAlert
+          {/* <UncontrolledAlert
             className="alert-with-icon"
             color="danger"
             fade={false}
@@ -217,9 +218,9 @@ const BondLiquidity = () => {
               tokens will be issued as usual and vested to you over a 12 month
               period.
             </span>
-          </UncontrolledAlert>
-          <br />
-          <Row className="card-body">
+          </UncontrolledAlert> */}
+
+          <Row className="card-body py-0">
             <Col>
               <div className="text-card">
                 Allocation
@@ -241,7 +242,6 @@ const BondLiquidity = () => {
           </Row>
 
           <div className="card-body">
-            <br />
             <div className="progress-container progress-primary">
               <Progress
                 max="2500000"
@@ -256,32 +256,39 @@ const BondLiquidity = () => {
               </Progress>
             </div>
             <Row className="mb-2">
-              <Col xs="4" className="">
+              <Col xs="auto">
                 <div className="title-card">Input</div>
               </Col>
-              <Col xs="8" className="text-right">
+              <Col className="text-right">
                 <div className="">
-                  {formatFromUnits(bondInput1?.value, 8)} {assetBond1?.symbol}
+                  {bondInput1?.value > 0
+                    ? formatFromUnits(bondInput1?.value, 6)
+                    : '0.00'}{' '}
+                  {getToken(assetBond1.tokenAddress)?.symbol}
                 </div>
               </Col>
             </Row>
             <Row className="mb-2">
-              <Col xs="4" className="">
+              <Col xs="auto" className="">
                 <div className="title-card">Minted</div>
               </Col>
-              <Col xs="8" className="text-right">
+              <Col className="text-right">
                 <div className="">
-                  {formatFromWei(calcSpartaMinted(), 8)} SPARTA
+                  {calcSpartaMinted() > 0
+                    ? formatFromWei(calcSpartaMinted(), 6)
+                    : '0.00'}{' '}
+                  SPARTA
                 </div>
               </Col>
             </Row>
             <Row className="mb-2">
-              <Col xs="4" className="">
+              <Col xs="auto" className="">
                 <div className="title-card">Output</div>
               </Col>
-              <Col xs="8" className="text-right">
+              <Col className="text-right">
                 <div className="">
-                  {formatFromWei(calcOutput(), 8)} {assetBond1?.symbol}-SPP
+                  {calcOutput() > 0 ? formatFromWei(calcOutput(), 6) : '0.00'}{' '}
+                  {getToken(assetBond1.tokenAddress)?.symbol}-SPP
                 </div>
               </Col>
             </Row>
@@ -290,7 +297,7 @@ const BondLiquidity = () => {
           <Row>
             <Approval
               tokenAddress={assetBond1?.tokenAddress}
-              symbol={assetBond1?.symbol}
+              symbol={getToken(assetBond1.tokenAddress)?.symbol}
               walletAddress={wallet?.account}
               contractAddress={addr.bond}
               txnAmount={convertToWei(bondInput1?.value)}
@@ -311,20 +318,16 @@ const BondLiquidity = () => {
                   )
                 }
               >
-                Bond {assetBond1?.symbol}
+                Bond {getToken(assetBond1.tokenAddress)?.symbol}
               </Button>
             </Col>
           </Row>
         </Card>
       </Row>
-      {poolFactory.finalLpArray && (
+      {poolFactory.poolDetails && (
         <Row>
           <Col xs="12" className="p-0">
-            <SwapPair
-              assetSwap={assetBond1}
-              finalLpArray={poolFactory.finalLpArray}
-              web3={web3}
-            />
+            <SwapPair assetSwap={assetBond1} />
           </Col>
         </Row>
       )}
