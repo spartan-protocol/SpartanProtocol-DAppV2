@@ -88,7 +88,7 @@ describe('Dao actions', () => {
     if (dispatchMock.mock.calls[1][0].type === Types.DAO_WITHDRAW) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!balance')
+      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('Must be DAO')
     }
   })
 
