@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -50,9 +52,9 @@ const RemoveLiquidity = () => {
   const [poolRemove1, setPoolRemove1] = useState('...')
 
   useEffect(() => {
-    const { finalArray } = poolFactory
+    const { poolDetails } = poolFactory
     const getAssetDetails = () => {
-      if (finalArray && activeTab === '1') {
+      if (poolDetails.length > 0 && activeTab === '1') {
         window.localStorage.setItem('assetType1', 'pool')
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'token')
@@ -71,9 +73,9 @@ const RemoveLiquidity = () => {
             : { tokenAddress: addr.bnb }
         asset3 = { tokenAddress: addr.sparta }
 
-        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-        asset2 = getItemFromArray(asset2, poolFactory.finalArray)
-        asset3 = getItemFromArray(asset3, poolFactory.finalArray)
+        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
+        asset2 = getItemFromArray(asset2, poolFactory.poolDetails)
+        asset3 = getItemFromArray(asset3, poolFactory.poolDetails)
 
         setPoolRemove1(asset1)
         setAssetRemove1(asset2)
@@ -82,7 +84,7 @@ const RemoveLiquidity = () => {
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-      } else if (finalArray && activeTab === '2') {
+      } else if (poolDetails && activeTab === '2') {
         window.localStorage.setItem('assetType1', 'pool')
         window.localStorage.setItem('assetType2', 'token')
 
@@ -99,8 +101,8 @@ const RemoveLiquidity = () => {
             ? asset2
             : { tokenAddress: addr.sparta }
 
-        asset1 = getItemFromArray(asset1, poolFactory.finalArray)
-        asset2 = getItemFromArray(asset2, poolFactory.finalArray)
+        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
+        asset2 = getItemFromArray(asset2, poolFactory.poolDetails)
 
         setPoolRemove1(asset1)
         setAssetRemove1(asset2)
@@ -112,13 +114,15 @@ const RemoveLiquidity = () => {
 
     getAssetDetails()
   }, [
-    poolFactory.finalArray,
-    poolFactory.finalLpArray,
+    poolFactory.poolDetails,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected2'),
     window.localStorage.getItem('assetSelected3'),
     activeTab,
   ])
+
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const removeInput1 = document.getElementById('removeInput1')
   const removeInput2 = document.getElementById('removeInput2')
@@ -128,16 +132,35 @@ const RemoveLiquidity = () => {
     if (activeTab !== tab) setActiveTab(tab)
   }
 
-  const clearInputs = () => {
+  const clearInputs = (focusAfter) => {
     if (removeInput1) {
-      removeInput1.value = '0'
+      removeInput1.value = ''
     }
     if (removeInput2) {
-      removeInput2.value = '0'
+      removeInput2.value = ''
     }
     if (removeInput3) {
-      removeInput3.value = '0'
+      removeInput3.value = ''
     }
+    if (focusAfter === 1) {
+      removeInput1.focus()
+    }
+    if (focusAfter === 2) {
+      removeInput2.focus()
+    }
+  }
+
+  const getBalance = (asset) => {
+    if (asset === 1) {
+      return poolRemove1?.balance
+    }
+    if (asset === 2) {
+      return getToken(assetRemove1?.tokenAddress)?.balance
+    }
+    if (asset === 3) {
+      return getToken(assetRemove2?.tokenAddress)?.balance
+    }
+    return poolRemove1?.balance
   }
 
   //= =================================================================================//
@@ -153,7 +176,7 @@ const RemoveLiquidity = () => {
         ),
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getRemoveSpartaOutput = () => {
@@ -166,7 +189,7 @@ const RemoveLiquidity = () => {
         ),
       )
     }
-    return '0'
+    return '0.00'
   }
 
   //= =================================================================================//
@@ -188,7 +211,7 @@ const RemoveLiquidity = () => {
       )
       return swapFee
     }
-    return '0'
+    return '0.00'
   }
 
   const getRemoveOneSwapOutput = () => {
@@ -206,7 +229,7 @@ const RemoveLiquidity = () => {
         assetRemove1?.tokenAddress === addr.sparta,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getRemoveOneFinalOutput = () => {
@@ -218,7 +241,7 @@ const RemoveLiquidity = () => {
       )
       return result
     }
-    return '0'
+    return '0.00'
   }
 
   //= =================================================================================//
@@ -232,14 +255,14 @@ const RemoveLiquidity = () => {
         convertToWei(removeInput2.value),
       ).times(web3.spartaPrice)
     }
-    return '0'
+    return '0.00'
   }
 
   const getOutput2ValueUSD = () => {
     if (assetRemove2 && removeInput3?.value) {
       return BN(convertToWei(removeInput3.value)).times(web3.spartaPrice)
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueBase = () => {
@@ -250,7 +273,7 @@ const RemoveLiquidity = () => {
         poolRemove1.poolUnits,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueToken = () => {
@@ -261,7 +284,7 @@ const RemoveLiquidity = () => {
         poolRemove1.poolUnits,
       )
     }
-    return '0'
+    return '0.00'
   }
 
   const getLpValueUSD = () => {
@@ -277,61 +300,37 @@ const RemoveLiquidity = () => {
         .times(web3.spartaPrice)
     }
 
-    return '0'
+    return '0.00'
   }
 
   const handleInputChange = () => {
-    if (activeTab === '1' && removeInput1 && removeInput2 && removeInput3) {
-      removeInput2.value = getRemoveTokenOutput()
-      removeInput3.value = getRemoveSpartaOutput()
-    }
-    if (activeTab === '2' && removeInput1 && removeInput2) {
-      removeInput2.value = convertFromWei(getRemoveOneFinalOutput())
+    if (activeTab === '1') {
+      if (removeInput1?.value && removeInput2 && removeInput3) {
+        removeInput2.value = getRemoveTokenOutput()
+        removeInput3.value = getRemoveSpartaOutput()
+      }
+    } else if (activeTab === '2') {
+      if (removeInput1?.value) {
+        removeInput2.value = convertFromWei(getRemoveOneFinalOutput())
+      }
     }
   }
 
   useEffect(() => {
-    if (activeTab === '1' && removeInput1?.value) {
-      if (
-        document.activeElement.id === 'removeInput2' &&
-        removeInput2?.value !== ''
-      ) {
-        handleInputChange(removeInput2?.value, false)
-      } else if (
-        (removeInput1 && removeInput2 && removeInput1?.value === '') ||
-        (removeInput1 && removeInput2 && removeInput2?.value === '')
-      ) {
-        removeInput1.value = '0'
-        removeInput2.value = '0'
-      } else {
-        handleInputChange(removeInput1?.value, true)
-      }
-    } else if (!removeInput1?.value) {
-      clearInputs()
-    }
-
-    if (activeTab === '2' && removeInput1?.value) {
-      if (removeInput1?.value !== '') {
-        handleInputChange()
-      } else {
-        removeInput1.value = '0'
-        handleInputChange()
-      }
-    } else if (!removeInput1?.value) {
-      clearInputs()
-    }
+    handleInputChange()
   }, [
     removeInput1?.value,
     removeInput2?.value,
     assetRemove1,
     assetRemove2,
+    poolRemove1,
     activeTab,
   ])
 
   return (
     <>
-      <Row>
-        <Card className="card-body">
+      <Row className="justify-content-center">
+        <Card className="card-body" style={{ maxWidth: '480px' }}>
           <Row>
             <Col md={12}>
               <Card
@@ -343,10 +342,15 @@ const RemoveLiquidity = () => {
                     <div className="">Pool</div>
                   </Col>
                   <Col xs="8" className="text-right">
-                    <div className="">
-                      Balance{' '}
-                      {poolFactory.finalLpArray &&
-                        formatFromWei(poolRemove1.balanceLPs)}
+                    <div
+                      role="button"
+                      onClick={() => {
+                        clearInputs(1)
+                        removeInput1.value = convertFromWei(getBalance(1))
+                      }}
+                    >
+                      Balance:{' '}
+                      {poolFactory.poolDetails && formatFromWei(getBalance(1))}
                     </div>
                   </Col>
                 </Row>
@@ -362,22 +366,24 @@ const RemoveLiquidity = () => {
                       <Input
                         className="text-right ml-0"
                         type="text"
-                        placeholder="0"
+                        placeholder="0.00"
                         id="removeInput1"
                       />
                       <InputGroupAddon
                         addonType="append"
                         role="button"
                         tabIndex={-1}
-                        onKeyPress={() => clearInputs()}
-                        onClick={() => clearInputs()}
+                        onKeyPress={() => clearInputs(1)}
+                        onClick={() => clearInputs(1)}
                       >
                         <i className="icon-search-bar icon-close icon-light my-auto" />
                       </InputGroupAddon>
                     </InputGroup>
                     <div className="text-right">
                       ~$
-                      {removeInput1?.value && formatFromWei(getLpValueUSD(), 2)}
+                      {removeInput1?.value
+                        ? formatFromWei(getLpValueUSD(), 2)
+                        : '0.00'}
                     </div>
                   </Col>
                 </Row>
@@ -406,7 +412,7 @@ const RemoveLiquidity = () => {
               </Nav>
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body "
+                className="card-body mb-0"
               >
                 <Row>
                   <Col xs="4" className="">
@@ -414,9 +420,8 @@ const RemoveLiquidity = () => {
                   </Col>
                   <Col xs="8" className="text-right">
                     <div className="">
-                      Balance{' '}
-                      {poolFactory.finalLpArray &&
-                        formatFromWei(assetRemove1.balanceTokens)}
+                      Balance:{' '}
+                      {poolFactory.tokenDetails && formatFromWei(getBalance(2))}
                     </div>
                   </Col>
                 </Row>
@@ -442,15 +447,16 @@ const RemoveLiquidity = () => {
                       <Input
                         className="text-right ml-0"
                         type="text"
-                        placeholder="0"
+                        placeholder="0.00"
                         id="removeInput2"
                         disabled
                       />
                     </InputGroup>
                     <div className="text-right">
                       ~$
-                      {removeInput2?.value &&
-                        formatFromWei(getOutput1ValueUSD(), 2)}
+                      {removeInput2?.value
+                        ? formatFromWei(getOutput1ValueUSD(), 2)
+                        : '0.00'}
                     </div>
                   </Col>
                 </Row>
@@ -464,9 +470,9 @@ const RemoveLiquidity = () => {
                       </Col>
                       <Col xs="8" className="text-right">
                         <div className="">
-                          Balance{' '}
-                          {poolFactory.finalLpArray &&
-                            formatFromWei(assetRemove2.balanceTokens)}
+                          Balance:{' '}
+                          {poolFactory.tokenDetails &&
+                            formatFromWei(getBalance(3))}
                         </div>
                       </Col>
                     </Row>
@@ -486,15 +492,16 @@ const RemoveLiquidity = () => {
                           <Input
                             className="text-right ml-0"
                             type="text"
-                            placeholder="0"
+                            placeholder="0.00"
                             id="removeInput3"
                             disabled
                           />
                         </InputGroup>
                         <div className="text-right">
                           ~$
-                          {removeInput3?.value &&
-                            formatFromWei(getOutput2ValueUSD(), 2)}
+                          {removeInput3?.value
+                            ? formatFromWei(getOutput2ValueUSD(), 2)
+                            : '0.00'}
                         </div>
                       </Col>
                     </Row>
@@ -502,16 +509,19 @@ const RemoveLiquidity = () => {
                 )}
               </Card>
 
-              {poolFactory.finalLpArray && (
+              {poolFactory.poolDetails && (
                 <>
                   <div className="card-body">
                     <Row className="mb-2">
-                      <Col xs="4" className="">
+                      <Col xs="auto">
                         <div className="title-card">Input</div>
                       </Col>
-                      <Col xs="8" className="text-right">
+                      <Col className="text-right">
                         <div className="">
-                          {removeInput1?.value} {poolRemove1?.symbol}-SPP
+                          {removeInput1?.value > 0
+                            ? formatFromUnits(removeInput1?.value, 6)
+                            : '0.00'}{' '}
+                          {getToken(poolRemove1?.tokenAddress)?.symbol}-SPP
                         </div>
                       </Col>
                     </Row>
@@ -523,24 +533,37 @@ const RemoveLiquidity = () => {
                         </Col>
                         <Col xs="8" className="text-right">
                           <div className="">
-                            {formatFromWei(getRemoveOneSwapFee())} SPARTA
+                            {getRemoveOneSwapFee() > 0
+                              ? formatFromWei(getRemoveOneSwapFee())
+                              : '0.00'}{' '}
+                            SPARTA
                           </div>
                         </Col>
                       </Row>
                     )}
 
                     <Row className="mb-2">
-                      <Col xs="4" className="">
-                        <div className="title-card mt-2">Output</div>
+                      <Col xs="auto">
+                        {activeTab === '1' && (
+                          <div className="title-card mt-2">Output</div>
+                        )}
+                        {activeTab === '2' && (
+                          <div className="title-card">Output</div>
+                        )}
                       </Col>
-                      <Col xs="8" className="text-right">
+                      <Col className="text-right">
                         <div className="">
-                          {formatFromUnits(removeInput2?.value, 8)}{' '}
-                          {assetRemove1?.symbol}
+                          {removeInput2?.value > 0
+                            ? formatFromUnits(removeInput2?.value, 6)
+                            : '0.00'}{' '}
+                          {getToken(poolRemove1?.tokenAddress)?.symbol}
                         </div>
                         {activeTab === '1' && (
                           <div className="">
-                            {formatFromUnits(removeInput3?.value, 8)} SPARTA
+                            {removeInput3?.value > 0
+                              ? formatFromUnits(removeInput3?.value, 6)
+                              : '0.00'}{' '}
+                            SPARTA
                           </div>
                         )}
                       </Col>
@@ -549,16 +572,15 @@ const RemoveLiquidity = () => {
                 </>
               )}
 
-              {!poolFactory.finalLpArray && (
+              {!poolFactory.poolDetails && (
                 <HelmetLoading height="150px" width="150px" />
               )}
             </Col>
           </Row>
           <Row className="text-center">
-            <Col xs="12" sm="4" />
-            <Col xs="12" sm="4">
+            <Col>
               <Button
-                className="w-100 h-100 btn-primary"
+                className="w-75 h-100 btn-primary"
                 onClick={() =>
                   activeTab === '1'
                     ? dispatch(
@@ -579,18 +601,13 @@ const RemoveLiquidity = () => {
                 Remove Liq
               </Button>
             </Col>
-            <Col xs="12" sm="4" />
           </Row>
         </Card>
       </Row>
-      {poolFactory.finalLpArray && (
+      {poolFactory.poolDetails && (
         <Row>
           <Col xs="12">
-            <SwapPair
-              assetSwap={poolRemove1}
-              finalLpArray={poolFactory.finalLpArray}
-              web3={web3}
-            />
+            <SwapPair assetSwap={poolRemove1} />
           </Col>
         </Row>
       )}

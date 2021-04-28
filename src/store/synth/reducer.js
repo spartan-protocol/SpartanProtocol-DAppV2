@@ -1,20 +1,37 @@
 import * as Types from './types'
 
 const initialState = {
+  globalDetails: [],
+  memberDetails: [],
   synthArray: [],
-  synthArrayFinal: [],
-  depositAmount: '0',
-  harvestAmount: '0',
+  synthDetails: [],
+  deposit: '0',
+  harvest: '0',
+  harvestSingle: '0',
   withdrawAmount: '0',
-  memberStaked: '0',
-  memberWeight: '0',
-  totalWeight: '0',
-  memberLastHarvest: '0',
 }
 
 export const synthReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_SYNTH_ARRAY: {
+    case Types.GLOBAL_DETAILS: {
+      return {
+        ...state,
+        globalDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.MEMBER_DETAILS: {
+      return {
+        ...state,
+        memberDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SYNTH_ARRAY: {
       return {
         ...state,
         synthArray: action.payload,
@@ -23,28 +40,37 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.SYNTH_ARRAY_FINAL: {
+    case Types.SYNTH_DETAILS: {
       return {
         ...state,
-        synthArrayFinal: action.payload,
+        synthDetails: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.DEPOSIT_AMOUNT: {
+    case Types.DEPOSIT: {
       return {
         ...state,
-        depositAmount: action.payload,
+        deposit: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.HARVEST_AMOUNT: {
+    case Types.HARVEST: {
       return {
         ...state,
-        harvestAmount: action.payload,
+        harvest: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.HARVEST_SINGLE: {
+      return {
+        ...state,
+        harvestSingle: action.payload,
         error: null,
         loading: false,
       }
@@ -54,42 +80,6 @@ export const synthReducer = (state = initialState, action) => {
       return {
         ...state,
         withdrawAmount: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.MEMBER_STAKED: {
-      return {
-        ...state,
-        memberStaked: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.MEMBER_WEIGHT: {
-      return {
-        ...state,
-        memberWeight: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.TOTAL_WEIGHT: {
-      return {
-        ...state,
-        totalWeight: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.MEMBER_LAST_HARVEST: {
-      return {
-        ...state,
-        memberLastHarvest: action.payload,
         error: null,
         loading: false,
       }

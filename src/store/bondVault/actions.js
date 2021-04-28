@@ -40,6 +40,6 @@ export const getBondVaultMemberDetails = (member, assetArray) => async (
       payloadToDispatch(Types.GET_BONDVAULT_MEMBER_DETAILS, memberDetails),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.BONDVAULT_ERROR, error))
+    dispatch(errorToDispatch(Types.BONDVAULT_ERROR, `${error}.`))
   }
 }

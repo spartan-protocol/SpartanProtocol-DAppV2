@@ -2,13 +2,18 @@ import React from 'react'
 import { Card, Col, Row } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import coinSparta from '../../../assets/icons/coin_sparta.svg'
+import { usePoolFactory } from '../../../store/poolFactory'
+import { useWeb3 } from '../../../store/web3'
 import { formatFromWei, formatFromUnits, BN } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
 
-const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
+const SwapPair = ({ assetSwap }) => {
+  const web3 = useWeb3()
+  const poolFactory = usePoolFactory()
+  const { poolDetails } = poolFactory
   const asset =
-    finalLpArray && finalLpArray.length
-      ? finalLpArray.find((lp) => lp.symbol === assetSwap.symbol)
+    poolDetails && poolDetails.length
+      ? poolDetails.find((lp) => lp.tokenAddress === assetSwap.tokenAddress)
       : 0
   const tokenPrice = BN(assetSwap?.baseAmount)
     .div(assetSwap?.tokenAmount)
@@ -32,6 +37,9 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
         )
       : 0
 
+  const getToken = (tokenAddress) =>
+    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
   return (
     <>
       <Card className="card-body">
@@ -40,11 +48,11 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
             <div className="output-card">
               <img
                 className="mr-2"
-                src={assetSwap.symbolUrl}
+                src={getToken(assetSwap.tokenAddress)?.symbolUrl}
                 alt="Logo"
                 height="32"
               />
-              {assetSwap?.symbol}
+              {getToken(assetSwap.tokenAddress)?.symbol}
             </div>
           </Col>
           <Col className="output-card text-right">
@@ -95,7 +103,8 @@ const SwapPair = ({ assetSwap, finalLpArray, web3 }) => {
             Depth
           </Col>
           <Col className="output-card text-right">
-            {formatFromWei(assetSwap.tokenAmount, 4)} {assetSwap.symbol} <br />
+            {formatFromWei(assetSwap.tokenAmount, 4)}{' '}
+            {getToken(assetSwap.tokenAddress)?.symbol} <br />
             {formatFromWei(assetSwap.baseAmount, 4)} SPARTA
           </Col>
         </Row>

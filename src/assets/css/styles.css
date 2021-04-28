@@ -159,6 +159,20 @@ input:focus, textarea:focus, select:focus{
     -ms-animation: fadeIn ease 3s;
 }
 
+.card-480 {
+    max-width: 480px;
+}
+
+.col-480 {
+    justify-content: center;
+    display: flex;
+}
+
+.row-480 {
+    justify-content: center;
+    display: flex; 
+}
+
 
 .modal-title {
     font-family: Kreon;
@@ -174,6 +188,18 @@ input:focus, textarea:focus, select:focus{
 
     color: #FFFFFF;
 
+}
+
+.text-title-small {
+    font-family: Kreon;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 46px;
+    /* identical to box height, or 133% */
+    font-feature-settings: 'liga' off;
+    /* White */
+    color: #FFFFFF;
 }
 
 
@@ -440,7 +466,7 @@ input:focus, textarea:focus, select:focus{
         border-color: transparent;
         z-index: 1;
         font-style: normal;
-        font-size: 12px;
+        font-size: 16px;
         line-height: 24px;
         font-family: Roboto, serif;
         font-weight: bold;

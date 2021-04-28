@@ -1,13 +1,13 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { TEST_POOL, TEST_WALLET } from '../../utils/web3'
+import { TEST_WALLET } from '../../utils/web3'
 import {
   getDaoIsMember,
   getDaoHarvestAmount,
   // getDaoHarvestEraAmount,
   getDaoMemberCount,
-  daoDeposit,
+  // daoDeposit,
   daoHarvest,
-  daoWithdraw,
+  // daoWithdraw,
   // getDaoProposalMajority,
   // getDaoProposalQuorum,
   // getDaoProposalMinority,
@@ -74,23 +74,23 @@ describe('Dao actions', () => {
   //   }
   // })
 
-  test('should deposit LPs in DAO for member', async () => {
-    await daoDeposit(TEST_POOL, 1, true)(dispatchMock)
-    if (dispatchMock.mock.calls[1][0].type === Types.DAO_DEPOSIT) {
-      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    } else {
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!Curated')
-    }
-  })
+  // test('should deposit LPs in DAO for member', async () => {
+  //   await daoDeposit(TEST_POOL, 1, true)(dispatchMock)
+  //   if (dispatchMock.mock.calls[1][0].type === Types.DAO_DEPOSIT) {
+  //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  //   } else {
+  //     expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!Curated')
+  //   }
+  // })
 
-  test('should withdraw LPS from DAO for member', async () => {
-    await daoWithdraw(TEST_POOL, true)(dispatchMock)
-    if (dispatchMock.mock.calls[1][0].type === Types.DAO_WITHDRAW) {
-      expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    } else {
-      expect(dispatchMock.mock.calls[1][0].error.reason).toBe('Must be DAO')
-    }
-  })
+  // test('should withdraw LPS from DAO for member', async () => {
+  //   await daoWithdraw(TEST_POOL, true)(dispatchMock)
+  //   if (dispatchMock.mock.calls[1][0].type === Types.DAO_WITHDRAW) {
+  //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  //   } else {
+  //     expect(dispatchMock.mock.calls[1][0].error.reason).toBe('!balance')
+  //   }
+  // })
 
   test('should perform a harvest for the DAO member', async () => {
     await daoHarvest(true)(dispatchMock)
