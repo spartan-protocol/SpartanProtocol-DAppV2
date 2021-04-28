@@ -7,7 +7,11 @@ import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { useReserve } from '../../../store/reserve/selector'
-import { calcShare } from '../../../utils/web3Utils'
+import {
+  calcLiquidityUnitsAsym,
+  calcShare,
+  calcSwapOutput,
+} from '../../../utils/web3Utils'
 import { useSparta } from '../../../store/sparta/selector'
 
 const SynthVaultItem = ({ synthItem }) => {
@@ -18,11 +22,15 @@ const SynthVaultItem = ({ synthItem }) => {
   const dispatch = useDispatch()
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  const getPool = (tokenAddress) =>
+    pool.poolDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)
     return date.toLocaleDateString()
   }
+
+  // Calculations
 
   const getClaimable = () => {
     // get seconds passed since last harvest
@@ -46,6 +54,36 @@ const SynthVaultItem = ({ synthItem }) => {
     return claimAmount
   }
 
+  const getSynthLPsFromBase = () => {
+    const temp = calcLiquidityUnitsAsym(
+      getClaimable(),
+      getPool(synthItem.tokenAddress)?.baseAmount,
+      getPool(synthItem.tokenAddress)?.poolUnits,
+    )
+    return temp
+  }
+
+  const getSynthOutputFromBase = () => {
+    const lpUnits = getSynthLPsFromBase()
+    const baseAmount = calcShare(
+      lpUnits,
+      BN(getPool(synthItem.tokenAddress)?.poolUnits).plus(lpUnits),
+      BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
+    )
+    const tokenAmount = calcShare(
+      lpUnits,
+      BN(getPool(synthItem.tokenAddress)?.poolUnits).plus(lpUnits),
+      getPool(synthItem.tokenAddress)?.tokenAmount,
+    )
+    const baseSwapped = calcSwapOutput(
+      baseAmount,
+      getPool(synthItem.tokenAddress)?.tokenAmount,
+      BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
+    )
+    const tokenValue = BN(tokenAmount).plus(baseSwapped)
+    return tokenValue
+  }
+
   return (
     <>
       <Col>
@@ -54,8 +92,8 @@ const SynthVaultItem = ({ synthItem }) => {
             <h4>{getToken(synthItem.tokenAddress)?.symbol}-SPS</h4>
             <p>Balance: {formatFromWei(synthItem.balance)}</p>
             <p>Staked: {formatFromWei(synthItem.staked)}</p>
-            <p>Claimable: {formatFromWei(getClaimable())}</p>
-            <p>Claimable: {formatDate(synthItem.lastHarvest)}</p>
+            <p>Harvestable: {formatFromWei(getSynthOutputFromBase())}</p>
+            <p>Last Harvest: {formatDate(synthItem.lastHarvest)}</p>
           </Col>
           <Col xs="12" className="text-center">
             <ButtonGroup>
