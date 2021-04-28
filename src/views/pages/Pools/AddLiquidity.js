@@ -445,8 +445,7 @@ const AddLiquidity = () => {
                         }}
                       >
                         Balance:{' '}
-                        {pool.poolDetails &&
-                          formatFromWei(getBalance(2))}
+                        {pool.poolDetails && formatFromWei(getBalance(2))}
                       </div>
                     </Col>
                   </Row>
@@ -500,8 +499,7 @@ const AddLiquidity = () => {
                     <Col xs="8" className="text-right">
                       <div className="text-sm-label">
                         Balance:{' '}
-                        {pool.poolDetails &&
-                          formatFromWei(getBalance(3))}
+                        {pool.poolDetails && formatFromWei(getBalance(3))}
                       </div>
                     </Col>
                   </Row>

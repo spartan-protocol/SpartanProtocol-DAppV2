@@ -368,9 +368,8 @@ const WalletSelect = (props) => {
                           ))}
                       </TabPane>
                       <TabPane tabId="lp" className="ml-n2">
-                        {pool.poolDetails?.filter(
-                          (asset) => asset.staked > 0,
-                        ).length > 0 && (
+                        {pool.poolDetails?.filter((asset) => asset.staked > 0)
+                          .length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
                               <div className="ml-n1">Staked</div>
@@ -589,9 +588,8 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
 
-                        {pool.poolDetails?.filter(
-                          (asset) => asset.bonded > 0,
-                        ).length > 0 && (
+                        {pool.poolDetails?.filter((asset) => asset.bonded > 0)
+                          .length > 0 && (
                           <Row className="my-3">
                             <Col xs="9" md="9">
                               <div className="text-card">Bonded</div>

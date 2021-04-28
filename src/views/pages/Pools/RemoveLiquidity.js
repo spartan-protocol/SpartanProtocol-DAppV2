@@ -471,8 +471,7 @@ const RemoveLiquidity = () => {
                       <Col xs="8" className="text-right">
                         <div className="">
                           Balance:{' '}
-                          {pool.tokenDetails &&
-                            formatFromWei(getBalance(3))}
+                          {pool.tokenDetails && formatFromWei(getBalance(3))}
                         </div>
                       </Col>
                     </Row>
