@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
 import { Card, CardBody, Row, Col } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
-import SpartaIcon from '../../assets/icons/SPARTA.svg'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
 
-const Share = () => {
+const Share = ({ assetToSwap }) => {
   const [showShare, setShowShare] = useState(false)
   const location = useLocation()
   const [url, setUrl] = useState('')
+  const { t } = useTranslation()
 
   useEffect(() => {
     const assetSelected1 = JSON.parse(
@@ -51,7 +52,7 @@ const Share = () => {
         onClick={() => setShowShare(true)}
       >
         <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
-        Share
+        {t('shareLink')}
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)}>
         <Card>
@@ -59,7 +60,7 @@ const Share = () => {
             <CardTitle tag="h2" />
             <Row>
               <Col xs="10">
-                <h2>Share</h2>
+                <h2>{t('shareLink')}</h2>
               </Col>
               <Col xs="2">
                 <Button
@@ -78,15 +79,18 @@ const Share = () => {
             <Col xs="12">
               <Card className="card-share">
                 <CardBody className="py-3">
-                  <h4 className="card-title">Swap on Spartan Protocol</h4>
+                  <h4 className="card-title">{t('swapSpartanProtocol')}</h4>
                   <Row>
-                    <Col xs="3">
-                      <img src={SpartaIcon} alt="Sparta icon" />
+                    <Col xs="5">
+                      <img
+                        src={assetToSwap.symbolUrl}
+                        alt="coin to swap icon"
+                      />
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
-                        Sparta
+                        {assetToSwap.symbol}
                       </span>
                     </Col>
                   </Row>
@@ -100,7 +104,7 @@ const Share = () => {
                   marginLeft: '15px',
                 }}
               >
-                Copy link
+                {t('copyLink')}
               </span>
               <ShareLink url={url}>
                 <Card className="card-link">
@@ -127,7 +131,9 @@ const Share = () => {
                   <CardBody className="py-3">
                     <Row>
                       <Col xs="10">
-                        <span className="card-title">Share via Facebook</span>
+                        <span className="card-title">
+                          {t('shareViaTwiter')}
+                        </span>
                       </Col>
                       <Col xs="2">
                         <TwitterIcon size={32} round />
@@ -146,7 +152,7 @@ const Share = () => {
                 style={{ width: '100%' }}
                 onClick={() => setShowShare(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
             </Col>
           </Row>

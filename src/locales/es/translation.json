@@ -58,5 +58,11 @@
     "selectAnAsset": "Seleccionar tipo de activo",
     "tokens": "Criptos",
     "lpTokens": "Criptos LP",
-    "searchAssets": "Buscar activo..."
+    "searchAssets": "Buscar activo...",
+    "shareLink": "Compartir",
+    "swapSpartanProtocol": "Intercambiar en Spartan Protocol",
+    "copyLink": "Copiar enlace",
+    "shareViaTwiter": "Compartir en Twitter",
+    "cancel": "Cancelar",
+    "copyNotification": "¡Se ha copiado un enlace de esta página a su portapapeles!"
 }

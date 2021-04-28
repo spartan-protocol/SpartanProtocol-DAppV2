@@ -58,5 +58,11 @@
   "selectAnAsset": "Select an Asset",
   "tokens": "tokens",
   "lpTokens": "LP Tokens",
-  "searchAssets": "Search Assets..."
+  "searchAssets": "Search Assets...",
+  "shareLink": "Share",
+  "swapSpartanProtocol": "Swap on Spartan Protocol",
+  "copyLink": "Copy link",
+  "shareViaTwiter": "Share via Twitter",
+  "cancel": "Cancel",
+  "copyNotification": "A link to this page has been copied to you clipboard!"
 }
