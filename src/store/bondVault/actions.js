@@ -36,9 +36,7 @@ export const getBondVaultMemberDetails = (member, assetArray) => async (
 
   try {
     const memberDetails = await Promise.all(awaitArray)
-    dispatch(
-      payloadToDispatch(Types.GET_BONDVAULT_MEMBER_DETAILS, memberDetails),
-    )
+    dispatch(payloadToDispatch(Types.BONDVAULT_MEMBER_DETAILS, memberDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.BONDVAULT_ERROR, `${error}.`))
   }

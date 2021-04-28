@@ -1,5 +1,5 @@
-export { usePoolFactory } from './selector'
-export { poolFactoryReducer } from './reducer'
+export { usePool } from './selector'
+export { poolReducer } from './reducer'
 export {
   getListedTokens,
   getCuratedPools,

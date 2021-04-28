@@ -10,7 +10,7 @@ import AdminLayout from './components/layout/Common'
 import { bondReducer } from './store/bond'
 import { bondVaultReducer } from './store/bondVault'
 import { daoReducer } from './store/dao'
-import { poolFactoryReducer } from './store/poolFactory'
+import { poolReducer } from './store/pool'
 import { reserveReducer } from './store/reserve'
 import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
@@ -38,7 +38,7 @@ const reducers = combineReducers({
   bond: bondReducer,
   bondVault: bondVaultReducer,
   dao: daoReducer,
-  poolFactory: poolFactoryReducer,
+  pool: poolReducer,
   reserve: reserveReducer,
   router: routerReducer,
   sparta: spartaReducer,

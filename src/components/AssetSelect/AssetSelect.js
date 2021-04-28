@@ -18,7 +18,7 @@ import {
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { usePoolFactory } from '../../store/poolFactory'
+import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
 import ShareLink from '../Share/ShareLink'
@@ -44,7 +44,7 @@ const AssetSelect = (props) => {
   const [showModal, setShowModal] = useState(false)
 
   const [activeTab, setActiveTab] = useState('all')
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
 
   const toggleModal = () => {
     setShowModal(!showModal)
@@ -61,7 +61,7 @@ const AssetSelect = (props) => {
   }
 
   const addSelection = (asset) => {
-    const tempAsset = poolFactory.poolDetails.filter(
+    const tempAsset = pool.poolDetails.filter(
       (i) => i.tokenAddress === asset.address,
     )
     window.localStorage.setItem(
@@ -91,7 +91,7 @@ const AssetSelect = (props) => {
   const [assetArray, setAssetArray] = useState([])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -99,8 +99,8 @@ const AssetSelect = (props) => {
   useEffect(() => {
     let finalArray = []
     const getArray = () => {
-      if (poolFactory.poolDetails) {
-        let tempArray = poolFactory.poolDetails
+      if (pool.poolDetails) {
+        let tempArray = pool.poolDetails
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
@@ -244,7 +244,7 @@ const AssetSelect = (props) => {
     }
     getArray()
   }, [
-    poolFactory.poolDetails,
+    pool.poolDetails,
     props.blackList,
     props.filter,
     props.whiteList,

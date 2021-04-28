@@ -2,15 +2,15 @@ import React from 'react'
 import { Card, Col, Row } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import coinSparta from '../../../assets/icons/coin_sparta.svg'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { formatFromWei, formatFromUnits, BN } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
 
 const SwapPair = ({ assetSwap }) => {
   const web3 = useWeb3()
-  const poolFactory = usePoolFactory()
-  const { poolDetails } = poolFactory
+  const pool = usePool()
+  const { poolDetails } = pool
   const asset =
     poolDetails && poolDetails.length
       ? poolDetails.find((lp) => lp.tokenAddress === assetSwap.tokenAddress)
@@ -38,7 +38,7 @@ const SwapPair = ({ assetSwap }) => {
       : 0
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   return (
     <>

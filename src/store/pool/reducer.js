@@ -11,9 +11,9 @@ const initialState = {
   loadingFinal: false,
 }
 
-export const poolFactoryReducer = (state = initialState, action) => {
+export const poolReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.LISTED_TOKENS: {
+    case Types.POOL_LISTED_TOKENS: {
       return {
         ...state,
         listedTokens: action.payload,
@@ -22,7 +22,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.CURATED_POOLS: {
+    case Types.POOL_CURATED_POOLS: {
       return {
         ...state,
         curatedPools: action.payload,
@@ -31,7 +31,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.TOKEN_DETAILS: {
+    case Types.POOL_TOKEN_DETAILS: {
       return {
         ...state,
         tokenDetails: action.payload,
@@ -40,7 +40,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.LISTED_POOLS: {
+    case Types.POOL_LISTED_POOLS: {
       return {
         ...state,
         listedPools: action.payload,
@@ -58,7 +58,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOLFACTORY_LOADING: {
+    case Types.POOL_LOADING: {
       return {
         ...state,
         loading: true,
@@ -66,7 +66,7 @@ export const poolFactoryReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOLFACTORY_ERROR: {
+    case Types.POOL_ERROR: {
       return {
         ...state,
         error: action.error,

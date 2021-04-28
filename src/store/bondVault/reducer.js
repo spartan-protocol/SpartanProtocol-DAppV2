@@ -6,7 +6,7 @@ const initialState = {
 
 export const bondVaultReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GET_BONDVAULT_MEMBER_DETAILS: {
+    case Types.BONDVAULT_MEMBER_DETAILS: {
       return {
         ...state,
         memberDetails: action.payload,

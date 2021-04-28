@@ -40,19 +40,19 @@ describe('Dao actions', () => {
 
   test('should get if wallet is member of DAO', async () => {
     await getDaoIsMember(TEST_WALLET)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_IS_MEMBER)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_IS_MEMBER)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
   test('should get the DAO member count', async () => {
     await getDaoMemberCount()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_MEMBER_COUNT)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_MEMBER_COUNT)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 
   test('should get a DAO members harvestable amount', async () => {
     await getDaoHarvestAmount(TEST_WALLET)(dispatchMock)
-    if (dispatchMock.mock.calls[1][0].type === Types.GET_DAO_HARVEST_AMOUNT) {
+    if (dispatchMock.mock.calls[1][0].type === Types.DAO_HARVEST_AMOUNT) {
       expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
     } else {
       expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_ERROR)
@@ -136,7 +136,7 @@ describe('Dao actions', () => {
 
   test('should get dao grant details', async () => {
     await getDaoGrantDetails(1)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_DAO_GRANT_DETAILS)
+    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.DAO_GRANT_DETAILS)
     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   })
 

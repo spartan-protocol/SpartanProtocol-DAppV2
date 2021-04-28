@@ -18,7 +18,7 @@ import {
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import {
   BN,
@@ -44,7 +44,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 const RemoveLiquidity = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const addr = getAddresses()
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
@@ -52,7 +52,7 @@ const RemoveLiquidity = () => {
   const [poolRemove1, setPoolRemove1] = useState('...')
 
   useEffect(() => {
-    const { poolDetails } = poolFactory
+    const { poolDetails } = pool
     const getAssetDetails = () => {
       if (poolDetails.length > 0 && activeTab === '1') {
         window.localStorage.setItem('assetType1', 'pool')
@@ -73,9 +73,9 @@ const RemoveLiquidity = () => {
             : { tokenAddress: addr.bnb }
         asset3 = { tokenAddress: addr.sparta }
 
-        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
-        asset2 = getItemFromArray(asset2, poolFactory.poolDetails)
-        asset3 = getItemFromArray(asset3, poolFactory.poolDetails)
+        asset1 = getItemFromArray(asset1, pool.poolDetails)
+        asset2 = getItemFromArray(asset2, pool.poolDetails)
+        asset3 = getItemFromArray(asset3, pool.poolDetails)
 
         setPoolRemove1(asset1)
         setAssetRemove1(asset2)
@@ -101,8 +101,8 @@ const RemoveLiquidity = () => {
             ? asset2
             : { tokenAddress: addr.sparta }
 
-        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
-        asset2 = getItemFromArray(asset2, poolFactory.poolDetails)
+        asset1 = getItemFromArray(asset1, pool.poolDetails)
+        asset2 = getItemFromArray(asset2, pool.poolDetails)
 
         setPoolRemove1(asset1)
         setAssetRemove1(asset2)
@@ -114,7 +114,7 @@ const RemoveLiquidity = () => {
 
     getAssetDetails()
   }, [
-    poolFactory.poolDetails,
+    pool.poolDetails,
     window.localStorage.getItem('assetSelected1'),
     window.localStorage.getItem('assetSelected2'),
     window.localStorage.getItem('assetSelected3'),
@@ -122,7 +122,7 @@ const RemoveLiquidity = () => {
   ])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const removeInput1 = document.getElementById('removeInput1')
   const removeInput2 = document.getElementById('removeInput2')
@@ -350,7 +350,7 @@ const RemoveLiquidity = () => {
                       }}
                     >
                       Balance:{' '}
-                      {poolFactory.poolDetails && formatFromWei(getBalance(1))}
+                      {pool.poolDetails && formatFromWei(getBalance(1))}
                     </div>
                   </Col>
                 </Row>
@@ -421,7 +421,7 @@ const RemoveLiquidity = () => {
                   <Col xs="8" className="text-right">
                     <div className="">
                       Balance:{' '}
-                      {poolFactory.tokenDetails && formatFromWei(getBalance(2))}
+                      {pool.tokenDetails && formatFromWei(getBalance(2))}
                     </div>
                   </Col>
                 </Row>
@@ -471,7 +471,7 @@ const RemoveLiquidity = () => {
                       <Col xs="8" className="text-right">
                         <div className="">
                           Balance:{' '}
-                          {poolFactory.tokenDetails &&
+                          {pool.tokenDetails &&
                             formatFromWei(getBalance(3))}
                         </div>
                       </Col>
@@ -509,7 +509,7 @@ const RemoveLiquidity = () => {
                 )}
               </Card>
 
-              {poolFactory.poolDetails && (
+              {pool.poolDetails && (
                 <>
                   <div className="card-body">
                     <Row className="mb-2">
@@ -572,7 +572,7 @@ const RemoveLiquidity = () => {
                 </>
               )}
 
-              {!poolFactory.poolDetails && (
+              {!pool.poolDetails && (
                 <HelmetLoading height="150px" width="150px" />
               )}
             </Col>
@@ -604,7 +604,7 @@ const RemoveLiquidity = () => {
           </Row>
         </Card>
       </Row>
-      {poolFactory.poolDetails && (
+      {pool.poolDetails && (
         <Row>
           <Col xs="12">
             <SwapPair assetSwap={poolRemove1} />

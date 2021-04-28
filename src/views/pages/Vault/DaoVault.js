@@ -14,7 +14,7 @@ import {
 import { Link } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/img/spartan_synth.svg'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
@@ -32,10 +32,10 @@ import {
 const DaoVault = () => {
   const wallet = useWallet()
   const dao = useDao()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const dispatch = useDispatch()
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -91,8 +91,8 @@ const DaoVault = () => {
             </Col>
           </Card>
         </Col>
-        {poolFactory?.poolDetails?.length > 0 &&
-          poolFactory.poolDetails
+        {pool?.poolDetails?.length > 0 &&
+          pool.poolDetails
             .filter((i) => i.curated === true || i.staked > 0)
             .map((i) => (
               <Col xs="12" lg="6" className="col-480" key={i.address}>

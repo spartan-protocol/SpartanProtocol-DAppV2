@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Card, Col, ButtonGroup } from 'reactstrap'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
@@ -14,10 +14,10 @@ const SynthVaultItem = ({ synthItem }) => {
   const sparta = useSparta()
   const reserve = useReserve()
   const synth = useSynth()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const dispatch = useDispatch()
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)

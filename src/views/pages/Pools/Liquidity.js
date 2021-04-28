@@ -14,12 +14,12 @@ import classnames from 'classnames'
 import AddLiquidity from './AddLiquidity'
 import RemoveLiquidity from './RemoveLiquidity'
 import BondLiquidity from './BondLiquidity'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Liquidity = () => {
   const [activeTab, setActiveTab] = useState('1')
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab)
   }
@@ -76,7 +76,7 @@ const Liquidity = () => {
                 </NavLink>
               </NavItem>
             </Nav>
-            {poolFactory.poolDetails.length > 0 && (
+            {pool.poolDetails.length > 0 && (
               <TabContent activeTab={activeTab}>
                 {activeTab === '1' && (
                   <TabPane tabId="1" className="p-3">
@@ -100,7 +100,7 @@ const Liquidity = () => {
                 )}
               </TabContent>
             )}
-            {poolFactory.poolDetails.length <= 0 && <HelmetLoading />}
+            {pool.poolDetails.length <= 0 && <HelmetLoading />}
           </Col>
         </Row>
       </div>

@@ -12,8 +12,8 @@ import { payloadToDispatch, errorToDispatch } from '../helpers'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
 import { getAddresses } from '../../utils/web3'
 
-export const poolFactoryLoading = () => ({
-  type: Types.POOLFACTORY_LOADING,
+export const poolLoading = () => ({
+  type: Types.POOL_LOADING,
 })
 
 export const poolDetailsLoading = () => ({
@@ -25,7 +25,7 @@ export const poolDetailsLoading = () => ({
  * @returns {array} tokenArray
  */
 export const getListedTokens = () => async (dispatch) => {
-  dispatch(poolFactoryLoading())
+  dispatch(poolLoading())
   const contract = getPoolFactoryContract()
   const addr = getAddresses()
 
@@ -40,9 +40,9 @@ export const getListedTokens = () => async (dispatch) => {
     if (wbnbIndex > -1)
       listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
     listedTokens.push(addr.sparta)
-    dispatch(payloadToDispatch(Types.LISTED_TOKENS, listedTokens))
+    dispatch(payloadToDispatch(Types.POOL_LISTED_TOKENS, listedTokens))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
   }
 }
 
@@ -51,7 +51,7 @@ export const getListedTokens = () => async (dispatch) => {
  * @returns {array} curatedPoolArray
  */
 export const getCuratedPools = () => async (dispatch) => {
-  dispatch(poolFactoryLoading())
+  dispatch(poolLoading())
   const contract = getPoolFactoryContract()
 
   try {
@@ -61,9 +61,9 @@ export const getCuratedPools = () => async (dispatch) => {
       tempArray.push(contract.callStatic.getCuratedPool(i))
     }
     const curatedPools = await Promise.all(tempArray)
-    dispatch(payloadToDispatch(Types.CURATED_POOLS, curatedPools))
+    dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
   }
 }
 
@@ -73,7 +73,7 @@ export const getCuratedPools = () => async (dispatch) => {
  * @returns {array} tokenDetails
  */
 export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
-  dispatch(poolFactoryLoading())
+  dispatch(poolLoading())
   const contract = getUtilsContract()
   const addr = getAddresses()
   const trustWalletIndex = await axios.get(
@@ -107,9 +107,9 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
       }
       tokenDetails.push(tempItem)
     }
-    dispatch(payloadToDispatch(Types.TOKEN_DETAILS, tokenDetails))
+    dispatch(payloadToDispatch(Types.POOL_TOKEN_DETAILS, tokenDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
   }
 }
 
@@ -122,7 +122,7 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
 export const getListedPools = (tokenDetails, curatedArray) => async (
   dispatch,
 ) => {
-  dispatch(poolFactoryLoading())
+  dispatch(poolLoading())
   const contract = getUtilsContract()
   const addr = getAddresses()
   try {
@@ -164,9 +164,9 @@ export const getListedPools = (tokenDetails, curatedArray) => async (
         bondLastClaim: '0',
       })
     }
-    dispatch(payloadToDispatch(Types.LISTED_POOLS, listedPools))
+    dispatch(payloadToDispatch(Types.POOL_LISTED_POOLS, listedPools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error} `))
+    dispatch(errorToDispatch(Types.POOL_ERROR, `${error} `))
   }
 }
 
@@ -259,6 +259,6 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOLFACTORY_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
   }
 }
