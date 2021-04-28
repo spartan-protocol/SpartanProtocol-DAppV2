@@ -42,6 +42,7 @@ import {
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSynth } from '../../../store/synth/selector'
+import swapIcon from '../../../assets/icons/swapadd.svg'
 // import SwapPair from '../Swap/SwapPair'
 
 const Swap = () => {
@@ -449,7 +450,7 @@ const Swap = () => {
                           <Col xs="8" className="text-right">
                             <div>
                               Balance{': '}
-                              {poolFactory.poolDetails &&
+                              {pool.poolDetails &&
                                 formatFromWei(getBalance(2), 4)}
                             </div>
                           </Col>
