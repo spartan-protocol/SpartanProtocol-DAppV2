@@ -13,7 +13,7 @@ const initialState = {
 
 export const synthReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.GLOBAL_DETAILS: {
+    case Types.SYNTH_GLOBAL_DETAILS: {
       return {
         ...state,
         globalDetails: action.payload,
@@ -22,7 +22,7 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.MEMBER_DETAILS: {
+    case Types.SYNTH_MEMBER_DETAILS: {
       return {
         ...state,
         memberDetails: action.payload,
@@ -49,7 +49,7 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.DEPOSIT: {
+    case Types.SYNTH_DEPOSIT: {
       return {
         ...state,
         deposit: action.payload,
@@ -58,7 +58,7 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.HARVEST: {
+    case Types.SYNTH_HARVEST: {
       return {
         ...state,
         harvest: action.payload,
@@ -67,7 +67,7 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.HARVEST_SINGLE: {
+    case Types.SYNTH_HARVEST_SINGLE: {
       return {
         ...state,
         harvestSingle: action.payload,
@@ -76,7 +76,7 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.WITHDRAW_AMOUNT: {
+    case Types.SYNTH_WITHDRAW_AMOUNT: {
       return {
         ...state,
         withdrawAmount: action.payload,

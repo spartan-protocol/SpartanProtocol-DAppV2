@@ -21,7 +21,7 @@ export const getBondListed = () => async (dispatch) => {
 
   try {
     const bondListed = await contract.callStatic.allListedAssets()
-    dispatch(payloadToDispatch(Types.GET_BOND_LISTED, bondListed))
+    dispatch(payloadToDispatch(Types.BOND_LISTED, bondListed))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -33,7 +33,7 @@ export const getBondListedAsset = (asset) => async (dispatch) => {
 
   try {
     const isListed = await contract.callStatic.isListed(asset)
-    dispatch(payloadToDispatch(Types.GET_BOND_LISTED_ASSET, isListed))
+    dispatch(payloadToDispatch(Types.BOND_LISTED_ASSET, isListed))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -50,7 +50,7 @@ export const getBondClaimable = (bondAddress, member, asset) => async (
       member,
       asset,
     )
-    dispatch(payloadToDispatch(Types.GET_BOND_CLAIMABLE, bondClaimable))
+    dispatch(payloadToDispatch(Types.BOND_CLAIMABLE, bondClaimable))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -64,7 +64,7 @@ export const getBondSpartaRemaining = () => async (dispatch) => {
     let bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)
     bondSpartaRemaining = bondSpartaRemaining.toString()
     dispatch(
-      payloadToDispatch(Types.GET_BOND_SPARTA_REMAINING, bondSpartaRemaining),
+      payloadToDispatch(Types.BOND_SPARTA_REMAINING, bondSpartaRemaining),
     )
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
@@ -77,7 +77,7 @@ export const getBondBurnReady = () => async (dispatch) => {
 
   try {
     const bondBurnReady = await contract.callStatic.balanceOf(addr.bond)
-    dispatch(payloadToDispatch(Types.GET_BOND_BURN_READY, bondBurnReady))
+    dispatch(payloadToDispatch(Types.BOND_BURN_READY, bondBurnReady))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -94,7 +94,7 @@ export const getBondListedCount = () => async (dispatch) => {
   try {
     const bondListedCount = await contract.callStatic.assetListedCount()
 
-    dispatch(payloadToDispatch(Types.GET_BOND_LISTED_COUNT, bondListedCount))
+    dispatch(payloadToDispatch(Types.BOND_LISTED_COUNT, bondListedCount))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -111,7 +111,7 @@ export const getBondMemberCount = () => async (dispatch) => {
   try {
     const memberCount = await contract.callStatic.memberCount()
 
-    dispatch(payloadToDispatch(Types.GET_BOND_MEMBER_COUNT, memberCount))
+    dispatch(payloadToDispatch(Types.BOND_MEMBER_COUNT, memberCount))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -128,7 +128,7 @@ export const getBondMembers = () => async (dispatch) => {
   try {
     const members = await contract.callStatic.allMembers()
 
-    dispatch(payloadToDispatch(Types.GET_BOND_MEMBERS, members))
+    dispatch(payloadToDispatch(Types.BOND_MEMBERS, members))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }

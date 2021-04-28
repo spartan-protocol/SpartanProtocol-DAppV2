@@ -18,7 +18,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import {
   BN,
@@ -47,7 +47,7 @@ const BondLiquidity = () => {
   const wallet = useWallet()
   const bond = useBond()
   const dispatch = useDispatch()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const addr = getAddresses()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [assetBond1, setAssetBond1] = useState('...')
@@ -64,7 +64,7 @@ const BondLiquidity = () => {
   }, [])
 
   useEffect(() => {
-    const { poolDetails } = poolFactory
+    const { poolDetails } = pool
     const getAssetDetails = () => {
       if (poolDetails) {
         window.localStorage.setItem('assetType1', 'token')
@@ -76,7 +76,7 @@ const BondLiquidity = () => {
             ? asset1
             : { tokenAddress: addr.bnb }
 
-        asset1 = getItemFromArray(asset1, poolFactory.poolDetails)
+        asset1 = getItemFromArray(asset1, pool.poolDetails)
 
         setAssetBond1(asset1)
 
@@ -86,10 +86,10 @@ const BondLiquidity = () => {
 
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [poolFactory.poolDetails, window.localStorage.getItem('assetSelected1')])
+  }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const bondInput1 = document.getElementById('bondInput1')
 
@@ -324,7 +324,7 @@ const BondLiquidity = () => {
           </Row>
         </Card>
       </Row>
-      {poolFactory.poolDetails && (
+      {pool.poolDetails && (
         <Row>
           <Col xs="12" className="p-0">
             <SwapPair assetSwap={assetBond1} />

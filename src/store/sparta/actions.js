@@ -7,13 +7,21 @@ export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
 })
 
-export const getEmitting = () => async (dispatch) => {
+export const getSpartaGlobalDetails = () => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getSpartaContract()
 
   try {
-    const emitting = await contract.callStatic.emitting()
-    dispatch(payloadToDispatch(Types.GET_EMITTING, emitting))
+    let awaitArray = [
+      contract.callStatic.emitting(),
+      contract.callStatic.secondsPerEra(),
+    ]
+    awaitArray = await Promise.all(awaitArray)
+    const globalDetails = {
+      emitting: awaitArray[0],
+      secondsPerEra: awaitArray[1].toString(),
+    }
+    dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }
@@ -28,7 +36,7 @@ export const getAdjustedClaimRate = (assetAddress) => async (dispatch) => {
       assetAddress,
     )
     dispatch(
-      payloadToDispatch(Types.GET_ADJUSTED_CLAIM_RATE, adjustedClaimRate),
+      payloadToDispatch(Types.SPARTA_ADJUSTED_CLAIM_RATE, adjustedClaimRate),
     )
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
@@ -52,7 +60,7 @@ export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
         // gasLimit: gLimit,
       })
     }
-    dispatch(payloadToDispatch(Types.CLAIM, claimed))
+    dispatch(payloadToDispatch(Types.SPARTA_CLAIM, claimed))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }

@@ -17,7 +17,7 @@ import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import {
   BN,
   convertToWei,
@@ -55,7 +55,7 @@ const Swap = () => {
   const wallet = useWallet()
   const dispatch = useDispatch()
   const addr = getAddresses()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const location = useLocation()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
@@ -69,7 +69,7 @@ const Swap = () => {
   )
 
   useEffect(() => {
-    const { poolDetails } = poolFactory
+    const { poolDetails } = pool
 
     const getAssetDetails = () => {
       if (poolDetails?.length > 0) {
@@ -157,7 +157,7 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     mode,
-    poolFactory.poolDetails,
+    pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,7 +169,7 @@ const Swap = () => {
   ])
 
   const getToken = (tokenAddress) =>
-    poolFactory.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getSynth = (tokenAddress) =>
     synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -565,7 +565,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {poolFactory.poolDetails?.length > 0 && (
+        {pool.poolDetails?.length > 0 && (
           <>
             <Row className="card-body justify-content-center">
               <Col xs="6" xl="5">
@@ -689,7 +689,7 @@ const Swap = () => {
                           <Col xs={8} className="text-right balance">
                             <div>
                               Balance{': '}
-                              {poolFactory.poolDetails &&
+                              {pool.poolDetails &&
                                 formatFromWei(getBalance(2), 4)}
                             </div>
                           </Col>
@@ -1034,13 +1034,13 @@ const Swap = () => {
               <Col xs="12" xl="9">
                 <Row>
                   <Col xs="12" md="6">
-                    {poolFactory.poolDetails &&
+                    {pool.poolDetails &&
                       assetSwap1.tokenAddress !== addr.sparta && (
                         <SwapPair assetSwap={assetSwap1} />
                       )}
                   </Col>
                   <Col xs="12" md="6">
-                    {poolFactory.poolDetails &&
+                    {pool.poolDetails &&
                       assetSwap2.tokenAddress !== addr.sparta && (
                         <SwapPair assetSwap={assetSwap2} />
                       )}
@@ -1050,7 +1050,7 @@ const Swap = () => {
             </Row>
           </>
         )}
-        {!poolFactory.poolDetails && (
+        {!pool.poolDetails && (
           <div>
             <HelmetLoading height={300} width={300} />
           </div>

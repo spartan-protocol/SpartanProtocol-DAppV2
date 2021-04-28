@@ -4,12 +4,12 @@ import { Row, Col, Table } from 'reactstrap'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'
 import { formatFromWei } from '../../utils/bigNumber'
-import { usePoolFactory } from '../../store/poolFactory'
+import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 
 const RecentTxns = () => {
   const web3 = useWeb3()
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const addr = getAddresses()
   // const [selectedFilter, setselectedFilter] = useState(false)
 
@@ -66,7 +66,7 @@ const RecentTxns = () => {
                           txn.args?.inputToken.toString(),
                           2,
                         )} ${
-                          poolFactory.finalLpArray?.filter(
+                          pool.finalLpArray?.filter(
                             (asset) => asset.poolAddress === txn.address,
                           )[0]?.symbol
                         }`}
@@ -76,7 +76,7 @@ const RecentTxns = () => {
                           txn.args?.unitsClaimed.toString(),
                           2,
                         )} ${
-                          poolFactory.finalLpArray?.filter(
+                          pool.finalLpArray?.filter(
                             (asset) => asset.poolAddress === txn.address,
                           )[0]?.symbol
                         }-SPP`}
@@ -85,7 +85,7 @@ const RecentTxns = () => {
                           txn.args?.inputAmount.toString(),
                           2,
                         )} ${
-                          poolFactory.finalLpArray?.filter((asset) => {
+                          pool.finalLpArray?.filter((asset) => {
                             let targetToken = txn.args.tokenFrom
                             if (targetToken === addr.wbnb) {
                               targetToken = addr.bnb
@@ -100,7 +100,7 @@ const RecentTxns = () => {
                           txn.args?.unitsIssued.toString(),
                           2,
                         )} ${
-                          poolFactory.finalLpArray?.filter(
+                          pool.finalLpArray?.filter(
                             (asset) => asset.poolAddress === txn.address,
                           )[0]?.symbol
                         }-SPP`}
@@ -112,7 +112,7 @@ const RecentTxns = () => {
                           txn.args?.outputToken.toString(),
                           2,
                         )} ${
-                          poolFactory.finalLpArray?.filter(
+                          pool.finalLpArray?.filter(
                             (asset) => asset.poolAddress === txn.address,
                           )[0]?.symbol
                         }`}
@@ -121,7 +121,7 @@ const RecentTxns = () => {
                           txn.args?.outputAmount.toString(),
                           2,
                         )} ${
-                          poolFactory.finalLpArray?.filter((asset) => {
+                          pool.finalLpArray?.filter((asset) => {
                             let targetToken = txn.args.tokenTo
                             if (targetToken === addr.wbnb) {
                               targetToken = addr.bnb

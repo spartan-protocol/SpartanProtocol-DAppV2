@@ -1,11 +1,11 @@
 import React from 'react'
 import { Card, CardBody, Row, Col } from 'reactstrap'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 
 const BondTable = () => {
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)
@@ -39,8 +39,8 @@ const BondTable = () => {
   return (
     <>
       <Row>
-        {poolFactory.finalLpArray?.length > 0 &&
-          poolFactory.finalLpArray
+        {pool.finalLpArray?.length > 0 &&
+          pool.finalLpArray
             .filter((asset) => asset.bondLastClaim > 0)
             .sort((a, b) => b.bondedLPs - a.bondedLPs)
             .map((asset) => (

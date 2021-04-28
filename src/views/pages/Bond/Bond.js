@@ -3,11 +3,11 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Col, Row, Button } from 'reactstrap'
 import { bondClaimAll } from '../../../store/bond/actions'
-import { usePoolFactory } from '../../../store/poolFactory'
+import { usePool } from '../../../store/pool'
 import BondTable from './BondTable'
 
 const Bond = () => {
-  const poolFactory = usePoolFactory()
+  const pool = usePool()
   const wallet = useWallet()
   const dispatch = useDispatch()
 
@@ -28,10 +28,9 @@ const Bond = () => {
                   onClick={() => dispatch(bondClaimAll(wallet.account))}
                 >
                   Claim all{' ( '}
-                  {poolFactory.finalLpArray?.length > 0 &&
-                    poolFactory.finalLpArray.filter(
-                      (asset) => asset.bondedLPs > 0,
-                    ).length}
+                  {pool.finalLpArray?.length > 0 &&
+                    pool.finalLpArray.filter((asset) => asset.bondedLPs > 0)
+                      .length}
                   {' )'}
                 </Button>
               </Col>
