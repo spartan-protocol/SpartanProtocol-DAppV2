@@ -141,160 +141,153 @@ const BondLiquidity = () => {
 
   return (
     <>
-      <Row className="justify-content-center">
-        <Card className="card-body" style={{ maxWidth: '480px' }}>
-          <Card style={{ backgroundColor: '#25212D' }} className="card-body">
-            <Row>
-              <Col xs="4" className="">
-                <div className="">Input</div>
-              </Col>
-              <Col xs="8" className="text-right">
-                <div
-                  role="button"
-                  onClick={() => {
-                    bondInput1.value = convertFromWei(
-                      getToken(assetBond1.tokenAddress)?.balance,
-                    )
-                  }}
-                >
-                  Balance:{' '}
-                  {formatFromWei(getToken(assetBond1.tokenAddress)?.balance)}
-                </div>
-              </Col>
-            </Row>
-            <Row className="my-3">
-              <Col xs="6">
-                <div className="output-card ml-2">
-                  <AssetSelect
-                    priority="1"
-                    filter={['token']}
-                    whiteList={bond.bondListed}
-                  />
-                </div>
-              </Col>
-              <Col className="text-right" xs="6">
-                <InputGroup className="">
-                  <Input
-                    className="text-right ml-0"
-                    type="text"
-                    placeholder="0.00"
-                    id="bondInput1"
-                  />
-                  <InputGroupAddon
-                    addonType="append"
-                    role="button"
-                    tabIndex={-1}
-                    onKeyPress={() => clearInputs()}
-                    onClick={() => clearInputs()}
-                  >
-                    <i className="icon-search-bar icon-close icon-light my-auto" />
-                  </InputGroupAddon>
-                </InputGroup>
-                <div className="text-right">
-                  ~$
-                  {bondInput1?.value
-                    ? formatFromWei(getInput1ValueUSD(), 2)
-                    : '0.00'}
-                </div>
-              </Col>
-            </Row>
-          </Card>
-          {/* <UncontrolledAlert
-            className="alert-with-icon"
-            color="danger"
-            fade={false}
-          >
-            <span
-              data-notify="icon"
-              className="icon-small icon-info icon-dark mb-5"
-            />
-            <span
-              id="notification-message"
-              data-notify="message"
-              className="p-0"
-            >
-              The equivalent purchasing power in SPARTA is minted with both
-              assets added symmetrically to the BNB:SPARTA liquidity pool. LP
-              tokens will be issued as usual and vested to you over a 12 month
-              period.
-            </span>
-          </UncontrolledAlert> */}
-
-          <Row className="card-body py-0">
-            <Col>
-              <div className="text-card">
-                Allocation
-                <i
-                  className="icon-small icon-info icon-dark ml-2"
-                  id="tooltipAddBase"
-                  role="button"
-                />
-                <UncontrolledTooltip placement="right" target="tooltipAddBase">
-                  The amount of SPARTA remaining in the Bond+Mint program. This
-                  can be topped up by 2.5M SPARTA by proposals in the DAO when
-                  it runs out.
-                </UncontrolledTooltip>
-              </div>
-            </Col>
-            <Col className="output-card text-right">
-              {formatFromWei(bond.bondSpartaRemaining, 0)} Remaining
-            </Col>
-          </Row>
-
-          <div className="card-body">
-            <div className="progress-container progress-primary">
-              <Progress
-                max="2500000"
-                value={convertFromWei(bond.bondSpartaRemaining)}
-                className=""
-              >
-                {formatFromUnits(
-                  BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
-                  2,
-                )}
-                % Remaining
-              </Progress>
-            </div>
-            <Row className="mb-2">
-              <Col xs="auto">
-                <div className="title-card">Input</div>
-              </Col>
-              <Col className="text-right">
-                <div className="">
-                  {bondInput1?.value > 0
-                    ? formatFromUnits(bondInput1?.value, 6)
-                    : '0.00'}{' '}
-                  {getToken(assetBond1.tokenAddress)?.symbol}
-                </div>
-              </Col>
-            </Row>
-            <Row className="mb-2">
-              <Col xs="auto" className="">
-                <div className="title-card">Minted</div>
-              </Col>
-              <Col className="text-right">
-                <div className="">
-                  {calcSpartaMinted() > 0
-                    ? formatFromWei(calcSpartaMinted(), 6)
-                    : '0.00'}{' '}
-                  SPARTA
-                </div>
-              </Col>
-            </Row>
-            <Row className="mb-2">
-              <Col xs="auto" className="">
-                <div className="title-card">Output</div>
-              </Col>
-              <Col className="text-right">
-                <div className="">
-                  {calcOutput() > 0 ? formatFromWei(calcOutput(), 6) : '0.00'}{' '}
-                  {getToken(assetBond1.tokenAddress)?.symbol}-SPP
-                </div>
-              </Col>
-            </Row>
-          </div>
-
+      <Col xs="auto">
+        <Card className="card-body card-480">
           <Row>
+            <Col xs="12" className="px-1 px-sm-3">
+              <Card
+                style={{ backgroundColor: '#25212D' }}
+                className="card-body pb-2 mb-1"
+              >
+                <Row>
+                  <Col xs="4" className="">
+                    <div className="text-sm-label">Bond</div>
+                  </Col>
+                  <Col xs="8" className="text-right">
+                    <div
+                      role="button"
+                      className="text-sm-label"
+                      onClick={() => {
+                        bondInput1.value = convertFromWei(
+                          getToken(assetBond1.tokenAddress)?.balance,
+                        )
+                      }}
+                    >
+                      Balance:{' '}
+                      {formatFromWei(
+                        getToken(assetBond1.tokenAddress)?.balance,
+                      )}
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="my-2">
+                  <Col xs="auto">
+                    <div className="ml-1">
+                      <AssetSelect
+                        priority="1"
+                        filter={['token']}
+                        whiteList={bond.bondListed}
+                      />
+                    </div>
+                  </Col>
+                  <Col className="text-right">
+                    <InputGroup className="m-0 mt-n1">
+                      <Input
+                        className="text-right h-100 ml-0 p-2"
+                        type="text"
+                        placeholder="Add..."
+                        id="bondInput1"
+                      />
+                      <InputGroupAddon
+                        addonType="append"
+                        role="button"
+                        tabIndex={-1}
+                        onKeyPress={() => clearInputs()}
+                        onClick={() => clearInputs()}
+                      >
+                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
+                      </InputGroupAddon>
+                    </InputGroup>
+                    <div className="text-right text-sm-label">
+                      ~$
+                      {bondInput1?.value
+                        ? formatFromWei(getInput1ValueUSD(), 2)
+                        : '0.00'}
+                    </div>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+
+            <Card className="card-body mb-1">
+              <Row className="mb-2">
+                <Col xs="auto">
+                  <div className="text-card">
+                    Allocation
+                    <i
+                      className="icon-extra-small icon-info icon-dark ml-1"
+                      id="tooltipAddBase"
+                      role="button"
+                    />
+                    <UncontrolledTooltip
+                      placement="right"
+                      target="tooltipAddBase"
+                    >
+                      The amount of SPARTA remaining in the Bond+Mint program.
+                      This can be topped up by 2.5M SPARTA by proposals in the
+                      DAO when it runs out.
+                    </UncontrolledTooltip>
+                  </div>
+                </Col>
+                <Col className="output-card text-right text-light">
+                  {formatFromWei(bond.bondSpartaRemaining, 0)} Remaining
+                </Col>
+              </Row>
+
+              <div className="progress-container progress-primary">
+                <Progress
+                  max="2500000"
+                  value={convertFromWei(bond.bondSpartaRemaining)}
+                  className=""
+                >
+                  {formatFromUnits(
+                    BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
+                    2,
+                  )}
+                  % Remaining
+                </Progress>
+              </div>
+              <Row className="mb-2">
+                <Col xs="auto">
+                  <div className="text-card">Bond</div>
+                </Col>
+                <Col className="text-right">
+                  <div className="output-card text-light">
+                    {bondInput1?.value > 0
+                      ? formatFromUnits(bondInput1?.value, 6)
+                      : '0.00'}{' '}
+                    {getToken(assetBond1.tokenAddress)?.symbol}
+                  </div>
+                </Col>
+              </Row>
+              <Row className="mb-2">
+                <Col xs="auto" className="">
+                  <div className="text-card">Mint</div>
+                </Col>
+                <Col className="text-right">
+                  <div className="output-card text-light">
+                    {calcSpartaMinted() > 0
+                      ? formatFromWei(calcSpartaMinted(), 6)
+                      : '0.00'}{' '}
+                    SPARTA
+                  </div>
+                </Col>
+              </Row>
+              <Row className="mb-2">
+                <Col xs="auto" className="">
+                  <div className="subtitle-card">Lock</div>
+                </Col>
+                <Col className="text-right">
+                  <span className="subtitle-card">
+                    {calcOutput() > 0 ? formatFromWei(calcOutput(), 6) : '0.00'}{' '}
+                    <span className="output-card ml-1">
+                      {getToken(assetBond1.tokenAddress)?.symbol}-SPP
+                    </span>
+                  </span>
+                </Col>
+              </Row>
+            </Card>
+
             <Approval
               tokenAddress={assetBond1?.tokenAddress}
               symbol={getToken(assetBond1.tokenAddress)?.symbol}
@@ -323,13 +316,11 @@ const BondLiquidity = () => {
             </Col>
           </Row>
         </Card>
-      </Row>
+      </Col>
       {pool.poolDetails && (
-        <Row>
-          <Col xs="12" className="p-0">
-            <SwapPair assetSwap={assetBond1} />
-          </Col>
-        </Row>
+        <Col xs="auto" className="p-0">
+          <SwapPair assetSwap={assetBond1} />
+        </Col>
       )}
     </>
   )

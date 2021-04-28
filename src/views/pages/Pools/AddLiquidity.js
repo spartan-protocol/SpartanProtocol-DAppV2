@@ -322,9 +322,12 @@ const AddLiquidity = () => {
 
   return (
     <>
-      <Row className="justify-content-center">
-        <Card className="card-body" style={{ maxWidth: '480px' }}>
-          <Nav pills className="nav-tabs-custom mt-2 mb-4">
+      <Col xs="auto">
+        <Card xs="auto" className="card-body card-480">
+          <Nav
+            pills
+            className="nav-tabs-custom mt-2 mb-4 justify-content-center"
+          >
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === 'addTab1' })}
@@ -382,7 +385,7 @@ const AddLiquidity = () => {
                   <Col className="text-right">
                     <InputGroup className="m-0 mt-n1">
                       <Input
-                        className="text-right h-100 ml-0"
+                        className="text-right h-100 ml-0 p-2"
                         type="text"
                         placeholder="Add..."
                         id="addInput1"
@@ -394,7 +397,7 @@ const AddLiquidity = () => {
                         onKeyPress={() => clearInputs(1)}
                         onClick={() => clearInputs(1)}
                       >
-                        <i className="icon-search-bar icon-close icon-light my-auto" />
+                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
                       </InputGroupAddon>
                     </InputGroup>
                     <div className="text-right text-sm-label">
@@ -461,7 +464,7 @@ const AddLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0">
                         <Input
-                          className="text-right h-100 ml-0 mt-n1"
+                          className="text-right h-100 ml-0 p-2"
                           type="text"
                           placeholder="Add..."
                           id="addInput2"
@@ -473,7 +476,7 @@ const AddLiquidity = () => {
                           onKeyPress={() => clearInputs(2)}
                           onClick={() => clearInputs(2)}
                         >
-                          <i className="icon-search-bar icon-close icon-light my-auto" />
+                          <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
                         </InputGroupAddon>
                       </InputGroup>
                       <div className="text-right text-sm-label">
@@ -492,7 +495,7 @@ const AddLiquidity = () => {
                   style={{ backgroundColor: '#25212D' }}
                   className="card-body mb-1"
                 >
-                  <Row>
+                  <Row className="my-2">
                     <Col xs="4" className="">
                       <div className="text-sm-label">Pool</div>
                     </Col>
@@ -504,7 +507,7 @@ const AddLiquidity = () => {
                     </Col>
                   </Row>
 
-                  <Row className="my-2">
+                  <Row className="">
                     <Col xs="auto">
                       <div className="output-card ml-1">
                         <AssetSelect
@@ -520,7 +523,7 @@ const AddLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0 mt-n1">
                         <Input
-                          className="text-right h-100 ml-0 text-light"
+                          className="text-right h-100 ml-0 p-2 text-light"
                           type="text"
                           placeholder="0.00"
                           id="addInput3"
@@ -666,13 +669,11 @@ const AddLiquidity = () => {
               )}
           </Row>
         </Card>
-      </Row>
+      </Col>
       {pool.poolDetails && (
-        <Row>
-          <Col xs="12">
-            <SwapPair assetSwap={poolAdd1} />
-          </Col>
-        </Row>
+        <Col xs="auto">
+          <SwapPair assetSwap={poolAdd1} />
+        </Col>
       )}
     </>
   )

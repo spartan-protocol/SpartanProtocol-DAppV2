@@ -31,13 +31,11 @@ const Vault = () => {
     <>
       <div className="content">
         <Row className="card-body row-480">
-          <Col xs="12" lg="6" className="col-480">
-            <div className="d-inline text-title-small ml-l">
-              {mode}Vault Staking
-            </div>
+          <Col xs="auto" className="d-flex">
+            <div className="text-title-small card-480">Staking</div>
           </Col>
-          <Col xs="12" lg="6" className="col-480">
-            <ButtonGroup className="ml-2">
+          <Col xs="auto" className="d-flex">
+            <ButtonGroup className="card-480">
               <Button
                 color={mode === 'Dao' ? 'primary' : 'info'}
                 type="Button"
