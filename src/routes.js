@@ -1,4 +1,3 @@
-/* eslint-disable*/
 // import Dashboard from './components/Dashboard/Dashboard'
 import PoolsOverview from './views/pages/Pools/Overview'
 // import Dao from './views/pages/Dao/Overview'
@@ -10,28 +9,21 @@ import Synths from './views/pages/Synths/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
-import Buttons from './views/pages/Samples/Buttons'
+// import Buttons from './views/pages/Samples/Buttons'
 // import Alerts from './views/pages/Samples/Alerts'
-import Typography from './views/pages/Samples/Typography'
+// import Typography from './views/pages/Samples/Typography'
 // import Grid from './views/pages/Samples/Grid'
 // import ReactTables from './views/pages/Samples/ReactTables'
 // import Forms from './views/pages/Samples/Forms'
 // import ExtendedForms from './views/pages/Samples/ExtendedForms'
-import Panels from './views/pages/Samples/Panels'
-import Tiles from './views/pages/Samples/Tiles'
+// import Panels from './views/pages/Samples/Panels'
+// import Tiles from './views/pages/Samples/Tiles'
 // import Utils from './utils/Utils'
 // import Tabs from './views/pages/Samples/Tabs'
 // import Share from './views/pages/Samples/Share'
 // import SearchModal from './views/pages/Samples/SearchModal'
 
 const routes = (t) => [
-  {
-    path: "/notificaions",
-    name: "Notificaions",
-    mini: "NO",
-    component: Notifications,
-    layout: "/dapp"
-  },
   {
     path: '/home',
     name: t('home'),
@@ -41,26 +33,26 @@ const routes = (t) => [
   },
 
   {
-    path: "/pools/overview",
-    name: t("pools"),
-    icon: "icon-medium icon-home icon-dark",
+    path: '/pools/overview',
+    name: t('pools'),
+    icon: 'icon-medium icon-home icon-dark',
     component: PoolsOverview,
-    layout: "/dapp"
+    layout: '/dapp',
   },
 
   {
-    path: "/pools/liquidity",
-    name: t("liquidity"),
-    icon: "icon-medium icon-sword icon-dark",
+    path: '/pools/liquidity',
+    name: t('liquidity'),
+    icon: 'icon-medium icon-sword icon-dark',
     component: Liquidity,
-    layout: "/dapp"
+    layout: '/dapp',
   },
   {
-    path: "/pools/swap",
-    name: t("swap"),
-    icon: "icon-medium icon-swords icon-dark",
+    path: '/pools/swap',
+    name: t('swap'),
+    icon: 'icon-medium icon-swords icon-dark',
     component: Swap,
-    layout: "/dapp"
+    layout: '/dapp',
   },
 
   {
@@ -68,7 +60,7 @@ const routes = (t) => [
     name: t('bond'),
     icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
-    layout: "/dapp"
+    layout: '/dapp',
   },
 
   {
