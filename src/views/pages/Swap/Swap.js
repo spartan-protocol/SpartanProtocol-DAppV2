@@ -103,13 +103,12 @@ const Swap = () => {
                 : { tokenAddress: poolDetails[2].tokenAddress }
           }
         } else if (type1 === 'synth') {
-          setFilter(['sparta'])
+          setFilter(['token'])
           setMode('synth')
-          asset2 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
         } else if (asset1?.tokenAddress !== addr.sparta && type1 === 'token') {
-          setFilter(['token'])
+          setFilter(['token', 'synth'])
           setMode('token')
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
@@ -694,7 +693,11 @@ const Swap = () => {
                             <AssetSelect
                               priority="2"
                               filter={filter}
-                              blackList={[assetSwap1?.tokenAddress]}
+                              blackList={
+                                assetSwap1.tokenAddress === addr.sparta && [
+                                  addr.sparta,
+                                ]
+                              }
                             />
                           </Col>
                           <Col className="text-right">
