@@ -68,22 +68,18 @@ const BondLiquidity = () => {
     const getAssetDetails = () => {
       if (poolDetails) {
         window.localStorage.setItem('assetType1', 'token')
-
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-
         asset1 =
-          asset1 && asset1.tokenAddress !== addr.sparta
+          asset1 &&
+          asset1.tokenAddress !== addr.sparta &&
+          bond.bondListed.includes(asset1.address)
             ? asset1
             : { tokenAddress: addr.bnb }
-
         asset1 = getItemFromArray(asset1, pool.poolDetails)
-
         setAssetBond1(asset1)
-
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
       }
     }
-
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
