@@ -190,15 +190,23 @@ const Swap = () => {
 
   const getSynthLPsFromBase = (baseOuput) => {
     let temp = '0'
-    if (!baseOuput) {
-      temp = calcLiquidityUnitsAsym(
-        convertToWei(swapInput1.value),
-        assetSwap2.baseAmount,
-        assetSwap2.poolUnits,
-      )
+    if (baseOuput) {
+      if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
+        temp = calcLiquidityUnitsAsym(
+          baseOuput,
+          BN(assetSwap2.baseAmount).minus(baseOuput),
+          assetSwap2.poolUnits,
+        )
+      } else {
+        temp = calcLiquidityUnitsAsym(
+          baseOuput,
+          assetSwap2.baseAmount,
+          assetSwap2.poolUnits,
+        )
+      }
     } else {
       temp = calcLiquidityUnitsAsym(
-        baseOuput,
+        convertToWei(swapInput1.value),
         assetSwap2.baseAmount,
         assetSwap2.poolUnits,
       )
@@ -216,18 +224,10 @@ const Swap = () => {
     return temp
   }
 
-  const getSwapOutput = (toBase) =>
-    calcSwapOutput(
-      convertToWei(swapInput1?.value),
-      assetSwap1?.tokenAmount,
-      assetSwap1?.baseAmount,
-      toBase,
-    )
-
   const getSynthOutputFromBase = () => {
     let tokenValue = '0'
     if (assetSwap1.tokenAddress === addr.sparta) {
-      const lpUnits = getSynthLPsFromBase(swapInput1?.value)
+      const lpUnits = getSynthLPsFromBase()
       const baseAmount = calcShare(
         lpUnits,
         BN(assetSwap2.poolUnits).plus(lpUnits),
@@ -245,23 +245,49 @@ const Swap = () => {
       )
       tokenValue = BN(tokenAmount).plus(baseSwapped)
     } else {
-      const outPutBase = getSwapOutput(true)
+      const outPutBase = calcSwapOutput(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
       const lpUnits = getSynthLPsFromBase(outPutBase)
-      const baseAmount = calcShare(
-        lpUnits,
-        BN(assetSwap2.poolUnits).plus(lpUnits),
-        BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
-      )
-      const tokenAmount = calcShare(
-        lpUnits,
-        BN(assetSwap2.poolUnits).plus(lpUnits),
-        assetSwap2.tokenAmount,
-      )
-      const baseSwapped = calcSwapOutput(
-        baseAmount,
-        assetSwap2.tokenAmount,
-        BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
-      )
+      let baseAmount = '0'
+      let tokenAmount = '0'
+      let baseSwapped = '0'
+      if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
+        baseAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          BN(assetSwap2.baseAmount),
+        )
+        tokenAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          BN(assetSwap2.tokenAmount).plus(convertToWei(swapInput1?.value)),
+        )
+        baseSwapped = calcSwapOutput(
+          baseAmount,
+          BN(assetSwap2.tokenAmount).plus(convertToWei(swapInput1?.value)),
+          BN(assetSwap2.baseAmount),
+        )
+      } else {
+        baseAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
+        )
+        tokenAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          assetSwap2.tokenAmount,
+        )
+        baseSwapped = calcSwapOutput(
+          baseAmount,
+          assetSwap2.tokenAmount,
+          BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
+        )
+      }
       tokenValue = BN(tokenAmount).plus(baseSwapped)
     }
     return tokenValue
@@ -279,6 +305,7 @@ const Swap = () => {
 
   const getSynthOutputToBase = () => {
     let tokenValue = '0'
+    let outPutBase = '0'
     if (assetSwap2.tokenAddress === addr.sparta) {
       const inputSynth = convertToWei(swapInput1?.value)
       tokenValue = calcSwapOutput(
@@ -287,8 +314,26 @@ const Swap = () => {
         assetSwap1.baseAmount,
         true,
       )
+    } else if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
+      outPutBase = calcSwapOutput(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
+      tokenValue = calcSwapOutput(
+        outPutBase,
+        assetSwap2.tokenAmount,
+        BN(assetSwap2.baseAmount).minus(outPutBase),
+        false,
+      )
     } else {
-      const outPutBase = getSwapOutput(true)
+      outPutBase = calcSwapOutput(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
       tokenValue = calcSwapOutput(
         outPutBase,
         assetSwap2.tokenAmount,
