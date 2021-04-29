@@ -19,6 +19,7 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
@@ -45,8 +46,11 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSynth } from '../../../store/synth/selector'
 import mintIcon from '../../../assets/icons/mint.svg'
 import fireIcon from '../../../assets/icons/fire.svg'
+import Approval from '../../../components/Approval/Approval'
+import SwapPair from '../Swap/SwapPair'
 
 const Swap = () => {
+  const wallet = useWallet()
   const synth = useSynth()
   const { t } = useTranslation()
   const web3 = useWeb3()
@@ -636,24 +640,38 @@ const Swap = () => {
 
                     {/* 'Approval/Allowance' row */}
                     {activeTab === 'mint' && (
-                      <Col>
-                        <Button
-                          color="primary"
-                          size="lg"
-                          onClick={() =>
-                            dispatch(
-                              swapAssetToSynth(
-                                convertToWei(swapInput1?.value),
-                                assetSwap1.tokenAddress,
-                                getSynth(assetSwap2.tokenAddress)?.address,
-                              ),
-                            )
-                          }
-                          block
-                        >
-                          Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
-                        </Button>
-                      </Col>
+                      <>
+                        {assetSwap1?.tokenAddress !== addr.bnb &&
+                          wallet?.account &&
+                          swapInput1?.value && (
+                            <Approval
+                              tokenAddress={assetSwap1?.tokenAddress}
+                              symbol={getToken(assetSwap1.tokenAddress)?.symbol}
+                              walletAddress={wallet?.account}
+                              contractAddress={addr.router}
+                              txnAmount={convertToWei(swapInput1?.value)}
+                              assetNumber="1"
+                            />
+                          )}
+                        <Col>
+                          <Button
+                            color="primary"
+                            size="lg"
+                            onClick={() =>
+                              dispatch(
+                                swapAssetToSynth(
+                                  convertToWei(swapInput1?.value),
+                                  assetSwap1.tokenAddress,
+                                  getSynth(assetSwap2.tokenAddress)?.address,
+                                ),
+                              )
+                            }
+                            block
+                          >
+                            Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
+                          </Button>
+                        </Col>
+                      </>
                     )}
                     {activeTab === 'burn' && (
                       <Col>
@@ -678,6 +696,16 @@ const Swap = () => {
                   </Col>
                 </Row>
               </Card>
+              {pool.poolDetails && assetSwap1.tokenAddress !== addr.sparta && (
+                <Col xs="auto">
+                  <SwapPair assetSwap={assetSwap1} />
+                </Col>
+              )}
+              {pool.poolDetails && assetSwap2.tokenAddress !== addr.sparta && (
+                <Col xs="auto">
+                  <SwapPair assetSwap={assetSwap2} />
+                </Col>
+              )}
             </Row>
           </>
         )}
