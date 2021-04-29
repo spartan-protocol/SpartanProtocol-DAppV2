@@ -272,22 +272,18 @@ const AddLiquidity = () => {
 
   const handleInputChange = () => {
     if (activeTab === 'addTab1') {
-      if (
-        addInput1?.value &&
-        addInput2 &&
-        addInput2 !== document.activeElement
-      ) {
+      if (addInput2 && addInput2 !== document.activeElement) {
         addInput2.value = calcValueInBase(
           assetAdd1.tokenAmount,
           assetAdd1.baseAmount,
-          addInput1.value,
+          addInput1.value > 0 ? addInput1.value : '0.00',
         )
         setOutputLp(convertToWei(getAddBothOutputLP()))
-      } else if (addInput2?.value && addInput1) {
+      } else if (addInput1 && addInput1 !== document.activeElement) {
         addInput1.value = calcValueInToken(
           assetAdd1.tokenAmount,
           assetAdd1.baseAmount,
-          addInput2.value,
+          addInput2.value > 0 ? addInput2.value : '0.00',
         )
         setOutputLp(convertToWei(getAddBothOutputLP()))
       }
