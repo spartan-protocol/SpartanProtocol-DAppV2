@@ -186,11 +186,6 @@ const Swap = () => {
     }
   }
 
-  useEffect(() => {
-    clearInputs()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap1, assetSwap2])
-
   const handleReverseAssets = () => {
     const asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
     const asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
