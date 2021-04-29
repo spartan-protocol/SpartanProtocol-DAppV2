@@ -54,6 +54,8 @@ const AddLiquidity = () => {
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [poolAdd1, setPoolAdd1] = useState('...')
   const [outputLp, setOutputLp] = useState('0.00')
+  const [asset1RequiresApproval, setAsset1RequiresApproval] = useState(false)
+  const [asset2RequiresApproval, setAsset2RequiresApproval] = useState(false)
 
   useEffect(() => {
     const { poolDetails } = pool
@@ -287,6 +289,20 @@ const AddLiquidity = () => {
         )
         setOutputLp(convertToWei(getAddBothOutputLP()))
       }
+
+      setAsset1RequiresApproval(
+        assetAdd1?.tokenAddress &&
+          assetAdd1?.tokenAddress !== addr.bnb &&
+          wallet?.account &&
+          addInput1?.value,
+      )
+
+      setAsset2RequiresApproval(
+        assetAdd2?.tokenAddress &&
+          assetAdd2?.tokenAddress !== addr.bnb &&
+          wallet?.account &&
+          addInput2?.value,
+      )
     } else if (activeTab === 'addTab2') {
       if (addInput1?.value && addInput3) {
         setOutputLp(convertToWei(getAddSingleOutputLP()))
@@ -613,19 +629,16 @@ const AddLiquidity = () => {
             </Col>
           </Row>
           <Row className="text-center">
-            {assetAdd1?.tokenAddress &&
-              assetAdd1?.tokenAddress !== addr.bnb &&
-              wallet?.account &&
-              addInput1?.value && (
-                <Approval
-                  tokenAddress={assetAdd1?.tokenAddress}
-                  symbol={getToken(assetAdd1.tokenAddress)?.symbol}
-                  walletAddress={wallet?.account}
-                  contractAddress={addr.router}
-                  txnAmount={convertToWei(addInput1?.value)}
-                  assetNumber="1"
-                />
-              )}
+            {asset1RequiresApproval && (
+              <Approval
+                tokenAddress={assetAdd1?.tokenAddress}
+                symbol={getToken(assetAdd1.tokenAddress)?.symbol}
+                walletAddress={wallet?.account}
+                contractAddress={addr.router}
+                txnAmount={convertToWei(addInput1?.value)}
+                assetNumber="1"
+              />
+            )}
             <Col xs="12" sm="4" md="12">
               <Button
                 className="h-100 w-75 btn-primary"
@@ -650,19 +663,16 @@ const AddLiquidity = () => {
                 Join Pool
               </Button>
             </Col>
-            {assetAdd2?.tokenAddress &&
-              assetAdd2?.tokenAddress !== addr.bnb &&
-              wallet?.account &&
-              addInput2?.value && (
-                <Approval
-                  tokenAddress={assetAdd2?.tokenAddress}
-                  symbol={getToken(assetAdd2.tokenAddress)?.symbol}
-                  walletAddress={wallet?.account}
-                  contractAddress={addr.router}
-                  txnAmount={convertToWei(addInput2?.value)}
-                  assetNumber="2"
-                />
-              )}
+            {asset2RequiresApproval && (
+              <Approval
+                tokenAddress={assetAdd2?.tokenAddress}
+                symbol={getToken(assetAdd2.tokenAddress)?.symbol}
+                walletAddress={wallet?.account}
+                contractAddress={addr.router}
+                txnAmount={convertToWei(addInput2?.value)}
+                assetNumber="2"
+              />
+            )}
           </Row>
         </Card>
       </Col>
