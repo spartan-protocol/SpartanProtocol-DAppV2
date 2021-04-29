@@ -165,11 +165,6 @@ export const routerAddLiqAsym = (input, fromBase, token) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.addLiquidityAsym(
-    //   input,
-    //   fromBase,
-    //   token,
-    // )
     const units = await contract.addLiquidityAsym(input, fromBase, token, {
       value:
         token === '0x0000000000000000000000000000000000000000' &&
@@ -177,7 +172,6 @@ export const routerAddLiqAsym = (input, fromBase, token) => async (
           ? input
           : null,
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
     dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_ASYM, units))
   } catch (error) {
@@ -256,10 +250,11 @@ export const routerRemoveLiqAsym = (units, toBase, token) => async (
 /**
  * Swap SPARTA for synthetic assets
  * @param {uint} inputAmount
+ * @param {address} fromToken
  * @param {address} synthOut
  * @returns {unit} outputSynth
  */
-export const routerSwapBaseToSynth = (inputAmount, synthOut) => async (
+export const swapAssetToSynth = (inputAmount, fromToken, synthOut) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -267,16 +262,20 @@ export const routerSwapBaseToSynth = (inputAmount, synthOut) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.swapBaseToSynth(
-    //   inputAmount,
-    //   synthOut,
-    // )
-    const outputSynth = await contract.swapBaseToSynth(inputAmount, synthOut, {
-      gasPrice: gPrice,
-      // gasLimit: gLimit,
-    })
+    const outputSynth = await contract.swapAssetToSynth(
+      inputAmount,
+      fromToken,
+      synthOut,
+      {
+        value:
+          fromToken === '0x0000000000000000000000000000000000000000'
+            ? inputAmount
+            : null,
+        gasPrice: gPrice,
+      },
+    )
 
-    dispatch(payloadToDispatch(Types.ROUTER_SWAP_BASE_TO_SYNTH, outputSynth))
+    dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSET_TO_SYNTH, outputSynth))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
@@ -285,11 +284,11 @@ export const routerSwapBaseToSynth = (inputAmount, synthOut) => async (
 /**
  * Swap synthetic assets for SPARTA
  * @param {uint} inputAmount
- * @param {address} synthIn
- * @param {bool} safe
+ * @param {address} fromSynth
+ * @param {address} toToken
  * @returns {unit} output
  */
-export const routerSwapSynthToBase = (inputAmount, synthIn) => async (
+export const swapSynthToAsset = (inputAmount, fromSynth, toToken) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -297,16 +296,16 @@ export const routerSwapSynthToBase = (inputAmount, synthIn) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.swapSynthToBase(
-    //   inputAmount,
-    //   synthIn,
-    // )
-    const output = await contract.swapSynthToBase(inputAmount, synthIn, {
-      gasPrice: gPrice,
-      // gasLimit: gLimit,
-    })
+    const output = await contract.swapSynthToAsset(
+      inputAmount,
+      fromSynth,
+      toToken,
+      {
+        gasPrice: gPrice,
+      },
+    )
 
-    dispatch(payloadToDispatch(Types.ROUTER_SWAP_SYNTH_TO_BASE, output))
+    dispatch(payloadToDispatch(Types.ROUTER_SWAP_SYNTH_TO_ASSET, output))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }

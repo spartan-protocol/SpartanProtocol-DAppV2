@@ -8,7 +8,7 @@ export {
   routerAddLiq,
   routerAddLiqAsym,
   routerRemoveLiqAsym,
-  routerSwapBaseToSynth,
-  routerSwapSynthToBase,
+  swapAssetToSynth,
+  swapSynthToAsset,
   routerZapLiquidity,
 } from './actions'

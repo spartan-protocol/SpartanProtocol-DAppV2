@@ -37,8 +37,8 @@ import {
 } from '../../../utils/web3Utils'
 import {
   routerSwapAssets,
-  routerSwapBaseToSynth,
-  routerSwapSynthToBase,
+  swapAssetToSynth,
+  swapSynthToAsset,
   routerZapLiquidity,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -1001,23 +1001,34 @@ const Swap = () => {
                     {mode === 'synth' &&
                       JSON.parse(window.localStorage.getItem('assetSelected1'))
                         .tokenAddress === addr.sparta && (
-                        <Col>
-                          <Button
-                            color="primary"
-                            size="lg"
-                            onClick={() =>
-                              dispatch(
-                                routerSwapBaseToSynth(
-                                  convertToWei(swapInput1?.value),
-                                  getSynth(assetSwap2.tokenAddress)?.address,
-                                ),
-                              )
-                            }
-                            block
-                          >
-                            Sell SPARTA
-                          </Button>
-                        </Col>
+                        <>
+                          <Approval
+                            tokenAddress={assetSwap1?.tokenAddress}
+                            symbol={assetSwap1?.symbol}
+                            walletAddress={wallet?.account}
+                            contractAddress={addr.router}
+                            txnAmount={convertToWei(swapInput1?.value)}
+                            assetNumber="1"
+                          />
+                          <Col>
+                            <Button
+                              color="primary"
+                              size="lg"
+                              onClick={() =>
+                                dispatch(
+                                  swapAssetToSynth(
+                                    convertToWei(swapInput1?.value),
+                                    assetSwap1.tokenAddress,
+                                    getSynth(assetSwap2.tokenAddress)?.address,
+                                  ),
+                                )
+                              }
+                              block
+                            >
+                              Sell SPARTA
+                            </Button>
+                          </Col>
+                        </>
                       )}
 
                     {mode === 'synth' &&
@@ -1029,9 +1040,10 @@ const Swap = () => {
                             size="lg"
                             onClick={() =>
                               dispatch(
-                                routerSwapSynthToBase(
+                                swapSynthToAsset(
                                   convertToWei(swapInput1?.value),
                                   getSynth(assetSwap1.tokenAddress)?.address,
+                                  assetSwap2.tokenAddress,
                                 ),
                               )
                             }

@@ -37,8 +37,8 @@ import {
   calcLiquidityUnitsAsym,
 } from '../../../utils/web3Utils'
 import {
-  routerSwapBaseToSynth,
-  routerSwapSynthToBase,
+  swapAssetToSynth,
+  swapSynthToAsset,
 } from '../../../store/router/actions'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -642,8 +642,9 @@ const Swap = () => {
                           size="lg"
                           onClick={() =>
                             dispatch(
-                              routerSwapBaseToSynth(
+                              swapAssetToSynth(
                                 convertToWei(swapInput1?.value),
+                                assetSwap1.tokenAddress,
                                 getSynth(assetSwap2.tokenAddress)?.address,
                               ),
                             )
@@ -661,9 +662,10 @@ const Swap = () => {
                           size="lg"
                           onClick={() =>
                             dispatch(
-                              routerSwapSynthToBase(
+                              swapSynthToAsset(
                                 convertToWei(swapInput1?.value),
                                 getSynth(assetSwap1.tokenAddress)?.address,
+                                assetSwap2.tokenAddress,
                               ),
                             )
                           }
