@@ -90,10 +90,19 @@ export const routerReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.ROUTER_SWAP_BASE_TO_SYNTH: {
+    case Types.ROUTER_SWAP_ASSET_TO_SYNTH: {
       return {
         ...state,
         outputSynth: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.ROUTER_SWAP_SYNTH_TO_ASSET: {
+      return {
+        ...state,
+        output: action.payload,
         error: null,
         loading: false,
       }

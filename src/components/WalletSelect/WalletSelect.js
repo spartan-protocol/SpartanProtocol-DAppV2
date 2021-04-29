@@ -368,24 +368,22 @@ const WalletSelect = (props) => {
                           ))}
                       </TabPane>
                       <TabPane tabId="lp" className="ml-n2">
-                        {pool.poolDetails?.filter((asset) => asset.staked > 0)
-                          .length > 0 && (
-                          <Row className="my-3">
-                            <Col xs="9" md="9">
-                              <div className="ml-n1">Staked</div>
-                            </Col>
-                            <Col xs="3" md="3">
-                              <div className="text-card float-right mr-1">
-                                Actions
-                              </div>
-                            </Col>
-                          </Row>
-                        )}
+                        <Row className="my-3">
+                          <Col xs="9" md="9" className="ml-n1">
+                            <div className="text-card">{t('wallet')}</div>
+                          </Col>
+                          <Col xs="3" md="3">
+                            <div className="text-card float-right mr-1">
+                              {t('actions')}
+                            </div>
+                          </Col>
+                        </Row>
+
                         {pool.poolDetails
-                          ?.filter((asset) => asset.staked > 0)
+                          ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.address}-lpdao`}
+                              key={`${asset.address}-lp`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
@@ -411,7 +409,7 @@ const WalletSelect = (props) => {
                                   <Col xs="12" className="float-left ml-n4">
                                     {`${getToken(asset.tokenAddress)?.symbol}p`}
                                     <div className="description">
-                                      {formatFromWei(asset.staked)}
+                                      {formatFromWei(asset.balance)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -477,22 +475,24 @@ const WalletSelect = (props) => {
                             </Row>
                           ))}
 
-                        <Row className="my-3">
-                          <Col xs="9" md="9" className="ml-n1">
-                            <div className="text-card">{t('wallet')}</div>
-                          </Col>
-                          <Col xs="3" md="3">
-                            <div className="text-card float-right mr-1">
-                              {t('actions')}
-                            </div>
-                          </Col>
-                        </Row>
-
+                        {pool.poolDetails?.filter((asset) => asset.staked > 0)
+                          .length > 0 && (
+                          <Row className="my-3">
+                            <Col xs="9" md="9">
+                              <div className="ml-n1">Staked</div>
+                            </Col>
+                            <Col xs="3" md="3">
+                              <div className="text-card float-right mr-1">
+                                Actions
+                              </div>
+                            </Col>
+                          </Row>
+                        )}
                         {pool.poolDetails
-                          ?.filter((asset) => asset.balance > 0)
+                          ?.filter((asset) => asset.staked > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.address}-lp`}
+                              key={`${asset.address}-lpdao`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
@@ -518,7 +518,7 @@ const WalletSelect = (props) => {
                                   <Col xs="12" className="float-left ml-n4">
                                     {`${getToken(asset.tokenAddress)?.symbol}p`}
                                     <div className="description">
-                                      {formatFromWei(asset.balance)}
+                                      {formatFromWei(asset.staked)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -694,24 +694,21 @@ const WalletSelect = (props) => {
                           ))}
                       </TabPane>
                       <TabPane tabId="synths" className="ml-n2">
-                        {synth.synthDetails?.filter((asset) => asset.staked > 0)
-                          .length > 0 && (
-                          <Row className="my-3">
-                            <Col xs="9" md="9">
-                              <div className="text-card">Staked</div>
-                            </Col>
-                            <Col xs="3" md="3">
-                              <div className="text-card float-right mr-1">
-                                Actions
-                              </div>
-                            </Col>
-                          </Row>
-                        )}
+                        <Row className="my-3">
+                          <Col xs="9" md="9" className="ml-n1">
+                            <div className="text-card">{t('wallet')}</div>
+                          </Col>
+                          <Col xs="3" md="3">
+                            <div className="text-card float-right mr-1">
+                              {t('actions')}
+                            </div>
+                          </Col>
+                        </Row>
                         {synth.synthDetails
-                          ?.filter((asset) => asset.staked > 0)
+                          ?.filter((asset) => asset.balance > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.address}-synthstake`}
+                              key={`${asset.address}-synth`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
@@ -728,6 +725,7 @@ const WalletSelect = (props) => {
                                   className="mr-2 mt-3"
                                 />
                               </Col>
+
                               <Col
                                 xs="5"
                                 sm="7"
@@ -737,7 +735,7 @@ const WalletSelect = (props) => {
                                   <Col xs="12" className="float-left ml-n4">
                                     {`${getToken(asset.tokenAddress)?.symbol}s`}
                                     <div className="description">
-                                      {formatFromWei(asset.staked)}
+                                      {formatFromWei(asset.balance)}
                                     </div>
                                   </Col>
                                 </Row>
@@ -802,21 +800,24 @@ const WalletSelect = (props) => {
                               </Col>
                             </Row>
                           ))}
-                        <Row className="my-3">
-                          <Col xs="9" md="9" className="ml-n1">
-                            <div className="text-card">{t('wallet')}</div>
-                          </Col>
-                          <Col xs="3" md="3">
-                            <div className="text-card float-right mr-1">
-                              {t('actions')}
-                            </div>
-                          </Col>
-                        </Row>
+                        {synth.synthDetails?.filter((asset) => asset.staked > 0)
+                          .length > 0 && (
+                          <Row className="my-3">
+                            <Col xs="9" md="9">
+                              <div className="text-card">Staked</div>
+                            </Col>
+                            <Col xs="3" md="3">
+                              <div className="text-card float-right mr-1">
+                                Actions
+                              </div>
+                            </Col>
+                          </Row>
+                        )}
                         {synth.synthDetails
-                          ?.filter((asset) => asset.balance > 0)
+                          ?.filter((asset) => asset.staked > 0)
                           .map((asset) => (
                             <Row
-                              key={`${asset.address}-synth`}
+                              key={`${asset.address}-synthstake`}
                               className="mb-3 output-card mr-2"
                             >
                               <Col xs="4" sm="2" className="p-0 pl-2">
@@ -833,7 +834,6 @@ const WalletSelect = (props) => {
                                   className="mr-2 mt-3"
                                 />
                               </Col>
-
                               <Col
                                 xs="5"
                                 sm="7"
@@ -843,7 +843,7 @@ const WalletSelect = (props) => {
                                   <Col xs="12" className="float-left ml-n4">
                                     {`${getToken(asset.tokenAddress)?.symbol}s`}
                                     <div className="description">
-                                      {formatFromWei(asset.balance)}
+                                      {formatFromWei(asset.staked)}
                                     </div>
                                   </Col>
                                 </Row>

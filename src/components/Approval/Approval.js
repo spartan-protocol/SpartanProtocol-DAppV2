@@ -66,7 +66,7 @@ const Approval = ({
             <Button
               className="btn-fill w-100 h-100"
               color="neutral"
-              onClick={() => {
+              onClick={async () => {
                 handleApproval()
               }}
             >

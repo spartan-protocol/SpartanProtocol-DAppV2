@@ -44,7 +44,10 @@ const SynthVault = () => {
               <p>Min Time: {synth.globalDetails?.minTime} second</p>
               <p>
                 Total Weight:{' '}
-                {formatFromWei(synth.globalDetails?.totalWeight, 0)} SPARTA
+                {synth.globalDetails?.totalWeight > 0
+                  ? formatFromWei(synth.globalDetails?.totalWeight, 0)
+                  : '0.00'}{' '}
+                SPARTA
               </p>
               <p>Eras to Earn: {synth.globalDetails?.erasToEarn}</p>
               <p>Block Delay: {synth.globalDetails?.blockDelay}</p>
@@ -58,10 +61,12 @@ const SynthVault = () => {
               <h4>SynthMember</h4>
               <p>
                 Your Weight:{' '}
-                {BN(synth.memberDetails?.totalWeight)
-                  .div(synth.globalDetails?.totalWeight)
-                  .times(100)
-                  .toFixed(4)}
+                {synth.memberDetails?.totalWeight > 0
+                  ? BN(synth.memberDetails?.totalWeight)
+                      .div(synth.globalDetails?.totalWeight)
+                      .times(100)
+                      .toFixed(4)
+                  : '0.00'}
                 %
               </p>
             </Col>

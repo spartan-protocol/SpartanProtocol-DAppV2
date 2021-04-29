@@ -19,6 +19,7 @@ import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
@@ -37,16 +38,19 @@ import {
   calcLiquidityUnitsAsym,
 } from '../../../utils/web3Utils'
 import {
-  routerSwapBaseToSynth,
-  routerSwapSynthToBase,
+  swapAssetToSynth,
+  swapSynthToAsset,
 } from '../../../store/router/actions'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSynth } from '../../../store/synth/selector'
 import mintIcon from '../../../assets/icons/mint.svg'
 import fireIcon from '../../../assets/icons/fire.svg'
+import Approval from '../../../components/Approval/Approval'
+import SwapPair from '../Swap/SwapPair'
 
 const Swap = () => {
+  const wallet = useWallet()
   const synth = useSynth()
   const { t } = useTranslation()
   const web3 = useWeb3()
@@ -86,14 +90,12 @@ const Swap = () => {
         }
 
         if (activeTab === 'mint') {
-          asset1 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'synth')
           if (asset2.curated !== true) {
             asset2 = { tokenAddress: addr.bnb }
           }
         } else {
-          asset2 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
           if (asset1.tokenAddress === addr.sparta) {
@@ -186,12 +188,29 @@ const Swap = () => {
   //= =================================================================================//
   // Functions SYNTHS calculations
 
-  const getSynthLPsFromBase = () => {
-    const temp = calcLiquidityUnitsAsym(
-      convertToWei(swapInput1.value),
-      assetSwap2.baseAmount,
-      assetSwap2.poolUnits,
-    )
+  const getSynthLPsFromBase = (baseOuput) => {
+    let temp = '0'
+    if (baseOuput) {
+      if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
+        temp = calcLiquidityUnitsAsym(
+          baseOuput,
+          BN(assetSwap2.baseAmount).minus(baseOuput),
+          assetSwap2.poolUnits,
+        )
+      } else {
+        temp = calcLiquidityUnitsAsym(
+          baseOuput,
+          assetSwap2.baseAmount,
+          assetSwap2.poolUnits,
+        )
+      }
+    } else {
+      temp = calcLiquidityUnitsAsym(
+        convertToWei(swapInput1.value),
+        assetSwap2.baseAmount,
+        assetSwap2.poolUnits,
+      )
+    }
     return temp
   }
 
@@ -206,23 +225,71 @@ const Swap = () => {
   }
 
   const getSynthOutputFromBase = () => {
-    const lpUnits = getSynthLPsFromBase()
-    const baseAmount = calcShare(
-      lpUnits,
-      BN(assetSwap2.poolUnits).plus(lpUnits),
-      BN(assetSwap2.baseAmount).plus(BN(swapInput1.value)),
-    )
-    const tokenAmount = calcShare(
-      lpUnits,
-      BN(assetSwap2.poolUnits).plus(lpUnits),
-      assetSwap2.tokenAmount,
-    )
-    const baseSwapped = calcSwapOutput(
-      baseAmount,
-      assetSwap2.tokenAmount,
-      BN(assetSwap2.baseAmount).plus(BN(swapInput1.value)),
-    )
-    const tokenValue = BN(tokenAmount).plus(baseSwapped)
+    let tokenValue = '0'
+    if (assetSwap1.tokenAddress === addr.sparta) {
+      const lpUnits = getSynthLPsFromBase()
+      const baseAmount = calcShare(
+        lpUnits,
+        BN(assetSwap2.poolUnits).plus(lpUnits),
+        BN(assetSwap2.baseAmount).plus(BN(swapInput1?.value)),
+      )
+      const tokenAmount = calcShare(
+        lpUnits,
+        BN(assetSwap2.poolUnits).plus(lpUnits),
+        assetSwap2.tokenAmount,
+      )
+      const baseSwapped = calcSwapOutput(
+        baseAmount,
+        assetSwap2.tokenAmount,
+        BN(assetSwap2.baseAmount).plus(BN(swapInput1?.value)),
+      )
+      tokenValue = BN(tokenAmount).plus(baseSwapped)
+    } else {
+      const outPutBase = calcSwapOutput(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
+      const lpUnits = getSynthLPsFromBase(outPutBase)
+      let baseAmount = '0'
+      let tokenAmount = '0'
+      let baseSwapped = '0'
+      if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
+        baseAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          BN(assetSwap2.baseAmount),
+        )
+        tokenAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          BN(assetSwap2.tokenAmount).plus(convertToWei(swapInput1?.value)),
+        )
+        baseSwapped = calcSwapOutput(
+          baseAmount,
+          BN(assetSwap2.tokenAmount).plus(convertToWei(swapInput1?.value)),
+          BN(assetSwap2.baseAmount),
+        )
+      } else {
+        baseAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
+        )
+        tokenAmount = calcShare(
+          lpUnits,
+          BN(assetSwap2.poolUnits).plus(lpUnits),
+          assetSwap2.tokenAmount,
+        )
+        baseSwapped = calcSwapOutput(
+          baseAmount,
+          assetSwap2.tokenAmount,
+          BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
+        )
+      }
+      tokenValue = BN(tokenAmount).plus(baseSwapped)
+    }
     return tokenValue
   }
 
@@ -237,14 +304,44 @@ const Swap = () => {
   }
 
   const getSynthOutputToBase = () => {
-    const inputSynth = convertToWei(swapInput1?.value)
-    const baseOutput = calcSwapOutput(
-      inputSynth,
-      assetSwap1.tokenAmount,
-      assetSwap1.baseAmount,
-      true,
-    )
-    return baseOutput
+    let tokenValue = '0'
+    let outPutBase = '0'
+    if (assetSwap2.tokenAddress === addr.sparta) {
+      const inputSynth = convertToWei(swapInput1?.value)
+      tokenValue = calcSwapOutput(
+        inputSynth,
+        assetSwap1.tokenAmount,
+        assetSwap1.baseAmount,
+        true,
+      )
+    } else if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
+      outPutBase = calcSwapOutput(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
+      tokenValue = calcSwapOutput(
+        outPutBase,
+        assetSwap2.tokenAmount,
+        BN(assetSwap2.baseAmount).minus(outPutBase),
+        false,
+      )
+    } else {
+      outPutBase = calcSwapOutput(
+        convertToWei(swapInput1?.value),
+        assetSwap1?.tokenAmount,
+        assetSwap1?.baseAmount,
+        true,
+      )
+      tokenValue = calcSwapOutput(
+        outPutBase,
+        assetSwap2.tokenAmount,
+        assetSwap2.baseAmount,
+        false,
+      )
+    }
+    return tokenValue
   }
 
   //= =================================================================================//
@@ -266,7 +363,7 @@ const Swap = () => {
 
   // GET USD VALUES
   const getInput1USD = () => {
-    if (activeTab === 'mint' && swapInput1?.value) {
+    if (assetSwap1.tokenAddress === addr.sparta) {
       return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
     }
     if (swapInput1?.value) {
@@ -283,7 +380,7 @@ const Swap = () => {
 
   // GET USD VALUES
   const getInput2USD = () => {
-    if (activeTab === 'burn' && swapInput2?.value) {
+    if (assetSwap2.tokenAddress === addr.sparta) {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (swapInput2?.value) {
@@ -325,7 +422,7 @@ const Swap = () => {
               </Col>
             </Row>
             <Row className="row-480">
-              <Card xs="auto" className="card-body card-480">
+              <Card xs="auto" className="card-body card-480 mb-auto">
                 <Nav
                   pills
                   className="nav-tabs-custom mt-2 mb-4 justify-content-center"
@@ -395,8 +492,6 @@ const Swap = () => {
                             filter={
                               activeTab === 'mint' ? ['token'] : ['synth']
                             }
-                            whiteList={activeTab === 'mint' && [addr.sparta]}
-                            disabled={activeTab === 'mint'}
                           />
                         </Col>
                         <Col className="text-right">
@@ -517,14 +612,7 @@ const Swap = () => {
                         <Row className="">
                           <Col xs="auto">
                             <div className="output-card ml-1">
-                              <AssetSelect
-                                priority="2"
-                                filter={['token']}
-                                disabled={
-                                  activeTab === 'burn' ||
-                                  assetSwap1.tokenAddress !== addr.sparta
-                                }
-                              />
+                              <AssetSelect priority="2" filter={['token']} />
                             </div>
                           </Col>
                           <Col className="text-right">
@@ -544,7 +632,7 @@ const Swap = () => {
                                 : '0.00'}
                               {' ('}
                               {swapInput2?.value
-                                ? formatFromUnits(getRateSlip())
+                                ? formatFromUnits(getRateSlip(), 2)
                                 : '0.00'}
                               {'%)'}
                             </div>
@@ -564,7 +652,7 @@ const Swap = () => {
                             ? formatFromUnits(swapInput1?.value, 6)
                             : '0.00'}{' '}
                           {getToken(assetSwap1.tokenAddress)?.symbol}
-                          {assetSwap1?.tokenAddress !== addr.sparta && 's'}
+                          {activeTab === 'burn' && 's'}
                         </span>
                       </Col>
                     </Row>
@@ -612,7 +700,7 @@ const Swap = () => {
                         <div className="subtitle-card">Output</div>
                       </Col>
                       <Col className="text-right">
-                        {assetSwap1?.tokenAddress === addr.sparta && (
+                        {activeTab === 'mint' && (
                           <span className="subtitle-card">
                             {swapInput1?.value
                               ? formatFromWei(getSynthOutputFromBase(), 6)
@@ -623,12 +711,14 @@ const Swap = () => {
                           </span>
                         )}
 
-                        {assetSwap1?.tokenAddress !== addr.sparta && (
+                        {activeTab === 'burn' && (
                           <span className="subtitle-card">
                             {swapInput1?.value
                               ? formatFromWei(getSynthOutputToBase(), 6)
                               : '0.00'}
-                            <span className="output-card ml-1">SPARTA</span>
+                            <span className="output-card ml-1">
+                              {getToken(assetSwap2.tokenAddress)?.symbol}
+                            </span>
                           </span>
                         )}
                       </Col>
@@ -636,23 +726,38 @@ const Swap = () => {
 
                     {/* 'Approval/Allowance' row */}
                     {activeTab === 'mint' && (
-                      <Col>
-                        <Button
-                          color="primary"
-                          size="lg"
-                          onClick={() =>
-                            dispatch(
-                              routerSwapBaseToSynth(
-                                convertToWei(swapInput1?.value),
-                                getSynth(assetSwap2.tokenAddress)?.address,
-                              ),
-                            )
-                          }
-                          block
-                        >
-                          Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
-                        </Button>
-                      </Col>
+                      <>
+                        {assetSwap1?.tokenAddress !== addr.bnb &&
+                          wallet?.account &&
+                          swapInput1?.value && (
+                            <Approval
+                              tokenAddress={assetSwap1?.tokenAddress}
+                              symbol={getToken(assetSwap1.tokenAddress)?.symbol}
+                              walletAddress={wallet?.account}
+                              contractAddress={addr.router}
+                              txnAmount={convertToWei(swapInput1?.value)}
+                              assetNumber="1"
+                            />
+                          )}
+                        <Col>
+                          <Button
+                            color="primary"
+                            size="lg"
+                            onClick={() =>
+                              dispatch(
+                                swapAssetToSynth(
+                                  convertToWei(swapInput1?.value),
+                                  assetSwap1.tokenAddress,
+                                  getSynth(assetSwap2.tokenAddress)?.address,
+                                ),
+                              )
+                            }
+                            block
+                          >
+                            Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
+                          </Button>
+                        </Col>
+                      </>
                     )}
                     {activeTab === 'burn' && (
                       <Col>
@@ -661,9 +766,10 @@ const Swap = () => {
                           size="lg"
                           onClick={() =>
                             dispatch(
-                              routerSwapSynthToBase(
+                              swapSynthToAsset(
                                 convertToWei(swapInput1?.value),
                                 getSynth(assetSwap1.tokenAddress)?.address,
+                                assetSwap2.tokenAddress,
                               ),
                             )
                           }
@@ -676,6 +782,17 @@ const Swap = () => {
                   </Col>
                 </Row>
               </Card>
+              <Col xs="auto">
+                {pool.poolDetails &&
+                  assetSwap1.tokenAddress !== addr.sparta &&
+                  assetSwap2.tokenAddress !== assetSwap1.tokenAddress && (
+                    <SwapPair assetSwap={assetSwap1} />
+                  )}
+                {pool.poolDetails &&
+                  assetSwap2.tokenAddress !== addr.sparta && (
+                    <SwapPair assetSwap={assetSwap2} />
+                  )}
+              </Col>
             </Row>
           </>
         )}
