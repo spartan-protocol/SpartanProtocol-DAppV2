@@ -72,7 +72,7 @@ const BondLiquidity = () => {
         asset1 =
           asset1 &&
           asset1.tokenAddress !== addr.sparta &&
-          bond.bondListed.includes(asset1.address)
+          bond.bondListed.includes(asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset1 = getItemFromArray(asset1, pool.poolDetails)
