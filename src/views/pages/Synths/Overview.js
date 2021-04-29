@@ -90,14 +90,12 @@ const Swap = () => {
         }
 
         if (activeTab === 'mint') {
-          asset1 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'synth')
           if (asset2.curated !== true) {
             asset2 = { tokenAddress: addr.bnb }
           }
         } else {
-          asset2 = { tokenAddress: addr.sparta }
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
           if (asset1.tokenAddress === addr.sparta) {
@@ -399,8 +397,6 @@ const Swap = () => {
                             filter={
                               activeTab === 'mint' ? ['token'] : ['synth']
                             }
-                            whiteList={activeTab === 'mint' && [addr.sparta]}
-                            disabled={activeTab === 'mint'}
                           />
                         </Col>
                         <Col className="text-right">
@@ -521,14 +517,7 @@ const Swap = () => {
                         <Row className="">
                           <Col xs="auto">
                             <div className="output-card ml-1">
-                              <AssetSelect
-                                priority="2"
-                                filter={['token']}
-                                disabled={
-                                  activeTab === 'burn' ||
-                                  assetSwap1.tokenAddress !== addr.sparta
-                                }
-                              />
+                              <AssetSelect priority="2" filter={['token']} />
                             </div>
                           </Col>
                           <Col className="text-right">
@@ -548,7 +537,7 @@ const Swap = () => {
                                 : '0.00'}
                               {' ('}
                               {swapInput2?.value
-                                ? formatFromUnits(getRateSlip())
+                                ? formatFromUnits(getRateSlip(), 2)
                                 : '0.00'}
                               {'%)'}
                             </div>
@@ -696,16 +685,16 @@ const Swap = () => {
                   </Col>
                 </Row>
               </Card>
-              {pool.poolDetails && assetSwap1.tokenAddress !== addr.sparta && (
-                <Col xs="auto">
-                  <SwapPair assetSwap={assetSwap1} />
-                </Col>
-              )}
-              {pool.poolDetails && assetSwap2.tokenAddress !== addr.sparta && (
-                <Col xs="auto">
-                  <SwapPair assetSwap={assetSwap2} />
-                </Col>
-              )}
+              <Col xs="auto">
+                {pool.poolDetails &&
+                  assetSwap1.tokenAddress !== addr.sparta && (
+                    <SwapPair assetSwap={assetSwap1} />
+                  )}
+                {pool.poolDetails &&
+                  assetSwap2.tokenAddress !== addr.sparta && (
+                    <SwapPair assetSwap={assetSwap2} />
+                  )}
+              </Col>
             </Row>
           </>
         )}
