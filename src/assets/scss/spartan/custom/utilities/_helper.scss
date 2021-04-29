@@ -60,3 +60,9 @@
 .opacity-10 {
     opacity: 1 !important;
 }
+
+// Visibility helpers 
+
+.hide-if-siblings:not(:only-child) {
+  display: none;
+}
