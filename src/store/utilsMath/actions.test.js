@@ -1,18 +1,18 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { getAddresses, TEST_POOL, TEST_WALLET } from '../../utils/web3'
-import {
-  getPart,
-  getShare,
-  getLiquidityShare,
-  getLiquidityUnits,
-  getSwapFee,
-  getSwapOutput,
-  getSlipAdustment,
-  getAsymmetricShare,
-} from './actions'
-import * as Types from './types'
+// import { getAddresses, TEST_POOL, TEST_WALLET } from '../../utils/web3'
+// import {
+//   getPart,
+//   getShare,
+//   getLiquidityShare,
+//   getLiquidityUnits,
+//   getSwapFee,
+//   getSwapOutput,
+//   getSlipAdustment,
+//   getAsymmetricShare,
+// } from './actions'
+// import * as Types from './types'
 
-const addr = getAddresses()
+// const addr = getAddresses()
 const BigNumber = require('bignumber.js')
 
 export const BN = BigNumber

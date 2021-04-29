@@ -1,21 +1,21 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { getAddresses, TEST_WALLET } from '../../utils/web3'
+// import { getAddresses, TEST_WALLET } from '../../utils/web3'
 import {
   getListedPools,
   getListedPoolsRange,
-  getTokenDetails,
-  getPoolDetails,
-  getMemberShare,
-  getPoolShare,
-  getShareOfBaseAmount,
-  getShareOfTokenAmount,
-  // getPoolShareAssym,
-  getPoolAge,
-  isMember,
+  // getTokenDetails,
+  // getPoolDetails,
+  // getMemberShare,
+  // getPoolShare,
+  // getShareOfBaseAmount,
+  // getShareOfTokenAmount,
+  // // getPoolShareAssym,
+  // getPoolAge,
+  // isMember,
 } from './actions'
 import * as Types from './types'
 
-const addr = getAddresses()
+// const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
