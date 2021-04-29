@@ -1,11 +1,16 @@
 import React from 'react'
-import { Card, CardBody, Row, Col } from 'reactstrap'
+import { useDispatch } from 'react-redux'
+import { Button, Card, CardBody, Row, Col } from 'reactstrap'
 import bnbSparta from '../../../assets/icons/bnb_sparta.png'
+import { bondClaim } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 
 const BondTable = () => {
   const pool = usePool()
+  const dispatch = useDispatch()
+  const getToken = (tokenAddress) =>
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)
@@ -39,13 +44,13 @@ const BondTable = () => {
   return (
     <>
       <Row>
-        {pool.finalLpArray?.length > 0 &&
-          pool.finalLpArray
+        {pool.poolDetails?.length > 0 &&
+          pool.poolDetails
             .filter((asset) => asset.bondLastClaim > 0)
-            .sort((a, b) => b.bondedLPs - a.bondedLPs)
+            .sort((a, b) => b.bonded - a.bonded)
             .map((asset) => (
               <Card
-                key={asset.tokenAddress}
+                key={asset.address}
                 className="card-body"
                 style={{ backgroundColor: '#1D171F' }}
               >
@@ -66,10 +71,10 @@ const BondTable = () => {
                               alt="Logo"
                               height="32"
                             />
-                            {asset.symbol}p
+                            {getToken(asset.tokenAddress)?.symbol}p
                           </h2>
                         </Col>
-                        {/* <Col
+                        <Col
                           xs="3"
                           className="text-center d-none d-sm-block mb-2"
                         >
@@ -82,16 +87,16 @@ const BondTable = () => {
                           >
                             Claim
                           </Button>
-                        </Col> */}
+                        </Col>
                         <Col xs="6" md="3">
                           <div className="title-card">Remaining</div>
                           <div className="d-none d-md-block">
-                            {formatFromWei(asset.bondedLPs)}
+                            {formatFromWei(asset.bonded)}
                           </div>
                         </Col>
                         <Col xs="6" className="d-md-none">
                           <div className="text-right">
-                            {formatFromWei(asset.bondedLPs)}
+                            {formatFromWei(asset.bonded)}
                           </div>
                         </Col>
                         <Col xs="6" md="3">
@@ -99,7 +104,7 @@ const BondTable = () => {
                           <div className="d-none d-md-block">
                             {formatFromWei(
                               getClaimable(
-                                asset.bondedLPs,
+                                asset.bonded,
                                 asset.bondLastClaim,
                                 asset.bondClaimRate,
                               ),
@@ -111,7 +116,7 @@ const BondTable = () => {
                           <div className="text-right">
                             {formatFromWei(
                               getClaimable(
-                                asset.bondedLPs,
+                                asset.bonded,
                                 asset.bondLastClaim,
                                 asset.bondClaimRate,
                               ),
@@ -135,7 +140,7 @@ const BondTable = () => {
                           <div className="d-none d-md-block">
                             {formatDate(
                               getEndDate(
-                                asset.bondedLPs,
+                                asset.bonded,
                                 asset.bondLastClaim,
                                 asset.bondClaimRate,
                               ),
@@ -146,14 +151,14 @@ const BondTable = () => {
                           <div className="text-right">
                             {formatDate(
                               getEndDate(
-                                asset.bondedLPs,
+                                asset.bonded,
                                 asset.bondLastClaim,
                                 asset.bondClaimRate,
                               ),
                             )}
                           </div>
                         </Col>
-                        {/* <Col xs="12" className="d-sm-none text-center">
+                        <Col xs="12" className="d-sm-none text-center">
                           <Button
                             type="Button"
                             className="btn btn-primary"
@@ -163,7 +168,7 @@ const BondTable = () => {
                           >
                             Claim
                           </Button>
-                        </Col> */}
+                        </Col>
                       </Row>
                     </CardBody>
                   </Card>

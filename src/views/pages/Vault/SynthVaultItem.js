@@ -92,8 +92,18 @@ const SynthVaultItem = ({ synthItem }) => {
             <h4>{getToken(synthItem.tokenAddress)?.symbol}s</h4>
             <p>Balance: {formatFromWei(synthItem.balance)}</p>
             <p>Staked: {formatFromWei(synthItem.staked)}</p>
-            <p>Harvestable: {formatFromWei(getSynthOutputFromBase())}</p>
-            <p>Last Harvest: {formatDate(synthItem.lastHarvest)}</p>
+            <p>
+              Harvestable:{' '}
+              {synthItem.weight > 0
+                ? formatFromWei(getSynthOutputFromBase())
+                : '0.00'}
+            </p>
+            <p>
+              Last Harvest:{' '}
+              {synthItem.lastHarvest > 0
+                ? formatDate(synthItem.lastHarvest)
+                : 'Never'}
+            </p>
           </Col>
           <Col xs="12" className="text-center">
             <ButtonGroup>

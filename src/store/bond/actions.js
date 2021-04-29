@@ -189,10 +189,9 @@ export const bondClaimAll = (member) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.claimAllForMember(member)
+    console.log(member)
     const bondClaimedAll = await contract.claimAllForMember(member, {
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimedAll))
@@ -212,10 +211,8 @@ export const bondClaim = (assetAddr) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.claimAllForMember(member)
     const bondClaimed = await contract.claimForMember(assetAddr, {
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
 
     dispatch(payloadToDispatch(Types.BOND_CLAIM, bondClaimed))

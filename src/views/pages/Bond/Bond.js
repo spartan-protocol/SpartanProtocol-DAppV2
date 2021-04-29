@@ -28,9 +28,8 @@ const Bond = () => {
                   onClick={() => dispatch(bondClaimAll(wallet.account))}
                 >
                   Claim all{' ( '}
-                  {pool.finalLpArray?.length > 0 &&
-                    pool.finalLpArray.filter((asset) => asset.bondedLPs > 0)
-                      .length}
+                  {pool.poolDetails?.length > 0 &&
+                    pool.poolDetails.filter((asset) => asset.bonded > 0).length}
                   {' )'}
                 </Button>
               </Col>

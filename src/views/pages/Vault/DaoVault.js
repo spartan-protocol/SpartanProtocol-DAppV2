@@ -87,13 +87,21 @@ const DaoVault = () => {
               <h4>DaoMember</h4>
               <p>
                 Your Weight:{' '}
-                {BN(dao.memberDetails?.weight)
-                  .div(dao.globalDetails?.totalWeight)
-                  .times(100)
-                  .toFixed(4)}
+                {dao.memberDetails?.weight > 0
+                  ? BN(dao.memberDetails?.weight)
+                      .div(dao.globalDetails?.totalWeight)
+                      .times(100)
+                      .toFixed(4)
+                  : '0.00'}
                 %
               </p>
-              <p>Harvestable: {formatFromWei(getClaimable())} SPARTA</p>
+              <p>
+                Harvestable:{' '}
+                {dao.memberDetails?.weight > 0
+                  ? formatFromWei(getClaimable())
+                  : '0.00'}{' '}
+                SPARTA
+              </p>
             </Col>
             <Col xs="12" className="text-center">
               <Button
