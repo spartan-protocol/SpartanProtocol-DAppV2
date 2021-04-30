@@ -166,6 +166,13 @@ input:focus, textarea:focus, select:focus{
     width: 85vw;
 }
 
+.card-480-left {
+    justify-content: left;
+    display: flex;
+    max-width: 480px;
+    width: 85vw;
+}
+
 .row-480 {
     justify-content: center;
     display: flex;
