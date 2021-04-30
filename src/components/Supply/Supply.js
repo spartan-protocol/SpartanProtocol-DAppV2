@@ -40,7 +40,7 @@ const Supply = () => {
 
       <UncontrolledPopover
         trigger="legacy"
-        rootClose
+        rootclose="true"
         placement="bottom"
         target="PopoverClick"
       >
@@ -172,34 +172,6 @@ const Supply = () => {
 
                     <Col xs={12} className="text-left mb-4">
                       <span>
-                        <div className="text-card">Pool Factory</div> View on
-                        BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.poolFactory)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Synth Factory</div> View on
-                        BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.synthFactory)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
                         <div className="text-card">Bond</div> View on BSC Scan{' '}
                         <a
                           href={getExplorerContract(addr.bond)}
@@ -254,6 +226,48 @@ const Supply = () => {
 
                     <Col xs={12} className="text-left mb-4">
                       <span>
+                        <div className="text-card">Migrate</div> View on BSC
+                        Scan{' '}
+                        <a
+                          href={getExplorerContract(addr.migrate)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <i className="icon-extra-small icon-scan ml-n2" />
+                        </a>
+                      </span>
+                    </Col>
+
+                    <Col xs={12} className="text-left mb-4">
+                      <span>
+                        <div className="text-card">Pool Factory</div> View on
+                        BSC Scan{' '}
+                        <a
+                          href={getExplorerContract(addr.poolFactory)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <i className="icon-extra-small icon-scan ml-n2" />
+                        </a>
+                      </span>
+                    </Col>
+
+                    <Col xs={12} className="text-left mb-4">
+                      <span>
+                        <div className="text-card">Reserve</div> View on BSC
+                        Scan{' '}
+                        <a
+                          href={getExplorerContract(addr.reserve)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <i className="icon-extra-small icon-scan ml-n2" />
+                        </a>
+                      </span>
+                    </Col>
+
+                    <Col xs={12} className="text-left mb-4">
+                      <span>
                         <div className="text-card">Router</div> View on BSC Scan{' '}
                         <a
                           href={getExplorerContract(addr.router)}
@@ -267,9 +281,10 @@ const Supply = () => {
 
                     <Col xs={12} className="text-left mb-4">
                       <span>
-                        <div className="text-card">Utils</div> View on BSC Scan{' '}
+                        <div className="text-card">Synth Factory</div> View on
+                        BSC Scan{' '}
                         <a
-                          href={getExplorerContract(addr.utils)}
+                          href={getExplorerContract(addr.synthFactory)}
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -280,10 +295,23 @@ const Supply = () => {
 
                     <Col xs={12} className="text-left mb-4">
                       <span>
-                        <div className="text-card">Migrate</div> View on BSC
+                        <div className="text-card">Synth Vault</div> View on BSC
                         Scan{' '}
                         <a
-                          href={getExplorerContract(addr.migrate)}
+                          href={getExplorerContract(addr.synthVault)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <i className="icon-extra-small icon-scan ml-n2" />
+                        </a>
+                      </span>
+                    </Col>
+
+                    <Col xs={12} className="text-left mb-4">
+                      <span>
+                        <div className="text-card">Utils</div> View on BSC Scan{' '}
+                        <a
+                          href={getExplorerContract(addr.utils)}
                           target="_blank"
                           rel="noreferrer"
                         >

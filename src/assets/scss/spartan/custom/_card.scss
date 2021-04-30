@@ -300,6 +300,20 @@ line-height: 20px;
 color: #A5ADAF;
 }
 
+.text-sm-label-alt{
+  /* Small value */
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  /* or 167% */
+  align-items: center;
+  font-feature-settings: 'liga' off;
+  /* Grey 10 */
+  color: #AACDFF;
+  }
+
 .text-sm-label{
 /* Small value */
 font-family: $font-family-base;

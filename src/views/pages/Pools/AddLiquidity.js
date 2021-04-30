@@ -17,6 +17,7 @@ import {
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useLocation } from 'react-router-dom'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -49,11 +50,15 @@ const AddLiquidity = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
+  const location = useLocation()
   const [activeTab, setActiveTab] = useState('addTab1')
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [poolAdd1, setPoolAdd1] = useState('...')
   const [outputLp, setOutputLp] = useState('0.00')
+  const [assetParam1, setAssetParam1] = useState(
+    new URLSearchParams(location.search).get(`asset1`),
+  )
 
   useEffect(() => {
     const { poolDetails } = pool
@@ -66,6 +71,13 @@ const AddLiquidity = () => {
         let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
         let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
         let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
+
+        if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+          ;[asset1] = poolDetails.filter(
+            (asset) => asset.tokenAddress === assetParam1,
+          )
+          setAssetParam1('')
+        }
 
         asset1 =
           asset1 && asset1.tokenAddress !== addr.sparta

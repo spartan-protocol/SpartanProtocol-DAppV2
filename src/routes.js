@@ -26,15 +26,7 @@ import Synths from './views/pages/Synths/Overview'
 const routes = (t) => [
   {
     path: '/home',
-    name: t('home'),
-    icon: 'icon-medium icon-home icon-dark',
-    component: Swap,
-    layout: '/dapp',
-  },
-
-  {
-    path: '/pools/overview',
-    name: t('pools'),
+    name: t('Overview'),
     icon: 'icon-medium icon-home icon-dark',
     component: PoolsOverview,
     layout: '/dapp',

@@ -285,14 +285,20 @@ const BondLiquidity = () => {
             </Card>
           </Row>
           <Row>
-            <Approval
-              tokenAddress={assetBond1?.tokenAddress}
-              symbol={getToken(assetBond1.tokenAddress)?.symbol}
-              walletAddress={wallet?.account}
-              contractAddress={addr.bond}
-              txnAmount={convertToWei(bondInput1?.value)}
-              assetNumber="1"
-            />
+            {assetBond1?.tokenAddress &&
+              assetBond1?.tokenAddress !== addr.bnb &&
+              wallet?.account &&
+              bondInput1?.value && (
+                <Approval
+                  tokenAddress={assetBond1?.tokenAddress}
+                  symbol={getToken(assetBond1.tokenAddress)?.symbol}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.bond}
+                  txnAmount={convertToWei(bondInput1?.value)}
+                  assetNumber="1"
+                />
+              )}
+
             <Col xs="12" className="hide-if-siblings">
               <Button
                 color="primary"
