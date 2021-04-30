@@ -1,6 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
-import { Button, NavbarBrand, Navbar, Nav, Container } from 'reactstrap'
+import { Button, Navbar, Nav, Container } from 'reactstrap'
+import { Link } from 'react-router-dom'
 import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
@@ -67,9 +68,11 @@ const Header = (props) => (
             <span className="navbar-toggler-bar bar2" />
           </button>
         </div>
-        <NavbarBrand className="d-none d-md-block" href="./">
-          <SpartanLogo className="mr-1" /> Spartan Protocol
-        </NavbarBrand>
+        <Link to="/">
+          <div className="d-none d-md-block navbar-brand-thing">
+            <SpartanLogo className="mr-1" /> Spartan Protocol
+          </div>
+        </Link>
       </div>
       <Nav className="ml-auto">
         <AddressConn

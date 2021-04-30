@@ -152,7 +152,7 @@ const Common = () => {
         routes={routes(t)}
         activeColor={activeColor}
         logo={{
-          outterLink: './',
+          innerLink: '/',
           text: 'Spartan Protocol',
           imgSrc: logo,
         }}
