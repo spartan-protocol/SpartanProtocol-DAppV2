@@ -265,7 +265,7 @@ input:focus, textarea:focus, select:focus{
     .sidebar {
         margin-top: 5px;
         margin-left: -2px;
-        width: 10%;
+        width: auto;
         height: 100%;
 
     }
