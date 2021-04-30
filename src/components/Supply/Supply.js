@@ -39,7 +39,8 @@ const Supply = () => {
       </Button>
 
       <UncontrolledPopover
-        trigger="click"
+        trigger="legacy"
+        rootClose
         placement="bottom"
         target="PopoverClick"
       >
