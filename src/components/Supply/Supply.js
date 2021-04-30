@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,8 +27,11 @@ const Supply = () => {
   const addr = getAddresses()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
 
+
+
   return (
     <>
+
       <Button
         id="PopoverClick"
         type="Button"
@@ -39,7 +43,7 @@ const Supply = () => {
       </Button>
 
       <UncontrolledPopover
-        trigger="click"
+        trigger="legacy" rootClose
         placement="bottom"
         target="PopoverClick"
       >
