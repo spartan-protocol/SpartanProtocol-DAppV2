@@ -283,7 +283,8 @@ const BondLiquidity = () => {
                 </Col>
               </Row>
             </Card>
-
+          </Row>
+          <Row>
             <Approval
               tokenAddress={assetBond1?.tokenAddress}
               symbol={getToken(assetBond1.tokenAddress)?.symbol}
@@ -292,7 +293,7 @@ const BondLiquidity = () => {
               txnAmount={convertToWei(bondInput1?.value)}
               assetNumber="1"
             />
-            <Col xs="12">
+            <Col xs="12" className="hide-if-siblings">
               <Button
                 color="primary"
                 size="lg"

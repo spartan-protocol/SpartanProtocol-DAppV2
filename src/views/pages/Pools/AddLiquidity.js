@@ -626,7 +626,7 @@ const AddLiquidity = () => {
                   assetNumber="1"
                 />
               )}
-            <Col xs="12" sm="4" md="12">
+            <Col xs="12" sm="4" md="12" className="hide-if-siblings">
               <Button
                 className="h-100 w-75 btn-primary"
                 onClick={() =>

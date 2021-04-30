@@ -60,38 +60,22 @@ const Approval = ({
 
   return (
     <>
-      {assetNumber === '1' &&
-        BN(web3.allowance1.toString()).comparedTo(txnAmount) === -1 && (
-          <Col>
-            <Button
-              className="btn-fill w-100 h-100"
-              color="neutral"
-              onClick={async () => {
-                handleApproval()
-              }}
-            >
-              <i className="icon-extra-small icon-lock icon-light align-middle" />
-              <br />
-              Approve {symbol}
-            </Button>
-          </Col>
-        )}
-      {assetNumber === '2' &&
-        BN(web3.allowance2.toString()).comparedTo(txnAmount) === -1 && (
-          <Col>
-            <Button
-              className="btn-fill w-100 h-100"
-              color="neutral"
-              onClick={async () => {
-                handleApproval()
-              }}
-            >
-              <i className="icon-extra-small icon-lock icon-light align-middle" />
-              <br />
-              Approve {symbol}
-            </Button>
-          </Col>
-        )}
+      {BN(web3[`allowance${assetNumber}`].toString()).comparedTo(txnAmount) ===
+        -1 && (
+        <Col>
+          <Button
+            className="btn-fill w-100 h-100"
+            color="neutral"
+            onClick={async () => {
+              handleApproval()
+            }}
+          >
+            <i className="icon-extra-small icon-lock icon-light align-middle" />
+            <br />
+            Approve {symbol}
+          </Button>
+        </Col>
+      )}
     </>
   )
 }

@@ -1042,7 +1042,7 @@ const Swap = () => {
                         />
                       )}
                     {mode === 'token' && (
-                      <Col>
+                      <Col className="hide-if-siblings">
                         <Button
                           color="primary"
                           size="lg"

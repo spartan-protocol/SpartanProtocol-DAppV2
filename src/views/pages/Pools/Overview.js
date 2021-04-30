@@ -324,7 +324,6 @@ const Overview = () => {
                 <Nav className="nav-tabs-custom card-body" pills>
                   <NavItem>
                     <NavLink
-                      style={{ cursor: 'pointer' }}
                       className={classnames({
                         active: customActiveTab === '1',
                       })}
@@ -337,7 +336,6 @@ const Overview = () => {
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      style={{ cursor: 'pointer' }}
                       className={classnames({
                         active: customActiveTab === '2',
                       })}
@@ -350,7 +348,6 @@ const Overview = () => {
                   </NavItem>
                   {/* <NavItem> */}
                   {/*  <NavLink */}
-                  {/*    style={{ cursor: "pointer" }} */}
                   {/*    className={classnames({ */}
                   {/*      active: customActiveTab === "3" */}
                   {/*    })} */}
@@ -363,7 +360,6 @@ const Overview = () => {
                   {/* </NavItem> */}
                   {/* <NavItem> */}
                   {/*  <NavLink */}
-                  {/*    style={{ cursor: "pointer" }} */}
                   {/*    className={classnames({ */}
                   {/*      active: customActiveTab === "4" */}
                   {/*    })} */}
@@ -376,7 +372,6 @@ const Overview = () => {
                   {/* </NavItem> */}
                   {/* <NavItem> */}
                   {/*  <NavLink */}
-                  {/*    style={{ cursor: "pointer" }} */}
                   {/*    className={classnames({ */}
                   {/*      active: customActiveTab === "5" */}
                   {/*    })} */}
