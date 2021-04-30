@@ -717,6 +717,11 @@ const Swap = () => {
                                 type="text"
                                 placeholder="Sell..."
                                 id="swapInput1"
+                                inputMode="decimal"
+                                pattern="^[0-9]*[.,]?[0-9]*$"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                minLength="1"
                                 onInput={handleTokenInputChange}
                               />
                               <InputGroupAddon
