@@ -630,6 +630,12 @@ const Swap = () => {
     return '0'
   }
 
+  const handleTokenInputChange = (e) => {
+    e.currentTarget.value = e.currentTarget.value
+      .replace(/[^0-9.]/g, '')
+      .replace(/(\..*?)\..*/g, '$1')
+  }
+
   useEffect(() => {
     if (swapInput1?.value) {
       if (mode === 'token') {
@@ -711,6 +717,7 @@ const Swap = () => {
                                 type="text"
                                 placeholder="Sell..."
                                 id="swapInput1"
+                                onInput={handleTokenInputChange}
                               />
                               <InputGroupAddon
                                 addonType="append"
