@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React from 'react'
 import classNames from 'classnames'
 import { Button, Navbar, Nav, Container } from 'reactstrap'
@@ -43,15 +44,15 @@ const Header = (props) => (
   >
     <Container fluid className="px-1">
       <div className="navbar-wrapper ">
-        <div className="navbar-minimize d-inline mr-n4">
+        <div className="navbar-minimize d-inline">
           <Button
-            className="minimize-sidebar btn-just-icon"
+            className="minimize-sidebar btn-just-icon ml-n2 mr-3"
             color="link"
             id="tooltip209599"
             onClick={props.handleMiniClick}
           >
-            <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n2 mr-4" />
-            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n2 mr-4" />
+            <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular" />
+            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini" />
           </Button>
         </div>
         <div
@@ -64,13 +65,13 @@ const Header = (props) => (
             type="button"
             onClick={props.toggleSidebar}
           >
-            <span className="navbar-toggler-bar bar1" />
-            <span className="navbar-toggler-bar bar2" />
+            <span className="navbar-toggler-bar bar1"/>
+            <span className="navbar-toggler-bar" />
           </button>
         </div>
         <Link to="/">
           <div className="d-none d-md-block navbar-brand-thing">
-            <SpartanLogo className="mr-1" /> Spartan Protocol
+            <SpartanLogo className="mr-1 mt-n1" /> Spartan Protocol
           </div>
         </Link>
       </div>
