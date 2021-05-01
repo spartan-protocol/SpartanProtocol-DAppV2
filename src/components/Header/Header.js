@@ -44,9 +44,9 @@ const Header = (props) => (
   >
     <Container fluid className="px-1">
       <div className="navbar-wrapper ">
-        <div className="navbar-minimize d-inline">
+        <div className="navbar-minimize d-inline mr-n4">
           <Button
-            className="minimize-sidebar btn-just-icon ml-n2 mr-3"
+            className="minimize-sidebar btn-just-icon ml-n2 mr-4"
             color="link"
             id="tooltip209599"
             onClick={props.handleMiniClick}
@@ -65,13 +65,12 @@ const Header = (props) => (
             type="button"
             onClick={props.toggleSidebar}
           >
-            <span className="navbar-toggler-bar bar1"/>
-            <span className="navbar-toggler-bar" />
+            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-regular" />
           </button>
         </div>
         <Link to="/">
           <div className="d-none d-md-block navbar-brand-thing">
-            <SpartanLogo className="mr-1 mt-n1" /> Spartan Protocol
+            <SpartanLogo className="mr-1" /> Spartan Protocol
           </div>
         </Link>
       </div>
