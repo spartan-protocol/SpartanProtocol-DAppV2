@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Col, Row } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { Link } from 'react-router-dom'
 import spartaIcon from '../../../assets/img/spartan_lp.svg'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useDao } from '../../../store/dao/selector'
 import {
-  daoDeposit,
   daoHarvest,
   daoWithdraw,
   getDaoMemberLastHarvest,
@@ -18,6 +18,7 @@ import {
 } from '../../../store/dao/actions'
 import { calcShare } from '../../../utils/web3Utils'
 import { useReserve } from '../../../store/reserve/selector'
+import DepositModal from './Components/DepositModal'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -25,9 +26,17 @@ const DaoVault = () => {
   const dao = useDao()
   const pool = usePool()
   const dispatch = useDispatch()
-  const [showDetails, setShowDetails] = useState(false)
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  // const [showDetails, setShowDetails] = useState(false)
+  const [tokenAddress, settokenAddress] = useState('')
+  const [showModal, setShowModal] = useState(false)
+
+  const getToken = (_tokenAddr) =>
+    pool.tokenDetails.filter((i) => i.address === _tokenAddr)[0]
+
+  const toggleModal = (_tokenAddr) => {
+    settokenAddress(_tokenAddr)
+    setShowModal(!showModal)
+  }
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -69,9 +78,9 @@ const DaoVault = () => {
     return claimAmount
   }
 
-  const toggleCollapse = () => {
-    setShowDetails(!showDetails)
-  }
+  // const toggleCollapse = () => {
+  //   setShowDetails(!showDetails)
+  // }
 
   return (
     <>
@@ -82,7 +91,7 @@ const DaoVault = () => {
         >
           <Col>
             <h3>DaoVault Details</h3>
-            <Row className="my-1">
+            <Row className="my-2">
               <Col xs="auto" className="text-card">
                 Total Weight
               </Col>
@@ -98,11 +107,13 @@ const DaoVault = () => {
                 {dao.globalDetails?.memberCount} Members
               </Col>
             </Row>
-            <Row className="text-center mt-2">
-              <Col xs="12" className="p-1">
-                <Button className="btn-sm btn-primary h-100" disabled>
-                  Join Pools
-                </Button>
+            <Row className="card-body text-center">
+              <Col xs="12" className="p-0 py-1">
+                <Link to="/dapp/pools/liquidity">
+                  <Button className="btn-sm btn-primary h-100 w-100">
+                    Join Pools
+                  </Button>
+                </Link>
               </Col>
             </Row>
           </Col>
@@ -116,7 +127,7 @@ const DaoVault = () => {
         >
           <Col>
             <h3>Member Details</h3>
-            <Row className="my-1">
+            <Row className="my-2">
               <Col xs="auto" className="text-card">
                 Your Weight
               </Col>
@@ -141,11 +152,12 @@ const DaoVault = () => {
                 SPARTA
               </Col>
             </Row>
-            <Row className="text-center mt-2">
-              <Col xs="12" className="p-1">
+            <Row className="card-body text-center">
+              <Col xs="12" className="p-0 py-1">
                 <Button
-                  className="btn-sm btn-primary h-100"
+                  className="btn-sm btn-primary h-100 w-100"
                   onClick={() => dispatch(daoHarvest())}
+                  disabled={dao.memberDetails?.weight <= 0}
                 >
                   Harvest All
                 </Button>
@@ -161,26 +173,34 @@ const DaoVault = () => {
           .map((i) => (
             <Col xs="auto" key={i.address}>
               <Card className="card-body card-320">
-                <Row className="mt-n3">
-                  <Col xs="auto" className="">
-                    <h3 className="mt-4">
-                      <img
-                        className=""
-                        src={getToken(i.tokenAddress)?.symbolUrl}
-                        alt={getToken(i.tokenAddress)?.symbol}
-                        height="50px"
-                      />
-                      <img
-                        height="25px"
-                        src={spartaIcon}
-                        alt="Sparta LP token icon"
-                        className="pr-2 ml-n3 mt-4"
-                      />
+                <Row className="mb-2">
+                  <Col xs="auto" className="pr-0">
+                    <img
+                      className=""
+                      src={getToken(i.tokenAddress)?.symbolUrl}
+                      alt={getToken(i.tokenAddress)?.symbol}
+                      height="50px"
+                    />
+                    <img
+                      height="25px"
+                      src={spartaIcon}
+                      alt="Sparta LP token icon"
+                      className="pr-2 ml-n3 mt-4"
+                    />
+                  </Col>
+                  <Col xs="auto" className="pl-1">
+                    <h3 className="mb-0">
                       {getToken(i.tokenAddress)?.symbol}p
                     </h3>
+                    <Link to={`/dapp/pools/liquidity?asset1=${i.tokenAddress}`}>
+                      <p className="text-sm-label-alt">
+                        Obtain {getToken(i.tokenAddress)?.symbol}p
+                        <i className="icon-scan icon-mini ml-1" />
+                      </p>
+                    </Link>
                   </Col>
 
-                  <Col className="text-right my-auto">
+                  {/* <Col className="text-right my-auto">
                     {showDetails && (
                       <i
                         role="button"
@@ -195,7 +215,7 @@ const DaoVault = () => {
                         onClick={() => toggleCollapse()}
                       />
                     )}
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <Row className="my-1">
@@ -218,26 +238,35 @@ const DaoVault = () => {
                   </Col>
                 </Row>
 
-                <Row className="text-center mt-2">
-                  <Col xs="6" className="p-1">
+                <Row className="card-body text-center">
+                  <Col xs="6" className="pl-0 py-1 pr-1">
                     <Button
                       color="primary"
                       className="btn-sm h-100 w-100"
-                      onClick={() => dispatch(daoDeposit(i.address, i.balance))}
+                      onClick={() => toggleModal(i.tokenAddress)}
+                      disabled={i.balance <= 0}
                     >
                       Deposit
                     </Button>
                   </Col>
-                  <Col xs="6" className="p-1">
+                  <Col xs="6" className="pr-0 py-1 pl-1">
                     <Button
                       color="primary"
                       className="btn-sm h-100 w-100"
                       onClick={() => dispatch(daoWithdraw(i.address))}
+                      disabled={i.staked <= 0}
                     >
-                      Withdraw
+                      Withdraw All
                     </Button>
                   </Col>
                 </Row>
+                {showModal && (
+                  <DepositModal
+                    showModal={showModal}
+                    toggleModal={toggleModal}
+                    tokenAddress={tokenAddress}
+                  />
+                )}
               </Card>
             </Col>
           ))}

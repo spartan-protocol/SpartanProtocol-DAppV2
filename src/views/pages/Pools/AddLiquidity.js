@@ -656,6 +656,15 @@ const AddLiquidity = () => {
             <Col xs="12" sm="4" md="12" className="hide-if-siblings">
               <Button
                 className="h-100 w-75 btn-primary"
+                disabled={
+                  addInput1?.value <= 0 ||
+                  BN(convertToWei(addInput1?.value)).isGreaterThan(
+                    getBalance(1),
+                  ) ||
+                  BN(convertToWei(addInput2?.value)).isGreaterThan(
+                    getBalance(2),
+                  )
+                }
                 onClick={() =>
                   activeTab === 'addTab1'
                     ? dispatch(

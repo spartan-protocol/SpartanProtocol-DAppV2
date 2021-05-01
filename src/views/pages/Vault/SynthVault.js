@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { Link } from 'react-router-dom'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
@@ -70,20 +71,29 @@ const SynthVault = () => {
                 {synth.globalDetails?.erasToEarn}
               </Col>
             </Row>
-            <Row className="my-1">
+            {/* <Row className="my-1">
               <Col xs="auto" className="text-card">
                 Block Delay
               </Col>
               <Col className="text-right output-card">
                 {synth.globalDetails?.blockDelay}
               </Col>
-            </Row>
+            </Row> */}
             <Row className="my-1">
               <Col xs="auto" className="text-card">
                 Vault Claim
               </Col>
               <Col className="text-right output-card">
                 {synth.globalDetails?.vaultClaim / 100}%
+              </Col>
+            </Row>
+            <Row className="card-body py-0 text-center">
+              <Col xs="12" className="p-0 py-1">
+                <Link to="/dapp/synths">
+                  <Button className="btn-sm btn-primary h-100 w-100">
+                    Mint Synths
+                  </Button>
+                </Link>
               </Col>
             </Row>
           </Col>
@@ -97,25 +107,25 @@ const SynthVault = () => {
         >
           <Col>
             <h3>Member Details</h3>
-            <Row className="my-1">
+            <Row className="my-4">
               <Col xs="auto" className="text-card">
                 Your Weight
               </Col>
               <Col className="text-right output-card">
                 {synth.memberDetails?.totalWeight > 0
-                  ? BN(synth.memberDetails?.totalWeight)
+                  ? `${BN(synth.memberDetails?.totalWeight)
                       .div(synth.globalDetails?.totalWeight)
                       .times(100)
-                      .toFixed(4)
-                  : '0.00'}
-                %
+                      .toFixed(4)}%`
+                  : 'No Weight'}
               </Col>
             </Row>
-            <Row className="text-center mt-2">
-              <Col xs="12" className="p-1">
+            <Row className="card-body text-center">
+              <Col xs="12" className="p-0 py-1 mt-4">
                 <Button
-                  className="btn btn-primary align-middle"
+                  className="btn-sm btn-primary h-100 w-100"
                   onClick={() => dispatch(synthHarvest())}
+                  disabled={synth.memberDetails?.totalWeight <= 0}
                 >
                   Harvest All
                 </Button>

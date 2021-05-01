@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getProviderGasPrice } from '../../utils/web3'
+import { getProviderGasPrice, getWalletProvider } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getDaoContract, getDaoVaultContract } from '../../utils/web3Contracts'
 
@@ -159,6 +159,10 @@ export const getDaoHarvestEraAmount = (member) => async (dispatch) => {
 export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract()
+  let provider = getWalletProvider()
+  if (provider._isSigner === true) {
+    provider = provider.provider
+  }
 
   try {
     let deposit = {}
@@ -166,12 +170,11 @@ export const daoDeposit = (pool, amount, justCheck) => async (dispatch) => {
       deposit = await contract.callStatic.deposit(pool, amount)
     } else {
       const gPrice = await getProviderGasPrice()
-      // const gLimit = await contract.estimateGas.deposit(pool, amount)
       deposit = await contract.deposit(pool, amount, {
         gasPrice: gPrice,
-        // gasLimit: gLimit,
       })
     }
+    deposit = await provider.waitForTransaction(deposit.hash, 1)
     dispatch(payloadToDispatch(Types.DAO_DEPOSIT, deposit))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))

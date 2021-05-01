@@ -317,6 +317,12 @@ const BondLiquidity = () => {
                 size="lg"
                 className="p-3"
                 block
+                disabled={
+                  bondInput1?.value <= 0 ||
+                  BN(convertToWei(bondInput1?.value)).isGreaterThan(
+                    getToken(assetBond1.tokenAddress)?.balance,
+                  )
+                }
                 onClick={() =>
                   dispatch(
                     bondDeposit(
