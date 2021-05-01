@@ -45,13 +45,13 @@ const Header = (props) => (
       <div className="navbar-wrapper ">
         <div className="navbar-minimize d-inline mr-n4">
           <Button
-            className="minimize-sidebar btn-just-icon"
+            className="minimize-sidebar btn-just-icon ml-n2 mr-4"
             color="link"
             id="tooltip209599"
             onClick={props.handleMiniClick}
           >
-            <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular ml-n2 mr-4" />
-            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini ml-n2 mr-4" />
+            <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular" />
+            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini" />
           </Button>
         </div>
         <div
@@ -64,8 +64,7 @@ const Header = (props) => (
             type="button"
             onClick={props.toggleSidebar}
           >
-            <span className="navbar-toggler-bar bar1" />
-            <span className="navbar-toggler-bar bar2" />
+            <i className="icon-medium icon-menu-open icon-light" />
           </button>
         </div>
         <Link to="/">

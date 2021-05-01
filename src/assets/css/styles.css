@@ -411,6 +411,8 @@ fieldset[disabled] .form-control {
 /*Mobile small I5*/
 
 @media (max-width: 568px) {
+
+
   #notification-message {
     font-size: 14px;
   }
@@ -521,6 +523,9 @@ fieldset[disabled] .form-control {
     font-size: 14px;
   }
 
+
+
+
   .form-control {
     color: white;
     border-radius: 12px;
@@ -609,6 +614,7 @@ fieldset[disabled] .form-control {
     height: 100% !important;
     padding: 0;
     margin: -110px 0px 0px;
+
   }
 
   .modal-content {
@@ -691,4 +697,8 @@ body::-webkit-scrollbar {
 
 .swal2-radio {
   display: grid !important;
+}
+
+.main-panel[data="blue"] {
+  border-top: 2px solid #a80005;
 }

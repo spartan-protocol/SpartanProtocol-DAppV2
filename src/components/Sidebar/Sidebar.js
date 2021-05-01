@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 import { Nav, Collapse } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 
+import { ReactComponent as SpartanLogoRedSmall } from '../../assets/img/spartan_red_small.svg'
+
 const Sidebar = (props) => {
   const { t } = useTranslation()
   const [state, setState] = React.useState({})
@@ -145,7 +147,7 @@ const Sidebar = (props) => {
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
-            <img src={logo.imgSrc} alt="react-logo" />
+            <img src={logo.imgSrc} alt="spartan-logo" />
           </div>
         </a>
       )
@@ -166,7 +168,7 @@ const Sidebar = (props) => {
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
-            <img src={logo.imgSrc} alt="spartan-logo" />
+            <i className="icon-medium icon-menu-closed icon-light" />
           </div>
         </NavLink>
       )
@@ -176,7 +178,10 @@ const Sidebar = (props) => {
           className="simple-text logo-normal"
           onClick={props.closeSidebar}
         >
-          {logo.text}
+          <div>
+            <SpartanLogoRedSmall className="mr-2" />
+            {logo.text}
+          </div>
         </NavLink>
       )
     }
