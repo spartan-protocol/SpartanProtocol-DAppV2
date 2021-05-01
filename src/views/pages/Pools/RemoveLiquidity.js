@@ -591,6 +591,12 @@ const RemoveLiquidity = () => {
             <Col>
               <Button
                 className="w-75 h-100 btn-primary"
+                disabled={
+                  removeInput1?.value <= 0 ||
+                  BN(convertToWei(removeInput1?.value)).isGreaterThan(
+                    getBalance(1),
+                  )
+                }
                 onClick={() =>
                   activeTab === '1'
                     ? dispatch(

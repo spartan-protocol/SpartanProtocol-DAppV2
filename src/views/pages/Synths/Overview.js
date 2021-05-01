@@ -421,7 +421,7 @@ const Swap = () => {
             <Row className="row-480">
               <Col xs="12">
                 <div className="card-480 my-3">
-                  <h2 className="text-title-small mb-0 mr-2">{t('synths')}</h2>
+                  <h2 className="text-title-small mb-0 mr-3">{t('synths')}</h2>
                   <Share />
                 </div>
               </Col>
@@ -534,16 +534,24 @@ const Swap = () => {
                         <img
                           src={mintIcon}
                           alt="plusicon"
-                          className="mx-auto z-index my-n2"
-                          style={{ height: '35px' }}
+                          className="mx-auto z-index my-n2 p-2"
+                          style={{
+                            backgroundColor: '#A80005',
+                            height: '35px',
+                            width: '35px',
+                          }}
                         />
                       )}
                       {activeTab === 'burn' && (
                         <img
                           src={fireIcon}
                           alt="plusicon"
-                          className="mx-auto z-index my-n2"
-                          style={{ height: '35px' }}
+                          className="mx-auto z-index my-n2 p-2"
+                          style={{
+                            backgroundColor: '#A80005',
+                            height: '35px',
+                            width: '35px',
+                          }}
                         />
                       )}
                     </Row>
@@ -766,6 +774,12 @@ const Swap = () => {
                                 ),
                               )
                             }
+                            disabled={
+                              swapInput1?.value <= 0 ||
+                              BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                                getBalance(1),
+                              )
+                            }
                             block
                           >
                             Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
@@ -785,6 +799,12 @@ const Swap = () => {
                                 getSynth(assetSwap1.tokenAddress)?.address,
                                 assetSwap2.tokenAddress,
                               ),
+                            )
+                          }
+                          disabled={
+                            swapInput1?.value <= 0 ||
+                            BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                              getBalance(1),
                             )
                           }
                           block

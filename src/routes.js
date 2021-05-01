@@ -39,11 +39,20 @@ const routes = (t) => [
     component: Liquidity,
     layout: '/dapp',
   },
+
   {
     path: '/pools/swap',
     name: t('swap'),
     icon: 'icon-medium icon-swords icon-dark',
     component: Swap,
+    layout: '/dapp',
+  },
+
+  {
+    path: '/synths',
+    name: 'Synths',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: Synths,
     layout: '/dapp',
   },
 
@@ -60,14 +69,6 @@ const routes = (t) => [
     name: 'Vault',
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Vault,
-    layout: '/dapp',
-  },
-
-  {
-    path: '/synths',
-    name: 'Synths',
-    icon: 'icon-medium icon-colosseum icon-dark',
-    component: Synths,
     layout: '/dapp',
   },
 

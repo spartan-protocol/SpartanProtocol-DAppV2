@@ -659,7 +659,7 @@ const Swap = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-2">{t('swap')}</h2>
+              <h2 className="text-title-small mb-0 mr-3">{t('swap')}</h2>
               <SharePool />
             </div>
           </Col>
@@ -953,7 +953,7 @@ const Swap = () => {
                               ? formatFromUnits(swapInput1?.value, 6)
                               : '0.00'}{' '}
                             {getToken(assetSwap1.tokenAddress)?.symbol}
-                            {assetSwap1?.tokenAddress !== addr.sparta && 's'}
+                            {mode === 'synthIn' && 's'}
                           </div>
                         </Col>
                       </Row>
@@ -1063,6 +1063,12 @@ const Swap = () => {
                               ),
                             )
                           }
+                          disabled={
+                            swapInput1?.value <= 0 ||
+                            BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                              getBalance(1),
+                            )
+                          }
                           block
                         >
                           Sell {assetSwap1?.symbol}
@@ -1081,6 +1087,12 @@ const Swap = () => {
                                 assetSwap1.tokenAddress,
                                 assetSwap2.tokenAddress,
                               ),
+                            )
+                          }
+                          disabled={
+                            swapInput1?.value <= 0 ||
+                            BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                              getBalance(1),
                             )
                           }
                           block
@@ -1112,6 +1124,12 @@ const Swap = () => {
                                 ),
                               )
                             }
+                            disabled={
+                              swapInput1?.value <= 0 ||
+                              BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                                getBalance(1),
+                              )
+                            }
                             block
                           >
                             Sell {getToken(assetSwap1.tokenAddress)?.symbol}
@@ -1134,6 +1152,12 @@ const Swap = () => {
                               ),
                             )
                           }
+                          disabled={
+                            swapInput1?.value <= 0 ||
+                            BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                              getBalance(1),
+                            )
+                          }
                           block
                         >
                           Sell {getToken(assetSwap1.tokenAddress)?.symbol}s
@@ -1150,7 +1174,8 @@ const Swap = () => {
                   )}
 
                 {pool.poolDetails &&
-                  assetSwap2.tokenAddress !== addr.sparta && (
+                  assetSwap2.tokenAddress !== addr.sparta &&
+                  assetSwap1.tokenAddress !== assetSwap2.tokenAddress && (
                     <SwapPair assetSwap={assetSwap2} />
                   )}
               </Col>

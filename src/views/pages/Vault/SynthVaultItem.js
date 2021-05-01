@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Button, Card, Col, ButtonGroup, Row } from 'reactstrap'
+import { Button, Card, Col, Row } from 'reactstrap'
+import { Link } from 'react-router-dom'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
@@ -23,7 +24,7 @@ const SynthVaultItem = ({ synthItem }) => {
   const synth = useSynth()
   const pool = usePool()
   const dispatch = useDispatch()
-  const [showDetails, setShowDetails] = useState(false)
+  // const [showDetails, setShowDetails] = useState(false)
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const getPool = (tokenAddress) =>
@@ -88,34 +89,42 @@ const SynthVaultItem = ({ synthItem }) => {
     return tokenValue
   }
 
-  const toggleCollapse = () => {
-    setShowDetails(!showDetails)
-  }
+  // const toggleCollapse = () => {
+  //   setShowDetails(!showDetails)
+  // }
 
   return (
     <>
       <Col xs="auto">
         <Card className="card-body card-320">
-          <Row className="mt-n3">
-            <Col xs="auto" className="">
-              <h3 className="mt-4">
-                <img
-                  className=""
-                  src={getToken(synthItem.tokenAddress)?.symbolUrl}
-                  alt={getToken(synthItem.tokenAddress)?.symbol}
-                  height="50px"
-                />
-                <img
-                  height="25px"
-                  src={spartaIconAlt}
-                  alt="Sparta LP token icon"
-                  className="pr-2 ml-n3 mt-4"
-                />
-                {getToken(synthItem.tokenAddress)?.symbol}p
+          <Row className="mb-2">
+            <Col xs="auto" className="pr-0">
+              <img
+                className=""
+                src={getToken(synthItem.tokenAddress)?.symbolUrl}
+                alt={getToken(synthItem.tokenAddress)?.symbol}
+                height="50px"
+              />
+              <img
+                height="25px"
+                src={spartaIconAlt}
+                alt="Sparta synth token icon"
+                className="pr-2 ml-n3 mt-4"
+              />
+            </Col>
+            <Col xs="auto" className="pl-1">
+              <h3 className="mb-0">
+                {getToken(synthItem.tokenAddress)?.symbol}s
               </h3>
+              <Link to={`/dapp/synths?asset2=${synthItem.tokenAddress}`}>
+                <p className="text-sm-label-alt">
+                  Obtain {getToken(synthItem.tokenAddress)?.symbol}s
+                  <i className="icon-scan icon-mini ml-1" />
+                </p>
+              </Link>
             </Col>
 
-            <Col className="text-right my-auto">
+            {/* <Col className="text-right my-auto">
               {showDetails && (
                 <i
                   role="button"
@@ -130,47 +139,78 @@ const SynthVaultItem = ({ synthItem }) => {
                   onClick={() => toggleCollapse()}
                 />
               )}
+            </Col> */}
+          </Row>
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              Balance
+            </Col>
+            <Col className="text-right output-card">
+              {formatFromWei(synthItem.balance)}{' '}
+              {getToken(synthItem.tokenAddress)?.symbol}s
             </Col>
           </Row>
-          <Col>
-            <h4>{getToken(synthItem.tokenAddress)?.symbol}s</h4>
-            <p>Balance: {formatFromWei(synthItem.balance)}</p>
-            <p>Staked: {formatFromWei(synthItem.staked)}</p>
-            <p>
-              Harvestable:{' '}
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              Staked
+            </Col>
+            <Col className="text-right output-card">
+              {formatFromWei(synthItem.staked)}{' '}
+              {getToken(synthItem.tokenAddress)?.symbol}s
+            </Col>
+          </Row>
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              Harvestable
+            </Col>
+            <Col className="text-right output-card">
               {synthItem.weight > 0
                 ? formatFromWei(getSynthOutputFromBase())
-                : '0.00'}
-            </p>
-            <p>
-              Last Harvest:{' '}
+                : '0.00'}{' '}
+              {getToken(synthItem.tokenAddress)?.symbol}s
+            </Col>
+          </Row>
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              Last Harvest
+            </Col>
+            <Col className="text-right output-card">
               {synthItem.lastHarvest > 0
                 ? formatDate(synthItem.lastHarvest)
                 : 'Never'}
-            </p>
-          </Col>
-          <Col xs="12" className="text-center">
-            <ButtonGroup>
+            </Col>
+          </Row>
+
+          <Row className="card-body py-0 text-center">
+            <Col xs="6" className="py-1 pr-1 pl-0">
               <Button
                 color="primary"
-                type="Button"
+                className="btn-sm h-100 w-100"
                 onClick={() =>
                   dispatch(synthDeposit(synthItem.address, synthItem.balance))
                 }
+                disabled={synthItem.balance <= 0}
               >
                 Deposit
               </Button>
+            </Col>
+            <Col xs="6" className="py-1 pl-1 pr-0">
               <Button
                 color="primary"
-                type="Button"
+                className="btn-sm h-100 w-100"
                 onClick={() =>
                   dispatch(synthWithdraw(synthItem.address, '10000'))
                 }
+                disabled={synthItem.staked <= 0}
               >
                 Withdraw
               </Button>
-            </ButtonGroup>
-          </Col>
+            </Col>
+          </Row>
         </Card>
       </Col>
     </>

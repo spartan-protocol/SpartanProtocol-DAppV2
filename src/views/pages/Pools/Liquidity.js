@@ -23,7 +23,7 @@ const Liquidity = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-2">Liquidity</h2>
+              <h2 className="text-title-small mb-0 mr-3">Liquidity</h2>
               <Share />
             </div>
           </Col>

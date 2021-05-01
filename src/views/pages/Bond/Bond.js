@@ -77,7 +77,9 @@ const Bond = () => {
             pool.poolDetails
               .filter((asset) => asset.bondLastClaim > 0)
               .sort((a, b) => b.bonded - a.bonded)
-              .map((asset) => <BondItem asset={asset} />)}
+              .map((asset) => (
+                <BondItem asset={asset} key={asset.tokenAddress} />
+              ))}
         </Row>
       </div>
     </>
