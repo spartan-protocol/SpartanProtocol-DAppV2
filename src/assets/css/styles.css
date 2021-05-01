@@ -692,3 +692,8 @@ body::-webkit-scrollbar {
 .swal2-radio {
   display: grid !important;
 }
+
+/* Mainpanel line */
+.main-panel[data="blue"] {
+  border-top: 0px solid #25212d;
+}
