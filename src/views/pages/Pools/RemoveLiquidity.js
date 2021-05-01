@@ -326,10 +326,7 @@ const RemoveLiquidity = () => {
     <>
       <Col xs="auto">
         <Card className="card-body card-480">
-          <Nav
-            pills
-            className="nav-tabs-custom mt-2 mb-4 justify-content-center"
-          >
+          <Nav pills className="nav-tabs-custom mt-2 mb-4">
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === '1' })}

@@ -52,15 +52,8 @@ const Share = () => {
 
   return (
     <>
-      <Button
-        className="d-inline float-right btn btn-info"
-        style={{
-          width: '100%',
-        }}
-        onClick={() => setShowShare(true)}
-      >
+      <Button className="btn-info btn-sm" onClick={() => setShowShare(true)}>
         <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
-        {t('shareLink')}
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)}>
         <Card>

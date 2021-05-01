@@ -656,20 +656,16 @@ const Swap = () => {
   return (
     <>
       <div className="content">
+        <Row className="row-480">
+          <Col xs="12">
+            <div className="card-480 my-3">
+              <h2 className="text-title-small mb-0 mr-2">{t('swap')}</h2>
+              <SharePool />
+            </div>
+          </Col>
+        </Row>
         {pool.poolDetails?.length > 0 && (
           <>
-            <Row className="row-480">
-              <Col xs="auto">
-                <div className="card-body card-480">
-                  <h3 className="text-title-small card-480">{t('swap')}</h3>
-                </div>
-              </Col>
-              <Col xs="auto">
-                <div className="card-body card-480">
-                  <SharePool />
-                </div>
-              </Col>
-            </Row>
             <Row className="row-480">
               <Col xs="auto">
                 <Card xs="auto" className="card-body card-480">
@@ -1161,10 +1157,12 @@ const Swap = () => {
             </Row>
           </>
         )}
-        {!pool.poolDetails && (
-          <div>
-            <HelmetLoading height={300} width={300} />
-          </div>
+        {pool.poolDetails.length <= 0 && (
+          <Row className="row-480">
+            <Col className="card-480">
+              <HelmetLoading height={300} width={300} />
+            </Col>
+          </Row>
         )}
       </div>
     </>

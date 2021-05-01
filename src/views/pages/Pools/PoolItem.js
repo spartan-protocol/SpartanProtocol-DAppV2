@@ -47,7 +47,7 @@ const PoolItem = ({ asset }) => {
 
   return (
     <>
-      <Col>
+      <Col xs="auto">
         <Card className="card-body card-320">
           <Row className="mb-2">
             <Col xs="auto" className="pr-0">

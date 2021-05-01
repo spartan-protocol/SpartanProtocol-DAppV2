@@ -8,6 +8,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import BondLiquidity from './BondLiquidity'
 import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import Share from '../../../components/Share/SharePool'
 
 const Liquidity = () => {
   const [activeTab, setActiveTab] = useState('1')
@@ -20,13 +21,17 @@ const Liquidity = () => {
     <>
       <div className="content">
         <Row className="row-480">
-          <Col xs="auto">
-            <div className="card-body card-480">
-              <h2 className="text-title mb-0">Liquidity</h2>
+          <Col xs="12">
+            <div className="card-480 my-3">
+              <h2 className="text-title-small mb-0 mr-2">Liquidity</h2>
+              <Share />
             </div>
           </Col>
-          <Col xs="auto">
-            <Nav pills className="nav-tabs-custom card-body card-480">
+        </Row>
+
+        <Row className="row-480">
+          <Col xs="12">
+            <Nav pills className="nav-tabs-custom card-480 mb-3">
               <NavItem>
                 <NavLink
                   className={classnames({ active: activeTab === '1' })}
@@ -78,7 +83,9 @@ const Liquidity = () => {
               {activeTab === '4' && <BondLiquidity />}
             </>
           )}
-          {pool.poolDetails.length <= 0 && <HelmetLoading />}
+          <Col className="card-480">
+            {pool.poolDetails.length <= 0 && <HelmetLoading />}
+          </Col>
         </Row>
       </div>
     </>

@@ -35,7 +35,7 @@ const Overview = () => {
       <div className="content">
         <Row className="row-480">
           <Col xs="12">
-            <div className="card-body card-480-left">
+            <div className="card-480 my-3">
               <h2 className="text-title-small mb-0">Home</h2>
             </div>
           </Col>
@@ -43,7 +43,7 @@ const Overview = () => {
 
         <Row className="row-480">
           <Col xs="12">
-            <Nav className="nav-tabs-custom card-480-left mb-3" pills>
+            <Nav className="nav-tabs-custom card-480 mb-3" pills>
               <NavItem>
                 <NavLink
                   className={classnames({
@@ -75,8 +75,10 @@ const Overview = () => {
               .filter((asset) => asset.tokenAddress !== addr.sparta)
               .sort((a, b) => b.baseAmount - a.baseAmount)
               .map((asset) => <PoolItem key={asset.address} asset={asset} />)}
-          {activeTab === 'overview' && !pool.poolDetails && (
-            <HelmetLoading height={300} width={300} />
+          {pool.poolDetails.length <= 0 && (
+            <Col className="card-480">
+              <HelmetLoading height={300} width={300} />
+            </Col>
           )}
         </Row>
       </div>

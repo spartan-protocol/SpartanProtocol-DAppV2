@@ -48,6 +48,7 @@ import mintIcon from '../../../assets/icons/mint.svg'
 import fireIcon from '../../../assets/icons/fire.svg'
 import Approval from '../../../components/Approval/Approval'
 import SwapPair from '../Swap/SwapPair'
+import Share from '../../../components/Share/SharePool'
 
 const Swap = () => {
   const wallet = useWallet()
@@ -418,21 +419,16 @@ const Swap = () => {
         {pool.poolDetails?.length > 0 && (
           <>
             <Row className="row-480">
-              <Col xs="auto">
-                <div className="card-body card-480">
-                  <h2 className="d-inline text-title ml-1">{t('Synths')}</h2>
+              <Col xs="12">
+                <div className="card-480 my-3">
+                  <h2 className="text-title-small mb-0 mr-2">{t('synths')}</h2>
+                  <Share />
                 </div>
-              </Col>
-              <Col xs="6" xl="4">
-                {/* Buttons? */}
               </Col>
             </Row>
             <Row className="row-480">
               <Card xs="auto" className="card-body card-480 mb-auto">
-                <Nav
-                  pills
-                  className="nav-tabs-custom mt-2 mb-4 justify-content-center"
-                >
+                <Nav pills className="nav-tabs-custom mt-2 mb-4">
                   <NavItem>
                     <NavLink
                       className={classnames({
@@ -814,7 +810,7 @@ const Swap = () => {
             </Row>
           </>
         )}
-        {!pool.poolDetails && (
+        {pool.poolDetails.length <= 0 && (
           <div>
             <HelmetLoading height={300} width={300} />
           </div>

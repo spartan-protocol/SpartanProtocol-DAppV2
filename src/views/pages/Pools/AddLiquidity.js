@@ -338,10 +338,7 @@ const AddLiquidity = () => {
     <>
       <Col xs="auto">
         <Card xs="auto" className="card-body card-480">
-          <Nav
-            pills
-            className="nav-tabs-custom mt-2 mb-4 justify-content-center"
-          >
+          <Nav pills className="nav-tabs-custom mt-2 mb-4">
             <NavItem>
               <NavLink
                 className={classnames({ active: activeTab === 'addTab1' })}
