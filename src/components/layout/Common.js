@@ -88,6 +88,7 @@ const Common = () => {
   const closeSidebar = () => {
     setSidebarOpened(false)
     document.documentElement.classList.remove('nav-open')
+    document.body.classList.remove('no-sidebar-mini')
   }
 
   const clickOutSidebar = (e) => {
@@ -100,6 +101,7 @@ const Common = () => {
     ) {
       setSidebarOpened(false)
       document.body.classList.add('sidebar-mini')
+      document.body.classList.remove('no-sidebar-mini')
       closeSidebar()
     }
   }

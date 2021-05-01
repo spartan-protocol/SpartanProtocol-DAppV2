@@ -599,7 +599,7 @@ fieldset[disabled] .form-control {
 
 @media (min-width: 992px) {
   .no-sidebar-mini .main-panel > .content {
-    padding-left: 190px;
+    padding-left: 200px;
   }
 }
 
