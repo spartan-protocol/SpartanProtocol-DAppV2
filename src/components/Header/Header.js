@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from 'react'
 import classNames from 'classnames'
 import { Button, Navbar, Nav, Container } from 'reactstrap'
@@ -65,7 +64,7 @@ const Header = (props) => (
             type="button"
             onClick={props.toggleSidebar}
           >
-            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-regular" />
+            <i className="icon-medium icon-menu-open icon-light" />
           </button>
         </div>
         <Link to="/">

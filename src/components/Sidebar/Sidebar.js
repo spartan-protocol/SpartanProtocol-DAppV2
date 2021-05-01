@@ -1,14 +1,11 @@
-/*eslint-disable*/
+import React, { useCallback } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
+import { Nav, Collapse } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 
-import React, { useCallback } from "react"
-import { NavLink, useLocation } from "react-router-dom"
-import PropTypes from "prop-types"
-
-import { Nav, Collapse, Button } from "reactstrap"
-import { useTranslation } from "react-i18next"
-
-import { ReactComponent as SpartanLogoRedSmall } from "../../assets/img/spartan_red_small.svg"
+import { ReactComponent as SpartanLogoRedSmall } from '../../assets/img/spartan_red_small.svg'
 
 const Sidebar = (props) => {
   const { t } = useTranslation()
@@ -38,14 +35,14 @@ const Sidebar = (props) => {
           initialState = {
             [prop.state]: getCollapseInitialState(prop.views),
             ...getCollapseStates(prop.views),
-            ...initialState
+            ...initialState,
           }
         }
         return null
       })
       return initialState
     },
-    [getCollapseInitialState]
+    [getCollapseInitialState],
   )
 
   // this function creates the links and collapses that appear in the sidebar (left menu)
@@ -60,7 +57,7 @@ const Sidebar = (props) => {
         st[prop.state] = !state[prop.state]
         return (
           <li
-            className={getCollapseInitialState(prop.views) ? "active" : ""}
+            className={getCollapseInitialState(prop.views) ? 'active' : ''}
             key={prop.path + prop.name}
           >
             <div
@@ -106,7 +103,7 @@ const Sidebar = (props) => {
       }
       // verifies if routeName is the one active (in browser input)
       const activeRoute = (routeName) =>
-        location.pathname === routeName ? "active" : ""
+        location.pathname === routeName ? 'active' : ''
       return (
         <li
           className={activeRoute(prop.layout + prop.path)}
@@ -149,7 +146,6 @@ const Sidebar = (props) => {
           className="simple-text logo-mini"
           onClick={props.closeSidebar}
         >
-
           <div className="logo-img">
             <img src={logo.imgSrc} alt="spartan-logo" />
           </div>
@@ -166,19 +162,13 @@ const Sidebar = (props) => {
       )
     } else {
       logoImg = (
-
-
-
         <NavLink
           to={logo.innerLink}
           className="simple-text logo-mini"
           onClick={props.closeSidebar}
         >
-
-
           <div className="logo-img">
             <i className="icon-medium icon-menu-closed icon-light" />
-
           </div>
         </NavLink>
       )
@@ -188,9 +178,10 @@ const Sidebar = (props) => {
           className="simple-text logo-normal"
           onClick={props.closeSidebar}
         >
-          <div><SpartanLogoRedSmall className="mr-2" />{logo.text}</div>
-
-
+          <div>
+            <SpartanLogoRedSmall className="mr-2" />
+            {logo.text}
+          </div>
         </NavLink>
       )
     }
@@ -212,7 +203,7 @@ const Sidebar = (props) => {
 }
 
 Sidebar.propTypes = {
-  activeColor: PropTypes.oneOf(["primary", "blue", "green", "orange", "red"]),
+  activeColor: PropTypes.oneOf(['primary', 'blue', 'green', 'orange', 'red']),
   rtlActive: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types
   routes: PropTypes.array.isRequired,
@@ -220,16 +211,16 @@ Sidebar.propTypes = {
     PropTypes.shape({
       innerLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
+      text: PropTypes.string.isRequired,
     }),
     PropTypes.shape({
       outterLink: PropTypes.string.isRequired,
       imgSrc: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired
-    })
+      text: PropTypes.string.isRequired,
+    }),
   ]),
   // this is used on responsive to close the sidebar on route navigation
-  closeSidebar: PropTypes.func
+  closeSidebar: PropTypes.func,
 }
 
 export default Sidebar
