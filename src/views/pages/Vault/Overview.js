@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
-import { Row, Col, Button, ButtonGroup } from 'reactstrap'
+import { Row, Col, Nav, NavItem, NavLink } from 'reactstrap'
 import { getReserveGlobalDetails } from '../../../store/reserve/actions'
 import { getSpartaGlobalDetails } from '../../../store/sparta/actions'
 import DaoVault from './DaoVault'
@@ -30,31 +31,45 @@ const Vault = () => {
   return (
     <>
       <div className="content">
-        <Row className="card-body row-480">
-          <Col xs="auto" className="d-flex">
-            <div className="text-title-small card-480">Staking</div>
-          </Col>
-          <Col xs="auto" className="d-flex">
-            <ButtonGroup className="card-480">
-              <Button
-                color={mode === 'Dao' ? 'primary' : 'info'}
-                type="Button"
-                onClick={() => setMode('Dao')}
-              >
-                DaoVault
-              </Button>
-              <Button
-                color={mode === 'Synth' ? 'primary' : 'info'}
-                type="Button"
-                onClick={() => setMode('Synth')}
-              >
-                SynthVault
-              </Button>
-            </ButtonGroup>
+        <Row className="row-480">
+          <Col xs="12">
+            <h2 className="text-title-small mb-0 mr-2">Staking</h2>
           </Col>
         </Row>
-        {mode === 'Dao' && <DaoVault />}
-        {mode === 'Synth' && <SynthVault />}
+        <Row className="row-480">
+          <Col xs="12">
+            <Nav pills className="nav-tabs-custom mt-2 mb-4">
+              <NavItem>
+                <NavLink
+                  className={classnames({
+                    active: mode === 'Dao',
+                  })}
+                  onClick={() => {
+                    setMode('Dao')
+                  }}
+                >
+                  DaoVault
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({
+                    active: mode === 'Synth',
+                  })}
+                  onClick={() => {
+                    setMode('Synth')
+                  }}
+                >
+                  SynthVault
+                </NavLink>
+              </NavItem>
+            </Nav>
+          </Col>
+        </Row>
+        <Row className="row-480">
+          {mode === 'Dao' && <DaoVault />}
+          {mode === 'Synth' && <SynthVault />}
+        </Row>
       </div>
     </>
   )

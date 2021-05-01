@@ -36,31 +36,72 @@ const SynthVault = () => {
 
   return (
     <>
-      <Row className="row-480">
-        <Col xs="auto">
-          <Card className="card-480">
-            <Col>
-              <h4>SynthVault Details</h4>
-              <p>Min Time: {synth.globalDetails?.minTime} second</p>
-              <p>
-                Total Weight:{' '}
+      <Col xs="auto">
+        <Card
+          className="card-body card-320"
+          style={{ backgroundColor: '#25212D' }}
+        >
+          <Col>
+            <h3>SynthVault Details</h3>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                Min Time
+              </Col>
+              <Col className="text-right output-card">
+                {synth.globalDetails?.minTime} seconds
+              </Col>
+            </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                Total Weight
+              </Col>
+              <Col className="text-right output-card">
                 {synth.globalDetails?.totalWeight > 0
                   ? formatFromWei(synth.globalDetails?.totalWeight, 0)
                   : '0.00'}{' '}
                 SPARTA
-              </p>
-              <p>Eras to Earn: {synth.globalDetails?.erasToEarn}</p>
-              <p>Block Delay: {synth.globalDetails?.blockDelay}</p>
-              <p>Vault Claim: {synth.globalDetails?.vaultClaim / 100}%</p>
-            </Col>
-          </Card>
-        </Col>
-        <Col xs="auto">
-          <Card className="card-480">
-            <Col>
-              <h4>SynthMember</h4>
-              <p>
-                Your Weight:{' '}
+              </Col>
+            </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                Eras to Earn
+              </Col>
+              <Col className="text-right output-card">
+                {synth.globalDetails?.erasToEarn}
+              </Col>
+            </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                Block Delay
+              </Col>
+              <Col className="text-right output-card">
+                {synth.globalDetails?.blockDelay}
+              </Col>
+            </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                Vault Claim
+              </Col>
+              <Col className="text-right output-card">
+                {synth.globalDetails?.vaultClaim / 100}%
+              </Col>
+            </Row>
+          </Col>
+        </Card>
+      </Col>
+
+      <Col xs="auto">
+        <Card
+          className="card-body card-320"
+          style={{ backgroundColor: '#25212D' }}
+        >
+          <Col>
+            <h3>Member Details</h3>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                Your Weight
+              </Col>
+              <Col className="text-right output-card">
                 {synth.memberDetails?.totalWeight > 0
                   ? BN(synth.memberDetails?.totalWeight)
                       .div(synth.globalDetails?.totalWeight)
@@ -68,24 +109,25 @@ const SynthVault = () => {
                       .toFixed(4)
                   : '0.00'}
                 %
-              </p>
-            </Col>
-            <Col xs="12" className="text-center">
-              <Button
-                color="primary"
-                type="Button"
-                onClick={() => dispatch(synthHarvest())}
-              >
-                Harvest
-              </Button>
-            </Col>
-          </Card>
-        </Col>
-        {synth?.synthDetails?.length > 0 &&
-          synth.synthDetails
-            .filter((i) => i.address !== false)
-            .map((i) => <SynthVaultItem key={i.address} synthItem={i} />)}
-      </Row>
+              </Col>
+            </Row>
+            <Row className="text-center mt-2">
+              <Col xs="12" className="p-1">
+                <Button
+                  className="btn btn-primary align-middle"
+                  onClick={() => dispatch(synthHarvest())}
+                >
+                  Harvest All
+                </Button>
+              </Col>
+            </Row>
+          </Col>
+        </Card>
+      </Col>
+      {synth?.synthDetails?.length > 0 &&
+        synth.synthDetails
+          .filter((i) => i.address !== false)
+          .map((i) => <SynthVaultItem key={i.address} synthItem={i} />)}
     </>
   )
 }

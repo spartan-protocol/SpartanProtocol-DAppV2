@@ -1,7 +1,9 @@
-import React from 'react'
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/interactive-supports-focus */
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Button, Card, Col, ButtonGroup } from 'reactstrap'
+import { Button, Card, Col, ButtonGroup, Row } from 'reactstrap'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
@@ -13,6 +15,7 @@ import {
   calcSwapOutput,
 } from '../../../utils/web3Utils'
 import { useSparta } from '../../../store/sparta/selector'
+import spartaIconAlt from '../../../assets/img/spartan_synth.svg'
 
 const SynthVaultItem = ({ synthItem }) => {
   const sparta = useSparta()
@@ -20,6 +23,7 @@ const SynthVaultItem = ({ synthItem }) => {
   const synth = useSynth()
   const pool = usePool()
   const dispatch = useDispatch()
+  const [showDetails, setShowDetails] = useState(false)
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const getPool = (tokenAddress) =>
@@ -84,10 +88,50 @@ const SynthVaultItem = ({ synthItem }) => {
     return tokenValue
   }
 
+  const toggleCollapse = () => {
+    setShowDetails(!showDetails)
+  }
+
   return (
     <>
       <Col xs="auto">
-        <Card className="card-480">
+        <Card className="card-body card-320">
+          <Row className="mt-n3">
+            <Col xs="auto" className="">
+              <h3 className="mt-4">
+                <img
+                  className=""
+                  src={getToken(synthItem.tokenAddress)?.symbolUrl}
+                  alt={getToken(synthItem.tokenAddress)?.symbol}
+                  height="50px"
+                />
+                <img
+                  height="25px"
+                  src={spartaIconAlt}
+                  alt="Sparta LP token icon"
+                  className="pr-2 ml-n3 mt-4"
+                />
+                {getToken(synthItem.tokenAddress)?.symbol}p
+              </h3>
+            </Col>
+
+            <Col className="text-right my-auto">
+              {showDetails && (
+                <i
+                  role="button"
+                  className="icon-small icon-up icon-light"
+                  onClick={() => toggleCollapse()}
+                />
+              )}
+              {!showDetails && (
+                <i
+                  role="button"
+                  className="icon-small icon-down icon-light"
+                  onClick={() => toggleCollapse()}
+                />
+              )}
+            </Col>
+          </Row>
           <Col>
             <h4>{getToken(synthItem.tokenAddress)?.symbol}s</h4>
             <p>Balance: {formatFromWei(synthItem.balance)}</p>

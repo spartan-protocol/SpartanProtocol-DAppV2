@@ -157,28 +157,28 @@ select:focus {
 }
 
 .card-320 {
-  justify-content: center;
+  justify-content: left;
   display: flex;
   max-width: 310px;
   width: 85vw;
 }
 
 .card-480 {
-  justify-content: center;
+  justify-content: left;
   display: flex;
-  max-width: 480px;
+  max-width: 470px;
   width: 85vw;
 }
 
-.card-480-left {
-  justify-content: left;
+.card-480-right {
+  justify-content: right;
   display: flex;
-  max-width: 480px;
+  max-width: 470px;
   width: 85vw;
 }
 
 .row-480 {
-  justify-content: center;
+  justify-content: left;
   display: flex;
   margin-left: auto;
   margin-right: auto;
@@ -277,7 +277,7 @@ select:focus {
 
 @media (min-width: 992px) {
   .sidebar-mini .sidebar:hover {
-    width: 10%;
+    width: auto;
   }
 }
 
@@ -593,7 +593,13 @@ fieldset[disabled] .form-control {
 
 @media (min-width: 992px) {
   .sidebar-mini .main-panel > .content {
-    padding-left: 70px;
+    padding-left: 99.2px;
+  }
+}
+
+@media (min-width: 992px) {
+  .no-sidebar-mini .main-panel > .content {
+    padding-left: 200px;
   }
 }
 

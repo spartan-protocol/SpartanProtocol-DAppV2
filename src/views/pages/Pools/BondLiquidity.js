@@ -333,7 +333,7 @@ const BondLiquidity = () => {
         </Card>
       </Col>
       {pool.poolDetails && (
-        <Col xs="auto" className="p-0">
+        <Col xs="auto">
           <SwapPair assetSwap={assetBond1} />
         </Col>
       )}
