@@ -1,8 +1,6 @@
-/*eslint-disable*/
 import React from 'react'
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-// react plugin for creating notifications over the dashboard
 import NotificationAlert from 'react-notification-alert'
 
 import Header from '../Header/Header'
@@ -24,28 +22,13 @@ const Common = () => {
   const notificationAlertRef = React.useRef(null)
   const location = useLocation()
   React.useEffect(() => {
+    document.body.classList.add('sidebar-mini')
     document.documentElement.scrollTop = 0
     document.scrollingElement.scrollTop = 0
     if (mainPanelRef.current) {
       mainPanelRef.current.scrollTop = 0
     }
   }, [location])
-
-  // const showNavbarButton = () => {
-  //   if (
-  //     document.documentElement.scrollTop > 50 ||
-  //     document.scrollingElement.scrollTop > 50 ||
-  //     (mainPanelRef.current && mainPanelRef.current.scrollTop > 50)
-  //   ) {
-  //     setOpacity(1)
-  //   } else if (
-  //     document.documentElement.scrollTop <= 50 ||
-  //     document.scrollingElement.scrollTop <= 50 ||
-  //     (mainPanelRef.current && mainPanelRef.current.scrollTop <= 50)
-  //   ) {
-  //     setOpacity(0)
-  //   }
-  // }
 
   const getRoutes = (tempRoutes) =>
     tempRoutes.map((prop) => {
@@ -94,6 +77,7 @@ const Common = () => {
       setSidebarMini(true)
     }
     document.body.classList.toggle('sidebar-mini')
+    document.body.classList.toggle('no-sidebar-mini')
   }
 
   const toggleSidebar = () => {
