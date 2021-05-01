@@ -722,7 +722,7 @@ const Swap = () => {
                                 autoComplete="off"
                                 autoCorrect="off"
                                 minLength="1"
-                                onInput={handleTokenInputChange}
+                                onInput={(e) => handleTokenInputChange(e)}
                               />
                               <InputGroupAddon
                                 addonType="append"
