@@ -405,6 +405,8 @@ const AssetSelect = (props) => {
                 </InputGroupText>
               </InputGroupAddon>
               <Input
+                autoComplete="off"
+                autoCorrect="off"
                 className="text-card mt-1"
                 placeholder={t('searchAssets')}
                 type="text"

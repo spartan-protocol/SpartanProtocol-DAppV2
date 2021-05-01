@@ -402,6 +402,12 @@ const Swap = () => {
     return '0'
   }
 
+  const handleTokenInputChange = (e) => {
+    e.currentTarget.value = e.currentTarget.value
+      .replace(/[^0-9.]/g, '')
+      .replace(/(\..*?)\..*/g, '$1')
+  }
+
   useEffect(() => {
     handleZapInputChange()
   }, [swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2, activeTab])
@@ -501,6 +507,12 @@ const Swap = () => {
                               type="text"
                               placeholder="Add..."
                               id="swapInput1"
+                              inputMode="decimal"
+                              pattern="^[0-9]*[.,]?[0-9]*$"
+                              autoComplete="off"
+                              autoCorrect="off"
+                              minLength="1"
+                              onInput={(e) => handleTokenInputChange(e)}
                             />
                             <InputGroupAddon
                               addonType="append"
@@ -571,6 +583,12 @@ const Swap = () => {
                                 type="text"
                                 placeholder="0.00"
                                 id="swapInput2"
+                                inputMode="decimal"
+                                pattern="^[0-9]*[.,]?[0-9]*$"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                minLength="1"
+                                onInput={(e) => handleTokenInputChange(e)}
                               />
                             </InputGroup>
                             <div className="text-right text-sm-label">

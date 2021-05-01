@@ -312,6 +312,12 @@ const RemoveLiquidity = () => {
     }
   }
 
+  const handleTokenInputChange = (e) => {
+    e.currentTarget.value = e.currentTarget.value
+      .replace(/[^0-9.]/g, '')
+      .replace(/(\..*?)\..*/g, '$1')
+  }
+
   useEffect(() => {
     handleInputChange()
   }, [removeInput1?.value, assetRemove1, assetRemove2, poolRemove1, activeTab])
@@ -381,6 +387,12 @@ const RemoveLiquidity = () => {
                         type="text"
                         placeholder="Redeem..."
                         id="removeInput1"
+                        inputMode="decimal"
+                        pattern="^[0-9]*[.,]?[0-9]*$"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        minLength="1"
+                        onInput={(e) => handleTokenInputChange(e)}
                       />
                       <InputGroupAddon
                         addonType="append"

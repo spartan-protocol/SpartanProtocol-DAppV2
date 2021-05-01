@@ -317,6 +317,12 @@ const AddLiquidity = () => {
     return '0.00'
   }
 
+  const handleTokenInputChange = (e) => {
+    e.currentTarget.value = e.currentTarget.value
+      .replace(/[^0-9.]/g, '')
+      .replace(/(\..*?)\..*/g, '$1')
+  }
+
   useEffect(() => {
     handleInputChange()
   }, [
@@ -397,6 +403,12 @@ const AddLiquidity = () => {
                         type="text"
                         placeholder="Add..."
                         id="addInput1"
+                        inputMode="decimal"
+                        pattern="^[0-9]*[.,]?[0-9]*$"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        minLength="1"
+                        onInput={(e) => handleTokenInputChange(e)}
                       />
                       <InputGroupAddon
                         addonType="append"
@@ -476,6 +488,12 @@ const AddLiquidity = () => {
                           type="text"
                           placeholder="Add..."
                           id="addInput2"
+                          inputMode="decimal"
+                          pattern="^[0-9]*[.,]?[0-9]*$"
+                          autoComplete="off"
+                          autoCorrect="off"
+                          minLength="1"
+                          onInput={(e) => handleTokenInputChange(e)}
                         />
                         <InputGroupAddon
                           addonType="append"
