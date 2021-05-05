@@ -8,7 +8,7 @@
     "circulating":"Circulante",
     "claim":"Afirmar",
     "curated":"curada",
-    "DAO":"Dao",
+    "dao":"Dao",
     "depth":"Profundidad",
     "join":"Entrar",
     "liquidity":"Liquidez",
@@ -64,5 +64,18 @@
     "copyLink": "Copiar enlace",
     "shareViaTwiter": "Compartir en Twitter",
     "cancel": "Cancelar",
-    "copyNotification": "¡Se ha copiado un enlace de esta página a su portapapeles!"
+    "copyNotification": "¡Se ha copiado un enlace de esta página a su portapapeles!",
+    "circulatingSupply": "Suministro circulante",
+    "marketcap": "Capitalización",
+    "totalSupply": "Total suministrado",
+    "contracts": "Contratos",
+    "migrate": "Migracion",
+    "poolFactory": "Factoria de fondo",
+    "reserve": "Reserva",
+    "router": "Ruta",
+    "synthFactory": "Factoria de sintetizador",
+    "utils": "Útiles",
+    "sparta": "Sparta",
+    "burn": "Quema",
+    "emisson": "Emisión"
 }

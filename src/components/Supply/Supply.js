@@ -25,6 +25,20 @@ const Supply = () => {
   const pool = usePool()
   const addr = getAddresses()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
+  const addrNames = [
+    'sparta',
+    'bond',
+    'bondVault',
+    'dao',
+    'daoVault',
+    'migrate',
+    'poolFactory',
+    'reserve',
+    'router',
+    'synthFactory',
+    'synthVault',
+    'utils',
+  ]
 
   return (
     <>
@@ -48,7 +62,7 @@ const Supply = () => {
         <PopoverBody>
           <Row>
             <Col xs="6" className="popover-text mb-4">
-              Marketcap
+              {t('marketcap')}
             </Col>
             <Col xs="6 mb-2" className="popover-text mb-4">
               $
@@ -63,7 +77,7 @@ const Supply = () => {
             </Col>
 
             <Col xs="6 mb-2" className="popover-text">
-              {`${t('circulating')} ${t('supply')}`}
+              {`${t('circulatingSupply')}`}
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(
@@ -81,7 +95,7 @@ const Supply = () => {
             </Col>
 
             <Col xs="6" className="popover-text mb-2">
-              {`Total ${t('supply')}`}
+              {t('totalSupply')}
             </Col>
             <Col xs="6" className="popover-text mb-2">
               {formatFromWei(
@@ -104,15 +118,15 @@ const Supply = () => {
             </Col>
             <Col xs="4">
               <span className="dot-burn mr-2" />
-              Burn
+              {t('burn')}
             </Col>
             <Col xs="4">
               <span className="dot-bond mr-1" />
-              Bond
+              {t('bond')}
             </Col>
             <Col xs="4">
               <span className="dot-emission mr-2" />
-              Emisson
+              {t('emisson')}
             </Col>
           </Row>
           <br />
@@ -136,7 +150,7 @@ const Supply = () => {
                   <Col xs={8} className="ml-n2 ">
                     <div className="text-left text-card">
                       <i className="icon-small icon-contracts icon-light mr-1" />{' '}
-                      Contracts
+                      {t('contracts')}
                     </div>
                   </Col>
                   <Col className="ml-auto">
@@ -154,171 +168,23 @@ const Supply = () => {
                     </div>
                   </Col>
                 </Row>
-
                 <Collapse role="tabpanel" isOpen={openedCollapseThree}>
                   <Row className="card-body text-center">
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">SPARTA</div> View on BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.sparta)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Bond</div> View on BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.bond)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Bond Vault</div> View on BSC
-                        Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.bondVault)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">DAO</div> View on BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.dao)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">DAO Vault</div> View on BSC
-                        Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.daoVault)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Migrate</div> View on BSC
-                        Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.migrate)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Pool Factory</div> View on
-                        BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.poolFactory)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Reserve</div> View on BSC
-                        Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.reserve)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Router</div> View on BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.router)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Synth Factory</div> View on
-                        BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.synthFactory)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Synth Vault</div> View on BSC
-                        Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.synthVault)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
-
-                    <Col xs={12} className="text-left mb-4">
-                      <span>
-                        <div className="text-card">Utils</div> View on BSC Scan{' '}
-                        <a
-                          href={getExplorerContract(addr.utils)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-extra-small icon-scan ml-n2" />
-                        </a>
-                      </span>
-                    </Col>
+                    {addrNames.map((c) => (
+                      <Col xs={12} className="text-left mb-4">
+                        <span>
+                          <div className="text-card">{t(c)}</div>{' '}
+                          {t('viewBscScan')}
+                          <a
+                            href={getExplorerContract(addr[c])}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <i className="icon-extra-small icon-scan ml-n2" />
+                          </a>
+                        </span>
+                      </Col>
+                    ))}
                   </Row>
                 </Collapse>
               </Card>
