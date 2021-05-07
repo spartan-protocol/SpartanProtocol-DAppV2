@@ -80,11 +80,11 @@
     "emisson": "Emisión",
     "overview": "Visión general",
     "apyInfo": "Estimación de APY de las ganancias de los fondos (comisiones + dividendos) Se calcula por medio de las ganancias del mes pasado * 12 menos el total de liquidez en el fondo de activos. No tiene en cuenta el valor de los activos. ¡Esto no garantiza el rendimiento en el futuro!",
-    "poolDepth": "liquidez",
+    "poolDepth": "Liquidez",
     "fees": "Comisiones",
-    "swapRevenue": "Ganancia por comisión de intercambio de activos generado por el fondo los anteriores {{days}} días",
+    "swapRevenue": "Ganancia por comisión de intercambio de activos generado por el fondo de activos en los anteriores {{days}} días",
     "dividends": "Dividendo",
     "dividendRevenue": "Ganancias por dividendo injectado en el fondo de activos en los anteriores {{days}} días",
     "stake": "Depositar",
-    "vault": "Depositos"
+    "vault": "Depósitos"
 }
