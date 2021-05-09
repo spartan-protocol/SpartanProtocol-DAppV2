@@ -17,6 +17,7 @@ import {
   Row,
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -47,6 +48,7 @@ const RemoveLiquidity = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
   const [assetRemove2, setAssetRemove2] = useState('...')
@@ -334,7 +336,7 @@ const RemoveLiquidity = () => {
                   toggle('1')
                 }}
               >
-                Remove Both
+                {t('removeBoth')}
               </NavLink>
             </NavItem>
             <NavItem>
@@ -344,7 +346,7 @@ const RemoveLiquidity = () => {
                   toggle('2')
                 }}
               >
-                Remove Single
+                {t('removeSingle')}
               </NavLink>
             </NavItem>
           </Nav>
@@ -356,7 +358,7 @@ const RemoveLiquidity = () => {
               >
                 <Row>
                   <Col xs="4">
-                    <div className="text-sm-label">Redeem</div>
+                    <div className="text-sm-label">{t('redeem')}</div>
                   </Col>
                   <Col xs="8" className="text-right">
                     <div
@@ -367,7 +369,7 @@ const RemoveLiquidity = () => {
                         removeInput1.value = convertFromWei(getBalance(1))
                       }}
                     >
-                      Balance:{' '}
+                      {t('balance')}:{' '}
                       {pool.poolDetails && formatFromWei(getBalance(1))}
                     </div>
                   </Col>
@@ -382,7 +384,7 @@ const RemoveLiquidity = () => {
                       <Input
                         className="text-right h-100 ml-0 p-2"
                         type="text"
-                        placeholder="Redeem..."
+                        placeholder={`${t('redeem')}...`}
                         id="removeInput1"
                         inputMode="decimal"
                         pattern="^[0-9]*[.,]?[0-9]*$"
@@ -429,11 +431,11 @@ const RemoveLiquidity = () => {
                 >
                   <Row>
                     <Col xs="4">
-                      <div className="text-sm-label">Receive</div>
+                      <div className="text-sm-label">{t('receive')}</div>
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="text-sm-label">
-                        Balance:{' '}
+                        {t('balance')}:{' '}
                         {pool.tokenDetails && formatFromWei(getBalance(2))}
                       </div>
                     </Col>
@@ -458,7 +460,7 @@ const RemoveLiquidity = () => {
                         <Input
                           className="text-right h-100 ml-0 p-2"
                           type="text"
-                          placeholder="Receive..."
+                          placeholder={`${t('receive')}...`}
                           id="removeInput2"
                           disabled
                         />
@@ -525,7 +527,7 @@ const RemoveLiquidity = () => {
                   <div className="card-body">
                     <Row className="my-2">
                       <Col xs="auto">
-                        <div className="text-card">Redeem</div>
+                        <div className="text-card">{t('redeem')}</div>
                       </Col>
                       <Col className="text-right">
                         <div className="output-card text-light">
@@ -540,7 +542,7 @@ const RemoveLiquidity = () => {
                     {activeTab === '2' && (
                       <Row className="mb-2">
                         <Col xs="4" className="">
-                          <div className="text-card">Fee</div>
+                          <div className="text-card">{t('fee')}</div>
                         </Col>
                         <Col xs="8" className="text-right">
                           <div className="output-card text-light">
@@ -555,9 +557,9 @@ const RemoveLiquidity = () => {
 
                     <Row className="mb-2">
                       <Col xs="auto">
-                        <div className="subtitle-card">Receive</div>
+                        <div className="subtitle-card">{t('receive')}</div>
                         {activeTab === '1' && (
-                          <div className="subtitle-card">Receive</div>
+                          <div className="subtitle-card">{t('receive')}</div>
                         )}
                       </Col>
                       <Col className="text-right">
@@ -614,7 +616,7 @@ const RemoveLiquidity = () => {
                       )
                 }
               >
-                Remove Liq
+                {t('removeLiq')}
               </Button>
             </Col>
           </Row>

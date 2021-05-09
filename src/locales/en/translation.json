@@ -86,5 +86,13 @@
   "dividends": "Dividends",
   "dividendRevenue": "Dividend revenue injected into this pool over the past {{days}} days",
   "stake": "Stake",
-  "vault": "Vault"
+  "vault": "Vault",
+  "receive": "Receive",
+  "redeem": "Redeem",
+  "removeLiq": "Remove Liq",
+  "joinPool": "Join Pool",
+  "mint": "Mint",
+  "bondInfo": "The amount of SPARTA remaining in the Bond+Mint program. This can be topped up by 2.5M SPARTA by proposals in the DAO when it runs out.",
+  "recentFees": "Recent Fee",
+  "recentDivis": "Recent Divis"
 }
