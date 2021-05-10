@@ -17,6 +17,7 @@ import {
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -43,6 +44,7 @@ import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 
 const BondLiquidity = () => {
+  const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
   const bond = useBond()
@@ -153,7 +155,7 @@ const BondLiquidity = () => {
               >
                 <Row>
                   <Col xs="4" className="">
-                    <div className="text-sm-label">Bond</div>
+                    <div className="text-sm-label">{t('bond')}</div>
                   </Col>
                   <Col xs="8" className="text-right">
                     <div
@@ -165,7 +167,7 @@ const BondLiquidity = () => {
                         )
                       }}
                     >
-                      Balance:{' '}
+                      {t('balance')}:{' '}
                       {formatFromWei(
                         getToken(assetBond1.tokenAddress)?.balance,
                       )}
@@ -187,7 +189,7 @@ const BondLiquidity = () => {
                       <Input
                         className="text-right h-100 ml-0 p-2"
                         type="text"
-                        placeholder="Add..."
+                        placeholder={`${t('add')}...`}
                         id="bondInput1"
                         inputMode="decimal"
                         pattern="^[0-9]*[.,]?[0-9]*$"
@@ -221,7 +223,7 @@ const BondLiquidity = () => {
               <Row className="mb-2">
                 <Col xs="auto">
                   <div className="text-card">
-                    Allocation
+                    {t('allocation')}
                     <i
                       className="icon-extra-small icon-info icon-dark ml-1"
                       id="tooltipAddBase"
@@ -231,14 +233,12 @@ const BondLiquidity = () => {
                       placement="right"
                       target="tooltipAddBase"
                     >
-                      The amount of SPARTA remaining in the Bond+Mint program.
-                      This can be topped up by 2.5M SPARTA by proposals in the
-                      DAO when it runs out.
+                      {t('bondInfo')}
                     </UncontrolledTooltip>
                   </div>
                 </Col>
                 <Col className="output-card text-right text-light">
-                  {formatFromWei(bond.bondSpartaRemaining, 0)} Remaining
+                  {formatFromWei(bond.bondSpartaRemaining, 0)} {t('remaining')}
                 </Col>
               </Row>
 
@@ -252,12 +252,12 @@ const BondLiquidity = () => {
                     BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
                     2,
                   )}
-                  % Remaining
+                  % {t('remaining')}
                 </Progress>
               </div>
               <Row className="mb-2">
                 <Col xs="auto">
-                  <div className="text-card">Bond</div>
+                  <div className="text-card">{t('bond')}</div>
                 </Col>
                 <Col className="text-right">
                   <div className="output-card text-light">
@@ -270,7 +270,7 @@ const BondLiquidity = () => {
               </Row>
               <Row className="mb-2">
                 <Col xs="auto" className="">
-                  <div className="text-card">Mint</div>
+                  <div className="text-card">{t('mint')}</div>
                 </Col>
                 <Col className="text-right">
                   <div className="output-card text-light">
@@ -283,7 +283,7 @@ const BondLiquidity = () => {
               </Row>
               <Row className="mb-2">
                 <Col xs="auto" className="">
-                  <div className="subtitle-card">Lock</div>
+                  <div className="subtitle-card">{t('lock')}</div>
                 </Col>
                 <Col className="text-right">
                   <span className="subtitle-card">
@@ -332,7 +332,7 @@ const BondLiquidity = () => {
                   )
                 }
               >
-                Bond {getToken(assetBond1.tokenAddress)?.symbol}
+                {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
               </Button>
             </Col>
           </Row>

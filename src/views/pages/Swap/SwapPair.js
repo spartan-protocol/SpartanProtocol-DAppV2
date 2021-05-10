@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Col, Row } from 'reactstrap'
 import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
+import { useTranslation } from 'react-i18next'
 import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
@@ -10,6 +11,7 @@ import { calcAPY } from '../../../utils/web3Utils'
 const SwapPair = ({ assetSwap }) => {
   const web3 = useWeb3()
   const pool = usePool()
+  const { t } = useTranslation()
   const { poolDetails } = pool
   const asset =
     poolDetails && poolDetails.length
@@ -72,7 +74,7 @@ const SwapPair = ({ assetSwap }) => {
 
         <Row className="my-2">
           <Col xs="auto" className="text-card">
-            Spot Price
+            {t('spotPrice')}
           </Col>
           <Col className="output-card text-right">
             {formatFromUnits(spotPrice, 4)} SPARTA
@@ -81,7 +83,7 @@ const SwapPair = ({ assetSwap }) => {
 
         <Row className="my-2">
           <Col xs="auto" className="text-card">
-            Recent Fees
+            {t('recentFees')}
           </Col>
           <Col className="output-card text-right">
             {formatFromWei(recentFees, 0)} SPARTA
@@ -90,17 +92,17 @@ const SwapPair = ({ assetSwap }) => {
 
         <Row className="my-2">
           <Col xs="auto" className="text-card">
-            Recent Divis
+            {t('recentDivis')}
           </Col>
           <Col className="output-card text-right">
             {assetSwap.curated === true
               ? `${formatFromWei(recentDivis, 0)} SPARTA`
-              : 'Not Curated'}
+              : t('notCurated')}
           </Col>
         </Row>
         <Row className="my-2">
           <Col xs="auto" className="text-card">
-            Depth
+            {t('depth')}
           </Col>
           <Col className="output-card text-right">
             {formatFromWei(assetSwap.tokenAmount, 4)}{' '}
@@ -117,7 +119,7 @@ const SwapPair = ({ assetSwap }) => {
               role="button"
             />
             <UncontrolledTooltip placement="right" target="tooltipInput">
-              dividend per year
+              {t('dividendPerYear')}
             </UncontrolledTooltip>
           </Col>
           <Col className="output-card text-right">{APY}%</Col>

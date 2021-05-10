@@ -18,6 +18,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -45,6 +46,7 @@ import plusIcon from '../../../assets/icons/plus.svg'
 import swapIcon from '../../../assets/icons/swapadd.svg'
 
 const AddLiquidity = () => {
+  const { t } = useTranslation()
   const wallet = useWallet()
   const dispatch = useDispatch()
   const web3 = useWeb3()
@@ -346,7 +348,7 @@ const AddLiquidity = () => {
                   toggle('addTab1')
                 }}
               >
-                Add Both
+                {t('addBoth')}
               </NavLink>
             </NavItem>
             <NavItem>
@@ -356,7 +358,7 @@ const AddLiquidity = () => {
                   toggle('addTab2')
                 }}
               >
-                Add Single
+                {t('addSingle')}
               </NavLink>
             </NavItem>
           </Nav>
@@ -368,7 +370,7 @@ const AddLiquidity = () => {
               >
                 <Row>
                   <Col xs="4">
-                    <div className="text-sm-label">Add</div>
+                    <div className="text-sm-label">{t('add')}</div>
                   </Col>
 
                   <Col xs="8" className="text-right">
@@ -379,7 +381,7 @@ const AddLiquidity = () => {
                         addInput1.value = convertFromWei(getBalance(1))
                       }}
                     >
-                      Balance:{' '}
+                      {t('balance')}:{' '}
                       {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
                     </div>
                   </Col>
@@ -398,7 +400,7 @@ const AddLiquidity = () => {
                       <Input
                         className="text-right h-100 ml-0 p-2"
                         type="text"
-                        placeholder="Add..."
+                        placeholder={`${t('add')}...`}
                         id="addInput1"
                         inputMode="decimal"
                         pattern="^[0-9]*[.,]?[0-9]*$"
@@ -453,7 +455,7 @@ const AddLiquidity = () => {
                 >
                   <Row className="my-2">
                     <Col xs="4" className="">
-                      <div className="text-sm-label">Add</div>
+                      <div className="text-sm-label">{t('add')}</div>
                     </Col>
                     <Col xs="8" className="text-right">
                       <div
@@ -464,7 +466,7 @@ const AddLiquidity = () => {
                           addInput2.value = convertFromWei(getBalance(2))
                         }}
                       >
-                        Balance:{' '}
+                        {t('balance')}:{' '}
                         {pool.poolDetails && formatFromWei(getBalance(2))}
                       </div>
                     </Col>
@@ -483,7 +485,7 @@ const AddLiquidity = () => {
                         <Input
                           className="text-right h-100 ml-0 p-2"
                           type="text"
-                          placeholder="Add..."
+                          placeholder={`${t('add')}...`}
                           id="addInput2"
                           inputMode="decimal"
                           pattern="^[0-9]*[.,]?[0-9]*$"
@@ -524,7 +526,7 @@ const AddLiquidity = () => {
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="text-sm-label">
-                        Balance:{' '}
+                        {t('Balance')}:{' '}
                         {pool.poolDetails && formatFromWei(getBalance(3))}
                       </div>
                     </Col>
@@ -574,7 +576,7 @@ const AddLiquidity = () => {
                   <Card className="card-body mb-1">
                     <Row className="mb-2">
                       <Col xs="auto">
-                        <span className="text-card">Add</span>
+                        <span className="text-card">{t('add')}</span>
                       </Col>
                       <Col className="text-right">
                         <span className="output-card text-light">
@@ -589,7 +591,7 @@ const AddLiquidity = () => {
                     {activeTab === 'addTab1' && (
                       <Row className="mb-2">
                         <Col xs="auto">
-                          <span className="text-card">Add</span>
+                          <span className="text-card">{t('add')}</span>
                         </Col>
                         <Col className="text-right">
                           <span className="output-card text-light">
@@ -605,7 +607,7 @@ const AddLiquidity = () => {
                     {activeTab === 'addTab2' && (
                       <Row className="mb-2">
                         <Col xs="auto" className="title-card">
-                          <span className="text-card">Fee</span>
+                          <span className="text-card">{t('fee')}</span>
                         </Col>
                         <Col className="text-right">
                           <span className="output-card text-light">
@@ -620,7 +622,7 @@ const AddLiquidity = () => {
 
                     <Row className="">
                       <Col xs="auto" className="title-card">
-                        <span className="subtitle-card">Receive</span>
+                        <span className="subtitle-card">{t('receive')}</span>
                       </Col>
                       <Col className="text-right">
                         <span className="subtitle-card">
@@ -683,7 +685,7 @@ const AddLiquidity = () => {
                       )
                 }
               >
-                Join Pool
+                {t('joinPool')}
               </Button>
             </Col>
             {assetAdd2?.tokenAddress &&

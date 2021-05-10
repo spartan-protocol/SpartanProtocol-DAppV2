@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
 
 import classnames from 'classnames'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
@@ -12,7 +12,7 @@ import { getBondListed } from '../../../store/bond/actions'
 
 const Overview = () => {
   const dispatch = useDispatch()
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
   const pool = usePool()
   const addr = getAddresses()
   const [activeTab, setActiveTab] = useState('overview')
@@ -36,7 +36,7 @@ const Overview = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0">Home</h2>
+              <h2 className="text-title-small mb-0">{t('home')}</h2>
             </div>
           </Col>
         </Row>
@@ -53,7 +53,7 @@ const Overview = () => {
                     setActiveTab('overview')
                   }}
                 >
-                  Overview
+                  {t('overview')}
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -65,7 +65,7 @@ const Overview = () => {
                     setActiveTab('positions')
                   }}
                 >
-                  Positions
+                  {t('positions')}
                 </NavLink>
               </NavItem>
             </Nav>
