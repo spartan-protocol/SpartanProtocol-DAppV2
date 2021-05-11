@@ -6,6 +6,7 @@ import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
+import abiTnFS from '../ABI/TN/FallenSpartans.json'
 import abiTnLoan from '../ABI/TN/SpartanLoan.json'
 import abiTnLoanVault from '../ABI/TN/SpartanLoanVault.json'
 import abiTnMigrate from '../ABI/TN/SPARTANUPGRADE.json'
@@ -26,6 +27,7 @@ import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnDaoVault from '../ABI/MN/DaoVault.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
+import abiMnFS from '../ABI/MN/FallenSpartans.json'
 import abiMnLoan from '../ABI/MN/SpartanLoan.json'
 import abiMnLoanVault from '../ABI/MN/SpartanLoanVault.json'
 import abiMnMigrate from '../ABI/MN/SPARTANUPGRADE.json'
@@ -51,6 +53,7 @@ export const abisTN = {
   dao: abiTnDao.abi,
   daoVault: abiTnDaoVault.abi,
   erc20: abiTnErc20.abi,
+  fs: abiTnFS.abi,
   loan: abiTnLoan.abi,
   loanVault: abiTnLoanVault.abi,
   migrate: abiTnMigrate.abi,
@@ -72,6 +75,7 @@ export const abisMN = {
   dao: abiMnDao.abi,
   daoVault: abiMnDaoVault.abi,
   erc20: abiMnErc20.abi,
+  fs: abiMnFS.abi,
   loan: abiMnLoan.abi,
   loanVault: abiMnLoanVault.abi,
   migrate: abiMnMigrate.abi,
@@ -109,6 +113,7 @@ export const addressesTN = {
   bondVaultv1: '0x7f06678Bf6199CdEF6Cf76C264b94ffA6CD22e40',
   daov2: '0x0dFA75B8e76101aDBf588A4C03653f59DE3D4B23',
   daoVaultv1: '0x2d53adc5e5acc92226FAaFf1a5FcdEf4fEFAA4DD',
+  fallenSpartansv1: '',
   migratev1: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
   poolFactoryv1: '0x47621301afa9FC76d61d6c34f96636D95a788142',
   reservev1: '0xaCb7645eb7784ee421dE0b4C4e2D31bbE29d3bD7',
@@ -121,6 +126,7 @@ export const addressesTN = {
   bondVault: '0x7f06678Bf6199CdEF6Cf76C264b94ffA6CD22e40',
   dao: '0x0dFA75B8e76101aDBf588A4C03653f59DE3D4B23',
   daoVault: '0x2d53adc5e5acc92226FAaFf1a5FcdEf4fEFAA4DD',
+  fallenSpartans: '',
   migrate: '0x197C0fc4Ea92b58f375De66647368862677C95B7',
   poolFactory: '0x47621301afa9FC76d61d6c34f96636D95a788142',
   reserve: '0xaCb7645eb7784ee421dE0b4C4e2D31bbE29d3bD7',
@@ -153,6 +159,7 @@ export const addressesMN = {
   bondVaultv1: '',
   daov2: '',
   daoVaultv1: '',
+  fallenSpartansv1: '',
   migratev1: '',
   poolFactoryv1: '',
   reservev1: '',
@@ -165,6 +172,7 @@ export const addressesMN = {
   bondVault: '',
   dao: '',
   daoVault: '',
+  fallenSpartans: '',
   poolFactory: '',
   migrate: '',
   reserve: '',
@@ -346,7 +354,6 @@ export const changeRpc = (_network) => {
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
 export const changeNetwork = (_network) => {
-  console.log(_network)
   // const tempNetwork = 'testnet' // remove this after mainnet is deployed; have the below 'tempNetworks' all changed to '_network'
   const rpcUrl = changeRpc(_network)
   changeAbis(_network)

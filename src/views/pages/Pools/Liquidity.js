@@ -25,7 +25,6 @@ const Liquidity = () => {
   useEffect(() => {
     if (trigger0 === 0) {
       getData()
-      console.log(network)
     }
     const timer = setTimeout(() => {
       getData()

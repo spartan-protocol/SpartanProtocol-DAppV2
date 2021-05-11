@@ -3,7 +3,7 @@ import * as Types from './types'
 const initialState = {
   globalDetails: [],
   upgrade: {},
-  claimCheck: {},
+  claimCheck: '0',
   claim: {},
   error: null,
   loading: false,
