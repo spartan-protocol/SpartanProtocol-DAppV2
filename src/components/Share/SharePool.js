@@ -21,25 +21,36 @@ const Share = () => {
   const [asset1, setasset1] = useState('')
   const [asset2, setasset2] = useState('')
 
-  useEffect(() => {
-    const assetSelected1 = JSON.parse(
-      window.localStorage?.getItem('assetSelected1'),
-    )
-    const assetSelected2 = JSON.parse(
-      window.localStorage?.getItem('assetSelected2'),
-    )
-    setasset1(assetSelected1)
-    setasset2(assetSelected2)
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
 
-    setUrl(
-      `https://${window.location.host}${location.pathname}?asset1=${
-        assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
-      }${
-        assetSelected2
-          ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
-          : ''
-      }`,
-    )
+  useEffect(() => {
+    if (pool.poolDetails?.length > 0) {
+      const assetSelected1 = tryParse(
+        window.localStorage?.getItem('assetSelected1'),
+      )
+      const assetSelected2 = tryParse(
+        window.localStorage?.getItem('assetSelected2'),
+      )
+      setasset1(assetSelected1)
+      setasset2(assetSelected2)
+
+      setUrl(
+        `https://${window.location.host}${location.pathname}?asset1=${
+          assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
+        }${
+          assetSelected2
+            ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
+            : ''
+        }`,
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     location.pathname,
     location.host,

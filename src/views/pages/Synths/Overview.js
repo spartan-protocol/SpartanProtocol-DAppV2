@@ -69,13 +69,21 @@ const Swap = () => {
     new URLSearchParams(location.search).get(`asset2`),
   )
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
   useEffect(() => {
     const { poolDetails } = pool
 
     const getAssetDetails = () => {
       if (poolDetails?.length > 0) {
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
         if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
           ;[asset1] = poolDetails.filter(

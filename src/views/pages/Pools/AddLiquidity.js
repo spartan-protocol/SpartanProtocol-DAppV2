@@ -62,6 +62,15 @@ const AddLiquidity = () => {
     new URLSearchParams(location.search).get(`asset1`),
   )
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      console.log('test')
+      return pool.poolDetails[0]
+    }
+  }
+
   useEffect(() => {
     const { poolDetails } = pool
     const getAssetDetails = () => {
@@ -70,9 +79,9 @@ const AddLiquidity = () => {
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'pool')
 
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
-        let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+        let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
 
         if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
           ;[asset1] = poolDetails.filter(
@@ -80,9 +89,11 @@ const AddLiquidity = () => {
           )
           setAssetParam1('')
         }
-
+        console.log(asset1)
         asset1 =
-          asset1 && asset1.tokenAddress !== addr.sparta
+          asset1 &&
+          asset1.tokenAddress !== addr.sparta &&
+          pool.poolDetails.find((x) => x.address === asset1.address) > 0
             ? asset1
             : { tokenAddress: addr.bnb }
         asset2 = { tokenAddress: addr.sparta }
@@ -106,10 +117,14 @@ const AddLiquidity = () => {
         window.localStorage.setItem('assetType1', 'token')
         window.localStorage.setItem('assetType3', 'pool')
 
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-        let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+        let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
 
-        asset1 = asset1 || { tokenAddress: addr.bnb }
+        asset1 =
+          asset1 &&
+          pool.poolDetails.find((x) => x.address === asset1.address) > 0
+            ? asset1
+            : { tokenAddress: addr.bnb }
         asset3 = asset1.tokenAddress !== addr.sparta ? asset1 : asset3
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)

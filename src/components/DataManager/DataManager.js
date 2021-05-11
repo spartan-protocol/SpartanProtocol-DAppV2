@@ -18,7 +18,7 @@ import {
   getSpartaPrice,
   getEventArray,
 } from '../../store/web3'
-import { changeNetwork } from '../../utils/web3'
+import { changeNetwork, getNetwork } from '../../utils/web3'
 import {
   getBondContract,
   getDaoContract,
@@ -32,8 +32,17 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const pool = usePool()
   const wallet = useWallet()
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return getNetwork()
+    }
+  }
+
   const [prevNetwork, setPrevNetwork] = useState(
-    JSON.parse(window.localStorage.getItem('network')),
+    tryParse(window.localStorage.getItem('network')),
   )
 
   /**
@@ -81,10 +90,9 @@ const DataManager = () => {
   useEffect(() => {
     const checkArrays = () => {
       if (
-        JSON.parse(window.localStorage.getItem('network')).net !==
-        prevNetwork.net
+        tryParse(window.localStorage.getItem('network')).net !== prevNetwork.net
       ) {
-        setPrevNetwork(JSON.parse(window.localStorage.getItem('network')))
+        setPrevNetwork(tryParse(window.localStorage.getItem('network')))
         dispatch(getListedTokens()) // TOKEN ARRAY
         dispatch(getCuratedPools()) // CURATED ARRAY
       }

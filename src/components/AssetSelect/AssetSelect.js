@@ -71,8 +71,16 @@ const AssetSelect = (props) => {
     window.localStorage.setItem(`assetType${props.priority}`, asset.type)
   }
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
   const [selectedItem, setSelectedItem] = useState(
-    JSON.parse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+    tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
   )
   const [selectedType, setSelectedType] = useState(
     window.localStorage.getItem(`assetType${props.priority}`),
@@ -80,7 +88,7 @@ const AssetSelect = (props) => {
 
   useEffect(() => {
     setSelectedItem(
-      JSON.parse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+      tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
     )
     setSelectedType(window.localStorage.getItem(`assetType${props.priority}`))
   }, [

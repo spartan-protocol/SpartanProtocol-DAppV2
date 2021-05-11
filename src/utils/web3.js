@@ -148,29 +148,29 @@ export const addressesMN = {
   routerv2c: '0x6239891FC4030dc050fB9F7083aa68a2E4Fe426D',
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
   // OLD ADDRESSES SPV2
-  bondv4: addressesTN.bondv4,
-  bondVaultv1: addressesTN.bondVaultv1,
-  daov2: addressesTN.daov2,
-  daoVaultv1: addressesTN.daoVaultv1,
-  migratev1: addressesTN.migratev1,
-  poolFactoryv1: addressesTN.poolFactoryv1,
-  reservev1: addressesTN.reservev1,
-  routerv3: addressesTN.routerv3,
-  synthFactoryv1: addressesTN.synthFactoryv1,
-  synthVaultv1: addressesTN.synthVaultv1,
-  utilsv2: addressesTN.utilsv2,
+  bondv4: '',
+  bondVaultv1: '',
+  daov2: '',
+  daoVaultv1: '',
+  migratev1: '',
+  poolFactoryv1: '',
+  reservev1: '',
+  routerv3: '',
+  synthFactoryv1: '',
+  synthVaultv1: '',
+  utilsv2: '',
   // CURRENT ADDRESSES
-  bond: addressesTN.bond,
-  bondVault: addressesTN.bondVault,
-  dao: addressesTN.dao,
-  daoVault: addressesTN.daoVault,
-  poolFactory: addressesTN.poolFactory,
-  migrate: addressesTN.migrate,
-  reserve: addressesTN.reserve,
-  router: addressesTN.router,
-  synthFactory: addressesTN.synthFactory,
-  synthVault: addressesTN.synthVault,
-  utils: addressesTN.utils,
+  bond: '',
+  bondVault: '',
+  dao: '',
+  daoVault: '',
+  poolFactory: '',
+  migrate: '',
+  reserve: '',
+  router: '',
+  synthFactory: '',
+  synthVault: '',
+  utils: '',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -284,13 +284,21 @@ export const changeAddresses = (_network) => {
   return addresses
 }
 
+const tryParse = (data) => {
+  try {
+    return JSON.parse(data)
+  } catch (e) {
+    return false
+  }
+}
+
 /**
  * Check localStorage for addresses and set default if missing
  * @returns {Object} Relevant list of addresses
  */
 export const getAddresses = () => {
-  const addresses = JSON.parse(window.localStorage.getItem('addresses'))
-    ? JSON.parse(window.localStorage.getItem('addresses'))
+  const addresses = tryParse(window.localStorage.getItem('addresses'))
+    ? tryParse(window.localStorage.getItem('addresses'))
     : changeAddresses('testnet') // Change this to 'mainnet' after mainnet is deployed
   return addresses
 }
@@ -311,8 +319,8 @@ export const changeAbis = (_network) => {
  * @returns {Object} Relevant list of ABIs
  */
 export const getAbis = () => {
-  const abis = JSON.parse(window.localStorage.getItem('abis'))
-    ? JSON.parse(window.localStorage.getItem('abis'))
+  const abis = tryParse(window.localStorage.getItem('abis'))
+    ? tryParse(window.localStorage.getItem('abis'))
     : changeAbis('testnet') // Change this to 'mainnet' after mainnet is deployed
   return abis
 }
@@ -353,8 +361,8 @@ export const changeNetwork = (_network) => {
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
 export const getNetwork = () => {
-  const network = JSON.parse(window.localStorage.getItem('network'))
-    ? JSON.parse(window.localStorage.getItem('network'))
+  const network = tryParse(window.localStorage.getItem('network'))
+    ? tryParse(window.localStorage.getItem('network'))
     : changeNetwork('testnet') // Change this to 'mainnet' after mainnet is deployed
   return network
 }
