@@ -94,5 +94,9 @@
   "mint": "Mint",
   "bondInfo": "The amount of SPARTA remaining in the Bond+Mint program. This can be topped up by 2.5M SPARTA by proposals in the DAO when it runs out.",
   "recentFees": "Recent Fee",
-  "recentDivis": "Recent Divis"
+  "recentDivis": "Recent Divis",
+  "sell": "Sell",
+  "buy": "Buy",
+  "slipFeeInfo": "The slip fee being injected into the pool with this txn to reward liquidity providers.",
+  "dividendPerYear": "Dividend per year"
 }
