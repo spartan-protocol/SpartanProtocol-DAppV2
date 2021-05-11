@@ -2,7 +2,8 @@ import * as Types from './types'
 
 const initialState = {
   globalDetails: [],
-  adjustedClaimRate: {},
+  upgrade: {},
+  claimCheck: {},
   claim: {},
   error: null,
   loading: false,
@@ -19,16 +20,25 @@ export const spartaReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.SPARTA_ADJUSTED_CLAIM_RATE: {
+    case Types.SPARTA_UPGRADE: {
       return {
         ...state,
-        adjustedClaimRate: action.payload,
+        upgrade: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.SPARTA_CLAIM: {
+    case Types.FALLENSPARTA_CHECK: {
+      return {
+        ...state,
+        claimCheck: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.FALLENSPARTA_CLAIM: {
       return {
         ...state,
         claim: action.payload,

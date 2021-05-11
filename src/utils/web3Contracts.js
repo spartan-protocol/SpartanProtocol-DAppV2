@@ -141,9 +141,20 @@ export const getRouterContract = () => {
  * @returns {uint} contract
  */
 export const getSpartaContract = () => {
-  const abiBase = getAbis().base
+  const abiBase = getAbis().sparta
   const provider = getWalletProvider()
   const contract = new ethers.Contract(addr.sparta, abiBase, provider)
+  return contract
+}
+
+/**
+ * Get the current base/SPARTA contract with signer/provider injected
+ * @returns {uint} contract
+ */
+export const getFallenSpartansContract = () => {
+  const abiFS = getAbis().fallenSpartans
+  const provider = getWalletProvider()
+  const contract = new ethers.Contract(addr.fallenSpartans, abiFS, provider)
   return contract
 }
 

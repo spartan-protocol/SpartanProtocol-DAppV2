@@ -1,4 +1,9 @@
 export { useSparta } from './selector'
 export { spartaReducer } from './reducer'
 
-export { getAdjustedClaimRate, getSpartaGlobalDetails, claim } from './actions'
+export {
+  getSpartaGlobalDetails,
+  spartaUpgrade,
+  fallenSpartansCheck,
+  fallenSpartansClaim,
+} from './actions'

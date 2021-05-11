@@ -1,7 +1,6 @@
 import { ethers } from 'ethers'
 
 // Testnet ABI Imports
-import abiTnBase from '../ABI/TN/Base.json'
 import abiTnBond from '../ABI/TN/Bond.json'
 import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
@@ -14,6 +13,7 @@ import abiTnPool from '../ABI/TN/Pool.json'
 import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
 import abiTnReserve from '../ABI/TN/Reserve.json'
 import abiTnRouter from '../ABI/TN/Router.json'
+import abiTnSparta from '../ABI/TN/Sparta.json'
 import abiTnSynth from '../ABI/TN/Synth.json'
 import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
 import abiTnSynthVault from '../ABI/TN/SynthVault.json'
@@ -21,7 +21,6 @@ import abiTnUtils from '../ABI/TN/Utils.json'
 import abiTnWbnb from '../ABI/TN/WBNB.json'
 
 // Mainnet ABI Imports
-import abiMnBase from '../ABI/MN/Base.json'
 import abiMnBond from '../ABI/MN/Bond.json'
 import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
@@ -34,6 +33,7 @@ import abiMnPool from '../ABI/MN/Pool.json'
 import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
 import abiMnReserve from '../ABI/MN/Reserve.json'
 import abiMnRouter from '../ABI/MN/Router.json'
+import abiMnSparta from '../ABI/MN/Sparta.json'
 import abiMnSynth from '../ABI/MN/Synth.json'
 import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnSynthVault from '../ABI/MN/SynthVault.json'
@@ -46,7 +46,6 @@ import abiMnWbnb from '../ABI/MN/WBNB.json'
 // import daiIcon from '../assets/tokens/DAI.png'
 
 export const abisTN = {
-  base: abiTnBase.abi,
   bond: abiTnBond.abi,
   bondVault: abiTnBondVault.abi,
   dao: abiTnDao.abi,
@@ -59,6 +58,7 @@ export const abisTN = {
   poolFactory: abiTnPoolFactory.abi,
   reserve: abiTnReserve.abi,
   router: abiTnRouter.abi,
+  sparta: abiTnSparta.abi,
   synth: abiTnSynth.abi,
   synthFactory: abiTnSynthFactory.abi,
   synthVault: abiTnSynthVault.abi,
@@ -67,7 +67,6 @@ export const abisTN = {
 }
 
 export const abisMN = {
-  base: abiMnBase.abi,
   bond: abiMnBond.abi,
   bondVault: abiMnBondVault.abi,
   dao: abiMnDao.abi,
@@ -80,6 +79,7 @@ export const abisMN = {
   poolFactory: abiMnPoolFactory.abi,
   reserve: abiMnReserve.abi,
   router: abiMnRouter.abi,
+  sparta: abiMnSparta.abi,
   synth: abiMnSynth.abi,
   synthFactory: abiMnSynthFactory.abi,
   synthVault: abiMnSynthVault.abi,

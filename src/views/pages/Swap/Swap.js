@@ -695,7 +695,7 @@ const Swap = () => {
             </div>
           </Col>
         </Row>
-        {network.chainId !== 97 && (
+        {network.chainId === 97 && (
           <>
             {pool.poolDetails?.length > 0 && (
               <>
