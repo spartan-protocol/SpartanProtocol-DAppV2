@@ -37,17 +37,15 @@ const Bond = () => {
                 pool.poolDetails
                   .filter((asset) => asset.bonded > 0)
                   .map((asset) => (
-                    <>
-                      <Row key={asset.address} className="my-1">
-                        <Col xs="auto" className="text-card">
-                          Remaining
-                        </Col>
-                        <Col className="text-right output-card">
-                          {formatFromWei(asset.bonded)}{' '}
-                          {getToken(asset.tokenAddress)?.symbol}p
-                        </Col>
-                      </Row>
-                    </>
+                    <Row key={asset.address} className="my-1">
+                      <Col xs="auto" className="text-card">
+                        Remaining
+                      </Col>
+                      <Col className="text-right output-card">
+                        {formatFromWei(asset.bonded)}{' '}
+                        {getToken(asset.tokenAddress)?.symbol}p
+                      </Col>
+                    </Row>
                   ))}
               {pool.poolDetails.filter((asset) => asset.bonded > 0).length <=
                 0 && (
