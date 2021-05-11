@@ -127,11 +127,17 @@ const Swap = () => {
           }
         }
 
-        if (!asset1) {
+        if (
+          !asset1 ||
+          !pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
+        ) {
           asset1 = { tokenAddress: addr.sparta }
         }
 
-        if (!asset2) {
+        if (
+          !asset2 ||
+          !pool.poolDetails.find((x) => x.tokenAddress === asset2.tokenAddress)
+        ) {
           asset2 = { tokenAddress: addr.bnb }
         }
 

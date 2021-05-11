@@ -79,7 +79,7 @@ const RemoveLiquidity = () => {
         asset1 =
           asset1 &&
           asset1.tokenAddress !== addr.sparta &&
-          pool.poolDetails.find((x) => x.address === asset1.address)
+          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset2 =
@@ -109,13 +109,14 @@ const RemoveLiquidity = () => {
         asset1 =
           asset1 &&
           asset1.tokenAddress !== addr.sparta &&
-          pool.poolDetails.find((x) => x.address === asset1.address) > 0
+          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset2 =
-          pool.poolDetails.find((x) => x.address === asset2.address) > 0
-            ? asset2
-            : { tokenAddress: addr.sparta }
+        asset2 = pool.poolDetails.find(
+          (x) => x.tokenAddress === asset2.tokenAddress,
+        )
+          ? asset2
+          : { tokenAddress: addr.sparta }
         asset2 =
           asset2.tokenAddress === asset1.tokenAddress ||
           asset2.tokenAddress === addr.sparta
