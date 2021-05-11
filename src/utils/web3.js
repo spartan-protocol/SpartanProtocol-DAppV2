@@ -131,7 +131,8 @@ export const addressesTN = {
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
-  sparta: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
+  oldSparta: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
+  sparta: '0xd055ADFdD53963F578A929eaA440DBED95407472',
 }
 
 // List of BSC Mainnet Addresses
@@ -174,6 +175,7 @@ export const addressesMN = {
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  oldSparta: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
   sparta: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
 }
 
@@ -257,23 +259,6 @@ export const formatShortString = (longString) => {
 }
 
 /**
- * Filter finalArray (or any array) to the scope of the assetAddress
- * @param {string} assetAddress
- * @param {string} finalArray
- * @returns {Object} item from finalArray
- */
-export const getItemFromArray = (asset, finalArray) => {
-  let arrayItem = finalArray.filter((item) => item.symbol === 'SPARTA')
-  if (finalArray.find((item) => item.tokenAddress === asset.tokenAddress)) {
-    arrayItem = finalArray.filter(
-      (item) => item.tokenAddress === asset.tokenAddress,
-    )
-  }
-  ;[arrayItem] = arrayItem
-  return arrayItem
-}
-
-/**
  * Trigger change between Addresses
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} Relevant list of addresses
@@ -301,6 +286,24 @@ export const getAddresses = () => {
     ? tryParse(window.localStorage.getItem('addresses'))
     : changeAddresses('testnet') // Change this to 'mainnet' after mainnet is deployed
   return addresses
+}
+
+/**
+ * Filter finalArray (or any array) to the scope of the assetAddress
+ * @param {string} assetAddress
+ * @param {string} finalArray
+ * @returns {Object} item from finalArray
+ */
+export const getItemFromArray = (asset, finalArray) => {
+  const addr = getAddresses()
+  let arrayItem = finalArray.filter((item) => item.tokenAddress === addr.sparta)
+  if (finalArray.find((item) => item.tokenAddress === asset.tokenAddress)) {
+    arrayItem = finalArray.filter(
+      (item) => item.tokenAddress === asset.tokenAddress,
+    )
+  }
+  ;[arrayItem] = arrayItem
+  return arrayItem
 }
 
 /**

@@ -89,7 +89,6 @@ const AddLiquidity = () => {
           )
           setAssetParam1('')
         }
-        console.log(asset1)
         asset1 =
           asset1 &&
           asset1.tokenAddress !== addr.sparta &&
@@ -230,7 +229,7 @@ const AddLiquidity = () => {
         convertToWei(BN(addInput1?.value).div(2)),
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
-        assetAdd1.symbol !== 'SPARTA',
+        assetAdd1.tokenAddress !== addr.sparta,
       )
       return swapFee
     }
@@ -407,7 +406,7 @@ const AddLiquidity = () => {
                     <AssetSelect
                       priority="1"
                       filter={['token']}
-                      blackList={[activeTab === 'addTab1' ? addr.sparta : '']}
+                      blackList={activeTab === 'addTab1' ? [addr.sparta] : []}
                     />
                   </Col>
                   <Col className="text-right">

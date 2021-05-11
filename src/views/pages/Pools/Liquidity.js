@@ -112,6 +112,21 @@ const Liquidity = () => {
             </Row>
           </>
         )}
+        {network.chainId !== 97 && (
+          <Row className="row-480">
+            <Col xs="12">
+              <h2>This feature is not available on this network</h2>
+              <h4>
+                Click the wallet icon in the header bar and select `Change
+                Wallet` to change between BSC Mainnet & TestNet
+              </h4>
+              <h5>
+                Ensure your MetaMask/Binance Wallet etc also has the same
+                network selected
+              </h5>
+            </Col>
+          </Row>
+        )}
       </div>
     </>
   )

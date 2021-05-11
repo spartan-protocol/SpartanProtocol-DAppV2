@@ -108,7 +108,9 @@ const AssetSelect = (props) => {
     let finalArray = []
     const getArray = () => {
       if (pool.poolDetails) {
-        let tempArray = pool.poolDetails
+        let tempArray = pool.poolDetails.filter(
+          (asset) => asset.tokenAddress !== addr.oldSparta,
+        )
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
