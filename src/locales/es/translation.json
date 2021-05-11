@@ -15,7 +15,7 @@
     "lock":"Bloquear",
     "lockEarn":"Lock + Gane",
     "locked":"bloqueado",
-    "output":"Producción",
+    "output":"Importe",
     "pending":"Pendiente",
     "pool":"Fondo",
     "pools":"Fondos",
@@ -95,5 +95,9 @@
     "mint": "Acuñar",
     "bondInfo": "La cantidad de SPARTA que queda por depositar y acuñar en el programa. Esto puede ser limitado a 2,5M SPARTA por pruesta en la votación si se hace efectiva",
     "recentFees": "Comisiones recientes",
-    "recentDivis": "Dividendos recientes"
+    "recentDivis": "Dividendos recientes",
+    "sell": "Vender",
+    "buy": "Comprar",
+    "slipFeeInfo": "La tarifa por esta transacción se injecta en el fondo de activo para recompensar a los aportadores de liquidez.",
+    "dividendPerYear": "Dividendo por año"
 }

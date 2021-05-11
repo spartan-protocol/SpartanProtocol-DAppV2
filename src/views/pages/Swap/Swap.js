@@ -679,7 +679,7 @@ const Swap = () => {
                       >
                         <Row>
                           <Col xs="4">
-                            <div className="text-sm-label">Sell</div>
+                            <div className="text-sm-label">{t('sell')}</div>
                           </Col>
                           <Col xs="8" className="text-right">
                             <div
@@ -711,7 +711,7 @@ const Swap = () => {
                               <Input
                                 className="text-right h-100 ml-0 p-2"
                                 type="text"
-                                placeholder="Sell..."
+                                placeholder={`${t('sell')}...`}
                                 id="swapInput1"
                                 inputMode="decimal"
                                 pattern="^[0-9]*[.,]?[0-9]*$"
@@ -760,11 +760,12 @@ const Swap = () => {
                       >
                         <Row className="my-2">
                           <Col xs="4" className="">
-                            <div className="text-sm-label">Buy</div>
+                            <div className="text-sm-label">{t('buy')}</div>
                           </Col>
                           <Col xs="8" className="text-right">
                             <div className="text-sm-label">
-                              Balance{': '}
+                              {t('balance')}
+                              {': '}
                               {pool.poolDetails &&
                                 formatFromWei(getBalance(2), 4)}
                             </div>
@@ -787,7 +788,7 @@ const Swap = () => {
                               <Input
                                 className="text-right h-100 ml-0 p-2"
                                 type="text"
-                                placeholder="Buy..."
+                                placeholder={`${t('buy')}...`}
                                 id="swapInput2"
                                 readOnly
                               />
@@ -822,7 +823,7 @@ const Swap = () => {
                     <Card className="card-body mb-1">
                       <Row className="mb-2">
                         <Col xs="auto">
-                          <div className="text-card">Sell</div>
+                          <div className="text-card">{t('sell')}</div>
                         </Col>
                         <Col className="text-right">
                           <span className="output-card text-light">
@@ -847,8 +848,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipFee"
                             >
-                              The slip fee being injected into the pool with
-                              this txn to reward liquidity providers.
+                              {t('slipFeeInfo')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -864,7 +864,7 @@ const Swap = () => {
 
                       <Row className="mb-2">
                         <Col xs="auto">
-                          <div className="subtitle-card">Receive</div>
+                          <div className="subtitle-card">{t('receive')}</div>
                         </Col>
                         <Col className="text-right">
                           <div className="subtitle-card">
@@ -908,9 +908,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipZapFee"
                             >
-                              {t(
-                                'The slip fee being injected into the pool to reward the liquidity providers',
-                              )}
+                              {t('slipFeeInfo')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -961,7 +959,7 @@ const Swap = () => {
                       <Row className="mb-2">
                         <Col xs="auto">
                           <div className="text-card">
-                            Fee{' '}
+                            {t('fee')}{' '}
                             <i
                               className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                               id="tooltipSynthFee"
@@ -971,8 +969,7 @@ const Swap = () => {
                               placement="right"
                               target="tooltipSynthFee"
                             >
-                              The slip fee being injected into the pool to
-                              reward the liquidity providers
+                              {t('slipFeeInfo')}
                             </UncontrolledTooltip>
                           </div>
                         </Col>
@@ -999,7 +996,7 @@ const Swap = () => {
 
                       <Row className="mb-2">
                         <Col xs="auto">
-                          <div className="subtitle-card">Output</div>
+                          <div className="subtitle-card">{t('output')}</div>
                         </Col>
                         <Col className="text-right">
                           <div className="subtitle-card">
@@ -1071,7 +1068,7 @@ const Swap = () => {
                           }
                           block
                         >
-                          Sell {assetSwap1?.symbol}
+                          {t('sell')} {assetSwap1?.symbol}
                         </Button>
                       </Col>
                     )}
@@ -1097,7 +1094,8 @@ const Swap = () => {
                           }
                           block
                         >
-                          Sell {getToken(assetSwap1.tokenAddress)?.symbol}p
+                          {t('sell')}{' '}
+                          {getToken(assetSwap1.tokenAddress)?.symbol}p
                         </Button>
                       </Col>
                     )}
@@ -1132,7 +1130,8 @@ const Swap = () => {
                             }
                             block
                           >
-                            Sell {getToken(assetSwap1.tokenAddress)?.symbol}
+                            {t('sell')}{' '}
+                            {getToken(assetSwap1.tokenAddress)?.symbol}
                           </Button>
                         </Col>
                       </>
@@ -1160,7 +1159,8 @@ const Swap = () => {
                           }
                           block
                         >
-                          Sell {getToken(assetSwap1.tokenAddress)?.symbol}s
+                          {t('sell')}{' '}
+                          {getToken(assetSwap1.tokenAddress)?.symbol}s
                         </Button>
                       </Col>
                     )}
