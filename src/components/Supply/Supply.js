@@ -171,7 +171,7 @@ const Supply = () => {
                 <Collapse role="tabpanel" isOpen={openedCollapseThree}>
                   <Row className="card-body text-center">
                     {addrNames.map((c) => (
-                      <Col xs={12} key={c} className="text-left mb-4">
+                      <Col key={c} xs={12} className="text-left mb-4">
                         <span>
                           <div className="text-card">{t(c)}</div>{' '}
                           {t('viewBscScan')}
