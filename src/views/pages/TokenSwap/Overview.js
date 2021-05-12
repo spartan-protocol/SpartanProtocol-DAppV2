@@ -1,19 +1,24 @@
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useState, useEffect } from 'react'
-// import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Row, Col } from 'reactstrap'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { usePool } from '../../../store/pool'
-// import { fallenSpartansCheck } from '../../../store/sparta/actions'
+import {
+  fallenSpartansCheck,
+  getSpartaGlobalDetails,
+} from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
 
 const TokenSwap = () => {
   const pool = usePool()
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
+  const wallet = useWallet()
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    // UNCOMMENT BELOW ONCE FS CONTRACT IS DEPLOYED
-    // dispatch(fallenSpartansCheck())
+    dispatch(fallenSpartansCheck(wallet.account))
+    dispatch(getSpartaGlobalDetails())
   }
   useEffect(() => {
     if (trigger0 === 0) {

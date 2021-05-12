@@ -13,6 +13,7 @@ export const spartaLoading = () => ({
 export const getSpartaGlobalDetails = () => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getSpartaContract()
+  const fsContract = getFallenSpartansContract()
 
   try {
     let awaitArray = [
@@ -22,6 +23,7 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
       // contract.callStatic.emissionCurve(),
       contract.callStatic.secondsPerEra(),
       // contract.callStatic.nextEraTime(),
+      fsContract.callStatic.genesis(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
@@ -31,6 +33,7 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
       // emissionCurve: awaitArray[],
       secondsPerEra: awaitArray[1].toString(),
       // nextEraTime: awaitArray[],
+      fsGenesis: awaitArray[2].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
@@ -67,10 +70,8 @@ export const fallenSpartansCheck = (walletAddr) => async (dispatch) => {
   const contract = getFallenSpartansContract()
 
   try {
-    const claimCheck = await contract.callStatic.mapFallenSpartan_toClaim(
-      walletAddr,
-    )
-    dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck))
+    const claimCheck = await contract.callStatic.getClaim(walletAddr)
+    dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck.toString()))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }

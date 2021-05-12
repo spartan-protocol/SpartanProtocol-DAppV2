@@ -42,7 +42,7 @@ const RecentTxns = () => {
         <Table borderless className="m-3">
           <thead className="text-primary">
             <tr>
-              <th>Block #</th>
+              <th>Block</th>
               <th>Event</th>
               <th>Input</th>
               <th>OutPut</th>

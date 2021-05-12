@@ -9,6 +9,7 @@ import { usePool } from '../../../store/pool'
 import { getAddresses, getNetwork } from '../../../utils/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getBondListed } from '../../../store/bond/actions'
+import WrongNetwork from '../../../components/Common/WrongNetwork'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -107,21 +108,7 @@ const Overview = () => {
             </Row>
           </>
         )}
-        {network.chainId !== 97 && (
-          <Row className="row-480">
-            <Col xs="12">
-              <h2>This feature is not available on this network</h2>
-              <h4>
-                Click the wallet icon in the header bar and select `Change
-                Wallet` to change between BSC Mainnet & TestNet
-              </h4>
-              <h5>
-                Ensure your MetaMask/Binance Wallet etc also has the same
-                network selected
-              </h5>
-            </Col>
-          </Row>
-        )}
+        {network.chainId !== 97 && <WrongNetwork />}
       </div>
     </>
   )

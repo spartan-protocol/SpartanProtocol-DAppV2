@@ -148,7 +148,7 @@ export const getSpartaContract = () => {
 }
 
 /**
- * Get the current base/SPARTA contract with signer/provider injected
+ * Get the current fallenSpartans contract with signer/provider injected
  * @returns {uint} contract
  */
 export const getFallenSpartansContract = () => {

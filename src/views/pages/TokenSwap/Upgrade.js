@@ -2,20 +2,35 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Card, Row, Col } from 'reactstrap'
-import { formatFromWei } from '../../../utils/bigNumber'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
 import { getAddresses } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
-import { spartaUpgrade } from '../../../store/sparta/actions'
+import {
+  fallenSpartansClaim,
+  spartaUpgrade,
+} from '../../../store/sparta/actions'
 
 const Upgrade = () => {
   const addr = getAddresses()
   const pool = usePool()
   const dispatch = useDispatch()
   const sparta = useSparta()
+  const wallet = useWallet()
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
+  const formatDate = (unixTime) => {
+    const date = new Date(unixTime * 1000)
+    return date.toLocaleDateString()
+  }
+
+  const getExpiry = () => {
+    const expiry = BN(sparta.fsGenesis).plus(15552000)
+    return expiry
+  }
 
   return (
     <>
@@ -70,20 +85,24 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 Claimable
               </Col>
-              <Col className="text-right output-card">###.## SPARTAv2</Col>
+              <Col className="text-right output-card">
+                {formatFromWei(sparta.claimCheck)} SPARTAv2
+              </Col>
             </Row>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
                 Expiry
               </Col>
-              <Col className="text-right output-card">DD/MM/YYYY</Col>
+              <Col className="text-right output-card">
+                {formatDate(getExpiry())}
+              </Col>
             </Row>
             <Row className="card-body py-1 text-center">
               <Col xs="12" className="p-0 py-1">
                 <Button
                   className="btn-sm btn-primary h-100 w-100"
-                  onClick={() => console.log('hello shazzy')}
-                  disabled={sparta?.claimCheck <= 0}
+                  onClick={() => dispatch(fallenSpartansClaim(wallet.account))}
+                  // disabled={sparta?.claimCheck <= 0}
                 >
                   Claim SPARTA
                 </Button>
