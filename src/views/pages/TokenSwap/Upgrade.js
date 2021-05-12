@@ -104,7 +104,7 @@ const Upgrade = () => {
         >
           <Col>
             <h3 className="mb-0">Claim SPARTA</h3>
-            <h4>From Pool Attack</h4>
+            <h4>From V1 LP Drain</h4>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
                 Claimable
@@ -158,17 +158,6 @@ const Upgrade = () => {
               </Col>
               <Col className="text-right output-card">
                 {formatFromWei(newSpartaBalance)} SPARTAv2
-              </Col>
-            </Row>
-            <Row className="card-body py-1 text-center">
-              <Col xs="12" className="p-0 py-1">
-                <Button
-                  className="btn-sm btn-primary h-100 w-100"
-                  onClick={() => console.log('hello shazzy')}
-                  // disabled={sparta?.claimCheck <= 0}
-                >
-                  Claim SPARTA
-                </Button>
               </Col>
             </Row>
           </Col>
