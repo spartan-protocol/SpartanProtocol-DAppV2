@@ -2,8 +2,6 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Row, Col } from 'reactstrap'
-import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { usePool } from '../../../store/pool'
 import {
   fallenSpartansCheck,
   getSpartaGlobalDetails,
@@ -11,7 +9,6 @@ import {
 import Upgrade from './Upgrade'
 
 const TokenSwap = () => {
-  const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWallet()
 
@@ -41,8 +38,7 @@ const TokenSwap = () => {
           </Col>
         </Row>
         <Row className="row-480">
-          {pool.poolDetails?.length > 0 && <Upgrade />}
-          {pool.poolDetails?.length <= 0 && <HelmetLoading />}
+          <Upgrade />
         </Row>
       </div>
     </>
