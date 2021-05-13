@@ -443,21 +443,21 @@ const AddLiquidity = () => {
                 </Row>
               </Card>
 
-              <Row className="my-n2">
+              <Row style={{ height: '1px' }}>
                 {activeTab === 'addTab1' && (
                   <img
                     src={plusIcon}
                     alt="plusicon"
-                    className="mx-auto z-index my-n2"
-                    style={{ height: '35px' }}
+                    className="mx-auto z-index position-relative"
+                    style={{ height: '35px', top: '-19px' }}
                   />
                 )}
                 {activeTab === 'addTab2' && (
                   <img
                     src={swapIcon}
                     alt="swapaddicon"
-                    className="mx-auto z-index my-n2"
-                    style={{ height: '35px' }}
+                    className="mx-auto z-index position-relative"
+                    style={{ height: '35px', top: '-19px' }}
                   />
                 )}
               </Row>

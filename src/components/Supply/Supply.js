@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -12,12 +12,12 @@ import {
   Progress,
   Collapse,
 } from 'reactstrap'
-import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
+// import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
 import { usePool } from '../../store/pool/selector'
 import { useWeb3 } from '../../store/web3'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
-import { getAddresses } from '../../utils/web3'
+import { getAddresses, getNetwork } from '../../utils/web3'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -31,6 +31,7 @@ const Supply = () => {
     'bondVault',
     'dao',
     'daoVault',
+    'fallenSpartans',
     'migrate',
     'poolFactory',
     'reserve',
@@ -40,16 +41,33 @@ const Supply = () => {
     'utils',
   ]
 
+  const [network, setnetwork] = useState(getNetwork())
+  const [trigger0, settrigger0] = useState(0)
+  const getNet = () => {
+    setnetwork(getNetwork())
+  }
+  useEffect(() => {
+    if (trigger0 === 0) {
+      getNet()
+    }
+    const timer = setTimeout(() => {
+      getNet()
+      settrigger0(trigger0 + 1)
+    }, 2000)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger0])
+
   return (
     <>
       <Button
         id="PopoverClick"
         type="Button"
-        className="mx-2 btn btn-default px-4 py-2"
+        className="mx-2 btn-header px-4"
         href="#"
       >
-        <img className="mr-1" src={IconLogo} height="25px" alt="share icon" /> $
-        {formatFromUnits(web3.spartaPrice, 2)}
+        {/* <img className="mr-1" src={IconLogo} height="25px" alt="share icon" /> */}
+        ${formatFromUnits(web3.spartaPrice, 2)}
       </Button>
 
       <UncontrolledPopover
@@ -60,77 +78,81 @@ const Supply = () => {
       >
         <PopoverHeader className="mt-2">Tokenomics</PopoverHeader>
         <PopoverBody>
-          <Row>
-            <Col xs="6" className="popover-text mb-4">
-              {t('marketcap')}
-            </Col>
-            <Col xs="6 mb-2" className="popover-text mb-4">
-              $
-              {formatFromWei(
-                BN(
-                  pool.tokenDetails?.filter(
-                    (asset) => asset.address === addr.sparta,
-                  )[0]?.totalSupply,
-                ).times(web3.spartaPrice),
-                0,
-              )}
-            </Col>
+          {network.chainId === 97 && (
+            <>
+              <Row>
+                <Col xs="6" className="popover-text mb-4">
+                  {t('marketcap')}
+                </Col>
+                <Col xs="6 mb-2" className="popover-text mb-4">
+                  $
+                  {formatFromWei(
+                    BN(
+                      pool.tokenDetails?.filter(
+                        (asset) => asset.address === addr.sparta,
+                      )[0]?.totalSupply,
+                    ).times(web3.spartaPrice),
+                    0,
+                  )}
+                </Col>
 
-            <Col xs="6 mb-2" className="popover-text">
-              {`${t('circulatingSupply')}`}
-            </Col>
-            <Col xs="6 mb-2" className="popover-text">
-              {formatFromWei(
-                pool.tokenDetails?.filter(
-                  (asset) => asset.address === addr.sparta,
-                )[0]?.totalSupply,
-                0,
-              )}
-            </Col>
-            <Col xs="12 mb-2">
-              <div className="progress-container progress-info">
-                <span className="progress-badge" />
-                <Progress max="100" value="60" />
-              </div>
-            </Col>
+                <Col xs="6 mb-2" className="popover-text">
+                  {`${t('circulatingSupply')}`}
+                </Col>
+                <Col xs="6 mb-2" className="popover-text">
+                  {formatFromWei(
+                    pool.tokenDetails?.filter(
+                      (asset) => asset.address === addr.sparta,
+                    )[0]?.totalSupply,
+                    0,
+                  )}
+                </Col>
+                <Col xs="12 mb-2">
+                  <div className="progress-container progress-info">
+                    <span className="progress-badge" />
+                    <Progress max="100" value="60" />
+                  </div>
+                </Col>
 
-            <Col xs="6" className="popover-text mb-2">
-              {t('totalSupply')}
-            </Col>
-            <Col xs="6" className="popover-text mb-2">
-              {formatFromWei(
-                pool.tokenDetails?.filter(
-                  (asset) => asset.address === addr.sparta,
-                )[0]?.totalSupply,
-                0,
-              )}
-            </Col>
+                <Col xs="6" className="popover-text mb-2">
+                  {t('totalSupply')}
+                </Col>
+                <Col xs="6" className="popover-text mb-2">
+                  {formatFromWei(
+                    pool.tokenDetails?.filter(
+                      (asset) => asset.address === addr.sparta,
+                    )[0]?.totalSupply,
+                    0,
+                  )}
+                </Col>
 
-            <Col xs="12 mb-2">
-              {' '}
-              <Progress multi>
-                <Progress bar color="primary" value="30" />
-                <Progress bar color="black" value="2" />
-                <Progress bar color="yellow" value="6" />
-                <Progress bar color="black" value="2" />
-                <Progress bar color="lightblue" value="10" />
-              </Progress>
-            </Col>
-            <Col xs="4">
-              <span className="dot-burn mr-2" />
-              {t('burn')}
-            </Col>
-            <Col xs="4">
-              <span className="dot-bond mr-1" />
-              {t('bond')}
-            </Col>
-            <Col xs="4">
-              <span className="dot-emission mr-2" />
-              {t('emisson')}
-            </Col>
-          </Row>
-          <br />
-          <br />
+                <Col xs="12 mb-2">
+                  {' '}
+                  <Progress multi>
+                    <Progress bar color="primary" value="30" />
+                    <Progress bar color="black" value="2" />
+                    <Progress bar color="yellow" value="6" />
+                    <Progress bar color="black" value="2" />
+                    <Progress bar color="lightblue" value="10" />
+                  </Progress>
+                </Col>
+                <Col xs="4">
+                  <span className="dot-burn mr-2" />
+                  {t('burn')}
+                </Col>
+                <Col xs="4">
+                  <span className="dot-bond mr-1" />
+                  {t('bond')}
+                </Col>
+                <Col xs="4">
+                  <span className="dot-emission mr-2" />
+                  {t('emisson')}
+                </Col>
+              </Row>
+              <br />
+              <br />
+            </>
+          )}
           <Row>
             <Col md="12" className="ml-auto text-right">
               <Card
@@ -149,7 +171,7 @@ const Supply = () => {
                 >
                   <Col xs={8} className="ml-n2 ">
                     <div className="text-left text-card">
-                      <i className="icon-small icon-contracts icon-light mr-1" />{' '}
+                      <i className="icon-small icon-contracts icon-light pr-4 mr-1" />{' '}
                       {t('contracts')}
                     </div>
                   </Col>

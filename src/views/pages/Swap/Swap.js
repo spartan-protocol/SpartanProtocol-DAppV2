@@ -777,10 +777,19 @@ const Swap = () => {
                           </Card>
                         </Col>
 
-                        <Col xs="12" className="text-center z-index my-n4">
+                        <Col
+                          xs="12"
+                          style={{ height: '1px' }}
+                          className="text-center z-index my-n4"
+                        >
                           <Button
-                            className="btn-sm btn-rounded btn-icon"
+                            className="btn-sm btn-round btn-icon position-relative"
                             color="primary"
+                            style={{
+                              height: '35px',
+                              top: '-19px',
+                              width: '35px',
+                            }}
                             onClick={() => handleReverseAssets()}
                           >
                             <i className="icon-swap-size icon-swap icon-light" />

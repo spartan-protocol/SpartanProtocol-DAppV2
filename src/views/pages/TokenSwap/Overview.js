@@ -24,10 +24,16 @@ const TokenSwap = () => {
     const timer = setTimeout(() => {
       getData()
       settrigger0(trigger0 + 1)
-    }, 10000)
-    return () => clearTimeout(timer)
+    }, 5000)
+    return () => {
+      clearTimeout(timer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  useEffect(() => {
+    settrigger0(0)
+  }, [wallet.account])
 
   return (
     <>

@@ -74,7 +74,7 @@ const Bond = () => {
                     </Col>
                   </Row>
                 )}
-                <Row className="text-center mt-2">
+                <Row className="text-center mt-3">
                   <Col xs="12" className="p-1">
                     <Button
                       className="btn btn-primary align-middle"

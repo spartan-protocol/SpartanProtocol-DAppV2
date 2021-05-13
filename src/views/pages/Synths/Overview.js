@@ -565,16 +565,17 @@ const Swap = () => {
                             </Col>
                           </Row>
                         </Card>
-                        <Row className="my-n2">
+                        <Row style={{ height: '1px' }}>
                           {activeTab === 'mint' && (
                             <img
                               src={mintIcon}
                               alt="plusicon"
-                              className="mx-auto z-index my-n2 p-2"
+                              className="mx-auto z-index position-relative p-2"
                               style={{
                                 backgroundColor: '#A80005',
                                 height: '35px',
                                 width: '35px',
+                                top: '-19px',
                               }}
                             />
                           )}
@@ -582,11 +583,12 @@ const Swap = () => {
                             <img
                               src={fireIcon}
                               alt="plusicon"
-                              className="mx-auto z-index my-n2 p-2"
+                              className="mx-auto z-index position-relative p-2"
                               style={{
                                 backgroundColor: '#A80005',
                                 height: '35px',
                                 width: '35px',
+                                top: '-19px',
                               }}
                             />
                           )}

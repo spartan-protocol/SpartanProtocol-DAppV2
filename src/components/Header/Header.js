@@ -42,7 +42,7 @@ const Header = (props) => (
     expand="lg"
   >
     <Container fluid className="px-1">
-      <div className="navbar-wrapper ">
+      <div className="navbar-wrapper w-100">
         <div className="navbar-minimize d-inline mr-n4">
           <Button
             className="minimize-sidebar btn-just-icon ml-n2 mr-4"
@@ -60,7 +60,7 @@ const Header = (props) => (
           })}
         >
           <button
-            className="navbar-toggler ml-2"
+            className="navbar-toggler ml-0"
             type="button"
             onClick={props.toggleSidebar}
           >
@@ -72,17 +72,17 @@ const Header = (props) => (
             <SpartanLogo className="mr-1" /> Spartan Protocol
           </div>
         </Link>
+        <Nav className="ml-auto">
+          <AddressConn
+            changeStates={props.changeStates}
+            changeNotification={props.changeNotification}
+            connectedTokens={props.connectedTokens}
+            connectingTokens={props.connectingTokens}
+          />
+          <LanguageDropdown />
+          <Supply />
+        </Nav>
       </div>
-      <Nav className="ml-auto">
-        <AddressConn
-          changeStates={props.changeStates}
-          changeNotification={props.changeNotification}
-          connectedTokens={props.connectedTokens}
-          connectingTokens={props.connectingTokens}
-        />
-        <LanguageDropdown />
-        <Supply />
-      </Nav>
     </Container>
   </Navbar>
 )

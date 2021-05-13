@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { ethers } from 'ethers'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
 import { getAddresses, getTokenContract } from '../../../utils/web3'
@@ -12,7 +13,6 @@ import {
 } from '../../../store/sparta/actions'
 import { getSpartaContract } from '../../../utils/web3Contracts'
 import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
-import oldSpartaIcon from '../../../assets/icons/oldSparta.svg'
 
 const Upgrade = () => {
   const addr = getAddresses()
@@ -26,7 +26,12 @@ const Upgrade = () => {
 
   const [trigger0, settrigger0] = useState(0)
   const getData = async () => {
-    if (wallet?.status === 'connected' && loadingBalance === false) {
+    if (
+      wallet?.status === 'connected' &&
+      loadingBalance === false &&
+      ethers.utils.isAddress(wallet.account)
+    ) {
+      const tempWallet = wallet.account
       setloadingBalance(true)
       let awaitArray = []
       awaitArray.push(
@@ -34,8 +39,10 @@ const Upgrade = () => {
         getSpartaContract().balanceOf(wallet.account),
       )
       awaitArray = await Promise.all(awaitArray)
-      setoldSpartaBalance(awaitArray[0].toString())
-      setnewSpartaBalance(awaitArray[1].toString())
+      if (tempWallet === wallet.account) {
+        setoldSpartaBalance(awaitArray[0].toString())
+        setnewSpartaBalance(awaitArray[1].toString())
+      }
       setloadingBalance(false)
     }
   }
@@ -47,9 +54,19 @@ const Upgrade = () => {
       getData()
       settrigger0(trigger0 + 1)
     }, 5000)
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      settrigger0(0)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+  }, [trigger0, wallet.account])
+
+  useEffect(() => {
+    if (wallet.status === 'disconnected') {
+      setoldSpartaBalance('0')
+      setnewSpartaBalance('0')
+    }
+  }, [wallet.status])
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)
@@ -66,16 +83,16 @@ const Upgrade = () => {
       <Col xs="auto">
         <Card
           className="card-body card-320"
-          style={{ backgroundColor: '#25212D' }}
+          style={{ backgroundColor: '#1D171F' }}
         >
           <Col>
-            <h3 className="mb-0">Upgrade SPARTA</h3>
-            <h4>Bridge V1 to V2</h4>
-            <Row className="my-2">
+            <h3 className="mb-0">Upgrade</h3>
+            <span className="subtitle-label">Bridge your v1 SPARTA to v2</span>
+            <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
                 Input
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-right text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv1
               </Col>
             </Row>
@@ -83,7 +100,7 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 Output
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-right text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv2
               </Col>
             </Row>
@@ -105,16 +122,18 @@ const Upgrade = () => {
       <Col xs="auto">
         <Card
           className="card-body card-320"
-          style={{ backgroundColor: '#25212D' }}
+          style={{ backgroundColor: '#1D171F' }}
         >
           <Col>
-            <h3 className="mb-0">Claim SPARTA</h3>
-            <h4>From V1 LP Drain</h4>
-            <Row className="my-2">
+            <h3 className="mb-0">Claim</h3>
+            <span className="subtitle-label">
+              Claim missing SPARTA from v1 pools
+            </span>
+            <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
                 Claim
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-right text-sm-label-wht">
                 {formatFromWei(sparta.claimCheck)} SPARTAv2
               </Col>
             </Row>
@@ -122,7 +141,7 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 Expiry
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-right text-sm-label-wht">
                 {formatDate(getExpiry())}
               </Col>
             </Row>
@@ -143,17 +162,26 @@ const Upgrade = () => {
 
       <Col xs="auto">
         <Card
-          className="card-body card-320"
-          style={{ backgroundColor: '#25212D' }}
+          className="card-body card-320 card-underlay"
+          style={{ backgroundColor: '#1D171F' }}
         >
           <Col>
-            <h3 className="mb-0">Balance SPARTA</h3>
-            <h4>V1 & V2 Balances</h4>
-            <Row className="my-2">
+            <h3 className="mb-0">
+              Your Balance
+              <img
+                height="35"
+                src={spartaIcon}
+                alt="sparta icon"
+                className="float-right"
+              />
+            </h3>
+
+            <span className="subtitle-label">Overview v1 & v2 balances</span>
+            <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
                 Balance
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-right text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv1
               </Col>
             </Row>
@@ -161,30 +189,18 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 Balance
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-right text-sm-label-wht">
                 {formatFromWei(newSpartaBalance)} SPARTAv2
               </Col>
             </Row>
             <Row className="card-body py-1 text-center">
               <Col xs="12" className="p-0 py-1">
                 <Button
-                  className="btn-sm btn-primary w-100 h-100 p-0"
+                  className="btn-sm btn-info w-100 h-100"
                   onClick={() => settrigger0(trigger0 + 1)}
                   disabled={loadingBalance === true}
                 >
-                  <img
-                    height="27"
-                    src={oldSpartaIcon}
-                    alt="old sparta icon"
-                    className="float-left ml-2"
-                  />
-                  <div className="d-inline-block mt-1">Refresh Balance</div>
-                  <img
-                    height="28"
-                    src={spartaIcon}
-                    alt="sparta icon"
-                    className="float-right mr-2"
-                  />
+                  Refresh Balance
                 </Button>
               </Col>
             </Row>

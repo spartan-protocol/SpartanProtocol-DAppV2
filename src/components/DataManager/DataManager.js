@@ -86,7 +86,10 @@ const DataManager = () => {
     dispatch(getCuratedPools()) // CURATED ARRAY
   }
   useEffect(() => {
-    if (trigger1 === 0) {
+    if (
+      trigger1 === 0 &&
+      tryParse(window.localStorage.getItem('network'))?.chainId === 97
+    ) {
       checkArrays()
       settrigger1(trigger1 + 1)
     }
@@ -120,7 +123,10 @@ const DataManager = () => {
    */
   useEffect(() => {
     const { listedTokens } = pool
-    if (trigger3 === 0) {
+    if (
+      trigger3 === 0 &&
+      tryParse(window.localStorage.getItem('network'))?.chainId === 97
+    ) {
       dispatch(getSynthArray(listedTokens))
       dispatch(getTokenDetails(listedTokens, wallet.account))
     }
@@ -152,7 +158,7 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.tokenDetails])
 
-  const [prevPoolDetails, setPrevPoolDetails] = useState(pool.finalLpArray)
+  const [prevPoolDetails, setPrevPoolDetails] = useState('')
 
   /**
    * Get final pool details
@@ -161,12 +167,14 @@ const DataManager = () => {
     const { listedPools } = pool
     const { synthArray } = synth
     const checkDetails = () => {
-      if (listedPools?.length > 0) {
-        dispatch(getPoolDetails(listedPools, wallet.account))
-        setPrevPoolDetails(pool.finalLpArray)
-      }
-      if (synthArray?.length > 0 && listedPools?.length > 0) {
-        dispatch(getSynthDetails(synthArray, listedPools, wallet.account))
+      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+        if (listedPools?.length > 0) {
+          dispatch(getPoolDetails(listedPools, wallet.account))
+          setPrevPoolDetails(pool.poolDetails)
+        }
+        if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthDetails(synthArray, listedPools, wallet.account))
+        }
       }
     }
     checkDetails()
@@ -178,8 +186,11 @@ const DataManager = () => {
    */
   const [eventArray, setEventArray] = useState([])
   useEffect(() => {
+    let contracts = []
     const { poolDetails } = pool
-    const contracts = [getBondContract(), getRouterContract(), getDaoContract()]
+    if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      contracts = [getBondContract(), getRouterContract(), getDaoContract()]
+    }
 
     const listen = async (contract) => {
       await contract.on('*', (eventObject) => {
@@ -212,7 +223,11 @@ const DataManager = () => {
     mapOut()
     return () => {
       for (let i = 0; i < contracts.length; i++) {
-        contracts[i]?.removeAllListeners()
+        try {
+          contracts[i]?.removeAllListeners()
+        } catch (e) {
+          console.log(e)
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

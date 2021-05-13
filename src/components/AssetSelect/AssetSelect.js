@@ -194,7 +194,7 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="mr-2 mt-3"
+                      className="ml-n3 mt-3"
                     />
                   </>
                 ),
@@ -229,7 +229,7 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
-                      className="mr-2 mt-3"
+                      className="ml-n3 mt-3"
                     />
                   </>
                 ),
@@ -294,7 +294,7 @@ const AssetSelect = (props) => {
                   height="20px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="mr-2 mt-3"
+                  className="ml-n3 mt-3"
                 />
               </>
             )}
@@ -312,7 +312,7 @@ const AssetSelect = (props) => {
                   height="20px"
                   src={spartaIconAlt}
                   alt="Sparta LP token icon"
-                  className="mr-2 mt-3"
+                  className="ml-n3 mt-3"
                 />
               </>
             )}
@@ -445,7 +445,7 @@ const AssetSelect = (props) => {
                 key={`${asset.actualAddr}-all`}
                 className="mb-3 output-card mr-2"
               >
-                <Col xs="4" sm="2" className="p-0 pl-2">
+                <Col xs="3" sm="2" className="p-0 pl-2">
                   <div
                     role="button"
                     onClick={() => {
@@ -457,7 +457,7 @@ const AssetSelect = (props) => {
                   </div>
                 </Col>
 
-                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
+                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-1">
                   <Row>
                     <Col xs="12" className="float-left ml-n4">
                       <div
@@ -521,7 +521,7 @@ const AssetSelect = (props) => {
                   key={asset.actualAddr + activeTab}
                   className="mb-3 output-card mr-2"
                 >
-                  <Col xs="4" sm="2" className="p-0 pl-2">
+                  <Col xs="3" sm="2" className="p-0 pl-2">
                     <div
                       role="button"
                       onClick={() => {
@@ -533,7 +533,7 @@ const AssetSelect = (props) => {
                     </div>
                   </Col>
 
-                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
+                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-1">
                     <Row>
                       <Col xs="12" className="float-left ml-n4">
                         <div
