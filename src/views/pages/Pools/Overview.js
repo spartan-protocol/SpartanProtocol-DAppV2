@@ -37,13 +37,16 @@ const Overview = () => {
 
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
-    if (trigger1 === 0) {
+    if (trigger1 === 0 && network.chainId === 97) {
       dispatch(getBondListed())
     }
     const timer = setTimeout(() => {
-      dispatch(getBondListed())
-      settrigger1(trigger1 + 1)
+      if (network.chainId === 97) {
+        dispatch(getBondListed())
+        settrigger1(trigger1 + 1)
+      }
     }, 10000)
+
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger1])

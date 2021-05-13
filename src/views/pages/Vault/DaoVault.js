@@ -176,7 +176,7 @@ const DaoVault = () => {
                 <Row className="mb-2">
                   <Col xs="auto" className="pr-0">
                     <img
-                      className=""
+                      className="mr-n3"
                       src={getToken(i.tokenAddress)?.symbolUrl}
                       alt={getToken(i.tokenAddress)?.symbol}
                       height="50px"

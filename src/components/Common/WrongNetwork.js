@@ -5,7 +5,7 @@ import { Col, Row } from 'reactstrap'
 const WrongNetwork = () => (
   <Row className="row-480">
     <Col xs="12">
-      <h2>Spartan Protocol V2 Coming Soon!</h2>
+      <h2>This feature will be available on Spartan Protocol V2!</h2>
       <h4>
         In the meantime please visit{' '}
         <Link

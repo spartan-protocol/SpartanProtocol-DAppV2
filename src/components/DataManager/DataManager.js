@@ -57,10 +57,10 @@ const DataManager = () => {
     if (netLoading === false) {
       setnetLoading(true)
       if (
-        tryParse(window.localStorage.getItem('network')).chainId !==
-        prevNetwork.chainId
+        tryParse(window.localStorage.getItem('network'))?.chainId !==
+        prevNetwork?.chainId
       ) {
-        changeNetwork(tryParse(window.localStorage.getItem('network')).chainId)
+        changeNetwork(tryParse(window.localStorage.getItem('network'))?.chainId)
         settrigger1(0)
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
@@ -82,8 +82,10 @@ const DataManager = () => {
    * Get the initial arrays (tokens & curateds)
    */
   const checkArrays = async () => {
-    dispatch(getListedTokens()) // TOKEN ARRAY
-    dispatch(getCuratedPools()) // CURATED ARRAY
+    if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      dispatch(getListedTokens()) // TOKEN ARRAY
+      dispatch(getCuratedPools()) // CURATED ARRAY
+    }
   }
   useEffect(() => {
     if (
@@ -150,7 +152,7 @@ const DataManager = () => {
     const { tokenDetails } = pool
     const { curatedPools } = pool
     const checkListedPools = () => {
-      if (tokenDetails.length > 0) {
+      if (tokenDetails && tokenDetails.length > 0) {
         dispatch(getListedPools(tokenDetails, curatedPools))
       }
     }

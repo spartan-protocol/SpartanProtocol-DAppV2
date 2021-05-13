@@ -98,26 +98,26 @@ const Share = () => {
                   <Row>
                     <Col>
                       <img
-                        src={getToken(asset1.tokenAddress)?.symbolUrl}
+                        src={getToken(asset1?.tokenAddress)?.symbolUrl}
                         alt="coin to swap icon"
                       />
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
-                        {getToken(asset1.tokenAddress)?.symbol}
+                        {getToken(asset1?.tokenAddress)?.symbol}
                       </span>
                     </Col>
                     <Col>
                       <img
-                        src={getToken(asset2.tokenAddress)?.symbolUrl}
+                        src={getToken(asset2?.tokenAddress)?.symbolUrl}
                         alt="coin to swap icon"
                       />
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
-                        {getToken(asset2.tokenAddress)?.symbol}
+                        {getToken(asset2?.tokenAddress)?.symbol}
                       </span>
                     </Col>
                   </Row>

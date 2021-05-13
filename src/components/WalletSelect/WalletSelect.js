@@ -41,6 +41,7 @@ const WalletSelect = (props) => {
     } else {
       setNetwork(changeNetworkLsOnly(net))
     }
+    window.location.reload()
   }
 
   useEffect(() => {
@@ -76,6 +77,11 @@ const WalletSelect = (props) => {
       wallet.connect(x.inject)
     }
     window.localStorage.setItem('lastWallet', x.id)
+  }
+
+  const resetWallet = async () => {
+    wallet.reset()
+    console.log('Wallet Status: cleared')
   }
 
   useEffect(() => {
@@ -141,7 +147,9 @@ const WalletSelect = (props) => {
                       type="switch"
                       id="custom-switch"
                       checked={network?.chainId === 56}
-                      onChange={(value) => onChangeNetwork(value)}
+                      onChange={(value) => {
+                        onChangeNetwork(value)
+                      }}
                       style={{ top: '-10px' }}
                     />
                   </Form>
@@ -159,7 +167,10 @@ const WalletSelect = (props) => {
             <div className="ml-2 mt-n3">
               <Row className="card-body">
                 <Col xs="10">
-                  <h3 className="ml-n4 modal-title">{t('wallet')}</h3>
+                  <h3 className="ml-n4 modal-title">
+                    {t('wallet')} -{' '}
+                    {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
+                  </h3>
                 </Col>
                 <Col xs="2">
                   <Button
@@ -203,7 +214,7 @@ const WalletSelect = (props) => {
                       <Button
                         className="mx-1 btn-sm btn-info btn-round d-block d-sm-none"
                         onClick={() => {
-                          wallet.reset()
+                          resetWallet()
                         }}
                       >
                         {t('changeWallet')}
@@ -212,7 +223,7 @@ const WalletSelect = (props) => {
                       <Button
                         className="float-right mx-1 btn-md btn-info btn-round d-none d-sm-block"
                         onClick={() => {
-                          wallet.reset()
+                          resetWallet()
                         }}
                       >
                         {t('changeWallet')}
