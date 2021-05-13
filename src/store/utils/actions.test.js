@@ -1,19 +1,19 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 // import { getAddresses, TEST_WALLET } from '../../utils/web3'
-import {
-  getListedPools,
-  getListedPoolsRange,
-  // getTokenDetails,
-  // getPoolDetails,
-  // getMemberShare,
-  // getPoolShare,
-  // getShareOfBaseAmount,
-  // getShareOfTokenAmount,
-  // // getPoolShareAssym,
-  // getPoolAge,
-  // isMember,
-} from './actions'
-import * as Types from './types'
+// import {
+//   // getListedPools,
+//   getListedPoolsRange,
+//   // getTokenDetails,
+//   // getPoolDetails,
+//   // getMemberShare,
+//   // getPoolShare,
+//   // getShareOfBaseAmount,
+//   // getShareOfTokenAmount,
+//   // // getPoolShareAssym,
+//   // getPoolAge,
+//   // isMember,
+// } from './actions'
+// import * as Types from './types'
 
 // const addr = getAddresses()
 
@@ -35,19 +35,19 @@ describe('Utils actions', () => {
     expect('1').not.toBe('2')
   })
 
-  test('should get listed pools', async () => {
-    await getListedPools()(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_LISTED_POOLS)
-  })
+  // test('should get listed pools', async () => {
+  //   await getListedPools()(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_LISTED_POOLS)
+  // })
 
-  test('should get listed pools according by range', async () => {
-    await getListedPoolsRange(1, 2)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-    expect(dispatchMock.mock.calls[1][0].type).toBe(
-      Types.GET_LISTED_POOLS_RANGE,
-    )
-  })
+  // test('should get listed pools according by range', async () => {
+  //   await getListedPoolsRange(1, 2)(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(
+  //     Types.GET_LISTED_POOLS_RANGE,
+  //   )
+  // })
 
   // test('should get token details', async () => {
   //   await getTokenDetails(addr.wbnb)(dispatchMock)
