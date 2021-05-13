@@ -536,11 +536,11 @@ const AddLiquidity = () => {
                 >
                   <Row className="my-2">
                     <Col xs="4" className="">
-                      <div className="text-sm-label">Pool</div>
+                      <div className="text-sm-label">{t('pool')}</div>
                     </Col>
                     <Col xs="8" className="text-right">
                       <div className="text-sm-label">
-                        {t('Balance')}:{' '}
+                        {t('balance')}:{' '}
                         {pool.poolDetails && formatFromWei(getBalance(3))}
                       </div>
                     </Col>

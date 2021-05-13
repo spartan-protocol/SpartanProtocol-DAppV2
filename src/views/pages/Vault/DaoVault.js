@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Col, Row } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import spartaIcon from '../../../assets/img/spartan_lp.svg'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -25,6 +26,7 @@ const DaoVault = () => {
   const wallet = useWallet()
   const dao = useDao()
   const pool = usePool()
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   // const [showDetails, setShowDetails] = useState(false)
   const [tokenAddress, settokenAddress] = useState('')
@@ -90,10 +92,10 @@ const DaoVault = () => {
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
-            <h3>DaoVault Details</h3>
+            <h3>{t('daoVaultDetails')}</h3>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
-                Total Weight
+                {t('totalWeight')}
               </Col>
               <Col className="text-right output-card">
                 {formatFromWei(dao.globalDetails?.totalWeight, 0)} SPARTA
@@ -101,17 +103,17 @@ const DaoVault = () => {
             </Row>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Member Count
+                {t('memberCount')}
               </Col>
               <Col className="text-right output-card">
-                {dao.globalDetails?.memberCount} Members
+                {dao.globalDetails?.memberCount} {t('members')}
               </Col>
             </Row>
             <Row className="card-body text-center">
               <Col xs="12" className="p-0 py-1">
                 <Link to="/dapp/pools/liquidity">
                   <Button className="btn-sm btn-primary h-100 w-100">
-                    Join Pools
+                    {t('joinPools')}
                   </Button>
                 </Link>
               </Col>
@@ -126,10 +128,10 @@ const DaoVault = () => {
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
-            <h3>Member Details</h3>
+            <h3>{t('memberDetails')}</h3>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
-                Your Weight
+                {t('yourWeight')}
               </Col>
               <Col className="text-right output-card">
                 {dao.memberDetails?.weight > 0
@@ -143,7 +145,7 @@ const DaoVault = () => {
             </Row>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Harvestable
+                {t('harvestable')}
               </Col>
               <Col className="text-right output-card">
                 {dao.memberDetails?.weight > 0
@@ -159,7 +161,7 @@ const DaoVault = () => {
                   onClick={() => dispatch(daoHarvest())}
                   disabled={dao.memberDetails?.weight <= 0}
                 >
-                  Harvest All
+                  {t('harvestAll')}
                 </Button>
               </Col>
             </Row>
@@ -194,7 +196,7 @@ const DaoVault = () => {
                     </h3>
                     <Link to={`/dapp/pools/liquidity?asset1=${i.tokenAddress}`}>
                       <p className="text-sm-label-alt">
-                        Obtain {getToken(i.tokenAddress)?.symbol}p
+                        {t('obtain')} {getToken(i.tokenAddress)?.symbol}p
                         <i className="icon-scan icon-mini ml-1" />
                       </p>
                     </Link>
@@ -220,7 +222,7 @@ const DaoVault = () => {
 
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    Balance
+                    {t('balance')}
                   </Col>
                   <Col className="text-right output-card">
                     {formatFromWei(i.balance)}{' '}
@@ -230,7 +232,7 @@ const DaoVault = () => {
 
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    Staked
+                    {t('staked')}
                   </Col>
                   <Col className="text-right output-card">
                     {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}
@@ -246,7 +248,7 @@ const DaoVault = () => {
                       onClick={() => toggleModal(i.tokenAddress)}
                       disabled={i.balance <= 0}
                     >
-                      Deposit
+                      {t('deposit')}
                     </Button>
                   </Col>
                   <Col xs="6" className="pr-0 py-1 pl-1">
@@ -256,7 +258,7 @@ const DaoVault = () => {
                       onClick={() => dispatch(daoWithdraw(i.address))}
                       disabled={i.staked <= 0}
                     >
-                      Withdraw All
+                      {t('withdrawAll')}
                     </Button>
                   </Col>
                 </Row>

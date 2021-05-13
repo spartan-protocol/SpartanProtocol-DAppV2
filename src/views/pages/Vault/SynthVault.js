@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Card, Row, Col } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link } from 'react-router-dom'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -14,6 +15,7 @@ import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 
 const SynthVault = () => {
+  const { t } = useTranslation()
   const wallet = useWallet()
   const synth = useSynth()
   const dispatch = useDispatch()
@@ -43,10 +45,10 @@ const SynthVault = () => {
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
-            <h3>SynthVault Details</h3>
+            <h3>{t('synthVaultDetails')}</h3>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Min Time
+                {t('minTime')}
               </Col>
               <Col className="text-right output-card">
                 {synth.globalDetails?.minTime} seconds
@@ -54,7 +56,7 @@ const SynthVault = () => {
             </Row>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Total Weight
+                {t('totalWeight')}
               </Col>
               <Col className="text-right output-card">
                 {synth.globalDetails?.totalWeight > 0
@@ -65,7 +67,7 @@ const SynthVault = () => {
             </Row>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Eras to Earn
+                {t('erasToEarn')}
               </Col>
               <Col className="text-right output-card">
                 {synth.globalDetails?.erasToEarn}
@@ -81,7 +83,7 @@ const SynthVault = () => {
             </Row> */}
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Vault Claim
+                {t('vaultClaim')}
               </Col>
               <Col className="text-right output-card">
                 {synth.globalDetails?.vaultClaim / 100}%
@@ -91,7 +93,7 @@ const SynthVault = () => {
               <Col xs="12" className="p-0 py-3">
                 <Link to="/dapp/synths">
                   <Button className="btn-sm btn-primary h-100 w-100">
-                    Mint Synths
+                    {t('mintSynths')}
                   </Button>
                 </Link>
               </Col>
@@ -106,10 +108,10 @@ const SynthVault = () => {
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
-            <h3>Member Details</h3>
+            <h3>{t('memberDetails')}</h3>
             <Row className="my-4">
               <Col xs="auto" className="text-card">
-                Your Weight
+                {t('yourWeight')}
               </Col>
               <Col className="text-right output-card">
                 {synth.memberDetails?.totalWeight > 0
@@ -117,7 +119,7 @@ const SynthVault = () => {
                       .div(synth.globalDetails?.totalWeight)
                       .times(100)
                       .toFixed(4)}%`
-                  : 'No Weight'}
+                  : t('noWeight')}
               </Col>
             </Row>
             <Row className="card-body text-center">
@@ -127,7 +129,7 @@ const SynthVault = () => {
                   onClick={() => dispatch(synthHarvest())}
                   disabled={synth.memberDetails?.totalWeight <= 0}
                 >
-                  Harvest All
+                  {t('harvestAll')}
                 </Button>
               </Col>
             </Row>

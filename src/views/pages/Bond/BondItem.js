@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import { bondClaim } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 // import { useWeb3 } from '../../../store/web3'
@@ -12,6 +13,7 @@ import spartaIcon from '../../../assets/img/spartan_lp.svg'
 const BondItem = ({ asset }) => {
   const pool = usePool()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   // const web3 = useWeb3()
   const [showDetails, setShowDetails] = useState(false)
   const { tokenAddress } = asset
@@ -92,7 +94,7 @@ const BondItem = ({ asset }) => {
           </Row>
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              Remaining
+              {t('remaining')}
             </Col>
             <Col className="text-right output-card">
               {formatFromWei(asset.bonded)} {token.symbol}p
@@ -101,7 +103,7 @@ const BondItem = ({ asset }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              Claimable
+              {t('claimable')}
               <i className="icon-extra-small icon-spinner icon-dark ml-1" />
             </Col>
             <Col className="text-right output-card">
@@ -119,7 +121,7 @@ const BondItem = ({ asset }) => {
             <>
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
-                  Last Claim
+                  {t('lastClaim')}
                 </Col>
                 <Col className="text-right output-card">
                   {formatDate(asset.bondLastClaim)}
@@ -128,7 +130,7 @@ const BondItem = ({ asset }) => {
 
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
-                  Final Date
+                  {t('finalDate')}
                 </Col>
                 <Col className="text-right output-card">
                   {formatDate(
@@ -145,7 +147,7 @@ const BondItem = ({ asset }) => {
           <Row className="text-center mt-2">
             <Col xs="6" className="p-1">
               <Button color="primary" className="btn-sm h-100 w-100" disabled>
-                Bond
+                {t('bond')}
               </Button>
             </Col>
             <Col xs="6" className="p-1">
@@ -154,7 +156,7 @@ const BondItem = ({ asset }) => {
                 className="btn-sm h-100 w-100"
                 onClick={() => dispatch(bondClaim(asset.tokenAddress))}
               >
-                Claim
+                {t('claim')}
               </Button>
             </Col>
           </Row>
