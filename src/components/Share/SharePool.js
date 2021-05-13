@@ -21,25 +21,36 @@ const Share = () => {
   const [asset1, setasset1] = useState('')
   const [asset2, setasset2] = useState('')
 
-  useEffect(() => {
-    const assetSelected1 = JSON.parse(
-      window.localStorage?.getItem('assetSelected1'),
-    )
-    const assetSelected2 = JSON.parse(
-      window.localStorage?.getItem('assetSelected2'),
-    )
-    setasset1(assetSelected1)
-    setasset2(assetSelected2)
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
 
-    setUrl(
-      `https://${window.location.host}${location.pathname}?asset1=${
-        assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
-      }${
-        assetSelected2
-          ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
-          : ''
-      }`,
-    )
+  useEffect(() => {
+    if (pool.poolDetails?.length > 0) {
+      const assetSelected1 = tryParse(
+        window.localStorage?.getItem('assetSelected1'),
+      )
+      const assetSelected2 = tryParse(
+        window.localStorage?.getItem('assetSelected2'),
+      )
+      setasset1(assetSelected1)
+      setasset2(assetSelected2)
+
+      setUrl(
+        `https://${window.location.host}${location.pathname}?asset1=${
+          assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
+        }${
+          assetSelected2
+            ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
+            : ''
+        }`,
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     location.pathname,
     location.host,
@@ -52,7 +63,10 @@ const Share = () => {
 
   return (
     <>
-      <Button className="btn-info btn-sm" onClick={() => setShowShare(true)}>
+      <Button
+        className="btn-round btn-info px-1 pl-2 btn-sm"
+        onClick={() => setShowShare(true)}
+      >
         <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)}>
@@ -84,26 +98,26 @@ const Share = () => {
                   <Row>
                     <Col>
                       <img
-                        src={getToken(asset1.tokenAddress)?.symbolUrl}
+                        src={getToken(asset1?.tokenAddress)?.symbolUrl}
                         alt="coin to swap icon"
                       />
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
-                        {getToken(asset1.tokenAddress)?.symbol}
+                        {getToken(asset1?.tokenAddress)?.symbol}
                       </span>
                     </Col>
                     <Col>
                       <img
-                        src={getToken(asset2.tokenAddress)?.symbolUrl}
+                        src={getToken(asset2?.tokenAddress)?.symbolUrl}
                         alt="coin to swap icon"
                       />
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
-                        {getToken(asset2.tokenAddress)?.symbol}
+                        {getToken(asset2?.tokenAddress)?.symbol}
                       </span>
                     </Col>
                   </Row>

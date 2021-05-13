@@ -12,7 +12,7 @@
   }
 
   .card-title {
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
   }
 
   .card-body {
@@ -27,13 +27,13 @@
       color: $white;
       text-transform: inherit;
       font-weight: $font-weight-light;
-      margin-bottom: .75rem;
+      margin-bottom: 0.75rem;
     }
 
-    .card-description, .card-category {
+    .card-description,
+    .card-category {
       color: rgba($white, 0.6);
     }
-
   }
 
   .card-header {
@@ -72,7 +72,8 @@
       color: $black;
     }
 
-    .card-category, .stats {
+    .card-category,
+    .stats {
       color: $card-stats-gray;
     }
 
@@ -81,7 +82,8 @@
     @include form-control-placeholder(rgba($black, 0.4), 1);
 
     .has-danger {
-      .form-control, .input-group-prepend .input-group-text {
+      .form-control,
+      .input-group-prepend .input-group-text {
         border-color: $danger-states;
       }
     }
@@ -128,8 +130,6 @@
           }
         }
       }
-
-
     }
 
     .input-group[disabled] {
@@ -139,7 +139,9 @@
       }
     }
 
-    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    .form-control[disabled],
+    .form-control[readonly],
+    fieldset[disabled] .form-control {
       background: $light-gray;
       border-color: rgba($black-states, 0.3);
     }
@@ -155,7 +157,6 @@
       &.no-border {
         .input-group-prepend .input-group-text,
         .input-group-append .input-group-text {
-
           background-color: $opacity-gray-5;
         }
       }
@@ -169,21 +170,25 @@
       border-left: none;
     }
 
-    .has-danger .form-control:focus, .has-success.input-group-focus .input-group-append .input-group-text, .has-success.input-group-focus .input-group-prepend .input-group-text {
+    .has-danger .form-control:focus,
+    .has-success.input-group-focus .input-group-append .input-group-text,
+    .has-success.input-group-focus .input-group-prepend .input-group-text {
       border-color: $danger-states;
     }
 
-    .has-success .form-control:focus, .has-success.input-group-focus .input-group-append .input-group-text, .has-success.input-group-focus .input-group-prepend .input-group-text {
+    .has-success .form-control:focus,
+    .has-success.input-group-focus .input-group-append .input-group-text,
+    .has-success.input-group-focus .input-group-prepend .input-group-text {
       border-color: darken($success, 10%);
     }
   }
 
   &.card-share {
-    background-color: #403A4B;
+    background-color: #403a4b;
   }
 
   &.card-link {
-    background-color:  #25212D;
+    background-color: #25212d;
   }
 
   &.card-plain {
@@ -208,7 +213,6 @@
   label {
     font-size: $font-size-sm;
     margin-bottom: 5px;
-
   }
 
   .card-footer {
@@ -216,12 +220,10 @@
     border: 0;
     padding: 15px;
 
-
     .stats {
       i {
         margin-right: 5px;
         position: relative;
-
       }
     }
 
@@ -235,7 +237,6 @@
 .card-body {
   padding: $card-spacer-y;
 }
-
 
 .text-muted {
   font-family: $font-family-base !important;
@@ -251,56 +252,59 @@
 
   /* Blue 80 */
 
-  color: #C0DAFF;
-
+  color: #c0daff;
 }
 
+.subtitle-label {
+  /* Label */
+  /* Caption */
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  /* White */
+  color: #ffffff;
+}
 
-#accordion > div > div.card-body.card{
+#accordion > div > div.card-body.card {
   margin-top: -45px;
 }
 
-
-.title-card{
+.title-card {
   font-family: $font-family-base;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
-  color: #A5ADAF;
+  color: #a5adaf;
 }
 
-.text-card{
+.text-card {
   /* Small label */
-
   font-family: $font-family-base;
   font-style: normal;
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-
   display: flex;
   align-items: center;
-  font-feature-settings: 'liga' off;
-
   /* Grey 10 */
-
-  color: #A5ADAF;
+  color: #a5adaf;
 }
 
-.text-xs-label{
-/* Extra small label */
-font-family: $font-family-base;
-font-style: normal;
-font-weight: normal;
-font-size: 10px;
-line-height: 20px;
-/* Grey 10 */
-color: #A5ADAF;
+.text-xs-label {
+  /* Extra small label */
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 20px;
+  /* Grey 10 */
+  color: #a5adaf;
 }
 
-.text-sm-label-alt{
+.text-sm-label-alt {
   /* Small value */
   font-family: $font-family-base;
   font-style: normal;
@@ -311,33 +315,47 @@ color: #A5ADAF;
   align-items: center;
   font-feature-settings: 'liga' off;
   /* Grey 10 */
-  color: #AACDFF;
-  }
-
-.text-sm-label{
-/* Small value */
-font-family: $font-family-base;
-font-style: normal;
-font-weight: 300;
-font-size: 12px;
-line-height: 20px;
-/* or 167% */
-align-items: center;
-font-feature-settings: 'liga' off;
-/* Grey 10 */
-color: #A5ADAF;
+  color: #aacdff;
 }
 
-.output-card{
+.text-sm-label {
+  /* Small value */
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  /* or 167% */
+  align-items: center;
+  font-feature-settings: 'liga' off;
+  /* Grey 10 */
+  color: #a5adaf;
+}
+
+.text-sm-label-wht {
+  /* Small value */
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+  /* or 167% */
+  align-items: center;
+  font-feature-settings: 'liga' off;
+  /* Grey 10 */
+  color: #fff;
+}
+
+.output-card {
   font-family: $font-family-base;
   font-style: normal;
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-.subtitle-card{
+.subtitle-card {
   /* Large label */
   font-family: $font-family-base;
   font-style: normal;
@@ -347,11 +365,10 @@ color: #A5ADAF;
   /* identical to box height, or 167% */
   font-feature-settings: 'liga' off;
   /* White */
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-
-.subtitle-amount{
+.subtitle-amount {
   font-family: $font-family-base;
   font-style: normal;
   font-weight: 500;
@@ -360,10 +377,10 @@ color: #A5ADAF;
   /* identical to box height, or 167% */
   font-feature-settings: 'liga' off;
   /* White */
-  color: #AACDFF;;
+  color: #aacdff;
 }
 
-.accent{
+.accent {
   font-family: Roboto;
   font-style: normal;
   font-weight: bold;
@@ -371,15 +388,21 @@ color: #A5ADAF;
   font-size: 12px;
   line-height: 32px;
   /* identical to box height, or 267% */
-  margin-top: 40px ;
+  margin-top: 40px;
   text-align: right;
   font-feature-settings: 'liga' off;
   /* Blue 100 */
-  color: #AACDFF;
+  color: #aacdff;
 }
 
-
-
+/* Checked */
+.card-underlay {
+  background-image: url('../../../img/cardunderlay.svg');
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-position-y: bottom;
+  background-size: contain;
+}
 
 .card-collaps {
   float: right;
@@ -388,7 +411,13 @@ color: #A5ADAF;
   top: 1px;
 }
 
-.card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+.card h1,
+.card h2,
+.card h3,
+.card h4,
+.card h5,
+.card h6 {
   font-family: $font-family-base;
   color: rgba(255, 255, 255, 0.8);
-  font-weight: 700; }
+  font-weight: 700;
+}

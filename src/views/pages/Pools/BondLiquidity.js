@@ -65,12 +65,20 @@ const BondLiquidity = () => {
     spartaRemainingLoop()
   }, [])
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
   useEffect(() => {
     const { poolDetails } = pool
     const getAssetDetails = () => {
       if (poolDetails) {
         window.localStorage.setItem('assetType1', 'token')
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
           asset1 &&
           asset1.tokenAddress !== addr.sparta &&

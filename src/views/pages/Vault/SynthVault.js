@@ -88,7 +88,7 @@ const SynthVault = () => {
               </Col>
             </Row>
             <Row className="card-body py-0 text-center">
-              <Col xs="12" className="p-0 py-1">
+              <Col xs="12" className="p-0 py-3">
                 <Link to="/dapp/synths">
                   <Button className="btn-sm btn-primary h-100 w-100">
                     Mint Synths
@@ -121,7 +121,7 @@ const SynthVault = () => {
               </Col>
             </Row>
             <Row className="card-body text-center">
-              <Col xs="12" className="p-0 py-1 mt-4">
+              <Col xs="12" className="p-0 py-1 mt-5">
                 <Button
                   className="btn-sm btn-primary h-100 w-100"
                   onClick={() => dispatch(synthHarvest())}

@@ -100,7 +100,7 @@ const SynthVaultItem = ({ synthItem }) => {
           <Row className="mb-2">
             <Col xs="auto" className="pr-0">
               <img
-                className=""
+                className="mr-n3"
                 src={getToken(synthItem.tokenAddress)?.symbolUrl}
                 alt={getToken(synthItem.tokenAddress)?.symbol}
                 height="50px"

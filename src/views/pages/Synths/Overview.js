@@ -21,7 +21,7 @@ import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
-import { getAddresses, getItemFromArray } from '../../../utils/web3'
+import { getAddresses, getItemFromArray, getNetwork } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
 import {
   BN,
@@ -49,6 +49,7 @@ import fireIcon from '../../../assets/icons/fire.svg'
 import Approval from '../../../components/Approval/Approval'
 import SwapPair from '../Swap/SwapPair'
 import Share from '../../../components/Share/SharePool'
+import WrongNetwork from '../../../components/Common/WrongNetwork'
 
 const Swap = () => {
   const wallet = useWallet()
@@ -69,13 +70,38 @@ const Swap = () => {
     new URLSearchParams(location.search).get(`asset2`),
   )
 
+  const [network, setnetwork] = useState(getNetwork())
+  const [trigger0, settrigger0] = useState(0)
+  const getData = () => {
+    setnetwork(getNetwork())
+  }
+  useEffect(() => {
+    if (trigger0 === 0) {
+      getData()
+    }
+    const timer = setTimeout(() => {
+      getData()
+      settrigger0(trigger0 + 1)
+    }, 2000)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger0])
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
   useEffect(() => {
     const { poolDetails } = pool
 
     const getAssetDetails = () => {
       if (poolDetails?.length > 0) {
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
         if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
           ;[asset1] = poolDetails.filter(
@@ -104,11 +130,17 @@ const Swap = () => {
           }
         }
 
-        if (!asset1) {
+        if (
+          !asset1 ||
+          !pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
+        ) {
           asset1 = { tokenAddress: addr.sparta }
         }
 
-        if (!asset2) {
+        if (
+          !asset2 ||
+          !pool.poolDetails.find((x) => x.tokenAddress === asset2.tokenAddress)
+        ) {
           asset2 = { tokenAddress: addr.bnb }
         }
 
@@ -416,425 +448,441 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {pool.poolDetails?.length > 0 && (
+        <Row className="row-480">
+          <Col xs="12">
+            <div className="card-480 my-3">
+              <h2 className="text-title-small mb-0 mr-3">{t('synths')}</h2>
+              <Share />
+            </div>
+          </Col>
+        </Row>
+        {network.chainId === 97 && (
           <>
-            <Row className="row-480">
-              <Col xs="12">
-                <div className="card-480 my-3">
-                  <h2 className="text-title-small mb-0 mr-3">{t('synths')}</h2>
-                  <Share />
-                </div>
-              </Col>
-            </Row>
-            <Row className="row-480">
-              <Card xs="auto" className="card-body card-480 mb-auto">
-                <Nav pills className="nav-tabs-custom mt-2 mb-4">
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: activeTab === 'mint',
-                      })}
-                      onClick={() => {
-                        toggle('mint')
-                      }}
-                    >
-                      Mint Synths
-                    </NavLink>
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: activeTab === 'burn',
-                      })}
-                      onClick={() => {
-                        toggle('burn')
-                      }}
-                    >
-                      Burn Synths
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <Row>
-                  <Col xs="12" className="px-1 px-sm-3">
-                    <Card
-                      style={{ backgroundColor: '#25212D' }}
-                      className="card-body mb-1"
-                    >
-                      <Row>
-                        {/* 'From' input box */}
-                        <Col xs="4">
-                          <div className="text-sm-label">
-                            {' '}
-                            {activeTab === 'mint' ? 'Add' : 'Burn'}
-                          </div>
-                        </Col>
+            {pool.poolDetails?.length > 0 && (
+              <>
+                <Row className="row-480">
+                  <Card xs="auto" className="card-body card-480 mb-auto">
+                    <Nav pills className="nav-tabs-custom mt-2 mb-4">
+                      <NavItem>
+                        <NavLink
+                          className={classnames({
+                            active: activeTab === 'mint',
+                          })}
+                          onClick={() => {
+                            toggle('mint')
+                          }}
+                        >
+                          Mint Synths
+                        </NavLink>
+                      </NavItem>
+                      <NavItem>
+                        <NavLink
+                          className={classnames({
+                            active: activeTab === 'burn',
+                          })}
+                          onClick={() => {
+                            toggle('burn')
+                          }}
+                        >
+                          Burn Synths
+                        </NavLink>
+                      </NavItem>
+                    </Nav>
+                    <Row>
+                      <Col xs="12" className="px-1 px-sm-3">
+                        <Card
+                          style={{ backgroundColor: '#25212D' }}
+                          className="card-body mb-1"
+                        >
+                          <Row>
+                            {/* 'From' input box */}
+                            <Col xs="4">
+                              <div className="text-sm-label">
+                                {' '}
+                                {activeTab === 'mint' ? 'Add' : 'Burn'}
+                              </div>
+                            </Col>
 
-                        <Col xs="8" className="text-right">
-                          <div
-                            className="text-sm-label"
-                            role="button"
-                            onClick={() => {
-                              swapInput1.value = convertFromWei(getBalance(1))
-                              handleZapInputChange(
-                                convertFromWei(getBalance(1)),
-                                true,
-                              )
-                            }}
-                          >
-                            {t('balance')}
-                            {': '}
-                            {formatFromWei(getBalance(1), 4)}
-                          </div>
-                        </Col>
-                      </Row>
-                      <Row className="my-2">
-                        <Col xs="auto" className="ml-1">
-                          <AssetSelect
-                            priority="1"
-                            filter={
-                              activeTab === 'mint' ? ['token'] : ['synth']
-                            }
-                          />
-                        </Col>
-                        <Col className="text-right">
-                          <InputGroup className="m-0 mt-n1">
-                            <Input
-                              className="text-right h-100 ml-0 p-2"
-                              type="text"
-                              placeholder="Add..."
-                              id="swapInput1"
-                              inputMode="decimal"
-                              pattern="^[0-9]*[.,]?[0-9]*$"
-                              autoComplete="off"
-                              autoCorrect="off"
-                              minLength="1"
-                              onInput={(e) => handleTokenInputChange(e)}
+                            <Col xs="8" className="text-right">
+                              <div
+                                className="text-sm-label"
+                                role="button"
+                                onClick={() => {
+                                  swapInput1.value = convertFromWei(
+                                    getBalance(1),
+                                  )
+                                  handleZapInputChange(
+                                    convertFromWei(getBalance(1)),
+                                    true,
+                                  )
+                                }}
+                              >
+                                {t('balance')}
+                                {': '}
+                                {formatFromWei(getBalance(1), 4)}
+                              </div>
+                            </Col>
+                          </Row>
+                          <Row className="my-2">
+                            <Col xs="auto" className="ml-1">
+                              <AssetSelect
+                                priority="1"
+                                filter={
+                                  activeTab === 'mint' ? ['token'] : ['synth']
+                                }
+                              />
+                            </Col>
+                            <Col className="text-right">
+                              <InputGroup className="m-0 mt-n1">
+                                <Input
+                                  className="text-right h-100 ml-0 p-2"
+                                  type="text"
+                                  placeholder="Add..."
+                                  id="swapInput1"
+                                  inputMode="decimal"
+                                  pattern="^[0-9]*[.,]?[0-9]*$"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  minLength="1"
+                                  onInput={(e) => handleTokenInputChange(e)}
+                                />
+                                <InputGroupAddon
+                                  addonType="append"
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs(1)}
+                                  onClick={() => clearInputs(1)}
+                                >
+                                  <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
+                                </InputGroupAddon>
+                              </InputGroup>
+                              <div className="text-right text-sm-label">
+                                ~$
+                                {swapInput1?.value
+                                  ? formatFromWei(getInput1USD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card>
+                        <Row style={{ height: '1px' }}>
+                          {activeTab === 'mint' && (
+                            <img
+                              src={mintIcon}
+                              alt="plusicon"
+                              className="mx-auto z-index position-relative p-2"
+                              style={{
+                                backgroundColor: '#A80005',
+                                height: '35px',
+                                width: '35px',
+                                top: '-19px',
+                              }}
                             />
-                            <InputGroupAddon
-                              addonType="append"
-                              role="button"
-                              tabIndex={-1}
-                              onKeyPress={() => clearInputs(1)}
-                              onClick={() => clearInputs(1)}
-                            >
-                              <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                            </InputGroupAddon>
-                          </InputGroup>
-                          <div className="text-right text-sm-label">
-                            ~$
-                            {swapInput1?.value
-                              ? formatFromWei(getInput1USD(), 2)
-                              : '0.00'}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card>
-                    <Row className="my-n2">
-                      {activeTab === 'mint' && (
-                        <img
-                          src={mintIcon}
-                          alt="plusicon"
-                          className="mx-auto z-index my-n2 p-2"
-                          style={{
-                            backgroundColor: '#A80005',
-                            height: '35px',
-                            width: '35px',
-                          }}
-                        />
-                      )}
-                      {activeTab === 'burn' && (
-                        <img
-                          src={fireIcon}
-                          alt="plusicon"
-                          className="mx-auto z-index my-n2 p-2"
-                          style={{
-                            backgroundColor: '#A80005',
-                            height: '35px',
-                            width: '35px',
-                          }}
-                        />
-                      )}
-                    </Row>
-
-                    {activeTab === 'mint' && (
-                      <Card
-                        style={{ backgroundColor: '#25212D' }}
-                        className="card-body mb-1"
-                      >
-                        <Row className="my-2">
-                          <Col xs="4" className="">
-                            <div className="text-sm-label">
-                              {' '}
-                              {activeTab === 'mint' ? 'Mint' : 'Receive'}
-                            </div>
-                          </Col>
-                          <Col xs="8" className="text-right">
-                            <div className="text-sm-label">
-                              Balance{': '}
-                              {pool.poolDetails &&
-                                formatFromWei(getBalance(2), 4)}
-                            </div>
-                          </Col>
-                        </Row>
-                        <Row className="">
-                          <Col xs="auto" className="ml-1">
-                            <AssetSelect priority="2" filter={['synth']} />
-                          </Col>
-                          <Col className="text-right">
-                            <InputGroup className="m-0 mt-n1">
-                              <Input
-                                className="text-right h-100 ml-0 p-2 text-light"
-                                type="text"
-                                placeholder="0.00"
-                                id="swapInput2"
-                                inputMode="decimal"
-                                pattern="^[0-9]*[.,]?[0-9]*$"
-                                autoComplete="off"
-                                autoCorrect="off"
-                                minLength="1"
-                                onInput={(e) => handleTokenInputChange(e)}
-                              />
-                            </InputGroup>
-                            <div className="text-right text-sm-label">
-                              ~$
-                              {swapInput2?.value
-                                ? formatFromWei(getInput2USD(), 2)
-                                : '0.00'}
-                              {' ('}
-                              {swapInput2?.value
-                                ? formatFromUnits(getRateSlip())
-                                : '0.00'}
-                              {'%)'}
-                            </div>
-                          </Col>
-                        </Row>
-                      </Card>
-                    )}
-
-                    {activeTab === 'burn' && (
-                      <Card
-                        style={{ backgroundColor: '#25212D' }}
-                        className="card-body mb-1"
-                      >
-                        <Row className="my-2">
-                          <Col xs="4" className="">
-                            <div className="text-sm-label">
-                              {activeTab === 'burn' ? 'Receive' : 'Burn'}
-                            </div>
-                          </Col>
-                          <Col xs="8" className="text-right">
-                            <div className="text-sm-label">
-                              Balance{': '}
-                              {pool.poolDetails &&
-                                formatFromWei(getBalance(2), 4)}
-                            </div>
-                          </Col>
+                          )}
+                          {activeTab === 'burn' && (
+                            <img
+                              src={fireIcon}
+                              alt="plusicon"
+                              className="mx-auto z-index position-relative p-2"
+                              style={{
+                                backgroundColor: '#A80005',
+                                height: '35px',
+                                width: '35px',
+                                top: '-19px',
+                              }}
+                            />
+                          )}
                         </Row>
 
-                        <Row className="">
-                          <Col xs="auto">
-                            <div className="output-card ml-1">
-                              <AssetSelect priority="2" filter={['token']} />
-                            </div>
-                          </Col>
-                          <Col className="text-right">
-                            <InputGroup className="m-0 mt-n1">
-                              <Input
-                                className="text-right h-100 ml-0 p-2 text-light"
-                                type="text"
-                                placeholder="0.00"
-                                id="swapInput2"
-                                disabled
-                              />
-                            </InputGroup>
-                            <div className="text-right text-sm-label">
-                              ~$
-                              {swapInput2?.value
-                                ? formatFromWei(getInput2USD(), 2)
-                                : '0.00'}
-                              {' ('}
-                              {swapInput2?.value
-                                ? formatFromUnits(getRateSlip(), 2)
-                                : '0.00'}
-                              {'%)'}
-                            </div>
-                          </Col>
-                        </Row>
-                      </Card>
-                    )}
-
-                    {/* Bottom 'synth' txnDetails row */}
-                    <Row className="mb-2 mt-3">
-                      <Col xs="auto">
-                        <div className="text-card">{t('input')}</div>
-                      </Col>
-                      <Col className="text-right">
-                        <span className="output-card text-light">
-                          {swapInput1?.value
-                            ? formatFromUnits(swapInput1?.value, 6)
-                            : '0.00'}{' '}
-                          {getToken(assetSwap1.tokenAddress)?.symbol}
-                          {activeTab === 'burn' && 's'}
-                        </span>
-                      </Col>
-                    </Row>
-
-                    <Row className="mb-3">
-                      <Col xs="auto">
-                        <div className="text-card">
-                          Fee{' '}
-                          <i
-                            className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
-                            id="tooltipSynthFee"
-                            role="button"
-                          />
-                          <UncontrolledTooltip
-                            placement="right"
-                            target="tooltipSynthFee"
-                          >
-                            The slip fee being injected into the pool to reward
-                            the liquidity providers
-                          </UncontrolledTooltip>
-                        </div>
-                      </Col>
-                      <Col className="text-right">
-                        {assetSwap1?.tokenAddress === addr.sparta && (
-                          <div className="output-card text-light">
-                            {swapInput1?.value
-                              ? formatFromWei(getSynthFeeFromBase(), 6)
-                              : '0.00'}{' '}
-                            SPARTA
-                          </div>
-                        )}
-                        {assetSwap1?.tokenAddress !== addr.sparta && (
-                          <div className="output-card text-light">
-                            {swapInput1?.value
-                              ? formatFromWei(getSynthFeeToBase(), 6)
-                              : '0.00'}{' '}
-                            SPARTA
-                          </div>
-                        )}
-                      </Col>
-                    </Row>
-
-                    <Row className="mb-3">
-                      <Col xs="auto">
-                        <div className="subtitle-card">Output</div>
-                      </Col>
-                      <Col className="text-right">
                         {activeTab === 'mint' && (
-                          <span className="subtitle-card">
-                            {swapInput1?.value
-                              ? formatFromWei(getSynthOutputFromBase(), 6)
-                              : '0.00'}
-                            <span className="output-card ml-1">
-                              {getToken(assetSwap2.tokenAddress)?.symbol}s
-                            </span>
-                          </span>
+                          <Card
+                            style={{ backgroundColor: '#25212D' }}
+                            className="card-body mb-1"
+                          >
+                            <Row className="my-2">
+                              <Col xs="4" className="">
+                                <div className="text-sm-label">
+                                  {' '}
+                                  {activeTab === 'mint' ? 'Mint' : 'Receive'}
+                                </div>
+                              </Col>
+                              <Col xs="8" className="text-right">
+                                <div className="text-sm-label">
+                                  Balance{': '}
+                                  {pool.poolDetails &&
+                                    formatFromWei(getBalance(2), 4)}
+                                </div>
+                              </Col>
+                            </Row>
+                            <Row className="">
+                              <Col xs="auto" className="ml-1">
+                                <AssetSelect priority="2" filter={['synth']} />
+                              </Col>
+                              <Col className="text-right">
+                                <InputGroup className="m-0 mt-n1">
+                                  <Input
+                                    className="text-right h-100 ml-0 p-2 text-light"
+                                    type="text"
+                                    placeholder="0.00"
+                                    id="swapInput2"
+                                    inputMode="decimal"
+                                    pattern="^[0-9]*[.,]?[0-9]*$"
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    minLength="1"
+                                    onInput={(e) => handleTokenInputChange(e)}
+                                  />
+                                </InputGroup>
+                                <div className="text-right text-sm-label">
+                                  ~$
+                                  {swapInput2?.value
+                                    ? formatFromWei(getInput2USD(), 2)
+                                    : '0.00'}
+                                  {' ('}
+                                  {swapInput2?.value
+                                    ? formatFromUnits(getRateSlip())
+                                    : '0.00'}
+                                  {'%)'}
+                                </div>
+                              </Col>
+                            </Row>
+                          </Card>
                         )}
 
                         {activeTab === 'burn' && (
-                          <span className="subtitle-card">
-                            {swapInput1?.value
-                              ? formatFromWei(getSynthOutputToBase(), 6)
-                              : '0.00'}
-                            <span className="output-card ml-1">
-                              {getToken(assetSwap2.tokenAddress)?.symbol}
+                          <Card
+                            style={{ backgroundColor: '#25212D' }}
+                            className="card-body mb-1"
+                          >
+                            <Row className="my-2">
+                              <Col xs="4" className="">
+                                <div className="text-sm-label">
+                                  {activeTab === 'burn' ? 'Receive' : 'Burn'}
+                                </div>
+                              </Col>
+                              <Col xs="8" className="text-right">
+                                <div className="text-sm-label">
+                                  Balance{': '}
+                                  {pool.poolDetails &&
+                                    formatFromWei(getBalance(2), 4)}
+                                </div>
+                              </Col>
+                            </Row>
+
+                            <Row className="">
+                              <Col xs="auto">
+                                <div className="output-card ml-1">
+                                  <AssetSelect
+                                    priority="2"
+                                    filter={['token']}
+                                  />
+                                </div>
+                              </Col>
+                              <Col className="text-right">
+                                <InputGroup className="m-0 mt-n1">
+                                  <Input
+                                    className="text-right h-100 ml-0 p-2 text-light"
+                                    type="text"
+                                    placeholder="0.00"
+                                    id="swapInput2"
+                                    disabled
+                                  />
+                                </InputGroup>
+                                <div className="text-right text-sm-label">
+                                  ~$
+                                  {swapInput2?.value
+                                    ? formatFromWei(getInput2USD(), 2)
+                                    : '0.00'}
+                                  {' ('}
+                                  {swapInput2?.value
+                                    ? formatFromUnits(getRateSlip(), 2)
+                                    : '0.00'}
+                                  {'%)'}
+                                </div>
+                              </Col>
+                            </Row>
+                          </Card>
+                        )}
+
+                        {/* Bottom 'synth' txnDetails row */}
+                        <Row className="mb-2 mt-3">
+                          <Col xs="auto">
+                            <div className="text-card">{t('input')}</div>
+                          </Col>
+                          <Col className="text-right">
+                            <span className="output-card text-light">
+                              {swapInput1?.value
+                                ? formatFromUnits(swapInput1?.value, 6)
+                                : '0.00'}{' '}
+                              {getToken(assetSwap1.tokenAddress)?.symbol}
+                              {activeTab === 'burn' && 's'}
                             </span>
-                          </span>
+                          </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                          <Col xs="auto">
+                            <div className="text-card">
+                              Fee{' '}
+                              <i
+                                className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
+                                id="tooltipSynthFee"
+                                role="button"
+                              />
+                              <UncontrolledTooltip
+                                placement="right"
+                                target="tooltipSynthFee"
+                              >
+                                The slip fee being injected into the pool to
+                                reward the liquidity providers
+                              </UncontrolledTooltip>
+                            </div>
+                          </Col>
+                          <Col className="text-right">
+                            {assetSwap1?.tokenAddress === addr.sparta && (
+                              <div className="output-card text-light">
+                                {swapInput1?.value
+                                  ? formatFromWei(getSynthFeeFromBase(), 6)
+                                  : '0.00'}{' '}
+                                SPARTA
+                              </div>
+                            )}
+                            {assetSwap1?.tokenAddress !== addr.sparta && (
+                              <div className="output-card text-light">
+                                {swapInput1?.value
+                                  ? formatFromWei(getSynthFeeToBase(), 6)
+                                  : '0.00'}{' '}
+                                SPARTA
+                              </div>
+                            )}
+                          </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                          <Col xs="auto">
+                            <div className="subtitle-card">Output</div>
+                          </Col>
+                          <Col className="text-right">
+                            {activeTab === 'mint' && (
+                              <span className="subtitle-card">
+                                {swapInput1?.value
+                                  ? formatFromWei(getSynthOutputFromBase(), 6)
+                                  : '0.00'}
+                                <span className="output-card ml-1">
+                                  {getToken(assetSwap2.tokenAddress)?.symbol}s
+                                </span>
+                              </span>
+                            )}
+
+                            {activeTab === 'burn' && (
+                              <span className="subtitle-card">
+                                {swapInput1?.value
+                                  ? formatFromWei(getSynthOutputToBase(), 6)
+                                  : '0.00'}
+                                <span className="output-card ml-1">
+                                  {getToken(assetSwap2.tokenAddress)?.symbol}
+                                </span>
+                              </span>
+                            )}
+                          </Col>
+                        </Row>
+
+                        {/* 'Approval/Allowance' row */}
+                        {activeTab === 'mint' && (
+                          <>
+                            {assetSwap1?.tokenAddress !== addr.bnb &&
+                              wallet?.account &&
+                              swapInput1?.value && (
+                                <Approval
+                                  tokenAddress={assetSwap1?.tokenAddress}
+                                  symbol={
+                                    getToken(assetSwap1.tokenAddress)?.symbol
+                                  }
+                                  walletAddress={wallet?.account}
+                                  contractAddress={addr.router}
+                                  txnAmount={convertToWei(swapInput1?.value)}
+                                  assetNumber="1"
+                                />
+                              )}
+                            <Col>
+                              <Button
+                                color="primary"
+                                size="lg"
+                                onClick={() =>
+                                  dispatch(
+                                    swapAssetToSynth(
+                                      convertToWei(swapInput1?.value),
+                                      assetSwap1.tokenAddress,
+                                      getSynth(assetSwap2.tokenAddress)
+                                        ?.address,
+                                    ),
+                                  )
+                                }
+                                disabled={
+                                  swapInput1?.value <= 0 ||
+                                  BN(
+                                    convertToWei(swapInput1?.value),
+                                  ).isGreaterThan(getBalance(1))
+                                }
+                                block
+                              >
+                                Mint {getToken(assetSwap2.tokenAddress)?.symbol}
+                                s
+                              </Button>
+                            </Col>
+                          </>
+                        )}
+                        {activeTab === 'burn' && (
+                          <Col>
+                            <Button
+                              color="primary"
+                              size="lg"
+                              onClick={() =>
+                                dispatch(
+                                  swapSynthToAsset(
+                                    convertToWei(swapInput1?.value),
+                                    getSynth(assetSwap1.tokenAddress)?.address,
+                                    assetSwap2.tokenAddress,
+                                  ),
+                                )
+                              }
+                              disabled={
+                                swapInput1?.value <= 0 ||
+                                BN(
+                                  convertToWei(swapInput1?.value),
+                                ).isGreaterThan(getBalance(1))
+                              }
+                              block
+                            >
+                              Burn {getToken(assetSwap1.tokenAddress)?.symbol}s
+                            </Button>
+                          </Col>
                         )}
                       </Col>
                     </Row>
-
-                    {/* 'Approval/Allowance' row */}
-                    {activeTab === 'mint' && (
-                      <>
-                        {assetSwap1?.tokenAddress !== addr.bnb &&
-                          wallet?.account &&
-                          swapInput1?.value && (
-                            <Approval
-                              tokenAddress={assetSwap1?.tokenAddress}
-                              symbol={getToken(assetSwap1.tokenAddress)?.symbol}
-                              walletAddress={wallet?.account}
-                              contractAddress={addr.router}
-                              txnAmount={convertToWei(swapInput1?.value)}
-                              assetNumber="1"
-                            />
-                          )}
-                        <Col>
-                          <Button
-                            color="primary"
-                            size="lg"
-                            onClick={() =>
-                              dispatch(
-                                swapAssetToSynth(
-                                  convertToWei(swapInput1?.value),
-                                  assetSwap1.tokenAddress,
-                                  getSynth(assetSwap2.tokenAddress)?.address,
-                                ),
-                              )
-                            }
-                            disabled={
-                              swapInput1?.value <= 0 ||
-                              BN(convertToWei(swapInput1?.value)).isGreaterThan(
-                                getBalance(1),
-                              )
-                            }
-                            block
-                          >
-                            Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
-                          </Button>
-                        </Col>
-                      </>
-                    )}
-                    {activeTab === 'burn' && (
-                      <Col>
-                        <Button
-                          color="primary"
-                          size="lg"
-                          onClick={() =>
-                            dispatch(
-                              swapSynthToAsset(
-                                convertToWei(swapInput1?.value),
-                                getSynth(assetSwap1.tokenAddress)?.address,
-                                assetSwap2.tokenAddress,
-                              ),
-                            )
-                          }
-                          disabled={
-                            swapInput1?.value <= 0 ||
-                            BN(convertToWei(swapInput1?.value)).isGreaterThan(
-                              getBalance(1),
-                            )
-                          }
-                          block
-                        >
-                          Burn {getToken(assetSwap1.tokenAddress)?.symbol}s
-                        </Button>
-                      </Col>
-                    )}
+                  </Card>
+                  <Col xs="auto">
+                    {pool.poolDetails &&
+                      assetSwap1.tokenAddress !== addr.sparta &&
+                      assetSwap2.tokenAddress !== assetSwap1.tokenAddress && (
+                        <SwapPair assetSwap={assetSwap1} />
+                      )}
+                    {pool.poolDetails &&
+                      assetSwap2.tokenAddress !== addr.sparta && (
+                        <SwapPair assetSwap={assetSwap2} />
+                      )}
                   </Col>
                 </Row>
-              </Card>
-              <Col xs="auto">
-                {pool.poolDetails &&
-                  assetSwap1.tokenAddress !== addr.sparta &&
-                  assetSwap2.tokenAddress !== assetSwap1.tokenAddress && (
-                    <SwapPair assetSwap={assetSwap1} />
-                  )}
-                {pool.poolDetails &&
-                  assetSwap2.tokenAddress !== addr.sparta && (
-                    <SwapPair assetSwap={assetSwap2} />
-                  )}
-              </Col>
-            </Row>
+              </>
+            )}
+            {pool.poolDetails.length <= 0 && (
+              <div>
+                <HelmetLoading height={300} width={300} />
+              </div>
+            )}
           </>
         )}
-        {pool.poolDetails.length <= 0 && (
-          <div>
-            <HelmetLoading height={300} width={300} />
-          </div>
-        )}
+        {network.chainId !== 97 && <WrongNetwork />}
       </div>
     </>
   )

@@ -1,14 +1,14 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-import { getAddresses } from '../../utils/web3'
-import {
-  // getBasePPinToken,
-  getTokenPPinBase,
-  // getValueInBase,
-  // getValueInToken,
-} from './actions'
-import * as Types from './types'
+// import { getAddresses } from '../../utils/web3'
+// import {
+//   // getBasePPinToken,
+//   getTokenPPinBase,
+//   // getValueInBase,
+//   // getValueInToken,
+// } from './actions'
+// import * as Types from './types'
 
-const addr = getAddresses()
+// const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
@@ -35,11 +35,11 @@ describe('UTILS Pricing actions', () => {
   //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   // })
 
-  test('should get the token pp in value', async () => {
-    await getTokenPPinBase(addr.wbnb, 100)(dispatchMock)
-    expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_TOKEN_P_PIN_BASE)
-    expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
-  })
+  // test('should get the token pp in value', async () => {
+  //   await getTokenPPinBase(addr.wbnb, 100)(dispatchMock)
+  //   expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_TOKEN_P_PIN_BASE)
+  //   expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
+  // })
 
   // NEED LIQ IN POOLS FOR THIS TO WORK
   // test('should get value in base', async () => {

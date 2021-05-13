@@ -6,6 +6,7 @@ import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
 import Vault from './views/pages/Vault/Overview'
 import Synths from './views/pages/Synths/Overview'
+import TokenSwap from './views/pages/TokenSwap/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
@@ -69,6 +70,14 @@ const routes = (t) => [
     name: t('vault'),
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Vault,
+    layout: '/dapp',
+  },
+
+  {
+    path: '/tokenswap',
+    name: 'TokenSwap',
+    icon: 'icon-medium icon-colosseum icon-dark',
+    component: TokenSwap,
     layout: '/dapp',
   },
 

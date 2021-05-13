@@ -176,7 +176,7 @@ const DaoVault = () => {
                 <Row className="mb-2">
                   <Col xs="auto" className="pr-0">
                     <img
-                      className=""
+                      className="mr-n3"
                       src={getToken(i.tokenAddress)?.symbolUrl}
                       alt={getToken(i.tokenAddress)?.symbol}
                       height="50px"
@@ -238,7 +238,7 @@ const DaoVault = () => {
                   </Col>
                 </Row>
 
-                <Row className="card-body text-center">
+                <Row className="card-body text-center pt-3 pb-2">
                   <Col xs="6" className="pl-0 py-1 pr-1">
                     <Button
                       color="primary"
