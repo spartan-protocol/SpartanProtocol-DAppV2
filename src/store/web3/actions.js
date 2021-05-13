@@ -40,7 +40,7 @@ export const addNetworkMM = () => async (dispatch) => {
               symbol: 'bnb',
               decimals: 18,
             },
-            rpcUrls: network.net === 'testnet' ? bscRpcsTN : bscRpcsMN,
+            rpcUrls: network.chainId === 97 ? bscRpcsTN : bscRpcsMN,
             blockExplorerUrls: ['https://bscscan.com/'],
           },
         ],
@@ -72,8 +72,7 @@ export const addNetworkBC = () => async (dispatch) => {
 
   if (providerBC && parseInt(providerBC?.chainId, 16) !== chainId) {
     console.log(providerBC, chainId)
-    const chainIdString =
-      network.net === 'testnet' ? 'bsc-testnet' : 'bsc-mainnet'
+    const chainIdString = network.chainId === 97 ? 'bsc-testnet' : 'bsc-mainnet'
     try {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(payloadToDispatch(Types.ADD_NETWORK_BC, addedNetworkBC))

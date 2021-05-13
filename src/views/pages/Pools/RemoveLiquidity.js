@@ -56,6 +56,14 @@ const RemoveLiquidity = () => {
   const [output1, setoutput1] = useState('0.00')
   const [output2, setoutput2] = useState('0.00')
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
   useEffect(() => {
     const { poolDetails } = pool
     const getAssetDetails = () => {
@@ -64,12 +72,14 @@ const RemoveLiquidity = () => {
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'token')
 
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
-        let asset3 = JSON.parse(window.localStorage.getItem('assetSelected3'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+        let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
 
         asset1 =
-          asset1 && asset1.tokenAddress !== addr.sparta
+          asset1 &&
+          asset1.tokenAddress !== addr.sparta &&
+          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset2 =
@@ -93,13 +103,20 @@ const RemoveLiquidity = () => {
         window.localStorage.setItem('assetType1', 'pool')
         window.localStorage.setItem('assetType2', 'token')
 
-        let asset1 = JSON.parse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = JSON.parse(window.localStorage.getItem('assetSelected2'))
+        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
         asset1 =
-          asset1 && asset1.tokenAddress !== addr.sparta
+          asset1 &&
+          asset1.tokenAddress !== addr.sparta &&
+          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
+        asset2 = pool.poolDetails.find(
+          (x) => x.tokenAddress === asset2.tokenAddress,
+        )
+          ? asset2
+          : { tokenAddress: addr.sparta }
         asset2 =
           asset2.tokenAddress === asset1.tokenAddress ||
           asset2.tokenAddress === addr.sparta
@@ -413,13 +430,13 @@ const RemoveLiquidity = () => {
                 </Row>
               </Card>
 
-              <Row className="my-n2">
+              <Row style={{ height: '1px' }}>
                 {activeTab === '2' && (
                   <img
                     src={swapIcon}
                     alt="swapaddicon"
-                    className="mx-auto z-index my-n2"
-                    style={{ height: '35px' }}
+                    className="mx-auto z-index position-relative"
+                    style={{ height: '35px', top: '-19px' }}
                   />
                 )}
               </Row>

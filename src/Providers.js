@@ -61,10 +61,18 @@ const store = createStore(
 const Providers = () => {
   const [network, setNetwork] = useState(getNetwork())
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return ''
+    }
+  }
+
   useEffect(() => {
     const interval = setInterval(() => {
-      if (network !== JSON.parse(window.localStorage.getItem('network'))) {
-        setNetwork(JSON.parse(window.localStorage.getItem('network')))
+      if (network !== tryParse(window.localStorage.getItem('network'))) {
+        setNetwork(getNetwork())
       }
     }, 500)
     return () => clearInterval(interval)

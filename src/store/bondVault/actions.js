@@ -24,7 +24,10 @@ export const getBondVaultMemberDetails = (member, assetArray) => async (
   const awaitArray = []
   for (let i = 0; i < assetArray.length; i++) {
     // console.log(assetArray[i].tokenAddress)
-    if (assetArray[i].tokenAddress !== addr.sparta) {
+    if (
+      assetArray[i].tokenAddress !== addr.sparta &&
+      assetArray[i].tokenAddress !== addr.oldSparta
+    ) {
       awaitArray.push(
         contract.callStatic.getMemberDetails(
           member,

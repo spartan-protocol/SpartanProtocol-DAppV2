@@ -1,12 +1,12 @@
 import { ethers } from 'ethers'
 
 // Testnet ABI Imports
-import abiTnBase from '../ABI/TN/Base.json'
 import abiTnBond from '../ABI/TN/Bond.json'
 import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
+import abiTnFS from '../ABI/TN/FallenSpartans.json'
 import abiTnLoan from '../ABI/TN/SpartanLoan.json'
 import abiTnLoanVault from '../ABI/TN/SpartanLoanVault.json'
 import abiTnMigrate from '../ABI/TN/SPARTANUPGRADE.json'
@@ -14,6 +14,7 @@ import abiTnPool from '../ABI/TN/Pool.json'
 import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
 import abiTnReserve from '../ABI/TN/Reserve.json'
 import abiTnRouter from '../ABI/TN/Router.json'
+import abiTnSparta from '../ABI/TN/Sparta.json'
 import abiTnSynth from '../ABI/TN/Synth.json'
 import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
 import abiTnSynthVault from '../ABI/TN/SynthVault.json'
@@ -21,12 +22,12 @@ import abiTnUtils from '../ABI/TN/Utils.json'
 import abiTnWbnb from '../ABI/TN/WBNB.json'
 
 // Mainnet ABI Imports
-import abiMnBase from '../ABI/MN/Base.json'
 import abiMnBond from '../ABI/MN/Bond.json'
 import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnDaoVault from '../ABI/MN/DaoVault.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
+import abiMnFS from '../ABI/MN/FallenSpartans.json'
 import abiMnLoan from '../ABI/MN/SpartanLoan.json'
 import abiMnLoanVault from '../ABI/MN/SpartanLoanVault.json'
 import abiMnMigrate from '../ABI/MN/SPARTANUPGRADE.json'
@@ -34,6 +35,7 @@ import abiMnPool from '../ABI/MN/Pool.json'
 import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
 import abiMnReserve from '../ABI/MN/Reserve.json'
 import abiMnRouter from '../ABI/MN/Router.json'
+import abiMnSparta from '../ABI/MN/Sparta.json'
 import abiMnSynth from '../ABI/MN/Synth.json'
 import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnSynthVault from '../ABI/MN/SynthVault.json'
@@ -46,12 +48,12 @@ import abiMnWbnb from '../ABI/MN/WBNB.json'
 // import daiIcon from '../assets/tokens/DAI.png'
 
 export const abisTN = {
-  base: abiTnBase.abi,
   bond: abiTnBond.abi,
   bondVault: abiTnBondVault.abi,
   dao: abiTnDao.abi,
   daoVault: abiTnDaoVault.abi,
   erc20: abiTnErc20.abi,
+  fallenSpartans: abiTnFS.abi,
   loan: abiTnLoan.abi,
   loanVault: abiTnLoanVault.abi,
   migrate: abiTnMigrate.abi,
@@ -59,6 +61,7 @@ export const abisTN = {
   poolFactory: abiTnPoolFactory.abi,
   reserve: abiTnReserve.abi,
   router: abiTnRouter.abi,
+  sparta: abiTnSparta.abi,
   synth: abiTnSynth.abi,
   synthFactory: abiTnSynthFactory.abi,
   synthVault: abiTnSynthVault.abi,
@@ -67,12 +70,12 @@ export const abisTN = {
 }
 
 export const abisMN = {
-  base: abiMnBase.abi,
   bond: abiMnBond.abi,
   bondVault: abiMnBondVault.abi,
   dao: abiMnDao.abi,
   daoVault: abiMnDaoVault.abi,
   erc20: abiMnErc20.abi,
+  fallenSpartans: abiMnFS.abi,
   loan: abiMnLoan.abi,
   loanVault: abiMnLoanVault.abi,
   migrate: abiMnMigrate.abi,
@@ -80,6 +83,7 @@ export const abisMN = {
   poolFactory: abiMnPoolFactory.abi,
   reserve: abiMnReserve.abi,
   router: abiMnRouter.abi,
+  sparta: abiMnSparta.abi,
   synth: abiMnSynth.abi,
   synthFactory: abiMnSynthFactory.abi,
   synthVault: abiMnSynthVault.abi,
@@ -109,7 +113,8 @@ export const addressesTN = {
   bondVaultv1: '0x7f06678Bf6199CdEF6Cf76C264b94ffA6CD22e40',
   daov2: '0x0dFA75B8e76101aDBf588A4C03653f59DE3D4B23',
   daoVaultv1: '0x2d53adc5e5acc92226FAaFf1a5FcdEf4fEFAA4DD',
-  migratev1: '0xFe44c5B65d4F809BF1b992b61844ae6b1dC71fBd',
+  fallenSpartansv1: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b',
+  migratev1: '0x197C0fc4Ea92b58f375De66647368862677C95B7',
   poolFactoryv1: '0x47621301afa9FC76d61d6c34f96636D95a788142',
   reservev1: '0xaCb7645eb7784ee421dE0b4C4e2D31bbE29d3bD7',
   routerv3: '0xC9B60E2b1Fa28CeA42fD6f25D76766e1D5908eF2',
@@ -121,6 +126,7 @@ export const addressesTN = {
   bondVault: '0x7f06678Bf6199CdEF6Cf76C264b94ffA6CD22e40',
   dao: '0x0dFA75B8e76101aDBf588A4C03653f59DE3D4B23',
   daoVault: '0x2d53adc5e5acc92226FAaFf1a5FcdEf4fEFAA4DD',
+  fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b',
   migrate: '0x197C0fc4Ea92b58f375De66647368862677C95B7',
   poolFactory: '0x47621301afa9FC76d61d6c34f96636D95a788142',
   reserve: '0xaCb7645eb7784ee421dE0b4C4e2D31bbE29d3bD7',
@@ -131,7 +137,8 @@ export const addressesTN = {
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
-  sparta: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
+  oldSparta: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
+  sparta: '0xd055ADFdD53963F578A929eaA440DBED95407472',
 }
 
 // List of BSC Mainnet Addresses
@@ -148,33 +155,36 @@ export const addressesMN = {
   routerv2c: '0x6239891FC4030dc050fB9F7083aa68a2E4Fe426D',
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
   // OLD ADDRESSES SPV2
-  bondv4: addressesTN.bondv4,
-  bondVaultv1: addressesTN.bondVaultv1,
-  daov2: addressesTN.daov2,
-  daoVaultv1: addressesTN.daoVaultv1,
-  migratev1: addressesTN.migratev1,
-  poolFactoryv1: addressesTN.poolFactoryv1,
-  reservev1: addressesTN.reservev1,
-  routerv3: addressesTN.routerv3,
-  synthFactoryv1: addressesTN.synthFactoryv1,
-  synthVaultv1: addressesTN.synthVaultv1,
-  utilsv2: addressesTN.utilsv2,
+  bondv4: '',
+  bondVaultv1: '',
+  daov2: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
+  daoVaultv1: '',
+  fallenSpartansv1: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
+  migratev1: '',
+  poolFactoryv1: '',
+  reservev1: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
+  routerv3: '',
+  synthFactoryv1: '',
+  synthVaultv1: '',
+  utilsv2: '0x20d0270649c9f13c081FF98350148706A05557F8',
   // CURRENT ADDRESSES
-  bond: addressesTN.bond,
-  bondVault: addressesTN.bondVault,
-  dao: addressesTN.dao,
-  daoVault: addressesTN.daoVault,
-  poolFactory: addressesTN.poolFactory,
-  migrate: addressesTN.migrate,
-  reserve: addressesTN.reserve,
-  router: addressesTN.router,
-  synthFactory: addressesTN.synthFactory,
-  synthVault: addressesTN.synthVault,
-  utils: addressesTN.utils,
+  bond: '',
+  bondVault: '',
+  dao: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
+  daoVault: '',
+  fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
+  poolFactory: '',
+  migrate: '',
+  reserve: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
+  router: '',
+  synthFactory: '',
+  synthVault: '',
+  utils: '0x20d0270649c9f13c081FF98350148706A05557F8',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-  sparta: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
+  oldSparta: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
+  sparta: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
 }
 
 // Listed tokens on testNet
@@ -233,13 +243,24 @@ export const bscRpcsTN = [
   'https://data-seed-prebsc-1-s2.binance.org:8545/',
   'https://data-seed-prebsc-2-s2.binance.org:8545/',
   'https://data-seed-prebsc-1-s3.binance.org:8545/',
-  'https://data-seed-prebsc-2-s3.binance.org:8545/',
+  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', MAJOR ISSUES WITH THIS ONE
 ]
 
 export const bscRpcsMN = [
   'https://bsc-dataseed.binance.org/',
   'https://bsc-dataseed1.defibit.io/',
   'https://bsc-dataseed1.ninicoin.io/',
+  // BACKUPS BELOW
+  // 'https://bsc-dataseed2.defibit.io/',
+  // 'https://bsc-dataseed3.defibit.io/',
+  // 'https://bsc-dataseed4.defibit.io/',
+  // 'https://bsc-dataseed2.ninicoin.io/',
+  // 'https://bsc-dataseed3.ninicoin.io/',
+  // 'https://bsc-dataseed4.ninicoin.io/',
+  // 'https://bsc-dataseed1.binance.org/',
+  // 'https://bsc-dataseed2.binance.org/',
+  // 'https://bsc-dataseed3.binance.org/',
+  // 'https://bsc-dataseed4.binance.org/',
 ]
 
 /**
@@ -257,13 +278,44 @@ export const formatShortString = (longString) => {
 }
 
 /**
+ * Trigger change between Addresses
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} Relevant list of addresses
+ */
+export const changeAddresses = (_network) => {
+  const addresses = _network === 97 ? addressesTN : addressesMN
+  window.localStorage.setItem('addresses', JSON.stringify(addresses))
+  return addresses
+}
+
+const tryParse = (data) => {
+  try {
+    return JSON.parse(data)
+  } catch (e) {
+    return false
+  }
+}
+
+/**
+ * Check localStorage for addresses and set default if missing
+ * @returns {Object} Relevant list of addresses
+ */
+export const getAddresses = () => {
+  const addresses = tryParse(window.localStorage.getItem('addresses'))
+    ? tryParse(window.localStorage.getItem('addresses'))
+    : changeAddresses('testnet') // Change this to 'mainnet' after mainnet is deployed
+  return addresses
+}
+
+/**
  * Filter finalArray (or any array) to the scope of the assetAddress
  * @param {string} assetAddress
  * @param {string} finalArray
  * @returns {Object} item from finalArray
  */
 export const getItemFromArray = (asset, finalArray) => {
-  let arrayItem = finalArray.filter((item) => item.symbol === 'SPARTA')
+  const addr = getAddresses()
+  let arrayItem = finalArray.filter((item) => item.tokenAddress === addr.sparta)
   if (finalArray.find((item) => item.tokenAddress === asset.tokenAddress)) {
     arrayItem = finalArray.filter(
       (item) => item.tokenAddress === asset.tokenAddress,
@@ -274,34 +326,12 @@ export const getItemFromArray = (asset, finalArray) => {
 }
 
 /**
- * Trigger change between Addresses
- * @param {string} net - 'mainnet' or 'testnet'
- * @returns {Object} Relevant list of addresses
- */
-export const changeAddresses = (_network) => {
-  const addresses = _network === 'testnet' ? addressesTN : addressesMN
-  window.localStorage.setItem('addresses', JSON.stringify(addresses))
-  return addresses
-}
-
-/**
- * Check localStorage for addresses and set default if missing
- * @returns {Object} Relevant list of addresses
- */
-export const getAddresses = () => {
-  const addresses = JSON.parse(window.localStorage.getItem('addresses'))
-    ? JSON.parse(window.localStorage.getItem('addresses'))
-    : changeAddresses('testnet') // Change this to 'mainnet' after mainnet is deployed
-  return addresses
-}
-
-/**
  * Trigger change between ABIs
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} Relevant list of ABIs
  */
 export const changeAbis = (_network) => {
-  const abis = _network === 'testnet' ? abisTN : abisMN
+  const abis = _network === 97 ? abisTN : abisMN
   window.localStorage.setItem('abis', JSON.stringify(abis))
   return abis
 }
@@ -311,8 +341,8 @@ export const changeAbis = (_network) => {
  * @returns {Object} Relevant list of ABIs
  */
 export const getAbis = () => {
-  const abis = JSON.parse(window.localStorage.getItem('abis'))
-    ? JSON.parse(window.localStorage.getItem('abis'))
+  const abis = tryParse(window.localStorage.getItem('abis'))
+    ? tryParse(window.localStorage.getItem('abis'))
     : changeAbis('testnet') // Change this to 'mainnet' after mainnet is deployed
   return abis
 }
@@ -323,7 +353,7 @@ export const getAbis = () => {
  * @returns {Object} RPC URL
  */
 export const changeRpc = (_network) => {
-  const rpcUrls = _network === 'testnet' ? bscRpcsTN : bscRpcsMN
+  const rpcUrls = _network === 97 ? bscRpcsTN : bscRpcsMN
   const rpcIndex = Math.floor(Math.random() * rpcUrls.length)
   const rpcUrl = rpcUrls[rpcIndex]
   return rpcUrl
@@ -334,14 +364,27 @@ export const changeRpc = (_network) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetwork = (_network) => {
-  console.log(_network)
-  // const tempNetwork = 'testnet' // remove this after mainnet is deployed; have the below 'tempNetworks' all changed to '_network'
+export const changeNetworkLsOnly = (_network) => {
   const rpcUrl = changeRpc(_network)
-  changeAbis(_network)
-  changeAddresses(_network)
   const network =
-    _network === 'testnet'
+    _network === 97
+      ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
+      : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
+  window.localStorage.setItem('network', JSON.stringify(network))
+  return network
+}
+
+/**
+ * Trigger change between mainnet and testnet
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} chainId (56), net (mainnet), chain (BSC)
+ */
+export const changeNetwork = async (_network) => {
+  const rpcUrl = changeRpc(_network)
+  await changeAbis(_network)
+  await changeAddresses(_network)
+  const network =
+    _network === 97
       ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
       : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
   window.localStorage.setItem('network', JSON.stringify(network))
@@ -353,9 +396,9 @@ export const changeNetwork = (_network) => {
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
 export const getNetwork = () => {
-  const network = JSON.parse(window.localStorage.getItem('network'))
-    ? JSON.parse(window.localStorage.getItem('network'))
-    : changeNetwork('testnet') // Change this to 'mainnet' after mainnet is deployed
+  const network = tryParse(window.localStorage.getItem('network'))
+    ? tryParse(window.localStorage.getItem('network'))
+    : changeNetwork(97) // Change this to 56 (mainnet) after mainnet is deployed
   return network
 }
 

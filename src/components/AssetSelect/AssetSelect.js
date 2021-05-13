@@ -71,8 +71,16 @@ const AssetSelect = (props) => {
     window.localStorage.setItem(`assetType${props.priority}`, asset.type)
   }
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
   const [selectedItem, setSelectedItem] = useState(
-    JSON.parse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+    tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
   )
   const [selectedType, setSelectedType] = useState(
     window.localStorage.getItem(`assetType${props.priority}`),
@@ -80,7 +88,7 @@ const AssetSelect = (props) => {
 
   useEffect(() => {
     setSelectedItem(
-      JSON.parse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+      tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
     )
     setSelectedType(window.localStorage.getItem(`assetType${props.priority}`))
   }, [
@@ -100,7 +108,9 @@ const AssetSelect = (props) => {
     let finalArray = []
     const getArray = () => {
       if (pool.poolDetails) {
-        let tempArray = pool.poolDetails
+        let tempArray = pool.poolDetails.filter(
+          (asset) => asset.tokenAddress !== addr.oldSparta,
+        )
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
@@ -184,7 +194,7 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="mr-2 mt-3"
+                      className="ml-n3 mt-3"
                     />
                   </>
                 ),
@@ -219,7 +229,7 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
-                      className="mr-2 mt-3"
+                      className="ml-n3 mt-3"
                     />
                   </>
                 ),
@@ -284,7 +294,7 @@ const AssetSelect = (props) => {
                   height="20px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="mr-2 mt-3"
+                  className="ml-n3 mt-3"
                 />
               </>
             )}
@@ -302,7 +312,7 @@ const AssetSelect = (props) => {
                   height="20px"
                   src={spartaIconAlt}
                   alt="Sparta LP token icon"
-                  className="mr-2 mt-3"
+                  className="ml-n3 mt-3"
                 />
               </>
             )}
@@ -435,7 +445,7 @@ const AssetSelect = (props) => {
                 key={`${asset.actualAddr}-all`}
                 className="mb-3 output-card mr-2"
               >
-                <Col xs="4" sm="2" className="p-0 pl-2">
+                <Col xs="3" sm="2" className="p-0 pl-2">
                   <div
                     role="button"
                     onClick={() => {
@@ -447,7 +457,7 @@ const AssetSelect = (props) => {
                   </div>
                 </Col>
 
-                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
+                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-1">
                   <Row>
                     <Col xs="12" className="float-left ml-n4">
                       <div
@@ -511,7 +521,7 @@ const AssetSelect = (props) => {
                   key={asset.actualAddr + activeTab}
                   className="mb-3 output-card mr-2"
                 >
-                  <Col xs="4" sm="2" className="p-0 pl-2">
+                  <Col xs="3" sm="2" className="p-0 pl-2">
                     <div
                       role="button"
                       onClick={() => {
@@ -523,7 +533,7 @@ const AssetSelect = (props) => {
                     </div>
                   </Col>
 
-                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-3">
+                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-1">
                     <Row>
                       <Col xs="12" className="float-left ml-n4">
                         <div

@@ -58,7 +58,7 @@ const BondItem = ({ asset }) => {
         <Card className="card-body card-320">
           <Row className="mt-n3">
             <Col xs="auto" className="">
-              <h3 className="mt-4">
+              <h3 className="mt-2">
                 <img
                   className=""
                   src={token.symbolUrl}
