@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import { Button, Card, Col, Row } from 'reactstrap'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
@@ -19,6 +20,7 @@ import { useSparta } from '../../../store/sparta/selector'
 import spartaIconAlt from '../../../assets/img/spartan_synth.svg'
 
 const SynthVaultItem = ({ synthItem }) => {
+  const { t } = useTranslation()
   const sparta = useSparta()
   const reserve = useReserve()
   const synth = useSynth()
@@ -118,7 +120,7 @@ const SynthVaultItem = ({ synthItem }) => {
               </h3>
               <Link to={`/dapp/synths?asset2=${synthItem.tokenAddress}`}>
                 <p className="text-sm-label-alt">
-                  Obtain {getToken(synthItem.tokenAddress)?.symbol}s
+                  {t('obtain')} {getToken(synthItem.tokenAddress)?.symbol}s
                   <i className="icon-scan icon-mini ml-1" />
                 </p>
               </Link>
@@ -144,7 +146,7 @@ const SynthVaultItem = ({ synthItem }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              Balance
+              {t('balance')}
             </Col>
             <Col className="text-right output-card">
               {formatFromWei(synthItem.balance)}{' '}
@@ -154,7 +156,7 @@ const SynthVaultItem = ({ synthItem }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              Staked
+              {t('staked')}
             </Col>
             <Col className="text-right output-card">
               {formatFromWei(synthItem.staked)}{' '}
@@ -164,7 +166,7 @@ const SynthVaultItem = ({ synthItem }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              Harvestable
+              {t('harvestable')}
             </Col>
             <Col className="text-right output-card">
               {synthItem.weight > 0
@@ -176,12 +178,12 @@ const SynthVaultItem = ({ synthItem }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              Last Harvest
+              {t('lastHarvest')}
             </Col>
             <Col className="text-right output-card">
               {synthItem.lastHarvest > 0
                 ? formatDate(synthItem.lastHarvest)
-                : 'Never'}
+                : t('never')}
             </Col>
           </Row>
 
@@ -195,7 +197,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 }
                 disabled={synthItem.balance <= 0}
               >
-                Deposit
+                {t('deposit')}
               </Button>
             </Col>
             <Col xs="6" className="py-1 pl-1 pr-0">
@@ -207,7 +209,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 }
                 disabled={synthItem.staked <= 0}
               >
-                Withdraw
+                {t('withdraw')}
               </Button>
             </Col>
           </Row>

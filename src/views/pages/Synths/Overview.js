@@ -438,7 +438,7 @@ const Swap = () => {
                         toggle('mint')
                       }}
                     >
-                      Mint Synths
+                      {t('mintSynths')}
                     </NavLink>
                   </NavItem>
                   <NavItem>
@@ -450,7 +450,7 @@ const Swap = () => {
                         toggle('burn')
                       }}
                     >
-                      Burn Synths
+                      {t('burnSynths')}
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -465,7 +465,7 @@ const Swap = () => {
                         <Col xs="4">
                           <div className="text-sm-label">
                             {' '}
-                            {activeTab === 'mint' ? 'Add' : 'Burn'}
+                            {activeTab === 'mint' ? t('add') : t('burn')}
                           </div>
                         </Col>
 
@@ -501,7 +501,7 @@ const Swap = () => {
                             <Input
                               className="text-right h-100 ml-0 p-2"
                               type="text"
-                              placeholder="Add..."
+                              placeholder={`${t('add')}...`}
                               id="swapInput1"
                               inputMode="decimal"
                               pattern="^[0-9]*[.,]?[0-9]*$"
@@ -565,12 +565,13 @@ const Swap = () => {
                           <Col xs="4" className="">
                             <div className="text-sm-label">
                               {' '}
-                              {activeTab === 'mint' ? 'Mint' : 'Receive'}
+                              {activeTab === 'mint' ? t('mint') : t('receive')}
                             </div>
                           </Col>
                           <Col xs="8" className="text-right">
                             <div className="text-sm-label">
-                              Balance{': '}
+                              {t('balance')}
+                              {': '}
                               {pool.poolDetails &&
                                 formatFromWei(getBalance(2), 4)}
                             </div>
@@ -619,12 +620,13 @@ const Swap = () => {
                         <Row className="my-2">
                           <Col xs="4" className="">
                             <div className="text-sm-label">
-                              {activeTab === 'burn' ? 'Receive' : 'Burn'}
+                              {activeTab === 'burn' ? t('receive') : t('burn')}
                             </div>
                           </Col>
                           <Col xs="8" className="text-right">
                             <div className="text-sm-label">
-                              Balance{': '}
+                              {t('balance')}
+                              {': '}
                               {pool.poolDetails &&
                                 formatFromWei(getBalance(2), 4)}
                             </div>
@@ -682,7 +684,7 @@ const Swap = () => {
                     <Row className="mb-3">
                       <Col xs="auto">
                         <div className="text-card">
-                          Fee{' '}
+                          {t('fee')}{' '}
                           <i
                             className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                             id="tooltipSynthFee"
@@ -692,8 +694,7 @@ const Swap = () => {
                             placement="right"
                             target="tooltipSynthFee"
                           >
-                            The slip fee being injected into the pool to reward
-                            the liquidity providers
+                            {t('slipFeeInfo')}
                           </UncontrolledTooltip>
                         </div>
                       </Col>
@@ -782,7 +783,8 @@ const Swap = () => {
                             }
                             block
                           >
-                            Mint {getToken(assetSwap2.tokenAddress)?.symbol}s
+                            {t('mint')}{' '}
+                            {getToken(assetSwap2.tokenAddress)?.symbol}s
                           </Button>
                         </Col>
                       </>
@@ -809,7 +811,8 @@ const Swap = () => {
                           }
                           block
                         >
-                          Burn {getToken(assetSwap1.tokenAddress)?.symbol}s
+                          {t('burn')}{' '}
+                          {getToken(assetSwap1.tokenAddress)?.symbol}s
                         </Button>
                       </Col>
                     )}

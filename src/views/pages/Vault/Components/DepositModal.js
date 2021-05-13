@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Col, Input, Modal, Row, FormGroup, Card } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
 import { daoDeposit } from '../../../../store/dao/actions'
 import { useDao } from '../../../../store/dao/selector'
@@ -11,6 +12,7 @@ import { getExplorerTxn } from '../../../../utils/extCalls'
 const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const [percentage, setpercentage] = useState('0')
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const pool = usePool()
   const dao = useDao()
   const [loading, setloading] = useState(false)
@@ -27,7 +29,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
       <Card className="card-body">
         <Row className="">
           <Col xs="10">
-            <h4 className="modal-title">Deposit</h4>
+            <h4 className="modal-title">{t('deposit')}</h4>
           </Col>
           <Col xs="2">
             <Button onClick={toggleModal} className="btn btn-transparent mt-4">
@@ -39,7 +41,8 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
           <Row className="my-1">
             <Col xs="12" className="text-left mb-4">
               <span>
-                <div className="text-card">Txn Complete</div> View on BSC Scan{' '}
+                <div className="text-card">{t('txnComplete')}</div>{' '}
+                {t('viewBscScan')}{' '}
                 <a
                   href={getExplorerTxn(dao.deposit.transactionHash)}
                   target="_blank"
@@ -52,7 +55,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
 
             <Col xs="12" className="">
               <Button color="primary" onClick={() => toggleModal()}>
-                Close
+                {t('close')}
               </Button>
             </Col>
           </Row>
@@ -62,7 +65,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
           <>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                Amount
+                {t('amount')}
               </Col>
               <Col className="text-right output-card">
                 {formatFromWei(deposit())} {token.symbol}
@@ -87,7 +90,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
             <Row>
               <Col xs="6" className="ml-n1">
                 <Button color="primary" onClick={() => toggleModal()}>
-                  Cancel
+                  {t('cancel')}
                 </Button>
               </Col>
               <Col xs="6" className="">
@@ -100,7 +103,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                     setloading(false)
                   }}
                 >
-                  Confirm
+                  {t('confirm')}
                 </Button>
               </Col>
             </Row>

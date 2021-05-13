@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { Row, Col, Nav, NavItem, NavLink } from 'reactstrap'
 import { getReserveGlobalDetails } from '../../../store/reserve/actions'
 import { getSpartaGlobalDetails } from '../../../store/sparta/actions'
@@ -9,6 +10,7 @@ import SynthVault from './SynthVault'
 
 const Vault = () => {
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const [mode, setMode] = useState('Dao')
 
   const [trigger0, settrigger0] = useState(0)
@@ -48,7 +50,7 @@ const Vault = () => {
                     setMode('Dao')
                   }}
                 >
-                  DaoVault
+                  {t('daoVault')}
                 </NavLink>
               </NavItem>
               <NavItem>
@@ -60,7 +62,7 @@ const Vault = () => {
                     setMode('Synth')
                   }}
                 >
-                  SynthVault
+                  {t('synthVault')}
                 </NavLink>
               </NavItem>
             </Nav>

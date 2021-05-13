@@ -1,6 +1,7 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
 import { Col, Row, Button, Card } from 'reactstrap'
 import { bondClaimAll } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
@@ -11,6 +12,7 @@ const Bond = () => {
   const pool = usePool()
   const wallet = useWallet()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -21,7 +23,7 @@ const Bond = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-2">Bond</h2>
+              <h2 className="text-title-small mb-0 mr-2">{t('bond')}</h2>
             </div>
           </Col>
         </Row>
@@ -32,14 +34,14 @@ const Bond = () => {
               className="card-body card-320"
               style={{ backgroundColor: '#25212D' }}
             >
-              <h3>Bond Positions</h3>
+              <h3>{t('bondPositions')}</h3>
               {pool.poolDetails?.length > 0 &&
                 pool.poolDetails
                   .filter((asset) => asset.bonded > 0)
                   .map((asset) => (
                     <Row key={asset.address} className="my-1">
                       <Col xs="auto" className="text-card">
-                        Remaining
+                        {t('remaining')}
                       </Col>
                       <Col className="text-right output-card">
                         {formatFromWei(asset.bonded)}{' '}
@@ -51,7 +53,8 @@ const Bond = () => {
                 0 && (
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    You have no Bond positions
+                    {t('noBondPosition')}
+                    {/* You have no Bond positions */}
                   </Col>
                 </Row>
               )}
@@ -61,7 +64,8 @@ const Bond = () => {
                     className="btn btn-primary align-middle"
                     onClick={() => dispatch(bondClaimAll(wallet.account))}
                   >
-                    Claim All{' ( '}
+                    {t('claimAll')}
+                    {' ( '}
                     {pool.poolDetails?.length > 0 &&
                       pool.poolDetails.filter((asset) => asset.bonded > 0)
                         .length}
