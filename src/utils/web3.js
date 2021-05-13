@@ -272,7 +272,7 @@ export const formatShortString = (longString) => {
  * @returns {Object} Relevant list of addresses
  */
 export const changeAddresses = (_network) => {
-  const addresses = _network === 'testnet' ? addressesTN : addressesMN
+  const addresses = _network === 97 ? addressesTN : addressesMN
   window.localStorage.setItem('addresses', JSON.stringify(addresses))
   return addresses
 }
@@ -320,7 +320,7 @@ export const getItemFromArray = (asset, finalArray) => {
  * @returns {Object} Relevant list of ABIs
  */
 export const changeAbis = (_network) => {
-  const abis = _network === 'testnet' ? abisTN : abisMN
+  const abis = _network === 97 ? abisTN : abisMN
   window.localStorage.setItem('abis', JSON.stringify(abis))
   return abis
 }
@@ -342,7 +342,7 @@ export const getAbis = () => {
  * @returns {Object} RPC URL
  */
 export const changeRpc = (_network) => {
-  const rpcUrls = _network === 'testnet' ? bscRpcsTN : bscRpcsMN
+  const rpcUrls = _network === 97 ? bscRpcsTN : bscRpcsMN
   const rpcIndex = Math.floor(Math.random() * rpcUrls.length)
   const rpcUrl = rpcUrls[rpcIndex]
   return rpcUrl
@@ -353,13 +353,27 @@ export const changeRpc = (_network) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetwork = (_network) => {
-  // const tempNetwork = 'testnet' // remove this after mainnet is deployed; have the below 'tempNetworks' all changed to '_network'
+export const changeNetworkLsOnly = (_network) => {
   const rpcUrl = changeRpc(_network)
-  changeAbis(_network)
-  changeAddresses(_network)
   const network =
-    _network === 'testnet'
+    _network === 97
+      ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
+      : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
+  window.localStorage.setItem('network', JSON.stringify(network))
+  return network
+}
+
+/**
+ * Trigger change between mainnet and testnet
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} chainId (56), net (mainnet), chain (BSC)
+ */
+export const changeNetwork = async (_network) => {
+  const rpcUrl = changeRpc(_network)
+  await changeAbis(_network)
+  await changeAddresses(_network)
+  const network =
+    _network === 97
       ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
       : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
   window.localStorage.setItem('network', JSON.stringify(network))
@@ -373,7 +387,7 @@ export const changeNetwork = (_network) => {
 export const getNetwork = () => {
   const network = tryParse(window.localStorage.getItem('network'))
     ? tryParse(window.localStorage.getItem('network'))
-    : changeNetwork('testnet') // Change this to 'mainnet' after mainnet is deployed
+    : changeNetwork(97) // Change this to 56 (mainnet) after mainnet is deployed
   return network
 }
 

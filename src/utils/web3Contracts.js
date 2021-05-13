@@ -2,8 +2,6 @@ import { ethers } from 'ethers'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
 
-const addr = getAddresses()
-
 const isAddress = (addrToCheck) => ethers.utils.isAddress(addrToCheck)
 
 /**
@@ -26,11 +24,11 @@ export const getTokenContract = (tokenAddr) => {
  * @returns {uint} contract
  */
 export const getReserveContract = () => {
-  let contract = isAddress(addr.reserve)
+  let contract = isAddress(getAddresses().reserve)
   const abiReserve = getAbis().reserve
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.reserve, abiReserve, provider)
+    contract = new ethers.Contract(getAddresses().reserve, abiReserve, provider)
   }
   return contract
 }
@@ -55,11 +53,11 @@ export const getOldBondContract = (bondAddress) => {
  * @returns {uint} contract
  */
 export const getBondContract = () => {
-  let contract = isAddress(addr.bond)
+  let contract = isAddress(getAddresses().bond)
   const abiBond = getAbis().bond
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.bond, abiBond, provider)
+    contract = new ethers.Contract(getAddresses().bond, abiBond, provider)
   }
   return contract
 }
@@ -69,11 +67,15 @@ export const getBondContract = () => {
  * @returns {uint} contract
  */
 export const getBondVaultContract = () => {
-  let contract = isAddress(addr.bondVault)
+  let contract = isAddress(getAddresses().bondVault)
   const abiBondVault = getAbis().bondVault
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.bondVault, abiBondVault, provider)
+    contract = new ethers.Contract(
+      getAddresses().bondVault,
+      abiBondVault,
+      provider,
+    )
   }
   return contract
 }
@@ -83,11 +85,11 @@ export const getBondVaultContract = () => {
  * @returns {uint} contract
  */
 export const getDaoContract = () => {
-  let contract = isAddress(addr.dao)
+  let contract = isAddress(getAddresses().dao)
   const abiDao = getAbis().dao
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.dao, abiDao, provider)
+    contract = new ethers.Contract(getAddresses().dao, abiDao, provider)
   }
   return contract
 }
@@ -97,33 +99,41 @@ export const getDaoContract = () => {
  * @returns {uint} contract
  */
 export const getDaoVaultContract = () => {
-  let contract = isAddress(addr.daoVault)
+  let contract = isAddress(getAddresses().daoVault)
   const abiDaoVault = getAbis().daoVault
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.daoVault, abiDaoVault, provider)
+    contract = new ethers.Contract(
+      getAddresses().daoVault,
+      abiDaoVault,
+      provider,
+    )
   }
   return contract
 }
 
 // GET LOAN CONTRACT ** CHECK / UPDATE THIS AFTER V1 ROLLOUT **
 export const getLoanContract = () => {
-  let contract = isAddress(addr.loan)
+  let contract = isAddress(getAddresses().loan)
   const abiLoan = getAbis().daoLoan
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.loan, abiLoan, provider)
+    contract = new ethers.Contract(getAddresses().loan, abiLoan, provider)
   }
   return contract
 }
 
 // GET LOANVAULT CONTRACT ** CHECK / UPDATE THIS AFTER V1 ROLLOUT **
 export const getLoanVaultContract = () => {
-  let contract = isAddress(addr.loanVault)
+  let contract = isAddress(getAddresses().loanVault)
   const abiLoanVault = getAbis().daoLoanVault
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.loanVault, abiLoanVault, provider)
+    contract = new ethers.Contract(
+      getAddresses().loanVault,
+      abiLoanVault,
+      provider,
+    )
   }
   return contract
 }
@@ -133,11 +143,11 @@ export const getLoanVaultContract = () => {
  * @returns {uint} contract
  */
 export const getMigrateContract = () => {
-  let contract = isAddress(addr.migrate)
+  let contract = isAddress(getAddresses().migrate)
   const abiMigrate = getAbis().migrate
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.migrate, abiMigrate, provider)
+    contract = new ethers.Contract(getAddresses().migrate, abiMigrate, provider)
   }
   return contract
 }
@@ -162,11 +172,15 @@ export const getPoolContract = (poolAddress) => {
  * @returns {uint} contract
  */
 export const getPoolFactoryContract = () => {
-  let contract = isAddress(addr.poolFactory)
+  let contract = isAddress(getAddresses().poolFactory)
   const abiPoolFactory = getAbis().poolFactory
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.poolFactory, abiPoolFactory, provider)
+    contract = new ethers.Contract(
+      getAddresses().poolFactory,
+      abiPoolFactory,
+      provider,
+    )
   }
   return contract
 }
@@ -176,11 +190,11 @@ export const getPoolFactoryContract = () => {
  * @returns {uint} contract
  */
 export const getRouterContract = () => {
-  let contract = isAddress(addr.router)
+  let contract = isAddress(getAddresses().router)
   const abiRouter = getAbis().router
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.router, abiRouter, provider)
+    contract = new ethers.Contract(getAddresses().router, abiRouter, provider)
   }
   return contract
 }
@@ -190,11 +204,11 @@ export const getRouterContract = () => {
  * @returns {uint} contract
  */
 export const getSpartaContract = () => {
-  let contract = isAddress(addr.sparta)
+  let contract = isAddress(getAddresses().sparta)
   const abiBase = getAbis().sparta
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.sparta, abiBase, provider)
+    contract = new ethers.Contract(getAddresses().sparta, abiBase, provider)
   }
   return contract
 }
@@ -204,11 +218,15 @@ export const getSpartaContract = () => {
  * @returns {uint} contract
  */
 export const getFallenSpartansContract = () => {
-  let contract = isAddress(addr.fallenSpartans)
+  let contract = isAddress(getAddresses().fallenSpartans)
   const abiFS = getAbis().fallenSpartans
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.fallenSpartans, abiFS, provider)
+    contract = new ethers.Contract(
+      getAddresses().fallenSpartans,
+      abiFS,
+      provider,
+    )
   }
   return contract
 }
@@ -233,11 +251,15 @@ export const getSynthContract = (synthAddress) => {
  * @returns {uint} contract
  */
 export const getSynthFactoryContract = () => {
-  let contract = isAddress(addr.synthFactory)
+  let contract = isAddress(getAddresses().synthFactory)
   const abiSynthFactory = getAbis().synthFactory
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.synthFactory, abiSynthFactory, provider)
+    contract = new ethers.Contract(
+      getAddresses().synthFactory,
+      abiSynthFactory,
+      provider,
+    )
   }
   return contract
 }
@@ -247,11 +269,15 @@ export const getSynthFactoryContract = () => {
  * @returns {uint} contract
  */
 export const getSynthVaultContract = () => {
-  let contract = isAddress(addr.synthVault)
+  let contract = isAddress(getAddresses().synthVault)
   const abiSynthVault = getAbis().synthVault
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.synthVault, abiSynthVault, provider)
+    contract = new ethers.Contract(
+      getAddresses().synthVault,
+      abiSynthVault,
+      provider,
+    )
   }
   return contract
 }
@@ -261,11 +287,11 @@ export const getSynthVaultContract = () => {
  * @returns {uint} contract
  */
 export const getUtilsContract = () => {
-  let contract = isAddress(addr.utils)
+  let contract = isAddress(getAddresses().utils)
   const abiUtils = getAbis().utils
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(addr.utils, abiUtils, provider)
+    contract = new ethers.Contract(getAddresses().utils, abiUtils, provider)
   }
   return contract
 }

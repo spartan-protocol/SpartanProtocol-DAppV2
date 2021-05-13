@@ -9,8 +9,8 @@ import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import { changeNetwork, getNetwork } from '../../utils/web3'
-import { addNetworkMM, addNetworkBC, watchAsset } from '../../store/web3'
+import { changeNetworkLsOnly, getNetwork } from '../../utils/web3'
+import { watchAsset } from '../../store/web3'
 import { usePool } from '../../store/pool/selector'
 import ShareLink from '../Share/ShareLink'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -34,15 +34,13 @@ const WalletSelect = (props) => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setNetwork(changeNetwork('mainnet'))
+      setNetwork(changeNetworkLsOnly(56))
     }
     if (net.target.checked === false) {
-      setNetwork(changeNetwork('testnet'))
+      setNetwork(changeNetworkLsOnly(97))
     } else {
-      setNetwork(changeNetwork(net))
+      setNetwork(changeNetworkLsOnly(net))
     }
-    await dispatch(addNetworkMM())
-    dispatch(addNetworkBC())
   }
 
   useEffect(() => {
@@ -142,7 +140,7 @@ const WalletSelect = (props) => {
                     <Form.Check
                       type="switch"
                       id="custom-switch"
-                      checked={network?.net === 'mainnet'}
+                      checked={network?.chainId === 56}
                       onChange={(value) => onChangeNetwork(value)}
                       style={{ top: '-10px' }}
                     />

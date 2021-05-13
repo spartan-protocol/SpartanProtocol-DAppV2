@@ -11,6 +11,8 @@ const RecentTxns = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
+  const getToken = (tokenAddress) =>
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   // const [selectedFilter, setselectedFilter] = useState(false)
 
   // const handleFilter = (formFilter) => {
@@ -66,9 +68,11 @@ const RecentTxns = () => {
                           txn.args?.inputToken.toString(),
                           2,
                         )} ${
-                          pool.finalLpArray?.filter(
-                            (asset) => asset.poolAddress === txn.address,
-                          )[0]?.symbol
+                          getToken(
+                            pool.poolDetails?.filter(
+                              (asset) => asset.address === txn.address,
+                            )[0].tokenAddress,
+                          )?.symbol
                         }`}
 
                       {txn.event === 'RemoveLiquidity' &&
@@ -76,21 +80,23 @@ const RecentTxns = () => {
                           txn.args?.unitsClaimed.toString(),
                           2,
                         )} ${
-                          pool.finalLpArray?.filter(
-                            (asset) => asset.poolAddress === txn.address,
-                          )[0]?.symbol
+                          getToken(
+                            pool.poolDetails?.filter(
+                              (asset) => asset.address === txn.address,
+                            )[0].tokenAddress,
+                          )?.symbol
                         }p`}
                       {txn.event === 'Swapped' &&
                         `${formatFromWei(
                           txn.args?.inputAmount.toString(),
                           2,
                         )} ${
-                          pool.finalLpArray?.filter((asset) => {
+                          pool.tokenDetails?.filter((asset) => {
                             let targetToken = txn.args.tokenFrom
                             if (targetToken === addr.wbnb) {
                               targetToken = addr.bnb
                             }
-                            return asset.tokenAddress === targetToken
+                            return asset.address === targetToken
                           })[0]?.symbol
                         }`}
                     </td>
@@ -100,9 +106,11 @@ const RecentTxns = () => {
                           txn.args?.unitsIssued.toString(),
                           2,
                         )} ${
-                          pool.finalLpArray?.filter(
-                            (asset) => asset.poolAddress === txn.address,
-                          )[0]?.symbol
+                          getToken(
+                            pool.poolDetails?.filter(
+                              (asset) => asset.address === txn.address,
+                            )[0],
+                          )?.symbol
                         }p`}
                       {txn.event === 'RemoveLiquidity' &&
                         `${formatFromWei(
@@ -112,21 +120,23 @@ const RecentTxns = () => {
                           txn.args?.outputToken.toString(),
                           2,
                         )} ${
-                          pool.finalLpArray?.filter(
-                            (asset) => asset.poolAddress === txn.address,
-                          )[0]?.symbol
+                          getToken(
+                            pool.poolDetails?.filter(
+                              (asset) => asset.address === txn.address,
+                            )[0],
+                          )?.symbol
                         }`}
                       {txn.event === 'Swapped' &&
                         `${formatFromWei(
                           txn.args?.outputAmount.toString(),
                           2,
                         )} ${
-                          pool.finalLpArray?.filter((asset) => {
+                          pool.tokenDetails?.filter((asset) => {
                             let targetToken = txn.args.tokenTo
                             if (targetToken === addr.wbnb) {
                               targetToken = addr.bnb
                             }
-                            return asset.tokenAddress === targetToken
+                            return asset.address === targetToken
                           })[0]?.symbol
                         }`}
                     </td>

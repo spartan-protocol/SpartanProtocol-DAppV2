@@ -11,6 +11,8 @@ import {
   spartaUpgrade,
 } from '../../../store/sparta/actions'
 import { getSpartaContract } from '../../../utils/web3Contracts'
+import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
+import oldSpartaIcon from '../../../assets/icons/oldSparta.svg'
 
 const Upgrade = () => {
   const addr = getAddresses()
@@ -20,10 +22,12 @@ const Upgrade = () => {
   const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
   const [newSpartaBalance, setnewSpartaBalance] = useState('0')
   const fsGenesis = '1620795586'
+  const [loadingBalance, setloadingBalance] = useState(false)
 
   const [trigger0, settrigger0] = useState(0)
   const getData = async () => {
-    if (wallet?.status === 'connected') {
+    if (wallet?.status === 'connected' && loadingBalance === false) {
+      setloadingBalance(true)
       let awaitArray = []
       awaitArray.push(
         getTokenContract(addr.oldSparta).balanceOf(wallet.account),
@@ -32,6 +36,7 @@ const Upgrade = () => {
       awaitArray = await Promise.all(awaitArray)
       setoldSpartaBalance(awaitArray[0].toString())
       setnewSpartaBalance(awaitArray[1].toString())
+      setloadingBalance(false)
     }
   }
   useEffect(() => {
@@ -64,8 +69,8 @@ const Upgrade = () => {
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
-            <h3 className="mb-0">Upgrade / Bridge</h3>
-            <h4>SPARTA Tokens</h4>
+            <h3 className="mb-0">Upgrade SPARTA</h3>
+            <h4>Bridge V1 to V2</h4>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
                 Input
@@ -107,7 +112,7 @@ const Upgrade = () => {
             <h4>From V1 LP Drain</h4>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
-                Claimable
+                Claim
               </Col>
               <Col className="text-right output-card">
                 {formatFromWei(sparta.claimCheck)} SPARTAv2
@@ -126,7 +131,7 @@ const Upgrade = () => {
                 <Button
                   className="btn-sm btn-primary h-100 w-100"
                   onClick={() => dispatch(fallenSpartansClaim(wallet.account))}
-                  // disabled={sparta?.claimCheck <= 0}
+                  disabled={sparta?.claimCheck <= 0}
                 >
                   Claim SPARTA
                 </Button>
@@ -142,8 +147,8 @@ const Upgrade = () => {
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
-            <h3 className="mb-0">SPARTA Balances</h3>
-            <h4>New & Old</h4>
+            <h3 className="mb-0">Balance SPARTA</h3>
+            <h4>V1 & V2 Balances</h4>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
                 Balance
@@ -158,6 +163,29 @@ const Upgrade = () => {
               </Col>
               <Col className="text-right output-card">
                 {formatFromWei(newSpartaBalance)} SPARTAv2
+              </Col>
+            </Row>
+            <Row className="card-body py-1 text-center">
+              <Col xs="12" className="p-0 py-1">
+                <Button
+                  className="btn-sm btn-primary w-100 h-100 p-0"
+                  onClick={() => settrigger0(trigger0 + 1)}
+                  disabled={loadingBalance === true}
+                >
+                  <img
+                    height="27"
+                    src={oldSpartaIcon}
+                    alt="old sparta icon"
+                    className="float-left ml-2"
+                  />
+                  <div className="d-inline-block mt-1">Refresh Balance</div>
+                  <img
+                    height="28"
+                    src={spartaIcon}
+                    alt="sparta icon"
+                    className="float-right mr-2"
+                  />
+                </Button>
               </Col>
             </Row>
           </Col>
