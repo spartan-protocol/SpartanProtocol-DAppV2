@@ -55,7 +55,7 @@ const BondItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto" key={asset.address}>
-        <Card className="card-body card-320">
+        <Card className="card-body card-320 pt-3 pb-2">
           <Row className="mt-n3">
             <Col xs="auto" className="">
               <h3 className="mt-2">
@@ -146,14 +146,14 @@ const BondItem = ({ asset }) => {
           )}
           <Row className="text-center mt-2">
             <Col xs="6" className="p-1">
-              <Button color="primary" className="btn-sm h-100 w-100" disabled>
+              <Button color="primary" className="btn w-100" disabled>
                 {t('bond')}
               </Button>
             </Col>
             <Col xs="6" className="p-1">
               <Button
                 color="primary"
-                className="btn-sm h-100 w-100"
+                className="btn w-100"
                 onClick={() => dispatch(bondClaim(asset.tokenAddress))}
               >
                 {t('claim')}

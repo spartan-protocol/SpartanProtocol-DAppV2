@@ -88,7 +88,7 @@ const DaoVault = () => {
     <>
       <Col xs="auto">
         <Card
-          className="card-body card-320"
+          className="card-body card-320 pb-2"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -110,9 +110,9 @@ const DaoVault = () => {
               </Col>
             </Row>
             <Row className="card-body text-center">
-              <Col xs="12" className="p-0 py-1">
+              <Col xs="12" className="p-0">
                 <Link to="/dapp/pools/liquidity">
-                  <Button className="btn-sm btn-primary h-100 w-100">
+                  <Button className="btn btn-primary p-2" block>
                     {t('joinPools')}
                   </Button>
                 </Link>
@@ -124,7 +124,7 @@ const DaoVault = () => {
 
       <Col xs="auto">
         <Card
-          className="card-body card-320"
+          className="card-body card-320 pb-2"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -155,9 +155,10 @@ const DaoVault = () => {
               </Col>
             </Row>
             <Row className="card-body text-center">
-              <Col xs="12" className="p-0 py-1">
+              <Col xs="12" className="p-0">
                 <Button
-                  className="btn-sm btn-primary h-100 w-100"
+                  className="btn btn-primary p-2"
+                  block
                   onClick={() => dispatch(daoHarvest())}
                   disabled={dao.memberDetails?.weight <= 0}
                 >
@@ -174,7 +175,7 @@ const DaoVault = () => {
           .filter((i) => i.curated === true || i.staked > 0)
           .map((i) => (
             <Col xs="auto" key={i.address}>
-              <Card className="card-body card-320">
+              <Card className="card-body card-320 pb-2">
                 <Row className="mb-2">
                   <Col xs="auto" className="pr-0">
                     <img
@@ -241,20 +242,22 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="card-body text-center pt-3 pb-2">
-                  <Col xs="6" className="pl-0 py-1 pr-1">
+                  <Col xs="6" className="p-0 pr-1">
                     <Button
                       color="primary"
-                      className="btn-sm h-100 w-100"
+                      className="btn btn-primary p-2"
+                      block
                       onClick={() => toggleModal(i.tokenAddress)}
                       disabled={i.balance <= 0}
                     >
                       {t('deposit')}
                     </Button>
                   </Col>
-                  <Col xs="6" className="pr-0 py-1 pl-1">
+                  <Col xs="6" className="p-0 pl-1">
                     <Button
                       color="primary"
-                      className="btn-sm h-100 w-100"
+                      className="btn btn-primary p-2"
+                      block
                       onClick={() => dispatch(daoWithdraw(i.address))}
                       disabled={i.staked <= 0}
                     >

@@ -50,7 +50,7 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-body card-320">
+        <Card className="card-body card-320 pt-3 pb-2">
           <Row className="mb-2">
             <Col xs="auto" className="pr-0">
               <img src={token.symbolUrl} alt={token.symbol} height="50" />
@@ -90,26 +90,25 @@ const PoolItem = ({ asset }) => {
               )}
             </Col>
           </Row>
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              {t('spotPrice')}
+            </Col>
+            <Col className="text-right output-card">
+              {formatFromUnits(tokenValueBase)} SPARTA
+            </Col>
+          </Row>
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              {t('poolDepth')}
+            </Col>
+            <Col className="text-right output-card">
+              ${formatFromWei(poolDepthUsd, 0)} USD
+            </Col>
+          </Row>
           {showDetails === true && (
             <>
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  {t('spotPrice')}
-                </Col>
-                <Col className="text-right output-card">
-                  {formatFromUnits(tokenValueBase)} SPARTA
-                </Col>
-              </Row>
-
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  {t('poolDepth')}
-                </Col>
-                <Col className="text-right output-card">
-                  ${formatFromWei(poolDepthUsd, 0)} USD
-                </Col>
-              </Row>
-
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
                   {t('fees')}
@@ -161,21 +160,21 @@ const PoolItem = ({ asset }) => {
           <Row className="text-center mt-2">
             <Col xs="4" className="p-1">
               <Link to={`/dapp/pools/swap?asset1=${tokenAddress}`}>
-                <Button color="primary" className="btn-sm h-100 w-100">
+                <Button color="primary" className="btn-sm w-100">
                   {t('swap')}
                 </Button>
               </Link>
             </Col>
             <Col xs="4" className="p-1">
               <Link to={`/dapp/pools/liquidity?asset1=${tokenAddress}`}>
-                <Button color="primary" className="btn-sm h-100 w-100">
+                <Button color="primary" className="btn-sm w-100">
                   {t('join')}
                 </Button>
               </Link>
             </Col>
             <Col xs="4" className="p-1">
               <Link to="/dapp/vault">
-                <Button color="primary" className="btn-sm h-100 w-100">
+                <Button color="primary" className="btn-sm w-100">
                   {t('stake')}
                 </Button>
               </Link>

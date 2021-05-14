@@ -535,7 +535,7 @@ const Swap = () => {
                             <Col className="text-right">
                               <InputGroup className="m-0 mt-n1">
                                 <Input
-                                  className="text-right h-100 ml-0 p-2"
+                                  className="text-right ml-0 p-2"
                                   type="text"
                                   placeholder={`${t('add')}...`}
                                   id="swapInput1"
@@ -624,7 +624,7 @@ const Swap = () => {
                               <Col className="text-right">
                                 <InputGroup className="m-0 mt-n1">
                                   <Input
-                                    className="text-right h-100 ml-0 p-2 text-light"
+                                    className="text-right ml-0 p-2 text-light"
                                     type="text"
                                     placeholder="0.00"
                                     id="swapInput2"
@@ -687,7 +687,7 @@ const Swap = () => {
                               <Col className="text-right">
                                 <InputGroup className="m-0 mt-n1">
                                   <Input
-                                    className="text-right h-100 ml-0 p-2 text-light"
+                                    className="text-right ml-0 p-2 text-light"
                                     type="text"
                                     placeholder="0.00"
                                     id="swapInput2"
@@ -809,45 +809,15 @@ const Swap = () => {
                                   assetNumber="1"
                                 />
                               )}
-                            <Col>
-                              <Button
-                                color="primary"
-                                size="lg"
-                                onClick={() =>
-                                  dispatch(
-                                    swapAssetToSynth(
-                                      convertToWei(swapInput1?.value),
-                                      assetSwap1.tokenAddress,
-                                      getSynth(assetSwap2.tokenAddress)
-                                        ?.address,
-                                    ),
-                                  )
-                                }
-                                disabled={
-                                  swapInput1?.value <= 0 ||
-                                  BN(
-                                    convertToWei(swapInput1?.value),
-                                  ).isGreaterThan(getBalance(1))
-                                }
-                                block
-                              >
-                                {t('mint')}{' '}
-                                {getToken(assetSwap2.tokenAddress)?.symbol}s
-                              </Button>
-                            </Col>
-                          </>
-                        )}
-                        {activeTab === 'burn' && (
-                          <Col>
+
                             <Button
                               color="primary"
-                              size="lg"
                               onClick={() =>
                                 dispatch(
-                                  swapSynthToAsset(
+                                  swapAssetToSynth(
                                     convertToWei(swapInput1?.value),
-                                    getSynth(assetSwap1.tokenAddress)?.address,
-                                    assetSwap2.tokenAddress,
+                                    assetSwap1.tokenAddress,
+                                    getSynth(assetSwap2.tokenAddress)?.address,
                                   ),
                                 )
                               }
@@ -859,10 +829,34 @@ const Swap = () => {
                               }
                               block
                             >
-                              {t('burn')}{' '}
-                              {getToken(assetSwap1.tokenAddress)?.symbol}s
+                              {t('mint')}{' '}
+                              {getToken(assetSwap2.tokenAddress)?.symbol}s
                             </Button>
-                          </Col>
+                          </>
+                        )}
+                        {activeTab === 'burn' && (
+                          <Button
+                            color="primary"
+                            onClick={() =>
+                              dispatch(
+                                swapSynthToAsset(
+                                  convertToWei(swapInput1?.value),
+                                  getSynth(assetSwap1.tokenAddress)?.address,
+                                  assetSwap2.tokenAddress,
+                                ),
+                              )
+                            }
+                            disabled={
+                              swapInput1?.value <= 0 ||
+                              BN(convertToWei(swapInput1?.value)).isGreaterThan(
+                                getBalance(1),
+                              )
+                            }
+                            block
+                          >
+                            {t('burn')}{' '}
+                            {getToken(assetSwap1.tokenAddress)?.symbol}s
+                          </Button>
                         )}
                       </Col>
                     </Row>

@@ -8,7 +8,7 @@ import {
 } from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
 
-const TokenSwap = () => {
+const Overview = () => {
   const dispatch = useDispatch()
   const wallet = useWallet()
 
@@ -51,4 +51,4 @@ const TokenSwap = () => {
   )
 }
 
-export default TokenSwap
+export default Overview

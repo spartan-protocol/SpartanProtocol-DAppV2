@@ -9,12 +9,12 @@ const WrongNetwork = () => (
       <h4>
         In the meantime please visit{' '}
         <Link
-          to="/dapp/tokenswap"
+          to="/dapp/upgrade"
           style={{
             fontWeight: 'bold',
           }}
         >
-          the bridge
+          the upgrade page
         </Link>{' '}
         to swap your old SPARTA tokens to new $SPARTA
       </h4>

@@ -64,7 +64,8 @@ const Approval = ({
         -1 && (
         <Col>
           <Button
-            className="btn-fill w-100 h-100"
+            className="btn-fill"
+            block
             color="neutral"
             onClick={async () => {
               handleApproval()

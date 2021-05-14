@@ -16,10 +16,6 @@
   height: 42px;
 }
 
-.card {
-  cursor: pointer;
-}
-
 .inactive .folding-pannel {
   transform: perspective(0px) rotateX(90deg);
   transition: all 0.3s ease-in-out;

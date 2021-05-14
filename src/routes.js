@@ -6,7 +6,7 @@ import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
 import Vault from './views/pages/Vault/Overview'
 import Synths from './views/pages/Synths/Overview'
-import TokenSwap from './views/pages/TokenSwap/Overview'
+import Upgrade from './views/pages/Upgrade/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
@@ -30,7 +30,7 @@ const routes = (t) => [
     name: t('overview'),
     icon: 'icon-medium icon-home icon-dark',
     component: PoolsOverview,
-    layout: '/dapp',
+    layout: '',
   },
 
   {
@@ -38,7 +38,7 @@ const routes = (t) => [
     name: t('liquidity'),
     icon: 'icon-medium icon-sword icon-dark',
     component: Liquidity,
-    layout: '/dapp',
+    layout: '',
   },
 
   {
@@ -46,7 +46,7 @@ const routes = (t) => [
     name: t('swap'),
     icon: 'icon-medium icon-swords icon-dark',
     component: Swap,
-    layout: '/dapp',
+    layout: '',
   },
 
   {
@@ -54,7 +54,7 @@ const routes = (t) => [
     name: t('synths'),
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Synths,
-    layout: '/dapp',
+    layout: '',
   },
 
   {
@@ -62,7 +62,7 @@ const routes = (t) => [
     name: t('bond'),
     icon: 'icon-medium icon-helmet icon-dark',
     component: Bond,
-    layout: '/dapp',
+    layout: '',
   },
 
   {
@@ -70,15 +70,15 @@ const routes = (t) => [
     name: t('vault'),
     icon: 'icon-medium icon-colosseum icon-dark',
     component: Vault,
-    layout: '/dapp',
+    layout: '',
   },
 
   {
-    path: '/tokenswap',
-    name: 'TokenSwap',
+    path: '/upgrade',
+    name: 'Upgrade',
     icon: 'icon-medium icon-colosseum icon-dark',
-    component: TokenSwap,
-    layout: '/dapp',
+    component: Upgrade,
+    layout: '',
   },
 
   // {

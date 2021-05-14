@@ -745,7 +745,7 @@ const Swap = () => {
                               <Col className="text-right">
                                 <InputGroup className="m-0 mt-n1">
                                   <Input
-                                    className="text-right h-100 ml-0 p-2"
+                                    className="text-right ml-0 p-2"
                                     type="text"
                                     placeholder={`${t('sell')}...`}
                                     id="swapInput1"
@@ -831,7 +831,7 @@ const Swap = () => {
                               <Col className="text-right">
                                 <InputGroup className="m-0">
                                   <Input
-                                    className="text-right h-100 ml-0 p-2"
+                                    className="text-right ml-0 p-2"
                                     type="text"
                                     placeholder={`${t('buy')}...`}
                                     id="swapInput2"
@@ -1113,7 +1113,6 @@ const Swap = () => {
                           <Col className="hide-if-siblings">
                             <Button
                               color="primary"
-                              size="lg"
                               onClick={() =>
                                 dispatch(
                                   routerSwapAssets(
@@ -1131,7 +1130,8 @@ const Swap = () => {
                               }
                               block
                             >
-                              {t('sell')} {assetSwap1?.symbol}
+                              {t('sell')}{' '}
+                              {getToken(assetSwap1.tokenAddress)?.symbol}
                             </Button>
                           </Col>
                         )}
@@ -1139,7 +1139,6 @@ const Swap = () => {
                           <Col>
                             <Button
                               color="primary"
-                              size="lg"
                               onClick={() =>
                                 dispatch(
                                   routerZapLiquidity(
@@ -1173,10 +1172,9 @@ const Swap = () => {
                               txnAmount={convertToWei(swapInput1?.value)}
                               assetNumber="1"
                             />
-                            <Col>
+                            <Col className="hide-if-siblings">
                               <Button
                                 color="primary"
-                                size="lg"
                                 onClick={() =>
                                   dispatch(
                                     swapAssetToSynth(
@@ -1207,7 +1205,6 @@ const Swap = () => {
                           <Col>
                             <Button
                               color="primary"
-                              size="lg"
                               onClick={() =>
                                 dispatch(
                                   swapSynthToAsset(
