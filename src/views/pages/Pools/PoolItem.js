@@ -159,21 +159,21 @@ const PoolItem = ({ asset }) => {
           )}
           <Row className="text-center mt-2">
             <Col xs="4" className="p-1">
-              <Link to={`/dapp/pools/swap?asset1=${tokenAddress}`}>
+              <Link to={`/pools/swap?asset1=${tokenAddress}`}>
                 <Button color="primary" className="btn-sm w-100">
                   {t('swap')}
                 </Button>
               </Link>
             </Col>
             <Col xs="4" className="p-1">
-              <Link to={`/dapp/pools/liquidity?asset1=${tokenAddress}`}>
+              <Link to={`/pools/liquidity?asset1=${tokenAddress}`}>
                 <Button color="primary" className="btn-sm w-100">
                   {t('join')}
                 </Button>
               </Link>
             </Col>
             <Col xs="4" className="p-1">
-              <Link to="/dapp/vault">
+              <Link to="/vault">
                 <Button color="primary" className="btn-sm w-100">
                   {t('stake')}
                 </Button>

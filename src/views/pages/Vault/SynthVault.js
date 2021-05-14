@@ -91,7 +91,7 @@ const SynthVault = () => {
             </Row>
             <Row className="card-body text-center">
               <Col xs="12" className="p-0 pt-1">
-                <Link to="/dapp/synths">
+                <Link to="/synths">
                   <Button className="btn-sm btn-primary p-2" block>
                     {t('mintSynths')}
                   </Button>

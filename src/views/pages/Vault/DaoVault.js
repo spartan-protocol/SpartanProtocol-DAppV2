@@ -111,7 +111,7 @@ const DaoVault = () => {
             </Row>
             <Row className="card-body text-center">
               <Col xs="12" className="p-0">
-                <Link to="/dapp/pools/liquidity">
+                <Link to="/pools/liquidity">
                   <Button className="btn btn-primary p-2" block>
                     {t('joinPools')}
                   </Button>
@@ -195,7 +195,7 @@ const DaoVault = () => {
                     <h3 className="mb-0">
                       {getToken(i.tokenAddress)?.symbol}p
                     </h3>
-                    <Link to={`/dapp/pools/liquidity?asset1=${i.tokenAddress}`}>
+                    <Link to={`/pools/liquidity?asset1=${i.tokenAddress}`}>
                       <p className="text-sm-label-alt">
                         {t('obtain')} {getToken(i.tokenAddress)?.symbol}p
                         <i className="icon-scan icon-mini ml-1" />

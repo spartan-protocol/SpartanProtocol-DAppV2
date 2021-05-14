@@ -118,7 +118,7 @@ const SynthVaultItem = ({ synthItem }) => {
               <h3 className="mb-0">
                 {getToken(synthItem.tokenAddress)?.symbol}s
               </h3>
-              <Link to={`/dapp/synths?asset2=${synthItem.tokenAddress}`}>
+              <Link to={`/synths?asset2=${synthItem.tokenAddress}`}>
                 <p className="text-sm-label-alt">
                   {t('obtain')} {getToken(synthItem.tokenAddress)?.symbol}s
                   <i className="icon-scan icon-mini ml-1" />
