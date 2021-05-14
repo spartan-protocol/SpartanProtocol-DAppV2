@@ -235,7 +235,6 @@ const BondLiquidity = () => {
                     <i
                       className="icon-extra-small icon-info icon-dark ml-1"
                       id="tooltipAddBase"
-                      role="button"
                     />
                     <UncontrolledTooltip
                       placement="right"

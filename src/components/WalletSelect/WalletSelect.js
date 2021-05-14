@@ -165,9 +165,9 @@ const WalletSelect = (props) => {
           {/* Wallet overview */}
           {wallet.status === 'connected' ? (
             <div className="ml-2 mt-n3">
-              <Row className="card-body">
+              <Row className="card-body pl-1">
                 <Col xs="10">
-                  <h3 className="ml-n4 modal-title">
+                  <h3 className="modal-title">
                     {t('wallet')} -{' '}
                     {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
                   </h3>
@@ -185,8 +185,8 @@ const WalletSelect = (props) => {
               {wallet.status === 'connected' && (
                 <>
                   <Row>
-                    <Col xs={6} className="ml-n1">
-                      <div className="output-wallet-description ">
+                    <Col xs={6} className="">
+                      <div className="output-wallet-description pl-2">
                         {t('viewBscScan')}{' '}
                         <a
                           href={getExplorerWallet(wallet.account)}
@@ -199,7 +199,7 @@ const WalletSelect = (props) => {
                           <i className="icon-extra-small icon-scan" />
                         </a>
                       </div>
-                      <span className="title">
+                      <span className="title pl-2">
                         {wallet.account?.substr(0, 5)}...
                         {wallet.account?.slice(-5)}
                         <ShareLink
@@ -338,10 +338,7 @@ const WalletSelect = (props) => {
                                         url={asset.address}
                                         notificationLocation="tc"
                                       >
-                                        <i
-                                          role="button"
-                                          className="icon-small icon-copy ml-2 align-middle"
-                                        />
+                                        <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
                                     <Col xs="6" className="mt-1">
@@ -442,10 +439,7 @@ const WalletSelect = (props) => {
                                         url={asset.address}
                                         notificationLocation="tc"
                                       >
-                                        <i
-                                          role="button"
-                                          className="icon-small icon-copy ml-2 align-middle"
-                                        />
+                                        <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
                                     <Col xs="6" className="mt-1">
@@ -555,10 +549,7 @@ const WalletSelect = (props) => {
                                         url={asset.address}
                                         notificationLocation="tc"
                                       >
-                                        <i
-                                          role="button"
-                                          className="icon-small icon-copy ml-2 align-middle"
-                                        />
+                                        <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
                                     <Col xs="6" className="mt-1">
@@ -668,10 +659,7 @@ const WalletSelect = (props) => {
                                         url={asset.address}
                                         notificationLocation="tc"
                                       >
-                                        <i
-                                          role="button"
-                                          className="icon-small icon-copy ml-2 align-middle"
-                                        />
+                                        <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
                                     <Col xs="6" className="mt-1">
@@ -780,10 +768,7 @@ const WalletSelect = (props) => {
                                         url={asset.address}
                                         notificationLocation="tc"
                                       >
-                                        <i
-                                          role="button"
-                                          className="icon-small icon-copy ml-2 align-middle"
-                                        />
+                                        <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
                                     <Col xs="6" className="mt-1">
@@ -893,10 +878,7 @@ const WalletSelect = (props) => {
                                         url={asset.address}
                                         notificationLocation="tc"
                                       >
-                                        <i
-                                          role="button"
-                                          className="icon-small icon-copy ml-2 align-middle"
-                                        />
+                                        <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
                                     <Col xs="6" className="mt-1">

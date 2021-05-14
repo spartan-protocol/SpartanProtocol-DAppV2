@@ -64,7 +64,7 @@ const Share = () => {
   return (
     <>
       <Button
-        className="btn-round btn-info px-1 pl-2 btn-sm"
+        className="btn-round btn-info pl-1 pr-0 btn-sm"
         onClick={() => setShowShare(true)}
       >
         <i className="spartan-icons icon-small icon-pools icon-dark mr-2" />

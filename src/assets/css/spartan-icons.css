@@ -336,10 +336,12 @@
 /* Info */
 .icon-info.icon-light {
   background-image: url('/src/assets/icons/icon-info-light.svg#light');
+  cursor: help;
 }
 
 .icon-info.icon-dark {
   background-image: url('/src/assets/icons/icon-info-dark.svg#dark');
+  cursor: help;
 }
 
 /* Medium */
@@ -429,8 +431,10 @@
 
 .icon-scan {
   background-image: url('/src/assets/icons/icon-scan.svg');
+  cursor: pointer;
 }
 
 .icon-copy {
   background-image: url('/src/assets/icons/icon-copy.svg');
+  cursor: copy;
 }
