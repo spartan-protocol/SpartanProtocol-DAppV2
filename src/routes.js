@@ -28,7 +28,7 @@ const routes = (t) => [
   {
     path: '/home',
     name: t('overview'),
-    icon: 'icon-medium icon-home icon-dark',
+    icon: 'icon-small icon-home icon-dark',
     component: PoolsOverview,
     layout: '',
   },
@@ -36,7 +36,7 @@ const routes = (t) => [
   {
     path: '/pools/liquidity',
     name: t('liquidity'),
-    icon: 'icon-medium icon-sword icon-dark',
+    icon: 'icon-small icon-sword icon-dark',
     component: Liquidity,
     layout: '',
   },
@@ -44,7 +44,7 @@ const routes = (t) => [
   {
     path: '/pools/swap',
     name: t('swap'),
-    icon: 'icon-medium icon-swords icon-dark',
+    icon: 'icon-small icon-swords icon-dark',
     component: Swap,
     layout: '',
   },
@@ -52,7 +52,7 @@ const routes = (t) => [
   {
     path: '/synths',
     name: t('synths'),
-    icon: 'icon-medium icon-colosseum icon-dark',
+    icon: 'icon-small icon-synths icon-dark',
     component: Synths,
     layout: '',
   },
@@ -60,7 +60,7 @@ const routes = (t) => [
   {
     path: '/bond',
     name: t('bond'),
-    icon: 'icon-medium icon-helmet icon-dark',
+    icon: 'icon-small icon-helmet icon-dark',
     component: Bond,
     layout: '',
   },
@@ -68,7 +68,7 @@ const routes = (t) => [
   {
     path: '/vault',
     name: t('vault'),
-    icon: 'icon-medium icon-colosseum icon-dark',
+    icon: 'icon-small icon-vault icon-dark',
     component: Vault,
     layout: '',
   },
@@ -76,7 +76,7 @@ const routes = (t) => [
   {
     path: '/upgrade',
     name: 'Upgrade',
-    icon: 'icon-medium icon-colosseum icon-dark',
+    icon: 'icon-small icon-upgrade icon-dark',
     component: Upgrade,
     layout: '',
   },

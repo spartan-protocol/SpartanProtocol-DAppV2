@@ -259,6 +259,21 @@
   background-image: url('/src/assets/icons/icon-spinner.svg#dark');
 }
 
+/* Synth */
+.icon-synths {
+  background-image: url('/src/assets/icons/icon-synths.svg');
+}
+
+/* Vault */
+.icon-vault {
+  background-image: url('/src/assets/icons/icon-vault.svg');
+}
+
+/* Vault */
+.icon-upgrade {
+  background-image: url('/src/assets/icons/icon-upgrade.svg');
+}
+
 /*!* Home *!*/
 /*.icon-home.icon-dark {*/
 /*    background-image: url('/src/assets/icons/icon-home-light.svg#dark');*/
