@@ -150,7 +150,7 @@ const Common = () => {
         />
         <Switch>
           {getRoutes(routes(t))}
-          <Redirect from="*" to="/dapp/home" />
+          <Redirect from="*" to="/home" />
         </Switch>
         {
           // we don't want the Footer to be rendered on full screen maps page

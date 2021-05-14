@@ -41,7 +41,7 @@ const SynthVault = () => {
     <>
       <Col xs="auto">
         <Card
-          className="card-body card-320 pb-2 pt-3"
+          className="card-body card-320 pb-2 pt-3 card-underlay"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -91,7 +91,7 @@ const SynthVault = () => {
             </Row>
             <Row className="card-body text-center">
               <Col xs="12" className="p-0 pt-1">
-                <Link to="/dapp/synths">
+                <Link to="/synths">
                   <Button className="btn-sm btn-primary p-2" block>
                     {t('mintSynths')}
                   </Button>
@@ -104,7 +104,7 @@ const SynthVault = () => {
 
       <Col xs="auto">
         <Card
-          className="card-body card-320 pb-2 pt-3"
+          className="card-body card-320 pb-2 pt-3 card-underlay"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>

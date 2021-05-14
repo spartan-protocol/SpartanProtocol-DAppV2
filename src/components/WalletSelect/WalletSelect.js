@@ -304,12 +304,12 @@ const WalletSelect = (props) => {
                                 key={`${asset.address}-asset`}
                                 className="mb-3 output-card mr-2"
                               >
-                                <Col xs="4" sm="2" className="p-0 pl-2">
+                                <Col xs="auto" className="p-0 pl-2">
                                   <img
                                     height="35px"
                                     src={asset.symbolUrl}
                                     alt={asset.name}
-                                    className="mr-1"
+                                    className="mr-4"
                                   />
                                 </Col>
                                 <Col
@@ -395,20 +395,21 @@ const WalletSelect = (props) => {
                                 key={`${asset.address}-lp`}
                                 className="mb-3 output-card mr-2"
                               >
-                                <Col xs="4" sm="2" className="p-0 pl-2">
+                                <Col xs="auto" className="p-0 pl-2">
                                   <img
                                     height="35px"
                                     src={
                                       getToken(asset.tokenAddress)?.symbolUrl
                                     }
                                     alt={getToken(asset.tokenAddress)?.name}
-                                    className="mr-n3"
+                                    className="mr-4"
                                   />
                                   <img
                                     height="20px"
                                     src={spartaIcon}
                                     alt="SPARTA"
-                                    className="ml-n3 mt-3"
+                                    className="position-absolute"
+                                    style={{ right: '17px', bottom: '2px' }}
                                   />
                                 </Col>
                                 <Col
@@ -505,20 +506,21 @@ const WalletSelect = (props) => {
                                 key={`${asset.address}-lpdao`}
                                 className="mb-3 output-card mr-2"
                               >
-                                <Col xs="4" sm="2" className="p-0 pl-2">
+                                <Col xs="auto" className="p-0 pl-2">
                                   <img
                                     height="35px"
                                     src={
                                       getToken(asset.tokenAddress)?.symbolUrl
                                     }
                                     alt={getToken(asset.tokenAddress)?.name}
-                                    className="mr-n3"
+                                    className="mr-4"
                                   />
                                   <img
                                     height="20px"
                                     src={spartaIcon}
                                     alt="SPARTA"
-                                    className="ml-n3 mt-3"
+                                    className="position-absolute"
+                                    style={{ right: '17px', bottom: '2px' }}
                                   />
                                 </Col>
                                 <Col
@@ -615,20 +617,21 @@ const WalletSelect = (props) => {
                                 key={`${asset.address}-lpbond`}
                                 className="mb-3 output-card mr-2"
                               >
-                                <Col xs="4" sm="2" className="p-0 pl-2">
+                                <Col xs="auto" className="p-0 pl-2">
                                   <img
                                     height="35px"
                                     src={
                                       getToken(asset.tokenAddress)?.symbolUrl
                                     }
                                     alt={getToken(asset.tokenAddress)?.name}
-                                    className="mr-n3"
+                                    className="mr-4"
                                   />
                                   <img
                                     height="20px"
                                     src={spartaIcon}
                                     alt="SPARTA"
-                                    className="ml-n3 mt-3"
+                                    className="position-absolute"
+                                    style={{ right: '17px', bottom: '2px' }}
                                   />
                                 </Col>
                                 <Col
@@ -723,20 +726,21 @@ const WalletSelect = (props) => {
                                 key={`${asset.address}-synth`}
                                 className="mb-3 output-card mr-2"
                               >
-                                <Col xs="4" sm="2" className="p-0 pl-2">
+                                <Col xs="auto" className="p-0 pl-2">
                                   <img
                                     height="35px"
                                     src={
                                       getToken(asset.tokenAddress)?.symbolUrl
                                     }
                                     alt={getToken(asset.tokenAddress)?.name}
-                                    className="mr-n3"
+                                    className="mr-4"
                                   />
                                   <img
                                     height="20px"
                                     src={spartaIconAlt}
                                     alt="SPARTA"
-                                    className="ml-n3 mt-3"
+                                    className="position-absolute"
+                                    style={{ right: '17px', bottom: '2px' }}
                                   />
                                 </Col>
 
@@ -834,20 +838,21 @@ const WalletSelect = (props) => {
                                 key={`${asset.address}-synthstake`}
                                 className="mb-3 output-card mr-2"
                               >
-                                <Col xs="4" sm="2" className="p-0 pl-2">
+                                <Col xs="auto" className="p-0 pl-2">
                                   <img
                                     height="35px"
                                     src={
                                       getToken(asset.tokenAddress)?.symbolUrl
                                     }
                                     alt={getToken(asset.tokenAddress)?.name}
-                                    className="mr-n3"
+                                    className="mr-4"
                                   />
                                   <img
                                     height="20px"
                                     src={spartaIconAlt}
                                     alt="SPARTA"
-                                    className="ml-n3 mt-3"
+                                    className="position-absolute"
+                                    style={{ right: '17px', bottom: '2px' }}
                                   />
                                 </Col>
                                 <Col

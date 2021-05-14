@@ -9,7 +9,7 @@ const WrongNetwork = () => (
       <h4>
         In the meantime please visit{' '}
         <Link
-          to="/dapp/upgrade"
+          to="/upgrade"
           style={{
             fontWeight: 'bold',
           }}

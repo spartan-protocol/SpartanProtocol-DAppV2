@@ -139,7 +139,7 @@ const AssetSelect = (props) => {
                     alt={`${
                       getToken(tempArray[i].tokenAddress)?.symbol
                     } asset icon`}
-                    className="mr-1"
+                    className="mr-4"
                   />
                 ),
                 iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
@@ -162,7 +162,7 @@ const AssetSelect = (props) => {
                   alt={`${
                     getToken(tempArray[i].tokenAddress)?.symbol
                   } asset icon`}
-                  className="mr-1"
+                  className="mr-4"
                 />
               ),
               iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
@@ -186,7 +186,7 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="mr-n3"
+                      className="mr-4"
                     />
                     <img
                       height="20px"
@@ -194,7 +194,8 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="ml-n3 mt-3"
+                      className="position-absolute"
+                      style={{ right: '17px', bottom: '2px' }}
                     />
                   </>
                 ),
@@ -221,7 +222,7 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
-                      className="mr-n3"
+                      className="mr-4"
                     />
                     <img
                       height="20px"
@@ -229,7 +230,8 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
-                      className="ml-n3 mt-3"
+                      className="position-absolute"
+                      style={{ right: '17px', bottom: '2px' }}
                     />
                   </>
                 ),
@@ -287,14 +289,15 @@ const AssetSelect = (props) => {
                   height="35px"
                   src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                   alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
-                  className="ml-2 mr-n3"
+                  className="mx-2"
                 />
 
                 <img
                   height="20px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="ml-n3 mt-3"
+                  className="position-absolute"
+                  style={{ left: '45px', bottom: '-2px' }}
                 />
               </>
             )}
@@ -305,19 +308,20 @@ const AssetSelect = (props) => {
                   height="35px"
                   src={getToken(selectedItem.tokenAddress)?.symbolUrl}
                   alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
-                  className="ml-2 mr-n3"
+                  className="mx-2"
                 />
 
                 <img
                   height="20px"
                   src={spartaIconAlt}
                   alt="Sparta LP token icon"
-                  className="ml-n3 mt-3"
+                  className="position-absolute"
+                  style={{ left: '45px', bottom: '-2px' }}
                 />
               </>
             )}
 
-            <span className="output-card mr-2">
+            <span className="output-card mr-2 ml-1">
               {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
               {selectedType === 'pool' && 'p'}
               {selectedType === 'synth' && 's'}
@@ -393,7 +397,7 @@ const AssetSelect = (props) => {
           )}
         </Nav>
 
-        <Row className="card-body">
+        <Row className="card-body pb-0">
           <Col xs="12" className="m-auto">
             <InputGroup>
               <InputGroupAddon
@@ -431,7 +435,7 @@ const AssetSelect = (props) => {
           </Col>
         </Row>
         <div className="modal-body">
-          <Row className="mt-n5">
+          <Row className="">
             <Col xs="9" md="9">
               <p className="text-card">Asset</p>
             </Col>
@@ -445,7 +449,7 @@ const AssetSelect = (props) => {
                 key={`${asset.actualAddr}-all`}
                 className="mb-3 output-card mr-2"
               >
-                <Col xs="3" sm="2" className="p-0 pl-2">
+                <Col xs="auto" className="p-0 pl-2">
                   <div
                     role="button"
                     onClick={() => {
@@ -521,7 +525,7 @@ const AssetSelect = (props) => {
                   key={asset.actualAddr + activeTab}
                   className="mb-3 output-card mr-2"
                 >
-                  <Col xs="3" sm="2" className="p-0 pl-2">
+                  <Col xs="auto" className="p-0 pl-2">
                     <div
                       role="button"
                       onClick={() => {

@@ -50,7 +50,7 @@ const Bond = () => {
           <Row className="row-480">
             <Col xs="auto">
               <Card
-                className="card-body card-320"
+                className="card-body card-320 pt-3 pb-2 card-underlay"
                 style={{ backgroundColor: '#25212D' }}
               >
                 <h3>{t('bondPositions')}</h3>
