@@ -131,6 +131,19 @@ export const calcPart = (bp, total) => {
   return part
 }
 
+/**
+ * Calculate burn fee basis points (0 - 100 ie. 0% to 1%)
+ * @param {uint} totalSupply
+ * @param {uint} amount
+ * @returns {uint} fee
+ */
+export const calcBurnFee = (totalSupply, amount) => {
+  const maxSupply = BN(300000000).times(one)
+  const feeOnTransfer = calcShare(totalSupply, maxSupply, 100) // 0->100BP
+  const fee = calcPart(feeOnTransfer, amount)
+  return fee
+}
+
 // Calculate swap fee
 export const calcSwapFee = (
   inputAmount,

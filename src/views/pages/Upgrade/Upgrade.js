@@ -13,6 +13,7 @@ import {
 } from '../../../store/sparta/actions'
 import { getSpartaContract } from '../../../utils/web3Contracts'
 import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
+import { calcBurnFee } from '../../../utils/web3Utils'
 
 const Upgrade = () => {
   const addr = getAddresses()
@@ -21,6 +22,7 @@ const Upgrade = () => {
   const wallet = useWallet()
   const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
   const [newSpartaBalance, setnewSpartaBalance] = useState('0')
+  const [spartaSupply, setspartaSupply] = useState('0')
   const fsGenesis = '1620795586'
   const [loadingBalance, setloadingBalance] = useState(false)
 
@@ -37,11 +39,13 @@ const Upgrade = () => {
       awaitArray.push(
         getTokenContract(addr.oldSparta).balanceOf(wallet.account),
         getSpartaContract().balanceOf(wallet.account),
+        getSpartaContract().totalSupply(),
       )
       awaitArray = await Promise.all(awaitArray)
       if (tempWallet === wallet.account) {
         setoldSpartaBalance(awaitArray[0].toString())
         setnewSpartaBalance(awaitArray[1].toString())
+        setspartaSupply(awaitArray[2].toString())
       }
       setloadingBalance(false)
     }
@@ -65,6 +69,7 @@ const Upgrade = () => {
     if (wallet.status === 'disconnected') {
       setoldSpartaBalance('0')
       setnewSpartaBalance('0')
+      setspartaSupply('0')
     }
   }, [wallet.status])
 
@@ -76,6 +81,16 @@ const Upgrade = () => {
   const getExpiry = () => {
     const expiry = BN(fsGenesis).plus(15552000)
     return expiry
+  }
+
+  const getBurnFee = () => {
+    const burnFee = calcBurnFee(spartaSupply, sparta.claimCheck)
+    return burnFee
+  }
+
+  const getClaimAmount = () => {
+    const claimAmount = BN(sparta.claimCheck).minus(getBurnFee())
+    return claimAmount
   }
 
   return (
@@ -104,18 +119,29 @@ const Upgrade = () => {
                 {formatFromWei(oldSpartaBalance)} SPARTAv2
               </Col>
             </Row>
-            <Row className="card-body py-1 text-center">
-              <Col xs="12" className="p-0 py-1">
-                <Button
-                  className="btn-primary"
-                  block
-                  onClick={() => dispatch(spartaUpgrade())}
-                  disabled={oldSpartaBalance <= 0}
-                >
-                  Upgrade SPARTA
-                </Button>
-              </Col>
-            </Row>
+            {wallet?.balance > 5000000000000000 && (
+              <Row className="card-body py-1 text-center">
+                <Col xs="12" className="p-0 py-1">
+                  <Button
+                    className="btn-primary"
+                    block
+                    onClick={() => dispatch(spartaUpgrade())}
+                    disabled={oldSpartaBalance <= 0}
+                  >
+                    Upgrade SPARTA
+                  </Button>
+                </Col>
+              </Row>
+            )}
+            {wallet?.balance <= 5000000000000000 && (
+              <Row className="card-body py-1 text-center">
+                <Col xs="12" className="p-0 py-1">
+                  <Button className="btn-alert" block disabled>
+                    Not Enough BNB
+                  </Button>
+                </Col>
+              </Row>
+            )}
           </Col>
         </Card>
       </Col>
@@ -135,7 +161,8 @@ const Upgrade = () => {
                 Claim
               </Col>
               <Col className="text-right text-sm-label-wht">
-                {formatFromWei(sparta.claimCheck)} SPARTAv2
+                {spartaSupply > 0 ? formatFromWei(getClaimAmount()) : 'Loading'}{' '}
+                SPARTAv2
               </Col>
             </Row>
             <Row className="my-2">
@@ -146,18 +173,31 @@ const Upgrade = () => {
                 {formatDate(getExpiry())}
               </Col>
             </Row>
-            <Row className="card-body py-1 text-center">
-              <Col xs="12" className="p-0 py-1">
-                <Button
-                  className="btn-primary"
-                  block
-                  onClick={() => dispatch(fallenSpartansClaim(wallet.account))}
-                  disabled={sparta?.claimCheck <= 0}
-                >
-                  Claim SPARTA
-                </Button>
-              </Col>
-            </Row>
+            {wallet?.balance > 5000000000000000 && (
+              <Row className="card-body py-1 text-center">
+                <Col xs="12" className="p-0 py-1">
+                  <Button
+                    className="btn-primary"
+                    block
+                    onClick={() =>
+                      dispatch(fallenSpartansClaim(wallet.account))
+                    }
+                    disabled={sparta?.claimCheck <= 0}
+                  >
+                    Claim SPARTA
+                  </Button>
+                </Col>
+              </Row>
+            )}
+            {wallet?.balance <= 5000000000000000 && (
+              <Row className="card-body py-1 text-center">
+                <Col xs="12" className="p-0 py-1">
+                  <Button className="btn-alert" block disabled>
+                    Not Enough BNB
+                  </Button>
+                </Col>
+              </Row>
+            )}
           </Col>
         </Card>
       </Col>
