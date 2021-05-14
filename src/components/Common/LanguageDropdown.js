@@ -49,7 +49,7 @@ const LanguageDropdown = () => {
           id="dropdownMenuButton"
           type="button"
         >
-          <i className="icon-small icon-lang icon-dark m-0 mt-1" />
+          <i className="icon-small icon-lang icon-dark m-0" />
         </DropdownToggle>
         <DropdownMenu className="language-switch" right>
           <DropdownItem header>Language</DropdownItem>
