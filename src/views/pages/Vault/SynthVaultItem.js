@@ -102,7 +102,7 @@ const SynthVaultItem = ({ synthItem }) => {
           <Row className="mb-2">
             <Col xs="auto" className="pr-0">
               <img
-                className="mr-n3"
+                className="mr-3"
                 src={getToken(synthItem.tokenAddress)?.symbolUrl}
                 alt={getToken(synthItem.tokenAddress)?.symbol}
                 height="50px"
@@ -111,7 +111,8 @@ const SynthVaultItem = ({ synthItem }) => {
                 height="25px"
                 src={spartaIconAlt}
                 alt="Sparta synth token icon"
-                className="pr-2 ml-n3 mt-4"
+                className="position-absolute"
+                style={{ right: '8px', bottom: '7px' }}
               />
             </Col>
             <Col xs="auto" className="pl-1">

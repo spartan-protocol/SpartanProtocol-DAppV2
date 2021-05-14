@@ -88,7 +88,7 @@ const DaoVault = () => {
     <>
       <Col xs="auto">
         <Card
-          className="card-body card-320 pb-2"
+          className="card-body card-320 pb-2 card-underlay"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -124,7 +124,7 @@ const DaoVault = () => {
 
       <Col xs="auto">
         <Card
-          className="card-body card-320 pb-2"
+          className="card-body card-320 pb-2 card-underlay"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -179,7 +179,7 @@ const DaoVault = () => {
                 <Row className="mb-2">
                   <Col xs="auto" className="pr-0">
                     <img
-                      className="mr-n3"
+                      className="mr-3"
                       src={getToken(i.tokenAddress)?.symbolUrl}
                       alt={getToken(i.tokenAddress)?.symbol}
                       height="50px"
@@ -188,7 +188,8 @@ const DaoVault = () => {
                       height="25px"
                       src={spartaIcon}
                       alt="Sparta LP token icon"
-                      className="pr-2 ml-n3 mt-4"
+                      className="position-absolute"
+                      style={{ right: '8px', bottom: '7px' }}
                     />
                   </Col>
                   <Col xs="auto" className="pl-1">

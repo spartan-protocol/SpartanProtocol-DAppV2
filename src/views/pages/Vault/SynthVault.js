@@ -41,7 +41,7 @@ const SynthVault = () => {
     <>
       <Col xs="auto">
         <Card
-          className="card-body card-320 pb-2 pt-3"
+          className="card-body card-320 pb-2 pt-3 card-underlay"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -104,7 +104,7 @@ const SynthVault = () => {
 
       <Col xs="auto">
         <Card
-          className="card-body card-320 pb-2 pt-3"
+          className="card-body card-320 pb-2 pt-3 card-underlay"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>

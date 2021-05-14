@@ -50,7 +50,7 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-body card-320 pt-3 pb-2">
+        <Card className="card-body card-320 pt-3 pb-2 card-underlay">
           <Row className="mb-2">
             <Col xs="auto" className="pr-0">
               <img src={token.symbolUrl} alt={token.symbol} height="50" />

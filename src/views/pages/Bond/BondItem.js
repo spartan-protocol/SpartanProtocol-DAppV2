@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { bondClaim } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 // import { useWeb3 } from '../../../store/web3'
@@ -55,24 +56,31 @@ const BondItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto" key={asset.address}>
-        <Card className="card-body card-320 pt-3 pb-2">
-          <Row className="mt-n3">
-            <Col xs="auto" className="">
-              <h3 className="mt-2">
-                <img
-                  className=""
-                  src={token.symbolUrl}
-                  alt={token.symbol}
-                  height="50px"
-                />
-                <img
-                  height="25px"
-                  src={spartaIcon}
-                  alt="Sparta LP token icon"
-                  className="pr-2 ml-n3 mt-4"
-                />
-                {token.symbol}p
-              </h3>
+        <Card className="card-body card-320 pt-4 pb-3">
+          <Row className="">
+            <Col xs="auto" className="pr-0">
+              <img
+                className="mr-3"
+                src={token.symbolUrl}
+                alt={token.symbol}
+                height="50px"
+              />
+              <img
+                height="25px"
+                src={spartaIcon}
+                alt="Sparta LP token icon"
+                className="position-absolute"
+                style={{ right: '8px', bottom: '7px' }}
+              />
+            </Col>
+            <Col xs="auto" className="pl-1">
+              <h3 className="mb-0">{token.symbol}p</h3>
+              <Link to={`/pools/liquidity?asset1=${token.address}`}>
+                <p className="text-sm-label-alt">
+                  {t('obtain')} {token.symbol}p
+                  <i className="icon-scan icon-mini ml-1" />
+                </p>
+              </Link>
             </Col>
 
             <Col className="text-right my-auto">
