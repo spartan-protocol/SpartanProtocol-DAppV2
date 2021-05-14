@@ -195,7 +195,7 @@ const BondLiquidity = () => {
                   <Col className="text-right">
                     <InputGroup className="m-0 mt-n1">
                       <Input
-                        className="text-right h-100 ml-0 p-2"
+                        className="text-right ml-0 p-2"
                         type="text"
                         placeholder={`${t('add')}...`}
                         id="bondInput1"
@@ -322,8 +322,6 @@ const BondLiquidity = () => {
             <Col xs="12" className="hide-if-siblings">
               <Button
                 color="primary"
-                size="lg"
-                className="p-3"
                 block
                 disabled={
                   bondInput1?.value <= 0 ||

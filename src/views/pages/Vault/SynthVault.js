@@ -41,7 +41,7 @@ const SynthVault = () => {
     <>
       <Col xs="auto">
         <Card
-          className="card-body card-320"
+          className="card-body card-320 pb-2 pt-3"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
@@ -89,10 +89,10 @@ const SynthVault = () => {
                 {synth.globalDetails?.vaultClaim / 100}%
               </Col>
             </Row>
-            <Row className="card-body py-0 text-center">
-              <Col xs="12" className="p-0 py-3">
+            <Row className="card-body text-center">
+              <Col xs="12" className="p-0 pt-1">
                 <Link to="/dapp/synths">
-                  <Button className="btn-sm btn-primary h-100 w-100">
+                  <Button className="btn-sm btn-primary p-2" block>
                     {t('mintSynths')}
                   </Button>
                 </Link>
@@ -104,12 +104,12 @@ const SynthVault = () => {
 
       <Col xs="auto">
         <Card
-          className="card-body card-320"
+          className="card-body card-320 pb-2 pt-3"
           style={{ backgroundColor: '#25212D' }}
         >
           <Col>
             <h3>{t('memberDetails')}</h3>
-            <Row className="my-4">
+            <Row className="my-4 pb-2">
               <Col xs="auto" className="text-card">
                 {t('yourWeight')}
               </Col>
@@ -123,9 +123,10 @@ const SynthVault = () => {
               </Col>
             </Row>
             <Row className="card-body text-center">
-              <Col xs="12" className="p-0 py-1 mt-5">
+              <Col xs="12" className="p-0 mt-5">
                 <Button
-                  className="btn-sm btn-primary h-100 w-100"
+                  className="btn-sm btn-primary p-2"
+                  block
                   onClick={() => dispatch(synthHarvest())}
                   disabled={synth.memberDetails?.totalWeight <= 0}
                 >

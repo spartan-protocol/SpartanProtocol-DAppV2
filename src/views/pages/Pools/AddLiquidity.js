@@ -412,7 +412,7 @@ const AddLiquidity = () => {
                   <Col className="text-right">
                     <InputGroup className="m-0 mt-n1">
                       <Input
-                        className="text-right h-100 ml-0 p-2"
+                        className="text-right ml-0 p-2"
                         type="text"
                         placeholder={`${t('add')}...`}
                         id="addInput1"
@@ -497,7 +497,7 @@ const AddLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0">
                         <Input
-                          className="text-right h-100 ml-0 p-2"
+                          className="text-right ml-0 p-2"
                           type="text"
                           placeholder={`${t('add')}...`}
                           id="addInput2"
@@ -562,7 +562,7 @@ const AddLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0 mt-n1">
                         <Input
-                          className="text-right h-100 ml-0 p-2 text-light"
+                          className="text-right ml-0 p-2 text-light"
                           type="text"
                           placeholder="0.00"
                           id="addInput3"
@@ -671,7 +671,7 @@ const AddLiquidity = () => {
               )}
             <Col xs="12" sm="4" md="12" className="hide-if-siblings">
               <Button
-                className="h-100 w-75 btn-primary"
+                className="w-100 btn-primary"
                 disabled={
                   addInput1?.value <= 0 ||
                   BN(convertToWei(addInput1?.value)).isGreaterThan(

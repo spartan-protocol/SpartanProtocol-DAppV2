@@ -98,7 +98,7 @@ const SynthVaultItem = ({ synthItem }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-body card-320">
+        <Card className="card-body card-320 py-3">
           <Row className="mb-2">
             <Col xs="auto" className="pr-0">
               <img
@@ -188,10 +188,11 @@ const SynthVaultItem = ({ synthItem }) => {
           </Row>
 
           <Row className="card-body py-0 text-center">
-            <Col xs="6" className="py-1 pr-1 pl-0">
+            <Col xs="6" className="pt-1 pr-1 pl-0">
               <Button
                 color="primary"
-                className="btn-sm h-100 w-100"
+                className="p-2"
+                block
                 onClick={() =>
                   dispatch(synthDeposit(synthItem.address, synthItem.balance))
                 }
@@ -200,10 +201,11 @@ const SynthVaultItem = ({ synthItem }) => {
                 {t('deposit')}
               </Button>
             </Col>
-            <Col xs="6" className="py-1 pl-1 pr-0">
+            <Col xs="6" className="pt-1 pl-1 pr-0">
               <Button
                 color="primary"
-                className="btn-sm h-100 w-100"
+                className="p-2"
+                block
                 onClick={() =>
                   dispatch(synthWithdraw(synthItem.address, '10000'))
                 }

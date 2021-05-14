@@ -42,7 +42,7 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
 }
 
 /**
- * Upgrade / bridge SPARTA(old V1) to SPARTA(New V2)
+ * Upgrade SPARTA(old V1) to SPARTA(New V2)
  */
 export const spartaUpgrade = () => async (dispatch) => {
   dispatch(spartaLoading())

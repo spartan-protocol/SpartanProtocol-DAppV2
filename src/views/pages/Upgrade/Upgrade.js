@@ -87,7 +87,7 @@ const Upgrade = () => {
         >
           <Col>
             <h3 className="mb-0">Upgrade</h3>
-            <span className="subtitle-label">Bridge your v1 SPARTA to v2</span>
+            <span className="subtitle-label">Upgrade your v1 SPARTA to v2</span>
             <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
                 Input
@@ -107,7 +107,8 @@ const Upgrade = () => {
             <Row className="card-body py-1 text-center">
               <Col xs="12" className="p-0 py-1">
                 <Button
-                  className="btn-sm btn-primary h-100 w-100"
+                  className="btn-primary"
+                  block
                   onClick={() => dispatch(spartaUpgrade())}
                   disabled={oldSpartaBalance <= 0}
                 >
@@ -148,7 +149,8 @@ const Upgrade = () => {
             <Row className="card-body py-1 text-center">
               <Col xs="12" className="p-0 py-1">
                 <Button
-                  className="btn-sm btn-primary h-100 w-100"
+                  className="btn-primary"
+                  block
                   onClick={() => dispatch(fallenSpartansClaim(wallet.account))}
                   disabled={sparta?.claimCheck <= 0}
                 >
@@ -196,7 +198,8 @@ const Upgrade = () => {
             <Row className="card-body py-1 text-center">
               <Col xs="12" className="p-0 py-1">
                 <Button
-                  className="btn-sm btn-info w-100 h-100"
+                  className="btn-info"
+                  block
                   onClick={() => settrigger0(trigger0 + 1)}
                   disabled={loadingBalance === true}
                 >

@@ -399,7 +399,7 @@ const RemoveLiquidity = () => {
                   <Col className="text-right">
                     <InputGroup className="m-0 mt-n1">
                       <Input
-                        className="text-right h-100 ml-0 p-2"
+                        className="text-right ml-0 p-2"
                         type="text"
                         placeholder={`${t('redeem')}...`}
                         id="removeInput1"
@@ -475,7 +475,7 @@ const RemoveLiquidity = () => {
                     <Col className="text-right">
                       <InputGroup className="m-0 mt-n1">
                         <Input
-                          className="text-right h-100 ml-0 p-2"
+                          className="text-right ml-0 p-2"
                           type="text"
                           placeholder={`${t('receive')}...`}
                           id="removeInput2"
@@ -521,7 +521,7 @@ const RemoveLiquidity = () => {
                       <Col className="text-right" xs="6">
                         <InputGroup className="">
                           <Input
-                            className="text-right h-100 ml-0 p-2"
+                            className="text-right ml-0 p-2"
                             type="text"
                             placeholder="0.00"
                             id="removeInput3"
@@ -609,7 +609,7 @@ const RemoveLiquidity = () => {
           <Row className="text-center">
             <Col>
               <Button
-                className="w-75 h-100 btn-primary"
+                className="w-100 btn-primary"
                 disabled={
                   removeInput1?.value <= 0 ||
                   BN(convertToWei(removeInput1?.value)).isGreaterThan(
