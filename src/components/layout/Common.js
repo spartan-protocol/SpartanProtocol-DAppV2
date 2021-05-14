@@ -35,16 +35,16 @@ const Common = () => {
       if (prop.collapse) {
         return getRoutes(prop.views)
       }
-      if (prop.layout === '/dapp') {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={prop.path + prop.name}
-          />
-        )
-      }
-      return null
+      // if (prop.layout === '/dapp') {
+      return (
+        <Route
+          path={prop.path}
+          component={prop.component}
+          key={prop.path + prop.name}
+        />
+      )
+      // }
+      // return null
     })
 
   const getActiveRoute = (tempRoutes) => {
@@ -55,11 +55,7 @@ const Common = () => {
         if (collapseActiveRoute !== activeRoute) {
           return collapseActiveRoute
         }
-      } else if (
-        window.location.pathname.indexOf(
-          tempRoutes[i].layout + tempRoutes[i].path,
-        ) !== -1
-      ) {
+      } else if (window.location.pathname.indexOf(tempRoutes[i].path) !== -1) {
         return tempRoutes[i].name
       }
     }
