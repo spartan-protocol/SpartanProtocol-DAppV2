@@ -75,7 +75,7 @@ const routes = (t) => [
 
   {
     path: '/upgrade',
-    name: 'Upgrade',
+    name: t('upgrade'),
     icon: 'icon-small icon-upgrade icon-dark',
     component: Upgrade,
     layout: '',

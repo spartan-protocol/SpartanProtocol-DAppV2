@@ -1,5 +1,6 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Row, Col } from 'reactstrap'
 import {
@@ -11,6 +12,7 @@ import Upgrade from './Upgrade'
 const Overview = () => {
   const dispatch = useDispatch()
   const wallet = useWallet()
+  const { t } = useTranslation()
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -40,7 +42,7 @@ const Overview = () => {
       <div className="content">
         <Row className="row-480">
           <Col xs="12">
-            <h2 className="text-title-small my-3 mr-2">TokenSwap</h2>
+            <h2 className="text-title-small my-3 mr-2">{t('upgrade')}</h2>
           </Col>
         </Row>
         <Row className="row-480">

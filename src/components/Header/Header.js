@@ -73,13 +73,13 @@ const Header = (props) => (
           </div>
         </Link>
         <Nav className="ml-auto">
+          <LanguageDropdown />
           <AddressConn
             changeStates={props.changeStates}
             changeNotification={props.changeNotification}
             connectedTokens={props.connectedTokens}
             connectingTokens={props.connectingTokens}
           />
-          <LanguageDropdown />
           <Supply />
         </Nav>
       </div>

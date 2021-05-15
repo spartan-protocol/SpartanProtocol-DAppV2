@@ -765,7 +765,7 @@ const Swap = () => {
 
                         <Row className="mb-3">
                           <Col xs="auto">
-                            <div className="subtitle-card">Output</div>
+                            <div className="subtitle-card">{t('output')}</div>
                           </Col>
                           <Col className="text-right">
                             {activeTab === 'mint' && (
