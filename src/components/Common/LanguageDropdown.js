@@ -1,26 +1,135 @@
 import React, { useState } from 'react'
 import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
   DropdownItem,
+  Row,
+  Col,
+  Button,
+  UncontrolledPopover,
+  PopoverHeader,
+  PopoverBody,
 } from 'reactstrap'
 
 // i18n
 import i18n from '../../i18n'
 
 // flags
-import enFlag from '../../assets/flags/au.svg'
-import hiFlag from '../../assets/flags/in.svg'
+import auFlag from '../../assets/flags/au.svg'
+import cnFlag from '../../assets/flags/cn.svg'
 import esFlag from '../../assets/flags/es.svg'
+import deFlag from '../../assets/flags/de.svg'
 import frFlag from '../../assets/flags/fr.svg'
-import bnFlag from '../../assets/flags/bn.svg'
-import ruFlag from '../../assets/flags/ru.svg'
-
+import grFlag from '../../assets/flags/gr.svg'
+import inFlag from '../../assets/flags/in.svg'
+import irFlag from '../../assets/flags/ir.svg'
+import itFlag from '../../assets/flags/it.svg'
 import nlFlag from '../../assets/flags/nl.svg'
+import plFlag from '../../assets/flags/pl.svg'
+import ptFlag from '../../assets/flags/pt.svg'
+import roFlag from '../../assets/flags/ro.svg'
+import ruFlag from '../../assets/flags/ru.svg'
+import seFlag from '../../assets/flags/se.svg'
+import uaFlag from '../../assets/flags/ua.svg'
+import zaFlag from '../../assets/flags/za.svg'
+
+const locales = [
+  {
+    id: 'af',
+    name: 'Afrikaans',
+    flag: zaFlag,
+  },
+  {
+    id: 'bn',
+    name: 'Bengali',
+    flag: inFlag,
+  },
+  {
+    id: 'de',
+    name: 'German',
+    flag: deFlag,
+  },
+  {
+    id: 'el',
+    name: 'Greek',
+    flag: grFlag,
+  },
+  {
+    id: 'en',
+    name: 'English',
+    flag: auFlag,
+  },
+  {
+    id: 'es',
+    name: 'Spanish',
+    flag: esFlag,
+  },
+  {
+    id: 'fa',
+    name: 'Persian',
+    flag: irFlag,
+  },
+  {
+    id: 'fr',
+    name: 'French',
+    flag: frFlag,
+  },
+  {
+    id: 'hi',
+    name: 'Hindi',
+    flag: inFlag,
+  },
+  {
+    id: 'it',
+    name: 'Italian',
+    flag: itFlag,
+  },
+  {
+    id: 'nl',
+    name: 'Dutch',
+    flag: nlFlag,
+  },
+  {
+    id: 'pa',
+    name: 'Punjabi',
+    flag: inFlag,
+  },
+  {
+    id: 'pl',
+    name: 'Polish',
+    flag: plFlag,
+  },
+  {
+    id: 'pt',
+    name: 'Portuguese',
+    flag: ptFlag,
+  },
+  {
+    id: 'ro',
+    name: 'Romanian',
+    flag: roFlag,
+  },
+  {
+    id: 'ru',
+    name: 'Russian',
+    flag: ruFlag,
+  },
+  {
+    id: 'sv',
+    name: 'Swedish',
+    flag: seFlag,
+  },
+  {
+    id: 'uk',
+    name: 'Ukrainian',
+    flag: uaFlag,
+  },
+  {
+    id: 'zh',
+    name: 'Chinese',
+    flag: cnFlag,
+  },
+]
 
 const LanguageDropdown = () => {
-  const [menu, setMenu] = useState(false)
   const [lng, setLng] = useState('en')
   // const [flag,setFlag] = useState(usFlag);
 
@@ -29,102 +138,44 @@ const LanguageDropdown = () => {
     setLng(lang)
   }
 
-  const toggle = () => {
-    setMenu(!menu)
-  }
-
   return (
     <>
-      <Dropdown
-        isOpen={menu}
-        toggle={toggle}
-        className="d-inline-block align-self-center ml-2"
+      <Button
+        id="PopoverClick1"
+        type="Button"
+        className="btn-round btn-transparent btn-icon ml-n1"
+        href="#"
       >
-        <DropdownToggle
-          aria-expanded={false}
-          aria-haspopup
-          className="btn-round btn-transparent btn-icon ml-n1"
-          color="default"
-          data-toggle="dropdown"
-          id="dropdownMenuButton"
-          type="button"
-        >
-          <i className="icon-small icon-lang icon-dark m-0" />
-        </DropdownToggle>
-        <DropdownMenu className="language-switch" right>
-          <DropdownItem header>Language</DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('en')}
-            className={`notify-item ${lng === 'en' ? 'active' : 'none'}`}
-          >
-            <img src={enFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">English</span>
-          </DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('hi')}
-            className={`notify-item ${lng === 'hi' ? 'active' : 'none'}`}
-          >
-            <img src={hiFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Hindi</span>
-          </DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('es')}
-            className={`notify-item ${lng === 'es' ? 'active' : 'none'}`}
-          >
-            <img src={esFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Spanish</span>
-          </DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('fr')}
-            className={`notify-item ${lng === 'fr' ? 'active' : 'none'}`}
-          >
-            <img src={frFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">French</span>
-          </DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('bn')}
-            className={`notify-item ${lng === 'bn' ? 'active' : 'none'}`}
-          >
-            <img src={bnFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Bengali</span>
-          </DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('ru')}
-            className={`notify-item ${lng === 'ru' ? 'active' : 'none'}`}
-          >
-            <img src={ruFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Russian</span>
-          </DropdownItem>
-
-          <DropdownItem
-            tag="a"
-            href="#"
-            onClick={() => changeLanguageAction('nl')}
-            className={`notify-item ${lng === 'nl' ? 'active' : 'none'}`}
-          >
-            <img src={nlFlag} alt="Spartan" height="12" />
-            <span className="align-middle ml-1 output-card">Nederlands</span>
-          </DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+        <i className="icon-small icon-lang icon-dark mt-2" />
+      </Button>
+      <UncontrolledPopover
+        trigger="legacy"
+        rootclose="true"
+        placement="bottom"
+        target="PopoverClick1"
+      >
+        <PopoverHeader className="mt-2">Language</PopoverHeader>
+        <PopoverBody>
+          <Row>
+            {locales.map((x) => (
+              <Col xs={6}>
+                <DropdownItem
+                  key={x.id}
+                  tag="a"
+                  href="#"
+                  onClick={() => changeLanguageAction(x.id)}
+                  className={`notify-item ${lng === x.id ? 'active' : 'none'}`}
+                >
+                  <img src={x.flag} alt="Spartan" height="12" />
+                  <span className="align-middle ml-1 output-card">
+                    {x.name}
+                  </span>
+                </DropdownItem>
+              </Col>
+            ))}
+          </Row>
+        </PopoverBody>
+      </UncontrolledPopover>
     </>
   )
 }
