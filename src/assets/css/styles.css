@@ -589,7 +589,7 @@ fieldset[disabled] .form-control {
 
 .main-panel > .content {
   padding: 10px 10px 30px 10px;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 210px);
 }
 
 @media (min-width: 992px) {
@@ -610,7 +610,6 @@ fieldset[disabled] .form-control {
     height: 100% !important;
     padding: 0;
     margin: -110px 0px 0px;
-
   }
 
   .modal-content {

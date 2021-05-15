@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Row, Col, Table } from 'reactstrap'
+import { Row, Table } from 'reactstrap'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -21,8 +21,8 @@ const RecentTxns = () => {
 
   return (
     <>
-      <Row>
-        {/* <Col>
+      {/* <Row> */}
+      {/* <Col>
           <FormGroup>
             <Input
               type="select"
@@ -36,18 +36,18 @@ const RecentTxns = () => {
             </Input>
           </FormGroup>
         </Col> */}
-        <Col>
+      {/* <Col>
           <h4>Recent Txns</h4>
-        </Col>
-      </Row>
+        </Col> */}
+      {/* </Row> */}
       <Row>
         <Table borderless className="m-3">
-          <thead className="text-primary">
+          <thead className="text-primary text-center">
             <tr>
               <th>Block</th>
               <th>Event</th>
               <th>Input</th>
-              <th>OutPut</th>
+              <th>Output</th>
               <th>txHash</th>
             </tr>
           </thead>

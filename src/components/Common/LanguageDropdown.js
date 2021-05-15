@@ -163,9 +163,8 @@ const LanguageDropdown = () => {
         <PopoverBody>
           <Row>
             {locales.map((x) => (
-              <Col xs={6}>
+              <Col xs={6} key={x.id}>
                 <DropdownItem
-                  key={x.id}
                   tag="a"
                   href="#"
                   onClick={() => changeLanguageAction(x.id)}
