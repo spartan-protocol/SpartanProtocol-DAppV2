@@ -76,7 +76,9 @@ const Supply = () => {
         placement="bottom"
         target="PopoverClick"
       >
-        <PopoverHeader className="mt-2">Tokenomics</PopoverHeader>
+        <PopoverHeader className="mt-2">
+          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
+        </PopoverHeader>
         <PopoverBody>
           {network.chainId === 97 && (
             <>
