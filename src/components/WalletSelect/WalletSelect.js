@@ -84,6 +84,13 @@ const WalletSelect = (props) => {
     console.log('Wallet Status: cleared')
   }
 
+  const onWalletDisconnect = async () => {
+    props.onHide()
+    window.localStorage.removeItem('lastWallet')
+    resetWallet()
+    window.location.reload()
+  }
+
   useEffect(() => {
     async function sleep() {
       await new Promise((resolve) => setTimeout(resolve, 3000))
@@ -214,19 +221,19 @@ const WalletSelect = (props) => {
                       <Button
                         className="mx-1 btn-sm btn-info btn-round d-block d-sm-none"
                         onClick={() => {
-                          resetWallet()
+                          onWalletDisconnect()
                         }}
                       >
-                        {t('changeWallet')}
+                        Disconnect Wallet
                       </Button>
 
                       <Button
                         className="float-right mx-1 btn-md btn-info btn-round d-none d-sm-block"
                         onClick={() => {
-                          resetWallet()
+                          onWalletDisconnect()
                         }}
                       >
-                        {t('changeWallet')}
+                        Disconnect Wallet
                       </Button>
                     </Col>
                   </Row>

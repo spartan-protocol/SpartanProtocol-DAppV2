@@ -91,13 +91,13 @@ const AddLiquidity = () => {
         }
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.sparta &&
+          asset1.tokenAddress !== addr.spartav1 &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset2 = { tokenAddress: addr.sparta }
+        asset2 = { tokenAddress: addr.spartav1 }
         asset3 =
-          asset1.tokenAddress !== addr.sparta
+          asset1.tokenAddress !== addr.spartav1
             ? asset1
             : { tokenAddress: addr.bnb }
 
@@ -124,7 +124,7 @@ const AddLiquidity = () => {
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset3 = asset1.tokenAddress !== addr.sparta ? asset1 : asset3
+        asset3 = asset1.tokenAddress !== addr.spartav1 ? asset1 : asset3
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset3 = getItemFromArray(asset3, pool.poolDetails)
@@ -213,7 +213,7 @@ const AddLiquidity = () => {
       return convertFromWei(
         calcLiquidityUnitsAsym(
           convertToWei(addInput1?.value),
-          assetAdd1.tokenAddress === addr.sparta
+          assetAdd1.tokenAddress === addr.spartav1
             ? poolAdd1?.baseAmount
             : poolAdd1?.tokenAmount,
           poolAdd1?.poolUnits,
@@ -229,7 +229,7 @@ const AddLiquidity = () => {
         convertToWei(BN(addInput1?.value).div(2)),
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
-        assetAdd1.tokenAddress !== addr.sparta,
+        assetAdd1.tokenAddress !== addr.spartav1,
       )
       return swapFee
     }
@@ -237,14 +237,14 @@ const AddLiquidity = () => {
   }
 
   const getInput1ValueUSD = () => {
-    if (assetAdd1?.tokenAddress !== addr.sparta && addInput1?.value) {
+    if (assetAdd1?.tokenAddress !== addr.spartav1 && addInput1?.value) {
       return calcValueInBase(
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
         convertToWei(addInput1.value),
       ).times(web3.spartaPrice)
     }
-    if (assetAdd1?.tokenAddress === addr.sparta && addInput1?.value) {
+    if (assetAdd1?.tokenAddress === addr.spartav1 && addInput1?.value) {
       return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
     }
     return '0.00'
@@ -406,7 +406,7 @@ const AddLiquidity = () => {
                     <AssetSelect
                       priority="1"
                       filter={['token']}
-                      blackList={activeTab === 'addTab1' ? [addr.sparta] : []}
+                      blackList={activeTab === 'addTab1' ? [addr.spartav1] : []}
                     />
                   </Col>
                   <Col className="text-right">
@@ -490,7 +490,7 @@ const AddLiquidity = () => {
                       <AssetSelect
                         priority="2"
                         filter={['token']}
-                        whiteList={[addr.sparta]}
+                        whiteList={[addr.spartav1]}
                         disabled={activeTab === 'addTab1'}
                       />
                     </Col>
@@ -554,7 +554,7 @@ const AddLiquidity = () => {
                           filter={['pool']}
                           disabled={
                             activeTab === 'addTab1' ||
-                            assetAdd1.tokenAddress !== addr.sparta
+                            assetAdd1.tokenAddress !== addr.spartav1
                           }
                         />
                       </div>
@@ -693,7 +693,7 @@ const AddLiquidity = () => {
                     : dispatch(
                         routerAddLiqAsym(
                           convertToWei(addInput1.value),
-                          assetAdd1.tokenAddress === addr.sparta,
+                          assetAdd1.tokenAddress === addr.spartav1,
                           poolAdd1.tokenAddress,
                         ),
                       )

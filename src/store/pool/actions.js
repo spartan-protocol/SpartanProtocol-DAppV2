@@ -39,7 +39,7 @@ export const getListedTokens = () => async (dispatch) => {
     const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
     if (wbnbIndex > -1)
       listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
-    listedTokens.push(addr.sparta, addr.oldSparta)
+    listedTokens.push(addr.spartav1, addr.spartav2)
     dispatch(payloadToDispatch(Types.POOL_LISTED_TOKENS, listedTokens))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
@@ -93,10 +93,10 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
     for (let i = 0; i < listedTokens.length; i++) {
       const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
       const symbol = () => {
-        if (listedTokens[i] === addr.sparta) {
+        if (listedTokens[i] === addr.spartav2) {
           return `${tempArray[i].symbol}`
         }
-        if (listedTokens[i] === addr.oldSparta) {
+        if (listedTokens[i] === addr.spartav1) {
           return `${tempArray[i].symbol} (old)`
         }
         return tempArray[i].symbol
@@ -139,8 +139,8 @@ export const getListedPools = (tokenDetails, curatedArray) => async (
     let tempArray = []
     for (let i = 0; i < tokenDetails.length; i++) {
       if (
-        tokenDetails[i].address === addr.sparta ||
-        tokenDetails[i].address === addr.oldSparta
+        tokenDetails[i].address === addr.spartav1 ||
+        tokenDetails[i].address === addr.spartav2
       ) {
         tempArray.push({
           poolAddress: '',
@@ -200,20 +200,20 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
       const daoVaultContract = getDaoVaultContract()
       const bondVaultContract = getBondVaultContract()
       const poolContract =
-        listedPools[i].tokenAddress === addr.sparta ||
-        listedPools[i].tokenAddress === addr.oldSparta
+        listedPools[i].tokenAddress === addr.spartav1 ||
+        listedPools[i].tokenAddress === addr.spartav2
           ? null
           : getPoolContract(listedPools[i].address)
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta ||
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2 ||
           wallet === null
           ? '0'
           : poolContract.callStatic.balanceOf(wallet),
       ) // balance
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta ||
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2 ||
           wallet === null
           ? '0'
           : daoVaultContract.callStatic.getMemberPoolBalance(
@@ -222,34 +222,34 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
             ),
       ) // staked
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2
           ? '0'
           : poolContract.callStatic.map30DPoolRevenue(),
       ) // recentFees
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2
           ? '0'
           : poolContract.callStatic.mapPast30DPoolRevenue(),
       ) // lastMonthFees
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2
           ? '0'
           : routerContract.callStatic.currentPoolRevenue(
               listedPools[i].address,
             ),
       ) // recentDivis
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2
           ? '0'
           : routerContract.callStatic.pastPoolRevenue(listedPools[i].address),
       ) // lastMonthDivis
       tempArray.push(
-        listedPools[i].tokenAddress === addr.sparta ||
-          listedPools[i].tokenAddress === addr.oldSparta ||
+        listedPools[i].tokenAddress === addr.spartav1 ||
+          listedPools[i].tokenAddress === addr.spartav2 ||
           wallet === null
           ? {
               isMember: false,

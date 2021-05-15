@@ -126,7 +126,6 @@ export const calcPart = (bp, total) => {
   let part = 0
   if (bp <= 10000 && bp > 0) {
     part = calcShare(bp, 10000, total)
-    console.log('part:', part.toFixed())
   } else console.log('Must be valid basis points')
   return part
 }

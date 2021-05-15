@@ -58,7 +58,7 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
   try {
     let tempArray = []
     for (let i = 0; i < tokenArray.length; i++) {
-      if (tokenArray[i] === addr.sparta || tokenArray[i] === addr.oldSparta) {
+      if (tokenArray[i] === addr.spartav1 || tokenArray[i] === addr.spartav2) {
         tempArray.push(addr.bnb)
       } else {
         tempArray.push(contract.callStatic.getSynth(tokenArray[i]))

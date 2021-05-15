@@ -96,8 +96,8 @@ const Overview = () => {
                 pool?.poolDetails
                   .filter(
                     (asset) =>
-                      asset.tokenAddress !== addr.sparta &&
-                      asset.tokenAddress !== addr.oldSparta,
+                      asset.tokenAddress !== addr.spartav1 &&
+                      asset.tokenAddress !== addr.spartav2,
                   )
                   .sort((a, b) => b.baseAmount - a.baseAmount)
                   .map((asset) => (

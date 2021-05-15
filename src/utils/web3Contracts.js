@@ -204,11 +204,11 @@ export const getRouterContract = () => {
  * @returns {uint} contract
  */
 export const getSpartaContract = () => {
-  let contract = isAddress(getAddresses().sparta)
+  let contract = isAddress(getAddresses().spartav2)
   const abiBase = getAbis().sparta
   const provider = getWalletProvider()
   if (contract === true) {
-    contract = new ethers.Contract(getAddresses().sparta, abiBase, provider)
+    contract = new ethers.Contract(getAddresses().spartav2, abiBase, provider)
   }
   return contract
 }

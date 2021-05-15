@@ -76,7 +76,9 @@ const Supply = () => {
         placement="bottom"
         target="PopoverClick"
       >
-        <PopoverHeader className="mt-2">Tokenomics</PopoverHeader>
+        <PopoverHeader className="mt-2">
+          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
+        </PopoverHeader>
         <PopoverBody>
           {network.chainId === 97 && (
             <>
@@ -89,7 +91,7 @@ const Supply = () => {
                   {formatFromWei(
                     BN(
                       pool.tokenDetails?.filter(
-                        (asset) => asset.address === addr.sparta,
+                        (asset) => asset.address === addr.spartav1,
                       )[0]?.totalSupply,
                     ).times(web3.spartaPrice),
                     0,
@@ -102,7 +104,7 @@ const Supply = () => {
                 <Col xs="6 mb-2" className="popover-text">
                   {formatFromWei(
                     pool.tokenDetails?.filter(
-                      (asset) => asset.address === addr.sparta,
+                      (asset) => asset.address === addr.spartav1,
                     )[0]?.totalSupply,
                     0,
                   )}
@@ -120,7 +122,7 @@ const Supply = () => {
                 <Col xs="6" className="popover-text mb-2">
                   {formatFromWei(
                     pool.tokenDetails?.filter(
-                      (asset) => asset.address === addr.sparta,
+                      (asset) => asset.address === addr.spartav1,
                     )[0]?.totalSupply,
                     0,
                   )}
