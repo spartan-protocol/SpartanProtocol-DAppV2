@@ -1,13 +1,16 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable*/
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { Button, Card, Col, Row, UncontrolledTooltip } from 'reactstrap'
-import { usePool } from '../../../store/pool'
-import { useWeb3 } from '../../../store/web3/selector'
-import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
-import { calcAPY } from '../../../utils/web3Utils'
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { Button, Card, Col, Row, UncontrolledTooltip } from "reactstrap"
+import { usePool } from "../../../store/pool"
+import { useWeb3 } from "../../../store/web3/selector"
+import { BN, formatFromUnits, formatFromWei } from "../../../utils/bigNumber"
+import { calcAPY } from "../../../utils/web3Utils"
+import downIcon from "../../../assets/icons/arrow-down-light.svg"
+import upIcon from "../../../assets/icons/arrow-up-light.svg"
+import iconInfo from "../../../assets/icons/icon-info-dark.svg"
 
 const PoolItem = ({ asset }) => {
   // const bond = useBond()
@@ -23,7 +26,7 @@ const PoolItem = ({ asset }) => {
     lastMonthDivis,
     recentFees,
     lastMonthFees,
-    genesis,
+    genesis
     // curated,
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -37,8 +40,8 @@ const PoolItem = ({ asset }) => {
       recentFees,
       lastMonthFees,
       genesis,
-      baseAmount,
-    ),
+      baseAmount
+    )
   )
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
@@ -63,36 +66,58 @@ const PoolItem = ({ asset }) => {
             </Col>
             <Col className="mt-1 p-0">
               <p className="text-sm-label d-inline-block">APY</p>
-              <i
+              <img
                 id="apy"
-                role="button"
-                className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
+                src={iconInfo}
+                alt="iconInfo"
+                className=""
+                style={{
+                  cursor: "help",
+                  height: "20px",
+                  width: "20px",
+                  top: "-15px"
+                }}
               />
+
               <UncontrolledTooltip target="apy">
-                {t('apyInfo')}
+                {t("apyInfo")}
               </UncontrolledTooltip>
               <p className="output-card">{APY}%</p>
             </Col>
             <Col xs="auto" className="text-right my-auto">
               {showDetails && (
-                <i
-                  role="button"
-                  className="icon-small icon-up icon-light"
+                <img
                   onClick={() => toggleCollapse()}
+                  src={upIcon}
+                  alt="upIcon"
+                  className="swap-icon-color"
+                  style={{
+                    cursor: "pointer",
+                    height: "30px",
+                    width: "30px",
+                    top: "-15px"
+                  }}
                 />
               )}
               {!showDetails && (
-                <i
-                  role="button"
-                  className="icon-small icon-down icon-light"
+                <img
                   onClick={() => toggleCollapse()}
+                  src={downIcon}
+                  alt="downIcon"
+                  className="swap-icon-color"
+                  style={{
+                    cursor: "pointer",
+                    height: "30px",
+                    width: "30px",
+                    top: "-15px"
+                  }}
                 />
               )}
             </Col>
           </Row>
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              {t('spotPrice')}
+              {t("spotPrice")}
             </Col>
             <Col className="text-right output-card">
               {formatFromUnits(tokenValueBase)} SPARTA
@@ -101,7 +126,7 @@ const PoolItem = ({ asset }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
-              {t('poolDepth')}
+              {t("poolDepth")}
             </Col>
             <Col className="text-right output-card">
               ${formatFromWei(poolDepthUsd, 0)} USD
@@ -111,48 +136,48 @@ const PoolItem = ({ asset }) => {
             <>
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
-                  {t('fees')}
+                  {t("fees")}
                   <i
                     id="fees"
                     role="button"
                     className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
                   />
                   <UncontrolledTooltip target="fees">
-                    {t('swapRevenue', {
-                      days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+                    {t("swapRevenue", {
+                      days: poolAgeDays > 30 ? "30" : poolAgeDays.toFixed(2)
                     })}
                   </UncontrolledTooltip>
                 </Col>
                 <Col className="text-right output-card">
                   {lastMonthFees > 0
                     ? formatFromWei(lastMonthFees, 0)
-                    : formatFromWei(recentFees, 0)}{' '}
+                    : formatFromWei(recentFees, 0)}{" "}
                   SPARTA
                 </Col>
               </Row>
 
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
-                  {t('dividends')}
+                  {t("dividends")}
                   <i
                     id="divis"
                     role="button"
                     className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
                   />
                   <UncontrolledTooltip target="divis">
-                    {t('dividendRevenue', {
-                      days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+                    {t("dividendRevenue", {
+                      days: poolAgeDays > 30 ? "30" : poolAgeDays.toFixed(2)
                     })}
                   </UncontrolledTooltip>
                 </Col>
                 <Col className="text-right output-card">
                   {asset.curated === true &&
-                    lastMonthDivis > 0 &&
-                    `${formatFromWei(lastMonthDivis, 0)} SPARTA`}
+                  lastMonthDivis > 0 &&
+                  `${formatFromWei(lastMonthDivis, 0)} SPARTA`}
                   {asset.curated === true &&
-                    lastMonthDivis <= 0 &&
-                    `${formatFromWei(recentDivis, 0)} SPARTA`}
-                  {asset.curated === false && t('notCurated')}
+                  lastMonthDivis <= 0 &&
+                  `${formatFromWei(recentDivis, 0)} SPARTA`}
+                  {asset.curated === false && t("notCurated")}
                 </Col>
               </Row>
             </>
@@ -161,21 +186,21 @@ const PoolItem = ({ asset }) => {
             <Col xs="4" className="p-1">
               <Link to={`/pools/swap?asset1=${tokenAddress}`}>
                 <Button color="primary" className="btn-sm w-100">
-                  {t('swap')}
+                  {t("swap")}
                 </Button>
               </Link>
             </Col>
             <Col xs="4" className="p-1">
               <Link to={`/pools/liquidity?asset1=${tokenAddress}`}>
                 <Button color="primary" className="btn-sm w-100">
-                  {t('join')}
+                  {t("join")}
                 </Button>
               </Link>
             </Col>
             <Col xs="4" className="p-1">
               <Link to="/vault">
                 <Button color="primary" className="btn-sm w-100">
-                  {t('stake')}
+                  {t("stake")}
                 </Button>
               </Link>
             </Col>

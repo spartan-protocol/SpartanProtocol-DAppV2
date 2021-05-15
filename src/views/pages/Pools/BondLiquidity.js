@@ -159,7 +159,7 @@ const BondLiquidity = () => {
             <Col xs="12" className="px-1 px-sm-3">
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body pb-2 mb-1"
+                className="card-body pb-2 mb-1 card-inside"
               >
                 <Row>
                   <Col xs="4" className="">

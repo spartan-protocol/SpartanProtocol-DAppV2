@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable*/
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
@@ -461,6 +461,7 @@ const Swap = () => {
             {pool.poolDetails?.length > 0 && (
               <>
                 <Row className="row-480">
+                  <Col xs="auto">
                   <Card xs="auto" className="card-body card-480 mb-auto">
                     <Nav pills className="nav-tabs-custom mt-2 mb-4">
                       <NavItem>
@@ -492,7 +493,7 @@ const Swap = () => {
                       <Col xs="12" className="px-1 px-sm-3">
                         <Card
                           style={{ backgroundColor: '#25212D' }}
-                          className="card-body mb-1"
+                          className="card-body mb-1 card-inside"
                         >
                           <Row>
                             {/* 'From' input box */}
@@ -569,7 +570,7 @@ const Swap = () => {
                           {activeTab === 'mint' && (
                             <img
                               src={mintIcon}
-                              alt="plusicon"
+                              alt="minticon"
                               className="mx-auto z-index position-relative p-2"
                               style={{
                                 backgroundColor: '#A80005',
@@ -597,7 +598,7 @@ const Swap = () => {
                         {activeTab === 'mint' && (
                           <Card
                             style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1"
+                            className="card-body mb-1 card-inside"
                           >
                             <Row className="my-2">
                               <Col xs="4" className="">
@@ -655,7 +656,7 @@ const Swap = () => {
                         {activeTab === 'burn' && (
                           <Card
                             style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1"
+                            className="card-body mb-1 card-inside"
                           >
                             <Row className="my-2">
                               <Col xs="4" className="">
@@ -861,6 +862,7 @@ const Swap = () => {
                       </Col>
                     </Row>
                   </Card>
+                  </Col>
                   <Col xs="auto">
                     {pool.poolDetails &&
                       assetSwap1.tokenAddress !== addr.sparta &&

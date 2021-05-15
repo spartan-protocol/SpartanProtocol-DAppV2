@@ -111,22 +111,37 @@
     background-image: url('/src/assets/icons/arrow.svg#light');
 }
 
-/* Up / Down Arrows */
-.icon-down.icon-dark {
-    background-image: url('/src/assets/icons/arrow-down-dark.svg#dark');
-}
 
-.icon-up.icon-dark {
+
+/* Up Arrows */
+
+.icon-up-light {
     background-image: url('/src/assets/icons/arrow-up-dark.svg#dark');
+
 }
 
-.icon-down.icon-light {
-    background-image: url('/src/assets/icons/arrow-down-light.svg#light');
-}
-
-.icon-up.icon-light {
+.icon-up-dark {
     background-image: url('/src/assets/icons/arrow-up-light.svg#light');
+
+
 }
+
+/* Down Arrows */
+
+.icon-down-light {
+    background-image: url('/src/assets/icons/arrow-down-light.svg#light');
+
+
+}
+
+.icon-up-dark {
+    background-image: url('/src/assets/icons/arrow-down-dark.svg#dark');
+
+
+}
+
+
+
 
 /* Max */
 .icon-max.icon-light {
@@ -388,6 +403,12 @@
 .icon-moon.icon-light {
     background-image: url('/src/assets/icons/icon-moon-light.svg#light');
 }
+
+/* Sun */
+.icon-sun.icon-dark {
+    background-image: url('/src/assets/icons/sun.svg#dark');
+}
+
 
 .icon-moon.icon-dark {
     background-image: url('/src/assets/icons/icon-moon-dark.svg#dark');

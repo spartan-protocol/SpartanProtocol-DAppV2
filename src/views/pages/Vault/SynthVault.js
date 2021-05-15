@@ -40,10 +40,7 @@ const SynthVault = () => {
   return (
     <>
       <Col xs="auto">
-        <Card
-          className="card-body card-320 pb-2 pt-3 card-underlay"
-          style={{ backgroundColor: '#25212D' }}
-        >
+        <Card className="card-body card-320 pb-2 pt-3 card-underlay">
           <Col>
             <h3>{t('synthVaultDetails')}</h3>
             <Row className="my-1">
@@ -103,10 +100,7 @@ const SynthVault = () => {
       </Col>
 
       <Col xs="auto">
-        <Card
-          className="card-body card-320 pb-2 pt-3 card-underlay"
-          style={{ backgroundColor: '#25212D' }}
-        >
+        <Card className="card-body card-320 pb-2 pt-3 card-underlay">
           <Col>
             <h3>{t('memberDetails')}</h3>
             <Row className="my-4 pb-2">

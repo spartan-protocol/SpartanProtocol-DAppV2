@@ -371,7 +371,7 @@ const RemoveLiquidity = () => {
             <Col xs="12" className="px-1 px-sm-3">
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body mb-1"
+                className="card-body mb-1 card-inside"
               >
                 <Row>
                   <Col xs="4">
@@ -444,7 +444,7 @@ const RemoveLiquidity = () => {
               {activeTab === '2' && (
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="card-body mb-0"
+                  className="card-body mb-0 card-inside"
                 >
                   <Row>
                     <Col xs="4">

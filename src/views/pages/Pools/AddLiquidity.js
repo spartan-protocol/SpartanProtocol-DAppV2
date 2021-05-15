@@ -380,7 +380,7 @@ const AddLiquidity = () => {
             <Col xs="12" className="px-1 px-sm-3">
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body mb-1"
+                className="card-body mb-1 card-inside"
               >
                 <Row>
                   <Col xs="4">
@@ -465,7 +465,7 @@ const AddLiquidity = () => {
               {activeTab === 'addTab1' && (
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="card-body mb-1"
+                  className="card-body mb-1 card-inside"
                 >
                   <Row className="my-2">
                     <Col xs="4" className="">
@@ -532,7 +532,7 @@ const AddLiquidity = () => {
               {activeTab === 'addTab2' && (
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="card-body mb-1"
+                  className="card-body mb-1 card-inside"
                 >
                   <Row className="my-2">
                     <Col xs="4" className="">

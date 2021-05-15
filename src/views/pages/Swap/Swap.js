@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
+/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import {
   Button,
@@ -48,6 +49,7 @@ import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import swapIcon from "../../../assets/icons/icon-swap-light.svg"
 
 const Swap = () => {
   const synth = useSynth()
@@ -709,7 +711,7 @@ const Swap = () => {
                         <Col xs="12" className="px-1 px-sm-3">
                           <Card
                             style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1"
+                            className="card-body mb-1 card-inside"
                           >
                             <Row>
                               <Col xs="4">
@@ -782,18 +784,22 @@ const Swap = () => {
                           style={{ height: '1px' }}
                           className="text-center z-index my-n4"
                         >
-                          <Button
-                            className="btn-sm btn-round btn-icon position-relative"
-                            color="primary"
-                            style={{
-                              height: '35px',
-                              top: '-19px',
-                              width: '35px',
-                            }}
-                            onClick={() => handleReverseAssets()}
-                          >
-                            <i className="icon-swap-size icon-swap icon-light" />
-                          </Button>
+
+                            <img
+
+                              onClick={() => handleReverseAssets()}
+                              src={swapIcon}
+                              alt="swapicon"
+                              className="mx-auto z-index position-relative p-2"
+                              style={{
+                                cursor: "pointer",
+                                backgroundColor: '#A80005',
+                                height: '35px',
+                                width: '35px',
+                                top: '-19px',
+                              }}
+                            />
+
                         </Col>
 
                         {/* 'To' input box */}
@@ -801,7 +807,7 @@ const Swap = () => {
                         <Col xs="12" className="px-1 px-sm-3">
                           <Card
                             style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1"
+                            className="card-body mb-1 card-inside"
                           >
                             <Row className="my-2">
                               <Col xs="4" className="">

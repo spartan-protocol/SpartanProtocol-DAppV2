@@ -212,7 +212,7 @@ const WalletSelect = (props) => {
                     </Col>
                     <Col xs={6}>
                       <Button
-                        className="mx-1 btn-sm btn-info btn-round d-block d-sm-none"
+                        className="mx-1 btn-sm btn-info d-block d-sm-none"
                         onClick={() => {
                           resetWallet()
                         }}
@@ -221,7 +221,7 @@ const WalletSelect = (props) => {
                       </Button>
 
                       <Button
-                        className="float-right mx-1 btn-md btn-info btn-round d-none d-sm-block"
+                        className="float-right mx-1 btn-md btn-info d-none d-sm-block"
                         onClick={() => {
                           resetWallet()
                         }}

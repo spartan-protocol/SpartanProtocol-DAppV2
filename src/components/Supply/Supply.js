@@ -137,15 +137,15 @@ const Supply = () => {
                   </Progress>
                 </Col>
                 <Col xs="4">
-                  <span className="dot-burn mr-2" />
+                  <span className="popover-text  dot-burn mr-2" />
                   {t('burn')}
                 </Col>
                 <Col xs="4">
-                  <span className="dot-bond mr-1" />
+                  <span className="popover-text dot-bond mr-1" />
                   {t('bond')}
                 </Col>
                 <Col xs="4">
-                  <span className="dot-emission mr-2" />
+                  <span className="popover-text  dot-emission mr-2" />
                   {t('emisson')}
                 </Col>
               </Row>
@@ -156,7 +156,7 @@ const Supply = () => {
           <Row>
             <Col md="12" className="ml-auto text-right">
               <Card
-                className="card-body"
+                className="card-body card-inside "
                 style={{ backgroundColor: '#25212D' }}
               >
                 <Row
