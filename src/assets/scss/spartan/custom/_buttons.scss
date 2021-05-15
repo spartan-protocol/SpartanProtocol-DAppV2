@@ -222,6 +222,8 @@
   padding: 2px;
 
   &.btn:hover,
+  &.btn:active,
+  &.btn:focus,
   &.btn-primary:hover {
     background: transparent;
     background-color: transparent !important;
@@ -238,6 +240,14 @@
   top: 50%;
   margin-top: -1px;
   right: 8px;
+}
+
+
+
+.btn-round:hover {
+  border-width: 0;
+  border-radius: 0;
+
 }
 
 .btn-round {
