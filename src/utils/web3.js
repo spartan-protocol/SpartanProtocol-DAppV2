@@ -137,8 +137,8 @@ export const addressesTN = {
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
-  oldSparta: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
-  sparta: '0xd055ADFdD53963F578A929eaA440DBED95407472',
+  spartav1: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
+  spartav2: '0xd055ADFdD53963F578A929eaA440DBED95407472',
 }
 
 // List of BSC Mainnet Addresses
@@ -183,8 +183,8 @@ export const addressesMN = {
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-  oldSparta: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
-  sparta: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
+  spartav1: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
+  spartav2: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
 }
 
 // Listed tokens on testNet
@@ -315,7 +315,9 @@ export const getAddresses = () => {
  */
 export const getItemFromArray = (asset, finalArray) => {
   const addr = getAddresses()
-  let arrayItem = finalArray.filter((item) => item.tokenAddress === addr.sparta)
+  let arrayItem = finalArray.filter(
+    (item) => item.tokenAddress === addr.spartav1,
+  )
   if (finalArray.find((item) => item.tokenAddress === asset.tokenAddress)) {
     arrayItem = finalArray.filter(
       (item) => item.tokenAddress === asset.tokenAddress,

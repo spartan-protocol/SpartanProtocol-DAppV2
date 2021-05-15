@@ -81,7 +81,7 @@ const BondLiquidity = () => {
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.sparta &&
+          asset1.tokenAddress !== addr.spartav1 &&
           bond.bondListed.includes(asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }

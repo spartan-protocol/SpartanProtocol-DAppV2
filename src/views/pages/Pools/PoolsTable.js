@@ -43,7 +43,7 @@ const Poolstable = () => {
       {pool?.poolDetails && (
         <Col md={12}>
           {pool?.poolDetails
-            .filter((asset) => asset.tokenAddress !== addr.sparta)
+            .filter((asset) => asset.tokenAddress !== addr.spartav1)
             .sort((a, b) => b.baseAmount - a.baseAmount)
             .map((asset, index) => (
               <Card

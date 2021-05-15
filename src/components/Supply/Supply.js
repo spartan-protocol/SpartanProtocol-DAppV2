@@ -91,7 +91,7 @@ const Supply = () => {
                   {formatFromWei(
                     BN(
                       pool.tokenDetails?.filter(
-                        (asset) => asset.address === addr.sparta,
+                        (asset) => asset.address === addr.spartav1,
                       )[0]?.totalSupply,
                     ).times(web3.spartaPrice),
                     0,
@@ -104,7 +104,7 @@ const Supply = () => {
                 <Col xs="6 mb-2" className="popover-text">
                   {formatFromWei(
                     pool.tokenDetails?.filter(
-                      (asset) => asset.address === addr.sparta,
+                      (asset) => asset.address === addr.spartav1,
                     )[0]?.totalSupply,
                     0,
                   )}
@@ -122,7 +122,7 @@ const Supply = () => {
                 <Col xs="6" className="popover-text mb-2">
                   {formatFromWei(
                     pool.tokenDetails?.filter(
-                      (asset) => asset.address === addr.sparta,
+                      (asset) => asset.address === addr.spartav1,
                     )[0]?.totalSupply,
                     0,
                   )}
