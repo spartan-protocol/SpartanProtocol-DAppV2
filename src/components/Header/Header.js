@@ -1,90 +1,72 @@
-import React from 'react'
-import classNames from 'classnames'
-import { Button, Navbar, Nav, Container } from 'reactstrap'
-import { Link } from 'react-router-dom'
-import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
-import LanguageDropdown from '../Common/LanguageDropdown'
-import AddressConn from '../Common/AddressConn'
-import Supply from '../Supply/Supply'
+/* eslint-disable */
+import React from "react"
+import classNames from "classnames"
+import { Button, Navbar, Nav, Container } from "reactstrap"
+import { Link } from "react-router-dom"
+import { ReactComponent as SpartanLogo } from "../../assets/img/logo.svg"
+import LanguageDropdown from "../Common/LanguageDropdown"
+import AddressConn from "../Common/AddressConn"
+import ThemeSwitcher from "../Common/ThemeSwitcher"
+import Supply from "../Supply/Supply"
+import CustomInput from "reactstrap"
+import Card from "react-bootstrap/Card"
 
-const Header = (props) => (
-  // const [color, setColor] = React.useState('navbar-transparent')
-  // function that adds color white/transparent to the navbar on resize (this is for the collapse)
-  // const updateColor = () => {
-  //   if (window.innerWidth < 993 && collapseOpen) {
-  //     setColor('bg-white')
-  //   } else {
-  //     setColor('navbar-transparent')
-  //   }
-  // }
-  // React.useEffect(() => {
-  //   window.addEventListener('resize', updateColor)
-  //   return function cleanup() {
-  //     window.removeEventListener('resize', updateColor)
-  //   }
-  // })
 
-  // // this function opens and closes the collapse on small devices
-  // const toggleCollapse = () => {
-  //   if (collapseOpen) {
-  //     setColor('navbar-transparent')
-  //   } else {
-  //     setColor('bg-white')
-  //   }
-  //   setCollapseOpen(!collapseOpen)
-  // }
+const Header = (props) => {
 
-  // Wallet functions
-  <Navbar
-    className={classNames('navbar sticky-top', {
-      color: 'navbar-transparent',
-    })}
-    expand="lg"
-  >
-    <Container fluid className="px-1">
-      <div className="navbar-wrapper w-100">
-        <div className="navbar-minimize d-inline mr-n4">
-          <Button
-            className="minimize-sidebar btn-just-icon ml-n2 mr-4"
-            color="link"
-            id="tooltip209599"
-            onClick={props.handleMiniClick}
-          >
-            <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular" />
-            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini" />
-          </Button>
-        </div>
-        <div
-          className={classNames('navbar-toggle d-inline', {
-            toggled: props.sidebarOpened,
-          })}
-        >
-          <button
-            className="navbar-toggler ml-0"
-            type="button"
-            onClick={props.toggleSidebar}
-          >
-            <i className="icon-medium icon-menu-open icon-light" />
-          </button>
-        </div>
-        <Link to="/">
-          <div className="d-none d-md-block navbar-brand-thing">
-            <SpartanLogo className="mr-1" /> Spartan Protocol
+  return (
+    <Navbar
+      className={classNames("navbar sticky-top", {
+        color: "navbar-transparent"
+      })}
+      expand="lg"
+    >
+      <Container fluid className="px-1">
+        <div className="navbar-wrapper w-100">
+          <div className="navbar-minimize d-inline mr-n4">
+            <Button
+              className="minimize-sidebar btn-just-icon ml-n2 mr-4"
+              color="link"
+              id="tooltip209599"
+              onClick={props.handleMiniClick}
+            >
+              <i  id='menu-drawer-closed'className="icon-medium icon-menu-closed-dark visible-on-sidebar-regular" />
+              <i id='menu-drawer-open'className="icon-medium icon-menu-open-dark visible-on-sidebar-mini" />
+            </Button>
           </div>
-        </Link>
-        <Nav className="ml-auto">
-          <LanguageDropdown />
-          <AddressConn
-            changeStates={props.changeStates}
-            changeNotification={props.changeNotification}
-            connectedTokens={props.connectedTokens}
-            connectingTokens={props.connectingTokens}
-          />
-          <Supply />
-        </Nav>
-      </div>
-    </Container>
-  </Navbar>
-)
+          <div
+            className={classNames("navbar-toggle d-inline", {
+              toggled: props.sidebarOpened
+            })}
+          >
+            <button
+              className="navbar-toggler ml-0"
+              type="button"
+              onClick={props.toggleSidebar}
+            >
+              <i id='mobile-menu-drawer-open' className="icon-medium icon-menu-open-dark" />
+            </button>
+          </div>
+          <Link to="/">
+            <div className="d-none d-md-block navbar-brand-thing">
+              <h6 className="text-title-header "><SpartanLogo className="mr-1" /> Spartan Protocol</h6></div>
+          </Link>
+          <Nav className="ml-auto">
+            <ThemeSwitcher />
+            <LanguageDropdown />
+            <AddressConn
+              changeStates={props.changeStates}
+              changeNotification={props.changeNotification}
+              connectedTokens={props.connectedTokens}
+              connectingTokens={props.connectingTokens}
+            />
+            <Supply />
+          </Nav>
+        </div>
+      </Container>
+    </Navbar>
+  )
+}
+
 
 export default Header

@@ -36,6 +36,7 @@
     overflow: hidden;
     position: relative;
     line-height: normal;
+    background: transparent;
 
     &.btn-simple {
       padding: 0;
@@ -242,6 +243,8 @@
 .btn-round {
   border-width: $border-thin;
   border-radius: $btn-round-radius;
+  background: transparent;
+
 
   &.btn-simple {
     padding: $padding-btn-vertical - 1 $padding-round-horizontal - 1;

@@ -397,12 +397,16 @@ $select-coordinates: 50% -40px !default;
 $general-transition-time: 300ms !default;
 
 // Fonts
-@import url(https://fonts.googleapis.com/css?family=Kreon);
+@import url(http://fonts.googleapis.com/css?family=Manrope);
+@import url(http://fonts.googleapis.com/css?family=Kreon);
+@import url(http://fonts.googleapis.com/css?family=IBM+Plex+Sans);
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
 $font-family-base: 'Roboto', sans-serif !default;
-$font-family-alt: 'Kreon', sans-serif !default;
-$font-family-headers: 'Kreon';
+$font-family-alt: 'IBM Plex Sans', sans-serif !default;
+$font-family-headers: 'IBM Plex Sans';
+
 
 $font-size-dash: 0.875rem !default;
 
