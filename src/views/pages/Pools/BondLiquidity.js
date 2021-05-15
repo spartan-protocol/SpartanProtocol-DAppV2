@@ -251,7 +251,7 @@ const BondLiquidity = () => {
 
               <div className="progress-container progress-primary">
                 <Progress
-                  max="2500000"
+                  max="5000000"
                   value={convertFromWei(bond.bondSpartaRemaining)}
                   className=""
                 >

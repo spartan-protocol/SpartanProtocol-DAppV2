@@ -152,7 +152,7 @@ const PoolItem = ({ asset }) => {
                   {asset.curated === true &&
                     lastMonthDivis <= 0 &&
                     `${formatFromWei(recentDivis, 0)} SPARTA`}
-                  {asset.curated === false && 'Not Curated'}
+                  {asset.curated === false && t('notCurated')}
                 </Col>
               </Row>
             </>

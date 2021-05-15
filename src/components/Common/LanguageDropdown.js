@@ -129,13 +129,17 @@ const locales = [
   },
 ]
 
+const getLocale = () =>
+  locales.filter((x) => x.id === window.localStorage.getItem('i18nextLng'))[0]
+
 const LanguageDropdown = () => {
-  const [lng, setLng] = useState('en')
-  // const [flag,setFlag] = useState(usFlag);
+  const [lng, setLng] = useState(window.localStorage.getItem('i18nextLng'))
+  const [flag, setFlag] = useState(getLocale().flag)
 
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
     setLng(lang)
+    setFlag(getLocale().flag)
   }
 
   return (
@@ -143,10 +147,11 @@ const LanguageDropdown = () => {
       <Button
         id="PopoverClick1"
         type="Button"
-        className="btn-round btn-transparent btn-icon ml-n1"
+        className="btn-round btn-transparent btn-icon"
         href="#"
       >
-        <i className="icon-small icon-lang icon-dark mt-2" />
+        <img src={flag} alt="flag" className="icon-small mt-2" />
+        {/* <i className="icon-small icon-lang icon-dark mt-2" /> */}
       </Button>
       <UncontrolledPopover
         trigger="legacy"

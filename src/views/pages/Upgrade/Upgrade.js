@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
+import { useTranslation } from 'react-i18next'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
 import { getAddresses, getTokenContract } from '../../../utils/web3'
@@ -20,6 +21,7 @@ const Upgrade = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
   const wallet = useWallet()
+  const { t } = useTranslation()
   const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
   const [newSpartaBalance, setnewSpartaBalance] = useState('0')
   const [spartaSupply, setspartaSupply] = useState('0')
@@ -101,11 +103,11 @@ const Upgrade = () => {
           style={{ backgroundColor: '#1D171F' }}
         >
           <Col>
-            <h3 className="mb-0">Upgrade</h3>
-            <span className="subtitle-label">Upgrade your v1 SPARTA to v2</span>
+            <h3 className="mb-0">{t('upgrade')}</h3>
+            <span className="subtitle-label">{t('upgradeSubtitle')}</span>
             <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
-                Input
+                {t('input')}
               </Col>
               <Col className="text-right text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv1
@@ -113,7 +115,7 @@ const Upgrade = () => {
             </Row>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
-                Output
+                {t('output')}
               </Col>
               <Col className="text-right text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv2
@@ -128,7 +130,7 @@ const Upgrade = () => {
                     onClick={() => dispatch(spartaUpgrade())}
                     disabled={oldSpartaBalance <= 0}
                   >
-                    Upgrade SPARTA
+                    {t('upgrade')} SPARTA
                   </Button>
                 </Col>
               </Row>
@@ -152,13 +154,11 @@ const Upgrade = () => {
           style={{ backgroundColor: '#1D171F' }}
         >
           <Col>
-            <h3 className="mb-0">Claim</h3>
-            <span className="subtitle-label">
-              Claim missing SPARTA from v1 pools
-            </span>
+            <h3 className="mb-0">{t('claim')}</h3>
+            <span className="subtitle-label">{t('claimSubtitle')}</span>
             <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
-                Claim
+                {t('claim')}
               </Col>
               <Col className="text-right text-sm-label-wht">
                 {spartaSupply > 0 ? formatFromWei(getClaimAmount()) : 'Loading'}{' '}
@@ -167,7 +167,7 @@ const Upgrade = () => {
             </Row>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
-                Expiry
+                {t('expiry')}
               </Col>
               <Col className="text-right text-sm-label-wht">
                 {formatDate(getExpiry())}
@@ -184,7 +184,7 @@ const Upgrade = () => {
                     }
                     disabled={sparta?.claimCheck <= 0}
                   >
-                    Claim SPARTA
+                    {t('claim')} SPARTA
                   </Button>
                 </Col>
               </Row>
@@ -209,7 +209,7 @@ const Upgrade = () => {
         >
           <Col>
             <h3 className="mb-0">
-              Your Balance
+              {t('yourBalance')}
               <img
                 height="35"
                 src={spartaIcon}
@@ -218,10 +218,10 @@ const Upgrade = () => {
               />
             </h3>
 
-            <span className="subtitle-label">Overview v1 & v2 balances</span>
+            <span className="subtitle-label">{t('balanceSubtitle')}</span>
             <Row className="mb-2 mt-4">
               <Col xs="auto" className="text-card">
-                Balance
+                {t('balance')}
               </Col>
               <Col className="text-right text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv1
@@ -229,7 +229,7 @@ const Upgrade = () => {
             </Row>
             <Row className="my-2">
               <Col xs="auto" className="text-card">
-                Balance
+                {t('balance')}
               </Col>
               <Col className="text-right text-sm-label-wht">
                 {formatFromWei(newSpartaBalance)} SPARTAv2
@@ -243,7 +243,7 @@ const Upgrade = () => {
                   onClick={() => settrigger0(trigger0 + 1)}
                   disabled={loadingBalance === true}
                 >
-                  Refresh Balance
+                  {t('refreshBalance')}
                 </Button>
               </Col>
             </Row>
