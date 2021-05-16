@@ -58,6 +58,33 @@ const Supply = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
+  const getTotalSupply = () => {
+    const totalSupply = pool.tokenDetails?.filter(
+      (asset) => asset.address === addr.spartav1,
+    )[0]?.totalSupply
+    if (totalSupply > 0) {
+      return totalSupply
+    }
+    return '0.00'
+  }
+
+  const getMarketCap = () => {
+    const totalSupply = getTotalSupply()
+    if (totalSupply > 0) {
+      return BN(totalSupply).times(web3.spartaPrice)
+    }
+    return '0.00'
+  }
+
+  // NEED TO ADD LOGIC TO REMOVE NOT-YET-CIRCULATING FROM THIS FIGURE SEE GITHUB ISSUE #192
+  const getCirculatingSupply = () => {
+    const totalSupply = getTotalSupply()
+    if (totalSupply > 0) {
+      return totalSupply
+    }
+    return '0.00'
+  }
+
   return (
     <>
       <Button
@@ -77,7 +104,7 @@ const Supply = () => {
         target="PopoverClick"
       >
         <PopoverHeader className="mt-2">
-          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
+          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'} (v1)
         </PopoverHeader>
         <PopoverBody>
           {network.chainId === 97 && (
@@ -87,27 +114,14 @@ const Supply = () => {
                   {t('marketcap')}
                 </Col>
                 <Col xs="6 mb-2" className="popover-text mb-4">
-                  $
-                  {formatFromWei(
-                    BN(
-                      pool.tokenDetails?.filter(
-                        (asset) => asset.address === addr.spartav1,
-                      )[0]?.totalSupply,
-                    ).times(web3.spartaPrice),
-                    0,
-                  )}
+                  ${formatFromWei(getMarketCap(), 0)}
                 </Col>
 
                 <Col xs="6 mb-2" className="popover-text">
                   {`${t('circulatingSupply')}`}
                 </Col>
                 <Col xs="6 mb-2" className="popover-text">
-                  {formatFromWei(
-                    pool.tokenDetails?.filter(
-                      (asset) => asset.address === addr.spartav1,
-                    )[0]?.totalSupply,
-                    0,
-                  )}
+                  {formatFromWei(getCirculatingSupply(), 0)}
                 </Col>
                 <Col xs="12 mb-2">
                   <div className="progress-container progress-info">
@@ -120,12 +134,7 @@ const Supply = () => {
                   {t('totalSupply')}
                 </Col>
                 <Col xs="6" className="popover-text mb-2">
-                  {formatFromWei(
-                    pool.tokenDetails?.filter(
-                      (asset) => asset.address === addr.spartav1,
-                    )[0]?.totalSupply,
-                    0,
-                  )}
+                  {formatFromWei(getTotalSupply(), 0)}
                 </Col>
 
                 <Col xs="12 mb-2">

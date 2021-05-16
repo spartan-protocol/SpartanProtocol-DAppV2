@@ -736,7 +736,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipSynthFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"
@@ -747,7 +746,7 @@ const Swap = () => {
                               </div>
                             </Col>
                             <Col className="text-right">
-                              {assetSwap1?.tokenAddress === addr.sparta && (
+                              {assetSwap1?.tokenAddress === addr.spartav1 && (
                                 <div className="output-card text-light">
                                   {swapInput1?.value
                                     ? formatFromWei(getSynthFeeFromBase(), 6)
@@ -755,7 +754,7 @@ const Swap = () => {
                                   SPARTA
                                 </div>
                               )}
-                              {assetSwap1?.tokenAddress !== addr.sparta && (
+                              {assetSwap1?.tokenAddress !== addr.spartav1 && (
                                 <div className="output-card text-light">
                                   {swapInput1?.value
                                     ? formatFromWei(getSynthFeeToBase(), 6)

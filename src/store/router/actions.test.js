@@ -56,7 +56,7 @@ describe('Router actions', () => {
   // })
 
   // test('should be able to swap assets', async () => {
-  //   await routerSwapAssets('10', addr.sparta, TEST_TOKEN)(dispatchMock)
+  //   await routerSwapAssets('10', addr.spartav1, TEST_TOKEN)(dispatchMock)
   //   if (dispatchMock.mock.calls[1][0].type === Types.ROUTER_SWAP_ASSETS) {
   //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   //   } else {

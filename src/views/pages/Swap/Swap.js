@@ -888,7 +888,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"
@@ -950,7 +949,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipZapFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"
@@ -1011,7 +1009,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipSynthFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"

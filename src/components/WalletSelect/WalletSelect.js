@@ -351,19 +351,7 @@ const WalletSelect = (props) => {
                                     <Col xs="6" className="mt-1">
                                       <div
                                         role="button"
-                                        tabIndex={0}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 32) {
-                                            dispatch(
-                                              watchAsset(
-                                                asset.address,
-                                                asset.symbol,
-                                                '18',
-                                                asset.symbolUrl,
-                                              ),
-                                            )
-                                          }
-                                        }}
+                                        aria-hidden="true"
                                         onClick={() => {
                                           dispatch(
                                             watchAsset(
@@ -453,23 +441,7 @@ const WalletSelect = (props) => {
                                     <Col xs="6" className="mt-1">
                                       <div
                                         role="button"
-                                        tabIndex={0}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 32) {
-                                            dispatch(
-                                              watchAsset(
-                                                asset.address,
-                                                `${
-                                                  getToken(asset.tokenAddress)
-                                                    ?.symbol
-                                                }p`,
-                                                '18',
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbolUrl,
-                                              ),
-                                            )
-                                          }
-                                        }}
+                                        aria-hidden="true"
                                         onClick={() => {
                                           dispatch(
                                             watchAsset(
@@ -564,23 +536,7 @@ const WalletSelect = (props) => {
                                     <Col xs="6" className="mt-1">
                                       <div
                                         role="button"
-                                        tabIndex={0}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 32) {
-                                            dispatch(
-                                              watchAsset(
-                                                asset.address,
-                                                `${
-                                                  getToken(asset.tokenAddress)
-                                                    ?.symbol
-                                                }p`,
-                                                '18',
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbolUrl,
-                                              ),
-                                            )
-                                          }
-                                        }}
+                                        aria-hidden="true"
                                         onClick={() => {
                                           dispatch(
                                             watchAsset(
@@ -675,23 +631,7 @@ const WalletSelect = (props) => {
                                     <Col xs="6" className="mt-1">
                                       <div
                                         role="button"
-                                        tabIndex={0}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 32) {
-                                            dispatch(
-                                              watchAsset(
-                                                asset.address,
-                                                `${
-                                                  getToken(asset.tokenAddress)
-                                                    ?.symbol
-                                                }p`,
-                                                '18',
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbolUrl,
-                                              ),
-                                            )
-                                          }
-                                        }}
+                                        aria-hidden="true"
                                         onClick={() => {
                                           dispatch(
                                             watchAsset(
@@ -785,23 +725,7 @@ const WalletSelect = (props) => {
                                     <Col xs="6" className="mt-1">
                                       <div
                                         role="button"
-                                        tabIndex={0}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 32) {
-                                            dispatch(
-                                              watchAsset(
-                                                asset.address,
-                                                `${
-                                                  getToken(asset.tokenAddress)
-                                                    ?.symbol
-                                                }s`,
-                                                '18',
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbolUrl,
-                                              ),
-                                            )
-                                          }
-                                        }}
+                                        aria-hidden="true"
                                         onClick={() => {
                                           dispatch(
                                             watchAsset(
@@ -896,23 +820,7 @@ const WalletSelect = (props) => {
                                     <Col xs="6" className="mt-1">
                                       <div
                                         role="button"
-                                        tabIndex={0}
-                                        onKeyDown={(e) => {
-                                          if (e.key === 32) {
-                                            dispatch(
-                                              watchAsset(
-                                                asset.address,
-                                                `${
-                                                  getToken(asset.tokenAddress)
-                                                    ?.symbol
-                                                }s`,
-                                                '18',
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbolUrl,
-                                              ),
-                                            )
-                                          }
-                                        }}
+                                        aria-hidden="true"
                                         onClick={() => {
                                           dispatch(
                                             watchAsset(

@@ -8,7 +8,6 @@ import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
 import downIcon from '../../../assets/icons/arrow-down-light.svg'
 import upIcon from '../../../assets/icons/arrow-up-light.svg'
-import iconInfo from '../../../assets/icons/icon-info-dark.svg'
 
 const PoolItem = ({ asset }) => {
   // const bond = useBond()
@@ -64,20 +63,12 @@ const PoolItem = ({ asset }) => {
             </Col>
             <Col className="mt-1 p-0">
               <p className="text-sm-label d-inline-block">APY</p>
-              <img
-                id="apy"
-                src={iconInfo}
-                alt="iconInfo"
-                className=""
-                style={{
-                  cursor: 'help',
-                  height: '20px',
-                  width: '20px',
-                  top: '-15px',
-                }}
+              <i
+                id={`apy${asset.address}`}
+                className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
               />
 
-              <UncontrolledTooltip target="apy">
+              <UncontrolledTooltip target={`apy${asset.address}`}>
                 {t('apyInfo')}
               </UncontrolledTooltip>
               <p className="output-card">{APY}%</p>
@@ -138,11 +129,10 @@ const PoolItem = ({ asset }) => {
                 <Col xs="auto" className="text-card">
                   {t('fees')}
                   <i
-                    id="fees"
-                    role="button"
+                    id={`fees${asset.address}`}
                     className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
                   />
-                  <UncontrolledTooltip target="fees">
+                  <UncontrolledTooltip target={`fees${asset.address}`}>
                     {t('swapRevenue', {
                       days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
                     })}
@@ -160,11 +150,10 @@ const PoolItem = ({ asset }) => {
                 <Col xs="auto" className="text-card">
                   {t('dividends')}
                   <i
-                    id="divis"
-                    role="button"
+                    id={`divis${asset.address}`}
                     className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
                   />
-                  <UncontrolledTooltip target="divis">
+                  <UncontrolledTooltip target={`divis${asset.address}`}>
                     {t('dividendRevenue', {
                       days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
                     })}

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'reactstrap'
@@ -87,6 +85,7 @@ const BondItem = ({ asset }) => {
               {showDetails && (
                 <i
                   role="button"
+                  aria-hidden="true"
                   className="icon-small icon-up icon-light"
                   onClick={() => toggleCollapse()}
                 />
@@ -94,6 +93,7 @@ const BondItem = ({ asset }) => {
               {!showDetails && (
                 <i
                   role="button"
+                  aria-hidden="true"
                   className="icon-small icon-down icon-light"
                   onClick={() => toggleCollapse()}
                 />
