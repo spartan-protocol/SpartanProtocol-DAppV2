@@ -7,7 +7,11 @@ import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
-import { getAddresses, getTokenContract } from '../../../utils/web3'
+import {
+  getAddresses,
+  getTokenContract,
+  getWalletProvider,
+} from '../../../utils/web3'
 import {
   fallenSpartansClaim,
   spartaUpgrade,
@@ -23,6 +27,7 @@ const Upgrade = () => {
   const { t } = useTranslation()
   const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
   const [newSpartaBalance, setnewSpartaBalance] = useState('0')
+  const [bnbBalance, setbnbBalance] = useState('0')
   const [spartaSupply, setspartaSupply] = useState('0')
   const fsGenesis = '1620795586'
   const [loadingBalance, setloadingBalance] = useState(false)
@@ -41,12 +46,15 @@ const Upgrade = () => {
         getTokenContract(addr.spartav1).balanceOf(wallet.account),
         getTokenContract(addr.spartav2).balanceOf(wallet.account),
         getTokenContract(addr.spartav2).totalSupply(),
+        getWalletProvider().getBalance(),
       )
       awaitArray = await Promise.all(awaitArray)
       if (tempWallet === wallet.account) {
         setoldSpartaBalance(awaitArray[0].toString())
         setnewSpartaBalance(awaitArray[1].toString())
         setspartaSupply(awaitArray[2].toString())
+        setbnbBalance(awaitArray[3].toString())
+        console.log(awaitArray[3].toString())
       }
       setloadingBalance(false)
     }
@@ -117,7 +125,7 @@ const Upgrade = () => {
                 {formatFromWei(oldSpartaBalance)} SPARTAv2
               </Col>
             </Row>
-            {wallet?.balance > 5000000000000000 && (
+            {bnbBalance > 5000000000000000 && (
               <Row className="card-body py-1 text-center">
                 <Col xs="12" className="p-0 py-1">
                   <Button
@@ -131,7 +139,7 @@ const Upgrade = () => {
                 </Col>
               </Row>
             )}
-            {wallet?.balance <= 5000000000000000 && (
+            {bnbBalance <= 5000000000000000 && (
               <Row className="card-body py-1 text-center">
                 <Col xs="12" className="p-0 py-1">
                   <Button className="btn-alert" block disabled>
@@ -166,7 +174,7 @@ const Upgrade = () => {
                 {formatDate(getExpiry())}
               </Col>
             </Row>
-            {wallet?.balance > 5000000000000000 && (
+            {bnbBalance > 5000000000000000 && (
               <Row className="card-body py-1 text-center">
                 <Col xs="12" className="p-0 py-1">
                   <Button
@@ -180,7 +188,7 @@ const Upgrade = () => {
                 </Col>
               </Row>
             )}
-            {wallet?.balance <= 5000000000000000 && (
+            {bnbBalance <= 5000000000000000 && (
               <Row className="card-body py-1 text-center">
                 <Col xs="12" className="p-0 py-1">
                   <Button className="btn-alert" block disabled>
