@@ -400,7 +400,7 @@ export const changeNetwork = async (_network) => {
 export const getNetwork = () => {
   const network = tryParse(window.localStorage.getItem('network'))
     ? tryParse(window.localStorage.getItem('network'))
-    : changeNetwork(97) // Change this to 56 (mainnet) after mainnet is deployed
+    : changeNetwork(56) // Change this to 56 (mainnet) after mainnet is deployed
   return network
 }
 
