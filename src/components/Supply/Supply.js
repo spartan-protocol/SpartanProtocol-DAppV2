@@ -90,7 +90,7 @@ const Supply = () => {
       <Button
         id="PopoverClick"
         type="Button"
-        className="btn-header px-4"
+        className="btn-header px-4 ml-1"
         href="#"
       >
         {/* <img className="mr-1" src={IconLogo} height="25px" alt="share icon" /> */}

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
-// import ThemeSwitcher from '../Common/ThemeSwitcher'
+import ThemeSwitcher from '../Common/ThemeSwitcher'
 import Supply from '../Supply/Supply'
 
 const Header = (props) => (
@@ -58,7 +58,7 @@ const Header = (props) => (
           </div>
         </Link>
         <Nav className="ml-auto">
-          {/* <ThemeSwitcher /> */}
+          <ThemeSwitcher />
           <LanguageDropdown />
           <AddressConn
             changeStates={props.changeStates}

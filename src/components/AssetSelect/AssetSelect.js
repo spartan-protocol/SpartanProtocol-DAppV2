@@ -304,8 +304,8 @@ const AssetSelect = (props) => {
               <>
                 <img
                   height="35px"
-                  src={getToken(selectedItem.tokenAddress)?.symbolUrl}
-                  alt={`${getToken(selectedItem.tokenAddress)?.symbol}icon`}
+                  src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
+                  alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
                   className="mx-2"
                 />
 
@@ -320,7 +320,7 @@ const AssetSelect = (props) => {
             )}
 
             <span className="output-card mr-2 ml-1">
-              {selectedItem && getToken(selectedItem.tokenAddress)?.symbol}
+              {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
               {selectedType === 'pool' && 'p'}
               {selectedType === 'synth' && 's'}
             </span>

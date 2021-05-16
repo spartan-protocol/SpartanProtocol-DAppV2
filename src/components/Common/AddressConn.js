@@ -11,7 +11,7 @@ const AddressConn = () => {
   const [walletModalShow, setWalletModalShow] = useState(false)
   // const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
-  const btnClass = 'btn-round btn-icon btn-transparent align-self-center'
+  const btnClass = 'btn-round btn-icon btn-transparent align-self-center ml-1'
   const iconClass = ' icon-small icon-dark m-0'
 
   return (
