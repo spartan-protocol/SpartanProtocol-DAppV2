@@ -116,7 +116,7 @@ const Swap = () => {
         if (activeTab === 'mint') {
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'synth')
-          if (asset2.curated !== true) {
+          if (asset2?.curated !== true) {
             asset2 = { tokenAddress: addr.bnb }
           }
         } else {

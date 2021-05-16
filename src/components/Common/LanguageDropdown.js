@@ -146,7 +146,7 @@ const LanguageDropdown = () => {
       <Button
         id="PopoverClick1"
         type="Button"
-        className="btn-round btn-transparent btn-icon"
+        className="btn-round btn-transparent btn-icon ml-1"
         href="#"
       >
         <img src={flag} alt="flag" className="icon-small mt-2" />
