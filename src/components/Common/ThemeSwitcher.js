@@ -10,7 +10,7 @@ const ThemeSwitcher = () => {
   const handleActiveMode = () => {
     setDarkMode(!darkMode)
     document.body.classList.toggle("white-content")
-    
+
     /*todo import svg to change color via SCSS*/
     document.getElementById("menu-drawer-closed").classList.toggle("icon-menu-closed-light")
     document.getElementById("menu-drawer-open").classList.toggle("icon-menu-open-light")
@@ -36,7 +36,6 @@ const ThemeSwitcher = () => {
         </Button>
 
       )}
-
       {darkMode && (
         <Button
           value={darkMode}
@@ -48,8 +47,6 @@ const ThemeSwitcher = () => {
         </Button>
 
       )}
-
-
     </>
   )
 }
