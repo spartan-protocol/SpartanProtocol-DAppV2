@@ -54,7 +54,6 @@ const Upgrade = () => {
         setnewSpartaBalance(awaitArray[1].toString())
         setspartaSupply(awaitArray[2].toString())
         setbnbBalance(awaitArray[3].toString())
-        console.log(awaitArray[3].toString())
       }
       setloadingBalance(false)
     }
