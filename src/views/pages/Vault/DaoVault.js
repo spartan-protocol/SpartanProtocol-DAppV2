@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Col, Row } from 'reactstrap'

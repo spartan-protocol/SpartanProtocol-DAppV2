@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useCallback } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
@@ -169,7 +168,10 @@ const Sidebar = (props) => {
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
-            <i id="sidebar-menu-drawer-closed" className="icon-medium icon-menu-closed-dark" />
+            <i
+              id="sidebar-menu-drawer-closed"
+              className="icon-medium icon-menu-closed-dark"
+            />
           </div>
         </NavLink>
       )

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 import classnames from 'classnames'
@@ -391,6 +389,7 @@ const AddLiquidity = () => {
                     <div
                       className="text-sm-label"
                       role="button"
+                      aria-hidden="true"
                       onClick={() => {
                         addInput1.value = convertFromWei(getBalance(1))
                       }}
@@ -475,6 +474,7 @@ const AddLiquidity = () => {
                       <div
                         className="text-sm-label"
                         role="button"
+                        aria-hidden="true"
                         onClick={() => {
                           addInput2.focus()
                           addInput2.value = convertFromWei(getBalance(2))

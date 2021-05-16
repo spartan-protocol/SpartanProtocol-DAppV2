@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -381,6 +379,7 @@ const RemoveLiquidity = () => {
                     <div
                       className="text-sm-label"
                       role="button"
+                      aria-hidden="true"
                       onClick={() => {
                         clearInputs(1)
                         removeInput1.value = convertFromWei(getBalance(1))

@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 import {
   Button,
@@ -49,7 +46,7 @@ import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-import swapIcon from "../../../assets/icons/icon-swap-light.svg"
+import swapIcon from '../../../assets/icons/icon-swap-light.svg'
 
 const Swap = () => {
   const synth = useSynth()
@@ -721,6 +718,7 @@ const Swap = () => {
                                 <div
                                   className="text-sm-label"
                                   role="button"
+                                  aria-hidden="true"
                                   onClick={() => {
                                     swapInput1.value = convertFromWei(
                                       getBalance(1),
@@ -784,22 +782,20 @@ const Swap = () => {
                           style={{ height: '1px' }}
                           className="text-center z-index my-n4"
                         >
-
-                            <img
-
-                              onClick={() => handleReverseAssets()}
-                              src={swapIcon}
-                              alt="swapicon"
-                              className="mx-auto z-index position-relative p-2"
-                              style={{
-                                cursor: "pointer",
-                                backgroundColor: '#A80005',
-                                height: '35px',
-                                width: '35px',
-                                top: '-19px',
-                              }}
-                            />
-
+                          <img
+                            onClick={() => handleReverseAssets()}
+                            src={swapIcon}
+                            alt="swapicon"
+                            aria-hidden="true"
+                            className="mx-auto z-index position-relative p-2"
+                            style={{
+                              cursor: 'pointer',
+                              backgroundColor: '#A80005',
+                              height: '35px',
+                              width: '35px',
+                              top: '-19px',
+                            }}
+                          />
                         </Col>
 
                         {/* 'To' input box */}
