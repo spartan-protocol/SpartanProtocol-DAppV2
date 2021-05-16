@@ -129,12 +129,11 @@ const locales = [
   },
 ]
 
-const getLocale = () =>
-  locales.filter((x) => x.id === window.localStorage.getItem('i18nextLng'))[0]
+const getLocale = () => locales?.filter((x) => x.id === i18n.languages[0])[0]
 
 const LanguageDropdown = () => {
-  const [lng, setLng] = useState(window.localStorage.getItem('i18nextLng'))
-  const [flag, setFlag] = useState(getLocale().flag)
+  const [lng, setLng] = useState(i18n.languages[0])
+  const [flag, setFlag] = useState(getLocale()?.flag || locales[4]?.flag)
 
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
@@ -163,9 +162,8 @@ const LanguageDropdown = () => {
         <PopoverBody>
           <Row>
             {locales.map((x) => (
-              <Col xs={6}>
+              <Col xs={6} key={x.id}>
                 <DropdownItem
-                  key={x.id}
                   tag="a"
                   href="#"
                   onClick={() => changeLanguageAction(x.id)}

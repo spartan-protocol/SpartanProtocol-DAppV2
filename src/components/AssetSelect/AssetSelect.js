@@ -1,6 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react'
 import {
   Button,
@@ -109,7 +107,7 @@ const AssetSelect = (props) => {
     const getArray = () => {
       if (pool.poolDetails) {
         let tempArray = pool.poolDetails.filter(
-          (asset) => asset.tokenAddress !== addr.oldSparta,
+          (asset) => asset.tokenAddress !== addr.spartav2,
         )
 
         if (props.whiteList) {
@@ -129,7 +127,7 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].tokenAddress === addr.sparta) {
+            if (tempArray[i].tokenAddress === addr.spartav1) {
               finalArray.push({
                 type: 'token',
                 icon: (
@@ -452,6 +450,7 @@ const AssetSelect = (props) => {
                 <Col xs="auto" className="p-0 pl-2">
                   <div
                     role="button"
+                    aria-hidden="true"
                     onClick={() => {
                       addSelection(asset)
                       toggleModal()
@@ -466,6 +465,7 @@ const AssetSelect = (props) => {
                     <Col xs="12" className="float-left ml-n4">
                       <div
                         role="button"
+                        aria-hidden="true"
                         onClick={() => {
                           addSelection(asset)
                           toggleModal()
@@ -493,6 +493,7 @@ const AssetSelect = (props) => {
                     <Col xs="6">
                       <div
                         role="button"
+                        aria-hidden="true"
                         onClick={() => {
                           dispatch(
                             watchAsset(
@@ -528,6 +529,7 @@ const AssetSelect = (props) => {
                   <Col xs="auto" className="p-0 pl-2">
                     <div
                       role="button"
+                      aria-hidden="true"
                       onClick={() => {
                         addSelection(asset)
                         toggleModal()
@@ -542,6 +544,7 @@ const AssetSelect = (props) => {
                       <Col xs="12" className="float-left ml-n4">
                         <div
                           role="button"
+                          aria-hidden="true"
                           onClick={() => {
                             addSelection(asset)
                             toggleModal()
@@ -569,6 +572,7 @@ const AssetSelect = (props) => {
                       <Col xs="6">
                         <div
                           role="button"
+                          aria-hidden="true"
                           onClick={() => {
                             dispatch(
                               watchAsset(

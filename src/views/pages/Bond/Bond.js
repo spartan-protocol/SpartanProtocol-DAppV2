@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -51,8 +49,7 @@ const Bond = () => {
         {network.chainId === 97 && (
           <Row className="row-480">
             <Col xs="auto">
-              <Card
-                className="card-body card-320 pt-3 pb-2 card-underlay">
+              <Card className="card-body card-320 pt-3 pb-2 card-underlay">
                 <h3>{t('bondPositions')}</h3>
                 {pool.poolDetails?.length > 0 &&
                   pool.poolDetails

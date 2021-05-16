@@ -12,7 +12,6 @@ import {
   fallenSpartansClaim,
   spartaUpgrade,
 } from '../../../store/sparta/actions'
-import { getSpartaContract } from '../../../utils/web3Contracts'
 import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
 import { calcBurnFee } from '../../../utils/web3Utils'
 
@@ -39,9 +38,9 @@ const Upgrade = () => {
       setloadingBalance(true)
       let awaitArray = []
       awaitArray.push(
-        getTokenContract(addr.oldSparta).balanceOf(wallet.account),
-        getSpartaContract().balanceOf(wallet.account),
-        getSpartaContract().totalSupply(),
+        getTokenContract(addr.spartav1).balanceOf(wallet.account),
+        getTokenContract(addr.spartav2).balanceOf(wallet.account),
+        getTokenContract(addr.spartav2).totalSupply(),
       )
       awaitArray = await Promise.all(awaitArray)
       if (tempWallet === wallet.account) {
@@ -173,9 +172,7 @@ const Upgrade = () => {
                   <Button
                     className="btn-primary"
                     block
-                    onClick={() =>
-                      dispatch(fallenSpartansClaim(wallet.account))
-                    }
+                    onClick={() => dispatch(fallenSpartansClaim())}
                     disabled={sparta?.claimCheck <= 0}
                   >
                     {t('claim')} SPARTA

@@ -78,7 +78,7 @@ const Overview = () => {
                       {t('overview')}
                     </NavLink>
                   </NavItem>
-                  <NavItem>
+                  {/* <NavItem>
                     <NavLink
                       className={classnames({
                         active: activeTab === 'positions',
@@ -89,15 +89,15 @@ const Overview = () => {
                     >
                       {t('positions')}
                     </NavLink>
-                  </NavItem>
+                  </NavItem> */}
                 </Nav>
               </Col>
               {activeTab === 'overview' &&
                 pool?.poolDetails
                   .filter(
                     (asset) =>
-                      asset.tokenAddress !== addr.sparta &&
-                      asset.tokenAddress !== addr.oldSparta,
+                      asset.tokenAddress !== addr.spartav1 &&
+                      asset.tokenAddress !== addr.spartav2,
                   )
                   .sort((a, b) => b.baseAmount - a.baseAmount)
                   .map((asset) => (

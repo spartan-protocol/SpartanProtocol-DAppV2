@@ -196,8 +196,8 @@ const DataManager = () => {
 
     const listen = async (contract) => {
       await contract.on('*', (eventObject) => {
-        setEventArray((oldArray) => [...oldArray, eventObject])
         console.log(eventObject)
+        setEventArray((oldArray) => [...oldArray, eventObject])
       })
     }
 

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -81,7 +79,7 @@ const BondLiquidity = () => {
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.sparta &&
+          asset1.tokenAddress !== addr.spartav1 &&
           bond.bondListed.includes(asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
@@ -168,6 +166,7 @@ const BondLiquidity = () => {
                   <Col xs="8" className="text-right">
                     <div
                       role="button"
+                      aria-hidden="true"
                       className="text-sm-label"
                       onClick={() => {
                         bondInput1.value = convertFromWei(

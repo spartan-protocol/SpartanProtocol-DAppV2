@@ -15,7 +15,7 @@ describe('Web3 actions', () => {
 
   // test('the contract should be approved', async () => {
   //   const dispatchMock = jest.fn()
-  //   await getApproval(addr.sparta, addr.router)(dispatchMock)
+  //   await getApproval(addr.spartav1, addr.router)(dispatchMock)
   //   if (dispatchMock.mock.calls[1][0].payload) {
   //     expect(dispatchMock.mock.calls[1][0].payload).not.toBeUndefined()
   //     expect(dispatchMock.mock.calls[1][0].type).toBe(Types.GET_APPROVAL)

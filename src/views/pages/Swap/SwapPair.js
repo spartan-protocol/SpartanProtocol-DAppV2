@@ -115,11 +115,13 @@ const SwapPair = ({ assetSwap }) => {
             APY{' '}
             <i
               className="icon-extra-small icon-info icon-dark ml-2"
-              id="tooltipInput"
-              role="button"
+              id={`apytt${assetSwap.tokenAddress}`}
             />
-            <UncontrolledTooltip placement="right" target="tooltipInput">
-              {t('dividendPerYear')}
+            <UncontrolledTooltip
+              placement="right"
+              target={`apytt${assetSwap.tokenAddress}`}
+            >
+              {t('apyInfo')}
             </UncontrolledTooltip>
           </Col>
           <Col className="output-card text-right">{APY}%</Col>
