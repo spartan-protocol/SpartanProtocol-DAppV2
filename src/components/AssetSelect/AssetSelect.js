@@ -109,7 +109,7 @@ const AssetSelect = (props) => {
     const getArray = () => {
       if (pool.poolDetails) {
         let tempArray = pool.poolDetails.filter(
-          (asset) => asset.tokenAddress !== addr.oldSparta,
+          (asset) => asset.tokenAddress !== addr.spartav2,
         )
 
         if (props.whiteList) {
@@ -129,7 +129,7 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].tokenAddress === addr.sparta) {
+            if (tempArray[i].tokenAddress === addr.spartav1) {
               finalArray.push({
                 type: 'token',
                 icon: (

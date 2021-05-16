@@ -148,7 +148,7 @@ const Swap = () => {
           !asset1 ||
           !pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
         ) {
-          asset1 = { tokenAddress: addr.sparta }
+          asset1 = { tokenAddress: addr.spartav1 }
         }
 
         if (
@@ -241,14 +241,14 @@ const Swap = () => {
   }
 
   const getSwapOutput = () => {
-    if (assetSwap1?.tokenAddress === addr.sparta) {
+    if (assetSwap1?.tokenAddress === addr.spartav1) {
       return calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
       )
     }
-    if (assetSwap2?.tokenAddress === addr.sparta) {
+    if (assetSwap2?.tokenAddress === addr.spartav1) {
       return calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
@@ -267,7 +267,7 @@ const Swap = () => {
 
   const getSwapFee = () => {
     // Fee in SPARTA via fee in TOKEN (Swap from SPARTA)
-    if (assetSwap1?.tokenAddress === addr.sparta) {
+    if (assetSwap1?.tokenAddress === addr.spartav1) {
       return calcValueInBase(
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
@@ -279,7 +279,7 @@ const Swap = () => {
       )
     }
     // Fee in SPARTA (Swap to SPARTA)
-    if (assetSwap2?.tokenAddress === addr.sparta) {
+    if (assetSwap2?.tokenAddress === addr.spartav1) {
       return calcSwapFee(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
@@ -306,7 +306,7 @@ const Swap = () => {
 
   const handleInputChange = () => {
     if (swapInput1?.value) {
-      if (assetSwap1?.tokenAddress === addr.sparta) {
+      if (assetSwap1?.tokenAddress === addr.spartav1) {
         swapInput2.value = convertFromWei(
           calcSwapOutput(
             convertToWei(swapInput1?.value),
@@ -315,7 +315,7 @@ const Swap = () => {
             false,
           ),
         )
-      } else if (assetSwap2?.tokenAddress === addr.sparta) {
+      } else if (assetSwap2?.tokenAddress === addr.spartav1) {
         swapInput2.value = convertFromWei(
           calcSwapOutput(
             convertToWei(swapInput1?.value),
@@ -461,7 +461,7 @@ const Swap = () => {
 
   const getSynthOutputFromBase = () => {
     let tokenValue = '0'
-    if (assetSwap1.tokenAddress === addr.sparta) {
+    if (assetSwap1.tokenAddress === addr.spartav1) {
       const lpUnits = getSynthLPsFromBase()
       const baseAmount = calcShare(
         lpUnits,
@@ -541,7 +541,7 @@ const Swap = () => {
   const getSynthOutputToBase = () => {
     let tokenValue = '0'
     let outPutBase = '0'
-    if (assetSwap2.tokenAddress === addr.sparta) {
+    if (assetSwap2.tokenAddress === addr.spartav1) {
       const inputSynth = convertToWei(swapInput1?.value)
       tokenValue = calcSwapOutput(
         inputSynth,
@@ -596,7 +596,7 @@ const Swap = () => {
 
   // GET USD VALUES
   const getInput1USD = () => {
-    if (assetSwap1?.tokenAddress === addr.sparta && swapInput1?.value) {
+    if (assetSwap1?.tokenAddress === addr.spartav1 && swapInput1?.value) {
       return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
     }
     if (mode === 'pool') {
@@ -626,7 +626,7 @@ const Swap = () => {
 
   // GET USD VALUES
   const getInput2USD = () => {
-    if (assetSwap2?.tokenAddress === addr.sparta && swapInput2?.value) {
+    if (assetSwap2?.tokenAddress === addr.spartav1 && swapInput2?.value) {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (mode === 'pool') {
@@ -824,9 +824,8 @@ const Swap = () => {
                                   priority="2"
                                   filter={filter}
                                   blackList={
-                                    assetSwap1.tokenAddress === addr.sparta && [
-                                      addr.sparta,
-                                    ]
+                                    assetSwap1.tokenAddress ===
+                                      addr.spartav1 && [addr.spartav1]
                                   }
                                 />
                               </Col>
@@ -1024,14 +1023,14 @@ const Swap = () => {
                             </Col>
                             <Col className="text-right">
                               <div className="output-card text-light">
-                                {assetSwap1?.tokenAddress === addr.sparta && (
+                                {assetSwap1?.tokenAddress === addr.spartav1 && (
                                   <>
                                     {swapInput1?.value
                                       ? formatFromWei(getSynthFeeFromBase(), 6)
                                       : '0.00'}
                                   </>
                                 )}
-                                {assetSwap1?.tokenAddress !== addr.sparta && (
+                                {assetSwap1?.tokenAddress !== addr.spartav1 && (
                                   <>
                                     {swapInput1?.value
                                       ? formatFromWei(getSynthFeeToBase(), 6)
@@ -1049,7 +1048,7 @@ const Swap = () => {
                             </Col>
                             <Col className="text-right">
                               <div className="subtitle-card">
-                                {assetSwap1?.tokenAddress === addr.sparta && (
+                                {assetSwap1?.tokenAddress === addr.spartav1 && (
                                   <>
                                     {swapInput1?.value
                                       ? formatFromWei(
@@ -1060,7 +1059,7 @@ const Swap = () => {
                                     {getToken(assetSwap2.tokenAddress)?.symbol}s
                                   </>
                                 )}
-                                {assetSwap1?.tokenAddress !== addr.sparta &&
+                                {assetSwap1?.tokenAddress !== addr.spartav1 &&
                                   mode === 'synthOut' && (
                                     <>
                                       {swapInput1?.value
@@ -1076,7 +1075,7 @@ const Swap = () => {
                                       s
                                     </>
                                   )}
-                                {assetSwap1?.tokenAddress !== addr.sparta &&
+                                {assetSwap1?.tokenAddress !== addr.spartav1 &&
                                   mode === 'synthIn' && (
                                     <>
                                       {swapInput1?.value
@@ -1234,12 +1233,12 @@ const Swap = () => {
                   </Col>
                   <Col xs="auto">
                     {pool.poolDetails &&
-                      assetSwap1.tokenAddress !== addr.sparta && (
+                      assetSwap1.tokenAddress !== addr.spartav1 && (
                         <SwapPair assetSwap={assetSwap1} />
                       )}
 
                     {pool.poolDetails &&
-                      assetSwap2.tokenAddress !== addr.sparta &&
+                      assetSwap2.tokenAddress !== addr.spartav1 &&
                       assetSwap1.tokenAddress !== assetSwap2.tokenAddress && (
                         <SwapPair assetSwap={assetSwap2} />
                       )}
