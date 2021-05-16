@@ -78,7 +78,7 @@ const Overview = () => {
                       {t('overview')}
                     </NavLink>
                   </NavItem>
-                  <NavItem>
+                  {/* <NavItem>
                     <NavLink
                       className={classnames({
                         active: activeTab === 'positions',
@@ -89,7 +89,7 @@ const Overview = () => {
                     >
                       {t('positions')}
                     </NavLink>
-                  </NavItem>
+                  </NavItem> */}
                 </Nav>
               </Col>
               {activeTab === 'overview' &&

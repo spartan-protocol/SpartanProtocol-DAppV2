@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
 import {
   Button,
@@ -48,6 +46,7 @@ import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import swapIcon from '../../../assets/icons/icon-swap-light.svg'
 
 const Swap = () => {
   const synth = useSynth()
@@ -709,7 +708,7 @@ const Swap = () => {
                         <Col xs="12" className="px-1 px-sm-3">
                           <Card
                             style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1"
+                            className="card-body mb-1 card-inside"
                           >
                             <Row>
                               <Col xs="4">
@@ -719,6 +718,7 @@ const Swap = () => {
                                 <div
                                   className="text-sm-label"
                                   role="button"
+                                  aria-hidden="true"
                                   onClick={() => {
                                     swapInput1.value = convertFromWei(
                                       getBalance(1),
@@ -782,18 +782,20 @@ const Swap = () => {
                           style={{ height: '1px' }}
                           className="text-center z-index my-n4"
                         >
-                          <Button
-                            className="btn-sm btn-round btn-icon position-relative"
-                            color="primary"
-                            style={{
-                              height: '35px',
-                              top: '-19px',
-                              width: '35px',
-                            }}
+                          <img
                             onClick={() => handleReverseAssets()}
-                          >
-                            <i className="icon-swap-size icon-swap icon-light" />
-                          </Button>
+                            src={swapIcon}
+                            alt="swapicon"
+                            aria-hidden="true"
+                            className="mx-auto z-index position-relative p-2"
+                            style={{
+                              cursor: 'pointer',
+                              backgroundColor: '#A80005',
+                              height: '35px',
+                              width: '35px',
+                              top: '-19px',
+                            }}
+                          />
                         </Col>
 
                         {/* 'To' input box */}
@@ -801,7 +803,7 @@ const Swap = () => {
                         <Col xs="12" className="px-1 px-sm-3">
                           <Card
                             style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1"
+                            className="card-body mb-1 card-inside"
                           >
                             <Row className="my-2">
                               <Col xs="4" className="">
@@ -886,7 +888,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"
@@ -948,7 +949,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipZapFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"
@@ -1009,7 +1009,6 @@ const Swap = () => {
                                 <i
                                   className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
                                   id="tooltipSynthFee"
-                                  role="button"
                                 />
                                 <UncontrolledTooltip
                                   placement="right"

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -159,7 +157,7 @@ const BondLiquidity = () => {
             <Col xs="12" className="px-1 px-sm-3">
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body pb-2 mb-1"
+                className="card-body pb-2 mb-1 card-inside"
               >
                 <Row>
                   <Col xs="4" className="">
@@ -168,6 +166,7 @@ const BondLiquidity = () => {
                   <Col xs="8" className="text-right">
                     <div
                       role="button"
+                      aria-hidden="true"
                       className="text-sm-label"
                       onClick={() => {
                         bondInput1.value = convertFromWei(

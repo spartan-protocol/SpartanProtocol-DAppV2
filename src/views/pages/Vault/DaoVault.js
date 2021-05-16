@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/interactive-supports-focus */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Col, Row } from 'reactstrap'
@@ -87,10 +85,7 @@ const DaoVault = () => {
   return (
     <>
       <Col xs="auto">
-        <Card
-          className="card-body card-320 pb-2 card-underlay"
-          style={{ backgroundColor: '#25212D' }}
-        >
+        <Card className="card-body card-320 pb-2 card-underlay">
           <Col>
             <h3>{t('daoVaultDetails')}</h3>
             <Row className="my-2">
@@ -123,10 +118,7 @@ const DaoVault = () => {
       </Col>
 
       <Col xs="auto">
-        <Card
-          className="card-body card-320 pb-2 card-underlay"
-          style={{ backgroundColor: '#25212D' }}
-        >
+        <Card className="card-body card-320 pb-2 card-underlay">
           <Col>
             <h3>{t('memberDetails')}</h3>
             <Row className="my-2">

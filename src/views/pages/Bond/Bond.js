@@ -49,10 +49,7 @@ const Bond = () => {
         {network.chainId === 97 && (
           <Row className="row-480">
             <Col xs="auto">
-              <Card
-                className="card-body card-320 pt-3 pb-2 card-underlay"
-                style={{ backgroundColor: '#25212D' }}
-              >
+              <Card className="card-body card-320 pt-3 pb-2 card-underlay">
                 <h3>{t('bondPositions')}</h3>
                 {pool.poolDetails?.length > 0 &&
                   pool.poolDetails

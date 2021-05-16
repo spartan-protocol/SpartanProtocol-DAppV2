@@ -97,10 +97,7 @@ const Upgrade = () => {
   return (
     <>
       <Col xs="auto">
-        <Card
-          className="card-body card-320"
-          style={{ backgroundColor: '#1D171F' }}
-        >
+        <Card className="card-body card-320">
           <Col>
             <h3 className="mb-0">{t('upgrade')}</h3>
             <span className="subtitle-label">{t('upgradeSubtitle')}</span>
@@ -148,10 +145,7 @@ const Upgrade = () => {
       </Col>
 
       <Col xs="auto">
-        <Card
-          className="card-body card-320"
-          style={{ backgroundColor: '#1D171F' }}
-        >
+        <Card className="card-body card-320">
           <Col>
             <h3 className="mb-0">{t('claim')}</h3>
             <span className="subtitle-label">{t('claimSubtitle')}</span>
@@ -200,10 +194,7 @@ const Upgrade = () => {
       </Col>
 
       <Col xs="auto">
-        <Card
-          className="card-body card-320 card-underlay"
-          style={{ backgroundColor: '#1D171F' }}
-        >
+        <Card className="card-body card-320 card-underlay">
           <Col>
             <h3 className="mb-0">
               {t('yourBalance')}

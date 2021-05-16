@@ -5,36 +5,10 @@ import { Link } from 'react-router-dom'
 import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import LanguageDropdown from '../Common/LanguageDropdown'
 import AddressConn from '../Common/AddressConn'
+// import ThemeSwitcher from '../Common/ThemeSwitcher'
 import Supply from '../Supply/Supply'
 
 const Header = (props) => (
-  // const [color, setColor] = React.useState('navbar-transparent')
-  // function that adds color white/transparent to the navbar on resize (this is for the collapse)
-  // const updateColor = () => {
-  //   if (window.innerWidth < 993 && collapseOpen) {
-  //     setColor('bg-white')
-  //   } else {
-  //     setColor('navbar-transparent')
-  //   }
-  // }
-  // React.useEffect(() => {
-  //   window.addEventListener('resize', updateColor)
-  //   return function cleanup() {
-  //     window.removeEventListener('resize', updateColor)
-  //   }
-  // })
-
-  // // this function opens and closes the collapse on small devices
-  // const toggleCollapse = () => {
-  //   if (collapseOpen) {
-  //     setColor('navbar-transparent')
-  //   } else {
-  //     setColor('bg-white')
-  //   }
-  //   setCollapseOpen(!collapseOpen)
-  // }
-
-  // Wallet functions
   <Navbar
     className={classNames('navbar sticky-top', {
       color: 'navbar-transparent',
@@ -50,8 +24,14 @@ const Header = (props) => (
             id="tooltip209599"
             onClick={props.handleMiniClick}
           >
-            <i className="icon-medium icon-menu-closed icon-light visible-on-sidebar-regular" />
-            <i className="icon-medium icon-menu-open icon-light visible-on-sidebar-mini" />
+            <i
+              id="menu-drawer-closed"
+              className="icon-medium icon-menu-closed-dark visible-on-sidebar-regular"
+            />
+            <i
+              id="menu-drawer-open"
+              className="icon-medium icon-menu-open-dark visible-on-sidebar-mini"
+            />
           </Button>
         </div>
         <div
@@ -64,15 +44,21 @@ const Header = (props) => (
             type="button"
             onClick={props.toggleSidebar}
           >
-            <i className="icon-medium icon-menu-open icon-light" />
+            <i
+              id="mobile-menu-drawer-open"
+              className="icon-medium icon-menu-open-dark"
+            />
           </button>
         </div>
         <Link to="/">
           <div className="d-none d-md-block navbar-brand-thing">
-            <SpartanLogo className="mr-1" /> Spartan Protocol
+            <h6 className="text-title-header ">
+              <SpartanLogo className="mr-1" /> Spartan Protocol
+            </h6>
           </div>
         </Link>
         <Nav className="ml-auto">
+          {/* <ThemeSwitcher /> */}
           <LanguageDropdown />
           <AddressConn
             changeStates={props.changeStates}

@@ -168,7 +168,10 @@ const Sidebar = (props) => {
           onClick={props.closeSidebar}
         >
           <div className="logo-img">
-            <i className="icon-medium icon-menu-closed icon-light" />
+            <i
+              id="sidebar-menu-drawer-closed"
+              className="icon-medium icon-menu-closed-dark"
+            />
           </div>
         </NavLink>
       )

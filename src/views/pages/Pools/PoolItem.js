@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +6,8 @@ import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
+import downIcon from '../../../assets/icons/arrow-down-light.svg'
+import upIcon from '../../../assets/icons/arrow-up-light.svg'
 
 const PoolItem = ({ asset }) => {
   // const bond = useBond()
@@ -64,28 +64,44 @@ const PoolItem = ({ asset }) => {
             <Col className="mt-1 p-0">
               <p className="text-sm-label d-inline-block">APY</p>
               <i
-                id="apy"
-                role="button"
+                id={`apy${asset.address}`}
                 className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
               />
-              <UncontrolledTooltip target="apy">
+
+              <UncontrolledTooltip target={`apy${asset.address}`}>
                 {t('apyInfo')}
               </UncontrolledTooltip>
               <p className="output-card">{APY}%</p>
             </Col>
             <Col xs="auto" className="text-right my-auto">
               {showDetails && (
-                <i
-                  role="button"
-                  className="icon-small icon-up icon-light"
+                <img
                   onClick={() => toggleCollapse()}
+                  src={upIcon}
+                  alt="upIcon"
+                  className="swap-icon-color"
+                  aria-hidden="true"
+                  style={{
+                    cursor: 'pointer',
+                    height: '30px',
+                    width: '30px',
+                    top: '-15px',
+                  }}
                 />
               )}
               {!showDetails && (
-                <i
-                  role="button"
-                  className="icon-small icon-down icon-light"
+                <img
                   onClick={() => toggleCollapse()}
+                  src={downIcon}
+                  alt="downIcon"
+                  aria-hidden="true"
+                  className="swap-icon-color"
+                  style={{
+                    cursor: 'pointer',
+                    height: '30px',
+                    width: '30px',
+                    top: '-15px',
+                  }}
                 />
               )}
             </Col>
@@ -113,11 +129,10 @@ const PoolItem = ({ asset }) => {
                 <Col xs="auto" className="text-card">
                   {t('fees')}
                   <i
-                    id="fees"
-                    role="button"
+                    id={`fees${asset.address}`}
                     className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
                   />
-                  <UncontrolledTooltip target="fees">
+                  <UncontrolledTooltip target={`fees${asset.address}`}>
                     {t('swapRevenue', {
                       days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
                     })}
@@ -135,11 +150,10 @@ const PoolItem = ({ asset }) => {
                 <Col xs="auto" className="text-card">
                   {t('dividends')}
                   <i
-                    id="divis"
-                    role="button"
+                    id={`divis${asset.address}`}
                     className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
                   />
-                  <UncontrolledTooltip target="divis">
+                  <UncontrolledTooltip target={`divis${asset.address}`}>
                     {t('dividendRevenue', {
                       days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
                     })}

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 
@@ -371,7 +369,7 @@ const RemoveLiquidity = () => {
             <Col xs="12" className="px-1 px-sm-3">
               <Card
                 style={{ backgroundColor: '#25212D' }}
-                className="card-body mb-1"
+                className="card-body mb-1 card-inside"
               >
                 <Row>
                   <Col xs="4">
@@ -381,6 +379,7 @@ const RemoveLiquidity = () => {
                     <div
                       className="text-sm-label"
                       role="button"
+                      aria-hidden="true"
                       onClick={() => {
                         clearInputs(1)
                         removeInput1.value = convertFromWei(getBalance(1))
@@ -444,7 +443,7 @@ const RemoveLiquidity = () => {
               {activeTab === '2' && (
                 <Card
                   style={{ backgroundColor: '#25212D' }}
-                  className="card-body mb-0"
+                  className="card-body mb-0 card-inside"
                 >
                   <Row>
                     <Col xs="4">
