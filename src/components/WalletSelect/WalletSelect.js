@@ -63,8 +63,8 @@ const WalletSelect = (props) => {
   }, [wallet.status])
 
   const connectWallet = async (x) => {
-    await wallet.connect(x.inject)
-    window.localStorage.setItem('lastWallet', x.id)
+    await wallet.connect(x?.inject)
+    window.localStorage.setItem('lastWallet', x?.id)
   }
 
   const resetWallet = async () => {
@@ -96,12 +96,12 @@ const WalletSelect = (props) => {
       wallet.status !== 'connecting'
     ) {
       connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
-    } else if (
-      window.localStorage.getItem('lastWallet') === 'WC' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+      // } else if (
+      //   window.localStorage.getItem('lastWallet') === 'WC' &&
+      //   wallet.account === null &&
+      //   wallet.status !== 'connecting'
+      // ) {
+      //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
     } else if (
       window.localStorage.getItem('lastWallet') === 'OOT' &&
       wallet.account === null &&
@@ -874,11 +874,11 @@ const WalletSelect = (props) => {
                     size="lg"
                     color="success"
                     type="button"
-                    className="btn btn-info btn-block mt-n3"
+                    className="btn btn-info btn-block mt-n3 p-2"
                     onClick={() => connectWallet(x)}
                   >
                     <Col>
-                      <div className="float-left mt-2 ">
+                      <div className="float-left mt-2 pt-1">
                         {x.title === 'Others' ? t('others') : x.title}
                       </div>
                       <div className="float-right">
@@ -886,7 +886,7 @@ const WalletSelect = (props) => {
                           <Image
                             key={`${x.id}icon${i}`}
                             src={i}
-                            className="px-1 wallet-icons"
+                            className="py-1 wallet-icons"
                           />
                         ))}
                       </div>
