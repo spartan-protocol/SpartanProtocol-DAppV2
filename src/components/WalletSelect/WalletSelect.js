@@ -48,9 +48,6 @@ const WalletSelect = (props) => {
     const checkWallet = () => {
       console.log('Wallet Status:', wallet.status)
       if (wallet.status === 'connected') {
-        if (wallet.account === null) {
-          wallet.connect()
-        }
         window.sessionStorage.setItem('walletConnected', '1')
       }
       if (wallet.status === 'disconnected') {
@@ -66,16 +63,7 @@ const WalletSelect = (props) => {
   }, [wallet.status])
 
   const connectWallet = async (x) => {
-    wallet.reset()
-    console.log('Wallet Status: cleared')
-    if (x.inject === '') {
-      wallet.connect()
-    } else if (x.inject === 'walletconnect') {
-      wallet.connectors.walletconnect.rpcUrl = network.rpc
-      await wallet.connect(x.inject)
-    } else {
-      wallet.connect(x.inject)
-    }
+    await wallet.connect(x.inject)
     window.localStorage.setItem('lastWallet', x.id)
   }
 
@@ -91,23 +79,51 @@ const WalletSelect = (props) => {
     window.location.reload()
   }
 
-  useEffect(() => {
-    async function sleep() {
-      await new Promise((resolve) => setTimeout(resolve, 3000))
-      if (window.localStorage.getItem('lastWallet') === 'BC') {
-        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
-      } else if (window.localStorage.getItem('lastWallet') === 'MM') {
-        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
-      } else if (window.localStorage.getItem('lastWallet') === 'WC') {
-        connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
-      } else if (window.localStorage.getItem('lastWallet') === 'OOT') {
-        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
-      }
+  const [trigger0, settrigger0] = useState(0)
+  /**
+   * Check wallet-loop
+   */
+  const checkWallets = async () => {
+    if (
+      window.localStorage.getItem('lastWallet') === 'BC' &&
+      wallet.account === null &&
+      wallet.status !== 'connecting'
+    ) {
+      connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+    } else if (
+      window.localStorage.getItem('lastWallet') === 'MM' &&
+      wallet.account === null &&
+      wallet.status !== 'connecting'
+    ) {
+      connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+    } else if (
+      window.localStorage.getItem('lastWallet') === 'WC' &&
+      wallet.account === null &&
+      wallet.status !== 'connecting'
+    ) {
+      connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+    } else if (
+      window.localStorage.getItem('lastWallet') === 'OOT' &&
+      wallet.account === null &&
+      wallet.status !== 'connecting'
+    ) {
+      connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
     }
-
-    sleep()
+  }
+  useEffect(() => {
+    if (trigger0 === 0) {
+      checkWallets()
+      settrigger0(trigger0 + 1)
+    }
+    const timer = setTimeout(() => {
+      checkWallets()
+      settrigger0(trigger0 + 1)
+    }, 1000)
+    return () => {
+      clearTimeout(timer)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [trigger0, wallet.account, wallet.status])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -116,7 +132,7 @@ const WalletSelect = (props) => {
     <>
       <Modal show={props.show} onHide={props.onHide}>
         <div className="card-body">
-          {wallet.status !== 'connected' && (
+          {wallet.account === null && (
             <CardHeader style={{ backgroundColor: '#1D171F' }}>
               <CardTitle tag="h2" />
               <Row>
@@ -142,7 +158,7 @@ const WalletSelect = (props) => {
             </Alert>
           )}
 
-          {wallet.status !== 'connected' && (
+          {wallet.account === null && (
             <>
               <Row className="align-middle mb-3">
                 <Col xs={5} className="text-right">
@@ -170,7 +186,7 @@ const WalletSelect = (props) => {
           )}
 
           {/* Wallet overview */}
-          {wallet.status === 'connected' ? (
+          {wallet.account !== null ? (
             <div className="ml-2 mt-n3">
               <Row className="card-body pl-1">
                 <Col xs="10">
@@ -189,7 +205,7 @@ const WalletSelect = (props) => {
                 </Col>
               </Row>
 
-              {wallet.status === 'connected' && (
+              {wallet.account !== null && (
                 <>
                   <Row>
                     <Col xs={6} className="">

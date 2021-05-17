@@ -83,6 +83,7 @@ const Providers = () => {
       <UseWalletProvider
         chainId={parseInt(network.chainId, 10)}
         connectors={{
+          injected: {},
           walletconnect: { rpcUrl: network.rpc },
           bsc: {},
         }}
