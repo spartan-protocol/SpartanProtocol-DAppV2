@@ -16,13 +16,13 @@ const walletTypes = [
     id: 'MM',
     title: 'MetaMask',
     icon: [MetaMask],
-    inject: '',
+    inject: undefined,
   },
   {
     id: 'WC',
     title: 'WalletConnect',
     icon: [WalletConnect],
-    inject: 'walletconnect', // Need to add capability to handle this after creating random-RPC function
+    inject: 'walletconnect',
   },
   {
     id: 'OOT',
