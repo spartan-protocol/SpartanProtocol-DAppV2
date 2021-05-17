@@ -1,6 +1,6 @@
 import BinanceChain from '../../assets/icons/BinanceChain.svg'
 import MetaMask from '../../assets/icons/metamask.svg'
-import WalletConnect from '../../assets/icons/WalletConnect.svg'
+// import WalletConnect from '../../assets/icons/WalletConnect.svg'
 import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
 import TokenPocket from '../../assets/icons/TokenPocket.svg'
@@ -19,17 +19,17 @@ const walletTypes = [
     inject: undefined,
   },
   {
-    id: 'WC',
-    title: 'WalletConnect',
-    icon: [WalletConnect],
-    inject: 'walletconnect',
-  },
-  {
     id: 'OOT',
-    title: 'Others',
-    icon: [TokenPocket, MathWallet, TrustWallet],
+    title: 'Mobile Wallet',
+    icon: [TrustWallet, TokenPocket, MathWallet],
     inject: 'injected',
   },
+  // {
+  //   id: 'WC',
+  //   title: 'WalletConnect',
+  //   icon: [WalletConnect],
+  //   inject: 'walletconnect',
+  // },
 ]
 
 export default walletTypes
