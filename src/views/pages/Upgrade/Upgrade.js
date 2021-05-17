@@ -7,7 +7,11 @@ import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
-import { getAddresses, getTokenContract } from '../../../utils/web3'
+import {
+  getAddresses,
+  getTokenContract,
+  getWalletProvider,
+} from '../../../utils/web3'
 import {
   fallenSpartansClaim,
   spartaUpgrade,
@@ -41,12 +45,15 @@ const Upgrade = () => {
         getTokenContract(addr.spartav1).balanceOf(wallet.account),
         getTokenContract(addr.spartav2).balanceOf(wallet.account),
         getTokenContract(addr.spartav2).totalSupply(),
+        wallet?.connector === 'walletconnect'
+          ? wallet.balance
+          : getWalletProvider().getBalance(),
       )
       awaitArray = await Promise.all(awaitArray)
       setoldSpartaBalance(awaitArray[0].toString())
       setnewSpartaBalance(awaitArray[1].toString())
       setspartaSupply(awaitArray[2].toString())
-      setbnbBalance(wallet.balance)
+      setbnbBalance(awaitArray[3].toString())
       setloadingBalance(false)
     }
   }
@@ -63,7 +70,7 @@ const Upgrade = () => {
       settrigger0(0)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0, wallet.account, wallet.balance])
+  }, [trigger0, wallet.account, wallet.balance, wallet.connector])
 
   useEffect(() => {
     if (wallet.status === 'disconnected') {
