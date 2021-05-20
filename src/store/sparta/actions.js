@@ -1,7 +1,8 @@
 import * as Types from './types'
 import {
   getFallenSpartansContract,
-  getSpartaContract,
+  getSpartaV1Contract,
+  getSpartaV2Contract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getProviderGasPrice } from '../../utils/web3'
@@ -12,7 +13,7 @@ export const spartaLoading = () => ({
 
 export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getSpartaContract(wallet)
+  const contract = getSpartaV1Contract(wallet)
   const fsContract = getFallenSpartansContract(wallet)
 
   try {
@@ -46,7 +47,7 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
  */
 export const spartaUpgrade = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getSpartaContract(wallet)
+  const contract = getSpartaV2Contract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()

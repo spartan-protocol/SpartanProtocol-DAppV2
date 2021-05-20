@@ -202,10 +202,24 @@ export const getRouterContract = (wallet) => {
 }
 
 /**
+ * Get the old base/SPARTA contract with signer/provider injected
+ * @returns {uint} contract
+ */
+export const getSpartaV1Contract = (wallet) => {
+  let contract = isAddress(getAddresses().spartav1)
+  const abiBase = getAbis().sparta
+  const provider = getWalletProvider(wallet?.ethereum)
+  if (contract === true) {
+    contract = new ethers.Contract(getAddresses().spartav1, abiBase, provider)
+  }
+  return contract
+}
+
+/**
  * Get the current base/SPARTA contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getSpartaContract = (wallet) => {
+export const getSpartaV2Contract = (wallet) => {
   let contract = isAddress(getAddresses().spartav2)
   const abiBase = getAbis().sparta
   const provider = getWalletProvider(wallet?.ethereum)
