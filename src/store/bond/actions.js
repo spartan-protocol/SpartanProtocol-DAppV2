@@ -2,7 +2,7 @@ import * as Types from './types'
 import {
   getBondContract,
   getOldBondContract,
-  getSpartaV1Contract,
+  getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getProviderGasPrice, getAddresses } from '../../utils/web3'
@@ -58,7 +58,7 @@ export const getBondClaimable = (bondAddress, wallet, asset) => async (
 
 export const getBondSpartaRemaining = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getSpartaV1Contract(wallet)
+  const contract = getTokenContract(addr.spartav1, wallet)
 
   try {
     let bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)

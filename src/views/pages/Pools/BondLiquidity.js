@@ -253,13 +253,7 @@ const BondLiquidity = () => {
                   max="5000000"
                   value={convertFromWei(bond.bondSpartaRemaining)}
                   className=""
-                >
-                  {formatFromUnits(
-                    BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
-                    2,
-                  )}
-                  % {t('remaining')}
-                </Progress>
+                />
               </div>
               <Row className="mb-2">
                 <Col xs="auto">
