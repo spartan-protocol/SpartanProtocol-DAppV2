@@ -4,6 +4,7 @@ import { Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
 import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getNetwork } from '../../../utils/web3'
@@ -16,6 +17,7 @@ const Overview = () => {
   const { t } = useTranslation()
   const pool = usePool()
   const addr = getAddresses()
+  const wallet = useWallet()
   const [activeTab, setActiveTab] = useState('overview')
 
   const [network, setnetwork] = useState(getNetwork())
@@ -38,11 +40,11 @@ const Overview = () => {
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
     if (trigger1 === 0 && network.chainId === 97) {
-      dispatch(getBondListed())
+      dispatch(getBondListed(wallet))
     }
     const timer = setTimeout(() => {
       if (network.chainId === 97) {
-        dispatch(getBondListed())
+        dispatch(getBondListed(wallet))
         settrigger1(trigger1 + 1)
       }
     }, 10000)

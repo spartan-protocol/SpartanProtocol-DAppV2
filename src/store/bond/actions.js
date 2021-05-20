@@ -15,9 +15,9 @@ export const bondLoading = () => ({
 
 // --------------------------------------- BOND+MINT HELPERS ---------------------------------------
 
-export const getBondListed = () => async (dispatch) => {
+export const getBondListed = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const bondListed = await contract.callStatic.allListedAssets()
@@ -27,9 +27,9 @@ export const getBondListed = () => async (dispatch) => {
   }
 }
 
-export const getBondListedAsset = (asset) => async (dispatch) => {
+export const getBondListedAsset = (asset, wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const isListed = await contract.callStatic.isListed(asset)
@@ -39,15 +39,15 @@ export const getBondListedAsset = (asset) => async (dispatch) => {
   }
 }
 
-export const getBondClaimable = (bondAddress, member, asset) => async (
+export const getBondClaimable = (bondAddress, wallet, asset) => async (
   dispatch,
 ) => {
   dispatch(bondLoading())
-  const contract = getOldBondContract(bondAddress)
+  const contract = getOldBondContract(bondAddress, wallet)
 
   try {
     const bondClaimable = await contract.callStatic.calcClaimBondedLP(
-      member,
+      wallet.account,
       asset,
     )
     dispatch(payloadToDispatch(Types.BOND_CLAIMABLE, bondClaimable))
@@ -56,9 +56,9 @@ export const getBondClaimable = (bondAddress, member, asset) => async (
   }
 }
 
-export const getBondSpartaRemaining = () => async (dispatch) => {
+export const getBondSpartaRemaining = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getSpartaContract()
+  const contract = getSpartaContract(wallet)
 
   try {
     let bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)
@@ -71,9 +71,9 @@ export const getBondSpartaRemaining = () => async (dispatch) => {
   }
 }
 
-export const getBondBurnReady = () => async (dispatch) => {
+export const getBondBurnReady = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const bondBurnReady = await contract.callStatic.balanceOf(addr.bond)
@@ -87,9 +87,9 @@ export const getBondBurnReady = () => async (dispatch) => {
  * Get a count of all bond-listed assets
  * @returns {uint256} count
  */
-export const getBondListedCount = () => async (dispatch) => {
+export const getBondListedCount = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const bondListedCount = await contract.callStatic.assetListedCount()
@@ -104,9 +104,9 @@ export const getBondListedCount = () => async (dispatch) => {
  * Get a count of all bond members
  * @returns {uint256} count
  */
-export const getBondMemberCount = () => async (dispatch) => {
+export const getBondMemberCount = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const memberCount = await contract.callStatic.memberCount()
@@ -121,9 +121,9 @@ export const getBondMemberCount = () => async (dispatch) => {
  * Get an array of all bond members
  * @returns {address} array all members
  */
-export const getBondMembers = () => async (dispatch) => {
+export const getBondMembers = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const members = await contract.callStatic.allMembers()
@@ -136,9 +136,9 @@ export const getBondMembers = () => async (dispatch) => {
 
 // --------------------------------------- BOND+MINT FUNCTIONS ---------------------------------------
 
-export const bondBurn = () => async (dispatch) => {
+export const bondBurn = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
@@ -159,9 +159,9 @@ export const bondBurn = () => async (dispatch) => {
  * @param {uint256} amount
  * @returns {boolean}
  */
-export const bondDeposit = (asset, amount) => async (dispatch) => {
+export const bondDeposit = (asset, amount, wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
@@ -183,14 +183,13 @@ export const bondDeposit = (asset, amount) => async (dispatch) => {
  * @param {address} member
  * @returns {boolean}
  */
-export const bondClaimAll = (member) => async (dispatch) => {
+export const bondClaimAll = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
-    console.log(member)
-    const bondClaimedAll = await contract.claimAllForMember(member, {
+    const bondClaimedAll = await contract.claimAllForMember(wallet.account, {
       gasPrice: gPrice,
     })
 
@@ -205,9 +204,9 @@ export const bondClaimAll = (member) => async (dispatch) => {
  * @param {address} assetAddr
  * @returns {boolean}
  */
-export const bondClaim = (assetAddr) => async (dispatch) => {
+export const bondClaim = (assetAddr, wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondContract()
+  const contract = getBondContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()

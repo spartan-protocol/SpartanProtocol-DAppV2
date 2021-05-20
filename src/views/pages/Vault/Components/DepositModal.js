@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Col, Input, Modal, Row, FormGroup, Card } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
 import { daoDeposit } from '../../../../store/dao/actions'
 import { useDao } from '../../../../store/dao/selector'
@@ -15,6 +16,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const dao = useDao()
+  const wallet = useWallet()
   const [loading, setloading] = useState(false)
   const [stage, setstage] = useState(0)
   const pool1 = pool.poolDetails.filter(
@@ -98,7 +100,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                   color="primary"
                   onClick={async () => {
                     setloading(true)
-                    await dispatch(daoDeposit(pool1.address, deposit()))
+                    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
                     setstage(stage + 1)
                     setloading(false)
                   }}

@@ -821,6 +821,7 @@ const Swap = () => {
                                       assetSwap1.tokenAddress,
                                       getSynth(assetSwap2.tokenAddress)
                                         ?.address,
+                                      wallet,
                                     ),
                                   )
                                 }
@@ -846,6 +847,7 @@ const Swap = () => {
                                     convertToWei(swapInput1?.value),
                                     getSynth(assetSwap1.tokenAddress)?.address,
                                     assetSwap2.tokenAddress,
+                                    wallet,
                                   ),
                                 )
                               }

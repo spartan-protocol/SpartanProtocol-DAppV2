@@ -40,9 +40,9 @@ const DaoVault = () => {
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    dispatch(getDaoVaultGlobalDetails())
-    dispatch(getDaoVaultMemberDetails(wallet.account))
-    dispatch(getDaoMemberLastHarvest(wallet.account))
+    dispatch(getDaoVaultGlobalDetails(wallet))
+    dispatch(getDaoVaultMemberDetails(wallet))
+    dispatch(getDaoMemberLastHarvest(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -151,7 +151,7 @@ const DaoVault = () => {
                 <Button
                   className="btn btn-primary p-2"
                   block
-                  onClick={() => dispatch(daoHarvest())}
+                  onClick={() => dispatch(daoHarvest(wallet))}
                   disabled={dao.memberDetails?.weight <= 0}
                 >
                   {t('harvestAll')}
@@ -251,7 +251,7 @@ const DaoVault = () => {
                       color="primary"
                       className="btn btn-primary p-2"
                       block
-                      onClick={() => dispatch(daoWithdraw(i.address))}
+                      onClick={() => dispatch(daoWithdraw(i.address, wallet))}
                       disabled={i.staked <= 0}
                     >
                       {t('withdrawAll')}

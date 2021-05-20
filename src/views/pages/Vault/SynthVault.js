@@ -23,7 +23,7 @@ const SynthVault = () => {
 
   const getData = () => {
     dispatch(getSynthGlobalDetails())
-    dispatch(getSynthMemberDetails(wallet.account))
+    dispatch(getSynthMemberDetails(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -121,7 +121,7 @@ const SynthVault = () => {
                 <Button
                   className="btn-sm btn-primary p-2"
                   block
-                  onClick={() => dispatch(synthHarvest())}
+                  onClick={() => dispatch(synthHarvest(wallet))}
                   disabled={synth.memberDetails?.totalWeight <= 0}
                 >
                   {t('harvestAll')}

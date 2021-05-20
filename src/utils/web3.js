@@ -154,6 +154,7 @@ export const addressesMN = {
   routerv2b: '0x9dB88952380c0E35B95e7047E5114971dFf20D07',
   routerv2c: '0x6239891FC4030dc050fB9F7083aa68a2E4Fe426D',
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
+  tempUtilsv1a: '0x20d0270649c9f13c081FF98350148706A05557F8',
   // OLD ADDRESSES SPV2
   bondv4: '',
   bondVaultv1: '',
@@ -166,7 +167,7 @@ export const addressesMN = {
   routerv3: '',
   synthFactoryv1: '',
   synthVaultv1: '',
-  utilsv2: '0x20d0270649c9f13c081FF98350148706A05557F8',
+  utilsv2: '',
   // CURRENT ADDRESSES
   bond: '',
   bondVault: '',
@@ -179,7 +180,7 @@ export const addressesMN = {
   router: '',
   synthFactory: '',
   synthVault: '',
-  utils: '0x20d0270649c9f13c081FF98350148706A05557F8',
+  utils: '',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -405,17 +406,11 @@ export const getNetwork = () => {
 }
 
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
-export const getWalletProvider = () => {
+export const getWalletProvider = (_provider) => {
   const network = getNetwork()
   let provider = new ethers.providers.JsonRpcProvider(network.rpc)
-  let connectedWalletType = ''
-  if (window.localStorage.getItem('lastWallet') === 'BC') {
-    connectedWalletType = window.BinanceChain
-  } else {
-    connectedWalletType = window.ethereum
-  }
-  if (window.sessionStorage.getItem('walletConnected')) {
-    provider = new ethers.providers.Web3Provider(connectedWalletType)
+  if (_provider) {
+    provider = new ethers.providers.Web3Provider(_provider)
     provider = provider.getSigner()
   }
   return provider
@@ -426,22 +421,6 @@ export const getProviderGasPrice = () => {
   const provider = getWalletProvider()
   const gasPrice = provider.getGasPrice()
   return gasPrice
-}
-
-// CONNECT TO CONTRACT WITH PROVIDER & SIGNER IF AVAILABLE
-export const getTokenContract = (tokenAddress) => {
-  const abi = getAbis().erc20
-  const provider = getWalletProvider()
-  const contract = new ethers.Contract(tokenAddress, abi, provider)
-  return contract
-}
-
-// GET WBNB CONTRACT
-export const getWbnbContract = () => {
-  const abiWbnb = getAbis().wbnb
-  const provider = getWalletProvider()
-  const contract = new ethers.Contract(getAddresses().wbnb, abiWbnb, provider)
-  return contract
 }
 
 /**

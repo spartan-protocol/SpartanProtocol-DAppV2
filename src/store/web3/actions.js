@@ -2,7 +2,6 @@ import axios from 'axios'
 import * as Types from './types'
 
 import {
-  getTokenContract,
   getWalletWindowObj,
   bscRpcsMN,
   bscRpcsTN,
@@ -11,6 +10,7 @@ import {
   getWalletProvider,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
+import { getTokenContract } from '../../utils/web3Contracts'
 
 export const web3Loading = () => ({
   type: Types.WEB3_LOADING,
@@ -94,12 +94,12 @@ export const addNetworkBC = () => async (dispatch) => {
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {boolean} true if succeeds
  */
-export const getApproval = (tokenAddress, contractAddress) => async (
+export const getApproval = (tokenAddress, contractAddress, wallet) => async (
   dispatch,
 ) => {
   dispatch(web3Loading())
-  const contract = getTokenContract(tokenAddress)
-  let provider = getWalletProvider()
+  const contract = getTokenContract(tokenAddress, wallet)
+  let provider = getWalletProvider(wallet?.ethereum)
   if (provider._isSigner === true) {
     provider = provider.provider
   }
@@ -124,16 +124,14 @@ export const getApproval = (tokenAddress, contractAddress) => async (
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */
-export const getAllowance1 = (
-  tokenAddress,
-  userAddress,
-  contractAddress,
-) => async (dispatch) => {
+export const getAllowance1 = (tokenAddress, wallet, contractAddress) => async (
+  dispatch,
+) => {
   dispatch(web3Loading())
-  const contract = getTokenContract(tokenAddress)
+  const contract = getTokenContract(tokenAddress, wallet)
 
   try {
-    const allowance1 = await contract.allowance(userAddress, contractAddress)
+    const allowance1 = await contract.allowance(wallet.account, contractAddress)
     dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
@@ -145,16 +143,14 @@ export const getAllowance1 = (
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */
-export const getAllowance2 = (
-  tokenAddress,
-  userAddress,
-  contractAddress,
-) => async (dispatch) => {
+export const getAllowance2 = (tokenAddress, wallet, contractAddress) => async (
+  dispatch,
+) => {
   dispatch(web3Loading())
-  const contract = getTokenContract(tokenAddress)
+  const contract = getTokenContract(tokenAddress, wallet)
 
   try {
-    const allowance2 = await contract.allowance(userAddress, contractAddress)
+    const allowance2 = await contract.allowance(wallet.account, contractAddress)
     dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))

@@ -14,11 +14,11 @@ export const reserveLoading = () => ({
  * Get the Reserve contract details
  * @returns {object} emissions, spartaBalance
  */
-export const getReserveGlobalDetails = () => async (dispatch) => {
+export const getReserveGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(reserveLoading())
   const addr = getAddresses()
-  const contract = getReserveContract()
-  const spartaContract = getSpartaContract()
+  const contract = getReserveContract(wallet)
+  const spartaContract = getSpartaContract(wallet)
 
   try {
     let awaitArray = [

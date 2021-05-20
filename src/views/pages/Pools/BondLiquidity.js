@@ -53,8 +53,8 @@ const BondLiquidity = () => {
   const [assetBond1, setAssetBond1] = useState('...')
 
   const spartaRemainingLoop = async () => {
-    dispatch(getBondSpartaRemaining())
-    dispatch(getBondListed())
+    dispatch(getBondSpartaRemaining(wallet))
+    dispatch(getBondListed(wallet))
     await pause(10000)
     spartaRemainingLoop()
   }
@@ -332,6 +332,7 @@ const BondLiquidity = () => {
                     bondDeposit(
                       assetBond1?.tokenAddress,
                       convertToWei(bondInput1?.value),
+                      wallet,
                     ),
                   )
                 }

@@ -12,9 +12,9 @@ export const utilsLoading = () => ({
  * UTILS HELPER -
  * Returns an array of pool addresses
  */
-export const getListedPools = () => async (dispatch) => {
+export const getListedPools = (wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const pools = await contract.callStatic.allPools()
@@ -28,9 +28,11 @@ export const getListedPools = () => async (dispatch) => {
  * UTILS HELPER -
  * Returns an array of pool addresses based on specified range
  */
-export const getListedPoolsRange = (first, count) => async (dispatch) => {
+export const getListedPoolsRange = (first, count, wallet) => async (
+  dispatch,
+) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const pools = await contract.callStatic.poolsInRange(first, count)
@@ -45,9 +47,9 @@ export const getListedPoolsRange = (first, count) => async (dispatch) => {
  * Returns the global details/stats
  * @returns [ totalPooled | totalVolume | totalFees | removeLiquidityTx | addLiquidityTx | swapTx ]
  */
-export const getGlobalDetails = () => async (dispatch) => {
+export const getGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const globalDetails = await contract.callStatic.getGlobalDetails()
@@ -62,9 +64,9 @@ export const getGlobalDetails = () => async (dispatch) => {
  * Returns the token's contract details
  * @returns [ name | symbol | decimals | totalSupply | balance ]
  */
-export const getTokenDetails = (token) => async (dispatch) => {
+export const getTokenDetails = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const tokenDetails = await contract.callStatic.getTokenDetails(token)
@@ -79,9 +81,9 @@ export const getTokenDetails = (token) => async (dispatch) => {
  * Returns the pool's details
  * @returns [ tokenAddress | poolAddress | genesis | baseAmount | tokenAmount | baseAmountPooled | tokenAmountPooled | fees | volume | txCount | poolUnits ]
  */
-export const getPoolDetails = (pool) => async (dispatch) => {
+export const getPoolDetails = (pool, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const poolDetails = await contract.callStatic.getPoolData(pool)
@@ -95,12 +97,15 @@ export const getPoolDetails = (pool) => async (dispatch) => {
  * Get share of pool by member (using tokenAddr) (doesn't include LP tokens staked in DAO)
  * @returns [ uint baseAmount | uint tokenAmount ]
  */
-export const getMemberShare = (token, member) => async (dispatch) => {
+export const getMemberShare = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
-    const memberShare = await contract.callStatic.getMemberShare(token, member)
+    const memberShare = await contract.callStatic.getMemberShare(
+      token,
+      wallet?.account,
+    )
     dispatch(payloadToDispatch(Types.GET_MEMBER_SHARE, memberShare))
   } catch (error) {
     dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
@@ -112,9 +117,9 @@ export const getMemberShare = (token, member) => async (dispatch) => {
  * Returns the share of a pool based on input LP token units
  * @returns [ uint baseAmount | uint tokenAmount ]
  */
-export const getPoolShare = (token, units) => async (dispatch) => {
+export const getPoolShare = (token, units, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const poolShare = await contract.callStatic.getPoolShare(token, units)
@@ -129,14 +134,14 @@ export const getPoolShare = (token, units) => async (dispatch) => {
  * Returns the SPARTA share of a pool based on member's holdings (doesn't include LP tokens staked in DAO nor the TOKEN share)
  * @returns uint baseAmount
  */
-export const getShareOfBaseAmount = (token, member) => async (dispatch) => {
+export const getShareOfBaseAmount = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const shareOfBaseAmount = await contract.callStatic.getShareOfBaseAmount(
       token,
-      member,
+      wallet?.account,
     )
     dispatch(
       payloadToDispatch(Types.GET_SHARE_OF_BASE_AMAOUNT, shareOfBaseAmount),
@@ -151,14 +156,14 @@ export const getShareOfBaseAmount = (token, member) => async (dispatch) => {
  * Returns the TOKEN share of a pool based on member's holdings (doesn't include LP tokens staked in DAO nor the SPARTA share)
  * @returns uint tokenAmount
  */
-export const getShareOfTokenAmount = (token, member) => async (dispatch) => {
+export const getShareOfTokenAmount = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const shareOfTokenAmount = await contract.callStatic.getShareOfTokenAmount(
       token,
-      member,
+      wallet?.account,
     )
     dispatch(
       payloadToDispatch(Types.GET_SHARE_OF_TOKEN_AMAOUNT, shareOfTokenAmount),
@@ -174,16 +179,16 @@ export const getShareOfTokenAmount = (token, member) => async (dispatch) => {
  * Works out what you would end up with if you removed the liquidity and then swapped it all to one asset.
  * @returns [ uint baseAmount | uint tokenAmount | uint outputAmt ]
  */
-export const getPoolShareAssym = (token, member, toBase) => async (
+export const getPoolShareAssym = (token, wallet, toBase) => async (
   dispatch,
 ) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const poolShareAssym = await contract.callStatic.getPoolShareAssym(
       token,
-      member,
+      wallet?.account,
       toBase,
     )
     dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM, poolShareAssym))
@@ -197,9 +202,9 @@ export const getPoolShareAssym = (token, member, toBase) => async (
  * Returns the ~days since the pools creation
  * @returns uint daysSinceGenesis
  */
-export const getPoolAge = (token) => async (dispatch) => {
+export const getPoolAge = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const poolAge = await contract.callStatic.getPoolAge(token)
@@ -214,12 +219,12 @@ export const getPoolAge = (token) => async (dispatch) => {
  * Returns whether the wallet address is a member of the pool
  * @returns bool
  */
-export const isMember = (token, member) => async (dispatch) => {
+export const isMember = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
-    const result = await contract.callStatic.isMember(token, member)
+    const result = await contract.callStatic.isMember(token, wallet?.account)
     dispatch(payloadToDispatch(Types.IS_MEMBER, result))
   } catch (error) {
     dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
@@ -231,11 +236,12 @@ export const isMember = (token, member) => async (dispatch) => {
 /**
  * Get a pool address from the token address
  * @param {address} token
+ * @param {object} wallet
  * @returns {address} pool
  */
-export const getPool = (token) => async (dispatch) => {
+export const getPool = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const pool = await contract.callStatic.getPool(token)
@@ -247,11 +253,12 @@ export const getPool = (token) => async (dispatch) => {
 
 /**
  * Get count of all pools
+ * @param {object} wallet
  * @returns {uint256} count
  */
-export const getPoolCount = () => async (dispatch) => {
+export const getPoolCount = (wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const count = await contract.callStatic.poolCount()
@@ -265,18 +272,18 @@ export const getPoolCount = () => async (dispatch) => {
  * Get share of pool by member (using poolAddr)
  * (doesn't include LP tokens staked in DAO)
  * @param {address} pool
- * @param {address} member
+ * @param {object} wallet
  * @returns {uint} baseAmount
  * @returns {uint} tokenAmount
  */
-export const getMemberPoolShare = (pool, member) => async (dispatch) => {
+export const getMemberPoolShare = (pool, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const outputAmount = await contract.callStatic.getMemberPoolShare(
       pool,
-      member,
+      wallet?.account,
     )
     dispatch(payloadToDispatch(Types.GET_MEMBER_POOL_SHARE, outputAmount))
   } catch (error) {
@@ -288,11 +295,14 @@ export const getMemberPoolShare = (pool, member) => async (dispatch) => {
  * Get weight of pool by LP units
  * @param {address} token
  * @param {uint} units
+ * @param {object} wallet
  * @returns {uint} weight
  */
-export const getPoolShareWeight = (tokens, units) => async (dispatch) => {
+export const getPoolShareWeight = (tokens, units, wallet) => async (
+  dispatch,
+) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const weight = await contract.callStatic.getPoolShareWeight(tokens, units)
@@ -306,11 +316,12 @@ export const getPoolShareWeight = (tokens, units) => async (dispatch) => {
  * Get depth of pool in SPARTA
  * Multiply this by 2 and then by SPARTA's USD price to get rough actual all-asset depth in USD
  * @param {address} pool
+ * @param {object} wallet
  * @returns {uint} baseAmount
  */
-export const getDepth = (pool) => async (dispatch) => {
+export const getDepth = (pool, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const baseAmount = await contract.callStatic.getDepth(pool)
@@ -323,11 +334,12 @@ export const getDepth = (pool) => async (dispatch) => {
 /**
  * Get synthetic asset address via the base token's address
  * @param {address} token
+ * @param {object} wallet
  * @returns {address} synth
  */
-export const getSynth = (token) => async (dispatch) => {
+export const getSynth = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const synth = await contract.callStatic.getSynth(token)
@@ -340,11 +352,12 @@ export const getSynth = (token) => async (dispatch) => {
 /**
  * Get synthetic asset address via the base token's address
  * @param {address} token
+ * @param {object} wallet
  * @returns {object} synthAddress, tokenAddress, genesis, totalDebt
  */
-export const getSynthData = (token) => async (dispatch) => {
+export const getSynthData = (token, wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const synthData = await contract.callStatic.getSynthData(token)
@@ -361,13 +374,18 @@ export const getSynthData = (token) => async (dispatch) => {
  * @param {uint} totalSupply
  * @param {address} lpToken
  * @param {address} synth
+ * @param {object} wallet
  * @returns {uint} share
  */
-export const getDebtShare = (units, totalSupply, lpToken, synth) => async (
-  dispatch,
-) => {
+export const getDebtShare = (
+  units,
+  totalSupply,
+  lpToken,
+  synth,
+  wallet,
+) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const share = await contract.callStatic.calcDebtShare(
@@ -384,11 +402,12 @@ export const getDebtShare = (units, totalSupply, lpToken, synth) => async (
 
 /**
  * Get count of curated pools
+ * @param {object} wallet
  * @returns {uint} count
  */
-export const getCuratedPoolCount = () => async (dispatch) => {
+export const getCuratedPoolCount = (wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const count = await contract.callStatic.curatedPoolCount()
@@ -400,11 +419,12 @@ export const getCuratedPoolCount = () => async (dispatch) => {
 
 /**
  * Get all curated pools
+ * @param {object} wallet
  * @returns {aray} curatedPools
  */
-export const getCuratedPools = () => async (dispatch) => {
+export const getCuratedPools = (wallet) => async (dispatch) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const curatedPools = await contract.callStatic.allCuratedPools()
@@ -418,11 +438,14 @@ export const getCuratedPools = () => async (dispatch) => {
  * Get curated pools in range
  * @param {uint} start
  * @param {uint} count
+ * @param {object} wallet
  * @returns {aray} curatedPools
  */
-export const getCuratedPoolsInRange = (start, count) => async (dispatch) => {
+export const getCuratedPoolsInRange = (start, count, wallet) => async (
+  dispatch,
+) => {
   dispatch(utilsLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
 
   try {
     const curatedPools = await contract.callStatic.curatedPoolsInRange(

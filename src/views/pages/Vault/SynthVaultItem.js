@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Col, Row } from 'reactstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
@@ -23,6 +24,7 @@ const SynthVaultItem = ({ synthItem }) => {
   const reserve = useReserve()
   const synth = useSynth()
   const pool = usePool()
+  const wallet = useWallet()
   const dispatch = useDispatch()
   // const [showDetails, setShowDetails] = useState(false)
   const getToken = (tokenAddress) =>
@@ -193,7 +195,9 @@ const SynthVaultItem = ({ synthItem }) => {
                 className="p-2"
                 block
                 onClick={() =>
-                  dispatch(synthDeposit(synthItem.address, synthItem.balance))
+                  dispatch(
+                    synthDeposit(synthItem.address, synthItem.balance, wallet),
+                  )
                 }
                 disabled={synthItem.balance <= 0}
               >
@@ -206,7 +210,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 className="p-2"
                 block
                 onClick={() =>
-                  dispatch(synthWithdraw(synthItem.address, '10000'))
+                  dispatch(synthWithdraw(synthItem.address, '10000', wallet))
                 }
                 disabled={synthItem.staked <= 0}
               >
