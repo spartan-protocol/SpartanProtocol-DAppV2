@@ -120,7 +120,6 @@ const DataManager = () => {
    * Update synthArray & tokenDetails
    */
   const checkArraysNext = async () => {
-    console.log(wallet)
     const { listedTokens } = pool
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (listedTokens.length > 0) {

@@ -1,9 +1,6 @@
 import * as Types from './types'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import {
-  getReserveContract,
-  getSpartaContract,
-} from '../../utils/web3Contracts'
+import { getReserveContract, getTokenContract } from '../../utils/web3Contracts'
 import { getAddresses } from '../../utils/web3'
 
 export const reserveLoading = () => ({
@@ -18,7 +15,8 @@ export const getReserveGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(reserveLoading())
   const addr = getAddresses()
   const contract = getReserveContract(wallet)
-  const spartaContract = getSpartaContract(wallet)
+  const spartaContract = getTokenContract(addr.spartav1, wallet)
+  console.log(spartaContract)
 
   try {
     let awaitArray = [

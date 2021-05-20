@@ -413,7 +413,6 @@ export const getWalletProvider = (_provider) => {
     provider = new ethers.providers.Web3Provider(_provider)
     provider = provider.getSigner()
   }
-  console.log(provider)
   return provider
 }
 
