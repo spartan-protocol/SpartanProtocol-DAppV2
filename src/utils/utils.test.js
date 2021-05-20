@@ -15,7 +15,7 @@ describe('Utils', () => {
   })
   test('should get wallet provider from ethereum globals in the first conection', () => {
     window.sessionStorage.setItem('walletConnected', true)
-    const { provider } = getWalletProvider()
+    const { provider } = getWalletProvider(window.ethereum)
 
     expect(provider.connection.url).not.toBeUndefined()
   })
@@ -24,7 +24,7 @@ describe('Utils', () => {
     window.sessionStorage.setItem('walletConnected', true)
     window.localStorage.setItem('lastWallet', 'BC')
 
-    const { provider } = getWalletProvider()
+    const { provider } = getWalletProvider(window.BinanceChain)
 
     expect(provider.connection.url).not.toBeUndefined()
   })
