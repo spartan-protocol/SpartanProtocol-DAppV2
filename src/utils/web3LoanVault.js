@@ -5,14 +5,14 @@ import { getLoanVaultContract } from './web3Contracts'
 
 /**
  * Get a LoanVault member's details
- * @param {address} member
+ * @param {object} wallet
  * @param {address} pool
  * @returns {uint} MemberDebt
  */
-export const loanVaultGetMemberDetails = async (member, poolAddress) => {
-  const contract = getLoanVaultContract()
+export const loanVaultGetMemberDetails = async (wallet, poolAddress) => {
+  const contract = getLoanVaultContract(wallet)
   const memberDebt = await contract.callStatic.getMemberDetails(
-    member,
+    wallet.account,
     poolAddress,
   )
   return memberDebt
@@ -22,8 +22,8 @@ export const loanVaultGetMemberDetails = async (member, poolAddress) => {
  * Get a count of all members of the loanVault
  * @returns {uint} memberCount
  */
-export const loanVaultGetMemberCount = async () => {
-  const contract = getLoanVaultContract()
+export const loanVaultGetMemberCount = async (wallet) => {
+  const contract = getLoanVaultContract(wallet)
   const memberCount = await contract.callStatic.getMemberLength()
   return memberCount
 }
@@ -31,10 +31,15 @@ export const loanVaultGetMemberCount = async () => {
 /**
  * Add collateral via the loanVault contract
  * @param {address} poolAddress
+ * @param {object} wallet
  * @returns {uint} asset
  */
-export const loanVaultAddCollateral = async (poolAddress, justCheck) => {
-  const contract = getLoanVaultContract()
+export const loanVaultAddCollateral = async (
+  poolAddress,
+  wallet,
+  justCheck,
+) => {
+  const contract = getLoanVaultContract(wallet)
   let asset = ''
   try {
     if (justCheck) {
@@ -57,10 +62,15 @@ export const loanVaultAddCollateral = async (poolAddress, justCheck) => {
 /**
  * Remove collateral via the loanVault contract
  * @param {address} poolAddress
+ * @param {object} wallet
  * @returns {array} uint outputCollateral, uint burntDebt
  */
-export const loanVaultRemoveCollateral = async (poolAddress, justCheck) => {
-  const contract = getLoanVaultContract()
+export const loanVaultRemoveCollateral = async (
+  poolAddress,
+  wallet,
+  justCheck,
+) => {
+  const contract = getLoanVaultContract(wallet)
   let outputCollateral = ''
   try {
     if (justCheck) {

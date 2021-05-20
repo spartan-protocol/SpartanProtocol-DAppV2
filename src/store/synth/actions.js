@@ -15,11 +15,12 @@ export const synthLoading = () => ({
 
 /**
  * Get the global synth details
+ * @param {object} wallet
  * @returns {object} minimumDepositTime, totalWeight, erasToEarn, blockDelay, vaultClaim, stakedSynthLength
  */
-export const getSynthGlobalDetails = () => async (dispatch) => {
+export const getSynthGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
     let awaitArray = [
@@ -48,12 +49,13 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
 /**
  * Get the synth addresses and setup the object
  * @param {array} tokenArray
+ * @param {object} wallet
  * @returns {array} synthArray
  */
-export const getSynthArray = (tokenArray) => async (dispatch) => {
+export const getSynthArray = (tokenArray, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const addr = getAddresses()
-  const contract = getSynthFactoryContract()
+  const contract = getSynthFactoryContract(wallet)
 
   try {
     let tempArray = []
@@ -91,10 +93,10 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
  */
 export const getSynthMemberDetails = (wallet) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
-    let awaitArray = [contract.callStatic.getMemberWeight(wallet)]
+    let awaitArray = [contract.callStatic.getMemberWeight(wallet.account)]
     awaitArray = await Promise.all(awaitArray)
     const memberDetails = {
       totalWeight: awaitArray[0].toString(),
@@ -109,39 +111,42 @@ export const getSynthMemberDetails = (wallet) => async (dispatch) => {
  * Get the synth details relevant to the member
  * @param {object} synthArray
  * @param {object} listedPools
- * @param {address} wallet
+ * @param {object} wallet
  * @returns {array} synthDetails
  */
 export const getSynthDetails = (synthArray, listedPools, wallet) => async (
   dispatch,
 ) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
     let tempArray = []
     for (let i = 0; i < synthArray.length; i++) {
-      if (wallet === null || synthArray[i].address === false) {
+      if (wallet.account === null || synthArray[i].address === false) {
         tempArray.push('0') // balance
         tempArray.push('0') // staked
         tempArray.push('0') // synthWeight
         tempArray.push('0') // lastHarvest
       } else {
-        const synthContract = getSynthContract(synthArray[i].address)
-        tempArray.push(synthContract.callStatic.balanceOf(wallet)) // balance
+        const synthContract = getSynthContract(synthArray[i].address, wallet)
+        tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
         tempArray.push(
-          contract.callStatic.getMemberDeposit(synthArray[i].address, wallet),
+          contract.callStatic.getMemberDeposit(
+            synthArray[i].address,
+            wallet.account,
+          ),
         ) // staked
         tempArray.push(
           contract.callStatic.getMemberSynthWeight(
             synthArray[i].address,
-            wallet,
+            wallet.account,
           ),
         ) // synthWeight
         tempArray.push(
           contract.callStatic.getMemberLastSynthTime(
             synthArray[i].address,
-            wallet,
+            wallet.account,
           ),
         ) // lastHarvest
       }
@@ -152,7 +157,7 @@ export const getSynthDetails = (synthArray, listedPools, wallet) => async (
         const pool = listedPools.filter(
           (lp) => lp.tokenAddress === synthArray[i].tokenAddress,
         )[0]
-        const synthContract = getSynthContract(synthArray[i].address)
+        const synthContract = getSynthContract(synthArray[i].address, wallet)
         tempArray.push(
           synthContract.callStatic.getmapAddress_LPBalance(pool.address),
         ) // lpBalance
@@ -184,11 +189,12 @@ export const getSynthDetails = (synthArray, listedPools, wallet) => async (
  * Deposit synths to synthVault
  * @param {address} synth
  * @param {uint256} amount
+ * @param {object} wallet
  * @returns {TBA} TBA
  */
-export const synthDeposit = (synth, amount) => async (dispatch) => {
+export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
@@ -204,11 +210,12 @@ export const synthDeposit = (synth, amount) => async (dispatch) => {
 
 /**
  * Harvest synths from synthVault
+ * @param {object} wallet
  * @returns {bool}
  */
-export const synthHarvest = () => async (dispatch) => {
+export const synthHarvest = (wallet) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
@@ -224,11 +231,12 @@ export const synthHarvest = () => async (dispatch) => {
 /**
  * Harvest a single synthetic stake position from synthVault
  * @param {address} synth
+ * @param {object} wallet
  * @returns {bool}
  */
-export const synthHarvestSingle = (synth) => async (dispatch) => {
+export const synthHarvestSingle = (synth, wallet) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
@@ -245,11 +253,14 @@ export const synthHarvestSingle = (synth) => async (dispatch) => {
  * Withdraw synths from synthVault
  * @param {address} synth
  * @param {uint256} basisPoints
+ * @param {object} wallet
  * @returns {uint256} withdrawAmount
  */
-export const synthWithdraw = (synth, basisPoints) => async (dispatch) => {
+export const synthWithdraw = (synth, basisPoints, wallet) => async (
+  dispatch,
+) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()

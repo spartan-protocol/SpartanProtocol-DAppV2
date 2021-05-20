@@ -16,6 +16,7 @@ import {
 } from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -46,6 +47,7 @@ const RemoveLiquidity = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
+  const wallet = useWallet()
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
@@ -621,6 +623,7 @@ const RemoveLiquidity = () => {
                         routerRemoveLiq(
                           convertToWei(removeInput1.value),
                           poolRemove1.tokenAddress,
+                          wallet,
                         ),
                       )
                     : dispatch(
@@ -628,6 +631,7 @@ const RemoveLiquidity = () => {
                           convertToWei(removeInput1.value),
                           assetRemove1.tokenAddress === addr.spartav1,
                           poolRemove1.tokenAddress,
+                          wallet,
                         ),
                       )
                 }

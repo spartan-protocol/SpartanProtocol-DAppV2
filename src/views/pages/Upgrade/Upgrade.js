@@ -7,17 +7,14 @@ import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
-import {
-  getAddresses,
-  getTokenContract,
-  getWalletProvider,
-} from '../../../utils/web3'
+import { getAddresses, getWalletProvider } from '../../../utils/web3'
 import {
   fallenSpartansClaim,
   spartaUpgrade,
 } from '../../../store/sparta/actions'
 import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
 import { calcBurnFee } from '../../../utils/web3Utils'
+import { getTokenContract } from '../../../utils/web3Contracts'
 
 const Upgrade = () => {
   const addr = getAddresses()
@@ -42,12 +39,10 @@ const Upgrade = () => {
       setloadingBalance(true)
       let awaitArray = []
       awaitArray.push(
-        getTokenContract(addr.spartav1).balanceOf(wallet.account),
-        getTokenContract(addr.spartav2).balanceOf(wallet.account),
-        getTokenContract(addr.spartav2).totalSupply(),
-        wallet?.connector === 'walletconnect'
-          ? wallet.balance
-          : getWalletProvider().getBalance(),
+        getTokenContract(addr.spartav1, wallet).balanceOf(wallet.account),
+        getTokenContract(addr.spartav2, wallet).balanceOf(wallet.account),
+        getTokenContract(addr.spartav2, wallet).totalSupply(),
+        getWalletProvider(wallet?.ethereum).getBalance(),
       )
       awaitArray = await Promise.all(awaitArray)
       setoldSpartaBalance(awaitArray[0].toString())
@@ -129,7 +124,7 @@ const Upgrade = () => {
                   <Button
                     className="btn-primary"
                     block
-                    onClick={() => dispatch(spartaUpgrade())}
+                    onClick={() => dispatch(spartaUpgrade(wallet))}
                     disabled={oldSpartaBalance <= 0}
                   >
                     {t('upgrade')} SPARTA
@@ -178,7 +173,7 @@ const Upgrade = () => {
                   <Button
                     className="btn-primary"
                     block
-                    onClick={() => dispatch(fallenSpartansClaim())}
+                    onClick={() => dispatch(fallenSpartansClaim(wallet))}
                     disabled={sparta?.claimCheck <= 0}
                   >
                     {t('claim')} SPARTA

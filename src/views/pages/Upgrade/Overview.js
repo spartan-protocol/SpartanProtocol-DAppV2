@@ -16,8 +16,8 @@ const Overview = () => {
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    dispatch(fallenSpartansCheck(wallet.account))
-    dispatch(getSpartaGlobalDetails())
+    dispatch(fallenSpartansCheck(wallet))
+    dispatch(getSpartaGlobalDetails(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {

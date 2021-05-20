@@ -62,14 +62,15 @@ const WalletSelect = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet.status])
 
-  const connectWallet = async (x) => {
-    await wallet.connect(x?.inject)
-    window.localStorage.setItem('lastWallet', x?.id)
-  }
-
   const resetWallet = async () => {
     wallet.reset()
     console.log('Wallet Status: cleared')
+  }
+
+  const connectWallet = async (x) => {
+    resetWallet()
+    await wallet.connect(x?.inject)
+    window.localStorage.setItem('lastWallet', x?.id)
   }
 
   const onWalletDisconnect = async () => {
@@ -96,12 +97,12 @@ const WalletSelect = (props) => {
       wallet.status !== 'connecting'
     ) {
       connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
-      // } else if (
-      //   window.localStorage.getItem('lastWallet') === 'WC' &&
-      //   wallet.account === null &&
-      //   wallet.status !== 'connecting'
-      // ) {
-      //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+    } else if (
+      window.localStorage.getItem('lastWallet') === 'WC' &&
+      wallet.account === null &&
+      wallet.status !== 'connecting'
+    ) {
+      connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
     } else if (
       window.localStorage.getItem('lastWallet') === 'OOT' &&
       wallet.account === null &&
@@ -255,7 +256,7 @@ const WalletSelect = (props) => {
                   </Row>
                   <br />
                   {/* wallet navigation tabs */}
-                  {network.chainId === 97 && (
+                  {network.chainId === 97 || network.chainId === 56 ? (
                     <div className="modal-body ml-n3 mb-4">
                       <Row>
                         <Nav pills className="nav-tabs-custom">
@@ -862,6 +863,8 @@ const WalletSelect = (props) => {
                         </TabPane>
                       </TabContent>
                     </div>
+                  ) : (
+                    'Wrong Network'
                   )}
                 </>
               )}

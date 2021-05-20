@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Button } from 'reactstrap'
-import { getWbnbContract } from '../../utils/web3'
+// import { getWbnbContract } from '../../utils/web3'
 
 // const addr = getAddresses()
 
@@ -15,7 +15,7 @@ const Dashboard = () => {
   // ]
 
   const getPoolArray = async () => {
-    const temp = await getWbnbContract()
+    const temp = 'await getWbnbContract()'
     // .deposit(
     //   wallet.account,
     //   '10000000000000000000',

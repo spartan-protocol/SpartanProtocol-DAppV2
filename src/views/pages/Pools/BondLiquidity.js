@@ -53,8 +53,8 @@ const BondLiquidity = () => {
   const [assetBond1, setAssetBond1] = useState('...')
 
   const spartaRemainingLoop = async () => {
-    dispatch(getBondSpartaRemaining())
-    dispatch(getBondListed())
+    dispatch(getBondSpartaRemaining(wallet))
+    dispatch(getBondListed(wallet))
     await pause(10000)
     spartaRemainingLoop()
   }
@@ -253,13 +253,7 @@ const BondLiquidity = () => {
                   max="5000000"
                   value={convertFromWei(bond.bondSpartaRemaining)}
                   className=""
-                >
-                  {formatFromUnits(
-                    BN(convertFromWei(bond.bondSpartaRemaining)).div(25000),
-                    2,
-                  )}
-                  % {t('remaining')}
-                </Progress>
+                />
               </div>
               <Row className="mb-2">
                 <Col xs="auto">
@@ -332,6 +326,7 @@ const BondLiquidity = () => {
                     bondDeposit(
                       assetBond1?.tokenAddress,
                       convertToWei(bondInput1?.value),
+                      wallet,
                     ),
                   )
                 }

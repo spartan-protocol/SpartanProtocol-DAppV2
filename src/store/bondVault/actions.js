@@ -11,16 +11,16 @@ export const bondVaultLoading = () => ({
 
 /**
  * Get a bond members' details
- * @param {address} member
+ * @param {object} wallet
  * @param {array} assetArray
  * @returns {object} isMember, bondedLP, claimRate, lastBlockTime
  */
-export const getBondVaultMemberDetails = (member, assetArray) => async (
+export const getBondVaultMemberDetails = (wallet, assetArray) => async (
   dispatch,
 ) => {
   dispatch(bondVaultLoading())
   const addr = getAddresses()
-  const contract = getBondVaultContract()
+  const contract = getBondVaultContract(wallet)
   const awaitArray = []
   for (let i = 0; i < assetArray.length; i++) {
     // console.log(assetArray[i].tokenAddress)
@@ -30,7 +30,7 @@ export const getBondVaultMemberDetails = (member, assetArray) => async (
     ) {
       awaitArray.push(
         contract.callStatic.getMemberDetails(
-          member,
+          wallet.account,
           assetArray[i].tokenAddress,
         ),
       )

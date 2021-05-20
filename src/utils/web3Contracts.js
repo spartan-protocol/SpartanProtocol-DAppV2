@@ -9,10 +9,10 @@ const isAddress = (addrToCheck) => ethers.utils.isAddress(addrToCheck)
  * @param {address} tokenAddr
  * @returns {uint} contract
  */
-export const getTokenContract = (tokenAddr) => {
+export const getTokenContract = (tokenAddr, wallet) => {
   let contract = isAddress(tokenAddr)
   const abiErc20 = getAbis().erc20
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(tokenAddr, abiErc20, provider)
   }
@@ -23,10 +23,10 @@ export const getTokenContract = (tokenAddr) => {
  * Get the current Reserve contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getReserveContract = () => {
+export const getReserveContract = (wallet) => {
   let contract = isAddress(getAddresses().reserve)
   const abiReserve = getAbis().reserve
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().reserve, abiReserve, provider)
   }
@@ -38,10 +38,10 @@ export const getReserveContract = () => {
  * @param {address} bondAddress
  * @returns {uint} contract
  */
-export const getOldBondContract = (bondAddress) => {
+export const getOldBondContract = (bondAddress, wallet) => {
   let contract = isAddress(bondAddress)
   const abiBond = getAbis().bond
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(bondAddress, abiBond, provider)
   }
@@ -52,10 +52,10 @@ export const getOldBondContract = (bondAddress) => {
  * Get the current bond contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getBondContract = () => {
+export const getBondContract = (wallet) => {
   let contract = isAddress(getAddresses().bond)
   const abiBond = getAbis().bond
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().bond, abiBond, provider)
   }
@@ -66,10 +66,10 @@ export const getBondContract = () => {
  * Get the current bondVault contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getBondVaultContract = () => {
+export const getBondVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().bondVault)
   const abiBondVault = getAbis().bondVault
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().bondVault,
@@ -82,12 +82,13 @@ export const getBondVaultContract = () => {
 
 /**
  * Get the current DAO contract with signer/provider injected
+ * @param {object} wallet
  * @returns {uint} contract
  */
-export const getDaoContract = () => {
+export const getDaoContract = (wallet) => {
   let contract = isAddress(getAddresses().dao)
   const abiDao = getAbis().dao
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().dao, abiDao, provider)
   }
@@ -98,10 +99,10 @@ export const getDaoContract = () => {
  * Get the current DAO Vault contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getDaoVaultContract = () => {
+export const getDaoVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().daoVault)
   const abiDaoVault = getAbis().daoVault
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().daoVault,
@@ -113,10 +114,10 @@ export const getDaoVaultContract = () => {
 }
 
 // GET LOAN CONTRACT ** CHECK / UPDATE THIS AFTER V1 ROLLOUT **
-export const getLoanContract = () => {
+export const getLoanContract = (wallet) => {
   let contract = isAddress(getAddresses().loan)
   const abiLoan = getAbis().daoLoan
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().loan, abiLoan, provider)
   }
@@ -124,10 +125,10 @@ export const getLoanContract = () => {
 }
 
 // GET LOANVAULT CONTRACT ** CHECK / UPDATE THIS AFTER V1 ROLLOUT **
-export const getLoanVaultContract = () => {
+export const getLoanVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().loanVault)
   const abiLoanVault = getAbis().daoLoanVault
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().loanVault,
@@ -142,10 +143,10 @@ export const getLoanVaultContract = () => {
  * Get the current migration contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getMigrateContract = () => {
+export const getMigrateContract = (wallet) => {
   let contract = isAddress(getAddresses().migrate)
   const abiMigrate = getAbis().migrate
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().migrate, abiMigrate, provider)
   }
@@ -155,12 +156,13 @@ export const getMigrateContract = () => {
 /**
  * Get the current pool contract with signer/provider injected
  * @param {address} poolAddress
+ * @param {object} wallet
  * @returns {uint} contract
  */
-export const getPoolContract = (poolAddress) => {
+export const getPoolContract = (poolAddress, wallet) => {
   let contract = isAddress(poolAddress)
   const abiPool = getAbis().pool
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(poolAddress, abiPool, provider)
   }
@@ -171,10 +173,10 @@ export const getPoolContract = (poolAddress) => {
  * Get the current poolFactory contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getPoolFactoryContract = () => {
+export const getPoolFactoryContract = (wallet) => {
   let contract = isAddress(getAddresses().poolFactory)
   const abiPoolFactory = getAbis().poolFactory
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().poolFactory,
@@ -189,12 +191,26 @@ export const getPoolFactoryContract = () => {
  * Get the current router contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getRouterContract = () => {
+export const getRouterContract = (wallet) => {
   let contract = isAddress(getAddresses().router)
   const abiRouter = getAbis().router
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().router, abiRouter, provider)
+  }
+  return contract
+}
+
+/**
+ * Get the old base/SPARTA contract with signer/provider injected
+ * @returns {uint} contract
+ */
+export const getSpartaV1Contract = (wallet) => {
+  let contract = isAddress(getAddresses().spartav1)
+  const abiBase = getAbis().sparta
+  const provider = getWalletProvider(wallet?.ethereum)
+  if (contract === true) {
+    contract = new ethers.Contract(getAddresses().spartav1, abiBase, provider)
   }
   return contract
 }
@@ -203,10 +219,10 @@ export const getRouterContract = () => {
  * Get the current base/SPARTA contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getSpartaContract = () => {
+export const getSpartaV2Contract = (wallet) => {
   let contract = isAddress(getAddresses().spartav2)
   const abiBase = getAbis().sparta
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().spartav2, abiBase, provider)
   }
@@ -217,10 +233,10 @@ export const getSpartaContract = () => {
  * Get the current fallenSpartans contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getFallenSpartansContract = () => {
+export const getFallenSpartansContract = (wallet) => {
   let contract = isAddress(getAddresses().fallenSpartans)
   const abiFS = getAbis().fallenSpartans
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().fallenSpartans,
@@ -236,10 +252,10 @@ export const getFallenSpartansContract = () => {
  * @param {address} synthAddress
  * @returns {uint} contract
  */
-export const getSynthContract = (synthAddress) => {
+export const getSynthContract = (synthAddress, wallet) => {
   let contract = isAddress(synthAddress)
   const abiSynth = getAbis().synth
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(synthAddress, abiSynth, provider)
   }
@@ -250,10 +266,10 @@ export const getSynthContract = (synthAddress) => {
  * Get the current synthFactory contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getSynthFactoryContract = () => {
+export const getSynthFactoryContract = (wallet) => {
   let contract = isAddress(getAddresses().synthFactory)
   const abiSynthFactory = getAbis().synthFactory
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().synthFactory,
@@ -268,10 +284,10 @@ export const getSynthFactoryContract = () => {
  * Get the current synthVault contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getSynthVaultContract = () => {
+export const getSynthVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().synthVault)
   const abiSynthVault = getAbis().synthVault
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().synthVault,
@@ -286,10 +302,10 @@ export const getSynthVaultContract = () => {
  * Get the current utils contract with signer/provider injected
  * @returns {uint} contract
  */
-export const getUtilsContract = () => {
+export const getUtilsContract = (wallet) => {
   let contract = isAddress(getAddresses().utils)
   const abiUtils = getAbis().utils
-  const provider = getWalletProvider()
+  const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().utils, abiUtils, provider)
   }

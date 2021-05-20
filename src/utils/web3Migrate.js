@@ -5,10 +5,11 @@ import { getMigrateContract } from './web3Contracts'
 
 /**
  * Migrate liquidity
+ * @param {object} wallet
  * @returns {bool}
  */
-export const migrateLiq = async (justCheck) => {
-  const contract = getMigrateContract()
+export const migrateLiq = async (wallet, justCheck) => {
+  const contract = getMigrateContract(wallet)
   let migratedLiq = ''
   try {
     if (justCheck) {
@@ -31,10 +32,11 @@ export const migrateLiq = async (justCheck) => {
 /**
  * Migrate bondV2
  * @param {address} token
+ * @param {object} wallet
  * @returns {bool}
  */
-export const migrateBondV2 = async (token, justCheck) => {
-  const contract = getMigrateContract()
+export const migrateBondV2 = async (token, wallet, justCheck) => {
+  const contract = getMigrateContract(wallet)
   let migratedBond = ''
   try {
     if (justCheck) {
@@ -57,10 +59,11 @@ export const migrateBondV2 = async (token, justCheck) => {
 /**
  * Migrate bondV3
  * @param {address} token
+ * @param {object} wallet
  * @returns {bool}
  */
-export const migrateBondV3 = async (justCheck) => {
-  const contract = getMigrateContract()
+export const migrateBondV3 = async (wallet, justCheck) => {
+  const contract = getMigrateContract(wallet)
   let migratedBond = ''
   try {
     if (justCheck) {

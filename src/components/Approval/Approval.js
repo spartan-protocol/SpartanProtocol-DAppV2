@@ -1,3 +1,4 @@
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Col } from 'reactstrap'
@@ -29,19 +30,20 @@ const Approval = ({
 }) => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
+  const wallet = useWallet()
 
   const getAllowance = () => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        dispatch(getAllowance1(tokenAddress, walletAddress, contractAddress))
+        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
       } else if (assetNumber === '2') {
-        dispatch(getAllowance2(tokenAddress, walletAddress, contractAddress))
+        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
       }
     }
   }
 
   const handleApproval = async () => {
-    await dispatch(getApproval(tokenAddress, contractAddress))
+    await dispatch(getApproval(tokenAddress, contractAddress, wallet))
     getAllowance()
   }
 

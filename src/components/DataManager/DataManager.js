@@ -54,21 +54,19 @@ const DataManager = () => {
    * On DApp load check network and get the party started
    */
   const checkNetwork = async () => {
+    const network = tryParse(window.localStorage.getItem('network'))
     if (netLoading === false) {
       setnetLoading(true)
-      if (
-        tryParse(window.localStorage.getItem('network'))?.chainId !==
-        prevNetwork?.chainId
-      ) {
-        changeNetwork(tryParse(window.localStorage.getItem('network'))?.chainId)
+      if (network?.chainId !== prevNetwork?.chainId) {
+        changeNetwork(network?.chainId)
         settrigger1(0)
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-        setPrevNetwork(tryParse(window.localStorage.getItem('network')))
+        setPrevNetwork(tryParse(network))
       } else {
         await dispatch(addNetworkMM())
         dispatch(addNetworkBC())
-        setPrevNetwork(tryParse(window.localStorage.getItem('network')))
+        setPrevNetwork(tryParse(network))
       }
       setnetLoading(false)
     }
@@ -82,16 +80,14 @@ const DataManager = () => {
    * Get the initial arrays (tokens & curateds)
    */
   const checkArrays = async () => {
-    if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
-      dispatch(getListedTokens()) // TOKEN ARRAY
-      dispatch(getCuratedPools()) // CURATED ARRAY
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (chainId === 97 || chainId === 56) {
+      dispatch(getListedTokens(wallet)) // TOKEN ARRAY
+      dispatch(getCuratedPools(wallet)) // CURATED ARRAY
     }
   }
   useEffect(() => {
-    if (
-      trigger1 === 0 &&
-      tryParse(window.localStorage.getItem('network'))?.chainId === 97
-    ) {
+    if (trigger1 === 0) {
       checkArrays()
       settrigger1(trigger1 + 1)
     }
@@ -123,27 +119,35 @@ const DataManager = () => {
   /**
    * Update synthArray & tokenDetails
    */
-  useEffect(() => {
+  const checkArraysNext = async () => {
     const { listedTokens } = pool
-    if (
-      trigger3 === 0 &&
-      tryParse(window.localStorage.getItem('network'))?.chainId === 97
-    ) {
-      dispatch(getSynthArray(listedTokens))
-      dispatch(getTokenDetails(listedTokens, wallet.account))
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (listedTokens.length > 0) {
+      if (chainId === 97 || chainId === 56) {
+        dispatch(getSynthArray(listedTokens, wallet))
+        dispatch(getTokenDetails(listedTokens, wallet))
+      }
+    }
+  }
+  useEffect(() => {
+    if (trigger3 === 0) {
+      checkArraysNext()
     }
     const timer = setTimeout(() => {
-      if (listedTokens.length > 0) {
-        dispatch(getSynthArray(listedTokens))
-        dispatch(getTokenDetails(listedTokens, wallet.account))
-        settrigger3(trigger3 + 1)
-      }
-    }, 7500)
+      checkArraysNext()
+      settrigger3(trigger3 + 1)
+    }, 5000)
     return () => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedTokens, wallet.account, trigger3])
+  }, [
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('network'),
+    pool.listedTokens,
+    wallet.account,
+    trigger3,
+  ])
 
   /**
    * Get listed pools details
@@ -153,7 +157,7 @@ const DataManager = () => {
     const { curatedPools } = pool
     const checkListedPools = () => {
       if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails, curatedPools))
+        dispatch(getListedPools(tokenDetails, curatedPools, wallet))
       }
     }
     checkListedPools()
@@ -171,11 +175,11 @@ const DataManager = () => {
     const checkDetails = () => {
       if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
         if (listedPools?.length > 0) {
-          dispatch(getPoolDetails(listedPools, wallet.account))
+          dispatch(getPoolDetails(listedPools, wallet))
           setPrevPoolDetails(pool.poolDetails)
         }
         if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthDetails(synthArray, listedPools, wallet.account))
+          dispatch(getSynthDetails(synthArray, listedPools, wallet))
         }
       }
     }
@@ -191,7 +195,11 @@ const DataManager = () => {
     let contracts = []
     const { poolDetails } = pool
     if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
-      contracts = [getBondContract(), getRouterContract(), getDaoContract()]
+      contracts = [
+        getBondContract(wallet),
+        getRouterContract(wallet),
+        getDaoContract(wallet),
+      ]
     }
 
     const listen = async (contract) => {
@@ -208,11 +216,14 @@ const DataManager = () => {
       ) {
         for (let i = 0; i < poolDetails.length; i++) {
           if (poolDetails[i]?.address) {
-            contracts.push(getPoolContract(poolDetails[i].address))
+            contracts.push(getPoolContract(poolDetails[i].address, wallet))
           }
           if (getSynth(poolDetails[i].tokenAddress)?.address) {
             contracts.push(
-              getSynthContract(getSynth(poolDetails[i].tokenAddress)?.address),
+              getSynthContract(
+                getSynth(poolDetails[i].tokenAddress)?.address,
+                wallet,
+              ),
             )
           }
         }

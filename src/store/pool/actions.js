@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ethers } from 'ethers'
 import * as Types from './types'
 import {
   getPoolContract,
@@ -7,9 +8,13 @@ import {
   getRouterContract,
   getDaoVaultContract,
   getBondVaultContract,
+  getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import fallbackImg from '../../assets/icons/Logo-unknown.svg'
+import bnbIcon from '../../assets/icons/BNB.svg'
+import spartaIcon from '../../assets/icons/coin_sparta_black_bg.svg'
+import oldSpartaIcon from '../../assets/icons/oldSparta.svg'
 import { getAddresses } from '../../utils/web3'
 
 export const poolLoading = () => ({
@@ -22,23 +27,28 @@ export const poolDetailsLoading = () => ({
 
 /**
  * Get array of all listed token addresses
+ * @param {object} wallet
  * @returns {array} tokenArray
  */
-export const getListedTokens = () => async (dispatch) => {
+export const getListedTokens = (wallet) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getPoolFactoryContract()
   const addr = getAddresses()
+  const check = ethers.utils.isAddress(addr.poolFactory)
+  const contract = check === true ? getPoolFactoryContract(wallet) : ''
 
   try {
-    const tokenCount = await contract.callStatic.tokenCount()
-    const tempArray = []
-    for (let i = 0; i < tokenCount; i++) {
-      tempArray.push(contract.callStatic.getToken(i))
+    let listedTokens = []
+    if (check === true) {
+      const tokenCount = await contract.callStatic.tokenCount()
+      const tempArray = []
+      for (let i = 0; i < tokenCount; i++) {
+        tempArray.push(contract.callStatic.getToken(i))
+      }
+      listedTokens = await Promise.all(tempArray)
+      const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
+      if (wbnbIndex > -1)
+        listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
     }
-    const listedTokens = await Promise.all(tempArray)
-    const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
-    if (wbnbIndex > -1)
-      listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
     listedTokens.push(addr.spartav1, addr.spartav2)
     dispatch(payloadToDispatch(Types.POOL_LISTED_TOKENS, listedTokens))
   } catch (error) {
@@ -48,19 +58,27 @@ export const getListedTokens = () => async (dispatch) => {
 
 /**
  * Get array of curated pool addresses
+ * @param {object} wallet
  * @returns {array} curatedPoolArray
  */
-export const getCuratedPools = () => async (dispatch) => {
+export const getCuratedPools = (wallet) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getPoolFactoryContract()
+  const addr = getAddresses()
+  const check = ethers.utils.isAddress(addr.poolFactory)
+  const contract = check === true ? getPoolFactoryContract(wallet) : ''
 
   try {
-    const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
-    const tempArray = []
-    for (let i = 0; i < curatedPoolCount; i++) {
-      tempArray.push(contract.callStatic.getCuratedPool(i))
+    let curatedPools = []
+    if (check === true) {
+      const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
+      const tempArray = []
+      for (let i = 0; i < curatedPoolCount; i++) {
+        tempArray.push(contract.callStatic.getCuratedPool(i))
+      }
+      curatedPools = await Promise.all(tempArray)
+    } else {
+      curatedPools = []
     }
-    const curatedPools = await Promise.all(tempArray)
     dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
@@ -74,48 +92,54 @@ export const getCuratedPools = () => async (dispatch) => {
  */
 export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getUtilsContract()
   const addr = getAddresses()
   const trustWalletIndex = await axios.get(
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
   )
 
   try {
-    const tempArray = await Promise.all(
-      listedTokens.map((i) =>
-        contract.callStatic.getTokenDetailsWithMember(
-          i,
-          wallet !== null ? wallet : addr.bnb,
-        ),
-      ),
-    )
-    const tokenDetails = []
+    let tempArray = []
     for (let i = 0; i < listedTokens.length; i++) {
-      const url = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
-      const symbol = () => {
-        if (listedTokens[i] === addr.spartav2) {
-          return `${tempArray[i].symbol}`
+      const contract = getTokenContract(listedTokens[i], wallet)
+      tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
+      if (wallet.account !== null) {
+        if (listedTokens[i] === addr.bnb) {
+          tempArray.push(wallet.balance)
+        } else {
+          tempArray.push(contract.callStatic.balanceOf(wallet?.account)) // TOKEN BALANCE (2)
         }
-        if (listedTokens[i] === addr.spartav1) {
-          return `${tempArray[i].symbol} (old)`
-        }
-        return tempArray[i].symbol
+      } else {
+        tempArray.push('0')
       }
-
-      const tempItem = {
-        address: listedTokens[i],
-        balance: wallet !== null ? tempArray[i].balance.toString() : '0',
-        name: tempArray[i].name,
-        symbol: symbol(),
-        decimals: tempArray[i].decimals.toString(),
-        totalSupply: tempArray[i].totalSupply.toString(),
-        symbolUrl:
+      if (listedTokens[i] === addr.bnb) {
+        tempArray.push('BNB')
+        tempArray.push(bnbIcon)
+      } else if (listedTokens[i] === addr.spartav1) {
+        tempArray.push('SPARTA (old)')
+        tempArray.push(oldSpartaIcon)
+      } else if (listedTokens[i] === addr.spartav2) {
+        tempArray.push('SPARTA')
+        tempArray.push(spartaIcon)
+      } else {
+        tempArray.push(contract.callStatic.symbol()) // TOKEN SYMBOL (3)
+        tempArray.push(
           trustWalletIndex.data.filter((asset) => asset === listedTokens[i])
             .length > 0
-            ? url
+            ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
             : fallbackImg,
+        ) // SYMBOL URL (4)
       }
-      tokenDetails.push(tempItem)
+    }
+    tempArray = await Promise.all(tempArray)
+    const varCount = 4
+    const tokenDetails = []
+    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
+      tokenDetails.push({
+        address: tempArray[i],
+        balance: tempArray[i + 1].toString(),
+        symbol: tempArray[i + 2],
+        symbolUrl: tempArray[i + 3],
+      })
     }
     dispatch(payloadToDispatch(Types.POOL_TOKEN_DETAILS, tokenDetails))
   } catch (error) {
@@ -127,13 +151,14 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
  * Get LP token addresses and setup the object
  * @param {array} tokenDetails
  * @param {array} curatedArray
+ * @param {object} wallet
  * @returns {array} listedPools
  */
-export const getListedPools = (tokenDetails, curatedArray) => async (
+export const getListedPools = (tokenDetails, curatedArray, wallet) => async (
   dispatch,
 ) => {
   dispatch(poolLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(wallet)
   const addr = getAddresses()
   try {
     let tempArray = []
@@ -196,29 +221,29 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
   try {
     let tempArray = []
     for (let i = 0; i < listedPools.length; i++) {
-      const routerContract = getRouterContract()
-      const daoVaultContract = getDaoVaultContract()
-      const bondVaultContract = getBondVaultContract()
+      const routerContract = getRouterContract(wallet)
+      const daoVaultContract = getDaoVaultContract(wallet)
+      const bondVaultContract = getBondVaultContract(wallet)
       const poolContract =
         listedPools[i].tokenAddress === addr.spartav1 ||
         listedPools[i].tokenAddress === addr.spartav2
           ? null
-          : getPoolContract(listedPools[i].address)
+          : getPoolContract(listedPools[i].address, wallet)
       tempArray.push(
         listedPools[i].tokenAddress === addr.spartav1 ||
           listedPools[i].tokenAddress === addr.spartav2 ||
-          wallet === null
+          wallet.account === null
           ? '0'
-          : poolContract.callStatic.balanceOf(wallet),
+          : poolContract.callStatic.balanceOf(wallet.account),
       ) // balance
       tempArray.push(
         listedPools[i].tokenAddress === addr.spartav1 ||
           listedPools[i].tokenAddress === addr.spartav2 ||
-          wallet === null
+          wallet.account === null
           ? '0'
           : daoVaultContract.callStatic.getMemberPoolBalance(
               listedPools[i].address,
-              wallet,
+              wallet.account,
             ),
       ) // staked
       tempArray.push(
@@ -250,7 +275,7 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
       tempArray.push(
         listedPools[i].tokenAddress === addr.spartav1 ||
           listedPools[i].tokenAddress === addr.spartav2 ||
-          wallet === null
+          wallet.account === null
           ? {
               isMember: false,
               bondedLP: '0',
@@ -258,7 +283,7 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
               lastBlockTime: '0',
             }
           : bondVaultContract.callStatic.getMemberDetails(
-              wallet,
+              wallet.account,
               listedPools[i].tokenAddress,
             ),
       ) // bondDetails - bondMember, bondClaimRate, bondLastClaim

@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Nav, NavItem, NavLink } from 'reactstrap'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { getReserveGlobalDetails } from '../../../store/reserve/actions'
 import { getSpartaGlobalDetails } from '../../../store/sparta/actions'
 import DaoVault from './DaoVault'
@@ -13,6 +14,7 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 const Vault = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const wallet = useWallet()
   const [mode, setMode] = useState('Dao')
 
   const [network, setnetwork] = useState(getNetwork())
@@ -34,8 +36,8 @@ const Vault = () => {
 
   const [trigger1, settrigger1] = useState(0)
   const getData = () => {
-    dispatch(getReserveGlobalDetails())
-    dispatch(getSpartaGlobalDetails())
+    dispatch(getReserveGlobalDetails(wallet))
+    dispatch(getSpartaGlobalDetails(wallet))
   }
   useEffect(() => {
     if (trigger1 === 0) {

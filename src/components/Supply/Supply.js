@@ -15,7 +15,12 @@ import {
 // import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
 import { usePool } from '../../store/pool/selector'
 import { useWeb3 } from '../../store/web3'
-import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
+import {
+  BN,
+  convertFromWei,
+  formatFromUnits,
+  formatFromWei,
+} from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses, getNetwork } from '../../utils/web3'
 
@@ -26,7 +31,8 @@ const Supply = () => {
   const addr = getAddresses()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
   const addrNames = [
-    'sparta',
+    'spartav1',
+    'spartav2',
     'bond',
     'bondVault',
     'dao',
@@ -40,6 +46,8 @@ const Supply = () => {
     'synthVault',
     'utils',
   ]
+  const distroMnBurnV1 = '42414904'
+  const distroMnBondV1 = '17500000'
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -104,73 +112,95 @@ const Supply = () => {
         target="PopoverClick"
       >
         <PopoverHeader className="mt-2">
-          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'} (v1)
+          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
         </PopoverHeader>
         <PopoverBody>
-          {network.chainId === 97 && (
-            <>
-              <Row>
-                <Col xs="6" className="popover-text mb-4">
-                  {t('marketcap')}
-                </Col>
-                <Col xs="6 mb-2" className="popover-text mb-4">
-                  ${formatFromWei(getMarketCap(), 0)}
-                </Col>
+          {/* {network.chainId === 97 && (
+            <> */}
+          <Row>
+            <Col xs="6" className="popover-text mb-4">
+              {t('marketcap')}
+            </Col>
+            <Col xs="6 mb-2" className="popover-text mb-4">
+              ${formatFromWei(getMarketCap(), 0)}
+            </Col>
 
-                <Col xs="6 mb-2" className="popover-text">
-                  {`${t('circulatingSupply')}`}
-                </Col>
-                <Col xs="6 mb-2" className="popover-text">
-                  {formatFromWei(getCirculatingSupply(), 0)}
-                </Col>
-                <Col xs="12 mb-2">
-                  <div className="progress-container progress-info">
-                    <span className="progress-badge" />
-                    <Progress max="100" value="60" />
-                  </div>
-                </Col>
+            <Col xs="6 mb-2" className="popover-text">
+              {`${t('circulatingSupply')}`}
+            </Col>
+            <Col xs="6 mb-2" className="popover-text">
+              {formatFromWei(getCirculatingSupply(), 0)}
+            </Col>
+            <Col xs="12 mb-2">
+              <div className="progress-container progress-info">
+                <span className="progress-badge" />
+                <Progress max="100" value="60" />
+              </div>
+            </Col>
 
-                <Col xs="6" className="popover-text mb-2">
-                  {t('totalSupply')}
-                </Col>
-                <Col xs="6" className="popover-text mb-2">
-                  {formatFromWei(getTotalSupply(), 0)}
-                </Col>
+            <Col xs="6" className="popover-text mb-2">
+              {t('totalSupply')}
+            </Col>
+            <Col xs="6" className="popover-text mb-2">
+              {formatFromWei(getTotalSupply(), 0)}
+            </Col>
 
-                <Col xs="12 mb-2">
-                  {' '}
-                  <Progress multi>
-                    <Progress bar color="primary" value="30" />
-                    <Progress bar color="black" value="2" />
-                    <Progress bar color="yellow" value="6" />
-                    <Progress bar color="black" value="2" />
-                    <Progress bar color="lightblue" value="10" />
-                  </Progress>
-                </Col>
-                <Col xs="4">
-                  <span className="popover-text  dot-burn mr-2" />
-                  {t('burn')}
-                </Col>
-                <Col xs="4">
-                  <span className="popover-text dot-bond mr-1" />
-                  {t('bond')}
-                </Col>
-                <Col xs="4">
-                  <span className="popover-text  dot-emission mr-2" />
-                  {t('emisson')}
-                </Col>
-              </Row>
-              <br />
-              <br />
-            </>
-          )}
+            <Col xs="12 mb-2">
+              {' '}
+              <Progress multi>
+                <Progress
+                  bar
+                  color="primary"
+                  value={formatFromUnits(
+                    BN(distroMnBurnV1).div(300000000).times(100),
+                  )}
+                />
+                <Progress bar color="black" value="1" />
+                <Progress
+                  bar
+                  color="yellow"
+                  value={formatFromUnits(
+                    BN(distroMnBondV1).div(300000000).times(100),
+                  )}
+                />
+                <Progress bar color="black" value="1" />
+                <Progress
+                  bar
+                  color="lightblue"
+                  value={formatFromUnits(
+                    BN(convertFromWei(getTotalSupply()))
+                      // MINUS OTHER DISTRO METHODS
+                      .div(300000000)
+                      .times(100),
+                  )}
+                />
+              </Progress>
+            </Col>
+            <Col xs="4">
+              <span className="popover-text  dot-burn mr-2" />
+              {t('burn')}
+            </Col>
+            <Col xs="4">
+              <span className="popover-text dot-bond mr-1" />
+              {t('bond')}
+            </Col>
+            <Col xs="4">
+              <span className="popover-text  dot-emission mr-2" />
+              {t('emisson')}
+            </Col>
+          </Row>
+          <br />
+          <br />
+          {/* </>
+          )} */}
           <Row>
             <Col md="12" className="ml-auto text-right">
               <Card
-                className="card-body card-inside "
+                className="card-body card-inside"
                 style={{ backgroundColor: '#25212D' }}
               >
                 <Row
+                  className="mb-3"
                   onClick={(e) => {
                     e.preventDefault()
                     setopenedCollapseThree(!openedCollapseThree)
@@ -202,22 +232,24 @@ const Supply = () => {
                   </Col>
                 </Row>
                 <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                  <Row className="card-body text-center">
-                    {addrNames.map((c) => (
-                      <Col key={c} xs={12} className="text-left mb-4">
-                        <span>
-                          <div className="text-card">{t(c)}</div>{' '}
-                          {t('viewBscScan')}
-                          <a
-                            href={getExplorerContract(addr[c])}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <i className="icon-extra-small icon-scan ml-n2" />
-                          </a>
-                        </span>
-                      </Col>
-                    ))}
+                  <Row className="card-body text-center p-2">
+                    {addrNames
+                      .filter((x) => addr[x] !== '')
+                      .map((c) => (
+                        <Col key={c} xs={6} className="text-left mb-3 px-2">
+                          <span>
+                            <div className="text-card">{t(c)}</div>{' '}
+                            {t('viewBscScan')}
+                            <a
+                              href={getExplorerContract(addr[c])}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <i className="icon-extra-small icon-scan ml-n2" />
+                            </a>
+                          </span>
+                        </Col>
+                      ))}
                   </Row>
                 </Collapse>
               </Card>

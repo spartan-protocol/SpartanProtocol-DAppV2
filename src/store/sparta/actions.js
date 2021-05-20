@@ -1,7 +1,8 @@
 import * as Types from './types'
 import {
   getFallenSpartansContract,
-  getSpartaContract,
+  getSpartaV1Contract,
+  getSpartaV2Contract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getProviderGasPrice } from '../../utils/web3'
@@ -10,10 +11,10 @@ export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
 })
 
-export const getSpartaGlobalDetails = () => async (dispatch) => {
+export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getSpartaContract()
-  const fsContract = getFallenSpartansContract()
+  const contract = getSpartaV1Contract(wallet)
+  const fsContract = getFallenSpartansContract(wallet)
 
   try {
     let awaitArray = [
@@ -44,9 +45,9 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
 /**
  * Upgrade SPARTA(old V1) to SPARTA(New V2)
  */
-export const spartaUpgrade = () => async (dispatch) => {
+export const spartaUpgrade = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getSpartaContract()
+  const contract = getSpartaV2Contract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
@@ -62,15 +63,15 @@ export const spartaUpgrade = () => async (dispatch) => {
 
 /**
  * Check if your wallet was affected by the attacks and your SPARTA amount available to claim
- * @param {address} walletAddr
+ * @param {object} wallet
  * @returns {uint} claimAmount
  */
-export const fallenSpartansCheck = (walletAddr) => async (dispatch) => {
+export const fallenSpartansCheck = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getFallenSpartansContract()
+  const contract = getFallenSpartansContract(wallet)
 
   try {
-    const claimCheck = await contract.callStatic.getClaim(walletAddr)
+    const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck.toString()))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
@@ -80,9 +81,9 @@ export const fallenSpartansCheck = (walletAddr) => async (dispatch) => {
 /**
  * Claim your wallet portion from the fallenSparta fund
  */
-export const fallenSpartansClaim = () => async (dispatch) => {
+export const fallenSpartansClaim = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getFallenSpartansContract()
+  const contract = getFallenSpartansContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()

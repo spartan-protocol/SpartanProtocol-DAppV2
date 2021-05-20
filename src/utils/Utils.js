@@ -1,4 +1,5 @@
 /* eslint-disable react/no-array-index-key */
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useUtils, getListedPools } from '../store/utils'
@@ -6,10 +7,11 @@ import { useUtils, getListedPools } from '../store/utils'
 const Utils = () => {
   const utils = useUtils()
   const dispatch = useDispatch()
+  const wallet = useWallet()
 
   useEffect(() => {
-    dispatch(getListedPools())
-  }, [dispatch])
+    dispatch(getListedPools(wallet))
+  }, [wallet, dispatch])
 
   return (
     <>

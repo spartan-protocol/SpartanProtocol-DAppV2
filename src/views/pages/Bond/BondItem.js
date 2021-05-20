@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { bondClaim } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 // import { useWeb3 } from '../../../store/web3'
@@ -13,6 +14,7 @@ const BondItem = ({ asset }) => {
   const pool = usePool()
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const wallet = useWallet()
   // const web3 = useWeb3()
   const [showDetails, setShowDetails] = useState(false)
   const { tokenAddress } = asset
@@ -162,7 +164,7 @@ const BondItem = ({ asset }) => {
               <Button
                 color="primary"
                 className="btn w-100"
-                onClick={() => dispatch(bondClaim(asset.tokenAddress))}
+                onClick={() => dispatch(bondClaim(asset.tokenAddress, wallet))}
               >
                 {t('claim')}
               </Button>

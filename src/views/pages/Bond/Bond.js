@@ -78,7 +78,7 @@ const Bond = () => {
                   <Col xs="12" className="p-1">
                     <Button
                       className="btn btn-primary align-middle"
-                      onClick={() => dispatch(bondClaimAll(wallet.account))}
+                      onClick={() => dispatch(bondClaimAll(wallet))}
                     >
                       {t('claimAll')}
                       {' ( '}

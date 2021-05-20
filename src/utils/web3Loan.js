@@ -15,8 +15,9 @@ export const loanAddCollateral = async (
   lpToken,
   loanAsset,
   justCheck,
+  wallet,
 ) => {
-  const contract = getLoanContract()
+  const contract = getLoanContract(wallet)
   let loanAssets = ''
   try {
     if (justCheck) {
@@ -61,8 +62,9 @@ export const loanRemoveCollateral = async (
   lpToken,
   loanAsset,
   justCheck,
+  wallet,
 ) => {
-  const contract = getLoanContract()
+  const contract = getLoanContract(wallet)
   let lpCollateral = ''
   try {
     if (justCheck) {

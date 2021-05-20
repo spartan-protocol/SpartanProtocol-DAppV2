@@ -688,6 +688,7 @@ const AddLiquidity = () => {
                           convertToWei(addInput2.value),
                           convertToWei(addInput1.value),
                           assetAdd1.tokenAddress,
+                          wallet,
                         ),
                       )
                     : dispatch(
@@ -695,6 +696,7 @@ const AddLiquidity = () => {
                           convertToWei(addInput1.value),
                           assetAdd1.tokenAddress === addr.spartav1,
                           poolAdd1.tokenAddress,
+                          wallet,
                         ),
                       )
                 }
