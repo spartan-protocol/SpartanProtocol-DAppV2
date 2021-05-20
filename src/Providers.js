@@ -5,7 +5,7 @@ import thunk from 'redux-thunk'
 import { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import AdminLayout from './components/layout/Common'
+import Common from './components/layout/Common'
 
 import { bondReducer } from './store/bond'
 import { bondVaultReducer } from './store/bondVault'
@@ -90,7 +90,7 @@ const Providers = () => {
       >
         <BrowserRouter>
           <Switch>
-            <Route path="/" render={() => <AdminLayout />} />
+            <Route path="/" render={() => <Common />} />
             <Redirect from="/" to="/home" />
           </Switch>
         </BrowserRouter>

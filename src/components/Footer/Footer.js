@@ -4,7 +4,6 @@ import { Container } from 'reactstrap'
 import PropTypes from 'prop-types'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-// import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import Sparta from '../../assets/icons/coin_sparta.svg'
 import RecentTxns from '../RecentTxns/RecentTxns'
 
