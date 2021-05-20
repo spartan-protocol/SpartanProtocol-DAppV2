@@ -26,7 +26,8 @@ const Supply = () => {
   const addr = getAddresses()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
   const addrNames = [
-    'sparta',
+    'spartav1',
+    'spartav2',
     'bond',
     'bondVault',
     'dao',
@@ -104,7 +105,7 @@ const Supply = () => {
         target="PopoverClick"
       >
         <PopoverHeader className="mt-2">
-          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'} (v1)
+          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
         </PopoverHeader>
         <PopoverBody>
           {network.chainId === 97 && (
@@ -167,10 +168,11 @@ const Supply = () => {
           <Row>
             <Col md="12" className="ml-auto text-right">
               <Card
-                className="card-body card-inside "
+                className="card-body card-inside"
                 style={{ backgroundColor: '#25212D' }}
               >
                 <Row
+                  className="mb-3"
                   onClick={(e) => {
                     e.preventDefault()
                     setopenedCollapseThree(!openedCollapseThree)
@@ -202,22 +204,24 @@ const Supply = () => {
                   </Col>
                 </Row>
                 <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                  <Row className="card-body text-center">
-                    {addrNames.map((c) => (
-                      <Col key={c} xs={12} className="text-left mb-4">
-                        <span>
-                          <div className="text-card">{t(c)}</div>{' '}
-                          {t('viewBscScan')}
-                          <a
-                            href={getExplorerContract(addr[c])}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <i className="icon-extra-small icon-scan ml-n2" />
-                          </a>
-                        </span>
-                      </Col>
-                    ))}
+                  <Row className="card-body text-center p-2">
+                    {addrNames
+                      .filter((x) => addr[x] !== '')
+                      .map((c) => (
+                        <Col key={c} xs={6} className="text-left mb-3 px-2">
+                          <span>
+                            <div className="text-card">{t(c)}</div>{' '}
+                            {t('viewBscScan')}
+                            <a
+                              href={getExplorerContract(addr[c])}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              <i className="icon-extra-small icon-scan ml-n2" />
+                            </a>
+                          </span>
+                        </Col>
+                      ))}
                   </Row>
                 </Collapse>
               </Card>
