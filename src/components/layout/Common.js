@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import NotificationAlert from 'react-notification-alert'
@@ -13,15 +13,13 @@ import logo from '../../assets/img/spartan_red_medium.svg'
 import DataManager from '../DataManager/DataManager'
 
 const Common = () => {
+  const activeColor = 'blue'
   const { t } = useTranslation()
-  const [activeColor] = React.useState('blue')
-  const [, setSidebarMini] = React.useState(true)
-  const [opacity] = React.useState(0)
-  const [sidebarOpened, setSidebarOpened] = React.useState(false)
-  const mainPanelRef = React.useRef(null)
-  const notificationAlertRef = React.useRef(null)
+  const [sidebarOpened, setSidebarOpened] = useState(false)
+  const mainPanelRef = useRef(null)
+  const notificationAlertRef = useRef(null)
   const location = useLocation()
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.add('sidebar-mini')
     document.documentElement.scrollTop = 0
     document.scrollingElement.scrollTop = 0
@@ -62,16 +60,7 @@ const Common = () => {
     return activeRoute
   }
 
-  // const handleActiveClick = (color) => {
-  //   setActiveColor(color)
-  // }
-
   const handleMiniClick = () => {
-    if (document.body.classList.contains('sidebar-mini')) {
-      setSidebarMini(false)
-    } else {
-      setSidebarMini(true)
-    }
     document.body.classList.toggle('sidebar-mini')
     document.body.classList.toggle('no-sidebar-mini')
   }
@@ -105,11 +94,9 @@ const Common = () => {
   return (
     <div
       className="wrapper"
-      onClick={(e) => {
-        clickOutSidebar(e)
-      }}
+      onClick={clickOutSidebar}
       onKeyDown={(e) => {
-        if (e.key === 32) {
+        if (e.key === KeyboardEvent.Spacebar) {
           clickOutSidebar(e)
         }
       }}
@@ -120,7 +107,7 @@ const Common = () => {
         <DataManager />
         <NotificationAlert ref={notificationAlertRef} />
       </div>
-      <div className="navbar-minimize-fixed" style={{ opacity }}>
+      <div className="navbar-minimize-fixed" style={{ opacity: 0 }}>
         <button
           type="button"
           className="minimize-sidebar btn btn-link btn-just-icon"
