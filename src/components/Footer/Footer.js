@@ -1,6 +1,5 @@
 import React from 'react'
 import { Container } from 'reactstrap'
-// used for making the prop types of this component
 import PropTypes from 'prop-types'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -37,14 +36,7 @@ const Footer = (props) => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="icon-small icon-twitter icon-light mr-3" />
-              </a>
-              <a
-                href="https://twitter.com/SpartanProtocol"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-reddit icon-light mr-3" />
+                <i className="icon-small icon-twitter icon-dark mr-3" />
               </a>
               <a
                 href="https://www.reddit.com/r/SpartanProtocol/"
@@ -52,21 +44,21 @@ const Footer = (props) => (
                 rel="noreferrer"
               >
                 {' '}
-                <i className="icon-small icon-github icon-light mr-3" />
+                <i className="icon-small icon-github icon-dark mr-3" />
               </a>
               <a
                 href="https://t.me/SpartanProtocolOrg"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="icon-small icon-telegram icon-light mr-3" />
+                <i className="icon-small icon-telegram icon-dark mr-3" />
               </a>
               <a
                 href="https://spartanprotocol.medium.com/"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="icon-small icon-mediums icon-light mr-3" />
+                <i className="icon-small icon-mediums icon-dark mr-3" />
               </a>
             </div>
           </Col>
