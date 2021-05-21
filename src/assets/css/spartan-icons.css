@@ -370,6 +370,16 @@
     background-image: url('/src/assets/icons/icon-down-dark.svg#dark');
 }
 
+/* Gitbook */
+
+.icon-gitbook.icon-light {
+    background-image: url('/src/assets/icons/icon-gitbook-light.svg#light')
+}
+
+.icon-gitbook.icon-dark {
+    background-image: url('/src/assets/icons/icon-gitbook-dark.svg#dark')
+}
+
 /* Github */
 .icon-github.icon-light {
     background-image: url('/src/assets/icons/icon-github-light.svg#light');
@@ -489,4 +499,10 @@
 .icon-copy {
     background-image: url('/src/assets/icons/icon-copy.svg');
     cursor: copy;
+}
+
+.zoomsm:hover {
+    -ms-transform: scale(1.3); /* IE 9 */
+    -webkit-transform: scale(1.3); /* Safari 3-8 */
+    transform: scale(1.3);
 }
