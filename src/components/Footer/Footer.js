@@ -1,10 +1,8 @@
 import React from 'react'
 import { Container } from 'reactstrap'
-// used for making the prop types of this component
 import PropTypes from 'prop-types'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-// import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import Sparta from '../../assets/icons/coin_sparta.svg'
 import RecentTxns from '../RecentTxns/RecentTxns'
 
@@ -39,13 +37,6 @@ const Footer = (props) => (
                 rel="noreferrer"
               >
                 <i className="icon-small icon-twitter icon-dark mr-3" />
-              </a>
-              <a
-                href="https://twitter.com/SpartanProtocol"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-reddit icon-dark mr-3" />
               </a>
               <a
                 href="https://www.reddit.com/r/SpartanProtocol/"
