@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Row, Table } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -11,6 +12,7 @@ const RecentTxns = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
+  const { t } = useTranslation()
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   // const [selectedFilter, setselectedFilter] = useState(false)
@@ -44,11 +46,11 @@ const RecentTxns = () => {
         <Table borderless className="m-3">
           <thead className="text-primary text-center">
             <tr>
-              <th>Block</th>
-              <th>Event</th>
-              <th>Input</th>
-              <th>Output</th>
-              <th>txHash</th>
+              <th>{t('block')}</th>
+              <th>{t('event')}</th>
+              <th>{t('input')}</th>
+              <th>{t('output')}</th>
+              <th>{t('txHash')}</th>
             </tr>
           </thead>
           <tbody>
