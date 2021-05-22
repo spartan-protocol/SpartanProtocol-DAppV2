@@ -46,7 +46,7 @@ const Footer = (props) => (
                 <i className="icon-small icon-twitter icon-dark mr-3 zoomsm" />
               </a>
               <a
-                href="https://www.reddit.com/r/SpartanProtocol/"
+                href="https://github.com/spartan-protocol"
                 target="_blank"
                 rel="noreferrer"
               >
