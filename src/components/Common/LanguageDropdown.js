@@ -13,7 +13,7 @@ import {
 import i18n from '../../i18n'
 
 // flags
-import auFlag from '../../assets/flags/au.svg'
+import gbFlag from '../../assets/flags/gb.svg'
 import cnFlag from '../../assets/flags/cn.svg'
 import esFlag from '../../assets/flags/es.svg'
 import deFlag from '../../assets/flags/de.svg'
@@ -33,99 +33,99 @@ import zaFlag from '../../assets/flags/za.svg'
 
 const locales = [
   {
+    id: 'en',
+    name: 'English',
+    flag: gbFlag,
+  },
+  {
+    id: 'zh',
+    name: '中国人',
+    flag: cnFlag,
+  },
+  {
+    id: 'es',
+    name: 'Español',
+    flag: esFlag,
+  },
+  {
+    id: 'fr',
+    name: 'Français',
+    flag: frFlag,
+  },
+  {
     id: 'af',
     name: 'Afrikaans',
     flag: zaFlag,
   },
   {
     id: 'bn',
-    name: 'Bengali',
+    name: 'বাংলা',
     flag: inFlag,
   },
   {
     id: 'de',
-    name: 'German',
+    name: 'Deutsche',
     flag: deFlag,
   },
   {
     id: 'el',
-    name: 'Greek',
+    name: 'Ελληνικά',
     flag: grFlag,
   },
   {
-    id: 'en',
-    name: 'English',
-    flag: auFlag,
-  },
-  {
-    id: 'es',
-    name: 'Spanish',
-    flag: esFlag,
-  },
-  {
     id: 'fa',
-    name: 'Persian',
+    name: 'فارسی',
     flag: irFlag,
   },
   {
-    id: 'fr',
-    name: 'French',
-    flag: frFlag,
-  },
-  {
     id: 'hi',
-    name: 'Hindi',
+    name: 'हिंदी',
     flag: inFlag,
   },
   {
     id: 'it',
-    name: 'Italian',
+    name: 'Italiano',
     flag: itFlag,
   },
   {
     id: 'nl',
-    name: 'Dutch',
+    name: 'Nederlands',
     flag: nlFlag,
   },
   {
     id: 'pa',
-    name: 'Punjabi',
+    name: 'ਪੰਜਾਬੀ',
     flag: inFlag,
   },
   {
     id: 'pl',
-    name: 'Polish',
+    name: 'Polskie',
     flag: plFlag,
   },
   {
     id: 'pt',
-    name: 'Portuguese',
+    name: 'Português',
     flag: ptFlag,
   },
   {
     id: 'ro',
-    name: 'Romanian',
+    name: 'Română',
     flag: roFlag,
   },
   {
     id: 'ru',
-    name: 'Russian',
+    name: 'Pусский',
     flag: ruFlag,
   },
   {
     id: 'sv',
-    name: 'Swedish',
+    name: 'Svenska',
     flag: seFlag,
   },
   {
     id: 'uk',
-    name: 'Ukrainian',
+    name: 'Український',
     flag: uaFlag,
-  },
-  {
-    id: 'zh',
-    name: 'Chinese',
-    flag: cnFlag,
   },
 ]
 
