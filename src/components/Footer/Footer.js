@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container } from 'reactstrap'
+import { Container, UncontrolledTooltip } from 'reactstrap'
 import PropTypes from 'prop-types'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -35,44 +35,67 @@ const Footer = (props) => (
                 href="https://docs.spartanprotocol.org/"
                 target="_blank"
                 rel="noreferrer"
+                id="footer-gitbook"
               >
                 <i className="icon-small icon-gitbook icon-dark mr-3 zoomsm" />
+                <UncontrolledTooltip target="footer-gitbook" placement="top">
+                  Gitbook
+                </UncontrolledTooltip>
               </a>
               <a
                 href="https://twitter.com/SpartanProtocol"
                 target="_blank"
                 rel="noreferrer"
+                id="footer-twitter"
               >
                 <i className="icon-small icon-twitter icon-dark mr-3 zoomsm" />
+                <UncontrolledTooltip target="footer-twitter" placement="top">
+                  Twitter
+                </UncontrolledTooltip>
               </a>
               <a
                 href="https://github.com/spartan-protocol"
                 target="_blank"
                 rel="noreferrer"
+                id="footer-github"
               >
-                {' '}
                 <i className="icon-small icon-github icon-dark mr-3 zoomsm" />
+                <UncontrolledTooltip target="footer-github" placement="top">
+                  Github
+                </UncontrolledTooltip>
               </a>
               <a
                 href="https://t.me/SpartanProtocolOrg"
                 target="_blank"
                 rel="noreferrer"
+                id="footer-telegram"
               >
                 <i className="icon-small icon-telegram icon-dark mr-3 zoomsm" />
+                <UncontrolledTooltip target="footer-telegram" placement="top">
+                  Telegram
+                </UncontrolledTooltip>
               </a>
               <a
                 href="https://spartanprotocol.medium.com/"
                 target="_blank"
                 rel="noreferrer"
+                id="footer-medium"
               >
                 <i className="icon-small icon-mediums icon-dark mr-3 zoomsm" />
+                <UncontrolledTooltip target="footer-medium" placement="top">
+                  Medium
+                </UncontrolledTooltip>
               </a>
               <a
                 href="https://www.reddit.com/r/SpartanProtocol/"
                 target="_blank"
                 rel="noreferrer"
+                id="footer-reddit"
               >
                 <i className="icon-small icon-reddit icon-dark mr-3 zoomsm" />
+                <UncontrolledTooltip target="footer-reddit" placement="top">
+                  Reddit
+                </UncontrolledTooltip>
               </a>
             </div>
           </Col>
