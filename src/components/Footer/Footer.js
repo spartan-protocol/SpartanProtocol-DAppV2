@@ -32,33 +32,47 @@ const Footer = (props) => (
           <Col xs={12} sm={4}>
             <div className="copyright ml-4">
               <a
+                href="https://docs.spartanprotocol.org/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <i className="icon-small icon-gitbook icon-dark mr-3 zoomsm" />
+              </a>
+              <a
                 href="https://twitter.com/SpartanProtocol"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="icon-small icon-twitter icon-dark mr-3" />
+                <i className="icon-small icon-twitter icon-dark mr-3 zoomsm" />
               </a>
               <a
-                href="https://www.reddit.com/r/SpartanProtocol/"
+                href="https://github.com/spartan-protocol"
                 target="_blank"
                 rel="noreferrer"
               >
                 {' '}
-                <i className="icon-small icon-github icon-dark mr-3" />
+                <i className="icon-small icon-github icon-dark mr-3 zoomsm" />
               </a>
               <a
                 href="https://t.me/SpartanProtocolOrg"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="icon-small icon-telegram icon-dark mr-3" />
+                <i className="icon-small icon-telegram icon-dark mr-3 zoomsm" />
               </a>
               <a
                 href="https://spartanprotocol.medium.com/"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="icon-small icon-mediums icon-dark mr-3" />
+                <i className="icon-small icon-mediums icon-dark mr-3 zoomsm" />
+              </a>
+              <a
+                href="https://www.reddit.com/r/SpartanProtocol/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <i className="icon-small icon-reddit icon-dark mr-3 zoomsm" />
               </a>
             </div>
           </Col>
