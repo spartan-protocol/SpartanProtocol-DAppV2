@@ -14,7 +14,7 @@ export const spartaLoading = () => ({
 export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getSpartaV1Contract(wallet)
-  const fsContract = getFallenSpartansContract(wallet)
+  // const fsContract = getFallenSpartansContract(wallet)
 
   try {
     let awaitArray = [
@@ -24,7 +24,7 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
       // contract.callStatic.emissionCurve(),
       contract.callStatic.secondsPerEra(),
       // contract.callStatic.nextEraTime(),
-      fsContract.callStatic.genesis(),
+      // fsContract.callStatic.genesis(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
@@ -34,7 +34,7 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
       // emissionCurve: awaitArray[],
       secondsPerEra: awaitArray[1].toString(),
       // nextEraTime: awaitArray[],
-      fsGenesis: awaitArray[2].toString(),
+      // fsGenesis: awaitArray[2].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
