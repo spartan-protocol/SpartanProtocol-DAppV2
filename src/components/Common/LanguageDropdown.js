@@ -145,7 +145,7 @@ const getLocale = () => locales?.filter((x) => x.id === i18n.languages[0])[0]
 
 const LanguageDropdown = () => {
   // const [lng, setLng] = useState(i18n.languages[0])
-  const [flag, setFlag] = useState(getLocale()?.flag || locales[4]?.flag)
+  const [flag, setFlag] = useState(getLocale()?.flag || locales[0]?.flag)
 
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
