@@ -157,6 +157,8 @@ export const bondBurn = (wallet) => async (dispatch) => {
  * Deposit asset via bond+mint contract
  * @param {address} asset
  * @param {uint256} amount
+ * @param {object} wallet
+ * @param {bool} justGasEst
  * @returns {boolean}
  */
 export const bondDeposit = (asset, amount, wallet) => async (dispatch) => {
@@ -165,13 +167,12 @@ export const bondDeposit = (asset, amount, wallet) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.deposit(asset, amount)
-    const deposit = await contract.deposit(asset, amount, {
+    const ORs = {
       value:
         asset === '0x0000000000000000000000000000000000000000' ? amount : null,
       gasPrice: gPrice,
-      // gasLimit: gLimit,
-    })
+    }
+    const deposit = await contract.deposit(asset, amount, ORs)
     dispatch(payloadToDispatch(Types.BOND_DEPOSIT, deposit))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
