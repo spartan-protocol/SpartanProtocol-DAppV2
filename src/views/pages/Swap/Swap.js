@@ -714,6 +714,29 @@ const Swap = () => {
     )
   }
 
+  const handleSwapToSynth = () => {
+    const gasSafety = '10000000000000000'
+    if (
+      assetSwap1?.tokenAddress === addr.bnb ||
+      assetSwap1?.tokenAddress === addr.wbnb
+    ) {
+      const balance = getToken(addr.bnb)?.balance
+      if (
+        BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
+      ) {
+        swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
+      }
+    }
+    dispatch(
+      swapAssetToSynth(
+        convertToWei(swapInput1?.value),
+        assetSwap1.tokenAddress,
+        getSynth(assetSwap2.tokenAddress)?.address,
+        wallet,
+      ),
+    )
+  }
+
   return (
     <>
       <div className="content">
@@ -1196,17 +1219,7 @@ const Swap = () => {
                             <Col className="hide-if-siblings">
                               <Button
                                 color="primary"
-                                onClick={() =>
-                                  dispatch(
-                                    swapAssetToSynth(
-                                      convertToWei(swapInput1?.value),
-                                      assetSwap1.tokenAddress,
-                                      getSynth(assetSwap2.tokenAddress)
-                                        ?.address,
-                                      wallet,
-                                    ),
-                                  )
-                                }
+                                onClick={() => handleSwapToSynth()}
                                 disabled={
                                   swapInput1?.value <= 0 ||
                                   BN(
