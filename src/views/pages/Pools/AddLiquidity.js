@@ -348,6 +348,41 @@ const AddLiquidity = () => {
     activeTab,
   ])
 
+  const handleAddLiquidity = () => {
+    if (
+      assetAdd1?.tokenAddress === addr.bnb ||
+      assetAdd1?.tokenAddress === addr.wbnb
+    ) {
+      const balance = getToken(addr.bnb)?.balance
+      if (
+        BN(balance)
+          .minus(convertToWei(addInput1?.value))
+          .isLessThan('5000000000000000')
+      ) {
+        addInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
+      }
+    }
+    if (activeTab === 'addTab1') {
+      dispatch(
+        routerAddLiq(
+          convertToWei(addInput2.value),
+          convertToWei(addInput1.value),
+          assetAdd1.tokenAddress,
+          wallet,
+        ),
+      )
+    } else {
+      dispatch(
+        routerAddLiqAsym(
+          convertToWei(addInput1.value),
+          assetAdd1.tokenAddress === addr.spartav1,
+          poolAdd1.tokenAddress,
+          wallet,
+        ),
+      )
+    }
+  }
+
   return (
     <>
       <Col xs="auto">
@@ -681,25 +716,7 @@ const AddLiquidity = () => {
                     getBalance(2),
                   )
                 }
-                onClick={() =>
-                  activeTab === 'addTab1'
-                    ? dispatch(
-                        routerAddLiq(
-                          convertToWei(addInput2.value),
-                          convertToWei(addInput1.value),
-                          assetAdd1.tokenAddress,
-                          wallet,
-                        ),
-                      )
-                    : dispatch(
-                        routerAddLiqAsym(
-                          convertToWei(addInput1.value),
-                          assetAdd1.tokenAddress === addr.spartav1,
-                          poolAdd1.tokenAddress,
-                          wallet,
-                        ),
-                      )
-                }
+                onClick={() => handleAddLiquidity()}
               >
                 {t('joinPool')}
               </Button>
