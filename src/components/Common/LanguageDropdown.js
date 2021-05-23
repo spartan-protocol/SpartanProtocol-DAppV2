@@ -13,7 +13,9 @@ import {
 import i18n from '../../i18n'
 
 // flags
+import auFlag from '../../assets/flags/au.svg'
 import gbFlag from '../../assets/flags/gb.svg'
+import usFlag from '../../assets/flags/us.svg'
 import cnFlag from '../../assets/flags/cn.svg'
 import esFlag from '../../assets/flags/es.svg'
 import deFlag from '../../assets/flags/de.svg'
@@ -31,11 +33,22 @@ import seFlag from '../../assets/flags/se.svg'
 import uaFlag from '../../assets/flags/ua.svg'
 import zaFlag from '../../assets/flags/za.svg'
 
+const getEnFlag = () => {
+  const enCountry = navigator.language.slice(-2)
+  if (enCountry === 'AU') {
+    return auFlag
+  }
+  if (enCountry === 'US') {
+    return usFlag
+  }
+  return gbFlag
+}
+
 const locales = [
   {
     id: 'en',
     name: 'English',
-    flag: gbFlag,
+    flag: getEnFlag(),
   },
   {
     id: 'zh',
