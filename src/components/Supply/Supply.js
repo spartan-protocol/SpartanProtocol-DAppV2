@@ -11,9 +11,11 @@ import {
   PopoverBody,
   Progress,
   Collapse,
+  UncontrolledTooltip,
 } from 'reactstrap'
-// import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
-import { usePool } from '../../store/pool/selector'
+import { useBond } from '../../store/bond/selector'
+import { useReserve } from '../../store/reserve/selector'
+import { useSparta } from '../../store/sparta/selector'
 import { useWeb3 } from '../../store/web3'
 import {
   BN,
@@ -27,8 +29,10 @@ import { getAddresses, getNetwork } from '../../utils/web3'
 const Supply = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const pool = usePool()
   const addr = getAddresses()
+  const sparta = useSparta()
+  const reserve = useReserve()
+  const bond = useBond()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
   const addrNames = [
     'spartav1',
@@ -67,28 +71,29 @@ const Supply = () => {
   }, [trigger0])
 
   const getTotalSupply = () => {
-    const totalSupply = pool.tokenDetails?.filter(
-      (asset) => asset.address === addr.spartav1,
-    )[0]?.totalSupply
+    const _totalSupply = sparta.globalDetails.totalSupply
+    const { oldTotalSupply } = sparta.globalDetails
+    const totalSupply = BN(_totalSupply).plus(oldTotalSupply)
     if (totalSupply > 0) {
       return totalSupply
+    }
+    return '0.00'
+  }
+
+  const getCirculatingSupply = () => {
+    const totalSupply = BN(getTotalSupply())
+    const reserveSparta = BN(reserve.globalDetails.spartaBalance)
+    const bondSparta = BN(bond.bondSpartaRemaining)
+    if (totalSupply > 0) {
+      return totalSupply.minus(reserveSparta).minus(bondSparta)
     }
     return '0.00'
   }
 
   const getMarketCap = () => {
-    const totalSupply = getTotalSupply()
-    if (totalSupply > 0) {
-      return BN(totalSupply).times(web3.spartaPrice)
-    }
-    return '0.00'
-  }
-
-  // NEED TO ADD LOGIC TO REMOVE NOT-YET-CIRCULATING FROM THIS FIGURE SEE GITHUB ISSUE #192
-  const getCirculatingSupply = () => {
-    const totalSupply = getTotalSupply()
-    if (totalSupply > 0) {
-      return totalSupply
+    const circSupply = getCirculatingSupply()
+    if (circSupply > 0) {
+      return BN(circSupply).times(web3.spartaPrice)
     }
     return '0.00'
   }
@@ -125,17 +130,44 @@ const Supply = () => {
               ${formatFromWei(getMarketCap(), 0)}
             </Col>
 
-            <Col xs="6 mb-2" className="popover-text">
-              {`${t('circulatingSupply')}`}
+            <Col xs="6" className="popover-text mb-2">
+              {t('circulating')}
             </Col>
-            <Col xs="6 mb-2" className="popover-text">
+            <Col xs="6" className="popover-text mb-2">
               {formatFromWei(getCirculatingSupply(), 0)}
             </Col>
-            <Col xs="12 mb-2">
-              <div className="progress-container progress-info">
-                <span className="progress-badge" />
-                <Progress max="100" value="60" />
-              </div>
+
+            <Col xs="12" className="mb-4">
+              <Progress multi>
+                <Progress
+                  bar
+                  id="sparta1supply"
+                  color="light"
+                  value={formatFromWei(
+                    BN(sparta.globalDetails.oldTotalSupply)
+                      .div(300000000)
+                      .times(100),
+                  )}
+                />
+                <UncontrolledTooltip target="sparta1supply">
+                  SPARTAv1
+                </UncontrolledTooltip>
+                <Progress bar color="black" value="1" />
+                <Progress
+                  bar
+                  id="sparta2supply"
+                  color="gray"
+                  value={formatFromWei(
+                    BN(getCirculatingSupply())
+                      .minus(sparta.globalDetails.oldTotalSupply)
+                      .div(300000000)
+                      .times(100),
+                  )}
+                />
+                <UncontrolledTooltip target="sparta2supply">
+                  SPARTAv2
+                </UncontrolledTooltip>
+              </Progress>
             </Col>
 
             <Col xs="6" className="popover-text mb-2">
@@ -146,7 +178,6 @@ const Supply = () => {
             </Col>
 
             <Col xs="12 mb-2">
-              {' '}
               <Progress multi>
                 <Progress
                   bar
@@ -169,7 +200,8 @@ const Supply = () => {
                   color="lightblue"
                   value={formatFromUnits(
                     BN(convertFromWei(getTotalSupply()))
-                      // MINUS OTHER DISTRO METHODS
+                      .minus(distroMnBurnV1)
+                      .minus(distroMnBondV1)
                       .div(300000000)
                       .times(100),
                   )}

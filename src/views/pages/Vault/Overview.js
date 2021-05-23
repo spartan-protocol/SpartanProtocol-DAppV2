@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import classnames from 'classnames'
-import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Nav, NavItem, NavLink } from 'reactstrap'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { getReserveGlobalDetails } from '../../../store/reserve/actions'
-import { getSpartaGlobalDetails } from '../../../store/sparta/actions'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 
 const Vault = () => {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWallet()
   const [mode, setMode] = useState('Dao')
 
   const [network, setnetwork] = useState(getNetwork())
@@ -33,23 +27,6 @@ const Vault = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
-
-  const [trigger1, settrigger1] = useState(0)
-  const getData = () => {
-    dispatch(getReserveGlobalDetails(wallet))
-    dispatch(getSpartaGlobalDetails(wallet))
-  }
-  useEffect(() => {
-    if (trigger1 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger1(trigger1 + 1)
-    }, 10000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1])
 
   return (
     <>

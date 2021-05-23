@@ -3,10 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Row, Col } from 'reactstrap'
-import {
-  fallenSpartansCheck,
-  getSpartaGlobalDetails,
-} from '../../../store/sparta/actions'
+import { fallenSpartansCheck } from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
 
 const Overview = () => {
@@ -17,7 +14,6 @@ const Overview = () => {
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
     dispatch(fallenSpartansCheck(wallet))
-    dispatch(getSpartaGlobalDetails(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {

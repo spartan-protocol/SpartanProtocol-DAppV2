@@ -57,7 +57,7 @@ const SynthVaultItem = ({ synthItem }) => {
     // get the members claimable amount
     const claimAmount = share
       .times(secondsSince)
-      .div(sparta.globalDetails.secondsPerEra)
+      .div(sparta.globalDetails.oldSecondsPerEra)
     return claimAmount
   }
 

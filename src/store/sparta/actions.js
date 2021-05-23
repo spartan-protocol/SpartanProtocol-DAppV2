@@ -13,28 +13,32 @@ export const spartaLoading = () => ({
 
 export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getSpartaV1Contract(wallet)
-  const fsContract = getFallenSpartansContract(wallet)
+  const contract1 = getSpartaV1Contract(wallet)
+  const contract2 = getSpartaV2Contract(wallet)
 
   try {
     let awaitArray = [
-      contract.callStatic.emitting(),
+      contract2.callStatic.emitting(),
       // contract.callStatic.minting(),
-      // contract.callStatic.feeOnTransfer(),
+      contract2.callStatic.feeOnTransfer(),
       // contract.callStatic.emissionCurve(),
-      contract.callStatic.secondsPerEra(),
+      contract2.callStatic.totalSupply(),
+      contract2.callStatic.secondsPerEra(),
       // contract.callStatic.nextEraTime(),
-      fsContract.callStatic.genesis(),
+      contract1.callStatic.secondsPerEra(),
+      contract1.callStatic.totalSupply(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
       emitting: awaitArray[0],
       // minting: awaitArray[],
-      // feeOnTransfer: awaitArray[],
+      feeOnTransfer: awaitArray[1],
       // emissionCurve: awaitArray[],
-      secondsPerEra: awaitArray[1].toString(),
+      totalSupply: awaitArray[2].toString(),
+      secondsPerEra: awaitArray[3].toString(),
       // nextEraTime: awaitArray[],
-      fsGenesis: awaitArray[2].toString(),
+      oldSecondsPerEra: awaitArray[4].toString(),
+      oldTotalSupply: awaitArray[5].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
