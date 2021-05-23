@@ -277,6 +277,22 @@ select:focus {
   }
 }
 
+.dot-sp1 {
+  height: 8px;
+  width: 8px;
+  background-color: #ced4da;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot-sp2 {
+  height: 8px;
+  width: 8px;
+  background-color: #c0daff;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 .dot-burn {
   height: 8px;
   width: 8px;

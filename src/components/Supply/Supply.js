@@ -11,6 +11,7 @@ import {
   PopoverBody,
   Progress,
   Collapse,
+  UncontrolledTooltip,
 } from 'reactstrap'
 import { useBond } from '../../store/bond/selector'
 import { useReserve } from '../../store/reserve/selector'
@@ -79,20 +80,20 @@ const Supply = () => {
     return '0.00'
   }
 
-  const getMarketCap = () => {
-    const totalSupply = getTotalSupply()
-    if (totalSupply > 0) {
-      return BN(totalSupply).times(web3.spartaPrice)
-    }
-    return '0.00'
-  }
-
   const getCirculatingSupply = () => {
     const totalSupply = BN(getTotalSupply())
     const reserveSparta = BN(reserve.globalDetails.spartaBalance)
     const bondSparta = BN(bond.bondSpartaRemaining)
     if (totalSupply > 0) {
       return totalSupply.minus(reserveSparta).minus(bondSparta)
+    }
+    return '0.00'
+  }
+
+  const getMarketCap = () => {
+    const circSupply = getCirculatingSupply()
+    if (circSupply > 0) {
+      return BN(circSupply).times(web3.spartaPrice)
     }
     return '0.00'
   }
@@ -129,17 +130,44 @@ const Supply = () => {
               ${formatFromWei(getMarketCap(), 0)}
             </Col>
 
-            <Col xs="6 mb-2" className="popover-text">
-              {`${t('circulating')}`}
+            <Col xs="6" className="popover-text mb-2">
+              {t('circulating')}
             </Col>
-            <Col xs="6 mb-2" className="popover-text">
+            <Col xs="6" className="popover-text mb-2">
               {formatFromWei(getCirculatingSupply(), 0)}
             </Col>
-            <Col xs="12 mb-2">
-              <div className="progress-container progress-info">
-                <span className="progress-badge" />
-                <Progress max="100" value="60" />
-              </div>
+
+            <Col xs="12" className="mb-4">
+              <Progress multi>
+                <Progress
+                  bar
+                  id="sparta1supply"
+                  color="light"
+                  value={formatFromWei(
+                    BN(sparta.globalDetails.oldTotalSupply)
+                      .div(300000000)
+                      .times(100),
+                  )}
+                />
+                <UncontrolledTooltip target="sparta1supply">
+                  SPARTAv1
+                </UncontrolledTooltip>
+                <Progress bar color="black" value="1" />
+                <Progress
+                  bar
+                  id="sparta2supply"
+                  color="gray"
+                  value={formatFromWei(
+                    BN(getCirculatingSupply())
+                      .minus(sparta.globalDetails.oldTotalSupply)
+                      .div(300000000)
+                      .times(100),
+                  )}
+                />
+                <UncontrolledTooltip target="sparta2supply">
+                  SPARTAv2
+                </UncontrolledTooltip>
+              </Progress>
             </Col>
 
             <Col xs="6" className="popover-text mb-2">
