@@ -33,11 +33,7 @@ import {
   calcValueInBase,
 } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
-import {
-  bondDeposit,
-  getBondListed,
-  getBondSpartaRemaining,
-} from '../../../store/bond/actions'
+import { bondDeposit, getBondListed } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 
@@ -53,7 +49,6 @@ const BondLiquidity = () => {
   const [assetBond1, setAssetBond1] = useState('...')
 
   const spartaRemainingLoop = async () => {
-    dispatch(getBondSpartaRemaining(wallet))
     dispatch(getBondListed(wallet))
     await pause(10000)
     spartaRemainingLoop()

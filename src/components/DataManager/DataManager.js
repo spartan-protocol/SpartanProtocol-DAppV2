@@ -1,6 +1,7 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { getBondSpartaRemaining } from '../../store/bond/actions'
 import {
   getCuratedPools,
   getListedPools,
@@ -9,6 +10,8 @@ import {
   getTokenDetails,
   usePool,
 } from '../../store/pool'
+import { getReserveGlobalDetails } from '../../store/reserve/actions'
+import { getSpartaGlobalDetails } from '../../store/sparta/actions'
 import { getSynthArray, getSynthDetails } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
 import {
@@ -84,6 +87,9 @@ const DataManager = () => {
     if (chainId === 97 || chainId === 56) {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
       dispatch(getCuratedPools(wallet)) // CURATED ARRAY
+      dispatch(getSpartaGlobalDetails(wallet))
+      dispatch(getBondSpartaRemaining(wallet))
+      dispatch(getReserveGlobalDetails(wallet))
     }
   }
   useEffect(() => {

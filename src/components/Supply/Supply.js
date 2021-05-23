@@ -12,8 +12,9 @@ import {
   Progress,
   Collapse,
 } from 'reactstrap'
-// import IconLogo from '../../assets/icons/coin_sparta_black_bg.svg'
-import { usePool } from '../../store/pool/selector'
+import { useBond } from '../../store/bond/selector'
+import { useReserve } from '../../store/reserve/selector'
+import { useSparta } from '../../store/sparta/selector'
 import { useWeb3 } from '../../store/web3'
 import {
   BN,
@@ -27,8 +28,10 @@ import { getAddresses, getNetwork } from '../../utils/web3'
 const Supply = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const pool = usePool()
   const addr = getAddresses()
+  const sparta = useSparta()
+  const reserve = useReserve()
+  const bond = useBond()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
   const addrNames = [
     'spartav1',
@@ -67,9 +70,9 @@ const Supply = () => {
   }, [trigger0])
 
   const getTotalSupply = () => {
-    const totalSupply = pool.tokenDetails?.filter(
-      (asset) => asset.address === addr.spartav1,
-    )[0]?.totalSupply
+    const _totalSupply = sparta.globalDetails.totalSupply
+    const { oldTotalSupply } = sparta.globalDetails
+    const totalSupply = BN(_totalSupply).plus(oldTotalSupply)
     if (totalSupply > 0) {
       return totalSupply
     }
@@ -84,11 +87,12 @@ const Supply = () => {
     return '0.00'
   }
 
-  // NEED TO ADD LOGIC TO REMOVE NOT-YET-CIRCULATING FROM THIS FIGURE SEE GITHUB ISSUE #192
   const getCirculatingSupply = () => {
-    const totalSupply = getTotalSupply()
+    const totalSupply = BN(getTotalSupply())
+    const reserveSparta = BN(reserve.globalDetails.spartaBalance)
+    const bondSparta = BN(bond.bondSpartaRemaining)
     if (totalSupply > 0) {
-      return totalSupply
+      return totalSupply.minus(reserveSparta).minus(bondSparta)
     }
     return '0.00'
   }
@@ -126,7 +130,7 @@ const Supply = () => {
             </Col>
 
             <Col xs="6 mb-2" className="popover-text">
-              {`${t('circulatingSupply')}`}
+              {`${t('circulating')}`}
             </Col>
             <Col xs="6 mb-2" className="popover-text">
               {formatFromWei(getCirculatingSupply(), 0)}
@@ -146,7 +150,6 @@ const Supply = () => {
             </Col>
 
             <Col xs="12 mb-2">
-              {' '}
               <Progress multi>
                 <Progress
                   bar
@@ -169,7 +172,8 @@ const Supply = () => {
                   color="lightblue"
                   value={formatFromUnits(
                     BN(convertFromWei(getTotalSupply()))
-                      // MINUS OTHER DISTRO METHODS
+                      .minus(distroMnBurnV1)
+                      .minus(distroMnBondV1)
                       .div(300000000)
                       .times(100),
                   )}
