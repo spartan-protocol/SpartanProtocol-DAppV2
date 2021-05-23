@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  DropdownItem,
   Row,
   Col,
   Button,
@@ -14,6 +13,8 @@ import i18n from '../../i18n'
 
 // flags
 import auFlag from '../../assets/flags/au.svg'
+import gbFlag from '../../assets/flags/gb.svg'
+import usFlag from '../../assets/flags/us.svg'
 import cnFlag from '../../assets/flags/cn.svg'
 import esFlag from '../../assets/flags/es.svg'
 import deFlag from '../../assets/flags/de.svg'
@@ -31,7 +32,38 @@ import seFlag from '../../assets/flags/se.svg'
 import uaFlag from '../../assets/flags/ua.svg'
 import zaFlag from '../../assets/flags/za.svg'
 
+const getEnFlag = () => {
+  const enCountry = navigator.language.slice(-2)
+  if (enCountry === 'AU') {
+    return auFlag
+  }
+  if (enCountry === 'US') {
+    return usFlag
+  }
+  return gbFlag
+}
+
 const locales = [
+  {
+    id: 'en',
+    name: 'English',
+    flag: getEnFlag(),
+  },
+  {
+    id: 'zh',
+    name: '中国人',
+    flag: cnFlag,
+  },
+  {
+    id: 'es',
+    name: 'Español',
+    flag: esFlag,
+  },
+  {
+    id: 'fr',
+    name: 'Français',
+    flag: frFlag,
+  },
   {
     id: 'af',
     name: 'Afrikaans',
@@ -39,105 +71,85 @@ const locales = [
   },
   {
     id: 'bn',
-    name: 'Bengali',
+    name: 'বাংলা',
     flag: inFlag,
   },
   {
     id: 'de',
-    name: 'German',
+    name: 'Deutsche',
     flag: deFlag,
   },
   {
     id: 'el',
-    name: 'Greek',
+    name: 'Ελληνικά',
     flag: grFlag,
   },
   {
-    id: 'en',
-    name: 'English',
-    flag: auFlag,
-  },
-  {
-    id: 'es',
-    name: 'Spanish',
-    flag: esFlag,
-  },
-  {
     id: 'fa',
-    name: 'Persian',
+    name: 'فارسی',
     flag: irFlag,
   },
   {
-    id: 'fr',
-    name: 'French',
-    flag: frFlag,
-  },
-  {
     id: 'hi',
-    name: 'Hindi',
+    name: 'हिंदी',
     flag: inFlag,
   },
   {
     id: 'it',
-    name: 'Italian',
+    name: 'Italiano',
     flag: itFlag,
   },
   {
     id: 'nl',
-    name: 'Dutch',
+    name: 'Nederlands',
     flag: nlFlag,
   },
   {
     id: 'pa',
-    name: 'Punjabi',
+    name: 'ਪੰਜਾਬੀ',
     flag: inFlag,
   },
   {
     id: 'pl',
-    name: 'Polish',
+    name: 'Polskie',
     flag: plFlag,
   },
   {
     id: 'pt',
-    name: 'Portuguese',
+    name: 'Português',
     flag: ptFlag,
   },
   {
     id: 'ro',
-    name: 'Romanian',
+    name: 'Română',
     flag: roFlag,
   },
   {
     id: 'ru',
-    name: 'Russian',
+    name: 'Pусский',
     flag: ruFlag,
   },
   {
     id: 'sv',
-    name: 'Swedish',
+    name: 'Svenska',
     flag: seFlag,
   },
   {
     id: 'uk',
-    name: 'Ukrainian',
+    name: 'Український',
     flag: uaFlag,
-  },
-  {
-    id: 'zh',
-    name: 'Chinese',
-    flag: cnFlag,
   },
 ]
 
 const getLocale = () => locales?.filter((x) => x.id === i18n.languages[0])[0]
 
 const LanguageDropdown = () => {
-  const [lng, setLng] = useState(i18n.languages[0])
+  // const [lng, setLng] = useState(i18n.languages[0])
   const [flag, setFlag] = useState(getLocale()?.flag || locales[4]?.flag)
 
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
-    setLng(lang)
+    // setLng(lang)
     setFlag(getLocale().flag)
   }
 
@@ -162,18 +174,21 @@ const LanguageDropdown = () => {
         <PopoverBody>
           <Row>
             {locales.map((x) => (
-              <Col xs={6} key={x.id}>
-                <DropdownItem
-                  tag="a"
-                  href="#"
+              <Col xs={6} key={x.id} className="pl-3 pr-1">
+                <Button
                   onClick={() => changeLanguageAction(x.id)}
-                  className={`notify-item ${lng === x.id ? 'active' : 'none'}`}
+                  className="btn-transparent"
                 >
-                  <img src={x.flag} alt="Spartan" height="12" />
-                  <span className="align-middle ml-1 output-card">
+                  <span className="output-card">
+                    <img
+                      src={x.flag}
+                      alt="Spartan"
+                      height="12"
+                      className="mr-2"
+                    />
                     {x.name}
                   </span>
-                </DropdownItem>
+                </Button>
               </Col>
             ))}
           </Row>
