@@ -1,95 +1,64 @@
 import React from 'react'
 import { Container } from 'reactstrap'
-import PropTypes from 'prop-types'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Sparta from '../../assets/icons/coin_sparta.svg'
-import RecentTxns from '../RecentTxns/RecentTxns'
+import gitbookSVG from '../../assets/icons/icon-gitbook-dark.svg'
+import twitterSVG from '../../assets/icons/icon-twitter-dark.svg'
+import githubSVG from '../../assets/icons/icon-github-dark.svg'
+import telegramSVG from '../../assets/icons/icon-telegram-dark.svg'
+import mediumSVG from '../../assets/icons/icon-medium-dark.svg'
+import redditSVG from '../../assets/icons/icon-reddit-dark.svg'
+import './Footer.scss'
 
-const Footer = (props) => (
-  <>
-    <footer className={`footer${props.default ? ' footer-default' : ''}`}>
-      <Container fluid={!!props.fluid}>
-        <Row>
-          <Col xs="12">
-            <RecentTxns />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} sm={4}>
-            <ul className="nav">
-              <li className="nav-item mt-3 mb-3 mb-md-0">
-                A Spartan Community Project
-              </li>
-            </ul>
-          </Col>
-          <Col xs={12} sm={4} className="text-center">
-            <div className="text-footer mb-3 mb-md-0">
-              <img className="mr-2 " src={Sparta} alt="Logo" height="32" />
-              Spartan Protocol
-            </div>
-          </Col>
-          <Col xs={12} sm={4}>
-            <div className="copyright ml-4">
-              <a
-                href="https://docs.spartanprotocol.org/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-gitbook icon-dark mr-3 zoomsm" />
-              </a>
-              <a
-                href="https://twitter.com/SpartanProtocol"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-twitter icon-dark mr-3 zoomsm" />
-              </a>
-              <a
-                href="https://github.com/spartan-protocol"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {' '}
-                <i className="icon-small icon-github icon-dark mr-3 zoomsm" />
-              </a>
-              <a
-                href="https://t.me/SpartanProtocolOrg"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-telegram icon-dark mr-3 zoomsm" />
-              </a>
-              <a
-                href="https://spartanprotocol.medium.com/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-mediums icon-dark mr-3 zoomsm" />
-              </a>
-              <a
-                href="https://www.reddit.com/r/SpartanProtocol/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="icon-small icon-reddit icon-dark mr-3 zoomsm" />
-              </a>
-            </div>
-          </Col>
-        </Row>
-      </Container>
-    </footer>
-  </>
+const footerStyle = {
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+}
+
+const Footer = () => (
+	<footer className="footer footer-default" style={{ backgroundColor: '#25212d' }}>
+		<Container fluid>
+			<Row style={footerStyle}>
+				<Col xs={12} sm={4} className="mt-2">
+					<div className="text-footer" style={{ color: 'white' }}>
+						A Spartan Community Project
+					</div>
+				</Col>
+				<Col xs={12} sm={4} className="mt-2">
+					<div className="text-footer">
+						<div style={{ height: '100%', textAlign: 'center' }}>
+							<img className="mr-2" src={Sparta} alt="Logo" height="32" />
+							Spartan Protocol
+						</div>
+					</div>
+				</Col>
+				<Col xs={12} sm={4} className="mt-2">
+					<div className="copyright">
+						<a href="https://docs.spartanprotocol.org/" target="_blank" rel="noreferrer">
+							<img src={gitbookSVG} alt="gitbook" height={24} />
+						</a>
+						<a href="https://twitter.com/SpartanProtocol" target="_blank" rel="noreferrer">
+							<img src={twitterSVG} alt="twitter" height={24} />
+						</a>
+						<a href="https://github.com/spartan-protocol" target="_blank" rel="noreferrer">
+							<img src={githubSVG} alt="twitter" height={24} />
+						</a>
+						<a href="https://t.me/SpartanProtocolOrg" target="_blank" rel="noreferrer">
+							<img src={telegramSVG} alt="twitter" height={24} />
+						</a>
+						<a href="https://spartanprotocol.medium.com" target="_blank" rel="noreferrer">
+							<img src={mediumSVG} alt="twitter" height={24} />
+						</a>
+						<a href="https://www.reddit.com/r/SpartanProtocol" target="_blank" rel="noreferrer">
+							<img src={redditSVG} alt="twitter" height={24} />
+						</a>
+					</div>
+				</Col>
+			</Row>
+		</Container>
+	</footer>
 )
-
-Footer.propTypes = {
-  default: PropTypes.bool,
-  fluid: PropTypes.bool,
-}
-
-Footer.defaultProps = {
-  default: true,
-  fluid: true,
-}
 
 export default Footer

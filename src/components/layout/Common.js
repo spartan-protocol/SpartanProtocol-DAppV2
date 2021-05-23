@@ -142,7 +142,7 @@ const Common = () => {
         {
           // we don't want the Footer to be rendered on full screen maps page
           location.pathname.indexOf('full-screen-map') !== -1 ? null : (
-            <Footer fluid />
+            <Footer />
           )
         }
       </div>
