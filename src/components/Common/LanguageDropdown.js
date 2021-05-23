@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  DropdownItem,
   Row,
   Col,
   Button,
@@ -145,12 +144,12 @@ const locales = [
 const getLocale = () => locales?.filter((x) => x.id === i18n.languages[0])[0]
 
 const LanguageDropdown = () => {
-  const [lng, setLng] = useState(i18n.languages[0])
+  // const [lng, setLng] = useState(i18n.languages[0])
   const [flag, setFlag] = useState(getLocale()?.flag || locales[4]?.flag)
 
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
-    setLng(lang)
+    // setLng(lang)
     setFlag(getLocale().flag)
   }
 
@@ -175,18 +174,21 @@ const LanguageDropdown = () => {
         <PopoverBody>
           <Row>
             {locales.map((x) => (
-              <Col xs={6} key={x.id}>
-                <DropdownItem
-                  tag="a"
-                  href="#"
+              <Col xs={6} key={x.id} className="pl-3 pr-1">
+                <Button
                   onClick={() => changeLanguageAction(x.id)}
-                  className={`notify-item ${lng === x.id ? 'active' : 'none'}`}
+                  className="btn-transparent"
                 >
-                  <img src={x.flag} alt="Spartan" height="12" />
-                  <span className="align-middle ml-1 output-card">
+                  <span className="output-card">
+                    <img
+                      src={x.flag}
+                      alt="Spartan"
+                      height="12"
+                      className="mr-2"
+                    />
                     {x.name}
                   </span>
-                </DropdownItem>
+                </Button>
               </Col>
             ))}
           </Row>
