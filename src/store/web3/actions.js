@@ -71,7 +71,6 @@ export const addNetworkBC = () => async (dispatch) => {
   const chainId = parseInt(network.chainId, 10)
 
   if (providerBC && parseInt(providerBC?.chainId, 16) !== chainId) {
-    console.log(providerBC, chainId)
     const chainIdString = network.chainId === 97 ? 'bsc-testnet' : 'bsc-mainnet'
     try {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
