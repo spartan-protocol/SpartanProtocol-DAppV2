@@ -50,34 +50,28 @@ export const getThisMonthDivis = (tokenAddress, wallet) => async (dispatch) => {
   }
 }
 
-export const routerAddLiq = (
-  inputBase,
-  inputToken,
-  token,
-  wallet,
-  justCheck,
-) => async (dispatch) => {
+export const routerAddLiq = (inputBase, inputToken, token, wallet) => async (
+  dispatch,
+) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
 
   try {
-    let liquidity = {}
-    if (justCheck) {
-      liquidity = await contract.callStatic.addLiquidity(
-        inputBase,
-        inputToken,
-        token,
-      )
-    } else {
-      const gPrice = await getProviderGasPrice()
-      liquidity = await contract.addLiquidity(inputBase, inputToken, token, {
-        value:
-          token === '0x0000000000000000000000000000000000000000'
-            ? inputToken
-            : null,
-        gasPrice: gPrice,
-      })
+    const gPrice = await getProviderGasPrice()
+    const ORs = {
+      value:
+        token === '0x0000000000000000000000000000000000000000'
+          ? inputToken
+          : null,
+      gasPrice: gPrice,
     }
+    const liquidity = await contract.addLiquidity(
+      inputBase,
+      inputToken,
+      token,
+      ORs,
+    )
+
     dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, liquidity))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
@@ -112,29 +106,26 @@ export const routerSwapAssets = (
   fromToken,
   toToken,
   wallet,
-  justCheck,
 ) => async (dispatch) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
 
   try {
-    let assetsSwapped = {}
-    if (justCheck) {
-      assetsSwapped = await contract.callStatic.swap(
-        inputAmount,
-        fromToken,
-        toToken,
-      )
-    } else {
-      const gPrice = await getProviderGasPrice()
-      assetsSwapped = await contract.swap(inputAmount, fromToken, toToken, {
-        value:
-          fromToken === '0x0000000000000000000000000000000000000000'
-            ? inputAmount
-            : null,
-        gasPrice: gPrice,
-      })
+    const gPrice = await getProviderGasPrice()
+    const ORs = {
+      value:
+        fromToken === '0x0000000000000000000000000000000000000000'
+          ? inputAmount
+          : null,
+      gasPrice: gPrice,
     }
+    const assetsSwapped = await contract.swap(
+      inputAmount,
+      fromToken,
+      toToken,
+      ORs,
+    )
+
     dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSETS, assetsSwapped))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
@@ -157,14 +148,15 @@ export const routerAddLiqAsym = (input, fromBase, token, wallet) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    const units = await contract.addLiquidityAsym(input, fromBase, token, {
+    const ORs = {
       value:
         token === '0x0000000000000000000000000000000000000000' &&
         fromBase !== true
           ? input
           : null,
       gasPrice: gPrice,
-    })
+    }
+    const units = await contract.addLiquidityAsym(input, fromBase, token, ORs)
     dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_ASYM, units))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
@@ -233,7 +225,7 @@ export const routerRemoveLiqAsym = (units, toBase, token, wallet) => async (
 }
 
 /**
- * Swap SPARTA for synthetic assets
+ * Swap BEP20 for synthetic assets
  * @param {uint} inputAmount
  * @param {address} fromToken
  * @param {address} synthOut
@@ -251,17 +243,18 @@ export const swapAssetToSynth = (
 
   try {
     const gPrice = await getProviderGasPrice()
+    const ORs = {
+      value:
+        fromToken === '0x0000000000000000000000000000000000000000'
+          ? inputAmount
+          : null,
+      gasPrice: gPrice,
+    }
     const outputSynth = await contract.swapAssetToSynth(
       inputAmount,
       fromToken,
       synthOut,
-      {
-        value:
-          fromToken === '0x0000000000000000000000000000000000000000'
-            ? inputAmount
-            : null,
-        gasPrice: gPrice,
-      },
+      ORs,
     )
 
     dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSET_TO_SYNTH, outputSynth))

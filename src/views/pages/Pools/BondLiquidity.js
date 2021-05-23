@@ -8,7 +8,6 @@ import {
   Input,
   InputGroup,
   InputGroupAddon,
-  // UncontrolledAlert,
   UncontrolledTooltip,
   Progress,
   Row,
@@ -142,6 +141,29 @@ const BondLiquidity = () => {
     e.currentTarget.value = e.currentTarget.value
       .replace(/[^0-9.]/g, '')
       .replace(/(\..*?)\..*/g, '$1')
+  }
+
+  const handleBondDeposit = () => {
+    if (
+      assetBond1?.tokenAddress === addr.bnb ||
+      assetBond1?.tokenAddress === addr.wbnb
+    ) {
+      const balance = getToken(addr.bnb)?.balance
+      if (
+        BN(balance)
+          .minus(convertToWei(bondInput1?.value))
+          .isLessThan('5000000000000000')
+      ) {
+        bondInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
+      }
+    }
+    dispatch(
+      bondDeposit(
+        assetBond1?.tokenAddress,
+        convertToWei(bondInput1?.value),
+        wallet,
+      ),
+    )
   }
 
   return (
@@ -316,15 +338,7 @@ const BondLiquidity = () => {
                     getToken(assetBond1.tokenAddress)?.balance,
                   )
                 }
-                onClick={() =>
-                  dispatch(
-                    bondDeposit(
-                      assetBond1?.tokenAddress,
-                      convertToWei(bondInput1?.value),
-                      wallet,
-                    ),
-                  )
-                }
+                onClick={() => handleBondDeposit()}
               >
                 {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
               </Button>
