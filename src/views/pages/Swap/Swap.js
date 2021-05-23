@@ -684,6 +684,36 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2])
 
+  const handleSwapAssets = () => {
+    let gasSafety = '5000000000000000'
+    // UPDATE TO SPARTAv2 LATER
+    if (
+      assetSwap1?.tokenAddress !== addr.spartav1 &&
+      assetSwap2?.tokenAddress !== addr.spartav1
+    ) {
+      gasSafety = '10000000000000000'
+    }
+    if (
+      assetSwap1?.tokenAddress === addr.bnb ||
+      assetSwap1?.tokenAddress === addr.wbnb
+    ) {
+      const balance = getToken(addr.bnb)?.balance
+      if (
+        BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
+      ) {
+        swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
+      }
+    }
+    dispatch(
+      routerSwapAssets(
+        convertToWei(swapInput1?.value),
+        assetSwap1.tokenAddress,
+        assetSwap2.tokenAddress,
+        wallet,
+      ),
+    )
+  }
+
   return (
     <>
       <div className="content">
@@ -1111,16 +1141,7 @@ const Swap = () => {
                           <Col className="hide-if-siblings">
                             <Button
                               color="primary"
-                              onClick={() =>
-                                dispatch(
-                                  routerSwapAssets(
-                                    convertToWei(swapInput1?.value),
-                                    assetSwap1.tokenAddress,
-                                    assetSwap2.tokenAddress,
-                                    wallet,
-                                  ),
-                                )
-                              }
+                              onClick={() => handleSwapAssets()}
                               disabled={
                                 swapInput1?.value <= 0 ||
                                 BN(
