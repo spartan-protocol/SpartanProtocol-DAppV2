@@ -67,6 +67,12 @@ const Swap = () => {
   const [assetParam2, setAssetParam2] = useState(
     new URLSearchParams(location.search).get(`asset2`),
   )
+  const [typeParam1, setTypeParam1] = useState(
+    new URLSearchParams(location.search).get(`type1`),
+  )
+  const [typeParam2, setTypeParam2] = useState(
+    new URLSearchParams(location.search).get(`type2`),
+  )
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -100,8 +106,8 @@ const Swap = () => {
       if (poolDetails?.length > 0) {
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-        const type1 = window.localStorage.getItem('assetType1')
-        const type2 = window.localStorage.getItem('assetType2')
+        let type1 = window.localStorage.getItem('assetType1')
+        let type2 = window.localStorage.getItem('assetType2')
 
         if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
           ;[asset1] = poolDetails.filter(
@@ -115,6 +121,25 @@ const Swap = () => {
           )
           setAssetParam2('')
         }
+        if (
+          typeParam1 === 'token' ||
+          typeParam1 === 'pool' ||
+          typeParam1 === 'synth'
+        ) {
+          type1 = typeParam1
+          setTypeParam1('')
+        }
+        if (
+          typeParam2 === 'token' ||
+          typeParam2 === 'pool' ||
+          typeParam2 === 'synth'
+        ) {
+          type2 = typeParam2
+          setTypeParam2('')
+        }
+
+        window.localStorage.setItem('assetType1', type1)
+        window.localStorage.setItem('assetType2', type2)
 
         if (type1 === 'token') {
           setFilter(['token', 'synth'])
@@ -141,6 +166,12 @@ const Swap = () => {
               asset1?.tokenAddress !== poolDetails[1].tokenAddress
                 ? { tokenAddress: poolDetails[1].tokenAddress }
                 : { tokenAddress: poolDetails[2].tokenAddress }
+          }
+        }
+
+        if (type1 === 'pool') {
+          if (asset2?.tokenAddress === addr.spartav1) {
+            asset2 = { tokenAddress: addr.bnb }
           }
         }
 
@@ -744,7 +775,7 @@ const Swap = () => {
           <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('swap')}</h2>
-              <SharePool />
+              {pool.poolDetails.length > 0 && <SharePool />}
             </div>
           </Col>
         </Row>

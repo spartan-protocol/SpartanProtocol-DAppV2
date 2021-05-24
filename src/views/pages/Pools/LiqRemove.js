@@ -42,7 +42,7 @@ import {
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import swapIcon from '../../../assets/icons/swapadd.svg'
 
-const RemoveLiquidity = () => {
+const LiqRemove = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -651,4 +651,4 @@ const RemoveLiquidity = () => {
   )
 }
 
-export default RemoveLiquidity
+export default LiqRemove

@@ -9,6 +9,8 @@ import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
 import { usePool } from '../../store/pool'
+import spartaLpIcon from '../../assets/img/spartan_lp.svg'
+import spartaSynthIcon from '../../assets/img/spartan_synth.svg'
 
 const Share = () => {
   const pool = usePool()
@@ -20,6 +22,8 @@ const Share = () => {
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const [asset1, setasset1] = useState('')
   const [asset2, setasset2] = useState('')
+  const [assetType1, setassetType1] = useState('')
+  const [assetType2, setassetType2] = useState('')
 
   const tryParse = (data) => {
     try {
@@ -27,6 +31,16 @@ const Share = () => {
     } catch (e) {
       return pool.poolDetails[0]
     }
+  }
+
+  const validateType = (data) => {
+    if (data === 'synth') {
+      return 'synth'
+    }
+    if (data === 'pool') {
+      return 'pool'
+    }
+    return 'token'
   }
 
   useEffect(() => {
@@ -37,17 +51,21 @@ const Share = () => {
       const assetSelected2 = tryParse(
         window.localStorage?.getItem('assetSelected2'),
       )
+      const type1 = validateType(window.localStorage?.getItem('assetType1'))
+      const type2 = validateType(window.localStorage?.getItem('assetType2'))
       setasset1(assetSelected1)
       setasset2(assetSelected2)
+      setassetType1(type1)
+      setassetType2(type2)
 
       setUrl(
-        `https://${window.location.host}${location.pathname}?asset1=${
+        `${window.location.host}${location.pathname}?asset1=${
           assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
         }${
           assetSelected2
             ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
             : ''
-        }`,
+        }&type1=${type1}&type2=${type2}`,
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,6 +77,10 @@ const Share = () => {
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected2'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetType1'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetType2'),
   ])
 
   return (
@@ -98,26 +120,79 @@ const Share = () => {
                   <Row>
                     <Col>
                       <img
+                        height="35px"
                         src={getToken(asset1?.tokenAddress)?.symbolUrl}
-                        alt="coin to swap icon"
+                        alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
+                        className="mx-2"
                       />
+                      {assetType1 === 'synth' && (
+                        <img
+                          height="20px"
+                          src={spartaSynthIcon}
+                          alt={`${
+                            getToken(asset1?.tokenAddress)?.symbol
+                          } synth icon`}
+                          className="position-absolute"
+                          style={{ left: '45px', bottom: '-2px' }}
+                        />
+                      )}
+                      {assetType1 === 'pool' && (
+                        <img
+                          height="20px"
+                          src={spartaLpIcon}
+                          alt={`${
+                            getToken(asset1?.tokenAddress)?.symbol
+                          } synth icon`}
+                          className="position-absolute"
+                          style={{ left: '45px', bottom: '-2px' }}
+                        />
+                      )}
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
                         {getToken(asset1?.tokenAddress)?.symbol}
+                        {assetType1 === 'synth' && 's'}
+                        {assetType1 === 'pool' && 'p'}
                       </span>
                     </Col>
                     <Col>
                       <img
+                        height="35px"
                         src={getToken(asset2?.tokenAddress)?.symbolUrl}
-                        alt="coin to swap icon"
+                        alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
+                        className="mx-2"
                       />
+                      {assetType2 === 'synth' && (
+                        <img
+                          height="20px"
+                          src={spartaSynthIcon}
+                          alt={`${
+                            getToken(asset1?.tokenAddress)?.symbol
+                          } synth icon`}
+                          className="position-absolute"
+                          style={{ left: '45px', bottom: '-2px' }}
+                        />
+                      )}
+                      {assetType2 === 'pool' && (
+                        <img
+                          height="20px"
+                          src={spartaLpIcon}
+                          alt={`${
+                            getToken(asset1?.tokenAddress)?.symbol
+                          } synth icon`}
+                          className="position-absolute"
+                          style={{ left: '45px', bottom: '-2px' }}
+                        />
+                      )}
+
                       <span
                         className="card-title"
                         style={{ marginLeft: '7px' }}
                       >
                         {getToken(asset2?.tokenAddress)?.symbol}
+                        {assetType2 === 'synth' && 's'}
+                        {assetType2 === 'pool' && 'p'}
                       </span>
                     </Col>
                   </Row>

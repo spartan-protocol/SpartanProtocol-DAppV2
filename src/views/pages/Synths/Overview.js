@@ -45,7 +45,7 @@ import mintIcon from '../../../assets/icons/mint.svg'
 import fireIcon from '../../../assets/icons/fire.svg'
 import Approval from '../../../components/Approval/Approval'
 import SwapPair from '../Swap/SwapPair'
-import Share from '../../../components/Share/SharePool'
+import SharePool from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 
 const Swap = () => {
@@ -65,6 +65,9 @@ const Swap = () => {
   )
   const [assetParam2, setAssetParam2] = useState(
     new URLSearchParams(location.search).get(`asset2`),
+  )
+  const [typeParam1, setTypeParam1] = useState(
+    new URLSearchParams(location.search).get(`type1`),
   )
 
   const [network, setnetwork] = useState(getNetwork())
@@ -111,6 +114,11 @@ const Swap = () => {
             (asset) => asset.tokenAddress === assetParam2,
           )
           setAssetParam2('')
+        }
+
+        if (typeParam1 === 'synth') {
+          setActiveTab('burn')
+          setTypeParam1('')
         }
 
         if (activeTab === 'mint') {
@@ -473,7 +481,7 @@ const Swap = () => {
           <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('synths')}</h2>
-              <Share />
+              {pool.poolDetails.length > 0 && <SharePool />}
             </div>
           </Col>
         </Row>

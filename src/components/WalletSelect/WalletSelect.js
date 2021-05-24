@@ -46,7 +46,7 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     const checkWallet = () => {
-      console.log('Wallet Status:', wallet.status)
+      // console.log('Wallet Status:', wallet.status)
       if (wallet.status === 'connected') {
         window.sessionStorage.setItem('walletConnected', '1')
       }
@@ -64,7 +64,7 @@ const WalletSelect = (props) => {
 
   const resetWallet = async () => {
     wallet.reset()
-    console.log('Wallet Status: cleared')
+    // console.log('Wallet Status: cleared')
   }
 
   const connectWallet = async (x) => {
