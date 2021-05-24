@@ -36,7 +36,7 @@ import { bondDeposit, getBondListed } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 
-const BondLiquidity = () => {
+const LiqBond = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
@@ -355,4 +355,4 @@ const BondLiquidity = () => {
   )
 }
 
-export default BondLiquidity
+export default LiqBond

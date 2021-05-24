@@ -43,7 +43,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
 import swapIcon from '../../../assets/icons/swapadd.svg'
 
-const AddLiquidity = () => {
+const LiqAdd = () => {
   const { t } = useTranslation()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -746,4 +746,4 @@ const AddLiquidity = () => {
   )
 }
 
-export default AddLiquidity
+export default LiqAdd
