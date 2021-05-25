@@ -78,7 +78,7 @@ export const routerAddLiq = (inputBase, inputToken, token, wallet) => async (
   }
 }
 
-export const routerRemoveLiq = (units, token, wallet, justCheck) => async (
+export const removeLiquidityExact = (units, token, wallet, justCheck) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -140,7 +140,7 @@ export const routerSwapAssets = (
  * @param {object} wallet
  * @returns {unit} units
  */
-export const routerAddLiqAsym = (input, fromBase, token, wallet) => async (
+export const addLiquiditySingle = (input, fromBase, token, wallet) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -156,8 +156,8 @@ export const routerAddLiqAsym = (input, fromBase, token, wallet) => async (
           : null,
       gasPrice: gPrice,
     }
-    const units = await contract.addLiquidityAsym(input, fromBase, token, ORs)
-    dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_ASYM, units))
+    const units = await contract.addLiquiditySingle(input, fromBase, token, ORs)
+    dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_SINGLE, units))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
@@ -206,7 +206,7 @@ export const routerZapLiquidity = (
  * @returns {unit} outputAmount
  * @returns {unit} fee
  */
-export const routerRemoveLiqAsym = (units, toBase, token, wallet) => async (
+export const removeLiquiditySingle = (units, toBase, token, wallet) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
@@ -214,9 +214,14 @@ export const routerRemoveLiqAsym = (units, toBase, token, wallet) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    const liquidity = await contract.removeLiquidityAsym(units, toBase, token, {
-      gasPrice: gPrice,
-    })
+    const liquidity = await contract.removeLiquiditySingle(
+      units,
+      toBase,
+      token,
+      {
+        gasPrice: gPrice,
+      },
+    )
 
     dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ_ASYM, liquidity))
   } catch (error) {

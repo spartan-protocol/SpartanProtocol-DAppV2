@@ -4,9 +4,9 @@ const initialState = {
   memberDetails: {},
 }
 
-export const bondVaultReducer = (state = initialState, action) => {
+export const bondReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.BONDVAULT_MEMBER_DETAILS: {
+    case Types.BOND_MEMBER_DETAILS: {
       return {
         ...state,
         memberDetails: action.payload,
@@ -15,14 +15,14 @@ export const bondVaultReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.BONDVAULT_LOADING: {
+    case Types.BOND_LOADING: {
       return {
         ...state,
         loading: true,
       }
     }
 
-    case Types.BONDVAULT_ERROR: {
+    case Types.BOND_ERROR: {
       return {
         ...state,
         error: action.error,

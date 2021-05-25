@@ -36,11 +36,12 @@ import {
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import {
-  routerRemoveLiq,
-  routerRemoveLiqAsym,
+  removeLiquidityExact,
+  removeLiquiditySingle,
 } from '../../../store/router/actions'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import swapIcon from '../../../assets/icons/swapadd.svg'
+import Approval from '../../../components/Approval/Approval'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -608,7 +609,20 @@ const LiqRemove = () => {
             </Col>
           </Row>
           <Row className="text-center">
-            <Col>
+            {poolRemove1?.tokenAddress &&
+              wallet?.account &&
+              removeInput1?.value && (
+                <Approval
+                  tokenAddress={poolRemove1?.address}
+                  symbol={getToken(poolRemove1.tokenAddress)?.symbol}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.router}
+                  txnAmount={convertToWei(removeInput1?.value)}
+                  assetNumber="1"
+                />
+              )}
+
+            <Col xs="12" sm="4" md="12" className="hide-if-siblings">
               <Button
                 className="w-100 btn-primary"
                 disabled={
@@ -620,14 +634,14 @@ const LiqRemove = () => {
                 onClick={() =>
                   activeTab === '1'
                     ? dispatch(
-                        routerRemoveLiq(
+                        removeLiquidityExact(
                           convertToWei(removeInput1.value),
                           poolRemove1.tokenAddress,
                           wallet,
                         ),
                       )
                     : dispatch(
-                        routerRemoveLiqAsym(
+                        removeLiquiditySingle(
                           convertToWei(removeInput1.value),
                           assetRemove1.tokenAddress === addr.spartav2,
                           poolRemove1.tokenAddress,

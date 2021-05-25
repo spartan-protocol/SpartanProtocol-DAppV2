@@ -63,7 +63,7 @@ export const routerReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.ROUTER_ADD_LIQ_ASYM: {
+    case Types.ROUTER_ADD_LIQ_SINGLE: {
       return {
         ...state,
         liquidityAsym: action.payload,

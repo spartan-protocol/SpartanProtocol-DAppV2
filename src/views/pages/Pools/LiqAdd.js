@@ -37,7 +37,7 @@ import {
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
-import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
+import { routerAddLiq, addLiquiditySingle } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
@@ -64,7 +64,6 @@ const LiqAdd = () => {
     try {
       return JSON.parse(data)
     } catch (e) {
-      console.log('test')
       return pool.poolDetails[0]
     }
   }
@@ -373,7 +372,7 @@ const LiqAdd = () => {
       )
     } else {
       dispatch(
-        routerAddLiqAsym(
+        addLiquiditySingle(
           convertToWei(addInput1.value),
           assetAdd1.tokenAddress === addr.spartav2,
           poolAdd1.tokenAddress,
@@ -440,7 +439,11 @@ const LiqAdd = () => {
                     <AssetSelect
                       priority="1"
                       filter={['token']}
-                      blackList={activeTab === 'addTab1' ? [addr.spartav2] : []}
+                      blackList={
+                        activeTab === 'addTab1'
+                          ? [addr.spartav1, addr.spartav2]
+                          : []
+                      }
                     />
                   </Col>
                   <Col className="text-right">

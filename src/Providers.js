@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import Common from './components/layout/Common'
 
-import { bondVaultReducer } from './store/bondVault'
+import { bondReducer } from './store/bond'
 import { daoReducer } from './store/dao'
 import { poolReducer } from './store/pool'
 import { reserveReducer } from './store/reserve'
@@ -32,7 +32,7 @@ const globalFormat = {
 BigNumber.config({ FORMAT: globalFormat })
 
 const reducers = combineReducers({
-  bondVault: bondVaultReducer,
+  bond: bondReducer,
   dao: daoReducer,
   pool: poolReducer,
   reserve: reserveReducer,
