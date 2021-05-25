@@ -37,12 +37,10 @@ const Supply = () => {
   const addrNames = [
     'spartav1',
     'spartav2',
-    'bond',
     'bondVault',
     'dao',
     'daoVault',
     'fallenSpartans',
-    'migrate',
     'poolFactory',
     'reserve',
     'router',
