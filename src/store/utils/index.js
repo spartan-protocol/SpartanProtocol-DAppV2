@@ -23,7 +23,4 @@ export {
   getSynth,
   getSynthData,
   getDebtShare,
-  getCuratedPoolCount,
-  getCuratedPools,
-  getCuratedPoolsInRange,
 } from './actions'

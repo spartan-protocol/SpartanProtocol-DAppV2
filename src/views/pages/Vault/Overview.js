@@ -10,7 +10,6 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 const Vault = () => {
   const { t } = useTranslation()
   const [mode, setMode] = useState('Dao')
-
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
   const getNet = () => {

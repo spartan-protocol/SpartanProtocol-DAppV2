@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { bondGlobalDetails } from '../../store/bond'
 import {
-  getCuratedPools,
   getListedPools,
   getListedTokens,
   getPoolDetails,
@@ -86,7 +85,6 @@ const DataManager = () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (chainId === 97 || chainId === 56) {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
-      dispatch(getCuratedPools(wallet)) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails(wallet))
       dispatch(bondGlobalDetails(wallet))
       dispatch(getReserveGlobalDetails(wallet))
@@ -160,10 +158,9 @@ const DataManager = () => {
    */
   useEffect(() => {
     const { tokenDetails } = pool
-    const { curatedPools } = pool
     const checkListedPools = () => {
       if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails, curatedPools, wallet))
+        dispatch(getListedPools(tokenDetails, wallet))
       }
     }
     checkListedPools()

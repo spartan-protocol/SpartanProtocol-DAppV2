@@ -126,7 +126,7 @@ export const claimForMember = (asset, wallet) => async (dispatch) => {
 
 /**
  * Claim all available bond by member
- * @param {address} member
+ * @param {object} wallet
  * @returns {boolean}
  */
 export const claimAllForMember = (wallet) => async (dispatch) => {

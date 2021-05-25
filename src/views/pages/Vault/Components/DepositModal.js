@@ -9,6 +9,8 @@ import { useDao } from '../../../../store/dao/selector'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import { getExplorerTxn } from '../../../../utils/extCalls'
+import Approval from '../../../../components/Approval/Approval'
+import { getAddresses } from '../../../../utils/web3'
 
 const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const [percentage, setpercentage] = useState('0')
@@ -17,6 +19,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const pool = usePool()
   const dao = useDao()
   const wallet = useWallet()
+  const addr = getAddresses()
   const [loading, setloading] = useState(false)
   const [stage, setstage] = useState(0)
   const pool1 = pool.poolDetails.filter(
@@ -90,14 +93,20 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
               </Col>
             </Row>
             <Row>
-              <Col xs="6" className="ml-n1">
-                <Button color="primary" onClick={() => toggleModal()}>
-                  {t('cancel')}
-                </Button>
-              </Col>
-              <Col xs="6" className="">
+              {wallet?.account && (
+                <Approval
+                  tokenAddress={pool1.address}
+                  symbol={`${token.symbol}p`}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.dao}
+                  txnAmount={deposit()}
+                  assetNumber="1"
+                />
+              )}
+              <Col className="hide-if-prior-sibling">
                 <Button
                   color="primary"
+                  block
                   onClick={async () => {
                     setloading(true)
                     await dispatch(daoDeposit(pool1.address, deposit(), wallet))

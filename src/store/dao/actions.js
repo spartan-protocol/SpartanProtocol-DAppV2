@@ -163,9 +163,7 @@ export const getDaoHarvestEraAmount = (wallet) => async (dispatch) => {
  * @param {uint256} amount
  * @param {object} wallet
  */
-export const daoDeposit = (pool, amount, wallet, justCheck) => async (
-  dispatch,
-) => {
+export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
   let provider = getWalletProvider(wallet?.ethereum)
@@ -174,15 +172,11 @@ export const daoDeposit = (pool, amount, wallet, justCheck) => async (
   }
 
   try {
-    let deposit = {}
-    if (justCheck) {
-      deposit = await contract.callStatic.deposit(pool, amount)
-    } else {
-      const gPrice = await getProviderGasPrice()
-      deposit = await contract.deposit(pool, amount, {
-        gasPrice: gPrice,
-      })
-    }
+    const gPrice = await getProviderGasPrice()
+    let deposit = await contract.deposit(pool, amount, {
+      gasPrice: gPrice,
+    })
+
     deposit = await provider.waitForTransaction(deposit.hash, 1)
     dispatch(payloadToDispatch(Types.DAO_DEPOSIT, deposit))
   } catch (error) {
