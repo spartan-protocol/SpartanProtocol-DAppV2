@@ -1,10 +1,10 @@
-// import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
-// import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, Button, Card } from 'reactstrap'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-// import { bondClaimAll } from '../../../store/bond/actions' // CHANGE THIS FOR V2A #396
+import { claimAllForMember } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork } from '../../../utils/web3'
@@ -12,8 +12,8 @@ import BondItem from './BondItem'
 
 const Bond = () => {
   const pool = usePool()
-  // const wallet = useWallet()
-  // const dispatch = useDispatch()
+  const wallet = useWallet()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const [network, setnetwork] = useState(getNetwork())
@@ -70,7 +70,6 @@ const Bond = () => {
                   <Row className="my-1">
                     <Col xs="auto" className="text-card">
                       {t('noBondPosition')}
-                      {/* You have no Bond positions */}
                     </Col>
                   </Row>
                 )}
@@ -78,7 +77,7 @@ const Bond = () => {
                   <Col xs="12" className="p-1">
                     <Button
                       className="btn btn-primary align-middle"
-                      // onClick={() => dispatch(bondClaimAll(wallet))} // CHANGE THIS FOR V2A #396
+                      onClick={() => dispatch(claimAllForMember(wallet))}
                     >
                       {t('claimAll')}
                       {' ( '}
