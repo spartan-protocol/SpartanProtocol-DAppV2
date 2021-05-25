@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { bondClaim } from '../../../store/bond/actions'
+// import { useWallet } from '@binance-chain/bsc-use-wallet'
+// import { bondClaim } from '../../../store/bond/actions' // CHANGE THIS FOR V2A #396
 import { usePool } from '../../../store/pool'
 // import { useWeb3 } from '../../../store/web3'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -12,10 +12,10 @@ import spartaIcon from '../../../assets/img/spartan_lp.svg'
 
 const BondItem = ({ asset }) => {
   const pool = usePool()
-  const dispatch = useDispatch()
-  const { t } = useTranslation()
-  const wallet = useWallet()
+  // const dispatch = useDispatch()
+  // const wallet = useWallet()
   // const web3 = useWeb3()
+  const { t } = useTranslation()
   const [showDetails, setShowDetails] = useState(false)
   const { tokenAddress } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -164,7 +164,7 @@ const BondItem = ({ asset }) => {
               <Button
                 color="primary"
                 className="btn w-100"
-                onClick={() => dispatch(bondClaim(asset.tokenAddress, wallet))}
+                // onClick={() => dispatch(bondClaim(asset.tokenAddress, wallet))} // CHANGE THIS FOR V2A #396
               >
                 {t('claim')}
               </Button>

@@ -49,20 +49,6 @@ export const getOldBondContract = (bondAddress, wallet) => {
 }
 
 /**
- * Get the current bond contract with signer/provider injected
- * @returns {uint} contract
- */
-export const getBondContract = (wallet) => {
-  let contract = isAddress(getAddresses().bond)
-  const abiBond = getAbis().bond
-  const provider = getWalletProvider(wallet?.ethereum)
-  if (contract === true) {
-    contract = new ethers.Contract(getAddresses().bond, abiBond, provider)
-  }
-  return contract
-}
-
-/**
  * Get the current bondVault contract with signer/provider injected
  * @returns {uint} contract
  */

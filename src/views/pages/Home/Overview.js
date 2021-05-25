@@ -3,21 +3,21 @@ import { Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
 
 import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+// import { useDispatch } from 'react-redux'
+// import { useWallet } from '@binance-chain/bsc-use-wallet'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getNetwork } from '../../../utils/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { getBondListed } from '../../../store/bond/actions'
+// import { getBondListed } from '../../../store/bond/actions' // CHANGE THIS FOR V2A #396
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 
 const Overview = () => {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
+  // const wallet = useWallet()
   const { t } = useTranslation()
   const pool = usePool()
   const addr = getAddresses()
-  const wallet = useWallet()
   const [activeTab, setActiveTab] = useState('overview')
 
   const [network, setnetwork] = useState(getNetwork())
@@ -40,11 +40,11 @@ const Overview = () => {
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
     if (trigger1 === 0 && network.chainId === 97) {
-      dispatch(getBondListed(wallet))
+      // dispatch(getBondListed(wallet)) // CHANGE THIS FOR V2A #396
     }
     const timer = setTimeout(() => {
       if (network.chainId === 97) {
-        dispatch(getBondListed(wallet))
+        // dispatch(getBondListed(wallet)) // CHANGE THIS FOR V2A #396
         settrigger1(trigger1 + 1)
       }
     }, 10000)

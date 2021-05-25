@@ -13,7 +13,6 @@ import {
   Collapse,
   UncontrolledTooltip,
 } from 'reactstrap'
-import { useBond } from '../../store/bond/selector'
 import { useReserve } from '../../store/reserve/selector'
 import { useSparta } from '../../store/sparta/selector'
 import { useWeb3 } from '../../store/web3'
@@ -32,7 +31,6 @@ const Supply = () => {
   const addr = getAddresses()
   const sparta = useSparta()
   const reserve = useReserve()
-  const bond = useBond()
   const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
   const addrNames = [
     'spartav1',
@@ -81,9 +79,9 @@ const Supply = () => {
   const getCirculatingSupply = () => {
     const totalSupply = BN(getTotalSupply())
     const reserveSparta = BN(reserve.globalDetails.spartaBalance)
-    const bondSparta = BN(bond.bondSpartaRemaining)
+    const bondSparta = BN('0') // BN(bond.bondSpartaRemaining) CHANGE THIS FOR V2A #396
     if (totalSupply > 0) {
-      return totalSupply.minus(reserveSparta).minus(bondSparta)
+      return totalSupply.minus(reserveSparta).minus(bondSparta) // CHANGE THIS FOR V2A #396
     }
     return '0.00'
   }
