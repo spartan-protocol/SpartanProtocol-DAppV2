@@ -25,7 +25,7 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
       contract2.callStatic.totalSupply(),
       contract2.callStatic.secondsPerEra(),
       // contract.callStatic.nextEraTime(),
-      contract1.callStatic.secondsPerEra(),
+      // contract1.callStatic.secondsPerEra(),
       contract1.callStatic.totalSupply(),
     ]
     awaitArray = await Promise.all(awaitArray)
@@ -37,8 +37,8 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
       totalSupply: awaitArray[2].toString(),
       secondsPerEra: awaitArray[3].toString(),
       // nextEraTime: awaitArray[],
-      oldSecondsPerEra: awaitArray[4].toString(),
-      oldTotalSupply: awaitArray[5].toString(),
+      // oldSecondsPerEra: awaitArray[].toString(),
+      oldTotalSupply: awaitArray[4].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {

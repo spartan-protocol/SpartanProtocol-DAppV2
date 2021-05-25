@@ -73,7 +73,7 @@ const LiqBond = () => {
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         // asset1 =
         //   asset1 &&
-        //   asset1.tokenAddress !== addr.spartav1 &&
+        //   asset1.tokenAddress !== addr.spartav2 &&
         //   bond.bondListed.includes(asset1.tokenAddress) // CHANGE THIS FOR V2A #396
         //     ? asset1
         //     : { tokenAddress: addr.bnb }

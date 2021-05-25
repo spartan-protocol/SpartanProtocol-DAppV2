@@ -58,7 +58,7 @@ export const getBondClaimable = (bondAddress, wallet, asset) => async (
 
 export const getBondSpartaRemaining = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getTokenContract(addr.spartav1, wallet)
+  const contract = getTokenContract(addr.spartav2, wallet)
 
   try {
     let bondSpartaRemaining = await contract.callStatic.balanceOf(addr.bond)

@@ -290,7 +290,7 @@ export const getAddresses = () => {
 export const getItemFromArray = (asset, finalArray) => {
   const addr = getAddresses()
   let arrayItem = finalArray.filter(
-    (item) => item.tokenAddress === addr.spartav1,
+    (item) => item.tokenAddress === addr.spartav2,
   )
   if (finalArray.find((item) => item.tokenAddress === asset.tokenAddress)) {
     arrayItem = finalArray.filter(

@@ -127,7 +127,7 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].tokenAddress === addr.spartav1) {
+            if (tempArray[i].tokenAddress === addr.spartav2) {
               finalArray.push({
                 type: 'token',
                 icon: (
