@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getProviderGasPrice } from '../../utils/web3'
+import { getAddresses, getProviderGasPrice } from '../../utils/web3'
 import { getRouterContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
@@ -7,55 +7,22 @@ export const routerLoading = () => ({
   type: Types.ROUTER_LOADING,
 })
 
-/**
- * Get last full month's dividends revenue by pool (not fees; just divis)
- * @param {address} tokenAddress
- * @param {object} wallet
- * @returns {unit} lastMonthDivis
- */
-export const getPastMonthDivis = (tokenAddress, wallet) => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract(wallet)
-
-  try {
-    const lastMonthDivis = await contract.callStatic.mapPast30DPoolRevenue(
-      tokenAddress,
-    )
-
-    dispatch(payloadToDispatch(Types.ROUTER_LAST_MONTH_DIVIS, lastMonthDivis))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
-  }
-}
+// --------------------------------------- LIQUIDITY FUNCTIONS ---------------------------------------
 
 /**
- * Get the current month's dividends revenue by pool (not fees; just divis)
- * THIS IS NOT ROLLING; ONLY PARTIAL-MONTH UNTIL THE ARRAY IS COMPLETE THEN PURGES
- * @param {address} tokenAddress
+ * Add Liquidity to a pool symmetrically
+ * @param {uint} inputBase
+ * @param {address} inputToken
+ * @param {address} token
  * @param {object} wallet
- * @returns {unit} thisMonthDivis
+ * @returns {unit} units
+ * @returns {unit} fee
  */
-export const getThisMonthDivis = (tokenAddress, wallet) => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract(wallet)
-
-  try {
-    const thisMonthDivis = await contract.callStatic.map30DPoolRevenue(
-      tokenAddress,
-    )
-
-    dispatch(payloadToDispatch(Types.ROUTER_THIS_MONTH_DIVIS, thisMonthDivis))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
-  }
-}
-
-export const routerAddLiq = (inputBase, inputToken, token, wallet) => async (
+export const addLiquidity = (inputBase, inputToken, token, wallet) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
     const ORs = {
@@ -65,68 +32,37 @@ export const routerAddLiq = (inputBase, inputToken, token, wallet) => async (
           : null,
       gasPrice: gPrice,
     }
-    const liquidity = await contract.addLiquidity(
+    const addLiq = await contract.addLiquidity(
       inputBase,
       inputToken,
       token,
       ORs,
     )
-
-    dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, liquidity))
+    dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, addLiq))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
-export const removeLiquidityExact = (units, token, wallet, justCheck) => async (
+/**
+ * Swap LP tokens for other LP tokens
+ * @param {uint} unitsInput
+ * @param {address} fromPool
+ * @param {address} toPool
+ * @param {object} wallet
+ * @returns {unit} units
+ */
+export const zapLiquidity = (unitsInput, fromPool, toPool, wallet) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
-
-  try {
-    let liquidity = {}
-    if (justCheck) {
-      liquidity = await contract.callStatic.removeLiquidityExact(units, token)
-    } else {
-      const gPrice = await getProviderGasPrice()
-
-      liquidity = await contract.removeLiquidityExact(units, token, {
-        gasPrice: gPrice,
-      })
-    }
-    dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, liquidity))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
-  }
-}
-
-export const routerSwapAssets = (
-  inputAmount,
-  fromToken,
-  toToken,
-  wallet,
-) => async (dispatch) => {
-  dispatch(routerLoading())
-  const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    const ORs = {
-      value:
-        fromToken === '0x0000000000000000000000000000000000000000'
-          ? inputAmount
-          : null,
+    const zapLiq = await contract.zapLiquidity(unitsInput, fromPool, toPool, {
       gasPrice: gPrice,
-    }
-    const assetsSwapped = await contract.swap(
-      inputAmount,
-      fromToken,
-      toToken,
-      ORs,
-    )
-
-    dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSETS, assetsSwapped))
+    })
+    dispatch(payloadToDispatch(Types.ROUTER_ZAP_LIQ, zapLiq))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
@@ -144,54 +80,45 @@ export const addLiquiditySingle = (input, fromBase, token, wallet) => async (
   dispatch,
 ) => {
   dispatch(routerLoading())
+  const addr = getAddresses()
   const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
     const ORs = {
-      value:
-        token === '0x0000000000000000000000000000000000000000' &&
-        fromBase !== true
-          ? input
-          : null,
+      value: token === addr.bnb && fromBase !== true ? input : null,
       gasPrice: gPrice,
     }
-    const units = await contract.addLiquiditySingle(input, fromBase, token, ORs)
-    dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_SINGLE, units))
+    const addLiqSingle = await contract.addLiquiditySingle(
+      input,
+      fromBase,
+      token,
+      ORs,
+    )
+    dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_SINGLE, addLiqSingle))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
 }
 
 /**
- * Swap LP tokens for other LP tokens
- * @param {uint} unitsLP
- * @param {address} fromToken
- * @param {address} toToken
+ * Remove liquidity symmetrically
+ * @param {uint} units
+ * @param {address} token
  * @param {object} wallet
  * @returns {unit} units
- * @returns {unit} fee
  */
-export const routerZapLiquidity = (
-  unitsLP,
-  fromToken,
-  toToken,
-  wallet,
-) => async (dispatch) => {
+export const removeLiquidityExact = (units, token, wallet) => async (
+  dispatch,
+) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    const proposalID = await contract.zapLiquidity(
-      unitsLP,
-      fromToken,
-      toToken,
-      {
-        gasPrice: gPrice,
-      },
-    )
-    dispatch(payloadToDispatch(Types.ROUTER_ZAP_LIQUIDITY, proposalID))
+    const remLiq = await contract.removeLiquidityExact(units, token, {
+      gasPrice: gPrice,
+    })
+
+    dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, remLiq))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
@@ -203,7 +130,6 @@ export const routerZapLiquidity = (
  * @param {bool} toBase
  * @param {address} token
  * @param {object} wallet
- * @returns {unit} outputAmount
  * @returns {unit} fee
  */
 export const removeLiquiditySingle = (units, toBase, token, wallet) => async (
@@ -211,10 +137,9 @@ export const removeLiquiditySingle = (units, toBase, token, wallet) => async (
 ) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    const liquidity = await contract.removeLiquiditySingle(
+    const remLiqSingle = await contract.removeLiquiditySingle(
       units,
       toBase,
       token,
@@ -223,7 +148,35 @@ export const removeLiquiditySingle = (units, toBase, token, wallet) => async (
       },
     )
 
-    dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ_ASYM, liquidity))
+    dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ_SINGLE, remLiqSingle))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
+  }
+}
+
+// --------------------------------------- SWAP FUNCTIONS ---------------------------------------
+
+/**
+ * Swap BEP20 assets
+ * @param {uint} inputAmount
+ * @param {address} fromToken
+ * @param {address} toToken
+ * @param {object} wallet
+ */
+export const swap = (inputAmount, fromToken, toToken, wallet) => async (
+  dispatch,
+) => {
+  dispatch(routerLoading())
+  const addr = getAddresses()
+  const contract = getRouterContract(wallet)
+  try {
+    const gPrice = await getProviderGasPrice()
+    const ORs = {
+      value: fromToken === addr.bnb ? inputAmount : null,
+      gasPrice: gPrice,
+    }
+    const swapped = await contract.swap(inputAmount, fromToken, toToken, ORs)
+    dispatch(payloadToDispatch(Types.ROUTER_SWAP, swapped))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
@@ -233,36 +186,32 @@ export const removeLiquiditySingle = (units, toBase, token, wallet) => async (
  * Swap BEP20 for synthetic assets
  * @param {uint} inputAmount
  * @param {address} fromToken
- * @param {address} synthOut
+ * @param {address} toSynth
  * @param {object} wallet
  * @returns {unit} outputSynth
  */
 export const swapAssetToSynth = (
   inputAmount,
   fromToken,
-  synthOut,
+  toSynth,
   wallet,
 ) => async (dispatch) => {
   dispatch(routerLoading())
+  const addr = getAddresses()
   const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
     const ORs = {
-      value:
-        fromToken === '0x0000000000000000000000000000000000000000'
-          ? inputAmount
-          : null,
+      value: fromToken === addr.bnb ? inputAmount : null,
       gasPrice: gPrice,
     }
-    const outputSynth = await contract.swapAssetToSynth(
+    const mintSynth = await contract.swapAssetToSynth(
       inputAmount,
       fromToken,
-      synthOut,
+      toSynth,
       ORs,
     )
-
-    dispatch(payloadToDispatch(Types.ROUTER_SWAP_ASSET_TO_SYNTH, outputSynth))
+    dispatch(payloadToDispatch(Types.ROUTER_MINT_SYNTH, mintSynth))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
@@ -284,10 +233,9 @@ export const swapSynthToAsset = (
 ) => async (dispatch) => {
   dispatch(routerLoading())
   const contract = getRouterContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    const output = await contract.swapSynthToAsset(
+    const burnSynth = await contract.swapSynthToAsset(
       inputAmount,
       fromSynth,
       toToken,
@@ -295,8 +243,7 @@ export const swapSynthToAsset = (
         gasPrice: gPrice,
       },
     )
-
-    dispatch(payloadToDispatch(Types.ROUTER_SWAP_SYNTH_TO_ASSET, output))
+    dispatch(payloadToDispatch(Types.ROUTER_BURN_SYNTH, burnSynth))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }

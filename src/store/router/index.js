@@ -1,14 +1,12 @@
 export { useRouter } from './selector'
 export { routerReducer } from './reducer'
 export {
-  getPastMonthDivis,
-  getThisMonthDivis,
-  removeLiquidityExact,
-  routerSwapAssets,
-  routerAddLiq,
+  addLiquidity,
+  zapLiquidity,
   addLiquiditySingle,
+  removeLiquidityExact,
   removeLiquiditySingle,
+  swap,
   swapAssetToSynth,
   swapSynthToAsset,
-  routerZapLiquidity,
 } from './actions'

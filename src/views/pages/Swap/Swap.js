@@ -34,10 +34,10 @@ import {
   calcLiquidityUnitsAsym,
 } from '../../../utils/web3Utils'
 import {
-  routerSwapAssets,
+  swap,
   swapAssetToSynth,
   swapSynthToAsset,
-  routerZapLiquidity,
+  zapLiquidity,
 } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
@@ -736,7 +736,7 @@ const Swap = () => {
       }
     }
     dispatch(
-      routerSwapAssets(
+      swap(
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
         assetSwap2.tokenAddress,
@@ -1178,75 +1178,100 @@ const Swap = () => {
                       )}
                       {/* 'Approval/Allowance' row */}
                       <Row>
-                        {mode === 'token' &&
-                          assetSwap1?.tokenAddress !== addr.bnb &&
-                          wallet?.account &&
-                          swapInput1?.value && (
-                            <Approval
-                              tokenAddress={assetSwap1?.tokenAddress}
-                              symbol={assetSwap1?.symbol}
-                              walletAddress={wallet?.account}
-                              contractAddress={addr.router}
-                              txnAmount={convertToWei(swapInput1?.value)}
-                              assetNumber="1"
-                            />
-                          )}
                         {mode === 'token' && (
-                          <Col className="hide-if-siblings">
-                            <Button
-                              color="primary"
-                              onClick={() => handleSwapAssets()}
-                              disabled={
-                                swapInput1?.value <= 0 ||
-                                BN(
-                                  convertToWei(swapInput1?.value),
-                                ).isGreaterThan(getBalance(1))
-                              }
-                              block
-                            >
-                              {t('sell')}{' '}
-                              {getToken(assetSwap1.tokenAddress)?.symbol}
-                            </Button>
-                          </Col>
-                        )}
-                        {mode === 'pool' && (
-                          <Col>
-                            <Button
-                              color="primary"
-                              onClick={() =>
-                                dispatch(
-                                  routerZapLiquidity(
+                          <>
+                            {assetSwap1?.tokenAddress !== addr.bnb &&
+                              wallet?.account &&
+                              swapInput1?.value && (
+                                <Approval
+                                  tokenAddress={assetSwap1?.tokenAddress}
+                                  symbol={
+                                    getToken(assetSwap1.tokenAddress)?.symbol
+                                  }
+                                  walletAddress={wallet?.account}
+                                  contractAddress={addr.router}
+                                  txnAmount={convertToWei(swapInput1?.value)}
+                                  assetNumber="1"
+                                />
+                              )}
+                            <Col className="hide-if-siblings">
+                              <Button
+                                color="primary"
+                                onClick={() => handleSwapAssets()}
+                                disabled={
+                                  swapInput1?.value <= 0 ||
+                                  BN(
                                     convertToWei(swapInput1?.value),
-                                    assetSwap1.tokenAddress,
-                                    assetSwap2.tokenAddress,
-                                    wallet,
-                                  ),
-                                )
-                              }
-                              disabled={
-                                swapInput1?.value <= 0 ||
-                                BN(
-                                  convertToWei(swapInput1?.value),
-                                ).isGreaterThan(getBalance(1))
-                              }
-                              block
-                            >
-                              {t('sell')}{' '}
-                              {getToken(assetSwap1.tokenAddress)?.symbol}p
-                            </Button>
-                          </Col>
+                                  ).isGreaterThan(getBalance(1))
+                                }
+                                block
+                              >
+                                {t('sell')}{' '}
+                                {getToken(assetSwap1.tokenAddress)?.symbol}
+                              </Button>
+                            </Col>
+                          </>
                         )}
+
+                        {mode === 'pool' && (
+                          <>
+                            {wallet?.account && swapInput1?.value && (
+                              <Approval
+                                tokenAddress={assetSwap1?.address}
+                                symbol={`${
+                                  getToken(assetSwap1.tokenAddress)?.symbol
+                                }p`}
+                                walletAddress={wallet?.account}
+                                contractAddress={addr.router}
+                                txnAmount={convertToWei(swapInput1?.value)}
+                                assetNumber="1"
+                              />
+                            )}
+                            <Col className="hide-if-siblings">
+                              <Button
+                                color="primary"
+                                onClick={() =>
+                                  dispatch(
+                                    zapLiquidity(
+                                      convertToWei(swapInput1?.value),
+                                      assetSwap1.address,
+                                      assetSwap2.address,
+                                      wallet,
+                                    ),
+                                  )
+                                }
+                                disabled={
+                                  swapInput1?.value <= 0 ||
+                                  BN(
+                                    convertToWei(swapInput1?.value),
+                                  ).isGreaterThan(getBalance(1))
+                                }
+                                block
+                              >
+                                {t('sell')}{' '}
+                                {getToken(assetSwap1.tokenAddress)?.symbol}p
+                              </Button>
+                            </Col>
+                          </>
+                        )}
+
                         {window.localStorage.getItem('assetType2') ===
                           'synth' && (
                           <>
-                            <Approval
-                              tokenAddress={assetSwap1?.tokenAddress}
-                              symbol={assetSwap1?.symbol}
-                              walletAddress={wallet?.account}
-                              contractAddress={addr.router}
-                              txnAmount={convertToWei(swapInput1?.value)}
-                              assetNumber="1"
-                            />
+                            {assetSwap1?.tokenAddress !== addr.bnb &&
+                              wallet?.account &&
+                              swapInput1?.value && (
+                                <Approval
+                                  tokenAddress={assetSwap1?.tokenAddress}
+                                  symbol={
+                                    getToken(assetSwap1.tokenAddress)?.symbol
+                                  }
+                                  walletAddress={wallet?.account}
+                                  contractAddress={addr.router}
+                                  txnAmount={convertToWei(swapInput1?.value)}
+                                  assetNumber="1"
+                                />
+                              )}
                             <Col className="hide-if-siblings">
                               <Button
                                 color="primary"
@@ -1268,31 +1293,48 @@ const Swap = () => {
 
                         {window.localStorage.getItem('assetType1') ===
                           'synth' && (
-                          <Col>
-                            <Button
-                              color="primary"
-                              onClick={() =>
-                                dispatch(
-                                  swapSynthToAsset(
+                          <>
+                            {wallet?.account && swapInput1?.value && (
+                              <Approval
+                                tokenAddress={
+                                  getSynth(assetSwap1.tokenAddress)?.address
+                                }
+                                symbol={`${
+                                  getToken(assetSwap1.tokenAddress)?.symbol
+                                }s`}
+                                walletAddress={wallet?.account}
+                                contractAddress={addr.router}
+                                txnAmount={convertToWei(swapInput1?.value)}
+                                assetNumber="1"
+                              />
+                            )}
+                            <Col className="hide-if-siblings">
+                              <Button
+                                color="primary"
+                                onClick={() =>
+                                  dispatch(
+                                    swapSynthToAsset(
+                                      convertToWei(swapInput1?.value),
+                                      getSynth(assetSwap1.tokenAddress)
+                                        ?.address,
+                                      assetSwap2.tokenAddress,
+                                      wallet,
+                                    ),
+                                  )
+                                }
+                                disabled={
+                                  swapInput1?.value <= 0 ||
+                                  BN(
                                     convertToWei(swapInput1?.value),
-                                    getSynth(assetSwap1.tokenAddress)?.address,
-                                    assetSwap2.tokenAddress,
-                                    wallet,
-                                  ),
-                                )
-                              }
-                              disabled={
-                                swapInput1?.value <= 0 ||
-                                BN(
-                                  convertToWei(swapInput1?.value),
-                                ).isGreaterThan(getBalance(1))
-                              }
-                              block
-                            >
-                              {t('sell')}{' '}
-                              {getToken(assetSwap1.tokenAddress)?.symbol}s
-                            </Button>
-                          </Col>
+                                  ).isGreaterThan(getBalance(1))
+                                }
+                                block
+                              >
+                                {t('sell')}{' '}
+                                {getToken(assetSwap1.tokenAddress)?.symbol}s
+                              </Button>
+                            </Col>
+                          </>
                         )}
                       </Row>
                     </Card>

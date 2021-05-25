@@ -1,63 +1,33 @@
 import * as Types from './types'
 
 const initialState = {
-  getPastMonthDivis: 0,
-  getThisMonthDivis: 0,
-  pool: {},
-  tokenCount: {},
-  totalPooled: {},
-  liquidity: {},
-  assetsSwapped: {},
-  liquidityAsym: 0,
-  proposalID: 0,
-  outputSynth: 0,
-  output: 0,
+  addLiq: {},
+  zapLiq: {},
+  addLiqSingle: {},
+  remLiq: {},
+  remLiqSingle: {},
+  swapped: 0,
+  mintSynth: 0,
+  burnSynth: 0,
   loading: false,
   error: null,
 }
 
 export const routerReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.ROUTER_LAST_MONTH_DIVIS: {
-      return {
-        ...state,
-        getPastMonthDivis: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.ROUTER_THIS_MONTH_DIVIS: {
-      return {
-        ...state,
-        getThisMonthDivis: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
     case Types.ROUTER_ADD_LIQ: {
       return {
         ...state,
-        liquidity: action.payload,
+        addLiq: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_REMOVE_LIQ: {
+    case Types.ROUTER_ZAP_LIQ: {
       return {
         ...state,
-        liquidity: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.ROUTER_SWAP_ASSETS: {
-      return {
-        ...state,
-        assetsSwapped: action.payload,
+        zapLiq: action.payload,
         error: null,
         loading: false,
       }
@@ -66,43 +36,52 @@ export const routerReducer = (state = initialState, action) => {
     case Types.ROUTER_ADD_LIQ_SINGLE: {
       return {
         ...state,
-        liquidityAsym: action.payload,
+        addLiqSingle: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_ZAP_LIQUIDITY: {
+    case Types.ROUTER_REMOVE_LIQ: {
       return {
         ...state,
-        proposalID: action.payload,
+        remLiq: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_REMOVE_LIQ_ASYM: {
+    case Types.ROUTER_REMOVE_LIQ_SINGLE: {
       return {
         ...state,
-        liquidity: action.payload,
+        remLiqSingle: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_SWAP_ASSET_TO_SYNTH: {
+    case Types.ROUTER_SWAP: {
       return {
         ...state,
-        outputSynth: action.payload,
+        swapped: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.ROUTER_SWAP_SYNTH_TO_ASSET: {
+    case Types.ROUTER_MINT_SYNTH: {
       return {
         ...state,
-        output: action.payload,
+        mintSynth: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.ROUTER_BURN_SYNTH: {
+      return {
+        ...state,
+        burnSynth: action.payload,
         error: null,
         loading: false,
       }

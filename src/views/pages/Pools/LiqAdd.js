@@ -37,7 +37,7 @@ import {
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
-import { routerAddLiq, addLiquiditySingle } from '../../../store/router/actions'
+import { addLiquidity, addLiquiditySingle } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
@@ -363,7 +363,7 @@ const LiqAdd = () => {
     }
     if (activeTab === 'addTab1') {
       dispatch(
-        routerAddLiq(
+        addLiquidity(
           convertToWei(addInput2.value),
           convertToWei(addInput1.value),
           assetAdd1.tokenAddress,
