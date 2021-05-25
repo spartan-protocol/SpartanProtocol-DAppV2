@@ -1,7 +1,7 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-// import { getBondSpartaRemaining } from '../../store/bond_old/actions' // CHANGE THIS FOR V2A #396
+import { bondGlobalDetails } from '../../store/bond'
 import {
   getCuratedPools,
   getListedPools,
@@ -88,7 +88,7 @@ const DataManager = () => {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
       dispatch(getCuratedPools(wallet)) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails(wallet))
-      // dispatch(getBondSpartaRemaining(wallet)) // CHANGE THIS FOR V2A #396
+      dispatch(bondGlobalDetails(wallet))
       dispatch(getReserveGlobalDetails(wallet))
     }
   }

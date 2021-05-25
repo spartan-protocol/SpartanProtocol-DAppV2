@@ -12,7 +12,7 @@ import {
   Progress,
   Row,
 } from 'reactstrap'
-// import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -25,14 +25,14 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-// import { useBond } from '../../../store/bond/selector' // CHANGE THIS FOR V2A #396
+import { useBond } from '../../../store/bond/selector'
 import {
   calcLiquidityUnits,
   calcSwapOutput,
   calcValueInBase,
 } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
-// import { bondDeposit, getBondListed } from '../../../store/bond/actions' // CHANGE THIS FOR V2A #396
+import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 
@@ -40,15 +40,15 @@ const LiqBond = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWallet()
-  // const bond = useBond()
-  // const dispatch = useDispatch()
+  const bond = useBond()
+  const dispatch = useDispatch()
   const pool = usePool()
   const addr = getAddresses()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [assetBond1, setAssetBond1] = useState('...')
 
   const spartaRemainingLoop = async () => {
-    // dispatch(getBondListed(wallet)) // CHANGE THIS FOR V2A #396
+    dispatch(allListedAssets(wallet))
     await pause(10000)
     spartaRemainingLoop()
   }
@@ -71,12 +71,12 @@ const LiqBond = () => {
       if (poolDetails) {
         window.localStorage.setItem('assetType1', 'token')
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-        // asset1 =
-        //   asset1 &&
-        //   asset1.tokenAddress !== addr.spartav2 &&
-        //   bond.bondListed.includes(asset1.tokenAddress) // CHANGE THIS FOR V2A #396
-        //     ? asset1
-        //     : { tokenAddress: addr.bnb }
+        asset1 =
+          asset1 &&
+          asset1.tokenAddress !== addr.spartav2 &&
+          bond.listedAssets.includes(asset1.tokenAddress)
+            ? asset1
+            : { tokenAddress: addr.bnb }
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         setAssetBond1(asset1)
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
@@ -157,13 +157,13 @@ const LiqBond = () => {
         bondInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
       }
     }
-    // dispatch(
-    //   bondDeposit(
-    //     assetBond1?.tokenAddress,
-    //     convertToWei(bondInput1?.value),
-    //     wallet,
-    //   ),
-    // ) // CHANGE THIS FOR V2A #396
+    dispatch(
+      bondDeposit(
+        assetBond1?.tokenAddress,
+        convertToWei(bondInput1?.value),
+        wallet,
+      ),
+    )
   }
 
   return (
@@ -204,7 +204,7 @@ const LiqBond = () => {
                       <AssetSelect
                         priority="1"
                         filter={['token']}
-                        // whiteList={bond.bondListed} // CHANGE THIS FOR V2A #396
+                        whiteList={bond.listedAssets}
                       />
                     </div>
                   </Col>
@@ -261,14 +261,15 @@ const LiqBond = () => {
                   </div>
                 </Col>
                 <Col className="output-card text-right text-light">
-                  {/* {formatFromWei(bond.bondSpartaRemaining, 0)} {t('remaining')} // CHANGE THIS FOR V2A #396 */}
+                  {formatFromWei(bond.global.spartaRemaining, 0)}{' '}
+                  {t('remaining')}
                 </Col>
               </Row>
 
               <div className="progress-container progress-primary">
                 <Progress
                   max="5000000"
-                  // value={convertFromWei(bond.bondSpartaRemaining)} // CHANGE THIS FOR V2A #396
+                  value={convertFromWei(bond.global.spartaRemaining)}
                   className=""
                 />
               </div>
@@ -336,6 +337,9 @@ const LiqBond = () => {
                   bondInput1?.value <= 0 ||
                   BN(convertToWei(bondInput1?.value)).isGreaterThan(
                     getToken(assetBond1.tokenAddress)?.balance,
+                  ) ||
+                  BN(calcSpartaMinted()).isGreaterThan(
+                    bond.global.spartaRemaining,
                   )
                 }
                 onClick={() => handleBondDeposit()}

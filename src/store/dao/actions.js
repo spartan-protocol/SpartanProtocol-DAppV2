@@ -11,7 +11,7 @@ export const daoLoading = () => ({
 
 /**
  * Get the global daoVault details
- * @returns {object} totalWeight
+ * @returns {object} globalDetails
  */
 export const getDaoVaultGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
