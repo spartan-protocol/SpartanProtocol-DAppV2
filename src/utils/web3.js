@@ -1,15 +1,11 @@
 import { ethers } from 'ethers'
 
 // Testnet ABI Imports
-import abiTnBond from '../ABI/TN/Bond.json'
 import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
 import abiTnErc20 from '../ABI/TN/ERC20.json'
 import abiTnFS from '../ABI/TN/FallenSpartans.json'
-import abiTnLoan from '../ABI/TN/SpartanLoan.json'
-import abiTnLoanVault from '../ABI/TN/SpartanLoanVault.json'
-import abiTnMigrate from '../ABI/TN/SPARTANUPGRADE.json'
 import abiTnPool from '../ABI/TN/Pool.json'
 import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
 import abiTnReserve from '../ABI/TN/Reserve.json'
@@ -22,15 +18,11 @@ import abiTnUtils from '../ABI/TN/Utils.json'
 import abiTnWbnb from '../ABI/TN/WBNB.json'
 
 // Mainnet ABI Imports
-import abiMnBond from '../ABI/MN/Bond.json'
 import abiMnBondVault from '../ABI/MN/BondVault.json'
 import abiMnDao from '../ABI/MN/Dao.json'
 import abiMnDaoVault from '../ABI/MN/DaoVault.json'
 import abiMnErc20 from '../ABI/MN/ERC20.json'
 import abiMnFS from '../ABI/MN/FallenSpartans.json'
-import abiMnLoan from '../ABI/MN/SpartanLoan.json'
-import abiMnLoanVault from '../ABI/MN/SpartanLoanVault.json'
-import abiMnMigrate from '../ABI/MN/SPARTANUPGRADE.json'
 import abiMnPool from '../ABI/MN/Pool.json'
 import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
 import abiMnReserve from '../ABI/MN/Reserve.json'
@@ -42,21 +34,12 @@ import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 
-// import spartaIcon from '../assets/tokens/coin_sparta.svg'
-// import bnbIcon from '../assets/tokens/coin_bnb.svg'
-// import busdIcon from '../assets/tokens/BUSD.png'
-// import daiIcon from '../assets/tokens/DAI.png'
-
 export const abisTN = {
-  bond: abiTnBond.abi,
   bondVault: abiTnBondVault.abi,
   dao: abiTnDao.abi,
   daoVault: abiTnDaoVault.abi,
   erc20: abiTnErc20.abi,
   fallenSpartans: abiTnFS.abi,
-  loan: abiTnLoan.abi,
-  loanVault: abiTnLoanVault.abi,
-  migrate: abiTnMigrate.abi,
   pool: abiTnPool.abi,
   poolFactory: abiTnPoolFactory.abi,
   reserve: abiTnReserve.abi,
@@ -70,15 +53,11 @@ export const abisTN = {
 }
 
 export const abisMN = {
-  bond: abiMnBond.abi,
   bondVault: abiMnBondVault.abi,
   dao: abiMnDao.abi,
   daoVault: abiMnDaoVault.abi,
   erc20: abiMnErc20.abi,
   fallenSpartans: abiMnFS.abi,
-  loan: abiMnLoan.abi,
-  loanVault: abiMnLoanVault.abi,
-  migrate: abiMnMigrate.abi,
   pool: abiMnPool.abi,
   poolFactory: abiMnPoolFactory.abi,
   reserve: abiMnReserve.abi,
@@ -122,18 +101,16 @@ export const addressesTN = {
   synthVaultv1: '0x8db384Ee61F6F56750e64f8011dD3e323d885d2C',
   utilsv2: '0x7c5bBc0A7E21c22936f3788F5d58fB732659B76E',
   // CURRENT ADDRESSES
-  bond: '0xFbaCb851716FFA718111f069937cDbCF7003B384',
-  bondVault: '0x7f06678Bf6199CdEF6Cf76C264b94ffA6CD22e40',
-  dao: '0x0dFA75B8e76101aDBf588A4C03653f59DE3D4B23',
-  daoVault: '0x2d53adc5e5acc92226FAaFf1a5FcdEf4fEFAA4DD',
+  bondVault: '0xF4B346F9Bf5173b9f7b92112d27Ff0fc96473bab',
+  dao: '0x0c35c5212A3162775C16127f52DA3350122e73D2',
+  daoVault: '0x1d1A72387AC51006068844589532c24B777870F1',
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b',
-  migrate: '0x197C0fc4Ea92b58f375De66647368862677C95B7',
-  poolFactory: '0x47621301afa9FC76d61d6c34f96636D95a788142',
-  reserve: '0xaCb7645eb7784ee421dE0b4C4e2D31bbE29d3bD7',
-  router: '0xC9B60E2b1Fa28CeA42fD6f25D76766e1D5908eF2',
-  synthFactory: '0x18f48fB0881B263B26266B4db2bF034fEe7a2b43',
-  synthVault: '0x8db384Ee61F6F56750e64f8011dD3e323d885d2C',
-  utils: '0x7c5bBc0A7E21c22936f3788F5d58fB732659B76E',
+  poolFactory: '0x6D597a8F4e8a13097F37eFE15f9a5408084Ac9cf',
+  reserve: '0xf5aB990cdC7B69717AA378A76eB8538F71318478',
+  router: '0x06b845EA714d054eed08CfFcE726B2fA572F036c',
+  synthFactory: '0x289f7B49F74163a4560dC585f3538A8Cbb091FD3',
+  synthVault: '0x9854128245D603B44bAEb2B2567072B844B38483',
+  utils: '0xe14D4c2d6792A8aE24E8cec6C5Fed13f76638131',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -156,12 +133,10 @@ export const addressesMN = {
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
   tempUtilsv1a: '0x20d0270649c9f13c081FF98350148706A05557F8',
   // OLD ADDRESSES SPV2
-  bondv4: '',
   bondVaultv1: '',
   daov2: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
   daoVaultv1: '',
   fallenSpartansv1: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
-  migratev1: '',
   poolFactoryv1: '',
   reservev1: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
   routerv3: '',
@@ -169,13 +144,11 @@ export const addressesMN = {
   synthVaultv1: '',
   utilsv2: '',
   // CURRENT ADDRESSES
-  bond: '',
   bondVault: '',
   dao: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
   daoVault: '',
   fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
   poolFactory: '',
-  migrate: '',
   reserve: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
   router: '',
   synthFactory: '',
