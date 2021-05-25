@@ -7,7 +7,6 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import Common from './components/layout/Common'
 
-import { bondReducer } from './store/bond'
 import { bondVaultReducer } from './store/bondVault'
 import { daoReducer } from './store/dao'
 import { poolReducer } from './store/pool'
@@ -16,8 +15,6 @@ import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
 import { synthReducer } from './store/synth'
 import { utilsReducer } from './store/utils'
-import { utilsMathReducer } from './store/utilsMath'
-import { utilsPricingReducer } from './store/utilsPricing'
 import { web3Reducer } from './store/web3'
 import { getNetwork } from './utils/web3'
 
@@ -35,7 +32,6 @@ const globalFormat = {
 BigNumber.config({ FORMAT: globalFormat })
 
 const reducers = combineReducers({
-  bond: bondReducer,
   bondVault: bondVaultReducer,
   dao: daoReducer,
   pool: poolReducer,
@@ -44,8 +40,6 @@ const reducers = combineReducers({
   sparta: spartaReducer,
   synth: synthReducer,
   utils: utilsReducer,
-  utilsMath: utilsMathReducer,
-  utilsPricing: utilsPricingReducer,
   web3: web3Reducer,
 })
 

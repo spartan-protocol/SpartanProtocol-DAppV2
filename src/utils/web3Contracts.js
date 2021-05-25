@@ -126,20 +126,6 @@ export const getLoanVaultContract = (wallet) => {
 }
 
 /**
- * Get the current migration contract with signer/provider injected
- * @returns {uint} contract
- */
-export const getMigrateContract = (wallet) => {
-  let contract = isAddress(getAddresses().migrate)
-  const abiMigrate = getAbis().migrate
-  const provider = getWalletProvider(wallet?.ethereum)
-  if (contract === true) {
-    contract = new ethers.Contract(getAddresses().migrate, abiMigrate, provider)
-  }
-  return contract
-}
-
-/**
  * Get the current pool contract with signer/provider injected
  * @param {address} poolAddress
  * @param {object} wallet
