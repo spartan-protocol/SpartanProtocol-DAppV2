@@ -889,7 +889,7 @@ const WalletSelect = (props) => {
                     onClick={() => {
                       connectWallet(x)
                       if (x.id === 'TW') {
-                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.origin}`
+                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.host}?wallet=TW`
                       }
                     }}
                   >
