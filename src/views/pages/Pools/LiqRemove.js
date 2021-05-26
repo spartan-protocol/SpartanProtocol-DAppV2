@@ -585,7 +585,7 @@ const LiqRemove = () => {
                         <span className="subtitle-card">
                           {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
                           <span className="output-card ml-1">
-                            {getToken(poolRemove1?.tokenAddress)?.symbol}p
+                            {getToken(poolRemove1?.tokenAddress)?.symbol}
                           </span>
                         </span>
                         {activeTab === '1' && (
