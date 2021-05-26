@@ -130,7 +130,7 @@ const Swap = () => {
         } else {
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
-          if (asset1.tokenAddress === addr.spartav1) {
+          if (asset1.tokenAddress === addr.spartav2) {
             asset1 = { tokenAddress: addr.bnb }
           }
         }
@@ -139,7 +139,7 @@ const Swap = () => {
           !asset1 ||
           !pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
         ) {
-          asset1 = { tokenAddress: addr.spartav1 }
+          asset1 = { tokenAddress: addr.spartav2 }
         }
 
         if (
@@ -264,7 +264,7 @@ const Swap = () => {
 
   const getSynthOutputFromBase = () => {
     let tokenValue = '0'
-    if (assetSwap1.tokenAddress === addr.spartav1) {
+    if (assetSwap1.tokenAddress === addr.spartav2) {
       const lpUnits = getSynthLPsFromBase()
       const baseAmount = calcShare(
         lpUnits,
@@ -344,7 +344,7 @@ const Swap = () => {
   const getSynthOutputToBase = () => {
     let tokenValue = '0'
     let outPutBase = '0'
-    if (assetSwap2.tokenAddress === addr.spartav1) {
+    if (assetSwap2.tokenAddress === addr.spartav2) {
       const inputSynth = convertToWei(swapInput1?.value)
       tokenValue = calcSwapOutput(
         inputSynth,
@@ -401,7 +401,7 @@ const Swap = () => {
 
   // GET USD VALUES
   const getInput1USD = () => {
-    if (assetSwap1.tokenAddress === addr.spartav1) {
+    if (assetSwap1.tokenAddress === addr.spartav2) {
       return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
     }
     if (swapInput1?.value) {
@@ -418,7 +418,7 @@ const Swap = () => {
 
   // GET USD VALUES
   const getInput2USD = () => {
-    if (assetSwap2.tokenAddress === addr.spartav1) {
+    if (assetSwap2.tokenAddress === addr.spartav2) {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (swapInput2?.value) {
@@ -777,7 +777,7 @@ const Swap = () => {
                               </div>
                             </Col>
                             <Col className="text-right">
-                              {assetSwap1?.tokenAddress === addr.spartav1 && (
+                              {assetSwap1?.tokenAddress === addr.spartav2 && (
                                 <div className="output-card text-light">
                                   {swapInput1?.value
                                     ? formatFromWei(getSynthFeeFromBase(), 6)
@@ -785,7 +785,7 @@ const Swap = () => {
                                   SPARTA
                                 </div>
                               )}
-                              {assetSwap1?.tokenAddress !== addr.spartav1 && (
+                              {assetSwap1?.tokenAddress !== addr.spartav2 && (
                                 <div className="output-card text-light">
                                   {swapInput1?.value
                                     ? formatFromWei(getSynthFeeToBase(), 6)
@@ -826,76 +826,102 @@ const Swap = () => {
                           </Row>
 
                           {/* 'Approval/Allowance' row */}
-                          {activeTab === 'mint' && (
-                            <>
-                              {assetSwap1?.tokenAddress !== addr.bnb &&
-                                wallet?.account &&
-                                swapInput1?.value && (
-                                  <Approval
-                                    tokenAddress={assetSwap1?.tokenAddress}
-                                    symbol={
-                                      getToken(assetSwap1.tokenAddress)?.symbol
+                          <Row>
+                            {activeTab === 'mint' && (
+                              <>
+                                {assetSwap1?.tokenAddress !== addr.bnb &&
+                                  wallet?.account &&
+                                  swapInput1?.value && (
+                                    <Approval
+                                      tokenAddress={assetSwap1?.tokenAddress}
+                                      symbol={
+                                        getToken(assetSwap1.tokenAddress)
+                                          ?.symbol
+                                      }
+                                      walletAddress={wallet?.account}
+                                      contractAddress={addr.router}
+                                      txnAmount={convertToWei(
+                                        swapInput1?.value,
+                                      )}
+                                      assetNumber="1"
+                                    />
+                                  )}
+                                <Col className="hide-if-siblings">
+                                  <Button
+                                    color="primary"
+                                    onClick={() => handleSwapToSynth()}
+                                    disabled={
+                                      swapInput1?.value <= 0 ||
+                                      BN(
+                                        convertToWei(swapInput1?.value),
+                                      ).isGreaterThan(getBalance(1))
                                     }
+                                    block
+                                  >
+                                    {t('mint')}{' '}
+                                    {getToken(assetSwap2.tokenAddress)?.symbol}s
+                                  </Button>
+                                </Col>
+                              </>
+                            )}
+                            {activeTab === 'burn' && (
+                              <>
+                                {wallet?.account && swapInput1?.value && (
+                                  <Approval
+                                    tokenAddress={
+                                      getSynth(assetSwap1?.tokenAddress)
+                                        ?.address
+                                    }
+                                    symbol={`${
+                                      getToken(assetSwap1.tokenAddress)?.symbol
+                                    }s`}
                                     walletAddress={wallet?.account}
                                     contractAddress={addr.router}
                                     txnAmount={convertToWei(swapInput1?.value)}
                                     assetNumber="1"
                                   />
                                 )}
-
-                              <Button
-                                color="primary"
-                                onClick={() => handleSwapToSynth()}
-                                disabled={
-                                  swapInput1?.value <= 0 ||
-                                  BN(
-                                    convertToWei(swapInput1?.value),
-                                  ).isGreaterThan(getBalance(1))
-                                }
-                                block
-                              >
-                                {t('mint')}{' '}
-                                {getToken(assetSwap2.tokenAddress)?.symbol}s
-                              </Button>
-                            </>
-                          )}
-                          {activeTab === 'burn' && (
-                            <Button
-                              color="primary"
-                              onClick={() =>
-                                dispatch(
-                                  swapSynthToAsset(
-                                    convertToWei(swapInput1?.value),
-                                    getSynth(assetSwap1.tokenAddress)?.address,
-                                    assetSwap2.tokenAddress,
-                                    wallet,
-                                  ),
-                                )
-                              }
-                              disabled={
-                                swapInput1?.value <= 0 ||
-                                BN(
-                                  convertToWei(swapInput1?.value),
-                                ).isGreaterThan(getBalance(1))
-                              }
-                              block
-                            >
-                              {t('burn')}{' '}
-                              {getToken(assetSwap1.tokenAddress)?.symbol}s
-                            </Button>
-                          )}
+                                <Col className="hide-if-siblings">
+                                  <Button
+                                    color="primary"
+                                    onClick={() =>
+                                      dispatch(
+                                        swapSynthToAsset(
+                                          convertToWei(swapInput1?.value),
+                                          getSynth(assetSwap1.tokenAddress)
+                                            ?.address,
+                                          assetSwap2.tokenAddress,
+                                          wallet,
+                                        ),
+                                      )
+                                    }
+                                    disabled={
+                                      swapInput1?.value <= 0 ||
+                                      BN(
+                                        convertToWei(swapInput1?.value),
+                                      ).isGreaterThan(getBalance(1))
+                                    }
+                                    block
+                                  >
+                                    {t('burn')}{' '}
+                                    {getToken(assetSwap1.tokenAddress)?.symbol}s
+                                  </Button>
+                                </Col>
+                              </>
+                            )}
+                          </Row>
                         </Col>
                       </Row>
                     </Card>
                   </Col>
                   <Col xs="auto">
                     {pool.poolDetails &&
-                      assetSwap1.tokenAddress !== addr.spartav1 &&
+                      assetSwap1.tokenAddress !== addr.spartav2 &&
                       assetSwap2.tokenAddress !== assetSwap1.tokenAddress && (
                         <SwapPair assetSwap={assetSwap1} />
                       )}
                     {pool.poolDetails &&
-                      assetSwap2.tokenAddress !== addr.spartav1 && (
+                      assetSwap2.tokenAddress !== addr.spartav2 && (
                         <SwapPair assetSwap={assetSwap2} />
                       )}
                   </Col>

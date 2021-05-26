@@ -19,7 +19,6 @@ const initialState = {
   synth: {},
   synthData: {},
   share: {},
-  curatedPools: {},
   isMember: false,
   error: null,
   loading: false,
@@ -202,33 +201,6 @@ export const utilsReducer = (state = initialState, action) => {
       return {
         ...state,
         share: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_CURATED_POOL_COUNT: {
-      return {
-        ...state,
-        curatedPools: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_CURATED_POOLS: {
-      return {
-        ...state,
-        curatedPools: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_CURATED_POOLS_IN_RANGE: {
-      return {
-        ...state,
-        curatedPools: action.payload,
         loading: false,
         error: null,
       }

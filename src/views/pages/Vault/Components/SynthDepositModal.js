@@ -4,27 +4,30 @@ import { Button, Col, Input, Modal, Row, FormGroup, Card } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
-import { daoDeposit } from '../../../../store/dao/actions'
-import { useDao } from '../../../../store/dao/selector'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import { getExplorerTxn } from '../../../../utils/extCalls'
+import Approval from '../../../../components/Approval/Approval'
+import { getAddresses } from '../../../../utils/web3'
+import { synthDeposit } from '../../../../store/synth/actions'
+import { useSynth } from '../../../../store/synth/selector'
 
-const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
+const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const [percentage, setpercentage] = useState('0')
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
-  const dao = useDao()
+  const synth = useSynth()
   const wallet = useWallet()
+  const addr = getAddresses()
   const [loading, setloading] = useState(false)
   const [stage, setstage] = useState(0)
-  const pool1 = pool.poolDetails.filter(
+  const synth1 = synth.synthDetails.filter(
     (i) => i.tokenAddress === tokenAddress,
   )[0]
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
-  const deposit = () => BN(percentage).div(100).times(pool1.balance).toFixed(0)
+  const deposit = () => BN(percentage).div(100).times(synth1.balance).toFixed(0)
 
   return (
     <Modal className="card-320" isOpen={showModal} toggle={toggleModal}>
@@ -46,7 +49,7 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                 <div className="text-card">{t('txnComplete')}</div>{' '}
                 {t('viewBscScan')}{' '}
                 <a
-                  href={getExplorerTxn(dao.deposit.transactionHash)}
+                  href={getExplorerTxn(synth.deposit.transactionHash)}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -90,17 +93,25 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
               </Col>
             </Row>
             <Row>
-              <Col xs="6" className="ml-n1">
-                <Button color="primary" onClick={() => toggleModal()}>
-                  {t('cancel')}
-                </Button>
-              </Col>
-              <Col xs="6" className="">
+              {wallet?.account && (
+                <Approval
+                  tokenAddress={synth1.address}
+                  symbol={`${token.symbol}s`}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.synthVault}
+                  txnAmount={deposit()}
+                  assetNumber="1"
+                />
+              )}
+              <Col className="hide-if-prior-sibling">
                 <Button
                   color="primary"
+                  block
                   onClick={async () => {
                     setloading(true)
-                    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
+                    await dispatch(
+                      synthDeposit(synth1.address, synth1.balance, wallet),
+                    )
                     setstage(stage + 1)
                     setloading(false)
                   }}
@@ -116,4 +127,4 @@ const DepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   )
 }
 
-export default DepositModal
+export default SynthDepositModal

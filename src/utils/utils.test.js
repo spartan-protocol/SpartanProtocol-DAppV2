@@ -29,8 +29,8 @@ describe('Utils', () => {
     expect(provider.connection.url).not.toBeUndefined()
   })
   test('should get contract', () => {
-    const contract = getTokenContract(addr.spartav1)
+    const contract = getTokenContract(addr.spartav2)
 
-    expect(contract.address).toBe(addr.spartav1)
+    expect(contract.address).toBe(addr.spartav2)
   })
 })

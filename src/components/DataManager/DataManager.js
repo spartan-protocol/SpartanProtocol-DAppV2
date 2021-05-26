@@ -1,9 +1,8 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { getBondSpartaRemaining } from '../../store/bond/actions'
+import { bondGlobalDetails } from '../../store/bond'
 import {
-  getCuratedPools,
   getListedPools,
   getListedTokens,
   getPoolDetails,
@@ -18,16 +17,16 @@ import {
   addNetworkMM,
   addNetworkBC,
   getSpartaPrice,
-  getEventArray,
+  // getEventArray,
 } from '../../store/web3'
 import { changeNetwork, getNetwork } from '../../utils/web3'
-import {
-  getBondContract,
-  getDaoContract,
-  getPoolContract,
-  getRouterContract,
-  getSynthContract,
-} from '../../utils/web3Contracts'
+// import {
+//   getBondContract,
+//   getDaoContract,
+//   getPoolContract,
+//   getRouterContract,
+//   getSynthContract,
+// } from '../../utils/web3Contracts'
 
 const DataManager = () => {
   const synth = useSynth()
@@ -35,8 +34,8 @@ const DataManager = () => {
   const pool = usePool()
   const wallet = useWallet()
 
-  const getSynth = (tokenAddress) =>
-    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+  // const getSynth = (tokenAddress) =>
+  //   synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   const [prevNetwork, setPrevNetwork] = useState(false)
   const [netLoading, setnetLoading] = useState(false)
@@ -86,9 +85,8 @@ const DataManager = () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (chainId === 97 || chainId === 56) {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
-      dispatch(getCuratedPools(wallet)) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails(wallet))
-      dispatch(getBondSpartaRemaining(wallet))
+      dispatch(bondGlobalDetails(wallet))
       dispatch(getReserveGlobalDetails(wallet))
     }
   }
@@ -160,17 +158,16 @@ const DataManager = () => {
    */
   useEffect(() => {
     const { tokenDetails } = pool
-    const { curatedPools } = pool
     const checkListedPools = () => {
       if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails, curatedPools, wallet))
+        dispatch(getListedPools(tokenDetails, wallet))
       }
     }
     checkListedPools()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.tokenDetails])
 
-  const [prevPoolDetails, setPrevPoolDetails] = useState('')
+  // const [prevPoolDetails, setPrevPoolDetails] = useState('')
 
   /**
    * Get final pool details
@@ -182,7 +179,7 @@ const DataManager = () => {
       if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
         if (listedPools?.length > 0) {
           dispatch(getPoolDetails(listedPools, wallet))
-          setPrevPoolDetails(pool.poolDetails)
+          // setPrevPoolDetails(pool.poolDetails)
         }
         if (synthArray?.length > 0 && listedPools?.length > 0) {
           dispatch(getSynthDetails(synthArray, listedPools, wallet))
@@ -193,72 +190,72 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
 
-  /**
-   * Listen to all contracts
-   */
-  const [eventArray, setEventArray] = useState([])
-  useEffect(() => {
-    let contracts = []
-    const { poolDetails } = pool
-    if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
-      contracts = [
-        getBondContract(wallet),
-        getRouterContract(wallet),
-        getDaoContract(wallet),
-      ]
-    }
+  // /**
+  //  * Listen to all contracts
+  //  */
+  // const [eventArray, setEventArray] = useState([])
+  // useEffect(() => {
+  //   let contracts = []
+  //   const { poolDetails } = pool
+  //   if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+  //     contracts = [
+  //       getBondContract(wallet),
+  //       getRouterContract(wallet),
+  //       getDaoContract(wallet),
+  //     ]
+  //   }
 
-    const listen = async (contract) => {
-      await contract.on('*', (eventObject) => {
-        console.log(eventObject)
-        setEventArray((oldArray) => [...oldArray, eventObject])
-      })
-    }
+  //   const listen = async (contract) => {
+  //     await contract.on('*', (eventObject) => {
+  //       console.log(eventObject)
+  //       setEventArray((oldArray) => [...oldArray, eventObject])
+  //     })
+  //   }
 
-    const mapOut = () => {
-      if (
-        poolDetails?.length !== prevPoolDetails?.length &&
-        poolDetails?.length > 0
-      ) {
-        for (let i = 0; i < poolDetails.length; i++) {
-          if (poolDetails[i]?.address) {
-            contracts.push(getPoolContract(poolDetails[i].address, wallet))
-          }
-          if (getSynth(poolDetails[i].tokenAddress)?.address) {
-            contracts.push(
-              getSynthContract(
-                getSynth(poolDetails[i].tokenAddress)?.address,
-                wallet,
-              ),
-            )
-          }
-        }
+  //   const mapOut = () => {
+  //     if (
+  //       poolDetails?.length !== prevPoolDetails?.length &&
+  //       poolDetails?.length > 0
+  //     ) {
+  //       for (let i = 0; i < poolDetails.length; i++) {
+  //         if (poolDetails[i]?.address) {
+  //           contracts.push(getPoolContract(poolDetails[i].address, wallet))
+  //         }
+  //         if (getSynth(poolDetails[i].tokenAddress)?.address) {
+  //           contracts.push(
+  //             getSynthContract(
+  //               getSynth(poolDetails[i].tokenAddress)?.address,
+  //               wallet,
+  //             ),
+  //           )
+  //         }
+  //       }
 
-        for (let i = 0; i < contracts.length; i++) {
-          listen(contracts[i])
-        }
-      }
-    }
-    mapOut()
-    return () => {
-      for (let i = 0; i < contracts.length; i++) {
-        try {
-          contracts[i]?.removeAllListeners()
-        } catch (e) {
-          console.log(e)
-        }
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
+  //       for (let i = 0; i < contracts.length; i++) {
+  //         listen(contracts[i])
+  //       }
+  //     }
+  //   }
+  //   mapOut()
+  //   return () => {
+  //     for (let i = 0; i < contracts.length; i++) {
+  //       try {
+  //         contracts[i]?.removeAllListeners()
+  //       } catch (e) {
+  //         console.log(e)
+  //       }
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [pool.poolDetails])
 
-  /**
-   * Update store whenever a new txn is picked up
-   */
-  useEffect(() => {
-    dispatch(getEventArray(eventArray))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventArray])
+  // /**
+  //  * Update store whenever a new txn is picked up
+  //  */
+  // useEffect(() => {
+  //   dispatch(getEventArray(eventArray))
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [eventArray])
 
   return <></>
 }

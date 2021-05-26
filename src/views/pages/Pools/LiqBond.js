@@ -32,7 +32,7 @@ import {
   calcValueInBase,
 } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
-import { bondDeposit, getBondListed } from '../../../store/bond/actions'
+import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 
@@ -48,7 +48,7 @@ const LiqBond = () => {
   const [assetBond1, setAssetBond1] = useState('...')
 
   const spartaRemainingLoop = async () => {
-    dispatch(getBondListed(wallet))
+    dispatch(allListedAssets(wallet))
     await pause(10000)
     spartaRemainingLoop()
   }
@@ -73,8 +73,8 @@ const LiqBond = () => {
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav1 &&
-          bond.bondListed.includes(asset1.tokenAddress)
+          asset1.tokenAddress !== addr.spartav2 &&
+          bond.listedAssets.includes(asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset1 = getItemFromArray(asset1, pool.poolDetails)
@@ -204,7 +204,7 @@ const LiqBond = () => {
                       <AssetSelect
                         priority="1"
                         filter={['token']}
-                        whiteList={bond.bondListed}
+                        whiteList={bond.listedAssets}
                       />
                     </div>
                   </Col>
@@ -261,14 +261,15 @@ const LiqBond = () => {
                   </div>
                 </Col>
                 <Col className="output-card text-right text-light">
-                  {formatFromWei(bond.bondSpartaRemaining, 0)} {t('remaining')}
+                  {formatFromWei(bond.global.spartaRemaining, 0)}{' '}
+                  {t('remaining')}
                 </Col>
               </Row>
 
               <div className="progress-container progress-primary">
                 <Progress
                   max="5000000"
-                  value={convertFromWei(bond.bondSpartaRemaining)}
+                  value={convertFromWei(bond.global.spartaRemaining)}
                   className=""
                 />
               </div>
@@ -336,6 +337,9 @@ const LiqBond = () => {
                   bondInput1?.value <= 0 ||
                   BN(convertToWei(bondInput1?.value)).isGreaterThan(
                     getToken(assetBond1.tokenAddress)?.balance,
+                  ) ||
+                  BN(calcSpartaMinted()).isGreaterThan(
+                    bond.global.spartaRemaining,
                   )
                 }
                 onClick={() => handleBondDeposit()}

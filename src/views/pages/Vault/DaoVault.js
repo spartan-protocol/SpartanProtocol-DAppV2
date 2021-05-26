@@ -17,7 +17,7 @@ import {
 } from '../../../store/dao/actions'
 import { calcShare } from '../../../utils/web3Utils'
 import { useReserve } from '../../../store/reserve/selector'
-import DepositModal from './Components/DepositModal'
+import DaoDepositModal from './Components/DaoDepositModal'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -259,7 +259,7 @@ const DaoVault = () => {
                   </Col>
                 </Row>
                 {showModal && (
-                  <DepositModal
+                  <DaoDepositModal
                     showModal={showModal}
                     toggleModal={toggleModal}
                     tokenAddress={tokenAddress}

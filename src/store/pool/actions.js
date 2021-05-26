@@ -11,10 +11,6 @@ import {
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import fallbackImg from '../../assets/icons/Logo-unknown.svg'
-import bnbIcon from '../../assets/icons/BNB.svg'
-import spartaIcon from '../../assets/icons/coin_sparta_black_bg.svg'
-import oldSpartaIcon from '../../assets/icons/oldSparta.svg'
 import { getAddresses } from '../../utils/web3'
 
 export const poolLoading = () => ({
@@ -113,20 +109,20 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
       }
       if (listedTokens[i] === addr.bnb) {
         tempArray.push('BNB')
-        tempArray.push(bnbIcon)
+        tempArray.push(`${window.location.origin}/images/icons/BNB.svg`)
       } else if (listedTokens[i] === addr.spartav1) {
         tempArray.push('SPARTA (old)')
-        tempArray.push(oldSpartaIcon)
+        tempArray.push(`${window.location.origin}/images/icons/SPARTA1.svg`)
       } else if (listedTokens[i] === addr.spartav2) {
         tempArray.push('SPARTA')
-        tempArray.push(spartaIcon)
+        tempArray.push(`${window.location.origin}/images/icons/SPARTA2.svg`)
       } else {
         tempArray.push(contract.callStatic.symbol()) // TOKEN SYMBOL (3)
         tempArray.push(
           trustWalletIndex.data.filter((asset) => asset === listedTokens[i])
             .length > 0
             ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
-            : fallbackImg,
+            : `${window.location.origin}/images/icons/Fallback.svg`,
         ) // SYMBOL URL (4)
       }
     }
@@ -150,13 +146,10 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
 /**
  * Get LP token addresses and setup the object
  * @param {array} tokenDetails
- * @param {array} curatedArray
  * @param {object} wallet
  * @returns {array} listedPools
  */
-export const getListedPools = (tokenDetails, curatedArray, wallet) => async (
-  dispatch,
-) => {
+export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
   dispatch(poolLoading())
   const contract = getUtilsContract(wallet)
   const addr = getAddresses()
@@ -184,8 +177,7 @@ export const getListedPools = (tokenDetails, curatedArray, wallet) => async (
       listedPools.push({
         tokenAddress: tokenDetails[i].address,
         address: tempArray[i].poolAddress,
-        curated:
-          curatedArray.find((item) => item === tempArray[i].poolAddress) > 0,
+        curated: false,
         balance: '0',
         staked: '0',
         bonded: '0',
@@ -224,6 +216,7 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
       const routerContract = getRouterContract(wallet)
       const daoVaultContract = getDaoVaultContract(wallet)
       const bondVaultContract = getBondVaultContract(wallet)
+      const pfContract = getPoolFactoryContract(wallet)
       const poolContract =
         listedPools[i].tokenAddress === addr.spartav1 ||
         listedPools[i].tokenAddress === addr.spartav2
@@ -287,24 +280,28 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
               listedPools[i].tokenAddress,
             ),
       ) // bondDetails - bondMember, bondClaimRate, bondLastClaim
+      tempArray.push(
+        listedPools[i].address !== ''
+          ? pfContract.callStatic.isCuratedPool(listedPools[i].address)
+          : false,
+      ) // check if pool is curated
     }
     tempArray = await Promise.all(tempArray)
     const poolDetails = listedPools
-    const varCount = 7
+    const varCount = 8
     for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
-      const bondDetails = tempArray[i + 6]
-      poolDetails[i / varCount].balance = tempArray[i].toString()
-      poolDetails[i / varCount].staked = tempArray[i + 1].toString()
-      poolDetails[i / varCount].bonded = bondDetails.bondedLP.toString()
-      poolDetails[i / varCount].recentFees = tempArray[i + 2].toString()
-      poolDetails[i / varCount].lastMonthFees = tempArray[i + 3].toString()
-      poolDetails[i / varCount].recentDivis = tempArray[i + 4].toString()
-      poolDetails[i / varCount].lastMonthDivis = tempArray[i + 5].toString()
-      poolDetails[i / varCount].bondMember = bondDetails.isMember
-      poolDetails[i / varCount].bondClaimRate = bondDetails.claimRate.toString()
-      poolDetails[
-        i / varCount
-      ].bondLastClaim = bondDetails.lastBlockTime.toString()
+      const ii = i / varCount
+      poolDetails[ii].balance = tempArray[i].toString()
+      poolDetails[ii].staked = tempArray[i + 1].toString()
+      poolDetails[ii].bonded = tempArray[i + 6].bondedLP.toString()
+      poolDetails[ii].recentFees = tempArray[i + 2].toString()
+      poolDetails[ii].lastMonthFees = tempArray[i + 3].toString()
+      poolDetails[ii].recentDivis = tempArray[i + 4].toString()
+      poolDetails[ii].lastMonthDivis = tempArray[i + 5].toString()
+      poolDetails[ii].bondMember = tempArray[i + 6].isMember
+      poolDetails[ii].bondClaimRate = tempArray[i + 6].claimRate.toString()
+      poolDetails[ii].bondLastClaim = tempArray[i + 6].lastBlockTime.toString()
+      poolDetails[ii].curated = tempArray[i + 7]
     }
     dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
   } catch (error) {

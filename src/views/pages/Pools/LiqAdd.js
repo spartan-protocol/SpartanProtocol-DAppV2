@@ -37,7 +37,7 @@ import {
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
-import { routerAddLiq, routerAddLiqAsym } from '../../../store/router/actions'
+import { addLiquidity, addLiquiditySingle } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
@@ -64,7 +64,6 @@ const LiqAdd = () => {
     try {
       return JSON.parse(data)
     } catch (e) {
-      console.log('test')
       return pool.poolDetails[0]
     }
   }
@@ -89,13 +88,13 @@ const LiqAdd = () => {
         }
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav1 &&
+          asset1.tokenAddress !== addr.spartav2 &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset2 = { tokenAddress: addr.spartav1 }
+        asset2 = { tokenAddress: addr.spartav2 }
         asset3 =
-          asset1.tokenAddress !== addr.spartav1
+          asset1.tokenAddress !== addr.spartav2
             ? asset1
             : { tokenAddress: addr.bnb }
 
@@ -122,7 +121,7 @@ const LiqAdd = () => {
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset3 = asset1.tokenAddress !== addr.spartav1 ? asset1 : asset3
+        asset3 = asset1.tokenAddress !== addr.spartav2 ? asset1 : asset3
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset3 = getItemFromArray(asset3, pool.poolDetails)
@@ -211,7 +210,7 @@ const LiqAdd = () => {
       return convertFromWei(
         calcLiquidityUnitsAsym(
           convertToWei(addInput1?.value),
-          assetAdd1.tokenAddress === addr.spartav1
+          assetAdd1.tokenAddress === addr.spartav2
             ? poolAdd1?.baseAmount
             : poolAdd1?.tokenAmount,
           poolAdd1?.poolUnits,
@@ -227,7 +226,7 @@ const LiqAdd = () => {
         convertToWei(BN(addInput1?.value).div(2)),
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
-        assetAdd1.tokenAddress !== addr.spartav1,
+        assetAdd1.tokenAddress !== addr.spartav2,
       )
       return swapFee
     }
@@ -235,14 +234,14 @@ const LiqAdd = () => {
   }
 
   const getInput1ValueUSD = () => {
-    if (assetAdd1?.tokenAddress !== addr.spartav1 && addInput1?.value) {
+    if (assetAdd1?.tokenAddress !== addr.spartav2 && addInput1?.value) {
       return calcValueInBase(
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
         convertToWei(addInput1.value),
       ).times(web3.spartaPrice)
     }
-    if (assetAdd1?.tokenAddress === addr.spartav1 && addInput1?.value) {
+    if (assetAdd1?.tokenAddress === addr.spartav2 && addInput1?.value) {
       return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
     }
     return '0.00'
@@ -364,7 +363,7 @@ const LiqAdd = () => {
     }
     if (activeTab === 'addTab1') {
       dispatch(
-        routerAddLiq(
+        addLiquidity(
           convertToWei(addInput2.value),
           convertToWei(addInput1.value),
           assetAdd1.tokenAddress,
@@ -373,9 +372,9 @@ const LiqAdd = () => {
       )
     } else {
       dispatch(
-        routerAddLiqAsym(
+        addLiquiditySingle(
           convertToWei(addInput1.value),
-          assetAdd1.tokenAddress === addr.spartav1,
+          assetAdd1.tokenAddress === addr.spartav2,
           poolAdd1.tokenAddress,
           wallet,
         ),
@@ -440,7 +439,11 @@ const LiqAdd = () => {
                     <AssetSelect
                       priority="1"
                       filter={['token']}
-                      blackList={activeTab === 'addTab1' ? [addr.spartav1] : []}
+                      blackList={
+                        activeTab === 'addTab1'
+                          ? [addr.spartav1, addr.spartav2]
+                          : []
+                      }
                     />
                   </Col>
                   <Col className="text-right">
@@ -525,7 +528,7 @@ const LiqAdd = () => {
                       <AssetSelect
                         priority="2"
                         filter={['token']}
-                        whiteList={[addr.spartav1]}
+                        whiteList={[addr.spartav2]}
                         disabled={activeTab === 'addTab1'}
                       />
                     </Col>
@@ -589,7 +592,7 @@ const LiqAdd = () => {
                           filter={['pool']}
                           disabled={
                             activeTab === 'addTab1' ||
-                            assetAdd1.tokenAddress !== addr.spartav1
+                            assetAdd1.tokenAddress !== addr.spartav2
                           }
                         />
                       </div>

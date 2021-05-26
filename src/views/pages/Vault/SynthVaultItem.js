@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { Button, Card, Col, Row } from 'reactstrap'
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
-import { synthDeposit, synthWithdraw } from '../../../store/synth/actions'
+import { synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { useReserve } from '../../../store/reserve/selector'
 import {
@@ -17,6 +17,7 @@ import {
 } from '../../../utils/web3Utils'
 import { useSparta } from '../../../store/sparta/selector'
 import spartaIconAlt from '../../../assets/img/spartan_synth.svg'
+import SynthDepositModal from './Components/SynthDepositModal'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -26,11 +27,18 @@ const SynthVaultItem = ({ synthItem }) => {
   const pool = usePool()
   const wallet = useWallet()
   const dispatch = useDispatch()
+  const [tokenAddress, settokenAddress] = useState('')
+  const [showModal, setShowModal] = useState(false)
   // const [showDetails, setShowDetails] = useState(false)
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-  const getPool = (tokenAddress) =>
-    pool.poolDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+  const getToken = (_tokenAddress) =>
+    pool.tokenDetails.filter((i) => i.address === _tokenAddress)[0]
+  const getPool = (_tokenAddress) =>
+    pool.poolDetails.filter((i) => i.tokenAddress === _tokenAddress)[0]
+
+  const toggleModal = (_tokenAddr) => {
+    settokenAddress(_tokenAddr)
+    setShowModal(!showModal)
+  }
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)
@@ -194,11 +202,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 color="primary"
                 className="p-2"
                 block
-                onClick={() =>
-                  dispatch(
-                    synthDeposit(synthItem.address, synthItem.balance, wallet),
-                  )
-                }
+                onClick={() => toggleModal(synthItem.tokenAddress)}
                 disabled={synthItem.balance <= 0}
               >
                 {t('deposit')}
@@ -218,6 +222,13 @@ const SynthVaultItem = ({ synthItem }) => {
               </Button>
             </Col>
           </Row>
+          {showModal && (
+            <SynthDepositModal
+              showModal={showModal}
+              toggleModal={toggleModal}
+              tokenAddress={tokenAddress}
+            />
+          )}
         </Card>
       </Col>
     </>

@@ -49,20 +49,6 @@ export const getOldBondContract = (bondAddress, wallet) => {
 }
 
 /**
- * Get the current bond contract with signer/provider injected
- * @returns {uint} contract
- */
-export const getBondContract = (wallet) => {
-  let contract = isAddress(getAddresses().bond)
-  const abiBond = getAbis().bond
-  const provider = getWalletProvider(wallet?.ethereum)
-  if (contract === true) {
-    contract = new ethers.Contract(getAddresses().bond, abiBond, provider)
-  }
-  return contract
-}
-
-/**
  * Get the current bondVault contract with signer/provider injected
  * @returns {uint} contract
  */
@@ -140,20 +126,6 @@ export const getLoanVaultContract = (wallet) => {
 }
 
 /**
- * Get the current migration contract with signer/provider injected
- * @returns {uint} contract
- */
-export const getMigrateContract = (wallet) => {
-  let contract = isAddress(getAddresses().migrate)
-  const abiMigrate = getAbis().migrate
-  const provider = getWalletProvider(wallet?.ethereum)
-  if (contract === true) {
-    contract = new ethers.Contract(getAddresses().migrate, abiMigrate, provider)
-  }
-  return contract
-}
-
-/**
  * Get the current pool contract with signer/provider injected
  * @param {address} poolAddress
  * @param {object} wallet
@@ -221,10 +193,10 @@ export const getSpartaV1Contract = (wallet) => {
  */
 export const getSpartaV2Contract = (wallet) => {
   let contract = isAddress(getAddresses().spartav2)
-  const abiBase = getAbis().sparta
+  const abiSparta = getAbis().sparta
   const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
-    contract = new ethers.Contract(getAddresses().spartav2, abiBase, provider)
+    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, provider)
   }
   return contract
 }
@@ -244,6 +216,7 @@ export const getFallenSpartansContract = (wallet) => {
       provider,
     )
   }
+  // console.log(contract)
   return contract
 }
 

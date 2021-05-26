@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, Button, Card } from 'reactstrap'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-import { bondClaimAll } from '../../../store/bond/actions'
+import { claimAllForMember } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork } from '../../../utils/web3'
@@ -70,7 +70,6 @@ const Bond = () => {
                   <Row className="my-1">
                     <Col xs="auto" className="text-card">
                       {t('noBondPosition')}
-                      {/* You have no Bond positions */}
                     </Col>
                   </Row>
                 )}
@@ -78,7 +77,7 @@ const Bond = () => {
                   <Col xs="12" className="p-1">
                     <Button
                       className="btn btn-primary align-middle"
-                      onClick={() => dispatch(bondClaimAll(wallet))}
+                      onClick={() => dispatch(claimAllForMember(wallet))}
                     >
                       {t('claimAll')}
                       {' ( '}

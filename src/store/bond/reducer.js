@@ -1,73 +1,38 @@
 import * as Types from './types'
 
 const initialState = {
-  bondListed: [],
-  bondListedAsset: false,
-  bondClaimable: 0,
-  bondSpartaRemaining: 0,
-  bondBurnReady: 0,
-  bondBurn: 0,
-  bondClaimedAll: 0,
-  bondClaimed: 0,
-  bondCoolOffPeriod: {},
-  bondListedCount: 0,
-  bondMemberCount: 0,
-  bondMembers: [],
-  loading: false,
-  error: null,
+  global: {},
+  listedAssets: [],
+  member: {},
+  deposit: '0',
+  bondClaim: '0',
+  bondClaimAll: '0',
 }
 
 export const bondReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Types.BOND_LISTED: {
+    case Types.BOND_GLOBAL: {
       return {
         ...state,
-        bondListed: action.payload,
+        global: action.payload,
         loading: false,
         error: null,
       }
     }
 
-    case Types.BOND_LISTED_ASSET: {
+    case Types.BOND_LISTED_ASSETS: {
       return {
         ...state,
-        bondListedAsset: action.payload,
+        listedAssets: action.payload,
         loading: false,
         error: null,
       }
     }
 
-    case Types.BOND_CLAIMABLE: {
+    case Types.BOND_MEMBER: {
       return {
         ...state,
-        bondClaimable: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_SPARTA_REMAINING: {
-      return {
-        ...state,
-        bondSpartaRemaining: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_BURN_READY: {
-      return {
-        ...state,
-        bondBurnReady: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_BURN: {
-      return {
-        ...state,
-        bondBurn: action.payload,
+        member: action.payload,
         loading: false,
         error: null,
       }
@@ -76,16 +41,7 @@ export const bondReducer = (state = initialState, action) => {
     case Types.BOND_DEPOSIT: {
       return {
         ...state,
-        bondDeposit: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_CLAIM_ALL: {
-      return {
-        ...state,
-        bondClaimedAll: action.payload,
+        deposit: action.payload,
         loading: false,
         error: null,
       }
@@ -94,34 +50,16 @@ export const bondReducer = (state = initialState, action) => {
     case Types.BOND_CLAIM: {
       return {
         ...state,
-        bondClaimed: action.payload,
+        bondClaim: action.payload,
         loading: false,
         error: null,
       }
     }
 
-    case Types.BOND_LISTED_COUNT: {
+    case Types.BOND_CLAIM_ALL: {
       return {
         ...state,
-        bondListedCount: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_MEMBER_COUNT: {
-      return {
-        ...state,
-        bondMemberCount: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_MEMBERS: {
-      return {
-        ...state,
-        bondMembers: action.payload,
+        bondClaimAll: action.payload,
         loading: false,
         error: null,
       }

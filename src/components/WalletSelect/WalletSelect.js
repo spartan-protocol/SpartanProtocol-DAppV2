@@ -17,6 +17,8 @@ import { formatFromWei } from '../../utils/bigNumber'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth/selector'
+import { isAppleDevice } from '../../utils/helpers'
+import iosIcon from '../../assets/icons/apple-ios.svg'
 
 const WalletSelect = (props) => {
   const synth = useSynth()
@@ -68,6 +70,7 @@ const WalletSelect = (props) => {
   }
 
   const connectWallet = async (x) => {
+    window.localStorage.removeItem('disableWallet')
     resetWallet()
     await wallet.connect(x?.inject)
     window.localStorage.setItem('lastWallet', x?.id)
@@ -75,7 +78,7 @@ const WalletSelect = (props) => {
 
   const onWalletDisconnect = async () => {
     props.onHide()
-    window.localStorage.removeItem('lastWallet')
+    window.localStorage.setItem('disableWallet', '1')
     resetWallet()
     window.location.reload()
   }
@@ -86,29 +89,23 @@ const WalletSelect = (props) => {
    */
   const checkWallets = async () => {
     if (
-      window.localStorage.getItem('lastWallet') === 'BC' &&
+      window.localStorage.getItem('disableWallet') !== '1' &&
       wallet.account === null &&
       wallet.status !== 'connecting'
     ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
-    } else if (
-      window.localStorage.getItem('lastWallet') === 'MM' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
-    } else if (
-      window.localStorage.getItem('lastWallet') === 'WC' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
-    } else if (
-      window.localStorage.getItem('lastWallet') === 'OOT' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
+      if (window.localStorage.getItem('lastWallet') === 'BC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'MM') {
+        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'TW') {
+        connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
+      }
+      // else if (window.localStorage.getItem('lastWallet') === 'WC') {
+      //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+      // }
+      else {
+        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
+      }
     }
   }
   useEffect(() => {
@@ -119,7 +116,7 @@ const WalletSelect = (props) => {
     const timer = setTimeout(() => {
       checkWallets()
       settrigger0(trigger0 + 1)
-    }, 1000)
+    }, 1500)
     return () => {
       clearTimeout(timer)
     }
@@ -129,10 +126,57 @@ const WalletSelect = (props) => {
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
+  const getWalletType = () => {
+    if (wallet.ethereum?.isMetaMask) {
+      return 'MM'
+    }
+    if (wallet.ethereum?.isTrust) {
+      return 'TW'
+    }
+    return false
+  }
+
+  const handleWatchAsset = (assetType, asset) => {
+    const walletType = getWalletType()
+    const token = getToken(asset.tokenAddress)
+    if (walletType === 'MM') {
+      if (assetType === 'token') {
+        dispatch(
+          watchAsset(
+            asset.address,
+            asset.symbol.substring(0, 11),
+            '18',
+            asset.symbolUrl,
+          ),
+        )
+      } else if (assetType === 'pool') {
+        dispatch(
+          watchAsset(
+            asset.address,
+            `${token?.symbol.substring(0, 10)}p`,
+            '18',
+            token?.symbolUrl,
+          ),
+        )
+      } else if (assetType === 'synth') {
+        dispatch(
+          watchAsset(
+            asset.address,
+            `${token?.symbol.substring(0, 10)}s`,
+            '18',
+            token?.symbolUrl,
+          ),
+        )
+      }
+    } else if (walletType === 'TW') {
+      window.location = `https://link.trustwallet.com/add_asset?asset=c20000714_t${asset.address}`
+    }
+  }
+
   return (
     <>
       <Modal show={props.show} onHide={props.onHide}>
-        <div className="card-body">
+        <div className="card-body p-3">
           {wallet.account === null && (
             <CardHeader style={{ backgroundColor: '#1D171F' }}>
               <CardTitle tag="h2" />
@@ -257,7 +301,7 @@ const WalletSelect = (props) => {
                   <br />
                   {/* wallet navigation tabs */}
                   {network.chainId === 97 || network.chainId === 56 ? (
-                    <div className="modal-body ml-n3 mb-4">
+                    <div className="modal-body p-3 ml-n3 mb-4">
                       <Row>
                         <Nav pills className="nav-tabs-custom">
                           <NavItem>
@@ -365,40 +409,53 @@ const WalletSelect = (props) => {
                                         <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
-                                    <Col xs="6" className="mt-1">
-                                      <div
-                                        role="button"
-                                        aria-hidden="true"
-                                        onClick={() => {
-                                          dispatch(
-                                            watchAsset(
-                                              asset.address,
-                                              asset.symbol,
-                                              '18',
-                                              asset.symbolUrl,
-                                            ),
-                                          )
-                                        }}
-                                      >
-                                        <i className="icon-small icon-metamask icon-light ml-2" />
-                                      </div>
-                                    </Col>
+                                    {getWalletType() && (
+                                      <Col xs="6" className="mt-1">
+                                        <div
+                                          role="button"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            handleWatchAsset('token', asset)
+                                          }}
+                                        >
+                                          {getWalletType() === 'MM' ? (
+                                            <i className="icon-small icon-metamask icon-light ml-2" />
+                                          ) : (
+                                            <img
+                                              src={
+                                                walletTypes.filter(
+                                                  (x) => x.id === 'TW',
+                                                )[0]?.icon
+                                              }
+                                              alt="TrustWallet icon"
+                                              className="position-absolute"
+                                              style={{ left: '27' }}
+                                              height="24"
+                                            />
+                                          )}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Col>
                               </Row>
                             ))}
                         </TabPane>
                         <TabPane tabId="lp" className="ml-n2">
-                          <Row className="my-3">
-                            <Col xs="9" md="9" className="ml-n1">
-                              <div className="text-card">{t('wallet')}</div>
-                            </Col>
-                            <Col xs="3" md="3">
-                              <div className="text-card float-right mr-1">
-                                {t('actions')}
-                              </div>
-                            </Col>
-                          </Row>
+                          {pool.poolDetails?.filter(
+                            (asset) => asset.balance > 0,
+                          ).length > 0 && (
+                            <Row className="my-3">
+                              <Col xs="9" md="9" className="ml-n1">
+                                <div className="text-card">{t('wallet')}</div>
+                              </Col>
+                              <Col xs="3" md="3">
+                                <div className="text-card float-right mr-1">
+                                  {t('actions')}
+                                </div>
+                              </Col>
+                            </Row>
+                          )}
 
                           {pool.poolDetails
                             ?.filter((asset) => asset.balance > 0)
@@ -455,28 +512,33 @@ const WalletSelect = (props) => {
                                         <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
-                                    <Col xs="6" className="mt-1">
-                                      <div
-                                        role="button"
-                                        aria-hidden="true"
-                                        onClick={() => {
-                                          dispatch(
-                                            watchAsset(
-                                              asset.address,
-                                              `${
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbol
-                                              }p`,
-                                              '18',
-                                              getToken(asset.tokenAddress)
-                                                ?.symbolUrl,
-                                            ),
-                                          )
-                                        }}
-                                      >
-                                        <i className="icon-small icon-metamask icon-light ml-2" />
-                                      </div>
-                                    </Col>
+                                    {getWalletType() && (
+                                      <Col xs="6" className="mt-1">
+                                        <div
+                                          role="button"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            handleWatchAsset('pool', asset)
+                                          }}
+                                        >
+                                          {getWalletType() === 'MM' ? (
+                                            <i className="icon-small icon-metamask icon-light ml-2" />
+                                          ) : (
+                                            <img
+                                              src={
+                                                walletTypes.filter(
+                                                  (x) => x.id === 'TW',
+                                                )[0]?.icon
+                                              }
+                                              alt="TrustWallet icon"
+                                              className="position-absolute"
+                                              style={{ left: '27' }}
+                                              height="24"
+                                            />
+                                          )}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Col>
                               </Row>
@@ -550,28 +612,33 @@ const WalletSelect = (props) => {
                                         <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
-                                    <Col xs="6" className="mt-1">
-                                      <div
-                                        role="button"
-                                        aria-hidden="true"
-                                        onClick={() => {
-                                          dispatch(
-                                            watchAsset(
-                                              asset.address,
-                                              `${
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbol
-                                              }p`,
-                                              '18',
-                                              getToken(asset.tokenAddress)
-                                                ?.symbolUrl,
-                                            ),
-                                          )
-                                        }}
-                                      >
-                                        <i className="icon-small icon-metamask icon-light ml-2" />
-                                      </div>
-                                    </Col>
+                                    {getWalletType() && (
+                                      <Col xs="6" className="mt-1">
+                                        <div
+                                          role="button"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            handleWatchAsset('pool', asset)
+                                          }}
+                                        >
+                                          {getWalletType() === 'MM' ? (
+                                            <i className="icon-small icon-metamask icon-light ml-2" />
+                                          ) : (
+                                            <img
+                                              src={
+                                                walletTypes.filter(
+                                                  (x) => x.id === 'TW',
+                                                )[0]?.icon
+                                              }
+                                              alt="TrustWallet icon"
+                                              className="position-absolute"
+                                              style={{ left: '27' }}
+                                              height="24"
+                                            />
+                                          )}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Col>
                               </Row>
@@ -645,44 +712,53 @@ const WalletSelect = (props) => {
                                         <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
-                                    <Col xs="6" className="mt-1">
-                                      <div
-                                        role="button"
-                                        aria-hidden="true"
-                                        onClick={() => {
-                                          dispatch(
-                                            watchAsset(
-                                              asset.address,
-                                              `${
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbol
-                                              }p`,
-                                              '18',
-                                              getToken(asset.tokenAddress)
-                                                ?.symbolUrl,
-                                            ),
-                                          )
-                                        }}
-                                      >
-                                        <i className="icon-small icon-metamask icon-light ml-2" />
-                                      </div>
-                                    </Col>
+                                    {getWalletType() && (
+                                      <Col xs="6" className="mt-1">
+                                        <div
+                                          role="button"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            handleWatchAsset('pool', asset)
+                                          }}
+                                        >
+                                          {getWalletType() === 'MM' ? (
+                                            <i className="icon-small icon-metamask icon-light ml-2" />
+                                          ) : (
+                                            <img
+                                              src={
+                                                walletTypes.filter(
+                                                  (x) => x.id === 'TW',
+                                                )[0]?.icon
+                                              }
+                                              alt="TrustWallet icon"
+                                              className="position-absolute"
+                                              style={{ left: '27' }}
+                                              height="24"
+                                            />
+                                          )}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Col>
                               </Row>
                             ))}
                         </TabPane>
                         <TabPane tabId="synths" className="ml-n2">
-                          <Row className="my-3">
-                            <Col xs="9" md="9" className="ml-n1">
-                              <div className="text-card">{t('wallet')}</div>
-                            </Col>
-                            <Col xs="3" md="3">
-                              <div className="text-card float-right mr-1">
-                                {t('actions')}
-                              </div>
-                            </Col>
-                          </Row>
+                          {synth.synthDetails?.filter(
+                            (asset) => asset.balance > 0,
+                          ).length > 0 && (
+                            <Row className="my-3">
+                              <Col xs="9" md="9" className="ml-n1">
+                                <div className="text-card">{t('wallet')}</div>
+                              </Col>
+                              <Col xs="3" md="3">
+                                <div className="text-card float-right mr-1">
+                                  {t('actions')}
+                                </div>
+                              </Col>
+                            </Row>
+                          )}
                           {synth.synthDetails
                             ?.filter((asset) => asset.balance > 0)
                             .map((asset) => (
@@ -739,28 +815,33 @@ const WalletSelect = (props) => {
                                         <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
-                                    <Col xs="6" className="mt-1">
-                                      <div
-                                        role="button"
-                                        aria-hidden="true"
-                                        onClick={() => {
-                                          dispatch(
-                                            watchAsset(
-                                              asset.address,
-                                              `${
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbol
-                                              }s`,
-                                              '18',
-                                              getToken(asset.tokenAddress)
-                                                ?.symbolUrl,
-                                            ),
-                                          )
-                                        }}
-                                      >
-                                        <i className="icon-small icon-metamask icon-light ml-2" />
-                                      </div>
-                                    </Col>
+                                    {getWalletType() && (
+                                      <Col xs="6" className="mt-1">
+                                        <div
+                                          role="button"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            handleWatchAsset('synth', asset)
+                                          }}
+                                        >
+                                          {getWalletType() === 'MM' ? (
+                                            <i className="icon-small icon-metamask icon-light ml-2" />
+                                          ) : (
+                                            <img
+                                              src={
+                                                walletTypes.filter(
+                                                  (x) => x.id === 'TW',
+                                                )[0]?.icon
+                                              }
+                                              alt="TrustWallet icon"
+                                              className="position-absolute"
+                                              style={{ left: '27' }}
+                                              height="24"
+                                            />
+                                          )}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Col>
                               </Row>
@@ -769,7 +850,7 @@ const WalletSelect = (props) => {
                             (asset) => asset.staked > 0,
                           ).length > 0 && (
                             <Row className="my-3">
-                              <Col xs="9" md="9">
+                              <Col xs="9" md="9" className="ml-n1">
                                 <div className="text-card">Staked</div>
                               </Col>
                               <Col xs="3" md="3">
@@ -834,28 +915,33 @@ const WalletSelect = (props) => {
                                         <i className="icon-small icon-copy ml-2 align-middle" />
                                       </ShareLink>
                                     </Col>
-                                    <Col xs="6" className="mt-1">
-                                      <div
-                                        role="button"
-                                        aria-hidden="true"
-                                        onClick={() => {
-                                          dispatch(
-                                            watchAsset(
-                                              asset.address,
-                                              `${
-                                                getToken(asset.tokenAddress)
-                                                  ?.symbol
-                                              }s`,
-                                              '18',
-                                              getToken(asset.tokenAddress)
-                                                ?.symbolUrl,
-                                            ),
-                                          )
-                                        }}
-                                      >
-                                        <i className="icon-small icon-metamask icon-light ml-2" />
-                                      </div>
-                                    </Col>
+                                    {getWalletType() && (
+                                      <Col xs="6" className="mt-1">
+                                        <div
+                                          role="button"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            handleWatchAsset('synth', asset)
+                                          }}
+                                        >
+                                          {getWalletType() === 'MM' ? (
+                                            <i className="icon-small icon-metamask icon-light ml-2" />
+                                          ) : (
+                                            <img
+                                              src={
+                                                walletTypes.filter(
+                                                  (x) => x.id === 'TW',
+                                                )[0]?.icon
+                                              }
+                                              alt="TrustWallet icon"
+                                              className="position-absolute"
+                                              style={{ left: '27' }}
+                                              height="24"
+                                            />
+                                          )}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Col>
                               </Row>
@@ -878,7 +964,12 @@ const WalletSelect = (props) => {
                     color="success"
                     type="button"
                     className="btn btn-info btn-block mt-n3 p-2"
-                    onClick={() => connectWallet(x)}
+                    onClick={() => {
+                      connectWallet(x)
+                      if (x.id === 'TW') {
+                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.origin}`
+                      }
+                    }}
                   >
                     <Col>
                       <div className="float-left mt-2 pt-1">
@@ -898,6 +989,24 @@ const WalletSelect = (props) => {
                   <br />
                 </div>
               ))}
+              {isAppleDevice() && (
+                <a
+                  href="https://link.trustwallet.com/browser_enable"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Row className="btn btn-primary btn-block mt-n3 p-2">
+                    <Col xs="9" className="float-left mt-1">
+                      Apple iOS devices click here to enable the TrustWallet
+                      in-app browser
+                    </Col>
+                    <Col xs="3" className="float-right">
+                      <img src={iosIcon} height="40" alt="apple icon" />
+                    </Col>
+                  </Row>
+                  <br />
+                </a>
+              )}
             </div>
           )}
         </div>

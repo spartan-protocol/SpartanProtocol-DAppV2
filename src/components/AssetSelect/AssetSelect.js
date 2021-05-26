@@ -16,6 +16,7 @@ import {
 import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
@@ -25,6 +26,8 @@ import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth/selector'
 import { getAddresses } from '../../utils/web3'
+import walletTypes from '../WalletSelect/walletTypes'
+
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
  * depending on the 'priority' prop handed over.
@@ -37,6 +40,7 @@ import { getAddresses } from '../../utils/web3'
 const AssetSelect = (props) => {
   const addr = getAddresses()
   const synth = useSynth()
+  const wallet = useWallet()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -107,7 +111,7 @@ const AssetSelect = (props) => {
     const getArray = () => {
       if (pool.poolDetails) {
         let tempArray = pool.poolDetails.filter(
-          (asset) => asset.tokenAddress !== addr.spartav2,
+          (asset) => asset.tokenAddress !== addr.spartav1,
         )
 
         if (props.whiteList) {
@@ -127,7 +131,7 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].tokenAddress === addr.spartav1) {
+            if (tempArray[i].tokenAddress === addr.spartav2) {
               finalArray.push({
                 type: 'token',
                 icon: (
@@ -260,6 +264,25 @@ const AssetSelect = (props) => {
     props.whiteList,
     searchInput?.value,
   ])
+
+  const getWalletType = () => {
+    if (wallet.ethereum?.isMetaMask) {
+      return 'MM'
+    }
+    if (wallet.ethereum?.isTrust) {
+      return 'TW'
+    }
+    return false
+  }
+
+  const handleWatchAsset = (asset) => {
+    const walletType = getWalletType()
+    if (walletType === 'MM') {
+      dispatch(watchAsset(asset.actualAddr, asset.symbol, '18', asset.iconUrl))
+    } else if (walletType === 'TW') {
+      window.location = `https://link.trustwallet.com/add_asset?asset=c20000714_t${asset.actualAddr}`
+    }
+  }
 
   return (
     <>
@@ -490,30 +513,32 @@ const AssetSelect = (props) => {
                         <i className="icon-small icon-copy ml-2" />
                       </ShareLink>
                     </Col>
-                    <Col xs="6">
-                      <div
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          dispatch(
-                            watchAsset(
-                              asset.actualAddr,
-                              asset.symbol.includes('-')
-                                ? asset.symbol.split('-')[0] +
-                                    asset.symbol
-                                      .split('-')[1]
-                                      .slice(-1)
-                                      .toLowerCase()
-                                : asset.symbol,
-                              '18',
-                              asset.symbolUrl,
-                            ),
-                          )
-                        }}
-                      >
-                        <i className="icon-small icon-metamask icon-light ml-2" />
-                      </div>
-                    </Col>
+                    {getWalletType() && (
+                      <Col xs="6">
+                        <div
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => {
+                            handleWatchAsset(asset)
+                          }}
+                        >
+                          {getWalletType() === 'MM' ? (
+                            <i className="icon-small icon-metamask icon-light ml-2" />
+                          ) : (
+                            <img
+                              src={
+                                walletTypes.filter((x) => x.id === 'TW')[0]
+                                  ?.icon
+                              }
+                              alt="TrustWallet icon"
+                              className="position-absolute"
+                              style={{ left: '27' }}
+                              height="24"
+                            />
+                          )}
+                        </div>
+                      </Col>
+                    )}
                   </Row>
                 </Col>
               </Row>
@@ -569,30 +594,32 @@ const AssetSelect = (props) => {
                           <i className="icon-small icon-copy ml-2" />
                         </ShareLink>
                       </Col>
-                      <Col xs="6">
-                        <div
-                          role="button"
-                          aria-hidden="true"
-                          onClick={() => {
-                            dispatch(
-                              watchAsset(
-                                asset.actualAddr,
-                                asset.symbol.includes('-')
-                                  ? asset.symbol.split('-')[0] +
-                                      asset.symbol
-                                        .split('-')[1]
-                                        .slice(-1)
-                                        .toLowerCase()
-                                  : asset.symbol,
-                                '18',
-                                asset.symbolUrl,
-                              ),
-                            )
-                          }}
-                        >
-                          <i className="icon-small icon-metamask icon-light ml-2" />
-                        </div>
-                      </Col>
+                      {getWalletType() && (
+                        <Col xs="6">
+                          <div
+                            role="button"
+                            aria-hidden="true"
+                            onClick={() => {
+                              handleWatchAsset(asset)
+                            }}
+                          >
+                            {getWalletType() === 'MM' ? (
+                              <i className="icon-small icon-metamask icon-light ml-2" />
+                            ) : (
+                              <img
+                                src={
+                                  walletTypes.filter((x) => x.id === 'TW')[0]
+                                    ?.icon
+                                }
+                                alt="TrustWallet icon"
+                                className="position-absolute"
+                                style={{ left: '27' }}
+                                height="24"
+                              />
+                            )}
+                          </div>
+                        </Col>
+                      )}
                     </Row>
                   </Col>
                 </Row>

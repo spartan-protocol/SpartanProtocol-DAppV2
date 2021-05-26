@@ -8,7 +8,6 @@ import BigNumber from 'bignumber.js'
 import Common from './components/layout/Common'
 
 import { bondReducer } from './store/bond'
-import { bondVaultReducer } from './store/bondVault'
 import { daoReducer } from './store/dao'
 import { poolReducer } from './store/pool'
 import { reserveReducer } from './store/reserve'
@@ -16,8 +15,6 @@ import { routerReducer } from './store/router'
 import { spartaReducer } from './store/sparta'
 import { synthReducer } from './store/synth'
 import { utilsReducer } from './store/utils'
-import { utilsMathReducer } from './store/utilsMath'
-import { utilsPricingReducer } from './store/utilsPricing'
 import { web3Reducer } from './store/web3'
 import { getNetwork } from './utils/web3'
 
@@ -36,7 +33,6 @@ BigNumber.config({ FORMAT: globalFormat })
 
 const reducers = combineReducers({
   bond: bondReducer,
-  bondVault: bondVaultReducer,
   dao: daoReducer,
   pool: poolReducer,
   reserve: reserveReducer,
@@ -44,8 +40,6 @@ const reducers = combineReducers({
   sparta: spartaReducer,
   synth: synthReducer,
   utils: utilsReducer,
-  utilsMath: utilsMathReducer,
-  utilsPricing: utilsPricingReducer,
   web3: web3Reducer,
 })
 

@@ -36,11 +36,12 @@ import {
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import {
-  routerRemoveLiq,
-  routerRemoveLiqAsym,
+  removeLiquidityExact,
+  removeLiquiditySingle,
 } from '../../../store/router/actions'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import swapIcon from '../../../assets/icons/swapadd.svg'
+import Approval from '../../../components/Approval/Approval'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -78,15 +79,15 @@ const LiqRemove = () => {
 
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav1 &&
+          asset1.tokenAddress !== addr.spartav2 &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset2 =
-          asset1.tokenAddress !== addr.spartav1
+          asset1.tokenAddress !== addr.spartav2
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset3 = { tokenAddress: addr.spartav1 }
+        asset3 = { tokenAddress: addr.spartav2 }
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset2 = getItemFromArray(asset2, pool.poolDetails)
@@ -108,7 +109,7 @@ const LiqRemove = () => {
 
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav1 &&
+          asset1.tokenAddress !== addr.spartav2 &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
@@ -116,12 +117,12 @@ const LiqRemove = () => {
           (x) => x.tokenAddress === asset2.tokenAddress,
         )
           ? asset2
-          : { tokenAddress: addr.spartav1 }
+          : { tokenAddress: addr.spartav2 }
         asset2 =
           asset2.tokenAddress === asset1.tokenAddress ||
-          asset2.tokenAddress === addr.spartav1
+          asset2.tokenAddress === addr.spartav2
             ? asset2
-            : { tokenAddress: addr.spartav1 }
+            : { tokenAddress: addr.spartav2 }
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset2 = getItemFromArray(asset2, pool.poolDetails)
@@ -217,12 +218,12 @@ const LiqRemove = () => {
   const getRemoveOneSwapFee = () => {
     if (removeInput1 && assetRemove1) {
       const swapFee = calcSwapFee(
-        assetRemove1?.tokenAddress === addr.spartav1
+        assetRemove1?.tokenAddress === addr.spartav2
           ? getRemoveTokenOutput()
           : getRemoveSpartaOutput(),
         BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
         BN(poolRemove1?.baseAmount).minus(getRemoveSpartaOutput()),
-        assetRemove1?.tokenAddress === addr.spartav1,
+        assetRemove1?.tokenAddress === addr.spartav2,
       )
       return swapFee
     }
@@ -232,12 +233,12 @@ const LiqRemove = () => {
   const getRemoveOneSwapOutput = () => {
     if (removeInput1 && assetRemove1) {
       return calcSwapOutput(
-        assetRemove1?.tokenAddress === addr.spartav1
+        assetRemove1?.tokenAddress === addr.spartav2
           ? getRemoveTokenOutput()
           : getRemoveSpartaOutput(),
         BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
         BN(poolRemove1?.baseAmount).minus(getRemoveSpartaOutput()),
-        assetRemove1?.tokenAddress === addr.spartav1,
+        assetRemove1?.tokenAddress === addr.spartav2,
       )
     }
     return '0.00'
@@ -246,7 +247,7 @@ const LiqRemove = () => {
   const getRemoveOneFinalOutput = () => {
     if (removeInput1 && assetRemove1) {
       const result = BN(getRemoveOneSwapOutput()).plus(
-        assetRemove1?.tokenAddress === addr.spartav1
+        assetRemove1?.tokenAddress === addr.spartav2
           ? BN(getRemoveSpartaOutput())
           : BN(getRemoveTokenOutput()),
       )
@@ -464,10 +465,10 @@ const LiqRemove = () => {
                       <AssetSelect
                         priority="2"
                         filter={['token']}
-                        blackList={[activeTab === '1' ? addr.spartav1 : '']}
+                        blackList={[activeTab === '1' ? addr.spartav2 : '']}
                         whiteList={
                           activeTab === '2'
-                            ? [addr.spartav1, poolRemove1.tokenAddress]
+                            ? [addr.spartav2, poolRemove1.tokenAddress]
                             : ['']
                         }
                         disabled={activeTab === '1'}
@@ -514,7 +515,7 @@ const LiqRemove = () => {
                           <AssetSelect
                             priority="3"
                             filter={['token']}
-                            whiteList={[addr.spartav1]}
+                            whiteList={[addr.spartav2]}
                             disabled
                           />
                         </div>
@@ -584,7 +585,7 @@ const LiqRemove = () => {
                         <span className="subtitle-card">
                           {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
                           <span className="output-card ml-1">
-                            {getToken(poolRemove1?.tokenAddress)?.symbol}p
+                            {getToken(poolRemove1?.tokenAddress)?.symbol}
                           </span>
                         </span>
                         {activeTab === '1' && (
@@ -608,7 +609,20 @@ const LiqRemove = () => {
             </Col>
           </Row>
           <Row className="text-center">
-            <Col>
+            {poolRemove1?.tokenAddress &&
+              wallet?.account &&
+              removeInput1?.value && (
+                <Approval
+                  tokenAddress={poolRemove1?.address}
+                  symbol={getToken(poolRemove1.tokenAddress)?.symbol}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.router}
+                  txnAmount={convertToWei(removeInput1?.value)}
+                  assetNumber="1"
+                />
+              )}
+
+            <Col xs="12" sm="4" md="12" className="hide-if-siblings">
               <Button
                 className="w-100 btn-primary"
                 disabled={
@@ -620,16 +634,16 @@ const LiqRemove = () => {
                 onClick={() =>
                   activeTab === '1'
                     ? dispatch(
-                        routerRemoveLiq(
+                        removeLiquidityExact(
                           convertToWei(removeInput1.value),
                           poolRemove1.tokenAddress,
                           wallet,
                         ),
                       )
                     : dispatch(
-                        routerRemoveLiqAsym(
+                        removeLiquiditySingle(
                           convertToWei(removeInput1.value),
-                          assetRemove1.tokenAddress === addr.spartav1,
+                          assetRemove1.tokenAddress === addr.spartav2,
                           poolRemove1.tokenAddress,
                           wallet,
                         ),

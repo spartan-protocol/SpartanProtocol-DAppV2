@@ -2,16 +2,10 @@ export { useBond } from './selector'
 export { bondReducer } from './reducer'
 
 export {
-  getBondListed,
-  getBondListedAsset,
-  getBondClaimable,
-  getBondSpartaRemaining,
-  getBondBurnReady,
-  bondBurn,
+  bondGlobalDetails,
+  allListedAssets,
+  bondMemberDetails,
   bondDeposit,
-  bondClaimAll,
-  bondClaim,
-  getBondMembers,
-  getBondMemberCount,
-  getBondListedCount,
+  claimForMember,
+  claimAllForMember,
 } from './actions'

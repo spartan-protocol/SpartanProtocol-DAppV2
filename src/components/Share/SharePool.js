@@ -3,7 +3,6 @@ import { Modal, Button } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
 import { Card, CardBody, Row, Col } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
 import CardHeader from 'reactstrap/es/CardHeader'
 import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
@@ -15,7 +14,6 @@ import spartaSynthIcon from '../../assets/img/spartan_synth.svg'
 const Share = () => {
   const pool = usePool()
   const [showShare, setShowShare] = useState(false)
-  const location = useLocation()
   const [url, setUrl] = useState('')
   const { t } = useTranslation()
   const getToken = (tokenAddress) =>
@@ -59,7 +57,7 @@ const Share = () => {
       setassetType2(type2)
 
       setUrl(
-        `${window.location.host}${location.pathname}?asset1=${
+        `${window.location.href}?asset1=${
           assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
         }${
           assetSelected2
@@ -70,9 +68,8 @@ const Share = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    location.pathname,
-    location.host,
-    location.search,
+    window.location.href,
+    window.location.search,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps

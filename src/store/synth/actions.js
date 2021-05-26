@@ -5,7 +5,11 @@ import {
   getSynthFactoryContract,
   getSynthVaultContract,
 } from '../../utils/web3Contracts'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import {
+  getAddresses,
+  getProviderGasPrice,
+  getWalletProvider,
+} from '../../utils/web3'
 
 export const synthLoading = () => ({
   type: Types.SYNTH_LOADING,
@@ -195,13 +199,17 @@ export const getSynthDetails = (synthArray, listedPools, wallet) => async (
 export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
+  let provider = getWalletProvider(wallet?.ethereum)
+  if (provider._isSigner === true) {
+    provider = provider.provider
+  }
 
   try {
     const gPrice = await getProviderGasPrice()
-    const deposit = await contract.deposit(synth, amount, {
+    let deposit = await contract.deposit(synth, amount, {
       gasPrice: gPrice,
     })
-    // Trace txnHash to get something relevant to dispatch
+    deposit = await provider.waitForTransaction(deposit.hash, 1)
     dispatch(payloadToDispatch(Types.SYNTH_DEPOSIT, deposit))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
