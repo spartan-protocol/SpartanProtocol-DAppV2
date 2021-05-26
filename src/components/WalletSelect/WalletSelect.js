@@ -68,6 +68,7 @@ const WalletSelect = (props) => {
   }
 
   const connectWallet = async (x) => {
+    window.localStorage.removeItem('disableWallet')
     resetWallet()
     await wallet.connect(x?.inject)
     window.localStorage.setItem('lastWallet', x?.id)
@@ -75,7 +76,7 @@ const WalletSelect = (props) => {
 
   const onWalletDisconnect = async () => {
     props.onHide()
-    window.localStorage.removeItem('lastWallet')
+    window.localStorage.setItem('disableWallet', '1')
     resetWallet()
     window.location.reload()
   }
@@ -86,33 +87,23 @@ const WalletSelect = (props) => {
    */
   const checkWallets = async () => {
     if (
-      window.localStorage.getItem('lastWallet') === 'BC' &&
+      window.localStorage.getItem('disableWallet') !== '1' &&
       wallet.account === null &&
       wallet.status !== 'connecting'
     ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
-    } else if (
-      window.localStorage.getItem('lastWallet') === 'MM' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
-    } else if (
-      window.localStorage.getItem('lastWallet') === 'TW' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
-    }
-    // else if (
-    //   window.localStorage.getItem('lastWallet') === 'WC' &&
-    //   wallet.account === null &&
-    //   wallet.status !== 'connecting'
-    // ) {
-    //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
-    // }
-    else if (wallet.account === null && wallet.status !== 'connecting') {
-      connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
+      if (window.localStorage.getItem('lastWallet') === 'BC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'MM') {
+        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'TW') {
+        connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
+      }
+      // else if (window.localStorage.getItem('lastWallet') === 'WC') {
+      //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+      // }
+      else {
+        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
+      }
     }
   }
   useEffect(() => {
@@ -377,7 +368,7 @@ const WalletSelect = (props) => {
                                           dispatch(
                                             watchAsset(
                                               asset.address,
-                                              asset.symbol,
+                                              asset.symbol.substring(0, 11),
                                               '18',
                                               asset.symbolUrl,
                                             ),

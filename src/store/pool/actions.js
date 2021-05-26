@@ -11,10 +11,6 @@ import {
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import fallbackImg from '../../assets/icons/Logo-unknown.svg'
-import bnbIcon from '../../assets/icons/BNB.svg'
-import spartaIcon from '../../assets/icons/coin_sparta_black_bg.svg'
-import oldSpartaIcon from '../../assets/icons/oldSparta.svg'
 import { getAddresses } from '../../utils/web3'
 
 export const poolLoading = () => ({
@@ -113,20 +109,20 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
       }
       if (listedTokens[i] === addr.bnb) {
         tempArray.push('BNB')
-        tempArray.push(bnbIcon)
+        tempArray.push(`${window.location.origin}/images/icons/BNB.svg`)
       } else if (listedTokens[i] === addr.spartav1) {
         tempArray.push('SPARTA (old)')
-        tempArray.push(oldSpartaIcon)
+        tempArray.push(`${window.location.origin}/images/icons/SPARTA1.svg`)
       } else if (listedTokens[i] === addr.spartav2) {
         tempArray.push('SPARTA')
-        tempArray.push(spartaIcon)
+        tempArray.push(`${window.location.origin}/images/icons/SPARTA2.svg`)
       } else {
         tempArray.push(contract.callStatic.symbol()) // TOKEN SYMBOL (3)
         tempArray.push(
           trustWalletIndex.data.filter((asset) => asset === listedTokens[i])
             .length > 0
             ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
-            : fallbackImg,
+            : `${window.location.origin}/images/icons/Fallback.svg`,
         ) // SYMBOL URL (4)
       }
     }
