@@ -17,6 +17,8 @@ import { formatFromWei } from '../../utils/bigNumber'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth/selector'
+import { isAppleDevice } from '../../utils/helpers'
+import iosIcon from '../../assets/icons/apple-ios.svg'
 
 const WalletSelect = (props) => {
   const synth = useSynth()
@@ -125,10 +127,10 @@ const WalletSelect = (props) => {
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getWalletType = () => {
-    if (wallet.ethereum.isMetaMask) {
+    if (wallet.ethereum?.isMetaMask) {
       return 'MM'
     }
-    if (wallet.ethereum.isTrust) {
+    if (wallet.ethereum?.isTrust) {
       return 'TW'
     }
     return false
@@ -987,6 +989,24 @@ const WalletSelect = (props) => {
                   <br />
                 </div>
               ))}
+              {isAppleDevice() && (
+                <a
+                  href="https://link.trustwallet.com/browser_enable"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Row className="btn btn-primary btn-block mt-n3 p-2">
+                    <Col xs="9" className="float-left mt-1">
+                      Apple iOS devices click here to enable the TrustWallet
+                      in-app browser
+                    </Col>
+                    <Col xs="3" className="float-right">
+                      <img src={iosIcon} height="40" alt="apple icon" />
+                    </Col>
+                  </Row>
+                  <br />
+                </a>
+              )}
             </div>
           )}
         </div>

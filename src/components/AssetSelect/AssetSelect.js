@@ -266,10 +266,10 @@ const AssetSelect = (props) => {
   ])
 
   const getWalletType = () => {
-    if (wallet.ethereum.isMetaMask) {
+    if (wallet.ethereum?.isMetaMask) {
       return 'MM'
     }
-    if (wallet.ethereum.isTrust) {
+    if (wallet.ethereum?.isTrust) {
       return 'TW'
     }
     return false

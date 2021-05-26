@@ -17,3 +17,16 @@ export const checkValidURL = (url) => {
   if (http.status !== 404) return true
   return false
 }
+
+// Check if device is iOS
+export const isAppleDevice = () =>
+  [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod',
+  ].includes(navigator.platform) ||
+  // iPad on iOS 13 detection
+  (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
