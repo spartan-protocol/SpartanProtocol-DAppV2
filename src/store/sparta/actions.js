@@ -52,7 +52,6 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
 export const spartaUpgrade = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getSpartaV2Contract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
     const upgrade = await contract.upgrade({
@@ -88,7 +87,6 @@ export const fallenSpartansCheck = (wallet) => async (dispatch) => {
 export const fallenSpartansClaim = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getFallenSpartansContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
     const claim = await contract.claim({
@@ -100,44 +98,3 @@ export const fallenSpartansClaim = (wallet) => async (dispatch) => {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }
 }
-
-// OLD SPARTA CONTRACT FUNCTION
-// export const getAdjustedClaimRate = (assetAddress) => async (dispatch) => {
-//   dispatch(spartaLoading())
-//   const contract = getSpartaContract()
-
-//   try {
-//     const adjustedClaimRate = await contract.callStatic.getAdjustedClaimRate(
-//       assetAddress,
-//     )
-//     dispatch(
-//       payloadToDispatch(Types.SPARTA_ADJUSTED_CLAIM_RATE, adjustedClaimRate),
-//     )
-//   } catch (error) {
-//     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
-//   }
-// }
-
-// OLD SPARTA CONTRACT FUNCTION
-// export const claim = (assetAddress, amount, justCheck) => async (dispatch) => {
-//   dispatch(spartaLoading())
-//   const provider = getWalletProvider()
-//   const contract = getSpartaContract()
-
-//   try {
-//     let claimed = {}
-//     if (justCheck) {
-//       claimed = await contract.callStatic.claim(assetAddress, amount)
-//     } else {
-//       const gPrice = await provider.getGasPrice()
-//       // const gLimit = await contract.estimateGas.claim(assetAddress, amount)
-//       claimed = await contract.claim(assetAddress, amount, {
-//         gasPrice: gPrice,
-//         // gasLimit: gLimit,
-//       })
-//     }
-//     dispatch(payloadToDispatch(Types.SPARTA_CLAIM, claimed))
-//   } catch (error) {
-//     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
-//   }
-// }

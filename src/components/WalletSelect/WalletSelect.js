@@ -98,12 +98,20 @@ const WalletSelect = (props) => {
     ) {
       connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
     } else if (
-      window.localStorage.getItem('lastWallet') === 'WC' &&
+      window.localStorage.getItem('lastWallet') === 'TW' &&
       wallet.account === null &&
       wallet.status !== 'connecting'
     ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
-    } else if (
+      connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
+    }
+    // else if (
+    //   window.localStorage.getItem('lastWallet') === 'WC' &&
+    //   wallet.account === null &&
+    //   wallet.status !== 'connecting'
+    // ) {
+    //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+    // }
+    else if (
       window.localStorage.getItem('lastWallet') === 'OOT' &&
       wallet.account === null &&
       wallet.status !== 'connecting'
@@ -119,7 +127,7 @@ const WalletSelect = (props) => {
     const timer = setTimeout(() => {
       checkWallets()
       settrigger0(trigger0 + 1)
-    }, 1000)
+    }, 1500)
     return () => {
       clearTimeout(timer)
     }
@@ -878,7 +886,12 @@ const WalletSelect = (props) => {
                     color="success"
                     type="button"
                     className="btn btn-info btn-block mt-n3 p-2"
-                    onClick={() => connectWallet(x)}
+                    onClick={() => {
+                      connectWallet(x)
+                      if (x.id === 'TW') {
+                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.origin}`
+                      }
+                    }}
                   >
                     <Col>
                       <div className="float-left mt-2 pt-1">

@@ -193,10 +193,10 @@ export const getSpartaV1Contract = (wallet) => {
  */
 export const getSpartaV2Contract = (wallet) => {
   let contract = isAddress(getAddresses().spartav2)
-  const abiBase = getAbis().sparta
+  const abiSparta = getAbis().sparta
   const provider = getWalletProvider(wallet?.ethereum)
   if (contract === true) {
-    contract = new ethers.Contract(getAddresses().spartav2, abiBase, provider)
+    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, provider)
   }
   return contract
 }
@@ -216,6 +216,7 @@ export const getFallenSpartansContract = (wallet) => {
       provider,
     )
   }
+  // console.log(contract)
   return contract
 }
 
