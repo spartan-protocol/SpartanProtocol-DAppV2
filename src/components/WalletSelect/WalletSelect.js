@@ -111,12 +111,8 @@ const WalletSelect = (props) => {
     // ) {
     //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
     // }
-    else if (
-      window.localStorage.getItem('lastWallet') === 'OOT' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting'
-    ) {
-      connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0])
+    else if (wallet.account === null && wallet.status !== 'connecting') {
+      connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
     }
   }
   useEffect(() => {
@@ -889,7 +885,7 @@ const WalletSelect = (props) => {
                     onClick={() => {
                       connectWallet(x)
                       if (x.id === 'TW') {
-                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.host}?wallet=TW`
+                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.host}`
                       }
                     }}
                   >

@@ -1,7 +1,6 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 import { bondGlobalDetails } from '../../store/bond'
 import {
   getListedPools,
@@ -21,7 +20,6 @@ import {
   // getEventArray,
 } from '../../store/web3'
 import { changeNetwork, getNetwork } from '../../utils/web3'
-import walletTypes from '../WalletSelect/walletTypes'
 // import {
 //   getBondContract,
 //   getDaoContract,
@@ -35,16 +33,12 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const pool = usePool()
   const wallet = useWallet()
-  const location = useLocation()
 
   // const getSynth = (tokenAddress) =>
   //   synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   const [prevNetwork, setPrevNetwork] = useState(false)
   const [netLoading, setnetLoading] = useState(false)
-  const [walletParam1, setWalletParam1] = useState(
-    new URLSearchParams(location.search).get(`wallet`),
-  )
 
   const [trigger1, settrigger1] = useState(0)
   const [trigger2, settrigger2] = useState(0)
@@ -57,14 +51,6 @@ const DataManager = () => {
       return getNetwork()
     }
   }
-
-  useEffect(() => {
-    if (walletTypes.filter((x) => x.id === walletParam1).length > 0) {
-      window.localStorage.setItem('lastWallet', walletParam1)
-    }
-    setWalletParam1('')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   /**
    * On DApp load check network and get the party started
