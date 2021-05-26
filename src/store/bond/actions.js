@@ -2,7 +2,7 @@ import * as Types from './types'
 import {
   getBondVaultContract,
   getDaoContract,
-  getTokenContract,
+  getSpartaV2Contract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getAddresses, getProviderGasPrice } from '../../utils/web3'
@@ -20,14 +20,12 @@ export const bondLoading = () => ({
 export const bondGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
   const addr = getAddresses()
-  const contract = getTokenContract(addr.spartav2, wallet)
+  const contract = getSpartaV2Contract(wallet)
   const bondContract = getBondVaultContract(wallet)
-
   try {
-    let awaitArray = [
-      contract.callStatic.balanceOf(addr.dao),
-      bondContract.callStatic.totalWeight(),
-    ]
+    let awaitArray = []
+    awaitArray.push(contract ? contract.callStatic.balanceOf(addr?.dao) : '0')
+    awaitArray.push(bondContract ? bondContract.callStatic.totalWeight() : '0')
     awaitArray = await Promise.all(awaitArray)
     const global = {
       spartaRemaining: awaitArray[0].toString(), // Bond allocation left

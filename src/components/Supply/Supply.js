@@ -48,8 +48,11 @@ const Supply = () => {
     'synthVault',
     'utils',
   ]
-  const distroMnBurnV1 = '42414904'
-  const distroMnBondV1 = '17500000'
+  // V1 (Protocol) Token Distribution
+  const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
+  const distroMnBondV1 = '17500000' // SPARTA minted via Bond (V1 TOKEN)
+  // V2 (Protocol) Token Distribution
+  const distroMnBondV2 = '0' // SPARTA minted via Bond (V2 TOKEN)
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -104,7 +107,6 @@ const Supply = () => {
         className="btn-header px-4 ml-1"
         href="#"
       >
-        {/* <img className="mr-1" src={IconLogo} height="25px" alt="share icon" /> */}
         ${formatFromUnits(web3.spartaPrice, 2)}
       </Button>
 
@@ -118,8 +120,6 @@ const Supply = () => {
           Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
         </PopoverHeader>
         <PopoverBody>
-          {/* {network.chainId === 97 && (
-            <> */}
           <Row>
             <Col xs="6" className="popover-text mb-4">
               {t('marketcap')}
@@ -180,29 +180,49 @@ const Supply = () => {
                 <Progress
                   bar
                   color="primary"
-                  value={formatFromUnits(
-                    BN(distroMnBurnV1).div(300000000).times(100),
-                  )}
+                  value={
+                    network.chainId === 56
+                      ? formatFromUnits(
+                          BN(distroMnBurnV1).div(300000000).times(100),
+                        )
+                      : '1'
+                  }
                 />
                 <Progress bar color="black" value="1" />
                 <Progress
                   bar
                   color="yellow"
-                  value={formatFromUnits(
-                    BN(distroMnBondV1).div(300000000).times(100),
-                  )}
+                  value={
+                    network.chainId === 56
+                      ? formatFromUnits(
+                          BN(distroMnBondV1)
+                            .plus(distroMnBondV2)
+                            .div(300000000)
+                            .times(100),
+                        )
+                      : '1'
+                  }
                 />
                 <Progress bar color="black" value="1" />
                 <Progress
                   bar
                   color="lightblue"
-                  value={formatFromUnits(
-                    BN(convertFromWei(getTotalSupply()))
-                      .minus(distroMnBurnV1)
-                      .minus(distroMnBondV1)
-                      .div(300000000)
-                      .times(100),
-                  )}
+                  value={
+                    network.chainId === 56
+                      ? formatFromUnits(
+                          BN(convertFromWei(getTotalSupply()))
+                            .minus(distroMnBurnV1)
+                            .minus(distroMnBondV1)
+                            .minus(distroMnBondV2)
+                            .div(300000000)
+                            .times(100),
+                        )
+                      : formatFromUnits(
+                          BN(convertFromWei(getTotalSupply()))
+                            .div(300000000)
+                            .times(100),
+                        )
+                  }
                 />
               </Progress>
             </Col>
@@ -221,8 +241,7 @@ const Supply = () => {
           </Row>
           <br />
           <br />
-          {/* </>
-          )} */}
+
           <Row>
             <Col md="12" className="ml-auto text-right">
               <Card
