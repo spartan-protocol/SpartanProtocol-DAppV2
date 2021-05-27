@@ -168,8 +168,6 @@ const WalletSelect = (props) => {
           ),
         )
       }
-    } else if (walletType === 'TW') {
-      window.location = `https://link.trustwallet.com/add_asset?asset=c20000714_t${asset.address}`
     }
   }
 
@@ -411,29 +409,37 @@ const WalletSelect = (props) => {
                                     </Col>
                                     {getWalletType() && (
                                       <Col xs="6" className="mt-1">
-                                        <div
-                                          role="button"
-                                          aria-hidden="true"
-                                          onClick={() => {
-                                            handleWatchAsset('token', asset)
-                                          }}
+                                        <a
+                                          href={
+                                            getWalletType() === 'TW'
+                                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                                              : '#section'
+                                          }
                                         >
-                                          {getWalletType() === 'MM' ? (
-                                            <i className="icon-small icon-metamask icon-light ml-2" />
-                                          ) : (
-                                            <img
-                                              src={
-                                                walletTypes.filter(
-                                                  (x) => x.id === 'TW',
-                                                )[0]?.icon
-                                              }
-                                              alt="TrustWallet icon"
-                                              className="position-absolute"
-                                              style={{ left: '27' }}
-                                              height="24"
-                                            />
-                                          )}
-                                        </div>
+                                          <div
+                                            role="button"
+                                            aria-hidden="true"
+                                            onClick={() => {
+                                              handleWatchAsset('token', asset)
+                                            }}
+                                          >
+                                            {getWalletType() === 'MM' ? (
+                                              <i className="icon-small icon-metamask icon-light ml-2" />
+                                            ) : (
+                                              <img
+                                                src={
+                                                  walletTypes.filter(
+                                                    (x) => x.id === 'TW',
+                                                  )[0]?.icon
+                                                }
+                                                alt="TrustWallet icon"
+                                                className="position-absolute"
+                                                style={{ left: '27' }}
+                                                height="24"
+                                              />
+                                            )}
+                                          </div>
+                                        </a>
                                       </Col>
                                     )}
                                   </Row>
@@ -514,29 +520,37 @@ const WalletSelect = (props) => {
                                     </Col>
                                     {getWalletType() && (
                                       <Col xs="6" className="mt-1">
-                                        <div
-                                          role="button"
-                                          aria-hidden="true"
-                                          onClick={() => {
-                                            handleWatchAsset('pool', asset)
-                                          }}
+                                        <a
+                                          href={
+                                            getWalletType() === 'TW'
+                                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                                              : '#section'
+                                          }
                                         >
-                                          {getWalletType() === 'MM' ? (
-                                            <i className="icon-small icon-metamask icon-light ml-2" />
-                                          ) : (
-                                            <img
-                                              src={
-                                                walletTypes.filter(
-                                                  (x) => x.id === 'TW',
-                                                )[0]?.icon
-                                              }
-                                              alt="TrustWallet icon"
-                                              className="position-absolute"
-                                              style={{ left: '27' }}
-                                              height="24"
-                                            />
-                                          )}
-                                        </div>
+                                          <div
+                                            role="button"
+                                            aria-hidden="true"
+                                            onClick={() => {
+                                              handleWatchAsset('pool', asset)
+                                            }}
+                                          >
+                                            {getWalletType() === 'MM' ? (
+                                              <i className="icon-small icon-metamask icon-light ml-2" />
+                                            ) : (
+                                              <img
+                                                src={
+                                                  walletTypes.filter(
+                                                    (x) => x.id === 'TW',
+                                                  )[0]?.icon
+                                                }
+                                                alt="TrustWallet icon"
+                                                className="position-absolute"
+                                                style={{ left: '27' }}
+                                                height="24"
+                                              />
+                                            )}
+                                          </div>
+                                        </a>
                                       </Col>
                                     )}
                                   </Row>
@@ -614,29 +628,37 @@ const WalletSelect = (props) => {
                                     </Col>
                                     {getWalletType() && (
                                       <Col xs="6" className="mt-1">
-                                        <div
-                                          role="button"
-                                          aria-hidden="true"
-                                          onClick={() => {
-                                            handleWatchAsset('pool', asset)
-                                          }}
+                                        <a
+                                          href={
+                                            getWalletType() === 'TW'
+                                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                                              : '#section'
+                                          }
                                         >
-                                          {getWalletType() === 'MM' ? (
-                                            <i className="icon-small icon-metamask icon-light ml-2" />
-                                          ) : (
-                                            <img
-                                              src={
-                                                walletTypes.filter(
-                                                  (x) => x.id === 'TW',
-                                                )[0]?.icon
-                                              }
-                                              alt="TrustWallet icon"
-                                              className="position-absolute"
-                                              style={{ left: '27' }}
-                                              height="24"
-                                            />
-                                          )}
-                                        </div>
+                                          <div
+                                            role="button"
+                                            aria-hidden="true"
+                                            onClick={() => {
+                                              handleWatchAsset('pool', asset)
+                                            }}
+                                          >
+                                            {getWalletType() === 'MM' ? (
+                                              <i className="icon-small icon-metamask icon-light ml-2" />
+                                            ) : (
+                                              <img
+                                                src={
+                                                  walletTypes.filter(
+                                                    (x) => x.id === 'TW',
+                                                  )[0]?.icon
+                                                }
+                                                alt="TrustWallet icon"
+                                                className="position-absolute"
+                                                style={{ left: '27' }}
+                                                height="24"
+                                              />
+                                            )}
+                                          </div>
+                                        </a>
                                       </Col>
                                     )}
                                   </Row>
@@ -714,29 +736,37 @@ const WalletSelect = (props) => {
                                     </Col>
                                     {getWalletType() && (
                                       <Col xs="6" className="mt-1">
-                                        <div
-                                          role="button"
-                                          aria-hidden="true"
-                                          onClick={() => {
-                                            handleWatchAsset('pool', asset)
-                                          }}
+                                        <a
+                                          href={
+                                            getWalletType() === 'TW'
+                                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                                              : '#section'
+                                          }
                                         >
-                                          {getWalletType() === 'MM' ? (
-                                            <i className="icon-small icon-metamask icon-light ml-2" />
-                                          ) : (
-                                            <img
-                                              src={
-                                                walletTypes.filter(
-                                                  (x) => x.id === 'TW',
-                                                )[0]?.icon
-                                              }
-                                              alt="TrustWallet icon"
-                                              className="position-absolute"
-                                              style={{ left: '27' }}
-                                              height="24"
-                                            />
-                                          )}
-                                        </div>
+                                          <div
+                                            role="button"
+                                            aria-hidden="true"
+                                            onClick={() => {
+                                              handleWatchAsset('pool', asset)
+                                            }}
+                                          >
+                                            {getWalletType() === 'MM' ? (
+                                              <i className="icon-small icon-metamask icon-light ml-2" />
+                                            ) : (
+                                              <img
+                                                src={
+                                                  walletTypes.filter(
+                                                    (x) => x.id === 'TW',
+                                                  )[0]?.icon
+                                                }
+                                                alt="TrustWallet icon"
+                                                className="position-absolute"
+                                                style={{ left: '27' }}
+                                                height="24"
+                                              />
+                                            )}
+                                          </div>
+                                        </a>
                                       </Col>
                                     )}
                                   </Row>
@@ -817,29 +847,37 @@ const WalletSelect = (props) => {
                                     </Col>
                                     {getWalletType() && (
                                       <Col xs="6" className="mt-1">
-                                        <div
-                                          role="button"
-                                          aria-hidden="true"
-                                          onClick={() => {
-                                            handleWatchAsset('synth', asset)
-                                          }}
+                                        <a
+                                          href={
+                                            getWalletType() === 'TW'
+                                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                                              : '#section'
+                                          }
                                         >
-                                          {getWalletType() === 'MM' ? (
-                                            <i className="icon-small icon-metamask icon-light ml-2" />
-                                          ) : (
-                                            <img
-                                              src={
-                                                walletTypes.filter(
-                                                  (x) => x.id === 'TW',
-                                                )[0]?.icon
-                                              }
-                                              alt="TrustWallet icon"
-                                              className="position-absolute"
-                                              style={{ left: '27' }}
-                                              height="24"
-                                            />
-                                          )}
-                                        </div>
+                                          <div
+                                            role="button"
+                                            aria-hidden="true"
+                                            onClick={() => {
+                                              handleWatchAsset('synth', asset)
+                                            }}
+                                          >
+                                            {getWalletType() === 'MM' ? (
+                                              <i className="icon-small icon-metamask icon-light ml-2" />
+                                            ) : (
+                                              <img
+                                                src={
+                                                  walletTypes.filter(
+                                                    (x) => x.id === 'TW',
+                                                  )[0]?.icon
+                                                }
+                                                alt="TrustWallet icon"
+                                                className="position-absolute"
+                                                style={{ left: '27' }}
+                                                height="24"
+                                              />
+                                            )}
+                                          </div>
+                                        </a>
                                       </Col>
                                     )}
                                   </Row>
@@ -917,29 +955,37 @@ const WalletSelect = (props) => {
                                     </Col>
                                     {getWalletType() && (
                                       <Col xs="6" className="mt-1">
-                                        <div
-                                          role="button"
-                                          aria-hidden="true"
-                                          onClick={() => {
-                                            handleWatchAsset('synth', asset)
-                                          }}
+                                        <a
+                                          href={
+                                            getWalletType() === 'TW'
+                                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                                              : '#section'
+                                          }
                                         >
-                                          {getWalletType() === 'MM' ? (
-                                            <i className="icon-small icon-metamask icon-light ml-2" />
-                                          ) : (
-                                            <img
-                                              src={
-                                                walletTypes.filter(
-                                                  (x) => x.id === 'TW',
-                                                )[0]?.icon
-                                              }
-                                              alt="TrustWallet icon"
-                                              className="position-absolute"
-                                              style={{ left: '27' }}
-                                              height="24"
-                                            />
-                                          )}
-                                        </div>
+                                          <div
+                                            role="button"
+                                            aria-hidden="true"
+                                            onClick={() => {
+                                              handleWatchAsset('synth', asset)
+                                            }}
+                                          >
+                                            {getWalletType() === 'MM' ? (
+                                              <i className="icon-small icon-metamask icon-light ml-2" />
+                                            ) : (
+                                              <img
+                                                src={
+                                                  walletTypes.filter(
+                                                    (x) => x.id === 'TW',
+                                                  )[0]?.icon
+                                                }
+                                                alt="TrustWallet icon"
+                                                className="position-absolute"
+                                                style={{ left: '27' }}
+                                                height="24"
+                                              />
+                                            )}
+                                          </div>
+                                        </a>
                                       </Col>
                                     )}
                                   </Row>
@@ -959,39 +1005,44 @@ const WalletSelect = (props) => {
             <div>
               {walletTypes.map((x) => (
                 <div key={x.id}>
-                  <button
-                    size="lg"
-                    color="success"
-                    type="button"
-                    className="btn btn-info btn-block mt-n3 p-2"
-                    onClick={() => {
-                      connectWallet(x)
-                      if (x.id === 'TW') {
-                        window.location = `https://link.trustwallet.com/open_url?coin_id=20000714&url=${window.location.origin}`
-                      }
-                    }}
+                  <a
+                    href={
+                      x.id === 'TW'
+                        ? `trust://open_url?coin_id=20000714&url=${window.location.origin}`
+                        : '#section'
+                    }
                   >
-                    <Col>
-                      <div className="float-left mt-2 pt-1">
-                        {x.title === 'Others' ? t('others') : x.title}
-                      </div>
-                      <div className="float-right">
-                        {x.icon.map((i) => (
-                          <Image
-                            key={`${x.id}icon${i}`}
-                            src={i}
-                            className="py-1 wallet-icons"
-                          />
-                        ))}
-                      </div>
-                    </Col>
-                  </button>
+                    <button
+                      size="lg"
+                      color="success"
+                      type="button"
+                      className="btn btn-info btn-block mt-n3 p-2"
+                      onClick={() => {
+                        connectWallet(x)
+                      }}
+                    >
+                      <Col>
+                        <div className="float-left mt-2 pt-1">
+                          {x.title === 'Others' ? t('others') : x.title}
+                        </div>
+                        <div className="float-right">
+                          {x.icon.map((i) => (
+                            <Image
+                              key={`${x.id}icon${i}`}
+                              src={i}
+                              className="py-1 wallet-icons"
+                            />
+                          ))}
+                        </div>
+                      </Col>
+                    </button>
+                  </a>
                   <br />
                 </div>
               ))}
               {isAppleDevice() && (
                 <a
-                  href="https://link.trustwallet.com/browser_enable"
+                  href="trust://browser_enable"
                   target="_blank"
                   rel="noreferrer"
                 >
