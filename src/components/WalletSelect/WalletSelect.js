@@ -1042,7 +1042,7 @@ const WalletSelect = (props) => {
               ))}
               {isAppleDevice() && (
                 <a
-                  href="https://link.trustwallet.com/browser_enable"
+                  href="trust://browser_enable"
                   target="_blank"
                   rel="noreferrer"
                 >
