@@ -32,7 +32,7 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
     const globalDetails = {
       emitting: awaitArray[0],
       // minting: awaitArray[],
-      feeOnTransfer: awaitArray[1],
+      feeOnTransfer: awaitArray[1].toString(),
       // emissionCurve: awaitArray[],
       totalSupply: awaitArray[2].toString(),
       secondsPerEra: awaitArray[3].toString(),

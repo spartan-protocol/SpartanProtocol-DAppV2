@@ -28,9 +28,9 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
+  calcFeeBurn,
   calcLiquidityHoldings,
   calcLiquidityUnits,
-  calcLiquidityUnitsAsym,
   calcSwapFee,
   calcValueInBase,
   calcValueInToken,
@@ -42,6 +42,7 @@ import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
 import swapIcon from '../../../assets/icons/swapadd.svg'
+import { useSparta } from '../../../store/sparta'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -50,6 +51,7 @@ const LiqAdd = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
+  const sparta = useSparta()
   const location = useLocation()
   const [activeTab, setActiveTab] = useState('addTab1')
   const [assetAdd1, setAssetAdd1] = useState('...')
@@ -184,6 +186,11 @@ const LiqAdd = () => {
     return poolAdd1?.balance
   }
 
+  const getFeeBurn = (_amount) => {
+    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
+    return burnFee
+  }
+
   //= =================================================================================//
   // 'Add Both' Functions (Re-Factor)
 
@@ -191,7 +198,9 @@ const LiqAdd = () => {
     if (addInput1 && addInput2 && assetAdd1) {
       return convertFromWei(
         calcLiquidityUnits(
-          convertToWei(addInput2?.value),
+          BN(convertToWei(addInput2?.value)).minus(
+            getFeeBurn(convertToWei(addInput2?.value)),
+          ),
           convertToWei(addInput1?.value),
           assetAdd1?.baseAmount,
           assetAdd1?.tokenAmount,
@@ -208,11 +217,17 @@ const LiqAdd = () => {
   const getAddSingleOutputLP = () => {
     if (addInput1 && assetAdd1) {
       return convertFromWei(
-        calcLiquidityUnitsAsym(
-          convertToWei(addInput1?.value),
+        calcLiquidityUnits(
           assetAdd1.tokenAddress === addr.spartav2
-            ? poolAdd1?.baseAmount
-            : poolAdd1?.tokenAmount,
+            ? BN(convertToWei(addInput1?.value)).minus(
+                getFeeBurn(convertToWei(addInput1?.value)),
+              )
+            : '0',
+          assetAdd1.tokenAddress !== addr.spartav2
+            ? convertToWei(addInput1?.value)
+            : '0',
+          poolAdd1?.baseAmount,
+          poolAdd1?.tokenAmount,
           poolAdd1?.poolUnits,
         ),
       )

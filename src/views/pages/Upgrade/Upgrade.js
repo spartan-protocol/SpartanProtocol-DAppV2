@@ -13,7 +13,7 @@ import {
   spartaUpgrade,
 } from '../../../store/sparta/actions'
 import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
-import { calcBurnFee } from '../../../utils/web3Utils'
+import { calcFeeBurn } from '../../../utils/web3Utils'
 import { getTokenContract } from '../../../utils/web3Contracts'
 
 const Upgrade = () => {
@@ -25,7 +25,6 @@ const Upgrade = () => {
   const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
   const [newSpartaBalance, setnewSpartaBalance] = useState('0')
   const [bnbBalance, setbnbBalance] = useState('0')
-  const [spartaSupply, setspartaSupply] = useState('0')
   const fsGenesis = '1620795586'
   const [loadingBalance, setloadingBalance] = useState(false)
 
@@ -41,14 +40,12 @@ const Upgrade = () => {
       awaitArray.push(
         getTokenContract(addr.spartav1, wallet).balanceOf(wallet.account),
         getTokenContract(addr.spartav2, wallet).balanceOf(wallet.account),
-        getTokenContract(addr.spartav2, wallet).totalSupply(),
         getWalletProvider(wallet?.ethereum).getBalance(),
       )
       awaitArray = await Promise.all(awaitArray)
       setoldSpartaBalance(awaitArray[0].toString())
       setnewSpartaBalance(awaitArray[1].toString())
-      setspartaSupply(awaitArray[2].toString())
-      setbnbBalance(awaitArray[3].toString())
+      setbnbBalance(awaitArray[2].toString())
       setloadingBalance(false)
     }
   }
@@ -71,7 +68,7 @@ const Upgrade = () => {
     if (wallet.status === 'disconnected') {
       setoldSpartaBalance('0')
       setnewSpartaBalance('0')
-      setspartaSupply('0')
+      setbnbBalance('0')
     }
   }, [wallet.status])
 
@@ -85,13 +82,16 @@ const Upgrade = () => {
     return expiry
   }
 
-  const getBurnFee = () => {
-    const burnFee = calcBurnFee(spartaSupply, sparta.claimCheck)
+  const getFeeBurn = () => {
+    const burnFee = calcFeeBurn(
+      sparta.globalDetails.feeOnTransfer,
+      sparta.claimCheck,
+    )
     return burnFee
   }
 
   const getClaimAmount = () => {
-    const claimAmount = BN(sparta.claimCheck).minus(getBurnFee())
+    const claimAmount = BN(sparta.claimCheck).minus(getFeeBurn())
     return claimAmount
   }
 
@@ -155,7 +155,9 @@ const Upgrade = () => {
                 {t('claim')}
               </Col>
               <Col className="text-right text-sm-label-wht">
-                {spartaSupply > 0 ? formatFromWei(getClaimAmount()) : 'Loading'}{' '}
+                {sparta.globalDetails.feeOnTransfer > 0
+                  ? formatFromWei(getClaimAmount())
+                  : 'Loading'}{' '}
                 SPARTAv2
               </Col>
             </Row>
