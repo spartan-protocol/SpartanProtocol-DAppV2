@@ -614,7 +614,7 @@ const LiqRemove = () => {
               removeInput1?.value && (
                 <Approval
                   tokenAddress={poolRemove1?.address}
-                  symbol={getToken(poolRemove1.tokenAddress)?.symbol}
+                  symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
                   walletAddress={wallet?.account}
                   contractAddress={addr.router}
                   txnAmount={convertToWei(removeInput1?.value)}
