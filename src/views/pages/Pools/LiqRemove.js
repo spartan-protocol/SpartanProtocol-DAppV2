@@ -272,7 +272,6 @@ const LiqRemove = () => {
           getRemoveSpartaBurn1().minus(getFeeBurn(getRemoveSpartaBurn1())),
           BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-          false,
         )
       }
 
