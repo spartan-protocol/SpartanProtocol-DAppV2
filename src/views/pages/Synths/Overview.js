@@ -502,7 +502,7 @@ const Swap = () => {
                               toggle('mint')
                             }}
                           >
-                            {t('mintSynths')}
+                            {t('forgeSynths')}
                           </NavLink>
                         </NavItem>
                         <NavItem>
@@ -514,7 +514,7 @@ const Swap = () => {
                               toggle('burn')
                             }}
                           >
-                            {t('burnSynths')}
+                            {t('meltSynths')}
                           </NavLink>
                         </NavItem>
                       </Nav>
@@ -529,7 +529,7 @@ const Swap = () => {
                               <Col xs="4">
                                 <div className="text-sm-label">
                                   {' '}
-                                  {activeTab === 'mint' ? t('add') : t('burn')}
+                                  {activeTab === 'mint' ? t('add') : t('melt')}
                                 </div>
                               </Col>
 
@@ -635,7 +635,7 @@ const Swap = () => {
                                   <div className="text-sm-label">
                                     {' '}
                                     {activeTab === 'mint'
-                                      ? t('mint')
+                                      ? t('forge')
                                       : t('receive')}
                                   </div>
                                 </Col>
@@ -858,7 +858,7 @@ const Swap = () => {
                                     }
                                     block
                                   >
-                                    {t('mint')}{' '}
+                                    {t('forge')}{' '}
                                     {getToken(assetSwap2.tokenAddress)?.symbol}s
                                   </Button>
                                 </Col>
