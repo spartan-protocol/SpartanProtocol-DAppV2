@@ -224,8 +224,11 @@ const LiqRemove = () => {
 
   const getRemoveSpartaBurn1 = () => {
     if (removeInput1 && poolRemove1) {
-      const _sparta = getRemoveSparta()
-      return _sparta.minus(getFeeBurn(_sparta))
+      let _sparta = getRemoveSparta()
+      if (poolRemove1.tokenAddress === addr.bnb) {
+        _sparta = _sparta.minus(getFeeBurn(_sparta))
+      }
+      return _sparta
     }
     return '0.00'
   }
@@ -246,7 +249,7 @@ const LiqRemove = () => {
       const swapFee = calcSwapFee(
         assetRemove1?.tokenAddress === addr.spartav2
           ? getRemoveTokenOutput()
-          : getRemoveSpartaBurn1(),
+          : getRemoveSpartaOutput(),
         BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
         BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
         assetRemove1?.tokenAddress === addr.spartav2,
@@ -267,9 +270,17 @@ const LiqRemove = () => {
           true,
         )
         result = result.minus(getFeeBurn(result))
+      } else if (poolRemove1.tokenAddress === addr.bnb) {
+        result = calcSwapOutput(
+          getRemoveSpartaOutput(),
+          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
+          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
+        )
       } else {
         result = calcSwapOutput(
-          getRemoveSpartaBurn1().minus(getFeeBurn(getRemoveSpartaBurn1())),
+          BN(getRemoveSpartaOutput()).minus(
+            getFeeBurn(getRemoveSpartaOutput()),
+          ),
           BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
         )
@@ -284,7 +295,13 @@ const LiqRemove = () => {
     if (removeInput1 && assetRemove1) {
       let result = ''
       if (assetRemove1?.tokenAddress === addr.spartav2) {
-        result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveSpartaBurn1()))
+        if (poolRemove1.tokenAddress === addr.bnb) {
+          result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveSpartaBurn1()))
+        } else {
+          result = BN(getRemoveOneSwapOutput()).plus(
+            BN(getRemoveSpartaOutput()),
+          )
+        }
         result = result.minus(getFeeBurn(result))
       } else {
         result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveTokenOutput()))
