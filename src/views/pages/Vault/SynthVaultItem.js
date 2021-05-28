@@ -11,6 +11,7 @@ import { synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { useReserve } from '../../../store/reserve/selector'
 import {
+  calcFeeBurn,
   calcLiquidityUnitsAsym,
   calcShare,
   calcSwapOutput,
@@ -45,6 +46,11 @@ const SynthVaultItem = ({ synthItem }) => {
     return date.toLocaleDateString()
   }
 
+  const getFeeBurn = (_amount) => {
+    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
+    return burnFee
+  }
+
   // Calculations
 
   const getClaimable = () => {
@@ -66,7 +72,8 @@ const SynthVaultItem = ({ synthItem }) => {
     const claimAmount = share
       .times(secondsSince)
       .div(sparta.globalDetails.oldSecondsPerEra)
-    return claimAmount
+    const feeBurn = getFeeBurn(claimAmount)
+    return BN(claimAmount).minus(feeBurn)
   }
 
   const getSynthLPsFromBase = () => {

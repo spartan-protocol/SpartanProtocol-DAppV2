@@ -15,15 +15,17 @@ import {
   getDaoVaultGlobalDetails,
   getDaoVaultMemberDetails,
 } from '../../../store/dao/actions'
-import { calcShare } from '../../../utils/web3Utils'
+import { calcFeeBurn, calcShare } from '../../../utils/web3Utils'
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
+import { useSparta } from '../../../store/sparta'
 
 const DaoVault = () => {
   const reserve = useReserve()
   const wallet = useWallet()
   const dao = useDao()
   const pool = usePool()
+  const sparta = useSparta()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // const [showDetails, setShowDetails] = useState(false)
@@ -56,6 +58,11 @@ const DaoVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
+  const getFeeBurn = (_amount) => {
+    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
+    return burnFee
+  }
+
   const getClaimable = () => {
     // get seconds passed since last harvest
     const timeStamp = BN(Date.now()).div(1000)
@@ -75,7 +82,8 @@ const DaoVault = () => {
     const claimAmount = share
       .times(secondsSince)
       .div(dao.globalDetails.secondsPerEra)
-    return claimAmount
+    const feeBurn = getFeeBurn(claimAmount) // feeBurn - Reserve to User
+    return BN(claimAmount).minus(feeBurn)
   }
 
   // const toggleCollapse = () => {

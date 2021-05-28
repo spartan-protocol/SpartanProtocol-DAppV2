@@ -30,9 +30,9 @@ import {
   calcDoubleSwapFee,
   calcValueInBase,
   calcLiquidityHoldings,
-  calcShare,
-  calcLiquidityUnitsAsym,
   calcFeeBurn,
+  calcLiquidityUnits,
+  // calcLiquidityUnitsAsym,
 } from '../../../utils/web3Utils'
 import {
   swap,
@@ -448,6 +448,13 @@ const Swap = () => {
     return '0'
   }
 
+  const getZapSwapBurn = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return BN(getZapSwap()).minus(getFeeBurn(getZapSwap()))
+    }
+    return '0'
+  }
+
   const getZapSwapFee = () => {
     if (assetSwap1 && swapInput1?.value) {
       return calcSwapFee(
@@ -462,11 +469,13 @@ const Swap = () => {
 
   const getZapOutput = () => {
     if (assetSwap1 && swapInput1?.value) {
-      return calcLiquidityUnitsAsym(
-        BN(getZapRemoveBaseBurn()).plus(
-          BN(getZapSwap()).minus(getFeeBurn(getZapSwap())),
-        ),
+      return calcLiquidityUnits(
+        BN(getZapRemoveBaseBurn())
+          .plus(getZapSwapBurn())
+          .minus(getFeeBurn(getZapRemoveBaseBurn())),
+        '0',
         assetSwap2.baseAmount,
+        assetSwap2.tokenAmount,
         assetSwap2.poolUnits,
       )
     }
@@ -474,175 +483,102 @@ const Swap = () => {
   }
 
   //= =================================================================================//
-  // Functions SYNTHS calculations
+  // Base-To-Synths Calcs
 
-  const getSynthLPsFromBase = (baseOutput) => {
-    let temp = '0'
-    if (baseOutput) {
-      if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
-        temp = calcLiquidityUnitsAsym(
-          baseOutput,
-          BN(assetSwap2.baseAmount).minus(baseOutput),
-          assetSwap2.poolUnits,
-        )
-      } else {
-        temp = calcLiquidityUnitsAsym(
-          baseOutput,
-          assetSwap2.baseAmount,
-          assetSwap2.poolUnits,
-        )
+  // STEP 1 - ADD ASSETs TO POOL (FEEBURN: YES)
+  const getAddedBase = (getFee) => {
+    const input = BN(convertToWei(swapInput1?.value))
+    const fromToken = assetSwap1
+    const fromBase = fromToken.tokenAddress === addr.spartav2
+    const { baseAmount } = assetSwap1
+    const { tokenAmount } = assetSwap1
+    let feeBurn = getFeeBurn(input) // feeBurn - SPARTA from User to Pool
+    if (fromBase) {
+      if (getFee) {
+        return '0'
       }
-    } else {
-      temp = calcLiquidityUnitsAsym(
-        BN(convertToWei(swapInput1.value)).minus(
-          getFeeBurn(convertToWei(swapInput1.value)),
-        ),
-        assetSwap2.baseAmount,
-        assetSwap2.poolUnits,
-      )
+      return input.minus(feeBurn)
     }
-    return temp
+    let baseSwapped = calcSwapOutput(input, tokenAmount, baseAmount, true)
+    feeBurn = getFeeBurn(baseSwapped) // feeBurn - Pool to Router
+    baseSwapped = baseSwapped.minus(feeBurn)
+    feeBurn = getFeeBurn(baseSwapped) // feeBurn - Router to Pool
+    if (getFee) {
+      const swapFee = calcSwapFee(input, tokenAmount, baseAmount, true)
+      return calcValueInBase(tokenAmount, baseAmount, swapFee)
+    }
+    return baseSwapped.minus(feeBurn)
   }
 
-  const getSynthFeeFromBase = () => {
-    let temp = calcSwapFee(
-      convertToWei(swapInput1?.value),
-      assetSwap2?.tokenAmount,
-      assetSwap2?.baseAmount,
-    )
-    temp = calcValueInBase(assetSwap2.tokenAmount, assetSwap2.baseAmount, temp)
-    return temp
+  // STEP 2 - ADD LPs TO SYNTH (FEEBURN: NO)
+  // const getAddedLPs = () => {
+  //   const input = getAddedBase()
+  //   const _pool = assetSwap2
+  //   const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
+  //   const { poolUnits } = _pool
+  //   const { baseAmount } = _pool
+  //   const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
+  //   return calcLiquidityUnitsAsym(input, actualBase, poolUnits)
+  // }
+
+  // STEP 3 - ADD SYNTHs TO USER (FEEBURN: NO)
+  const getAddedSynths = (getFee) => {
+    const input = getAddedBase()
+    const _pool = assetSwap2
+    const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
+    const tokenAmount = BN(_pool.tokenAmount)
+    const actualToken = sameLayer1
+      ? tokenAmount.plus(convertToWei(swapInput1?.value))
+      : tokenAmount
+    const baseAmount = BN(_pool.baseAmount)
+    const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
+    if (getFee) {
+      const swapFee = calcSwapFee(input, actualToken, actualBase, false)
+      return calcValueInBase(actualToken, actualBase, swapFee)
+    }
+    return calcSwapOutput(input, actualToken, actualBase, false)
   }
 
-  const getSynthOutputFromBase = () => {
-    let tokenValue = '0'
-    if (assetSwap1.tokenAddress === addr.spartav2) {
-      const lpUnits = getSynthLPsFromBase()
-      const baseAmount = calcShare(
-        lpUnits,
-        BN(assetSwap2.poolUnits).plus(lpUnits),
-        BN(assetSwap2.baseAmount).plus(
-          BN(convertToWei(swapInput1?.value)).minus(
-            convertToWei(swapInput1?.value),
-          ),
-        ),
-      )
-      const tokenAmount = calcShare(
-        lpUnits,
-        BN(assetSwap2.poolUnits).plus(lpUnits),
-        assetSwap2.tokenAmount,
-      )
-      const baseSwapped = calcSwapOutput(
-        baseAmount,
-        assetSwap2.tokenAmount,
-        BN(assetSwap2.baseAmount).plus(
-          BN(convertToWei(swapInput1?.value)).minus(
-            convertToWei(swapInput1?.value),
-          ),
-        ),
-      )
-      tokenValue = BN(tokenAmount).plus(baseSwapped)
-    } else {
-      let outputBase = calcSwapOutput(
-        convertToWei(swapInput1?.value),
-        assetSwap1?.tokenAmount,
-        assetSwap1?.baseAmount,
-        true,
-      )
-      outputBase = BN(outputBase).minus(getFeeBurn(outputBase))
-      const lpUnits = getSynthLPsFromBase(outputBase)
-      let baseAmount = '0'
-      let tokenAmount = '0'
-      let baseSwapped = '0'
-      if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
-        baseAmount = calcShare(
-          lpUnits,
-          BN(assetSwap2.poolUnits).plus(lpUnits),
-          BN(assetSwap2.baseAmount),
-        )
-        tokenAmount = calcShare(
-          lpUnits,
-          BN(assetSwap2.poolUnits).plus(lpUnits),
-          BN(assetSwap2.tokenAmount).plus(convertToWei(swapInput1?.value)),
-        )
-        baseSwapped = calcSwapOutput(
-          baseAmount,
-          BN(assetSwap2.tokenAmount).plus(convertToWei(swapInput1?.value)),
-          BN(assetSwap2.baseAmount),
-        )
-      } else {
-        baseAmount = calcShare(
-          lpUnits,
-          BN(assetSwap2.poolUnits).plus(lpUnits),
-          BN(assetSwap2.baseAmount).plus(BN(outputBase)),
-        )
-        tokenAmount = calcShare(
-          lpUnits,
-          BN(assetSwap2.poolUnits).plus(lpUnits),
-          assetSwap2.tokenAmount,
-        )
-        baseSwapped = calcSwapOutput(
-          baseAmount,
-          assetSwap2.tokenAmount,
-          BN(assetSwap2.baseAmount).plus(BN(outputBase)),
-        )
+  // STEP 1A - Get fee from swap in step 1
+  const getSynthSwapFee = () => {
+    const swapFee1 = BN(getAddedBase(true))
+    const swapFee2 = BN(getAddedSynths(true))
+    return swapFee1.minus(swapFee2)
+  }
+
+  //= =================================================================================//
+  // Synth-To-Base Calcs
+  const getRemovedBase = (getFee) => {
+    const input = BN(convertToWei(swapInput1?.value))
+    const toToken = assetSwap2
+    const toBase = toToken.tokenAddress === addr.spartav2
+    const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
+    let baseAmount = BN(assetSwap1.baseAmount)
+    let { tokenAmount } = assetSwap1
+    const swapped = calcSwapOutput(input, tokenAmount, baseAmount, true)
+    let swapFee1 = calcSwapFee(input, tokenAmount, baseAmount, true)
+    swapFee1 = calcValueInBase(tokenAmount, baseAmount, swapFee1)
+    let feeBurn = getFeeBurn(swapped) // feeBurn - Pool to User / Router
+    let output = BN(swapped).minus(feeBurn)
+    if (toBase) {
+      if (getFee) {
+        return swapFee1
       }
-      tokenValue = BN(tokenAmount).plus(baseSwapped)
+      return output
     }
-    return tokenValue
-  }
-
-  const getSynthFeeToBase = () => {
-    const fee = calcSwapFee(
-      convertToWei(swapInput1.value),
-      assetSwap1.tokenAmount,
-      assetSwap1.baseAmount,
-      true,
-    )
-    return fee
-  }
-
-  const getSynthOutputToBase = () => {
-    let tokenValue = '0'
-    let outputBase = '0'
-    if (assetSwap2.tokenAddress === addr.spartav2) {
-      const inputSynth = convertToWei(swapInput1?.value)
-      tokenValue = calcSwapOutput(
-        inputSynth,
-        assetSwap1.tokenAmount,
-        assetSwap1.baseAmount,
-        true,
-      )
-    } else if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
-      outputBase = calcSwapOutput(
-        convertToWei(swapInput1?.value),
-        assetSwap1?.tokenAmount,
-        assetSwap1?.baseAmount,
-        true,
-      )
-      outputBase = BN(outputBase).minus(getFeeBurn(outputBase))
-      tokenValue = calcSwapOutput(
-        outputBase,
-        assetSwap2.tokenAmount,
-        BN(assetSwap2.baseAmount).minus(outputBase),
-        false,
-      )
+    if (sameLayer1) {
+      baseAmount = baseAmount.minus(swapped)
     } else {
-      outputBase = calcSwapOutput(
-        convertToWei(swapInput1?.value),
-        assetSwap1?.tokenAmount,
-        assetSwap1?.baseAmount,
-        true,
-      )
-      outputBase = BN(outputBase).minus(getFeeBurn(outputBase))
-      tokenValue = calcSwapOutput(
-        outputBase,
-        assetSwap2.tokenAmount,
-        assetSwap2.baseAmount,
-        false,
-      )
+      tokenAmount = assetSwap2.tokenAmount
+      baseAmount = assetSwap2.baseAmount
     }
-    return tokenValue
+    feeBurn = getFeeBurn(output) // feeBurn - Router to Pool
+    output = BN(output).minus(feeBurn)
+    const swapFee2 = calcSwapFee(output, tokenAmount, baseAmount, false)
+    if (getFee) {
+      return BN(swapFee1).plus(swapFee2)
+    }
+    return calcSwapOutput(output, tokenAmount, baseAmount, false)
   }
 
   //= =================================================================================//
@@ -654,9 +590,9 @@ const Swap = () => {
 
   const handleSynthInputChange = () => {
     if (mode === 'synthOut') {
-      swapInput2.value = convertFromWei(getSynthOutputFromBase(), 18)
+      swapInput2.value = convertFromWei(getAddedSynths(), 18)
     } else if (mode === 'synthIn') {
-      swapInput2.value = convertFromWei(getSynthOutputToBase(), 18)
+      swapInput2.value = convertFromWei(getRemovedBase(), 18)
     }
   }
 
@@ -1139,17 +1075,17 @@ const Swap = () => {
                             </Col>
                             <Col className="text-right">
                               <div className="output-card text-light">
-                                {assetSwap1?.tokenAddress === addr.spartav2 && (
+                                {mode === 'synthOut' && (
                                   <>
                                     {swapInput1?.value
-                                      ? formatFromWei(getSynthFeeFromBase(), 6)
+                                      ? formatFromWei(getSynthSwapFee(), 6)
                                       : '0.00'}
                                   </>
                                 )}
-                                {assetSwap1?.tokenAddress !== addr.spartav2 && (
+                                {mode === 'synthIn' && (
                                   <>
                                     {swapInput1?.value
-                                      ? formatFromWei(getSynthFeeToBase(), 6)
+                                      ? formatFromWei(getRemovedBase(true), 6)
                                       : '0.00'}
                                   </>
                                 )}{' '}
@@ -1167,10 +1103,7 @@ const Swap = () => {
                                 {assetSwap1?.tokenAddress === addr.spartav2 && (
                                   <>
                                     {swapInput1?.value
-                                      ? formatFromWei(
-                                          getSynthOutputFromBase(),
-                                          6,
-                                        )
+                                      ? formatFromWei(getAddedSynths(), 6)
                                       : '0.00'}{' '}
                                     {getToken(assetSwap2.tokenAddress)?.symbol}s
                                   </>
@@ -1179,10 +1112,7 @@ const Swap = () => {
                                   mode === 'synthOut' && (
                                     <>
                                       {swapInput1?.value
-                                        ? formatFromWei(
-                                            getSynthOutputFromBase(),
-                                            6,
-                                          )
+                                        ? formatFromWei(getAddedSynths(), 6)
                                         : '0.00'}{' '}
                                       {
                                         getToken(assetSwap2.tokenAddress)
@@ -1195,10 +1125,7 @@ const Swap = () => {
                                   mode === 'synthIn' && (
                                     <>
                                       {swapInput1?.value
-                                        ? formatFromWei(
-                                            getSynthOutputToBase(),
-                                            6,
-                                          )
+                                        ? formatFromWei(getRemovedBase(), 6)
                                         : '0.00'}{' '}
                                       {
                                         getToken(assetSwap2.tokenAddress)
