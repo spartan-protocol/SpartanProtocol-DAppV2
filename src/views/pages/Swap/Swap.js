@@ -33,6 +33,7 @@ import {
   calcShare,
   calcLiquidityUnitsAsym,
   calcFeeBurn,
+  calcLiquidityUnits,
 } from '../../../utils/web3Utils'
 import {
   swap,
@@ -448,6 +449,13 @@ const Swap = () => {
     return '0'
   }
 
+  const getZapSwapBurn = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return BN(getZapSwap()).minus(getFeeBurn(getZapSwap()))
+    }
+    return '0'
+  }
+
   const getZapSwapFee = () => {
     if (assetSwap1 && swapInput1?.value) {
       return calcSwapFee(
@@ -462,11 +470,13 @@ const Swap = () => {
 
   const getZapOutput = () => {
     if (assetSwap1 && swapInput1?.value) {
-      return calcLiquidityUnitsAsym(
-        BN(getZapRemoveBaseBurn()).plus(
-          BN(getZapSwap()).minus(getFeeBurn(getZapSwap())),
-        ),
+      return calcLiquidityUnits(
+        BN(getZapRemoveBaseBurn())
+          .plus(getZapSwapBurn())
+          .minus(getFeeBurn(getZapRemoveBaseBurn())),
+        '0',
         assetSwap2.baseAmount,
+        assetSwap2.tokenAmount,
         assetSwap2.poolUnits,
       )
     }
