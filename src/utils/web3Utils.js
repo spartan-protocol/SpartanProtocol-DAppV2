@@ -131,14 +131,13 @@ export const calcPart = (bp, total) => {
 }
 
 /**
- * Calculate burn fee basis points (0 - 100 ie. 0% to 1%)
- * @param {uint} totalSupply
+ * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%)
+ * Uses the feeOnTransfer if already called
+ * @param {uint} feeOnTransfer
  * @param {uint} amount
  * @returns {uint} fee
  */
-export const calcBurnFee = (totalSupply, amount) => {
-  const maxSupply = BN(300000000).times(one)
-  const feeOnTransfer = calcShare(totalSupply, maxSupply, 100) // 0->100BP
+export const calcFeeBurn = (feeOnTransfer, amount) => {
   const fee = calcPart(feeOnTransfer, amount)
   return fee
 }

@@ -27,6 +27,7 @@ import {
 } from '../../../utils/bigNumber'
 import { useBond } from '../../../store/bond/selector'
 import {
+  calcFeeBurn,
   calcLiquidityUnits,
   calcSwapOutput,
   calcValueInBase,
@@ -35,6 +36,7 @@ import Approval from '../../../components/Approval/Approval'
 import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
+import { useSparta } from '../../../store/sparta'
 
 const LiqBond = () => {
   const { t } = useTranslation()
@@ -43,6 +45,7 @@ const LiqBond = () => {
   const bond = useBond()
   const dispatch = useDispatch()
   const pool = usePool()
+  const sparta = useSparta()
   const addr = getAddresses()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [assetBond1, setAssetBond1] = useState('...')
@@ -98,6 +101,11 @@ const LiqBond = () => {
     }
   }
 
+  const getFeeBurn = (_amount) => {
+    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
+    return burnFee
+  }
+
   // Bond Functions
   const calcSpartaMinted = () => {
     if (bondInput1) {
@@ -115,7 +123,7 @@ const LiqBond = () => {
   const calcOutput = () => {
     if (bondInput1) {
       const output = calcLiquidityUnits(
-        calcSpartaMinted(),
+        BN(calcSpartaMinted()).minus(getFeeBurn(calcSpartaMinted())),
         convertToWei(bondInput1.value),
         assetBond1.baseAmount,
         assetBond1.tokenAmount,

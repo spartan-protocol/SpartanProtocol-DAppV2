@@ -28,6 +28,7 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
+  calcFeeBurn,
   calcLiquidityHoldings,
   calcSwapFee,
   calcSwapOutput,
@@ -42,6 +43,7 @@ import {
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import swapIcon from '../../../assets/icons/swapadd.svg'
 import Approval from '../../../components/Approval/Approval'
+import { useSparta } from '../../../store/sparta'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -49,6 +51,7 @@ const LiqRemove = () => {
   const pool = usePool()
   const addr = getAddresses()
   const wallet = useWallet()
+  const sparta = useSparta()
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
@@ -187,6 +190,11 @@ const LiqRemove = () => {
     return poolRemove1?.balance
   }
 
+  const getFeeBurn = (_amount) => {
+    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
+    return burnFee
+  }
+
   //= =================================================================================//
   // 'Remove Both' Functions (Re-Factor to just getOutput)
 
@@ -201,13 +209,31 @@ const LiqRemove = () => {
     return '0.00'
   }
 
+  const getRemoveSparta = () => {
+    if (removeInput1 && poolRemove1) {
+      return BN(
+        calcLiquidityHoldings(
+          poolRemove1?.baseAmount,
+          convertToWei(removeInput1?.value),
+          poolRemove1?.poolUnits,
+        ),
+      )
+    }
+    return '0.00'
+  }
+
+  const getRemoveSpartaBurn1 = () => {
+    if (removeInput1 && poolRemove1) {
+      const _sparta = getRemoveSparta()
+      return _sparta.minus(getFeeBurn(_sparta))
+    }
+    return '0.00'
+  }
+
   const getRemoveSpartaOutput = () => {
     if (removeInput1 && poolRemove1) {
-      return calcLiquidityHoldings(
-        poolRemove1?.baseAmount,
-        convertToWei(removeInput1?.value),
-        poolRemove1?.poolUnits,
-      )
+      const _sparta = getRemoveSpartaBurn1()
+      return _sparta.minus(getFeeBurn(_sparta))
     }
     return '0.00'
   }
@@ -220,9 +246,9 @@ const LiqRemove = () => {
       const swapFee = calcSwapFee(
         assetRemove1?.tokenAddress === addr.spartav2
           ? getRemoveTokenOutput()
-          : getRemoveSpartaOutput(),
+          : getRemoveSpartaBurn1(),
         BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-        BN(poolRemove1?.baseAmount).minus(getRemoveSpartaOutput()),
+        BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
         assetRemove1?.tokenAddress === addr.spartav2,
       )
       return swapFee
@@ -232,25 +258,37 @@ const LiqRemove = () => {
 
   const getRemoveOneSwapOutput = () => {
     if (removeInput1 && assetRemove1) {
-      return calcSwapOutput(
-        assetRemove1?.tokenAddress === addr.spartav2
-          ? getRemoveTokenOutput()
-          : getRemoveSpartaOutput(),
-        BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-        BN(poolRemove1?.baseAmount).minus(getRemoveSpartaOutput()),
-        assetRemove1?.tokenAddress === addr.spartav2,
-      )
+      let result = ''
+      if (assetRemove1?.tokenAddress === addr.spartav2) {
+        result = calcSwapOutput(
+          getRemoveTokenOutput(),
+          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
+          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
+          true,
+        )
+        result = result.minus(getFeeBurn(result))
+      } else {
+        result = calcSwapOutput(
+          getRemoveSpartaBurn1().minus(getFeeBurn(getRemoveSpartaBurn1())),
+          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
+          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
+        )
+      }
+
+      return result
     }
     return '0.00'
   }
 
   const getRemoveOneFinalOutput = () => {
     if (removeInput1 && assetRemove1) {
-      const result = BN(getRemoveOneSwapOutput()).plus(
-        assetRemove1?.tokenAddress === addr.spartav2
-          ? BN(getRemoveSpartaOutput())
-          : BN(getRemoveTokenOutput()),
-      )
+      let result = ''
+      if (assetRemove1?.tokenAddress === addr.spartav2) {
+        result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveSpartaBurn1()))
+        result = result.minus(getFeeBurn(result))
+      } else {
+        result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveTokenOutput()))
+      }
       return result
     }
     return '0.00'
@@ -585,7 +623,7 @@ const LiqRemove = () => {
                         <span className="subtitle-card">
                           {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
                           <span className="output-card ml-1">
-                            {getToken(poolRemove1?.tokenAddress)?.symbol}
+                            {getToken(assetRemove1?.tokenAddress)?.symbol}
                           </span>
                         </span>
                         {activeTab === '1' && (

@@ -32,6 +32,7 @@ import {
   calcLiquidityHoldings,
   calcShare,
   calcLiquidityUnitsAsym,
+  calcFeeBurn,
 } from '../../../utils/web3Utils'
 import {
   swap,
@@ -47,6 +48,7 @@ import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import swapIcon from '../../../assets/icons/icon-swap-light.svg'
+import { useSparta } from '../../../store/sparta'
 
 const Swap = () => {
   const synth = useSynth()
@@ -56,6 +58,7 @@ const Swap = () => {
   const dispatch = useDispatch()
   const addr = getAddresses()
   const pool = usePool()
+  const sparta = useSparta()
   const location = useLocation()
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
@@ -246,6 +249,11 @@ const Swap = () => {
     clearInputs()
   }
 
+  const getFeeBurn = (_amount) => {
+    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
+    return burnFee
+  }
+
   //= =================================================================================//
   // Functions SWAP calculations
 
@@ -274,18 +282,21 @@ const Swap = () => {
   const getSwapOutput = () => {
     if (assetSwap1?.tokenAddress === addr.spartav2) {
       return calcSwapOutput(
-        convertToWei(swapInput1?.value),
+        BN(convertToWei(swapInput1?.value)).minus(
+          getFeeBurn(convertToWei(swapInput1?.value)),
+        ),
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
       )
     }
     if (assetSwap2?.tokenAddress === addr.spartav2) {
-      return calcSwapOutput(
+      const result = calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
         assetSwap1?.baseAmount,
         true,
       )
+      return BN(result).minus(getFeeBurn(result))
     }
     return calcDoubleSwapOutput(
       convertToWei(swapInput1?.value),
@@ -340,14 +351,15 @@ const Swap = () => {
       if (assetSwap1?.tokenAddress === addr.spartav2) {
         swapInput2.value = convertFromWei(
           calcSwapOutput(
-            convertToWei(swapInput1?.value),
+            BN(convertToWei(swapInput1?.value)).minus(
+              getFeeBurn(convertToWei(swapInput1?.value)),
+            ),
             assetSwap2.tokenAmount,
             assetSwap2.baseAmount,
-            false,
           ),
         )
       } else if (assetSwap2?.tokenAddress === addr.spartav2) {
-        swapInput2.value = convertFromWei(
+        const result = convertFromWei(
           calcSwapOutput(
             convertToWei(swapInput1?.value),
             assetSwap1.tokenAmount,
@@ -355,6 +367,7 @@ const Swap = () => {
             true,
           ),
         )
+        swapInput2.value = BN(result).minus(getFeeBurn(result))
       } else {
         swapInput2.value = convertFromWei(
           calcDoubleSwapOutput(
@@ -379,6 +392,13 @@ const Swap = () => {
         convertToWei(swapInput1.value),
         assetSwap1.poolUnits,
       )
+    }
+    return '0'
+  }
+
+  const getZapRemoveBaseBurn = () => {
+    if (assetSwap1 && swapInput1?.value) {
+      return BN(getZapRemoveBase()).minus(getFeeBurn(getZapRemoveBase()))
     }
     return '0'
   }
@@ -443,7 +463,9 @@ const Swap = () => {
   const getZapOutput = () => {
     if (assetSwap1 && swapInput1?.value) {
       return calcLiquidityUnitsAsym(
-        BN(getZapRemoveBase()).plus(getZapSwap()),
+        BN(getZapRemoveBaseBurn()).plus(
+          BN(getZapSwap()).minus(getFeeBurn(getZapSwap())),
+        ),
         assetSwap2.baseAmount,
         assetSwap2.poolUnits,
       )
@@ -454,25 +476,27 @@ const Swap = () => {
   //= =================================================================================//
   // Functions SYNTHS calculations
 
-  const getSynthLPsFromBase = (baseOuput) => {
+  const getSynthLPsFromBase = (baseOutput) => {
     let temp = '0'
-    if (baseOuput) {
+    if (baseOutput) {
       if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
         temp = calcLiquidityUnitsAsym(
-          baseOuput,
-          BN(assetSwap2.baseAmount).minus(baseOuput),
+          baseOutput,
+          BN(assetSwap2.baseAmount).minus(baseOutput),
           assetSwap2.poolUnits,
         )
       } else {
         temp = calcLiquidityUnitsAsym(
-          baseOuput,
+          baseOutput,
           assetSwap2.baseAmount,
           assetSwap2.poolUnits,
         )
       }
     } else {
       temp = calcLiquidityUnitsAsym(
-        convertToWei(swapInput1.value),
+        BN(convertToWei(swapInput1.value)).minus(
+          getFeeBurn(convertToWei(swapInput1.value)),
+        ),
         assetSwap2.baseAmount,
         assetSwap2.poolUnits,
       )
@@ -497,7 +521,11 @@ const Swap = () => {
       const baseAmount = calcShare(
         lpUnits,
         BN(assetSwap2.poolUnits).plus(lpUnits),
-        BN(assetSwap2.baseAmount).plus(BN(swapInput1?.value)),
+        BN(assetSwap2.baseAmount).plus(
+          BN(convertToWei(swapInput1?.value)).minus(
+            convertToWei(swapInput1?.value),
+          ),
+        ),
       )
       const tokenAmount = calcShare(
         lpUnits,
@@ -507,17 +535,22 @@ const Swap = () => {
       const baseSwapped = calcSwapOutput(
         baseAmount,
         assetSwap2.tokenAmount,
-        BN(assetSwap2.baseAmount).plus(BN(swapInput1?.value)),
+        BN(assetSwap2.baseAmount).plus(
+          BN(convertToWei(swapInput1?.value)).minus(
+            convertToWei(swapInput1?.value),
+          ),
+        ),
       )
       tokenValue = BN(tokenAmount).plus(baseSwapped)
     } else {
-      const outPutBase = calcSwapOutput(
+      let outputBase = calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
         assetSwap1?.baseAmount,
         true,
       )
-      const lpUnits = getSynthLPsFromBase(outPutBase)
+      outputBase = BN(outputBase).minus(getFeeBurn(outputBase))
+      const lpUnits = getSynthLPsFromBase(outputBase)
       let baseAmount = '0'
       let tokenAmount = '0'
       let baseSwapped = '0'
@@ -541,7 +574,7 @@ const Swap = () => {
         baseAmount = calcShare(
           lpUnits,
           BN(assetSwap2.poolUnits).plus(lpUnits),
-          BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
+          BN(assetSwap2.baseAmount).plus(BN(outputBase)),
         )
         tokenAmount = calcShare(
           lpUnits,
@@ -551,7 +584,7 @@ const Swap = () => {
         baseSwapped = calcSwapOutput(
           baseAmount,
           assetSwap2.tokenAmount,
-          BN(assetSwap2.baseAmount).plus(BN(outPutBase)),
+          BN(assetSwap2.baseAmount).plus(BN(outputBase)),
         )
       }
       tokenValue = BN(tokenAmount).plus(baseSwapped)
@@ -571,7 +604,7 @@ const Swap = () => {
 
   const getSynthOutputToBase = () => {
     let tokenValue = '0'
-    let outPutBase = '0'
+    let outputBase = '0'
     if (assetSwap2.tokenAddress === addr.spartav2) {
       const inputSynth = convertToWei(swapInput1?.value)
       tokenValue = calcSwapOutput(
@@ -581,27 +614,29 @@ const Swap = () => {
         true,
       )
     } else if (assetSwap1.tokenAddress === assetSwap2.tokenAddress) {
-      outPutBase = calcSwapOutput(
+      outputBase = calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
         assetSwap1?.baseAmount,
         true,
       )
+      outputBase = BN(outputBase).minus(getFeeBurn(outputBase))
       tokenValue = calcSwapOutput(
-        outPutBase,
+        outputBase,
         assetSwap2.tokenAmount,
-        BN(assetSwap2.baseAmount).minus(outPutBase),
+        BN(assetSwap2.baseAmount).minus(outputBase),
         false,
       )
     } else {
-      outPutBase = calcSwapOutput(
+      outputBase = calcSwapOutput(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
         assetSwap1?.baseAmount,
         true,
       )
+      outputBase = BN(outputBase).minus(getFeeBurn(outputBase))
       tokenValue = calcSwapOutput(
-        outPutBase,
+        outputBase,
         assetSwap2.tokenAmount,
         assetSwap2.baseAmount,
         false,
