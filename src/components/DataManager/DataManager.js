@@ -10,7 +10,10 @@ import {
   usePool,
 } from '../../store/pool'
 import { getReserveGlobalDetails } from '../../store/reserve/actions'
-import { getSpartaGlobalDetails } from '../../store/sparta/actions'
+import {
+  getSpartaGlobalDetails,
+  spartaFeeBurnTally,
+} from '../../store/sparta/actions'
 import { getSynthArray, getSynthDetails } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
 import {
@@ -114,6 +117,7 @@ const DataManager = () => {
     }
     const timer = setTimeout(() => {
       dispatch(getSpartaPrice())
+      dispatch(spartaFeeBurnTally())
       settrigger2(trigger2 + 1)
     }, 10000)
     return () => clearTimeout(timer)

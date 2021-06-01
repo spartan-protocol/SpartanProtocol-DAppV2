@@ -5,6 +5,7 @@ const initialState = {
   upgrade: {},
   claimCheck: '0',
   claim: {},
+  feeBurnTally: '0',
   error: null,
   loading: false,
 }
@@ -42,6 +43,15 @@ export const spartaReducer = (state = initialState, action) => {
       return {
         ...state,
         claim: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SPARTA_FEEBURN_TALLY: {
+      return {
+        ...state,
+        feeBurnTally: action.payload,
         error: null,
         loading: false,
       }

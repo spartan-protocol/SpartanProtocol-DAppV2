@@ -6,4 +6,5 @@ export {
   spartaUpgrade,
   fallenSpartansCheck,
   fallenSpartansClaim,
+  spartaFeeBurnTally,
 } from './actions'
