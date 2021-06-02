@@ -1,11 +1,11 @@
 // import Dashboard from './components/Dashboard/Dashboard'
-import Overview from './views/pages/Home/Overview'
-// import Dao from './views/pages/Dao/Overview'
+import Home from './views/pages/Home/Overview'
 import Liquidity from './views/pages/Pools/Overview'
-import Bond from './views/pages/Bond/Bond'
 import Swap from './views/pages/Swap/Swap'
-import Vault from './views/pages/Vault/Overview'
 import Synths from './views/pages/Synths/Overview'
+import Bond from './views/pages/Bond/Bond'
+import Vault from './views/pages/Vault/Overview'
+import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
@@ -29,7 +29,7 @@ const routes = (t) => [
     path: '/home',
     name: t('overview'),
     icon: 'icon-small icon-home icon-dark',
-    component: Overview,
+    component: Home,
     layout: '',
   },
 
@@ -70,6 +70,14 @@ const routes = (t) => [
     name: t('vault'),
     icon: 'icon-small icon-vault icon-dark',
     component: Vault,
+    layout: '',
+  },
+
+  {
+    path: '/dao',
+    name: t('dao'),
+    icon: 'icon-small icon-vault icon-dark',
+    component: Dao,
     layout: '',
   },
 

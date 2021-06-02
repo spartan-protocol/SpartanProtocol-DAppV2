@@ -74,36 +74,19 @@ const PoolItem = ({ asset }) => {
               <p className="output-card">{APY}%</p>
             </Col>
             <Col xs="auto" className="text-right my-auto">
-              {showDetails && (
-                <img
-                  onClick={() => toggleCollapse()}
-                  src={upIcon}
-                  alt="upIcon"
-                  className="swap-icon-color"
-                  aria-hidden="true"
-                  style={{
-                    cursor: 'pointer',
-                    height: '30px',
-                    width: '30px',
-                    top: '-15px',
-                  }}
-                />
-              )}
-              {!showDetails && (
-                <img
-                  onClick={() => toggleCollapse()}
-                  src={downIcon}
-                  alt="downIcon"
-                  aria-hidden="true"
-                  className="swap-icon-color"
-                  style={{
-                    cursor: 'pointer',
-                    height: '30px',
-                    width: '30px',
-                    top: '-15px',
-                  }}
-                />
-              )}
+              <img
+                onClick={() => toggleCollapse()}
+                src={showDetails ? upIcon : downIcon}
+                alt={showDetails ? 'upIcon' : 'downIcon'}
+                className="swap-icon-color"
+                aria-hidden="true"
+                style={{
+                  cursor: 'pointer',
+                  height: '30px',
+                  width: '30px',
+                  top: '-15px',
+                }}
+              />
             </Col>
           </Row>
           <Row className="my-1">

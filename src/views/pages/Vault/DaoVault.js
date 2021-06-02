@@ -11,7 +11,6 @@ import { useDao } from '../../../store/dao/selector'
 import {
   daoHarvest,
   daoWithdraw,
-  getDaoMemberLastHarvest,
   getDaoVaultGlobalDetails,
   getDaoVaultMemberDetails,
 } from '../../../store/dao/actions'
@@ -44,7 +43,6 @@ const DaoVault = () => {
   const getData = () => {
     dispatch(getDaoVaultGlobalDetails(wallet))
     dispatch(getDaoVaultMemberDetails(wallet))
-    dispatch(getDaoMemberLastHarvest(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -66,7 +64,7 @@ const DaoVault = () => {
   const getClaimable = () => {
     // get seconds passed since last harvest
     const timeStamp = BN(Date.now()).div(1000)
-    const lastHarvest = BN(dao.lastHarvest)
+    const lastHarvest = BN(dao.memberDetails.lastHarvest)
     const secondsSince = timeStamp.minus(lastHarvest)
     // get the members share
     const weight = BN(dao.memberDetails.weight)
