@@ -86,7 +86,7 @@ const Share = () => {
         className="btn-transparent align-self-center btn btn-secondary"
         onClick={() => setShowShare(true)}
       >
-        <i className="spartan-icons icon-small icon-pools icon-dark mr-1 mt-1" />
+        <i className="spartan-icons icon-small icon-pools icon-dark mr-1 mt-1 ml-2" />
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)}>
         <Card>

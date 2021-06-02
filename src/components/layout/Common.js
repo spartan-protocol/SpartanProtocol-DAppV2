@@ -78,23 +78,27 @@ const Common = () => {
 
   const clickOutSidebar = (e) => {
     const sidebar = document.body.getElementsByClassName('sidebar-wrapper')[0]
-    if (
-      !sidebar?.contains(e.target) &&
-      !e.target.className?.includes('icon-menu-open') &&
-      !e.target.className?.includes('icon-menu-closed') &&
-      !e.target.className?.includes('navbar-toggler')
-    ) {
-      setSidebarOpened(false)
-      document.body.classList.add('sidebar-mini')
-      document.body.classList.remove('no-sidebar-mini')
-      closeSidebar()
+    if (e.target.className.length > 0) {
+      if (
+        !sidebar?.contains(e.target) &&
+        !e.target.className?.includes('icon-menu-open') &&
+        !e.target.className?.includes('icon-menu-closed') &&
+        !e.target.className?.includes('navbar-toggler')
+      ) {
+        setSidebarOpened(false)
+        document.body.classList.add('sidebar-mini')
+        document.body.classList.remove('no-sidebar-mini')
+        closeSidebar()
+      }
     }
   }
 
   return (
     <div
       className="wrapper"
-      onClick={clickOutSidebar}
+      onClick={(e) => {
+        clickOutSidebar(e)
+      }}
       onKeyDown={(e) => {
         if (e.key === KeyboardEvent.Spacebar) {
           clickOutSidebar(e)

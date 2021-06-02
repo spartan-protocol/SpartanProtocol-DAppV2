@@ -8,6 +8,7 @@ import {
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getAddresses, getProviderGasPrice } from '../../utils/web3'
 import { apiUrlBQ, headerBQ } from '../../utils/extCalls'
+import { convertToWei } from '../../utils/bigNumber'
 
 export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
@@ -102,7 +103,7 @@ export const fallenSpartansClaim = (wallet) => async (dispatch) => {
 }
 
 /**
- * Claim your wallet portion from the fallenSparta fund
+ * Get the total feeBurn tally on dapp-load
  */
 export const spartaFeeBurnTally = () => async (dispatch) => {
   dispatch(spartaLoading())
@@ -153,9 +154,22 @@ export const spartaFeeBurnTally = () => async (dispatch) => {
     dispatch(
       payloadToDispatch(
         Types.SPARTA_FEEBURN_TALLY,
-        feeBurnTally.data.data.ethereum.transfers[0],
+        convertToWei(feeBurnTally.data.data.ethereum.transfers[0].amount),
       ),
     )
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+  }
+}
+
+/**
+ * Update the feeBurn tally
+ */
+export const spartaFeeBurnRecent = (amount) => async (dispatch) => {
+  dispatch(spartaLoading())
+  try {
+    const feeBurnRecent = amount
+    dispatch(payloadToDispatch(Types.SPARTA_FEEBURN_RECENT, feeBurnRecent))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }

@@ -25,6 +25,8 @@ import {
 } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses, getNetwork } from '../../utils/web3'
+import { ReactComponent as FireIcon } from '../../assets/icons/fire.svg'
+import { ReactComponent as DownIcon } from '../../assets/icons/arrow-down.svg'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -99,15 +101,42 @@ const Supply = () => {
     return '0.00'
   }
 
+  const [feeBurn, setfeeBurn] = useState('0')
+  useEffect(() => {
+    setfeeBurn(BN(sparta.feeBurnTally).plus(sparta.feeBurnRecent))
+  }, [sparta.feeBurnTally, sparta.feeBurnRecent])
+
+  const [feeIconActive, setfeeIconActive] = useState(false)
+  useEffect(() => {
+    const action = () => {
+      setfeeIconActive(true)
+    }
+    action()
+    const timer = setTimeout(() => {
+      setfeeIconActive(false)
+    }, 1000)
+    return () => {
+      clearTimeout(timer)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sparta.feeBurnRecent])
+
   return (
     <>
       <Button
         id="PopoverClick"
         type="Button"
-        className="btn-header px-4 ml-1"
+        className="btn-header px-2 px-sm-4 ml-1"
         href="#"
       >
-        ${formatFromUnits(web3.spartaPrice, 2)}
+        <DownIcon fill="white" className="mr-1" />$
+        {formatFromUnits(web3.spartaPrice, 2)}
+        <FireIcon
+          height={feeIconActive ? '16' : '15'}
+          width="15"
+          fill={feeIconActive ? 'red' : 'white'}
+          className="mb-1 ml-1"
+        />
       </Button>
 
       <UncontrolledPopover
@@ -238,10 +267,15 @@ const Supply = () => {
               <span className="popover-text  dot-emission mr-2" />
               {t('emisson')}
             </Col>
+
+            <Col xs="6" className="popover-text mt-3">
+              {t('totalFeeBurn')}
+            </Col>
+            <Col xs="6" className="popover-text mt-3">
+              {formatFromWei(feeBurn, 2)}
+            </Col>
           </Row>
           <br />
-          <br />
-
           <Row>
             <Col md="12" className="ml-auto text-right">
               <Card
