@@ -202,6 +202,23 @@ export const getSpartaV2Contract = (wallet) => {
 }
 
 /**
+ * Get the current base/SPARTA contract with API provider injected
+ * @returns {uint} contract
+ */
+export const getSpartaV2API = () => {
+  let contract = isAddress(getAddresses().spartav2)
+  const abiSparta = getAbis().sparta
+  const provider = new ethers.providers.JsonRpcProvider(
+    `https://bsc.getblock.io/?api_key=${process.env.REACT_APP_GETBLOCK}`,
+  )
+
+  if (contract === true) {
+    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, provider)
+  }
+  return contract
+}
+
+/**
  * Get the current fallenSpartans contract with signer/provider injected
  * @returns {uint} contract
  */

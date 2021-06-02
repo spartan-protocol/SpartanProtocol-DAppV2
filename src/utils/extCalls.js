@@ -1,6 +1,12 @@
 import axios from 'axios'
 import { getNetwork } from './web3'
 
+export const apiUrlBQ = 'https://graphql.bitquery.io'
+export const headerBQ = {
+  'content-type': 'application/json',
+  'X-API-KEY': process.env.REACT_APP_BITQUERY,
+}
+
 // GET BSCSCAN URL BY CONTRACT ADDRESS
 export const getExplorerContract = (contractAddr) => {
   const { net } = getNetwork()

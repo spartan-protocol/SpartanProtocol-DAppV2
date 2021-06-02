@@ -40,7 +40,7 @@ const Header = (props) => (
           })}
         >
           <button
-            className="navbar-toggler ml-0"
+            className="navbar-toggler ml-0 p-1 p-sm-2"
             type="button"
             onClick={props.toggleSidebar}
           >

@@ -10,7 +10,11 @@ import {
   usePool,
 } from '../../store/pool'
 import { getReserveGlobalDetails } from '../../store/reserve/actions'
-import { getSpartaGlobalDetails } from '../../store/sparta/actions'
+import {
+  getSpartaGlobalDetails,
+  spartaFeeBurnRecent,
+  spartaFeeBurnTally,
+} from '../../store/sparta/actions'
 import { getSynthArray, getSynthDetails } from '../../store/synth/actions'
 import { useSynth } from '../../store/synth/selector'
 import {
@@ -19,7 +23,9 @@ import {
   getSpartaPrice,
   // getEventArray,
 } from '../../store/web3'
-import { changeNetwork, getNetwork } from '../../utils/web3'
+import { BN } from '../../utils/bigNumber'
+import { changeNetwork, getAddresses, getNetwork } from '../../utils/web3'
+import { getSpartaV2Contract } from '../../utils/web3Contracts'
 // import {
 //   getBondContract,
 //   getDaoContract,
@@ -33,6 +39,7 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const pool = usePool()
   const wallet = useWallet()
+  const addr = getAddresses()
 
   // const getSynth = (tokenAddress) =>
   //   synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
@@ -51,6 +58,36 @@ const DataManager = () => {
       return getNetwork()
     }
   }
+
+  /**
+   * Get feeBurn tally *JUST ONCE* on load
+   */
+  const [addFeeBurn, setaddFeeBurn] = useState('0')
+  useEffect(() => {
+    const contract = getSpartaV2Contract()
+    const filter = contract.filters.Transfer(null, addr.bnb)
+    const listen = async () => {
+      await contract.on(filter, (from, to, amount) => {
+        console.log(amount.toString())
+        setaddFeeBurn(BN(addFeeBurn).plus(amount.toString()))
+      })
+    }
+    dispatch(spartaFeeBurnTally())
+    listen()
+    return () => {
+      try {
+        contract.removeAllListeners(filter)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addFeeBurn])
+
+  useEffect(() => {
+    dispatch(spartaFeeBurnRecent(addFeeBurn))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addFeeBurn])
 
   /**
    * On DApp load check network and get the party started
