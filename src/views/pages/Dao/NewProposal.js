@@ -1,21 +1,37 @@
 import React, { useState } from 'react'
-import { Modal, Button } from 'react-bootstrap'
-import { Card, CardBody, Row, Col } from 'reactstrap'
+import {
+  Card,
+  CardBody,
+  Row,
+  Col,
+  Button,
+  CardHeader,
+  CardTitle,
+  InputGroup,
+  InputGroupText,
+  InputGroupAddon,
+  Input,
+} from 'reactstrap'
 import { useTranslation } from 'react-i18next'
-import CardHeader from 'reactstrap/es/CardHeader'
-import CardTitle from 'reactstrap/es/CardTitle'
+import Select from 'react-select'
+import { Modal } from 'react-bootstrap'
+import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
+import { proposalTypes } from './types'
 
 const NewProposal = () => {
-  const [showModal, setShowModal] = useState(false)
   const { t } = useTranslation()
+
+  const [showModal, setShowModal] = useState(false)
+  const [singleSelect, setsingleSelect] = React.useState(null)
 
   return (
     <>
       <Button
-        className="btn-transparent align-self-center btn btn-secondary"
+        className="align-self-center btn-sm btn-secondary"
         onClick={() => setShowModal(true)}
       >
-        <i className="spartan-icons icon-small icon-pools icon-dark mr-1 mt-1 ml-2" />
+        New Proposal
+        <PlusIcon fill="white" className="ml-2 mb-1" />
       </Button>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Card>
@@ -23,7 +39,7 @@ const NewProposal = () => {
             <CardTitle tag="h2" />
             <Row>
               <Col xs="10">
-                <h2>{t('shareLink')}</h2>
+                <h2>{t('newProposal')}</h2>
               </Col>
               <Col xs="2">
                 <Button
@@ -40,29 +56,59 @@ const NewProposal = () => {
           </CardHeader>
           <Row className="card-body">
             <Col xs="12">
-              <Card className="card-share">
+              <Card className="card-share mb-1">
                 <CardBody className="py-3">
-                  <h4 className="card-title">{t('swapSpartanProtocol')}</h4>
+                  <h4 className="card-title">Choose proposal type</h4>
                   <Row>
-                    <Col>here</Col>
-                    <Col>there</Col>
+                    <Col>
+                      <Select
+                        className="react-select info"
+                        classNamePrefix="react-select bg-light"
+                        name="singleSelect"
+                        value={singleSelect}
+                        onChange={(value) => setsingleSelect(value)}
+                        options={proposalTypes}
+                        placeholder="Single Select"
+                      />
+                    </Col>
                   </Row>
                 </CardBody>
               </Card>
-              <span
-                className="card-title"
-                style={{
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  marginLeft: '15px',
-                }}
-              >
-                {t('copyLink')}
-              </span>
+            </Col>
+          </Row>
+          <Row className="card-body">
+            <Col xs="12">
+              <Card className="card-share">
+                <CardBody className="py-3">
+                  <h4 className="card-title">Input Options</h4>
+                  <Row>
+                    <Col xs="12">
+                      {singleSelect?.type === 'Address' && (
+                        <InputGroup>
+                          <InputGroupAddon addonType="prepend">
+                            <InputGroupText>Address</InputGroupText>
+                          </InputGroupAddon>
+                          <Input placeholder="username" />
+                          <InputGroupAddon addonType="append">
+                            <InputGroupText>Validate</InputGroupText>
+                          </InputGroupAddon>
+                        </InputGroup>
+                      )}
+                    </Col>
+                  </Row>
+                </CardBody>
+              </Card>
             </Col>
           </Row>
           <Row>
             <Col xs="12" className="text-center">
+              <Button
+                type="Button"
+                className="btn btn-primary"
+                onClick={() => setShowModal(false)}
+              >
+                {t('continue')}
+              </Button>
               <Button
                 type="Button"
                 className="btn btn-primary"

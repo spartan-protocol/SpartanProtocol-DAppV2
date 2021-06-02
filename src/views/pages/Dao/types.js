@@ -1,0 +1,80 @@
+export const proposalTypes = [
+  {
+    value: 'GET_SPARTA',
+    label: 'Bond: New Allocation',
+    desc: 'Release 2.5M SPARTA allocation for Bond',
+    type: 'Action',
+  },
+  {
+    value: 'LIST_BOND',
+    label: 'Bond: List Bond Asset',
+    desc: 'Enable a new bond asset',
+    type: 'Address',
+  },
+  {
+    value: 'DELIST_BOND',
+    label: 'Bond: Delist Bond Asset',
+    desc: 'Disabled a bond asset',
+    type: 'Address',
+  },
+  {
+    value: 'FLIP_EMISSIONS',
+    label: 'Base: Emissions On/Off',
+    desc: 'Switch the BASE emissions on/off',
+    type: 'Action',
+  },
+  {
+    value: 'ADD_CURATED_POOL',
+    label: 'Pools: Add To Curated',
+    desc: 'Add a pool to the curated list',
+    type: 'Address',
+  },
+  {
+    value: 'REMOVE_CURATED_POOL',
+    label: 'Pools: Remove From Curated',
+    desc: 'Remove a pool from the curated list',
+    type: 'Address',
+  },
+  {
+    value: 'COOL_OFF',
+    label: 'DAO: Change Cooloff',
+    desc: 'Change the DAO cooloff period',
+    type: 'Param',
+  },
+  {
+    value: 'ERAS_TO_EARN',
+    label: 'DAO: Change ErasToEarn',
+    desc: 'Change the DAO erasToEarn param',
+    type: 'Param',
+  },
+  {
+    value: 'GRANT',
+    label: 'DAO: Grant SPARTA',
+    desc: 'Grant SPARTA funds to a wallet',
+    type: 'Grant',
+  },
+  {
+    value: 'DAO',
+    label: 'DAO: Change Contract',
+    desc: 'Change the DAO contract',
+    type: 'Address',
+  },
+  {
+    value: 'ROUTER',
+    label: 'Router: Change Contract',
+    desc: 'Change Router contract',
+    type: 'Address',
+  },
+  {
+    value: 'UTILS',
+    label: 'Utils: Change Contract',
+    desc: 'Change Utils contract',
+    type: 'Address',
+  },
+  {
+    value: 'RESERVE',
+    label: 'Reserve: Change Contract',
+    desc: 'Change Reserve contract',
+    type: 'Address',
+  },
+]

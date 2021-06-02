@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col } from 'reactstrap'
+import { Row, Col, Card } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -47,19 +47,29 @@ const Overview = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0">{t('dao')}</h2>
+              <h2 className="text-title-small mb-0 mr-3">{t('dao')}</h2>
               <NewProposal />
             </div>
           </Col>
         </Row>
 
         <Row className="row-480">
-          {dao?.proposalDetails
-            .filter((pid) => pid.finalised !== 1)
-            .sort((a, b) => b.votes - a.votes)
-            .map((pid) => (
-              <ProposalItem key={pid.address} pid={pid} />
-            ))}
+          {dao?.proposalDetails.length > 0 &&
+            dao?.proposalDetails
+              .filter((pid) => pid.finalised !== 1)
+              .sort((a, b) => b.votes - a.votes)
+              .map((pid) => <ProposalItem key={pid.address} pid={pid} />)}
+          {dao?.proposalDetails.length <= 0 && (
+            <Col xs="auto">
+              <Card className="card-body card-320 pt-3 pb-2 card-underlay">
+                <Row className="mb-2">
+                  <Col xs="auto" className="pr-0 my-auto">
+                    <h4 className="my-auto">No valid proposals found</h4>
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          )}
         </Row>
       </div>
     </>
