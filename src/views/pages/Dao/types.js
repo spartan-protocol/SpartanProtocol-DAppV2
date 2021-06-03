@@ -14,7 +14,7 @@ export const proposalTypes = [
   {
     value: 'DELIST_BOND',
     label: 'Bond: Delist Bond Asset',
-    desc: 'Disabled a bond asset',
+    desc: 'Disable a bond asset',
     type: 'Address',
   },
   {

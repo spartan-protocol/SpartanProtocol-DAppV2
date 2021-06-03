@@ -68,7 +68,6 @@ const DataManager = () => {
     const filter = contract.filters.Transfer(null, addr.bnb)
     const listen = async () => {
       await contract.on(filter, (from, to, amount) => {
-        console.log(amount.toString())
         setaddFeeBurn(BN(addFeeBurn).plus(amount.toString()))
       })
     }
