@@ -8,9 +8,21 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn install && yarn lint && yarn test && yarn build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: yarn install
+      - name: Lint
+        run: yarn lint
+      - name: Test
+        run: yarn test
+      - name: Build
+        run: yarn build
+        env:
+          REACT_APP_BITQUERY: ${{ secrets.REACT_APP_BITQUERY }}
+          REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}
+      - name: Deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SPARTAN_PROTOCOL_DAPP }}'
