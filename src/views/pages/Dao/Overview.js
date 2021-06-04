@@ -6,11 +6,12 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import ProposalItem from './ProposalItem'
 import { useDao } from '../../../store/dao/selector'
 import {
-  getDaoProposalDetails,
-  getDaoVaultGlobalDetails,
-  getDaoVaultMemberDetails,
+  daoGlobalDetails,
+  daoMemberDetails,
+  daoProposalDetails,
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
+import { bondMemberDetails } from '../../../store/bond'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -20,8 +21,7 @@ const Overview = () => {
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    dispatch(getDaoVaultGlobalDetails(wallet))
-    dispatch(getDaoProposalDetails(wallet))
+    dispatch(daoGlobalDetails(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -36,10 +36,11 @@ const Overview = () => {
   }, [trigger0])
 
   useEffect(() => {
-    dispatch(getDaoVaultMemberDetails(wallet))
-    dispatch(getDaoProposalDetails(wallet))
+    dispatch(daoMemberDetails(wallet))
+    dispatch(bondMemberDetails(wallet))
+    dispatch(daoProposalDetails(dao.global?.proposalCount, wallet))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dao.globalDetails])
+  }, [dao.global, dao.newProp])
 
   return (
     <>
@@ -54,12 +55,12 @@ const Overview = () => {
         </Row>
 
         <Row className="row-480">
-          {dao?.proposalDetails.length > 0 &&
-            dao?.proposalDetails
-              .filter((pid) => pid.finalised !== 1)
+          {dao?.proposal.length > 0 &&
+            dao?.proposal
+              .filter((pid) => pid.finalised !== 1 && pid.proposalType !== '') // && pid.open === true
               .sort((a, b) => b.votes - a.votes)
-              .map((pid) => <ProposalItem key={pid.address} pid={pid} />)}
-          {dao?.proposalDetails.length <= 0 && (
+              .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
+          {dao?.proposal.length <= 0 && (
             <Col xs="auto">
               <Card className="card-body card-320 pt-3 pb-2 card-underlay">
                 <Row className="mb-2">

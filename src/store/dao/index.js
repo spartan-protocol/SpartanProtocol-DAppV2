@@ -3,21 +3,18 @@ export { useDao } from './selector'
 export { daoReducer } from './reducer'
 
 export {
-  // FINAL AND READY BELOW
-  getDaoVaultGlobalDetails,
-  getDaoVaultMemberDetails,
-  getDaoProposalDetails,
-  // PENDING REFACTOR BELOW
+  daoGlobalDetails,
+  daoMemberDetails,
+  daoProposalDetails,
   daoDeposit,
-  daoHarvest,
   daoWithdraw,
-  getDaoGrantDetails,
-  daoProposalNewAction,
-  daoProposalNewParam,
-  daoProposalNewAddress,
-  daoProposalNewGrant,
-  daoProposalVote,
-  daoProposalRemoveVote,
-  daoProposalCancel,
-  daoProposalFinalise,
+  daoHarvest,
+  newActionProposal,
+  newParamProposal,
+  newAddressProposal,
+  newGrantProposal,
+  voteProposal,
+  removeVote,
+  cancelProposal,
+  finaliseProposal,
 } from './actions'

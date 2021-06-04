@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 export const BN = (x) => new BigNumber(x)
+export const one = BN('1000000000000000000')
 
 /**
  * Shift units from wei string without formatting

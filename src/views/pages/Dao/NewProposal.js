@@ -18,22 +18,53 @@ import {
 import { useTranslation } from 'react-i18next'
 import Select from 'react-select'
 import { Modal } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
 import { proposalTypes } from './types'
+import {
+  newActionProposal,
+  newParamProposal,
+  newAddressProposal,
+  newGrantProposal,
+} from '../../../store/dao/actions'
+import Approval from '../../../components/Approval/Approval'
+import { getAddresses } from '../../../utils/web3'
+import { convertToWei } from '../../../utils/bigNumber'
 
 const NewProposal = () => {
+  const dispatch = useDispatch()
+  const wallet = useWallet()
+  const addr = getAddresses()
   const { t } = useTranslation()
 
   const [showModal, setShowModal] = useState(false)
-  const [singleSelect, setsingleSelect] = React.useState(null)
+  const [selectedType, setselectedType] = useState(null)
   const [feeConfirm, setfeeConfirm] = useState(false)
   const [formValid, setformValid] = useState(false)
+  const [inputAddress, setinputAddress] = useState(null)
 
   useEffect(() => {
-    if (singleSelect?.type === 'Action') {
+    if (selectedType?.type === 'Action') {
       setformValid(true)
+    } else if (selectedType?.type === 'Address') {
+      setformValid(true) // ADD IN VALIDATION HERE
     }
-  }, [singleSelect])
+  }, [selectedType])
+
+  const handleSubmit = () => {
+    console.log(selectedType)
+    if (selectedType?.type === 'Action') {
+      dispatch(newActionProposal(selectedType.value, wallet))
+    } else if (selectedType?.type === 'Param') {
+      dispatch(newParamProposal(selectedType.value, wallet)) // ADD PARAM HERE AS ARG
+    } else if (selectedType?.type === 'Address') {
+      console.log(inputAddress)
+      dispatch(newAddressProposal(inputAddress, selectedType.value, wallet))
+    } else if (selectedType?.type === 'Grant') {
+      dispatch(newGrantProposal(wallet)) // ADD RECEIVER & AMOUNT HERE AS ARGS
+    }
+  }
 
   return (
     <>
@@ -44,6 +75,7 @@ const NewProposal = () => {
         New Proposal
         <PlusIcon fill="white" className="ml-2 mb-1" />
       </Button>
+
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Card>
           <CardHeader>
@@ -74,9 +106,8 @@ const NewProposal = () => {
                     <Col>
                       <Select
                         className="react-select info bg-light"
-                        name="singleSelect"
-                        value={singleSelect}
-                        onChange={(value) => setsingleSelect(value)}
+                        value={selectedType}
+                        onChange={(value) => setselectedType(value)}
                         options={proposalTypes}
                         placeholder="Select a proposal"
                       />
@@ -86,20 +117,24 @@ const NewProposal = () => {
               </Card>
             </Col>
           </Row>
-          {singleSelect !== null && (
+          {selectedType !== null && (
             <Row className="card-body">
               <Col xs="12">
                 <Card className="card-share">
                   <CardBody className="py-3">
-                    <h4 className="card-title">{singleSelect?.desc}</h4>
+                    <h4 className="card-title">{selectedType?.desc}</h4>
                     <Row>
                       <Col xs="12">
-                        {singleSelect?.type === 'Address' && (
+                        {selectedType?.type === 'Address' && (
                           <InputGroup>
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>Address</InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="0x..." />
+                            <Input
+                              placeholder="0x..."
+                              type="text"
+                              onChange={(e) => setinputAddress(e.target.value)}
+                            />
                             <InputGroupAddon addonType="append">
                               {/* ADD ADDRESS VALIDATION HERE */}
                               <InputGroupText>Validate</InputGroupText>
@@ -114,10 +149,10 @@ const NewProposal = () => {
                   <div className="text-center">
                     <CustomInput
                       type="switch"
-                      id="exampleCustomSwitch3"
+                      id="inputConfirmFee"
                       label="Confirm 100 SPARTA Proposal-Fee (Add tooltip)"
-                      value={feeConfirm}
-                      onClick={() => setfeeConfirm(!feeConfirm)}
+                      checked={feeConfirm}
+                      onChange={() => setfeeConfirm(!feeConfirm)}
                       disabled={!formValid}
                     />
                   </div>
@@ -125,22 +160,25 @@ const NewProposal = () => {
               </Col>
             </Row>
           )}
-          <Row>
-            <Col xs="12" className="text-center">
+          <Row className="card-body">
+            {wallet?.account && (
+              <Approval
+                tokenAddress={addr.spartav2}
+                symbol="SPARTA"
+                walletAddress={wallet.account}
+                contractAddress={addr.dao}
+                txnAmount={convertToWei('100')}
+                assetNumber="1"
+              />
+            )}
+            <Col xs="12" className="hide-if-prior-sibling">
               <Button
-                type="Button"
-                className="btn btn-primary"
-                onClick={() => setShowModal(false)}
+                block
+                className="btn-fill btn-primary"
                 disabled={!feeConfirm}
+                onClick={() => handleSubmit()}
               >
                 {t('continue')}
-              </Button>
-              <Button
-                type="Button"
-                className="btn btn-primary"
-                onClick={() => setShowModal(false)}
-              >
-                {t('cancel')}
               </Button>
             </Col>
           </Row>
