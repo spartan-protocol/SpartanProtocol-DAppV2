@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -10,14 +9,17 @@ import {
   voteProposal,
 } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
+import { usePool } from '../../../store/pool/selector'
+import { useSparta } from '../../../store/sparta/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
-import { getDaoContract } from '../../../utils/web3Contracts'
+import { getExplorerContract, getExplorerWallet } from '../../../utils/extCalls'
+import { formatShortString } from '../../../utils/web3'
 import { proposalTypes } from './types'
-// import downIcon from '../../../assets/icons/arrow-down-light.svg'
-// import upIcon from '../../../assets/icons/arrow-up-light.svg'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
+  const sparta = useSparta()
+  const pool = usePool()
   const bond = useBond()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -67,6 +69,98 @@ const ProposalItem = ({ proposal }) => {
     return 'Weak Support'
   }
 
+  const getToken = (tokenAddress) =>
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
+  const getPool = (poolAddress) =>
+    getToken(
+      pool.poolDetails.filter((i) => i.address === poolAddress)[0]
+        ?.tokenAddress,
+    )
+
+  const getDetails = () => {
+    // 'GET_SPARTA' = '2.5M SPARTA'
+    if (proposal.proposalType === 'GET_SPARTA') {
+      return '2.5M SPARTA'
+    }
+    // 'LIST_BOND', 'DELIST_BOND' = proposal.proposedAddress + 'token details'
+    if (['LIST_BOND', 'DELIST_BOND'].includes(proposal.proposalType)) {
+      return (
+        <>
+          <a
+            href={getExplorerContract(proposal.proposedAddress)}
+            target="_blank"
+            rel="noreferrer"
+            className="mr-2"
+          >
+            {formatShortString(proposal.proposedAddress)}
+          </a>
+          {getToken(proposal.proposedAddress)?.symbol}
+        </>
+      )
+    }
+    // 'FLIP_EMISSIONS' = 'on' or 'off'
+    if (proposal.proposalType === 'FLIP_EMISSIONS') {
+      return sparta.globalDetails.emitting ? 'off' : 'on'
+    }
+    // 'ADD_CURATED_POOL', 'REMOVE_CURATED_POOL' = proposal.proposedAddress + 'pool details'
+    if (
+      ['ADD_CURATED_POOL', 'REMOVE_CURATED_POOL'].includes(
+        proposal.proposalType,
+      )
+    ) {
+      return (
+        <>
+          <a
+            href={getExplorerContract(proposal.proposedAddress)}
+            target="_blank"
+            rel="noreferrer"
+            className="mr-2"
+          >
+            {formatShortString(proposal.proposedAddress)}
+          </a>
+          {getPool(proposal.proposedAddress)?.symbol}p
+        </>
+      )
+    }
+    // 'COOL_OFF', 'ERAS_TO_EARN' = proposal.param + type.units
+    if (['COOL_OFF', 'ERAS_TO_EARN'].includes(proposal.proposalType)) {
+      return `${proposal.param} ${type.units}`
+    }
+    // 'GRANT' = proposal.param + 'to' + proposal.proposedAddress
+    if (proposal.proposalType === 'GRANT') {
+      return (
+        <>
+          {proposal.param} SPARTA to
+          <a
+            href={getExplorerWallet(proposal.proposedAddress)}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-2"
+          >
+            {formatShortString(proposal.proposedAddress)}
+          </a>
+        </>
+      )
+    }
+    // 'DAO', 'ROUTER', 'UTILS', 'RESERVE' = proposal.proposedAddress
+    if (['DAO', 'ROUTER', 'UTILS', 'RESERVE'].includes(proposal.proposalType)) {
+      return (
+        <>
+          <a
+            href={getExplorerContract(proposal.proposedAddress)}
+            target="_blank"
+            rel="noreferrer"
+            className="mr-2"
+          >
+            {formatShortString(proposal.proposedAddress)}
+          </a>
+        </>
+      )
+    }
+    return '0'
+  }
+
   return (
     <>
       <Col xs="auto">
@@ -79,25 +173,15 @@ const ProposalItem = ({ proposal }) => {
               <h4 className="mb-0">{type.label}</h4>
               <p className="text-sm-label-alt">{status()}</p>
             </Col>
-            {/* <Col xs="auto" className="text-right my-auto">
-              <img
-                onClick={() => toggleCollapse()}
-                src={showDetails ? upIcon : downIcon}
-                alt={showDetails ? 'upIcon' : 'downIcon'}
-                className="swap-icon-color"
-                aria-hidden="true"
-                style={{
-                  cursor: 'pointer',
-                  height: '30px',
-                  width: '30px',
-                  top: '-15px',
-                }}
-              />
-            </Col> */}
           </Row>
           <Row>
             <Col>
               <div className="output-card mb-2">{type.desc}</div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div className="output-card mb-2">{getDetails()}</div>
             </Col>
           </Row>
 

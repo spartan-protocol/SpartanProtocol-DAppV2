@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Row, Col, Card } from 'reactstrap'
-import { bondMemberDetails, useBond } from '../../../../store/bond'
+import { useBond } from '../../../../store/bond'
 import { usePool } from '../../../../store/pool/selector'
 import { formatShortString, getAddresses } from '../../../../utils/web3'
 
@@ -77,7 +77,7 @@ const AssetSelect = (props) => {
                 </Col>
                 <Col xs="auto" className="my-auto">
                   {poolMode
-                    ? getToken(asset.tokenAddress).symbol
+                    ? `${getToken(asset.tokenAddress).symbol}p`
                     : asset.symbol}
                 </Col>
                 <Col className="my-auto text-right">
