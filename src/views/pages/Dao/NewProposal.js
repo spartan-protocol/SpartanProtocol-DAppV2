@@ -74,6 +74,7 @@ const NewProposal = () => {
 
   useEffect(() => {
     handleAddrChange('')
+    setfeeConfirm(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType])
 
@@ -126,7 +127,7 @@ const NewProposal = () => {
             <Col xs="12">
               <Card className="card-share mb-1">
                 <CardBody className="py-3">
-                  <h4 className="card-title">Choose proposal type</h4>
+                  <h4 className="card-title">{t('chooseProposalType')}</h4>
                   <Row>
                     <Col>
                       <Select
@@ -229,7 +230,7 @@ const NewProposal = () => {
                 disabled={!feeConfirm || !formValid}
                 onClick={() => handleSubmit()}
               >
-                {t('continue')}
+                {t('confirm')}
               </Button>
             </Col>
           </Row>

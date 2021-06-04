@@ -1,86 +1,87 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { Row, Col, Card } from 'reactstrap'
+import { bondMemberDetails, useBond } from '../../../../store/bond'
 import { usePool } from '../../../../store/pool/selector'
-import { formatShortString } from '../../../../utils/web3'
+import { formatShortString, getAddresses } from '../../../../utils/web3'
 
 const AssetSelect = (props) => {
   const pool = usePool()
-
-  const pools = ['REMOVE_CURATED_POOL', 'ADD_CURATED_POOL']
-  // const tokens = ['DELIST_BOND']
-  const mode = pools.includes(props.selectedType) ? 'pool' : 'token'
+  const bond = useBond()
+  const addr = getAddresses()
+  let poolMode = false
+  const filter = [addr.spartav1, addr.spartav2]
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
-  const setinputAddress = (addr) => {
-    props.handleAddrChange(addr)
+  const setinputAddress = (address) => {
+    props.handleAddrChange(address)
+  }
+
+  const getArray = () => {
+    if (props.selectedType === 'REMOVE_CURATED_POOL') {
+      poolMode = true
+      return pool.poolDetails?.filter(
+        (asset) =>
+          asset.curated === true && !filter.includes(asset.tokenAddress),
+      )
+    }
+    if (props.selectedType === 'ADD_CURATED_POOL') {
+      poolMode = true
+      return pool.poolDetails?.filter(
+        (asset) =>
+          asset.curated === false && !filter.includes(asset.tokenAddress),
+      )
+    }
+    // ELSE: DELIST_BOND
+    poolMode = false
+    return pool.tokenDetails?.filter((asset) =>
+      bond.listedAssets.includes(asset.address),
+    )
   }
 
   return (
     <>
       <Card className="py-2">
-        {mode === 'token' ? (
+        {getArray().length > 0 ? (
           <>
-            {pool.tokenDetails
-              ?.filter((asset) => asset.balance > 0)
-              .map((asset) => (
-                <Row
-                  key={`${asset.address}-asset`}
-                  className="output-card px-3 py-2"
-                  onClick={() => setinputAddress(asset.address)}
-                  role="button"
-                >
-                  <Col xs="auto" className="">
-                    <img
-                      height="35px"
-                      src={asset.symbolUrl}
-                      alt={asset.name}
-                      className=""
-                    />
-                  </Col>
-                  <Col xs="auto" className="my-auto">
-                    {asset.symbol}
-                  </Col>
-                  <Col className="my-auto text-right">
-                    <div className="description">
-                      {formatShortString(asset.address)}
-                    </div>
-                  </Col>
-                </Row>
-              ))}
+            {getArray().map((asset) => (
+              <Row
+                key={`${asset.address}-asset`}
+                className="output-card px-3 py-2"
+                onClick={() => setinputAddress(asset.address)}
+                role="button"
+              >
+                <Col xs="auto" className="">
+                  <img
+                    height="35px"
+                    src={
+                      poolMode
+                        ? getToken(asset.tokenAddress).symbolUrl
+                        : asset.symbolUrl
+                    }
+                    alt={asset.name}
+                    className=""
+                  />
+                </Col>
+                <Col xs="auto" className="my-auto">
+                  {poolMode
+                    ? getToken(asset.tokenAddress).symbol
+                    : asset.symbol}
+                </Col>
+                <Col className="my-auto text-right">
+                  <div className="description">
+                    {formatShortString(asset.address)}
+                  </div>
+                </Col>
+              </Row>
+            ))}
           </>
         ) : (
-          <>
-            {pool.poolDetails
-              ?.filter((asset) => asset.balance > 0)
-              .map((asset) => (
-                <Row
-                  key={`${asset.address}-asset`}
-                  className="output-card px-3 py-2"
-                  onClick={() => setinputAddress(asset.address)}
-                  role="button"
-                >
-                  <Col xs="auto" className="">
-                    <img
-                      height="35px"
-                      src={getToken(asset.tokenAddress)?.symbolUrl}
-                      alt={getToken(asset.tokenAddress)?.name}
-                      className=""
-                    />
-                  </Col>
-                  <Col xs="auto" className="my-auto">
-                    {`${getToken(asset.tokenAddress)?.symbol}p`}
-                  </Col>
-                  <Col className="my-auto text-right">
-                    <div className="description">
-                      {formatShortString(asset.address)}
-                    </div>
-                  </Col>
-                </Row>
-              ))}
-          </>
+          <Row className="output-card px-3 py-2">
+            <Col>No valid assets</Col>
+          </Row>
         )}
       </Card>
     </>
