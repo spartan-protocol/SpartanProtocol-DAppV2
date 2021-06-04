@@ -45,11 +45,15 @@ const NewProposal = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedType, setselectedType] = useState(null)
   const [feeConfirm, setfeeConfirm] = useState(false)
-  const [formValid, setformValid] = useState(false)
+
   const [inputAddress, setinputAddress] = useState(null)
-
-  const noAddrInput = ['DELIST_BOND', 'REMOVE_CURATED_POOL', 'ADD_CURATED_POOL']
-
+  const showAddrInput = ['Address', 'Grant']
+  const noAddrInput = [
+    'LIST_BOND',
+    'DELIST_BOND',
+    'REMOVE_CURATED_POOL',
+    'ADD_CURATED_POOL',
+  ]
   const addrInput = document.getElementById('addrInput')
   const handleAddrChange = (newValue) => {
     if (addrInput) {
@@ -58,37 +62,65 @@ const NewProposal = () => {
     }
   }
 
+  const [inputParam, setinputParam] = useState(null)
+  const showParamInput = ['Param', 'Grant']
+  const paramInput = document.getElementById('paramInput')
+  const handleParamChange = (newValue) => {
+    if (paramInput) {
+      setinputParam(newValue)
+      paramInput.value = newValue
+    }
+  }
+
+  const [addrValid, setaddrValid] = useState(false)
+  useEffect(() => {
+    if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
+      setaddrValid(true)
+    } else {
+      setaddrValid(false)
+    }
+  }, [selectedType, inputAddress])
+
+  const [paramValid, setparamValid] = useState(false)
+  useEffect(() => {
+    if (inputParam > 0) {
+      setparamValid(true)
+    } else {
+      setparamValid(false)
+    }
+  }, [selectedType, inputParam])
+
+  const [formValid, setformValid] = useState(false)
   useEffect(() => {
     if (selectedType?.type === 'Action') {
       setformValid(true)
-    } else if (selectedType?.type === 'Param') {
-      setformValid(true) // ADD IN VALIDATION HERE
-    } else if (selectedType?.type === 'Address') {
-      if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
-        setformValid(true)
-      } else {
-        setformValid(false)
-      }
+    } else if (selectedType?.type === 'Param' && paramValid) {
+      setformValid(true)
+    } else if (selectedType?.type === 'Address' && addrValid) {
+      setformValid(true)
+    } else if (selectedType?.type === 'Grant' && paramValid && addrValid) {
+      setformValid(true)
+    } else {
+      setformValid(false)
     }
-  }, [selectedType, inputAddress]) // ADD IN VALIDATION ON INPUT-CHANGE
+  }, [addrValid, paramValid, selectedType])
 
   useEffect(() => {
     handleAddrChange('')
+    handleParamChange('')
     setfeeConfirm(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType])
 
   const handleSubmit = () => {
-    console.log(selectedType)
     if (selectedType?.type === 'Action') {
       dispatch(newActionProposal(selectedType.value, wallet))
     } else if (selectedType?.type === 'Param') {
-      dispatch(newParamProposal(selectedType.value, wallet)) // ADD PARAM HERE AS ARG
+      dispatch(newParamProposal(inputParam, selectedType.value, wallet))
     } else if (selectedType?.type === 'Address') {
-      console.log(inputAddress)
       dispatch(newAddressProposal(inputAddress, selectedType.value, wallet))
     } else if (selectedType?.type === 'Grant') {
-      dispatch(newGrantProposal(wallet)) // ADD RECEIVER & AMOUNT HERE AS ARGS
+      dispatch(newGrantProposal(inputAddress, inputParam, wallet))
     }
   }
 
@@ -151,7 +183,7 @@ const NewProposal = () => {
                     <h4 className="card-title">{selectedType?.desc}</h4>
                     <Row>
                       <Col xs="12">
-                        {selectedType?.type === 'Address' && (
+                        {showAddrInput.includes(selectedType.type) && (
                           <>
                             {noAddrInput.includes(selectedType.value) && (
                               <AssetSelect
@@ -167,6 +199,10 @@ const NewProposal = () => {
                                 id="addrInput"
                                 placeholder="0x..."
                                 type="text"
+                                inputMode="decimal"
+                                pattern="^[0-9]*[.,]?[0-9]*$"
+                                autoComplete="off"
+                                autoCorrect="off"
                                 disabled={noAddrInput.includes(
                                   selectedType.value,
                                 )}
@@ -176,7 +212,7 @@ const NewProposal = () => {
                               />
                               <InputGroupAddon addonType="append">
                                 <InputGroupText className="p-1">
-                                  {formValid ? (
+                                  {addrValid ? (
                                     <ValidIcon
                                       fill="green"
                                       height="30"
@@ -193,6 +229,47 @@ const NewProposal = () => {
                               </InputGroupAddon>
                             </InputGroup>
                           </>
+                        )}
+
+                        {showParamInput.includes(selectedType.type) && (
+                          <InputGroup>
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                {selectedType.type}
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                              id="paramInput"
+                              placeholder=""
+                              type="number"
+                              inputMode="decimal"
+                              autoComplete="off"
+                              autoCorrect="off"
+                              onChange={(e) => setinputParam(e.target.value)}
+                            />
+                            <InputGroupAddon addonType="append">
+                              <InputGroupText className="p-1">
+                                {selectedType.units}
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <InputGroupAddon addonType="append">
+                              <InputGroupText className="p-1">
+                                {paramValid ? (
+                                  <ValidIcon
+                                    fill="green"
+                                    height="30"
+                                    width="30"
+                                  />
+                                ) : (
+                                  <InvalidIcon
+                                    fill="red"
+                                    height="30"
+                                    width="30"
+                                  />
+                                )}
+                              </InputGroupText>
+                            </InputGroupAddon>
+                          </InputGroup>
                         )}
                       </Col>
                     </Row>

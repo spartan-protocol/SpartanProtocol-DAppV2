@@ -34,10 +34,20 @@ const AssetSelect = (props) => {
           asset.curated === false && !filter.includes(asset.tokenAddress),
       )
     }
+    if (props.selectedType === 'LIST_BOND') {
+      poolMode = false
+      return pool.tokenDetails?.filter(
+        (asset) =>
+          !filter.includes(asset.address) &&
+          !bond.listedAssets.includes(asset.address),
+      )
+    }
     // ELSE: DELIST_BOND
     poolMode = false
-    return pool.tokenDetails?.filter((asset) =>
-      bond.listedAssets.includes(asset.address),
+    return pool.tokenDetails?.filter(
+      (asset) =>
+        !filter.includes(asset.address) &&
+        bond.listedAssets.includes(asset.address),
     )
   }
 

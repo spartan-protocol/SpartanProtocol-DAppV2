@@ -76,7 +76,7 @@ const ProposalItem = ({ proposal }) => {
               <h4 className="my-auto">#{proposal.id}</h4>
             </Col>
             <Col>
-              <h3 className="mb-0">{type.label}</h3>
+              <h4 className="mb-0">{type.label}</h4>
               <p className="text-sm-label-alt">{status()}</p>
             </Col>
             {/* <Col xs="auto" className="text-right my-auto">
