@@ -11,6 +11,7 @@ import {
 } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { getDaoContract } from '../../../utils/web3Contracts'
 import { proposalTypes } from './types'
 // import downIcon from '../../../assets/icons/arrow-down-light.svg'
 // import upIcon from '../../../assets/icons/arrow-up-light.svg'
@@ -24,13 +25,18 @@ const ProposalItem = ({ proposal }) => {
   const getEndDate = () => {
     const timeStamp = BN(Date.now()).div(1000)
     const endDate = BN(proposal.timeStart).plus(dao.global.coolOffPeriod)
-    const hoursAway = timeStamp.minus(endDate).div(60).div(60)
+    const hoursAway = endDate.minus(timeStamp).div(60).div(60)
     return hoursAway.toFixed(0)
   }
-  const status =
-    proposal.finalising && getEndDate() > 0
-      ? `Finalising in ${getEndDate()} Hrs`
-      : 'Requires More Support'
+  const status = () => {
+    if (proposal.finalising && getEndDate() > 0) {
+      return `${getEndDate()} hour cool-off remaining`
+    }
+    if (proposal.finalising && getEndDate() <= 0) {
+      return `Ready for final vote count!`
+    }
+    return 'Requires more support'
+  }
 
   const memberPercent =
     dao.member.weight && bond.member.weight
@@ -67,11 +73,11 @@ const ProposalItem = ({ proposal }) => {
         <Card className="card-body card-320 pt-3 pb-2 card-underlay">
           <Row className="mb-2">
             <Col xs="auto" className="pr-0 my-auto">
-              <h4 className="my-auto">{proposal.id}</h4>
+              <h4 className="my-auto">#{proposal.id}</h4>
             </Col>
             <Col>
               <h3 className="mb-0">{type.label}</h3>
-              <p className="text-sm-label-alt">{status}</p>
+              <p className="text-sm-label-alt">{status()}</p>
             </Col>
             {/* <Col xs="auto" className="text-right my-auto">
               <img

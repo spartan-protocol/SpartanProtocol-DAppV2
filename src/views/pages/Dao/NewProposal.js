@@ -20,6 +20,7 @@ import Select from 'react-select'
 import { Modal } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { ethers } from 'ethers'
 import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
 import { proposalTypes } from './types'
 import {
@@ -31,6 +32,9 @@ import {
 import Approval from '../../../components/Approval/Approval'
 import { getAddresses } from '../../../utils/web3'
 import { convertToWei } from '../../../utils/bigNumber'
+import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
+import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
+import AssetSelect from './components/AssetSelect'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
@@ -44,12 +48,33 @@ const NewProposal = () => {
   const [formValid, setformValid] = useState(false)
   const [inputAddress, setinputAddress] = useState(null)
 
+  const noAddrInput = ['DELIST_BOND', 'REMOVE_CURATED_POOL', 'ADD_CURATED_POOL']
+
+  const addrInput = document.getElementById('addrInput')
+  const handleAddrChange = (newValue) => {
+    if (addrInput) {
+      setinputAddress(newValue)
+      addrInput.value = newValue
+    }
+  }
+
   useEffect(() => {
     if (selectedType?.type === 'Action') {
       setformValid(true)
-    } else if (selectedType?.type === 'Address') {
+    } else if (selectedType?.type === 'Param') {
       setformValid(true) // ADD IN VALIDATION HERE
+    } else if (selectedType?.type === 'Address') {
+      if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
+        setformValid(true)
+      } else {
+        setformValid(false)
+      }
     }
+  }, [selectedType, inputAddress]) // ADD IN VALIDATION ON INPUT-CHANGE
+
+  useEffect(() => {
+    handleAddrChange('')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType])
 
   const handleSubmit = () => {
@@ -97,7 +122,7 @@ const NewProposal = () => {
               </Col>
             </Row>
           </CardHeader>
-          <Row className="card-body">
+          <Row className="card-body py-1">
             <Col xs="12">
               <Card className="card-share mb-1">
                 <CardBody className="py-3">
@@ -118,7 +143,7 @@ const NewProposal = () => {
             </Col>
           </Row>
           {selectedType !== null && (
-            <Row className="card-body">
+            <Row className="card-body py-1">
               <Col xs="12">
                 <Card className="card-share">
                   <CardBody className="py-3">
@@ -126,20 +151,47 @@ const NewProposal = () => {
                     <Row>
                       <Col xs="12">
                         {selectedType?.type === 'Address' && (
-                          <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>Address</InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="0x..."
-                              type="text"
-                              onChange={(e) => setinputAddress(e.target.value)}
-                            />
-                            <InputGroupAddon addonType="append">
-                              {/* ADD ADDRESS VALIDATION HERE */}
-                              <InputGroupText>Validate</InputGroupText>
-                            </InputGroupAddon>
-                          </InputGroup>
+                          <>
+                            {noAddrInput.includes(selectedType.value) && (
+                              <AssetSelect
+                                handleAddrChange={handleAddrChange}
+                                selectedType={selectedType.value}
+                              />
+                            )}
+                            <InputGroup>
+                              <InputGroupAddon addonType="prepend">
+                                <InputGroupText>Address</InputGroupText>
+                              </InputGroupAddon>
+                              <Input
+                                id="addrInput"
+                                placeholder="0x..."
+                                type="text"
+                                disabled={noAddrInput.includes(
+                                  selectedType.value,
+                                )}
+                                onChange={(e) =>
+                                  setinputAddress(e.target.value)
+                                }
+                              />
+                              <InputGroupAddon addonType="append">
+                                <InputGroupText className="p-1">
+                                  {formValid ? (
+                                    <ValidIcon
+                                      fill="green"
+                                      height="30"
+                                      width="30"
+                                    />
+                                  ) : (
+                                    <InvalidIcon
+                                      fill="red"
+                                      height="30"
+                                      width="30"
+                                    />
+                                  )}
+                                </InputGroupText>
+                              </InputGroupAddon>
+                            </InputGroup>
+                          </>
                         )}
                       </Col>
                     </Row>
@@ -153,7 +205,6 @@ const NewProposal = () => {
                       label="Confirm 100 SPARTA Proposal-Fee (Add tooltip)"
                       checked={feeConfirm}
                       onChange={() => setfeeConfirm(!feeConfirm)}
-                      disabled={!formValid}
                     />
                   </div>
                 </FormGroup>
@@ -175,7 +226,7 @@ const NewProposal = () => {
               <Button
                 block
                 className="btn-fill btn-primary"
-                disabled={!feeConfirm}
+                disabled={!feeConfirm || !formValid}
                 onClick={() => handleSubmit()}
               >
                 {t('continue')}
