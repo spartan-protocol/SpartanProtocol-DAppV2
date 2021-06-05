@@ -14,7 +14,7 @@
   "balance": "Equilibrio",
   "balanceSubtitle": "Panoramica v1 e v2 saldi",
   "bond": "Legame",
-  "bondInfo": "La quantità di SPARTA rimanente nel programma di Bond + Mint. Questo può essere integrato da 5M SPARTA da proposte in DAO quando si esaurisce.",
+  "bondInfo": "allocazione SPARTA residuo del programma Bond. Se questa si esaurisce, può essere ricaricata tramite una proposta DAO.",
   "bondPositions": "obbligazionari Posizioni",
   "bondVault": "legame Vault",
   "burn": "Bruciare",

@@ -15,7 +15,7 @@
   "balanceSubtitle": "Overview v1 & v2 balances",
   "block": "Block",
   "bond": "Bond",
-  "bondInfo": "The amount of SPARTA remaining in the Bond+Mint program. This can be topped up by 5M SPARTA by proposals in the DAO when it runs out.",
+  "bondInfo": "SPARTA allocation remaining for the Bond program. If this runs out, it can be refilled via a DAO proposal.",
   "bondPositions": "Bond Positions",
   "bondVault": "Bond Vault",
   "burn": "Burn",

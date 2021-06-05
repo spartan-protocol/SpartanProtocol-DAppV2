@@ -14,7 +14,7 @@
   "balance": "Echilibru",
   "balanceSubtitle": "Soldurile v1 & v2 Prezentare generală",
   "bond": "Legătură",
-  "bondInfo": "Cantitatea de SPARTA rămasă în programul Bond + Mint. Acest lucru poate fi completat de 2,5M SPARTA de propuneri în DAO când se execută afară.",
+  "bondInfo": "Alocarea SPARTA rămasă pentru programul Bond. Dacă acest lucru se execută, aceasta poate fi reumplut prin intermediul unei propuneri DAO.",
   "bondPositions": "Bond Pozitii",
   "bondVault": "Bond Vault",
   "burn": "A arde",

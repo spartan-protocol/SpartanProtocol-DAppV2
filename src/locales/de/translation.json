@@ -14,7 +14,7 @@
   "balance": "Balance",
   "balanceSubtitle": "Übersicht v1 & v2 Salden",
   "bond": "Bindung",
-  "bondInfo": "Die Menge des SPARTA noch in dem Bond + Mint Programm. Dies kann bis von 2,5M SPARTA von Vorschlägen im DAO gekrönt werden, wenn es zu Ende geht.",
+  "bondInfo": "SPARTA Zuweisung für das Programm Bond bleiben. Wenn dies abläuft, kann es über einen DAO Vorschlag nachgefüllt werden.",
   "bondPositions": "Bond Positionen",
   "bondVault": "Bond Vault",
   "burn": "Brennen",

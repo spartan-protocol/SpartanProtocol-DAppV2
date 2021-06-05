@@ -14,7 +14,7 @@
   "balance": "solde",
   "balanceSubtitle": "Aperçu soldes v1 & v2",
   "bond": "Lier",
-  "bondInfo": "La quantité de SPARTA restant dans le Bond + programme Mint. Cela peut être surmonté par 5M SPARTA par des propositions dans le DAO lorsqu'elle est épuisée.",
+  "bondInfo": "allocation SPARTA restant pour le programme d'obligations. Si cela se épuise, il peut être rempli à nouveau par le biais d'une proposition de DAO.",
   "bondPositions": "Positions obligataires",
   "bondVault": "Vault Bond",
   "burn": "Brûler",

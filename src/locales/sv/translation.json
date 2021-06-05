@@ -14,7 +14,7 @@
   "balance": "Balans",
   "balanceSubtitle": "Översikt v1 & v2 saldon",
   "bond": "Obligation",
-  "bondInfo": "Mängden SPARTA kvar i Bond + Mint program. Detta kan fyllas på med 2.5M SPARTA av förslag i DAO när det tar slut.",
+  "bondInfo": "SPARTA tilldelning återstår för Bond-programmet. Om detta tar slut, kan det fyllas via ett förslag DAO.",
   "bondPositions": "Bond Positioner",
   "bondVault": "Bond Vault",
   "burn": "Bränna",

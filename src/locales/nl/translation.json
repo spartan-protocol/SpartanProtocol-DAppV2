@@ -14,7 +14,7 @@
   "balance": "Balans",
   "balanceSubtitle": "Overzicht v1 en v2 balances",
   "bond": "obligatie",
-  "bondInfo": "De hoeveelheid SPARTA nog in de Bond + Mint programma. Dit kan door 5M SPARTA worden aangevuld met voorstellen in de DAO wanneer het op is.",
+  "bondInfo": "SPARTA toewijzing resterende voor de Bond-programma. Als dit leeg is, kan het worden bijgevuld via een DAO voorstel.",
   "bondPositions": "Bond posities",
   "bondVault": "Bond Vault",
   "burn": "Brandwond",

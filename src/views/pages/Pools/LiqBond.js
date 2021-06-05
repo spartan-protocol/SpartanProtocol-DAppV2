@@ -276,7 +276,7 @@ const LiqBond = () => {
 
               <div className="progress-container progress-primary">
                 <Progress
-                  max="5000000"
+                  max="2500000"
                   value={convertFromWei(bond.global.spartaRemaining)}
                   className=""
                 />

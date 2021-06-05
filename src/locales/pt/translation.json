@@ -14,7 +14,7 @@
   "balance": "Saldo",
   "balanceSubtitle": "Visão geral v1 e v2 saldos",
   "bond": "Título",
-  "bondInfo": "A quantidade de SPARTA remanescente no programa de Bond + hortelã. Isso pode ser complementado por 5M SPARTA de propostas do DAO quando se esgota.",
+  "bondInfo": "alocação SPARTA restante para o programa de Bond. Se isso acabar, ele pode ser recarregado através de uma proposta DAO.",
   "bondPositions": "Posições de títulos",
   "bondVault": "Cofre de Títulos",
   "burn": "Queimar",

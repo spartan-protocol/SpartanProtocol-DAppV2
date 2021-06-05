@@ -15,7 +15,7 @@
   "balanceSubtitle": "Información general de su saldo en v1 y v2",
   "block": "Bloque",
   "bond": "Deposito",
-  "bondInfo": "La cantidad de SPARTA que queda por depositar y acuñar en el programa. Esto puede ser limitado a 5M SPARTA por pruesta en la votación si se hace efectiva",
+  "bondInfo": "La asignación SPARTA restante para el programa de bonos. Si se agota, se puede recargar mediante una propuesta de DAO.",
   "bondPositions": "Depositado",
   "bondVault": "Depositar",
   "burn": "Quemar",
