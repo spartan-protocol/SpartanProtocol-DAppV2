@@ -73,7 +73,7 @@ const DaoDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                 {t('amount')}
               </Col>
               <Col className="text-right output-card">
-                {formatFromWei(deposit())} {token.symbol}
+                {formatFromWei(deposit())} {token.symbol}p
               </Col>
             </Row>
             <Row className="">
