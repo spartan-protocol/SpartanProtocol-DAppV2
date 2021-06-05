@@ -103,7 +103,10 @@ const SynthVaultItem = ({ synthItem }) => {
       BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
     )
     const tokenValue = BN(tokenAmount).plus(baseSwapped)
-    return tokenValue
+    if (tokenValue > 0) {
+      return tokenValue
+    }
+    return '0.00'
   }
 
   // const toggleCollapse = () => {
@@ -225,7 +228,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 }
                 disabled={synthItem.staked <= 0}
               >
-                {t('withdraw')}
+                {t('withdrawAll')}
               </Button>
             </Col>
           </Row>
