@@ -40,30 +40,40 @@ const ProposalItem = ({ proposal }) => {
     return 'Requires more support'
   }
 
-  const memberPercent =
-    dao.member.weight && bond.member.weight
-      ? BN(proposal.memberVotes)
-          .div(BN(dao.member.weight).plus(bond.member.weight))
-          .times(100)
-          .toString()
-      : '0'
+  const memberPercent = () => {
+    if (dao.member.weight && bond.member.weight && proposal.memberVotes) {
+      const _memberPercent = BN(proposal.memberVotes)
+        .div(BN(dao.member.weight).plus(bond.member.weight))
+        .times(100)
+        .toString()
+      if (_memberPercent > 0) {
+        return _memberPercent
+      }
+    }
+    return '0'
+  }
 
-  const totalPercent =
-    dao.global.totalWeight && bond.global.weight
-      ? BN(proposal.votes)
-          .div(BN(dao.global.totalWeight).plus(bond.global.weight))
-          .times(100)
-          .toString()
-      : '0'
+  const totalPercent = () => {
+    if (dao.global.totalWeight && bond.global.weight && proposal.votes) {
+      const _totalPercent = BN(proposal.votes)
+        .div(BN(dao.global.totalWeight).plus(bond.global.weight))
+        .times(100)
+        .toString()
+      if (_totalPercent > 0) {
+        return _totalPercent
+      }
+    }
+    return '0'
+  }
 
   const weightClass = () => {
-    if (totalPercent > (100 / 3) * 2) {
+    if (totalPercent() > (100 / 3) * 2) {
       return 'Majority'
     }
-    if (totalPercent > 100 / 2) {
+    if (totalPercent() > 100 / 2) {
       return 'Quorum'
     }
-    if (totalPercent > 100 / 6) {
+    if (totalPercent() > 100 / 6) {
       return 'Minority'
     }
     return 'Weak Support'
@@ -191,7 +201,7 @@ const ProposalItem = ({ proposal }) => {
             </Col>
             <Col className="text-right output-card">
               {formatFromWei(proposal.memberVotes)} (
-              {formatFromUnits(memberPercent, 2)}%)
+              {formatFromUnits(memberPercent(), 2)}%)
             </Col>
           </Row>
 
@@ -200,13 +210,13 @@ const ProposalItem = ({ proposal }) => {
               Total votes
             </Col>
             <Col className="text-right output-card">
-              {weightClass()} ({formatFromUnits(totalPercent, 2)}%)
+              {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
             </Col>
           </Row>
 
           <div className="progress-container progress-primary my-2">
             <span className="progress-badge" />
-            <Progress max="100" value={totalPercent} />
+            <Progress max="100" value={totalPercent()} />
           </div>
 
           <Row>
@@ -215,7 +225,7 @@ const ProposalItem = ({ proposal }) => {
                 color="primary"
                 className="btn-sm w-100"
                 onClick={() => dispatch(voteProposal(proposal.id, wallet))}
-                disabled={memberPercent >= 100}
+                disabled={memberPercent() >= 100}
               >
                 Vote Up
               </Button>
@@ -225,7 +235,7 @@ const ProposalItem = ({ proposal }) => {
                 color="primary"
                 className="btn-sm w-100"
                 onClick={() => dispatch(removeVote(proposal.id, wallet))}
-                disabled={memberPercent <= 0}
+                disabled={memberPercent() <= 0}
               >
                 Vote Down
               </Button>
