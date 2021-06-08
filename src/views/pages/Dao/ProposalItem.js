@@ -141,7 +141,7 @@ const ProposalItem = ({ proposal }) => {
     if (proposal.proposalType === 'GRANT') {
       return (
         <>
-          {proposal.param} SPARTA to
+          {formatFromWei(proposal.param)} SPARTA to
           <a
             href={getExplorerWallet(proposal.proposedAddress)}
             target="_blank"

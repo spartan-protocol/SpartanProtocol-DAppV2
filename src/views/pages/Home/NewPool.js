@@ -53,6 +53,27 @@ const NewPool = () => {
 
   const [inputAddress, setinputAddress] = useState(null)
   const addrInput = document.getElementById('addrInput')
+  const handleAddrChange = (newValue) => {
+    if (addrInput) {
+      setinputAddress(newValue)
+      addrInput.value = newValue
+    }
+  }
+
+  const [tokenInfo, setTokenInfo] = useState(null)
+  const [tokenIcon, setTokenIcon] = useState(null)
+  const [infoLoaded, setInfoLoaded] = useState(false)
+  const getTokenInfo = async () => {
+    if (!infoLoaded) {
+      const info = await axios.get(
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${inputAddress}/info.json`,
+      )
+      setTokenInfo(info.data)
+      setTokenIcon(
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${inputAddress}/logo.png`,
+      )
+    }
+  }
 
   const [inputSparta, setInputSparta] = useState(null)
   const spartaInput = document.getElementById('spartaInput')
@@ -73,22 +94,36 @@ const NewPool = () => {
   }
 
   const [addrValid, setaddrValid] = useState(false)
+  const handleInvalid = () => {
+    setaddrValid(false)
+    handleSpartaChange('')
+    handleTokenChange('')
+    setInfoLoaded(false)
+  }
+  const clearTokenInfo = () => {
+    setTokenInfo(false)
+    setTokenIcon('')
+  }
   useEffect(() => {
     if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
       if (trustWalletIndex.data.includes(inputAddress)) {
-        setaddrValid(true)
+        getTokenInfo()
+        setInfoLoaded(true)
+        if (tokenInfo.decimals === 18) {
+          setaddrValid(true)
+        } else {
+          handleInvalid()
+        }
       } else {
-        setaddrValid(false)
-        handleSpartaChange('')
-        handleTokenChange('')
+        handleInvalid()
+        clearTokenInfo()
       }
     } else {
-      setaddrValid(false)
-      handleSpartaChange('')
-      handleTokenChange('')
+      handleInvalid()
+      clearTokenInfo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputAddress, trustWalletIndex])
+  }, [inputAddress, trustWalletIndex, showModal, tokenInfo])
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
@@ -120,6 +155,19 @@ const NewPool = () => {
   const handleSubmit = () => {
     console.log('add dispatch here to the create pool action')
   }
+
+  const handleModalClear = () => {
+    handleAddrChange('')
+    handleSpartaChange('')
+    handleTokenChange('')
+    setInfoLoaded(false)
+  }
+  useEffect(() => {
+    if (showModal !== true) {
+      handleModalClear()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showModal])
 
   return (
     <>
@@ -157,10 +205,22 @@ const NewPool = () => {
             <Col xs="12">
               <Card className="card-share">
                 <CardBody className="py-3">
-                  <h4 className="card-title">desc</h4>
+                  {/* <h4 className="card-title">Desc</h4> */}
                   <Row>
                     <Col xs="12">
-                      <InputGroup>
+                      {trustWalletIndex.data?.includes(inputAddress) &&
+                        tokenInfo && (
+                          <div className="text-sm-label-alt">
+                            <img
+                              src={tokenIcon}
+                              height="45px"
+                              alt="tokenIcon"
+                              className="mr-2"
+                            />
+                            {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                          </div>
+                        )}
+                      <InputGroup className="mt-2">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>Address</InputGroupText>
                         </InputGroupAddon>
@@ -184,7 +244,18 @@ const NewPool = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                       </InputGroup>
-
+                      <div className="text-sm-label-alt pb-2">
+                        Input a valid token address (18 decimal BEP20 asset
+                        listed in the{' '}
+                        <a
+                          href="https://github.com/trustwallet/assets/tree/master/blockchains/smartchain"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          TrustWallet repo
+                        </a>
+                        )
+                      </div>
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>Input</InputGroupText>
@@ -214,7 +285,6 @@ const NewPool = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                       </InputGroup>
-
                       <InputGroup>
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText>Input</InputGroupText>

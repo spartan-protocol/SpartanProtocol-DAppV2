@@ -95,6 +95,7 @@ export const daoProposalDetails = (proposalCount, wallet) => async (
         )
       }
       const proposalArray = await Promise.all(awaitArray)
+      console.log(proposalArray)
       const proposal = []
       const varCount = 2
       for (
@@ -111,7 +112,7 @@ export const daoProposalDetails = (proposalCount, wallet) => async (
           finalised: proposalArray[i][5],
           param: proposalArray[i][6].toString(),
           proposedAddress: proposalArray[i][7].toString(),
-          // open: proposalArray[i][8].toString(),
+          open: proposalArray[i][8],
           memberVotes: proposalArray[i + 1].toString(),
         })
       }
@@ -368,7 +369,6 @@ export const cancelProposal = (oldProposalID, newProposalID, wallet) => async (
 export const finaliseProposal = (proposalID, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
-  console.log(proposalID)
   try {
     const gPrice = await getProviderGasPrice()
     const propFinalise = await contract.finaliseProposal(proposalID, {

@@ -57,7 +57,10 @@ const Overview = () => {
         <Row className="row-480">
           {dao?.proposal.length > 0 &&
             dao?.proposal
-              .filter((pid) => pid.finalised !== 1 && pid.proposalType !== '') // && pid.open === true
+              .filter(
+                (pid) =>
+                  pid.finalised !== 1 && pid.proposalType !== '' && pid.open,
+              )
               .sort((a, b) => b.votes - a.votes)
               .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
           {dao?.proposal.length <= 0 && (

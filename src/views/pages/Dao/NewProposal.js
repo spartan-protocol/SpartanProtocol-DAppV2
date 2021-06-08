@@ -122,7 +122,7 @@ const NewProposal = () => {
     } else if (selectedType?.type === 'Address') {
       dispatch(newAddressProposal(inputAddress, selectedType.value, wallet))
     } else if (selectedType?.type === 'Grant') {
-      dispatch(newGrantProposal(inputAddress, inputParam, wallet))
+      dispatch(newGrantProposal(inputAddress, convertToWei(inputParam), wallet))
     }
   }
 
