@@ -23,21 +23,46 @@ import { ethers } from 'ethers'
 import axios from 'axios'
 import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
 import Approval from '../../../components/Approval/Approval'
-import { getAddresses } from '../../../utils/web3'
-import { convertToWei } from '../../../utils/bigNumber'
+import {
+  getAddresses,
+  getNetwork,
+  getWalletProvider,
+} from '../../../utils/web3'
+import { BN, convertToWei, formatFromUnits } from '../../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import { useSparta } from '../../../store/sparta/selector'
+import { createPoolADD } from '../../../store/pool'
+import { useWeb3 } from '../../../store/web3'
+import { getTokenContract } from '../../../utils/web3Contracts'
 
 const NewPool = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
+  const web3 = useWeb3()
   const wallet = useWallet()
   const addr = getAddresses()
   const { t } = useTranslation()
 
   const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
+
+  const [network, setnetwork] = useState(getNetwork())
+  const [trigger0, settrigger0] = useState(0)
+  const getNet = () => {
+    setnetwork(getNetwork())
+  }
+  useEffect(() => {
+    if (trigger0 === 0) {
+      getNet()
+    }
+    const timer = setTimeout(() => {
+      getNet()
+      settrigger0(trigger0 + 1)
+    }, 2000)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger0])
 
   const [trustWalletIndex, setTrustWalletIndex] = useState([])
   const getTrustWalletIndex = async () => {
@@ -51,65 +76,78 @@ const NewPool = () => {
     getTrustWalletIndex()
   }, [])
 
-  const [inputAddress, setinputAddress] = useState(null)
   const addrInput = document.getElementById('addrInput')
   const handleAddrChange = (newValue) => {
     if (addrInput) {
-      setinputAddress(newValue)
       addrInput.value = newValue
     }
   }
 
   const [tokenInfo, setTokenInfo] = useState(null)
+  const [tokenSymbol, setTokenSymbol] = useState('TOKEN')
   const [tokenIcon, setTokenIcon] = useState(null)
-  const [infoLoaded, setInfoLoaded] = useState(false)
   const getTokenInfo = async () => {
-    if (!infoLoaded) {
+    if (network.chainId === 56) {
       const info = await axios.get(
-        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${inputAddress}/info.json`,
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${addrInput?.value}/info.json`,
       )
       setTokenInfo(info.data)
       setTokenIcon(
-        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${inputAddress}/logo.png`,
+        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${addrInput?.value}/logo.png`,
       )
     }
+    const provider = getWalletProvider()
+    const deployed = await provider.getCode(addrInput?.value)
+    const contract = getTokenContract(addrInput?.value)
+    let symbol = 'TOKEN'
+    try {
+      symbol = deployed !== '0x' ? await contract.symbol() : 'TOKEN'
+    } catch (e) {
+      console.error(e)
+      symbol = 'TOKEN'
+    }
+    setTokenSymbol(symbol)
   }
 
-  const [inputSparta, setInputSparta] = useState(null)
   const spartaInput = document.getElementById('spartaInput')
   const handleSpartaChange = (newValue) => {
     if (spartaInput) {
-      setInputSparta(newValue)
       spartaInput.value = newValue
     }
   }
 
-  const [inputToken, setInputToken] = useState(null)
   const tokenInput = document.getElementById('tokenInput')
   const handleTokenChange = (newValue) => {
     if (tokenInput) {
-      setInputToken(newValue)
       tokenInput.value = newValue
     }
   }
 
+  const [prevToken, setPrevToken] = useState(null)
   const [addrValid, setaddrValid] = useState(false)
   const handleInvalid = () => {
     setaddrValid(false)
     handleSpartaChange('')
     handleTokenChange('')
-    setInfoLoaded(false)
   }
   const clearTokenInfo = () => {
     setTokenInfo(false)
     setTokenIcon('')
+    setTokenSymbol('TOKEN')
   }
   useEffect(() => {
-    if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
-      if (trustWalletIndex.data.includes(inputAddress)) {
-        getTokenInfo()
-        setInfoLoaded(true)
-        if (tokenInfo.decimals === 18) {
+    if (
+      addrInput?.value?.length === 42 &&
+      ethers.utils.isAddress(addrInput?.value)
+    ) {
+      if (
+        network.chainId === 97 ||
+        trustWalletIndex.data.includes(addrInput?.value)
+      ) {
+        if (prevToken !== addrInput?.value) {
+          getTokenInfo()
+        }
+        if (network.chainId === 97 || tokenInfo.decimals === 18) {
           setaddrValid(true)
         } else {
           handleInvalid()
@@ -118,30 +156,31 @@ const NewPool = () => {
         handleInvalid()
         clearTokenInfo()
       }
+      setPrevToken(addrInput?.value)
     } else {
       handleInvalid()
       clearTokenInfo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputAddress, trustWalletIndex, showModal, tokenInfo])
+  }, [addrInput?.value, trustWalletIndex, showModal, tokenInfo])
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
-    if (inputSparta >= 10000) {
+    if (spartaInput?.value >= 10000) {
       setSpartaValid(true)
     } else {
       setSpartaValid(false)
     }
-  }, [inputSparta])
+  }, [spartaInput?.value])
 
   const [tokenValid, setTokenValid] = useState(false)
   useEffect(() => {
-    if (inputToken > 0) {
+    if (tokenInput?.value > 0) {
       setTokenValid(true)
     } else {
       setTokenValid(false)
     }
-  }, [inputToken])
+  }, [tokenInput?.value])
 
   const [formValid, setformValid] = useState(false)
   useEffect(() => {
@@ -153,14 +192,21 @@ const NewPool = () => {
   }, [addrValid, spartaValid, tokenValid])
 
   const handleSubmit = () => {
-    console.log('add dispatch here to the create pool action')
+    dispatch(
+      createPoolADD(
+        convertToWei(spartaInput?.value),
+        convertToWei(tokenInput?.value),
+        addrInput?.value,
+        wallet,
+      ),
+    )
   }
 
   const handleModalClear = () => {
     handleAddrChange('')
     handleSpartaChange('')
     handleTokenChange('')
-    setInfoLoaded(false)
+    setTokenSymbol('TOKEN')
   }
   useEffect(() => {
     if (showModal !== true) {
@@ -168,6 +214,49 @@ const NewPool = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showModal])
+
+  const priceInSparta = () => {
+    const price = BN(tokenInput?.value).div(spartaInput?.value)
+    if (price > 10) {
+      return formatFromUnits(price, 2)
+    }
+    if (price > 1) {
+      return formatFromUnits(price, 4)
+    }
+    if (price > 0) {
+      return formatFromUnits(price, 6)
+    }
+    return '0.00'
+  }
+
+  const priceInToken = () => {
+    const price = BN(spartaInput?.value).div(tokenInput?.value)
+    if (price > 10) {
+      return formatFromUnits(price, 2)
+    }
+    if (price > 1) {
+      return formatFromUnits(price, 4)
+    }
+    if (price > 0) {
+      return formatFromUnits(price, 6)
+    }
+    return '0.00'
+  }
+
+  const priceinUSD = () => {
+    let price = BN(tokenInput?.value).div(spartaInput?.value)
+    price = price.times(web3.spartaPrice)
+    if (price > 10) {
+      return formatFromUnits(price, 2)
+    }
+    if (price > 1) {
+      return formatFromUnits(price, 4)
+    }
+    if (price > 0) {
+      return formatFromUnits(price, 6)
+    }
+    return '0.00'
+  }
 
   return (
     <>
@@ -208,9 +297,10 @@ const NewPool = () => {
                   {/* <h4 className="card-title">Desc</h4> */}
                   <Row>
                     <Col xs="12">
-                      {trustWalletIndex.data?.includes(inputAddress) &&
+                      {network.chainId === 56 &&
+                        trustWalletIndex.data?.includes(addrInput?.value) &&
                         tokenInfo && (
-                          <div className="text-sm-label-alt">
+                          <div className="text-sm-label-alt text-center">
                             <img
                               src={tokenIcon}
                               height="45px"
@@ -232,7 +322,6 @@ const NewPool = () => {
                           pattern="^[0-9]*[.,]?[0-9]*$"
                           autoComplete="off"
                           autoCorrect="off"
-                          onChange={(e) => setinputAddress(e.target.value)}
                         />
                         <InputGroupAddon addonType="append">
                           <InputGroupText className="p-1">
@@ -244,7 +333,7 @@ const NewPool = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                       </InputGroup>
-                      <div className="text-sm-label-alt pb-2">
+                      <div className="text-sm-label-alt pb-2 text-center">
                         Input a valid token address (18 decimal BEP20 asset
                         listed in the{' '}
                         <a
@@ -268,7 +357,6 @@ const NewPool = () => {
                           autoComplete="off"
                           autoCorrect="off"
                           disabled={!addrValid}
-                          onChange={(e) => setInputSparta(e.target.value)}
                         />
                         <InputGroupAddon addonType="append">
                           <InputGroupText className="p-1">
@@ -297,10 +385,11 @@ const NewPool = () => {
                           autoComplete="off"
                           autoCorrect="off"
                           disabled={!addrValid}
-                          onChange={(e) => setInputToken(e.target.value)}
                         />
                         <InputGroupAddon addonType="append">
-                          <InputGroupText className="p-1">TOKEN</InputGroupText>
+                          <InputGroupText className="p-1">
+                            {tokenSymbol}
+                          </InputGroupText>
                         </InputGroupAddon>
                         <InputGroupAddon addonType="append">
                           <InputGroupText className="p-1">
@@ -312,16 +401,24 @@ const NewPool = () => {
                           </InputGroupText>
                         </InputGroupAddon>
                       </InputGroup>
+                      <div className="text-sm-label-alt pb-2 text-center">
+                        Minimum of 10,000 SPARTA required
+                      </div>
                     </Col>
                   </Row>
                 </CardBody>
               </Card>
+              <div className="output-card text-center mb-2">
+                1 SPARTA = {priceInSparta()} {tokenSymbol}
+                <br />1 {tokenSymbol} = {priceInToken()} {tokenSymbol}
+                <br />1 {tokenSymbol} = ~${priceinUSD()} USD
+              </div>
               <FormGroup>
                 <div className="text-center">
                   <CustomInput
                     type="switch"
                     id="inputConfirmRatio"
-                    label="Confirm Ratio of: "
+                    label="Confirm ratio! Avoid getting rekt!"
                     checked={ratioConfirm}
                     onChange={() => setRatioConfirm(!ratioConfirm)}
                   />
@@ -331,17 +428,17 @@ const NewPool = () => {
           </Row>
 
           <Row className="card-body">
-            {wallet?.account && (
+            {wallet?.account && spartaInput?.value > 0 && (
               <Approval
                 tokenAddress={addr.spartav2}
                 symbol="SPARTA"
                 walletAddress={wallet.account}
-                contractAddress={addr.dao}
-                txnAmount={convertToWei('100')}
+                contractAddress={addr.poolFactory}
+                txnAmount={convertToWei(spartaInput?.value)}
                 assetNumber="1"
               />
             )}
-            <Col xs="12" className="hide-if-prior-sibling">
+            <Col xs="12" className="hide-if-siblings">
               <Button
                 block
                 className="btn-fill btn-primary"
@@ -351,6 +448,18 @@ const NewPool = () => {
                 {t('confirm')}
               </Button>
             </Col>
+            {wallet?.account &&
+              tokenInput?.value > 0 &&
+              addrInput?.value !== addr.bnb && (
+                <Approval
+                  tokenAddress={addrInput?.value}
+                  symbol={tokenSymbol}
+                  walletAddress={wallet.account}
+                  contractAddress={addr.poolFactory}
+                  txnAmount={convertToWei(tokenInput?.value)}
+                  assetNumber="2"
+                />
+              )}
           </Row>
         </Card>
       </Modal>

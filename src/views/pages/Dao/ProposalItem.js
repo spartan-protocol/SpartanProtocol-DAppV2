@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col, Progress } from 'reactstrap'
 import { useBond } from '../../../store/bond'
 import {
+  cancelProposal,
   finaliseProposal,
   removeVote,
   voteProposal,
@@ -24,17 +25,40 @@ const ProposalItem = ({ proposal }) => {
   const wallet = useWallet()
   const dispatch = useDispatch()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
-  const getEndDate = () => {
+  // const cancelPeriod = BN('1209600')
+
+  // const getSecondsLeft = () => {
+  //   const timeStamp = BN(Date.now()).div(1000)
+  //   const secondsLeft = BN(proposal.startTime)
+  //     .plus(cancelPeriod)
+  //     .minus(timeStamp)
+  //   if (secondsLeft > 86400) {
+  //     return `in ${secondsLeft.div(60).div(60).div(24)} days`
+  //   }
+  //   if (secondsLeft > 3600) {
+  //     return `in ${secondsLeft.div(60).div(60)} hours`
+  //   }
+  //   if (secondsLeft > 60) {
+  //     return `in ${secondsLeft.div(60)} minutes`
+  //   }
+  //   if (secondsLeft > 0) {
+  //     return `in ${secondsLeft} seconds`
+  //   }
+  //   return 'right now'
+  // }
+
+  const getHoursAway = () => {
     const timeStamp = BN(Date.now()).div(1000)
     const endDate = BN(proposal.timeStart).plus(dao.global.coolOffPeriod)
     const hoursAway = endDate.minus(timeStamp).div(60).div(60)
     return hoursAway.toFixed(0)
   }
+
   const status = () => {
-    if (proposal.finalising && getEndDate() > 0) {
-      return `${getEndDate()} hour cool-off remaining`
+    if (proposal.finalising && getHoursAway() > 0) {
+      return `${getHoursAway()} hour cool-off remaining`
     }
-    if (proposal.finalising && getEndDate() <= 0) {
+    if (proposal.finalising && getHoursAway() <= 0) {
       return `Ready for final vote count!`
     }
     return 'Requires more support'
@@ -197,10 +221,19 @@ const ProposalItem = ({ proposal }) => {
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
+              Can cancel
+            </Col>
+            <Col className="text-right output-card">
+              {/* {getSecondsLeft()} */}
+            </Col>
+          </Row>
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
               Your votes
             </Col>
             <Col className="text-right output-card">
-              {formatFromWei(proposal.memberVotes)} (
+              {formatFromWei(proposal.memberVotes, 0)} (
               {formatFromUnits(memberPercent(), 2)}%)
             </Col>
           </Row>
@@ -224,7 +257,7 @@ const ProposalItem = ({ proposal }) => {
               <Button
                 color="primary"
                 className="btn-sm w-100"
-                onClick={() => dispatch(voteProposal(proposal.id, wallet))}
+                onClick={() => dispatch(voteProposal(wallet))}
                 disabled={memberPercent() >= 100}
               >
                 Vote Up
@@ -234,22 +267,33 @@ const ProposalItem = ({ proposal }) => {
               <Button
                 color="primary"
                 className="btn-sm w-100"
-                onClick={() => dispatch(removeVote(proposal.id, wallet))}
+                onClick={() => dispatch(removeVote(wallet))}
                 disabled={memberPercent() <= 0}
               >
                 Vote Down
               </Button>
             </Col>
           </Row>
+
           <Row>
             <Col className="px-1">
               <Button
                 color="secondary"
                 className="btn-sm w-100"
-                onClick={() => dispatch(finaliseProposal(proposal.id, wallet))}
-                disabled={!proposal.finalising || getEndDate() > 0}
+                onClick={() => dispatch(finaliseProposal(wallet))}
+                disabled={!proposal.finalising || getHoursAway() > 0}
               >
                 Count Votes
+              </Button>
+            </Col>
+            <Col className="px-1">
+              <Button
+                color="secondary"
+                className="btn-sm w-100"
+                onClick={() => dispatch(cancelProposal(wallet))}
+                disabled
+              >
+                Cancel
               </Button>
             </Col>
           </Row>

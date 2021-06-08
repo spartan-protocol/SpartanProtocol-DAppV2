@@ -11,7 +11,7 @@ import {
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getAddresses } from '../../utils/web3'
+import { getAddresses, getProviderGasPrice } from '../../utils/web3'
 
 export const poolLoading = () => ({
   type: Types.POOL_LOADING,
@@ -306,5 +306,32 @@ export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
     dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
+  }
+}
+
+/**
+ * Create a new pool
+ * @param {uint} inputBase
+ * @param {uint} inputToken
+ * @param {address} token
+ * @param {object} wallet
+ */
+export const createPoolADD = (inputBase, inputToken, token, wallet) => async (
+  dispatch,
+) => {
+  dispatch(poolLoading())
+  const contract = getPoolFactoryContract(wallet)
+
+  try {
+    const gPrice = await getProviderGasPrice()
+    const newPool = await contract.createPoolADD(inputBase, inputToken, token, {
+      gasPrice: gPrice,
+    })
+    console.log(newPool)
+    dispatch(payloadToDispatch(Types.POOL_NEW_POOL, newPool))
+  } catch (error) {
+    dispatch(
+      errorToDispatch(Types.POOL_ERROR, `${error} - ${error.data.message}.`),
+    )
   }
 }
