@@ -35,9 +35,11 @@ import { convertToWei } from '../../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
+import { useSparta } from '../../../store/sparta/selector'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
+  const sparta = useSparta()
   const wallet = useWallet()
   const addr = getAddresses()
   const { t } = useTranslation()
@@ -180,7 +182,12 @@ const NewProposal = () => {
               <Col xs="12">
                 <Card className="card-share">
                   <CardBody className="py-3">
-                    <h4 className="card-title">{selectedType?.desc}</h4>
+                    <h4 className="card-title">
+                      {selectedType?.desc}
+                      {selectedType?.value === 'FLIP_EMISSIONS' && (
+                        <>{sparta.globalDetails.emitting ? ' off' : ' on'}</>
+                      )}
+                    </h4>
                     <Row>
                       <Col xs="12">
                         {showAddrInput.includes(selectedType.type) && (
