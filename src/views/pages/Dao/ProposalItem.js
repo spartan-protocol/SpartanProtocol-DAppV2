@@ -215,18 +215,29 @@ const ProposalItem = ({ proposal }) => {
     <>
       <Col xs="auto">
         <Card className="card-body card-320 pt-3 pb-2 card-underlay">
+          {/* {!proposal.open && (
+            <Row className="mb-2">
+              <Col xs="auto" className="pr-0 my-auto">
+                <h4 className="my-auto">
+                  {proposal.finalised
+                    ? 'Ended Proposal - Success'
+                    : 'Ended Proposal - Failed'}
+                </h4>
+              </Col>
+            </Row>
+          )} */}
           <Row className="mb-2">
             <Col xs="auto" className="pr-0 my-auto">
               <h4 className="my-auto">#{proposal.id}</h4>
             </Col>
             <Col>
-              <h4 className="mb-0">{type.label}</h4>
+              <h4 className="mb-0">{type?.label}</h4>
               <p className="text-sm-label-alt">{status()}</p>
             </Col>
           </Row>
           <Row>
             <Col>
-              <div className="output-card mb-2">{type.desc}</div>
+              <div className="output-card mb-2">{type?.desc}</div>
             </Col>
           </Row>
           <Row>
@@ -234,83 +245,90 @@ const ProposalItem = ({ proposal }) => {
               <div className="output-card mb-2">{getDetails()}</div>
             </Col>
           </Row>
+          {proposal.open && (
+            <>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  Can cancel
+                </Col>
+                <Col className="text-right output-card">
+                  {getSecondsCancel()}
+                </Col>
+              </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              Can cancel
-            </Col>
-            <Col className="text-right output-card">{getSecondsCancel()}</Col>
-          </Row>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  Your votes
+                </Col>
+                <Col className="text-right output-card">
+                  {formatFromWei(proposal.memberVotes, 0)} (
+                  {formatFromUnits(memberPercent(), 2)}%)
+                </Col>
+              </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              Your votes
-            </Col>
-            <Col className="text-right output-card">
-              {formatFromWei(proposal.memberVotes, 0)} (
-              {formatFromUnits(memberPercent(), 2)}%)
-            </Col>
-          </Row>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  Total votes
+                </Col>
+                <Col className="text-right output-card">
+                  {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
+                </Col>
+              </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              Total votes
-            </Col>
-            <Col className="text-right output-card">
-              {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
-            </Col>
-          </Row>
+              <div className="progress-container progress-primary my-2">
+                <span className="progress-badge" />
+                <Progress max="100" value={totalPercent()} />
+              </div>
 
-          <div className="progress-container progress-primary my-2">
-            <span className="progress-badge" />
-            <Progress max="100" value={totalPercent()} />
-          </div>
+              <Row>
+                <Col className="px-1">
+                  <Button
+                    color="primary"
+                    className="btn-sm w-100"
+                    onClick={() => dispatch(voteProposal(wallet))}
+                    disabled={memberPercent() >= 100}
+                  >
+                    Vote Up
+                  </Button>
+                </Col>
+                <Col className="px-1">
+                  <Button
+                    color="primary"
+                    className="btn-sm w-100"
+                    onClick={() => dispatch(removeVote(wallet))}
+                    disabled={memberPercent() <= 0}
+                  >
+                    Vote Down
+                  </Button>
+                </Col>
+              </Row>
 
-          <Row>
-            <Col className="px-1">
-              <Button
-                color="primary"
-                className="btn-sm w-100"
-                onClick={() => dispatch(voteProposal(wallet))}
-                disabled={memberPercent() >= 100}
-              >
-                Vote Up
-              </Button>
-            </Col>
-            <Col className="px-1">
-              <Button
-                color="primary"
-                className="btn-sm w-100"
-                onClick={() => dispatch(removeVote(wallet))}
-                disabled={memberPercent() <= 0}
-              >
-                Vote Down
-              </Button>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col className="px-1">
-              <Button
-                color="secondary"
-                className="btn-sm w-100"
-                onClick={() => dispatch(finaliseProposal(wallet))}
-                disabled={!proposal.finalising || getSecondsCooloff()[0] > 0}
-              >
-                Count Votes
-              </Button>
-            </Col>
-            <Col className="px-1">
-              <Button
-                color="secondary"
-                className="btn-sm w-100"
-                onClick={() => dispatch(cancelProposal(wallet))}
-                // disabled={getSecondsCancel() !== 'right now'}
-              >
-                Cancel
-              </Button>
-            </Col>
-          </Row>
+              <Row>
+                <Col className="px-1">
+                  <Button
+                    color="secondary"
+                    className="btn-sm w-100"
+                    onClick={() => dispatch(finaliseProposal(wallet))}
+                    disabled={
+                      !proposal.finalising || getSecondsCooloff()[0] > 0
+                    }
+                  >
+                    Count Votes
+                  </Button>
+                </Col>
+                <Col className="px-1">
+                  <Button
+                    color="secondary"
+                    className="btn-sm w-100"
+                    onClick={() => dispatch(cancelProposal(wallet))}
+                    disabled={getSecondsCancel() !== 'right now'}
+                  >
+                    Cancel
+                  </Button>
+                </Col>
+              </Row>
+            </>
+          )}
         </Card>
       </Col>
     </>

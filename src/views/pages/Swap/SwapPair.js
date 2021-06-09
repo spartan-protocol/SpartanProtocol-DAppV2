@@ -36,6 +36,7 @@ const SwapPair = ({ assetSwap }) => {
             assetSwap.genesis,
             assetSwap.baseAmount,
           ),
+          2,
         )
       : 0
 

@@ -623,7 +623,7 @@ const Swap = () => {
                                       : '0.00'}
                                     {' ('}
                                     {swapInput2?.value
-                                      ? formatFromUnits(getRateSlip())
+                                      ? formatFromUnits(getRateSlip(), 2)
                                       : '0.00'}
                                     {'%)'}
                                   </div>

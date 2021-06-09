@@ -629,7 +629,7 @@ const LiqAdd = () => {
                           : '0.00'}
                         {' ('}
                         {addInput1?.value
-                          ? formatFromUnits(getRateSlip())
+                          ? formatFromUnits(getRateSlip(), 2)
                           : '0.00'}
                         {'%)'}
                       </div>

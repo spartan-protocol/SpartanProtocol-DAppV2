@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col, Card } from 'reactstrap'
+import { Row, Col, Card, FormGroup, CustomInput } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -18,6 +18,8 @@ const Overview = () => {
   const dao = useDao()
   const wallet = useWallet()
   const { t } = useTranslation()
+
+  const [selectedView, setSelectedView] = useState('current')
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -53,16 +55,61 @@ const Overview = () => {
             </div>
           </Col>
         </Row>
-
         <Row className="row-480">
-          {dao?.proposal.length > 0 &&
-            dao?.proposal
-              .filter(
-                (pid) =>
-                  pid.finalised !== 1 && pid.proposalType !== '' && pid.open,
-              )
-              .sort((a, b) => b.votes - a.votes)
-              .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
+          <Col xs="12">
+            <FormGroup>
+              <div className="mb-3">
+                <CustomInput
+                  type="radio"
+                  id="viewCurrent"
+                  label="Current Proposal"
+                  checked={selectedView === 'current'}
+                  onClick={() => setSelectedView('current')}
+                  readOnly
+                  inline
+                />
+                <CustomInput
+                  type="radio"
+                  id="viewComplete"
+                  label="Complete Proposals"
+                  checked={selectedView === 'complete'}
+                  onClick={() => setSelectedView('complete')}
+                  readOnly
+                  inline
+                />
+                <CustomInput
+                  type="radio"
+                  id="viewFailed"
+                  label="Failed Proposals"
+                  checked={selectedView === 'failed'}
+                  onClick={() => setSelectedView('failed')}
+                  readOnly
+                  inline
+                />
+              </div>
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row className="row-480">
+          {dao?.proposal.length > 0 && (
+            <>
+              {selectedView === 'current' &&
+                dao?.proposal
+                  .filter((pid) => pid.open)
+                  .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
+              {selectedView === 'complete' &&
+                dao?.proposal
+                  .filter((pid) => pid.finalised)
+                  .sort((a, b) => b.id - a.id)
+                  .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
+              {selectedView === 'failed' &&
+                dao?.proposal
+                  .filter((pid) => !pid.open && !pid.finalised)
+                  .sort((a, b) => b.id - a.id)
+                  .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
+            </>
+          )}
+
           {dao?.proposal.length <= 0 && (
             <Col xs="auto">
               <Card className="card-body card-320 pt-3 pb-2 card-underlay">

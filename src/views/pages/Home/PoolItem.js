@@ -39,6 +39,7 @@ const PoolItem = ({ asset }) => {
       genesis,
       baseAmount,
     ),
+    2,
   )
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
@@ -58,7 +59,7 @@ const PoolItem = ({ asset }) => {
             <Col>
               <h3 className="mb-0">{token.symbol}</h3>
               <p className="text-sm-label-alt">
-                ${formatFromUnits(tokenValueUSD)}
+                ${formatFromUnits(tokenValueUSD, 2)}
               </p>
             </Col>
             <Col className="mt-1 p-0">
@@ -94,7 +95,7 @@ const PoolItem = ({ asset }) => {
               {t('spotPrice')}
             </Col>
             <Col className="text-right output-card">
-              {formatFromUnits(tokenValueBase)} SPARTA
+              {formatFromUnits(tokenValueBase, 2)} SPARTA
             </Col>
           </Row>
 
