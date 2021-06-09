@@ -40,7 +40,7 @@ export const formatFromWei = (weiString, decs = 4) => {
  * @returns {string} units
  */
 export const formatFromUnits = (unitString, formatDecimals) => {
-  const decimals = formatDecimals || 2
+  const decimals = formatDecimals || 0
   const units = BN(unitString).toFormat(decimals)
   return units
 }

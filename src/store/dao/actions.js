@@ -106,8 +106,8 @@ export const daoProposalDetails = (proposalCount, wallet) => async (
           id: proposalArray[i].id.toString(),
           proposalType: proposalArray[i].proposalType,
           votes: proposalArray[i].votes.toString(),
-          // startTime: proposalArray[i].startTime.toString(), // timestamp of proposal genesis
-          timeStart: proposalArray[i].timeStart.toString(), // timestamp of coolOff
+          startTime: proposalArray[i].startTime.toString(), // timestamp of proposal genesis
+          coolOffTime: proposalArray[i].coolOffTime.toString(), // timestamp of coolOff
           finalising: proposalArray[i].finalising,
           finalised: proposalArray[i].finalised,
           param: proposalArray[i].param.toString(),
@@ -199,10 +199,8 @@ export const daoHarvest = (wallet) => async (dispatch) => {
 export const newActionProposal = (typeStr, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
-  console.log(typeStr)
   try {
     const gPrice = await getProviderGasPrice()
-    console.log(typeStr)
     const newProp = await contract.newActionProposal(typeStr, {
       gasPrice: gPrice,
     })

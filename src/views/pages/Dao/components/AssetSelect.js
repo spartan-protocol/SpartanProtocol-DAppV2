@@ -60,7 +60,9 @@ const AssetSelect = (props) => {
               <Row
                 key={`${asset.address}-asset`}
                 className="output-card px-3 py-2"
-                onClick={() => setinputAddress(asset.address)}
+                onClick={() =>
+                  setinputAddress(poolMode ? asset.tokenAddress : asset.address)
+                }
                 role="button"
               >
                 <Col xs="auto" className="">

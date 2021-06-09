@@ -142,7 +142,7 @@ const DaoVault = () => {
                 {t('harvestable')}
               </Col>
               <Col className="text-right output-card">
-                {dao.member?.weight > 0
+                {dao.member?.weight > 0 && dao.member?.isMember
                   ? formatFromWei(getClaimable())
                   : '0.00'}{' '}
                 SPARTA

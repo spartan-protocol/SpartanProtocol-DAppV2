@@ -25,40 +25,57 @@ const ProposalItem = ({ proposal }) => {
   const wallet = useWallet()
   const dispatch = useDispatch()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
-  // const cancelPeriod = BN('1209600')
+  const cancelPeriod = BN('1209600')
 
-  // const getSecondsLeft = () => {
-  //   const timeStamp = BN(Date.now()).div(1000)
-  //   const secondsLeft = BN(proposal.startTime)
-  //     .plus(cancelPeriod)
-  //     .minus(timeStamp)
-  //   if (secondsLeft > 86400) {
-  //     return `in ${secondsLeft.div(60).div(60).div(24)} days`
-  //   }
-  //   if (secondsLeft > 3600) {
-  //     return `in ${secondsLeft.div(60).div(60)} hours`
-  //   }
-  //   if (secondsLeft > 60) {
-  //     return `in ${secondsLeft.div(60)} minutes`
-  //   }
-  //   if (secondsLeft > 0) {
-  //     return `in ${secondsLeft} seconds`
-  //   }
-  //   return 'right now'
-  // }
-
-  const getHoursAway = () => {
+  const getSecondsCancel = () => {
     const timeStamp = BN(Date.now()).div(1000)
-    const endDate = BN(proposal.timeStart).plus(dao.global.coolOffPeriod)
-    const hoursAway = endDate.minus(timeStamp).div(60).div(60)
-    return hoursAway.toFixed(0)
+    const secondsLeft = BN(proposal.startTime)
+      .plus(cancelPeriod)
+      .minus(timeStamp)
+    if (secondsLeft > 86400) {
+      return `in ${formatFromUnits(
+        secondsLeft.div(60).div(60).div(24),
+        2,
+      )} days`
+    }
+    if (secondsLeft > 3600) {
+      return `${formatFromUnits(secondsLeft.div(60).div(60), 2)} hours`
+    }
+    if (secondsLeft > 60) {
+      return `in ${formatFromUnits(secondsLeft.div(60), 2)} minutes`
+    }
+    if (secondsLeft > 0) {
+      return `in ${formatFromUnits(secondsLeft, 0)} seconds`
+    }
+    return 'right now'
+  }
+
+  const getSecondsCooloff = () => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const endDate = BN(proposal.coolOffTime).plus(dao.global.coolOffPeriod)
+    const secondsLeft = endDate.minus(timeStamp)
+    if (secondsLeft > 86400) {
+      return [formatFromUnits(secondsLeft.div(60).div(60).div(24), 2), ' days']
+    }
+    if (secondsLeft > 3600) {
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ' hours']
+    }
+    if (secondsLeft > 60) {
+      return [formatFromUnits(secondsLeft.div(60), 2), ' minutes']
+    }
+    if (secondsLeft > 0) {
+      return [formatFromUnits(secondsLeft, 0), ' seconds']
+    }
+    return [0, ' seconds']
   }
 
   const status = () => {
-    if (proposal.finalising && getHoursAway() > 0) {
-      return `${getHoursAway()} hour cool-off remaining`
+    if (proposal.finalising && getSecondsCooloff()[0] > 0) {
+      return `${
+        getSecondsCooloff()[0] + getSecondsCooloff()[1]
+      } cool-off remaining`
     }
-    if (proposal.finalising && getHoursAway() <= 0) {
+    if (proposal.finalising && getSecondsCooloff()[0] <= 0) {
       return `Ready for final vote count!`
     }
     return 'Requires more support'
@@ -106,11 +123,8 @@ const ProposalItem = ({ proposal }) => {
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
-  const getPool = (poolAddress) =>
-    getToken(
-      pool.poolDetails.filter((i) => i.address === poolAddress)[0]
-        ?.tokenAddress,
-    )
+  const getPool = (tokenAddress) =>
+    pool.poolDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   const getDetails = () => {
     // 'GET_SPARTA' = '2.5M SPARTA'
@@ -146,14 +160,16 @@ const ProposalItem = ({ proposal }) => {
       return (
         <>
           <a
-            href={getExplorerContract(proposal.proposedAddress)}
+            href={getExplorerContract(
+              getPool(proposal.proposedAddress)?.address,
+            )}
             target="_blank"
             rel="noreferrer"
             className="mr-2"
           >
-            {formatShortString(proposal.proposedAddress)}
+            {formatShortString(getPool(proposal.proposedAddress)?.address)}
           </a>
-          {getPool(proposal.proposedAddress)?.symbol}p
+          {getToken(proposal.proposedAddress)?.symbol}p
         </>
       )
     }
@@ -223,9 +239,7 @@ const ProposalItem = ({ proposal }) => {
             <Col xs="auto" className="text-card">
               Can cancel
             </Col>
-            <Col className="text-right output-card">
-              {/* {getSecondsLeft()} */}
-            </Col>
+            <Col className="text-right output-card">{getSecondsCancel()}</Col>
           </Row>
 
           <Row className="my-1">
@@ -281,7 +295,7 @@ const ProposalItem = ({ proposal }) => {
                 color="secondary"
                 className="btn-sm w-100"
                 onClick={() => dispatch(finaliseProposal(wallet))}
-                disabled={!proposal.finalising || getHoursAway() > 0}
+                disabled={!proposal.finalising || getSecondsCooloff()[0] > 0}
               >
                 Count Votes
               </Button>
@@ -291,7 +305,7 @@ const ProposalItem = ({ proposal }) => {
                 color="secondary"
                 className="btn-sm w-100"
                 onClick={() => dispatch(cancelProposal(wallet))}
-                disabled
+                // disabled={getSecondsCancel() !== 'right now'}
               >
                 Cancel
               </Button>

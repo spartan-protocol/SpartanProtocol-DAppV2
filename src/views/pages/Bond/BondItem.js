@@ -112,7 +112,6 @@ const BondItem = ({ asset }) => {
           <Row className="my-1">
             <Col xs="auto" className="text-card">
               {t('claimable')}
-              <i className="icon-extra-small icon-spinner icon-dark ml-1" />
             </Col>
             <Col className="text-right output-card">
               {formatFromWei(

@@ -46,7 +46,18 @@ export const allListedAssets = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
 
   try {
-    const listedAssets = await contract.callStatic.allListedAssets()
+    const historyBonded = await contract.callStatic.allListedAssets()
+    let awaitArray = []
+    for (let i = 0; i < historyBonded.length; i++) {
+      awaitArray.push(contract.isListed(historyBonded[i]))
+    }
+    awaitArray = await Promise.all(awaitArray)
+    const listedAssets = []
+    for (let i = 0; i < historyBonded.length; i++) {
+      if (awaitArray[i]) {
+        listedAssets.push(historyBonded[i])
+      }
+    }
     dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
