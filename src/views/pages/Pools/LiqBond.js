@@ -15,6 +15,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -253,8 +254,9 @@ const LiqBond = () => {
                   </>
                 ) : (
                   <div className="output-card">
-                    No assets are currently listed for Bond. Visit the DAO to
-                    propose a new Bond asset.
+                    No assets are currently listed for Bond.{' '}
+                    <Link to="/dao">Visit the DAO</Link> to propose a new Bond
+                    asset.
                   </div>
                 )}
               </Card>
@@ -338,40 +340,44 @@ const LiqBond = () => {
               )}
             </Card>
           </Row>
-          <Row>
-            {assetBond1?.tokenAddress &&
-              assetBond1?.tokenAddress !== addr.bnb &&
-              wallet?.account &&
-              bondInput1?.value && (
-                <Approval
-                  tokenAddress={assetBond1?.tokenAddress}
-                  symbol={getToken(assetBond1.tokenAddress)?.symbol}
-                  walletAddress={wallet?.account}
-                  contractAddress={addr.dao}
-                  txnAmount={convertToWei(bondInput1?.value)}
-                  assetNumber="1"
-                />
-              )}
+          {bond.listedAssets?.length > 0 && (
+            <>
+              <Row>
+                {assetBond1?.tokenAddress &&
+                  assetBond1?.tokenAddress !== addr.bnb &&
+                  wallet?.account &&
+                  bondInput1?.value && (
+                    <Approval
+                      tokenAddress={assetBond1?.tokenAddress}
+                      symbol={getToken(assetBond1.tokenAddress)?.symbol}
+                      walletAddress={wallet?.account}
+                      contractAddress={addr.dao}
+                      txnAmount={convertToWei(bondInput1?.value)}
+                      assetNumber="1"
+                    />
+                  )}
 
-            <Col xs="12" className="hide-if-siblings">
-              <Button
-                color="primary"
-                block
-                disabled={
-                  bondInput1?.value <= 0 ||
-                  BN(convertToWei(bondInput1?.value)).isGreaterThan(
-                    getToken(assetBond1.tokenAddress)?.balance,
-                  ) ||
-                  BN(calcSpartaMinted()).isGreaterThan(
-                    bond.global.spartaRemaining,
-                  )
-                }
-                onClick={() => handleBondDeposit()}
-              >
-                {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
-              </Button>
-            </Col>
-          </Row>
+                <Col xs="12" className="hide-if-siblings">
+                  <Button
+                    color="primary"
+                    block
+                    disabled={
+                      bondInput1?.value <= 0 ||
+                      BN(convertToWei(bondInput1?.value)).isGreaterThan(
+                        getToken(assetBond1.tokenAddress)?.balance,
+                      ) ||
+                      BN(calcSpartaMinted()).isGreaterThan(
+                        bond.global.spartaRemaining,
+                      )
+                    }
+                    onClick={() => handleBondDeposit()}
+                  >
+                    {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
+                  </Button>
+                </Col>
+              </Row>
+            </>
+          )}
         </Card>
       </Col>
       {pool.poolDetails && (

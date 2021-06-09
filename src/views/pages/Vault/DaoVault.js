@@ -18,11 +18,13 @@ import { calcFeeBurn, calcShare } from '../../../utils/web3Utils'
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
 import { useSparta } from '../../../store/sparta'
+import { bondMemberDetails, useBond } from '../../../store/bond'
 
 const DaoVault = () => {
   const reserve = useReserve()
   const wallet = useWallet()
   const dao = useDao()
+  const bond = useBond()
   const pool = usePool()
   const sparta = useSparta()
   const { t } = useTranslation()
@@ -43,6 +45,7 @@ const DaoVault = () => {
   const getData = () => {
     dispatch(daoGlobalDetails(wallet))
     dispatch(daoMemberDetails(wallet))
+    dispatch(bondMemberDetails(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -64,15 +67,15 @@ const DaoVault = () => {
   const getClaimable = () => {
     // get seconds passed since last harvest
     const timeStamp = BN(Date.now()).div(1000)
-    const lastHarvest = BN(dao.member.lastHarvest)
+    const lastHarvest = BN(dao.member?.lastHarvest)
     const secondsSince = timeStamp.minus(lastHarvest)
     // get the members share
-    const weight = BN(dao.member.weight)
+    const weight = BN(dao.member?.weight).plus(bond.member?.weight)
     const reserveShare = BN(reserve.globalDetails.spartaBalance).div(
       dao.global.erasToEarn,
     )
     const vaultShare = reserveShare.times(dao.global.daoClaim).div('10000')
-    const totalWeight = BN(dao.global.totalWeight)
+    const totalWeight = BN(dao.global?.totalWeight).plus(bond.global?.weight)
     const share = calcShare(weight, totalWeight, vaultShare)
     // get the members claimable amount
     const claimAmount = share.times(secondsSince).div(dao.global.secondsPerEra)
@@ -95,7 +98,11 @@ const DaoVault = () => {
                 {t('totalWeight')}
               </Col>
               <Col className="text-right output-card">
-                {formatFromWei(dao.global?.totalWeight, 0)} SPARTA
+                {formatFromWei(
+                  BN(dao.global?.totalWeight).plus(bond.global?.weight),
+                  0,
+                )}{' '}
+                SPARTA
               </Col>
             </Row>
             <Row className="my-1">
@@ -128,9 +135,12 @@ const DaoVault = () => {
                 {t('yourWeight')}
               </Col>
               <Col className="text-right output-card">
-                {dao.member?.weight > 0
+                {BN(dao.member?.weight).plus(bond.member?.weight) > 0
                   ? BN(dao.member?.weight)
-                      .div(dao.global?.totalWeight)
+                      .plus(bond.member?.weight)
+                      .div(
+                        BN(dao.global?.totalWeight).plus(bond.global?.weight),
+                      )
                       .times(100)
                       .toFixed(4)
                   : '0.00'}
@@ -142,7 +152,8 @@ const DaoVault = () => {
                 {t('harvestable')}
               </Col>
               <Col className="text-right output-card">
-                {dao.member?.weight > 0 && dao.member?.isMember
+                {BN(dao.member?.weight).plus(bond.member?.weight) > 0 &&
+                dao.member?.isMember
                   ? formatFromWei(getClaimable())
                   : '0.00'}{' '}
                 SPARTA
@@ -154,7 +165,9 @@ const DaoVault = () => {
                   className="btn btn-primary p-2"
                   block
                   onClick={() => dispatch(daoHarvest(wallet))}
-                  disabled={dao.member?.weight <= 0}
+                  disabled={
+                    BN(dao.member?.weight).plus(bond.member?.weight) <= 0
+                  }
                 >
                   {t('harvestAll')}
                 </Button>
