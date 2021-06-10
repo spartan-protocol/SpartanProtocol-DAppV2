@@ -192,6 +192,9 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
         bondMember: false,
         bondClaimRate: '0',
         bondLastClaim: '0',
+        hide:
+          tokenDetails[i].address !== addr.spartav2 &&
+          tempArray[i].baseAmount.toString() <= 0,
       })
     }
     dispatch(payloadToDispatch(Types.POOL_LISTED_POOLS, listedPools))

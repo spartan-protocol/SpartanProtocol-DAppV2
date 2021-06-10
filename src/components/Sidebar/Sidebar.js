@@ -49,7 +49,7 @@ const Sidebar = (props) => {
   const createLinks = (routes) => {
     const { rtlActive } = props
     return routes.map((prop) => {
-      if (prop.redirect) {
+      if (prop.redirect || prop.hide) {
         return null
       }
       if (prop.collapse) {

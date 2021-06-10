@@ -101,7 +101,8 @@ const Overview = () => {
                   .filter(
                     (asset) =>
                       asset.tokenAddress !== addr.spartav1 &&
-                      asset.tokenAddress !== addr.spartav2,
+                      asset.tokenAddress !== addr.spartav2 &&
+                      asset.baseAmount > 0,
                   )
                   .sort((a, b) => b.baseAmount - a.baseAmount)
                   .map((asset) => (

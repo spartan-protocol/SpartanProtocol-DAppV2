@@ -732,7 +732,8 @@ const LiqAdd = () => {
                   ) ||
                   BN(convertToWei(addInput2?.value)).isGreaterThan(
                     getBalance(2),
-                  )
+                  ) ||
+                  poolAdd1.baseAmount <= 0
                 }
                 onClick={() => handleAddLiquidity()}
               >

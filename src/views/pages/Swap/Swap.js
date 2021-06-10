@@ -688,7 +688,6 @@ const Swap = () => {
 
   const handleSwapAssets = () => {
     let gasSafety = '5000000000000000'
-    // UPDATE TO SPARTAv2 LATER
     if (
       assetSwap1?.tokenAddress !== addr.spartav2 &&
       assetSwap2?.tokenAddress !== addr.spartav2

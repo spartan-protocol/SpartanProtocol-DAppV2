@@ -7,6 +7,7 @@ import Bond from './views/pages/Bond/Bond'
 import Vault from './views/pages/Vault/Overview'
 import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
+import PU from './views/pages/PU/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
 // import Notifications from './views/pages/Samples/Notifications'
@@ -87,6 +88,15 @@ const routes = (t) => [
     icon: 'icon-small icon-upgrade icon-dark',
     component: Upgrade,
     layout: '',
+  },
+
+  {
+    path: '/PU',
+    name: 'PowerUser',
+    icon: '',
+    component: PU,
+    layout: '',
+    hide: true,
   },
 
   // {
