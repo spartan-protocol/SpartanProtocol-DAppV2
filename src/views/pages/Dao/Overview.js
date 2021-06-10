@@ -71,7 +71,7 @@ const Overview = () => {
                 <CustomInput
                   type="radio"
                   id="viewComplete"
-                  label="Complete Proposals"
+                  label="Completed Proposals"
                   checked={selectedView === 'complete'}
                   onClick={() => setSelectedView('complete')}
                   readOnly

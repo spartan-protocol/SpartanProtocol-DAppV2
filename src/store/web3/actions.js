@@ -11,6 +11,7 @@ import {
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
+import { convertToWei } from '../../utils/bigNumber'
 
 export const web3Loading = () => ({
   type: Types.WEB3_LOADING,
@@ -104,13 +105,14 @@ export const getApproval = (tokenAddress, contractAddress, wallet) => async (
   }
 
   try {
-    const supply = await contract.totalSupply()
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.approve(contractAddress, supply)
-    let approval = await contract.approve(contractAddress, supply, {
-      gasPrice: gPrice,
-      // gasLimit: gLimit,
-    })
+    let approval = await contract.approve(
+      contractAddress,
+      convertToWei(1000000000),
+      {
+        gasPrice: gPrice,
+      },
+    )
     approval = await provider.waitForTransaction(approval.hash, 1)
     dispatch(payloadToDispatch(Types.GET_APPROVAL, approval))
   } catch (error) {

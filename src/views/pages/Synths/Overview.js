@@ -642,7 +642,7 @@ const Swap = () => {
                                   <div className="text-sm-label">
                                     {activeTab === 'burn'
                                       ? t('receive')
-                                      : t('burn')}
+                                      : t('melt')}
                                   </div>
                                 </Col>
                                 <Col xs="8" className="text-right">
@@ -849,7 +849,7 @@ const Swap = () => {
                                     }
                                     block
                                   >
-                                    {t('burn')}{' '}
+                                    {t('melt')}{' '}
                                     {getToken(assetSwap1.tokenAddress)?.symbol}s
                                   </Button>
                                 </Col>
