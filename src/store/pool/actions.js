@@ -320,18 +320,26 @@ export const createPoolADD = (inputBase, inputToken, token, wallet) => async (
   dispatch,
 ) => {
   dispatch(poolLoading())
+  const addr = getAddresses()
   const contract = getPoolFactoryContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
-    const newPool = await contract.createPoolADD(inputBase, inputToken, token, {
+    const ORs = {
+      value: token === addr.bnb ? inputToken : null,
       gasPrice: gPrice,
-    })
+    }
+    const newPool = await contract.createPoolADD(
+      inputBase,
+      inputToken,
+      token,
+      ORs,
+    )
     console.log(newPool)
     dispatch(payloadToDispatch(Types.POOL_NEW_POOL, newPool))
   } catch (error) {
     dispatch(
-      errorToDispatch(Types.POOL_ERROR, `${error} - ${error.data.message}.`),
+      errorToDispatch(Types.POOL_ERROR, `${error} - ${error.data?.message}.`),
     )
   }
 }

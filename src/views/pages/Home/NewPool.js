@@ -244,7 +244,7 @@ const NewPool = () => {
   }
 
   const priceinUSD = () => {
-    let price = BN(tokenInput?.value).div(spartaInput?.value)
+    let price = BN(spartaInput?.value).div(tokenInput?.value)
     price = price.times(web3.spartaPrice)
     if (price > 10) {
       return formatFromUnits(price, 2)
@@ -410,7 +410,7 @@ const NewPool = () => {
               </Card>
               <div className="output-card text-center mb-2">
                 1 SPARTA = {priceInSparta()} {tokenSymbol}
-                <br />1 {tokenSymbol} = {priceInToken()} {tokenSymbol}
+                <br />1 {tokenSymbol} = {priceInToken()} SPARTA
                 <br />1 {tokenSymbol} = ~${priceinUSD()} USD
               </div>
               <FormGroup>
