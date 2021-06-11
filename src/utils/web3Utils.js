@@ -104,7 +104,7 @@ export const calcLiquidityUnits = (
   const t = BN(tokenInput) // t = _actualInputToken
   const T = BN(tokensInPool) // T = tokenAmount
   const P = BN(poolTotalSupply) // P = LP Token TotalSupply
-  if (P === 0) {
+  if (P <= 0) {
     return b
   }
   const slipAdjustment = calcSlipAdjustment(b, B, t, T)

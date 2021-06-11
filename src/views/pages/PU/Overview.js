@@ -114,7 +114,7 @@ const Overview = () => {
                 </Col>
               )}
               {activeTab === 'emptyPools' && (
-                <EmptyPools asset={selectedAsset} />
+                <EmptyPools selectedAsset={selectedAsset} />
               )}
             </Row>
           </>

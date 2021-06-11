@@ -22,19 +22,16 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import {
-  calcFeeBurn,
-  calcLiquidityUnits,
-  calcValueInBase,
-} from '../../../utils/web3Utils'
+import { calcFeeBurn, calcLiquidityUnits } from '../../../utils/web3Utils'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
+import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import { useSparta } from '../../../store/sparta'
 
-const EmptyPools = (selectedAsset) => {
+const EmptyPools = (props) => {
   const { t } = useTranslation()
   const wallet = useWallet()
   const dispatch = useDispatch()
@@ -58,9 +55,9 @@ const EmptyPools = (selectedAsset) => {
         window.localStorage.setItem('assetType2', 'token')
         window.localStorage.setItem('assetType3', 'pool')
 
-        const asset1 = getPool(selectedAsset)
+        const asset1 = getPool(props.selectedAsset)
         const asset2 = getPool(addr.spartav2)
-        const asset3 = getPool(selectedAsset)
+        const asset3 = getPool(props.selectedAsset)
 
         setAssetAdd1(asset1)
         setAssetAdd2(asset2)
@@ -132,26 +129,11 @@ const EmptyPools = (selectedAsset) => {
             getFeeBurn(convertToWei(addInput2?.value)),
           ),
           convertToWei(addInput1?.value),
-          0,
-          0,
-          0,
+          poolAdd1.baseAmount,
+          poolAdd1.tokenAmount,
+          poolAdd1.poolUnits,
         ),
       )
-    }
-    console.log('fail')
-    return '0.00'
-  }
-
-  const getInput1ValueUSD = () => {
-    if (assetAdd1?.tokenAddress !== addr.spartav2 && addInput1?.value) {
-      return calcValueInBase(
-        poolAdd1?.tokenAmount,
-        poolAdd1?.baseAmount,
-        convertToWei(addInput1.value),
-      ).times(web3.spartaPrice)
-    }
-    if (assetAdd1?.tokenAddress === addr.spartav2 && addInput1?.value) {
-      return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
     }
     return '0.00'
   }
@@ -194,7 +176,6 @@ const EmptyPools = (selectedAsset) => {
         addInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
       }
     }
-
     dispatch(
       addLiquidity(
         convertToWei(addInput2.value),
@@ -203,6 +184,49 @@ const EmptyPools = (selectedAsset) => {
         wallet,
       ),
     )
+  }
+
+  const priceInSparta = () => {
+    const price = BN(addInput1?.value).div(addInput2?.value)
+    if (price > 10) {
+      return formatFromUnits(price, 2)
+    }
+    if (price > 1) {
+      return formatFromUnits(price, 4)
+    }
+    if (price > 0) {
+      return formatFromUnits(price, 6)
+    }
+    return '0.00'
+  }
+
+  const priceInToken = () => {
+    const price = BN(addInput2?.value).div(addInput1?.value)
+    if (price > 10) {
+      return formatFromUnits(price, 2)
+    }
+    if (price > 1) {
+      return formatFromUnits(price, 4)
+    }
+    if (price > 0) {
+      return formatFromUnits(price, 6)
+    }
+    return '0.00'
+  }
+
+  const priceinUSD = () => {
+    let price = BN(addInput2?.value).div(addInput1?.value)
+    price = price.times(web3.spartaPrice)
+    if (price > 10) {
+      return formatFromUnits(price, 2)
+    }
+    if (price > 1) {
+      return formatFromUnits(price, 4)
+    }
+    if (price > 0) {
+      return formatFromUnits(price, 6)
+    }
+    return '0.00'
   }
 
   return (
@@ -269,12 +293,6 @@ const EmptyPools = (selectedAsset) => {
                         <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
                       </InputGroupAddon>
                     </InputGroup>
-                    <div className="text-right text-sm-label">
-                      ~$
-                      {addInput1?.value
-                        ? formatFromWei(getInput1ValueUSD(), 2)
-                        : '0.00'}
-                    </div>
                   </Col>
                 </Row>
               </Card>
@@ -426,13 +444,13 @@ const EmptyPools = (selectedAsset) => {
                 className="w-100 btn-primary"
                 disabled={
                   addInput1?.value <= 0 ||
+                  addInput2?.value <= 0 ||
                   BN(convertToWei(addInput1?.value)).isGreaterThan(
                     getBalance(1),
                   ) ||
                   BN(convertToWei(addInput2?.value)).isGreaterThan(
                     getBalance(2),
-                  ) ||
-                  poolAdd1?.baseAmount <= 0
+                  )
                 }
                 onClick={() => handleAddLiquidity()}
               >
@@ -452,6 +470,75 @@ const EmptyPools = (selectedAsset) => {
                   assetNumber="2"
                 />
               )}
+          </Row>
+        </Card>
+      </Col>
+      <Col xs="auto">
+        <Card className="card-body card-480 card-underlay">
+          <Row>
+            <Col xs="auto">
+              <div className="text-title-small">Proposed Ratios</div>
+              <div className="output-card text-light my-2">
+                Based on your inputs; the initial internal pricing as below.
+                Ensure you are 100% certain your proposed ratio of SPARTA:
+                {getToken(poolAdd1.tokenAddress)?.symbol} matches the other
+                available markets to avoid creating a large arbitrage
+                opportunity and getting rekt!
+              </div>
+            </Col>
+          </Row>
+          <Row className="mb-1 mt-3">
+            <Col xs="auto">
+              <div className="output-card">
+                <img
+                  className="mr-2"
+                  src={getToken(poolAdd1.tokenAddress)?.symbolUrl}
+                  alt="Logo"
+                  height="32"
+                />
+                {getToken(poolAdd1.tokenAddress)?.symbol}
+              </div>
+            </Col>
+            <Col className="output-card text-right">${priceinUSD()}</Col>
+          </Row>
+
+          <Row className="my-2">
+            <Col xs="auto">
+              <div className="output-card">
+                <img className="mr-2" src={coinSparta} alt="Logo" height="32" />
+                SPARTA
+              </div>
+            </Col>
+            <Col className="output-card text-right">${web3?.spartaPrice}</Col>
+          </Row>
+
+          <Row className="my-2">
+            <Col xs="auto" className="text-card">
+              {t('spotPrice')}
+            </Col>
+            <Col className="output-card text-right">
+              {priceInToken()} SPARTA
+            </Col>
+          </Row>
+
+          <Row className="my-2">
+            <Col xs="auto" className="text-card">
+              {t('spotPrice')}
+            </Col>
+            <Col className="output-card text-right">
+              {priceInSparta()} {getToken(poolAdd1.tokenAddress)?.symbol}
+            </Col>
+          </Row>
+
+          <Row className="my-2">
+            <Col xs="auto" className="text-card">
+              {t('depth')}
+            </Col>
+            <Col className="output-card text-right">
+              {formatFromUnits(addInput1?.value, 4)}{' '}
+              {getToken(poolAdd1?.tokenAddress)?.symbol} <br />
+              {formatFromUnits(addInput2?.value, 4)} SPARTA
+            </Col>
           </Row>
         </Card>
       </Col>
