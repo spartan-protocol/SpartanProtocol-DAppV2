@@ -49,6 +49,7 @@ import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import swapIcon from '../../../assets/icons/icon-swap-light.svg'
 import { useSparta } from '../../../store/sparta'
+import NewPool from '../Home/NewPool'
 
 const Swap = () => {
   const synth = useSynth()
@@ -745,6 +746,7 @@ const Swap = () => {
           <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('swap')}</h2>
+              <NewPool />
               {pool.poolDetails.length > 0 && <SharePool />}
             </div>
           </Col>

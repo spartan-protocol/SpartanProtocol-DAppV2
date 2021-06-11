@@ -70,15 +70,21 @@ const ProposalItem = ({ proposal }) => {
   }
 
   const status = () => {
-    if (proposal.finalising && getSecondsCooloff()[0] > 0) {
-      return `${
-        getSecondsCooloff()[0] + getSecondsCooloff()[1]
-      } cool-off remaining`
+    if (proposal.open) {
+      if (proposal.finalising && getSecondsCooloff()[0] > 0) {
+        return `${
+          getSecondsCooloff()[0] + getSecondsCooloff()[1]
+        } cool-off remaining`
+      }
+      if (proposal.finalising && getSecondsCooloff()[0] <= 0) {
+        return `Ready for final vote count!`
+      }
+      return 'Requires more support'
     }
-    if (proposal.finalising && getSecondsCooloff()[0] <= 0) {
-      return `Ready for final vote count!`
+    if (proposal.finalised) {
+      return 'Successful Proposal'
     }
-    return 'Requires more support'
+    return 'Failed Proposal'
   }
 
   const memberPercent = () => {

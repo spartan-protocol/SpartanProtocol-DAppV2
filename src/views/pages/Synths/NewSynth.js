@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import {
   Card,
@@ -30,12 +31,14 @@ import {
 import { BN, convertToWei, formatFromUnits } from '../../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
+import { useSparta } from '../../../store/sparta/selector'
 import { createPoolADD } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { getTokenContract } from '../../../utils/web3Contracts'
 
-const NewPool = () => {
+const NewSynth = () => {
   const dispatch = useDispatch()
+  const sparta = useSparta()
   const web3 = useWeb3()
   const wallet = useWallet()
   const addr = getAddresses()
@@ -262,7 +265,7 @@ const NewPool = () => {
         onClick={() => setShowModal(true)}
       >
         <PlusIcon fill="white" className="mr-2" />
-        {t('pool')}
+        {t('synth')}
       </Button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -464,4 +467,4 @@ const NewPool = () => {
   )
 }
 
-export default NewPool
+export default NewSynth
