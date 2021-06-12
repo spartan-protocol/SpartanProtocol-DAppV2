@@ -77,7 +77,7 @@ const routes = (t) => [
   {
     path: '/dao',
     name: t('dao'),
-    icon: 'icon-small icon-vault icon-dark',
+    icon: 'icon-small icon-colosseum icon-dark',
     component: Dao,
     layout: '',
   },

@@ -184,7 +184,9 @@ const DaoVault = () => {
                 {t('Locked for')}
               </Col>
               <Col className="text-right output-card">
-                {getLockedSecs()[0] + getLockedSecs()[1]}
+                {getLockedSecs()[0] > 0
+                  ? getLockedSecs()[0] + getLockedSecs()[1]
+                  : 'Unlocked'}
               </Col>
             </Row>
             <Row className="card-body text-center">
@@ -294,6 +296,12 @@ const DaoVault = () => {
                     >
                       {t('withdrawAll')}
                     </Button>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs="12" className="text-card">
+                    DAOVault will be redeployed soon; please avoid depositing LP
+                    tokens until this message is gone.
                   </Col>
                 </Row>
               </Card>
