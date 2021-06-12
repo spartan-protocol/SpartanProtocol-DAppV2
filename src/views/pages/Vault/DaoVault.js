@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import spartaIcon from '../../../assets/img/spartan_lp.svg'
 import { usePool } from '../../../store/pool'
-import { BN, formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { useDao } from '../../../store/dao/selector'
 import {
   daoHarvest,
@@ -64,6 +64,27 @@ const DaoVault = () => {
     return burnFee
   }
 
+  const getLockedSecs = () => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const depositTime = BN('1623465671') // Remove this line after next DaoVault deploy
+    // const depositTime = BN(dao.member?.depositTime) // Uncomment this line after next DaoVault deploy
+    const lockUpSecs = BN('86400')
+    const secondsLeft = depositTime.plus(lockUpSecs).minus(timeStamp)
+    if (secondsLeft > 86400) {
+      return [formatFromUnits(secondsLeft.div(60).div(60).div(24), 2), ' days']
+    }
+    if (secondsLeft > 3600) {
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ' hours']
+    }
+    if (secondsLeft > 60) {
+      return [formatFromUnits(secondsLeft.div(60), 2), ' minutes']
+    }
+    if (secondsLeft > 0) {
+      return [formatFromUnits(secondsLeft, 0), ' seconds']
+    }
+    return [0, ' secs (now)']
+  }
+
   const getClaimable = () => {
     // get seconds passed since last harvest
     const timeStamp = BN(Date.now()).div(1000)
@@ -93,7 +114,7 @@ const DaoVault = () => {
         <Card className="card-body card-320 pb-2 card-underlay">
           <Col>
             <h3>{t('daoVaultDetails')}</h3>
-            <Row className="my-2">
+            <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('totalWeight')}
               </Col>
@@ -113,6 +134,12 @@ const DaoVault = () => {
                 {dao.global?.memberCount} {t('members')}
               </Col>
             </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('lockupPeriod')}
+              </Col>
+              <Col className="text-right output-card">24 Hours</Col>
+            </Row>
             <Row className="card-body text-center">
               <Col xs="12" className="p-0">
                 <Link to="/pools/liquidity">
@@ -130,7 +157,7 @@ const DaoVault = () => {
         <Card className="card-body card-320 pb-2 card-underlay">
           <Col>
             <h3>{t('memberDetails')}</h3>
-            <Row className="my-2">
+            <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('yourWeight')}
               </Col>
@@ -157,6 +184,14 @@ const DaoVault = () => {
                   ? formatFromWei(getClaimable())
                   : '0.00'}{' '}
                 SPARTA
+              </Col>
+            </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('Locked for')}
+              </Col>
+              <Col className="text-right output-card">
+                {getLockedSecs()[0] + getLockedSecs()[1]}
               </Col>
             </Row>
             <Row className="card-body text-center">
@@ -267,7 +302,7 @@ const DaoVault = () => {
                       className="btn btn-primary p-2"
                       block
                       onClick={() => dispatch(daoWithdraw(i.address, wallet))}
-                      disabled={i.staked <= 0}
+                      disabled={i.staked <= 0 || getLockedSecs()[0] > 0}
                     >
                       {t('withdrawAll')}
                     </Button>

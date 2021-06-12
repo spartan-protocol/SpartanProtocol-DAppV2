@@ -69,6 +69,8 @@
   "lock": "Lock",
   "lockEarn": "Lock+Earn",
   "locked": "Locked",
+  "locked24": "Locked 24hrs",
+  "lockupPeriod": "Lockup Period",
   "lpShares": "LP Shares",
   "lpTokens": "LP Tokens",
   "marketcap": "Marketcap",

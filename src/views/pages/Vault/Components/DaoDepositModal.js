@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Col, Input, Modal, Row, FormGroup, Card } from 'reactstrap'
+import {
+  Button,
+  Col,
+  Input,
+  Modal,
+  Row,
+  FormGroup,
+  Card,
+  CustomInput,
+} from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
@@ -22,16 +31,20 @@ const DaoDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const addr = getAddresses()
   const [loading, setloading] = useState(false)
   const [stage, setstage] = useState(0)
+  const [lockConfirm, setlockConfirm] = useState(false)
   const pool1 = pool.poolDetails.filter(
     (i) => i.tokenAddress === tokenAddress,
   )[0]
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
+  const getToken = (_tokenAddr) =>
+    pool.tokenDetails.filter((i) => i.address === _tokenAddr)[0]
+
   const deposit = () => BN(percentage).div(100).times(pool1.balance).toFixed(0)
 
   return (
     <Modal className="card-320" isOpen={showModal} toggle={toggleModal}>
-      <Card className="card-body">
+      <Card className="card-body mb-0">
         <Row className="">
           <Col xs="10">
             <h4 className="modal-title">{t('deposit')}</h4>
@@ -92,7 +105,37 @@ const DaoDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                 </FormGroup>
               </Col>
             </Row>
-            <Row>
+            <Row xs="12" className="my-2">
+              <Col xs="12" className="output-card">
+                This deposit will disable withdraw on all staked LP tokens for
+                24 hours:
+              </Col>
+            </Row>
+            {pool.poolDetails
+              .filter((i) => i.staked > 0)
+              .map((i) => (
+                <Row xs="12" key={i.address} className="">
+                  <Col xs="auto" className="text-card">
+                    {t('locked24')}
+                  </Col>
+                  <Col className="text-right output-card">
+                    {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}
+                    p
+                  </Col>
+                </Row>
+              ))}
+            <FormGroup>
+              <div className="text-center mt-3">
+                <CustomInput
+                  type="switch"
+                  id="inputConfirmLocked"
+                  label="Confirm 24 hour withdraw lockout"
+                  checked={lockConfirm}
+                  onChange={() => setlockConfirm(!lockConfirm)}
+                />
+              </div>
+            </FormGroup>
+            <Row className="mt-2">
               {wallet?.account && (
                 <Approval
                   tokenAddress={pool1.address}
@@ -113,6 +156,7 @@ const DaoDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                     setstage(stage + 1)
                     setloading(false)
                   }}
+                  disabled={deposit() <= 0}
                 >
                   {t('confirm')}
                 </Button>

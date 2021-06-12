@@ -33,21 +33,18 @@ const ProposalItem = ({ proposal }) => {
       .plus(cancelPeriod)
       .minus(timeStamp)
     if (secondsLeft > 86400) {
-      return `in ${formatFromUnits(
-        secondsLeft.div(60).div(60).div(24),
-        2,
-      )} days`
+      return [formatFromUnits(secondsLeft.div(60).div(60).div(24), 2), ' days']
     }
     if (secondsLeft > 3600) {
-      return `${formatFromUnits(secondsLeft.div(60).div(60), 2)} hours`
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ' hours']
     }
     if (secondsLeft > 60) {
-      return `in ${formatFromUnits(secondsLeft.div(60), 2)} minutes`
+      return [formatFromUnits(secondsLeft.div(60), 2), ' minutes']
     }
     if (secondsLeft > 0) {
-      return `in ${formatFromUnits(secondsLeft, 0)} seconds`
+      return [formatFromUnits(secondsLeft, 0), ' seconds']
     }
-    return 'right now'
+    return [0, ' seconds (now)']
   }
 
   const getSecondsCooloff = () => {
@@ -66,7 +63,7 @@ const ProposalItem = ({ proposal }) => {
     if (secondsLeft > 0) {
       return [formatFromUnits(secondsLeft, 0), ' seconds']
     }
-    return [0, ' seconds']
+    return [0, ' seconds (now)']
   }
 
   const status = () => {
@@ -258,7 +255,9 @@ const ProposalItem = ({ proposal }) => {
                   Can cancel
                 </Col>
                 <Col className="text-right output-card">
-                  {getSecondsCancel()}
+                  {getSecondsCancel()[0] > 0
+                    ? getSecondsCancel()[0] + getSecondsCancel()[1]
+                    : 'right now'}
                 </Col>
               </Row>
 
@@ -327,7 +326,7 @@ const ProposalItem = ({ proposal }) => {
                     color="secondary"
                     className="btn-sm w-100"
                     onClick={() => dispatch(cancelProposal(wallet))}
-                    disabled={getSecondsCancel() !== 'right now'}
+                    disabled={getSecondsCancel()[0] > 0}
                   >
                     Cancel
                   </Button>

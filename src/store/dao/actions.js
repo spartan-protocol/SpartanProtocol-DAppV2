@@ -58,12 +58,14 @@ export const daoMemberDetails = (wallet) => async (dispatch) => {
       contract.callStatic.isMember(wallet.account),
       dvContract.callStatic.getMemberWeight(wallet.account),
       contract.callStatic.mapMember_lastTime(wallet.account),
+      // dvContract.callStatic.mapMember_depositTime(wallet.account), // Uncomment after next DaoVault Deploy
     ]
     awaitArray = await Promise.all(awaitArray)
     const member = {
       isMember: awaitArray[0],
       weight: awaitArray[1].toString(),
       lastHarvest: awaitArray[2].toString(),
+      // depositTime: awaitArray[3].toString(), // Uncomment after next DaoVault Deploy
     }
     dispatch(payloadToDispatch(Types.DAO_MEMBER_DETAILS, member))
   } catch (error) {
