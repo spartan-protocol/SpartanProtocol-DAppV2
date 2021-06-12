@@ -30,16 +30,9 @@ const DaoVault = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   // const [showDetails, setShowDetails] = useState(false)
-  const [tokenAddress, settokenAddress] = useState('')
-  const [showModal, setShowModal] = useState(false)
 
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddr)[0]
-
-  const toggleModal = (_tokenAddr) => {
-    settokenAddress(_tokenAddr)
-    setShowModal(!showModal)
-  }
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -66,7 +59,7 @@ const DaoVault = () => {
 
   const getLockedSecs = () => {
     const timeStamp = BN(Date.now()).div(1000)
-    const depositTime = BN('1623465671') // Remove this line after next DaoVault deploy
+    const depositTime = BN('1623400000') // Remove this line after next DaoVault deploy
     // const depositTime = BN(dao.member?.depositTime) // Uncomment this line after next DaoVault deploy
     const lockUpSecs = BN('86400')
     const secondsLeft = depositTime.plus(lockUpSecs).minus(timeStamp)
@@ -286,15 +279,10 @@ const DaoVault = () => {
 
                 <Row className="card-body text-center pt-3 pb-2">
                   <Col xs="6" className="p-0 pr-1">
-                    <Button
-                      color="primary"
-                      className="btn btn-primary p-2"
-                      block
-                      onClick={() => toggleModal(i.tokenAddress)}
+                    <DaoDepositModal
+                      tokenAddress={i.tokenAddress}
                       disabled={i.balance <= 0}
-                    >
-                      {t('deposit')}
-                    </Button>
+                    />
                   </Col>
                   <Col xs="6" className="p-0 pl-1">
                     <Button
@@ -308,13 +296,6 @@ const DaoVault = () => {
                     </Button>
                   </Col>
                 </Row>
-                {showModal && (
-                  <DaoDepositModal
-                    showModal={showModal}
-                    toggleModal={toggleModal}
-                    tokenAddress={tokenAddress}
-                  />
-                )}
               </Card>
             </Col>
           ))}
