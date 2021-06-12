@@ -629,7 +629,7 @@ const LiqAdd = () => {
                           : '0.00'}
                         {' ('}
                         {addInput1?.value
-                          ? formatFromUnits(getRateSlip())
+                          ? formatFromUnits(getRateSlip(), 2)
                           : '0.00'}
                         {'%)'}
                       </div>
@@ -732,7 +732,8 @@ const LiqAdd = () => {
                   ) ||
                   BN(convertToWei(addInput2?.value)).isGreaterThan(
                     getBalance(2),
-                  )
+                  ) ||
+                  poolAdd1.baseAmount <= 0
                 }
                 onClick={() => handleAddLiquidity()}
               >

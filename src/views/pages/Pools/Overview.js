@@ -10,6 +10,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import SharePool from '../../../components/Share/SharePool'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import NewPool from '../Home/NewPool'
 
 const Overview = () => {
   const { t } = useTranslation()
@@ -44,6 +45,7 @@ const Overview = () => {
           <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('liquidity')}</h2>
+              <NewPool />
               {pool.poolDetails.length > 0 && <SharePool />}
             </div>
           </Col>

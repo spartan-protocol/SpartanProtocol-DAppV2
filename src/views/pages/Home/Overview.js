@@ -11,6 +11,7 @@ import { getAddresses, getNetwork } from '../../../utils/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import NewPool from './NewPool'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -59,7 +60,8 @@ const Overview = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0">{t('home')}</h2>
+              <h2 className="text-title-small mb-0 mr-3">{t('home')}</h2>
+              <NewPool />
             </div>
           </Col>
         </Row>
@@ -99,7 +101,8 @@ const Overview = () => {
                   .filter(
                     (asset) =>
                       asset.tokenAddress !== addr.spartav1 &&
-                      asset.tokenAddress !== addr.spartav2,
+                      asset.tokenAddress !== addr.spartav2 &&
+                      asset.baseAmount > 0,
                   )
                   .sort((a, b) => b.baseAmount - a.baseAmount)
                   .map((asset) => (

@@ -39,6 +39,7 @@ const PoolItem = ({ asset }) => {
       genesis,
       baseAmount,
     ),
+    2,
   )
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
@@ -58,7 +59,7 @@ const PoolItem = ({ asset }) => {
             <Col>
               <h3 className="mb-0">{token.symbol}</h3>
               <p className="text-sm-label-alt">
-                ${formatFromUnits(tokenValueUSD)}
+                ${formatFromUnits(tokenValueUSD, 2)}
               </p>
             </Col>
             <Col className="mt-1 p-0">
@@ -74,36 +75,19 @@ const PoolItem = ({ asset }) => {
               <p className="output-card">{APY}%</p>
             </Col>
             <Col xs="auto" className="text-right my-auto">
-              {showDetails && (
-                <img
-                  onClick={() => toggleCollapse()}
-                  src={upIcon}
-                  alt="upIcon"
-                  className="swap-icon-color"
-                  aria-hidden="true"
-                  style={{
-                    cursor: 'pointer',
-                    height: '30px',
-                    width: '30px',
-                    top: '-15px',
-                  }}
-                />
-              )}
-              {!showDetails && (
-                <img
-                  onClick={() => toggleCollapse()}
-                  src={downIcon}
-                  alt="downIcon"
-                  aria-hidden="true"
-                  className="swap-icon-color"
-                  style={{
-                    cursor: 'pointer',
-                    height: '30px',
-                    width: '30px',
-                    top: '-15px',
-                  }}
-                />
-              )}
+              <img
+                onClick={() => toggleCollapse()}
+                src={showDetails ? upIcon : downIcon}
+                alt={showDetails ? 'upIcon' : 'downIcon'}
+                className="swap-icon-color"
+                aria-hidden="true"
+                style={{
+                  cursor: 'pointer',
+                  height: '30px',
+                  width: '30px',
+                  top: '-15px',
+                }}
+              />
             </Col>
           </Row>
           <Row className="my-1">
@@ -111,7 +95,7 @@ const PoolItem = ({ asset }) => {
               {t('spotPrice')}
             </Col>
             <Col className="text-right output-card">
-              {formatFromUnits(tokenValueBase)} SPARTA
+              {formatFromUnits(tokenValueBase, 2)} SPARTA
             </Col>
           </Row>
 

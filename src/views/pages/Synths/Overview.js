@@ -47,6 +47,7 @@ import SwapPair from '../Swap/SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
+import NewSynth from './NewSynth'
 
 const Swap = () => {
   const wallet = useWallet()
@@ -427,6 +428,7 @@ const Swap = () => {
           <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('synths')}</h2>
+              <NewSynth />
               {pool.poolDetails.length > 0 && <SharePool />}
             </div>
           </Col>
@@ -623,7 +625,7 @@ const Swap = () => {
                                       : '0.00'}
                                     {' ('}
                                     {swapInput2?.value
-                                      ? formatFromUnits(getRateSlip())
+                                      ? formatFromUnits(getRateSlip(), 2)
                                       : '0.00'}
                                     {'%)'}
                                   </div>
@@ -642,7 +644,7 @@ const Swap = () => {
                                   <div className="text-sm-label">
                                     {activeTab === 'burn'
                                       ? t('receive')
-                                      : t('burn')}
+                                      : t('melt')}
                                   </div>
                                 </Col>
                                 <Col xs="8" className="text-right">
@@ -849,7 +851,7 @@ const Swap = () => {
                                     }
                                     block
                                   >
-                                    {t('burn')}{' '}
+                                    {t('melt')}{' '}
                                     {getToken(assetSwap1.tokenAddress)?.symbol}s
                                   </Button>
                                 </Col>

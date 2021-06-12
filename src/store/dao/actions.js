@@ -13,7 +13,7 @@ export const daoLoading = () => ({
  * Get the global daoVault details
  * @returns {object} globalDetails
  */
-export const getDaoVaultGlobalDetails = (wallet) => async (dispatch) => {
+export const daoGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoVaultContract(wallet)
   const daoContract = getDaoContract(wallet)
@@ -25,16 +25,20 @@ export const getDaoVaultGlobalDetails = (wallet) => async (dispatch) => {
       daoContract.callStatic.erasToEarn(),
       daoContract.callStatic.daoClaim(),
       daoContract.callStatic.secondsPerEra(),
+      daoContract.callStatic.proposalCount(),
+      daoContract.callStatic.coolOffPeriod(),
     ]
     awaitArray = await Promise.all(awaitArray)
-    const globalDetails = {
+    const global = {
       totalWeight: awaitArray[0].toString(), // Dao totalWeight
       memberCount: awaitArray[1].toString(), // Dao memberCount
       erasToEarn: awaitArray[2].toString(), // Dao erasToEarn
       daoClaim: awaitArray[3].toString(), // Dao daoClaim
       secondsPerEra: awaitArray[4].toString(), // Dao secondsPerEra
+      proposalCount: awaitArray[5].toString(), // Dao proposalCount
+      coolOffPeriod: awaitArray[6].toString(), // Dao coolOffPeriod
     }
-    dispatch(payloadToDispatch(Types.DAO_GLOBAL_DETAILS, globalDetails))
+    dispatch(payloadToDispatch(Types.DAO_GLOBAL_DETAILS, global))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -44,118 +48,82 @@ export const getDaoVaultGlobalDetails = (wallet) => async (dispatch) => {
  * Get the daoVault member details
  * @returns {object} weight
  */
-export const getDaoVaultMemberDetails = (wallet) => async (dispatch) => {
+export const daoMemberDetails = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
-  const contract = getDaoVaultContract(wallet)
+  const contract = getDaoContract(wallet)
+  const dvContract = getDaoVaultContract(wallet)
 
   try {
-    let awaitArray = [contract.callStatic.getMemberWeight(wallet.account)]
+    let awaitArray = [
+      contract.callStatic.isMember(wallet.account),
+      dvContract.callStatic.getMemberWeight(wallet.account),
+      contract.callStatic.mapMember_lastTime(wallet.account),
+      // dvContract.callStatic.mapMember_depositTime(wallet.account), // Uncomment after next DaoVault Deploy
+    ]
     awaitArray = await Promise.all(awaitArray)
-    const memberDetails = {
-      weight: awaitArray[0].toString(),
+    const member = {
+      isMember: awaitArray[0],
+      weight: awaitArray[1].toString(),
+      lastHarvest: awaitArray[2].toString(),
+      // depositTime: awaitArray[3].toString(), // Uncomment after next DaoVault Deploy
     }
-    dispatch(payloadToDispatch(Types.DAO_MEMBER_DETAILS, memberDetails))
+    dispatch(payloadToDispatch(Types.DAO_MEMBER_DETAILS, member))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
 
-// --------------------------------------- FINAL DAO ACTIONS ABOVE ---------------------------------------
-
-// --------------------------------------- GENERAL DAO HELPERS ---------------------------------------
-
 /**
- * Get the member's last harvest time
+ * Get all the dao proposal details
+ * @param {uint} count
  * @param {object} wallet
- * @returns {uint} lastHarvest
+ * @returns {object}
  */
-export const getDaoMemberLastHarvest = (wallet) => async (dispatch) => {
+export const daoProposalDetails = (proposalCount, wallet) => async (
+  dispatch,
+) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
-    const lastHarvest = await contract.callStatic.mapMember_lastTime(
-      wallet.account,
-    )
-    dispatch(payloadToDispatch(Types.DAO_LAST_HARVEST, lastHarvest.toString()))
+    if (proposalCount > 0) {
+      const awaitArray = []
+      for (let i = 1; i <= proposalCount; i++) {
+        awaitArray.push(contract.callStatic.getProposalDetails(i))
+        awaitArray.push(
+          wallet.account
+            ? contract.callStatic.mapPIDMember_votes(i, wallet.account)
+            : '0',
+        )
+      }
+      const proposalArray = await Promise.all(awaitArray)
+      const proposal = []
+      const varCount = 2
+      for (
+        let i = 0;
+        i < proposalArray.length - (varCount - 1);
+        i += varCount
+      ) {
+        proposal.push({
+          id: proposalArray[i].id.toString(),
+          proposalType: proposalArray[i].proposalType,
+          votes: proposalArray[i].votes.toString(),
+          startTime: proposalArray[i].startTime.toString(), // timestamp of proposal genesis
+          coolOffTime: proposalArray[i].coolOffTime.toString(), // timestamp of coolOff
+          finalising: proposalArray[i].finalising,
+          finalised: proposalArray[i].finalised,
+          param: proposalArray[i].param.toString(),
+          proposedAddress: proposalArray[i].proposedAddress.toString(),
+          open: proposalArray[i].open,
+          memberVotes: proposalArray[i + 1].toString(),
+        })
+      }
+      dispatch(payloadToDispatch(Types.DAO_PROPOSAL_DETAILS, proposal))
+    }
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
 }
-
-/**
- * Check if the wallet is a member of the DAO
- * @param {object} wallet
- * @returns {boolean} isMember
- */
-export const getDaoIsMember = (wallet) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const isMember = await contract.callStatic.isMember(wallet.account)
-    dispatch(payloadToDispatch(Types.DAO_IS_MEMBER, isMember))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Get the count of DAO members
- * @returns {unit} memberCount
- */
-export const getDaoMemberCount = (wallet) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const memberCount = await contract.callStatic.memberCount()
-    dispatch(payloadToDispatch(Types.DAO_MEMBER_COUNT, memberCount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * DAO HELPER -
- * Get the current harvestable amount of SPARTA from DaoVault staking
- * Uses getDaoHarvestEraAmount() but works out what portion of an era/s the member can claim
- * @returns unit
- */
-export const getDaoHarvestAmount = (wallet) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const harvestAmount = await contract.callStatic.calcCurrentReward(
-      wallet.account,
-    )
-    dispatch(payloadToDispatch(Types.DAO_HARVEST_AMOUNT, harvestAmount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * DAO HELPER -
- * Get the member's current harvest share of the DAO (per era)
- * @returns unit
- */
-export const getDaoHarvestEraAmount = (wallet) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const harvestEraAmount = await contract.callStatic.calcReward(
-      wallet.account,
-    )
-    dispatch(payloadToDispatch(Types.DAO_HARVEST_ERA_AMOUNT, harvestEraAmount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-// --------------------------------------- GENERAL DAO FUNCTIONS ---------------------------------------
 
 /**
  * Deposit / Stake LP Tokens (Lock them in the DAO)
@@ -189,22 +157,16 @@ export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
  * @param {address} pool
  * @param {object} wallet
  */
-export const daoWithdraw = (pool, wallet, justCheck) => async (dispatch) => {
+export const daoWithdraw = (pool, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
     let withdraw = {}
-    if (justCheck) {
-      withdraw = await contract.callStatic.withdraw(pool)
-    } else {
-      const gPrice = await getProviderGasPrice()
-      // const gLimit = await contract.estimateGas.withdraw(pool, amount)
-      withdraw = await contract.withdraw(pool, {
-        gasPrice: gPrice,
-        // gasLimit: gLimit,
-      })
-    }
+    const gPrice = await getProviderGasPrice()
+    withdraw = await contract.withdraw(pool, {
+      gasPrice: gPrice,
+    })
     dispatch(payloadToDispatch(Types.DAO_WITHDRAW, withdraw))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
@@ -212,125 +174,19 @@ export const daoWithdraw = (pool, wallet, justCheck) => async (dispatch) => {
 }
 
 /**
- * Harvest SPARTA 'staking' rewards
+ * Harvest SPARTA DAOVault rewards
  */
-export const daoHarvest = (wallet, justCheck) => async (dispatch) => {
+export const daoHarvest = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
     let harvest = {}
-    if (justCheck) {
-      harvest = await contract.callStatic.harvest()
-    } else {
-      const gPrice = await getProviderGasPrice()
-      // const gLimit = await contract.estimateGas.harvest()
-      harvest = await contract.harvest({
-        gasPrice: gPrice,
-        // gasLimit: gLimit,
-      })
-    }
+    const gPrice = await getProviderGasPrice()
+    harvest = await contract.harvest({
+      gasPrice: gPrice,
+    })
     dispatch(payloadToDispatch(Types.DAO_HARVEST, harvest))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Check if proposal has at least the majority of dao weight
- * @param {uint} proposalID
- * @param {object} wallet
- * @returns {boolean}
- */
-export const getDaoProposalMajority = (proposalID, wallet) => async (
-  dispatch,
-) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const majority = await contract.callStatic.hasMajority(proposalID)
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_MAJORITY, majority))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Check if proposal has at least the quorum of dao weight
- * @param {uint} proposalID
- * @param {object} wallet
- * @returns {boolean}
- */
-export const getDaoProposalQuorum = (proposalID, wallet) => async (
-  dispatch,
-) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const quorum = await contract.callStatic.hasQuorum(proposalID)
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_QUORUM, quorum))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Check if proposal has at least the minorty of dao weight
- * @param {uint} proposalID
- * @param {object} wallet
- * @returns {boolean}
- */
-export const getDaoProposalMinority = (proposalID, wallet) => async (
-  dispatch,
-) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const minorty = await contract.callStatic.hasMinority(proposalID)
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_MINORITY, minorty))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Get the dao proposal details
- * @param {uint} proposalID
- * @param {object} wallet
- * @returns {object} id, proposalType, votes, timeStart, finalising, finalised, param, proposedAddress
- */
-export const getDaoProposalDetails = (proposalID, wallet) => async (
-  dispatch,
-) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const proposalDetails = await contract.callStatic.getProposalDetails(
-      proposalID,
-    )
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_DETAILS, proposalDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Get the dao grant proposal details
- * @param {uint} proposalID
- * @param {object} wallet
- * @returns {object} id, proposalType, votes, timeStart, finalising, finalised, param, proposedAddress
- */
-export const getDaoGrantDetails = (proposalID, wallet) => async (dispatch) => {
-  dispatch(daoLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const grantDetails = await contract.callStatic.getGrantDetails(proposalID)
-    dispatch(payloadToDispatch(Types.DAO_GRANT_DETAILS, grantDetails))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -342,18 +198,15 @@ export const getDaoGrantDetails = (proposalID, wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {unit} proposalID
  */
-export const daoProposalNewAction = (typeStr, wallet) => async (dispatch) => {
+export const newActionProposal = (typeStr, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.newActionProposal(typeStr)
-    const proposalID = await contract.newActionProposal(typeStr, {
+    const newProp = await contract.newActionProposal(typeStr, {
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_ACTION, proposalID))
+    dispatch(payloadToDispatch(Types.DAO_NEW_ACTION, newProp))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -366,7 +219,7 @@ export const daoProposalNewAction = (typeStr, wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {unit} proposalID
  */
-export const daoProposalNewParam = (param, typeStr, wallet) => async (
+export const newParamProposal = (param, typeStr, wallet) => async (
   dispatch,
 ) => {
   dispatch(daoLoading())
@@ -374,12 +227,10 @@ export const daoProposalNewParam = (param, typeStr, wallet) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.newParamProposal(param, typeStr)
-    const proposalID = await contract.newParamProposal(param, typeStr, {
+    const newProp = await contract.newParamProposal(param, typeStr, {
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_PARAM, proposalID))
+    dispatch(payloadToDispatch(Types.DAO_NEW_PARAM, newProp))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -392,29 +243,22 @@ export const daoProposalNewParam = (param, typeStr, wallet) => async (
  * @param {object} wallet
  * @returns {unit} proposalID
  */
-export const daoProposalNewAddress = (
-  proposedAddress,
-  typeStr,
-  wallet,
-) => async (dispatch) => {
+export const newAddressProposal = (proposedAddress, typeStr, wallet) => async (
+  dispatch,
+) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.newAddressProposal(
-    //   proposedAddress,
-    //   typeStr,
-    // )
-    const proposalID = await contract.newAddressProposal(
+    const newProp = await contract.newAddressProposal(
       proposedAddress,
       typeStr,
       {
         gasPrice: gPrice,
-        // gasLimit: gLimit,
       },
     )
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_ADDRESS, proposalID))
+    dispatch(payloadToDispatch(Types.DAO_NEW_ADDRESS, newProp))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -427,7 +271,7 @@ export const daoProposalNewAddress = (
  * @param {object} wallet
  * @returns {unit} proposalID
  */
-export const daoProposalNewGrant = (recipient, amount, wallet) => async (
+export const newGrantProposal = (recipient, amount, wallet) => async (
   dispatch,
 ) => {
   dispatch(daoLoading())
@@ -435,15 +279,10 @@ export const daoProposalNewGrant = (recipient, amount, wallet) => async (
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.newGrantProposal(
-    //   recipient,
-    //   amount,
-    // )
-    const proposalID = await contract.newGrantProposal(recipient, amount, {
+    const newProp = await contract.newGrantProposal(recipient, amount, {
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_NEW_GRANT, proposalID))
+    dispatch(payloadToDispatch(Types.DAO_NEW_GRANT, newProp))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -455,18 +294,16 @@ export const daoProposalNewGrant = (recipient, amount, wallet) => async (
  * @param {object} wallet
  * @returns {unit} voteWeight
  */
-export const daoProposalVote = (proposalID, wallet) => async (dispatch) => {
+export const voteProposal = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.voteProposal(proposalID)
-    const voteWeight = await contract.voteProposal(proposalID, {
+    const propVote = await contract.voteProposal({
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_VOTE, voteWeight))
+    dispatch(payloadToDispatch(Types.DAO_VOTE, propVote))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -478,22 +315,16 @@ export const daoProposalVote = (proposalID, wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {unit} voteWeightRemoved
  */
-export const daoProposalRemoveVote = (proposalID, wallet) => async (
-  dispatch,
-) => {
+export const removeVote = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.removeVote(proposalID)
-    const voteWeightRemoved = await contract.removeVote(proposalID, {
+    const propRemoveVote = await contract.removeVote({
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
-    dispatch(
-      payloadToDispatch(Types.DAO_PROPOSAL_REMOTE_VOTE, voteWeightRemoved),
-    )
+    dispatch(payloadToDispatch(Types.DAO_REMOTE_VOTE, propRemoveVote))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -508,29 +339,16 @@ export const daoProposalRemoveVote = (proposalID, wallet) => async (
  * @param {uint} newProposalID
  * @param {object} wallet
  */
-export const daoProposalCancel = (
-  oldProposalID,
-  newProposalID,
-  wallet,
-) => async (dispatch) => {
+export const cancelProposal = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
 
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.cancelProposal(
-    //   oldProposalID,
-    //   newProposalID,
-    // )
-    const proposal = await contract.cancelProposal(
-      oldProposalID,
-      newProposalID,
-      {
-        gasPrice: gPrice,
-        // gasLimit: gLimit,
-      },
-    )
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_CANCEL, proposal))
+    const propCancel = await contract.cancelProposal({
+      gasPrice: gPrice,
+    })
+    dispatch(payloadToDispatch(Types.DAO_CANCEL, propCancel))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }
@@ -539,22 +357,19 @@ export const daoProposalCancel = (
 /**
  * Finalise a proposal
  * Must be past cool-off & in finalising stage
- * @param {uint} oldProposalID
+ * @param {uint} proposalID
  * @param {object} wallet
  */
-export const daoProposalFinalise = (proposalID, wallet) => async (dispatch) => {
+export const finaliseProposal = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    // const gLimit = await contract.estimateGas.finaliseProposal(proposalID)
-    const proposal = await contract.finaliseProposal(proposalID, {
+    const propFinalise = await contract.finaliseProposal({
       gasPrice: gPrice,
-      // gasLimit: gLimit,
     })
 
-    dispatch(payloadToDispatch(Types.DAO_PROPOSAL_FINALISE, proposal))
+    dispatch(payloadToDispatch(Types.DAO_FINALISE, propFinalise))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }

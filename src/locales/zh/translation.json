@@ -14,7 +14,7 @@
   "balance": "余额",
   "balanceSubtitle": "概述V1 V2和结余",
   "bond": "键",
-  "bondInfo": "SPARTA中剩余的债券+薄荷程序的量。这可以通过2.5M斯巴达由DAO提案时用完加满。",
+  "bondInfo": "斯巴达分配剩余债券计划。如果用完了，它可以通过一个DAO提案补充。",
   "bondPositions": "债券头寸",
   "bondVault": "债券库",
   "burn": "烧伤",

@@ -213,6 +213,7 @@ const Supply = () => {
                     network.chainId === 56
                       ? formatFromUnits(
                           BN(distroMnBurnV1).div(300000000).times(100),
+                          2,
                         )
                       : '1'
                   }
@@ -228,6 +229,7 @@ const Supply = () => {
                             .plus(distroMnBondV2)
                             .div(300000000)
                             .times(100),
+                          2,
                         )
                       : '1'
                   }
@@ -245,11 +247,13 @@ const Supply = () => {
                             .minus(distroMnBondV2)
                             .div(300000000)
                             .times(100),
+                          2,
                         )
                       : formatFromUnits(
                           BN(convertFromWei(getTotalSupply()))
                             .div(300000000)
                             .times(100),
+                          2,
                         )
                   }
                 />

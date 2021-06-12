@@ -1,3 +1,7 @@
+.custom-control {
+    z-index: auto;
+}
+
 .custom-control-label {
     // Background-color and (when enabled) gradient
     &::before {
@@ -15,6 +19,10 @@
 
 .custom-control-label {
     margin-bottom: 0;
+}
+
+.custom-control-label::before {
+    background-color: #403a4b;
 }
 
 .custom-control-input {

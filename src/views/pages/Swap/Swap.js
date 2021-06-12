@@ -49,6 +49,7 @@ import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import swapIcon from '../../../assets/icons/icon-swap-light.svg'
 import { useSparta } from '../../../store/sparta'
+import NewPool from '../Home/NewPool'
 
 const Swap = () => {
   const synth = useSynth()
@@ -688,7 +689,6 @@ const Swap = () => {
 
   const handleSwapAssets = () => {
     let gasSafety = '5000000000000000'
-    // UPDATE TO SPARTAv2 LATER
     if (
       assetSwap1?.tokenAddress !== addr.spartav2 &&
       assetSwap2?.tokenAddress !== addr.spartav2
@@ -746,6 +746,7 @@ const Swap = () => {
           <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('swap')}</h2>
+              <NewPool />
               {pool.poolDetails.length > 0 && <SharePool />}
             </div>
           </Col>
@@ -910,7 +911,7 @@ const Swap = () => {
                                     : '0.00'}
                                   {' ('}
                                   {swapInput1?.value
-                                    ? formatFromUnits(getRateSlip())
+                                    ? formatFromUnits(getRateSlip(), 2)
                                     : '0.00'}
                                   {'%)'}
                                 </div>

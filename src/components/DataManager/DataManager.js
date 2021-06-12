@@ -64,15 +64,17 @@ const DataManager = () => {
    */
   const [addFeeBurn, setaddFeeBurn] = useState('0')
   useEffect(() => {
+    dispatch(spartaFeeBurnTally())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  useEffect(() => {
     const contract = getSpartaV2Contract()
     const filter = contract.filters.Transfer(null, addr.bnb)
     const listen = async () => {
       await contract.on(filter, (from, to, amount) => {
-        console.log(amount.toString())
         setaddFeeBurn(BN(addFeeBurn).plus(amount.toString()))
       })
     }
-    dispatch(spartaFeeBurnTally())
     listen()
     return () => {
       try {
@@ -83,7 +85,6 @@ const DataManager = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addFeeBurn])
-
   useEffect(() => {
     dispatch(spartaFeeBurnRecent(addFeeBurn))
     // eslint-disable-next-line react-hooks/exhaustive-deps

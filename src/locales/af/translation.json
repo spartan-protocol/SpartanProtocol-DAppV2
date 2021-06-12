@@ -14,7 +14,7 @@
   "balance": "balans",
   "balanceSubtitle": "Oorsig v1 & v2's",
   "bond": "Bond",
-  "bondInfo": "Die bedrag van SPARTA oorblywende in die Bond + Munt program. Dit kan deur 5m SPARTA word aangevul deur voorstelle in die DAO wanneer dit loop uit.",
+  "bondInfo": "SPARTA toekenning oorblywende vir die Bond program. As dit loop uit, kan dit hervul via 'n DAO voorstel.",
   "bondPositions": "Bond posisies",
   "bondVault": "Bond Vault",
   "burn": "brand",

@@ -10,4 +10,5 @@ export {
   synthHarvest,
   synthHarvestSingle,
   synthWithdraw,
+  createSynth,
 } from './actions'

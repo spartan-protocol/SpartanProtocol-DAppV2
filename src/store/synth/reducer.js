@@ -9,6 +9,7 @@ const initialState = {
   harvest: '0',
   harvestSingle: '0',
   withdrawAmount: '0',
+  newSynth: {},
 }
 
 export const synthReducer = (state = initialState, action) => {
@@ -80,6 +81,15 @@ export const synthReducer = (state = initialState, action) => {
       return {
         ...state,
         withdrawAmount: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SYNTH_CREATE: {
+      return {
+        ...state,
+        newSynth: action.payload,
         error: null,
         loading: false,
       }

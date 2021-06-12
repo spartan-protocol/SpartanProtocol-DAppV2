@@ -6,6 +6,7 @@ const initialState = {
   tokenDetails: [],
   listedPools: [],
   poolDetails: [],
+  newPool: {},
   loading: false,
   error: null,
   loadingFinal: false,
@@ -53,6 +54,15 @@ export const poolReducer = (state = initialState, action) => {
       return {
         ...state,
         poolDetails: action.payload,
+        error: null,
+        loadingFinal: false,
+      }
+    }
+
+    case Types.POOL_NEW_POOL: {
+      return {
+        ...state,
+        newPool: action.payload,
         error: null,
         loadingFinal: false,
       }
