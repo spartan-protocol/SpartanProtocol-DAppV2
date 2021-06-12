@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Row, Col, Card } from 'reactstrap'
 import { useBond } from '../../../../store/bond'

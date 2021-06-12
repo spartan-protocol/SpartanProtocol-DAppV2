@@ -280,3 +280,23 @@ export const synthWithdraw = (synth, basisPoints, wallet) => async (
     dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
 }
+
+/**
+ * Deploy synthetic BEP20 asset
+ * @param {address} token
+ * @returns {address} synth
+ */
+export const createSynth = (token, wallet) => async (dispatch) => {
+  dispatch(synthLoading())
+  const contract = getSynthFactoryContract(wallet)
+
+  try {
+    const gPrice = await getProviderGasPrice()
+    const newSynth = await contract.createSynth(token, {
+      gasPrice: gPrice,
+    })
+    dispatch(payloadToDispatch(Types.SYNTH_CREATE, newSynth))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+  }
+}
