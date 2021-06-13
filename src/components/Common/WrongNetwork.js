@@ -20,7 +20,15 @@ const WrongNetwork = () => (
       </h4>
       <h5>
         You are also welcome to switch the network to testnet and play around
-        with the testnet deployed V2
+        with the testnet deployed V2. Get some testnet assets from the{' '}
+        <a
+          href="https://testnet.binance.org/faucet-smart"
+          target="_blank"
+          rel="noreferrer"
+        >
+          BSC testnet faucet here
+        </a>
+        . Claim BNB first (for gas)
       </h5>
     </Col>
   </Row>

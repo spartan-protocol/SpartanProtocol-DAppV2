@@ -12,6 +12,8 @@ import {
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
 import { bondMemberDetails } from '../../../store/bond'
+import { getNetwork } from '../../../utils/web3'
+import WrongNetwork from '../../../components/Common/WrongNetwork'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -21,9 +23,28 @@ const Overview = () => {
 
   const [selectedView, setSelectedView] = useState('current')
 
+  const [network, setnetwork] = useState(getNetwork())
+  const [trigger1, settrigger1] = useState(0)
+  const getData1 = () => {
+    setnetwork(getNetwork())
+  }
+  useEffect(() => {
+    if (trigger1 === 0) {
+      getData1()
+    }
+    const timer = setTimeout(() => {
+      getData1()
+      settrigger1(trigger1 + 1)
+    }, 2000)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger1])
+
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    dispatch(daoGlobalDetails(wallet))
+    if (network.chainId === 97) {
+      dispatch(daoGlobalDetails(wallet))
+    }
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -38,9 +59,11 @@ const Overview = () => {
   }, [trigger0])
 
   useEffect(() => {
-    dispatch(daoMemberDetails(wallet))
-    dispatch(bondMemberDetails(wallet))
-    dispatch(daoProposalDetails(dao.global?.proposalCount, wallet))
+    if (network.chainId === 97) {
+      dispatch(daoMemberDetails(wallet))
+      dispatch(bondMemberDetails(wallet))
+      dispatch(daoProposalDetails(dao.global?.proposalCount, wallet))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
 
@@ -55,73 +78,84 @@ const Overview = () => {
             </div>
           </Col>
         </Row>
-        <Row className="row-480">
-          <Col xs="12">
-            <FormGroup>
-              <div className="mb-3">
-                <CustomInput
-                  type="radio"
-                  id="viewCurrent"
-                  label="Current Proposal"
-                  checked={selectedView === 'current'}
-                  onClick={() => setSelectedView('current')}
-                  readOnly
-                  inline
-                />
-                <CustomInput
-                  type="radio"
-                  id="viewComplete"
-                  label="Completed Proposals"
-                  checked={selectedView === 'complete'}
-                  onClick={() => setSelectedView('complete')}
-                  readOnly
-                  inline
-                />
-                <CustomInput
-                  type="radio"
-                  id="viewFailed"
-                  label="Failed Proposals"
-                  checked={selectedView === 'failed'}
-                  onClick={() => setSelectedView('failed')}
-                  readOnly
-                  inline
-                />
-              </div>
-            </FormGroup>
-          </Col>
-        </Row>
-        <Row className="row-480">
-          {dao?.proposal.length > 0 && (
-            <>
-              {selectedView === 'current' &&
-                dao?.proposal
-                  .filter((pid) => pid.open)
-                  .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
-              {selectedView === 'complete' &&
-                dao?.proposal
-                  .filter((pid) => pid.finalised)
-                  .sort((a, b) => b.id - a.id)
-                  .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
-              {selectedView === 'failed' &&
-                dao?.proposal
-                  .filter((pid) => !pid.open && !pid.finalised)
-                  .sort((a, b) => b.id - a.id)
-                  .map((pid) => <ProposalItem key={pid.id} proposal={pid} />)}
-            </>
-          )}
+        {network.chainId === 97 && (
+          <>
+            <Row className="row-480">
+              <Col xs="12">
+                <FormGroup>
+                  <div className="mb-3">
+                    <CustomInput
+                      type="radio"
+                      id="viewCurrent"
+                      label="Current Proposal"
+                      checked={selectedView === 'current'}
+                      onClick={() => setSelectedView('current')}
+                      readOnly
+                      inline
+                    />
+                    <CustomInput
+                      type="radio"
+                      id="viewComplete"
+                      label="Completed Proposals"
+                      checked={selectedView === 'complete'}
+                      onClick={() => setSelectedView('complete')}
+                      readOnly
+                      inline
+                    />
+                    <CustomInput
+                      type="radio"
+                      id="viewFailed"
+                      label="Failed Proposals"
+                      checked={selectedView === 'failed'}
+                      onClick={() => setSelectedView('failed')}
+                      readOnly
+                      inline
+                    />
+                  </div>
+                </FormGroup>
+              </Col>
+            </Row>
+            <Row className="row-480">
+              {dao?.proposal.length > 0 && (
+                <>
+                  {selectedView === 'current' &&
+                    dao?.proposal
+                      .filter((pid) => pid.open)
+                      .map((pid) => (
+                        <ProposalItem key={pid.id} proposal={pid} />
+                      ))}
+                  {selectedView === 'complete' &&
+                    dao?.proposal
+                      .filter((pid) => pid.finalised)
+                      .sort((a, b) => b.id - a.id)
+                      .map((pid) => (
+                        <ProposalItem key={pid.id} proposal={pid} />
+                      ))}
+                  {selectedView === 'failed' &&
+                    dao?.proposal
+                      .filter((pid) => !pid.open && !pid.finalised)
+                      .sort((a, b) => b.id - a.id)
+                      .map((pid) => (
+                        <ProposalItem key={pid.id} proposal={pid} />
+                      ))}
+                </>
+              )}
 
-          {dao?.proposal.length <= 0 && (
-            <Col xs="auto">
-              <Card className="card-body card-320 pt-3 pb-2 card-underlay">
-                <Row className="mb-2">
-                  <Col xs="auto" className="pr-0 my-auto">
-                    <h4 className="my-auto">No valid proposals found</h4>
-                  </Col>
-                </Row>
-              </Card>
-            </Col>
-          )}
-        </Row>
+              {dao?.proposal.length <= 0 && (
+                <Col xs="auto">
+                  <Card className="card-body card-320 pt-3 pb-2 card-underlay">
+                    <Row className="mb-2">
+                      <Col xs="auto" className="pr-0 my-auto">
+                        <h4 className="my-auto">No valid proposals found</h4>
+                      </Col>
+                    </Row>
+                  </Card>
+                </Col>
+              )}
+            </Row>
+          </>
+        )}
+        {network.chainId !== 97 && <WrongNetwork />}
       </div>
     </>
   )

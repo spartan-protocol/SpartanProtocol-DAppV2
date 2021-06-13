@@ -90,7 +90,7 @@ const SynthVault = () => {
               <Col xs="12" className="p-0 pt-1">
                 <Link to="/synths">
                   <Button className="btn-sm btn-primary p-2" block>
-                    {t('mintSynths')}
+                    {t('forgeSynths')}
                   </Button>
                 </Link>
               </Col>
