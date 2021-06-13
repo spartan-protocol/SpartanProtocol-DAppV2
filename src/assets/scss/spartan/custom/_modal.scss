@@ -3,79 +3,11 @@
 // --------------------------------------------------
 .modal-content {
   background-color: #1D171F;
-  border: 0;
-
-  // Modal header
-  // Top section of the modal w/ title and dismiss
-
-  .modal-header {
-    border-bottom: none;
-
-    & button {
-        position: absolute;
-        right: 27px;
-        top: 24px;
-        outline: 0;
-        padding: 1rem;
-        margin: -1rem -1rem -1rem auto;
-    }
-    .title{
-        color: $black;
-        margin-top: 5px;
-        margin-bottom: 0;
-    }
-
-    .modal-title{
-      color:$white;
-    }
-
-    i.bd-icons {
-      font-size: 16px;
-    }
-  }
-
-
-  // Modal body
-  // Where all modal content resides (sibling of .modal-header and .modal-footer)
-  .modal-body {
-    line-height: 1.9;
-
-    p{
-      color: $black;
-    }
-  }
-  // Footer (for actions)
-  .modal-footer {
-    border-top: 0;
-    -webkit-justify-content: space-between; /* Safari 6.1+ */
-    justify-content: space-between;
-
-    button {
-      margin: 0;
-      padding-left: 16px;
-      padding-right: 16px;
-      width: auto;
-
-      &.pull-left {
-        padding-left: 5px;
-        padding-right: 5px;
-        position: relative;
-        left: -5px;
-      }
-    }
-
-  }
-  .modal-body + .modal-footer {
-    padding-top: 0;
-  }
 }
 
 .modal-backdrop {
   background: rgba(251, 220, 255, 0.98);
-
 }
-
-
 
 .modal{
   .modal-login{
@@ -245,19 +177,6 @@
   .modal-footer{
     border-top: 2px solid #f9f9f9;
     margin: 0px 25px 20px;
-  }
-}
-
-
-@include media-breakpoint-down(xs) {
-  .modal {
-    &.show .modal-dialog {
-      transform: translateY(10%);
-
-      &.modal-notice {
-        transform: translateY(3%);
-      }
-    }
   }
 }
 
