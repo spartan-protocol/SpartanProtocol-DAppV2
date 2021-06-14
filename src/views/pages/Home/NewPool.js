@@ -278,173 +278,183 @@ const NewPool = () => {
       >
         <MDBModalDialog centered>
           <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle>{t('createPool')}</MDBModalTitle>
-              <MDBBtn
-                onClick={() => setShowModal(false)}
-                color="link"
-                className="my-auto"
-              >
-                <i className="icon-small icon-close" />
-              </MDBBtn>
-            </MDBModalHeader>
-            <MDBModalBody>
-              {network.chainId === 56 &&
-                trustWalletIndex.data?.includes(addrInput?.value) &&
-                tokenInfo && (
-                  <div className="text-sm-label-alt text-center">
-                    <img
-                      src={tokenIcon}
-                      height="45px"
-                      alt="tokenIcon"
-                      className="mr-2"
+            {network.chainId === 97 && (
+              <>
+                <MDBModalHeader>
+                  <MDBModalTitle>{t('createPool')}</MDBModalTitle>
+                  <MDBBtn
+                    onClick={() => setShowModal(false)}
+                    color="link"
+                    className="my-auto"
+                  >
+                    <i className="icon-small icon-close" />
+                  </MDBBtn>
+                </MDBModalHeader>
+                <MDBModalBody>
+                  {network.chainId === 56 &&
+                    trustWalletIndex.data?.includes(addrInput?.value) &&
+                    tokenInfo && (
+                      <div className="text-sm-label-alt text-center">
+                        <img
+                          src={tokenIcon}
+                          height="45px"
+                          alt="tokenIcon"
+                          className="mr-2"
+                        />
+                        {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                      </div>
+                    )}
+                  <InputGroup className="mt-2">
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>Address</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      id="addrInput"
+                      placeholder="0x..."
+                      type="text"
+                      inputMode="decimal"
+                      pattern="^[0-9]*[.,]?[0-9]*$"
+                      autoComplete="off"
+                      autoCorrect="off"
                     />
-                    {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                    <InputGroupAddon addonType="append">
+                      <InputGroupText className="p-1">
+                        {addrValid ? (
+                          <ValidIcon fill="green" height="30" width="30" />
+                        ) : (
+                          <InvalidIcon fill="red" height="30" width="30" />
+                        )}
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  <div className="text-sm-label-alt pb-2 text-center">
+                    Input a valid token address (18 decimal BEP20 asset listed
+                    in the{' '}
+                    <a
+                      href="https://github.com/trustwallet/assets/tree/master/blockchains/smartchain"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      TrustWallet repo
+                    </a>
+                    )
                   </div>
-                )}
-              <InputGroup className="mt-2">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>Address</InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  id="addrInput"
-                  placeholder="0x..."
-                  type="text"
-                  inputMode="decimal"
-                  pattern="^[0-9]*[.,]?[0-9]*$"
-                  autoComplete="off"
-                  autoCorrect="off"
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText className="p-1">
-                    {addrValid ? (
-                      <ValidIcon fill="green" height="30" width="30" />
-                    ) : (
-                      <InvalidIcon fill="red" height="30" width="30" />
-                    )}
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-              <div className="text-sm-label-alt pb-2 text-center">
-                Input a valid token address (18 decimal BEP20 asset listed in
-                the{' '}
-                <a
-                  href="https://github.com/trustwallet/assets/tree/master/blockchains/smartchain"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  TrustWallet repo
-                </a>
-                )
-              </div>
-              <InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>Input</InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  id="spartaInput"
-                  placeholder=""
-                  type="number"
-                  inputMode="decimal"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  disabled={!addrValid}
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText className="p-1">SPARTA</InputGroupText>
-                </InputGroupAddon>
-                <InputGroupAddon addonType="append">
-                  <InputGroupText className="p-1">
-                    {spartaValid ? (
-                      <ValidIcon fill="green" height="30" width="30" />
-                    ) : (
-                      <InvalidIcon fill="red" height="30" width="30" />
-                    )}
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-              <InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>Input</InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  id="tokenInput"
-                  placeholder=""
-                  type="number"
-                  inputMode="decimal"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  disabled={!addrValid}
-                />
-                <InputGroupAddon addonType="append">
-                  <InputGroupText className="p-1">{tokenSymbol}</InputGroupText>
-                </InputGroupAddon>
-                <InputGroupAddon addonType="append">
-                  <InputGroupText className="p-1">
-                    {tokenValid ? (
-                      <ValidIcon fill="green" height="30" width="30" />
-                    ) : (
-                      <InvalidIcon fill="red" height="30" width="30" />
-                    )}
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-              <div className="text-sm-label-alt pb-2 text-center">
-                Minimum of 10,000 SPARTA required
-              </div>
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>Input</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      id="spartaInput"
+                      placeholder=""
+                      type="number"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      disabled={!addrValid}
+                    />
+                    <InputGroupAddon addonType="append">
+                      <InputGroupText className="p-1">SPARTA</InputGroupText>
+                    </InputGroupAddon>
+                    <InputGroupAddon addonType="append">
+                      <InputGroupText className="p-1">
+                        {spartaValid ? (
+                          <ValidIcon fill="green" height="30" width="30" />
+                        ) : (
+                          <InvalidIcon fill="red" height="30" width="30" />
+                        )}
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  <InputGroup>
+                    <InputGroupAddon addonType="prepend">
+                      <InputGroupText>Input</InputGroupText>
+                    </InputGroupAddon>
+                    <Input
+                      id="tokenInput"
+                      placeholder=""
+                      type="number"
+                      inputMode="decimal"
+                      autoComplete="off"
+                      autoCorrect="off"
+                      disabled={!addrValid}
+                    />
+                    <InputGroupAddon addonType="append">
+                      <InputGroupText className="p-1">
+                        {tokenSymbol}
+                      </InputGroupText>
+                    </InputGroupAddon>
+                    <InputGroupAddon addonType="append">
+                      <InputGroupText className="p-1">
+                        {tokenValid ? (
+                          <ValidIcon fill="green" height="30" width="30" />
+                        ) : (
+                          <InvalidIcon fill="red" height="30" width="30" />
+                        )}
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  <div className="text-sm-label-alt pb-2 text-center">
+                    Minimum of 10,000 SPARTA required
+                  </div>
 
-              <div className="output-card text-center mb-2">
-                1 SPARTA = {priceInSparta()} {tokenSymbol}
-                <br />1 {tokenSymbol} = {priceInToken()} SPARTA
-                <br />1 {tokenSymbol} = ~${priceinUSD()} USD
-              </div>
-              <FormGroup>
-                <div className="text-center">
-                  <CustomInput
-                    type="switch"
-                    id="inputConfirmRatio"
-                    label="Confirm ratio! Avoid getting rekt!"
-                    checked={ratioConfirm}
-                    onChange={() => setRatioConfirm(!ratioConfirm)}
-                  />
-                </div>
-              </FormGroup>
-            </MDBModalBody>
-            <MDBModalFooter>
-              {wallet?.account && spartaInput?.value > 0 && (
-                <Approval
-                  tokenAddress={addr.spartav2}
-                  symbol="SPARTA"
-                  walletAddress={wallet.account}
-                  contractAddress={addr.poolFactory}
-                  txnAmount={convertToWei(spartaInput?.value)}
-                  assetNumber="1"
-                />
-              )}
-              <MDBCol size="12" className="hide-if-siblings">
-                <MDBBtn
-                  block
-                  className="btn-fill btn-primary"
-                  disabled={!ratioConfirm || !formValid}
-                  onClick={() => handleSubmit()}
-                >
-                  {t('confirm')}
-                </MDBBtn>
-              </MDBCol>
-              {wallet?.account &&
-                tokenInput?.value > 0 &&
-                addrInput?.value !== addr.bnb && (
-                  <Approval
-                    tokenAddress={addrInput?.value}
-                    symbol={tokenSymbol}
-                    walletAddress={wallet.account}
-                    contractAddress={addr.poolFactory}
-                    txnAmount={convertToWei(tokenInput?.value)}
-                    assetNumber="2"
-                  />
-                )}
-            </MDBModalFooter>
-            {network.chainId !== 97 && <WrongNetwork />}
+                  <div className="output-card text-center mb-2">
+                    1 SPARTA = {priceInSparta()} {tokenSymbol}
+                    <br />1 {tokenSymbol} = {priceInToken()} SPARTA
+                    <br />1 {tokenSymbol} = ~${priceinUSD()} USD
+                  </div>
+                  <FormGroup>
+                    <div className="text-center">
+                      <CustomInput
+                        type="switch"
+                        id="inputConfirmRatio"
+                        label="Confirm ratio! Avoid getting rekt!"
+                        checked={ratioConfirm}
+                        onChange={() => setRatioConfirm(!ratioConfirm)}
+                      />
+                    </div>
+                  </FormGroup>
+                </MDBModalBody>
+                <MDBModalFooter>
+                  {wallet?.account && spartaInput?.value > 0 && (
+                    <Approval
+                      tokenAddress={addr.spartav2}
+                      symbol="SPARTA"
+                      walletAddress={wallet.account}
+                      contractAddress={addr.poolFactory}
+                      txnAmount={convertToWei(spartaInput?.value)}
+                      assetNumber="1"
+                    />
+                  )}
+                  <MDBCol size="12" className="hide-if-siblings">
+                    <MDBBtn
+                      block
+                      className="btn-fill btn-primary"
+                      disabled={!ratioConfirm || !formValid}
+                      onClick={() => handleSubmit()}
+                    >
+                      {t('confirm')}
+                    </MDBBtn>
+                  </MDBCol>
+                  {wallet?.account &&
+                    tokenInput?.value > 0 &&
+                    addrInput?.value !== addr.bnb && (
+                      <Approval
+                        tokenAddress={addrInput?.value}
+                        symbol={tokenSymbol}
+                        walletAddress={wallet.account}
+                        contractAddress={addr.poolFactory}
+                        txnAmount={convertToWei(tokenInput?.value)}
+                        assetNumber="2"
+                      />
+                    )}
+                </MDBModalFooter>
+              </>
+            )}
+            {network.chainId !== 97 && (
+              <MDBModalBody>
+                <WrongNetwork />
+              </MDBModalBody>
+            )}
           </MDBModalContent>
         </MDBModalDialog>
       </MDBModal>
