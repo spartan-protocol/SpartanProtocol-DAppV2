@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { Col, Nav, NavItem, NavLink, Row } from 'reactstrap'
-
-import classnames from 'classnames'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import {
+  MDBCol,
+  MDBRow,
+  MDBTabs,
+  MDBTabsItem,
+  MDBTabsLink,
+} from 'mdb-react-ui-kit'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getNetwork } from '../../../utils/web3'
@@ -57,45 +61,42 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
+        <MDBRow className="row-480">
+          <MDBCol size="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('home')}</h2>
               <NewPool />
             </div>
-          </Col>
-        </Row>
+          </MDBCol>
+        </MDBRow>
         {network.chainId === 97 && (
           <>
-            <Row className="row-480">
-              <Col xs="12">
-                <Nav className="nav-tabs-custom card-480 mb-3" pills>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: activeTab === 'overview',
-                      })}
+            <MDBRow className="row-480">
+              <MDBCol size="12">
+                <MDBTabs className="nav-tabs-custom card-480 mb-3">
+                  <MDBTabsItem>
+                    <MDBTabsLink
+                      active={activeTab === 'overview'}
                       onClick={() => {
                         setActiveTab('overview')
                       }}
                     >
                       {t('overview')}
-                    </NavLink>
-                  </NavItem>
-                  {/* <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: activeTab === 'positions',
-                      })}
+                    </MDBTabsLink>
+                  </MDBTabsItem>
+                  {/* <MDBTabsItem>
+                    <MDBTabsLink
+                      active={activeTab === 'positions'}
                       onClick={() => {
                         setActiveTab('positions')
                       }}
                     >
                       {t('positions')}
-                    </NavLink>
-                  </NavItem> */}
-                </Nav>
-              </Col>
+                    </MDBTabsLink>
+                  </MDBTabsItem> */}
+                </MDBTabs>
+              </MDBCol>
+
               {activeTab === 'overview' &&
                 pool?.poolDetails
                   .filter(
@@ -109,11 +110,11 @@ const Overview = () => {
                     <PoolItem key={asset.address} asset={asset} />
                   ))}
               {pool.poolDetails.length <= 0 && (
-                <Col className="card-480">
+                <MDBCol className="card-480">
                   <HelmetLoading height={300} width={300} />
-                </Col>
+                </MDBCol>
               )}
-            </Row>
+            </MDBRow>
           </>
         )}
         {network.chainId !== 97 && <WrongNetwork />}

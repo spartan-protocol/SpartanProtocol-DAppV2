@@ -71,8 +71,12 @@ const WalletSelect = (props) => {
 
   const connectWallet = async (x) => {
     window.localStorage.removeItem('disableWallet')
-    resetWallet()
-    await wallet.connect(x?.inject)
+    if (wallet) {
+      resetWallet()
+    }
+    if (x) {
+      await wallet.connect(x?.inject)
+    }
     window.localStorage.setItem('lastWallet', x?.id)
   }
 
@@ -116,12 +120,20 @@ const WalletSelect = (props) => {
     const timer = setTimeout(() => {
       checkWallets()
       settrigger0(trigger0 + 1)
-    }, 1500)
+    }, 500)
     return () => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0, wallet.account, wallet.status])
+  }, [
+    trigger0,
+    wallet.account,
+    wallet.status,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('lastWallet'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('disableWallet'),
+  ])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]

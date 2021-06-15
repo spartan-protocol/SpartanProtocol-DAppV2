@@ -3,13 +3,11 @@ import { Button } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import WalletSelect from '../WalletSelect/WalletSelect'
 import { usePool } from '../../store/pool/selector'
-// import walletTypes from '../WalletSelect/walletTypes'
 
 const AddressConn = () => {
   const wallet = useWallet()
   const pool = usePool()
   const [walletModalShow, setWalletModalShow] = useState(false)
-  // const [walletHeaderIcon] = useState(walletTypes[0].icon[0])
 
   const btnClass = 'btn-round btn-icon btn-transparent align-self-center ml-1'
   const iconClass = ' icon-small icon-dark m-0'
@@ -85,7 +83,6 @@ const AddressConn = () => {
       <WalletSelect
         show={walletModalShow}
         onHide={() => setWalletModalShow(false)}
-        // setWalletHeaderIcon={setWalletHeaderIcon}
       />
     </>
   )

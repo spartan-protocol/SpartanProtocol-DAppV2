@@ -341,3 +341,8 @@ textarea.form-control {
     font-size: $font-paragraph;
   }
 }
+
+.input-group>.form-control:focus {
+  box-shadow: none;
+  border-color: #00000000;
+}

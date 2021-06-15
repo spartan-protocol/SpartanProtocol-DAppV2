@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ethers } from 'ethers'
 import * as Types from './types'
 import {
   getFallenSpartansContract,
@@ -6,7 +7,13 @@ import {
   getSpartaV2Contract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import {
+  addressesMN,
+  bscRpcsMN,
+  getAbis,
+  getAddresses,
+  getProviderGasPrice,
+} from '../../utils/web3'
 import { apiUrlBQ, headerBQ } from '../../utils/extCalls'
 import { convertToWei } from '../../utils/bigNumber'
 
@@ -170,6 +177,56 @@ export const spartaFeeBurnRecent = (amount) => async (dispatch) => {
   try {
     const feeBurnRecent = amount
     dispatch(payloadToDispatch(Types.SPARTA_FEEBURN_RECENT, feeBurnRecent))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+  }
+}
+
+/**
+ * Community wallet holdings
+ */
+export const communityWalletHoldings = (wallet) => async (dispatch) => {
+  dispatch(spartaLoading())
+  const comWal = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
+  const abiErc20 = getAbis().erc20
+  const provider = new ethers.providers.JsonRpcProvider(bscRpcsMN[0])
+  const spartaCont = new ethers.Contract(
+    addressesMN.spartav2,
+    abiErc20,
+    provider,
+  )
+  const busdCont = new ethers.Contract(
+    '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+    abiErc20,
+    provider,
+  )
+  const usdtCont = new ethers.Contract(
+    '0x55d398326f99059ff775485246999027b3197955',
+    abiErc20,
+    provider,
+  )
+  try {
+    let awaitArray = [
+      spartaCont.callStatic.balanceOf(comWal),
+      busdCont.callStatic.balanceOf(comWal),
+      usdtCont.callStatic.balanceOf(comWal),
+      // wallet ? spartaCont.callStatic.balanceOf(wallet.account) : '0',
+      wallet?.account ? busdCont.callStatic.balanceOf(wallet.account) : '0',
+      wallet?.account ? usdtCont.callStatic.balanceOf(wallet.account) : '0',
+    ]
+    awaitArray = await Promise.all(awaitArray)
+    const communityWallet = {
+      bnb: (await provider.getBalance(comWal)).toString(),
+      sparta: awaitArray[0].toString(),
+      busd: awaitArray[1].toString(),
+      usdt: awaitArray[2].toString(),
+      userBnb: wallet?.account
+        ? (await provider.getBalance(wallet.account)).toString()
+        : '0',
+      userBusd: awaitArray[3].toString(),
+      userUsdt: awaitArray[4].toString(),
+    }
+    dispatch(payloadToDispatch(Types.SPARTA_COMMUNITY_WALLET, communityWallet))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
   }

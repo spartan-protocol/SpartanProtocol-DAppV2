@@ -7,6 +7,7 @@ import Bond from './views/pages/Bond/Bond'
 import Vault from './views/pages/Vault/Overview'
 import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
+import CodeArena from './views/pages/CodeArena/Overview'
 import PU from './views/pages/PU/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
@@ -87,6 +88,14 @@ const routes = (t) => [
     name: t('upgrade'),
     icon: 'icon-small icon-upgrade icon-dark',
     component: Upgrade,
+    layout: '',
+  },
+
+  {
+    path: '/codearena',
+    name: t('codeArena'),
+    icon: 'icon-small icon-list icon-dark',
+    component: CodeArena,
     layout: '',
   },
 

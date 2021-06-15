@@ -52,7 +52,7 @@ const NewSynth = () => {
   const [showModal, setShowModal] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
 
-  const [inputAddress, setinputAddress] = useState(null)
+  const [inputAddress, setinputAddress] = useState('')
   const addrInput = document.getElementById('addrInput')
   const handleAddrChange = (newValue) => {
     if (addrInput) {

@@ -67,6 +67,15 @@ export const spartaReducer = (state = initialState, action) => {
       }
     }
 
+    case Types.SPARTA_COMMUNITY_WALLET: {
+      return {
+        ...state,
+        communityWallet: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.SPARTA_LOADING: {
       return {
         ...state,

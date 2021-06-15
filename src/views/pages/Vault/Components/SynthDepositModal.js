@@ -110,7 +110,7 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                   onClick={async () => {
                     setloading(true)
                     await dispatch(
-                      synthDeposit(synth1.address, synth1.balance, wallet),
+                      synthDeposit(synth1.address, deposit(), wallet),
                     )
                     setstage(stage + 1)
                     setloading(false)
