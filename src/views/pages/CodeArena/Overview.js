@@ -277,6 +277,7 @@ const Overview = () => {
                         <MDBInputGroup>
                           <MDBInputGroupElement
                             type="number"
+                            id="inputDonation"
                             placeholder="Select asset above..."
                             disabled={!selectedAsset}
                           />
