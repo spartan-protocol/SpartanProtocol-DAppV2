@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 import {
   Button,
   Modal,
-  Row,
-  Col,
   Nav,
   NavItem,
   NavLink,
@@ -17,6 +15,7 @@ import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { MDBCol, MDBRow } from 'mdb-react-ui-kit'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
@@ -284,84 +283,79 @@ const AssetSelect = (props) => {
 
   return (
     <>
-      <Row
+      <MDBRow
         onClick={() =>
           !props.disabled ? toggleModal() : console.log('button disabled')
         }
         role="button"
         className="justify-content-left"
       >
-        <Row className="select-box h-auto" name="singleSelect">
-          <Col xs="auto">
-            {selectedType === 'token' && (
+        <MDBCol size="auto" className="pr-1">
+          {selectedType === 'token' && (
+            <img
+              height="35px"
+              src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
+              alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+            />
+          )}
+
+          {selectedType === 'pool' && (
+            <>
               <img
                 height="35px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
-                className="mx-2"
               />
-            )}
 
-            {selectedType === 'pool' && (
-              <>
-                <img
-                  height="35px"
-                  src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
-                  alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
-                  className="mx-2"
-                />
+              <img
+                height="20px"
+                src={spartaIcon}
+                alt="Sparta LP token icon"
+                className="position-absolute"
+                style={{ left: '35px', bottom: '-2px' }}
+              />
+            </>
+          )}
 
-                <img
-                  height="20px"
-                  src={spartaIcon}
-                  alt="Sparta LP token icon"
-                  className="position-absolute"
-                  style={{ left: '45px', bottom: '-2px' }}
-                />
-              </>
-            )}
+          {selectedType === 'synth' && (
+            <>
+              <img
+                height="35px"
+                src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
+                alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+              />
 
-            {selectedType === 'synth' && (
-              <>
-                <img
-                  height="35px"
-                  src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
-                  alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
-                  className="mx-2"
-                />
+              <img
+                height="20px"
+                src={spartaIconAlt}
+                alt="Sparta LP token icon"
+                className="position-absolute"
+                style={{ left: '35px', bottom: '-2px' }}
+              />
+            </>
+          )}
+        </MDBCol>
+        <MDBCol className="output-card px-2 my-auto">
+          {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
+          {selectedType === 'pool' && 'p'}
+          {selectedType === 'synth' && 's'}
+          {!props.disabled && (
+            <i className="ml-1 icon-extra-small icon-arrow icon-light align-middle" />
+          )}
+        </MDBCol>
+      </MDBRow>
 
-                <img
-                  height="20px"
-                  src={spartaIconAlt}
-                  alt="Sparta LP token icon"
-                  className="position-absolute"
-                  style={{ left: '45px', bottom: '-2px' }}
-                />
-              </>
-            )}
-
-            <span className="output-card mr-2 ml-1">
-              {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
-              {selectedType === 'pool' && 'p'}
-              {selectedType === 'synth' && 's'}
-            </span>
-            {!props.disabled && (
-              <i className="icon-extra-small icon-arrow icon-light align-middle" />
-            )}
-          </Col>
-        </Row>
-      </Row>
       <Modal isOpen={showModal} toggle={toggleModal}>
-        <Row className="card-body">
-          <Col xs="10">
+        <MDBRow className="card-body">
+          <MDBCol size="10">
             <h3 className="ml-2 modal-title">{t('selectAnAsset')}</h3>
-          </Col>
-          <Col xs="2">
+          </MDBCol>
+          <MDBCol size="2">
             <Button onClick={toggleModal} className="btn btn-transparent mt-4">
               <i className="icon-small icon-close" />
             </Button>
-          </Col>
-        </Row>
+          </MDBCol>
+        </MDBRow>
         <Nav className="nav-tabs-custom card-body" pills>
           <NavItem>
             <NavLink
@@ -416,8 +410,8 @@ const AssetSelect = (props) => {
           )}
         </Nav>
 
-        <Row className="card-body pb-0">
-          <Col xs="12" className="m-auto">
+        <MDBRow className="card-body pb-0">
+          <MDBCol size="12" className="m-auto">
             <InputGroup>
               <InputGroupAddon
                 addonType="prepend"
@@ -451,24 +445,24 @@ const AssetSelect = (props) => {
                 </InputGroupText>
               </InputGroupAddon>
             </InputGroup>
-          </Col>
-        </Row>
+          </MDBCol>
+        </MDBRow>
         <div className="modal-body">
-          <Row className="">
-            <Col xs="9" md="9">
+          <MDBRow className="">
+            <MDBCol size="9" md="9">
               <p className="text-card">Asset</p>
-            </Col>
-            <Col xs="3" md="3">
+            </MDBCol>
+            <MDBCol size="3" md="3">
               <p className="text-card float-right mr-1">Actions</p>
-            </Col>
-          </Row>
+            </MDBCol>
+          </MDBRow>
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <Row
+              <MDBRow
                 key={`${asset.actualAddr}-all`}
                 className="mb-3 output-card mr-2"
               >
-                <Col xs="auto" className="p-0 pl-2">
+                <MDBCol size="auto" className="p-0 pl-2">
                   <div
                     role="button"
                     aria-hidden="true"
@@ -479,11 +473,15 @@ const AssetSelect = (props) => {
                   >
                     {asset.icon}
                   </div>
-                </Col>
+                </MDBCol>
 
-                <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-1">
-                  <Row>
-                    <Col xs="12" className="float-left ml-n4">
+                <MDBCol
+                  size="5"
+                  sm="7"
+                  className="align-items-center p-0 pl-sm-1"
+                >
+                  <MDBRow>
+                    <MDBCol size="12" className="float-left ml-n4">
                       <div
                         role="button"
                         aria-hidden="true"
@@ -497,22 +495,22 @@ const AssetSelect = (props) => {
                       <div className="description">
                         {formatFromWei(asset.balance)}
                       </div>
-                    </Col>
-                  </Row>
-                </Col>
+                    </MDBCol>
+                  </MDBRow>
+                </MDBCol>
 
-                <Col xs="3" md="3" className="text-right p-0 pr-2">
-                  <Row>
-                    <Col xs="6">
+                <MDBCol size="3" md="3" className="text-right p-0 pr-2">
+                  <MDBRow>
+                    <MDBCol size="6">
                       <ShareLink
                         url={asset.actualAddr}
                         notificationLocation="tc"
                       >
                         <i className="icon-small icon-copy ml-2" />
                       </ShareLink>
-                    </Col>
+                    </MDBCol>
                     {getWalletType() && (
-                      <Col xs="6">
+                      <MDBCol size="6">
                         <a
                           href={
                             getWalletType() === 'TW'
@@ -543,21 +541,21 @@ const AssetSelect = (props) => {
                             )}
                           </div>
                         </a>
-                      </Col>
+                      </MDBCol>
                     )}
-                  </Row>
-                </Col>
-              </Row>
+                  </MDBRow>
+                </MDBCol>
+              </MDBRow>
             ))}
           {activeTab !== 'all' &&
             assetArray
               .filter((asset) => asset.type === activeTab)
               .map((asset) => (
-                <Row
+                <MDBRow
                   key={asset.actualAddr + activeTab}
                   className="mb-3 output-card mr-2"
                 >
-                  <Col xs="auto" className="p-0 pl-2">
+                  <MDBCol size="auto" className="p-0 pl-2">
                     <div
                       role="button"
                       aria-hidden="true"
@@ -568,11 +566,15 @@ const AssetSelect = (props) => {
                     >
                       {asset.icon}
                     </div>
-                  </Col>
+                  </MDBCol>
 
-                  <Col xs="5" sm="7" className="align-items-center p-0 pl-sm-1">
-                    <Row>
-                      <Col xs="12" className="float-left ml-n4">
+                  <MDBCol
+                    size="5"
+                    sm="7"
+                    className="align-items-center p-0 pl-sm-1"
+                  >
+                    <MDBRow>
+                      <MDBCol size="12" className="float-left ml-n4">
                         <div
                           role="button"
                           aria-hidden="true"
@@ -586,22 +588,22 @@ const AssetSelect = (props) => {
                         <div className="description">
                           {formatFromWei(asset.balance)}
                         </div>
-                      </Col>
-                    </Row>
-                  </Col>
+                      </MDBCol>
+                    </MDBRow>
+                  </MDBCol>
 
-                  <Col xs="3" md="3" className="text-right p-0 pr-2">
-                    <Row>
-                      <Col xs="6">
+                  <MDBCol size="3" md="3" className="text-right p-0 pr-2">
+                    <MDBRow>
+                      <MDBCol size="6">
                         <ShareLink
                           url={asset.actualAddr}
                           notificationLocation="tc"
                         >
                           <i className="icon-small icon-copy ml-2" />
                         </ShareLink>
-                      </Col>
+                      </MDBCol>
                       {getWalletType() && (
-                        <Col xs="6">
+                        <MDBCol size="6">
                           <a
                             href={
                               getWalletType() === 'TW'
@@ -632,11 +634,11 @@ const AssetSelect = (props) => {
                               )}
                             </div>
                           </a>
-                        </Col>
+                        </MDBCol>
                       )}
-                    </Row>
-                  </Col>
-                </Row>
+                    </MDBRow>
+                  </MDBCol>
+                </MDBRow>
               ))}
         </div>
       </Modal>
