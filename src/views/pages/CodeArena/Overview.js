@@ -273,7 +273,7 @@ ethereum(network: $network){
                       in the next available slot.
                     </MDBCardText>
                     <MDBCardText>
-                      The scope of contracts to be audited has a recomended
+                      The scope of contracts to be audited has a recommended
                       bounty requirement of $80k USD. Being a community built
                       and run project; there is a drive to crowdfund the bounty.
                     </MDBCardText>
@@ -282,10 +282,11 @@ ethereum(network: $network){
                       reached, but raising $80k will ensure the entire suite of
                       contracts are audited!
                     </MDBCardText>
+
                     <MDBCardText className="output-card mt-2">
                       View Community Wallet:{' '}
                       <a
-                        href={getExplorerWallet(communityWallet)}
+                        href="https://bscscan.com/address/0x588f82a66eE31E59B88114836D11e3d00b3A7916"
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -437,14 +438,16 @@ ethereum(network: $network){
                             </MDBBtn>
                           </>
                         )}
-                        {network.chainId !== 56 && (
-                          <>
-                            <MDBCardText>
-                              Switch the DApp and your wallet to mainnet to
-                              contribute funds
-                            </MDBCardText>
-                          </>
-                        )}
+                      </MDBCol>
+                    </>
+                  )}
+                  {network.chainId !== 56 && (
+                    <>
+                      <MDBCol>
+                        <MDBCardText>
+                          Switch the DApp and your wallet to mainnet to
+                          contribute funds
+                        </MDBCardText>
                       </MDBCol>
                     </>
                   )}
@@ -494,6 +497,18 @@ ethereum(network: $network){
                       </MDBCol>
                     </MDBRow>
                   ))}
+                {network.chainId !== 56 && (
+                  <>
+                    <MDBRow>
+                      <MDBCol>
+                        <MDBCardText>
+                          Switch the DApp and your wallet to mainnet to
+                          contribute funds
+                        </MDBCardText>
+                      </MDBCol>
+                    </MDBRow>
+                  </>
+                )}
               </MDBCardBody>
             </MDBCard>
           </MDBCol>
