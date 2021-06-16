@@ -1,7 +1,16 @@
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   line-height: $headings-line-height;
-
 }
 
 button,
@@ -9,24 +18,32 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: $font-family-base
+  font-family: $font-family-base;
 }
 
 .card {
-  h1, h2, h3, h4, h5, h6, {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: $font-family-base;
     color: $opacity-8;
     font-weight: $font-weight-extra-bold;
-
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $font-family-base;
   font-weight: $font-weight-normal;
   color: $opacity-8;
 }
-
 
 accentcurrency {
   display: block;
@@ -36,13 +53,12 @@ accentcurrency {
   font-size: 12px;
   line-height: 32px;
   font-feature-settings: 'liga' off;
-  color: #AACDFF;
+  color: #aacdff;
   text-transform: uppercase;
   margin-top: -40px;
   /* top: 0px; */
   margin-left: 96px;
 }
-
 
 accentstatus {
   display: block;
@@ -52,13 +68,12 @@ accentstatus {
   font-size: 12px;
   line-height: 32px;
   font-feature-settings: 'liga' off;
-  color: #AACDFF;
+  color: #aacdff;
   text-transform: uppercase;
   margin-top: -40px;
   /* top: 0px; */
   margin-left: 190px;
 }
-
 
 accent {
   font-family: $font-family-base !important;
@@ -66,10 +81,9 @@ accent {
   font-size: 12px;
   line-height: 32px;
   font-feature-settings: 'liga' off;
-  color: #AACDFF;
+  color: #aacdff;
 
   /* top: 0px; */
-
 }
 
 .header-title {
@@ -78,7 +92,6 @@ accent {
   font-weight: bold;
   font-size: 28px;
   line-height: 32px;
-
 }
 
 //titlecard{
@@ -97,7 +110,6 @@ accent {
 //  color: #F5F8FC;
 //}
 
-
 breadcrum {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -106,11 +118,8 @@ breadcrum {
   font-weight: bold;
   font-size: 28px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-  font-feature-settings: 'liga' off;
-  color: #FFFFFF;
+  color: #ffffff;
 }
-
 
 a {
   color: $primary-states;
@@ -122,30 +131,32 @@ a {
   }
 }
 
-h1, .h1 {
+h1,
+.h1 {
   line-height: 1.05;
   margin-bottom: $margin-base-vertical * 2;
 
   small {
     font-weight: $font-weight-bold;
     text-transform: uppercase;
-    opacity: .8;
+    opacity: 0.8;
   }
-
 }
 
-h2, .h2 {
+h2,
+.h2 {
   margin-bottom: $margin-base-vertical * 2;
   line-height: 1.2;
-
 }
 
-h3, .h3 {
+h3,
+.h3 {
   margin-bottom: $margin-base-vertical * 2;
   line-height: 1.4em;
 }
 
-h4, .h4 {
+h4,
+.h4 {
   line-height: 1.45em;
   margin-bottom: $margin-base-vertical;
 
@@ -155,12 +166,14 @@ h4, .h4 {
   }
 }
 
-h5, .h5 {
+h5,
+.h5 {
   line-height: 1.4em;
   margin-bottom: 15px;
 }
 
-h6, .h6 {
+h6,
+.h6 {
   text-transform: uppercase;
   font-weight: $font-weight-bold;
 }
@@ -174,25 +187,13 @@ p {
   }
 }
 
-
 .title {
-  /* Hyperlinks */
-
   font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-
-  display: flex;
-  align-items: center;
-  text-align: right;
-  font-feature-settings: 'liga' off;
-
-  /* White */
-
-  color: #FFFFFF;
+  color: #ffffff;
 
   &.title-up {
     text-transform: uppercase;
@@ -269,7 +270,8 @@ p {
   }
 }
 
-ul li, ol li {
+ul li,
+ol li {
   color: $white;
 }
 
@@ -283,21 +285,12 @@ hr {
   margin-bottom: $spacer;
 }
 
-
 .amount {
-  /* Hyperlinks */
-
   font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-
-  font-feature-settings: 'liga' off;
-
-  /* White */
-
   color: #ffffff;
 
   &.title-up {
@@ -314,36 +307,20 @@ hr {
   }
 }
 
-
-.page-header{
-  /* Headline 3 */
-
+.page-header {
   font-family: Kreon;
   font-style: normal;
   font-weight: bold;
   font-size: 28px;
   line-height: 32px;
-  /* identical to box height, or 133% */
-
-  font-feature-settings: 'liga' off;
-
-  /* White */
-
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-
-.text-footer{
+.text-footer {
   font-family: Kreon;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
   line-height: 32px;
-  /* identical to box height, or 133% */
-
-  font-feature-settings: 'liga' off;
-
-  /* Light Grey */
-
-  color: #F5F8FC;
+  color: #f5f8fc;
 }

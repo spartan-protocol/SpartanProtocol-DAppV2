@@ -22,7 +22,7 @@ const ThemeSwitcher = () => {
       ?.classList.toggle('icon-menu-open-light')
   }
 
-  const btnClass = 'btn-transparent align-self-center ml-1'
+  const btnClass = 'btn-transparent align-self-center mx-1'
   const iconClass = 'icon-small icon-dark m-0'
 
   return (

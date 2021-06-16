@@ -151,7 +151,7 @@ const LanguageDropdown = () => {
       <Button
         id="PopoverClick1"
         type="Button"
-        className="btn-round btn-transparent btn-icon ml-1"
+        className="btn-round btn-transparent btn-icon ms-1"
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
       >

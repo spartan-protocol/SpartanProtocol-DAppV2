@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Button } from 'reactstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { Button } from 'react-bootstrap'
 import WalletSelect from '../WalletSelect/WalletSelect'
 import { usePool } from '../../store/pool/selector'
 
@@ -9,8 +9,8 @@ const AddressConn = () => {
   const pool = usePool()
   const [walletModalShow, setWalletModalShow] = useState(false)
 
-  const btnClass = 'btn-round btn-icon btn-transparent align-self-center ml-1'
-  const iconClass = ' icon-small icon-dark m-0'
+  const btnClass = 'btn-round btn-icon btn-transparent align-self-center me-1'
+  const iconClass = 'icon-small icon-dark m-0'
 
   return (
     <>
@@ -21,7 +21,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <i className={`icon-wallet-red${iconClass}`} />
+          <i className={`icon-wallet-red ${iconClass}`} />
         </Button>
       )}
 
@@ -32,7 +32,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <i className={`icon-wallet-red${iconClass}`} />
+          <i className={`icon-wallet-red ${iconClass}`} />
         </Button>
       )}
 
@@ -43,7 +43,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <i className={`icon-wallet-red${iconClass}`} />
+          <i className={`icon-wallet-red ${iconClass}`} />
         </Button>
       )}
 
@@ -54,7 +54,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <i className={`icon-wallet-red${iconClass}`} />
+          <i className={`icon-wallet-red ${iconClass}`} />
         </Button>
       )}
 
@@ -65,7 +65,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <i className={`icon-wallet-yellow${iconClass}`} />
+          <i className={`icon-wallet-yellow ${iconClass}`} />
         </Button>
       )}
 
@@ -76,7 +76,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <i className={`icon-wallet-green${iconClass}`} />
+          <i className={`icon-wallet-green ${iconClass}`} />
         </Button>
       )}
 

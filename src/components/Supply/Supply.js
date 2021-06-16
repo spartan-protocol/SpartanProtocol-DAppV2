@@ -126,16 +126,16 @@ const Supply = () => {
       <Button
         id="PopoverClick"
         type="Button"
-        className="btn-header px-2 px-sm-4 ml-1"
+        className="px-2 px-sm-4 ms-1 output-card"
         href="#"
       >
-        <DownIcon fill="white" className="mr-1" />$
+        <DownIcon fill="white" className="me-1" />$
         {formatFromUnits(web3.spartaPrice, 2)}
         <FireIcon
           height={feeIconActive ? '16' : '15'}
           width="15"
           fill={feeIconActive ? 'red' : 'white'}
-          className="mb-1 ml-1"
+          className="ms-1"
         />
       </Button>
 
