@@ -163,7 +163,7 @@ const Sidebar = (props) => {
     } else {
       logoImg = (
         <NavLink
-          to={logo.innerLink}
+          to="#"
           className="simple-text logo-mini"
           onClick={props.closeSidebar}
         >
