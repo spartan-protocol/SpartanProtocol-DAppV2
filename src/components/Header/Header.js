@@ -9,13 +9,13 @@ import Supply from '../Supply/Supply'
 import './Header.scss'
 
 const Header = (props) => (
-  <Navbar bg="dark" fixed="top">
+  <Navbar fixed="top">
     <Container>
       {/* ADD TOGGLE FOR SIDEBAR HERE */}
 
       <Link to="/" className="navbar-brand">
-        <SpartanLogo className="mr-2 mb-1" />
-        <Navbar.Brand className="d-none d-sm-inline">
+        <SpartanLogo className="my-auto" />
+        <Navbar.Brand className="d-none d-sm-inline ms-2">
           Spartan Protocol
         </Navbar.Brand>
       </Link>
