@@ -714,13 +714,13 @@ button.rbc-input::-moz-focus-inner {
 // .perfect-scrollbar-on .rbc-calendar .rbc-row-content {
 //   min-height: 115px;
 // }
-@include media-breakpoint-down(sm) {
-  .rbc-calendar .rbc-row-content {
-    min-height: 45px;
-  }
-}
-@include media-breakpoint-down(md) {
-  .rbc-calendar .rbc-row-content {
-    min-height: 90px;
-  }
-}
+// @include media-breakpoint-down(sm) {
+//   .rbc-calendar .rbc-row-content {
+//     min-height: 45px;
+//   }
+// }
+// @include media-breakpoint-down(md) {
+//   .rbc-calendar .rbc-row-content {
+//     min-height: 90px;
+//   }
+// }

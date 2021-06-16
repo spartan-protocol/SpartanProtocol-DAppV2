@@ -73,8 +73,8 @@
   }
 }
 
-@include media-breakpoint-down(sm){
-  .card-stats [class*="col-"] .statistics::after {
-    display: none;
-  }
-}
+// @include media-breakpoint-down(sm){
+//   .card-stats [class*="col-"] .statistics::after {
+//     display: none;
+//   }
+// }

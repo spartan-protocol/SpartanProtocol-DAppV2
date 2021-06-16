@@ -11,7 +11,7 @@
   &:focus {
     border-color: #2B222E;
     background-color: $input-bg;
-    @include box-shadow(none);
+    // @include box-shadow(none);
 
     & + .input-group-append .input-group-text,
     & ~ .input-group-append .input-group-text,
@@ -23,12 +23,12 @@
     }
   }
 
-  .has-success &,
-  .has-error &,
-  .has-success &:focus,
-  .has-error &:focus {
-      @include box-shadow(none);
-  }
+  // .has-success &,
+  // .has-error &,
+  // .has-success &:focus,
+  // .has-error &:focus {
+  //     @include box-shadow(none);
+  // }
 
   .has-danger &,
   .has-success & {
@@ -139,16 +139,16 @@
 }
 
 
-@include media-breakpoint-down(xs) {
-  .form-horizontal .col-form-label,
-  .form-horizontal .label-on-right {
-    text-align: inherit;
-    padding-top: 0;
-    code {
-      padding: 0 10px;
-    }
-  }
-}
+// @include media-breakpoint-down(xs) {
+//   .form-horizontal .col-form-label,
+//   .form-horizontal .label-on-right {
+//     text-align: inherit;
+//     padding-top: 0;
+//     code {
+//       padding: 0 10px;
+//     }
+//   }
+// }
 
 
 .noUi-connect {

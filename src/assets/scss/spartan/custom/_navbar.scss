@@ -162,231 +162,231 @@
   }
 }
 
-@include media-breakpoint-down(md) {
-  .navbar {
-    top: -70px;
-  }
+// @include media-breakpoint-down(md) {
+//   .navbar {
+//     top: -70px;
+//   }
 
-  .navbar {
-    .container-fluid {
-      padding-right: 15px;
-      padding-left: 15px;
-    }
+//   .navbar {
+//     .container-fluid {
+//       padding-right: 15px;
+//       padding-left: 15px;
+//     }
 
-    .navbar-collapse {
-      .input-group {
-        margin: 0;
-        margin-top: 5px;
-      }
-    }
+//     .navbar-collapse {
+//       .input-group {
+//         margin: 0;
+//         margin-top: 5px;
+//       }
+//     }
 
-    .navbar-nav {
-      display: block;
+//     .navbar-nav {
+//       display: block;
 
-      .btn {
-        margin-left: -3px;
-        display: inline-block;
+//       .btn {
+//         margin-left: -3px;
+//         display: inline-block;
 
-        i {
-          margin-right: 12px;
-        }
+//         i {
+//           margin-right: 12px;
+//         }
 
-        span {
-          margin: 0;
-          text-transform: uppercase;
-          font-weight: 300;
+//         span {
+//           margin: 0;
+//           text-transform: uppercase;
+//           font-weight: 300;
 
-          &,
-          &:hover,
-          &:focus,
-          &:active,
-          &:active:focus {
-            color: $black !important;
-          }
-        }
-      }
+//           &,
+//           &:hover,
+//           &:focus,
+//           &:active,
+//           &:active:focus {
+//             color: $black !important;
+//           }
+//         }
+//       }
 
-      a.nav-link {
-        i {
-          opacity: 1;
-          margin-left: 4px;
-          margin-right: 5px;
-        }
+//       a.nav-link {
+//         i {
+//           opacity: 1;
+//           margin-left: 4px;
+//           margin-right: 5px;
+//         }
 
-        p {
-          display: inline-block;
-          text-transform: uppercase;
-          margin-left: 7px;
-        }
-      }
+//         p {
+//           display: inline-block;
+//           text-transform: uppercase;
+//           margin-left: 7px;
+//         }
+//       }
 
-      .modal-search .modal-dialog {
-        padding: 0 40px;
-      }
+//       .modal-search .modal-dialog {
+//         padding: 0 40px;
+//       }
 
-      .dropdown {
-        margin: 5px 0;
+//       .dropdown {
+//         margin: 5px 0;
 
-        .nav-link {
-          padding-bottom: 0;
-        }
+//         .nav-link {
+//           padding-bottom: 0;
+//         }
 
-        .dropdown-menu {
-          .dropdown-item {
-            margin-top: 0;
-            padding-left: 24px;
-          }
-        }
-      }
-    }
+//         .dropdown-menu {
+//           .dropdown-item {
+//             margin-top: 0;
+//             padding-left: 24px;
+//           }
+//         }
+//       }
+//     }
 
-    .dropdown.show .dropdown-menu {
-      display: block;
+//     .dropdown.show .dropdown-menu {
+//       display: block;
 
-    }
+//     }
 
-    .dropdown .dropdown-menu {
-      display: none;
+//     .dropdown .dropdown-menu {
+//       display: none;
 
-      li a {
-        color: $black;
-      }
-    }
+//       li a {
+//         color: $black;
+//       }
+//     }
 
-    .dropdown.show .dropdown-menu,
-    .dropdown .dropdown-menu {
-      background-color: #1D171F;
-      border: 0;
-      transition: none;
-      -webkit-box-shadow: none;
-      box-shadow: none;
-      width: auto;
-      margin: 0px 1rem;
-      padding-top: 0;
-      margin-top: 0px;
+//     .dropdown.show .dropdown-menu,
+//     .dropdown .dropdown-menu {
+//       background-color: #1D171F;
+//       border: 0;
+//       transition: none;
+//       -webkit-box-shadow: none;
+//       box-shadow: none;
+//       width: auto;
+//       margin: 0px 1rem;
+//       padding-top: 0;
+//       margin-top: 0px;
 
-      &:before {
-        display: none;
-      }
-    }
+//       &:before {
+//         display: none;
+//       }
+//     }
 
-    .dropdown-menu .dropdown-item:focus,
-    .dropdown-menu .dropdown-item:hover {
-      color: $white;
-    }
+//     .dropdown-menu .dropdown-item:focus,
+//     .dropdown-menu .dropdown-item:hover {
+//       color: $white;
+//     }
 
-    &.bg-white .dropdown-menu .dropdown-item:focus,
-    &.bg-white .dropdown-menu .dropdown-item:hover {
-      color: $default;
-    }
+//     &.bg-white .dropdown-menu .dropdown-item:focus,
+//     &.bg-white .dropdown-menu .dropdown-item:hover {
+//       color: $default;
+//     }
 
-    .navbar-toggler-bar {
-      display: block;
-      position: relative;
-      width: 22px;
-      height: 1px;
-      border-radius: 1px;
-      background: $white;
+//     .navbar-toggler-bar {
+//       display: block;
+//       position: relative;
+//       width: 22px;
+//       height: 1px;
+//       border-radius: 1px;
+//       background: $white;
 
-      &.navbar-kebab {
-        height: 4px;
-        width: 4px;
-        margin-bottom: 3px;
-        border-radius: 50%;
-      }
+//       &.navbar-kebab {
+//         height: 4px;
+//         width: 4px;
+//         margin-bottom: 3px;
+//         border-radius: 50%;
+//       }
 
-      & + .navbar-toggler-bar {
-        margin-top: 7px;
-      }
+//       & + .navbar-toggler-bar {
+//         margin-top: 7px;
+//       }
 
-      & + .navbar-toggler-bar.navbar-kebab {
-        margin-top: 0px;
-      }
+//       & + .navbar-toggler-bar.navbar-kebab {
+//         margin-top: 0px;
+//       }
 
-      &.bar2 {
-        width: 17px;
-        transition: width .2s linear;
-      }
-    }
+//       &.bar2 {
+//         width: 17px;
+//         transition: width .2s linear;
+//       }
+//     }
 
-    &.bg-white:not(.navbar-transparent) .navbar-toggler-bar {
-      background-color: $default;
-    }
+//     &.bg-white:not(.navbar-transparent) .navbar-toggler-bar {
+//       background-color: $default;
+//     }
 
-    & .toggled .navbar-toggler-bar {
-      width: 24px;
-    }
-  }
+//     & .toggled .navbar-toggler-bar {
+//       width: 24px;
+//     }
+//   }
 
-  .navbar-nav {
-    .nav-link {
-      i.fa,
-      i.bd-icons {
-        opacity: .5;
-      }
-    }
-  }
+//   .navbar-nav {
+//     .nav-link {
+//       i.fa,
+//       i.bd-icons {
+//         opacity: .5;
+//       }
+//     }
+//   }
 
-}
+// }
 
-@include media-breakpoint-up(lg) {
-  .navbar-collapse {
-    background: none !important;
-  }
+// @include media-breakpoint-up(lg) {
+//   .navbar-collapse {
+//     background: none !important;
+//   }
 
-  .navbar .navbar-toggle {
-    display: none;
+//   .navbar .navbar-toggle {
+//     display: none;
 
-  }
+//   }
 
-  .navbar {
-    .caret {
-      position: absolute;
-      left: 80%;
-      top: 55%;
-      margin-left: 0;
-    }
-  }
+//   .navbar {
+//     .caret {
+//       position: absolute;
+//       left: 80%;
+//       top: 55%;
+//       margin-left: 0;
+//     }
+//   }
 
-  .navbar-expand-lg .navbar-nav .nav-link {
-    padding-right: $list-inline-padding;
-    padding-left: $list-inline-padding;
-  }
+//   .navbar-expand-lg .navbar-nav .nav-link {
+//     padding-right: $list-inline-padding;
+//     padding-left: $list-inline-padding;
+//   }
 
-}
+// }
 
-@include media-breakpoint-down(xs) {
-  .navbar[class*='navbar-toggleable-'] .container {
-    margin-left: 0;
-    margin-right: 0;
-  }
+// @include media-breakpoint-down(xs) {
+//   .navbar[class*='navbar-toggleable-'] .container {
+//     margin-left: 0;
+//     margin-right: 0;
+//   }
 
-}
+// }
 
-@include media-breakpoint-between(md, lg) {
+// @include media-breakpoint-between(md, lg) {
 
-  .navbar .navbar-toggler-bar.bar2 {
-    width: 17px;
-    transition: width .2s linear;
-  }
+//   .navbar .navbar-toggler-bar.bar2 {
+//     width: 17px;
+//     transition: width .2s linear;
+//   }
 
-  .navbar .navbar-toggler-bar {
-    display: block;
-    position: relative !important;
-    width: 22px;
-    height: 1px;
-    border-radius: 1px;
-    background: $white;
-  }
-  .navbar .navbar-toggler-bar + .navbar-toggler-bar {
-    margin-top: 7px;
-  }
+//   .navbar .navbar-toggler-bar {
+//     display: block;
+//     position: relative !important;
+//     width: 22px;
+//     height: 1px;
+//     border-radius: 1px;
+//     background: $white;
+//   }
+//   .navbar .navbar-toggler-bar + .navbar-toggler-bar {
+//     margin-top: 7px;
+//   }
 
-  .navbar .navbar-toggle .navbar-toggler {
-    display: block;
-  }
+//   .navbar .navbar-toggle .navbar-toggler {
+//     display: block;
+//   }
 
-  .navbar-minimize-fixed {
-    display: none;
-  }
-}
+//   .navbar-minimize-fixed {
+//     display: none;
+//   }
+// }

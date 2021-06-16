@@ -1,14 +1,7 @@
-import React, { useState } from 'react'
-import {
-  Row,
-  Col,
-  Button,
-  UncontrolledPopover,
-  PopoverHeader,
-  PopoverBody,
-} from 'reactstrap'
+import React, { useRef, useState } from 'react'
 
 // i18n
+import { Button, Col, Overlay, Popover, Row } from 'react-bootstrap'
 import i18n from '../../i18n'
 
 // flags
@@ -144,12 +137,12 @@ const locales = [
 const getLocale = () => locales?.filter((x) => x.id === i18n.languages[0])[0]
 
 const LanguageDropdown = () => {
-  // const [lng, setLng] = useState(i18n.languages[0])
+  const [showDropdown, setshowDropdown] = useState(false)
+  const target = useRef(null)
   const [flag, setFlag] = useState(getLocale()?.flag || locales[0]?.flag)
 
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
-    // setLng(lang)
     setFlag(getLocale().flag)
   }
 
@@ -159,41 +152,40 @@ const LanguageDropdown = () => {
         id="PopoverClick1"
         type="Button"
         className="btn-round btn-transparent btn-icon ml-1"
-        href="#"
+        onClick={() => setshowDropdown(!showDropdown)}
+        ref={target}
       >
-        <img src={flag} alt="flag" className="icon-small mt-2" />
+        <img src={flag} alt="flag" className="icon-small" />
         {/* <i className="icon-small icon-lang icon-dark mt-2" /> */}
       </Button>
-      <UncontrolledPopover
-        trigger="legacy"
-        rootclose="true"
+      <Overlay
+        target={target.current}
+        show={showDropdown}
         placement="bottom"
-        target="PopoverClick1"
+        onHide={() => setshowDropdown(false)}
+        rootClose
       >
-        <PopoverHeader className="mt-2">Language</PopoverHeader>
-        <PopoverBody>
-          <Row>
-            {locales.map((x) => (
-              <Col xs={6} key={x.id} className="pl-3 pr-1">
-                <Button
-                  onClick={() => changeLanguageAction(x.id)}
-                  className="btn-transparent"
-                >
-                  <span className="output-card">
-                    <img
-                      src={x.flag}
-                      alt="Spartan"
-                      height="12"
-                      className="mr-2"
-                    />
-                    {x.name}
-                  </span>
-                </Button>
-              </Col>
-            ))}
-          </Row>
-        </PopoverBody>
-      </UncontrolledPopover>
+        <Popover>
+          <Popover.Header>Language</Popover.Header>
+          <Popover.Body>
+            <Row>
+              {locales.map((x) => (
+                <Col xs={6} key={x.id} className="pl-3 pr-1">
+                  <Button
+                    onClick={() => changeLanguageAction(x.id)}
+                    className="btn-transparent"
+                  >
+                    <span className="output-card">
+                      <img src={x.flag} alt="Spartan" height="12" />
+                      {` ${x.name}`}
+                    </span>
+                  </Button>
+                </Col>
+              ))}
+            </Row>
+          </Popover.Body>
+        </Popover>
+      </Overlay>
     </>
   )
 }

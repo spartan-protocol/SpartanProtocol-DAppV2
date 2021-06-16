@@ -47,60 +47,60 @@
 	}
 }
 
-@include media-breakpoint-down(md) {
-	.footer {
-		padding-left: 30px;
-		text-align: center;
+// @include media-breakpoint-down(md) {
+// 	.footer {
+// 		padding-left: 30px;
+// 		text-align: center;
 
-		.copyright {
-			text-align: right;
-		}
-	}
-}
+// 		.copyright {
+// 			text-align: right;
+// 		}
+// 	}
+// }
 
-@include media-breakpoint-up(xl) {
-	.footer {
-		.copyright {
-			float: right;
-		}
-	}
-}
+// @include media-breakpoint-up(xl) {
+// 	.footer {
+// 		.copyright {
+// 			float: right;
+// 		}
+// 	}
+// }
 
-@include media-breakpoint-down(sm) {
-	.footer {
-		text-align: center;
+// @include media-breakpoint-down(sm) {
+// 	.footer {
+// 		text-align: center;
 
-		nav {
-			display: block;
-			margin-bottom: 5px;
-			float: none;
-		}
+// 		nav {
+// 			display: block;
+// 			margin-bottom: 5px;
+// 			float: none;
+// 		}
 
-		.copyright {
-			text-align: center;
-		}
-	}
-}
+// 		.copyright {
+// 			text-align: center;
+// 		}
+// 	}
+// }
 
-@include media-breakpoint-down(sm) {
-	.footer {
-		.copyright {
-			text-align: center;
-		}
+// @include media-breakpoint-down(sm) {
+// 	.footer {
+// 		.copyright {
+// 			text-align: center;
+// 		}
 
-		.nav {
-			float: none;
-		}
-	}
-}
+// 		.nav {
+// 			float: none;
+// 		}
+// 	}
+// }
 
-@include media-breakpoint-between(md, lg) {
-	.footer {
-		padding-left: 30px !important;
-		text-align: center;
+// @include media-breakpoint-between(md, lg) {
+// 	.footer {
+// 		padding-left: 30px !important;
+// 		text-align: center;
 
-		.copyright {
-			float: right;
-		}
-	}
-}
+// 		.copyright {
+// 			float: right;
+// 		}
+// 	}
+// }

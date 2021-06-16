@@ -43,13 +43,13 @@
 }
 
 
-@include media-breakpoint-down(xs){
+// @include media-breakpoint-down(xs){
 
-  .card-contributions .card-stats {
-    flex-direction: column;
+//   .card-contributions .card-stats {
+//     flex-direction: column;
 
-    .bootstrap-switch {
-      margin-bottom: 15px;
-    }
-  }
-}
+//     .bootstrap-switch {
+//       margin-bottom: 15px;
+//     }
+//   }
+// }

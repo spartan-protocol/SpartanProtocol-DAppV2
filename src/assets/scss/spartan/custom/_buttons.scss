@@ -18,7 +18,7 @@
   &:active,
   &.active,
   .open > &.dropdown-toggle {
-    @include box-shadow(none);
+    // @include box-shadow(none);
     outline: 0 !important;
   }
 
@@ -324,12 +324,12 @@
   color: $white;
 }
 
-@include media-breakpoint-down(md) {
-  .btn-group .btn {
-    padding-left: $padding-round-horizontal;
-    padding-right: $padding-round-horizontal;
-  }
-}
+// @include media-breakpoint-down(md) {
+//   .btn-group .btn {
+//     padding-left: $padding-round-horizontal;
+//     padding-right: $padding-round-horizontal;
+//   }
+// }
 
 .btn-success {
   color: #0a0001;

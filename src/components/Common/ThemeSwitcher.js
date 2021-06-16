@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'reactstrap'
+import { Button } from 'react-bootstrap'
 
 const ThemeSwitcher = () => {
   const [darkMode, setDarkMode] = React.useState(false)
@@ -10,20 +10,20 @@ const ThemeSwitcher = () => {
     /* todo import svg to change color via SCSS */
     document
       .getElementById('menu-drawer-closed')
-      .classList.toggle('icon-menu-closed-light')
+      ?.classList.toggle('icon-menu-closed-light')
     document
       .getElementById('menu-drawer-open')
-      .classList.toggle('icon-menu-open-light')
+      ?.classList.toggle('icon-menu-open-light')
     document
       .getElementById('sidebar-menu-drawer-closed')
-      .classList.toggle('icon-menu-closed-light')
+      ?.classList.toggle('icon-menu-closed-light')
     document
       .getElementById('mobile-menu-drawer-open')
-      .classList.toggle('icon-menu-open-light')
+      ?.classList.toggle('icon-menu-open-light')
   }
 
   const btnClass = 'btn-transparent align-self-center ml-1'
-  const iconClass = ' icon-small icon-dark m-0'
+  const iconClass = 'icon-small icon-dark m-0'
 
   return (
     <>
@@ -34,7 +34,7 @@ const ThemeSwitcher = () => {
           className={btnClass}
           onClick={handleActiveMode}
         >
-          <i className={`icon-moon${iconClass}`} />
+          <i className={`icon-moon ${iconClass}`} />
         </Button>
       )}
       {darkMode && (
@@ -44,7 +44,7 @@ const ThemeSwitcher = () => {
           className={btnClass}
           onClick={handleActiveMode}
         >
-          <i className={`icon-sun${iconClass}`} />
+          <i className={`icon-sun ${iconClass}`} />
         </Button>
       )}
     </>

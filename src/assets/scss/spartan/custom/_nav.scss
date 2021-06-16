@@ -17,9 +17,9 @@ nav.nav-link {
     background-color: #ffff;
     transition: $transition-base;
 
-    &:hover {
-      color: $nav-pills-link-hover-color;
-    }
+    // &:hover {
+    //   color: $nav-pills-link-hover-color;
+    // }
   }
 
   .nav-link.active,
@@ -31,13 +31,13 @@ nav.nav-link {
 
 }
 
-@include media-breakpoint-down(sm) {
-  .nav-pills:not(.nav-pills-circle) {
-    .nav-item {
-      padding-right: 0;
-    }
-  }
-}
+// @include media-breakpoint-down(sm) {
+//   .nav-pills:not(.nav-pills-circle) {
+//     .nav-item {
+//       padding-right: 0;
+//     }
+//   }
+// }
 
 // Nav pills circle
 
@@ -61,28 +61,28 @@ nav.nav-link {
 // Nav wrapper
 .nav-wrapper {
   padding: 1rem 0;
-  @include border-top-radius($card-border-radius);
+  // @include border-top-radius($card-border-radius);
 
-  + .card {
-    @include border-top-radius(0);
-    @include border-bottom-radius($card-border-radius);
-  }
+  // + .card {
+  //   @include border-top-radius(0);
+  //   @include border-bottom-radius($card-border-radius);
+  // }
 }
 
 
-@include media-breakpoint-down(sm) {
-  .nav-tabs {
-    display: inline-block;
-    width: 100%;
-    padding-left: 100px;
-    padding-right: 100px;
-    text-align: center;
+// @include media-breakpoint-down(sm) {
+//   .nav-tabs {
+//     display: inline-block;
+//     width: 100%;
+//     padding-left: 100px;
+//     padding-right: 100px;
+//     text-align: center;
 
-    .nav-item > .nav-link {
-      margin-bottom: 5px;
-    }
-  }
-}
+//     .nav-item > .nav-link {
+//       margin-bottom: 5px;
+//     }
+//   }
+// }
 
 
 

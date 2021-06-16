@@ -129,13 +129,13 @@
 
 }
 
-@include media-breakpoint-down(sm){
-  div.dataTables_paginate ul.pagination {
-    .page-item:first-of-type,
-    .page-item:nth-of-type(2),
-    .page-item:nth-of-type(8),
-    .page-item:last-of-type {
-       display: none !important;
-     }
-  }
-}
+// @include media-breakpoint-down(sm){
+//   div.dataTables_paginate ul.pagination {
+//     .page-item:first-of-type,
+//     .page-item:nth-of-type(2),
+//     .page-item:nth-of-type(8),
+//     .page-item:last-of-type {
+//        display: none !important;
+//      }
+//   }
+// }

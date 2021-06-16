@@ -323,13 +323,13 @@
     }
 }
 
-@include media-breakpoint-down(xs){
-  .fixed-plugin {
-    top: 100px;
-  }
+// @include media-breakpoint-down(xs){
+//   .fixed-plugin {
+//     top: 100px;
+//   }
 
-  .fixed-plugin .dropdown-menu {
-    width: 225px;
-    top: -65px !important;
-  }
-}
+//   .fixed-plugin .dropdown-menu {
+//     width: 225px;
+//     top: -65px !important;
+//   }
+// }

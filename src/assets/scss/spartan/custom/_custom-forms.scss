@@ -71,9 +71,9 @@
                 &::before {
                     border-color: $custom-control-indicator-checked-border-color;
                 }
-                &::after {
-                    background-image: $custom-checkbox-indicator-icon-checked;
-                }
+                // &::after {
+                //     background-image: $custom-checkbox-indicator-icon-checked;
+                // }
             }
         }
 
@@ -85,9 +85,9 @@
             }
 
             &:checked {
-                &::before {
-                    border-color: $custom-control-indicator-checked-disabled-bg;
-                }
+                // &::before {
+                //     border-color: $custom-control-indicator-checked-disabled-bg;
+                // }
             }
         }
     }
@@ -106,9 +106,9 @@
                 &::before {
                     border-color: $custom-control-indicator-checked-border-color;
                 }
-                &::after {
-                    background-image: $custom-radio-indicator-icon-checked;
-                }
+                // &::after {
+                //     background-image: $custom-radio-indicator-icon-checked;
+                // }
             }
         }
 
@@ -119,11 +119,11 @@
                 }
             }
 
-            &:checked {
-                &::before {
-                    border-color: $custom-control-indicator-checked-disabled-bg;
-                }
-            }
+            // &:checked {
+            //     &::before {
+            //         border-color: $custom-control-indicator-checked-disabled-bg;
+            //     }
+            // }
         }
     }
 
@@ -159,9 +159,9 @@
                 + .custom-toggle-slider {
                     border: $custom-control-indicator-border-width solid $custom-control-indicator-disabled-bg;
 
-                    &:before {
-                        background-color: lighten($custom-control-indicator-checked-bg, 10%);
-                    }
+                    // &:before {
+                    //     background-color: lighten($custom-control-indicator-checked-bg, 10%);
+                    // }
                 }
             }
         }

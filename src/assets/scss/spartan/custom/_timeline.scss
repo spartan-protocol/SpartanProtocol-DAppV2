@@ -217,35 +217,35 @@
 
 }
 
-@include media-breakpoint-down(sm){
-  .card.card-timeline {
-    .timeline {
-        &:before {
-          left: 5%;
-        }
+// @include media-breakpoint-down(sm){
+//   .card.card-timeline {
+//     .timeline {
+//         &:before {
+//           left: 5%;
+//         }
 
-        > li > .timeline-badge {
-            left: 5%;
-        }
+//         > li > .timeline-badge {
+//             left: 5%;
+//         }
 
-        > li > .timeline-panel{
-            float: right;
-            width: 83% !important;
+//         > li > .timeline-panel{
+//             float: right;
+//             width: 83% !important;
 
-            &:before{
-                border-left-width: 0;
-                border-right-width: 15px;
-                left: -15px;
-                right: auto;
-            }
+//             &:before{
+//                 border-left-width: 0;
+//                 border-right-width: 15px;
+//                 left: -15px;
+//                 right: auto;
+//             }
 
-            &:after{
-                border-left-width: 0;
-                border-right-width: 14px;
-                left: -14px;
-                right: auto;
-            }
-        }
-    }
-  }
-}
+//             &:after{
+//                 border-left-width: 0;
+//                 border-right-width: 14px;
+//                 left: -14px;
+//                 right: auto;
+//             }
+//         }
+//     }
+//   }
+// }

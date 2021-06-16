@@ -85,8 +85,8 @@
 
 }
 
-@each $color, $value in $theme-colors {
-	.icon-shape-#{$color} {
-		@include icon-shape-variant(theme-color($color));
-	}
-}
+// @each $color, $value in $theme-colors {
+// 	.icon-shape-#{$color} {
+// 		@include icon-shape-variant(theme-color($color));
+// 	}
+// }
