@@ -17,9 +17,7 @@
       font-size: 14px;
       line-height: 20px;
       text-align: center;
-
       color: #ffffff;
-
       border-bottom: 1px solid #fb2715;
       border-radius: 1px;
     }
@@ -27,5 +25,21 @@
 }
 
 .nav-tabs {
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: none;
+}
+
+// LIGHT MODE
+.white-content {
+  .nav-item {
+    background: #FFFFFF;
+    
+    .nav-link {
+      color: #B70000;
+      
+      &.active {
+        background-color: #FFFFFF;
+        color: #000000;
+      }
+    }
+  }
 }

@@ -65,14 +65,6 @@ const Assets = () => {
 
   return (
     <>
-      <Row className="my-3">
-        <Col xs="9" className="">
-          <div className="text-card">{t('wallet')}</div>
-        </Col>
-        <Col xs="3">
-          <div className="text-card text-right">{t('actions')}</div>
-        </Col>
-      </Row>
       {pool.tokenDetails
         ?.filter((asset) => asset.balance > 0)
         .map((asset) => (
@@ -88,7 +80,7 @@ const Assets = () => {
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {asset.symbol}
+                  {asset.symbol} - {t('wallet')}
                   <div className="description">
                     {formatFromWei(asset.balance)}
                   </div>

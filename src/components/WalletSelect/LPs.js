@@ -67,17 +67,6 @@ const LPs = () => {
   return (
     <>
       {/* HELD LP TOKENS */}
-      {pool.poolDetails?.filter((asset) => asset.balance > 0).length > 0 && (
-        <Row className="my-3">
-          <Col xs="9">
-            <div className="text-card">{t('wallet')}</div>
-          </Col>
-          <Col xs="3">
-            <div className="text-card text-right">{t('actions')}</div>
-          </Col>
-        </Row>
-      )}
-
       {pool.poolDetails
         ?.filter((asset) => asset.balance > 0)
         .map((asset) => (
@@ -99,7 +88,7 @@ const LPs = () => {
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {`${getToken(asset.tokenAddress)?.symbol}p`}
+                  {`${getToken(asset.tokenAddress)?.symbol}p - ${t('wallet')}`}
                   <div className="description">
                     {formatFromWei(asset.balance)}
                   </div>
@@ -149,16 +138,9 @@ const LPs = () => {
             </Col>
           </Row>
         ))}
-      {/* STOKED LP TOKENS */}
+      {/* STAKED LP TOKENS */}
       {pool.poolDetails?.filter((asset) => asset.staked > 0).length > 0 && (
-        <Row className="my-3">
-          <Col xs="9">
-            <div>Staked</div>
-          </Col>
-          <Col xs="3">
-            <div className="text-card text-right">Actions</div>
-          </Col>
-        </Row>
+        <hr />
       )}
       {pool.poolDetails
         ?.filter((asset) => asset.staked > 0)
@@ -181,7 +163,7 @@ const LPs = () => {
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {`${getToken(asset.tokenAddress)?.symbol}p`}
+                  {`${getToken(asset.tokenAddress)?.symbol}p - ${t('staked')}`}
                   <div className="description">
                     {formatFromWei(asset.staked)}
                   </div>
@@ -233,14 +215,7 @@ const LPs = () => {
         ))}
       {/* BONDED LP TOKENS */}
       {pool.poolDetails?.filter((asset) => asset.bonded > 0).length > 0 && (
-        <Row className="my-3">
-          <Col xs="9">
-            <div className="text-card">Bonded</div>
-          </Col>
-          <Col xs="3">
-            <div className="text-card text-right">Actions</div>
-          </Col>
-        </Row>
+        <hr />
       )}
       {pool.poolDetails
         ?.filter((asset) => asset.bonded > 0)
@@ -263,7 +238,7 @@ const LPs = () => {
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {`${getToken(asset.tokenAddress)?.symbol}p`}
+                  {`${getToken(asset.tokenAddress)?.symbol}p - ${t('bond')}`}
                   <div className="description">
                     {formatFromWei(asset.bonded)}
                   </div>

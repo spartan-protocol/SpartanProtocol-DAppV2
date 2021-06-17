@@ -4,7 +4,7 @@
 
 .modal-header {
   background-color: #25212d;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #fb2715;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
@@ -14,9 +14,33 @@
 
 .modal-body {
   font-style: normal;
-font-weight: normal;
-font-size: 14px;
-line-height: 20px;
-  color: #FFFFFF;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
 }
 
+.modal-footer {
+  background-color: #25212d;
+  border-top: 1px solid #fb2715;
+}
+
+// LIGHT MODE
+.white-content {
+  .modal-content {
+    background-color: #ffffff;
+  }
+
+  .modal-header {
+    background-color: #F5F8FC;
+    color: #000000;
+  }
+
+  .modal-body {
+    color: #000000;
+  }
+
+  .modal-footer {
+    background-color: #F5F8FC;
+  }
+}

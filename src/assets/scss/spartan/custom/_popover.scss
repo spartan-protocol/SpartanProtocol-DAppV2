@@ -6,7 +6,7 @@
 .popover-header {
   // General
   background-color: #25212d;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #fb2715;
   // Type
   font: $font-family-headers;
   font-style: normal;
@@ -47,5 +47,12 @@ a {
 @each $color, $value in $theme-colors {
   .popover-#{$color} {
     @include popover-variant($value);
+  }
+}
+
+// LIGHT THEME
+.white-content {
+  .popover-header {
+    color: #000000;
   }
 }

@@ -25,6 +25,8 @@ import iosIcon from '../../assets/icons/apple-ios.svg'
 import Assets from './Assets'
 import LPs from './LPs'
 import Synths from './Synths'
+import { ReactComponent as OpenIcon } from '../../assets/icons/icon-scan.svg'
+import { ReactComponent as DiscIcon } from '../../assets/icons/wallet-red.svg'
 
 const WalletSelect = (props) => {
   const wallet = useWallet()
@@ -135,11 +137,43 @@ const WalletSelect = (props) => {
 
   return (
     <>
-      <Modal show={props.show} onHide={props.onHide}>
+      <Modal show={props.show} onHide={props.onHide} centered>
         <Modal.Header closeButton closeVariant="white">
           <Modal.Title>
-            {t('wallet')}
-            {network.chainId === 97 ? ' - Testnet' : ' - Mainnet'}
+            <Row>
+              <Col xs="12">
+                {wallet.account ? (
+                  <>
+                    Wallet:{' '}
+                    <span className="output-card">
+                      {formatShortString(wallet.account)}
+                      <ShareLink url={wallet.account} notificationLocation="tc">
+                        <i className="icon-small icon-copy ms-2" />
+                      </ShareLink>
+                    </span>
+                  </>
+                ) : (
+                  t('connectWallet')
+                )}
+              </Col>
+              <Col xs="auto">
+                <Form className="mb-0">
+                  {/* Network:{' '} */}
+                  <span className="output-card">
+                    Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                    <Form.Check
+                      type="switch"
+                      id="custom-switch"
+                      className="ms-2 d-inline-flex"
+                      checked={network?.chainId === 56}
+                      onChange={(value) => {
+                        onChangeNetwork(value)
+                      }}
+                    />
+                  </span>
+                </Form>
+              </Col>
+            </Row>
           </Modal.Title>
         </Modal.Header>
 
@@ -154,27 +188,6 @@ const WalletSelect = (props) => {
               wallet too!
             </Alert>
           )}
-
-          <Row>
-            <Col xs={5} className="text-end">
-              TestNet
-            </Col>
-            <Col xs={2} className="text-center">
-              <Form>
-                <Form.Check
-                  type="switch"
-                  id="custom-switch"
-                  checked={network?.chainId === 56}
-                  onChange={(value) => {
-                    onChangeNetwork(value)
-                  }}
-                />
-              </Form>
-            </Col>
-            <Col xs={5} className="text-start">
-              MainNet
-            </Col>
-          </Row>
 
           {/* Wallet overview */}
           {wallet.account === null ? (
@@ -238,45 +251,6 @@ const WalletSelect = (props) => {
             </Row>
           ) : (
             <>
-              <Row>
-                <Col xs={6} className="text-center">
-                  <div className="output-wallet-description">
-                    {t('viewBscScan')}{' '}
-                    <a
-                      href={getExplorerWallet(wallet.account)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <i className="icon-extra-small icon-scan" />
-                    </a>
-                  </div>
-                  <div className="title">
-                    {formatShortString(wallet.account)}
-                    <ShareLink url={wallet.account} notificationLocation="tc">
-                      <i className="icon-small icon-copy" />
-                    </ShareLink>
-                  </div>
-                </Col>
-                <Col xs={6}>
-                  <Button
-                    className="mx-1 btn-sm btn-info d-block d-sm-none"
-                    onClick={() => {
-                      onWalletDisconnect()
-                    }}
-                  >
-                    Disconnect Wallet
-                  </Button>
-
-                  <Button
-                    className="float-right mx-1 btn-md btn-info d-none d-sm-block"
-                    onClick={() => {
-                      onWalletDisconnect()
-                    }}
-                  >
-                    Disconnect Wallet
-                  </Button>
-                </Col>
-              </Row>
               {/* wallet navigation tabs */}
               {network.chainId === 97 || network.chainId === 56 ? (
                 <>
@@ -284,7 +258,7 @@ const WalletSelect = (props) => {
                     <Tabs
                       defaultActiveKey="assets"
                       id="uncontrolled-tab-example"
-                      className="flex-row px-2 mt-3"
+                      className="flex-row px-2 mb-3"
                       fill
                     >
                       <Tab eventKey="assets" title={t('assets')}>
@@ -305,6 +279,28 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
+        <Modal.Footer className="justify-content-center">
+          <Button
+            href={getExplorerWallet(wallet.account)}
+            target="_blank"
+            rel="noreferrer"
+            size="sm"
+            variant="secondary"
+          >
+            {t('viewBscScan')}{' '}
+            <OpenIcon height="16" fill="white" className="mb-1" />
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => {
+              onWalletDisconnect()
+            }}
+          >
+            {t('disconnect')}
+            <DiscIcon height="17" fill="white" className="mb-1" />
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   )
