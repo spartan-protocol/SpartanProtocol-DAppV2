@@ -143,12 +143,8 @@ const Common = () => {
           {getRoutes(routes(t))}
           <Redirect from="*" to="/home" />
         </Switch>
-        {
-          // we don't want the Footer to be rendered on full screen maps page
-          location.pathname.indexOf('full-screen-map') !== -1 ? null : (
-            <Footer />
-          )
-        }
+
+        <Footer />
       </div>
     </div>
   )
