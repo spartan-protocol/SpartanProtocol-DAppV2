@@ -34,7 +34,7 @@ const AddressConn = () => {
           onClick={() => setWalletModalShow(true)}
           onKeyPress={() => setWalletModalShow(true)}
         >
-          <WalletIconC fill="#aacdff" />
+          <WalletIconB fill="#aacdff" />
         </Button>
       )}
 

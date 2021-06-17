@@ -1,0 +1,43 @@
+.accordion-item {
+  background-color: #25212d;
+  border-top: 1px solid #fb2715;
+  color: #FFFFFF;
+}
+
+.accordion-button {
+  background-color: #25212d;
+  color: #FFFFFF;
+  border-bottom: 1px solid #1D171F;
+}
+
+.accordion-button:focus {
+  box-shadow: none;
+  border: none;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #FFF;
+  background-color: #25212d;
+  border-bottom: 1px solid #1D171F;
+}
+
+.accordion-button::after {
+  filter: invert(100%) sepia(99%) saturate(2%) hue-rotate(317deg) brightness(110%) contrast(100%);
+}
+
+// LIGHT MODE
+.white-content {
+  .accordion-item {
+    background-color: #F5F8FC;
+    color: #000000;
+  }
+
+  .accordion-button {
+    background-color: #F5F8FC;
+    color: #000000;
+  }
+
+  .accordion-button::after {
+    filter: invert(0%) sepia(99%) saturate(7500%) hue-rotate(318deg) brightness(97%) contrast(103%);
+  }
+}

@@ -1,18 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import {
   Button,
   Row,
   Col,
-  Card,
-  UncontrolledPopover,
-  PopoverHeader,
-  PopoverBody,
-  Progress,
-  Collapse,
-  UncontrolledTooltip,
-} from 'reactstrap'
+  Popover,
+  ProgressBar,
+  Badge,
+  Accordion,
+  Overlay,
+} from 'react-bootstrap'
 import { useBond } from '../../store/bond'
 import { useReserve } from '../../store/reserve/selector'
 import { useSparta } from '../../store/sparta/selector'
@@ -27,6 +24,8 @@ import { getExplorerContract } from '../../utils/extCalls'
 import { getAddresses, getNetwork } from '../../utils/web3'
 import { ReactComponent as FireIcon } from '../../assets/icons/fire.svg'
 import { ReactComponent as DownIcon } from '../../assets/icons/arrow-down.svg'
+import { ReactComponent as ContractIcon } from '../../assets/icons/icon-contratcs.svg'
+import { ReactComponent as OpenIcon } from '../../assets/icons/icon-scan.svg'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -35,7 +34,8 @@ const Supply = () => {
   const sparta = useSparta()
   const reserve = useReserve()
   const bond = useBond()
-  const [openedCollapseThree, setopenedCollapseThree] = React.useState(false)
+  const target = useRef(null)
+  const [showDropdown, setshowDropdown] = useState(false)
   const addrNames = [
     'spartav1',
     'spartav2',
@@ -125,9 +125,10 @@ const Supply = () => {
     <>
       <Button
         id="PopoverClick"
-        type="Button"
-        className="px-2 px-sm-4 ms-1 output-card"
-        href="#"
+        variant="dark"
+        className="px-2 px-sm-4 ms-1 output-card pt-2"
+        onClick={() => setshowDropdown(!showDropdown)}
+        ref={target}
       >
         <DownIcon fill="white" className="me-1" />$
         {formatFromUnits(web3.spartaPrice, 2)}
@@ -135,215 +136,191 @@ const Supply = () => {
           height={feeIconActive ? '16' : '15'}
           width="15"
           fill={feeIconActive ? 'red' : 'white'}
-          className="ms-1"
+          className="ms-1 mb-1"
         />
       </Button>
 
-      <UncontrolledPopover
-        trigger="legacy"
-        rootclose="true"
+      <Overlay
+        target={target.current}
+        show={showDropdown}
         placement="bottom"
-        target="PopoverClick"
+        onHide={() => setshowDropdown(false)}
+        rootClose
       >
-        <PopoverHeader className="mt-2">
-          Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
-        </PopoverHeader>
-        <PopoverBody>
-          <Row>
-            <Col xs="6" className="popover-text mb-4">
-              {t('marketcap')}
-            </Col>
-            <Col xs="6 mb-2" className="popover-text mb-4">
-              ${formatFromWei(getMarketCap(), 0)}
-            </Col>
+        <Popover>
+          <Popover.Header className="mt-2">
+            Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
+          </Popover.Header>
+          <Popover.Body>
+            <Row>
+              <Col xs="6" className="popover-text mb-4">
+                {t('marketcap')}
+              </Col>
+              <Col xs="6 mb-2" className="popover-text text-end mb-4">
+                ${formatFromWei(getMarketCap(), 0)}
+              </Col>
 
-            <Col xs="6" className="popover-text mb-2">
-              {t('circulating')}
-            </Col>
-            <Col xs="6" className="popover-text mb-2">
-              {formatFromWei(getCirculatingSupply(), 0)}
-            </Col>
+              <Col xs="6" className="popover-text mb-2">
+                {t('circulating')}
+              </Col>
+              <Col xs="6" className="popover-text text-end mb-2">
+                {formatFromWei(getCirculatingSupply(), 0)}
+              </Col>
 
-            <Col xs="12" className="mb-4">
-              <Progress multi>
-                <Progress
-                  bar
-                  id="sparta1supply"
-                  color="light"
-                  value={formatFromWei(
-                    BN(sparta.globalDetails.oldTotalSupply)
-                      .div(300000000)
-                      .times(100),
-                  )}
-                />
-                <UncontrolledTooltip target="sparta1supply">
-                  SPARTAv1
-                </UncontrolledTooltip>
-                <Progress bar color="black" value="1" />
-                <Progress
-                  bar
-                  id="sparta2supply"
-                  color="gray"
-                  value={formatFromWei(
-                    BN(getCirculatingSupply())
-                      .minus(sparta.globalDetails.oldTotalSupply)
-                      .div(300000000)
-                      .times(100),
-                  )}
-                />
-                <UncontrolledTooltip target="sparta2supply">
-                  SPARTAv2
-                </UncontrolledTooltip>
-              </Progress>
-            </Col>
+              <Col xs="12" className="mb-2">
+                <ProgressBar>
+                  <ProgressBar
+                    id="sparta1supply"
+                    variant="warning"
+                    key={1}
+                    now={formatFromWei(
+                      BN(sparta.globalDetails.oldTotalSupply)
+                        .div(300000000)
+                        .times(100),
+                    )}
+                  />
+                  <ProgressBar
+                    id="sparta2supply"
+                    variant="primary"
+                    key={2}
+                    now={formatFromWei(
+                      BN(getCirculatingSupply())
+                        .minus(sparta.globalDetails.oldTotalSupply)
+                        .div(300000000)
+                        .times(100),
+                    )}
+                  />
+                </ProgressBar>
+              </Col>
+              <Col xs="6" className="text-center">
+                <Badge bg="warning">SPARTAv1</Badge>
+              </Col>
+              <Col xs="6" className="text-center">
+                <Badge bg="primary">SPARTAv2</Badge>
+              </Col>
 
-            <Col xs="6" className="popover-text mb-2">
-              {t('totalSupply')}
-            </Col>
-            <Col xs="6" className="popover-text mb-2">
-              {formatFromWei(getTotalSupply(), 0)}
-            </Col>
+              <Col xs="6" className="popover-text my-2">
+                {t('totalSupply')}
+              </Col>
+              <Col xs="6" className="popover-text text-end my-2">
+                {formatFromWei(getTotalSupply(), 0)}
+              </Col>
 
-            <Col xs="12 mb-2">
-              <Progress multi>
-                <Progress
-                  bar
-                  color="primary"
-                  value={
-                    network.chainId === 56
-                      ? formatFromUnits(
-                          BN(distroMnBurnV1).div(300000000).times(100),
-                          2,
-                        )
-                      : '1'
-                  }
-                />
-                <Progress bar color="black" value="1" />
-                <Progress
-                  bar
-                  color="yellow"
-                  value={
-                    network.chainId === 56
-                      ? formatFromUnits(
-                          BN(distroMnBondV1)
-                            .plus(distroMnBondV2)
-                            .div(300000000)
-                            .times(100),
-                          2,
-                        )
-                      : '1'
-                  }
-                />
-                <Progress bar color="black" value="1" />
-                <Progress
-                  bar
-                  color="lightblue"
-                  value={
-                    network.chainId === 56
-                      ? formatFromUnits(
-                          BN(convertFromWei(getTotalSupply()))
-                            .minus(distroMnBurnV1)
-                            .minus(distroMnBondV1)
-                            .minus(distroMnBondV2)
-                            .div(300000000)
-                            .times(100),
-                          2,
-                        )
-                      : formatFromUnits(
-                          BN(convertFromWei(getTotalSupply()))
-                            .div(300000000)
-                            .times(100),
-                          2,
-                        )
-                  }
-                />
-              </Progress>
-            </Col>
-            <Col xs="4">
-              <span className="popover-text  dot-burn mr-2" />
-              {t('burn')}
-            </Col>
-            <Col xs="4">
-              <span className="popover-text dot-bond mr-1" />
-              {t('bond')}
-            </Col>
-            <Col xs="4">
-              <span className="popover-text  dot-emission mr-2" />
-              {t('emisson')}
-            </Col>
+              <Col xs="12 mb-2">
+                <ProgressBar>
+                  <ProgressBar
+                    variant="primary"
+                    key={1}
+                    now={
+                      network.chainId === 56
+                        ? formatFromUnits(
+                            BN(distroMnBurnV1).div(300000000).times(100),
+                            2,
+                          )
+                        : '1'
+                    }
+                  />
+                  <ProgressBar
+                    variant="info"
+                    key={2}
+                    now={
+                      network.chainId === 56
+                        ? formatFromUnits(
+                            BN(distroMnBondV1)
+                              .plus(distroMnBondV2)
+                              .div(300000000)
+                              .times(100),
+                            2,
+                          )
+                        : '1'
+                    }
+                  />
+                  <ProgressBar
+                    variant="danger"
+                    key={3}
+                    now={
+                      network.chainId === 56
+                        ? formatFromUnits(
+                            BN(convertFromWei(getTotalSupply()))
+                              .minus(distroMnBurnV1)
+                              .minus(distroMnBondV1)
+                              .minus(distroMnBondV2)
+                              .div(300000000)
+                              .times(100),
+                            2,
+                          )
+                        : formatFromUnits(
+                            BN(convertFromWei(getTotalSupply()))
+                              .div(300000000)
+                              .times(100),
+                            2,
+                          )
+                    }
+                  />
+                </ProgressBar>
+              </Col>
+              <Col xs="4" className="text-center">
+                <Badge bg="primary">{t('burn')}</Badge>
+              </Col>
+              <Col xs="4" className="text-center">
+                <Badge bg="info">{t('bond')}</Badge>
+              </Col>
+              <Col xs="4" className="text-center">
+                <Badge bg="danger">{t('emisson')}</Badge>
+              </Col>
 
-            <Col xs="6" className="popover-text mt-3">
-              {t('totalFeeBurn')}
-            </Col>
-            <Col xs="6" className="popover-text mt-3">
-              {formatFromWei(feeBurn, 2)}
-            </Col>
-          </Row>
-          <br />
-          <Row>
-            <Col md="12" className="ml-auto text-right">
-              <Card
-                className="card-body card-inside"
-                style={{ backgroundColor: '#25212D' }}
-              >
-                <Row
-                  className="mb-3"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setopenedCollapseThree(!openedCollapseThree)
-                  }}
-                  onKeyPress={(e) => {
-                    e.preventDefault()
-                    setopenedCollapseThree(!openedCollapseThree)
-                  }}
-                >
-                  <Col xs={8} className="ml-n2 ">
-                    <div className="text-left text-card">
-                      <i className="icon-small icon-contracts icon-light pr-4 mr-1" />{' '}
-                      {t('contracts')}
-                    </div>
-                  </Col>
-                  <Col className="ml-auto">
-                    <div
-                      aria-expanded={openedCollapseThree}
-                      role="button"
-                      tabIndex={-1}
-                      data-parent="#accordion"
-                      data-toggle="collapse"
-                    >
-                      <i
-                        className="bd-icons icon-minimal-down mt-1"
-                        style={{ color: '#FFF' }}
+              <Col xs="6" className="popover-text mt-3">
+                {t('totalFeeBurn')}
+              </Col>
+              <Col xs="6" className="popover-text text-end mt-3">
+                {formatFromWei(feeBurn, 2)}
+              </Col>
+            </Row>
+
+            <br />
+
+            <Row>
+              <Col xs="12">
+                <Accordion>
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>
+                      <ContractIcon
+                        height="20"
+                        fill="#fb2715"
+                        className="me-2"
                       />
-                    </div>
-                  </Col>
-                </Row>
-                <Collapse role="tabpanel" isOpen={openedCollapseThree}>
-                  <Row className="card-body text-center p-2">
-                    {addrNames
-                      .filter((x) => addr[x] !== '')
-                      .map((c) => (
-                        <Col key={c} xs={6} className="text-left mb-3 px-2">
-                          <span>
-                            <div className="text-card">{t(c)}</div>{' '}
-                            {t('viewBscScan')}
-                            <a
-                              href={getExplorerContract(addr[c])}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <i className="icon-extra-small icon-scan ml-n2" />
-                            </a>
-                          </span>
-                        </Col>
-                      ))}
-                  </Row>
-                </Collapse>
-              </Card>
-            </Col>
-          </Row>
-        </PopoverBody>
-      </UncontrolledPopover>
+                      {t('contracts')}
+                    </Accordion.Header>
+                    <Accordion.Body className="p-1">
+                      <Row className="card-body text-center p-2">
+                        {addrNames
+                          .filter((x) => addr[x] !== '')
+                          .map((c) => (
+                            <Col key={c} xs={6} className="mb-1 px-1">
+                              <a
+                                href={getExplorerContract(addr[c])}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                <h6>
+                                  <Badge bg="info" className="w-100">
+                                    {t(c)}
+                                    <br />
+                                    <OpenIcon height="12" className="mt-1" />
+                                  </Badge>
+                                </h6>
+                              </a>
+                            </Col>
+                          ))}
+                      </Row>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              </Col>
+            </Row>
+          </Popover.Body>
+        </Popover>
+      </Overlay>
     </>
   )
 }

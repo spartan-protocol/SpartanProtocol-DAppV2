@@ -3,6 +3,10 @@
 }
 
 @each $color, $value in $theme-colors {
+	@include bg-variant(".bg-#{$color}", $value, $ignore-warning: true);
+}
+
+@each $color, $value in $theme-colors {
 	@include bg-gradient-variant(".bg-gradient-#{$color}", $value, $ignore-warning: true);
 }
 

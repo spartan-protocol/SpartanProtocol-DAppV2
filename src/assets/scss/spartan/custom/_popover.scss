@@ -4,16 +4,18 @@
 }
 
 .popover-header {
-  // General
   background-color: #25212d;
   border-bottom: 1px solid #fb2715;
-  // Type
   font: $font-family-headers;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
   line-height: 32px;
   color: #ffffff;
+}
+
+.popover-header::before {
+  display: none!important;
 }
 
 .popover-body,
@@ -52,7 +54,21 @@ a {
 
 // LIGHT THEME
 .white-content {
+  .popover {
+    background: #FFFFFF;
+  }
+  
   .popover-header {
+    background-color: #F5F8FC;
+    color: #000000;
+  }
+  
+  .popover-body,
+  a {
+    color: #000000;
+  }
+  
+  .popover-text {
     color: #000000;
   }
 }
