@@ -9,7 +9,7 @@ import Supply from '../Supply/Supply'
 import './Header.scss'
 
 const Header = (props) => (
-  <Navbar fixed="top">
+  <Navbar className="header" fixed="top">
     <Container>
       {/* ADD TOGGLE FOR SIDEBAR HERE */}
 

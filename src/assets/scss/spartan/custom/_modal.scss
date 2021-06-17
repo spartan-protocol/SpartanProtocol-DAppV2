@@ -20,6 +20,20 @@
   color: #ffffff;
 }
 
+.modal-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+  background-color: #970303;
+  outline: 1px solid #1d171f;
+}
+
 .modal-footer {
   background-color: #25212d;
   border-top: 1px solid #fb2715;
