@@ -30,6 +30,7 @@ import roFlag from '../../assets/flags/ro.svg'
 import ruFlag from '../../assets/flags/ru.svg'
 import seFlag from '../../assets/flags/se.svg'
 import uaFlag from '../../assets/flags/ua.svg'
+import vnFlag from '../../assets/flags/vn.svg'
 import zaFlag from '../../assets/flags/za.svg'
 
 const getEnFlag = () => {
@@ -138,6 +139,11 @@ const locales = [
     id: 'uk',
     name: 'Український',
     flag: uaFlag,
+  },
+  {
+    id: 'vi',
+    name: 'Tiếng Việt',
+    flag: vnFlag,
   },
 ]
 

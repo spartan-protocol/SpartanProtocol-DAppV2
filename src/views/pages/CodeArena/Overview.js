@@ -171,7 +171,7 @@ ethereum(network: $network){
   const [progColor, setprogColor] = useState('primary')
   useEffect(() => {
     let _progColor = 'primary'
-    if (totalWidth >= 80) {
+    if (totalWidth >= 96) {
       _progColor = 'green'
     } else if (totalWidth >= 30) {
       _progColor = 'info'
@@ -274,12 +274,13 @@ ethereum(network: $network){
                     </MDBCardText>
                     <MDBCardText>
                       The scope of contracts to be audited has a recommended
-                      bounty requirement of $80k USD. Being a community built
-                      and run project; there is a drive to crowdfund the bounty.
+                      bounty + contest cost requirement of $96k USD. Being a
+                      community built and run project; there is a drive to
+                      crowdfund the bounty.
                     </MDBCardText>
                     <MDBCardText>
                       The audit will go ahead whether or not the target is
-                      reached, but raising $80k will ensure the entire suite of
+                      reached, but raising $96k will ensure the entire suite of
                       contracts are audited!
                     </MDBCardText>
 
@@ -297,11 +298,12 @@ ethereum(network: $network){
                   <MDBCol size="12" className="my-2">
                     <MDBProgress height="15">
                       <MDBProgressBar bgColor={progColor} width={totalWidth}>
-                        ${formatFromWei(totalUSD, 0)}
+                        ${formatFromWei(totalUSD, 0)} (Donations)
                       </MDBProgressBar>
-                      <MDBProgressBar bgColor="black" width={100 - totalWidth}>
-                        {'<-- Donations'}
-                      </MDBProgressBar>
+                      <MDBProgressBar
+                        bgColor="black"
+                        width={100 - totalWidth}
+                      />
                     </MDBProgress>
                   </MDBCol>
 
@@ -309,13 +311,11 @@ ethereum(network: $network){
                     <MDBProgress height="30">
                       <MDBProgressBar width="30">$30K (Min)</MDBProgressBar>
                       <MDBProgressBar bgColor="black" width="0.25" />
-                      <MDBProgressBar bgColor="info" width="50">
-                        $80K (Target)
+                      <MDBProgressBar bgColor="info" width="66">
+                        $96K (Target)
                       </MDBProgressBar>
                       <MDBProgressBar bgColor="black" width="0.25" />
-                      <MDBProgressBar bgColor="green" width="20">
-                        $100K
-                      </MDBProgressBar>
+                      <MDBProgressBar bgColor="green" width="4" />
                     </MDBProgress>
                   </MDBCol>
                 </MDBRow>
