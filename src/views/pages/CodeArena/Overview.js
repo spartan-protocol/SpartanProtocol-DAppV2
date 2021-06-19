@@ -64,7 +64,6 @@ const Overview = () => {
 
   const [recentTxns, setrecentTxns] = useState([])
   const [bnbPrice, setbnbPrice] = useState(0)
-  const [trigger1, settrigger1] = useState(0)
   const getHoldings = async () => {
     dispatch(communityWalletHoldings(wallet.account ? wallet : ''))
     const _bnbPrice = await axios.get(
@@ -128,7 +127,7 @@ ethereum(network: $network){
     }
   }
   useEffect(() => {
-      getHoldings()
+    getHoldings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
