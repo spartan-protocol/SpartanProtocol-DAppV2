@@ -128,16 +128,9 @@ ethereum(network: $network){
     }
   }
   useEffect(() => {
-    if (trigger1 === 0) {
       getHoldings()
-    }
-    const timer = setTimeout(() => {
-      getHoldings()
-      settrigger1(trigger1 + 1)
-    }, 10000)
-    return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1, wallet.account])
+  }, [])
 
   const [totalUSD, settotalUSD] = useState(0)
   useEffect(() => {
