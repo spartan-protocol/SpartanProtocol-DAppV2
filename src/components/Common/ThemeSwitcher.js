@@ -1,25 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 
 const ThemeSwitcher = () => {
-  const [darkMode, setDarkMode] = React.useState(false)
-  const handleActiveMode = () => {
-    setDarkMode(!darkMode)
-    document.body.classList.toggle('white-content')
+  const [lightMode, setlightMode] = React.useState(false)
 
-    /* todo import svg to change color via SCSS */
-    document
-      .getElementById('menu-drawer-closed')
-      ?.classList.toggle('icon-menu-closed')
-    document
-      .getElementById('menu-drawer-open')
-      ?.classList.toggle('icon-menu-open')
-    document
-      .getElementById('sidebar-menu-drawer-closed')
-      ?.classList.toggle('icon-menu-closed')
-    document
-      .getElementById('mobile-menu-drawer-open')
-      ?.classList.toggle('icon-menu-open')
+  useEffect(() => {
+    const lsMode = window.localStorage.getItem('theme')
+    if (lsMode) {
+      setlightMode(true)
+      document.body.classList.toggle('white-content')
+    }
+  }, [])
+
+  const handleActiveMode = () => {
+    const _lightMode = document.body.classList.contains('white-content')
+    if (_lightMode) {
+      setlightMode(false)
+      window.localStorage.removeItem('theme')
+    } else {
+      setlightMode(true)
+      window.localStorage.setItem('theme', true)
+    }
+    document.body.classList.toggle('white-content')
   }
 
   const btnClass = 'btn-transparent align-self-center mx-1'
@@ -27,9 +29,9 @@ const ThemeSwitcher = () => {
 
   return (
     <>
-      {!darkMode && (
+      {!lightMode && (
         <Button
-          value={darkMode}
+          value={lightMode}
           type="Button"
           className={btnClass}
           onClick={handleActiveMode}
@@ -37,9 +39,9 @@ const ThemeSwitcher = () => {
           <i className={`icon-moon ${iconClass}`} />
         </Button>
       )}
-      {darkMode && (
+      {lightMode && (
         <Button
-          value={darkMode}
+          value={lightMode}
           type="Button"
           className={btnClass}
           onClick={handleActiveMode}

@@ -11,24 +11,15 @@ import { routes } from '../../routes'
 
 const Sidebar = () => {
   const [navOpen, setnavOpen] = useState(false)
-  const [lightMode, setlightMode] = useState(false)
   const { t } = useTranslation()
 
-  const checkLightMode = () => {
-    if (document.body.classList.contains('white-content')) {
-      setlightMode(true)
-    } else {
-      setlightMode(false)
-    }
-  }
+  const isLightMode = window.localStorage.getItem('theme')
 
   const openNav = () => {
-    checkLightMode()
     setnavOpen(true)
   }
 
   const closeNav = () => {
-    checkLightMode()
     setnavOpen(false)
   }
 
@@ -37,14 +28,14 @@ const Sidebar = () => {
       {navOpen ? (
         <>
           <NavOpenIcon
-            fill={lightMode ? 'black' : 'white'}
+            fill={isLightMode ? 'black' : 'white'}
             role="button"
             onClick={closeNav}
           />
         </>
       ) : (
         <NavClosedIcon
-          fill={lightMode ? 'black' : 'white'}
+          fill={isLightMode ? 'black' : 'white'}
           role="button"
           onClick={openNav}
         />
@@ -54,14 +45,14 @@ const Sidebar = () => {
           {navOpen ? (
             <>
               <NavOpenIcon
-                fill={lightMode ? 'black' : 'white'}
+                fill={isLightMode ? 'black' : 'white'}
                 role="button"
                 onClick={closeNav}
               />
             </>
           ) : (
             <NavClosedIcon
-              fill={lightMode ? 'black' : 'white'}
+              fill={isLightMode ? 'black' : 'white'}
               role="button"
               onClick={openNav}
             />
@@ -86,7 +77,7 @@ const Sidebar = () => {
                         <route.icon
                           height="30"
                           width="30"
-                          fill={lightMode ? 'black' : 'white'}
+                          fill={isLightMode ? 'black' : 'white'}
                         />
                         <span className="ms-2">{t(route.name)}</span>
                       </div>
