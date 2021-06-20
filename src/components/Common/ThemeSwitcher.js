@@ -10,16 +10,16 @@ const ThemeSwitcher = () => {
     /* todo import svg to change color via SCSS */
     document
       .getElementById('menu-drawer-closed')
-      ?.classList.toggle('icon-menu-closed-light')
+      ?.classList.toggle('icon-menu-closed')
     document
       .getElementById('menu-drawer-open')
-      ?.classList.toggle('icon-menu-open-light')
+      ?.classList.toggle('icon-menu-open')
     document
       .getElementById('sidebar-menu-drawer-closed')
-      ?.classList.toggle('icon-menu-closed-light')
+      ?.classList.toggle('icon-menu-closed')
     document
       .getElementById('mobile-menu-drawer-open')
-      ?.classList.toggle('icon-menu-open-light')
+      ?.classList.toggle('icon-menu-open')
   }
 
   const btnClass = 'btn-transparent align-self-center mx-1'

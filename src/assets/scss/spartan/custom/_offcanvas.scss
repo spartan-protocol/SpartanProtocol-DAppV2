@@ -1,0 +1,31 @@
+.offcanvas {
+  background-color: #1d171f;
+}
+
+.offcanvas-header {
+  border-bottom: 1px solid #fb2715;
+}
+
+.offcanvas-title {
+  color: #FFFFFF;
+  margin-bottom: 0!important;
+}
+
+.offcanvas-body {
+  color: #FFFFFF;
+}
+
+// WHITE MODE
+.white-content {
+  .offcanvas {
+    background-color: #FFF;
+  }
+  
+  .offcanvas-title {
+    color: #000;
+  }
+  
+  .offcanvas-body {
+    color: #000;
+  }
+}

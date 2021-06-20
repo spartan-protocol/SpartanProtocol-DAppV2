@@ -305,23 +305,13 @@
 
 /* Drawer icons switch*/
 
-.icon-menu-closed-dark {
-    background-image: url('/src/assets/icons/icon-menu-closed.svg#dark');
+.icon-menu-closed {
+    background-image: url('/src/assets/icons/icon-menu-closed.svg');
 }
 
 
-.icon-menu-closed-light {
-    background-image: url('/src/assets/icons/icon-menu-closed-light.svg#light');
-}
-
-
-.icon-menu-open-dark {
-    background-image: url('/src/assets/icons/icon-menu-open.svg#dark');
-}
-
-
-.icon-menu-open-light {
-    background-image: url('/src/assets/icons/icon-menu-open-light.svg#light');
+.icon-menu-open {
+    background-image: url('/src/assets/icons/icon-menu-open.svg');
 }
 
 
@@ -372,21 +362,13 @@
 
 /* Gitbook */
 
-.icon-gitbook.icon-light {
-    background-image: url('/src/assets/icons/icon-gitbook-light.svg#light')
-}
-
-.icon-gitbook.icon-dark {
-    background-image: url('/src/assets/icons/icon-gitbook-dark.svg#dark')
+.icon-gitbook.icon {
+    background-image: url('/src/assets/icons/icon-gitbook.svg')
 }
 
 /* Github */
-.icon-github.icon-light {
-    background-image: url('/src/assets/icons/icon-github-light.svg#light');
-}
-
-.icon-github.icon-dark {
-    background-image: url('/src/assets/icons/icon-github-dark.svg#dark');
+.icon-github.icon {
+    background-image: url('/src/assets/icons/icon-github.svg');
 }
 
 /* Info */
@@ -401,12 +383,8 @@
 }
 
 /* Medium */
-.icon-mediums.icon-light {
-    background-image: url('/src/assets/icons/icon-medium-light.svg#light');
-}
-
-.icon-mediums.icon-dark {
-    background-image: url('/src/assets/icons/icon-medium-dark.svg#dark');
+.icon-mediums.icon {
+    background-image: url('/src/assets/icons/icon-medium.svg');
 }
 
 /* Moon */
@@ -425,12 +403,8 @@
 }
 
 /* Reddit */
-.icon-reddit.icon-light {
-    background-image: url('/src/assets/icons/icon-reddit-light.svg#light');
-}
-
-.icon-reddit.icon-dark {
-    background-image: url('/src/assets/icons/icon-reddit-dark.svg#dark');
+.icon-reddit.icon {
+    background-image: url('/src/assets/icons/icon-reddit.svg');
 }
 
 /* Swap */
@@ -443,21 +417,13 @@
 }
 
 /* Telegram */
-.icon-telegram.icon-light {
-    background-image: url('/src/assets/icons/icon-telegram-light.svg#light');
-}
-
-.icon-telegram.icon-dark {
-    background-image: url('/src/assets/icons/icon-telegram-dark.svg#dark');
+.icon-telegram.icon {
+    background-image: url('/src/assets/icons/icon-telegram.svg');
 }
 
 /* Twitter */
-.icon-twitter.icon-light {
-    background-image: url('/src/assets/icons/icon-twitter-light.svg#light');
-}
-
-.icon-twitter.icon-dark {
-    background-image: url('/src/assets/icons/icon-twitter-dark.svg#dark');
+.icon-twitter.icon {
+    background-image: url('/src/assets/icons/icon-twitter.svg');
 }
 
 /* Users */

@@ -1,13 +1,15 @@
 import React from 'react'
 import { Container, Navbar, Tooltip } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import Sparta from '../../assets/icons/coin_sparta.svg'
-import gitbookSVG from '../../assets/icons/icon-gitbook-dark.svg'
-import twitterSVG from '../../assets/icons/icon-twitter-dark.svg'
-import githubSVG from '../../assets/icons/icon-github-dark.svg'
-import telegramSVG from '../../assets/icons/icon-telegram-dark.svg'
-import mediumSVG from '../../assets/icons/icon-medium-dark.svg'
-import redditSVG from '../../assets/icons/icon-reddit-dark.svg'
+
+import { ReactComponent as SpartaIcon } from '../../assets/icons/coin_sparta.svg'
+import { ReactComponent as GitbookIcon } from '../../assets/icons/icon-gitbook.svg'
+import { ReactComponent as TwitterIcon } from '../../assets/icons/icon-twitter.svg'
+import { ReactComponent as GithubIcon } from '../../assets/icons/icon-github.svg'
+import { ReactComponent as TelegramIcon } from '../../assets/icons/icon-telegram.svg'
+import { ReactComponent as MediumIcon } from '../../assets/icons/icon-medium.svg'
+import { ReactComponent as RedditIcon } from '../../assets/icons/icon-reddit.svg'
+
 import './Footer.scss'
 
 const Footer = () => (
@@ -17,18 +19,13 @@ const Footer = () => (
     </Container>
     <Container className="d-none d-sm-flex">
       <Link to="/" className="text-footer mx-auto">
-        <img className="me-2" src={Sparta} alt="Logo" height="32" />
+        <SpartaIcon className="me-2" height="32" />
         <span>Spartan Protocol</span>
       </Link>
     </Container>
     <Container>
       <Link to="/" className="d-block d-sm-none">
-        <img
-          className="d-block d-sm-none"
-          src={Sparta}
-          alt="Logo"
-          height="32"
-        />
+        <SpartaIcon className="d-block d-sm-none" height="32" />
       </Link>
 
       <a
@@ -37,7 +34,7 @@ const Footer = () => (
         rel="noreferrer"
         id="footer-gitbook"
       >
-        <img src={gitbookSVG} alt="gitbook" height={24} />
+        <GitbookIcon height="24" width="24" fill="white" />
         <Tooltip target="footer-gitbook" placement="top">
           Gitbook
         </Tooltip>
@@ -48,7 +45,7 @@ const Footer = () => (
         rel="noreferrer"
         id="footer-twitter"
       >
-        <img src={twitterSVG} alt="twitter" height={24} />
+        <TwitterIcon height="24" width="24" fill="white" />
         <Tooltip target="footer-twitter" placement="top">
           Twitter
         </Tooltip>
@@ -59,7 +56,7 @@ const Footer = () => (
         rel="noreferrer"
         id="footer-github"
       >
-        <img src={githubSVG} alt="twitter" height={24} />
+        <GithubIcon height="24" width="24" fill="white" />
         <Tooltip target="footer-github" placement="top">
           Github
         </Tooltip>
@@ -70,7 +67,7 @@ const Footer = () => (
         rel="noreferrer"
         id="footer-telegram"
       >
-        <img src={telegramSVG} alt="twitter" height={24} />
+        <TelegramIcon height="24" width="24" fill="white" />
         <Tooltip target="footer-telegram" placement="top">
           Telegram
         </Tooltip>
@@ -81,7 +78,7 @@ const Footer = () => (
         rel="noreferrer"
         id="footer-medium"
       >
-        <img src={mediumSVG} alt="twitter" height={24} />
+        <MediumIcon height="24" width="24" fill="white" />
         <Tooltip target="footer-medium" placement="top">
           Medium
         </Tooltip>
@@ -92,7 +89,7 @@ const Footer = () => (
         rel="noreferrer"
         id="footer-reddit"
       >
-        <img src={redditSVG} alt="twitter" height={24} />
+        <RedditIcon height="24" width="24" fill="white" />
         <Tooltip target="footer-reddit" placement="top">
           Reddit
         </Tooltip>

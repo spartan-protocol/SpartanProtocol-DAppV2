@@ -8,11 +8,13 @@ html {
   background-color: #25212d;
   position: absolute;
   top: 0;
+  padding-top: 67px;
 }
 
 .main-panel > .content {
-  min-height: calc(100vh - (67px)); /* footer size */
+  min-height: calc(100vh - (67px + 67px)); /* view height - (header + footer) */
   background-color: black;
+  padding: 10px;
 }
 
 body::-webkit-scrollbar {

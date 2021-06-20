@@ -1,3 +1,4 @@
+// ** COMPONENTS **
 // import Dashboard from './components/Dashboard/Dashboard'
 import Home from './views/pages/Home/Overview'
 import Liquidity from './views/pages/Pools/Overview'
@@ -26,75 +27,86 @@ import PU from './views/pages/PU/Overview'
 // import Share from './views/pages/Samples/Share'
 // import SearchModal from './views/pages/Samples/SearchModal'
 
-const routes = (t) => [
+// ** ICONS **
+import { ReactComponent as HomeIcon } from './assets/icons/icon-home.svg'
+import { ReactComponent as SwordIcon } from './assets/icons/icon-menu-sword.svg'
+import { ReactComponent as SwordsIcon } from './assets/icons/icon-menu-swords.svg'
+import { ReactComponent as SynthsIcon } from './assets/icons/icon-synths.svg'
+import { ReactComponent as HelmetIcon } from './assets/icons/icon-menu-helmet.svg'
+import { ReactComponent as VaultIcon } from './assets/icons/icon-vault.svg'
+import { ReactComponent as ColosseumIcon } from './assets/icons/icon-menu-colosseum.svg'
+import { ReactComponent as UpgradeIcon } from './assets/icons/icon-upgrade.svg'
+import { ReactComponent as ListIcon } from './assets/icons/list.svg'
+
+export const routes = [
   {
     path: '/home',
-    name: t('overview'),
-    icon: 'icon-small icon-home icon-dark',
+    name: 'overview',
+    icon: HomeIcon,
     component: Home,
     layout: '',
   },
 
   {
     path: '/pools/liquidity',
-    name: t('liquidity'),
-    icon: 'icon-small icon-sword icon-dark',
+    name: 'liquidity',
+    icon: SwordIcon,
     component: Liquidity,
     layout: '',
   },
 
   {
     path: '/pools/swap',
-    name: t('swap'),
-    icon: 'icon-small icon-swords icon-dark',
+    name: 'swap',
+    icon: SwordsIcon,
     component: Swap,
     layout: '',
   },
 
   {
     path: '/synths',
-    name: t('synths'),
-    icon: 'icon-small icon-synths icon-dark',
+    name: 'synths',
+    icon: SynthsIcon,
     component: Synths,
     layout: '',
   },
 
   {
     path: '/bond',
-    name: t('bond'),
-    icon: 'icon-small icon-helmet icon-dark',
+    name: 'bond',
+    icon: HelmetIcon,
     component: Bond,
     layout: '',
   },
 
   {
     path: '/vault',
-    name: t('vault'),
-    icon: 'icon-small icon-vault icon-dark',
+    name: 'vault',
+    icon: VaultIcon,
     component: Vault,
     layout: '',
   },
 
   {
     path: '/dao',
-    name: t('dao'),
-    icon: 'icon-small icon-colosseum icon-dark',
+    name: 'dao',
+    icon: ColosseumIcon,
     component: Dao,
     layout: '',
   },
 
   {
     path: '/upgrade',
-    name: t('upgrade'),
-    icon: 'icon-small icon-upgrade icon-dark',
+    name: 'upgrade',
+    icon: UpgradeIcon,
     component: Upgrade,
     layout: '',
   },
 
   {
     path: '/codearena',
-    name: t('codeArena'),
-    icon: 'icon-small icon-list icon-dark',
+    name: 'codeArena',
+    icon: ListIcon,
     component: CodeArena,
     layout: '',
   },
@@ -291,5 +303,3 @@ const routes = (t) => [
   //   ],
   // },
 ]
-
-export default routes

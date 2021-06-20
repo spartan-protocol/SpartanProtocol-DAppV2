@@ -1,6 +1,11 @@
 .nav-item {
   background: #1d171f;
-  
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+  color: #ffffff;
+
   .nav-link {
     border: none;
     font-style: normal;
@@ -8,8 +13,8 @@
     font-size: 14px;
     line-height: 20px;
     text-align: center;
-    color: #aacdff;
-    
+    color: #ffffff;
+
     &.active {
       background-color: #1d171f;
       font-style: normal;
@@ -28,17 +33,42 @@
   border-bottom: none;
 }
 
+.flex-column {
+  .nav-item {
+    .nav-link {
+      text-align: left;
+      padding-left: 14px;
+    
+      &.active {
+        background-color: #25212D;
+        border-left: 2px solid #fb2715;
+        border-bottom: none;
+      }
+    }
+  }
+}
+
 // LIGHT MODE
 .white-content {
   .nav-item {
-    background: #FFFFFF;
-    
+    background: #ffffff;
+
     .nav-link {
-      color: #B70000;
-      
+      color: #b70000;
+
       &.active {
-        background-color: #FFFFFF;
+        background-color: #ffffff;
         color: #000000;
+      }
+    }
+  }
+
+  .flex-column {
+    .nav-item {
+      .nav-link {
+        &.active {
+          background-color: #F5F8FC;
+        }
       }
     }
   }
