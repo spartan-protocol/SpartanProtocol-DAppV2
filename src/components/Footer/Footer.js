@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container, Navbar, Tooltip } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import Sparta from '../../assets/icons/coin_sparta.svg'
 import gitbookSVG from '../../assets/icons/icon-gitbook-dark.svg'
 import twitterSVG from '../../assets/icons/icon-twitter-dark.svg'
@@ -11,17 +12,25 @@ import './Footer.scss'
 
 const Footer = () => (
   <Navbar className="footer" sticky="bottom">
-    <Container>
-      <div className="text-footer">A Spartan Community Project</div>
+    <Container className="d-none d-sm-flex">
+      <div className="text-footer mx-auto">A Spartan Community Project</div>
+    </Container>
+    <Container className="d-none d-sm-flex">
+      <Link to="/" className="text-footer mx-auto">
+        <img className="me-2" src={Sparta} alt="Logo" height="32" />
+        <span>Spartan Protocol</span>
+      </Link>
     </Container>
     <Container>
-      <div className="text-footer">
-        <img className="mr-2" src={Sparta} alt="Logo" height="32" />
-        Spartan Protocol
-      </div>
-    </Container>
-    <Container>
-      {' '}
+      <Link to="/" className="d-block d-sm-none">
+        <img
+          className="d-block d-sm-none"
+          src={Sparta}
+          alt="Logo"
+          height="32"
+        />
+      </Link>
+
       <a
         href="https://docs.spartanprotocol.org/"
         target="_blank"

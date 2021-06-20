@@ -1,5 +1,17 @@
+html {
+  background-color: #25212d;
+}
+
+.main-panel {
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #25212d;
+  position: absolute;
+  top: 0;
+}
+
 .main-panel > .content {
-  min-height: calc(100vh - (67px + 67px)); /* footer plus header size */
+  min-height: calc(100vh - (67px)); /* footer size */
   background-color: black;
 }
 

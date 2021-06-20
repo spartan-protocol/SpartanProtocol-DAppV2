@@ -143,7 +143,6 @@ const Common = () => {
           {getRoutes(routes(t))}
           <Redirect from="*" to="/home" />
         </Switch>
-
         <Footer />
       </div>
     </div>
