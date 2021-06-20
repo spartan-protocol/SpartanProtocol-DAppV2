@@ -158,7 +158,6 @@ const WalletSelect = (props) => {
               </Col>
               <Col xs="auto">
                 <Form className="mb-0">
-                  {/* Network:{' '} */}
                   <span className="output-card">
                     Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
                     <Form.Check

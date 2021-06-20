@@ -9,6 +9,7 @@ import {
   Badge,
   Accordion,
   Overlay,
+  Form,
 } from 'react-bootstrap'
 import { useBond } from '../../store/bond'
 import { useReserve } from '../../store/reserve/selector'
@@ -21,7 +22,7 @@ import {
   formatFromWei,
 } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
-import { getAddresses, getNetwork } from '../../utils/web3'
+import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
 import { ReactComponent as FireIcon } from '../../assets/icons/fire.svg'
 import { ReactComponent as DownIcon } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ContractIcon } from '../../assets/icons/icon-contratcs.svg'
@@ -121,6 +122,18 @@ const Supply = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sparta.feeBurnRecent])
 
+  const onChangeNetwork = async (net) => {
+    if (net.target.checked === true) {
+      setnetwork(changeNetworkLsOnly(56))
+    }
+    if (net.target.checked === false) {
+      setnetwork(changeNetworkLsOnly(97))
+    } else {
+      setnetwork(changeNetworkLsOnly(net))
+    }
+    window.location.reload()
+  }
+
   return (
     <>
       <Button
@@ -149,7 +162,21 @@ const Supply = () => {
       >
         <Popover>
           <Popover.Header className="mt-2">
-            Tokenomics - {network.chainId === 97 ? 'Testnet' : 'Mainnet'}
+            Tokenomics
+            <Form className="mb-0">
+              <span className="output-card">
+                Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                <Form.Check
+                  type="switch"
+                  id="custom-switch"
+                  className="ms-2 d-inline-flex"
+                  checked={network?.chainId === 56}
+                  onChange={(value) => {
+                    onChangeNetwork(value)
+                  }}
+                />
+              </span>
+            </Form>
           </Popover.Header>
           <Popover.Body>
             <Row>
