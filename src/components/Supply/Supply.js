@@ -37,6 +37,7 @@ const Supply = () => {
   const bond = useBond()
   const target = useRef(null)
   const [showDropdown, setshowDropdown] = useState(false)
+  const isLightMode = window.localStorage.getItem('theme')
   const addrNames = [
     'spartav1',
     'spartav2',
@@ -138,17 +139,17 @@ const Supply = () => {
     <>
       <Button
         id="PopoverClick"
-        variant="dark"
+        variant={isLightMode ? 'secondary' : 'info'}
         className="px-2 px-sm-4 ms-1 output-card pt-2"
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
       >
-        <DownIcon fill="white" className="me-1" />$
+        <DownIcon fill={isLightMode ? 'black' : 'white'} className="me-1" />$
         {formatFromUnits(web3.spartaPrice, 2)}
         <FireIcon
           height={feeIconActive ? '16' : '15'}
           width="15"
-          fill={feeIconActive ? 'red' : 'white'}
+          fill={feeIconActive ? 'red' : isLightMode ? 'black' : 'white'}
           className="ms-1 mb-1"
         />
       </Button>

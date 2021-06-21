@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import {
-  MDBCol,
-  MDBRow,
-  MDBTabs,
-  MDBTabsItem,
-  MDBTabsLink,
-} from 'mdb-react-ui-kit'
+import { Col, Row, Tab, Tabs } from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getNetwork } from '../../../utils/web3'
@@ -23,7 +17,6 @@ const Overview = () => {
   const { t } = useTranslation()
   const pool = usePool()
   const addr = getAddresses()
-  const [activeTab, setActiveTab] = useState('overview')
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -61,29 +54,34 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <MDBRow className="row-480">
-          <MDBCol size="12">
+        <Row className="row-480">
+          <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-3">{t('home')}</h2>
+              <h2 className="text-title-small mb-0 me-3">{t('home')}</h2>
               <NewPool />
             </div>
-          </MDBCol>
-        </MDBRow>
+          </Col>
+        </Row>
         {network.chainId === 97 && (
           <>
-            <MDBRow className="row-480">
-              <MDBCol size="12">
-                <MDBTabs className="nav-tabs-custom card-480 mb-3">
-                  <MDBTabsItem>
-                    <MDBTabsLink
-                      active={activeTab === 'overview'}
-                      onClick={() => {
-                        setActiveTab('overview')
-                      }}
-                    >
-                      {t('overview')}
-                    </MDBTabsLink>
-                  </MDBTabsItem>
+            <Row className="row-480">
+              <Col xs="12">
+                <Tabs className="card-480 mb-3">
+                  <Tab eventKey="overview" title={t('overview')}>
+                    <Row>
+                      {pool?.poolDetails
+                        .filter(
+                          (asset) =>
+                            asset.tokenAddress !== addr.spartav1 &&
+                            asset.tokenAddress !== addr.spartav2 &&
+                            asset.baseAmount > 0,
+                        )
+                        .sort((a, b) => b.baseAmount - a.baseAmount)
+                        .map((asset) => (
+                          <PoolItem key={asset.address} asset={asset} />
+                        ))}
+                    </Row>
+                  </Tab>
                   {/* <MDBTabsItem>
                     <MDBTabsLink
                       active={activeTab === 'positions'}
@@ -94,27 +92,15 @@ const Overview = () => {
                       {t('positions')}
                     </MDBTabsLink>
                   </MDBTabsItem> */}
-                </MDBTabs>
-              </MDBCol>
+                </Tabs>
+              </Col>
 
-              {activeTab === 'overview' &&
-                pool?.poolDetails
-                  .filter(
-                    (asset) =>
-                      asset.tokenAddress !== addr.spartav1 &&
-                      asset.tokenAddress !== addr.spartav2 &&
-                      asset.baseAmount > 0,
-                  )
-                  .sort((a, b) => b.baseAmount - a.baseAmount)
-                  .map((asset) => (
-                    <PoolItem key={asset.address} asset={asset} />
-                  ))}
               {pool.poolDetails.length <= 0 && (
-                <MDBCol className="card-480">
+                <Col className="card-480">
                   <HelmetLoading height={300} width={300} />
-                </MDBCol>
+                </Col>
               )}
-            </MDBRow>
+            </Row>
           </>
         )}
         {network.chainId !== 97 && <WrongNetwork />}

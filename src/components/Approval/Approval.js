@@ -1,7 +1,7 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect } from 'react'
+import { Button, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { Button, Col } from 'reactstrap'
 import {
   getAllowance1,
   getAllowance2,
@@ -66,9 +66,7 @@ const Approval = ({
         -1 && (
         <Col>
           <Button
-            className="btn-fill"
-            block
-            color="neutral"
+            variant="info"
             onClick={async () => {
               handleApproval()
             }}

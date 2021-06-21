@@ -94,22 +94,23 @@ $colors: map-merge(
 $default-color-opacity: rgba(182, 182, 182, 0.6) !default;
 $orange-color: #f96332 !default;
 
-$default: #1d171f !default;
-$primary: #fb2715 !default;
-$secondary: #f4f5f7 !default;
-$success: #aacdff !default;
+$default: #25212D !default;
+$primary: #FB2715 !default;
+$secondary: #AACDFF !default;
+$success: #228B22 !default;
 $info: #403a4b !default;
-$warning: #fc5d50 !default;
-$danger: #25212d !default;
-$black: #1d171f !default;
+$warning: #B70000 !default;
+$danger: #d4630d !default;
+$black: #0A0001 !default;
 
 // gradient
-$default-states: #403a4b !default;
-$primary-states: #a32d5b !default;
-$success-states: #1a68ff !default;
+$default-states: #403A4B !default;
+$primary-states: #FC5D50 !default;
+$secondary-states: #C0DAFF !default;
+$success-states: #32CD32 !default;
 $info-states: #605e68 !default;
 $warning-states: #f5bc17 !default;
-$danger-states: #d4630d !default;
+$danger-states: #B70000 !default;
 $black-states: #1d171f !default;
 
 // background

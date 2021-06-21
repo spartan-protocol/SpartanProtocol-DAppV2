@@ -49,3 +49,18 @@ body::-webkit-scrollbar {
   margin-right: auto;
   max-width: 1200px;
 }
+
+// WHITE MODE
+.white-content {
+  html {
+    background-color: rgb(249, 249, 255);
+  }
+  
+  .main-panel {
+    background-color: rgb(249, 249, 255);
+  }
+  
+  .main-panel > .content {
+    background-color: rgb(249, 249, 255);
+  }
+}
