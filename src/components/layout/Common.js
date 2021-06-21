@@ -77,8 +77,8 @@ const Common = () => {
   }
 
   const clickOutSidebar = (e) => {
-    const sidebar = document.body.getElementsByClassName('sidebar-wrapper')[0]
-    if (e.target.className.length > 0) {
+    if (e.target.nodeName !== 'svg' && e.target.nodeName !== 'path') {
+      const sidebar = document.body.getElementsByClassName('sidebar-wrapper')[0]
       if (
         !sidebar?.contains(e.target) &&
         !e.target.className?.includes('icon-menu-open') &&
@@ -96,9 +96,7 @@ const Common = () => {
   return (
     <div
       className="wrapper"
-      onClick={(e) => {
-        clickOutSidebar(e)
-      }}
+      onClick={clickOutSidebar}
       onKeyDown={(e) => {
         if (e.key === KeyboardEvent.Spacebar) {
           clickOutSidebar(e)
