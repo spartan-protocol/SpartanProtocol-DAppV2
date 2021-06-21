@@ -18,6 +18,7 @@ import translationPT from './locales/pt/translation.json'
 import translationRO from './locales/ro/translation.json'
 import translationRU from './locales/ru/translation.json'
 import translationSV from './locales/sv/translation.json'
+import translationTR from './locales/tr/translation.json'
 import translationUK from './locales/uk/translation.json'
 import translationZH from './locales/zh/translation.json'
 
@@ -73,6 +74,9 @@ const resources = {
   },
   sv: {
     translation: translationSV,
+  },
+  tr: {
+    translation: translationTR,
   },
   uk: {
     translation: translationUK,

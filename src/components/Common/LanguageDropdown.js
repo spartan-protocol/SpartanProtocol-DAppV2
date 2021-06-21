@@ -29,6 +29,7 @@ import ptFlag from '../../assets/flags/pt.svg'
 import roFlag from '../../assets/flags/ro.svg'
 import ruFlag from '../../assets/flags/ru.svg'
 import seFlag from '../../assets/flags/se.svg'
+import trFlag from '../../assets/flags/tr.svg'
 import uaFlag from '../../assets/flags/ua.svg'
 import zaFlag from '../../assets/flags/za.svg'
 
@@ -133,6 +134,11 @@ const locales = [
     id: 'sv',
     name: 'Svenska',
     flag: seFlag,
+  },
+  {
+    id: 'tr',
+    name: 'Türkçe',
+    flag: trFlag,
   },
   {
     id: 'uk',
