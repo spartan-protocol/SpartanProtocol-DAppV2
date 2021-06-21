@@ -7,7 +7,7 @@ import githubSVG from '../../assets/icons/icon-github-dark.svg'
 import telegramSVG from '../../assets/icons/icon-telegram-dark.svg'
 import mediumSVG from '../../assets/icons/icon-medium-dark.svg'
 import redditSVG from '../../assets/icons/icon-reddit-dark.svg'
-import discordSVG from '../../assets/icons/icon-discord-dark.svg'
+import discordSVG from '../../assets/icons/icon-discord.svg'
 import './Footer.scss'
 
 const footerStyle = {
