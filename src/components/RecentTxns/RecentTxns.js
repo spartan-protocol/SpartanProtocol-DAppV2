@@ -14,8 +14,6 @@ const RecentTxns = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
 
-  console.log(web3)
-
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
