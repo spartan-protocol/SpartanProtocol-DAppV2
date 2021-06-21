@@ -37,7 +37,10 @@ const RecentTxns = () => {
               web3.eventArray
                 ?.filter((e) => e.event !== 'Transfer')
                 .map((txn) => (
-                  <tr key={txn.transactionHash + txn.event + txn.logIndex}>
+                  <tr
+                    key={txn.transactionHash + txn.event + txn.logIndex}
+                    className="text-center"
+                  >
                     <td>{txn.blockNumber}</td>
                     <td>{txn.event}</td>
                     <td>
