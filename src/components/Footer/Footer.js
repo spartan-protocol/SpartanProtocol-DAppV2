@@ -10,6 +10,7 @@ import githubSVG from '../../assets/icons/icon-github-dark.svg'
 import telegramSVG from '../../assets/icons/icon-telegram-dark.svg'
 import mediumSVG from '../../assets/icons/icon-medium-dark.svg'
 import redditSVG from '../../assets/icons/icon-reddit-dark.svg'
+import discordSVG from '../../assets/icons/icon-discord.svg'
 import './Footer.scss'
 import Backdrop from '../Drawer/Backdrop'
 
@@ -77,7 +78,7 @@ const Footer = () => {
                   rel="noreferrer"
                   id="footer-github"
                 >
-                  <img src={githubSVG} alt="twitter" height={24} />
+                  <img src={githubSVG} alt="gihub" height={24} />
                   <UncontrolledTooltip target="footer-github" placement="top">
                     Github
                   </UncontrolledTooltip>
@@ -88,7 +89,7 @@ const Footer = () => {
                   rel="noreferrer"
                   id="footer-telegram"
                 >
-                  <img src={telegramSVG} alt="twitter" height={24} />
+                  <img src={telegramSVG} alt="telegram" height={24} />
                   <UncontrolledTooltip target="footer-telegram" placement="top">
                     Telegram
                   </UncontrolledTooltip>
@@ -99,7 +100,7 @@ const Footer = () => {
                   rel="noreferrer"
                   id="footer-medium"
                 >
-                  <img src={mediumSVG} alt="twitter" height={24} />
+                  <img src={mediumSVG} alt="medium" height={24} />
                   <UncontrolledTooltip target="footer-medium" placement="top">
                     Medium
                   </UncontrolledTooltip>
@@ -110,9 +111,20 @@ const Footer = () => {
                   rel="noreferrer"
                   id="footer-reddit"
                 >
-                  <img src={redditSVG} alt="twitter" height={24} />
+                  <img src={redditSVG} alt="reddit" height={24} />
                   <UncontrolledTooltip target="footer-reddit" placement="top">
                     Reddit
+                  </UncontrolledTooltip>
+                </a>
+                <a
+                  href="https://discord.gg/wQggvntnGk"
+                  target="_blank"
+                  rel="noreferrer"
+                  id="footer-discord"
+                >
+                  <img src={discordSVG} alt="discord" height={24} />
+                  <UncontrolledTooltip target="footer-discord" placement="top">
+                    Discord
                   </UncontrolledTooltip>
                 </a>
               </div>
