@@ -128,7 +128,6 @@ const AssetSelect = (props) => {
                     alt={`${
                       getToken(tempArray[i].tokenAddress)?.symbol
                     } asset icon`}
-                    className="me-4"
                   />
                 ),
                 iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
@@ -151,7 +150,6 @@ const AssetSelect = (props) => {
                   alt={`${
                     getToken(tempArray[i].tokenAddress)?.symbol
                   } asset icon`}
-                  className="me-4"
                 />
               ),
               iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
@@ -175,7 +173,6 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="me-4"
                     />
                     <img
                       height="20px"
@@ -184,7 +181,7 @@ const AssetSelect = (props) => {
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
                       className="position-absolute"
-                      style={{ right: '17px', bottom: '2px' }}
+                      style={{ left: '28px', top: '18px' }}
                     />
                   </>
                 ),
@@ -211,7 +208,6 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
-                      className="me-4"
                     />
                     <img
                       height="20px"
@@ -220,7 +216,7 @@ const AssetSelect = (props) => {
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
                       className="position-absolute"
-                      style={{ right: '17px', bottom: '2px' }}
+                      style={{ left: '28px', top: '18px' }}
                     />
                   </>
                 ),
@@ -416,11 +412,8 @@ const AssetSelect = (props) => {
 
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <Row
-                key={`${asset.actualAddr}-all`}
-                className="mb-3 output-card me-2"
-              >
-                <Col xs="auto" className="p-0 ps-2">
+              <Row key={`${asset.actualAddr}-all`} className="mb-3 output-card">
+                <Col xs="auto" className="position-relative">
                   <div
                     role="button"
                     aria-hidden="true"
@@ -507,9 +500,9 @@ const AssetSelect = (props) => {
               .map((asset) => (
                 <Row
                   key={asset.actualAddr + activeTab}
-                  className="mb-3 output-card me-2"
+                  className="mb-3 output-card"
                 >
-                  <Col xs="auto" className="p-0 ps-2">
+                  <Col xs="auto" className="position-relative">
                     <div
                       role="button"
                       aria-hidden="true"
