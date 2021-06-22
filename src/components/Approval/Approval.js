@@ -10,6 +10,7 @@ import {
 } from '../../store/web3'
 
 import { BN } from '../../utils/bigNumber'
+import { Icon } from '../Icons/icons'
 
 /**
  * An approval/allowance check + actioner
@@ -71,8 +72,7 @@ const Approval = ({
               handleApproval()
             }}
           >
-            <i className="icon-extra-small icon-lock icon-light align-middle" />
-            <br />
+            <Icon icon="lock" fill="white" size="20" className="me-1" />
             Approve {symbol}
           </Button>
         </Col>

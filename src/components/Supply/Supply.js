@@ -140,7 +140,7 @@ const Supply = () => {
       <Button
         id="PopoverClick"
         variant={isLightMode ? 'secondary' : 'info'}
-        className="px-2 px-sm-4 ms-1 output-card pt-2"
+        className="px-2 px-sm-4 ms-1 output-card pt-2 rounded-pill"
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
       >

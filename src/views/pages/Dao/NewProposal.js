@@ -20,7 +20,7 @@ import { Modal } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
-import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
+import { ReactComponent as PlusIcon } from '../../../assets/icons/plus.svg'
 import { proposalTypes } from './types'
 import {
   newActionProposal,

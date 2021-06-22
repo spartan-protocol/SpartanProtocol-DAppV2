@@ -12,7 +12,7 @@ import {
   InputGroup,
   Modal,
 } from 'react-bootstrap'
-import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
+import { ReactComponent as PlusIcon } from '../../../assets/icons/plus.svg'
 import Approval from '../../../components/Approval/Approval'
 import {
   getAddresses,
@@ -253,6 +253,7 @@ const NewPool = () => {
       <Button
         variant={isLightMode ? 'secondary' : 'info'}
         onClick={() => setShowModal(true)}
+        className="rounded-pill"
       >
         <PlusIcon fill="white" className="me-2" />
         {t('pool')}
@@ -289,7 +290,7 @@ const NewPool = () => {
                   isValid={addrValid}
                   isInvalid={!addrValid}
                 />
-                <Form.Control.Feedback type="invalid" tooltip>
+                <Form.Control.Feedback type="invalid">
                   Input a valid token address (18 decimal BEP20 asset listed in
                   the{' '}
                   <a
@@ -314,10 +315,10 @@ const NewPool = () => {
                   isInvalid={!spartaValid && addrValid}
                   disabled={!addrValid}
                 />
-                <Form.Control.Feedback type="invalid" tooltip>
+                <InputGroup.Text>SPARTA</InputGroup.Text>
+                <Form.Control.Feedback type="invalid">
                   Minimum of 10,000 SPARTA required
                 </Form.Control.Feedback>
-                <InputGroup.Text>SPARTA</InputGroup.Text>
               </InputGroup>
               <InputGroup className="my-2">
                 <InputGroup.Text>Input</InputGroup.Text>
@@ -332,9 +333,9 @@ const NewPool = () => {
                   disabled={!addrValid}
                 />
                 <InputGroup.Text>{tokenSymbol}</InputGroup.Text>
-                <Form.Control.Feedback type="invalid" tooltip>
-                  Input valid token amount; make sure you thoroughly check the
-                  ratio of the assets being added match the intended markets
+                <Form.Control.Feedback type="invalid">
+                  Make sure you thoroughly check the ratio of the assets being
+                  added
                 </Form.Control.Feedback>
               </InputGroup>
 

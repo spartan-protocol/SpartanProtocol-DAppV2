@@ -195,8 +195,8 @@ const WalletSelect = (props) => {
                 <Col key={x.id} xs="12" sm="6">
                   <Button
                     key={x.id}
-                    variant="dark"
-                    className="w-100"
+                    variant="info"
+                    className="w-100 my-1"
                     onClick={() => {
                       connectWallet(x)
                     }}
@@ -284,14 +284,14 @@ const WalletSelect = (props) => {
             target="_blank"
             rel="noreferrer"
             size="sm"
-            variant="secondary"
+            variant="primary"
           >
             {t('viewBscScan')}{' '}
             <OpenIcon height="16" fill="white" className="mb-1" />
           </Button>
           <Button
             size="sm"
-            variant="secondary"
+            variant="primary"
             onClick={() => {
               onWalletDisconnect()
             }}

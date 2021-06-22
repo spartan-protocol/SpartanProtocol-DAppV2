@@ -66,7 +66,7 @@ const Overview = () => {
           <>
             <Row className="row-480">
               <Col xs="12">
-                <Tabs className="card-480 mb-3">
+                <Tabs className="mb-3">
                   <Tab eventKey="overview" title={t('overview')}>
                     <Row>
                       {pool?.poolDetails

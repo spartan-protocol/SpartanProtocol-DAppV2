@@ -12,7 +12,7 @@ const AddressConn = () => {
   const pool = usePool()
   const [walletModalShow, setWalletModalShow] = useState(false)
 
-  const btnClass = 'btn-round btn-icon btn-transparent align-self-center me-1'
+  const btnClass = 'btn-round btn-icon btn-transparent align-self-center mx-2'
 
   return (
     <>

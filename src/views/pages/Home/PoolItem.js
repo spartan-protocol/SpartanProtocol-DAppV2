@@ -3,20 +3,17 @@ import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   Button,
-  ButtonGroup,
   Card,
   Col,
   OverlayTrigger,
   Popover,
   Row,
 } from 'react-bootstrap'
-import { MDBTooltip } from 'mdb-react-ui-kit'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
-import downIcon from '../../../assets/icons/arrow-down-light.svg'
-import upIcon from '../../../assets/icons/arrow-up-light.svg'
+import { Icon } from '../../../components/Icons/icons'
 
 const PoolItem = ({ asset }) => {
   const { t } = useTranslation()
@@ -56,10 +53,43 @@ const PoolItem = ({ asset }) => {
     setShowDetails(!showDetails)
   }
 
-  const apyTooltip = (
+  const tooltipApy = (
     <Popover>
       <Popover.Header>APY Info</Popover.Header>
       <Popover.Body>{t('apyInfo')}</Popover.Body>
+    </Popover>
+  )
+
+  const tooltipRevenue = (
+    <Popover>
+      <Popover.Header>Revenue Info</Popover.Header>
+      <Popover.Body>
+        {t('revenueInfo', {
+          days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+        })}
+      </Popover.Body>
+    </Popover>
+  )
+
+  const tooltipSwapRevenue = (
+    <Popover>
+      <Popover.Header>Swap Revenue</Popover.Header>
+      <Popover.Body>
+        {t('swapRevenue', {
+          days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+        })}
+      </Popover.Body>
+    </Popover>
+  )
+
+  const tooltipDiviRevenue = (
+    <Popover>
+      <Popover.Header>Dividend Revenue</Popover.Header>
+      <Popover.Body>
+        {t('dividendRevenue', {
+          days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+        })}
+      </Popover.Body>
     </Popover>
   )
 
@@ -77,31 +107,25 @@ const PoolItem = ({ asset }) => {
                 ${formatFromUnits(tokenValueUSD, 2)}
               </p>
             </Col>
-            <Col className="text-right mt-1 p-0 pr-2">
-              <OverlayTrigger
-                trigger="click"
-                placement="auto"
-                overlay={apyTooltip}
-                rootClose
-              >
-                <i className="icon-extra-small icon-info icon-light ml-1 align-middle mb-1" />
+            <Col className="text-end mt-2 p-0 pr-2">
+              <OverlayTrigger placement="auto" overlay={tooltipApy}>
+                <span role="button">
+                  <Icon icon="info" className="me-1" size="17" fill="white" />
+                </span>
               </OverlayTrigger>
               <p className="text-sm-label d-inline-block">APY</p>
               <p className="output-card">{APY}%</p>
             </Col>
-            <Col xs="auto" className="text-right my-auto p-0 px-2">
-              <img
-                onClick={() => toggleCollapse()}
-                src={showDetails ? upIcon : downIcon}
-                alt={showDetails ? 'upIcon' : 'downIcon'}
-                className="swap-icon-color"
-                aria-hidden="true"
-                style={{
-                  cursor: 'pointer',
-                  height: '30px',
-                  width: '30px',
-                  top: '-15px',
-                }}
+            <Col
+              xs="auto"
+              className="text-end my-auto p-0 px-2"
+              onClick={() => toggleCollapse()}
+              role="button"
+            >
+              <Icon
+                className=""
+                icon={showDetails ? 'arrowUp' : 'arrowDown'}
+                size="30"
               />
             </Col>
           </Row>
@@ -109,16 +133,17 @@ const PoolItem = ({ asset }) => {
             <Col xs="auto" className="text-card">
               {t('spotPrice')}
             </Col>
-            <Col className="text-right output-card">
+            <Col className="text-end output-card">
               {formatFromUnits(tokenValueBase, 2)} SPARTA
             </Col>
           </Row>
+          {showDetails === true && <hr className="my-0" />}
 
           <Row className="my-1">
             <Col xs="auto" className="text-card">
               {t('poolDepth')}
             </Col>
-            <Col className="text-right output-card">
+            <Col className="text-end output-card">
               ${formatFromWei(poolDepthUsd, 0)} USD
             </Col>
           </Row>
@@ -126,17 +151,67 @@ const PoolItem = ({ asset }) => {
             <>
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
-                  {t('fees')}
-                  <MDBTooltip
-                    tag="i"
-                    wrapperClass="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
-                    title={t('swapRevenue', {
-                      days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-                    })}
-                    placement="auto"
-                  />
+                  SPARTA
                 </Col>
-                <Col className="text-right output-card">
+                <Col className="text-end output-card fw-light">
+                  {formatFromWei(baseAmount)}
+                </Col>
+              </Row>
+
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  {token.symbol}
+                </Col>
+                <Col className="text-end output-card fw-light">
+                  {formatFromWei(tokenAmount)}
+                </Col>
+              </Row>
+              <hr className="my-0" />
+            </>
+          )}
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              {t('revenue')}
+              <OverlayTrigger placement="auto" overlay={tooltipRevenue}>
+                <span role="button">
+                  <Icon icon="info" className="ms-1" size="17" fill="white" />
+                </span>
+              </OverlayTrigger>
+            </Col>
+            <Col className="text-end output-card">
+              $
+              {lastMonthFees + lastMonthDivis > 0
+                ? formatFromWei(
+                    BN(lastMonthFees)
+                      .plus(lastMonthDivis)
+                      .times(web3?.spartaPrice),
+                    0,
+                  )
+                : formatFromWei(
+                    BN(recentFees).plus(recentDivis).times(web3?.spartaPrice),
+                    0,
+                  )}{' '}
+              USD
+            </Col>
+          </Row>
+          {showDetails === true && (
+            <>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  {t('fees')}
+                  <OverlayTrigger placement="auto" overlay={tooltipSwapRevenue}>
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Col>
+                <Col className="text-end output-card fw-light">
                   {lastMonthFees > 0
                     ? formatFromWei(lastMonthFees, 0)
                     : formatFromWei(recentFees, 0)}{' '}
@@ -147,16 +222,18 @@ const PoolItem = ({ asset }) => {
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
                   {t('dividends')}
-                  <MDBTooltip
-                    tag="i"
-                    wrapperClass="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
-                    title={t('dividendRevenue', {
-                      days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-                    })}
-                    placement="auto"
-                  />
+                  <OverlayTrigger placement="auto" overlay={tooltipDiviRevenue}>
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </Col>
-                <Col className="text-right output-card">
+                <Col className="text-end output-card fw-light">
                   {asset.curated === true &&
                     lastMonthDivis > 0 &&
                     `${formatFromWei(lastMonthDivis, 0)} SPARTA`}
@@ -166,28 +243,41 @@ const PoolItem = ({ asset }) => {
                   {asset.curated === false && t('notCurated')}
                 </Col>
               </Row>
+              <hr className="my-0" />
             </>
           )}
           <Row className="text-center mt-2">
-            <ButtonGroup xs="sm">
+            <Col>
               <Button
+                size="sm"
+                className="w-100 rounded-pill"
                 onClick={() =>
                   history.push(`/pools/swap?asset1=${tokenAddress}`)
                 }
               >
                 {t('swap')}
               </Button>
+            </Col>
+            <Col>
               <Button
+                size="sm"
+                className="w-100 rounded-pill"
                 onClick={() =>
                   history.push(`/pools/liquidity?asset1=${tokenAddress}`)
                 }
               >
                 {t('join')}
               </Button>
-              <Button onClick={() => history.push('/vault')}>
+            </Col>
+            <Col>
+              <Button
+                size="sm"
+                className="w-100 rounded-pill"
+                onClick={() => history.push('/vault')}
+              >
                 {t('stake')}
               </Button>
-            </ButtonGroup>
+            </Col>
           </Row>
         </Card>
       </Col>
