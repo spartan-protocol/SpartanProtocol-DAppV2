@@ -48,23 +48,27 @@ const Overview = () => {
         {network.chainId === 97 && (
           <>
             <Row className="row-480">
-              <Col xs="12">
-                <Tabs
-                  activeKey={activeTab}
-                  onSelect={(k) => setActiveTab(k)}
-                  className="mb-3 card-480"
-                >
-                  <Tab eventKey="1" title={t('add')}>
-                    {pool.poolDetails.length > 0 && <LiqAdd />}
-                  </Tab>
-                  <Tab eventKey="2" title={t('remove')}>
-                    {pool.poolDetails.length > 0 && <LiqRemove />}
-                  </Tab>
-                  <Tab eventKey="4" title={t('bond')}>
-                    {pool.poolDetails.length > 0 && <LiqBond />}
-                  </Tab>
-                </Tabs>
-              </Col>
+              <Tabs
+                activeKey={activeTab}
+                onSelect={(k) => setActiveTab(k)}
+                className="mb-3 card-480"
+              >
+                <Tab eventKey="1" title={t('add')}>
+                  {pool.poolDetails.length > 0 && activeTab === '1' && (
+                    <LiqAdd />
+                  )}
+                </Tab>
+                <Tab eventKey="2" title={t('remove')}>
+                  {pool.poolDetails.length > 0 && activeTab === '2' && (
+                    <LiqRemove />
+                  )}
+                </Tab>
+                <Tab eventKey="4" title={t('bond')}>
+                  {pool.poolDetails.length > 0 && activeTab === '4' && (
+                    <LiqBond />
+                  )}
+                </Tab>
+              </Tabs>
             </Row>
             <Row className="row-480">
               <Col className="card-480">

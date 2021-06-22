@@ -156,11 +156,6 @@
   background-image: url('/src/assets/icons/list.svg#dark');
 }
 
-/* Close */
-.icon-close.icon-dark {
-  background-image: url('/src/assets/icons/close.svg#dark');
-}
-
 /* New */
 .icon-new.icon-dark {
   background-image: url('/src/assets/icons/new.svg#dark');
@@ -392,7 +387,7 @@
 }
 
 .icon-close {
-  background-image: url('/src/assets/icons/icon-close.svg#light');
+  background-image: url('/src/assets/icons/close.svg');
 }
 
 .icon-scan {

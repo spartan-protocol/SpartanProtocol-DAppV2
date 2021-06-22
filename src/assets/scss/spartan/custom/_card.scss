@@ -5,122 +5,16 @@
   border-radius: 12px;
 }
 
-.text-muted {
-  font-family: $font-family-base !important;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  color: #c0daff;
-}
-
-.subtitle-label {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 16px;
-  color: #ffffff;
-}
-
-.title-card {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  color: #a5adaf;
-}
-
-.text-card {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  color: #a5adaf;
-}
-
-.text-xs-label {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 10px;
-  line-height: 20px;
-  color: #a5adaf;
-}
-
-.text-sm-label-alt {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 20px;
-  align-items: center;
-  color: #aacdff;
-}
-
-.text-sm-label {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 20px;
-  align-items: center;
-  color: #a5adaf;
-}
-
-.text-sm-label-wht {
-  font-family: $font-family-base;
+.card-header {
+  background-color: #25212d;
+  border-bottom: 1px solid #fb2715;
+  font: $font-family-headers;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
-  line-height: 20px;
-  align-items: center;
-  color: #fff;
-}
-
-.output-card {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  color: #ffffff;
-}
-
-.subtitle-card {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
-}
-
-.subtitle-amount {
-  font-family: $font-family-base;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
-  color: #aacdff;
-}
-
-.accent {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: 12px;
+  font-size: 24px;
   line-height: 32px;
-  margin-top: 40px;
-  text-align: right;
-  color: #aacdff;
+  color: #ffffff;
+  border-radius: 12px 12px 0 0;
 }
 
 .card-underlay {

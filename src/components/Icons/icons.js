@@ -1,16 +1,20 @@
 import React from 'react'
 import { ReactComponent as ArrowDown } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ArrowUp } from '../../assets/icons/arrow-up.svg'
+import { ReactComponent as Close } from '../../assets/icons/close.svg'
 import { ReactComponent as Info } from '../../assets/icons/info.svg'
 import { ReactComponent as Lock } from '../../assets/icons/lock.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
+import { ReactComponent as Search } from '../../assets/icons/search.svg'
 
 const icons = {
   arrowDown: ArrowDown,
   arrowUp: ArrowUp,
+  close: Close,
   info: Info,
   lock: Lock,
   plus: Plus,
+  search: Search,
 }
 
 /**

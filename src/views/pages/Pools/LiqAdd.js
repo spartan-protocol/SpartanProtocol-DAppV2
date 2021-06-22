@@ -1,21 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
-import classnames from 'classnames'
-import {
-  Button,
-  Card,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { MDBCol, MDBRow } from 'mdb-react-ui-kit'
+import {
+  Button,
+  Card,
+  Col,
+  FormControl,
+  InputGroup,
+  Nav,
+  Row,
+} from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -397,370 +394,371 @@ const LiqAdd = () => {
   }
 
   return (
-    <>
-      <MDBCol size="auto">
-        <Card size="auto" className="card-body card-480">
-          <Nav pills className="nav-tabs-custom mt-2 mb-4">
-            <NavItem>
-              <NavLink
-                className={classnames({ active: activeTab === 'addTab1' })}
-                onClick={() => {
-                  toggle('addTab1')
-                }}
-              >
-                {t('addBoth')}
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink
-                className={classnames({ active: activeTab === 'addTab2' })}
-                onClick={() => {
-                  toggle('addTab2')
-                }}
-              >
-                {t('addSingle')}
-              </NavLink>
-            </NavItem>
-          </Nav>
-          <MDBRow>
-            <MDBCol size="12" className="px-1 px-sm-3">
-              <Card
-                style={{ backgroundColor: '#25212D' }}
-                className="card-body mb-1 card-inside"
-              >
-                <MDBRow>
-                  <MDBCol size="4">
-                    <div className="text-sm-label">{t('add')}</div>
-                  </MDBCol>
-
-                  <MDBCol size="8" className="text-right">
-                    <div
-                      className="text-sm-label"
-                      role="button"
-                      aria-hidden="true"
-                      onClick={() => {
-                        addInput1.value = convertFromWei(getBalance(1))
-                      }}
-                    >
-                      {t('balance')}:{' '}
-                      {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
-                    </div>
-                  </MDBCol>
-                </MDBRow>
-
-                <MDBRow className="my-2">
-                  <MDBCol size="auto">
-                    <AssetSelect
-                      priority="1"
-                      filter={['token']}
-                      blackList={
-                        activeTab === 'addTab1'
-                          ? [addr.spartav1, addr.spartav2]
-                          : []
-                      }
-                    />
-                  </MDBCol>
-                  <MDBCol className="text-right">
-                    <InputGroup className="m-0 mt-n1">
-                      <Input
-                        className="text-right ml-0 p-2"
-                        type="text"
-                        placeholder={`${t('add')}...`}
-                        id="addInput1"
-                        inputMode="decimal"
-                        pattern="^[0-9]*[.,]?[0-9]*$"
-                        autoComplete="off"
-                        autoCorrect="off"
-                        minLength="1"
-                        onInput={(e) => handleTokenInputChange(e)}
-                      />
-                      <InputGroupAddon
-                        addonType="append"
-                        role="button"
-                        tabIndex={-1}
-                        onKeyPress={() => clearInputs(1)}
-                        onClick={() => clearInputs(1)}
-                      >
-                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                    <div className="text-right text-sm-label">
-                      ~$
-                      {addInput1?.value
-                        ? formatFromWei(getInput1ValueUSD(), 2)
-                        : '0.00'}
-                    </div>
-                  </MDBCol>
-                </MDBRow>
-              </Card>
-
-              <MDBRow style={{ height: '1px' }}>
-                {activeTab === 'addTab1' && (
-                  <img
-                    src={plusIcon}
-                    alt="plusicon"
-                    className="mx-auto z-index position-relative"
-                    style={{ height: '35px', top: '-19px' }}
-                  />
-                )}
-                {activeTab === 'addTab2' && (
-                  <img
-                    src={swapIcon}
-                    alt="swapaddicon"
-                    className="mx-auto z-index position-relative"
-                    style={{ height: '35px', top: '-19px' }}
-                  />
-                )}
-              </MDBRow>
-
-              {activeTab === 'addTab1' && (
+    <Row>
+      <Col xs="auto">
+        <Card xs="auto" className="card-480">
+          <Card.Header className="p-0 border-0 mb-3">
+            <Nav activeKey={activeTab} fill className="rounded-top">
+              <Nav.Item key="addTab1" className="rounded-top">
+                <Nav.Link
+                  className="rounded-top"
+                  eventKey="addTab1"
+                  onClick={() => {
+                    toggle('addTab1')
+                  }}
+                >
+                  {t('addBoth')}
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item key="addTab2" className="rounded-top">
+                <Nav.Link
+                  className="rounded-top"
+                  eventKey="addTab2"
+                  onClick={() => {
+                    toggle('addTab2')
+                  }}
+                >
+                  {t('addSingle')}
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Card.Header>
+          <Card.Body>
+            <Row>
+              <Col xs="12" className="px-1 px-sm-3">
                 <Card
                   style={{ backgroundColor: '#25212D' }}
                   className="card-body mb-1 card-inside"
                 >
-                  <MDBRow className="my-2">
-                    <MDBCol size="4" className="">
+                  <Row>
+                    <Col xs="4">
                       <div className="text-sm-label">{t('add')}</div>
-                    </MDBCol>
-                    <MDBCol size="8" className="text-right">
+                    </Col>
+
+                    <Col xs="8" className="text-end">
                       <div
                         className="text-sm-label"
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          addInput2.focus()
-                          addInput2.value = convertFromWei(getBalance(2))
+                          addInput1.value = convertFromWei(getBalance(1))
                         }}
                       >
                         {t('balance')}:{' '}
-                        {pool.poolDetails && formatFromWei(getBalance(2))}
+                        {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
                       </div>
-                    </MDBCol>
-                  </MDBRow>
-                  <MDBRow className="">
-                    <MDBCol size="auto" className="ml-1">
+                    </Col>
+                  </Row>
+
+                  <Row className="my-2">
+                    <Col xs="auto">
                       <AssetSelect
-                        priority="2"
+                        priority="1"
                         filter={['token']}
-                        whiteList={[addr.spartav2]}
-                        disabled={activeTab === 'addTab1'}
+                        blackList={
+                          activeTab === 'addTab1'
+                            ? [addr.spartav1, addr.spartav2]
+                            : []
+                        }
                       />
-                    </MDBCol>
-                    <MDBCol className="text-right">
-                      <InputGroup className="m-0">
-                        <Input
-                          className="text-right ml-0 p-2"
-                          type="text"
+                    </Col>
+                    <Col className="text-end">
+                      <InputGroup className="m-0 mt-n1">
+                        <FormControl
+                          className="text-end ms-0 p-2"
+                          type="number"
                           placeholder={`${t('add')}...`}
-                          id="addInput2"
-                          inputMode="decimal"
-                          pattern="^[0-9]*[.,]?[0-9]*$"
+                          id="addInput1"
                           autoComplete="off"
                           autoCorrect="off"
-                          minLength="1"
                           onInput={(e) => handleTokenInputChange(e)}
                         />
-                        <InputGroupAddon
-                          addonType="append"
+                        <InputGroup.Text
                           role="button"
                           tabIndex={-1}
-                          onKeyPress={() => clearInputs(2)}
-                          onClick={() => clearInputs(2)}
+                          onKeyPress={() => clearInputs(1)}
+                          onClick={() => clearInputs(1)}
                         >
                           <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                        </InputGroupAddon>
+                        </InputGroup.Text>
                       </InputGroup>
-                      <div className="text-right text-sm-label">
+                      <div className="text-end text-sm-label">
                         ~$
-                        {addInput2?.value
-                          ? formatFromWei(getInput2ValueUSD(), 2)
+                        {addInput1?.value
+                          ? formatFromWei(getInput1ValueUSD(), 2)
                           : '0.00'}
                       </div>
-                    </MDBCol>
-                  </MDBRow>
+                    </Col>
+                  </Row>
                 </Card>
-              )}
 
-              {activeTab === 'addTab2' && (
-                <Card
-                  style={{ backgroundColor: '#25212D' }}
-                  className="card-body mb-1 card-inside"
-                >
-                  <MDBRow className="my-2">
-                    <MDBCol size="4" className="">
-                      <div className="text-sm-label">{t('pool')}</div>
-                    </MDBCol>
-                    <MDBCol size="8" className="text-right">
-                      <div className="text-sm-label">
-                        {t('balance')}:{' '}
-                        {pool.poolDetails && formatFromWei(getBalance(3))}
-                      </div>
-                    </MDBCol>
-                  </MDBRow>
+                <Row style={{ height: '1px' }}>
+                  {activeTab === 'addTab1' && (
+                    <img
+                      src={plusIcon}
+                      alt="plusicon"
+                      className="mx-auto z-index position-relative"
+                      style={{ height: '35px', top: '-19px' }}
+                    />
+                  )}
+                  {activeTab === 'addTab2' && (
+                    <img
+                      src={swapIcon}
+                      alt="swapaddicon"
+                      className="mx-auto z-index position-relative"
+                      style={{ height: '35px', top: '-19px' }}
+                    />
+                  )}
+                </Row>
 
-                  <MDBRow className="">
-                    <MDBCol size="auto">
-                      <div className="output-card ml-1">
+                {activeTab === 'addTab1' && (
+                  <Card
+                    style={{ backgroundColor: '#25212D' }}
+                    className="card-body mb-1 card-inside"
+                  >
+                    <Row className="my-2">
+                      <Col xs="4" className="">
+                        <div className="text-sm-label">{t('add')}</div>
+                      </Col>
+                      <Col xs="8" className="text-end">
+                        <div
+                          className="text-sm-label"
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => {
+                            addInput2.focus()
+                            addInput2.value = convertFromWei(getBalance(2))
+                          }}
+                        >
+                          {t('balance')}:{' '}
+                          {pool.poolDetails && formatFromWei(getBalance(2))}
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row className="">
+                      <Col xs="auto" className="ms-1">
                         <AssetSelect
-                          priority="3"
-                          filter={['pool']}
-                          disabled={
-                            activeTab === 'addTab1' ||
-                            assetAdd1.tokenAddress !== addr.spartav2
-                          }
+                          priority="2"
+                          filter={['token']}
+                          whiteList={[addr.spartav2]}
+                          disabled={activeTab === 'addTab1'}
                         />
-                      </div>
-                    </MDBCol>
-                    <MDBCol className="text-right">
-                      <InputGroup className="m-0 mt-n1">
-                        <Input
-                          className="text-right ml-0 p-2 text-light"
-                          type="text"
-                          placeholder="0.00"
-                          id="addInput3"
-                          disabled
-                        />
-                      </InputGroup>
-                      <div className="text-right text-sm-label">
-                        ~$
-                        {addInput1?.value
-                          ? formatFromWei(getLpValueUSD(), 2)
-                          : '0.00'}
-                        {' ('}
-                        {addInput1?.value
-                          ? formatFromUnits(getRateSlip(), 2)
-                          : '0.00'}
-                        {'%)'}
-                      </div>
-                    </MDBCol>
-                  </MDBRow>
-                </Card>
-              )}
-
-              {pool.poolDetails && (
-                <>
-                  <Card className="card-body mb-1">
-                    <MDBRow className="mb-2">
-                      <MDBCol size="auto">
-                        <span className="text-card">{t('add')}</span>
-                      </MDBCol>
-                      <MDBCol className="text-right">
-                        <span className="output-card text-light">
-                          {addInput1?.value > 0
-                            ? formatFromUnits(addInput1?.value, 6)
-                            : '0.00'}{' '}
-                          {getToken(assetAdd1.tokenAddress)?.symbol}
-                        </span>
-                      </MDBCol>
-                    </MDBRow>
-
-                    {activeTab === 'addTab1' && (
-                      <MDBRow className="mb-2">
-                        <MDBCol size="auto">
-                          <span className="text-card">{t('add')}</span>
-                        </MDBCol>
-                        <MDBCol className="text-right">
-                          <span className="output-card text-light">
-                            {addInput2?.value > 0
-                              ? formatFromUnits(addInput2?.value, 6)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    )}
-
-                    {activeTab === 'addTab2' && (
-                      <MDBRow className="mb-2">
-                        <MDBCol size="auto" className="title-card">
-                          <span className="text-card">{t('fee')}</span>
-                        </MDBCol>
-                        <MDBCol className="text-right">
-                          <span className="output-card text-light">
-                            {assetAdd1 && getAddSingleSwapFee() > 0
-                              ? formatFromWei(getAddSingleSwapFee(), 6)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </span>
-                        </MDBCol>
-                      </MDBRow>
-                    )}
-
-                    <MDBRow className="">
-                      <MDBCol size="auto" className="title-card">
-                        <span className="subtitle-card">{t('receive')}</span>
-                      </MDBCol>
-                      <MDBCol className="text-right">
-                        <span className="subtitle-card">
-                          {outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
-                          <span className="output-card ml-1">
-                            {getToken(assetAdd1.tokenAddress)?.symbol}p
-                          </span>
-                        </span>
-                      </MDBCol>
-                    </MDBRow>
+                      </Col>
+                      <Col className="text-end">
+                        <InputGroup className="m-0">
+                          <FormControl
+                            className="text-end ms-0 p-2"
+                            type="number"
+                            placeholder={`${t('add')}...`}
+                            id="addInput2"
+                            autoComplete="off"
+                            autoCorrect="off"
+                            onInput={(e) => handleTokenInputChange(e)}
+                          />
+                          <InputGroup.Text
+                            role="button"
+                            tabIndex={-1}
+                            onKeyPress={() => clearInputs(2)}
+                            onClick={() => clearInputs(2)}
+                          >
+                            <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
+                          </InputGroup.Text>
+                        </InputGroup>
+                        <div className="text-end text-sm-label">
+                          ~$
+                          {addInput2?.value
+                            ? formatFromWei(getInput2ValueUSD(), 2)
+                            : '0.00'}
+                        </div>
+                      </Col>
+                    </Row>
                   </Card>
-                </>
-              )}
-              {!pool.poolDetails && (
-                <HelmetLoading height="150px" width="150px" />
-              )}
-            </MDBCol>
-          </MDBRow>
-          <MDBRow className="text-center">
-            {assetAdd1?.tokenAddress &&
-              assetAdd1?.tokenAddress !== addr.bnb &&
-              wallet?.account &&
-              addInput1?.value && (
-                <Approval
-                  tokenAddress={assetAdd1?.tokenAddress}
-                  symbol={getToken(assetAdd1.tokenAddress)?.symbol}
-                  walletAddress={wallet?.account}
-                  contractAddress={addr.router}
-                  txnAmount={convertToWei(addInput1?.value)}
-                  assetNumber="1"
-                />
-              )}
-            <MDBCol size="12" sm="4" md="12" className="hide-if-siblings">
-              <Button
-                className="w-100 btn-primary"
-                disabled={
-                  addInput1?.value <= 0 ||
-                  BN(convertToWei(addInput1?.value)).isGreaterThan(
-                    getBalance(1),
-                  ) ||
-                  BN(convertToWei(addInput2?.value)).isGreaterThan(
-                    getBalance(2),
-                  ) ||
-                  poolAdd1.baseAmount <= 0
-                }
-                onClick={() => handleAddLiquidity()}
-              >
-                {t('joinPool')}
-              </Button>
-            </MDBCol>
-            {assetAdd2?.tokenAddress &&
-              assetAdd2?.tokenAddress !== addr.bnb &&
-              wallet?.account &&
-              addInput2?.value && (
-                <Approval
-                  tokenAddress={assetAdd2?.tokenAddress}
-                  symbol={getToken(assetAdd2.tokenAddress)?.symbol}
-                  walletAddress={wallet?.account}
-                  contractAddress={addr.router}
-                  txnAmount={convertToWei(addInput2?.value)}
-                  assetNumber="2"
-                />
-              )}
-          </MDBRow>
+                )}
+
+                {activeTab === 'addTab2' && (
+                  <Card
+                    style={{ backgroundColor: '#25212D' }}
+                    className="card-body mb-1 card-inside"
+                  >
+                    <Row className="my-2">
+                      <Col xs="4" className="">
+                        <div className="text-sm-label">{t('pool')}</div>
+                      </Col>
+                      <Col xs="8" className="text-end">
+                        <div className="text-sm-label">
+                          {t('balance')}:{' '}
+                          {pool.poolDetails && formatFromWei(getBalance(3))}
+                        </div>
+                      </Col>
+                    </Row>
+
+                    <Row className="">
+                      <Col xs="auto">
+                        <div className="output-card ms-1">
+                          <AssetSelect
+                            priority="3"
+                            filter={['pool']}
+                            disabled={
+                              activeTab === 'addTab1' ||
+                              assetAdd1.tokenAddress !== addr.spartav2
+                            }
+                          />
+                        </div>
+                      </Col>
+                      <Col className="text-end">
+                        <InputGroup className="m-0 mt-n1">
+                          <FormControl
+                            className="text-end ms-0 p-2 text-light"
+                            type="number"
+                            placeholder="0.00"
+                            id="addInput3"
+                            disabled
+                          />
+                        </InputGroup>
+                        <div className="text-end text-sm-label">
+                          ~$
+                          {addInput1?.value
+                            ? formatFromWei(getLpValueUSD(), 2)
+                            : '0.00'}
+                          {' ('}
+                          {addInput1?.value
+                            ? formatFromUnits(getRateSlip(), 2)
+                            : '0.00'}
+                          {'%)'}
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card>
+                )}
+
+                {pool.poolDetails && (
+                  <>
+                    <Card className="card-body mb-1">
+                      <Row className="mb-2">
+                        <Col xs="auto">
+                          <span className="text-card">{t('add')}</span>
+                        </Col>
+                        <Col className="text-end">
+                          <span className="output-card text-light">
+                            {addInput1?.value > 0
+                              ? formatFromUnits(addInput1?.value, 6)
+                              : '0.00'}{' '}
+                            {getToken(assetAdd1.tokenAddress)?.symbol}
+                          </span>
+                        </Col>
+                      </Row>
+
+                      {activeTab === 'addTab1' && (
+                        <Row className="mb-2">
+                          <Col xs="auto">
+                            <span className="text-card">{t('add')}</span>
+                          </Col>
+                          <Col className="text-end">
+                            <span className="output-card text-light">
+                              {addInput2?.value > 0
+                                ? formatFromUnits(addInput2?.value, 6)
+                                : '0.00'}{' '}
+                              <span className="">SPARTA</span>
+                            </span>
+                          </Col>
+                        </Row>
+                      )}
+
+                      {activeTab === 'addTab2' && (
+                        <Row className="mb-2">
+                          <Col xs="auto" className="title-card">
+                            <span className="text-card">{t('fee')}</span>
+                          </Col>
+                          <Col className="text-end">
+                            <span className="output-card text-light">
+                              {assetAdd1 && getAddSingleSwapFee() > 0
+                                ? formatFromWei(getAddSingleSwapFee(), 6)
+                                : '0.00'}{' '}
+                              <span className="">SPARTA</span>
+                            </span>
+                          </Col>
+                        </Row>
+                      )}
+
+                      <Row className="">
+                        <Col xs="auto" className="title-card">
+                          <span className="subtitle-card">{t('receive')}</span>
+                        </Col>
+                        <Col className="text-end">
+                          <span className="subtitle-card">
+                            {outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
+                            <span className="output-card ms-1">
+                              {getToken(assetAdd1.tokenAddress)?.symbol}p
+                            </span>
+                          </span>
+                        </Col>
+                      </Row>
+                    </Card>
+                  </>
+                )}
+                {!pool.poolDetails && (
+                  <HelmetLoading height="150px" width="150px" />
+                )}
+              </Col>
+            </Row>
+          </Card.Body>
+
+          <Card.Footer>
+            <Row className="text-center">
+              {assetAdd1?.tokenAddress &&
+                assetAdd1?.tokenAddress !== addr.bnb &&
+                wallet?.account &&
+                addInput1?.value && (
+                  <Approval
+                    tokenAddress={assetAdd1?.tokenAddress}
+                    symbol={getToken(assetAdd1.tokenAddress)?.symbol}
+                    walletAddress={wallet?.account}
+                    contractAddress={addr.router}
+                    txnAmount={convertToWei(addInput1?.value)}
+                    assetNumber="1"
+                  />
+                )}
+              <Col xs="12" sm="4" md="12" className="hide-if-siblings">
+                <Button
+                  className="w-100"
+                  disabled={
+                    addInput1?.value <= 0 ||
+                    BN(convertToWei(addInput1?.value)).isGreaterThan(
+                      getBalance(1),
+                    ) ||
+                    BN(convertToWei(addInput2?.value)).isGreaterThan(
+                      getBalance(2),
+                    ) ||
+                    poolAdd1.baseAmount <= 0
+                  }
+                  onClick={() => handleAddLiquidity()}
+                >
+                  {t('joinPool')}
+                </Button>
+              </Col>
+              {assetAdd2?.tokenAddress &&
+                assetAdd2?.tokenAddress !== addr.bnb &&
+                wallet?.account &&
+                addInput2?.value && (
+                  <Approval
+                    tokenAddress={assetAdd2?.tokenAddress}
+                    symbol={getToken(assetAdd2.tokenAddress)?.symbol}
+                    walletAddress={wallet?.account}
+                    contractAddress={addr.router}
+                    txnAmount={convertToWei(addInput2?.value)}
+                    assetNumber="2"
+                  />
+                )}
+            </Row>
+          </Card.Footer>
         </Card>
-      </MDBCol>
+      </Col>
       {pool.poolDetails && (
-        <MDBCol size="auto">
+        <Col xs="auto">
           <SwapPair assetSwap={poolAdd1} />
-        </MDBCol>
+        </Col>
       )}
-    </>
+    </Row>
   )
 }
 
