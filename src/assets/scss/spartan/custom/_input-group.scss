@@ -1,0 +1,46 @@
+.input-group-text {
+  background-color: #25212d;
+  border-color: #1d171f;
+}
+
+.form-control {
+  background-color: #25212d;
+  border-color: #1d171f;
+  color: #fff;
+
+  &:focus {
+    background-color: #1d171f;
+    color: #fff;
+    border-color: #1d171f;
+  }
+
+  &:disabled {
+    background-color: #25212d;
+    color: #A5ADAF;
+    border-color: #1d171f;
+  }
+}
+
+.input-group-text:nth-last-child(n+2) {
+  border-right: none;
+}
+
+// WHITE MODE
+.white-content {
+  .input-group-text {
+    background-color: #F5F8FC;
+    border-color: #605E68;
+  }
+  
+  .form-control {
+    background-color: #F5F8FC;
+    border-color: #605E68;
+    color: #000;
+  
+    &:focus {
+      background-color: #A5ADAF;
+      color: #000;
+      border-color: #605E68;
+    }
+  }
+}

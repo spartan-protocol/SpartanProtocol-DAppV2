@@ -41,9 +41,9 @@ import {
   removeLiquiditySingle,
 } from '../../../store/router/actions'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import swapIcon from '../../../assets/icons/swapadd.svg'
 import Approval from '../../../components/Approval/Approval'
 import { useSparta } from '../../../store/sparta'
+import { Icon } from '../../../components/Icons/icons'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -489,11 +489,12 @@ const LiqRemove = () => {
 
               <Row style={{ height: '1px' }}>
                 {activeTab === '2' && (
-                  <img
-                    src={swapIcon}
-                    alt="swapaddicon"
-                    className="mx-auto z-index position-relative"
-                    style={{ height: '35px', top: '-19px' }}
+                  <Icon
+                    icon="swapAdd"
+                    size="25"
+                    fill="#fb2715"
+                    className="mx-auto position-relative"
+                    style={{ height: '35px', top: '-18px', zIndex: '1080' }}
                   />
                 )}
               </Row>

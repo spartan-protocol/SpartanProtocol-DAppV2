@@ -1,19 +1,13 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Card,
-  Col,
-  OverlayTrigger,
-  Popover,
-  Row,
-} from 'react-bootstrap'
+import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const PoolItem = ({ asset }) => {
   const { t } = useTranslation()
@@ -53,44 +47,18 @@ const PoolItem = ({ asset }) => {
     setShowDetails(!showDetails)
   }
 
-  const tooltipApy = (
-    <Popover>
-      <Popover.Header>APY Info</Popover.Header>
-      <Popover.Body>{t('apyInfo')}</Popover.Body>
-    </Popover>
+  const apyTooltip = Tooltip('apy')
+  const revenueTooltip = Tooltip(
+    'revenue',
+    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
-
-  const tooltipRevenue = (
-    <Popover>
-      <Popover.Header>Revenue Info</Popover.Header>
-      <Popover.Body>
-        {t('revenueInfo', {
-          days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-        })}
-      </Popover.Body>
-    </Popover>
+  const swapRevTooltip = Tooltip(
+    'swapRevenue',
+    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
-
-  const tooltipSwapRevenue = (
-    <Popover>
-      <Popover.Header>Swap Revenue</Popover.Header>
-      <Popover.Body>
-        {t('swapRevenue', {
-          days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-        })}
-      </Popover.Body>
-    </Popover>
-  )
-
-  const tooltipDiviRevenue = (
-    <Popover>
-      <Popover.Header>Dividend Revenue</Popover.Header>
-      <Popover.Body>
-        {t('dividendRevenue', {
-          days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-        })}
-      </Popover.Body>
-    </Popover>
+  const diviRevTooltip = Tooltip(
+    'dividendRevenue',
+    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
 
   return (
@@ -108,7 +76,7 @@ const PoolItem = ({ asset }) => {
               </p>
             </Col>
             <Col className="text-end mt-2 p-0 pr-2">
-              <OverlayTrigger placement="auto" overlay={tooltipApy}>
+              <OverlayTrigger placement="auto" overlay={apyTooltip}>
                 <span role="button">
                   <Icon icon="info" className="me-1" size="17" fill="white" />
                 </span>
@@ -173,7 +141,7 @@ const PoolItem = ({ asset }) => {
           <Row className="my-1">
             <Col xs="auto" className="text-card">
               {t('revenue')}
-              <OverlayTrigger placement="auto" overlay={tooltipRevenue}>
+              <OverlayTrigger placement="auto" overlay={revenueTooltip}>
                 <span role="button">
                   <Icon icon="info" className="ms-1" size="17" fill="white" />
                 </span>
@@ -200,7 +168,7 @@ const PoolItem = ({ asset }) => {
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
                   {t('fees')}
-                  <OverlayTrigger placement="auto" overlay={tooltipSwapRevenue}>
+                  <OverlayTrigger placement="auto" overlay={swapRevTooltip}>
                     <span role="button">
                       <Icon
                         icon="info"
@@ -222,7 +190,7 @@ const PoolItem = ({ asset }) => {
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
                   {t('dividends')}
-                  <OverlayTrigger placement="auto" overlay={tooltipDiviRevenue}>
+                  <OverlayTrigger placement="auto" overlay={diviRevTooltip}>
                     <span role="button">
                       <Icon
                         icon="info"

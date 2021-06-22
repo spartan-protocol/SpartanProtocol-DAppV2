@@ -6,6 +6,7 @@ import { ReactComponent as Info } from '../../assets/icons/info.svg'
 import { ReactComponent as Lock } from '../../assets/icons/lock.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
+import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
 
 const icons = {
   arrowDown: ArrowDown,
@@ -15,6 +16,7 @@ const icons = {
   lock: Lock,
   plus: Plus,
   search: Search,
+  swapAdd: SwapAdd,
 }
 
 /**
@@ -26,6 +28,7 @@ const icons = {
  * @param {string} size width & height in one (optional)
  * @param {string} height height in px (optional)
  * @param {string} width width in px (optional)
+ * @param {string} style (optional)
  * @returns {Component} Custom Icon imported as ReactComponent
  */
 export const Icon = (props) => {
@@ -37,6 +40,7 @@ export const Icon = (props) => {
         height={props.size || props.height || '40'}
         width={props.size || props.width || '40'}
         fill={props.fill || 'white'}
+        style={props.style || null}
       />
     </>
   )

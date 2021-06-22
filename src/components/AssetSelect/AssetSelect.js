@@ -272,9 +272,8 @@ const AssetSelect = (props) => {
           !props.disabled ? toggleModal() : console.log('button disabled')
         }
         role="button"
-        className="justify-content-left"
       >
-        <Col xs="auto" className="pe-1">
+        <Col xs="auto" className="position-relative pe-1 ps-2">
           {selectedType === 'token' && (
             <img
               height="35px"
@@ -296,7 +295,7 @@ const AssetSelect = (props) => {
                 src={spartaIcon}
                 alt="Sparta LP token icon"
                 className="position-absolute"
-                style={{ left: '35px', bottom: '-2px' }}
+                style={{ left: '28px', top: '18px' }}
               />
             </>
           )}
@@ -314,17 +313,17 @@ const AssetSelect = (props) => {
                 src={spartaIconAlt}
                 alt="Sparta LP token icon"
                 className="position-absolute"
-                style={{ left: '35px', bottom: '-2px' }}
+                style={{ left: '28px', top: '18px' }}
               />
             </>
           )}
         </Col>
-        <Col className="output-card px-2 my-auto">
+        <Col className="output-card px-1 my-auto text-light">
           {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
           {!props.disabled && (
-            <i className="ms-1 icon-extra-small icon-arrow icon-light align-middle" />
+            <Icon icon="arrowDown" size="20" fill="grey" className="ps-1" />
           )}
         </Col>
       </Row>
