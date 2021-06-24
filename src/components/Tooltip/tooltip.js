@@ -15,6 +15,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'apyInfo',
     },
     {
+      id: 'bond',
+      title: 'bond',
+      body: 'bondInfo',
+    },
+    {
       id: 'revenue',
       title: 'revenue',
       body: 'revenueInfo',

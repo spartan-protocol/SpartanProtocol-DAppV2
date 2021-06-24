@@ -1,21 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
-
-import {
-  Button,
-  Card,
-  Col,
-  Input,
-  InputGroup,
-  InputGroupAddon,
-  UncontrolledTooltip,
-  Progress,
-  Row,
-} from 'reactstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import {
+  Col,
+  Row,
+  Card,
+  InputGroup,
+  FormControl,
+  Button,
+  OverlayTrigger,
+  ProgressBar,
+} from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -38,6 +36,8 @@ import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { Icon } from '../../../components/Icons/icons'
 
 const LiqBond = () => {
   const { t } = useTranslation()
@@ -176,208 +176,208 @@ const LiqBond = () => {
   }
 
   return (
-    <>
+    <Row>
       <Col xs="auto">
-        <Card className="card-body card-480">
-          <Row>
-            <Col xs="12" className="px-1 px-sm-3">
-              <Card
-                style={{ backgroundColor: '#25212D' }}
-                className="card-body pb-2 mb-1 card-inside"
-              >
-                {bond.listedAssets?.length > 0 ? (
-                  <>
-                    <Row>
-                      <Col xs="4" className="">
-                        <div className="text-sm-label">{t('bond')}</div>
-                      </Col>
-                      <Col xs="8" className="text-right">
-                        <div
-                          role="button"
-                          aria-hidden="true"
-                          className="text-sm-label"
-                          onClick={() => {
-                            bondInput1.value = convertFromWei(
+        <Card xs="auto" className="card-480">
+          <Card.Body>
+            <Row>
+              <Col xs="12" className="px-1 px-sm-3">
+                <Card style={{ backgroundColor: '#25212d' }}>
+                  <Card.Body>
+                    {bond.listedAssets?.length > 0 ? (
+                      <>
+                        <Row>
+                          <Col className="text-sm-label">{t('bond')}</Col>
+                          <Col
+                            className="text-sm-label float-end text-end"
+                            role="button"
+                            aria-hidden="true"
+                            onClick={() => {
+                              bondInput1.value = convertFromWei(
+                                getToken(assetBond1.tokenAddress)?.balance,
+                              )
+                            }}
+                          >
+                            {t('balance')}:{' '}
+                            {formatFromWei(
                               getToken(assetBond1.tokenAddress)?.balance,
-                            )
-                          }}
-                        >
-                          {t('balance')}:{' '}
-                          {formatFromWei(
-                            getToken(assetBond1.tokenAddress)?.balance,
-                          )}
-                        </div>
+                            )}
+                          </Col>
+                        </Row>
+
+                        <Row className="my-1">
+                          <Col>
+                            <InputGroup className="">
+                              <InputGroup.Text>
+                                <AssetSelect
+                                  priority="1"
+                                  filter={['token']}
+                                  whiteList={bond.listedAssets}
+                                />
+                              </InputGroup.Text>
+                              <FormControl
+                                className="text-end ms-0"
+                                type="number"
+                                placeholder={`${t('add')}...`}
+                                id="bondInput1"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                onInput={(e) => handleTokenInputChange(e)}
+                              />
+                              <InputGroup.Text
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs()}
+                                onClick={() => clearInputs()}
+                              >
+                                <Icon icon="close" size="12" fill="grey" />
+                              </InputGroup.Text>
+                            </InputGroup>
+                            <div className="text-end text-sm-label pt-1">
+                              ~$
+                              {bondInput1?.value
+                                ? formatFromWei(getInput1ValueUSD(), 2)
+                                : '0.00'}
+                            </div>
+                          </Col>
+                        </Row>
+                      </>
+                    ) : (
+                      <div className="output-card">
+                        No assets are currently listed for Bond.{' '}
+                        <Link to="/dao">Visit the DAO</Link> to propose a new
+                        Bond asset.
+                      </div>
+                    )}
+                  </Card.Body>
+                </Card>
+
+                <Row className="mb-2 mt-3">
+                  <Col xs="auto">
+                    <span className="subtitle-card">
+                      {t('allocation')}
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(t, 'bond')}
+                      >
+                        <span role="button">
+                          <Icon
+                            icon="info"
+                            className="ms-1"
+                            size="17"
+                            fill="white"
+                          />
+                        </span>
+                      </OverlayTrigger>
+                    </span>
+                  </Col>
+                  <Col className="text-end">
+                    <span className="subtitle-card">
+                      {formatFromWei(bond.global.spartaRemaining, 0)}{' '}
+                      {t('remaining')}
+                    </span>
+                  </Col>
+                </Row>
+
+                <ProgressBar
+                  variant="info"
+                  className="my-2"
+                  now={BN(convertFromWei(bond.global.spartaRemaining))
+                    .div(2500000)
+                    .times(100)}
+                  label={`${formatFromWei(
+                    bond.global.spartaRemaining,
+                    0,
+                  )} SPARTA`}
+                />
+
+                {bond.listedAssets?.length > 0 && (
+                  <>
+                    <Row className="mb-2">
+                      <Col xs="auto">
+                        <span className="text-card">{t('bond')}</span>
+                      </Col>
+                      <Col className="text-end">
+                        <span className="text-card">
+                          {bondInput1?.value > 0
+                            ? formatFromUnits(bondInput1?.value, 6)
+                            : '0.00'}{' '}
+                          {getToken(assetBond1.tokenAddress)?.symbol}
+                        </span>
                       </Col>
                     </Row>
-                    <Row className="my-2">
-                      <Col xs="auto">
-                        <div className="ml-1">
-                          <AssetSelect
-                            priority="1"
-                            filter={['token']}
-                            whiteList={bond.listedAssets}
-                          />
-                        </div>
+                    <Row className="mb-2">
+                      <Col xs="auto" className="">
+                        <span className="text-card">{t('mint')}</span>
                       </Col>
-                      <Col className="text-right">
-                        <InputGroup className="m-0 mt-n1">
-                          <Input
-                            className="text-right ml-0 p-2"
-                            type="text"
-                            placeholder={`${t('add')}...`}
-                            id="bondInput1"
-                            inputMode="decimal"
-                            pattern="^[0-9]*[.,]?[0-9]*$"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            minLength="1"
-                            onInput={(e) => handleTokenInputChange(e)}
-                          />
-                          <InputGroupAddon
-                            addonType="append"
-                            role="button"
-                            tabIndex={-1}
-                            onKeyPress={() => clearInputs()}
-                            onClick={() => clearInputs()}
-                          >
-                            <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                          </InputGroupAddon>
-                        </InputGroup>
-                        <div className="text-right text-sm-label">
-                          ~$
-                          {bondInput1?.value
-                            ? formatFromWei(getInput1ValueUSD(), 2)
-                            : '0.00'}
-                        </div>
+                      <Col className="text-end">
+                        <span className="text-card">
+                          {calcSpartaMinted() > 0
+                            ? formatFromWei(calcSpartaMinted(), 6)
+                            : '0.00'}{' '}
+                          SPARTA
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row className="">
+                      <Col xs="auto" className="title-card">
+                        <span className="subtitle-card">{t('lock')}</span>
+                      </Col>
+                      <Col className="text-end">
+                        <span className="subtitle-card">
+                          {calcOutput() > 0
+                            ? formatFromWei(calcOutput(), 6)
+                            : '0.00'}{' '}
+                          <span className="output-card">
+                            {getToken(assetBond1.tokenAddress)?.symbol}p
+                          </span>
+                        </span>
                       </Col>
                     </Row>
                   </>
-                ) : (
-                  <div className="output-card">
-                    No assets are currently listed for Bond.{' '}
-                    <Link to="/dao">Visit the DAO</Link> to propose a new Bond
-                    asset.
-                  </div>
                 )}
-              </Card>
-            </Col>
+              </Col>
+            </Row>
+          </Card.Body>
+          <Card.Footer>
+            {bond.listedAssets?.length > 0 && (
+              <>
+                <Row className="text-center">
+                  {assetBond1?.tokenAddress &&
+                    assetBond1?.tokenAddress !== addr.bnb &&
+                    wallet?.account &&
+                    bondInput1?.value && (
+                      <Approval
+                        tokenAddress={assetBond1?.tokenAddress}
+                        symbol={getToken(assetBond1.tokenAddress)?.symbol}
+                        walletAddress={wallet?.account}
+                        contractAddress={addr.dao}
+                        txnAmount={convertToWei(bondInput1?.value)}
+                        assetNumber="1"
+                      />
+                    )}
 
-            <Card className="card-body mb-1">
-              <Row className="mb-2">
-                <Col xs="auto">
-                  <div className="text-card">
-                    {t('allocation')}
-                    <i
-                      className="icon-extra-small icon-info icon-dark ml-1"
-                      id="tooltipAddBase"
-                    />
-                    <UncontrolledTooltip
-                      placement="right"
-                      target="tooltipAddBase"
+                  <Col xs="12" sm="4" md="12" className="hide-if-siblings">
+                    <Button
+                      className="w-100"
+                      disabled={
+                        bondInput1?.value <= 0 ||
+                        BN(convertToWei(bondInput1?.value)).isGreaterThan(
+                          getToken(assetBond1.tokenAddress)?.balance,
+                        ) ||
+                        BN(calcSpartaMinted()).isGreaterThan(
+                          bond.global.spartaRemaining,
+                        )
+                      }
+                      onClick={() => handleBondDeposit()}
                     >
-                      {t('bondInfo')}
-                    </UncontrolledTooltip>
-                  </div>
-                </Col>
-                <Col className="output-card text-right text-light">
-                  {formatFromWei(bond.global.spartaRemaining, 0)}{' '}
-                  {t('remaining')}
-                </Col>
-              </Row>
-
-              <div className="progress-container progress-primary">
-                <Progress
-                  max="2500000"
-                  value={convertFromWei(bond.global.spartaRemaining)}
-                  className=""
-                />
-              </div>
-
-              {bond.listedAssets?.length > 0 && (
-                <>
-                  <Row className="mb-2">
-                    <Col xs="auto">
-                      <div className="text-card">{t('bond')}</div>
-                    </Col>
-                    <Col className="text-right">
-                      <div className="output-card text-light">
-                        {bondInput1?.value > 0
-                          ? formatFromUnits(bondInput1?.value, 6)
-                          : '0.00'}{' '}
-                        {getToken(assetBond1.tokenAddress)?.symbol}
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row className="mb-2">
-                    <Col xs="auto" className="">
-                      <div className="text-card">{t('mint')}</div>
-                    </Col>
-                    <Col className="text-right">
-                      <div className="output-card text-light">
-                        {calcSpartaMinted() > 0
-                          ? formatFromWei(calcSpartaMinted(), 6)
-                          : '0.00'}{' '}
-                        SPARTA
-                      </div>
-                    </Col>
-                  </Row>
-                  <Row className="mb-2">
-                    <Col xs="auto" className="">
-                      <div className="subtitle-card">{t('lock')}</div>
-                    </Col>
-                    <Col className="text-right">
-                      <span className="subtitle-card">
-                        {calcOutput() > 0
-                          ? formatFromWei(calcOutput(), 6)
-                          : '0.00'}{' '}
-                        <span className="output-card ml-1">
-                          {getToken(assetBond1.tokenAddress)?.symbol}p
-                        </span>
-                      </span>
-                    </Col>
-                  </Row>
-                </>
-              )}
-            </Card>
-          </Row>
-          {bond.listedAssets?.length > 0 && (
-            <>
-              <Row>
-                {assetBond1?.tokenAddress &&
-                  assetBond1?.tokenAddress !== addr.bnb &&
-                  wallet?.account &&
-                  bondInput1?.value && (
-                    <Approval
-                      tokenAddress={assetBond1?.tokenAddress}
-                      symbol={getToken(assetBond1.tokenAddress)?.symbol}
-                      walletAddress={wallet?.account}
-                      contractAddress={addr.dao}
-                      txnAmount={convertToWei(bondInput1?.value)}
-                      assetNumber="1"
-                    />
-                  )}
-
-                <Col xs="12" className="hide-if-siblings">
-                  <Button
-                    color="primary"
-                    block
-                    disabled={
-                      bondInput1?.value <= 0 ||
-                      BN(convertToWei(bondInput1?.value)).isGreaterThan(
-                        getToken(assetBond1.tokenAddress)?.balance,
-                      ) ||
-                      BN(calcSpartaMinted()).isGreaterThan(
-                        bond.global.spartaRemaining,
-                      )
-                    }
-                    onClick={() => handleBondDeposit()}
-                  >
-                    {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
-                  </Button>
-                </Col>
-              </Row>
-            </>
-          )}
+                      {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
+                    </Button>
+                  </Col>
+                </Row>
+              </>
+            )}
+          </Card.Footer>
         </Card>
       </Col>
       {pool.poolDetails && (
@@ -385,7 +385,7 @@ const LiqBond = () => {
           <SwapPair assetSwap={assetBond1} />
         </Col>
       )}
-    </>
+    </Row>
   )
 }
 
