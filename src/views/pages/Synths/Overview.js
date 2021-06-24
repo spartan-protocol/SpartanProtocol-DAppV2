@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import classnames from 'classnames'
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Input,
-  Nav,
-  NavItem,
-  NavLink,
-  InputGroup,
-  InputGroupAddon,
-} from 'reactstrap'
-import UncontrolledTooltip from 'reactstrap/lib/UncontrolledTooltip'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import {
+  Row,
+  Col,
+  Card,
+  Nav,
+  InputGroup,
+  FormControl,
+  Button,
+} from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray, getNetwork } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
@@ -40,14 +35,13 @@ import {
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSynth } from '../../../store/synth/selector'
-import mintIcon from '../../../assets/icons/mint.svg'
-import fireIcon from '../../../assets/icons/fire.svg'
 import Approval from '../../../components/Approval/Approval'
 import SwapPair from '../Swap/SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
 import NewSynth from './NewSynth'
+import { Icon } from '../../../components/Icons/icons'
 
 const Swap = () => {
   const wallet = useWallet()
@@ -427,7 +421,7 @@ const Swap = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-3">{t('synths')}</h2>
+              <h2 className="text-title-small mb-0 me-3">{t('synths')}</h2>
               <NewSynth />
               {pool.poolDetails.length > 0 && <SharePool />}
             </div>
@@ -439,427 +433,403 @@ const Swap = () => {
               <>
                 <Row className="row-480">
                   <Col xs="auto">
-                    <Card xs="auto" className="card-body card-480 mb-auto">
-                      <Nav pills className="nav-tabs-custom mt-2 mb-4">
-                        <NavItem>
-                          <NavLink
-                            className={classnames({
-                              active: activeTab === 'mint',
-                            })}
-                            onClick={() => {
-                              toggle('mint')
-                            }}
-                          >
-                            {t('forgeSynths')}
-                          </NavLink>
-                        </NavItem>
-                        <NavItem>
-                          <NavLink
-                            className={classnames({
-                              active: activeTab === 'burn',
-                            })}
-                            onClick={() => {
-                              toggle('burn')
-                            }}
-                          >
-                            {t('meltSynths')}
-                          </NavLink>
-                        </NavItem>
-                      </Nav>
-                      <Row>
-                        <Col xs="12" className="px-1 px-sm-3">
-                          <Card
-                            style={{ backgroundColor: '#25212D' }}
-                            className="card-body mb-1 card-inside"
-                          >
-                            <Row>
-                              {/* 'From' input box */}
-                              <Col xs="4">
-                                <div className="text-sm-label">
-                                  {' '}
-                                  {activeTab === 'mint' ? t('add') : t('melt')}
-                                </div>
-                              </Col>
-
-                              <Col xs="8" className="text-right">
-                                <div
-                                  className="text-sm-label"
-                                  role="button"
-                                  aria-hidden="true"
-                                  onClick={() => {
-                                    swapInput1.value = convertFromWei(
-                                      getBalance(1),
-                                    )
-                                    handleZapInputChange(
-                                      convertFromWei(getBalance(1)),
-                                      true,
-                                    )
-                                  }}
-                                >
-                                  {t('balance')}
-                                  {': '}
-                                  {formatFromWei(getBalance(1), 4)}
-                                </div>
-                              </Col>
-                            </Row>
-                            <Row className="my-2">
-                              <Col xs="auto" className="ml-1">
-                                <AssetSelect
-                                  priority="1"
-                                  filter={
-                                    activeTab === 'mint' ? ['token'] : ['synth']
-                                  }
-                                />
-                              </Col>
-                              <Col className="text-right">
-                                <InputGroup className="m-0">
-                                  <Input
-                                    className="text-right ml-0 p-2"
-                                    type="text"
-                                    placeholder={`${t('add')}...`}
-                                    id="swapInput1"
-                                    inputMode="decimal"
-                                    pattern="^[0-9]*[.,]?[0-9]*$"
-                                    autoComplete="off"
-                                    autoCorrect="off"
-                                    minLength="1"
-                                    onInput={(e) => handleTokenInputChange(e)}
-                                  />
-                                  <InputGroupAddon
-                                    addonType="append"
-                                    role="button"
-                                    tabIndex={-1}
-                                    onKeyPress={() => clearInputs(1)}
-                                    onClick={() => clearInputs(1)}
-                                  >
-                                    <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                                  </InputGroupAddon>
-                                </InputGroup>
-                                <div className="text-right text-sm-label">
-                                  ~$
-                                  {swapInput1?.value
-                                    ? formatFromWei(getInput1USD(), 2)
-                                    : '0.00'}
-                                </div>
-                              </Col>
-                            </Row>
-                          </Card>
-                          <Row style={{ height: '1px' }}>
-                            {activeTab === 'mint' && (
-                              <img
-                                src={mintIcon}
-                                alt="minticon"
-                                className="mx-auto z-index position-relative p-2"
-                                style={{
-                                  backgroundColor: '#A80005',
-                                  height: '35px',
-                                  width: '35px',
-                                  top: '-19px',
-                                }}
-                              />
-                            )}
-                            {activeTab === 'burn' && (
-                              <img
-                                src={fireIcon}
-                                alt="plusicon"
-                                className="mx-auto z-index position-relative p-2"
-                                style={{
-                                  backgroundColor: '#A80005',
-                                  height: '35px',
-                                  width: '35px',
-                                  top: '-19px',
-                                }}
-                              />
-                            )}
-                          </Row>
-
-                          {activeTab === 'mint' && (
-                            <Card
-                              style={{ backgroundColor: '#25212D' }}
-                              className="card-body mb-1 card-inside"
+                    <Card xs="auto" className="card-480">
+                      <Card.Header className="p-0 border-0 mb-3">
+                        <Nav activeKey={activeTab} fill className="rounded-top">
+                          <Nav.Item key="mint" className="rounded-top">
+                            <Nav.Link
+                              className="rounded-top"
+                              eventKey="mint"
+                              onClick={() => {
+                                toggle('mint')
+                              }}
                             >
-                              <Row className="my-2">
-                                <Col xs="4" className="">
-                                  <div className="text-sm-label">
+                              {t('forgeSynths')}
+                            </Nav.Link>
+                          </Nav.Item>
+                          <Nav.Item key="burn" className="rounded-top">
+                            <Nav.Link
+                              className="rounded-top"
+                              eventKey="burn"
+                              onClick={() => {
+                                toggle('burn')
+                              }}
+                            >
+                              {t('meltSynths')}
+                            </Nav.Link>
+                          </Nav.Item>
+                        </Nav>
+                      </Card.Header>
+                      <Card.Body>
+                        <Row>
+                          <Col xs="12" className="px-1 px-sm-3">
+                            <Card style={{ backgroundColor: '#25212d' }}>
+                              <Card.Body>
+                                <Row>
+                                  {/* 'From' input box */}
+                                  <Col className="text-sm-label">
                                     {' '}
                                     {activeTab === 'mint'
-                                      ? t('forge')
-                                      : t('receive')}
-                                  </div>
-                                </Col>
-                                <Col xs="8" className="text-right">
-                                  <div className="text-sm-label">
-                                    {t('balance')}
-                                    {': '}
-                                    {pool.poolDetails &&
-                                      formatFromWei(getBalance(2), 4)}
-                                  </div>
-                                </Col>
-                              </Row>
-                              <Row className="">
-                                <Col xs="auto" className="ml-1">
-                                  <AssetSelect
-                                    priority="2"
-                                    filter={['synth']}
-                                  />
-                                </Col>
-                                <Col className="text-right">
-                                  <InputGroup className="m-0">
-                                    <Input
-                                      className="text-right ml-0 p-2 text-light"
-                                      type="text"
-                                      placeholder="0.00"
-                                      id="swapInput2"
-                                      inputMode="decimal"
-                                      pattern="^[0-9]*[.,]?[0-9]*$"
-                                      autoComplete="off"
-                                      autoCorrect="off"
-                                      minLength="1"
-                                      onInput={(e) => handleTokenInputChange(e)}
-                                    />
-                                  </InputGroup>
-                                  <div className="text-right text-sm-label">
-                                    ~$
-                                    {swapInput2?.value
-                                      ? formatFromWei(getInput2USD(), 2)
-                                      : '0.00'}
-                                    {' ('}
-                                    {swapInput2?.value
-                                      ? formatFromUnits(getRateSlip(), 2)
-                                      : '0.00'}
-                                    {'%)'}
-                                  </div>
-                                </Col>
-                              </Row>
-                            </Card>
-                          )}
-
-                          {activeTab === 'burn' && (
-                            <Card
-                              style={{ backgroundColor: '#25212D' }}
-                              className="card-body mb-1 card-inside"
-                            >
-                              <Row className="my-2">
-                                <Col xs="4" className="">
-                                  <div className="text-sm-label">
-                                    {activeTab === 'burn'
-                                      ? t('receive')
+                                      ? t('add')
                                       : t('melt')}
-                                  </div>
-                                </Col>
-                                <Col xs="8" className="text-right">
-                                  <div className="text-sm-label">
+                                  </Col>
+
+                                  <Col
+                                    className="text-sm-label float-end text-end"
+                                    role="button"
+                                    aria-hidden="true"
+                                    onClick={() => {
+                                      swapInput1.value = convertFromWei(
+                                        getBalance(1),
+                                      )
+                                      handleZapInputChange(
+                                        convertFromWei(getBalance(1)),
+                                        true,
+                                      )
+                                    }}
+                                  >
                                     {t('balance')}
                                     {': '}
-                                    {pool.poolDetails &&
-                                      formatFromWei(getBalance(2), 4)}
-                                  </div>
-                                </Col>
-                              </Row>
+                                    {formatFromWei(getBalance(1), 4)}
+                                  </Col>
+                                </Row>
 
-                              <Row className="">
-                                <Col xs="auto">
-                                  <div className="output-card ml-1">
-                                    <AssetSelect
-                                      priority="2"
-                                      filter={['token']}
-                                    />
-                                  </div>
-                                </Col>
-                                <Col className="text-right">
-                                  <InputGroup className="m-0">
-                                    <Input
-                                      className="text-right ml-0 p-2 text-light"
-                                      type="text"
-                                      placeholder="0.00"
-                                      id="swapInput2"
-                                      disabled
-                                    />
-                                  </InputGroup>
-                                  <div className="text-right text-sm-label">
-                                    ~$
-                                    {swapInput2?.value
-                                      ? formatFromWei(getInput2USD(), 2)
-                                      : '0.00'}
-                                    {' ('}
-                                    {swapInput2?.value
-                                      ? formatFromUnits(getRateSlip(), 2)
-                                      : '0.00'}
-                                    {'%)'}
-                                  </div>
-                                </Col>
-                              </Row>
+                                <Row className="my-1">
+                                  <Col>
+                                    <InputGroup className="">
+                                      <InputGroup.Text>
+                                        <AssetSelect
+                                          priority="1"
+                                          filter={
+                                            activeTab === 'mint'
+                                              ? ['token']
+                                              : ['synth']
+                                          }
+                                        />
+                                      </InputGroup.Text>
+                                      <FormControl
+                                        className="text-end ms-0"
+                                        type="number"
+                                        placeholder={`${t('add')}...`}
+                                        id="swapInput1"
+                                        autoComplete="off"
+                                        autoCorrect="off"
+                                        onInput={(e) =>
+                                          handleTokenInputChange(e)
+                                        }
+                                      />
+                                      <InputGroup.Text
+                                        role="button"
+                                        tabIndex={-1}
+                                        onKeyPress={() => clearInputs(1)}
+                                        onClick={() => clearInputs(1)}
+                                      >
+                                        <Icon
+                                          icon="close"
+                                          size="12"
+                                          fill="grey"
+                                        />
+                                      </InputGroup.Text>
+                                    </InputGroup>
+                                    <div className="text-end text-sm-label pt-1">
+                                      ~$
+                                      {swapInput1?.value
+                                        ? formatFromWei(getInput1USD(), 2)
+                                        : '0.00'}
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Card.Body>
                             </Card>
-                          )}
 
-                          {/* Bottom 'synth' txnDetails row */}
-                          <Row className="mb-2 mt-3">
-                            <Col xs="auto">
-                              <div className="text-card">{t('input')}</div>
-                            </Col>
-                            <Col className="text-right">
-                              <span className="output-card text-light">
-                                {swapInput1?.value
-                                  ? formatFromUnits(swapInput1?.value, 6)
-                                  : '0.00'}{' '}
-                                {getToken(assetSwap1.tokenAddress)?.symbol}
-                                {activeTab === 'burn' && 's'}
-                              </span>
-                            </Col>
-                          </Row>
+                            <Row style={{ height: '2px' }}>
+                              <Col xs="auto" className="mx-auto">
+                                {activeTab === 'mint' && (
+                                  <Icon
+                                    icon="mint"
+                                    size="25"
+                                    fill="#fb2715"
+                                    className="mx-auto position-relative"
+                                    style={{
+                                      height: '35px',
+                                      top: '-18px',
+                                      zIndex: '1000',
+                                    }}
+                                  />
+                                )}
+                                {activeTab === 'burn' && (
+                                  <Icon
+                                    icon="fire"
+                                    size="25"
+                                    fill="#fb2715"
+                                    className="mx-auto position-relative"
+                                    style={{
+                                      height: '35px',
+                                      top: '-18px',
+                                      zIndex: '1000',
+                                    }}
+                                  />
+                                )}
+                              </Col>
+                            </Row>
 
-                          <Row className="mb-3">
-                            <Col xs="auto">
-                              <div className="text-card">
-                                {t('fee')}{' '}
-                                <i
-                                  className="icon-extra-small icon-info icon-dark ml-2 mt-n1"
-                                  id="tooltipSynthFee"
-                                />
-                                <UncontrolledTooltip
-                                  placement="right"
-                                  target="tooltipSynthFee"
-                                >
-                                  {t('slipFeeInfo')}
-                                </UncontrolledTooltip>
-                              </div>
-                            </Col>
-                            <Col className="text-right">
-                              {activeTab === 'mint' && (
-                                <div className="output-card text-light">
+                            {activeTab === 'mint' && (
+                              <Card style={{ backgroundColor: '#25212D' }}>
+                                <Card.Body>
+                                  <Row>
+                                    <Col className="text-sm-label">
+                                      {activeTab === 'mint'
+                                        ? t('forge')
+                                        : t('receive')}
+                                    </Col>
+                                    <Col className="text-sm-label float-end text-end">
+                                      {t('balance')}
+                                      {': '}
+                                      {pool.poolDetails &&
+                                        formatFromWei(getBalance(2), 4)}
+                                    </Col>
+                                  </Row>
+
+                                  <Row className="my-1">
+                                    <Col>
+                                      <InputGroup className="m-0">
+                                        <InputGroup.Text>
+                                          <AssetSelect
+                                            priority="2"
+                                            filter={['synth']}
+                                          />
+                                        </InputGroup.Text>
+                                        <FormControl
+                                          className="text-end ms-0"
+                                          type="number"
+                                          placeholder="0.00"
+                                          id="swapInput2"
+                                          autoComplete="off"
+                                          autoCorrect="off"
+                                          onInput={(e) =>
+                                            handleTokenInputChange(e)
+                                          }
+                                          disabled
+                                        />
+                                      </InputGroup>
+                                      <div className="text-end text-sm-label pt-1">
+                                        ~$
+                                        {swapInput2?.value
+                                          ? formatFromWei(getInput2USD(), 2)
+                                          : '0.00'}
+                                        {' ('}
+                                        {swapInput2?.value
+                                          ? formatFromUnits(getRateSlip(), 2)
+                                          : '0.00'}
+                                        {'%)'}
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </Card.Body>
+                              </Card>
+                            )}
+
+                            {activeTab === 'burn' && (
+                              <Card style={{ backgroundColor: '#25212D' }}>
+                                <Card.Body>
+                                  <Row>
+                                    <Col className="text-sm-label">
+                                      {activeTab === 'burn'
+                                        ? t('receive')
+                                        : t('melt')}
+                                    </Col>
+                                    <Col className="text-sm-label float-end text-end">
+                                      {t('balance')}
+                                      {': '}
+                                      {pool.poolDetails &&
+                                        formatFromWei(getBalance(2), 4)}
+                                    </Col>
+                                  </Row>
+
+                                  <Row className="my-1">
+                                    <Col>
+                                      <InputGroup className="m-0">
+                                        <InputGroup.Text>
+                                          <AssetSelect
+                                            priority="2"
+                                            filter={['token']}
+                                          />
+                                        </InputGroup.Text>
+                                        <FormControl
+                                          className="text-end ms-0"
+                                          type="number"
+                                          placeholder="0.00"
+                                          id="swapInput2"
+                                          disabled
+                                        />
+                                      </InputGroup>
+                                      <div className="text-end text-sm-label pt-1">
+                                        ~$
+                                        {swapInput2?.value
+                                          ? formatFromWei(getInput2USD(), 2)
+                                          : '0.00'}
+                                        {' ('}
+                                        {swapInput2?.value
+                                          ? formatFromUnits(getRateSlip(), 2)
+                                          : '0.00'}
+                                        {'%)'}
+                                      </div>
+                                    </Col>
+                                  </Row>
+                                </Card.Body>
+                              </Card>
+                            )}
+
+                            {/* Bottom 'synth' txnDetails row */}
+                            <Row className="mb-2 mt-3">
+                              <Col xs="auto">
+                                <div className="text-card">{t('input')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
                                   {swapInput1?.value
-                                    ? formatFromWei(getSynthSwapFee(), 6)
+                                    ? formatFromUnits(swapInput1?.value, 6)
                                     : '0.00'}{' '}
-                                  SPARTA
+                                  {getToken(assetSwap1.tokenAddress)?.symbol}
+                                  {activeTab === 'burn' && 's'}
                                 </div>
-                              )}
-                              {activeTab === 'burn' && (
-                                <div className="output-card text-light">
-                                  {swapInput1?.value
-                                    ? formatFromWei(getRemovedBase(true), 6)
-                                    : '0.00'}{' '}
-                                  SPARTA
-                                </div>
-                              )}
-                            </Col>
-                          </Row>
+                              </Col>
+                            </Row>
 
-                          <Row className="mb-3">
-                            <Col xs="auto">
-                              <div className="subtitle-card">{t('output')}</div>
-                            </Col>
-                            <Col className="text-right">
-                              {activeTab === 'mint' && (
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('fee')} </div>
+                              </Col>
+                              <Col className="text-end">
+                                {activeTab === 'mint' && (
+                                  <div className="text-card">
+                                    {swapInput1?.value
+                                      ? formatFromWei(getSynthSwapFee(), 6)
+                                      : '0.00'}{' '}
+                                    SPARTA
+                                  </div>
+                                )}
+                                {activeTab === 'burn' && (
+                                  <div className="text-card">
+                                    {swapInput1?.value
+                                      ? formatFromWei(getRemovedBase(true), 6)
+                                      : '0.00'}{' '}
+                                    SPARTA
+                                  </div>
+                                )}
+                              </Col>
+                            </Row>
+
+                            <Row className="">
+                              <Col xs="auto" className="title-card">
                                 <span className="subtitle-card">
-                                  {swapInput1?.value
-                                    ? formatFromWei(getAddedSynths(), 6)
-                                    : '0.00'}
-                                  <span className="output-card ml-1">
+                                  {t('output')}
+                                </span>
+                              </Col>
+                              <Col className="text-end">
+                                {activeTab === 'mint' && (
+                                  <span className="subtitle-card">
+                                    {swapInput1?.value
+                                      ? formatFromWei(getAddedSynths(), 6)
+                                      : '0.00'}{' '}
                                     {getToken(assetSwap2.tokenAddress)?.symbol}s
                                   </span>
-                                </span>
-                              )}
+                                )}
 
-                              {activeTab === 'burn' && (
-                                <span className="subtitle-card">
-                                  {swapInput1?.value
-                                    ? formatFromWei(getRemovedBase(), 6)
-                                    : '0.00'}
-                                  <span className="output-card ml-1">
+                                {activeTab === 'burn' && (
+                                  <span className="subtitle-card">
+                                    {swapInput1?.value
+                                      ? formatFromWei(getRemovedBase(), 6)
+                                      : '0.00'}{' '}
                                     {getToken(assetSwap2.tokenAddress)?.symbol}
                                   </span>
-                                </span>
-                              )}
-                            </Col>
-                          </Row>
-
-                          {/* 'Approval/Allowance' row */}
-                          <Row>
-                            {activeTab === 'mint' && (
-                              <>
-                                {assetSwap1?.tokenAddress !== addr.bnb &&
-                                  wallet?.account &&
-                                  swapInput1?.value && (
-                                    <Approval
-                                      tokenAddress={assetSwap1?.tokenAddress}
-                                      symbol={
-                                        getToken(assetSwap1.tokenAddress)
-                                          ?.symbol
-                                      }
-                                      walletAddress={wallet?.account}
-                                      contractAddress={addr.router}
-                                      txnAmount={convertToWei(
-                                        swapInput1?.value,
-                                      )}
-                                      assetNumber="1"
-                                    />
-                                  )}
-                                <Col className="hide-if-siblings">
-                                  <Button
-                                    color="primary"
-                                    onClick={() => handleSwapToSynth()}
-                                    disabled={
-                                      swapInput1?.value <= 0 ||
-                                      BN(
-                                        convertToWei(swapInput1?.value),
-                                      ).isGreaterThan(getBalance(1))
-                                    }
-                                    block
-                                  >
-                                    {t('forge')}{' '}
-                                    {getToken(assetSwap2.tokenAddress)?.symbol}s
-                                  </Button>
-                                </Col>
-                              </>
-                            )}
-                            {activeTab === 'burn' && (
-                              <>
-                                {wallet?.account && swapInput1?.value && (
+                                )}
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                      <Card.Footer>
+                        {/* 'Approval/Allowance' row */}
+                        <Row>
+                          {activeTab === 'mint' && (
+                            <>
+                              {assetSwap1?.tokenAddress !== addr.bnb &&
+                                wallet?.account &&
+                                swapInput1?.value && (
                                   <Approval
-                                    tokenAddress={
-                                      getSynth(assetSwap1?.tokenAddress)
-                                        ?.address
-                                    }
-                                    symbol={`${
+                                    tokenAddress={assetSwap1?.tokenAddress}
+                                    symbol={
                                       getToken(assetSwap1.tokenAddress)?.symbol
-                                    }s`}
+                                    }
                                     walletAddress={wallet?.account}
                                     contractAddress={addr.router}
                                     txnAmount={convertToWei(swapInput1?.value)}
                                     assetNumber="1"
                                   />
                                 )}
-                                <Col className="hide-if-siblings">
-                                  <Button
-                                    color="primary"
-                                    onClick={() =>
-                                      dispatch(
-                                        swapSynthToAsset(
-                                          convertToWei(swapInput1?.value),
-                                          getSynth(assetSwap1.tokenAddress)
-                                            ?.address,
-                                          assetSwap2.tokenAddress,
-                                          wallet,
-                                        ),
-                                      )
-                                    }
-                                    disabled={
-                                      swapInput1?.value <= 0 ||
-                                      BN(
+                              <Col className="hide-if-siblings">
+                                <Button
+                                  onClick={() => handleSwapToSynth()}
+                                  className="w-100"
+                                  disabled={
+                                    swapInput1?.value <= 0 ||
+                                    BN(
+                                      convertToWei(swapInput1?.value),
+                                    ).isGreaterThan(getBalance(1))
+                                  }
+                                >
+                                  {t('forge')}{' '}
+                                  {getToken(assetSwap2.tokenAddress)?.symbol}s
+                                </Button>
+                              </Col>
+                            </>
+                          )}
+                          {activeTab === 'burn' && (
+                            <>
+                              {wallet?.account && swapInput1?.value && (
+                                <Approval
+                                  tokenAddress={
+                                    getSynth(assetSwap1?.tokenAddress)?.address
+                                  }
+                                  symbol={`${
+                                    getToken(assetSwap1.tokenAddress)?.symbol
+                                  }s`}
+                                  walletAddress={wallet?.account}
+                                  contractAddress={addr.router}
+                                  txnAmount={convertToWei(swapInput1?.value)}
+                                  assetNumber="1"
+                                />
+                              )}
+                              <Col className="hide-if-siblings">
+                                <Button
+                                  className="w-100"
+                                  onClick={() =>
+                                    dispatch(
+                                      swapSynthToAsset(
                                         convertToWei(swapInput1?.value),
-                                      ).isGreaterThan(getBalance(1))
-                                    }
-                                    block
-                                  >
-                                    {t('melt')}{' '}
-                                    {getToken(assetSwap1.tokenAddress)?.symbol}s
-                                  </Button>
-                                </Col>
-                              </>
-                            )}
-                          </Row>
-                        </Col>
-                      </Row>
+                                        getSynth(assetSwap1.tokenAddress)
+                                          ?.address,
+                                        assetSwap2.tokenAddress,
+                                        wallet,
+                                      ),
+                                    )
+                                  }
+                                  disabled={
+                                    swapInput1?.value <= 0 ||
+                                    BN(
+                                      convertToWei(swapInput1?.value),
+                                    ).isGreaterThan(getBalance(1))
+                                  }
+                                >
+                                  {t('melt')}{' '}
+                                  {getToken(assetSwap1.tokenAddress)?.symbol}s
+                                </Button>
+                              </Col>
+                            </>
+                          )}
+                        </Row>
+                      </Card.Footer>
                     </Card>
                   </Col>
                   <Col xs="auto">
