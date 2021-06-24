@@ -44,8 +44,6 @@ const SwapPair = ({ assetSwap }) => {
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
-  const apyTooltip = Tooltip('apy')
-
   return (
     <>
       <Card className="card-480 card-underlay">
@@ -118,7 +116,7 @@ const SwapPair = ({ assetSwap }) => {
           <Row className="my-2">
             <Col xs="auto" className="text-card">
               APY{' '}
-              <OverlayTrigger placement="auto" overlay={apyTooltip}>
+              <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                 <span role="button">
                   <Icon icon="info" className="ms-1" size="17" fill="white" />
                 </span>

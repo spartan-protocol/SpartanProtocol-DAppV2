@@ -1,6 +1,7 @@
 .input-group-text {
   background-color: #25212d;
   border-color: #1d171f;
+  color: #FFF;
 }
 
 .form-control {
@@ -39,8 +40,8 @@
   
     &:focus {
       background-color: #A5ADAF;
-      color: #000;
       border-color: #605E68;
+      color: #000;
     }
   }
 }

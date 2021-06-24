@@ -47,16 +47,18 @@ const PoolItem = ({ asset }) => {
     setShowDetails(!showDetails)
   }
 
-  const apyTooltip = Tooltip('apy')
   const revenueTooltip = Tooltip(
+    t,
     'revenue',
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
   const swapRevTooltip = Tooltip(
+    t,
     'swapRevenue',
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
   const diviRevTooltip = Tooltip(
+    t,
     'dividendRevenue',
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
@@ -76,7 +78,7 @@ const PoolItem = ({ asset }) => {
               </p>
             </Col>
             <Col className="text-end mt-2 p-0 pr-2">
-              <OverlayTrigger placement="auto" overlay={apyTooltip}>
+              <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                 <span role="button">
                   <Icon icon="info" className="me-1" size="17" fill="white" />
                 </span>

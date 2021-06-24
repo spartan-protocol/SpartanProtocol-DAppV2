@@ -1,6 +1,5 @@
 import React from 'react'
 import { Popover } from 'react-bootstrap'
-import { useTranslation } from 'react-i18next'
 
 /**
  * Get the custom tooltip from imported list.
@@ -8,8 +7,7 @@ import { useTranslation } from 'react-i18next'
  * @param {string} variable value of a custom variable if included (optional)
  * @returns {Component} Custom Tooltip
  */
-export const Tooltip = (tooltipId, variable) => {
-  const { t } = useTranslation()
+export const Tooltip = (t, tooltipId, variable) => {
   const allTooltips = [
     {
       id: 'apy',
@@ -24,13 +22,13 @@ export const Tooltip = (tooltipId, variable) => {
     },
     {
       id: 'swapRevenue',
-      title: 'swapRevenue',
+      title: 'swapRevenueTitle',
       body: 'swapRevenue',
       variable: { days: variable },
     },
     {
       id: 'dividendRevenue',
-      title: 'dividendRevenue',
+      title: 'dividendRevenueTitle',
       body: 'dividendRevenue',
       variable: { days: variable },
     },
@@ -42,7 +40,7 @@ export const Tooltip = (tooltipId, variable) => {
 
   return (
     <Popover>
-      <Popover.Header as="h3">{title}</Popover.Header>
+      <Popover.Header as="h3">{t(title)}</Popover.Header>
       <Popover.Body>{body}</Popover.Body>
     </Popover>
   )

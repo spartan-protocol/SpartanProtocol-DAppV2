@@ -492,7 +492,7 @@ const LiqAdd = () => {
                       size="25"
                       fill="#fb2715"
                       className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-18px', zIndex: '1080' }}
+                      style={{ height: '35px', top: '-18px', zIndex: '1000' }}
                     />
                   )}
                   {activeTab === 'addTab2' && (
@@ -501,7 +501,7 @@ const LiqAdd = () => {
                       size="25"
                       fill="#fb2715"
                       className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-18px', zIndex: '1080' }}
+                      style={{ height: '35px', top: '-18px', zIndex: '1000' }}
                     />
                   )}
                 </Row>
