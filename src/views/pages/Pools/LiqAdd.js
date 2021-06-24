@@ -622,7 +622,7 @@ const LiqAdd = () => {
                         <span className="text-card">{t('add')}</span>
                       </Col>
                       <Col className="text-end">
-                        <span className="output-card text-light">
+                        <span className="text-card">
                           {addInput1?.value > 0
                             ? formatFromUnits(addInput1?.value, 6)
                             : '0.00'}{' '}
@@ -637,7 +637,7 @@ const LiqAdd = () => {
                           <span className="text-card">{t('add')}</span>
                         </Col>
                         <Col className="text-end">
-                          <span className="output-card text-light">
+                          <span className="text-card">
                             {addInput2?.value > 0
                               ? formatFromUnits(addInput2?.value, 6)
                               : '0.00'}{' '}
@@ -653,7 +653,7 @@ const LiqAdd = () => {
                           <span className="text-card">{t('fee')}</span>
                         </Col>
                         <Col className="text-end">
-                          <span className="output-card text-light">
+                          <span className="text-card">
                             {assetAdd1 && getAddSingleSwapFee() > 0
                               ? formatFromWei(getAddSingleSwapFee(), 6)
                               : '0.00'}{' '}
