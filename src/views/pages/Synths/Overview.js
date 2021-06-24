@@ -512,7 +512,7 @@ const Swap = () => {
                                 />
                               </Col>
                               <Col className="text-right">
-                                <InputGroup className="m-0 mt-n1">
+                                <InputGroup className="m-0">
                                   <Input
                                     className="text-right ml-0 p-2"
                                     type="text"
@@ -604,7 +604,7 @@ const Swap = () => {
                                   />
                                 </Col>
                                 <Col className="text-right">
-                                  <InputGroup className="m-0 mt-n1">
+                                  <InputGroup className="m-0">
                                     <Input
                                       className="text-right ml-0 p-2 text-light"
                                       type="text"
@@ -667,7 +667,7 @@ const Swap = () => {
                                   </div>
                                 </Col>
                                 <Col className="text-right">
-                                  <InputGroup className="m-0 mt-n1">
+                                  <InputGroup className="m-0">
                                     <Input
                                       className="text-right ml-0 p-2 text-light"
                                       type="text"

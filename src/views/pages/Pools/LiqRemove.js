@@ -445,7 +445,7 @@ const LiqRemove = () => {
 
                     <Row className="my-1">
                       <Col>
-                        <InputGroup className="m-0 mt-n1">
+                        <InputGroup className="m-0">
                           <InputGroup.Text>
                             <AssetSelect priority="1" filter={['pool']} />
                           </InputGroup.Text>

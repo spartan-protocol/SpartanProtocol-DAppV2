@@ -7,6 +7,7 @@ import { ReactComponent as Info } from '../../assets/icons/info.svg'
 import { ReactComponent as Lock } from '../../assets/icons/lock.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
+import { ReactComponent as Swap } from '../../assets/icons/swap.svg'
 import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
 
 const icons = {
@@ -18,6 +19,7 @@ const icons = {
   lock: Lock,
   plus: Plus,
   search: Search,
+  swap: Swap,
   swapAdd: SwapAdd,
 }
 
@@ -42,6 +44,7 @@ export const Icon = (props) => {
         height={props.size || props.height || '40'}
         width={props.size || props.width || '40'}
         fill={props.fill || 'white'}
+        stroke={props.stroke || null}
         style={props.style || null}
       />
     </>

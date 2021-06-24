@@ -337,12 +337,8 @@
 }
 
 /* Swap */
-.icon-swap.icon-light {
-  background-image: url('/src/assets/icons/icon-swap-light.svg#light');
-}
-
-.icon-swap.icon-dark {
-  background-image: url('/src/assets/icons/icon-swap-dark.svg#dark');
+.icon-swap {
+  background-image: url('/src/assets/icons/swap.svg');
 }
 
 /* Telegram */
