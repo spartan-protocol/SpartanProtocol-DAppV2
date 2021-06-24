@@ -26,7 +26,7 @@ import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
 import { ReactComponent as FireIcon } from '../../assets/icons/fire.svg'
 import { ReactComponent as DownIcon } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ContractIcon } from '../../assets/icons/icon-contratcs.svg'
-import { ReactComponent as OpenIcon } from '../../assets/icons/icon-scan.svg'
+import { ReactComponent as OpenIcon } from '../../assets/icons/scan.svg'
 
 const Supply = () => {
   const { t } = useTranslation()

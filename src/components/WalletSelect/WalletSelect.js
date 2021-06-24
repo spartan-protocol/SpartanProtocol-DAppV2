@@ -25,7 +25,7 @@ import iosIcon from '../../assets/icons/apple-ios.svg'
 import Assets from './Assets'
 import LPs from './LPs'
 import Synths from './Synths'
-import { ReactComponent as OpenIcon } from '../../assets/icons/icon-scan.svg'
+import { ReactComponent as OpenIcon } from '../../assets/icons/scan.svg'
 import { ReactComponent as DiscIcon } from '../../assets/icons/wallet-red.svg'
 
 const WalletSelect = (props) => {

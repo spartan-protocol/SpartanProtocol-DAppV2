@@ -8,6 +8,7 @@ import { ReactComponent as Info } from '../../assets/icons/info.svg'
 import { ReactComponent as Lock } from '../../assets/icons/lock.svg'
 import { ReactComponent as Mint } from '../../assets/icons/mint.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
+import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
 import { ReactComponent as Swap } from '../../assets/icons/swap.svg'
 import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
@@ -22,6 +23,7 @@ const icons = {
   lock: Lock,
   mint: Mint,
   plus: Plus,
+  scan: Scan,
   search: Search,
   swap: Swap,
   swapAdd: SwapAdd,
