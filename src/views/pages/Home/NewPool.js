@@ -12,7 +12,6 @@ import {
   InputGroup,
   Modal,
 } from 'react-bootstrap'
-import { ReactComponent as PlusIcon } from '../../../assets/icons/plus.svg'
 import Approval from '../../../components/Approval/Approval'
 import {
   getAddresses,
@@ -24,6 +23,7 @@ import { createPoolADD } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { getTokenContract } from '../../../utils/web3Contracts'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import { Icon } from '../../../components/Icons/icons'
 
 const NewPool = () => {
   const dispatch = useDispatch()
@@ -253,10 +253,10 @@ const NewPool = () => {
       <Button
         variant={isLightMode ? 'secondary' : 'info'}
         onClick={() => setShowModal(true)}
-        className="rounded-pill"
+        className="rounded"
       >
-        <PlusIcon fill="white" className="me-2" />
         {t('pool')}
+        <Icon icon="plus" fill="white" size="20" className="ms-2" />
       </Button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>

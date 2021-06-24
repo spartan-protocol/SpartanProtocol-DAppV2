@@ -85,7 +85,7 @@ const Share = () => {
         className="ms-3"
         onClick={() => setShowShare(true)}
       >
-        <Icon icon="connect" size="30" fill="white" />
+        <Icon icon="connect" size="25" fill="white" />
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)} centered>
         <Modal.Header closeButton closeVariant="white">
