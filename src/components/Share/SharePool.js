@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, Card, Row, Col } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
-import { Card, CardBody, Row, Col } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
-import CardHeader from 'reactstrap/es/CardHeader'
-import CardTitle from 'reactstrap/es/CardTitle'
 import ShareLink from './ShareLink'
 import CopyIcon from '../../assets/icons/icon-copy.svg'
 import { usePool } from '../../store/pool'
 import spartaLpIcon from '../../assets/img/spartan_lp.svg'
 import spartaSynthIcon from '../../assets/img/spartan_synth.svg'
+import { Icon } from '../Icons/icons'
 
 const Share = () => {
   const pool = usePool()
@@ -83,178 +81,149 @@ const Share = () => {
   return (
     <>
       <Button
-        className="btn-transparent align-self-center btn btn-secondary"
+        variant="transparent"
+        className="ms-3"
         onClick={() => setShowShare(true)}
       >
-        <i className="spartan-icons icon-small icon-pools icon-dark mr-1 mt-1 ml-2" />
+        <Icon icon="connect" size="30" fill="white" />
       </Button>
-      <Modal show={showShare} onHide={() => setShowShare(false)}>
-        <Card>
-          <CardHeader>
-            <CardTitle tag="h2" />
-            <Row>
-              <Col xs="10">
-                <h2>{t('shareLink')}</h2>
-              </Col>
-              <Col xs="2">
-                <Button
-                  style={{
-                    right: '16px',
-                  }}
-                  onClick={() => setShowShare(false)}
-                  className="btn btn-transparent"
-                >
-                  <i className="icon-small icon-close" />
-                </Button>
-              </Col>
-            </Row>
-          </CardHeader>
-          <Row className="card-body">
-            <Col xs="12">
-              <Card className="card-share">
-                <CardBody className="py-3">
-                  <h4 className="card-title">{t('swapSpartanProtocol')}</h4>
-                  <Row>
-                    <Col>
-                      <img
-                        height="35px"
-                        src={getToken(asset1?.tokenAddress)?.symbolUrl}
-                        alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
-                        className="mx-2"
-                      />
-                      {assetType1 === 'synth' && (
-                        <img
-                          height="20px"
-                          src={spartaSynthIcon}
-                          alt={`${
-                            getToken(asset1?.tokenAddress)?.symbol
-                          } synth icon`}
-                          className="position-absolute"
-                          style={{ left: '45px', bottom: '-2px' }}
-                        />
-                      )}
-                      {assetType1 === 'pool' && (
-                        <img
-                          height="20px"
-                          src={spartaLpIcon}
-                          alt={`${
-                            getToken(asset1?.tokenAddress)?.symbol
-                          } synth icon`}
-                          className="position-absolute"
-                          style={{ left: '45px', bottom: '-2px' }}
-                        />
-                      )}
-                      <span
-                        className="card-title"
-                        style={{ marginLeft: '7px' }}
-                      >
-                        {getToken(asset1?.tokenAddress)?.symbol}
-                        {assetType1 === 'synth' && 's'}
-                        {assetType1 === 'pool' && 'p'}
-                      </span>
-                    </Col>
-                    <Col>
-                      <img
-                        height="35px"
-                        src={getToken(asset2?.tokenAddress)?.symbolUrl}
-                        alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
-                        className="mx-2"
-                      />
-                      {assetType2 === 'synth' && (
-                        <img
-                          height="20px"
-                          src={spartaSynthIcon}
-                          alt={`${
-                            getToken(asset1?.tokenAddress)?.symbol
-                          } synth icon`}
-                          className="position-absolute"
-                          style={{ left: '45px', bottom: '-2px' }}
-                        />
-                      )}
-                      {assetType2 === 'pool' && (
-                        <img
-                          height="20px"
-                          src={spartaLpIcon}
-                          alt={`${
-                            getToken(asset1?.tokenAddress)?.symbol
-                          } synth icon`}
-                          className="position-absolute"
-                          style={{ left: '45px', bottom: '-2px' }}
-                        />
-                      )}
+      <Modal show={showShare} onHide={() => setShowShare(false)} centered>
+        <Modal.Header closeButton closeVariant="white">
+          <Modal.Title>{t('shareLink')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Card className="card-share">
+            <Card.Body className="py-3">
+              <Row>
+                <Col>
+                  <img
+                    height="35px"
+                    src={getToken(asset1?.tokenAddress)?.symbolUrl}
+                    alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
+                    className="mx-2"
+                  />
+                  {assetType1 === 'synth' && (
+                    <img
+                      height="20px"
+                      src={spartaSynthIcon}
+                      alt={`${
+                        getToken(asset1?.tokenAddress)?.symbol
+                      } synth icon`}
+                      className="position-absolute"
+                      style={{ left: '45px', bottom: '-2px' }}
+                    />
+                  )}
+                  {assetType1 === 'pool' && (
+                    <img
+                      height="20px"
+                      src={spartaLpIcon}
+                      alt={`${
+                        getToken(asset1?.tokenAddress)?.symbol
+                      } synth icon`}
+                      className="position-absolute"
+                      style={{ left: '45px', bottom: '-2px' }}
+                    />
+                  )}
+                  <span className="card-title" style={{ marginLeft: '7px' }}>
+                    {getToken(asset1?.tokenAddress)?.symbol}
+                    {assetType1 === 'synth' && 's'}
+                    {assetType1 === 'pool' && 'p'}
+                  </span>
+                </Col>
+                <Col>
+                  <img
+                    height="35px"
+                    src={getToken(asset2?.tokenAddress)?.symbolUrl}
+                    alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
+                    className="mx-2"
+                  />
+                  {assetType2 === 'synth' && (
+                    <img
+                      height="20px"
+                      src={spartaSynthIcon}
+                      alt={`${
+                        getToken(asset1?.tokenAddress)?.symbol
+                      } synth icon`}
+                      className="position-absolute"
+                      style={{ left: '45px', bottom: '-2px' }}
+                    />
+                  )}
+                  {assetType2 === 'pool' && (
+                    <img
+                      height="20px"
+                      src={spartaLpIcon}
+                      alt={`${
+                        getToken(asset1?.tokenAddress)?.symbol
+                      } synth icon`}
+                      className="position-absolute"
+                      style={{ left: '45px', bottom: '-2px' }}
+                    />
+                  )}
 
-                      <span
-                        className="card-title"
-                        style={{ marginLeft: '7px' }}
-                      >
-                        {getToken(asset2?.tokenAddress)?.symbol}
-                        {assetType2 === 'synth' && 's'}
-                        {assetType2 === 'pool' && 'p'}
-                      </span>
-                    </Col>
-                  </Row>
-                </CardBody>
-              </Card>
-              <span
-                className="card-title"
-                style={{
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  marginLeft: '15px',
-                }}
-              >
-                {t('copyLink')}
-              </span>
-              <ShareLink url={url}>
-                <Card className="card-link">
-                  <CardBody className="py-3">
-                    <Row>
-                      <Col xs="10">
-                        <span className="card-title">
-                          {url.length > 50 ? `${url.substr(0, 50)}...` : url}
-                        </span>
-                      </Col>
-                      <Col xs="2">
-                        <img src={CopyIcon} alt="Copy icon" />
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </ShareLink>
-              <TwitterShareButton
-                url={url}
-                title="Sparta Protocol"
-                style={{ width: '100%' }}
-              >
-                <Card className="card-share">
-                  <CardBody className="py-3">
-                    <Row>
-                      <Col xs="10">
-                        <span className="card-title">
-                          {t('shareViaTwiter')}
-                        </span>
-                      </Col>
-                      <Col xs="2">
-                        <TwitterIcon size={32} round />
-                      </Col>
-                    </Row>
-                  </CardBody>
-                </Card>
-              </TwitterShareButton>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs="12" className="text-center">
-              <Button
-                type="Button"
-                className="btn btn-primary"
-                onClick={() => setShowShare(false)}
-              >
-                {t('cancel')}
-              </Button>
-            </Col>
-          </Row>
-        </Card>
+                  <span className="card-title" style={{ marginLeft: '7px' }}>
+                    {getToken(asset2?.tokenAddress)?.symbol}
+                    {assetType2 === 'synth' && 's'}
+                    {assetType2 === 'pool' && 'p'}
+                  </span>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+          <span
+            className="card-title"
+            style={{
+              color: '#fff',
+              fontWeight: 'bold',
+              marginLeft: '15px',
+            }}
+          >
+            {t('copyLink')}
+          </span>
+          <ShareLink url={url}>
+            <Card className="card-link">
+              <Card.Body className="py-3">
+                <Row>
+                  <Col xs="10">
+                    <span className="card-title">
+                      {url.length > 50 ? `${url.substr(0, 50)}...` : url}
+                    </span>
+                  </Col>
+                  <Col xs="2" className="text-center">
+                    <img src={CopyIcon} alt="Copy icon" />
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </ShareLink>
+          <TwitterShareButton
+            url={url}
+            title="Sparta Protocol"
+            style={{ width: '100%' }}
+          >
+            <Card className="card-share">
+              <Card.Body className="py-3">
+                <Row>
+                  <Col xs="10">
+                    <span className="card-title">{t('shareViaTwiter')}</span>
+                  </Col>
+                  <Col xs="2">
+                    <TwitterIcon size={32} round />
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </TwitterShareButton>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            type="Button"
+            className="w-100"
+            onClick={() => setShowShare(false)}
+          >
+            {t('cancel')}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   )

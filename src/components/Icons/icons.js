@@ -2,6 +2,7 @@ import React from 'react'
 import { ReactComponent as ArrowDown } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ArrowUp } from '../../assets/icons/arrow-up.svg'
 import { ReactComponent as Close } from '../../assets/icons/close.svg'
+import { ReactComponent as Connect } from '../../assets/icons/connect.svg'
 import { ReactComponent as Info } from '../../assets/icons/info.svg'
 import { ReactComponent as Lock } from '../../assets/icons/lock.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
@@ -12,6 +13,7 @@ const icons = {
   arrowDown: ArrowDown,
   arrowUp: ArrowUp,
   close: Close,
+  connect: Connect,
   info: Info,
   lock: Lock,
   plus: Plus,

@@ -255,12 +255,8 @@
 }
 
 /* PoolsTable */
-.icon-pools.icon-light {
-  background-image: url('/src/assets/icons/icon-connect-light.svg#light');
-}
-
-.icon-pools.icon-dark {
-  background-image: url('/src/assets/icons/icon-connect-dark.svg#dark');
+.icon-pools {
+  background-image: url('/src/assets/icons/connect.svg');
 }
 
 /* Analysis */
