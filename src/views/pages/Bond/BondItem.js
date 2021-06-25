@@ -56,7 +56,7 @@ const BondItem = ({ asset }) => {
     <>
       <Col xs="auto" key={asset.address}>
         <Card className="card-320">
-          <Card.Header>
+          <Card.Body>
             <Row className="">
               <Col xs="auto" className="position-relative pt-1">
                 <img
@@ -104,8 +104,6 @@ const BondItem = ({ asset }) => {
                 )}
               </Col>
             </Row>
-          </Card.Header>
-          <Card.Body>
             <Row className="my-1 mt-2">
               <Col xs="auto" className="text-card">
                 {t('remaining')}
