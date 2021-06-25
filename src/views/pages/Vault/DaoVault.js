@@ -32,6 +32,8 @@ const DaoVault = () => {
   const dispatch = useDispatch()
   // const [showDetails, setShowDetails] = useState(false)
 
+  const isLightMode = window.localStorage.getItem('theme')
+
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddr)[0]
 
@@ -232,7 +234,7 @@ const DaoVault = () => {
                           <Icon
                             icon="scan"
                             size="13"
-                            fill="white"
+                            fill={isLightMode ? 'black' : 'white'}
                             className="ms-1"
                           />
                         </p>
