@@ -106,7 +106,7 @@ const DaoVault = () => {
 
   return (
     <Row>
-      <Col xs="auto">
+      <Col xs="auto" className="mb-3">
         <Card xs="auto" className="card-320">
           <Card.Header className="">{t('daoVaultDetails')}</Card.Header>
           <Card.Body>

@@ -1,26 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import {
   Card,
-  CardBody,
   Row,
   Col,
   Button,
-  CardHeader,
-  CardTitle,
   InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input,
-  FormGroup,
-  CustomInput,
-} from 'reactstrap'
+  FormControl,
+  Form,
+  Modal,
+  FloatingLabel,
+} from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import Select from 'react-select'
-import { Modal } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
-import { ReactComponent as PlusIcon } from '../../../assets/icons/plus.svg'
 import { proposalTypes } from './types'
 import {
   newActionProposal,
@@ -36,6 +29,7 @@ import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
 import { useSparta } from '../../../store/sparta/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import { Icon } from '../../../components/Icons/icons'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
@@ -62,7 +56,7 @@ const NewProposal = () => {
   }, [trigger0])
 
   const [showModal, setShowModal] = useState(false)
-  const [selectedType, setselectedType] = useState(null)
+  const [selectedType, setSelectedType] = useState(proposalTypes[0])
   const [feeConfirm, setfeeConfirm] = useState(false)
 
   const [inputAddress, setinputAddress] = useState(null)
@@ -143,64 +137,59 @@ const NewProposal = () => {
     }
   }
 
+  const handleTypeSelect = (value) => {
+    setSelectedType(proposalTypes.filter((i) => i.value === value)[0])
+  }
+
+  const handleOnHide = () => {
+    setShowModal(false)
+    setSelectedType(proposalTypes[0])
+    setfeeConfirm(false)
+    setinputAddress('')
+    setinputParam('')
+  }
+
   return (
     <>
       <Button
-        className="align-self-center btn-sm btn-secondary"
+        variant="info"
+        className="rounded"
         onClick={() => setShowModal(true)}
       >
         {t('proposal')}
-        <PlusIcon fill="white" className="ml-2 mb-1" />
+        <Icon icon="plus" fill="white" size="20" className="ms-2" />
       </Button>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Card>
-          {network.chainId === 97 && (
-            <>
-              <CardHeader>
-                <CardTitle tag="h2" />
-                <Row>
-                  <Col xs="10">
-                    <h2>{t('newProposal')}</h2>
-                  </Col>
-                  <Col xs="2">
-                    <Button
-                      style={{
-                        right: '16px',
-                      }}
-                      onClick={() => setShowModal(false)}
-                      className="btn btn-transparent"
-                    >
-                      <i className="icon-small icon-close" />
-                    </Button>
-                  </Col>
-                </Row>
-              </CardHeader>
-              <Row className="card-body py-1">
-                <Col xs="12">
-                  <Card className="card-share mb-1">
-                    <CardBody className="py-3">
-                      <h4 className="card-title">{t('chooseProposalType')}</h4>
-                      <Row>
-                        <Col>
-                          <Select
-                            className="react-select info bg-light"
-                            value={selectedType}
-                            onChange={(value) => setselectedType(value)}
-                            options={proposalTypes}
-                            placeholder="Select a proposal"
-                          />
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
+      <Modal show={showModal} onHide={() => handleOnHide()} centered>
+        {network.chainId === 97 && (
+          <>
+            <Modal.Header>
+              <Modal.Title>{t('newProposal')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <FloatingLabel
+                controlId="floatingSelect"
+                label={t('chooseProposalType')}
+              >
+                <Form.Select
+                  id="proposalTypeInput"
+                  value={selectedType.value}
+                  onChange={(e) => handleTypeSelect(e.target.value)}
+                  aria-label="Choose proposal type"
+                >
+                  {proposalTypes.map((pid) => (
+                    <option key={pid.value} value={pid.value}>
+                      {pid.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              </FloatingLabel>
+
               {selectedType !== null && (
                 <Row className="card-body py-1">
                   <Col xs="12">
                     <Card className="card-share">
-                      <CardBody className="py-3">
+                      <Card.Body className="py-3">
                         <h4 className="card-title">
                           {selectedType?.desc}
                           {selectedType?.value === 'FLIP_EMISSIONS' && (
@@ -220,15 +209,11 @@ const NewProposal = () => {
                                   />
                                 )}
                                 <InputGroup>
-                                  <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Address</InputGroupText>
-                                  </InputGroupAddon>
-                                  <Input
+                                  <InputGroup.Text>Address</InputGroup.Text>
+                                  <FormControl
                                     id="addrInput"
                                     placeholder="0x..."
                                     type="text"
-                                    inputMode="decimal"
-                                    pattern="^[0-9]*[.,]?[0-9]*$"
                                     autoComplete="off"
                                     autoCorrect="off"
                                     disabled={noAddrInput.includes(
@@ -238,53 +223,8 @@ const NewProposal = () => {
                                       setinputAddress(e.target.value)
                                     }
                                   />
-                                  <InputGroupAddon addonType="append">
-                                    <InputGroupText className="p-1">
-                                      {addrValid ? (
-                                        <ValidIcon
-                                          fill="green"
-                                          height="30"
-                                          width="30"
-                                        />
-                                      ) : (
-                                        <InvalidIcon
-                                          fill="red"
-                                          height="30"
-                                          width="30"
-                                        />
-                                      )}
-                                    </InputGroupText>
-                                  </InputGroupAddon>
-                                </InputGroup>
-                              </>
-                            )}
-
-                            {showParamInput.includes(selectedType.type) && (
-                              <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>
-                                    {selectedType.type}
-                                  </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                  id="paramInput"
-                                  placeholder=""
-                                  type="number"
-                                  inputMode="decimal"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                  onChange={(e) =>
-                                    setinputParam(e.target.value)
-                                  }
-                                />
-                                <InputGroupAddon addonType="append">
-                                  <InputGroupText className="p-1">
-                                    {selectedType.units}
-                                  </InputGroupText>
-                                </InputGroupAddon>
-                                <InputGroupAddon addonType="append">
-                                  <InputGroupText className="p-1">
-                                    {paramValid ? (
+                                  <InputGroup.Text className="p-1">
+                                    {addrValid ? (
                                       <ValidIcon
                                         fill="green"
                                         height="30"
@@ -297,17 +237,53 @@ const NewProposal = () => {
                                         width="30"
                                       />
                                     )}
-                                  </InputGroupText>
-                                </InputGroupAddon>
+                                  </InputGroup.Text>
+                                </InputGroup>
+                              </>
+                            )}
+
+                            {showParamInput.includes(selectedType.type) && (
+                              <InputGroup>
+                                <InputGroup.Text>
+                                  {selectedType.type}
+                                </InputGroup.Text>
+                                <FormControl
+                                  id="paramInput"
+                                  placeholder=""
+                                  type="number"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  onChange={(e) =>
+                                    setinputParam(e.target.value)
+                                  }
+                                />
+                                <InputGroup.Text className="">
+                                  {selectedType.units}
+                                </InputGroup.Text>
+                                <InputGroup.Text className="">
+                                  {paramValid ? (
+                                    <ValidIcon
+                                      fill="green"
+                                      height="30"
+                                      width="30"
+                                    />
+                                  ) : (
+                                    <InvalidIcon
+                                      fill="red"
+                                      height="30"
+                                      width="30"
+                                    />
+                                  )}
+                                </InputGroup.Text>
                               </InputGroup>
                             )}
                           </Col>
                         </Row>
-                      </CardBody>
+                      </Card.Body>
                     </Card>
-                    <FormGroup>
+                    <Form>
                       <div className="text-center">
-                        <CustomInput
+                        <Form.Switch
                           type="switch"
                           id="inputConfirmFee"
                           label="Confirm 100 SPARTA Proposal-Fee (Add tooltip)"
@@ -315,36 +291,37 @@ const NewProposal = () => {
                           onChange={() => setfeeConfirm(!feeConfirm)}
                         />
                       </div>
-                    </FormGroup>
+                    </Form>
                   </Col>
                 </Row>
               )}
-              <Row className="card-body">
-                {wallet?.account && (
-                  <Approval
-                    tokenAddress={addr.spartav2}
-                    symbol="SPARTA"
-                    walletAddress={wallet.account}
-                    contractAddress={addr.dao}
-                    txnAmount={convertToWei('100')}
-                    assetNumber="1"
-                  />
-                )}
-                <Col xs="12" className="hide-if-prior-sibling">
-                  <Button
-                    block
-                    className="btn-fill btn-primary"
-                    disabled={!feeConfirm || !formValid}
-                    onClick={() => handleSubmit()}
-                  >
-                    {t('confirm')}
-                  </Button>
-                </Col>
-              </Row>
-            </>
-          )}
-        </Card>
+            </Modal.Body>
+          </>
+        )}
         {network.chainId !== 97 && <WrongNetwork />}
+        <Modal.Footer>
+          <Row className="">
+            {wallet?.account && (
+              <Approval
+                tokenAddress={addr.spartav2}
+                symbol="SPARTA"
+                walletAddress={wallet.account}
+                contractAddress={addr.dao}
+                txnAmount={convertToWei('100')}
+                assetNumber="1"
+              />
+            )}
+            <Col xs="12" className="hide-if-prior-sibling">
+              <Button
+                className="w-100"
+                disabled={!feeConfirm || !formValid}
+                onClick={() => handleSubmit()}
+              >
+                {t('confirm')}
+              </Button>
+            </Col>
+          </Row>
+        </Modal.Footer>
       </Modal>
     </>
   )

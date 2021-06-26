@@ -1,22 +1,22 @@
 .input-group-text {
-  background-color: #25212d;
+  background-color: #403A4B;
   border-color: #1d171f;
   color: #FFF;
 }
 
 .form-control {
-  background-color: #25212d;
+  background-color: #403A4B;
   border-color: #1d171f;
   color: #fff;
 
   &:focus {
-    background-color: #1d171f;
+    background-color: #25212d;
     color: #fff;
     border-color: #1d171f;
   }
 
   &:disabled {
-    background-color: #25212d;
+    background-color: #403A4B;
     color: #A5ADAF;
     border-color: #1d171f;
   }
