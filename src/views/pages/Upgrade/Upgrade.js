@@ -191,7 +191,7 @@ const Upgrade = () => {
             {bnbBalance <= 5000000000000000 && (
               <Row className="">
                 <Col xs="12" className="">
-                  <Button variant="warning" className="w-100" disabled>
+                  <Button variant="info" className="w-100" disabled>
                     Not Enough BNB
                   </Button>
                 </Col>

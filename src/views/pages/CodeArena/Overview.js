@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from 'react'
-
 import { useTranslation } from 'react-i18next'
 import {
-  MDBBtn,
-  MDBCard,
-  MDBCardBody,
-  MDBCardHeader,
-  MDBCardText,
-  MDBCardTitle,
-  MDBCol,
-  MDBInputGroup,
-  MDBInputGroupElement,
-  MDBInputGroupText,
-  MDBProgress,
-  MDBProgressBar,
-  MDBRow,
-} from 'mdb-react-ui-kit'
+  Button,
+  Card,
+  Col,
+  InputGroup,
+  ProgressBar,
+  Row,
+  FormControl,
+} from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -245,45 +238,40 @@ ethereum(network: $network){
   return (
     <>
       <div className="content">
-        <MDBRow className="row-480">
-          <MDBCol xs="12">
+        <Row className="row-480">
+          <Col xs="12">
             <div className="card-480 my-3">
               <h2 className="text-title-small mb-0 mr-3">{t('codeArena')}</h2>
             </div>
-          </MDBCol>
-        </MDBRow>
-        <MDBRow className="row-480">
-          <MDBCol>
-            <MDBCard className="card-480">
-              <MDBCardHeader>
-                <MDBCardTitle>Crowdfunded CodeArena Bounty Target</MDBCardTitle>
-              </MDBCardHeader>
-              <MDBCardBody>
-                <MDBRow>
-                  <MDBCol size="12" className="my-2">
-                    <MDBCardText>
-                      The Spartan Protocol V2 contracts will undergo a{' '}
-                      <a
-                        href="https://code423n4.com/"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        CodeArena audit
-                      </a>{' '}
-                      in the next available slot.
-                    </MDBCardText>
-                    <MDBCardText>
-                      The scope of contracts to be audited has a recommended
-                      bounty requirement of $80k USD. Being a community built
-                      and run project; there is a drive to crowdfund the bounty.
-                    </MDBCardText>
-                    <MDBCardText>
-                      The audit will go ahead whether or not the target is
-                      reached, but raising $80k will ensure the entire suite of
-                      contracts are audited!
-                    </MDBCardText>
-
-                    <MDBCardText className="output-card mt-2">
+          </Col>
+        </Row>
+        <Row className="row-480">
+          <Col className="mb-3">
+            <Card className="card-480">
+              <Card.Header>
+                <Card.Title>Crowdfunded CodeArena Bounty Target</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Row>
+                  <Col xs="12" className="my-2">
+                    The Spartan Protocol V2 contracts will undergo a{' '}
+                    <a
+                      href="https://code423n4.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      CodeArena audit
+                    </a>{' '}
+                    in the next available slot.
+                    <br />
+                    The scope of contracts to be audited has a recommended
+                    bounty requirement of $80k USD. Being a community built and
+                    run project; there is a drive to crowdfund the bounty. The
+                    audit will go ahead whether or not the target is reached,
+                    but raising $80k will ensure the entire suite of contracts
+                    are audited!
+                    <br />
+                    <div className="output-card mt-2">
                       View Community Wallet:{' '}
                       <a
                         href="https://bscscan.com/address/0x588f82a66eE31E59B88114836D11e3d00b3A7916"
@@ -292,57 +280,62 @@ ethereum(network: $network){
                       >
                         {formatShortString(communityWallet)}
                       </a>
-                    </MDBCardText>
-                  </MDBCol>
-                  <MDBCol size="12" className="my-2">
-                    <MDBProgress height="15">
-                      <MDBProgressBar bgColor={progColor} width={totalWidth}>
-                        ${formatFromWei(totalUSD, 0)}
-                      </MDBProgressBar>
-                      <MDBProgressBar bgColor="black" width={100 - totalWidth}>
-                        {'<-- Donations'}
-                      </MDBProgressBar>
-                    </MDBProgress>
-                  </MDBCol>
+                    </div>
+                  </Col>
+                  <Col xs="12" className="my-2">
+                    <ProgressBar height="15">
+                      <ProgressBar
+                        variant={progColor}
+                        now={totalWidth}
+                        label={`$${formatFromWei(totalUSD, 0)}`}
+                      />
+                      <ProgressBar
+                        variant="black"
+                        now={100 - totalWidth}
+                        label="<-- Donations"
+                      />
+                    </ProgressBar>
+                  </Col>
 
-                  <MDBCol size="12" className="my-2">
-                    <MDBProgress height="30">
-                      <MDBProgressBar width="30">$30K (Min)</MDBProgressBar>
-                      <MDBProgressBar bgColor="black" width="0.25" />
-                      <MDBProgressBar bgColor="info" width="50">
-                        $80K (Target)
-                      </MDBProgressBar>
-                      <MDBProgressBar bgColor="black" width="0.25" />
-                      <MDBProgressBar bgColor="green" width="20">
-                        $100K
-                      </MDBProgressBar>
-                    </MDBProgress>
-                  </MDBCol>
-                </MDBRow>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-          <MDBCol>
-            <MDBCard className="card-480">
-              <MDBCardHeader>
-                <MDBCardTitle>Donate to the CodeArena Campaign</MDBCardTitle>
-              </MDBCardHeader>
-              <MDBCardBody>
-                <MDBRow>
+                  <Col xs="12" className="my-2">
+                    <ProgressBar height="30">
+                      <ProgressBar now="30" label="$30K (Min)" />
+                      <ProgressBar variant="black" now="0.25" />
+                      <ProgressBar
+                        variant="info"
+                        now="66"
+                        label="$96K (Target)"
+                      />
+                      <ProgressBar variant="black" now="0.25" />
+                      <ProgressBar variant="green" now="14" label="$110K" />
+                    </ProgressBar>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col className="mb-3">
+            <Card className="card-480">
+              <Card.Header>
+                <Card.Title>Donate to the CodeArena Campaign</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Row>
                   {network.chainId === 56 && (
                     <>
-                      <MDBCol size="12" className="my-2">
-                        <MDBRow
+                      <Col xs="12" className="my-2">
+                        <Row
                           onClick={() => setselectedAsset('BNB')}
                           role="button"
                         >
-                          <MDBCol size="auto" className="pr-0">
+                          <Col xs="auto" className="pr-0">
                             <BnbIcon height="35" width="35" />
-                          </MDBCol>
-                          <MDBCol>
-                            <MDBRow>
-                              <MDBCol
-                                size="12"
+                          </Col>
+                          <Col>
+                            <Row>
+                              <Col
+                                xs="12"
                                 className="float-left ml-n4 output-card"
                               >
                                 BNB - Binance Coin BEP20 Token
@@ -352,23 +345,23 @@ ethereum(network: $network){
                                     sparta.communityWallet?.userBnb,
                                   )}
                                 </div>
-                              </MDBCol>
-                            </MDBRow>
-                          </MDBCol>
-                        </MDBRow>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
 
-                        <MDBRow
+                        <Row
                           className="my-3"
                           onClick={() => setselectedAsset('BUSD')}
                           role="button"
                         >
-                          <MDBCol size="auto" className="pr-0">
+                          <Col xs="auto" className="pr-0">
                             <BusdIcon height="35" width="35" />
-                          </MDBCol>
-                          <MDBCol>
-                            <MDBRow>
-                              <MDBCol
-                                size="12"
+                          </Col>
+                          <Col>
+                            <Row>
+                              <Col
+                                xs="12"
                                 className="float-left ml-n4 output-card"
                               >
                                 BUSD - Binance-Peg BUSD Token
@@ -378,22 +371,22 @@ ethereum(network: $network){
                                     sparta.communityWallet?.userBusd,
                                   )}
                                 </div>
-                              </MDBCol>
-                            </MDBRow>
-                          </MDBCol>
-                        </MDBRow>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
 
-                        <MDBRow
+                        <Row
                           onClick={() => setselectedAsset('USDT')}
                           role="button"
                         >
-                          <MDBCol size="auto" className="pr-0">
+                          <Col xs="auto" className="pr-0">
                             <UsdtIcon height="35" width="35" />
-                          </MDBCol>
-                          <MDBCol>
-                            <MDBRow>
-                              <MDBCol
-                                size="12"
+                          </Col>
+                          <Col>
+                            <Row>
+                              <Col
+                                xs="12"
                                 className="float-left ml-n4 output-card"
                               >
                                 USDT - Binance-Peg USD-T Token
@@ -403,15 +396,15 @@ ethereum(network: $network){
                                     sparta.communityWallet?.userUsdt,
                                   )}
                                 </div>
-                              </MDBCol>
-                            </MDBRow>
-                          </MDBCol>
-                        </MDBRow>
-                      </MDBCol>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Col>
 
-                      <MDBCol size="12" className="my-2">
-                        <MDBInputGroup>
-                          <MDBInputGroupElement
+                      <Col xs="12" className="my-2">
+                        <InputGroup>
+                          <FormControl
                             type="number"
                             id="inputDonation"
                             placeholder={
@@ -421,50 +414,48 @@ ethereum(network: $network){
                             }
                             disabled={!selectedAsset}
                           />
-                          <MDBInputGroupText>{selectedAsset}</MDBInputGroupText>
-                        </MDBInputGroup>
-                      </MDBCol>
-                      <MDBCol>
-                        {network.chainId === 56 && (
-                          <>
-                            <MDBBtn
-                              block
-                              disabled={
-                                inputDonation?.value <= 0 && wallet?.account
-                              }
-                              onClick={() => handleDonation()}
-                            >
-                              Donate
-                            </MDBBtn>
-                          </>
-                        )}
-                      </MDBCol>
+                          <InputGroup.Text>{selectedAsset}</InputGroup.Text>
+                        </InputGroup>
+                      </Col>
                     </>
                   )}
                   {network.chainId !== 56 && (
                     <>
-                      <MDBCol>
-                        <MDBCardText>
+                      <Col>
+                        <div>
                           Switch the DApp and your wallet to mainnet to
                           contribute funds
-                        </MDBCardText>
-                      </MDBCol>
+                        </div>
+                      </Col>
                     </>
                   )}
-                </MDBRow>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-          <MDBCol>
-            <MDBCard className="card-480">
-              <MDBCardHeader>
-                <MDBCardTitle>Recent Donations</MDBCardTitle>
-              </MDBCardHeader>
-              <MDBCardBody>
+                </Row>
+              </Card.Body>
+              <Card.Footer>
+                {network.chainId === 56 && (
+                  <>
+                    <Button
+                      className="w-100"
+                      disabled={inputDonation?.value <= 0 && wallet?.account}
+                      onClick={() => handleDonation()}
+                    >
+                      Donate
+                    </Button>
+                  </>
+                )}
+              </Card.Footer>
+            </Card>
+          </Col>
+          <Col className="mb-3">
+            <Card className="card-480">
+              <Card.Header>
+                <Card.Title>Recent Donations</Card.Title>
+              </Card.Header>
+              <Card.Body>
                 {recentTxns.length > 0 &&
                   recentTxns.map((i) => (
-                    <MDBRow key={i.transaction.hash} className="my-2">
-                      <MDBCol size="auto" className="pr-0">
+                    <Row key={i.transaction.hash} className="my-2">
+                      <Col xs="auto" className="pr-0">
                         {i.currency.symbol === 'BNB' && (
                           <BnbIcon height="35" width="35" />
                         )}
@@ -474,13 +465,10 @@ ethereum(network: $network){
                         {i.currency.symbol === 'USDT' && (
                           <UsdtIcon height="35" width="35" />
                         )}
-                      </MDBCol>
-                      <MDBCol>
-                        <MDBRow>
-                          <MDBCol
-                            size="12"
-                            className="float-left ml-n4 output-card"
-                          >
+                      </Col>
+                      <Col>
+                        <Row>
+                          <Col xs="12" className="float-left ml-n4 output-card">
                             {i.amount} {i.currency.symbol}
                             <div className="description">
                               Donated by:{' '}
@@ -492,27 +480,27 @@ ethereum(network: $network){
                                 {formatShortString(i.address.address)}
                               </a>
                             </div>
-                          </MDBCol>
-                        </MDBRow>
-                      </MDBCol>
-                    </MDBRow>
+                          </Col>
+                        </Row>
+                      </Col>
+                    </Row>
                   ))}
                 {network.chainId !== 56 && (
                   <>
-                    <MDBRow>
-                      <MDBCol>
-                        <MDBCardText>
+                    <Row>
+                      <Col>
+                        <div>
                           Switch the DApp and your wallet to mainnet to
                           contribute funds
-                        </MDBCardText>
-                      </MDBCol>
-                    </MDBRow>
+                        </div>
+                      </Col>
+                    </Row>
                   </>
                 )}
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </>
   )
