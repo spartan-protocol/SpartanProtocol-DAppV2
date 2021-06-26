@@ -1,6 +1,5 @@
 import React from 'react'
-
-import { Row, Table } from 'reactstrap'
+import { Row, Table } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'

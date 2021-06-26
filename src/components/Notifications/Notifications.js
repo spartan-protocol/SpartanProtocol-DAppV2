@@ -1,15 +1,5 @@
 import React from 'react'
-import NotificationAlert from 'react-notification-alert'
-import {
-  UncontrolledAlert,
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  Row,
-  Col,
-} from 'reactstrap'
+import { Alert, Button, Card, Row, Col } from 'react-bootstrap'
 
 const Notifications = () => {
   const notificationAlertRef = React.useRef(null)
@@ -43,29 +33,26 @@ const Notifications = () => {
 
         <Row className="justify-content-center">
           <Col xs="12" xl="9">
-            <div className="rna-container">
-              <NotificationAlert ref={notificationAlertRef} />
-            </div>
             <div className="content">
               <Row>
                 <Col md="6">
                   <Card>
-                    <CardHeader>
-                      <CardTitle tag="h4">Notification states</CardTitle>
-                    </CardHeader>
-                    <CardBody>
-                      <UncontrolledAlert color="success" fade={false}>
+                    <Card.Header>
+                      <Card.Title tag="h4">Notification states</Card.Title>
+                    </Card.Header>
+                    <Card.Body>
+                      <Alert color="success" fade={false}>
                         <span>
                           <b>Success - </b>
                           Message
                         </span>
-                      </UncontrolledAlert>
-                      <UncontrolledAlert color="warning" fade={false}>
+                      </Alert>
+                      <Alert color="warning" fade={false}>
                         <span>
                           <b>Error - </b>
                           Message
                         </span>
-                      </UncontrolledAlert>
+                      </Alert>
                       <Button
                         type="Button"
                         className="mx-1 btn btn-success"
@@ -85,7 +72,7 @@ const Notifications = () => {
                           Trigger message error
                         </div>
                       </Button>
-                    </CardBody>
+                    </Card.Body>
                   </Card>
                 </Col>
               </Row>

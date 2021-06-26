@@ -1,6 +1,6 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
-import NotificationAlert from 'react-notification-alert'
+// import NotificationAlert from 'react-notification-alert'
 
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
@@ -9,7 +9,7 @@ import DataManager from '../DataManager/DataManager'
 import { routes } from '../../routes'
 
 const Common = () => {
-  const notificationAlertRef = useRef(null)
+  // const notificationAlertRef = useRef(null)
 
   const getRoutes = (tempRoutes) =>
     tempRoutes.map((prop) => (
@@ -24,7 +24,7 @@ const Common = () => {
     <div className="wrapper">
       <div className="rna-container">
         <DataManager />
-        <NotificationAlert ref={notificationAlertRef} />
+        {/* <NotificationAlert ref={notificationAlertRef} /> */}
       </div>
       <div className="main-panel">
         <Header />
