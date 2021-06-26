@@ -207,6 +207,7 @@ const Supply = () => {
                         .times(100),
                     )}
                   />
+                  <ProgressBar variant="black" now={0.25} />
                   <ProgressBar
                     id="sparta2supply"
                     variant="primary"
@@ -218,6 +219,7 @@ const Supply = () => {
                         .times(100),
                     )}
                   />
+                  <ProgressBar variant="black" now={0.25} />
                 </ProgressBar>
               </Col>
               <Col xs="6" className="text-center">
@@ -248,6 +250,7 @@ const Supply = () => {
                         : '1'
                     }
                   />
+                  <ProgressBar variant="black" now={0.25} />
                   <ProgressBar
                     variant="info"
                     key={2}
@@ -263,6 +266,7 @@ const Supply = () => {
                         : '1'
                     }
                   />
+                  <ProgressBar variant="black" now={0.25} />
                   <ProgressBar
                     variant="danger"
                     key={3}
@@ -285,6 +289,7 @@ const Supply = () => {
                           )
                     }
                   />
+                  <ProgressBar variant="black" now={0.25} />
                 </ProgressBar>
               </Col>
               <Col xs="4" className="text-center">

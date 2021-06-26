@@ -1,20 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Col,
-  CustomInput,
-  FormGroup,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-} from 'reactstrap'
-
-import classnames from 'classnames'
+import { Button, Card, Col, Form, Nav, Row } from 'react-bootstrap'
 import { getAddresses, getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
@@ -56,40 +41,39 @@ const Overview = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-3">Power User</h2>
+              <h2 className="text-title-small mb-0 me-3">Power User</h2>
             </div>
           </Col>
         </Row>
         {network.chainId === 97 && (
           <>
             <Row className="row-480">
-              <Col xs="12">
-                <Nav className="nav-tabs-custom card-480 mb-3" pills>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: activeTab === 'overview',
-                      })}
+              <Col xs="12" className="mb-3">
+                <Nav className="card-480" activeKey={activeTab}>
+                  <Nav.Item key="overview">
+                    <Nav.Link
+                      eventKey="overview"
                       onClick={() => {
                         setActiveTab('overview')
                       }}
                     >
                       Overview
-                    </NavLink>
-                  </NavItem>
+                    </Nav.Link>
+                  </Nav.Item>
                 </Nav>
               </Col>
+
               {activeTab === 'overview' && (
                 <Col xs="12">
                   <Card className="card-480">
-                    <CardHeader>Empty Pools</CardHeader>
-                    <CardBody>
+                    <Card.Header>Empty Pools</Card.Header>
+                    <Card.Body>
                       There are {emptyPools?.length} pool(s) that have been
                       created but have no depth. Add the initial liquidty to set
                       the ratio of TOKEN:SPARTA for:
                       {emptyPools.map((asset) => (
-                        <FormGroup className="my-2" key={asset.tokenAddress}>
-                          <CustomInput
+                        <Form className="my-2" key={asset.tokenAddress}>
+                          <Form.Check
                             id={asset.tokenAddress}
                             type="radio"
                             label={`${
@@ -99,17 +83,18 @@ const Overview = () => {
                             checked={selectedAsset === asset.tokenAddress}
                             readOnly
                           />
-                        </FormGroup>
+                        </Form>
                       ))}
-                    </CardBody>
-                    <CardFooter>
+                    </Card.Body>
+                    <Card.Footer>
                       <Button
+                        className="w-100"
                         onClick={() => setActiveTab('emptyPools')}
                         disabled={!selectedAsset}
                       >
                         Add {getToken(selectedAsset)?.symbol}:SPARTA
                       </Button>
-                    </CardFooter>
+                    </Card.Footer>
                   </Card>
                 </Col>
               )}

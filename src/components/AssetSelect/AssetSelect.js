@@ -276,7 +276,7 @@ const AssetSelect = (props) => {
         <Col xs="auto" className="position-relative pe-1 ps-2">
           {selectedType === 'token' && (
             <img
-              height="35px"
+              height="30px"
               src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
               alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
             />
@@ -285,7 +285,7 @@ const AssetSelect = (props) => {
           {selectedType === 'pool' && (
             <>
               <img
-                height="35px"
+                height="30px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
@@ -295,7 +295,7 @@ const AssetSelect = (props) => {
                 src={spartaIcon}
                 alt="Sparta LP token icon"
                 className="position-absolute"
-                style={{ left: '28px', top: '18px' }}
+                style={{ left: '22px', top: '14px' }}
               />
             </>
           )}
@@ -303,7 +303,7 @@ const AssetSelect = (props) => {
           {selectedType === 'synth' && (
             <>
               <img
-                height="35px"
+                height="30px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
@@ -313,7 +313,7 @@ const AssetSelect = (props) => {
                 src={spartaIconAlt}
                 alt="Sparta LP token icon"
                 className="position-absolute"
-                style={{ left: '28px', top: '18px' }}
+                style={{ left: '22px', top: '14px' }}
               />
             </>
           )}
