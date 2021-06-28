@@ -1,50 +1,52 @@
-import React from 'react'
-import { Button } from 'reactstrap'
+import React, { useEffect } from 'react'
+import { Button } from 'react-bootstrap'
 
 const ThemeSwitcher = () => {
-  const [darkMode, setDarkMode] = React.useState(false)
-  const handleActiveMode = () => {
-    setDarkMode(!darkMode)
-    document.body.classList.toggle('white-content')
+  const [lightMode, setlightMode] = React.useState(false)
 
-    /* todo import svg to change color via SCSS */
-    document
-      .getElementById('menu-drawer-closed')
-      .classList.toggle('icon-menu-closed-light')
-    document
-      .getElementById('menu-drawer-open')
-      .classList.toggle('icon-menu-open-light')
-    document
-      .getElementById('sidebar-menu-drawer-closed')
-      .classList.toggle('icon-menu-closed-light')
-    document
-      .getElementById('mobile-menu-drawer-open')
-      .classList.toggle('icon-menu-open-light')
+  useEffect(() => {
+    const lsMode = window.localStorage.getItem('theme')
+    if (lsMode) {
+      setlightMode(true)
+      document.body.classList.toggle('white-content')
+    }
+  }, [])
+
+  const handleActiveMode = () => {
+    const _lightMode = document.body.classList.contains('white-content')
+    if (_lightMode) {
+      setlightMode(false)
+      window.localStorage.removeItem('theme')
+    } else {
+      setlightMode(true)
+      window.localStorage.setItem('theme', true)
+    }
+    document.body.classList.toggle('white-content')
   }
 
-  const btnClass = 'btn-transparent align-self-center ml-1'
-  const iconClass = ' icon-small icon-dark m-0'
+  const btnClass = 'btn-transparent align-self-center mx-1'
+  const iconClass = 'icon-small icon-dark m-0'
 
   return (
     <>
-      {!darkMode && (
+      {!lightMode && (
         <Button
-          value={darkMode}
+          value={lightMode}
           type="Button"
           className={btnClass}
           onClick={handleActiveMode}
         >
-          <i className={`icon-moon${iconClass}`} />
+          <i className={`icon-moon ${iconClass}`} />
         </Button>
       )}
-      {darkMode && (
+      {lightMode && (
         <Button
-          value={darkMode}
+          value={lightMode}
           type="Button"
           className={btnClass}
           onClick={handleActiveMode}
         >
-          <i className={`icon-sun${iconClass}`} />
+          <i className={`icon-sun ${iconClass}`} />
         </Button>
       )}
     </>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Card } from 'reactstrap'
+import { Row, Col, Card } from 'react-bootstrap'
 import { useBond } from '../../../../store/bond'
 import { usePool } from '../../../../store/pool/selector'
 import { formatShortString, getAddresses } from '../../../../utils/web3'

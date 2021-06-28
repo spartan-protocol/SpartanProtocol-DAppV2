@@ -1,31 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
-import {
-  Button,
-  Modal,
-  Nav,
-  NavItem,
-  NavLink,
-  InputGroup,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-} from 'reactstrap'
-import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { MDBCol, MDBRow } from 'mdb-react-ui-kit'
+import { Row, Col, InputGroup, FormControl, Nav, Modal } from 'react-bootstrap'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
 import ShareLink from '../Share/ShareLink'
-// import MetaMask from '../../assets/icons/metamask.svg'
 import spartaIcon from '../../assets/img/spartan_lp.svg'
 import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth/selector'
 import { getAddresses } from '../../utils/web3'
 import walletTypes from '../WalletSelect/walletTypes'
+import { Icon } from '../Icons/icons'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -140,7 +128,6 @@ const AssetSelect = (props) => {
                     alt={`${
                       getToken(tempArray[i].tokenAddress)?.symbol
                     } asset icon`}
-                    className="mr-4"
                   />
                 ),
                 iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
@@ -163,7 +150,6 @@ const AssetSelect = (props) => {
                   alt={`${
                     getToken(tempArray[i].tokenAddress)?.symbol
                   } asset icon`}
-                  className="mr-4"
                 />
               ),
               iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
@@ -187,7 +173,6 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="mr-4"
                     />
                     <img
                       height="20px"
@@ -196,7 +181,7 @@ const AssetSelect = (props) => {
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
                       className="position-absolute"
-                      style={{ right: '17px', bottom: '2px' }}
+                      style={{ left: '28px', top: '18px' }}
                     />
                   </>
                 ),
@@ -223,7 +208,6 @@ const AssetSelect = (props) => {
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
-                      className="mr-4"
                     />
                     <img
                       height="20px"
@@ -232,7 +216,7 @@ const AssetSelect = (props) => {
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
                       className="position-absolute"
-                      style={{ right: '17px', bottom: '2px' }}
+                      style={{ left: '28px', top: '18px' }}
                     />
                   </>
                 ),
@@ -283,17 +267,16 @@ const AssetSelect = (props) => {
 
   return (
     <>
-      <MDBRow
+      <Row
         onClick={() =>
           !props.disabled ? toggleModal() : console.log('button disabled')
         }
         role="button"
-        className="justify-content-left"
       >
-        <MDBCol size="auto" className="pr-1">
+        <Col xs="auto" className="position-relative pe-1 ps-2">
           {selectedType === 'token' && (
             <img
-              height="35px"
+              height="30px"
               src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
               alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
             />
@@ -302,7 +285,7 @@ const AssetSelect = (props) => {
           {selectedType === 'pool' && (
             <>
               <img
-                height="35px"
+                height="30px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
@@ -312,7 +295,7 @@ const AssetSelect = (props) => {
                 src={spartaIcon}
                 alt="Sparta LP token icon"
                 className="position-absolute"
-                style={{ left: '35px', bottom: '-2px' }}
+                style={{ left: '22px', top: '14px' }}
               />
             </>
           )}
@@ -320,7 +303,7 @@ const AssetSelect = (props) => {
           {selectedType === 'synth' && (
             <>
               <img
-                height="35px"
+                height="30px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
@@ -330,139 +313,106 @@ const AssetSelect = (props) => {
                 src={spartaIconAlt}
                 alt="Sparta LP token icon"
                 className="position-absolute"
-                style={{ left: '35px', bottom: '-2px' }}
+                style={{ left: '22px', top: '14px' }}
               />
             </>
           )}
-        </MDBCol>
-        <MDBCol className="output-card px-2 my-auto">
+        </Col>
+        <Col className="output-card px-1 my-auto text-light">
           {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
           {!props.disabled && (
-            <i className="ml-1 icon-extra-small icon-arrow icon-light align-middle" />
+            <Icon icon="arrowDown" size="20" fill="grey" className="ps-1" />
           )}
-        </MDBCol>
-      </MDBRow>
+        </Col>
+      </Row>
 
-      <Modal isOpen={showModal} toggle={toggleModal}>
-        <MDBRow className="card-body">
-          <MDBCol size="10">
-            <h3 className="ml-2 modal-title">{t('selectAnAsset')}</h3>
-          </MDBCol>
-          <MDBCol size="2">
-            <Button onClick={toggleModal} className="btn btn-transparent mt-4">
-              <i className="icon-small icon-close" />
-            </Button>
-          </MDBCol>
-        </MDBRow>
-        <Nav className="nav-tabs-custom card-body" pills>
-          <NavItem>
-            <NavLink
-              className={classnames({
-                active: activeTab === 'all',
-              })}
-              onClick={() => {
-                changeTab('all')
-              }}
-            >
-              {t('all')}
-            </NavLink>
-          </NavItem>
-          {assetArray.filter((asset) => asset.type === 'token').length > 0 && (
-            <NavItem>
-              <NavLink
-                className={classnames({ active: activeTab === 'token' })}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('selectAnAsset')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Nav activeKey={activeTab} fill>
+            <Nav.Item key="all">
+              <Nav.Link
+                eventKey="all"
                 onClick={() => {
-                  changeTab('token')
+                  changeTab('all')
                 }}
               >
-                {' '}
-                {t('tokens')}
-              </NavLink>
-            </NavItem>
-          )}
-          {assetArray.filter((asset) => asset.type === 'pool').length > 0 && (
-            <NavItem>
-              <NavLink
-                className={classnames({
-                  active: activeTab === 'pool',
-                })}
-                onClick={() => {
-                  changeTab('pool')
-                }}
-              >
-                {t('lpTokens')}
-              </NavLink>
-            </NavItem>
-          )}
-          {assetArray.filter((asset) => asset.type === 'synth').length > 0 && (
-            <NavItem>
-              <NavLink
-                className={classnames({ active: activeTab === 'synth' })}
-                onClick={() => {
-                  changeTab('synth')
-                }}
-              >
-                {t('synths')}
-              </NavLink>
-            </NavItem>
-          )}
-        </Nav>
+                {t('all')}
+              </Nav.Link>
+            </Nav.Item>
+            {assetArray.filter((asset) => asset.type === 'token').length >
+              0 && (
+              <Nav.Item key="token">
+                <Nav.Link
+                  eventKey="token"
+                  onClick={() => {
+                    changeTab('token')
+                  }}
+                >
+                  {t('tokens')}
+                </Nav.Link>
+              </Nav.Item>
+            )}
+            {assetArray.filter((asset) => asset.type === 'pool').length > 0 && (
+              <Nav.Item key="pool">
+                <Nav.Link
+                  eventKey="pool"
+                  onClick={() => {
+                    changeTab('pool')
+                  }}
+                >
+                  {t('lpTokens')}
+                </Nav.Link>
+              </Nav.Item>
+            )}
+            {assetArray.filter((asset) => asset.type === 'synth').length >
+              0 && (
+              <Nav.Item key="synth">
+                <Nav.Link
+                  eventKey="synth"
+                  onClick={() => {
+                    changeTab('synth')
+                  }}
+                >
+                  {t('synths')}
+                </Nav.Link>
+              </Nav.Item>
+            )}
+          </Nav>
 
-        <MDBRow className="card-body pb-0">
-          <MDBCol size="12" className="m-auto">
-            <InputGroup>
-              <InputGroupAddon
-                addonType="prepend"
-                role="button"
-                tabIndex={-1}
-                onKeyPress={() => clearSearch()}
-                onClick={() => clearSearch()}
-              >
-                <InputGroupText>
-                  <i
-                    className=""
-                    role="button"
-                    tabIndex={-1}
-                    onKeyPress={() => clearSearch()}
-                    onClick={() => clearSearch()}
-                  />
-                  <i className="icon-search-bar icon-close icon-light ml-n3 mt-1" />
-                </InputGroupText>
-              </InputGroupAddon>
-              <Input
-                autoComplete="off"
-                autoCorrect="off"
-                className="text-card mt-1"
-                placeholder={t('searchAssets')}
-                type="text"
-                id="searchInput"
-              />
-              <InputGroupAddon addonType="append">
-                <InputGroupText>
-                  <i className="icon-search-bar icon-search icon-light" />
-                </InputGroupText>
-              </InputGroupAddon>
-            </InputGroup>
-          </MDBCol>
-        </MDBRow>
-        <div className="modal-body">
-          <MDBRow className="">
-            <MDBCol size="9" md="9">
-              <p className="text-card">Asset</p>
-            </MDBCol>
-            <MDBCol size="3" md="3">
-              <p className="text-card float-right mr-1">Actions</p>
-            </MDBCol>
-          </MDBRow>
+          <Row className="my-3">
+            <Col xs="12" className="m-auto">
+              <InputGroup>
+                <InputGroup.Text>
+                  <Icon size="18" icon="search" xs="18" fill="grey" />
+                </InputGroup.Text>
+                <FormControl
+                  autoComplete="off"
+                  autoCorrect="off"
+                  placeholder={t('searchAssets')}
+                  type="text"
+                  id="searchInput"
+                />
+                <InputGroup.Text
+                  role="button"
+                  tabIndex={-1}
+                  onKeyPress={() => clearSearch()}
+                  onClick={() => clearSearch()}
+                >
+                  <Icon size="12" icon="close" xs="12" fill="grey" />
+                </InputGroup.Text>
+              </InputGroup>
+            </Col>
+          </Row>
+
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <MDBRow
-                key={`${asset.actualAddr}-all`}
-                className="mb-3 output-card mr-2"
-              >
-                <MDBCol size="auto" className="p-0 pl-2">
+              <Row key={`${asset.actualAddr}-all`} className="mb-3 output-card">
+                <Col xs="auto" className="position-relative">
                   <div
                     role="button"
                     aria-hidden="true"
@@ -473,15 +423,11 @@ const AssetSelect = (props) => {
                   >
                     {asset.icon}
                   </div>
-                </MDBCol>
+                </Col>
 
-                <MDBCol
-                  size="5"
-                  sm="7"
-                  className="align-items-center p-0 pl-sm-1"
-                >
-                  <MDBRow>
-                    <MDBCol size="12" className="float-left ml-n4">
+                <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
+                  <Row>
+                    <Col xs="12" className="float-left ms-n4">
                       <div
                         role="button"
                         aria-hidden="true"
@@ -495,22 +441,22 @@ const AssetSelect = (props) => {
                       <div className="description">
                         {formatFromWei(asset.balance)}
                       </div>
-                    </MDBCol>
-                  </MDBRow>
-                </MDBCol>
+                    </Col>
+                  </Row>
+                </Col>
 
-                <MDBCol size="3" md="3" className="text-right p-0 pr-2">
-                  <MDBRow>
-                    <MDBCol size="6">
+                <Col xs="3" md="3" className="text-end p-0 pe-2">
+                  <Row>
+                    <Col xs="6">
                       <ShareLink
                         url={asset.actualAddr}
                         notificationLocation="tc"
                       >
-                        <i className="icon-small icon-copy ml-2" />
+                        <i className="icon-small icon-copy ms-2" />
                       </ShareLink>
-                    </MDBCol>
+                    </Col>
                     {getWalletType() && (
-                      <MDBCol size="6">
+                      <Col xs="6">
                         <a
                           href={
                             getWalletType() === 'TW'
@@ -526,7 +472,7 @@ const AssetSelect = (props) => {
                             }}
                           >
                             {getWalletType() === 'MM' ? (
-                              <i className="icon-small icon-metamask icon-light ml-2" />
+                              <i className="icon-small icon-metamask icon-light ms-2" />
                             ) : (
                               <img
                                 src={
@@ -541,21 +487,21 @@ const AssetSelect = (props) => {
                             )}
                           </div>
                         </a>
-                      </MDBCol>
+                      </Col>
                     )}
-                  </MDBRow>
-                </MDBCol>
-              </MDBRow>
+                  </Row>
+                </Col>
+              </Row>
             ))}
           {activeTab !== 'all' &&
             assetArray
               .filter((asset) => asset.type === activeTab)
               .map((asset) => (
-                <MDBRow
+                <Row
                   key={asset.actualAddr + activeTab}
-                  className="mb-3 output-card mr-2"
+                  className="mb-3 output-card"
                 >
-                  <MDBCol size="auto" className="p-0 pl-2">
+                  <Col xs="auto" className="position-relative">
                     <div
                       role="button"
                       aria-hidden="true"
@@ -566,15 +512,11 @@ const AssetSelect = (props) => {
                     >
                       {asset.icon}
                     </div>
-                  </MDBCol>
+                  </Col>
 
-                  <MDBCol
-                    size="5"
-                    sm="7"
-                    className="align-items-center p-0 pl-sm-1"
-                  >
-                    <MDBRow>
-                      <MDBCol size="12" className="float-left ml-n4">
+                  <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
+                    <Row>
+                      <Col xs="12" className="float-left ms-n4">
                         <div
                           role="button"
                           aria-hidden="true"
@@ -588,22 +530,22 @@ const AssetSelect = (props) => {
                         <div className="description">
                           {formatFromWei(asset.balance)}
                         </div>
-                      </MDBCol>
-                    </MDBRow>
-                  </MDBCol>
+                      </Col>
+                    </Row>
+                  </Col>
 
-                  <MDBCol size="3" md="3" className="text-right p-0 pr-2">
-                    <MDBRow>
-                      <MDBCol size="6">
+                  <Col xs="3" md="3" className="text-end p-0 pe-2">
+                    <Row>
+                      <Col xs="6">
                         <ShareLink
                           url={asset.actualAddr}
                           notificationLocation="tc"
                         >
-                          <i className="icon-small icon-copy ml-2" />
+                          <i className="icon-small icon-copy ms-2" />
                         </ShareLink>
-                      </MDBCol>
+                      </Col>
                       {getWalletType() && (
-                        <MDBCol size="6">
+                        <Col xs="6">
                           <a
                             href={
                               getWalletType() === 'TW'
@@ -619,7 +561,7 @@ const AssetSelect = (props) => {
                               }}
                             >
                               {getWalletType() === 'MM' ? (
-                                <i className="icon-small icon-metamask icon-light ml-2" />
+                                <i className="icon-small icon-metamask icon-light ms-2" />
                               ) : (
                                 <img
                                   src={
@@ -634,13 +576,13 @@ const AssetSelect = (props) => {
                               )}
                             </div>
                           </a>
-                        </MDBCol>
+                        </Col>
                       )}
-                    </MDBRow>
-                  </MDBCol>
-                </MDBRow>
+                    </Row>
+                  </Col>
+                </Row>
               ))}
-        </div>
+        </Modal.Body>
       </Modal>
     </>
   )

@@ -1,7 +1,7 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Row, Col, Progress } from 'reactstrap'
+import { Button, Card, Row, Col, ProgressBar } from 'react-bootstrap'
 import { useBond } from '../../../store/bond'
 import {
   cancelProposal,
@@ -145,7 +145,7 @@ const ProposalItem = ({ proposal }) => {
             className="mr-2"
           >
             {formatShortString(proposal.proposedAddress)}
-          </a>
+          </a>{' '}
           {getToken(proposal.proposedAddress)?.symbol}
         </>
       )
@@ -171,7 +171,7 @@ const ProposalItem = ({ proposal }) => {
             className="mr-2"
           >
             {formatShortString(getPool(proposal.proposedAddress)?.address)}
-          </a>
+          </a>{' '}
           {getToken(proposal.proposedAddress)?.symbol}p
         </>
       )
@@ -184,7 +184,7 @@ const ProposalItem = ({ proposal }) => {
     if (proposal.proposalType === 'GRANT') {
       return (
         <>
-          {formatFromWei(proposal.param)} SPARTA to
+          {formatFromWei(proposal.param, 0)} SPARTA to{' '}
           <a
             href={getExplorerWallet(proposal.proposedAddress)}
             target="_blank"
@@ -216,9 +216,21 @@ const ProposalItem = ({ proposal }) => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-body card-320 pt-3 pb-2 card-underlay">
-          {/* {!proposal.open && (
+      <Col xs="auto" className="mb-3">
+        <Card className="card-320 card-underlay">
+          <Card.Header>
+            <Row className="">
+              <Col xs="auto" className="my-auto ps-2 pe-0">
+                <h5 className="my-auto">#{proposal.id}</h5>
+              </Col>
+              <Col>
+                <h5 className="mb-0">{type?.label}</h5>
+                <p className="text-sm-label-alt">{status()}</p>
+              </Col>
+            </Row>
+          </Card.Header>
+          <Card.Body className="pb-0">
+            {/* {!proposal.open && (
             <Row className="mb-2">
               <Col xs="auto" className="pr-0 my-auto">
                 <h4 className="my-auto">
@@ -229,77 +241,72 @@ const ProposalItem = ({ proposal }) => {
               </Col>
             </Row>
           )} */}
-          <Row className="mb-2">
-            <Col xs="auto" className="pr-0 my-auto">
-              <h4 className="my-auto">#{proposal.id}</h4>
-            </Col>
-            <Col>
-              <h4 className="mb-0">{type?.label}</h4>
-              <p className="text-sm-label-alt">{status()}</p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <div className="output-card mb-2">{type?.desc}</div>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <div className="output-card mb-2">{getDetails()}</div>
-            </Col>
-          </Row>
+            <Row>
+              <Col>
+                <div className="output-card mb-2">{type?.desc}</div>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <div className="output-card mb-2">{getDetails()}</div>
+              </Col>
+            </Row>
+            {proposal.open && (
+              <>
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    Can cancel
+                  </Col>
+                  <Col className="text-right output-card">
+                    {getSecondsCancel()[0] > 0
+                      ? getSecondsCancel()[0] + getSecondsCancel()[1]
+                      : 'right now'}
+                  </Col>
+                </Row>
+
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    Your votes
+                  </Col>
+                  <Col className="text-right output-card">
+                    {formatFromWei(proposal.memberVotes, 0)} (
+                    {formatFromUnits(memberPercent(), 2)}%)
+                  </Col>
+                </Row>
+
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    Total votes
+                  </Col>
+                  <Col className="text-right output-card">
+                    {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
+                  </Col>
+                </Row>
+
+                <div className="progress-container progress-primary mt-2">
+                  <span className="progress-badge" />
+                  <ProgressBar now={totalPercent()} />
+                </div>
+              </>
+            )}
+          </Card.Body>
           {proposal.open && (
-            <>
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  Can cancel
-                </Col>
-                <Col className="text-right output-card">
-                  {getSecondsCancel()[0] > 0
-                    ? getSecondsCancel()[0] + getSecondsCancel()[1]
-                    : 'right now'}
-                </Col>
-              </Row>
-
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  Your votes
-                </Col>
-                <Col className="text-right output-card">
-                  {formatFromWei(proposal.memberVotes, 0)} (
-                  {formatFromUnits(memberPercent(), 2)}%)
-                </Col>
-              </Row>
-
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  Total votes
-                </Col>
-                <Col className="text-right output-card">
-                  {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
-                </Col>
-              </Row>
-
-              <div className="progress-container progress-primary my-2">
-                <span className="progress-badge" />
-                <Progress max="100" value={totalPercent()} />
-              </div>
-
+            <Card.Footer>
               <Row>
-                <Col className="px-1">
+                <Col className="mb-2">
                   <Button
-                    color="primary"
-                    className="btn-sm w-100"
+                    className="w-100"
+                    size="sm"
                     onClick={() => dispatch(voteProposal(wallet))}
                     disabled={memberPercent() >= 100}
                   >
                     Vote Up
                   </Button>
                 </Col>
-                <Col className="px-1">
+                <Col className="mb-2">
                   <Button
-                    color="primary"
-                    className="btn-sm w-100"
+                    className="w-100"
+                    size="sm"
                     onClick={() => dispatch(removeVote(wallet))}
                     disabled={memberPercent() <= 0}
                   >
@@ -309,10 +316,11 @@ const ProposalItem = ({ proposal }) => {
               </Row>
 
               <Row>
-                <Col className="px-1">
+                <Col className="">
                   <Button
-                    color="secondary"
-                    className="btn-sm w-100"
+                    variant="secondary"
+                    className="w-100"
+                    size="sm"
                     onClick={() => dispatch(finaliseProposal(wallet))}
                     disabled={
                       !proposal.finalising || getSecondsCooloff()[0] > 0
@@ -321,10 +329,11 @@ const ProposalItem = ({ proposal }) => {
                     Count Votes
                   </Button>
                 </Col>
-                <Col className="px-1">
+                <Col className="">
                   <Button
-                    color="secondary"
-                    className="btn-sm w-100"
+                    variant="secondary"
+                    className="w-100"
+                    size="sm"
                     onClick={() => dispatch(cancelProposal(wallet))}
                     disabled={getSecondsCancel()[0] > 0}
                   >
@@ -332,7 +341,7 @@ const ProposalItem = ({ proposal }) => {
                   </Button>
                 </Col>
               </Row>
-            </>
+            </Card.Footer>
           )}
         </Card>
       </Col>

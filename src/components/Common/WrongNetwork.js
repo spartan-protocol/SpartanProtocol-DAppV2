@@ -1,5 +1,5 @@
 import React from 'react'
-import { Col, Row } from 'reactstrap'
+import { Col, Row } from 'react-bootstrap'
 import { useTranslation, Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 

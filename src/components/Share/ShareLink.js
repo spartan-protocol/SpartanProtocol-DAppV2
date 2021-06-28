@@ -2,12 +2,11 @@
 
 import React from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
-import NotificationAlert from 'react-notification-alert'
 import { useTranslation } from 'react-i18next'
 
 const ShareLink = (props) => {
   const { t } = useTranslation()
-  const notificationAlertRef = React.useRef(null)
+  // const notificationAlertRef = React.useRef(null)
 
   const notify = (place, color) => {
     let type
@@ -43,13 +42,13 @@ const ShareLink = (props) => {
       icon: 'icon-extra-small icon-scan',
       autoDismiss: 2,
     }
-    notificationAlertRef.current.notificationAlert(options)
+    // notificationAlertRef.current.notificationAlert(options)
   }
 
   return (
     <>
       <div className="rna-container share-notification">
-        <NotificationAlert ref={notificationAlertRef} />
+        {/* <NotificationAlert ref={notificationAlertRef} /> */}
       </div>
       <CopyToClipboard
         text={props.url}

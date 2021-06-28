@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-
-import { Button, Card, Col, Row } from 'reactstrap'
+import { Button, Card, Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
@@ -19,6 +18,7 @@ import {
 import { useSparta } from '../../../store/sparta/selector'
 import spartaIconAlt from '../../../assets/img/spartan_synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
+import { Icon } from '../../../components/Icons/icons'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -76,6 +76,8 @@ const SynthVaultItem = ({ synthItem }) => {
     return BN(claimAmount).minus(feeBurn)
   }
 
+  const isLightMode = window.localStorage.getItem('theme')
+
   const getSynthLPsFromBase = () => {
     const temp = calcLiquidityUnitsAsym(
       getClaimable(),
@@ -116,36 +118,42 @@ const SynthVaultItem = ({ synthItem }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-body card-320 py-3">
-          <Row className="mb-2">
-            <Col xs="auto" className="pr-0">
-              <img
-                className="mr-3"
-                src={getToken(synthItem.tokenAddress)?.symbolUrl}
-                alt={getToken(synthItem.tokenAddress)?.symbol}
-                height="50px"
-              />
-              <img
-                height="25px"
-                src={spartaIconAlt}
-                alt="Sparta synth token icon"
-                className="position-absolute"
-                style={{ right: '8px', bottom: '7px' }}
-              />
-            </Col>
-            <Col xs="auto" className="pl-1">
-              <h3 className="mb-0">
-                {getToken(synthItem.tokenAddress)?.symbol}s
-              </h3>
-              <Link to={`/synths?asset2=${synthItem.tokenAddress}`}>
-                <p className="text-sm-label-alt">
-                  {t('obtain')} {getToken(synthItem.tokenAddress)?.symbol}s
-                  <i className="icon-scan icon-mini ml-1" />
-                </p>
-              </Link>
-            </Col>
+        <Card className="card-320">
+          <Card.Body>
+            <Row className="mb-2">
+              <Col xs="auto" className="position-relative">
+                <img
+                  className="mr-3"
+                  src={getToken(synthItem.tokenAddress)?.symbolUrl}
+                  alt={getToken(synthItem.tokenAddress)?.symbol}
+                  height="50px"
+                />
+                <img
+                  height="25px"
+                  src={spartaIconAlt}
+                  alt="Sparta synth token icon"
+                  className="position-absolute"
+                  style={{ right: '8px', bottom: '7px' }}
+                />
+              </Col>
+              <Col xs="auto" className="pl-1">
+                <h3 className="mb-0">
+                  {getToken(synthItem.tokenAddress)?.symbol}s
+                </h3>
+                <Link to={`/synths?asset2=${synthItem.tokenAddress}`}>
+                  <p className="text-sm-label-alt">
+                    {t('obtain')} {getToken(synthItem.tokenAddress)?.symbol}s
+                    <Icon
+                      icon="scan"
+                      size="13"
+                      fill={isLightMode ? 'black' : 'white'}
+                      className="ms-1"
+                    />
+                  </p>
+                </Link>
+              </Col>
 
-            {/* <Col className="text-right my-auto">
+              {/* <Col className="text-end my-auto">
               {showDetails && (
                 <i
                   role="button"
@@ -161,77 +169,75 @@ const SynthVaultItem = ({ synthItem }) => {
                 />
               )}
             </Col> */}
-          </Row>
+            </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('balance')}
-            </Col>
-            <Col className="text-right output-card">
-              {formatFromWei(synthItem.balance)}{' '}
-              {getToken(synthItem.tokenAddress)?.symbol}s
-            </Col>
-          </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('balance')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromWei(synthItem.balance)}{' '}
+                {getToken(synthItem.tokenAddress)?.symbol}s
+              </Col>
+            </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('staked')}
-            </Col>
-            <Col className="text-right output-card">
-              {formatFromWei(synthItem.staked)}{' '}
-              {getToken(synthItem.tokenAddress)?.symbol}s
-            </Col>
-          </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('staked')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromWei(synthItem.staked)}{' '}
+                {getToken(synthItem.tokenAddress)?.symbol}s
+              </Col>
+            </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('harvestable')}
-            </Col>
-            <Col className="text-right output-card">
-              {synthItem.weight > 0
-                ? formatFromWei(getSynthOutputFromBase())
-                : '0.00'}{' '}
-              {getToken(synthItem.tokenAddress)?.symbol}s
-            </Col>
-          </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('harvestable')}
+              </Col>
+              <Col className="text-end output-card">
+                {synthItem.weight > 0
+                  ? formatFromWei(getSynthOutputFromBase())
+                  : '0.00'}{' '}
+                {getToken(synthItem.tokenAddress)?.symbol}s
+              </Col>
+            </Row>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('lastHarvest')}
-            </Col>
-            <Col className="text-right output-card">
-              {synthItem.lastHarvest > 0
-                ? formatDate(synthItem.lastHarvest)
-                : t('never')}
-            </Col>
-          </Row>
-
-          <Row className="card-body py-0 text-center">
-            <Col xs="6" className="pt-1 pr-1 pl-0">
-              <Button
-                color="primary"
-                className="p-2"
-                block
-                onClick={() => toggleModal(synthItem.tokenAddress)}
-                disabled={synthItem.balance <= 0}
-              >
-                {t('deposit')}
-              </Button>
-            </Col>
-            <Col xs="6" className="pt-1 pl-1 pr-0">
-              <Button
-                color="primary"
-                className="p-2"
-                block
-                onClick={() =>
-                  dispatch(synthWithdraw(synthItem.address, '10000', wallet))
-                }
-                disabled={synthItem.staked <= 0}
-              >
-                {t('withdrawAll')}
-              </Button>
-            </Col>
-          </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('lastHarvest')}
+              </Col>
+              <Col className="text-end output-card">
+                {synthItem.lastHarvest > 0
+                  ? formatDate(synthItem.lastHarvest)
+                  : t('never')}
+              </Col>
+            </Row>
+          </Card.Body>
+          <Card.Footer className="">
+            <Row>
+              <Col xs="6">
+                <Button
+                  className="w-100"
+                  onClick={() => toggleModal(synthItem.tokenAddress)}
+                  disabled={synthItem.balance <= 0}
+                >
+                  {t('deposit')}
+                </Button>
+              </Col>
+              <Col xs="6">
+                <Button
+                  className="w-100"
+                  onClick={() =>
+                    dispatch(synthWithdraw(synthItem.address, '10000', wallet))
+                  }
+                  disabled={synthItem.staked <= 0}
+                >
+                  {t('withdrawAll')}
+                </Button>
+              </Col>
+            </Row>
+          </Card.Footer>
           {showModal && (
             <SynthDepositModal
               showModal={showModal}

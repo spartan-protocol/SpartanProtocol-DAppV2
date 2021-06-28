@@ -1,7 +1,16 @@
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   line-height: $headings-line-height;
-
 }
 
 button,
@@ -9,24 +18,32 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: $font-family-base
+  font-family: $font-family-base;
 }
 
 .card {
-  h1, h2, h3, h4, h5, h6, {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: $font-family-base;
     color: $opacity-8;
     font-weight: $font-weight-extra-bold;
-
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: $font-family-base;
   font-weight: $font-weight-normal;
   color: $opacity-8;
 }
-
 
 accentcurrency {
   display: block;
@@ -35,14 +52,11 @@ accentcurrency {
   font-weight: bold;
   font-size: 12px;
   line-height: 32px;
-  font-feature-settings: 'liga' off;
-  color: #AACDFF;
+  color: #aacdff;
   text-transform: uppercase;
   margin-top: -40px;
-  /* top: 0px; */
   margin-left: 96px;
 }
-
 
 accentstatus {
   display: block;
@@ -51,25 +65,18 @@ accentstatus {
   font-weight: bold;
   font-size: 12px;
   line-height: 32px;
-  font-feature-settings: 'liga' off;
-  color: #AACDFF;
+  color: #aacdff;
   text-transform: uppercase;
   margin-top: -40px;
-  /* top: 0px; */
   margin-left: 190px;
 }
-
 
 accent {
   font-family: $font-family-base !important;
   font-style: normal;
   font-size: 12px;
   line-height: 32px;
-  font-feature-settings: 'liga' off;
-  color: #AACDFF;
-
-  /* top: 0px; */
-
+  color: #aacdff;
 }
 
 .header-title {
@@ -78,25 +85,7 @@ accent {
   font-weight: bold;
   font-size: 28px;
   line-height: 32px;
-
 }
-
-//titlecard{
-//  font-family: $font-family-base !important;
-//  font-style: normal;
-//  font-weight: 500;
-//  font-size: 16px;
-//  line-height: 24px;
-//  /* identical to box height, or 150% */
-//  display: flex;
-//  align-items: center;
-//  font-feature-settings: 'liga' off;
-//
-//  /* Light Grey */
-//
-//  color: #F5F8FC;
-//}
-
 
 breadcrum {
   margin-top: 20px;
@@ -106,11 +95,8 @@ breadcrum {
   font-weight: bold;
   font-size: 28px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-  font-feature-settings: 'liga' off;
-  color: #FFFFFF;
+  color: #ffffff;
 }
-
 
 a {
   color: $primary-states;
@@ -122,32 +108,33 @@ a {
   }
 }
 
-h1, .h1 {
+h1,
+.h1 {
   line-height: 1.05;
   margin-bottom: $margin-base-vertical * 2;
 
   small {
     font-weight: $font-weight-bold;
     text-transform: uppercase;
-    opacity: .8;
+    opacity: 0.8;
   }
-
 }
 
-h2, .h2 {
+h2,
+.h2 {
   margin-bottom: $margin-base-vertical * 2;
   line-height: 1.2;
-
 }
 
-h3, .h3 {
+h3,
+.h3 {
   margin-bottom: $margin-base-vertical * 2;
   line-height: 1.4em;
 }
 
-h4, .h4 {
+h4,
+.h4 {
   line-height: 1.45em;
-  margin-bottom: $margin-base-vertical;
 
   & + .category,
   &.title + .category {
@@ -155,12 +142,14 @@ h4, .h4 {
   }
 }
 
-h5, .h5 {
+h5,
+.h5 {
   line-height: 1.4em;
   margin-bottom: 15px;
 }
 
-h6, .h6 {
+h6,
+.h6 {
   text-transform: uppercase;
   font-weight: $font-weight-bold;
 }
@@ -174,25 +163,13 @@ p {
   }
 }
 
-
 .title {
-  /* Hyperlinks */
-
   font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-
-  display: flex;
-  align-items: center;
-  text-align: right;
-  font-feature-settings: 'liga' off;
-
-  /* White */
-
-  color: #FFFFFF;
+  color: #ffffff;
 
   &.title-up {
     text-transform: uppercase;
@@ -269,7 +246,8 @@ p {
   }
 }
 
-ul li, ol li {
+ul li,
+ol li {
   color: $white;
 }
 
@@ -278,26 +256,17 @@ pre {
 }
 
 hr {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid #fb2715;
   margin-top: $spacer;
   margin-bottom: $spacer;
 }
 
-
 .amount {
-  /* Hyperlinks */
-
   font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
-  /* identical to box height, or 143% */
-
-  font-feature-settings: 'liga' off;
-
-  /* White */
-
   color: #ffffff;
 
   &.title-up {
@@ -314,36 +283,134 @@ hr {
   }
 }
 
-
-.page-header{
-  /* Headline 3 */
-
+.page-header {
   font-family: Kreon;
   font-style: normal;
   font-weight: bold;
   font-size: 28px;
   line-height: 32px;
-  /* identical to box height, or 133% */
-
-  font-feature-settings: 'liga' off;
-
-  /* White */
-
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
-
-.text-footer{
+.text-footer {
   font-family: Kreon;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
   line-height: 32px;
-  /* identical to box height, or 133% */
+  color: #f5f8fc;
+}
 
-  font-feature-settings: 'liga' off;
+.text-muted {
+  font-family: $font-family-base !important;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  color: #c0daff;
+}
 
-  /* Light Grey */
+.subtitle-label {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
+}
 
-  color: white;
+.title-card {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #a5adaf;
+}
+
+.text-card {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 20px;
+  color: #a5adaf;
+}
+
+.text-xs-label {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 20px;
+  color: #a5adaf;
+}
+
+.text-sm-label-alt {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  align-items: center;
+  color: #aacdff;
+}
+
+.text-sm-label {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 20px;
+  align-items: center;
+  color: #a5adaf;
+}
+
+.text-sm-label-wht {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 20px;
+  align-items: center;
+  color: #fff;
+}
+
+.output-card {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.subtitle-card {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+}
+
+.subtitle-amount {
+  font-family: $font-family-base;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #aacdff;
+}
+
+.accent {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 32px;
+  margin-top: 40px;
+  text-align: right;
+  color: #aacdff;
 }

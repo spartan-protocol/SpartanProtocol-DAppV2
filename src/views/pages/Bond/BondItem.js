@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Row, Col } from 'reactstrap'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { Row, Col, Card, Button } from 'react-bootstrap'
 import { claimForMember } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/img/spartan_lp.svg'
+import { Icon } from '../../../components/Icons/icons'
 
 const BondItem = ({ asset }) => {
   const pool = usePool()
@@ -54,121 +55,126 @@ const BondItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto" key={asset.address}>
-        <Card className="card-body card-320 pt-4 pb-3">
-          <Row className="">
-            <Col xs="auto" className="pr-0">
-              <img
-                className="mr-3"
-                src={token.symbolUrl}
-                alt={token.symbol}
-                height="50px"
-              />
-              <img
-                height="25px"
-                src={spartaIcon}
-                alt="Sparta LP token icon"
-                className="position-absolute"
-                style={{ right: '8px', bottom: '7px' }}
-              />
-            </Col>
-            <Col xs="auto" className="pl-1">
-              <h3 className="mb-0">{token.symbol}p</h3>
-              <Link to={`/pools/liquidity?asset1=${token.address}`}>
-                <p className="text-sm-label-alt">
-                  {t('obtain')} {token.symbol}p
-                  <i className="icon-scan icon-mini ml-1" />
-                </p>
-              </Link>
-            </Col>
-
-            <Col className="text-right my-auto">
-              {showDetails && (
-                <i
-                  role="button"
-                  aria-hidden="true"
-                  className="icon-small icon-up icon-light"
-                  onClick={() => toggleCollapse()}
+        <Card className="card-320">
+          <Card.Body>
+            <Row className="">
+              <Col xs="auto" className="position-relative pt-1">
+                <img
+                  className="mr-3"
+                  src={token.symbolUrl}
+                  alt={token.symbol}
+                  height="50px"
                 />
-              )}
-              {!showDetails && (
-                <i
-                  role="button"
-                  aria-hidden="true"
-                  className="icon-small icon-down icon-light"
-                  onClick={() => toggleCollapse()}
+                <img
+                  height="25px"
+                  src={spartaIcon}
+                  alt="Sparta LP token icon"
+                  className="position-absolute"
+                  style={{ right: '10px', bottom: '7px' }}
                 />
-              )}
-            </Col>
-          </Row>
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('remaining')}
-            </Col>
-            <Col className="text-right output-card">
-              {formatFromWei(asset.bonded)} {token.symbol}p
-            </Col>
-          </Row>
+              </Col>
+              <Col xs="auto" className="pl-1">
+                <h3 className="mb-0">{token.symbol}p</h3>
+                <Link to={`/pools/liquidity?asset1=${token.address}`}>
+                  <p className="text-sm-label-alt">
+                    {t('obtain')} {token.symbol}p
+                    <Icon icon="scan" size="13" fill="white" className="ms-1" />
+                  </p>
+                </Link>
+              </Col>
 
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('claimable')}
-            </Col>
-            <Col className="text-right output-card">
-              {formatFromWei(
-                getClaimable(
-                  asset.bonded,
-                  asset.bondLastClaim,
-                  asset.bondClaimRate,
-                ),
-              )}{' '}
-              {token.symbol}p
-            </Col>
-          </Row>
-          {showDetails === true && (
-            <>
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  {t('lastClaim')}
-                </Col>
-                <Col className="text-right output-card">
-                  {formatDate(asset.bondLastClaim)}
-                </Col>
-              </Row>
+              <Col className="text-end my-auto">
+                {showDetails && (
+                  <span
+                    aria-hidden="true"
+                    role="button"
+                    onClick={() => toggleCollapse()}
+                  >
+                    <Icon icon="arrowUp" size="20" fill="grey" />
+                  </span>
+                )}
+                {!showDetails && (
+                  <span
+                    aria-hidden="true"
+                    role="button"
+                    onClick={() => toggleCollapse()}
+                  >
+                    <Icon icon="arrowDown" size="20" fill="grey" />
+                  </span>
+                )}
+              </Col>
+            </Row>
+            <Row className="my-1 mt-2">
+              <Col xs="auto" className="text-card">
+                {t('remaining')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromWei(asset.bonded)} {token.symbol}p
+              </Col>
+            </Row>
 
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  {t('finalDate')}
-                </Col>
-                <Col className="text-right output-card">
-                  {formatDate(
-                    getEndDate(
-                      asset.bonded,
-                      asset.bondLastClaim,
-                      asset.bondClaimRate,
-                    ),
-                  )}
-                </Col>
-              </Row>
-            </>
-          )}
-          <Row className="text-center mt-2">
-            <Col xs="6" className="p-1">
-              <Button color="primary" className="btn w-100" disabled>
-                {t('bond')}
-              </Button>
-            </Col>
-            <Col xs="6" className="p-1">
-              <Button
-                color="primary"
-                className="btn w-100"
-                onClick={() =>
-                  dispatch(claimForMember(asset.tokenAddress, wallet))
-                }
-              >
-                {t('claim')}
-              </Button>
-            </Col>
-          </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('claimable')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromWei(
+                  getClaimable(
+                    asset.bonded,
+                    asset.bondLastClaim,
+                    asset.bondClaimRate,
+                  ),
+                )}{' '}
+                {token.symbol}p
+              </Col>
+            </Row>
+            {showDetails === true && (
+              <>
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    {t('lastClaim')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatDate(asset.bondLastClaim)}
+                  </Col>
+                </Row>
+
+                <Row className="mt-1">
+                  <Col xs="auto" className="text-card">
+                    {t('finalDate')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatDate(
+                      getEndDate(
+                        asset.bonded,
+                        asset.bondLastClaim,
+                        asset.bondClaimRate,
+                      ),
+                    )}
+                  </Col>
+                </Row>
+              </>
+            )}
+          </Card.Body>
+          <Card.Footer>
+            <Row className="text-center">
+              <Col xs="6" className="px-2">
+                <Button className="w-100" disabled>
+                  {t('bond')}
+                </Button>
+              </Col>
+              <Col xs="6" className="px-2">
+                <Button
+                  className="w-100"
+                  onClick={() =>
+                    dispatch(claimForMember(asset.tokenAddress, wallet))
+                  }
+                >
+                  {t('claim')}
+                </Button>
+              </Col>
+            </Row>
+          </Card.Footer>
         </Card>
       </Col>
     </>

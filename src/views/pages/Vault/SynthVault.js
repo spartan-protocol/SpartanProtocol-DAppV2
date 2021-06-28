@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-
-import { Button, Card, Row, Col } from 'reactstrap'
+import { Button, Card, Row, Col } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link } from 'react-router-dom'
@@ -38,16 +37,16 @@ const SynthVault = () => {
   }, [trigger0])
 
   return (
-    <>
-      <Col xs="auto">
-        <Card className="card-body card-320 pb-2 pt-3 card-underlay">
-          <Col>
-            <h3>{t('synthVaultDetails')}</h3>
+    <Row>
+      <Col xs="auto" className="mb-3">
+        <Card className="card-320 card-underlay">
+          <Card.Header>{t('synthVaultDetails')}</Card.Header>
+          <Card.Body>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('minTime')}
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-end output-card">
                 {synth.globalDetails?.minTime} seconds
               </Col>
             </Row>
@@ -55,7 +54,7 @@ const SynthVault = () => {
               <Col xs="auto" className="text-card">
                 {t('totalWeight')}
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-end output-card">
                 {synth.globalDetails?.totalWeight > 0
                   ? formatFromWei(synth.globalDetails?.totalWeight, 0)
                   : '0.00'}{' '}
@@ -66,7 +65,7 @@ const SynthVault = () => {
               <Col xs="auto" className="text-card">
                 {t('erasToEarn')}
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-end output-card">
                 {synth.globalDetails?.erasToEarn}
               </Col>
             </Row>
@@ -74,7 +73,7 @@ const SynthVault = () => {
               <Col xs="auto" className="text-card">
                 Block Delay
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-end output-card">
                 {synth.globalDetails?.blockDelay}
               </Col>
             </Row> */}
@@ -82,32 +81,28 @@ const SynthVault = () => {
               <Col xs="auto" className="text-card">
                 {t('vaultClaim')}
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-end output-card">
                 {synth.globalDetails?.vaultClaim / 100}%
               </Col>
             </Row>
-            <Row className="card-body text-center">
-              <Col xs="12" className="p-0 pt-1">
-                <Link to="/synths">
-                  <Button className="btn-sm btn-primary p-2" block>
-                    {t('forgeSynths')}
-                  </Button>
-                </Link>
-              </Col>
-            </Row>
-          </Col>
+          </Card.Body>
+          <Card.Footer xs="12">
+            <Link to="/synths">
+              <Button className="w-100">{t('forgeSynths')}</Button>
+            </Link>
+          </Card.Footer>
         </Card>
       </Col>
 
       <Col xs="auto">
-        <Card className="card-body card-320 pb-2 pt-3 card-underlay">
-          <Col>
-            <h3>{t('memberDetails')}</h3>
+        <Card className="card-320 card-underlay">
+          <Card.Header>{t('memberDetails')}</Card.Header>
+          <Card.Body>
             <Row className="my-4 pb-2">
               <Col xs="auto" className="text-card">
                 {t('yourWeight')}
               </Col>
-              <Col className="text-right output-card">
+              <Col className="text-end output-card">
                 {synth.memberDetails?.totalWeight > 0
                   ? `${BN(synth.memberDetails?.totalWeight)
                       .div(synth.globalDetails?.totalWeight)
@@ -116,26 +111,23 @@ const SynthVault = () => {
                   : t('noWeight')}
               </Col>
             </Row>
-            <Row className="card-body text-center">
-              <Col xs="12" className="p-0 mt-5">
-                <Button
-                  className="btn-sm btn-primary p-2"
-                  block
-                  onClick={() => dispatch(synthHarvest(wallet))}
-                  disabled={synth.memberDetails?.totalWeight <= 0}
-                >
-                  {t('harvestAll')}
-                </Button>
-              </Col>
-            </Row>
-          </Col>
+          </Card.Body>
+          <Card.Footer xs="12">
+            <Button
+              className="w-100"
+              onClick={() => dispatch(synthHarvest(wallet))}
+              disabled={synth.memberDetails?.totalWeight <= 0}
+            >
+              {t('harvestAll')}
+            </Button>
+          </Card.Footer>
         </Card>
       </Col>
       {synth?.synthDetails?.length > 0 &&
         synth.synthDetails
           .filter((i) => i.address !== false)
           .map((i) => <SynthVaultItem key={i.address} synthItem={i} />)}
-    </>
+    </Row>
   )
 }
 

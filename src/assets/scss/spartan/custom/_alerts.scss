@@ -82,10 +82,10 @@
       opacity: 1 !important;
     }
 
-    @include media-breakpoint-down(xs) {
-      top: 1rem;
-      right: .5rem;
-    }
+    // @include media-breakpoint-down(xs) {
+    //   top: 1rem;
+    //   right: .5rem;
+    // }
 
     & > span:not(.sr-only) {
       font-size: 1.5rem;

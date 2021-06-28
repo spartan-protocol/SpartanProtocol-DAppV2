@@ -1,55 +1,19 @@
 //#
 
 .white-content {
-
-
   //Buttons
-
   .btn-round.btn-icon {
     background: transparent;
-
   }
 
   .navbar.navbar-transparent .navbar-brand {
     color: $black-states;
-
-
   }
-
 
   // Icons
   .swap-icon-color {
     filter: invert(99%) sepia(4%) saturate(434%) hue-rotate(199deg) brightness(113%) contrast(91%);
   }
-
-
-  // Navigation
-
-  //.navbar.navbar-transparent .navbar-toggler-bar{
-  //  background: $black-states;
-  //}
-  //.navbar.navbar-transparent .navbar-nav li a:not(.dropdown-item){
-  //    color: $black-states;
-  //    & i{
-  //      color: $black-states;
-  //    }
-  //}
-  //
-  //.navbar.navbar-transparent .navbar-minimize button i{
-  //  color: $black-states;
-  //}
-  //
-  //.navbar.navbar-transparent .search-bar.input-group i{
-  //  color: $black-states;
-  //}
-  //.navbar.navbar-transparent .search-bar.input-group .form-control{
-  //  color: $default;
-  //  &::placeholder{
-  //    color: $dark-gray;
-  //  }
-  //}
-  //
-
 
   .nav-pills .nav-item .nav-link.active, .nav-pills .nav-item .nav-link.active:focus, .nav-pills .nav-item .nav-link.active:hover {
     border: 0px;
@@ -676,25 +640,8 @@
     color: $black-states;
   }
 
-  .modal-title {
-  }
-
   .output-wallet-description {
     color: $black-states;
-
-  }
-
-  .modal-content {
-    background-color: $white;
-    border: 0;
-  }
-
-  .popover-header {
-
-    background-color: $white;
-
-  }
-  .output-card{
 
   }
 

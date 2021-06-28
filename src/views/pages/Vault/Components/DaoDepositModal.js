@@ -1,15 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import {
-  Button,
-  Col,
-  Input,
-  Row,
-  FormGroup,
-  Card,
-  CustomInput,
-} from 'reactstrap'
-import { Modal } from 'react-bootstrap'
+import { Button, Col, Row, Modal, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
@@ -40,6 +31,14 @@ const DaoDepositModal = (props) => {
     (i) => i.address === props.tokenAddress,
   )[0]
 
+  const handleCloseModal = () => {
+    setshowModal(false)
+    setstage(0)
+    setloading(false)
+    setLockoutConfirm(false)
+    setpercentage('0')
+  }
+
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddr)[0]
 
@@ -48,32 +47,20 @@ const DaoDepositModal = (props) => {
   return (
     <>
       <Button
-        color="primary"
-        className="btn btn-primary p-2"
-        block
+        className="w-100"
         onClick={() => setshowModal(true)}
         disabled={props.disabled}
       >
         {t('deposit')}
       </Button>
-      <Modal show={showModal} onHide={() => setshowModal(false)}>
-        <Card className="card-body mb-0">
-          <Row className="">
-            <Col xs="10">
-              <h4 className="modal-title">{t('deposit')}</h4>
-            </Col>
-            <Col xs="2">
-              <Button
-                onClick={() => setshowModal(false)}
-                className="btn btn-transparent mt-4"
-              >
-                <i className="icon-small icon-close" />
-              </Button>
-            </Col>
-          </Row>
+      <Modal show={showModal} onHide={() => handleCloseModal()} centered>
+        <Modal.Header closeButton closeVariant="white">
+          {t('deposit')}
+        </Modal.Header>
+        <Modal.Body>
           {!loading && stage > 0 && (
             <Row className="my-1">
-              <Col xs="12" className="text-left mb-4">
+              <Col xs="12" className="">
                 <span>
                   <div className="text-card">{t('txnComplete')}</div>{' '}
                   {t('viewBscScan')}{' '}
@@ -88,7 +75,7 @@ const DaoDepositModal = (props) => {
               </Col>
 
               <Col xs="12" className="">
-                <Button color="primary" onClick={() => setshowModal(false)}>
+                <Button color="primary" onClick={() => handleCloseModal()}>
                   {t('close')}
                 </Button>
               </Col>
@@ -101,26 +88,22 @@ const DaoDepositModal = (props) => {
                 <Col xs="auto" className="text-card">
                   {t('amount')}
                 </Col>
-                <Col className="text-right output-card">
+                <Col className="text-end output-card">
                   {formatFromWei(deposit())} {token.symbol}p
                 </Col>
               </Row>
               <Row className="">
                 <Col xs="12">
-                  <FormGroup>
-                    <Input
-                      type="range"
-                      name="range"
-                      id="daoVaultSlider"
-                      onChange={(e) => setpercentage(e.target.value)}
-                      min="0"
-                      max="100"
-                      defaultValue="0"
-                      className="no-ui"
-                    />
-                  </FormGroup>
+                  <Form.Range
+                    id="daoVaultSlider"
+                    onChange={(e) => setpercentage(e.target.value)}
+                    min="0"
+                    max="100"
+                    defaultValue="0"
+                  />
                 </Col>
               </Row>
+              <hr />
               <Row xs="12" className="my-2">
                 <Col xs="12" className="output-card">
                   This deposit will disable withdraw on all staked LP tokens for
@@ -131,7 +114,7 @@ const DaoDepositModal = (props) => {
                 <Col xs="auto" className="text-card">
                   This stake locked
                 </Col>
-                <Col className="text-right output-card">
+                <Col className="text-end output-card">
                   {formatFromWei(deposit())} {token.symbol}p
                 </Col>
               </Row>
@@ -142,55 +125,56 @@ const DaoDepositModal = (props) => {
                     <Col xs="auto" className="text-card">
                       Existing stake locked
                     </Col>
-                    <Col className="text-right output-card">
+                    <Col className="text-end output-card">
                       {formatFromWei(i.staked)}{' '}
                       {getToken(i.tokenAddress)?.symbol}p
                     </Col>
                   </Row>
                 ))}
-              <FormGroup>
-                <div className="text-center mt-3">
-                  <CustomInput
+              <hr />
+              <Form className="my-2 text-center">
+                <span className="output-card">
+                  Confirm 24hr withdraw lockout
+                  <Form.Check
                     type="switch"
                     id="confirmLockout"
-                    label="Confirm 24hr withdraw lockout"
+                    className="ms-2 d-inline-flex"
                     checked={lockoutConfirm}
                     onChange={() => setLockoutConfirm(!lockoutConfirm)}
                   />
-                </div>
-              </FormGroup>
-              <Row className="mt-2">
-                {wallet?.account && (
-                  <Approval
-                    tokenAddress={pool1.address}
-                    symbol={`${token.symbol}p`}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.dao}
-                    txnAmount={deposit()}
-                    assetNumber="1"
-                  />
-                )}
-                <Col className="hide-if-prior-sibling">
-                  <Button
-                    color="primary"
-                    block
-                    onClick={async () => {
-                      setloading(true)
-                      await dispatch(
-                        daoDeposit(pool1.address, deposit(), wallet),
-                      )
-                      setstage(stage + 1)
-                      setloading(false)
-                    }}
-                    disabled={deposit() <= 0 || !lockoutConfirm}
-                  >
-                    {t('confirm')}
-                  </Button>
-                </Col>
-              </Row>
+                </span>
+              </Form>
             </>
           )}
-        </Card>
+        </Modal.Body>
+        <Modal.Footer>
+          <Row className="text-center">
+            {wallet?.account && (
+              <Approval
+                tokenAddress={pool1.address}
+                symbol={`${token.symbol}p`}
+                walletAddress={wallet?.account}
+                contractAddress={addr.dao}
+                txnAmount={deposit()}
+                assetNumber="1"
+              />
+            )}
+            <Col xs="12" className="hide-if-prior-sibling">
+              <Button
+                className="w-100"
+                onClick={async () => {
+                  setloading(true)
+                  await dispatch(daoDeposit(pool1.address, deposit(), wallet))
+                  setstage(stage + 1)
+                  setloading(false)
+                }}
+                disabled={deposit() <= 0 || !lockoutConfirm}
+              >
+                {t('confirm')}
+              </Button>
+            </Col>
+          </Row>
+        </Modal.Footer>
       </Modal>
     </>
   )

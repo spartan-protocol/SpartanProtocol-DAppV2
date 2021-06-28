@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-
-import { Button, Card, Row, Col } from 'reactstrap'
+import { Button, Card, Row, Col } from 'react-bootstrap'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
@@ -98,15 +97,17 @@ const Upgrade = () => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-body card-320">
-          <Col>
-            <h3 className="mb-0">{t('upgrade')}</h3>
-            <span className="subtitle-label">{t('upgradeSubtitle')}</span>
-            <Row className="mb-2 mt-4">
+        <Card className="card-320">
+          <Card.Header>
+            <Card.Title>{t('upgrade')}</Card.Title>
+            <Card.Subtitle>{t('upgradeSubtitle')}</Card.Subtitle>
+          </Card.Header>
+          <Card.Body>
+            <Row className="">
               <Col xs="auto" className="text-card">
                 {t('input')}
               </Col>
-              <Col className="text-right text-sm-label-wht">
+              <Col className="text-end text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv1
               </Col>
             </Row>
@@ -114,16 +115,17 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 {t('output')}
               </Col>
-              <Col className="text-right text-sm-label-wht">
+              <Col className="text-end text-sm-label-wht">
                 {formatFromWei(oldSpartaBalance)} SPARTAv2
               </Col>
             </Row>
+          </Card.Body>
+          <Card.Footer>
             {bnbBalance > 5000000000000000 && (
-              <Row className="card-body py-1 text-center">
-                <Col xs="12" className="p-0 py-1">
+              <Row className="">
+                <Col xs="12" className="">
                   <Button
-                    className="btn-primary"
-                    block
+                    className="w-100"
                     onClick={() => dispatch(spartaUpgrade(wallet))}
                     disabled={oldSpartaBalance <= 0}
                   >
@@ -133,28 +135,30 @@ const Upgrade = () => {
               </Row>
             )}
             {bnbBalance <= 5000000000000000 && (
-              <Row className="card-body py-1 text-center">
-                <Col xs="12" className="p-0 py-1">
-                  <Button className="btn-alert" block disabled>
+              <Row className="">
+                <Col xs="12" className="">
+                  <Button variant="info" className="w-100" disabled>
                     Not Enough BNB
                   </Button>
                 </Col>
               </Row>
             )}
-          </Col>
+          </Card.Footer>
         </Card>
       </Col>
 
       <Col xs="auto">
-        <Card className="card-body card-320">
-          <Col>
-            <h3 className="mb-0">{t('claim')}</h3>
-            <span className="subtitle-label">{t('claimSubtitle')}</span>
-            <Row className="mb-2 mt-4">
+        <Card className="card-320">
+          <Card.Header>
+            <Card.Title className="">{t('claim')}</Card.Title>
+            <Card.Subtitle className="">{t('claimSubtitle')}</Card.Subtitle>
+          </Card.Header>
+          <Card.Body>
+            <Row className="">
               <Col xs="auto" className="text-card">
                 {t('claim')}
               </Col>
-              <Col className="text-right text-sm-label-wht">
+              <Col className="text-end text-sm-label-wht">
                 {sparta.globalDetails.feeOnTransfer > 0
                   ? formatFromWei(getClaimAmount())
                   : 'Loading'}{' '}
@@ -165,16 +169,17 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 {t('expiry')}
               </Col>
-              <Col className="text-right text-sm-label-wht">
+              <Col className="text-end text-sm-label-wht">
                 {formatDate(getExpiry())}
               </Col>
             </Row>
+          </Card.Body>
+          <Card.Footer>
             {bnbBalance > 5000000000000000 && (
-              <Row className="card-body py-1 text-center">
-                <Col xs="12" className="p-0 py-1">
+              <Row className="">
+                <Col xs="12" className="">
                   <Button
-                    className="btn-primary"
-                    block
+                    className="w-100"
                     onClick={() => dispatch(fallenSpartansClaim(wallet))}
                     disabled={sparta?.claimCheck <= 0}
                   >
@@ -184,61 +189,61 @@ const Upgrade = () => {
               </Row>
             )}
             {bnbBalance <= 5000000000000000 && (
-              <Row className="card-body py-1 text-center">
-                <Col xs="12" className="p-0 py-1">
-                  <Button className="btn-alert" block disabled>
+              <Row className="">
+                <Col xs="12" className="">
+                  <Button variant="info" className="w-100" disabled>
                     Not Enough BNB
                   </Button>
                 </Col>
               </Row>
             )}
-          </Col>
+          </Card.Footer>
         </Card>
       </Col>
 
       <Col xs="auto">
-        <Card className="card-body card-320 card-underlay">
-          <Col>
-            <h3 className="mb-0">
-              {t('yourBalance')}
-              <img
-                height="35"
-                src={spartaIcon}
-                alt="sparta icon"
-                className="float-right"
-              />
-            </h3>
+        <Card className="card-320 card-underlay">
+          <Card.Body>
+            <Col>
+              <h3 className="mb-0">
+                {t('yourBalance')}
+                <img
+                  height="35"
+                  src={spartaIcon}
+                  alt="sparta icon"
+                  className="float-end"
+                />
+              </h3>
 
-            <span className="subtitle-label">{t('balanceSubtitle')}</span>
-            <Row className="mb-2 mt-4">
-              <Col xs="auto" className="text-card">
-                {t('balance')}
-              </Col>
-              <Col className="text-right text-sm-label-wht">
-                {formatFromWei(oldSpartaBalance)} SPARTAv1
-              </Col>
-            </Row>
-            <Row className="my-2">
-              <Col xs="auto" className="text-card">
-                {t('balance')}
-              </Col>
-              <Col className="text-right text-sm-label-wht">
-                {formatFromWei(newSpartaBalance)} SPARTAv2
-              </Col>
-            </Row>
-            <Row className="card-body py-1 text-center">
-              <Col xs="12" className="p-0 py-1">
-                <Button
-                  className="btn-info"
-                  block
-                  onClick={() => settrigger0(trigger0 + 1)}
-                  disabled={loadingBalance === true}
-                >
-                  {t('refreshBalance')}
-                </Button>
-              </Col>
-            </Row>
-          </Col>
+              <span className="subtitle-label">{t('balanceSubtitle')}</span>
+              <Row className="mb-2 mt-4">
+                <Col xs="auto" className="text-card">
+                  {t('balance')}
+                </Col>
+                <Col className="text-end text-sm-label-wht">
+                  {formatFromWei(oldSpartaBalance)} SPARTAv1
+                </Col>
+              </Row>
+              <Row className="my-2">
+                <Col xs="auto" className="text-card">
+                  {t('balance')}
+                </Col>
+                <Col className="text-end text-sm-label-wht">
+                  {formatFromWei(newSpartaBalance)} SPARTAv2
+                </Col>
+              </Row>
+            </Col>
+          </Card.Body>
+          <Card.Footer>
+            <Button
+              className="w-100"
+              variant="info"
+              onClick={() => settrigger0(trigger0 + 1)}
+              disabled={loadingBalance === true}
+            >
+              {t('refreshBalance')}
+            </Button>
+          </Card.Footer>
         </Card>
       </Col>
     </>

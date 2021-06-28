@@ -4,11 +4,11 @@ import {
   Button,
   Card,
   Col,
-  Input,
+  FormControl,
+  FormGroup,
   InputGroup,
-  InputGroupAddon,
   Row,
-} from 'reactstrap'
+} from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
@@ -270,28 +270,24 @@ const EmptyPools = (props) => {
                     />
                   </Col>
                   <Col className="text-right">
-                    <InputGroup className="m-0 mt-n1">
-                      <Input
+                    <InputGroup className="m-0">
+                      <FormControl
                         className="text-right ml-0 p-2"
                         type="text"
                         placeholder={`${t('add')}...`}
                         id="addInput1"
-                        inputMode="decimal"
-                        pattern="^[0-9]*[.,]?[0-9]*$"
                         autoComplete="off"
                         autoCorrect="off"
-                        minLength="1"
                         onInput={(e) => handleTokenInputChange(e)}
                       />
-                      <InputGroupAddon
-                        addonType="append"
+                      <InputGroup.Text
                         role="button"
                         tabIndex={-1}
                         onKeyPress={() => clearInputs(1)}
                         onClick={() => clearInputs(1)}
                       >
                         <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                      </InputGroupAddon>
+                      </InputGroup.Text>
                     </InputGroup>
                   </Col>
                 </Row>
@@ -341,27 +337,23 @@ const EmptyPools = (props) => {
                   </Col>
                   <Col className="text-right">
                     <InputGroup className="m-0">
-                      <Input
+                      <FormGroup
                         className="text-right ml-0 p-2"
                         type="text"
                         placeholder={`${t('add')}...`}
                         id="addInput2"
-                        inputMode="decimal"
-                        pattern="^[0-9]*[.,]?[0-9]*$"
                         autoComplete="off"
                         autoCorrect="off"
-                        minLength="1"
                         onInput={(e) => handleTokenInputChange(e)}
                       />
-                      <InputGroupAddon
-                        addonType="append"
+                      <InputGroup.Text
                         role="button"
                         tabIndex={-1}
                         onKeyPress={() => clearInputs(2)}
                         onClick={() => clearInputs(2)}
                       >
                         <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
-                      </InputGroupAddon>
+                      </InputGroup.Text>
                     </InputGroup>
                     <div className="text-right text-sm-label">
                       ~$

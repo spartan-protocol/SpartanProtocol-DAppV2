@@ -1,22 +1,3 @@
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "src/assets/scss/spartan/custom/variables";
-@import "~bootstrap/scss/mixins/breakpoints";
-
-.footer {
-  background-color: #25212d;
-}
-
-.white-content .footer {
-  background-color: white;
-}
-
-.footerRow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .copyright a {
   margin-right: 15px;
 }

@@ -2,7 +2,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Col, Row, Button, Card } from 'reactstrap'
+import { Row, Col, Card, Button } from 'react-bootstrap'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { claimAllForMember } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
@@ -42,52 +42,52 @@ const Bond = () => {
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-2">{t('bond')}</h2>
+              <h2 className="text-title-small mb-0 me-3">{t('bond')}</h2>
             </div>
           </Col>
         </Row>
         {network.chainId === 97 && (
           <Row className="row-480">
             <Col xs="auto">
-              <Card className="card-body card-320 pt-3 pb-2 card-underlay">
-                <h3>{t('bondPositions')}</h3>
-                {pool.poolDetails?.length > 0 &&
-                  pool.poolDetails
-                    .filter((asset) => asset.bonded > 0)
-                    .map((asset) => (
-                      <Row key={asset.address} className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('remaining')}
-                        </Col>
-                        <Col className="text-right output-card">
-                          {formatFromWei(asset.bonded)}{' '}
-                          {getToken(asset.tokenAddress)?.symbol}p
-                        </Col>
-                      </Row>
-                    ))}
-                {pool.poolDetails.filter((asset) => asset.bonded > 0).length <=
-                  0 && (
-                  <Row className="my-1">
-                    <Col xs="auto" className="text-card">
-                      {t('noBondPosition')}
-                    </Col>
-                  </Row>
-                )}
-                <Row className="text-center mt-3">
-                  <Col xs="12" className="p-1">
-                    <Button
-                      className="btn btn-primary align-middle"
-                      onClick={() => dispatch(claimAllForMember(wallet))}
-                    >
-                      {t('claimAll')}
-                      {' ( '}
-                      {pool.poolDetails?.length > 0 &&
-                        pool.poolDetails.filter((asset) => asset.bonded > 0)
-                          .length}
-                      {' )'}
-                    </Button>
-                  </Col>
-                </Row>
+              <Card xs="auto" className="card-320">
+                <Card.Header>{t('bondPositions')}</Card.Header>
+                <Card.Body>
+                  {pool.poolDetails?.length > 0 &&
+                    pool.poolDetails
+                      .filter((asset) => asset.bonded > 0)
+                      .map((asset) => (
+                        <Row key={asset.address} className="my-1">
+                          <Col xs="auto" className="text-card">
+                            {t('remaining')}
+                          </Col>
+                          <Col className="text-end output-card">
+                            {formatFromWei(asset.bonded)}{' '}
+                            {getToken(asset.tokenAddress)?.symbol}p
+                          </Col>
+                        </Row>
+                      ))}
+                  {pool.poolDetails.filter((asset) => asset.bonded > 0)
+                    .length <= 0 && (
+                    <Row className="my-1">
+                      <Col xs="auto" className="text-card">
+                        {t('noBondPosition')}
+                      </Col>
+                    </Row>
+                  )}
+                </Card.Body>
+                <Card.Footer>
+                  <Button
+                    className="w-100"
+                    onClick={() => dispatch(claimAllForMember(wallet))}
+                  >
+                    {t('claimAll')}
+                    {' ( '}
+                    {pool.poolDetails?.length > 0 &&
+                      pool.poolDetails.filter((asset) => asset.bonded > 0)
+                        .length}
+                    {' )'}
+                  </Button>
+                </Card.Footer>
               </Card>
             </Col>
             {pool.poolDetails?.length > 0 &&

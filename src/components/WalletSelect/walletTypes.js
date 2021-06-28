@@ -3,7 +3,7 @@ import MetaMask from '../../assets/icons/metamask.svg'
 // import WalletConnect from '../../assets/icons/WalletConnect.svg'
 import TrustWallet from '../../assets/icons/TrustWallet.svg'
 import MathWallet from '../../assets/icons/MathWallet.svg'
-import TokenPocket from '../../assets/icons/TokenPocket.svg'
+// import TokenPocket from '../../assets/icons/TokenPocket.svg'
 
 const walletTypes = [
   {
@@ -27,7 +27,7 @@ const walletTypes = [
   {
     id: 'OOT',
     title: 'Others',
-    icon: [TokenPocket, MathWallet],
+    icon: [MathWallet],
     inject: 'injected',
   },
   // {

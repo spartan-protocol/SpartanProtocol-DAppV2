@@ -2,7 +2,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Row, Col } from 'reactstrap'
+import { Row, Col } from 'react-bootstrap'
 import { fallenSpartansCheck } from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
 
@@ -38,7 +38,9 @@ const Overview = () => {
       <div className="content">
         <Row className="row-480">
           <Col xs="12">
-            <h2 className="text-title-small my-3 mr-2">{t('upgrade')}</h2>
+            <div className="card-480 my-3">
+              <h2 className="text-title-small mb-0 me-3">{t('upgrade')}</h2>
+            </div>
           </Col>
         </Row>
         <Row className="row-480">

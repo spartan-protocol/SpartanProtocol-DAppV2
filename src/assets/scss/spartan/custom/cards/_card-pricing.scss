@@ -159,32 +159,32 @@
     }
 }
 
-@include media-breakpoint-up(md){
-  .pricing-page {
-    [class*="col-"]{
-      &:first-child{
-          padding-right: 0;
-         .card:not(.card-raised){
-          border-top-right-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-      }
-      &:not(:first-child):not(:last-child) {
-        padding: 0;
-        .card:not(.card-raised){
-          border-radius: 0;
-          img{
-            border-radius: 0;
-          }
-        }
-      }
-      &:last-child {
-        padding-left: 0;
-        .card:not(.card-raised){
-          border-top-left-radius: 0;
-          border-bottom-left-radius: 0;
-        }
-      }
-    }
-  }
-}
+// @include media-breakpoint-up(md){
+//   .pricing-page {
+//     [class*="col-"]{
+//       &:first-child{
+//           padding-right: 0;
+//          .card:not(.card-raised){
+//           border-top-right-radius: 0;
+//           border-bottom-right-radius: 0;
+//         }
+//       }
+//       &:not(:first-child):not(:last-child) {
+//         padding: 0;
+//         .card:not(.card-raised){
+//           border-radius: 0;
+//           img{
+//             border-radius: 0;
+//           }
+//         }
+//       }
+//       &:last-child {
+//         padding-left: 0;
+//         .card:not(.card-raised){
+//           border-top-left-radius: 0;
+//           border-bottom-left-radius: 0;
+//         }
+//       }
+//     }
+//   }
+// }

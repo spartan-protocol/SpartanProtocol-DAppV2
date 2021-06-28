@@ -1,20 +1,13 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  MDBBtn,
-  MDBBtnGroup,
-  MDBCard,
-  MDBCol,
-  MDBRow,
-  MDBTooltip,
-} from 'mdb-react-ui-kit'
+import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { calcAPY } from '../../../utils/web3Utils'
-import downIcon from '../../../assets/icons/arrow-down-light.svg'
-import upIcon from '../../../assets/icons/arrow-up-light.svg'
+import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const PoolItem = ({ asset }) => {
   const { t } = useTranslation()
@@ -54,98 +47,163 @@ const PoolItem = ({ asset }) => {
     setShowDetails(!showDetails)
   }
 
+  const revenueTooltip = Tooltip(
+    t,
+    'revenue',
+    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+  )
+  const swapRevTooltip = Tooltip(
+    t,
+    'swapRevenue',
+    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+  )
+  const diviRevTooltip = Tooltip(
+    t,
+    'dividendRevenue',
+    poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
+  )
+
   return (
     <>
-      <MDBCol size="auto">
-        <MDBCard className="card-body card-320 pt-3 pb-2 card-underlay">
-          <MDBRow className="mb-2">
-            <MDBCol size="auto" className="pr-0">
+      <Col xs="auto">
+        <Card className="card-body card-320 pt-3 pb-2 card-underlay">
+          <Row className="mb-2">
+            <Col xs="auto" className="pr-0">
               <img src={token.symbolUrl} alt={token.symbol} height="50" />
-            </MDBCol>
-            <MDBCol size="auto">
+            </Col>
+            <Col xs="auto">
               <h3 className="mb-0">{token.symbol}</h3>
               <p className="text-sm-label-alt">
                 ${formatFromUnits(tokenValueUSD, 2)}
               </p>
-            </MDBCol>
-            <MDBCol className="text-right mt-1 p-0 pr-2">
+            </Col>
+            <Col className="text-end mt-2 p-0 pr-2">
+              <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
+                <span role="button">
+                  <Icon icon="info" className="me-1" size="17" fill="white" />
+                </span>
+              </OverlayTrigger>
               <p className="text-sm-label d-inline-block">APY</p>
-              <MDBTooltip
-                tag="i"
-                wrapperClass="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
-                title={t('apyInfo')}
-                placement="auto"
-              />
               <p className="output-card">{APY}%</p>
-            </MDBCol>
-            <MDBCol size="auto" className="text-right my-auto p-0 px-2">
-              <img
-                onClick={() => toggleCollapse()}
-                src={showDetails ? upIcon : downIcon}
-                alt={showDetails ? 'upIcon' : 'downIcon'}
-                className="swap-icon-color"
-                aria-hidden="true"
-                style={{
-                  cursor: 'pointer',
-                  height: '30px',
-                  width: '30px',
-                  top: '-15px',
-                }}
+            </Col>
+            <Col
+              xs="auto"
+              className="text-end my-auto p-0 px-2"
+              onClick={() => toggleCollapse()}
+              role="button"
+            >
+              <Icon
+                className=""
+                icon={showDetails ? 'arrowUp' : 'arrowDown'}
+                size="30"
               />
-            </MDBCol>
-          </MDBRow>
-          <MDBRow className="my-1">
-            <MDBCol size="auto" className="text-card">
+            </Col>
+          </Row>
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
               {t('spotPrice')}
-            </MDBCol>
-            <MDBCol className="text-right output-card">
+            </Col>
+            <Col className="text-end output-card">
               {formatFromUnits(tokenValueBase, 2)} SPARTA
-            </MDBCol>
-          </MDBRow>
+            </Col>
+          </Row>
+          {showDetails === true && <hr className="my-0" />}
 
-          <MDBRow className="my-1">
-            <MDBCol size="auto" className="text-card">
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
               {t('poolDepth')}
-            </MDBCol>
-            <MDBCol className="text-right output-card">
+            </Col>
+            <Col className="text-end output-card">
               ${formatFromWei(poolDepthUsd, 0)} USD
-            </MDBCol>
-          </MDBRow>
+            </Col>
+          </Row>
           {showDetails === true && (
             <>
-              <MDBRow className="my-1">
-                <MDBCol size="auto" className="text-card">
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  SPARTA
+                </Col>
+                <Col className="text-end output-card fw-light">
+                  {formatFromWei(baseAmount)}
+                </Col>
+              </Row>
+
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  {token.symbol}
+                </Col>
+                <Col className="text-end output-card fw-light">
+                  {formatFromWei(tokenAmount)}
+                </Col>
+              </Row>
+              <hr className="my-0" />
+            </>
+          )}
+
+          <Row className="my-1">
+            <Col xs="auto" className="text-card">
+              {t('revenue')}
+              <OverlayTrigger placement="auto" overlay={revenueTooltip}>
+                <span role="button">
+                  <Icon icon="info" className="ms-1" size="17" fill="white" />
+                </span>
+              </OverlayTrigger>
+            </Col>
+            <Col className="text-end output-card">
+              $
+              {lastMonthFees + lastMonthDivis > 0
+                ? formatFromWei(
+                    BN(lastMonthFees)
+                      .plus(lastMonthDivis)
+                      .times(web3?.spartaPrice),
+                    0,
+                  )
+                : formatFromWei(
+                    BN(recentFees).plus(recentDivis).times(web3?.spartaPrice),
+                    0,
+                  )}{' '}
+              USD
+            </Col>
+          </Row>
+          {showDetails === true && (
+            <>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
                   {t('fees')}
-                  <MDBTooltip
-                    tag="i"
-                    wrapperClass="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
-                    title={t('swapRevenue', {
-                      days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-                    })}
-                    placement="auto"
-                  />
-                </MDBCol>
-                <MDBCol className="text-right output-card">
+                  <OverlayTrigger placement="auto" overlay={swapRevTooltip}>
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Col>
+                <Col className="text-end output-card fw-light">
                   {lastMonthFees > 0
                     ? formatFromWei(lastMonthFees, 0)
                     : formatFromWei(recentFees, 0)}{' '}
                   SPARTA
-                </MDBCol>
-              </MDBRow>
+                </Col>
+              </Row>
 
-              <MDBRow className="my-1">
-                <MDBCol size="auto" className="text-card">
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
                   {t('dividends')}
-                  <MDBTooltip
-                    tag="i"
-                    wrapperClass="icon-extra-small icon-info icon-light ml-1 align-middle mb-1"
-                    title={t('dividendRevenue', {
-                      days: poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
-                    })}
-                    placement="auto"
-                  />
-                </MDBCol>
-                <MDBCol className="text-right output-card">
+                  <OverlayTrigger placement="auto" overlay={diviRevTooltip}>
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Col>
+                <Col className="text-end output-card fw-light">
                   {asset.curated === true &&
                     lastMonthDivis > 0 &&
                     `${formatFromWei(lastMonthDivis, 0)} SPARTA`}
@@ -153,33 +211,46 @@ const PoolItem = ({ asset }) => {
                     lastMonthDivis <= 0 &&
                     `${formatFromWei(recentDivis, 0)} SPARTA`}
                   {asset.curated === false && t('notCurated')}
-                </MDBCol>
-              </MDBRow>
+                </Col>
+              </Row>
+              <hr className="my-0" />
             </>
           )}
-          <MDBRow className="text-center mt-2">
-            <MDBBtnGroup size="sm">
-              <MDBBtn
+          <Row className="text-center mt-2">
+            <Col>
+              <Button
+                size="sm"
+                className="w-100 rounded-pill"
                 onClick={() =>
                   history.push(`/pools/swap?asset1=${tokenAddress}`)
                 }
               >
                 {t('swap')}
-              </MDBBtn>
-              <MDBBtn
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                size="sm"
+                className="w-100 rounded-pill"
                 onClick={() =>
                   history.push(`/pools/liquidity?asset1=${tokenAddress}`)
                 }
               >
                 {t('join')}
-              </MDBBtn>
-              <MDBBtn onClick={() => history.push('/vault')}>
+              </Button>
+            </Col>
+            <Col>
+              <Button
+                size="sm"
+                className="w-100 rounded-pill"
+                onClick={() => history.push('/vault')}
+              >
                 {t('stake')}
-              </MDBBtn>
-            </MDBBtnGroup>
-          </MDBRow>
-        </MDBCard>
-      </MDBCol>
+              </Button>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
     </>
   )
 }

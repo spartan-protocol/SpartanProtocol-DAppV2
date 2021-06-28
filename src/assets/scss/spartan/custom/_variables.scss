@@ -94,22 +94,23 @@ $colors: map-merge(
 $default-color-opacity: rgba(182, 182, 182, 0.6) !default;
 $orange-color: #f96332 !default;
 
-$default: #1d171f !default;
-$primary: #fb2715 !default;
-$secondary: #f4f5f7 !default;
-$success: #aacdff !default;
+$default: #25212D !default;
+$primary: #FB2715 !default;
+$secondary: #AACDFF !default;
+$success: #228B22 !default;
 $info: #403a4b !default;
-$warning: #fc5d50 !default;
-$danger: #25212d !default;
-$black: #1d171f !default;
+$warning: #B70000 !default;
+$danger: #d4630d !default;
+$black: #0A0001 !default;
 
 // gradient
-$default-states: #403a4b !default;
-$primary-states: #a32d5b !default;
-$success-states: #1a68ff !default;
+$default-states: #403A4B !default;
+$primary-states: #FC5D50 !default;
+$secondary-states: #C0DAFF !default;
+$success-states: #32CD32 !default;
 $info-states: #605e68 !default;
 $warning-states: #f5bc17 !default;
-$danger-states: #d4630d !default;
+$danger-states: #B70000 !default;
 $black-states: #1d171f !default;
 
 // background
@@ -271,8 +272,8 @@ $grid-breakpoints: (
   xl: 1200px,
 );
 
-@include _assert-ascending($grid-breakpoints, '$grid-breakpoints');
-@include _assert-starts-at-zero($grid-breakpoints);
+// @include _assert-ascending($grid-breakpoints, '$grid-breakpoints');
+// @include _assert-starts-at-zero($grid-breakpoints);
 
 // Grid containers
 //
@@ -404,7 +405,7 @@ $general-transition-time: 300ms !default;
 
 $font-family-base: 'Roboto', sans-serif !default;
 $font-family-alt: 'IBM Plex Sans', sans-serif !default;
-$font-family-headers: 'IBM Plex Sans';
+$font-family-headers: 'IBM Plex Sans', sans-serif !default;
 
 $font-size-dash: 0.875rem !default;
 
@@ -530,7 +531,7 @@ $input-btn-padding-x: 0.7rem !default;
 $input-btn-line-height: $shape-height-base !default;
 
 $input-btn-focus-width: 0 !default;
-$input-btn-focus-color: rgba($component-active-bg, 1);
+// $input-btn-focus-color: rgba($component-active-bg, 1);
 //$input-btn-focus-box-shadow:  0 4px 10px 0 rgba(0, 0, 0, 0.04);
 $input-btn-focus-box-shadow: none !default;
 
@@ -666,10 +667,10 @@ $custom-control-indicator-checked-color: $component-active-color !default;
 $custom-control-indicator-checked-bg: $component-active-bg !default;
 $custom-control-indicator-checked-border-color: $component-active-border-color !default;
 $custom-control-indicator-checked-box-shadow: $custom-control-indicator-box-shadow !default;
-$custom-control-indicator-checked-disabled-bg: rgba(
-  theme-color('primary'),
-  0.5
-);
+// $custom-control-indicator-checked-disabled-bg: rgba(
+//   theme-color('primary'),
+//   0.5
+// );
 
 $custom-control-indicator-disabled-bg: $gray-200 !default;
 $custom-control-label-disabled-color: $gray-600 !default;
@@ -742,7 +743,7 @@ $nav-pills-border-color: theme-color('primary') !default;
 $nav-pills-border-radius: $border-radius !default;
 
 $nav-pills-link-color: theme-color('primary') !default;
-$nav-pills-link-hover-color: darken(theme-color('primary'), 5%);
+// $nav-pills-link-hover-color: darken(theme-color('primary'), 5%);
 $nav-pills-link-active-color: color-yiq(theme-color('primary'));
 $nav-pills-link-active-bg: theme-color('primary') !default;
 $nav-pills-box-shadow: $btn-box-shadow !default;
@@ -836,7 +837,7 @@ $popover-font-size: $font-size-sm !default;
 $popover-bg: $white !default;
 $popover-max-width: 276px !default;
 $popover-border-width: 1px !default;
-$popover-border-color: rgba($black, 0.05);
+$popover-border-color: rgba($black, 0.5);
 $popover-border-radius: $border-radius-lg !default;
 $popover-box-shadow: 0px 0.5rem 2rem 0px rgba($black, 0.2);
 
@@ -986,10 +987,10 @@ $datepicker-active-background: theme-color('primary') !default;
 $datepicker-active-box-shadow: none !default;
 
 $datepicker-range-background: theme-color('primary') !default;
-$datepicker-range-cell-focused-background: darken(
-  $datepicker-range-background,
-  5%
-);
+// $datepicker-range-cell-focused-background: darken(
+//   $datepicker-range-background,
+//   5%
+// );
 $datepicker-range-color: $white !default;
 $datepicker-range-highlighted-bg: $gray-200 !default;
 

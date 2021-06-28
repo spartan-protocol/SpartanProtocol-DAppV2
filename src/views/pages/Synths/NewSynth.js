@@ -1,36 +1,29 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
-  Card,
-  CardBody,
+  Button,
+  Modal,
   Row,
   Col,
-  Button,
-  CardHeader,
-  CardTitle,
   InputGroup,
-  InputGroupText,
-  InputGroupAddon,
-  Input,
-  FormGroup,
-  CustomInput,
-} from 'reactstrap'
-import { useTranslation } from 'react-i18next'
-import { Modal } from 'react-bootstrap'
+  FormControl,
+  Form,
+} from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { ReactComponent as PlusIcon } from '../../../assets/icons/icon-plus.svg'
-import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
-import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../../store/synth'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import { Icon } from '../../../components/Icons/icons'
 
 const NewSynth = () => {
   const dispatch = useDispatch()
   const wallet = useWallet()
   const { t } = useTranslation()
+
+  const isLightMode = window.localStorage.getItem('theme')
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -77,115 +70,73 @@ const NewSynth = () => {
   return (
     <>
       <Button
-        className="align-self-center btn-sm btn-secondary"
+        variant={isLightMode ? 'secondary' : 'info'}
         onClick={() => setShowModal(true)}
+        className="rounded"
       >
         {t('synth')}
-        <PlusIcon fill="white" className="ml-2 mb-1" />
+        <Icon icon="plus" fill="white" size="20" className="ms-1" />
       </Button>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Card>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{t('newSynth')}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
           {network.chainId === 97 && (
             <>
-              <CardHeader>
-                <CardTitle tag="h2" />
-                <Row>
-                  <Col xs="10">
-                    <h2>{t('newSynth')}</h2>
-                  </Col>
-                  <Col xs="2">
-                    <Button
-                      style={{
-                        right: '16px',
-                      }}
-                      onClick={() => setShowModal(false)}
-                      className="btn btn-transparent"
-                    >
-                      <i className="icon-small icon-close" />
-                    </Button>
-                  </Col>
-                </Row>
-              </CardHeader>
+              <Modal.Title>Choose Synth Asset to Deploy</Modal.Title>
 
-              <Row className="card-body py-1">
-                <Col xs="12">
-                  <Card className="card-share">
-                    <CardBody className="py-3">
-                      <h4 className="card-title">
-                        Choose Synth Asset to Deploy
-                      </h4>
-                      <Row>
-                        <Col xs="12">
-                          <AssetSelect handleAddrChange={handleAddrChange} />
+              <AssetSelect handleAddrChange={handleAddrChange} />
 
-                          <InputGroup>
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>Address</InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              id="addrInput"
-                              placeholder="0x..."
-                              type="text"
-                              inputMode="decimal"
-                              pattern="^[0-9]*[.,]?[0-9]*$"
-                              autoComplete="off"
-                              autoCorrect="off"
-                              disabled
-                              value={inputAddress}
-                            />
-                            <InputGroupAddon addonType="append">
-                              <InputGroupText className="p-1">
-                                {addrValid ? (
-                                  <ValidIcon
-                                    fill="green"
-                                    height="30"
-                                    width="30"
-                                  />
-                                ) : (
-                                  <InvalidIcon
-                                    fill="red"
-                                    height="30"
-                                    width="30"
-                                  />
-                                )}
-                              </InputGroupText>
-                            </InputGroupAddon>
-                          </InputGroup>
-                        </Col>
-                      </Row>
-                    </CardBody>
-                  </Card>
-                  <FormGroup>
-                    <div className="text-center">
-                      <CustomInput
-                        type="switch"
-                        id="inputConfirmFee"
-                        label="Pay gas to deploy Synth BEP20"
-                        checked={feeConfirm}
-                        onChange={() => setfeeConfirm(!feeConfirm)}
-                      />
-                    </div>
-                  </FormGroup>
-                </Col>
-              </Row>
+              <InputGroup>
+                <InputGroup.Text>Address</InputGroup.Text>
+                <FormControl
+                  id="addrInput"
+                  placeholder="0x..."
+                  type="number"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  disabled
+                  value={inputAddress}
+                  isValid={addrValid}
+                  isInvalid={!addrValid}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Only listed pools that are also curated are able to be
+                  deployed as a synthetic asset
+                </Form.Control.Feedback>
+              </InputGroup>
 
-              <Row className="card-body">
-                <Col xs="12" className="hide-if-prior-sibling">
-                  <Button
-                    block
-                    className="btn-fill btn-primary"
-                    disabled={!feeConfirm || !addrValid}
-                    onClick={() => handleSubmit()}
-                  >
-                    {t('confirm')}
-                  </Button>
-                </Col>
-              </Row>
+              <Form className="mb-0">
+                <span className="output-card">
+                  Pay gas to deploy Synth BEP20
+                  <Form.Check
+                    type="switch"
+                    id="inputConfirmFee"
+                    className="ms-2 d-inline-flex"
+                    checked={feeConfirm}
+                    onChange={() => setfeeConfirm(!feeConfirm)}
+                  />
+                </span>
+              </Form>
             </>
           )}
-        </Card>
-        {network.chainId !== 97 && <WrongNetwork />}
+          {network.chainId !== 97 && <WrongNetwork />}
+        </Modal.Body>
+        <Modal.Footer>
+          <Row className="card-body">
+            <Col xs="12" className="hide-if-prior-sibling">
+              <Button
+                className="w-100"
+                disabled={!feeConfirm || !addrValid}
+                onClick={() => handleSubmit()}
+              >
+                {t('confirm')}
+              </Button>
+            </Col>
+          </Row>
+        </Modal.Footer>
       </Modal>
     </>
   )

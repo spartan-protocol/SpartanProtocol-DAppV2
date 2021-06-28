@@ -25,13 +25,13 @@ export const proposalTypes = [
   },
   {
     value: 'ADD_CURATED_POOL',
-    label: 'Pools: Add To Curated',
+    label: 'Pools: Add Curated',
     desc: 'Add to the curated list:',
     type: 'Address',
   },
   {
     value: 'REMOVE_CURATED_POOL',
-    label: 'Pools: Remove From Curated',
+    label: 'Pools: Remove Curated',
     desc: 'Remove from the curated list:',
     type: 'Address',
   },
