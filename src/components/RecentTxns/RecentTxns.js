@@ -12,37 +12,14 @@ const RecentTxns = () => {
   const pool = usePool()
   const addr = getAddresses()
   const { t } = useTranslation()
+
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-  // const [selectedFilter, setselectedFilter] = useState(false)
-
-  // const handleFilter = (formFilter) => {
-  //   setselectedFilter(formFilter)
-  // }
 
   return (
     <>
-      {/* <Row> */}
-      {/* <Col>
-          <FormGroup>
-            <Input
-              type="select"
-              name="select"
-              id="exampleSelect"
-              onChange={(event) => handleFilter(event.target.value)}
-            >
-              <option>User</option>
-              <option>Router</option>
-              <option>Dao</option>
-            </Input>
-          </FormGroup>
-        </Col> */}
-      {/* <Col>
-          <h4>Recent Txns</h4>
-        </Col> */}
-      {/* </Row> */}
       <Row>
-        <Table borderless className="m-3">
+        <Table borderless striped className="m-3">
           <thead className="text-primary text-center">
             <tr>
               <th>{t('block')}</th>
@@ -57,7 +34,10 @@ const RecentTxns = () => {
               web3.eventArray
                 ?.filter((e) => e.event !== 'Transfer')
                 .map((txn) => (
-                  <tr key={txn.transactionHash + txn.event + txn.logIndex}>
+                  <tr
+                    key={txn.transactionHash + txn.event + txn.logIndex}
+                    className="text-center"
+                  >
                     <td>{txn.blockNumber}</td>
                     <td>{txn.event}</td>
                     <td>

@@ -84,7 +84,7 @@ const Providers = () => {
       >
         <BrowserRouter>
           <Switch>
-            <Route path="/" render={() => <Common />} />
+            <Route path="/" component={Common} />
             <Redirect from="/" to="/home" />
           </Switch>
         </BrowserRouter>

@@ -57,7 +57,6 @@ const Overview = () => {
 
   const [recentTxns, setrecentTxns] = useState([])
   const [bnbPrice, setbnbPrice] = useState(0)
-  const [trigger1, settrigger1] = useState(0)
   const getHoldings = async () => {
     dispatch(communityWalletHoldings(wallet.account ? wallet : ''))
     const _bnbPrice = await axios.get(
@@ -121,16 +120,9 @@ ethereum(network: $network){
     }
   }
   useEffect(() => {
-    if (trigger1 === 0) {
-      getHoldings()
-    }
-    const timer = setTimeout(() => {
-      getHoldings()
-      settrigger1(trigger1 + 1)
-    }, 10000)
-    return () => clearTimeout(timer)
+    getHoldings()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1, wallet.account])
+  }, [])
 
   const [totalUSD, settotalUSD] = useState(0)
   useEffect(() => {
@@ -164,7 +156,7 @@ ethereum(network: $network){
   const [progColor, setprogColor] = useState('primary')
   useEffect(() => {
     let _progColor = 'primary'
-    if (totalWidth >= 80) {
+    if (totalWidth >= 96) {
       _progColor = 'green'
     } else if (totalWidth >= 30) {
       _progColor = 'info'
@@ -265,10 +257,10 @@ ethereum(network: $network){
                     in the next available slot.
                     <br />
                     The scope of contracts to be audited has a recommended
-                    bounty requirement of $80k USD. Being a community built and
+                    bounty requirement of $96K USD. Being a community built and
                     run project; there is a drive to crowdfund the bounty. The
                     audit will go ahead whether or not the target is reached,
-                    but raising $80k will ensure the entire suite of contracts
+                    but raising $96K will ensure the entire suite of contracts
                     are audited!
                     <br />
                     <div className="output-card mt-2">
