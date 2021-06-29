@@ -13,9 +13,6 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
-import { ReactComponent as BnbIcon } from '../../../assets/icons/bnbb.svg'
-import { ReactComponent as BusdIcon } from '../../../assets/icons/busd.svg'
-import { ReactComponent as UsdtIcon } from '../../../assets/icons/USDT.svg'
 import {
   formatShortString,
   getNetwork,
@@ -27,6 +24,7 @@ import { BN, convertToWei, formatFromWei } from '../../../utils/bigNumber'
 import { useWeb3 } from '../../../store/web3/selector'
 import { getTokenContract } from '../../../utils/web3Contracts'
 import { apiUrlBQ, getExplorerWallet, headerBQ } from '../../../utils/extCalls'
+import { Icon } from '../../../components/Icons/icons'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -322,7 +320,7 @@ ethereum(network: $network){
                           role="button"
                         >
                           <Col xs="auto" className="pr-0">
-                            <BnbIcon height="35" width="35" />
+                            <Icon icon="bnb" size="35" />
                           </Col>
                           <Col>
                             <Row>
@@ -348,7 +346,7 @@ ethereum(network: $network){
                           role="button"
                         >
                           <Col xs="auto" className="pr-0">
-                            <BusdIcon height="35" width="35" />
+                            <Icon icon="busd" size="35" />
                           </Col>
                           <Col>
                             <Row>
@@ -373,7 +371,7 @@ ethereum(network: $network){
                           role="button"
                         >
                           <Col xs="auto" className="pr-0">
-                            <UsdtIcon height="35" width="35" />
+                            <Icon icon="usdt" size="35" />
                           </Col>
                           <Col>
                             <Row>
@@ -449,13 +447,13 @@ ethereum(network: $network){
                     <Row key={i.transaction.hash} className="my-2">
                       <Col xs="auto" className="pr-0">
                         {i.currency.symbol === 'BNB' && (
-                          <BnbIcon height="35" width="35" />
+                          <Icon icon="bnb" size="35" />
                         )}
                         {i.currency.symbol === 'BUSD' && (
-                          <BusdIcon height="35" width="35" />
+                          <Icon icon="busd" size="35" />
                         )}
                         {i.currency.symbol === 'USDT' && (
-                          <UsdtIcon height="35" width="35" />
+                          <Icon icon="usdt" size="35" />
                         )}
                       </Col>
                       <Col>

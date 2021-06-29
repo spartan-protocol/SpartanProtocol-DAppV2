@@ -7,8 +7,8 @@ import { usePool } from '../../store/pool'
 import { watchAsset } from '../../store/web3'
 import { formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
-import walletTypes from './walletTypes'
-import spartaIcon from '../../assets/img/spartan_lp.svg'
+import { Icon } from '../Icons/icons'
+import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 
 const LPs = () => {
   const { t } = useTranslation()
@@ -78,11 +78,10 @@ const LPs = () => {
                 alt={getToken(asset.tokenAddress)?.name}
               />
               <img
+                src={spartaLpIcon}
                 height="20px"
-                src={spartaIcon}
-                alt="SPARTA"
-                className="position-absolute"
-                style={{ left: '28px', top: '18px' }}
+                className="token-badge"
+                alt={`${getToken(asset.tokenAddress)?.symbol} LP token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
@@ -100,7 +99,7 @@ const LPs = () => {
               <Row>
                 <Col xs="6" className="mt-1">
                   <ShareLink url={asset.address} notificationLocation="tc">
-                    <i className="icon-small icon-copy align-middle" />
+                    <Icon icon="copy" role="button" size="24" />
                   </ShareLink>
                 </Col>
                 {getWalletType() && (
@@ -120,15 +119,9 @@ const LPs = () => {
                         }}
                       >
                         {getWalletType() === 'MM' ? (
-                          <i className="icon-small icon-metamask icon-light" />
+                          <Icon icon="metamask" role="button" size="24" />
                         ) : (
-                          <img
-                            src={
-                              walletTypes.filter((x) => x.id === 'TW')[0]?.icon
-                            }
-                            alt="TrustWallet icon"
-                            height="24"
-                          />
+                          <Icon icon="trustwallet" role="button" size="24" />
                         )}
                       </div>
                     </a>
@@ -153,11 +146,10 @@ const LPs = () => {
                 alt={getToken(asset.tokenAddress)?.name}
               />
               <img
+                src={spartaLpIcon}
                 height="20px"
-                src={spartaIcon}
-                alt="SPARTA"
-                className="position-absolute"
-                style={{ left: '28px', top: '18px' }}
+                className="token-badge"
+                alt={`${getToken(asset.tokenAddress)?.symbol} LP token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
@@ -175,7 +167,7 @@ const LPs = () => {
               <Row>
                 <Col xs="6" className="mt-1">
                   <ShareLink url={asset.address} notificationLocation="tc">
-                    <i className="icon-small icon-copy align-middle" />
+                    <Icon icon="copy" role="button" size="24" />
                   </ShareLink>
                 </Col>
                 {getWalletType() && (
@@ -195,15 +187,9 @@ const LPs = () => {
                         }}
                       >
                         {getWalletType() === 'MM' ? (
-                          <i className="icon-small icon-metamask icon-light" />
+                          <Icon icon="metamask" role="button" size="24" />
                         ) : (
-                          <img
-                            src={
-                              walletTypes.filter((x) => x.id === 'TW')[0]?.icon
-                            }
-                            alt="TrustWallet icon"
-                            height="24"
-                          />
+                          <Icon icon="trustwallet" role="button" size="24" />
                         )}
                       </div>
                     </a>
@@ -228,11 +214,10 @@ const LPs = () => {
                 alt={getToken(asset.tokenAddress)?.name}
               />
               <img
+                src={spartaLpIcon}
                 height="20px"
-                src={spartaIcon}
-                alt="SPARTA"
-                className="position-absolute"
-                style={{ left: '28px', top: '18px' }}
+                className="token-badge"
+                alt={`${getToken(asset.tokenAddress)?.symbol} LP token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
@@ -250,7 +235,7 @@ const LPs = () => {
               <Row>
                 <Col xs="6" className="mt-1">
                   <ShareLink url={asset.address} notificationLocation="tc">
-                    <i className="icon-small icon-copy align-middle" />
+                    <Icon icon="copy" role="button" size="24" />
                   </ShareLink>
                 </Col>
                 {getWalletType() && (
@@ -270,15 +255,9 @@ const LPs = () => {
                         }}
                       >
                         {getWalletType() === 'MM' ? (
-                          <i className="icon-small icon-metamask icon-light" />
+                          <Icon icon="metamask" role="button" size="24" />
                         ) : (
-                          <img
-                            src={
-                              walletTypes.filter((x) => x.id === 'TW')[0]?.icon
-                            }
-                            alt="TrustWallet icon"
-                            height="24"
-                          />
+                          <Icon icon="trustwallet" role="button" size="24" />
                         )}
                       </div>
                     </a>

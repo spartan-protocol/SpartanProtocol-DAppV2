@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Row, Col, OverlayTrigger } from 'react-bootstrap'
-import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { formatFromWei, formatFromUnits, BN } from '../../../utils/bigNumber'
@@ -68,7 +67,7 @@ const SwapPair = ({ assetSwap }) => {
           <Row className="my-2">
             <Col xs="auto">
               <div className="output-card">
-                <img className="me-2" src={coinSparta} alt="Logo" height="32" />
+                <Icon icon="spartav2" size="32" className="me-2" />
                 SPARTA
               </div>
             </Col>

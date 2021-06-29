@@ -23,10 +23,7 @@ import {
 } from '../../utils/bigNumber'
 import { getExplorerContract } from '../../utils/extCalls'
 import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
-import { ReactComponent as FireIcon } from '../../assets/icons/fire.svg'
-import { ReactComponent as DownIcon } from '../../assets/icons/arrow-down.svg'
-import { ReactComponent as ContractIcon } from '../../assets/icons/icon-contratcs.svg'
-import { ReactComponent as OpenIcon } from '../../assets/icons/scan.svg'
+import { Icon } from '../Icons/icons'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -144,11 +141,16 @@ const Supply = () => {
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
       >
-        <DownIcon fill={isLightMode ? 'black' : 'white'} className="me-1" />$
-        {formatFromUnits(web3.spartaPrice, 2)}
-        <FireIcon
-          height={feeIconActive ? '16' : '15'}
-          width="15"
+        <Icon
+          icon="arrowDown"
+          fill={isLightMode ? 'black' : 'white'}
+          className="me-1"
+          size="15"
+        />
+        ${formatFromUnits(web3.spartaPrice, 2)}
+        <Icon
+          icon="fire"
+          size={feeIconActive ? '16' : '15'}
           fill={feeIconActive ? 'red' : isLightMode ? 'black' : 'white'}
           className="ms-1 mb-1"
         />
@@ -317,8 +319,9 @@ const Supply = () => {
                 <Accordion>
                   <Accordion.Item eventKey="0">
                     <Accordion.Header>
-                      <ContractIcon
-                        height="20"
+                      <Icon
+                        icon="contract"
+                        size="20"
                         fill="#fb2715"
                         className="me-2"
                       />
@@ -339,7 +342,11 @@ const Supply = () => {
                                   <Badge bg="info" className="w-100">
                                     {t(c)}
                                     <br />
-                                    <OpenIcon height="12" className="mt-1" />
+                                    <Icon
+                                      icon="scan"
+                                      size="12"
+                                      className="mt-1"
+                                    />
                                   </Badge>
                                 </h6>
                               </a>

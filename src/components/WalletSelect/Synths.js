@@ -7,9 +7,9 @@ import { usePool } from '../../store/pool'
 import { watchAsset } from '../../store/web3'
 import { formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
-import walletTypes from './walletTypes'
-import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth'
+import { Icon } from '../Icons/icons'
+import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 
 const Synths = () => {
   const { t } = useTranslation()
@@ -82,11 +82,12 @@ const Synths = () => {
                     alt={getToken(asset.tokenAddress)?.name}
                   />
                   <img
+                    src={spartaSynthIcon}
                     height="20px"
-                    src={spartaIconAlt}
-                    alt="SPARTA"
-                    className="position-absolute"
-                    style={{ left: '28px', top: '18px' }}
+                    className="token-badge"
+                    alt={`${
+                      getToken(asset.tokenAddress)?.symbol
+                    } synth token icon`}
                   />
                 </Col>
 
@@ -107,7 +108,7 @@ const Synths = () => {
                   <Row>
                     <Col xs="6" className="mt-1">
                       <ShareLink url={asset.address} notificationLocation="tc">
-                        <i className="icon-small icon-copy align-middle" />
+                        <Icon icon="copy" role="button" size="24" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
@@ -127,15 +128,12 @@ const Synths = () => {
                             }}
                           >
                             {getWalletType() === 'MM' ? (
-                              <i className="icon-small icon-metamask icon-light ml-2" />
+                              <Icon icon="metamask" role="button" size="24" />
                             ) : (
-                              <img
-                                src={
-                                  walletTypes.filter((x) => x.id === 'TW')[0]
-                                    ?.icon
-                                }
-                                alt="TrustWallet icon"
-                                height="24"
+                              <Icon
+                                icon="trustwallet"
+                                role="button"
+                                size="24"
                               />
                             )}
                           </div>
@@ -165,11 +163,10 @@ const Synths = () => {
                 alt={getToken(asset.tokenAddress)?.name}
               />
               <img
+                src={spartaSynthIcon}
                 height="20px"
-                src={spartaIconAlt}
-                alt="SPARTA"
-                className="position-absolute"
-                style={{ left: '28px', top: '18px' }}
+                className="token-badge"
+                alt={`${getToken(asset.tokenAddress)?.symbol} synth token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
@@ -187,7 +184,7 @@ const Synths = () => {
               <Row>
                 <Col xs="6" className="mt-1">
                   <ShareLink url={asset.address} notificationLocation="tc">
-                    <i className="icon-small icon-copy align-middle" />
+                    <Icon icon="copy" role="button" size="24" />
                   </ShareLink>
                 </Col>
                 {getWalletType() && (
@@ -207,15 +204,9 @@ const Synths = () => {
                         }}
                       >
                         {getWalletType() === 'MM' ? (
-                          <i className="icon-small icon-metamask icon-light ml-2" />
+                          <Icon icon="metamask" role="button" size="24" />
                         ) : (
-                          <img
-                            src={
-                              walletTypes.filter((x) => x.id === 'TW')[0]?.icon
-                            }
-                            alt="TrustWallet icon"
-                            height="24"
-                          />
+                          <Icon icon="trustwallet" role="button" size="24" />
                         )}
                       </div>
                     </a>

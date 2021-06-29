@@ -28,8 +28,8 @@ import { addLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
-import coinSparta from '../../../assets/icons/coin_sparta.svg'
 import { useSparta } from '../../../store/sparta'
+import { Icon } from '../../../components/Icons/icons'
 
 const EmptyPools = (props) => {
   const { t } = useTranslation()
@@ -286,7 +286,7 @@ const EmptyPools = (props) => {
                         onKeyPress={() => clearInputs(1)}
                         onClick={() => clearInputs(1)}
                       >
-                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
+                        <Icon icon="close" />
                       </InputGroup.Text>
                     </InputGroup>
                   </Col>
@@ -352,7 +352,7 @@ const EmptyPools = (props) => {
                         onKeyPress={() => clearInputs(2)}
                         onClick={() => clearInputs(2)}
                       >
-                        <i className="icon-search-bar icon-mini icon-close icon-light my-auto" />
+                        <Icon icon="close" />
                       </InputGroup.Text>
                     </InputGroup>
                     <div className="text-right text-sm-label">
@@ -497,7 +497,7 @@ const EmptyPools = (props) => {
           <Row className="my-2">
             <Col xs="auto">
               <div className="output-card">
-                <img className="mr-2" src={coinSparta} alt="Logo" height="32" />
+                <Icon icon="sparta" className="mr-2" size="32" />
                 SPARTA
               </div>
             </Col>

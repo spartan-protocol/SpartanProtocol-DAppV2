@@ -16,7 +16,7 @@ import {
   calcSwapOutput,
 } from '../../../utils/web3Utils'
 import { useSparta } from '../../../store/sparta/selector'
-import spartaIconAlt from '../../../assets/img/spartan_synth.svg'
+import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
 import { Icon } from '../../../components/Icons/icons'
 

@@ -21,12 +21,10 @@ import {
 } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
 import { isAppleDevice } from '../../utils/helpers'
-import iosIcon from '../../assets/icons/apple-ios.svg'
 import Assets from './Assets'
 import LPs from './LPs'
 import Synths from './Synths'
-import { ReactComponent as OpenIcon } from '../../assets/icons/scan.svg'
-import { ReactComponent as DiscIcon } from '../../assets/icons/wallet-red.svg'
+import { Icon } from '../Icons/icons'
 
 const WalletSelect = (props) => {
   const wallet = useWallet()
@@ -148,7 +146,12 @@ const WalletSelect = (props) => {
                     <span className="output-card">
                       {formatShortString(wallet.account)}
                       <ShareLink url={wallet.account} notificationLocation="tc">
-                        <i className="icon-small icon-copy ms-2" />
+                        <Icon
+                          icon="copy"
+                          className="ms-2 mb-1"
+                          size="18"
+                          role="button"
+                        />
                       </ShareLink>
                     </span>
                   </>
@@ -208,16 +211,7 @@ const WalletSelect = (props) => {
                   >
                     <Row>
                       <Col xs="3">
-                        <div className="float-end">
-                          {x.icon.map((i) => (
-                            <img
-                              key={`${x.id}icon${i}`}
-                              src={i}
-                              height="35"
-                              alt={`${x.id}-wallet-icon`}
-                            />
-                          ))}
-                        </div>
+                        <div className="float-end">{x.icon}</div>
                       </Col>
                       <Col xs="9">
                         <div className="float-start mt-1">
@@ -237,7 +231,7 @@ const WalletSelect = (props) => {
                   >
                     <Row>
                       <Col xs="2" className="float-right">
-                        <img src={iosIcon} height="40" alt="apple icon" />
+                        <Icon icon="apple" size="40" />
                       </Col>
                       <Col xs="10" className="float-left">
                         Apple iOS devices click here to enable the TrustWallet
@@ -287,7 +281,7 @@ const WalletSelect = (props) => {
             variant="primary"
           >
             {t('viewBscScan')}{' '}
-            <OpenIcon height="16" fill="white" className="mb-1" />
+            <Icon icon="scan" size="16" fill="white" className="mb-1" />
           </Button>
           <Button
             size="sm"
@@ -297,7 +291,7 @@ const WalletSelect = (props) => {
             }}
           >
             {t('disconnect')}
-            <DiscIcon height="17" fill="white" className="mb-1" />
+            <Icon icon="walletRed" size="17" fill="white" className="mb-1" />
           </Button>
         </Modal.Footer>
       </Modal>

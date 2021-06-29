@@ -168,7 +168,6 @@ const LanguageDropdown = () => {
         ref={target}
       >
         <img src={flag} alt="flag" className="icon-small" />
-        {/* <i className="icon-small icon-lang icon-dark mt-2" /> */}
       </Button>
       <Overlay
         target={target.current}

@@ -1,13 +1,10 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Nav, Navbar, Offcanvas } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LinkContainer } from 'react-router-bootstrap'
-import { ReactComponent as NavOpenIcon } from '../../assets/icons/icon-menu-open.svg'
-import { ReactComponent as NavClosedIcon } from '../../assets/icons/icon-menu-closed.svg'
-import { ReactComponent as SpartanLogo } from '../../assets/img/logo.svg'
 import { routes } from '../../routes'
+import { Icon } from '../Icons/icons'
 
 const Sidebar = () => {
   const [navOpen, setnavOpen] = useState(false)
@@ -27,40 +24,48 @@ const Sidebar = () => {
     <>
       {navOpen ? (
         <>
-          <NavOpenIcon
-            fill={isLightMode ? 'black' : 'white'}
-            role="button"
-            onClick={closeNav}
-          />
+          <span role="button" onClick={closeNav} aria-hidden="true">
+            <Icon
+              icon="menuOpen"
+              fill={isLightMode ? 'black' : 'white'}
+              size="24"
+            />
+          </span>
         </>
       ) : (
-        <NavClosedIcon
-          fill={isLightMode ? 'black' : 'white'}
-          role="button"
-          onClick={openNav}
-        />
+        <span role="button" onClick={openNav} aria-hidden="true">
+          <Icon
+            icon="menuClose"
+            fill={isLightMode ? 'black' : 'white'}
+            size="24"
+          />
+        </span>
       )}
       <Offcanvas show={navOpen} placement="start" onHide={closeNav}>
         <Offcanvas.Header closeButton>
           {navOpen ? (
             <>
-              <NavOpenIcon
-                fill={isLightMode ? 'black' : 'white'}
-                role="button"
-                onClick={closeNav}
-              />
+              <span role="button" onClick={closeNav} aria-hidden="true">
+                <Icon
+                  icon="menuOpen"
+                  fill={isLightMode ? 'black' : 'white'}
+                  size="24"
+                />
+              </span>
             </>
           ) : (
-            <NavClosedIcon
-              fill={isLightMode ? 'black' : 'white'}
-              role="button"
-              onClick={openNav}
-            />
+            <span role="button" onClick={openNav} aria-hidden="true">
+              <Icon
+                icon="menuClose"
+                fill={isLightMode ? 'black' : 'white'}
+                size="24"
+              />
+            </span>
           )}
           <Offcanvas.Title className="ms-2">
             {' '}
             <Link to="/" className="navbar-brand ms-2" onClick={closeNav}>
-              <SpartanLogo className="my-auto" />
+              <Icon icon="spartav2" className="my-auto" />
               <Navbar.Brand className="ms-2">Spartan Protocol</Navbar.Brand>
             </Link>
           </Offcanvas.Title>
@@ -74,10 +79,10 @@ const Sidebar = () => {
                   <LinkContainer to={route.path}>
                     <Nav.Link eventKey={route.path} onClick={closeNav}>
                       <div>
-                        <route.icon
-                          height="30"
-                          width="30"
+                        <Icon
+                          icon={route.icon}
                           fill={isLightMode ? 'black' : 'white'}
+                          size="24"
                         />
                         <span className="ms-2">{t(route.name)}</span>
                       </div>

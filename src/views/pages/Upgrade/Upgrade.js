@@ -11,9 +11,9 @@ import {
   fallenSpartansClaim,
   spartaUpgrade,
 } from '../../../store/sparta/actions'
-import spartaIcon from '../../../assets/icons/coin_sparta_black_bg.svg'
 import { calcFeeBurn } from '../../../utils/web3Utils'
 import { getTokenContract } from '../../../utils/web3Contracts'
+import { Icon } from '../../../components/Icons/icons'
 
 const Upgrade = () => {
   const addr = getAddresses()
@@ -107,7 +107,7 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 {t('input')}
               </Col>
-              <Col className="text-end text-sm-label-wht">
+              <Col className="text-end output-card">
                 {formatFromWei(oldSpartaBalance)} SPARTAv1
               </Col>
             </Row>
@@ -115,7 +115,7 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 {t('output')}
               </Col>
-              <Col className="text-end text-sm-label-wht">
+              <Col className="text-end output-card">
                 {formatFromWei(oldSpartaBalance)} SPARTAv2
               </Col>
             </Row>
@@ -158,7 +158,7 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 {t('claim')}
               </Col>
-              <Col className="text-end text-sm-label-wht">
+              <Col className="text-end output-card">
                 {sparta.globalDetails.feeOnTransfer > 0
                   ? formatFromWei(getClaimAmount())
                   : 'Loading'}{' '}
@@ -169,7 +169,7 @@ const Upgrade = () => {
               <Col xs="auto" className="text-card">
                 {t('expiry')}
               </Col>
-              <Col className="text-end text-sm-label-wht">
+              <Col className="text-end output-card">
                 {formatDate(getExpiry())}
               </Col>
             </Row>
@@ -207,12 +207,7 @@ const Upgrade = () => {
             <Col>
               <h3 className="mb-0">
                 {t('yourBalance')}
-                <img
-                  height="35"
-                  src={spartaIcon}
-                  alt="sparta icon"
-                  className="float-end"
-                />
+                <Icon icon="spartav2" className="float-end" size="35" />
               </h3>
 
               <span className="subtitle-label">{t('balanceSubtitle')}</span>
@@ -220,7 +215,7 @@ const Upgrade = () => {
                 <Col xs="auto" className="text-card">
                   {t('balance')}
                 </Col>
-                <Col className="text-end text-sm-label-wht">
+                <Col className="text-end output-card">
                   {formatFromWei(oldSpartaBalance)} SPARTAv1
                 </Col>
               </Row>
@@ -228,7 +223,7 @@ const Upgrade = () => {
                 <Col xs="auto" className="text-card">
                   {t('balance')}
                 </Col>
-                <Col className="text-end text-sm-label-wht">
+                <Col className="text-end output-card">
                   {formatFromWei(newSpartaBalance)} SPARTAv2
                 </Col>
               </Row>
