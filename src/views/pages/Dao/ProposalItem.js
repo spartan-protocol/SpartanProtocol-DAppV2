@@ -260,7 +260,7 @@ const ProposalItem = ({ proposal }) => {
                   <Col className="text-right output-card">
                     {getSecondsCancel()[0] > 0
                       ? getSecondsCancel()[0] + getSecondsCancel()[1]
-                      : 'right now'}
+                      : 'Right now'}
                   </Col>
                 </Row>
 
