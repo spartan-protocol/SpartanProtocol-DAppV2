@@ -7,7 +7,7 @@ import { Row, Col, Card, Button } from 'react-bootstrap'
 import { claimForMember } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
-import spartaIcon from '../../../assets/img/spartan_lp.svg'
+import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { Icon } from '../../../components/Icons/icons'
 
 const BondItem = ({ asset }) => {

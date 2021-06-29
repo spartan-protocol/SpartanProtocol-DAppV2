@@ -27,22 +27,11 @@ import PU from './views/pages/PU/Overview'
 // import Share from './views/pages/Samples/Share'
 // import SearchModal from './views/pages/Samples/SearchModal'
 
-// ** ICONS **
-import { ReactComponent as HomeIcon } from './assets/icons/icon-home.svg'
-import { ReactComponent as SwordIcon } from './assets/icons/icon-menu-sword.svg'
-import { ReactComponent as SwordsIcon } from './assets/icons/icon-menu-swords.svg'
-import { ReactComponent as SynthsIcon } from './assets/icons/icon-synths.svg'
-import { ReactComponent as HelmetIcon } from './assets/icons/icon-menu-helmet.svg'
-import { ReactComponent as VaultIcon } from './assets/icons/icon-vault.svg'
-import { ReactComponent as ColosseumIcon } from './assets/icons/icon-menu-colosseum.svg'
-import { ReactComponent as UpgradeIcon } from './assets/icons/icon-upgrade.svg'
-import { ReactComponent as ListIcon } from './assets/icons/list.svg'
-
 export const routes = [
   {
     path: '/home',
     name: 'overview',
-    icon: HomeIcon,
+    icon: 'home',
     component: Home,
     layout: '',
   },
@@ -50,7 +39,7 @@ export const routes = [
   {
     path: '/pools/liquidity',
     name: 'liquidity',
-    icon: SwordIcon,
+    icon: 'sword',
     component: Liquidity,
     layout: '',
   },
@@ -58,7 +47,7 @@ export const routes = [
   {
     path: '/pools/swap',
     name: 'swap',
-    icon: SwordsIcon,
+    icon: 'swords',
     component: Swap,
     layout: '',
   },
@@ -66,7 +55,7 @@ export const routes = [
   {
     path: '/synths',
     name: 'synths',
-    icon: SynthsIcon,
+    icon: 'synth',
     component: Synths,
     layout: '',
   },
@@ -74,7 +63,7 @@ export const routes = [
   {
     path: '/bond',
     name: 'bond',
-    icon: HelmetIcon,
+    icon: 'helmet',
     component: Bond,
     layout: '',
   },
@@ -82,7 +71,7 @@ export const routes = [
   {
     path: '/vault',
     name: 'vault',
-    icon: VaultIcon,
+    icon: 'vault',
     component: Vault,
     layout: '',
   },
@@ -90,7 +79,7 @@ export const routes = [
   {
     path: '/dao',
     name: 'dao',
-    icon: ColosseumIcon,
+    icon: 'colosseum',
     component: Dao,
     layout: '',
   },
@@ -98,7 +87,7 @@ export const routes = [
   {
     path: '/upgrade',
     name: 'upgrade',
-    icon: UpgradeIcon,
+    icon: 'upgrade',
     component: Upgrade,
     layout: '',
   },
@@ -106,7 +95,7 @@ export const routes = [
   {
     path: '/codearena',
     name: 'codeArena',
-    icon: ListIcon,
+    icon: 'list',
     component: CodeArena,
     layout: '',
   },

@@ -3,10 +3,7 @@ import { Modal, Button, Card, Row, Col } from 'react-bootstrap'
 import { TwitterShareButton, TwitterIcon } from 'react-share'
 import { useTranslation } from 'react-i18next'
 import ShareLink from './ShareLink'
-import CopyIcon from '../../assets/icons/icon-copy.svg'
 import { usePool } from '../../store/pool'
-import spartaLpIcon from '../../assets/img/spartan_lp.svg'
-import spartaSynthIcon from '../../assets/img/spartan_synth.svg'
 import { Icon } from '../Icons/icons'
 
 const Share = () => {
@@ -103,25 +100,17 @@ const Share = () => {
                     className="mx-2"
                   />
                   {assetType1 === 'synth' && (
-                    <img
-                      height="20px"
-                      src={spartaSynthIcon}
-                      alt={`${
-                        getToken(asset1?.tokenAddress)?.symbol
-                      } synth icon`}
-                      className="position-absolute"
-                      style={{ left: '45px', bottom: '-2px' }}
+                    <Icon
+                      icon="spartaSynth"
+                      size="20"
+                      className="token-badge-share"
                     />
                   )}
                   {assetType1 === 'pool' && (
-                    <img
-                      height="20px"
-                      src={spartaLpIcon}
-                      alt={`${
-                        getToken(asset1?.tokenAddress)?.symbol
-                      } synth icon`}
-                      className="position-absolute"
-                      style={{ left: '45px', bottom: '-2px' }}
+                    <Icon
+                      icon="spartaLp"
+                      size="20"
+                      className="token-badge-share"
                     />
                   )}
                   <span className="card-title" style={{ marginLeft: '7px' }}>
@@ -138,25 +127,17 @@ const Share = () => {
                     className="mx-2"
                   />
                   {assetType2 === 'synth' && (
-                    <img
-                      height="20px"
-                      src={spartaSynthIcon}
-                      alt={`${
-                        getToken(asset1?.tokenAddress)?.symbol
-                      } synth icon`}
-                      className="position-absolute"
-                      style={{ left: '45px', bottom: '-2px' }}
+                    <Icon
+                      icon="spartaSynth"
+                      size="20"
+                      className="token-badge-share"
                     />
                   )}
                   {assetType2 === 'pool' && (
-                    <img
-                      height="20px"
-                      src={spartaLpIcon}
-                      alt={`${
-                        getToken(asset1?.tokenAddress)?.symbol
-                      } synth icon`}
-                      className="position-absolute"
-                      style={{ left: '45px', bottom: '-2px' }}
+                    <Icon
+                      icon="spartaLp"
+                      size="20"
+                      className="token-badge-share"
                     />
                   )}
 
@@ -189,7 +170,7 @@ const Share = () => {
                     </span>
                   </Col>
                   <Col xs="2" className="text-center">
-                    <img src={CopyIcon} alt="Copy icon" />
+                    <Icon icon="copy" size="24" />
                   </Col>
                 </Row>
               </Card.Body>

@@ -8,12 +8,11 @@ import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
 import ShareLink from '../Share/ShareLink'
-import spartaIcon from '../../assets/img/spartan_lp.svg'
-import spartaIconAlt from '../../assets/img/spartan_synth.svg'
 import { useSynth } from '../../store/synth/selector'
 import { getAddresses } from '../../utils/web3'
-import walletTypes from '../WalletSelect/walletTypes'
 import { Icon } from '../Icons/icons'
+import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
+import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -175,13 +174,12 @@ const AssetSelect = (props) => {
                       } LP token icon`}
                     />
                     <img
+                      src={spartaLpIcon}
                       height="20px"
-                      src={spartaIcon}
+                      className="token-badge"
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
-                      className="position-absolute"
-                      style={{ left: '28px', top: '18px' }}
                     />
                   </>
                 ),
@@ -210,13 +208,12 @@ const AssetSelect = (props) => {
                       } synth icon`}
                     />
                     <img
+                      src={spartaSynthIcon}
                       height="20px"
-                      src={spartaIconAlt}
+                      className="token-badge"
                       alt={`${
                         getToken(tempArray[i].tokenAddress)?.symbol
-                      } synth icon`}
-                      className="position-absolute"
-                      style={{ left: '28px', top: '18px' }}
+                      } LP token icon`}
                     />
                   </>
                 ),
@@ -289,13 +286,13 @@ const AssetSelect = (props) => {
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
-
               <img
+                src={spartaLpIcon}
                 height="20px"
-                src={spartaIcon}
-                alt="Sparta LP token icon"
-                className="position-absolute"
-                style={{ left: '22px', top: '14px' }}
+                className="token-badge-tight"
+                alt={`${
+                  getToken(selectedItem?.tokenAddress)?.symbol
+                } LP token icon`}
               />
             </>
           )}
@@ -307,13 +304,13 @@ const AssetSelect = (props) => {
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
-
               <img
+                src={spartaSynthIcon}
                 height="20px"
-                src={spartaIconAlt}
-                alt="Sparta LP token icon"
-                className="position-absolute"
-                style={{ left: '22px', top: '14px' }}
+                className="token-badge-tight"
+                alt={`${
+                  getToken(selectedItem?.tokenAddress)?.symbol
+                } LP token icon`}
               />
             </>
           )}
@@ -452,7 +449,7 @@ const AssetSelect = (props) => {
                         url={asset.actualAddr}
                         notificationLocation="tc"
                       >
-                        <i className="icon-small icon-copy ms-2" />
+                        <Icon icon="copy" size="24" className="ms-2" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
@@ -472,17 +469,16 @@ const AssetSelect = (props) => {
                             }}
                           >
                             {getWalletType() === 'MM' ? (
-                              <i className="icon-small icon-metamask icon-light ms-2" />
+                              <Icon
+                                icon="metamask"
+                                size="24"
+                                className="ms-2"
+                              />
                             ) : (
-                              <img
-                                src={
-                                  walletTypes.filter((x) => x.id === 'TW')[0]
-                                    ?.icon
-                                }
-                                alt="TrustWallet icon"
-                                className="position-absolute"
-                                style={{ left: '27' }}
-                                height="24"
+                              <Icon
+                                icon="trustwallet"
+                                size="24"
+                                className="ms-2"
                               />
                             )}
                           </div>
@@ -541,7 +537,7 @@ const AssetSelect = (props) => {
                           url={asset.actualAddr}
                           notificationLocation="tc"
                         >
-                          <i className="icon-small icon-copy ms-2" />
+                          <Icon icon="copy" size="24" className="ms-2" />
                         </ShareLink>
                       </Col>
                       {getWalletType() && (
@@ -561,17 +557,16 @@ const AssetSelect = (props) => {
                               }}
                             >
                               {getWalletType() === 'MM' ? (
-                                <i className="icon-small icon-metamask icon-light ms-2" />
+                                <Icon
+                                  icon="metamask"
+                                  size="24"
+                                  className="ms-2"
+                                />
                               ) : (
-                                <img
-                                  src={
-                                    walletTypes.filter((x) => x.id === 'TW')[0]
-                                      ?.icon
-                                  }
-                                  alt="TrustWallet icon"
-                                  className="position-absolute"
-                                  style={{ left: '27' }}
-                                  height="24"
+                                <Icon
+                                  icon="trustwallet"
+                                  size="24"
+                                  className="ms-2"
                                 />
                               )}
                             </div>

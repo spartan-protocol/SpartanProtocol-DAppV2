@@ -3,15 +3,7 @@ import { Container, Nav, Navbar, Tooltip, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import Drawer from '../Drawer/Drawer'
 import Backdrop from '../Drawer/Backdrop'
-
-import { ReactComponent as SpartaIcon } from '../../assets/icons/coin_sparta.svg'
-import { ReactComponent as GitbookIcon } from '../../assets/icons/icon-gitbook.svg'
-import { ReactComponent as TwitterIcon } from '../../assets/icons/icon-twitter.svg'
-import { ReactComponent as GithubIcon } from '../../assets/icons/icon-github.svg'
-import { ReactComponent as TelegramIcon } from '../../assets/icons/icon-telegram.svg'
-import { ReactComponent as MediumIcon } from '../../assets/icons/icon-medium.svg'
-import { ReactComponent as RedditIcon } from '../../assets/icons/icon-reddit.svg'
-import { ReactComponent as DiscordIcon } from '../../assets/icons/icon-discord.svg'
+import { Icon } from '../Icons/icons'
 
 const Footer = () => {
   const [showDrawer, setShowDrawer] = useState(false)
@@ -40,7 +32,11 @@ const Footer = () => {
         <Container fluid>
           <div>
             <Link to="/">
-              <SpartaIcon fill={isLightMode ? 'white' : 'black'} height="32" />
+              <Icon
+                icon="spartav2"
+                fill={isLightMode ? 'white' : 'black'}
+                size="32"
+              />
             </Link>
             <div className="ms-2 text-footer d-none d-sm-inline-block">
               A Spartan Community Project
@@ -55,10 +51,10 @@ const Footer = () => {
               id="footer-gitbook"
               className="mx-1"
             >
-              <GitbookIcon
+              <Icon
+                icon="gitbook"
                 fill={isLightMode ? 'black' : 'white'}
-                height="24"
-                width="24"
+                size="24"
               />
               <Tooltip target="footer-gitbook" placement="top">
                 Gitbook
@@ -71,9 +67,9 @@ const Footer = () => {
               id="footer-twitter"
               className="mx-1"
             >
-              <TwitterIcon
-                height="24"
-                width="24"
+              <Icon
+                icon="twitter"
+                size="24"
                 fill={isLightMode ? 'black' : 'white'}
               />
               <Tooltip target="footer-twitter" placement="top">
@@ -87,9 +83,9 @@ const Footer = () => {
               id="footer-github"
               className="mx-1"
             >
-              <GithubIcon
-                height="24"
-                width="24"
+              <Icon
+                icon="github"
+                size="24"
                 fill={isLightMode ? 'black' : 'white'}
               />
               <Tooltip target="footer-github" placement="top">
@@ -103,9 +99,9 @@ const Footer = () => {
               id="footer-telegram"
               className="mx-1"
             >
-              <TelegramIcon
-                height="24"
-                width="24"
+              <Icon
+                icon="telegram"
+                size="24"
                 fill={isLightMode ? 'black' : 'white'}
               />
               <Tooltip target="footer-telegram" placement="top">
@@ -119,9 +115,9 @@ const Footer = () => {
               id="footer-medium"
               className="mx-1"
             >
-              <MediumIcon
-                height="24"
-                width="24"
+              <Icon
+                icon="medium"
+                size="24"
                 fill={isLightMode ? 'black' : 'white'}
               />
               <Tooltip target="footer-medium" placement="top">
@@ -135,9 +131,9 @@ const Footer = () => {
               id="footer-reddit"
               className="mx-1"
             >
-              <RedditIcon
-                height="24"
-                width="24"
+              <Icon
+                icon="reddit"
+                size="24"
                 fill={isLightMode ? 'black' : 'white'}
               />
               <Tooltip target="footer-reddit" placement="top">
@@ -152,9 +148,9 @@ const Footer = () => {
               id="footer-discord"
               className="mx-1"
             >
-              <DiscordIcon
-                height="24"
-                width="24"
+              <Icon
+                icon="discord"
+                size="24"
                 fill={isLightMode ? 'black' : 'white'}
               />
               <Tooltip target="footer-discord" placement="top">

@@ -11,6 +11,7 @@ import Approval from '../../../../components/Approval/Approval'
 import { getAddresses } from '../../../../utils/web3'
 import { synthDeposit } from '../../../../store/synth/actions'
 import { useSynth } from '../../../../store/synth/selector'
+import { Icon } from '../../../../components/Icons/icons'
 
 const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const [percentage, setpercentage] = useState('0')
@@ -52,7 +53,7 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <i className="icon-extra-small icon-scan ml-n2" />
+                    <Icon icon="scan" />
                   </a>
                 </span>
               </Col>

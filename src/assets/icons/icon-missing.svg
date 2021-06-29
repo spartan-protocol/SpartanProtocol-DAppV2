@@ -1,0 +1,52 @@
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+     width="32"
+   height="32"
+   viewBox="0 0 24 24"
+   fill="black"
+   version="1.1"
+   id="svg4">
+  <ellipse
+     style="fill:#ff0000;fill-opacity:1;stroke:#ffffff;stroke-width:0.75;stroke-opacity:0.03517588"
+     id="path837"
+     cx="12.152649"
+     cy="12.242852"
+     rx="10.930193"
+     ry="11.038057" />
+  <path
+     d="M 12,0.375 C 5.5900098,0.375 0.37499995,5.5900216 0.37499995,12 0.37499995,18.410025 5.5900098,23.625 12,23.625 18.410025,23.625 23.625,18.410025 23.625,12 23.625,5.5900216 18.410025,0.375 12,0.375 Z m 0,1.7437501 c 5.467586,0 9.88125,4.4136638 9.88125,9.8812499 0,5.467586 -4.413664,9.88125 -9.88125,9.88125 C 6.532402,21.88125 2.11875,17.467586 2.11875,12 2.11875,6.5324139 6.532402,2.1187501 12,2.1187501 Z"
+     id="path2"
+     inkscapeconnector-curvature="0"
+     sodipodinodetypes="ssssssssss"
+     style="stroke-width:1.1624999;fill:#000000" />
+  <g
+     id="g829"
+     transform="translate(3.8146974e-8,-0.97326424)">
+    <g
+       id="g835"
+       transform="translate(0,-0.3445)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:9px;line-height:1.25;font-family:Kreon;-inkscape-font-specification:'Kreon Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.75"
+         x="3.9483047"
+         y="14.148444"
+         id="text819"><tspan
+           sodipodirole="line"
+           id="tspan817"
+           x="3.9483047"
+           y="14.148444"
+           style="font-size:9px;stroke-width:0.75">!con</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4px;line-height:1.25;font-family:Kreon;-inkscape-font-specification:'Kreon Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.75"
+         x="5.3931251"
+         y="17.600084"
+         id="text823"><tspan
+           sodipodirole="line"
+           id="tspan821"
+           x="5.3931251"
+           y="17.600084"
+           style="font-size:4px;stroke-width:0.75">missing</tspan></text>
+    </g>
+  </g>
+</svg>

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Button } from 'react-bootstrap'
+import { Icon } from '../Icons/icons'
 
 const ThemeSwitcher = () => {
   const [lightMode, setlightMode] = React.useState(false)
@@ -25,7 +26,6 @@ const ThemeSwitcher = () => {
   }
 
   const btnClass = 'btn-transparent align-self-center mx-1'
-  const iconClass = 'icon-small icon-dark m-0'
 
   return (
     <>
@@ -36,7 +36,7 @@ const ThemeSwitcher = () => {
           className={btnClass}
           onClick={handleActiveMode}
         >
-          <i className={`icon-moon ${iconClass}`} />
+          <Icon icon="moon" size="24" />
         </Button>
       )}
       {lightMode && (
@@ -46,7 +46,7 @@ const ThemeSwitcher = () => {
           className={btnClass}
           onClick={handleActiveMode}
         >
-          <i className={`icon-sun ${iconClass}`} />
+          <Icon icon="sun" size="24" />
         </Button>
       )}
     </>

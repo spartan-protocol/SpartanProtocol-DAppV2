@@ -11,6 +11,7 @@ import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import { getExplorerTxn } from '../../../../utils/extCalls'
 import Approval from '../../../../components/Approval/Approval'
 import { getAddresses } from '../../../../utils/web3'
+import { Icon } from '../../../../components/Icons/icons'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
@@ -69,7 +70,7 @@ const DaoDepositModal = (props) => {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <i className="icon-extra-small icon-scan ml-n2" />
+                    <Icon icon="scan" />
                   </a>
                 </span>
               </Col>
