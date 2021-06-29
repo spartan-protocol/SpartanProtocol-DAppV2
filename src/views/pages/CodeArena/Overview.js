@@ -236,7 +236,7 @@ ethereum(network: $network){
           </Col>
         </Row>
         <Row className="row-480">
-          <Col className="mb-3">
+          <Col className="">
             <Card className="card-480">
               <Card.Header>
                 <Card.Title>Crowdfunded CodeArena Bounty Target</Card.Title>
@@ -305,7 +305,7 @@ ethereum(network: $network){
             </Card>
           </Col>
 
-          <Col className="mb-3">
+          <Col className="">
             <Card className="card-480">
               <Card.Header>
                 <Card.Title>Donate to the CodeArena Campaign</Card.Title>
@@ -436,7 +436,7 @@ ethereum(network: $network){
               </Card.Footer>
             </Card>
           </Col>
-          <Col className="mb-3">
+          <Col className="">
             <Card className="card-480">
               <Card.Header>
                 <Card.Title>Recent Donations</Card.Title>

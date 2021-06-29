@@ -216,7 +216,7 @@ const ProposalItem = ({ proposal }) => {
 
   return (
     <>
-      <Col xs="auto" className="mb-3">
+      <Col xs="auto" className="">
         <Card className="card-320 card-underlay">
           <Card.Header>
             <Row className="">
@@ -257,10 +257,10 @@ const ProposalItem = ({ proposal }) => {
                   <Col xs="auto" className="text-card">
                     Can cancel
                   </Col>
-                  <Col className="text-right output-card">
+                  <Col className="text-end output-card">
                     {getSecondsCancel()[0] > 0
                       ? getSecondsCancel()[0] + getSecondsCancel()[1]
-                      : 'right now'}
+                      : 'Right now'}
                   </Col>
                 </Row>
 
@@ -268,7 +268,7 @@ const ProposalItem = ({ proposal }) => {
                   <Col xs="auto" className="text-card">
                     Your votes
                   </Col>
-                  <Col className="text-right output-card">
+                  <Col className="text-end output-card">
                     {formatFromWei(proposal.memberVotes, 0)} (
                     {formatFromUnits(memberPercent(), 2)}%)
                   </Col>
@@ -278,7 +278,7 @@ const ProposalItem = ({ proposal }) => {
                   <Col xs="auto" className="text-card">
                     Total votes
                   </Col>
-                  <Col className="text-right output-card">
+                  <Col className="text-end output-card">
                     {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
                   </Col>
                 </Row>

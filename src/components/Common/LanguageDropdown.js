@@ -106,7 +106,7 @@ const locales = [
   },
   {
     id: 'pl',
-    name: 'Polskie',
+    name: 'Polski',
     flag: plFlag,
   },
   {

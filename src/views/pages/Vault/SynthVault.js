@@ -38,7 +38,7 @@ const SynthVault = () => {
 
   return (
     <Row>
-      <Col xs="auto" className="mb-3">
+      <Col xs="auto" className="">
         <Card className="card-320 card-underlay">
           <Card.Header>{t('synthVaultDetails')}</Card.Header>
           <Card.Body>

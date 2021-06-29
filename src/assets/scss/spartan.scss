@@ -5,60 +5,34 @@
 
 // Custom components
 @import 'spartan/custom/reboot.scss';
-@import 'spartan/custom/reboot.scss';
-@import 'spartan/custom/global.scss';
 @import 'spartan/custom/utilities.scss';
 @import 'spartan/custom/alerts.scss';
-@import 'spartan/custom/avatars.scss';
 @import 'spartan/custom/badge.scss';
 @import 'spartan/custom/buttons.scss';
 @import 'spartan/custom/close.scss';
-@import 'spartan/custom/custom-forms.scss';
 @import 'spartan/custom/cursors.scss';
-@import 'spartan/custom/dropdown.scss';
 @import 'spartan/custom/floating-labels.scss';
 @import 'spartan/custom/footer.scss';
-@import 'spartan/custom/forms.scss';
 @import 'spartan/custom/icons.scss';
 @import 'spartan/custom/images.scss';
 @import 'spartan/custom/input-group.scss';
-@import 'spartan/custom/info-areas.scss';
 @import 'spartan/custom/modal.scss';
 @import 'spartan/custom/nav.scss';
 @import 'spartan/custom/navbar.scss';
 @import 'spartan/custom/offcanvas.scss';
-@import 'spartan/custom/pagination.scss';
-@import 'spartan/custom/tabs.scss';
-@import 'spartan/custom/pills.scss';
 @import 'spartan/custom/popover.scss';
-@import 'spartan/custom/progress.scss';
 @import 'spartan/custom/type.scss';
 @import 'spartan/custom/tables';
 @import 'spartan/custom/checkboxes-radio';
-@import 'spartan/custom/fixed-plugin';
 @import 'spartan/custom/sidebar-and-main-panel.scss';
 @import 'spartan/custom/misc.scss';
-@import 'spartan/custom/rtl.scss';
-@import 'spartan/custom/timeline.scss';
 @import 'spartan/custom/tooltip.scss';
 @import 'spartan/custom/loader.scss';
-@import 'spartan/custom/share-link.scss';
 @import 'spartan/custom/card.scss';
 @import 'spartan/custom/accordion.scss';
 
 //Vendor / Plugins
-@import 'spartan/custom/vendor/plugin-nouislider.scss';
 @import 'spartan/custom/vendor/plugin-sweetalert2.scss';
-@import 'spartan/custom/vendor/plugin-bootstrap-switch.scss';
-@import 'spartan/custom/vendor/plugin-bootstrap-select.scss';
-@import 'spartan/custom/vendor/plugin-jasny-fileupload.scss';
-@import 'spartan/custom/vendor/plugin-tagsinput.scss';
-@import 'spartan/custom/vendor/plugin-perfect-scrollbar.scss';
-@import 'spartan/custom/vendor/plugin-jquery.jvectormap.scss';
-@import 'spartan/custom/vendor/plugin-datatables.net.scss';
-@import 'spartan/custom/vendor/plugin-animate-bootstrap-notify.scss';
-@import 'spartan/custom/vendor/plugin-card-wizard.scss';
-@import 'spartan/custom/vendor/plugin-chartjs.scss';
 
 // light mode
 @import 'spartan/custom/white-content.scss';
@@ -66,20 +40,13 @@
 // Tiles
 @import 'spartan/custom/card';
 @import 'spartan/custom/cards/card-chart';
-@import 'spartan/custom/cards/card-map';
-@import 'spartan/custom/cards/card-user';
-@import 'spartan/custom/cards/card-task';
 @import 'spartan/custom/cards/card-animation-on-hover';
 @import 'spartan/custom/cards/card-collapse';
-@import 'spartan/custom/cards/card-contributions';
 @import 'spartan/custom/cards/card-lock';
 @import 'spartan/custom/cards/card-pricing';
-@import 'spartan/custom/cards/card-profile';
 @import 'spartan/custom/cards/card-plain';
-@import 'spartan/custom/cards/card-register';
 @import 'spartan/custom/cards/card-stats';
 @import 'spartan/custom/cards/card-subcategories';
-@import 'spartan/custom/cards/card-testimonials';
 
 // React Differences
 @import 'spartan/react/react-differences';

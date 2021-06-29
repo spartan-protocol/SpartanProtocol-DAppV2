@@ -30,11 +30,13 @@ import AssetSelect from './components/AssetSelect'
 import { useSparta } from '../../../store/sparta/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
+import { useDao } from '../../../store/dao/selector'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
   const wallet = useWallet()
+  const dao = useDao()
   const addr = getAddresses()
   const { t } = useTranslation()
 
@@ -103,20 +105,35 @@ const NewProposal = () => {
     }
   }, [selectedType, inputParam])
 
+  const [existingPid, setexistingPid] = useState(false)
+  const checkExistingOpen = () => {
+    if (dao?.proposal.filter((pid) => pid.open).length > 0) {
+      setexistingPid(true)
+    } else {
+      setexistingPid(false)
+    }
+  }
+
   const [formValid, setformValid] = useState(false)
   useEffect(() => {
-    if (selectedType?.type === 'Action') {
-      setformValid(true)
-    } else if (selectedType?.type === 'Param' && paramValid) {
-      setformValid(true)
-    } else if (selectedType?.type === 'Address' && addrValid) {
-      setformValid(true)
-    } else if (selectedType?.type === 'Grant' && paramValid && addrValid) {
-      setformValid(true)
+    checkExistingOpen()
+    if (!existingPid) {
+      if (selectedType?.type === 'Action') {
+        setformValid(true)
+      } else if (selectedType?.type === 'Param' && paramValid) {
+        setformValid(true)
+      } else if (selectedType?.type === 'Address' && addrValid) {
+        setformValid(true)
+      } else if (selectedType?.type === 'Grant' && paramValid && addrValid) {
+        setformValid(true)
+      } else {
+        setformValid(false)
+      }
     } else {
       setformValid(false)
     }
-  }, [addrValid, paramValid, selectedType])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feeConfirm, addrValid, paramValid, selectedType, existingPid])
 
   useEffect(() => {
     handleAddrChange('')
@@ -163,7 +180,7 @@ const NewProposal = () => {
       <Modal show={showModal} onHide={() => handleOnHide()} centered>
         {network.chainId === 97 && (
           <>
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Modal.Title>{t('newProposal')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -301,7 +318,7 @@ const NewProposal = () => {
         {network.chainId !== 97 && <WrongNetwork />}
         <Modal.Footer>
           <Row className="">
-            {wallet?.account && (
+            {wallet?.account && !existingPid && (
               <Approval
                 tokenAddress={addr.spartav2}
                 symbol="SPARTA"
@@ -310,6 +327,11 @@ const NewProposal = () => {
                 txnAmount={convertToWei('100')}
                 assetNumber="1"
               />
+            )}
+            {existingPid && (
+              <Button className="w-100" disabled>
+                Existing Proposal
+              </Button>
             )}
             <Col xs="12" className="hide-if-prior-sibling">
               <Button

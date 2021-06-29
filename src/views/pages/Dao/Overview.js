@@ -113,11 +113,13 @@ const Overview = () => {
               {dao?.proposal.length > 0 && (
                 <>
                   {selectedView === 'current' &&
-                    dao?.proposal
-                      .filter((pid) => pid.open)
-                      .map((pid) => (
-                        <ProposalItem key={pid.id} proposal={pid} />
-                      ))}
+                    (dao?.proposal.filter((pid) => pid.open).length > 0
+                      ? dao?.proposal
+                          .filter((pid) => pid.open)
+                          .map((pid) => (
+                            <ProposalItem key={pid.id} proposal={pid} />
+                          ))
+                      : 'No open proposals, visit the community channels to join the discussion of the next community proposal')}
                   {selectedView === 'complete' &&
                     dao?.proposal
                       .filter((pid) => pid.finalised)

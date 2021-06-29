@@ -15,13 +15,14 @@ const Footer = () => {
         <Backdrop show={showDrawer} onClick={() => setShowDrawer(false)} />
         <Drawer show={showDrawer} onClick={() => setShowDrawer(false)} />
         <Button
+          className="mx-auto"
+          variant="info"
           style={{
             position: 'absolute',
             top: -25,
             left: 0,
             right: 0,
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            zIndex: 100,
           }}
           onClick={() => setShowDrawer(true)}
         >
