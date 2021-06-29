@@ -1,7 +1,7 @@
 .alert {
   border: 0;
   color: $white;
-  background: #403A4B;
+  background: #403a4b;
 
   .alert-link {
     color: $white;
@@ -11,11 +11,9 @@
     background-color: darken($primary, 10%);
   }
 
-
   &.alert-warning {
-    background-color: #FC5D50;
+    background-color: #fc5d50;
   }
-
 
   &.alert-success {
     background-color: darken($success, 10%);
@@ -32,13 +30,13 @@
 
   .close {
     color: $white;
-    opacity: .9;
+    opacity: 0.9;
     text-shadow: none;
     line-height: 0;
     outline: 0;
   }
 
-  span[data-notify="icon"] {
+  span[data-notify='icon'] {
     font-size: 22px;
     display: block;
     left: 19px;
@@ -73,42 +71,27 @@
     right: $alert-padding-x;
     padding: 0;
     transform: translateY(-50%);
-    color: rgba($white, .6);
+    color: rgba($white, 0.6);
     opacity: 1;
 
     &:hover,
     &:focus {
-      color: rgba($white, .9);
+      color: rgba($white, 0.9);
       opacity: 1 !important;
     }
-
-    // @include media-breakpoint-down(xs) {
-    //   top: 1rem;
-    //   right: .5rem;
-    // }
 
     & > span:not(.sr-only) {
       font-size: 1.5rem;
       background-color: transparent;
-      color: rgba($white, .6);
+      color: rgba($white, 0.6);
     }
 
     &:hover,
     &:focus {
       & > span:not(.sr-only) {
         background-color: transparent;
-        color: rgba($white, .9);
+        color: rgba($white, 0.9);
       }
     }
   }
 }
-
-
-//.alert {
-//  position: relative;
-//  padding: 0.9rem 1.25rem;
-//  margin-bottom: 1rem;
-//  border: 0.0625rem solid transparent;
-//  background: #403A4B;
-//  border-radius: 12px;
-//}

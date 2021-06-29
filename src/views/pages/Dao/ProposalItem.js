@@ -216,7 +216,7 @@ const ProposalItem = ({ proposal }) => {
 
   return (
     <>
-      <Col xs="auto" className="mb-3">
+      <Col xs="auto" className="">
         <Card className="card-320 card-underlay">
           <Card.Header>
             <Row className="">
