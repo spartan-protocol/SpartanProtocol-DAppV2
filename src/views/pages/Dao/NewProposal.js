@@ -163,7 +163,7 @@ const NewProposal = () => {
       <Modal show={showModal} onHide={() => handleOnHide()} centered>
         {network.chainId === 97 && (
           <>
-            <Modal.Header>
+            <Modal.Header closeButton>
               <Modal.Title>{t('newProposal')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
