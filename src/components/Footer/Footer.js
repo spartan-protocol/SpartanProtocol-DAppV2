@@ -19,7 +19,7 @@ const Footer = () => {
           variant="info"
           style={{
             position: 'absolute',
-            top: -25,
+            bottom: 25,
             left: 0,
             right: 0,
             zIndex: 100,
