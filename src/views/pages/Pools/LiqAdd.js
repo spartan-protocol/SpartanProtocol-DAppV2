@@ -510,7 +510,7 @@ const LiqAdd = () => {
                   <Card style={{ backgroundColor: '#25212d' }}>
                     <Card.Body>
                       <Row className="">
-                        <Col className="text-sm-label">{t('add')}</Col>
+                        <Col className="text-sm-label">{t('receive')}</Col>
                         <Col
                           className="text-sm-label float-end text-end"
                           role="button"
