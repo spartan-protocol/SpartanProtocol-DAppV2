@@ -291,7 +291,7 @@ const WalletSelect = (props) => {
               <Col xs="12">
                 {wallet.account ? (
                   <>
-                    Wallet:{' '}
+                    {t('wallet')}:{' '}
                     <span className="output-card">
                       {formatShortString(wallet.account)}
                       <ShareLink url={wallet.account} notificationLocation="tc">
@@ -311,7 +311,8 @@ const WalletSelect = (props) => {
               <Col xs="12">
                 <Form className="mb-1">
                   <span className="output-card">
-                    Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                    {t('network')}:{' '}
+                    {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
                     <Form.Check
                       type="switch"
                       id="custom-switch"
@@ -351,12 +352,9 @@ const WalletSelect = (props) => {
         <Modal.Body>
           {wallet.status === 'error' && (
             <Alert variant="primary">
-              You have selected{' '}
-              {network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet'} in the
-              DApp.
-              <br /> Make sure you have selected{' '}
-              {network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet'} in your
-              wallet too!
+              {t('wrongNetwork', {
+                network: network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
+              })}
             </Alert>
           )}
 

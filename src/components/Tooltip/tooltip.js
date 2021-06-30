@@ -15,6 +15,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'apyInfo',
     },
     {
+      id: 'apySynth',
+      title: 'synthVaultApy',
+      body: 'vaultApyInfo',
+    },
+    {
       id: 'bond',
       title: 'bond',
       body: 'bondInfo',
@@ -22,8 +27,7 @@ export const Tooltip = (t, tooltipId, variable) => {
     {
       id: 'rank',
       title: 'rank',
-      body:
-        'A NET SPARTA-value sum of all your Spartan Protocol ecosystem tokens, whether held, staked or bonded.',
+      body: 'rankInfo',
     },
     {
       id: 'revenue',

@@ -12,10 +12,12 @@ import {
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
+import { useReserve } from '../../../store/reserve/selector'
 
 const SynthVault = () => {
   const { t } = useTranslation()
   const wallet = useWallet()
+  const reserve = useReserve()
   const synth = useSynth()
   const dispatch = useDispatch()
   const [trigger0, settrigger0] = useState(0)
@@ -113,13 +115,19 @@ const SynthVault = () => {
             </Row>
           </Card.Body>
           <Card.Footer xs="12">
-            <Button
-              className="w-100"
-              onClick={() => dispatch(synthHarvest(wallet))}
-              disabled={synth.memberDetails?.totalWeight <= 0}
-            >
-              {t('harvestAll')}
-            </Button>
+            {reserve.globalDetails.emissions ? (
+              <Button
+                className="w-100"
+                onClick={() => dispatch(synthHarvest(wallet))}
+                disabled={synth.memberDetails?.totalWeight <= 0}
+              >
+                {t('harvestAll')}
+              </Button>
+            ) : (
+              <Button className="w-100" disabled>
+                {t('incentivesDisabled')}
+              </Button>
+            )}
           </Card.Footer>
         </Card>
       </Col>

@@ -168,7 +168,8 @@ const Supply = () => {
             Tokenomics
             <Form className="mb-0">
               <span className="output-card">
-                Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                {t('network')}:{' '}
+                {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
                 <Form.Check
                   type="switch"
                   id="custom-switch"

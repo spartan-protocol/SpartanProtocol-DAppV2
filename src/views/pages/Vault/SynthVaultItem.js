@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Col, Row } from 'react-bootstrap'
+import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { usePool } from '../../../store/pool'
-import { BN, formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { useReserve } from '../../../store/reserve/selector'
 import {
+  calcAPY,
   calcFeeBurn,
   calcLiquidityUnitsAsym,
   calcShare,
@@ -19,6 +20,7 @@ import { useSparta } from '../../../store/sparta/selector'
 import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -36,6 +38,18 @@ const SynthVaultItem = ({ synthItem }) => {
   const getPool = (_tokenAddress) =>
     pool.poolDetails.filter((i) => i.tokenAddress === _tokenAddress)[0]
 
+  const APY = formatFromUnits(
+    calcAPY(
+      0,
+      0,
+      synth.globalDetails.recentRevenue,
+      synth.globalDetails.lastMonthRevenue,
+      synth.globalDetails.genesis,
+      BN(synth.globalDetails.totalWeight).div(2),
+    ),
+    2,
+  )
+
   const toggleModal = (_tokenAddr) => {
     settokenAddress(_tokenAddr)
     setShowModal(!showModal)
@@ -52,7 +66,6 @@ const SynthVaultItem = ({ synthItem }) => {
   }
 
   // Calculations
-
   const getClaimable = () => {
     // get seconds passed since last harvest
     const timeStamp = BN(Date.now()).div(1000)
@@ -71,7 +84,7 @@ const SynthVaultItem = ({ synthItem }) => {
     // get the members claimable amount
     const claimAmount = share
       .times(secondsSince)
-      .div(sparta.globalDetails.oldSecondsPerEra)
+      .div(sparta.globalDetails.secondsPerEra)
     const feeBurn = getFeeBurn(claimAmount)
     return BN(claimAmount).minus(feeBurn)
   }
@@ -105,6 +118,7 @@ const SynthVaultItem = ({ synthItem }) => {
       BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
     )
     const tokenValue = BN(tokenAmount).plus(baseSwapped)
+    // console.log(tokenValue)
     if (tokenValue > 0) {
       return tokenValue
     }
@@ -152,6 +166,23 @@ const SynthVaultItem = ({ synthItem }) => {
                   </p>
                 </Link>
               </Col>
+              <Col className="text-center m-auto">
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={Tooltip(t, 'apySynth')}
+                >
+                  <span role="button">
+                    <Icon
+                      icon="info"
+                      className="me-1"
+                      size="17"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
+                  </span>
+                </OverlayTrigger>
+                <p className="text-sm-label d-inline-block">APY</p>
+                <p className="output-card">{APY}%</p>
+              </Col>
 
               {/* <Col className="text-end my-auto">
               {showDetails && (
@@ -196,10 +227,13 @@ const SynthVaultItem = ({ synthItem }) => {
                 {t('harvestable')}
               </Col>
               <Col className="text-end output-card">
-                {synthItem.weight > 0
-                  ? formatFromWei(getSynthOutputFromBase())
-                  : '0.00'}{' '}
-                {getToken(synthItem.tokenAddress)?.symbol}s
+                {reserve.globalDetails.emissions
+                  ? synthItem.weight > 0
+                    ? `${formatFromWei(getSynthOutputFromBase())} ${
+                        getToken(synthItem.tokenAddress)?.symbol
+                      }s`
+                    : `0.00 ${getToken(synthItem.tokenAddress)?.symbol}s`
+                  : t('incentivesDisabled')}
               </Col>
             </Row>
 
@@ -216,7 +250,7 @@ const SynthVaultItem = ({ synthItem }) => {
           </Card.Body>
           <Card.Footer className="">
             <Row>
-              <Col xs="6">
+              <Col xs="6" className="pe-1">
                 <Button
                   className="w-100"
                   onClick={() => toggleModal(synthItem.tokenAddress)}
@@ -225,7 +259,7 @@ const SynthVaultItem = ({ synthItem }) => {
                   {t('deposit')}
                 </Button>
               </Col>
-              <Col xs="6">
+              <Col xs="6" className="ps-1">
                 <Button
                   className="w-100"
                   onClick={() =>

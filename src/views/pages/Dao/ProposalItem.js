@@ -2,6 +2,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col, ProgressBar } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 import { useBond } from '../../../store/bond'
 import {
   cancelProposal,
@@ -24,6 +25,7 @@ const ProposalItem = ({ proposal }) => {
   const bond = useBond()
   const wallet = useWallet()
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
   const cancelPeriod = BN('1209600')
 
@@ -33,18 +35,21 @@ const ProposalItem = ({ proposal }) => {
       .plus(cancelPeriod)
       .minus(timeStamp)
     if (secondsLeft > 86400) {
-      return [formatFromUnits(secondsLeft.div(60).div(60).div(24), 2), ' days']
+      return [
+        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
+        ` ${t('days')}`,
+      ]
     }
     if (secondsLeft > 3600) {
-      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ' hours']
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
     }
     if (secondsLeft > 60) {
-      return [formatFromUnits(secondsLeft.div(60), 2), ' minutes']
+      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
     }
     if (secondsLeft > 0) {
-      return [formatFromUnits(secondsLeft, 0), ' seconds']
+      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
     }
-    return [0, ' seconds (now)']
+    return [0, ` ${t('seconds')} (now)`]
   }
 
   const getSecondsCooloff = () => {
@@ -52,36 +57,39 @@ const ProposalItem = ({ proposal }) => {
     const endDate = BN(proposal.coolOffTime).plus(dao.global.coolOffPeriod)
     const secondsLeft = endDate.minus(timeStamp)
     if (secondsLeft > 86400) {
-      return [formatFromUnits(secondsLeft.div(60).div(60).div(24), 2), ' days']
+      return [
+        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
+        ` ${t('days')}`,
+      ]
     }
     if (secondsLeft > 3600) {
-      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ' hours']
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
     }
     if (secondsLeft > 60) {
-      return [formatFromUnits(secondsLeft.div(60), 2), ' minutes']
+      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
     }
     if (secondsLeft > 0) {
-      return [formatFromUnits(secondsLeft, 0), ' seconds']
+      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
     }
-    return [0, ' seconds (now)']
+    return [0, ` ${t('seconds')} (now)`]
   }
 
   const status = () => {
     if (proposal.open) {
       if (proposal.finalising && getSecondsCooloff()[0] > 0) {
-        return `${
-          getSecondsCooloff()[0] + getSecondsCooloff()[1]
-        } cool-off remaining`
+        return `${getSecondsCooloff()[0] + getSecondsCooloff()[1]} ${t(
+          'coolOffRemaining',
+        )}`
       }
       if (proposal.finalising && getSecondsCooloff()[0] <= 0) {
-        return `Ready for final vote count!`
+        return t('readyFinalVoteCount')
       }
-      return 'Requires more support'
+      return t('requiresMoreSupport')
     }
     if (proposal.finalised) {
-      return 'Successful Proposal'
+      return t('successfulProposal')
     }
-    return 'Failed Proposal'
+    return t('failedProposal')
   }
 
   const memberPercent = () => {
@@ -112,15 +120,15 @@ const ProposalItem = ({ proposal }) => {
 
   const weightClass = () => {
     if (totalPercent() > (100 / 3) * 2) {
-      return 'Majority'
+      return t('majority')
     }
     if (totalPercent() > 100 / 2) {
-      return 'Quorum'
+      return t('quorum')
     }
     if (totalPercent() > 100 / 6) {
-      return 'Minority'
+      return t('minority')
     }
-    return 'Weak Support'
+    return t('weakSupport')
   }
 
   const getToken = (tokenAddress) =>
@@ -255,18 +263,18 @@ const ProposalItem = ({ proposal }) => {
               <>
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    Can cancel
+                    {t('canCancel')}
                   </Col>
                   <Col className="text-end output-card">
                     {getSecondsCancel()[0] > 0
                       ? getSecondsCancel()[0] + getSecondsCancel()[1]
-                      : 'Right now'}
+                      : t('rightNow')}
                   </Col>
                 </Row>
 
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    Your votes
+                    {t('yourVotes')}
                   </Col>
                   <Col className="text-end output-card">
                     {formatFromWei(proposal.memberVotes, 0)} (
@@ -276,7 +284,7 @@ const ProposalItem = ({ proposal }) => {
 
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    Total votes
+                    {t('totalVotes')}
                   </Col>
                   <Col className="text-end output-card">
                     {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
@@ -300,7 +308,7 @@ const ProposalItem = ({ proposal }) => {
                     onClick={() => dispatch(voteProposal(wallet))}
                     disabled={memberPercent() >= 100}
                   >
-                    Vote Up
+                    {t('voteUp')}
                   </Button>
                 </Col>
                 <Col className="mb-2">
@@ -310,7 +318,7 @@ const ProposalItem = ({ proposal }) => {
                     onClick={() => dispatch(removeVote(wallet))}
                     disabled={memberPercent() <= 0}
                   >
-                    Vote Down
+                    {t('voteDown')}
                   </Button>
                 </Col>
               </Row>
@@ -326,7 +334,7 @@ const ProposalItem = ({ proposal }) => {
                       !proposal.finalising || getSecondsCooloff()[0] > 0
                     }
                   >
-                    Count Votes
+                    {t('countVotes')}
                   </Button>
                 </Col>
                 <Col className="">
@@ -337,7 +345,7 @@ const ProposalItem = ({ proposal }) => {
                     onClick={() => dispatch(cancelProposal(wallet))}
                     disabled={getSecondsCancel()[0] > 0}
                   >
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </Col>
               </Row>
