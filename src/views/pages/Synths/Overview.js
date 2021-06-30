@@ -463,7 +463,7 @@ const Swap = () => {
                       <Card.Body>
                         <Row>
                           <Col xs="12" className="px-1 px-sm-3">
-                            <Card style={{ backgroundColor: '#25212d' }}>
+                            <Card>
                               <Card.Body>
                                 <Row>
                                   {/* 'From' input box */}
@@ -552,7 +552,7 @@ const Swap = () => {
                                     className="mx-auto position-relative"
                                     style={{
                                       height: '35px',
-                                      top: '-18px',
+                                      top: '-20px',
                                       zIndex: '1000',
                                     }}
                                   />
@@ -565,7 +565,7 @@ const Swap = () => {
                                     className="mx-auto position-relative"
                                     style={{
                                       height: '35px',
-                                      top: '-18px',
+                                      top: '-20px',
                                       zIndex: '1000',
                                     }}
                                   />
@@ -574,7 +574,7 @@ const Swap = () => {
                             </Row>
 
                             {activeTab === 'mint' && (
-                              <Card style={{ backgroundColor: '#25212D' }}>
+                              <Card>
                                 <Card.Body>
                                   <Row>
                                     <Col className="text-sm-label">
@@ -630,7 +630,7 @@ const Swap = () => {
                             )}
 
                             {activeTab === 'burn' && (
-                              <Card style={{ backgroundColor: '#25212D' }}>
+                              <Card>
                                 <Card.Body>
                                   <Row>
                                     <Col className="text-sm-label">

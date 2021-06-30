@@ -373,7 +373,7 @@ const EmptyPools = (props) => {
                         <span className="text-card">{t('add')}</span>
                       </Col>
                       <Col className="text-right">
-                        <span className="output-card text-light">
+                        <span className="output-card">
                           {addInput1?.value > 0
                             ? formatFromUnits(addInput1?.value, 6)
                             : '0.00'}{' '}
@@ -387,7 +387,7 @@ const EmptyPools = (props) => {
                         <span className="text-card">{t('add')}</span>
                       </Col>
                       <Col className="text-right">
-                        <span className="output-card text-light">
+                        <span className="output-card">
                           {addInput2?.value > 0
                             ? formatFromUnits(addInput2?.value, 6)
                             : '0.00'}{' '}
@@ -470,7 +470,7 @@ const EmptyPools = (props) => {
           <Row>
             <Col xs="auto">
               <div className="text-title-small">Proposed Ratios</div>
-              <div className="output-card text-light my-2">
+              <div className="output-card my-2">
                 Based on your inputs; the initial internal pricing as below.
                 Ensure you are 100% certain your proposed ratio of SPARTA:
                 {getToken(poolAdd1.tokenAddress)?.symbol} matches the other

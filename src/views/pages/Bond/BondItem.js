@@ -18,6 +18,7 @@ const BondItem = ({ asset }) => {
   const [showDetails, setShowDetails] = useState(false)
   const { tokenAddress } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  const isLightMode = window.localStorage.getItem('theme')
 
   const formatDate = (unixTime) => {
     const date = new Date(unixTime * 1000)
@@ -78,7 +79,12 @@ const BondItem = ({ asset }) => {
                 <Link to={`/pools/liquidity?asset1=${token.address}`}>
                   <p className="text-sm-label-alt">
                     {t('obtain')} {token.symbol}p
-                    <Icon icon="scan" size="13" fill="white" className="ms-1" />
+                    <Icon
+                      icon="scan"
+                      size="13"
+                      fill={isLightMode ? 'black' : 'white'}
+                      className="ms-1"
+                    />
                   </p>
                 </Link>
               </Col>
@@ -90,7 +96,11 @@ const BondItem = ({ asset }) => {
                     role="button"
                     onClick={() => toggleCollapse()}
                   >
-                    <Icon icon="arrowUp" size="20" fill="grey" />
+                    <Icon
+                      icon="arrowUp"
+                      size="20"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 )}
                 {!showDetails && (
@@ -99,7 +109,11 @@ const BondItem = ({ asset }) => {
                     role="button"
                     onClick={() => toggleCollapse()}
                   >
-                    <Icon icon="arrowDown" size="20" fill="grey" />
+                    <Icon
+                      icon="arrowDown"
+                      size="20"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 )}
               </Col>

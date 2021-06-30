@@ -1,5 +1,6 @@
 .navbar {
   background: $navbar-color;
+  overflow: hidden;
 
   &.navbar-transparent {
     background: transparent !important;
@@ -53,4 +54,11 @@
 .footer {
   border-top: 1px solid #00000020;
   height: 67px; 
+}
+
+// WHITE MODE
+.white-content {
+  .navbar {
+    background: #FFF;
+  }
 }

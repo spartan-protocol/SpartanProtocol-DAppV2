@@ -761,7 +761,7 @@ const Swap = () => {
                         <Row>
                           {/* 'From' input box */}
                           <Col xs="12" className="px-1 px-sm-3">
-                            <Card style={{ backgroundColor: '#25212D' }}>
+                            <Card>
                               <Card.Body>
                                 <Row>
                                   <Col className="text-sm-label">
@@ -845,7 +845,7 @@ const Swap = () => {
                                   className="mx-auto position-relative"
                                   style={{
                                     height: '35px',
-                                    top: '-18px',
+                                    top: '-20px',
                                     zIndex: '1000',
                                   }}
                                 />
@@ -854,7 +854,7 @@ const Swap = () => {
 
                             {/* 'To' input box */}
 
-                            <Card style={{ backgroundColor: '#25212D' }}>
+                            <Card>
                               <Card.Body>
                                 <Row>
                                   <Col className="text-sm-label">

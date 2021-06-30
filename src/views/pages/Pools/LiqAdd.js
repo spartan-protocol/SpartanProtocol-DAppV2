@@ -425,7 +425,7 @@ const LiqAdd = () => {
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
-                <Card style={{ backgroundColor: '#25212d' }}>
+                <Card>
                   <Card.Body>
                     <Row className="">
                       <Col className="text-sm-label">{t('add')}</Col>
@@ -492,7 +492,7 @@ const LiqAdd = () => {
                       size="25"
                       fill="#fb2715"
                       className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-18px', zIndex: '1000' }}
+                      style={{ height: '35px', top: '-20px', zIndex: '1000' }}
                     />
                   )}
                   {activeTab === 'addTab2' && (
@@ -501,13 +501,13 @@ const LiqAdd = () => {
                       size="25"
                       fill="#fb2715"
                       className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-18px', zIndex: '1000' }}
+                      style={{ height: '35px', top: '-20px', zIndex: '1000' }}
                     />
                   )}
                 </Row>
 
                 {activeTab === 'addTab1' && (
-                  <Card style={{ backgroundColor: '#25212d' }}>
+                  <Card>
                     <Card.Body>
                       <Row className="">
                         <Col className="text-sm-label">{t('receive')}</Col>
@@ -567,7 +567,7 @@ const LiqAdd = () => {
                 )}
 
                 {activeTab === 'addTab2' && (
-                  <Card style={{ backgroundColor: '#25212d' }}>
+                  <Card>
                     <Card.Body>
                       <Row className="">
                         <Col className="text-sm-label">{t('add')}</Col>

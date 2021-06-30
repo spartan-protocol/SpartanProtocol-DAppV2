@@ -182,7 +182,7 @@ const LiqBond = () => {
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
-                <Card style={{ backgroundColor: '#25212d' }}>
+                <Card>
                   <Card.Body>
                     {bond.listedAssets?.length > 0 ? (
                       <>
