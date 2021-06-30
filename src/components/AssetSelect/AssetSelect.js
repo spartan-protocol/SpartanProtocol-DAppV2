@@ -315,7 +315,7 @@ const AssetSelect = (props) => {
             </>
           )}
         </Col>
-        <Col className="output-card px-1 my-auto text-light">
+        <Col className="output-card px-1 my-auto">
           {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}

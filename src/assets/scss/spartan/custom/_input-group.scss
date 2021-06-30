@@ -22,8 +22,12 @@
   }
 }
 
-.input-group-text:nth-last-child(n+2) {
+.input-group-text:first-child {
   border-right: none;
+}
+
+.input-group-text:last-child {
+  border-left: none;
 }
 
 // WHITE MODE
