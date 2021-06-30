@@ -231,7 +231,7 @@ ethereum(network: $network){
         <Row className="row-480">
           <Col xs="12">
             <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-3">{t('codeArena')}</h2>
+              <h2 className="text-title-small mb-0 mr-3">{t('donations')}</h2>
             </div>
           </Col>
         </Row>
@@ -239,7 +239,7 @@ ethereum(network: $network){
           <Col className="">
             <Card className="card-480">
               <Card.Header>
-                <Card.Title>Crowdfunded CodeArena Bounty Target</Card.Title>
+                <Card.Title>{t('communityCrowdfunding')}</Card.Title>
               </Card.Header>
               <Card.Body>
                 <Row>
@@ -252,17 +252,13 @@ ethereum(network: $network){
                     >
                       CodeArena audit
                     </a>{' '}
-                    in the next available slot.
+                    in July.
                     <br />
-                    The scope of contracts to be audited has a recommended
-                    bounty requirement of $96K USD. Being a community built and
-                    run project; there is a drive to crowdfund the bounty. The
-                    audit will go ahead whether or not the target is reached,
-                    but raising $96K will ensure the entire suite of contracts
-                    are audited!
                     <br />
-                    <div className="output-card mt-2">
-                      View Community Wallet:{' '}
+                    {t('codeArenaInfo')}
+                    <br />
+                    <div className="output-card mt-4">
+                      {t('viewCommunityWallet')}:{' '}
                       <a
                         href="https://bscscan.com/address/0x588f82a66eE31E59B88114836D11e3d00b3A7916"
                         target="_blank"
@@ -273,28 +269,26 @@ ethereum(network: $network){
                     </div>
                   </Col>
                   <Col xs="12" className="my-2">
-                    <ProgressBar height="15">
+                    <ProgressBar style={{ height: '30px' }}>
                       <ProgressBar
                         variant={progColor}
                         now={totalWidth}
-                        label={`$${formatFromWei(totalUSD, 0)}`}
+                        label={`$${formatFromWei(totalUSD, 0)} (${t(
+                          'donations',
+                        )})`}
                       />
-                      <ProgressBar
-                        variant="black"
-                        now={100 - totalWidth}
-                        label="<-- Donations"
-                      />
+                      <ProgressBar variant="black" now={100 - totalWidth} />
                     </ProgressBar>
                   </Col>
 
                   <Col xs="12" className="my-2">
-                    <ProgressBar height="30">
+                    <ProgressBar style={{ height: '30px' }}>
                       <ProgressBar now="30" label="$30K (Min)" />
                       <ProgressBar variant="black" now="0.25" />
                       <ProgressBar
                         variant="info"
                         now="66"
-                        label="$96K (Target)"
+                        label={`$96K (${t('target')})`}
                       />
                       <ProgressBar variant="black" now="0.25" />
                       <ProgressBar variant="green" now="14" label="$110K" />
@@ -308,12 +302,15 @@ ethereum(network: $network){
           <Col className="">
             <Card className="card-480">
               <Card.Header>
-                <Card.Title>Donate to the CodeArena Campaign</Card.Title>
+                <Card.Title>{t('donateToCampaign')}</Card.Title>
               </Card.Header>
               <Card.Body>
                 <Row>
                   {network.chainId === 56 && (
                     <>
+                      <Col xs="12" className="my-2">
+                        {t('donationsHeldCurrencyInfo')}
+                      </Col>
                       <Col xs="12" className="my-2">
                         <Row
                           onClick={() => setselectedAsset('BNB')}
@@ -330,7 +327,7 @@ ethereum(network: $network){
                               >
                                 BNB - Binance Coin BEP20 Token
                                 <div className="description">
-                                  Your Wallet:{' '}
+                                  {t('yourWallet')}:{' '}
                                   {formatFromWei(
                                     sparta.communityWallet?.userBnb,
                                   )}
@@ -356,7 +353,7 @@ ethereum(network: $network){
                               >
                                 BUSD - Binance-Peg BUSD Token
                                 <div className="description">
-                                  Your Wallet:{' '}
+                                  {t('yourWallet')}:{' '}
                                   {formatFromWei(
                                     sparta.communityWallet?.userBusd,
                                   )}
@@ -381,7 +378,7 @@ ethereum(network: $network){
                               >
                                 USDT - Binance-Peg USD-T Token
                                 <div className="description">
-                                  Your Wallet:{' '}
+                                  {t('yourWallet')}:{' '}
                                   {formatFromWei(
                                     sparta.communityWallet?.userUsdt,
                                   )}
@@ -412,10 +409,7 @@ ethereum(network: $network){
                   {network.chainId !== 56 && (
                     <>
                       <Col>
-                        <div>
-                          Switch the DApp and your wallet to mainnet to
-                          contribute funds
-                        </div>
+                        <div>{t('changeToMainnet')}</div>
                       </Col>
                     </>
                   )}
@@ -429,7 +423,7 @@ ethereum(network: $network){
                       disabled={inputDonation?.value <= 0 && wallet?.account}
                       onClick={() => handleDonation()}
                     >
-                      Donate
+                      {t('donate')}
                     </Button>
                   </>
                 )}
@@ -439,7 +433,7 @@ ethereum(network: $network){
           <Col className="">
             <Card className="card-480">
               <Card.Header>
-                <Card.Title>Recent Donations</Card.Title>
+                <Card.Title> {t('recentDonations')}</Card.Title>
               </Card.Header>
               <Card.Body>
                 {recentTxns.length > 0 &&
@@ -461,7 +455,7 @@ ethereum(network: $network){
                           <Col xs="12" className="float-left ml-n4 output-card">
                             {i.amount} {i.currency.symbol}
                             <div className="description">
-                              Donated by:{' '}
+                              {t('donatedBy')}:{' '}
                               <a
                                 href={getExplorerWallet(i.address.address)}
                                 target="_blank"
@@ -479,10 +473,7 @@ ethereum(network: $network){
                   <>
                     <Row>
                       <Col>
-                        <div>
-                          Switch the DApp and your wallet to mainnet to
-                          contribute funds
-                        </div>
+                        <div>{t('changeToMainnet')}</div>
                       </Col>
                     </Row>
                   </>

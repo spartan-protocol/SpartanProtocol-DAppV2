@@ -168,7 +168,8 @@ const Supply = () => {
             Tokenomics
             <Form className="mb-0">
               <span className="output-card">
-                Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                {t('network')}:{' '}
+                {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
                 <Form.Check
                   type="switch"
                   id="custom-switch"
@@ -301,7 +302,7 @@ const Supply = () => {
                 <Badge bg="info">{t('bond')}</Badge>
               </Col>
               <Col xs="4" className="text-center">
-                <Badge bg="danger">{t('emisson')}</Badge>
+                <Badge bg="danger">{t('emission')}</Badge>
               </Col>
 
               <Col xs="6" className="popover-text mt-3">

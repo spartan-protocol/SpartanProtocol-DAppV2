@@ -280,7 +280,7 @@ const NewPool = () => {
                   </div>
                 )}
               <InputGroup className="my-2">
-                <InputGroup.Text>Address</InputGroup.Text>
+                <InputGroup.Text>{t('address')}</InputGroup.Text>
                 <FormControl
                   id="addrInput"
                   placeholder="0x..."
@@ -304,7 +304,7 @@ const NewPool = () => {
                 </Form.Control.Feedback>
               </InputGroup>
               <InputGroup className="my-2">
-                <InputGroup.Text>Input</InputGroup.Text>
+                <InputGroup.Text>{t('input')}</InputGroup.Text>
                 <FormControl
                   id="spartaInput"
                   placeholder="$SPARTA"
@@ -321,7 +321,7 @@ const NewPool = () => {
                 </Form.Control.Feedback>
               </InputGroup>
               <InputGroup className="my-2">
-                <InputGroup.Text>Input</InputGroup.Text>
+                <InputGroup.Text>{t('input')}</InputGroup.Text>
                 <FormControl
                   id="tokenInput"
                   placeholder={`$${tokenSymbol}`}

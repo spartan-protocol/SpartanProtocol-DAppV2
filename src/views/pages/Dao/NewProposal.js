@@ -226,7 +226,9 @@ const NewProposal = () => {
                                   />
                                 )}
                                 <InputGroup>
-                                  <InputGroup.Text>Address</InputGroup.Text>
+                                  <InputGroup.Text>
+                                    {t('address')}
+                                  </InputGroup.Text>
                                   <FormControl
                                     id="addrInput"
                                     placeholder="0x..."

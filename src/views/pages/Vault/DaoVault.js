@@ -134,7 +134,7 @@ const DaoVault = () => {
               <Col xs="auto" className="text-card">
                 {t('lockupPeriod')}
               </Col>
-              <Col className="text-end output-card">24 Hours</Col>
+              <Col className="text-end output-card">24 {t('hours')}</Col>
             </Row>
           </Card.Body>
           <Card.Footer>
@@ -171,11 +171,12 @@ const DaoVault = () => {
                 {t('harvestable')}
               </Col>
               <Col className="text-end output-card">
-                {BN(dao.member?.weight).plus(bond.member?.weight) > 0 &&
-                dao.member?.isMember
-                  ? formatFromWei(getClaimable())
-                  : '0.00'}{' '}
-                SPARTA
+                {reserve.globalDetails.emissions
+                  ? BN(dao.member?.weight).plus(bond.member?.weight) > 0 &&
+                    dao.member?.isMember
+                    ? `${formatFromWei(getClaimable())} SPARTA`
+                    : '0.00 SPARTA'
+                  : t('incentivesDisabled')}
               </Col>
             </Row>
             <Row className="my-1">
@@ -185,18 +186,24 @@ const DaoVault = () => {
               <Col className="text-end output-card">
                 {getLockedSecs()[0] > 0
                   ? getLockedSecs()[0] + getLockedSecs()[1]
-                  : 'Unlocked'}
+                  : t('unlocked')}
               </Col>
             </Row>
           </Card.Body>
           <Card.Footer className="card-body text-center">
-            <Button
-              className="w-100"
-              onClick={() => dispatch(daoHarvest(wallet))}
-              disabled={BN(dao.member?.weight).plus(bond.member?.weight) <= 0}
-            >
-              {t('harvestAll')}
-            </Button>
+            {reserve.globalDetails.emissions ? (
+              <Button
+                className="w-100"
+                onClick={() => dispatch(daoHarvest(wallet))}
+                disabled={BN(dao.member?.weight).plus(bond.member?.weight) <= 0}
+              >
+                {t('harvestAll')}
+              </Button>
+            ) : (
+              <Button className="w-100" disabled>
+                {t('incentivesDisabled')}
+              </Button>
+            )}
           </Card.Footer>
         </Card>
       </Col>
@@ -281,13 +288,13 @@ const DaoVault = () => {
                 </Card.Body>
                 <Card.Footer>
                   <Row>
-                    <Col xs="6">
+                    <Col xs="6" className="pe-1">
                       <DaoDepositModal
                         tokenAddress={i.tokenAddress}
                         disabled={i.balance <= 0}
                       />
                     </Col>
-                    <Col xs="6">
+                    <Col xs="6" className="ps-1">
                       <Button
                         className="w-100"
                         onClick={() => dispatch(daoWithdraw(i.address, wallet))}

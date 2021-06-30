@@ -1,5 +1,5 @@
 .card {
-  background-color: #25212d;
+  background-color: #1D171F;
   color: #ffffff;
   border: 0;
   box-shadow: $box-shadow;
@@ -36,6 +36,10 @@
   font-weight: 700;
 }
 
+.card-alt {
+  background-color: #25212D;
+}
+
 // WHITE MODE
 .white-content {
   .card {
@@ -49,5 +53,8 @@
   .card h5,
   .card h6 {
     color: #000;
+  }
+  .card-alt {
+    background-color: #F5F8FC;
   }
 }

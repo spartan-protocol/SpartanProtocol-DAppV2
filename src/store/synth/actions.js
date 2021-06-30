@@ -33,6 +33,9 @@ export const getSynthGlobalDetails = (wallet) => async (dispatch) => {
       contract.callStatic.erasToEarn(),
       contract.callStatic.blockDelay(),
       contract.callStatic.vaultClaim(),
+      contract.callStatic.genesis(),
+      contract.callStatic.map30DVaultRevenue(),
+      contract.callStatic.mapPast30DVaultRevenue(),
       // contract.callStatic.getStakeSynthLength(),
     ]
     awaitArray = await Promise.all(awaitArray)
@@ -42,6 +45,9 @@ export const getSynthGlobalDetails = (wallet) => async (dispatch) => {
       erasToEarn: awaitArray[2].toString(),
       blockDelay: awaitArray[3].toString(),
       vaultClaim: awaitArray[4].toString(),
+      genesis: awaitArray[5].toString(),
+      recentRevenue: awaitArray[6].toString(),
+      lastMonthRevenue: awaitArray[7].toString(),
       // stakedSynthLength: awaitArray[5].toString(),
     }
     dispatch(payloadToDispatch(Types.SYNTH_GLOBAL_DETAILS, globalDetails))

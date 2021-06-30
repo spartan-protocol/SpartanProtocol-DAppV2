@@ -57,12 +57,6 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
                   </a>
                 </span>
               </Col>
-
-              <Col xs="12" className="">
-                <Button color="primary" onClick={() => handleCloseModal()}>
-                  {t('close')}
-                </Button>
-              </Col>
             </Row>
           )}
           {loading && <HelmetLoading />}
@@ -91,33 +85,43 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
           )}
         </Card.Body>
         <Card.Footer>
-          <Row>
-            {wallet?.account && (
-              <Approval
-                tokenAddress={synth1.address}
-                symbol={`${token.symbol}s`}
-                walletAddress={wallet?.account}
-                contractAddress={addr.synthVault}
-                txnAmount={deposit()}
-                assetNumber="1"
-              />
-            )}
-            <Col className="hide-if-prior-sibling">
-              <Button
-                className="w-100"
-                onClick={async () => {
-                  setloading(true)
-                  await dispatch(
-                    synthDeposit(synth1.address, deposit(), wallet),
-                  )
-                  setstage(stage + 1)
-                  setloading(false)
-                }}
-              >
-                {t('confirm')}
-              </Button>
-            </Col>
-          </Row>
+          {stage === 0 ? (
+            <Row>
+              {wallet?.account && (
+                <Approval
+                  tokenAddress={synth1.address}
+                  symbol={`${token.symbol}s`}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.synthVault}
+                  txnAmount={deposit()}
+                  assetNumber="1"
+                />
+              )}
+              <Col className="hide-if-prior-sibling">
+                <Button
+                  className="w-100"
+                  onClick={async () => {
+                    setloading(true)
+                    await dispatch(
+                      synthDeposit(synth1.address, deposit(), wallet),
+                    )
+                    setstage(stage + 1)
+                    setloading(false)
+                  }}
+                >
+                  {t('confirm')}
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            <Row>
+              <Col xs="12" className="">
+                <Button color="primary" onClick={() => handleCloseModal()}>
+                  {t('close')}
+                </Button>
+              </Col>
+            </Row>
+          )}
         </Card.Footer>
       </Card>
     </Modal>

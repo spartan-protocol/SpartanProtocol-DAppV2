@@ -10,6 +10,7 @@ import {
   InputGroup,
   FormControl,
   Button,
+  Badge,
 } from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray, getNetwork } from '../../../utils/web3'
@@ -761,10 +762,10 @@ const Swap = () => {
                         <Row>
                           {/* 'From' input box */}
                           <Col xs="12" className="px-1 px-sm-3">
-                            <Card>
+                            <Card className="card-alt">
                               <Card.Body>
                                 <Row>
-                                  <Col className="text-sm-label">
+                                  <Col xs="auto" className="text-sm-label">
                                     {t('sell')}
                                   </Col>
                                   <Col
@@ -781,6 +782,9 @@ const Swap = () => {
                                       )
                                     }}
                                   >
+                                    <Badge bg="primary" className="me-1">
+                                      MAX
+                                    </Badge>
                                     {t('balance')}
                                     {': '}
                                     {formatFromWei(getBalance(1), 4)}
@@ -839,12 +843,10 @@ const Swap = () => {
                               >
                                 <Icon
                                   icon="swap"
-                                  size="25"
-                                  stroke="#fb2715"
-                                  fill="none"
-                                  className="mx-auto position-relative"
+                                  size="35"
+                                  stroke="white"
+                                  className="position-relative bg-primary rounded-circle px-2"
                                   style={{
-                                    height: '35px',
                                     top: '-20px',
                                     zIndex: '1000',
                                   }}
@@ -854,10 +856,10 @@ const Swap = () => {
 
                             {/* 'To' input box */}
 
-                            <Card>
+                            <Card className="card-alt">
                               <Card.Body>
                                 <Row>
-                                  <Col className="text-sm-label">
+                                  <Col xs="auto" className="text-sm-label">
                                     {t('buy')}
                                   </Col>
                                   <Col className="text-sm-label float-end text-end">

@@ -11,6 +11,7 @@ import {
   InputGroup,
   FormControl,
   Button,
+  Badge,
 } from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
@@ -425,10 +426,12 @@ const LiqRemove = () => {
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
-                <Card>
+                <Card className="card-alt">
                   <Card.Body>
                     <Row>
-                      <Col className="text-sm-label">{t('redeem')}</Col>
+                      <Col xs="auto" className="text-sm-label">
+                        {t('redeem')}
+                      </Col>
                       <Col
                         className="text-sm-label float-end text-end"
                         role="button"
@@ -438,6 +441,9 @@ const LiqRemove = () => {
                           removeInput1.value = convertFromWei(getBalance(1))
                         }}
                       >
+                        <Badge bg="primary" className="me-1">
+                          MAX
+                        </Badge>
                         {t('balance')}:{' '}
                         {pool.poolDetails && formatFromWei(getBalance(1))}
                       </Col>
@@ -491,10 +497,12 @@ const LiqRemove = () => {
                 </Row>
 
                 {activeTab === '2' && (
-                  <Card>
+                  <Card className="card-alt">
                     <Card.Body>
                       <Row>
-                        <Col className="text-sm-label">{t('receive')}</Col>
+                        <Col xs="auto" className="text-sm-label">
+                          {t('receive')}
+                        </Col>
                         <Col className="text-sm-label float-end text-end">
                           {t('balance')}:{' '}
                           {pool.tokenDetails && formatFromWei(getBalance(2))}

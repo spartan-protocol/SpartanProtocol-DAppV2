@@ -83,7 +83,7 @@ const Overview = () => {
             <Form.Group as={Row} className="row-480 mb-3">
               <Col xs="12">
                 <Form.Check
-                  label="Current Proposal"
+                  label={t('open')}
                   inline
                   name="group1"
                   type="radio"
@@ -92,7 +92,7 @@ const Overview = () => {
                   onClick={() => setSelectedView('current')}
                 />
                 <Form.Check
-                  label="Completed Proposals"
+                  label={t('completed')}
                   inline
                   name="group1"
                   type="radio"
@@ -100,7 +100,7 @@ const Overview = () => {
                   onClick={() => setSelectedView('complete')}
                 />
                 <Form.Check
-                  label="Failed Proposals"
+                  label={t('failed')}
                   inline
                   name="group1"
                   type="radio"
@@ -119,7 +119,7 @@ const Overview = () => {
                           .map((pid) => (
                             <ProposalItem key={pid.id} proposal={pid} />
                           ))
-                      : 'No open proposals, visit the community channels to join the discussion of the next community proposal')}
+                      : t('noOpenProposalsInfo'))}
                   {selectedView === 'complete' &&
                     dao?.proposal
                       .filter((pid) => pid.finalised)
@@ -140,7 +140,7 @@ const Overview = () => {
               {dao?.proposal.length <= 0 && (
                 <Col xs="auto">
                   <Card className="card-320 card-underlay">
-                    <Card.Title>No valid proposals found</Card.Title>
+                    <Card.Body>{t('noValidProposals')}</Card.Body>
                   </Card>
                 </Col>
               )}
