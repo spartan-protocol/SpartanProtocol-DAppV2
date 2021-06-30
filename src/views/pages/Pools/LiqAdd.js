@@ -5,6 +5,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
+  Badge,
   Button,
   Card,
   Col,
@@ -425,10 +426,12 @@ const LiqAdd = () => {
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
-                <Card>
+                <Card className="card-alt">
                   <Card.Body>
                     <Row className="">
-                      <Col className="text-sm-label">{t('add')}</Col>
+                      <Col xs="auto" className="text-sm-label">
+                        {t('add')}
+                      </Col>
                       <Col
                         className="text-sm-label float-end text-end"
                         role="button"
@@ -437,6 +440,9 @@ const LiqAdd = () => {
                           addInput1.value = convertFromWei(getBalance(1))
                         }}
                       >
+                        <Badge bg="primary" className="me-1">
+                          MAX
+                        </Badge>
                         {t('balance')}:{' '}
                         {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
                       </Col>
@@ -486,31 +492,38 @@ const LiqAdd = () => {
                 </Card>
 
                 <Row style={{ height: '2px' }}>
-                  {activeTab === 'addTab1' && (
-                    <Icon
-                      icon="plus"
-                      size="25"
-                      fill="#fb2715"
-                      className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-20px', zIndex: '1000' }}
-                    />
-                  )}
-                  {activeTab === 'addTab2' && (
-                    <Icon
-                      icon="swapAdd"
-                      size="25"
-                      fill="#fb2715"
-                      className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-20px', zIndex: '1000' }}
-                    />
-                  )}
+                  <Col xs="auto" className="mx-auto">
+                    {activeTab === 'addTab1' && (
+                      <Icon
+                        icon="plus"
+                        size="35"
+                        stroke="white"
+                        className="position-relative bg-primary rounded-circle px-1"
+                        style={{
+                          top: '-20px',
+                          zIndex: '1000',
+                        }}
+                      />
+                    )}
+                    {activeTab === 'addTab2' && (
+                      <Icon
+                        icon="swapAdd"
+                        size="35"
+                        fill="#fb2715"
+                        className="mx-auto position-relative"
+                        style={{ height: '35px', top: '-20px', zIndex: '1000' }}
+                      />
+                    )}
+                  </Col>
                 </Row>
 
                 {activeTab === 'addTab1' && (
-                  <Card>
+                  <Card className="card-alt">
                     <Card.Body>
                       <Row className="">
-                        <Col className="text-sm-label">{t('receive')}</Col>
+                        <Col xs="auto" className="text-sm-label">
+                          {t('add')}
+                        </Col>
                         <Col
                           className="text-sm-label float-end text-end"
                           role="button"
@@ -520,6 +533,9 @@ const LiqAdd = () => {
                             addInput2.value = convertFromWei(getBalance(2))
                           }}
                         >
+                          <Badge bg="primary" className="me-1">
+                            MAX
+                          </Badge>
                           {t('balance')}:{' '}
                           {pool.poolDetails && formatFromWei(getBalance(2))}
                         </Col>
@@ -567,10 +583,12 @@ const LiqAdd = () => {
                 )}
 
                 {activeTab === 'addTab2' && (
-                  <Card>
+                  <Card className="card-alt">
                     <Card.Body>
                       <Row className="">
-                        <Col className="text-sm-label">{t('add')}</Col>
+                        <Col xs="auto" className="text-sm-label">
+                          {t('receive')}
+                        </Col>
                         <Col className="text-sm-label float-end text-end">
                           {t('balance')}:{' '}
                           {pool.poolDetails && formatFromWei(getBalance(3))}

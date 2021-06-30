@@ -13,6 +13,7 @@ import {
   Button,
   OverlayTrigger,
   ProgressBar,
+  Badge,
 } from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
@@ -182,12 +183,14 @@ const LiqBond = () => {
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
-                <Card>
+                <Card className="card-alt">
                   <Card.Body>
                     {bond.listedAssets?.length > 0 ? (
                       <>
                         <Row>
-                          <Col className="text-sm-label">{t('bond')}</Col>
+                          <Col xs="auto" className="text-sm-label">
+                            {t('bond')}
+                          </Col>
                           <Col
                             className="text-sm-label float-end text-end"
                             role="button"
@@ -198,6 +201,9 @@ const LiqBond = () => {
                               )
                             }}
                           >
+                            <Badge bg="primary" className="me-1">
+                              MAX
+                            </Badge>
                             {t('balance')}:{' '}
                             {formatFromWei(
                               getToken(assetBond1.tokenAddress)?.balance,
