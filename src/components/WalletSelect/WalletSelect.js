@@ -10,6 +10,7 @@ import {
   Col,
   Tabs,
   Tab,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import walletTypes from './walletTypes'
@@ -17,6 +18,7 @@ import { getExplorerWallet } from '../../utils/extCalls'
 import {
   changeNetworkLsOnly,
   formatShortString,
+  getAddresses,
   getNetwork,
 } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
@@ -25,9 +27,71 @@ import Assets from './Assets'
 import LPs from './LPs'
 import Synths from './Synths'
 import { Icon } from '../Icons/icons'
+import { Tooltip } from '../Tooltip/tooltip'
+import { useBond } from '../../store/bond/selector'
+import { useDao } from '../../store/dao/selector'
+import { useSynth } from '../../store/synth'
+import { usePool } from '../../store/pool'
+import { BN, convertFromWei } from '../../utils/bigNumber'
+
+export const spartanRanks = [
+  {
+    id: 'Hopolite',
+    weight: 10,
+  },
+  {
+    id: 'Lochagos',
+    weight: 100,
+  },
+  {
+    id: 'Igetis Tagmatos',
+    weight: 1000,
+  },
+  {
+    id: 'Syntagmatarchis',
+    weight: 2500,
+  },
+  {
+    id: 'Taxiarchos',
+    weight: 5000,
+  },
+  {
+    id: 'Stratigos',
+    weight: 10000,
+  },
+  {
+    id: 'Polemarchos',
+    weight: 20000,
+  },
+  {
+    id: 'Aesipolis',
+    weight: 40000,
+  },
+  {
+    id: 'Pausanius',
+    weight: 80000,
+  },
+  {
+    id: 'Agis III',
+    weight: 160000,
+  },
+  {
+    id: 'Anaxandridas II',
+    weight: 320000,
+  },
+  {
+    id: 'Leonidas I',
+    weight: 640000,
+  },
+]
 
 const WalletSelect = (props) => {
   const wallet = useWallet()
+  const bond = useBond()
+  const dao = useDao()
+  const synth = useSynth()
+  const pool = usePool()
+  const addr = getAddresses()
   const [network, setNetwork] = useState(getNetwork)
   const { t } = useTranslation()
 
@@ -133,6 +197,91 @@ const WalletSelect = (props) => {
     window.localStorage.getItem('disableWallet'),
   ])
 
+  const getWeight = () => {
+    if (wallet.account && pool.tokenDetails.length > 1) {
+      const validate = (value) => (value > 0 ? BN(value) : BN('0'))
+      const getPoolWeight = () => {
+        let weight = BN('0')
+        for (let i = 0; i < pool.poolDetails.length; i++) {
+          const thePool = pool.poolDetails[i]
+          if (thePool.address !== '') {
+            weight = weight.plus(
+              BN(thePool.balance)
+                .div(BN(thePool.poolUnits))
+                .times(BN(thePool.baseAmount)),
+            )
+          }
+        }
+        return validate(weight)
+      }
+      const getSynthWeight = () => {
+        let weight = BN('0')
+        for (let i = 0; i < synth.synthDetails.length; i++) {
+          const theSynth = synth.synthDetails[i]
+          const thePool = pool.poolDetails.filter(
+            (pewl) => pewl.tokenAddress === theSynth.tokenAddress,
+          )[0]
+          if (theSynth.balance > 0) {
+            weight = weight.plus(
+              BN(theSynth.balance).times(
+                BN(thePool.baseAmount).div(BN(thePool.tokenAmount)),
+              ),
+            )
+          }
+        }
+        return validate(weight)
+      }
+
+      const bondWeight = validate(bond.member.weight)
+      const daoWeight = validate(dao.member.weight)
+      const synthVaultWeight = validate(synth.memberDetails.totalWeight)
+      const spartaWeight = validate(
+        pool.tokenDetails.filter((token) => token.address === addr.spartav2)[0]
+          .balance,
+      )
+      const poolWeight = getPoolWeight()
+      const synthWeight = getSynthWeight()
+
+      return convertFromWei(
+        bondWeight
+          .plus(daoWeight)
+          .plus(synthVaultWeight)
+          .plus(spartaWeight)
+          .plus(poolWeight)
+          .plus(synthWeight),
+      )
+    }
+    return '0'
+  }
+
+  const [rank, setrank] = useState('0')
+  const getRank = () => {
+    const weight = getWeight()
+    const ranksArray = spartanRanks.filter((i) => i.weight < weight)
+    const { length } = ranksArray
+    if (length > 0) {
+      setrank(ranksArray[length - 1].id)
+    } else {
+      setrank('Peasant')
+    }
+  }
+
+  const [trigger1, settrigger1] = useState(0)
+  useEffect(() => {
+    if (trigger1 === 0) {
+      getRank()
+      settrigger1(trigger1 + 1)
+    }
+    const timer = setTimeout(() => {
+      getRank()
+      settrigger1(trigger1 + 1)
+    }, 3000)
+    return () => {
+      clearTimeout(timer)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger1])
+
   return (
     <>
       <Modal show={props.show} onHide={props.onHide} centered>
@@ -159,8 +308,8 @@ const WalletSelect = (props) => {
                   t('connectWallet')
                 )}
               </Col>
-              <Col xs="auto">
-                <Form className="mb-0">
+              <Col xs="12">
+                <Form className="mb-1">
                   <span className="output-card">
                     Network: {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
                     <Form.Check
@@ -172,6 +321,26 @@ const WalletSelect = (props) => {
                         onChangeNetwork(value)
                       }}
                     />
+                  </span>
+                </Form>
+              </Col>
+              <Col xs="12">
+                <Form className="mb-0">
+                  <span className="output-card">
+                    Rank: {rank}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'rank')}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="17"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
                   </span>
                 </Form>
               </Col>

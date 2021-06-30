@@ -301,7 +301,7 @@ const Supply = () => {
                 <Badge bg="info">{t('bond')}</Badge>
               </Col>
               <Col xs="4" className="text-center">
-                <Badge bg="danger">{t('emisson')}</Badge>
+                <Badge bg="danger">{t('emission')}</Badge>
               </Col>
 
               <Col xs="6" className="popover-text mt-3">

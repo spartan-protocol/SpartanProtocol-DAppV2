@@ -20,6 +20,12 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'bondInfo',
     },
     {
+      id: 'rank',
+      title: 'rank',
+      body:
+        'A NET SPARTA-value sum of all your Spartan Protocol ecosystem tokens, whether held, staked or bonded.',
+    },
+    {
       id: 'revenue',
       title: 'revenue',
       body: 'revenueInfo',
