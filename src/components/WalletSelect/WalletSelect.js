@@ -36,19 +36,19 @@ import { BN, convertFromWei } from '../../utils/bigNumber'
 
 export const spartanRanks = [
   {
-    id: 'Paides',
+    id: 'Polemistis',
     weight: 10,
   },
   {
-    id: 'Paidiskoi',
+    id: 'Psiloi',
     weight: 100,
   },
   {
-    id: 'Hēbōntes',
+    id: 'Toxotai',
     weight: 500,
   },
   {
-    id: 'Hopolite',
+    id: 'Hoplite',
     weight: 1000,
   },
   {
@@ -76,7 +76,7 @@ export const spartanRanks = [
     weight: 300000,
   },
   {
-    id: 'Aesipolis',
+    id: 'Cynisca',
     weight: 500000,
   },
   {
@@ -88,7 +88,7 @@ export const spartanRanks = [
     weight: 1000000,
   },
   {
-    id: 'Anaxandridas II',
+    id: 'Gorgo',
     weight: 2000000,
   },
   {
