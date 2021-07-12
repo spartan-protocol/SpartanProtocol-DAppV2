@@ -124,74 +124,73 @@ export const getSynthMemberDetails = (wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {array} synthDetails
  */
-export const getSynthDetails = (synthArray, listedPools, wallet) => async (
-  dispatch,
-) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract(wallet)
+export const getSynthDetails =
+  (synthArray, listedPools, wallet) => async (dispatch) => {
+    dispatch(synthLoading())
+    const contract = getSynthVaultContract(wallet)
 
-  try {
-    let tempArray = []
-    for (let i = 0; i < synthArray.length; i++) {
-      if (wallet.account === null || synthArray[i].address === false) {
-        tempArray.push('0') // balance
-        tempArray.push('0') // staked
-        tempArray.push('0') // synthWeight
-        tempArray.push('0') // lastHarvest
-      } else {
-        const synthContract = getSynthContract(synthArray[i].address, wallet)
-        tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
-        tempArray.push(
-          contract.callStatic.getMemberDeposit(
-            synthArray[i].address,
-            wallet.account,
-          ),
-        ) // staked
-        tempArray.push(
-          contract.callStatic.getMemberSynthWeight(
-            synthArray[i].address,
-            wallet.account,
-          ),
-        ) // synthWeight
-        tempArray.push(
-          contract.callStatic.getMemberLastSynthTime(
-            synthArray[i].address,
-            wallet.account,
-          ),
-        ) // lastHarvest
+    try {
+      let tempArray = []
+      for (let i = 0; i < synthArray.length; i++) {
+        if (wallet.account === null || synthArray[i].address === false) {
+          tempArray.push('0') // balance
+          tempArray.push('0') // staked
+          tempArray.push('0') // synthWeight
+          tempArray.push('0') // lastHarvest
+        } else {
+          const synthContract = getSynthContract(synthArray[i].address, wallet)
+          tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
+          tempArray.push(
+            contract.callStatic.getMemberDeposit(
+              synthArray[i].address,
+              wallet.account,
+            ),
+          ) // staked
+          tempArray.push(
+            contract.callStatic.getMemberSynthWeight(
+              synthArray[i].address,
+              wallet.account,
+            ),
+          ) // synthWeight
+          tempArray.push(
+            contract.callStatic.getMemberLastSynthTime(
+              synthArray[i].address,
+              wallet.account,
+            ),
+          ) // lastHarvest
+        }
+        if (synthArray[i].address === false) {
+          tempArray.push('0') // lpBalance
+          tempArray.push('0') // lpDebt
+        } else {
+          const pool = listedPools.filter(
+            (lp) => lp.tokenAddress === synthArray[i].tokenAddress,
+          )[0]
+          const synthContract = getSynthContract(synthArray[i].address, wallet)
+          tempArray.push(
+            synthContract.callStatic.getmapAddress_LPBalance(pool.address),
+          ) // lpBalance
+          tempArray.push(
+            synthContract.callStatic.getmapAddress_LPDebt(pool.address),
+          ) // lpDebt
+        }
       }
-      if (synthArray[i].address === false) {
-        tempArray.push('0') // lpBalance
-        tempArray.push('0') // lpDebt
-      } else {
-        const pool = listedPools.filter(
-          (lp) => lp.tokenAddress === synthArray[i].tokenAddress,
-        )[0]
-        const synthContract = getSynthContract(synthArray[i].address, wallet)
-        tempArray.push(
-          synthContract.callStatic.getmapAddress_LPBalance(pool.address),
-        ) // lpBalance
-        tempArray.push(
-          synthContract.callStatic.getmapAddress_LPDebt(pool.address),
-        ) // lpDebt
+      const synthDetails = synthArray
+      tempArray = await Promise.all(tempArray)
+      const varCount = 6
+      for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
+        synthDetails[i / varCount].balance = tempArray[i].toString()
+        synthDetails[i / varCount].staked = tempArray[i + 1].toString()
+        synthDetails[i / varCount].weight = tempArray[i + 2].toString()
+        synthDetails[i / varCount].lastHarvest = tempArray[i + 3].toString()
+        synthDetails[i / varCount].lpBalance = tempArray[i + 4].toString()
+        synthDetails[i / varCount].lpDebt = tempArray[i + 5].toString()
       }
+      dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
     }
-    const synthDetails = synthArray
-    tempArray = await Promise.all(tempArray)
-    const varCount = 6
-    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
-      synthDetails[i / varCount].balance = tempArray[i].toString()
-      synthDetails[i / varCount].staked = tempArray[i + 1].toString()
-      synthDetails[i / varCount].weight = tempArray[i + 2].toString()
-      synthDetails[i / varCount].lastHarvest = tempArray[i + 3].toString()
-      synthDetails[i / varCount].lpBalance = tempArray[i + 4].toString()
-      synthDetails[i / varCount].lpDebt = tempArray[i + 5].toString()
-    }
-    dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
   }
-}
 
 // --------------------------------------- SYNTH Actions ---------------------------------------
 
@@ -270,22 +269,21 @@ export const synthHarvestSingle = (synth, wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {uint256} withdrawAmount
  */
-export const synthWithdraw = (synth, basisPoints, wallet) => async (
-  dispatch,
-) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract(wallet)
+export const synthWithdraw =
+  (synth, basisPoints, wallet) => async (dispatch) => {
+    dispatch(synthLoading())
+    const contract = getSynthVaultContract(wallet)
 
-  try {
-    const gPrice = await getProviderGasPrice()
-    const withdrawAmount = await contract.withdraw(synth, basisPoints, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.SYNTH_WITHDRAW_AMOUNT, withdrawAmount))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+    try {
+      const gPrice = await getProviderGasPrice()
+      const withdrawAmount = await contract.withdraw(synth, basisPoints, {
+        gasPrice: gPrice,
+      })
+      dispatch(payloadToDispatch(Types.SYNTH_WITHDRAW_AMOUNT, withdrawAmount))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+    }
   }
-}
 
 /**
  * Deploy synthetic BEP20 asset
