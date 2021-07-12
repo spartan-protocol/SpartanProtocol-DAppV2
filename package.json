@@ -25,7 +25,6 @@
     "prop-types": "15.7.2",
     "react": "^17.0.1",
     "react-bootstrap": "^2.0.0-beta.0",
-    "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "17.0.1",
     "react-i18next": "^11.8.13",
     "react-lottie": "^1.2.3",
