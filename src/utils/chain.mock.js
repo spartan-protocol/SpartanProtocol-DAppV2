@@ -24,8 +24,7 @@ export const binanceChainMock = {
         from: '0xa7d9ddbe1f17865597fbd27ec712455208b6b76d',
         gas: '0xc350',
         gasPrice: '0x4a817c800',
-        hash:
-          '0xc6a8fa37107ed2bd3d9c07be0c86ff8a83002ab590d296cc3af303f09f68b379',
+        hash: '0xc6a8fa37107ed2bd3d9c07be0c86ff8a83002ab590d296cc3af303f09f68b379',
         input: '0x68656c6c6f21',
         nonce: '0x15',
         to: '0xf02c1c8e6114b1dbe8937a39260b5b0a374432bb',
