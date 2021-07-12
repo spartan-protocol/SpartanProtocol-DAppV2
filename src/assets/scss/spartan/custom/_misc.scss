@@ -24,3 +24,15 @@
 .card-collapse .card [data-toggle='collapse'].expanded i {
   @include rotate-180();
 }
+
+.zoomhover:hover {
+  -ms-transform: scale(1.15); /* IE 9 */
+  -webkit-transform: scale(1.15); /* Safari 3-8 */
+  transform: scale(1.15);
+}
+
+.zoomactive:active {
+  -ms-transform: scale(1.15); /* IE 9 */
+  -webkit-transform: scale(1.15); /* Safari 3-8 */
+  transform: scale(1.15);
+}

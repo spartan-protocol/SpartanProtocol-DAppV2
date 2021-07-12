@@ -91,7 +91,7 @@ const Assets = () => {
             <Col xs="3" className="text-right">
               <Row>
                 <Col xs="6" className="mt-1">
-                  <ShareLink url={asset.address} notificationLocation="tc">
+                  <ShareLink url={asset.address}>
                     <Icon icon="copy" role="button" size="24" />
                   </ShareLink>
                 </Col>
