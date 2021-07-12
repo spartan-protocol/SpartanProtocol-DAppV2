@@ -306,7 +306,7 @@ const WalletSelect = (props) => {
                     {t('wallet')}:{' '}
                     <span className="output-card">
                       {formatShortString(wallet.account)}
-                      <ShareLink url={wallet.account} notificationLocation="tc">
+                      <ShareLink url={wallet.account}>
                         <Icon
                           icon="copy"
                           className="ms-2 mb-1"

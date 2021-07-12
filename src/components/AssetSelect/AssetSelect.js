@@ -445,10 +445,7 @@ const AssetSelect = (props) => {
                 <Col xs="3" md="3" className="text-end p-0 pe-2">
                   <Row>
                     <Col xs="6">
-                      <ShareLink
-                        url={asset.actualAddr}
-                        notificationLocation="tc"
-                      >
+                      <ShareLink url={asset.actualAddr}>
                         <Icon icon="copy" size="24" className="ms-2" />
                       </ShareLink>
                     </Col>
@@ -533,10 +530,7 @@ const AssetSelect = (props) => {
                   <Col xs="3" md="3" className="text-end p-0 pe-2">
                     <Row>
                       <Col xs="6">
-                        <ShareLink
-                          url={asset.actualAddr}
-                          notificationLocation="tc"
-                        >
+                        <ShareLink url={asset.actualAddr}>
                           <Icon icon="copy" size="24" className="ms-2" />
                         </ShareLink>
                       </Col>
