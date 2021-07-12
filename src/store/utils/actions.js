@@ -28,19 +28,18 @@ export const getListedPools = (wallet) => async (dispatch) => {
  * UTILS HELPER -
  * Returns an array of pool addresses based on specified range
  */
-export const getListedPoolsRange = (first, count, wallet) => async (
-  dispatch,
-) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract(wallet)
+export const getListedPoolsRange =
+  (first, count, wallet) => async (dispatch) => {
+    dispatch(utilsLoading())
+    const contract = getUtilsContract(wallet)
 
-  try {
-    const pools = await contract.callStatic.poolsInRange(first, count)
-    dispatch(payloadToDispatch(Types.GET_LISTED_POOLS_RANGE, pools))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    try {
+      const pools = await contract.callStatic.poolsInRange(first, count)
+      dispatch(payloadToDispatch(Types.GET_LISTED_POOLS_RANGE, pools))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    }
   }
-}
 
 /**
  * UTILS HELPER -
@@ -179,23 +178,22 @@ export const getShareOfTokenAmount = (token, wallet) => async (dispatch) => {
  * Works out what you would end up with if you removed the liquidity and then swapped it all to one asset.
  * @returns [ uint baseAmount | uint tokenAmount | uint outputAmt ]
  */
-export const getPoolShareAssym = (token, wallet, toBase) => async (
-  dispatch,
-) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract(wallet)
+export const getPoolShareAssym =
+  (token, wallet, toBase) => async (dispatch) => {
+    dispatch(utilsLoading())
+    const contract = getUtilsContract(wallet)
 
-  try {
-    const poolShareAssym = await contract.callStatic.getPoolShareAssym(
-      token,
-      wallet?.account,
-      toBase,
-    )
-    dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM, poolShareAssym))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    try {
+      const poolShareAssym = await contract.callStatic.getPoolShareAssym(
+        token,
+        wallet?.account,
+        toBase,
+      )
+      dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM, poolShareAssym))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    }
   }
-}
 
 /**
  * UTILS HELPER -
@@ -298,19 +296,18 @@ export const getMemberPoolShare = (pool, wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {uint} weight
  */
-export const getPoolShareWeight = (tokens, units, wallet) => async (
-  dispatch,
-) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract(wallet)
+export const getPoolShareWeight =
+  (tokens, units, wallet) => async (dispatch) => {
+    dispatch(utilsLoading())
+    const contract = getUtilsContract(wallet)
 
-  try {
-    const weight = await contract.callStatic.getPoolShareWeight(tokens, units)
-    dispatch(payloadToDispatch(Types.GET_POOL_SHARE_WEIGHT, weight))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    try {
+      const weight = await contract.callStatic.getPoolShareWeight(tokens, units)
+      dispatch(payloadToDispatch(Types.GET_POOL_SHARE_WEIGHT, weight))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    }
   }
-}
 
 /**
  * Get depth of pool in SPARTA
@@ -377,25 +374,20 @@ export const getSynthData = (token, wallet) => async (dispatch) => {
  * @param {object} wallet
  * @returns {uint} share
  */
-export const getDebtShare = (
-  units,
-  totalSupply,
-  lpToken,
-  synth,
-  wallet,
-) => async (dispatch) => {
-  dispatch(utilsLoading())
-  const contract = getUtilsContract(wallet)
+export const getDebtShare =
+  (units, totalSupply, lpToken, synth, wallet) => async (dispatch) => {
+    dispatch(utilsLoading())
+    const contract = getUtilsContract(wallet)
 
-  try {
-    const share = await contract.callStatic.calcDebtShare(
-      units,
-      totalSupply,
-      lpToken,
-      synth,
-    )
-    dispatch(payloadToDispatch(Types.GET_DEBT_SHARE, share))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    try {
+      const share = await contract.callStatic.calcDebtShare(
+        units,
+        totalSupply,
+        lpToken,
+        synth,
+      )
+      dispatch(payloadToDispatch(Types.GET_DEBT_SHARE, share))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    }
   }
-}
