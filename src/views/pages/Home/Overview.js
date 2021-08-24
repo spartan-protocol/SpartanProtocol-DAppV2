@@ -5,18 +5,18 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Col, Row, Tab, Tabs } from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
-import { getAddresses, getNetwork } from '../../../utils/web3'
+import { getNetwork } from '../../../utils/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import NewPool from './NewPool'
+import SummaryItem from './SummaryItem'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const wallet = useWallet()
   const { t } = useTranslation()
   const pool = usePool()
-  const addr = getAddresses()
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -67,15 +67,39 @@ const Overview = () => {
             <Row className="row-480">
               <Col xs="12">
                 <Tabs className="mb-3">
-                  <Tab eventKey="overview" title={t('overview')}>
+                  <Tab eventKey="curated" title={t('curated')}>
+                    <SummaryItem />
                     <Row>
                       {pool?.poolDetails
                         .filter(
                           (asset) =>
-                            asset.tokenAddress !== addr.spartav1 &&
-                            asset.tokenAddress !== addr.spartav2 &&
-                            asset.baseAmount > 0,
+                            asset.baseAmount > 0 && asset.curated === true,
                         )
+                        .sort((a, b) => b.baseAmount - a.baseAmount)
+                        .map((asset) => (
+                          <PoolItem key={asset.address} asset={asset} />
+                        ))}
+                    </Row>
+                  </Tab>
+                  <Tab eventKey="standard" title={t('standard')}>
+                    <SummaryItem />
+                    <Row>
+                      {pool?.poolDetails
+                        .filter(
+                          (asset) =>
+                            asset.baseAmount > 0 && asset.curated === false,
+                        )
+                        .sort((a, b) => b.baseAmount - a.baseAmount)
+                        .map((asset) => (
+                          <PoolItem key={asset.address} asset={asset} />
+                        ))}
+                    </Row>
+                  </Tab>
+                  <Tab eventKey="new" title={t('new')}>
+                    <SummaryItem />
+                    <Row>
+                      {pool?.poolDetails
+                        .filter((asset) => asset.newPool === true)
                         .sort((a, b) => b.baseAmount - a.baseAmount)
                         .map((asset) => (
                           <PoolItem key={asset.address} asset={asset} />

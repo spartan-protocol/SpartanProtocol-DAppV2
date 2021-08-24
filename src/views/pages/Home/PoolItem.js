@@ -9,6 +9,10 @@ import { calcAPY } from '../../../utils/web3Utils'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 
+// NOTES:
+// ADD INITIALISATION PERIOD CHECK (GENESIS + 604800) CANT REMOVELIQ; SHOW WARNING ON ADDLIQ; SHOW BADGE? OR DIFFERENT TAB (NEW POOLS???)
+// --- USE PoolData.newPool to validate initialisation-period-pools
+
 const PoolItem = ({ asset }) => {
   const { t } = useTranslation()
   const pool = usePool()

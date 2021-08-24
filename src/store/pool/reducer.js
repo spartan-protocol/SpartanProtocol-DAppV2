@@ -2,7 +2,6 @@ import * as Types from './types'
 
 const initialState = {
   listedTokens: [],
-  curatedPools: [],
   tokenDetails: [],
   listedPools: [],
   poolDetails: [],
@@ -18,15 +17,6 @@ export const poolReducer = (state = initialState, action) => {
       return {
         ...state,
         listedTokens: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.POOL_CURATED_POOLS: {
-      return {
-        ...state,
-        curatedPools: action.payload,
         error: null,
         loading: false,
       }
