@@ -29,6 +29,7 @@ import {
   calcLiquidityHoldings,
   calcLiquidityUnits,
   calcSwapFee,
+  calcSwapOutput,
   calcValueInBase,
   calcValueInToken,
 } from '../../../utils/web3Utils'
@@ -182,9 +183,10 @@ const LiqAdd = () => {
     return poolAdd1?.balance
   }
 
-  const getFeeBurn = (_amount) => {
+  const minusFeeBurn = (_amount) => {
     const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
+    const afterFeeBurn = _amount.minus(burnFee)
+    return afterFeeBurn
   }
 
   //= =================================================================================//
@@ -194,9 +196,7 @@ const LiqAdd = () => {
     if (addInput1 && addInput2 && assetAdd1) {
       return convertFromWei(
         calcLiquidityUnits(
-          BN(convertToWei(addInput2?.value)).minus(
-            getFeeBurn(convertToWei(addInput2?.value)),
-          ),
+          minusFeeBurn(BN(convertToWei(addInput2?.value))),
           convertToWei(addInput1?.value),
           assetAdd1?.baseAmount,
           assetAdd1?.tokenAmount,
@@ -210,36 +210,53 @@ const LiqAdd = () => {
   //= =================================================================================//
   // 'Add Single' Functions (Re-Factor)
 
+  /**
+   * Swap details from before the liqAdd
+   * @returns {uint} swapOutput
+   * @returns {uint} swapFee
+   */
+  const getAddSingleSwapOutput = () => {
+    if (addInput1 && assetAdd1) {
+      const toSparta = assetAdd1.tokenAddress !== addr.spartav2
+      let received = BN(convertToWei(addInput1?.value)).div(2)
+      received = assetAdd1 === addr.spartav2 ? minusFeeBurn(received) : received
+      const swapOutput = calcSwapOutput(
+        received,
+        poolAdd1.tokenAmount,
+        poolAdd1.baseAmount,
+        toSparta,
+      )
+      const swapFee = calcSwapFee(
+        received,
+        poolAdd1.tokenAmount,
+        poolAdd1.baseAmount,
+        toSparta,
+      )
+      return [swapOutput, swapFee]
+    }
+    return ['0.00', '0.00']
+  }
+
   const getAddSingleOutputLP = () => {
     if (addInput1 && assetAdd1) {
+      const swapOutput = getAddSingleSwapOutput()
+      const fromSparta = assetAdd1.tokenAddress === addr.spartav2
+      const received = BN(convertToWei(addInput1?.value)).div(2)
       return convertFromWei(
         calcLiquidityUnits(
-          assetAdd1.tokenAddress === addr.spartav2
-            ? BN(convertToWei(addInput1?.value)).minus(
-                getFeeBurn(convertToWei(addInput1?.value)),
-              )
-            : '0',
-          assetAdd1.tokenAddress !== addr.spartav2
-            ? convertToWei(addInput1?.value)
-            : '0',
-          poolAdd1?.baseAmount,
-          poolAdd1?.tokenAmount,
+          fromSparta
+            ? minusFeeBurn(received)
+            : minusFeeBurn(minusFeeBurn(swapOutput[0])),
+          fromSparta ? swapOutput[0] : received,
+          fromSparta
+            ? BN(poolAdd1?.baseAmount).plus(minusFeeBurn(received))
+            : BN(poolAdd1?.baseAmount).minus(swapOutput[0]),
+          fromSparta
+            ? BN(poolAdd1?.tokenAmount).minus(swapOutput[0])
+            : BN(poolAdd1?.tokenAmount).plus(received),
           poolAdd1?.poolUnits,
         ),
       )
-    }
-    return '0.00'
-  }
-
-  const getAddSingleSwapFee = () => {
-    if (addInput1 && assetAdd1) {
-      const swapFee = calcSwapFee(
-        convertToWei(BN(addInput1?.value).div(2)),
-        poolAdd1.tokenAmount,
-        poolAdd1.baseAmount,
-        assetAdd1.tokenAddress !== addr.spartav2,
-      )
-      return swapFee
     }
     return '0.00'
   }
@@ -375,7 +392,6 @@ const LiqAdd = () => {
     if (activeTab === 'addTab1') {
       dispatch(
         addLiquidity(
-          convertToWei(addInput2.value),
           convertToWei(addInput1.value),
           assetAdd1.tokenAddress,
           wallet,
@@ -522,7 +538,7 @@ const LiqAdd = () => {
                     <Card.Body>
                       <Row className="">
                         <Col xs="auto" className="text-sm-label">
-                          {t('add')}
+                          {t('add')} (~)
                         </Col>
                         <Col
                           className="text-sm-label float-end text-end"
@@ -656,6 +672,7 @@ const LiqAdd = () => {
                         </Col>
                         <Col className="text-end">
                           <span className="text-card">
+                            ~
                             {addInput2?.value > 0
                               ? formatFromUnits(addInput2?.value, 6)
                               : '0.00'}{' '}
@@ -672,8 +689,8 @@ const LiqAdd = () => {
                         </Col>
                         <Col className="text-end">
                           <span className="text-card">
-                            {assetAdd1 && getAddSingleSwapFee() > 0
-                              ? formatFromWei(getAddSingleSwapFee(), 6)
+                            {assetAdd1 && getAddSingleSwapOutput()[1] > 0
+                              ? formatFromWei(getAddSingleSwapOutput()[1], 6)
                               : '0.00'}{' '}
                             <span className="">SPARTA</span>
                           </span>
