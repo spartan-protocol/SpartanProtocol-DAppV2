@@ -704,7 +704,7 @@ const LiqAdd = () => {
                       </Col>
                       <Col className="text-end">
                         <span className="subtitle-card">
-                          {outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
+                          ~{outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
                           <span className="output-card">
                             {getToken(assetAdd1.tokenAddress)?.symbol}p
                           </span>

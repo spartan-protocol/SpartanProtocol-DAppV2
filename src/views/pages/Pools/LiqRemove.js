@@ -186,9 +186,31 @@ const LiqRemove = () => {
     return poolRemove1?.balance
   }
 
-  const getFeeBurn = (_amount) => {
+  const minusFeeBurn = (_amount) => {
     const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
+    const afterFeeBurn = _amount.minus(burnFee)
+    return afterFeeBurn
+  }
+
+  const getSecondsNew = () => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const secondsLeft = BN(poolRemove1?.genesis).plus(604800).minus(timeStamp)
+    if (secondsLeft > 86400) {
+      return [
+        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
+        ` ${t('days')}`,
+      ]
+    }
+    if (secondsLeft > 3600) {
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
+    }
+    if (secondsLeft > 60) {
+      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
+    }
+    if (secondsLeft > 0) {
+      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
+    }
+    return [0, ` ${t('seconds')} (now)`]
   }
 
   //= =================================================================================//
@@ -222,7 +244,7 @@ const LiqRemove = () => {
     if (removeInput1 && poolRemove1) {
       let _sparta = getRemoveSparta()
       if (poolRemove1.tokenAddress === addr.bnb) {
-        _sparta = _sparta.minus(getFeeBurn(_sparta))
+        _sparta = minusFeeBurn(_sparta)
       }
       return _sparta
     }
@@ -232,7 +254,7 @@ const LiqRemove = () => {
   const getRemoveSpartaOutput = () => {
     if (removeInput1 && poolRemove1) {
       const _sparta = getRemoveSpartaBurn1()
-      return _sparta.minus(getFeeBurn(_sparta))
+      return minusFeeBurn(_sparta)
     }
     return '0.00'
   }
@@ -265,7 +287,7 @@ const LiqRemove = () => {
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
           true,
         )
-        result = result.minus(getFeeBurn(result))
+        result = minusFeeBurn(result)
       } else if (poolRemove1.tokenAddress === addr.bnb) {
         result = calcSwapOutput(
           getRemoveSpartaOutput(),
@@ -274,9 +296,7 @@ const LiqRemove = () => {
         )
       } else {
         result = calcSwapOutput(
-          BN(getRemoveSpartaOutput()).minus(
-            getFeeBurn(getRemoveSpartaOutput()),
-          ),
+          minusFeeBurn(BN(getRemoveSpartaOutput())),
           BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
         )
@@ -298,7 +318,7 @@ const LiqRemove = () => {
             BN(getRemoveSpartaOutput()),
           )
         }
-        result = result.minus(getFeeBurn(result))
+        result = minusFeeBurn(result)
       } else {
         result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveTokenOutput()))
       }
@@ -634,17 +654,15 @@ const LiqRemove = () => {
                       </Col>
                       <Col className="text-end">
                         <span className="subtitle-card">
-                          {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
+                          ~{output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
                           <span className="output-card">
                             {getToken(assetRemove1?.tokenAddress)?.symbol}
                           </span>
                         </span>
                         {activeTab === '1' && (
                           <span className="subtitle-card">
-                            <br />
-                            {output2 > 0
-                              ? formatFromWei(output2, 6)
-                              : '0.00'}{' '}
+                            <br />~
+                            {output2 > 0 ? formatFromWei(output2, 6) : '0.00'}{' '}
                             <span className="output-card">SPARTA</span>
                           </span>
                         )}
@@ -660,52 +678,62 @@ const LiqRemove = () => {
             </Row>
           </Card.Body>
           <Card.Footer>
-            <Row className="text-center">
-              {poolRemove1?.tokenAddress &&
-                wallet?.account &&
-                removeInput1?.value && (
-                  <Approval
-                    tokenAddress={poolRemove1?.address}
-                    symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.router}
-                    txnAmount={convertToWei(removeInput1?.value)}
-                    assetNumber="1"
-                  />
-                )}
-
-              <Col xs="12" sm="4" md="12" className="hide-if-siblings">
-                <Button
-                  className="w-100"
-                  disabled={
-                    removeInput1?.value <= 0 ||
-                    BN(convertToWei(removeInput1?.value)).isGreaterThan(
-                      getBalance(1),
-                    )
-                  }
-                  onClick={() =>
-                    activeTab === '1'
-                      ? dispatch(
-                          removeLiquidityExact(
-                            convertToWei(removeInput1.value),
-                            poolRemove1.tokenAddress,
-                            wallet,
-                          ),
-                        )
-                      : dispatch(
-                          removeLiquiditySingle(
-                            convertToWei(removeInput1.value),
-                            assetRemove1.tokenAddress === addr.spartav2,
-                            poolRemove1.tokenAddress,
-                            wallet,
-                          ),
-                        )
-                  }
-                >
-                  {t('removeLiq')}
-                </Button>
-              </Col>
-            </Row>
+            {poolRemove1?.newPool ? (
+              <Row className="text-center">
+                {poolRemove1?.tokenAddress &&
+                  wallet?.account &&
+                  removeInput1?.value && (
+                    <Approval
+                      tokenAddress={poolRemove1?.address}
+                      symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
+                      walletAddress={wallet?.account}
+                      contractAddress={addr.router}
+                      txnAmount={convertToWei(removeInput1?.value)}
+                      assetNumber="1"
+                    />
+                  )}
+                <Col xs="12" sm="4" md="12" className="hide-if-siblings">
+                  <Button
+                    className="w-100"
+                    disabled={
+                      removeInput1?.value <= 0 ||
+                      BN(convertToWei(removeInput1?.value)).isGreaterThan(
+                        getBalance(1),
+                      )
+                    }
+                    onClick={() =>
+                      activeTab === '1'
+                        ? dispatch(
+                            removeLiquidityExact(
+                              convertToWei(removeInput1.value),
+                              poolRemove1.tokenAddress,
+                              wallet,
+                            ),
+                          )
+                        : dispatch(
+                            removeLiquiditySingle(
+                              convertToWei(removeInput1.value),
+                              assetRemove1.tokenAddress === addr.spartav2,
+                              poolRemove1.tokenAddress,
+                              wallet,
+                            ),
+                          )
+                    }
+                  >
+                    {t('removeLiq')}
+                  </Button>
+                </Col>
+              </Row>
+            ) : (
+              <Row className="text-center">
+                <Col xs="12" sm="4" md="12">
+                  <Button className="w-100" disabled>
+                    {t('newPoolLockedFor')}: {getSecondsNew()[0]}{' '}
+                    {getSecondsNew()[1]}
+                  </Button>
+                </Col>
+              </Row>
+            )}
           </Card.Footer>
         </Card>
       </Col>

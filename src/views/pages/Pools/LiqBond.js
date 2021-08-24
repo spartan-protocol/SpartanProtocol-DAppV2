@@ -318,6 +318,7 @@ const LiqBond = () => {
                       </Col>
                       <Col className="text-end">
                         <span className="text-card">
+                          ~
                           {calcSpartaMinted() > 0
                             ? formatFromWei(calcSpartaMinted(), 6)
                             : '0.00'}{' '}
@@ -331,6 +332,7 @@ const LiqBond = () => {
                       </Col>
                       <Col className="text-end">
                         <span className="subtitle-card">
+                          ~
                           {calcOutput() > 0
                             ? formatFromWei(calcOutput(), 6)
                             : '0.00'}{' '}

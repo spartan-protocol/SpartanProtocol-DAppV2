@@ -134,7 +134,7 @@ export const removeLiquiditySingle =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const remLiqSingle = await contract.removeLiquiditySingle(
+      const remLiqSingle = await contract.removeLiquidityAsym(
         units,
         toBase,
         token,
