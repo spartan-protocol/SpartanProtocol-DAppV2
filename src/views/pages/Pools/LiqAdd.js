@@ -40,6 +40,7 @@ import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
+import TxnModal from './Modals/TxnModal'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -187,6 +188,27 @@ const LiqAdd = () => {
     const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
     const afterFeeBurn = _amount.minus(burnFee)
     return afterFeeBurn
+  }
+
+  const getSecondsNew = () => {
+    const timeStamp = BN(Date.now()).div(1000)
+    const secondsLeft = BN(poolAdd1?.genesis).plus(86400).minus(timeStamp)
+    if (secondsLeft > 86400) {
+      return [
+        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
+        ` ${t('days')}`,
+      ]
+    }
+    if (secondsLeft > 3600) {
+      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
+    }
+    if (secondsLeft > 60) {
+      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
+    }
+    if (secondsLeft > 0) {
+      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
+    }
+    return [0, ` ${t('seconds')} (now)`]
   }
 
   //= =================================================================================//
@@ -706,7 +728,7 @@ const LiqAdd = () => {
                         <span className="subtitle-card">
                           ~{outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
                           <span className="output-card">
-                            {getToken(assetAdd1.tokenAddress)?.symbol}p
+                            {getToken(poolAdd1.tokenAddress)?.symbol}p
                           </span>
                         </span>
                       </Col>
@@ -736,6 +758,60 @@ const LiqAdd = () => {
                   />
                 )}
               <Col xs="12" sm="4" md="12" className="hide-if-siblings">
+                <TxnModal
+                  buttonText="Join Pool (Modal)"
+                  header="Join Pool"
+                  body={
+                    poolAdd1.newPool
+                      ? `This pool is currently in it's initiation phase. Please be aware you will not be able to withdraw your liquidity until this pool is fully established in ${
+                          getSecondsNew()[0]
+                        }${getSecondsNew()[1]}`
+                      : 'Please confirm the details of your liquidity-add below'
+                  }
+                  txnDetails={[
+                    {
+                      id: 0,
+                      label: 'Input',
+                      amount: formatFromUnits(addInput1?.value, 4),
+                      symbol: getToken(assetAdd1.tokenAddress)?.symbol,
+                    },
+                    activeTab === 'addTab1' && {
+                      id: 1,
+                      label: 'Input (Estimated)',
+                      amount: formatFromUnits(addInput2?.value, 4),
+                      symbol: getToken(assetAdd2.tokenAddress)?.symbol,
+                    },
+                    {
+                      id: 2,
+                      label: 'Output (Estimated)',
+                      amount: formatFromWei(outputLp, 4),
+                      symbol: `${getToken(poolAdd1.tokenAddress)?.symbol}p`,
+                      class: 'subtitle-card',
+                    },
+                  ]}
+                  confirmMessage={
+                    poolAdd1.newPool ? 'Confirm lockout period' : null
+                  }
+                  confirmButton={
+                    <Button
+                      className="w-100"
+                      disabled={
+                        addInput1?.value <= 0 ||
+                        BN(convertToWei(addInput1?.value)).isGreaterThan(
+                          getBalance(1),
+                        ) ||
+                        BN(convertToWei(addInput2?.value)).isGreaterThan(
+                          getBalance(2),
+                        ) ||
+                        poolAdd1.baseAmount <= 0
+                      }
+                      onClick={() => handleAddLiquidity()}
+                    >
+                      {t('joinPool')}
+                    </Button>
+                  }
+                  tokenAddress={assetAdd1?.tokenAddress}
+                />
                 <Button
                   className="w-100"
                   disabled={
