@@ -116,7 +116,7 @@ const SynthVaultItem = ({ synthItem }) => {
       baseAmount,
       getPool(synthItem.tokenAddress)?.tokenAmount,
       BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
-    )
+    )[0]
     const tokenValue = BN(tokenAmount).plus(baseSwapped)
     // console.log(tokenValue)
     if (tokenValue > 0) {

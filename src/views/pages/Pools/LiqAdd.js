@@ -28,10 +28,9 @@ import {
   calcFeeBurn,
   calcLiquidityHoldings,
   calcLiquidityUnits,
-  calcSwapFee,
   calcSwapOutput,
-  calcValueInBase,
-  calcValueInToken,
+  calcSpotValueInBase,
+  calcSpotValueInToken,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
@@ -242,13 +241,7 @@ const LiqAdd = () => {
       const toSparta = assetAdd1.tokenAddress !== addr.spartav2
       let received = BN(convertToWei(addInput1?.value)).div(2)
       received = assetAdd1 === addr.spartav2 ? minusFeeBurn(received) : received
-      const swapOutput = calcSwapOutput(
-        received,
-        poolAdd1.tokenAmount,
-        poolAdd1.baseAmount,
-        toSparta,
-      )
-      const swapFee = calcSwapFee(
+      const [swapOutput, swapFee] = calcSwapOutput(
         received,
         poolAdd1.tokenAmount,
         poolAdd1.baseAmount,
@@ -261,13 +254,14 @@ const LiqAdd = () => {
 
   const getAddSingleOutputLP = () => {
     if (addInput1 && assetAdd1) {
+      const routerRec = BN(convertToWei(addInput1?.value))
       const swapOutput = getAddSingleSwapOutput()
       const fromSparta = assetAdd1.tokenAddress === addr.spartav2
-      const received = BN(convertToWei(addInput1?.value)).div(2)
+      const received = routerRec.div(2)
       return convertFromWei(
         calcLiquidityUnits(
           fromSparta
-            ? minusFeeBurn(received)
+            ? minusFeeBurn(routerRec).minus(received)
             : minusFeeBurn(minusFeeBurn(swapOutput[0])),
           fromSparta ? swapOutput[0] : received,
           fromSparta
@@ -285,11 +279,9 @@ const LiqAdd = () => {
 
   const getInput1ValueUSD = () => {
     if (assetAdd1?.tokenAddress !== addr.spartav2 && addInput1?.value) {
-      return calcValueInBase(
-        poolAdd1.tokenAmount,
-        poolAdd1.baseAmount,
-        convertToWei(addInput1.value),
-      ).times(web3.spartaPrice)
+      return calcSpotValueInBase(convertToWei(addInput1.value), poolAdd1).times(
+        web3.spartaPrice,
+      )
     }
     if (assetAdd1?.tokenAddress === addr.spartav2 && addInput1?.value) {
       return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
@@ -328,13 +320,7 @@ const LiqAdd = () => {
 
   const getLpValueUSD = () => {
     if (assetAdd1 && addInput1?.value) {
-      return BN(
-        calcValueInBase(
-          poolAdd1?.tokenAmount,
-          poolAdd1?.baseAmount,
-          getLpValueToken(),
-        ),
-      )
+      return BN(calcSpotValueInBase(getLpValueToken(), poolAdd1))
         .plus(getLpValueBase())
         .times(web3.spartaPrice)
     }
@@ -348,17 +334,15 @@ const LiqAdd = () => {
   const handleInputChange = () => {
     if (activeTab === 'addTab1') {
       if (addInput2 && addInput2 !== document.activeElement) {
-        addInput2.value = calcValueInBase(
-          assetAdd1.tokenAmount,
-          assetAdd1.baseAmount,
+        addInput2.value = calcSpotValueInBase(
           addInput1.value > 0 ? addInput1.value : '0.00',
+          assetAdd1,
         )
         setOutputLp(convertToWei(getAddBothOutputLP()))
       } else if (addInput1 && addInput1 !== document.activeElement) {
-        addInput1.value = calcValueInToken(
-          assetAdd1.tokenAmount,
-          assetAdd1.baseAmount,
+        addInput1.value = calcSpotValueInToken(
           addInput2.value > 0 ? addInput2.value : '0.00',
+          assetAdd1,
         )
         setOutputLp(convertToWei(getAddBothOutputLP()))
       }

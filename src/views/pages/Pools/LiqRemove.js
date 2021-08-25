@@ -28,7 +28,7 @@ import {
   calcLiquidityHoldings,
   calcSwapFee,
   calcSwapOutput,
-  calcValueInBase,
+  calcSpotValueInBase,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
@@ -287,7 +287,7 @@ const LiqRemove = () => {
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
           true,
         )
-        result = minusFeeBurn(result)
+        result = minusFeeBurn(result[0])
       } else if (poolRemove1.tokenAddress === addr.bnb) {
         result = calcSwapOutput(
           getRemoveSpartaOutput(),
@@ -302,7 +302,7 @@ const LiqRemove = () => {
         )
       }
 
-      return result
+      return result[0]
     }
     return '0.00'
   }
@@ -332,11 +332,7 @@ const LiqRemove = () => {
 
   const getOutput1ValueUSD = () => {
     if (assetRemove1 && output1) {
-      return calcValueInBase(
-        poolRemove1.tokenAmount,
-        poolRemove1.baseAmount,
-        output1,
-      ).times(web3.spartaPrice)
+      return calcSpotValueInBase(output1, poolRemove1).times(web3.spartaPrice)
     }
     return '0.00'
   }
@@ -372,13 +368,7 @@ const LiqRemove = () => {
 
   const getLpValueUSD = () => {
     if (assetRemove1 && removeInput1?.value) {
-      return BN(
-        calcValueInBase(
-          poolRemove1?.tokenAmount,
-          poolRemove1?.baseAmount,
-          getLpValueToken(),
-        ),
-      )
+      return BN(calcSpotValueInBase(getLpValueToken(), poolRemove1))
         .plus(getLpValueBase())
         .times(web3.spartaPrice)
     }

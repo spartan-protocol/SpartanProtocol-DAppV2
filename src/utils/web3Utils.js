@@ -4,6 +4,8 @@ export const one = BN(1).times(10).pow(18)
 
 // ************** CORE MATHEMATICS (USE THESE IN UI WHERE NEAR-INSTANT-RETURN IS REQUIRED) ************** //
 
+// /////////////////////////////// UTILS FUNCTIONS ////////////////////////////////////////////////////
+
 /**
  * Calculate basis points (10,000 basis points = 100.00%)
  * @param {uint} input
@@ -13,31 +15,179 @@ export const one = BN(1).times(10).pow(18)
 export const calcBasisPoints = (input, balance) => {
   const part1 = BN(input).div(BN(balance))
   const part = part1.times('10000')
-  // console.log(part.toFixed())
   return part
 }
 
-/**
- * Calculate redemption value of LP token (only one-side i.e. SPARTA or TOKEN)
- * @param tokensInPool uint - amount of TOKENS or SPARTA held by the pool
- * @param units uint - amount of LP TOKENS being calculated from (input)
- * @param poolTotalSupply uint - total supply of LP tokens
- * @returns {uint} share
- */
-export const calcLiquidityHoldings = (tokensInPool, units, poolTotalSupply) => {
-  const part = BN(tokensInPool).times(BN(units)).div(BN(poolTotalSupply))
-  return part
-}
-
-// Calculate share
+// Calculate share | share = amount * part/total
 export const calcShare = (part, total, amount) => {
-  // share = amount * part/total
   const _part = BN(part)
   const _total = BN(total)
   const _amount = BN(amount)
   const result = _amount.times(_part).div(_total)
   return result
 }
+
+/**
+ * Calculate Part (10,000 basis points = 100.00%)
+ * @param {uint} bp
+ * @param {uint} total
+ * @returns {uint} part
+ */
+export const calcPart = (bp, total) => {
+  let part = 0
+  if (bp <= 10000 && bp > 0) {
+    part = calcShare(bp, 10000, total)
+  } else console.log('Must be valid basis points')
+  return part
+}
+
+export const getPoolShareWeight = (units, totalSupply, totalAmount) => {
+  const _units = BN(units)
+  const _totalSupply = BN(totalSupply)
+  const _totalAmount = BN(totalAmount)
+  const weight = calcShare(_units, _totalSupply, _totalAmount)
+  return weight
+}
+
+export const getPool = (tokenAddr, poolDetails) =>
+  poolDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
+
+export const getSynth = (tokenAddr, synthDetails) =>
+  synthDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
+
+// Get spot value of tokens in base
+export const calcSpotValueInBase = (inputAmount, poolDetails) => {
+  const _input = BN(inputAmount)
+  const _spartaDepth = BN(poolDetails.baseAmount)
+  const _tokenDepth = BN(poolDetails.tokenAmount)
+  const result = _input.times(_spartaDepth).div(_tokenDepth)
+  return result
+}
+
+// Get spot value of sparta in token
+export const calcSpotValueInToken = (inputAmount, poolDetails) => {
+  const _input = BN(inputAmount)
+  const _spartaDepth = BN(poolDetails.baseAmount)
+  const _tokenDepth = BN(poolDetails.tokenAmount)
+  const result = _input.times(_tokenDepth).div(_spartaDepth)
+  return result
+}
+
+// Get spot value of synths in base? For realise() function calc
+export const calcSynthSpotValueInBase = (inputAmount, poolDetails) => {
+  const _input = BN(inputAmount)
+  const _spartaDepth = BN(poolDetails.baseAmount)
+  const _tokenDepth = BN(poolDetails.tokenAmount)
+  const numerator = _input.times(_spartaDepth)
+  const denominator = _tokenDepth.times(2)
+  const result = numerator.div(denominator)
+  return result
+}
+
+export const calcSlipAdjustment = (spartaInput, tokenInput, poolDetails) => {
+  const b = BN(spartaInput)
+  const B = BN(poolDetails.baseAmount)
+  const t = BN(tokenInput)
+  const T = BN(poolDetails.tokenAmount)
+  const part1 = B.times(t) // baseDepth * tokenInput
+  const part2 = b.times(T) // baseInput * tokenDepth
+  const part3 = b.times(2).plus(B) // 2 * baseInput + baseDepth (Modified to reduce slip adjustment)
+  const part4 = t.plus(T) // tokenInput + tokenDepth
+  let numerator = ''
+  if (part1.isGreaterThan(part2)) {
+    numerator = part1.minus(part2)
+  } else {
+    numerator = part2.minus(part1)
+  }
+  const denominator = part3.times(part4)
+  return one.minus(numerator.times(one).div(denominator)).toFixed(0, 1)
+}
+
+// Calculate liquidity units
+export const calcLiquidityUnits = (spartaInput, tokenInput, poolDetails) => {
+  const b = BN(spartaInput)
+  const B = BN(poolDetails.baseAmount)
+  const t = BN(tokenInput)
+  const T = BN(poolDetails.tokenAmount)
+  const P = BN(poolDetails.poolUnits)
+  if (P <= 0) {
+    return b
+  }
+  const slipAdjustment = calcSlipAdjustment(
+    spartaInput,
+    tokenInput,
+    poolDetails,
+  )
+  const part1 = t.times(B) // tokenInput * baseDepth
+  const part2 = T.times(b) // tokenDepth * baseInput
+  const part3 = T.times(B).times(2) // tokenDepth * baseDepth * 2
+  const part4 = P.times(part1.plus(part2)).div(part3) // P == totalSupply
+  const result = BN(part4).times(slipAdjustment).div(one)
+  return result.toFixed(0, 1)
+}
+
+/**
+ * Calculate redemption value of LP tokens
+ * @param inputLP uint - amount of LP TOKENS being calculated from (input)
+ * @param poolDetails pool item from poolDetails object
+ * @returns [spartaValue, tokenValue]
+ */
+export const calcLiquidityHoldings = (inputLP, poolDetails) => {
+  const _inputLP = BN(inputLP)
+  const _spartaDepth = BN(poolDetails.baseAmount)
+  const _tokenDepth = BN(poolDetails.tokenAmount)
+  const _totalSupply = BN(poolDetails.poolUnits)
+  const spartaValue = _spartaDepth.times(_inputLP).div(_totalSupply)
+  const tokenValue = _tokenDepth.times(_inputLP).div(_totalSupply)
+  return [spartaValue, tokenValue]
+}
+
+/**
+ * calcSwapOutput inc fee
+ * @param inputAmount
+ * @param poolDetails
+ * @param toBase
+ * @returns [swapOutput, swapFee]
+ */
+export const calcSwapOutput = (inputAmount, poolDetails, toBase) => {
+  const x = BN(inputAmount) // Input amount
+  const X = toBase ? BN(poolDetails.tokenAmount) : BN(poolDetails.baseAmount) // if toBase; tokenAmount
+  const Y = toBase ? BN(poolDetails.baseAmount) : BN(poolDetails.tokenAmount) // if toBase; baseAmount
+  const swapNumerator = x.times(X).times(Y)
+  const swapDenominator = x.plus(X).times(x.plus(X))
+  const swapOutput = swapNumerator.div(swapDenominator)
+  const feeNumerator = x.times(x).times(Y)
+  const feeDenominator = x.plus(X).times(x.plus(X))
+  const swapFee = feeNumerator.div(feeDenominator)
+  const swapFeeInBase = toBase
+    ? calcSpotValueInBase(swapFee, poolDetails)
+    : swapFee
+  return [swapOutput, swapFeeInBase]
+}
+
+// Calculate swap fee
+export const calcSwapFee = (inputAmount, poolDetails, toBase) => {
+  const x = BN(inputAmount) // Input amount
+  const X = toBase ? BN(poolDetails.tokenAmount) : BN(poolDetails.baseAmount) // if toBase; tokenAmount
+  const Y = toBase ? BN(poolDetails.baseAmount) : BN(poolDetails.tokenAmount) // if toBase; baseAmount
+  const numerator = x.times(x).times(Y)
+  const denominator = x.plus(X).times(x.plus(X))
+  const result = numerator.div(denominator)
+  return result
+}
+
+// LP Units minted from forged Synth
+export const calcLiquidityUnitsAsym = (inputAmount, poolDetails) => {
+  const _input = BN(inputAmount)
+  const _spartaDepth = BN(poolDetails.baseAmount)
+  const _totalSupply = BN(poolDetails.poolUnits)
+  const numerator = _totalSupply.times(_input)
+  const denominator = _input.plus(_spartaDepth).times(2)
+  const result = numerator.div(denominator)
+  return result
+}
+
+// ///////////////// OTHERS ////////////////////////
 
 // Calculate asymmetric share
 export const calcAsymmetricShare = (input, pool, toBase) => {
@@ -66,70 +216,6 @@ export const calcLiquidityShare = (input, pool) => {
   return result
 }
 
-export const calcSlipAdjustment = (_b, _B, _t, _T) => {
-  // slipAdjustment = (1 - ABS((B t - b T)/((2 b + B) (t + T))))
-  // 1 - ABS(part1 - part2)/(part3 * part4))
-  const b = BN(_b)
-  const B = BN(_B)
-  const t = BN(_t)
-  const T = BN(_T)
-
-  const part1 = B.times(t)
-  const part2 = b.times(T)
-  const part3 = b.times(2).plus(B)
-  const part4 = t.plus(T)
-
-  let numerator = ''
-  if (part1.isGreaterThan(part2)) {
-    numerator = part1.minus(part2)
-  } else {
-    numerator = part2.minus(part1)
-  }
-  const denominator = part3.times(part4)
-  return one.minus(numerator.times(one).div(denominator)).toFixed(0) // Multiply by 10**18
-}
-
-// Calculate liquidity units
-export const calcLiquidityUnits = (
-  spartaInput,
-  tokenInput,
-  spartaInPool,
-  tokensInPool,
-  poolTotalSupply,
-) => {
-  // units = ((P (t B + T b))/(2 T B)) * slipAdjustment
-  // P * (part1 + part2) / (part3) * slipAdjustment
-  const b = BN(spartaInput) // b = _actualInputBase
-  const B = BN(spartaInPool) // B = baseAmount
-  const t = BN(tokenInput) // t = _actualInputToken
-  const T = BN(tokensInPool) // T = tokenAmount
-  const P = BN(poolTotalSupply) // P = LP Token TotalSupply
-  if (P <= 0) {
-    return b
-  }
-  const slipAdjustment = calcSlipAdjustment(b, B, t, T)
-  const part1 = t.times(B)
-  const part2 = T.times(b)
-  const part3 = T.times(B).times(2)
-  const part4 = P.times(part1.plus(part2)).div(part3)
-  const result = BN(part4).times(slipAdjustment).div(one)
-  return result
-}
-
-/**
- * Calculate Part (10,000 basis points = 100.00%)
- * @param {uint} bp
- * @param {uint} total
- * @returns {uint} part
- */
-export const calcPart = (bp, total) => {
-  let part = 0
-  if (bp <= 10000 && bp > 0) {
-    part = calcShare(bp, 10000, total)
-  } else console.log('Must be valid basis points')
-  return part
-}
-
 /**
  * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%)
  * Uses the feeOnTransfer if already called
@@ -140,52 +226,6 @@ export const calcPart = (bp, total) => {
 export const calcFeeBurn = (feeOnTransfer, amount) => {
   const fee = calcPart(feeOnTransfer, amount)
   return fee
-}
-
-// Calculate swap fee
-export const calcSwapFee = (
-  inputAmount,
-  poolTokenAmount,
-  poolSpartaAmount,
-  toBase,
-) => {
-  // y = (x * x * Y) / (x + X)^2
-  const x = BN(inputAmount) // Input amount
-  const X = toBase ? BN(poolTokenAmount) : BN(poolSpartaAmount) // if toBase; tokenAmount
-  const Y = toBase ? BN(poolSpartaAmount) : BN(poolTokenAmount) // if toBase; baseAmount
-  const numerator = x.times(x.times(Y))
-  const denominator = x.plus(X).times(x.plus(X))
-  const result = numerator.div(denominator)
-  return result
-}
-
-// Calculate swap output
-export const calcSwapOutput = (
-  inputAmount,
-  tokensInPool,
-  spartaInPool,
-  toBase,
-) => {
-  // y = (x * X * Y )/(x + X)^2
-  const x = BN(inputAmount) // Input amount
-  const X = toBase ? BN(tokensInPool) : BN(spartaInPool) // if toBase; tokenAmount
-  const Y = toBase ? BN(spartaInPool) : BN(tokensInPool) // if toBase; baseAmount
-  const numerator = x.times(X.times(Y))
-  const denominator = x.plus(X).times(x.plus(X))
-  const result = numerator.div(denominator)
-  return result
-}
-
-// synthUnits += (P b)/(2 (b + B))
-export const calcLiquidityUnitsAsym = (
-  inputAmount,
-  pooledSparta,
-  poolSupply,
-) => {
-  const temp = BN(poolSupply)
-    .times(BN(inputAmount))
-    .div(BN(2).times(BN(inputAmount).plus(pooledSparta)))
-  return temp
 }
 
 /**
@@ -208,7 +248,7 @@ export const calcSynthsValue = (
     tokensInPool,
     spartaInPool,
     true,
-  ) // BASE SWAPPED VALUE
+  )[0] // BASE SWAPPED VALUE
   const units = calcLiquidityUnits(
     spartaSwapValue,
     spartaInPool,
@@ -220,35 +260,23 @@ export const calcSynthsValue = (
   return units
 }
 
-// Calculate value in token
-export const calcValueInToken = (poolTokenAmount, poolSpartaAmount, amount) => {
-  const _baseAmount = poolSpartaAmount
-  const _tokenAmount = poolTokenAmount
-  const result = BN(amount).times(BN(_tokenAmount)).div(BN(_baseAmount))
-  return result
-}
-
-// Calculate value in token
-export const calcValueInBase = (poolTokenAmount, poolSpartaAmount, amount) => {
-  const _baseAmount = poolSpartaAmount
-  const _tokenAmount = poolTokenAmount
-  const result = BN(amount).times(BN(_baseAmount)).div(BN(_tokenAmount))
-  return result
-}
-
 // Calculate double-swap fee
-export const calcDoubleSwapFee = (
-  inputAmount,
-  pool1TokenAmount,
-  pool1BaseAmount,
-  pool2TokenAmount,
-  pools2BaseAmount,
-) => {
+export const calcDoubleSwapFee = (inputAmount, pool1, pool2) => {
   // formula: getSwapFee1 + getSwapFee2
-  const fee1 = calcSwapFee(inputAmount, pool1TokenAmount, pool1BaseAmount, true) // Fee in SPARTA
-  const x = calcSwapOutput(inputAmount, pool1TokenAmount, pool1BaseAmount, true) // Output in SPARTA
-  const fee2 = calcSwapFee(x, pool2TokenAmount, pools2BaseAmount, false) // Fee in targetToken
-  const fee2Sparta = calcValueInBase(pool2TokenAmount, pools2BaseAmount, fee2) // targetToken fee converted to SPARTA
+  const fee1 = calcSwapFee(
+    inputAmount,
+    pool1.tokenAmount,
+    pool1.baseAmount,
+    true,
+  ) // Fee in SPARTA
+  const x = calcSwapOutput(
+    inputAmount,
+    pool1.tokenAmount,
+    pool1.baseAmount,
+    true,
+  ) // Output in SPARTA
+  const fee2 = calcSwapFee(x[0], pool2.tokenAmount, pool2.baseAmount, false) // Fee in targetToken
+  const fee2Sparta = calcSpotValueInBase(fee2, pool2) // targetToken fee converted to SPARTA
   const result = fee1.plus(fee2Sparta) // Total fee in SPARTA
   return result
 }
@@ -263,8 +291,8 @@ export const calcDoubleSwapOutput = (
 ) => {
   // formula: calcSwapOutput(pool1) => calcSwapOutput(pool2)
   const x = calcSwapOutput(inputAmount, pool1Token, pool1Sparta, true)
-  const output = calcSwapOutput(x, pool2Token, pool2Sparta, false)
-  return output
+  const output = calcSwapOutput(x[0], pool2Token, pool2Sparta, false)
+  return output[0]
 }
 
 // Calculate swap slippage
@@ -282,7 +310,7 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
   // formula: getSwapSlip1(input1) + getSwapSlip2(getSwapOutput1 => input2)
   const swapSlip1 = calcSwapSlip(inputAmount, pool1, true)
   const x = calcSwapOutput(inputAmount, pool1, true)
-  const swapSlip2 = calcSwapSlip(x, pool2, false)
+  const swapSlip2 = calcSwapSlip(x[0], pool2, false)
   const result = swapSlip1.plus(swapSlip2)
   console.log(result.toFixed())
   return result

@@ -30,7 +30,7 @@ import {
   calcFeeBurn,
   calcLiquidityUnits,
   calcSwapOutput,
-  calcValueInBase,
+  calcSpotValueInBase,
 } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
 import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
@@ -117,7 +117,7 @@ const LiqBond = () => {
         assetBond1.baseAmount,
         true,
       )
-      return minted
+      return minted[0]
     }
     return '0'
   }
@@ -138,10 +138,9 @@ const LiqBond = () => {
 
   const getInput1ValueUSD = () => {
     if (assetBond1 && bondInput1?.value) {
-      return calcValueInBase(
-        assetBond1.tokenAmount,
-        assetBond1.baseAmount,
+      return calcSpotValueInBase(
         convertToWei(bondInput1.value),
+        assetBond1,
       ).times(web3.spartaPrice)
     }
     return '0'

@@ -27,10 +27,10 @@ import {
   calcSwapOutput,
   calcSwapFee,
   calcDoubleSwapFee,
-  calcValueInBase,
   calcLiquidityHoldings,
   calcFeeBurn,
   calcLiquidityUnits,
+  calcSpotValueInBase,
   // calcLiquidityUnitsAsym,
 } from '../../../utils/web3Utils'
 import {
@@ -287,7 +287,7 @@ const Swap = () => {
         ),
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
-      )
+      )[0]
     }
     if (assetSwap2?.tokenAddress === addr.spartav2) {
       const result = calcSwapOutput(
@@ -295,7 +295,7 @@ const Swap = () => {
         assetSwap1?.tokenAmount,
         assetSwap1?.baseAmount,
         true,
-      )
+      )[0]
       return BN(result).minus(getFeeBurn(result))
     }
     return calcDoubleSwapOutput(
@@ -310,14 +310,13 @@ const Swap = () => {
   const getSwapFee = () => {
     // Fee in SPARTA via fee in TOKEN (Swap from SPARTA)
     if (assetSwap1?.tokenAddress === addr.spartav2) {
-      return calcValueInBase(
-        assetSwap2?.tokenAmount,
-        assetSwap2?.baseAmount,
+      return calcSpotValueInBase(
         calcSwapFee(
           convertToWei(swapInput1?.value),
           assetSwap2?.tokenAmount,
           assetSwap2?.baseAmount,
         ),
+        assetSwap2,
       )
     }
     // Fee in SPARTA (Swap to SPARTA)
@@ -330,9 +329,7 @@ const Swap = () => {
       )
     }
     // Fee in SPARTA via fee in token2 (swap token1 to token2)
-    return calcValueInBase(
-      assetSwap2?.tokenAmount,
-      assetSwap2?.baseAmount,
+    return calcSpotValueInBase(
       calcDoubleSwapFee(
         convertToWei(swapInput1?.value),
         assetSwap1?.tokenAmount,
@@ -340,6 +337,7 @@ const Swap = () => {
         assetSwap2?.tokenAmount,
         assetSwap2?.baseAmount,
       ),
+      assetSwap2,
     )
   }
 
@@ -356,7 +354,7 @@ const Swap = () => {
             ),
             assetSwap2.tokenAmount,
             assetSwap2.baseAmount,
-          ),
+          )[0],
         )
       } else if (assetSwap2?.tokenAddress === addr.spartav2) {
         const result = convertFromWei(
@@ -365,7 +363,7 @@ const Swap = () => {
             assetSwap1.tokenAmount,
             assetSwap1.baseAmount,
             true,
-          ),
+          )[0],
         )
         swapInput2.value = BN(result).minus(getFeeBurn(result))
       } else {
@@ -443,7 +441,7 @@ const Swap = () => {
         BN(assetSwap1.tokenAmount).minus(getZapRemoveToken()),
         BN(assetSwap1.baseAmount).minus(getZapRemoveBase()),
         true,
-      )
+      )[0]
     }
     return '0'
   }
@@ -499,13 +497,13 @@ const Swap = () => {
       }
       return input.minus(feeBurn)
     }
-    let baseSwapped = calcSwapOutput(input, tokenAmount, baseAmount, true)
+    let baseSwapped = calcSwapOutput(input, tokenAmount, baseAmount, true)[0]
     feeBurn = getFeeBurn(baseSwapped) // feeBurn - Pool to Router
     baseSwapped = baseSwapped.minus(feeBurn)
     feeBurn = getFeeBurn(baseSwapped) // feeBurn - Router to Pool
     if (getFee) {
       const swapFee = calcSwapFee(input, tokenAmount, baseAmount, true)
-      return calcValueInBase(tokenAmount, baseAmount, swapFee)
+      return calcSpotValueInBase(swapFee, assetSwap1)
     }
     return baseSwapped.minus(feeBurn)
   }
@@ -534,9 +532,9 @@ const Swap = () => {
     const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
     if (getFee) {
       const swapFee = calcSwapFee(input, actualToken, actualBase, false)
-      return calcValueInBase(actualToken, actualBase, swapFee)
+      return calcSpotValueInBase(swapFee, _pool)
     }
-    return calcSwapOutput(input, actualToken, actualBase, false)
+    return calcSwapOutput(input, actualToken, actualBase, false)[0]
   }
 
   // STEP 1A - Get fee from swap in step 1
@@ -555,9 +553,12 @@ const Swap = () => {
     const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
     let baseAmount = BN(assetSwap1.baseAmount)
     let { tokenAmount } = assetSwap1
-    const swapped = calcSwapOutput(input, tokenAmount, baseAmount, true)
-    let swapFee1 = calcSwapFee(input, tokenAmount, baseAmount, true)
-    swapFee1 = calcValueInBase(tokenAmount, baseAmount, swapFee1)
+    const [swapped, swapFee1] = calcSwapOutput(
+      input,
+      tokenAmount,
+      baseAmount,
+      true,
+    )
     let feeBurn = getFeeBurn(swapped) // feeBurn - Pool to User / Router
     let output = BN(swapped).minus(feeBurn)
     if (toBase) {
@@ -578,7 +579,7 @@ const Swap = () => {
     if (getFee) {
       return BN(swapFee1).plus(swapFee2)
     }
-    return calcSwapOutput(output, tokenAmount, baseAmount, false)
+    return calcSwapOutput(output, tokenAmount, baseAmount, false)[0]
   }
 
   //= =================================================================================//
@@ -603,24 +604,14 @@ const Swap = () => {
     }
     if (mode === 'pool') {
       if (assetSwap1 && swapInput1?.value) {
-        return BN(
-          calcValueInBase(
-            assetSwap1?.tokenAmount,
-            assetSwap1?.baseAmount,
-            getZapRemoveToken(),
-          ),
-        )
+        return BN(calcSpotValueInBase(getZapRemoveToken(), assetSwap1))
           .plus(getZapRemoveBase())
           .times(web3.spartaPrice)
       }
     }
     if (swapInput1?.value) {
       return BN(
-        calcValueInBase(
-          assetSwap1?.tokenAmount,
-          assetSwap1?.baseAmount,
-          convertToWei(swapInput1?.value),
-        ),
+        calcSpotValueInBase(convertToWei(swapInput1?.value), assetSwap1),
       ).times(web3.spartaPrice)
     }
     return '0'
@@ -633,24 +624,14 @@ const Swap = () => {
     }
     if (mode === 'pool') {
       if (assetSwap2 && swapInput2?.value) {
-        return BN(
-          calcValueInBase(
-            assetSwap2?.tokenAmount,
-            assetSwap2?.baseAmount,
-            getZapOtherRemoveToken(),
-          ),
-        )
+        return BN(calcSpotValueInBase(getZapOtherRemoveToken(), assetSwap2))
           .plus(getZapOtherRemoveBase())
           .times(web3.spartaPrice)
       }
     }
     if (swapInput2?.value) {
       return BN(
-        calcValueInBase(
-          assetSwap2?.tokenAmount,
-          assetSwap2?.baseAmount,
-          convertToWei(swapInput2?.value),
-        ),
+        calcSpotValueInBase(convertToWei(swapInput2?.value), assetSwap2),
       ).times(web3.spartaPrice)
     }
     return '0'
