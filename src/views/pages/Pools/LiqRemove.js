@@ -678,7 +678,7 @@ const LiqRemove = () => {
             </Row>
           </Card.Body>
           <Card.Footer>
-            {poolRemove1?.newPool ? (
+            {!poolRemove1?.newPool ? (
               <Row className="text-center">
                 {poolRemove1?.tokenAddress &&
                   wallet?.account &&

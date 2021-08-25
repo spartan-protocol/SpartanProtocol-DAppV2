@@ -192,7 +192,7 @@ const LiqAdd = () => {
 
   const getSecondsNew = () => {
     const timeStamp = BN(Date.now()).div(1000)
-    const secondsLeft = BN(poolAdd1?.genesis).plus(86400).minus(timeStamp)
+    const secondsLeft = BN(poolAdd1?.genesis).plus(604800).minus(timeStamp)
     if (secondsLeft > 86400) {
       return [
         formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
@@ -759,38 +759,55 @@ const LiqAdd = () => {
                 )}
               <Col xs="12" sm="4" md="12" className="hide-if-siblings">
                 <TxnModal
-                  buttonText="Join Pool (Modal)"
+                  btnText="Join Pool (Modal)"
+                  btnDisabled={
+                    addInput1?.value <= 0 ||
+                    BN(convertToWei(addInput1?.value)).isGreaterThan(
+                      getBalance(1),
+                    ) ||
+                    BN(convertToWei(addInput2?.value)).isGreaterThan(
+                      getBalance(2),
+                    ) ||
+                    poolAdd1.baseAmount <= 0
+                  }
                   header="Join Pool"
                   body={
                     poolAdd1.newPool
-                      ? `This pool is currently in it's initiation phase. Please be aware you will not be able to withdraw your liquidity until this pool is fully established in ${
+                      ? `This pool is currently in it's initialization phase. Please be aware you will not be able to withdraw your liquidity until this pool is fully established in ${
                           getSecondsNew()[0]
                         }${getSecondsNew()[1]}`
                       : 'Please confirm the details of your liquidity-add below'
                   }
-                  txnDetails={[
+                  txnInputs={[
                     {
                       id: 0,
-                      label: 'Input',
-                      amount: formatFromUnits(addInput1?.value, 4),
+                      amount: addInput1?.value,
                       symbol: getToken(assetAdd1.tokenAddress)?.symbol,
-                    },
-                    activeTab === 'addTab1' && {
-                      id: 1,
-                      label: 'Input (Estimated)',
-                      amount: formatFromUnits(addInput2?.value, 4),
-                      symbol: getToken(assetAdd2.tokenAddress)?.symbol,
+                      icon: getToken(assetAdd1.tokenAddress)?.symbolUrl,
                     },
                     {
-                      id: 2,
-                      label: 'Output (Estimated)',
-                      amount: formatFromWei(outputLp, 4),
+                      id: 1,
+                      amount: addInput2?.value,
+                      symbol: getToken(assetAdd2.tokenAddress)?.symbol,
+                      icon: getToken(assetAdd2.tokenAddress)?.symbolUrl,
+                    },
+                  ]}
+                  txnOutputs={[
+                    {
+                      id: 0,
+                      amount: outputLp,
                       symbol: `${getToken(poolAdd1.tokenAddress)?.symbol}p`,
+                      icon: getToken(poolAdd1.tokenAddress)?.symbolUrl,
+                      assetType: 'pool',
                       class: 'subtitle-card',
                     },
                   ]}
                   confirmMessage={
-                    poolAdd1.newPool ? 'Confirm lockout period' : null
+                    poolAdd1.newPool
+                      ? `Confirm; your liquidity will be locked for ${
+                          getSecondsNew()[0]
+                        }${getSecondsNew()[1]}`
+                      : null
                   }
                   confirmButton={
                     <Button
@@ -812,22 +829,6 @@ const LiqAdd = () => {
                   }
                   tokenAddress={assetAdd1?.tokenAddress}
                 />
-                <Button
-                  className="w-100"
-                  disabled={
-                    addInput1?.value <= 0 ||
-                    BN(convertToWei(addInput1?.value)).isGreaterThan(
-                      getBalance(1),
-                    ) ||
-                    BN(convertToWei(addInput2?.value)).isGreaterThan(
-                      getBalance(2),
-                    ) ||
-                    poolAdd1.baseAmount <= 0
-                  }
-                  onClick={() => handleAddLiquidity()}
-                >
-                  {t('joinPool')}
-                </Button>
               </Col>
               {assetAdd2?.tokenAddress &&
                 assetAdd2?.tokenAddress !== addr.bnb &&
