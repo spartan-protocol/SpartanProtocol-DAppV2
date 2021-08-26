@@ -12,6 +12,7 @@ import {
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import { convertToWei } from '../../utils/bigNumber'
 
 export const poolLoading = () => ({
   type: Types.POOL_LOADING,
@@ -159,6 +160,12 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
         poolUnits: tempArray[i].poolUnits.toString(),
         // baseCap: tempArray[i].baseCap.toString(),
         // synthCap: tempArray[i].synthCap.toString(),
+        // minSynth: tempArray[i].minSynth.toString(),
+        // collateral: tempArray[i].collateral.toString(),
+        baseCap: convertToWei(100000000).toString(), // DELETE THIS AFTER V2 TESTNET
+        synthCap: '3000', // DELETE THIS AFTER V2 TESTNET
+        minSynth: '500', // DELETE THIS AFTER V2 TESTNET
+        collateral: '0', // DELETE THIS AFTER V2 TESTNET
         recentFees: '0',
         lastMonthFees: '0',
         recentDivis: '0',

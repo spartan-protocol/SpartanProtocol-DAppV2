@@ -28,10 +28,9 @@ import {
   calcSwapFee,
   calcDoubleSwapFee,
   calcLiquidityHoldings,
-  calcFeeBurn,
   calcLiquidityUnits,
   calcSpotValueInBase,
-  // calcLiquidityUnitsAsym,
+  minusFeeBurn,
 } from '../../../utils/web3Utils'
 import {
   swap,
@@ -249,10 +248,8 @@ const Swap = () => {
     clearInputs()
   }
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
+  const _minusFeeBurn = (_amount) =>
+    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
   //= =================================================================================//
   // Functions SWAP calculations
@@ -282,11 +279,9 @@ const Swap = () => {
   const getSwapOutput = () => {
     if (assetSwap1?.tokenAddress === addr.spartav2) {
       return calcSwapOutput(
-        BN(convertToWei(swapInput1?.value)).minus(
-          getFeeBurn(convertToWei(swapInput1?.value)),
-        ),
-        assetSwap2?.tokenAmount,
-        assetSwap2?.baseAmount,
+        _minusFeeBurn(convertToWei(swapInput1?.value)),
+        assetSwap2,
+        false,
       )[0]
     }
     if (assetSwap2?.tokenAddress === addr.spartav2) {
@@ -296,7 +291,7 @@ const Swap = () => {
         assetSwap1?.baseAmount,
         true,
       )[0]
-      return BN(result).minus(getFeeBurn(result))
+      return _minusFeeBurn(result)
     }
     return calcDoubleSwapOutput(
       convertToWei(swapInput1?.value),
@@ -349,23 +344,15 @@ const Swap = () => {
       if (assetSwap1?.tokenAddress === addr.spartav2) {
         swapInput2.value = convertFromWei(
           calcSwapOutput(
-            BN(convertToWei(swapInput1?.value)).minus(
-              getFeeBurn(convertToWei(swapInput1?.value)),
-            ),
-            assetSwap2.tokenAmount,
-            assetSwap2.baseAmount,
+            _minusFeeBurn(convertToWei(swapInput1?.value)),
+            assetSwap2,
           )[0],
         )
       } else if (assetSwap2?.tokenAddress === addr.spartav2) {
         const result = convertFromWei(
-          calcSwapOutput(
-            convertToWei(swapInput1?.value),
-            assetSwap1.tokenAmount,
-            assetSwap1.baseAmount,
-            true,
-          )[0],
+          calcSwapOutput(convertToWei(swapInput1?.value), assetSwap1, true)[0],
         )
-        swapInput2.value = BN(result).minus(getFeeBurn(result))
+        swapInput2.value = _minusFeeBurn(result)
       } else {
         swapInput2.value = convertFromWei(
           calcDoubleSwapOutput(
@@ -396,7 +383,7 @@ const Swap = () => {
 
   const getZapRemoveBaseBurn = () => {
     if (assetSwap1 && swapInput1?.value) {
-      return BN(getZapRemoveBase()).minus(getFeeBurn(getZapRemoveBase()))
+      return _minusFeeBurn(getZapRemoveBase())
     }
     return '0'
   }
@@ -448,7 +435,7 @@ const Swap = () => {
 
   const getZapSwapBurn = () => {
     if (assetSwap1 && swapInput1?.value) {
-      return BN(getZapSwap()).minus(getFeeBurn(getZapSwap()))
+      return _minusFeeBurn(getZapSwap())
     }
     return '0'
   }
@@ -468,13 +455,9 @@ const Swap = () => {
   const getZapOutput = () => {
     if (assetSwap1 && swapInput1?.value) {
       return calcLiquidityUnits(
-        BN(getZapRemoveBaseBurn())
-          .plus(getZapSwapBurn())
-          .minus(getFeeBurn(getZapRemoveBaseBurn())),
+        _minusFeeBurn(getZapRemoveBaseBurn()).plus(getZapSwapBurn()),
         '0',
-        assetSwap2.baseAmount,
-        assetSwap2.tokenAmount,
-        assetSwap2.poolUnits,
+        assetSwap2,
       )
     }
     return '0'
@@ -488,24 +471,18 @@ const Swap = () => {
     const input = BN(convertToWei(swapInput1?.value))
     const fromToken = assetSwap1
     const fromBase = fromToken.tokenAddress === addr.spartav2
-    const { baseAmount } = assetSwap1
-    const { tokenAmount } = assetSwap1
-    let feeBurn = getFeeBurn(input) // feeBurn - SPARTA from User to Pool
     if (fromBase) {
       if (getFee) {
         return '0'
       }
-      return input.minus(feeBurn)
+      return _minusFeeBurn(input)
     }
-    let baseSwapped = calcSwapOutput(input, tokenAmount, baseAmount, true)[0]
-    feeBurn = getFeeBurn(baseSwapped) // feeBurn - Pool to Router
-    baseSwapped = baseSwapped.minus(feeBurn)
-    feeBurn = getFeeBurn(baseSwapped) // feeBurn - Router to Pool
+    const [_output, _fee] = calcSwapOutput(input, assetSwap1, true)
+    const baseSwapped = _minusFeeBurn(_output)
     if (getFee) {
-      const swapFee = calcSwapFee(input, tokenAmount, baseAmount, true)
-      return calcSpotValueInBase(swapFee, assetSwap1)
+      return _fee
     }
-    return baseSwapped.minus(feeBurn)
+    return _minusFeeBurn(baseSwapped)
   }
 
   // STEP 2 - ADD LPs TO SYNTH (FEEBURN: NO)
@@ -559,8 +536,7 @@ const Swap = () => {
       baseAmount,
       true,
     )
-    let feeBurn = getFeeBurn(swapped) // feeBurn - Pool to User / Router
-    let output = BN(swapped).minus(feeBurn)
+    let output = _minusFeeBurn(swapped)
     if (toBase) {
       if (getFee) {
         return swapFee1
@@ -573,8 +549,7 @@ const Swap = () => {
       tokenAmount = assetSwap2.tokenAmount
       baseAmount = assetSwap2.baseAmount
     }
-    feeBurn = getFeeBurn(output) // feeBurn - Router to Pool
-    output = BN(output).minus(feeBurn)
+    output = _minusFeeBurn(output)
     const swapFee2 = calcSwapFee(output, tokenAmount, baseAmount, false)
     if (getFee) {
       return BN(swapFee1).plus(swapFee2)

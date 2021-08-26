@@ -229,6 +229,19 @@ export const calcFeeBurn = (feeOnTransfer, amount) => {
 }
 
 /**
+ * Return SPARTA after feeBurn
+ * @param {uint} amount
+ * @param {uint} feeOnTsf
+ * @returns {uint} fee
+ */
+export const minusFeeBurn = (amount, feeOnTsf) => {
+  const _amount = BN(amount)
+  const burnFee = calcFeeBurn(feeOnTsf, _amount)
+  const afterFeeBurn = _amount.minus(burnFee)
+  return afterFeeBurn
+}
+
+/**
  * Calculate value of synthetic assets
  * @param amount uint - amount of synths?
  * @param tokensInPool uint - amount of TOKENS held by the pool

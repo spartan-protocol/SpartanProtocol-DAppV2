@@ -27,10 +27,10 @@ import {
 } from '../../../utils/bigNumber'
 import { useBond } from '../../../store/bond/selector'
 import {
-  calcFeeBurn,
   calcLiquidityUnits,
   calcSwapOutput,
   calcSpotValueInBase,
+  minusFeeBurn,
 } from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
 import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
@@ -103,10 +103,8 @@ const LiqBond = () => {
     }
   }
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
+  const _minusFeeBurn = (_amount) =>
+    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
   // Bond Functions
   const calcSpartaMinted = () => {
@@ -125,7 +123,7 @@ const LiqBond = () => {
   const calcOutput = () => {
     if (bondInput1) {
       const output = calcLiquidityUnits(
-        BN(calcSpartaMinted()).minus(getFeeBurn(calcSpartaMinted())),
+        _minusFeeBurn(calcSpartaMinted()),
         convertToWei(bondInput1.value),
         assetBond1.baseAmount,
         assetBond1.tokenAmount,

@@ -25,12 +25,12 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
-  calcFeeBurn,
   calcLiquidityHoldings,
   calcLiquidityUnits,
   calcSwapOutput,
   calcSpotValueInBase,
   calcSpotValueInToken,
+  minusFeeBurn,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
@@ -183,11 +183,8 @@ const LiqAdd = () => {
     return poolAdd1?.balance
   }
 
-  const minusFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    const afterFeeBurn = _amount.minus(burnFee)
-    return afterFeeBurn
-  }
+  const _minusFeeBurn = (_amount) =>
+    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
   const getSecondsNew = () => {
     const timeStamp = BN(Date.now()).div(1000)
@@ -217,7 +214,7 @@ const LiqAdd = () => {
     if (addInput1 && addInput2 && assetAdd1) {
       return convertFromWei(
         calcLiquidityUnits(
-          minusFeeBurn(BN(convertToWei(addInput2?.value))),
+          _minusFeeBurn(BN(convertToWei(addInput2?.value))),
           convertToWei(addInput1?.value),
           assetAdd1?.baseAmount,
           assetAdd1?.tokenAmount,
@@ -240,7 +237,8 @@ const LiqAdd = () => {
     if (addInput1 && assetAdd1) {
       const toSparta = assetAdd1.tokenAddress !== addr.spartav2
       let received = BN(convertToWei(addInput1?.value)).div(2)
-      received = assetAdd1 === addr.spartav2 ? minusFeeBurn(received) : received
+      received =
+        assetAdd1 === addr.spartav2 ? _minusFeeBurn(received) : received
       const [swapOutput, swapFee] = calcSwapOutput(
         received,
         poolAdd1.tokenAmount,
@@ -261,11 +259,11 @@ const LiqAdd = () => {
       return convertFromWei(
         calcLiquidityUnits(
           fromSparta
-            ? minusFeeBurn(routerRec).minus(received)
-            : minusFeeBurn(minusFeeBurn(swapOutput[0])),
+            ? _minusFeeBurn(routerRec).minus(received)
+            : _minusFeeBurn(_minusFeeBurn(swapOutput[0])),
           fromSparta ? swapOutput[0] : received,
           fromSparta
-            ? BN(poolAdd1?.baseAmount).plus(minusFeeBurn(received))
+            ? BN(poolAdd1?.baseAmount).plus(_minusFeeBurn(received))
             : BN(poolAdd1?.baseAmount).minus(swapOutput[0]),
           fromSparta
             ? BN(poolAdd1?.tokenAmount).minus(swapOutput[0])

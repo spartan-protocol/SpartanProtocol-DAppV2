@@ -22,7 +22,7 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import { calcFeeBurn, calcLiquidityUnits } from '../../../utils/web3Utils'
+import { calcLiquidityUnits, minusFeeBurn } from '../../../utils/web3Utils'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -113,10 +113,8 @@ const EmptyPools = (props) => {
     return poolAdd1?.balance
   }
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
+  const _minusFeeBurn = (_amount) =>
+    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
   //= =================================================================================//
   // 'Add Both' Functions (Re-Factor)
@@ -125,13 +123,9 @@ const EmptyPools = (props) => {
     if (addInput1 && addInput2) {
       return convertFromWei(
         calcLiquidityUnits(
-          BN(convertToWei(addInput2?.value)).minus(
-            getFeeBurn(convertToWei(addInput2?.value)),
-          ),
+          _minusFeeBurn(convertToWei(addInput2?.value)),
           convertToWei(addInput1?.value),
-          poolAdd1.baseAmount,
-          poolAdd1.tokenAmount,
-          poolAdd1.poolUnits,
+          poolAdd1,
         ),
       )
     }

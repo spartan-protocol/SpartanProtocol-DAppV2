@@ -88,6 +88,7 @@ export const getSynthArray = (tokenArray, wallet) => async (dispatch) => {
         lastHarvest: '0',
         lpBalance: '0',
         lpDebt: '0',
+        totalSupply: '0', // DELETE THIS AFTER V2 TESTNET; MAKE SURE YOU MAP IN THE ACTUAL TOTALSUPPLY
       })
     }
     dispatch(payloadToDispatch(Types.SYNTH_ARRAY, synthArray))

@@ -24,11 +24,11 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
-  calcFeeBurn,
   calcLiquidityHoldings,
   calcSwapFee,
   calcSwapOutput,
   calcSpotValueInBase,
+  minusFeeBurn,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
@@ -186,11 +186,8 @@ const LiqRemove = () => {
     return poolRemove1?.balance
   }
 
-  const minusFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    const afterFeeBurn = _amount.minus(burnFee)
-    return afterFeeBurn
-  }
+  const _minusFeeBurn = (_amount) =>
+    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
   const getSecondsNew = () => {
     const timeStamp = BN(Date.now()).div(1000)
@@ -244,7 +241,7 @@ const LiqRemove = () => {
     if (removeInput1 && poolRemove1) {
       let _sparta = getRemoveSparta()
       if (poolRemove1.tokenAddress === addr.bnb) {
-        _sparta = minusFeeBurn(_sparta)
+        _sparta = _minusFeeBurn(_sparta)
       }
       return _sparta
     }
@@ -254,7 +251,7 @@ const LiqRemove = () => {
   const getRemoveSpartaOutput = () => {
     if (removeInput1 && poolRemove1) {
       const _sparta = getRemoveSpartaBurn1()
-      return minusFeeBurn(_sparta)
+      return _minusFeeBurn(_sparta)
     }
     return '0.00'
   }
@@ -287,7 +284,7 @@ const LiqRemove = () => {
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
           true,
         )
-        result = minusFeeBurn(result[0])
+        result = _minusFeeBurn(result[0])
       } else if (poolRemove1.tokenAddress === addr.bnb) {
         result = calcSwapOutput(
           getRemoveSpartaOutput(),
@@ -296,7 +293,7 @@ const LiqRemove = () => {
         )
       } else {
         result = calcSwapOutput(
-          minusFeeBurn(BN(getRemoveSpartaOutput())),
+          _minusFeeBurn(BN(getRemoveSpartaOutput())),
           BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
           BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
         )
@@ -318,7 +315,7 @@ const LiqRemove = () => {
             BN(getRemoveSpartaOutput()),
           )
         }
-        result = minusFeeBurn(result)
+        result = _minusFeeBurn(result)
       } else {
         result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveTokenOutput()))
       }
