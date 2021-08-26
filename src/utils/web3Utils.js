@@ -37,7 +37,7 @@ export const calcPart = (bp, total) => {
   let part = 0
   if (bp <= 10000 && bp > 0) {
     part = calcShare(bp, 10000, total)
-  } else console.log('Must be valid basis points')
+  }
   return part
 }
 
@@ -159,7 +159,7 @@ export const calcSwapOutput = (inputAmount, poolDetails, toBase) => {
   const feeNumerator = x.times(x).times(Y)
   const feeDenominator = x.plus(X).times(x.plus(X))
   const swapFee = feeNumerator.div(feeDenominator)
-  const swapFeeInBase = toBase
+  const swapFeeInBase = !toBase
     ? calcSpotValueInBase(swapFee, poolDetails)
     : swapFee
   return [swapOutput, swapFeeInBase]
@@ -269,7 +269,6 @@ export const calcSynthsValue = (
     tokensInPool,
     poolTotalSupply,
   )
-  console.log(units.toFixed())
   return units
 }
 
@@ -314,7 +313,6 @@ export const calcSwapSlip = (inputAmount, pool, toBase) => {
   const x = BN(inputAmount) // input amount
   const X = toBase ? BN(pool.tokenAmount) : BN(pool.baseAmount) // if toBase; tokenAmount
   const result = x.div(x.plus(X))
-  console.log(result.toFixed())
   return result
 }
 
@@ -325,7 +323,6 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
   const x = calcSwapOutput(inputAmount, pool1, true)
   const swapSlip2 = calcSwapSlip(x[0], pool2, false)
   const result = swapSlip1.plus(swapSlip2)
-  console.log(result.toFixed())
   return result
 }
 

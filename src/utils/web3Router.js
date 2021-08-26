@@ -37,9 +37,9 @@ export const addLiq = (inputToken, pool, feeOnTsf) => {
  */
 export const addLiqAsym = (input, pool, fromBase, feeOnTsf) => {
   const _input = BN(input) // TOKEN1 sent to Router
-  const _received = fromBase ? minusFeeBurn(feeOnTsf, _input) : _input // TOKEN1 received by Router (after feeBurn)
+  const _received = fromBase ? minusFeeBurn(_input, feeOnTsf) : _input // TOKEN1 received by Router (after feeBurn)
   const _swapIn = _input.div(2) // TOKEN1 leaving the Router
-  const _swapInRec = fromBase ? minusFeeBurn(feeOnTsf, _swapIn) : _swapIn // TOKEN1 received by Pool (after feeBurn)
+  const _swapInRec = fromBase ? minusFeeBurn(_swapIn, feeOnTsf) : _swapIn // TOKEN1 received by Pool (after feeBurn)
   const [_swapOut, swapFee] = calcSwapOutput(_swapInRec, pool, !fromBase) // TOKEN2 leaving the Pool
   const _swapOutRec = fromBase ? _swapOut : minusFeeBurn(_swapOut, feeOnTsf) // TOKEN2 received by Router (after feeBurn)
   const _recSparta = fromBase
@@ -84,8 +84,8 @@ export const removeLiqAsym = (inputLP, pool, toBase, feeOnTsf) => {
   const [_swapOut, swapFee] = toBase
     ? calcSwapOutput(_tokenOut, pool, toBase) // SPARTA output from swap
     : calcSwapOutput(_recSparta1, pool, toBase) // TOKEN output from swap
-  const _swapOutRec = toBase ? minusFeeBurn(_swapOut) : _swapOut // Swap output received by Router (after feeBurn)
-  const tokensOut = toBase ? minusFeeBurn(_swapOutRec) : _swapOutRec // Swap output received by User (after feeBurn)
+  const _swapOutRec = toBase ? minusFeeBurn(_swapOut, feeOnTsf) : _swapOut // Swap output received by Router (after feeBurn)
+  const tokensOut = toBase ? minusFeeBurn(_swapOutRec, feeOnTsf) : _swapOutRec // Swap output received by User (after feeBurn)
   return [tokensOut, swapFee]
 }
 

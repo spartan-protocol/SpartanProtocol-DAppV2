@@ -26,11 +26,8 @@ import {
 } from '../../../utils/bigNumber'
 import {
   calcLiquidityHoldings,
-  calcLiquidityUnits,
-  calcSwapOutput,
   calcSpotValueInBase,
   calcSpotValueInToken,
-  minusFeeBurn,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
@@ -40,6 +37,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
 import TxnModal from './Modals/TxnModal'
+import { addLiq, addLiqAsym } from '../../../utils/web3Router'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -183,9 +181,6 @@ const LiqAdd = () => {
     return poolAdd1?.balance
   }
 
-  const _minusFeeBurn = (_amount) =>
-    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-
   const getSecondsNew = () => {
     const timeStamp = BN(Date.now()).div(1000)
     const secondsLeft = BN(poolAdd1?.genesis).plus(604800).minus(timeStamp)
@@ -208,71 +203,42 @@ const LiqAdd = () => {
   }
 
   //= =================================================================================//
-  // 'Add Both' Functions (Re-Factor)
-
-  const getAddBothOutputLP = () => {
-    if (addInput1 && addInput2 && assetAdd1) {
-      return convertFromWei(
-        calcLiquidityUnits(
-          _minusFeeBurn(BN(convertToWei(addInput2?.value))),
-          convertToWei(addInput1?.value),
-          assetAdd1?.baseAmount,
-          assetAdd1?.tokenAmount,
-          assetAdd1?.poolUnits,
-        ),
-      )
-    }
-    return '0.00'
-  }
-
-  //= =================================================================================//
-  // 'Add Single' Functions (Re-Factor)
+  // Get txn info
 
   /**
-   * Swap details from before the liqAdd
-   * @returns {uint} swapOutput
-   * @returns {uint} swapFee
+   * Get liqAdd txn details
+   * @returns {uint} outputLP
+   * @returns {uint} inputSparta
    */
-  const getAddSingleSwapOutput = () => {
-    if (addInput1 && assetAdd1) {
-      const toSparta = assetAdd1.tokenAddress !== addr.spartav2
-      let received = BN(convertToWei(addInput1?.value)).div(2)
-      received =
-        assetAdd1 === addr.spartav2 ? _minusFeeBurn(received) : received
-      const [swapOutput, swapFee] = calcSwapOutput(
-        received,
-        poolAdd1.tokenAmount,
-        poolAdd1.baseAmount,
-        toSparta,
+  const getAddLiq = () => {
+    if (addInput1 && activeTab === 'addTab1') {
+      const [outputLP, inputSparta] = addLiq(
+        convertToWei(addInput1.value),
+        assetAdd1,
+        sparta.globalDetails.feeOnTransfer,
       )
-      return [swapOutput, swapFee]
+      return [outputLP, inputSparta]
     }
     return ['0.00', '0.00']
   }
 
-  const getAddSingleOutputLP = () => {
-    if (addInput1 && assetAdd1) {
-      const routerRec = BN(convertToWei(addInput1?.value))
-      const swapOutput = getAddSingleSwapOutput()
-      const fromSparta = assetAdd1.tokenAddress === addr.spartav2
-      const received = routerRec.div(2)
-      return convertFromWei(
-        calcLiquidityUnits(
-          fromSparta
-            ? _minusFeeBurn(routerRec).minus(received)
-            : _minusFeeBurn(_minusFeeBurn(swapOutput[0])),
-          fromSparta ? swapOutput[0] : received,
-          fromSparta
-            ? BN(poolAdd1?.baseAmount).plus(_minusFeeBurn(received))
-            : BN(poolAdd1?.baseAmount).minus(swapOutput[0]),
-          fromSparta
-            ? BN(poolAdd1?.tokenAmount).minus(swapOutput[0])
-            : BN(poolAdd1?.tokenAmount).plus(received),
-          poolAdd1?.poolUnits,
-        ),
+  /**
+   * Get liqAddAsym txn details
+   * @returns {uint} outputLP
+   * @returns {uint} swapFee
+   */
+  const getAddLiqAsym = () => {
+    if (addInput1 && assetAdd1 && activeTab === 'addTab2') {
+      const fromBase = assetAdd1.tokenAddress === addr.spartav2
+      const [unitsLP, swapFee] = addLiqAsym(
+        convertToWei(addInput1.value),
+        poolAdd1,
+        fromBase,
+        sparta.globalDetails.feeOnTransfer,
       )
+      return [unitsLP, swapFee]
     }
-    return '0.00'
+    return ['0.00', '0.00']
   }
 
   const getInput1ValueUSD = () => {
@@ -296,22 +262,14 @@ const LiqAdd = () => {
 
   const getLpValueBase = () => {
     if (assetAdd1 && addInput1?.value) {
-      return calcLiquidityHoldings(
-        poolAdd1.baseAmount,
-        outputLp,
-        poolAdd1.poolUnits,
-      )
+      return calcLiquidityHoldings(outputLp, poolAdd1)[0]
     }
     return '0.00'
   }
 
   const getLpValueToken = () => {
     if (assetAdd1 && addInput1?.value) {
-      return calcLiquidityHoldings(
-        poolAdd1.tokenAmount,
-        outputLp,
-        poolAdd1.poolUnits,
-      )
+      return calcLiquidityHoldings(outputLp, poolAdd1)[1]
     }
     return '0.00'
   }
@@ -322,7 +280,6 @@ const LiqAdd = () => {
         .plus(getLpValueBase())
         .times(web3.spartaPrice)
     }
-
     return '0.00'
   }
 
@@ -330,24 +287,21 @@ const LiqAdd = () => {
   // General Functions
 
   const handleInputChange = () => {
-    if (activeTab === 'addTab1') {
-      if (addInput2 && addInput2 !== document.activeElement) {
-        addInput2.value = calcSpotValueInBase(
-          addInput1.value > 0 ? addInput1.value : '0.00',
-          assetAdd1,
-        )
-        setOutputLp(convertToWei(getAddBothOutputLP()))
-      } else if (addInput1 && addInput1 !== document.activeElement) {
+    if (activeTab === 'addTab1' && addInput1 && addInput2) {
+      if (addInput2 !== document.activeElement) {
+        addInput2.value = convertFromWei(getAddLiq()[1])
+        setOutputLp(getAddLiq()[0])
+      } else if (addInput1 !== document.activeElement) {
         addInput1.value = calcSpotValueInToken(
           addInput2.value > 0 ? addInput2.value : '0.00',
           assetAdd1,
         )
-        setOutputLp(convertToWei(getAddBothOutputLP()))
+        setOutputLp(getAddLiq()[0])
       }
-    } else if (activeTab === 'addTab2') {
-      if (addInput1?.value && addInput3) {
-        setOutputLp(convertToWei(getAddSingleOutputLP()))
-        addInput3.value = getAddSingleOutputLP()
+    } else if (activeTab === 'addTab2' && addInput1 && addInput3) {
+      if (addInput1.value) {
+        setOutputLp(getAddLiqAsym()[0])
+        addInput3.value = convertFromWei(getAddLiqAsym()[0])
       }
     }
   }
@@ -693,9 +647,7 @@ const LiqAdd = () => {
                         </Col>
                         <Col className="text-end">
                           <span className="text-card">
-                            {assetAdd1 && getAddSingleSwapOutput()[1] > 0
-                              ? formatFromWei(getAddSingleSwapOutput()[1], 6)
-                              : '0.00'}{' '}
+                            {formatFromWei(getAddLiqAsym()[1], 4)}{' '}
                             <span className="">SPARTA</span>
                           </span>
                         </Col>
