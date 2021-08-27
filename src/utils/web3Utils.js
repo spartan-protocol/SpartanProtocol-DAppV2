@@ -132,7 +132,7 @@ export const calcLiquidityUnits = (spartaInput, tokenInput, poolDetails) => {
  * @param poolDetails pool item from poolDetails object
  * @returns [spartaValue, tokenValue]
  */
-export const calcLiquidityHoldings = (inputLP, poolDetails) => {
+export const calcLiqValue = (inputLP, poolDetails) => {
   const _inputLP = BN(inputLP)
   const _spartaDepth = BN(poolDetails.baseAmount)
   const _tokenDepth = BN(poolDetails.tokenAmount)

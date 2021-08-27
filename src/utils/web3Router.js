@@ -1,7 +1,7 @@
 import { BN } from './bigNumber'
 import { getAddresses } from './web3'
 import {
-  calcLiquidityHoldings,
+  calcLiqValue,
   calcLiquidityUnits,
   calcSpotValueInBase,
   calcSwapOutput,
@@ -62,7 +62,7 @@ export const removeLiq = (inputLP, pool, feeOnTsf) => {
   const isBNB =
     pool.tokenAddress === addr.bnb || pool.tokenAddress === addr.wbnb
   const _inputLP = BN(inputLP) // LP units received by pool
-  const [_baseOut, _tokenOut] = calcLiquidityHoldings(_inputLP, pool) // Get redemption value of the LP units
+  const [_baseOut, _tokenOut] = calcLiqValue(_inputLP, pool) // Get redemption value of the LP units
   let _recSparta = minusFeeBurn(_baseOut, feeOnTsf) // SPARTA received by user
   _recSparta = isBNB ? minusFeeBurn(_recSparta, feeOnTsf) : _recSparta // If BNB pool; another feeBurn via Router (unwrap)
   return [_recSparta, _tokenOut]
@@ -78,7 +78,7 @@ export const removeLiq = (inputLP, pool, feeOnTsf) => {
  */
 export const removeLiqAsym = (inputLP, pool, toBase, feeOnTsf) => {
   const _inputLP = BN(inputLP) // LP units received by pool
-  const [_baseOut, _tokenOut] = calcLiquidityHoldings(_inputLP, pool) // SPARTA & TOKEN sent out from pool
+  const [_baseOut, _tokenOut] = calcLiqValue(_inputLP, pool) // SPARTA & TOKEN sent out from pool
   const _recSparta = minusFeeBurn(_baseOut, feeOnTsf) // SPARTA received by router
   const _recSparta1 = minusFeeBurn(_recSparta, feeOnTsf) // SPARTA received by pool
   const [_swapOut, swapFee] = toBase
@@ -117,14 +117,14 @@ export const zapLiq = (input, pool1, pool2, feeOnTsf) => {
 /**
  * Get the details of a swap | output, slipFee, dividends
  * Make sure to handle dividend checks on other side (ie. [reserve.emissions === true] etc)
- * @param input @param pool1 @param pool2 default null @param feeOnTsf
- * @param toBase default false @param fromBase default false
+ * @param input @param inPool @param outPool
+ * @param feeOnTsf @param toBase @param fromBase
  * @returns [output, swapFee, divi1, divi2]
  */
 export const swapTo = (
   input,
-  pool1,
-  pool2 = null,
+  inPool,
+  outPool,
   feeOnTsf,
   toBase = false,
   fromBase = false,
@@ -133,32 +133,26 @@ export const swapTo = (
   let divi2 = BN(0)
   if (fromBase) {
     // Simple swap SPARTA -> TOKEN
-    const _spartaRec = minusFeeBurn(input, feeOnTsf) // Tsf SPARTA in (User -> Pool1) (feeBurn)
-    const [_tokenOut, swapFee] = calcSwapOutput(_spartaRec, pool1, false) // Swap SPARTA to TOKEN (Pool1 -> User)
-    divi1 = pool1.curated && swapFee.isGreaterThan(one) && swapFee
+    const _spartaRec = minusFeeBurn(input, feeOnTsf) // Tsf SPARTA in (User -> outPool) (feeBurn)
+    const [_tokenOut, swapFee] = calcSwapOutput(_spartaRec, outPool, false) // Swap SPARTA to TOKEN (outPool -> User)
+    divi1 = outPool.curated && swapFee.isGreaterThan(one) && swapFee
     return [_tokenOut, swapFee, divi1, divi2]
   }
   if (toBase) {
     // Simple swap TOKEN -> SPARTA
-    const [spartaOut, swapFee] = calcSwapOutput(input, pool1, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> User)
+    const [spartaOut, swapFee] = calcSwapOutput(input, inPool, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> User)
     const _spartaOut = minusFeeBurn(spartaOut, feeOnTsf) // SPARTA received (User) (feeBurn)
-    divi1 = pool1.curated && swapFee.isGreaterThan(one) && swapFee
+    divi1 = inPool.curated && swapFee.isGreaterThan(one) && swapFee
     return [_spartaOut, swapFee, divi1, divi2]
   }
-  if (pool2) {
-    // Double swap TOKEN1 -> TOKEN2
-    const [spartaOut, swapFee1] = calcSwapOutput(input, pool1, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> Pool2)
-    divi1 = pool1.curated && swapFee1.isGreaterThan(one) && swapFee1
-    const _spartaOut = minusFeeBurn(spartaOut, feeOnTsf) // SPARTA received (Pool2) (feeBurn)
-    const [_tokenOut, swapFee2] = calcSwapOutput(_spartaOut, pool2, false) // Swap SPARTA to TOKEN (Pool2 -> Router -> User)
-    const swapFee = swapFee1.plus(swapFee2)
-    divi2 = pool2.curated && swapFee2.isGreaterThan(one) && swapFee2
-    return [_tokenOut, swapFee, divi1, divi2]
-  }
-  console.log(
-    'Invalid swap inputs; make sure you check if its from/to base and/or include both pools',
-  )
-  return null
+  // Double swap TOKEN1 -> TOKEN2
+  const [spartaOut, swapFee1] = calcSwapOutput(input, inPool, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> Pool2)
+  divi1 = inPool.curated && swapFee1.isGreaterThan(one) && swapFee1
+  const _spartaOut = minusFeeBurn(spartaOut, feeOnTsf) // SPARTA received (Pool2) (feeBurn)
+  const [_tokenOut, swapFee2] = calcSwapOutput(_spartaOut, outPool, false) // Swap SPARTA to TOKEN (Pool2 -> Router -> User)
+  const swapFee = swapFee1.plus(swapFee2)
+  divi2 = outPool.curated && swapFee2.isGreaterThan(one) && swapFee2
+  return [_tokenOut, swapFee, divi1, divi2]
 }
 
 /**
@@ -181,12 +175,13 @@ export const mintSynth = (
   let synthCapped = false
   let baseAmount = BN(synthPool.baseAmount)
   let tokenAmount = BN(synthPool.tokenAmount)
+  const minSynth = BN(synthPool.minSynth)
+  const collateral = BN(synthPool.collateral)
   const synthSupply = BN(synth.totalSupply)
   let synthCap = tokenAmount.times(synthPool.synthCap).div(10000)
-  let minDebt = synthPool.minSynth.times(tokenAmount).div(10000)
-  let minCollat = synthPool.minSynth.times(baseAmount).div(10000)
-  let collat =
-    synthPool.collateral > minCollat ? synthPool.collateral : minCollat
+  let minDebt = minSynth.times(tokenAmount).div(10000)
+  let minCollat = minSynth.times(baseAmount).div(10000)
+  let collat = collateral > minCollat ? collateral : minCollat
   let debt = synthSupply > minDebt ? synthSupply : minDebt
   let virtualPool = {
     baseAmount: baseAmount.plus(collat),
@@ -214,10 +209,10 @@ export const mintSynth = (
     baseAmount = baseAmount.minus(_spartaSwap)
     tokenAmount = tokenAmount.plus(input)
     synthCap = tokenAmount.times(synthPool.synthCap).div(10000)
-    minDebt = synthPool.minSynth.times(tokenAmount).div(10000)
-    minCollat = synthPool.minSynth.times(baseAmount).div(10000)
-    collat = synthPool.collateral > minCollat ? synthPool.collateral : minCollat
-    debt = synthSupply > minDebt ? synthSupply : minDebt
+    minDebt = minSynth.times(tokenAmount).div(10000)
+    minCollat = minSynth.times(baseAmount).div(10000)
+    collat = collateral.isGreaterThan(minCollat) ? collateral : minCollat
+    debt = synthSupply.isGreaterThan(minDebt) ? synthSupply : minDebt
     virtualPool = {
       baseAmount: baseAmount.plus(collat),
       tokenAmount: tokenAmount.minus(debt),
@@ -252,12 +247,13 @@ export const burnSynth = (
   let diviSwap = BN(0)
   const baseAmount = BN(synthPool.baseAmount)
   const tokenAmount = BN(synthPool.tokenAmount)
+  const minSynth = BN(synthPool.minSynth)
+  const collateral = BN(synthPool.collateral)
   const synthSupply = BN(synth.totalSupply)
-  const minDebt = synthPool.minSynth.times(tokenAmount).div(10000)
-  const minCollat = synthPool.minSynth.times(baseAmount).div(10000)
-  const collat =
-    synthPool.collateral > minCollat ? synthPool.collateral : minCollat
-  const debt = synthSupply > minDebt ? synthSupply : minDebt
+  const minDebt = minSynth.times(tokenAmount).div(10000)
+  const minCollat = minSynth.times(baseAmount).div(10000)
+  const collat = collateral.isGreaterThan(minCollat) ? collateral : minCollat
+  const debt = synthSupply.isGreaterThan(minDebt) ? synthSupply : minDebt
   const virtualPool = {
     baseAmount: baseAmount.plus(collat),
     tokenAmount: tokenAmount.minus(debt),
@@ -274,7 +270,10 @@ export const burnSynth = (
   const _spartaRec = minusFeeBurn(spartaOut, feeOnTsf) // Router receives SPARTA (feeBurn)
   diviSynth = synthFee.isGreaterThan(one) && synthFee
   const _spartaRec1 = minusFeeBurn(_spartaRec, feeOnTsf) // Pool receives SPARTA (feeBurn)
-  const updatedPool = swapPool
+  const updatedPool = {}
+  updatedPool.curated = swapPool.curated
+  updatedPool.baseAmount = swapPool.baseAmount
+  updatedPool.tokenAmount = swapPool.tokenAmount
   if (swapPool.tokenAddress === synthPool.tokenAddress) {
     updatedPool.baseAmount = baseAmount.plus(_spartaRec1)
   }

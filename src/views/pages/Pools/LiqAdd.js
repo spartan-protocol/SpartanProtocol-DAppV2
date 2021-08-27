@@ -25,7 +25,7 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
-  calcLiquidityHoldings,
+  calcLiqValue,
   calcSpotValueInBase,
   calcSpotValueInToken,
   getTimeUntil,
@@ -245,14 +245,14 @@ const LiqAdd = () => {
 
   const getLpValueBase = () => {
     if (assetAdd1 && addInput1?.value) {
-      return calcLiquidityHoldings(outputLp, poolAdd1)[0]
+      return calcLiqValue(outputLp, poolAdd1)[0]
     }
     return '0.00'
   }
 
   const getLpValueToken = () => {
     if (assetAdd1 && addInput1?.value) {
-      return calcLiquidityHoldings(outputLp, poolAdd1)[1]
+      return calcLiqValue(outputLp, poolAdd1)[1]
     }
     return '0.00'
   }

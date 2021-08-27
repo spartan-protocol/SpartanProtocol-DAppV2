@@ -22,16 +22,7 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
-import {
-  calcDoubleSwapOutput,
-  calcSwapOutput,
-  calcSwapFee,
-  calcDoubleSwapFee,
-  calcLiquidityHoldings,
-  calcLiquidityUnits,
-  calcSpotValueInBase,
-  minusFeeBurn,
-} from '../../../utils/web3Utils'
+import { calcSpotValueInBase, calcLiqValue } from '../../../utils/web3Utils'
 import {
   swap,
   swapAssetToSynth,
@@ -48,6 +39,7 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
 import NewPool from '../Home/NewPool'
 import { Icon } from '../../../components/Icons/icons'
+import { burnSynth, mintSynth, swapTo, zapLiq } from '../../../utils/web3Router'
 
 const Swap = () => {
   const synth = useSynth()
@@ -248,9 +240,6 @@ const Swap = () => {
     clearInputs()
   }
 
-  const _minusFeeBurn = (_amount) =>
-    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-
   //= =================================================================================//
   // Functions SWAP calculations
 
@@ -276,301 +265,107 @@ const Swap = () => {
     return item.balanceTokens
   }
 
-  const getSwapOutput = () => {
-    if (assetSwap1?.tokenAddress === addr.spartav2) {
-      return calcSwapOutput(
-        _minusFeeBurn(convertToWei(swapInput1?.value)),
-        assetSwap2,
-        false,
-      )[0]
-    }
-    if (assetSwap2?.tokenAddress === addr.spartav2) {
-      const result = calcSwapOutput(
-        convertToWei(swapInput1?.value),
-        assetSwap1?.tokenAmount,
-        assetSwap1?.baseAmount,
-        true,
-      )[0]
-      return _minusFeeBurn(result)
-    }
-    return calcDoubleSwapOutput(
-      convertToWei(swapInput1?.value),
-      assetSwap1?.tokenAmount,
-      assetSwap1?.baseAmount,
-      assetSwap2?.tokenAmount,
-      assetSwap2?.baseAmount,
-    )
-  }
-
-  const getSwapFee = () => {
-    // Fee in SPARTA via fee in TOKEN (Swap from SPARTA)
-    if (assetSwap1?.tokenAddress === addr.spartav2) {
-      return calcSpotValueInBase(
-        calcSwapFee(
-          convertToWei(swapInput1?.value),
-          assetSwap2?.tokenAmount,
-          assetSwap2?.baseAmount,
-        ),
-        assetSwap2,
-      )
-    }
-    // Fee in SPARTA (Swap to SPARTA)
-    if (assetSwap2?.tokenAddress === addr.spartav2) {
-      return calcSwapFee(
-        convertToWei(swapInput1?.value),
-        assetSwap1?.tokenAmount,
-        assetSwap1?.baseAmount,
-        true,
-      )
-    }
-    // Fee in SPARTA via fee in token2 (swap token1 to token2)
-    return calcSpotValueInBase(
-      calcDoubleSwapFee(
-        convertToWei(swapInput1?.value),
-        assetSwap1?.tokenAmount,
-        assetSwap1?.baseAmount,
-        assetSwap2?.tokenAmount,
-        assetSwap2?.baseAmount,
-      ),
-      assetSwap2,
-    )
-  }
-
   //= =================================================================================//
-  // Functions for SWAP input handling
+  // Functions to get txn Details
 
-  const handleInputChange = () => {
-    if (swapInput1?.value) {
-      if (assetSwap1?.tokenAddress === addr.spartav2) {
-        swapInput2.value = convertFromWei(
-          calcSwapOutput(
-            _minusFeeBurn(convertToWei(swapInput1?.value)),
-            assetSwap2,
-          )[0],
-        )
-      } else if (assetSwap2?.tokenAddress === addr.spartav2) {
-        const result = convertFromWei(
-          calcSwapOutput(convertToWei(swapInput1?.value), assetSwap1, true)[0],
-        )
-        swapInput2.value = _minusFeeBurn(result)
-      } else {
-        swapInput2.value = convertFromWei(
-          calcDoubleSwapOutput(
-            convertToWei(swapInput1?.value),
-            assetSwap1.tokenAmount,
-            assetSwap1.baseAmount,
-            assetSwap2.tokenAmount,
-            assetSwap2.baseAmount,
-          ),
-        )
-      }
-    }
-  }
-
-  //= =================================================================================//
-  // Functions ZAP calculations
-
-  const getZapRemoveBase = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return calcLiquidityHoldings(
-        assetSwap1.baseAmount,
+  /**
+   * Get swap txn details
+   * @returns [output, swapFee, divi1, divi2]
+   */
+  const getSwap = () => {
+    if (swapInput1 && assetSwap1 && assetSwap2) {
+      const [output, swapFee, divi1, divi2] = swapTo(
         convertToWei(swapInput1.value),
-        assetSwap1.poolUnits,
-      )
-    }
-    return '0'
-  }
-
-  const getZapRemoveBaseBurn = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return _minusFeeBurn(getZapRemoveBase())
-    }
-    return '0'
-  }
-
-  const getZapRemoveToken = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return calcLiquidityHoldings(
-        assetSwap1.tokenAmount,
-        convertToWei(swapInput1.value),
-        assetSwap1.poolUnits,
-      )
-    }
-    return '0'
-  }
-
-  const getZapOtherRemoveBase = () => {
-    if (assetSwap2 && swapInput2?.value) {
-      return calcLiquidityHoldings(
-        assetSwap2.baseAmount,
-        convertToWei(swapInput2.value),
-        assetSwap2.poolUnits,
-      )
-    }
-    return '0'
-  }
-
-  const getZapOtherRemoveToken = () => {
-    if (assetSwap2 && swapInput2?.value) {
-      return calcLiquidityHoldings(
-        assetSwap2.tokenAmount,
-        convertToWei(swapInput2.value),
-        assetSwap2.poolUnits,
-      )
-    }
-    return '0'
-  }
-
-  const getZapSwap = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return calcSwapOutput(
-        getZapRemoveToken(),
-        BN(assetSwap1.tokenAmount).minus(getZapRemoveToken()),
-        BN(assetSwap1.baseAmount).minus(getZapRemoveBase()),
-        true,
-      )[0]
-    }
-    return '0'
-  }
-
-  const getZapSwapBurn = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return _minusFeeBurn(getZapSwap())
-    }
-    return '0'
-  }
-
-  const getZapSwapFee = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return calcSwapFee(
-        getZapRemoveToken(),
-        BN(assetSwap1.tokenAmount).minus(getZapRemoveToken()),
-        BN(assetSwap1.baseAmount).minus(getZapRemoveBase()),
-        true,
-      )
-    }
-    return '0'
-  }
-
-  const getZapOutput = () => {
-    if (assetSwap1 && swapInput1?.value) {
-      return calcLiquidityUnits(
-        _minusFeeBurn(getZapRemoveBaseBurn()).plus(getZapSwapBurn()),
-        '0',
+        assetSwap1,
         assetSwap2,
+        sparta.globalDetails.feeOnTransfer,
+        assetSwap2.tokenAddress === addr.spartav2,
+        assetSwap1.tokenAddress === addr.spartav2,
       )
+      return [output, swapFee, divi1, divi2]
     }
-    return '0'
+    return ['0.00', '0.00', '0.00', '0.00']
   }
 
-  //= =================================================================================//
-  // Base-To-Synths Calcs
-
-  // STEP 1 - ADD ASSETs TO POOL (FEEBURN: YES)
-  const getAddedBase = (getFee) => {
-    const input = BN(convertToWei(swapInput1?.value))
-    const fromToken = assetSwap1
-    const fromBase = fromToken.tokenAddress === addr.spartav2
-    if (fromBase) {
-      if (getFee) {
-        return '0'
-      }
-      return _minusFeeBurn(input)
+  /**
+   * Get zap txn details
+   * @returns [unitsLP, swapFee]
+   */
+  const getZap = () => {
+    if (swapInput1 && assetSwap1 && assetSwap2) {
+      const [unitsLP, swapFee] = zapLiq(
+        convertToWei(swapInput1.value),
+        assetSwap1,
+        assetSwap2,
+        sparta.globalDetails.feeOnTransfer,
+      )
+      return [unitsLP, swapFee]
     }
-    const [_output, _fee] = calcSwapOutput(input, assetSwap1, true)
-    const baseSwapped = _minusFeeBurn(_output)
-    if (getFee) {
-      return _fee
-    }
-    return _minusFeeBurn(baseSwapped)
+    return ['0.00', '0.00']
   }
 
-  // STEP 2 - ADD LPs TO SYNTH (FEEBURN: NO)
-  // const getAddedLPs = () => {
-  //   const input = getAddedBase()
-  //   const _pool = assetSwap2
-  //   const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
-  //   const { poolUnits } = _pool
-  //   const { baseAmount } = _pool
-  //   const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
-  //   return calcLiquidityUnitsAsym(input, actualBase, poolUnits)
-  // }
-
-  // STEP 3 - ADD SYNTHs TO USER (FEEBURN: NO)
-  const getAddedSynths = (getFee) => {
-    const input = getAddedBase()
-    const _pool = assetSwap2
-    const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
-    const tokenAmount = BN(_pool.tokenAmount)
-    const actualToken = sameLayer1
-      ? tokenAmount.plus(convertToWei(swapInput1?.value))
-      : tokenAmount
-    const baseAmount = BN(_pool.baseAmount)
-    const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
-    if (getFee) {
-      const swapFee = calcSwapFee(input, actualToken, actualBase, false)
-      return calcSpotValueInBase(swapFee, _pool)
+  /**
+   * Get synth mint txn details
+   * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
+   */
+  const getMint = () => {
+    if (swapInput1 && assetSwap1 && assetSwap2) {
+      const [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped] =
+        mintSynth(
+          convertToWei(swapInput1.value),
+          assetSwap1,
+          assetSwap2,
+          getSynth(assetSwap2.tokenAddress),
+          sparta.globalDetails.feeOnTransfer,
+          assetSwap1.tokenAddress === addr.spartav2,
+        )
+      return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
     }
-    return calcSwapOutput(input, actualToken, actualBase, false)[0]
+    return ['0.00', '0.00', '0.00', '0.00', '0.00', '0.00']
   }
 
-  // STEP 1A - Get fee from swap in step 1
-  const getSynthSwapFee = () => {
-    const swapFee1 = BN(getAddedBase(true))
-    const swapFee2 = BN(getAddedSynths(true))
-    return swapFee1.minus(swapFee2)
-  }
-
-  //= =================================================================================//
-  // Synth-To-Base Calcs
-  const getRemovedBase = (getFee) => {
-    const input = BN(convertToWei(swapInput1?.value))
-    const toToken = assetSwap2
-    const toBase = toToken.tokenAddress === addr.spartav2
-    const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
-    let baseAmount = BN(assetSwap1.baseAmount)
-    let { tokenAmount } = assetSwap1
-    const [swapped, swapFee1] = calcSwapOutput(
-      input,
-      tokenAmount,
-      baseAmount,
-      true,
-    )
-    let output = _minusFeeBurn(swapped)
-    if (toBase) {
-      if (getFee) {
-        return swapFee1
-      }
-      return output
+  /**
+   * Get synth burn txn details
+   * @returns [tokenOut, slipFee, diviSynth, diviSwap]
+   */
+  const getBurn = () => {
+    if (swapInput1 && assetSwap1 && assetSwap2) {
+      const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
+        convertToWei(swapInput1.value),
+        assetSwap2,
+        assetSwap1,
+        getSynth(assetSwap1.tokenAddress),
+        sparta.globalDetails.feeOnTransfer,
+        assetSwap2.tokenAddress === addr.spartav2,
+      )
+      return [tokenOut, slipFee, diviSynth, diviSwap]
     }
-    if (sameLayer1) {
-      baseAmount = baseAmount.minus(swapped)
-    } else {
-      tokenAmount = assetSwap2.tokenAmount
-      baseAmount = assetSwap2.baseAmount
-    }
-    output = _minusFeeBurn(output)
-    const swapFee2 = calcSwapFee(output, tokenAmount, baseAmount, false)
-    if (getFee) {
-      return BN(swapFee1).plus(swapFee2)
-    }
-    return calcSwapOutput(output, tokenAmount, baseAmount, false)[0]
+    return ['0.00', '0.00', '0.00', '0.00']
   }
 
   //= =================================================================================//
   // Functions for input handling
 
+  const handleInputChange = () => {
+    if (swapInput1?.value) {
+      swapInput2.value = convertFromWei(getSwap()[0])
+    }
+  }
+
   const handleZapInputChange = () => {
-    swapInput2.value = convertFromWei(getZapOutput(), 18)
+    swapInput2.value = convertFromWei(getZap()[0], 18)
   }
 
   const handleSynthInputChange = () => {
     if (mode === 'synthOut') {
-      swapInput2.value = convertFromWei(getAddedSynths(), 18)
+      swapInput2.value = convertFromWei(getMint()[0], 18)
     } else if (mode === 'synthIn') {
-      swapInput2.value = convertFromWei(getRemovedBase(), 18)
+      swapInput2.value = convertFromWei(getBurn()[0], 18)
     }
   }
+
+  //= =================================================================================//
+  // Functions for input handling
 
   // GET USD VALUES
   const getInput1USD = () => {
@@ -579,8 +374,12 @@ const Swap = () => {
     }
     if (mode === 'pool') {
       if (assetSwap1 && swapInput1?.value) {
-        return BN(calcSpotValueInBase(getZapRemoveToken(), assetSwap1))
-          .plus(getZapRemoveBase())
+        const [_sparta, _token] = calcLiqValue(
+          convertToWei(swapInput1.value),
+          assetSwap1,
+        )
+        return BN(calcSpotValueInBase(_token, assetSwap1))
+          .plus(_sparta)
           .times(web3.spartaPrice)
       }
     }
@@ -599,8 +398,9 @@ const Swap = () => {
     }
     if (mode === 'pool') {
       if (assetSwap2 && swapInput2?.value) {
-        return BN(calcSpotValueInBase(getZapOtherRemoveToken(), assetSwap2))
-          .plus(getZapOtherRemoveBase())
+        const [_sparta, _token] = calcLiqValue(getZap()[0], assetSwap2)
+        return BN(calcSpotValueInBase(_token, assetSwap2))
+          .plus(_sparta)
           .times(web3.spartaPrice)
       }
     }
@@ -902,7 +702,7 @@ const Swap = () => {
                                   <Col className="text-end">
                                     <div className="text-card">
                                       {swapInput1?.value
-                                        ? formatFromWei(getSwapFee(), 6)
+                                        ? formatFromWei(getSwap()[1], 6)
                                         : '0.00'}{' '}
                                       SPARTA
                                     </div>
@@ -918,7 +718,7 @@ const Swap = () => {
                                   <Col className="text-end">
                                     <span className="subtitle-card">
                                       {swapInput1?.value
-                                        ? formatFromWei(getSwapOutput(), 6)
+                                        ? formatFromWei(getSwap()[0], 6)
                                         : '0.00'}{' '}
                                       {
                                         getToken(assetSwap2.tokenAddress)
@@ -960,7 +760,7 @@ const Swap = () => {
                                   <Col className="text-end">
                                     <div className="text-card">
                                       {swapInput1?.value
-                                        ? formatFromWei(getZapSwapFee(), 6)
+                                        ? formatFromWei(getZap()[1], 6)
                                         : '0.00'}{' '}
                                       SPARTA
                                     </div>
@@ -976,7 +776,7 @@ const Swap = () => {
                                   <Col className="text-end">
                                     <span className="subtitle-card">
                                       {swapInput1?.value
-                                        ? formatFromWei(getZapOutput(), 6)
+                                        ? formatFromWei(getZap()[0], 6)
                                         : '0.00'}{' '}
                                       <span className="output-card">
                                         {' '}
@@ -1024,20 +824,14 @@ const Swap = () => {
                                       {mode === 'synthOut' && (
                                         <>
                                           {swapInput1?.value
-                                            ? formatFromWei(
-                                                getSynthSwapFee(),
-                                                6,
-                                              )
+                                            ? formatFromWei(getMint()[1], 6)
                                             : '0.00'}
                                         </>
                                       )}
                                       {mode === 'synthIn' && (
                                         <>
                                           {swapInput1?.value
-                                            ? formatFromWei(
-                                                getRemovedBase(true),
-                                                6,
-                                              )
+                                            ? formatFromWei(getBurn()[1], 6)
                                             : '0.00'}
                                         </>
                                       )}{' '}
@@ -1058,7 +852,7 @@ const Swap = () => {
                                         addr.spartav2 && (
                                         <>
                                           {swapInput1?.value
-                                            ? formatFromWei(getAddedSynths(), 6)
+                                            ? formatFromWei(getMint()[0], 6)
                                             : '0.00'}{' '}
                                           <span className="output-card">
                                             {
@@ -1074,10 +868,7 @@ const Swap = () => {
                                         mode === 'synthOut' && (
                                           <>
                                             {swapInput1?.value
-                                              ? formatFromWei(
-                                                  getAddedSynths(),
-                                                  6,
-                                                )
+                                              ? formatFromWei(getMint()[0], 6)
                                               : '0.00'}{' '}
                                             <span className="output-card">
                                               {
@@ -1094,10 +885,7 @@ const Swap = () => {
                                         mode === 'synthIn' && (
                                           <>
                                             {swapInput1?.value
-                                              ? formatFromWei(
-                                                  getRemovedBase(),
-                                                  6,
-                                                )
+                                              ? formatFromWei(getBurn()[0], 6)
                                               : '0.00'}{' '}
                                             <span className="output-card">
                                               {

@@ -24,7 +24,7 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import {
-  calcLiquidityHoldings,
+  calcLiqValue,
   calcSpotValueInBase,
   getTimeUntil,
 } from '../../../utils/web3Utils'
@@ -239,20 +239,14 @@ const LiqRemove = () => {
 
   const getLpValueBase = () => {
     if (assetRemove1 && removeInput1?.value) {
-      return calcLiquidityHoldings(
-        convertToWei(removeInput1.value),
-        poolRemove1,
-      )[0]
+      return calcLiqValue(convertToWei(removeInput1.value), poolRemove1)[0]
     }
     return '0.00'
   }
 
   const getLpValueToken = () => {
     if (assetRemove1 && removeInput1?.value) {
-      return calcLiquidityHoldings(
-        convertToWei(removeInput1.value),
-        poolRemove1,
-      )[1]
+      return calcLiqValue(convertToWei(removeInput1.value), poolRemove1)[1]
     }
     return '0.00'
   }
