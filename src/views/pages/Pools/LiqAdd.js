@@ -192,8 +192,7 @@ const LiqAdd = () => {
 
   /**
    * Get liqAdd txn details
-   * @returns {uint} outputLP
-   * @returns {uint} inputSparta
+   * @returns outputLP @returns inputSparta
    */
   const getAddLiq = () => {
     if (addInput1 && activeTab === 'addTab1') {
@@ -209,8 +208,7 @@ const LiqAdd = () => {
 
   /**
    * Get liqAddAsym txn details
-   * @returns {uint} outputLP
-   * @returns {uint} swapFee
+   * @returns outputLP @returns swapFee
    */
   const getAddLiqAsym = () => {
     if (addInput1 && assetAdd1 && activeTab === 'addTab2') {
@@ -318,7 +316,7 @@ const LiqAdd = () => {
     activeTab,
   ])
 
-  const handleAddLiquidity = () => {
+  const handleAddLiq = () => {
     if (
       assetAdd1?.tokenAddress === addr.bnb ||
       assetAdd1?.tokenAddress === addr.wbnb
@@ -632,7 +630,9 @@ const LiqAdd = () => {
                         </Col>
                         <Col className="text-end">
                           <span className="text-card">
-                            {formatFromWei(getAddLiqAsym()[1], 4)}{' '}
+                            {getAddLiqAsym()[1] > 0
+                              ? formatFromWei(getAddLiqAsym()[1], 4)
+                              : '0.00'}{' '}
                             <span className="">SPARTA</span>
                           </span>
                         </Col>
@@ -741,7 +741,7 @@ const LiqAdd = () => {
                         ) ||
                         poolAdd1.baseAmount <= 0
                       }
-                      onClick={() => handleAddLiquidity()}
+                      onClick={() => handleAddLiq()}
                     >
                       {t('joinPool')}
                     </Button>

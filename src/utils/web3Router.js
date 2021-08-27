@@ -84,7 +84,9 @@ export const removeLiqAsym = (inputLP, pool, toBase, feeOnTsf) => {
   const [_swapOut, swapFee] = toBase
     ? calcSwapOutput(_tokenOut, pool, toBase) // SPARTA output from swap
     : calcSwapOutput(_recSparta1, pool, toBase) // TOKEN output from swap
-  const _swapOutRec = toBase ? minusFeeBurn(_swapOut, feeOnTsf) : _swapOut // Swap output received by Router (after feeBurn)
+  const _swapOutRec = toBase
+    ? minusFeeBurn(_swapOut, feeOnTsf).plus(_recSparta)
+    : _swapOut.plus(_tokenOut) // Swap output + previous received by Router (after feeBurn)
   const tokensOut = toBase ? minusFeeBurn(_swapOutRec, feeOnTsf) : _swapOutRec // Swap output received by User (after feeBurn)
   return [tokensOut, swapFee]
 }

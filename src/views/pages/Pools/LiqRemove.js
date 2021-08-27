@@ -25,10 +25,7 @@ import {
 } from '../../../utils/bigNumber'
 import {
   calcLiquidityHoldings,
-  calcSwapFee,
-  calcSwapOutput,
   calcSpotValueInBase,
-  minusFeeBurn,
   getTimeUntil,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
@@ -41,6 +38,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import Approval from '../../../components/Approval/Approval'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
+import { removeLiq, removeLiqAsym } from '../../../utils/web3Router'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -149,18 +147,16 @@ const LiqRemove = () => {
 
   const removeInput1 = document.getElementById('removeInput1')
   const removeInput2 = document.getElementById('removeInput2')
-  // const removeInput3 = document.getElementById('removeInput3')
 
   const clearInputs = (focusAfter) => {
+    setoutput1('0.00')
+    setoutput2('0.00')
     if (removeInput1) {
       removeInput1.value = ''
     }
     if (removeInput2) {
       removeInput2.value = ''
     }
-    // if (removeInput3) {
-    //   removeInput3.value = ''
-    // }
     if (focusAfter === 1) {
       removeInput1.focus()
     }
@@ -187,152 +183,66 @@ const LiqRemove = () => {
     return poolRemove1?.balance
   }
 
-  const _minusFeeBurn = (_amount) =>
-    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-
   const getTimeNew = () => {
     const timeStamp = BN(poolRemove1?.genesis).plus(604800)
     return getTimeUntil(timeStamp, t)
   }
 
   //= =================================================================================//
-  // 'Remove Both' Functions (Re-Factor to just getOutput)
+  // Remove Liquidity Txn Details
 
-  const getRemoveTokenOutput = () => {
-    if (removeInput1 && poolRemove1) {
-      return calcLiquidityHoldings(
-        poolRemove1?.tokenAmount,
-        convertToWei(removeInput1?.value),
-        poolRemove1?.poolUnits,
+  /**
+   * Get remove liquidity equal (sym) txn details
+   * @returns spartaOutput @returns tokenOutput
+   */
+  const getRemLiq = () => {
+    if (removeInput1 && poolRemove1 && activeTab === '1') {
+      const [spartaOutput, tokenOutput] = removeLiq(
+        convertToWei(removeInput1.value),
+        poolRemove1,
+        sparta.globalDetails.feeOnTransfer,
       )
+      return [spartaOutput, tokenOutput]
     }
-    return '0.00'
+    return ['0.00', '0.00']
   }
 
-  const getRemoveSparta = () => {
-    if (removeInput1 && poolRemove1) {
-      return BN(
-        calcLiquidityHoldings(
-          poolRemove1?.baseAmount,
-          convertToWei(removeInput1?.value),
-          poolRemove1?.poolUnits,
-        ),
+  /**
+   * Get remove liquidity one-sided (asym) txn details
+   * @returns tokensOut @returns swapFee
+   */
+  const getRemLiqAsym = () => {
+    if (removeInput1 && assetRemove1 && activeTab === '2') {
+      const [tokensOut, swapFee] = removeLiqAsym(
+        convertToWei(removeInput1.value),
+        poolRemove1,
+        assetRemove1.tokenAddress === addr.spartav2,
+        sparta.globalDetails.feeOnTransfer,
       )
+      return [tokensOut, swapFee]
     }
-    return '0.00'
-  }
-
-  const getRemoveSpartaBurn1 = () => {
-    if (removeInput1 && poolRemove1) {
-      let _sparta = getRemoveSparta()
-      if (poolRemove1.tokenAddress === addr.bnb) {
-        _sparta = _minusFeeBurn(_sparta)
-      }
-      return _sparta
-    }
-    return '0.00'
-  }
-
-  const getRemoveSpartaOutput = () => {
-    if (removeInput1 && poolRemove1) {
-      const _sparta = getRemoveSpartaBurn1()
-      return _minusFeeBurn(_sparta)
-    }
-    return '0.00'
+    return ['0.00', '0.00']
   }
 
   //= =================================================================================//
-  // 'Remove Single' Functions (Re-Factor)
-
-  const getRemoveOneSwapFee = () => {
-    if (removeInput1 && assetRemove1) {
-      const swapFee = calcSwapFee(
-        assetRemove1?.tokenAddress === addr.spartav2
-          ? getRemoveTokenOutput()
-          : getRemoveSpartaOutput(),
-        BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-        BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-        assetRemove1?.tokenAddress === addr.spartav2,
-      )
-      return swapFee
-    }
-    return '0.00'
-  }
-
-  const getRemoveOneSwapOutput = () => {
-    if (removeInput1 && assetRemove1) {
-      let result = ''
-      if (assetRemove1?.tokenAddress === addr.spartav2) {
-        result = calcSwapOutput(
-          getRemoveTokenOutput(),
-          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-          true,
-        )
-        result = _minusFeeBurn(result[0])
-      } else if (poolRemove1.tokenAddress === addr.bnb) {
-        result = calcSwapOutput(
-          getRemoveSpartaOutput(),
-          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-        )
-      } else {
-        result = calcSwapOutput(
-          _minusFeeBurn(BN(getRemoveSpartaOutput())),
-          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-        )
-      }
-
-      return result[0]
-    }
-    return '0.00'
-  }
-
-  const getRemoveOneFinalOutput = () => {
-    if (removeInput1 && assetRemove1) {
-      let result = ''
-      if (assetRemove1?.tokenAddress === addr.spartav2) {
-        if (poolRemove1.tokenAddress === addr.bnb) {
-          result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveSpartaBurn1()))
-        } else {
-          result = BN(getRemoveOneSwapOutput()).plus(
-            BN(getRemoveSpartaOutput()),
-          )
-        }
-        result = _minusFeeBurn(result)
-      } else {
-        result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveTokenOutput()))
-      }
-      return result
-    }
-    return '0.00'
-  }
-
-  //= =================================================================================//
-  // General Functions
+  // Remove liquidity get-value-of functions
 
   const getOutput1ValueUSD = () => {
     if (assetRemove1 && output1) {
+      if (assetRemove1.tokenAddress === addr.spartav2) {
+        return output1.times(web3.spartaPrice)
+      }
       return calcSpotValueInBase(output1, poolRemove1).times(web3.spartaPrice)
     }
     return '0.00'
   }
 
-  // const getOutput2ValueUSD = () => {
-  //   if (assetRemove2 && removeInput3?.value) {
-  //     return BN(convertToWei(removeInput3.value)).times(web3.spartaPrice)
-  //   }
-  //   return '0.00'
-  // }
-
   const getLpValueBase = () => {
     if (assetRemove1 && removeInput1?.value) {
       return calcLiquidityHoldings(
-        poolRemove1.baseAmount,
         convertToWei(removeInput1.value),
-        poolRemove1.poolUnits,
-      )
+        poolRemove1,
+      )[0]
     }
     return '0.00'
   }
@@ -340,10 +250,9 @@ const LiqRemove = () => {
   const getLpValueToken = () => {
     if (assetRemove1 && removeInput1?.value) {
       return calcLiquidityHoldings(
-        poolRemove1.tokenAmount,
         convertToWei(removeInput1.value),
-        poolRemove1.poolUnits,
-      )
+        poolRemove1,
+      )[1]
     }
     return '0.00'
   }
@@ -354,23 +263,25 @@ const LiqRemove = () => {
         .plus(getLpValueBase())
         .times(web3.spartaPrice)
     }
-
     return '0.00'
   }
+
+  //= =================================================================================//
+  // Handlers
 
   const handleInputChange = () => {
     if (activeTab === '1') {
       if (removeInput1?.value) {
-        setoutput1(getRemoveTokenOutput())
-        setoutput2(getRemoveSpartaOutput())
+        setoutput1(getRemLiq()[1])
+        setoutput2(getRemLiq()[0])
       }
     }
     if (activeTab === '2') {
       if (removeInput1?.value && document.getElementById('removeInput2')) {
         document.getElementById('removeInput2').value = convertFromWei(
-          getRemoveOneFinalOutput(),
+          getRemLiqAsym()[0],
         )
-        setoutput1(getRemoveOneFinalOutput())
+        setoutput1(getRemLiqAsym()[0])
       }
     }
   }
@@ -539,52 +450,6 @@ const LiqRemove = () => {
                   </Card>
                 )}
 
-                {/* {activeTab === '1' && (
-                  <>
-                    <hr className="m-1" />
-                    <Row className="my-2">
-                      <Col xs="4" className="">
-                        <div className="">Output</div>
-                      </Col>
-                      <Col xs="8" className="text-right">
-                        <div className="">
-                          Balance:{' '}
-                          {pool.tokenDetails && formatFromWei(getBalance(3))}
-                        </div>
-                      </Col>
-                    </Row>
-                    <Row className="">
-                      <Col xs="6">
-                        <div className="output-card ml-2">
-                          <AssetSelect
-                            priority="3"
-                            filter={['token']}
-                            whiteList={[addr.spartav2]}
-                            disabled
-                          />
-                        </div>
-                      </Col>
-                      <Col className="text-right" xs="6">
-                        <InputGroup className="">
-                          <Input
-                            className="text-right ml-0 p-2"
-                            type="text"
-                            placeholder="0.00"
-                            id="removeInput3"
-                            disabled
-                          />
-                        </InputGroup>
-                        <div className="text-right">
-                          ~$
-                          {removeInput3?.value
-                            ? formatFromWei(getOutput2ValueUSD(), 2)
-                            : '0.00'}
-                        </div>
-                      </Col>
-                    </Row>
-                  </>
-                )} */}
-
                 {pool.poolDetails && (
                   <>
                     <Row className="mb-2 mt-3">
@@ -608,8 +473,8 @@ const LiqRemove = () => {
                         </Col>
                         <Col className="text-end">
                           <div className="text-card">
-                            {getRemoveOneSwapFee() > 0
-                              ? formatFromWei(getRemoveOneSwapFee(), 6)
+                            {getRemLiqAsym()[1] > 0
+                              ? formatFromWei(getRemLiqAsym()[1], 6)
                               : '0.00'}{' '}
                             <span className="">SPARTA</span>
                           </div>
