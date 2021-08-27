@@ -29,6 +29,7 @@ import {
   calcSwapOutput,
   calcSpotValueInBase,
   minusFeeBurn,
+  getTimeUntil,
 } from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
@@ -189,25 +190,9 @@ const LiqRemove = () => {
   const _minusFeeBurn = (_amount) =>
     minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
-  const getSecondsNew = () => {
-    const timeStamp = BN(Date.now()).div(1000)
-    const secondsLeft = BN(poolRemove1?.genesis).plus(604800).minus(timeStamp)
-    if (secondsLeft > 86400) {
-      return [
-        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
-        ` ${t('days')}`,
-      ]
-    }
-    if (secondsLeft > 3600) {
-      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
-    }
-    if (secondsLeft > 60) {
-      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
-    }
-    if (secondsLeft > 0) {
-      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
-    }
-    return [0, ` ${t('seconds')} (now)`]
+  const getTimeNew = () => {
+    const timeStamp = BN(poolRemove1?.genesis).plus(604800)
+    return getTimeUntil(timeStamp, t)
   }
 
   //= =================================================================================//
@@ -715,8 +700,7 @@ const LiqRemove = () => {
               <Row className="text-center">
                 <Col xs="12" sm="4" md="12">
                   <Button className="w-100" disabled>
-                    {t('newPoolLockedFor')}: {getSecondsNew()[0]}{' '}
-                    {getSecondsNew()[1]}
+                    {t('newPoolLockedFor')}: {getTimeNew()[0]} {getTimeNew()[1]}
                   </Button>
                 </Col>
               </Row>

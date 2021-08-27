@@ -1,4 +1,4 @@
-import { BN } from './bigNumber'
+import { BN, formatFromUnits } from './bigNumber'
 
 export const one = BN(1).times(10).pow(18)
 
@@ -189,7 +189,7 @@ export const calcLiquidityUnitsAsym = (inputAmount, poolDetails) => {
 
 // ///////////////// OTHERS ////////////////////////
 
-// Calculate asymmetric share
+// Calculate asymmetric share *** ASSESS/REMOVE AT THE END ***
 export const calcAsymmetricShare = (input, pool, toBase) => {
   // share = (u * U * (2 * A^2 - 2 * U * u + U^2))/U^3
   // (part1 * (part2 - part3 + part4)) / part5
@@ -206,7 +206,7 @@ export const calcAsymmetricShare = (input, pool, toBase) => {
   return result
 }
 
-// Calculate liquidity share
+// Calculate liquidity share *** ASSESS/REMOVE AT THE END ***
 export const calcLiquidityShare = (input, pool) => {
   // share = amount * part/total
   const _input = BN(input)
@@ -242,7 +242,58 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
 }
 
 /**
- * Calculate value of synthetic assets
+ * Return seconds/minutes/hours/days
+ * @param {uint} seconds uint seconds to convert
+ * @param {uint} t hand in the {t} translation obj
+ * @returns [string, string] [0 = time] [1 = string label ie. 'seconds' 'minutes']
+ */
+export const convertTimeUnits = (seconds, t) => {
+  if (seconds > 86400) {
+    return [
+      formatFromUnits(seconds.div(60).div(60).div(24), 2),
+      ` ${t('days')}`,
+    ]
+  }
+  if (seconds > 3600) {
+    return [formatFromUnits(seconds.div(60).div(60), 2), ` ${t('hours')}`]
+  }
+  if (seconds > 60) {
+    return [formatFromUnits(seconds.div(60), 2), ` ${t('minutes')}`]
+  }
+  if (seconds > 0) {
+    return [formatFromUnits(seconds, 0), ` ${t('seconds')}`]
+  }
+  return [0, ` ${t('seconds')} (now)`]
+}
+
+/**
+ * Return time left until a timestamp
+ * @param {uint} timestamp to compare current time to
+ * @param {uint} t hand in the {t} translation obj
+ * @returns [string, string] [0 = time uints] [1 = string label ie. 'seconds' 'minutes']
+ */
+export const getTimeUntil = (timestamp, t) => {
+  const _timeStamp = BN(timestamp)
+  const timeNow = BN(Date.now()).div(1000)
+  const secondsUntil = _timeStamp.minus(timeNow)
+  return convertTimeUnits(secondsUntil, t)
+}
+
+/**
+ * Return time passed since a timestamp
+ * @param {uint} timestamp to compare current time to
+ * @param {uint} t hand in the {t} translation obj
+ * @returns [string, string] [0 = time uints] [1 = string label ie. 'seconds' 'minutes']
+ */
+export const getTimeSince = (timestamp, t) => {
+  const _timeStamp = BN(timestamp)
+  const timeNow = BN(Date.now()).div(1000)
+  const secondsSince = timeNow.minus(_timeStamp)
+  return convertTimeUnits(secondsSince, t)
+}
+
+/**
+ * Calculate value of synthetic assets *** ASSESS/REMOVE AT THE END ***
  * @param amount uint - amount of synths?
  * @param tokensInPool uint - amount of TOKENS held by the pool
  * @param spartaInPool uint - amount of SPARTA held by the pool
@@ -272,7 +323,7 @@ export const calcSynthsValue = (
   return units
 }
 
-// Calculate double-swap fee
+// Calculate double-swap fee *** ASSESS/REMOVE AT THE END ***
 export const calcDoubleSwapFee = (inputAmount, pool1, pool2) => {
   // formula: getSwapFee1 + getSwapFee2
   const fee1 = calcSwapFee(
@@ -293,7 +344,7 @@ export const calcDoubleSwapFee = (inputAmount, pool1, pool2) => {
   return result
 }
 
-// Calculate double-swap output
+// Calculate double-swap output *** ASSESS/REMOVE AT THE END ***
 export const calcDoubleSwapOutput = (
   inputAmount,
   pool1Token,
@@ -307,7 +358,7 @@ export const calcDoubleSwapOutput = (
   return output[0]
 }
 
-// Calculate swap slippage
+// Calculate swap slippage *** ASSESS/REMOVE AT THE END ***
 export const calcSwapSlip = (inputAmount, pool, toBase) => {
   // formula: (x) / (x + X)
   const x = BN(inputAmount) // input amount
@@ -316,7 +367,7 @@ export const calcSwapSlip = (inputAmount, pool, toBase) => {
   return result
 }
 
-// Calculate double-swap slippage
+// Calculate double-swap slippage *** ASSESS/REMOVE AT THE END ***
 export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
   // formula: getSwapSlip1(input1) + getSwapSlip2(getSwapOutput1 => input2)
   const swapSlip1 = calcSwapSlip(inputAmount, pool1, true)
@@ -326,7 +377,7 @@ export const calcDoubleSwapSlip = (inputAmount, pool1, pool2) => {
   return result
 }
 
-// Calculate swap input
+// Calculate swap input *** ASSESS/REMOVE AT THE END ***
 export const getSwapInput = (outputAmount, tokenAmount, baseAmount, toBase) => {
   // formula: (((X*Y)/y - 2*X) - sqrt(((X*Y)/y - 2*X)^2 - 4*X^2))/2
   // (part1 - sqrt(part1 - part2))/2
@@ -339,7 +390,7 @@ export const getSwapInput = (outputAmount, tokenAmount, baseAmount, toBase) => {
   return result
 }
 
-// Calculate double-swap input
+// Calculate double-swap input *** ASSESS/REMOVE AT THE END ***
 export const calcDoubleSwapInput = (
   outputAmount,
   pool1Token,
@@ -354,7 +405,7 @@ export const calcDoubleSwapInput = (
 }
 
 /**
- * Calculate APY using full month divis + fees and pool's depth
+ * Calculate APY using full month divis + fees and pool's depth *** UPDATE WITH GENESIS/LASTMONTH ***
  * @param {uint} recentDivis
  * @param {uint} lastMonthDivis
  * @param {uint} recentFees

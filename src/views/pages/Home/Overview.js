@@ -73,7 +73,9 @@ const Overview = () => {
                       {pool?.poolDetails
                         .filter(
                           (asset) =>
-                            asset.baseAmount > 0 && asset.curated === true,
+                            asset.baseAmount > 0 &&
+                            asset.curated === true &&
+                            asset.newPool === false,
                         )
                         .sort((a, b) => b.baseAmount - a.baseAmount)
                         .map((asset) => (
@@ -87,7 +89,9 @@ const Overview = () => {
                       {pool?.poolDetails
                         .filter(
                           (asset) =>
-                            asset.baseAmount > 0 && asset.curated === false,
+                            asset.baseAmount > 0 &&
+                            asset.curated === false &&
+                            asset.newPool === false,
                         )
                         .sort((a, b) => b.baseAmount - a.baseAmount)
                         .map((asset) => (
@@ -99,7 +103,10 @@ const Overview = () => {
                     <SummaryItem />
                     <Row>
                       {pool?.poolDetails
-                        .filter((asset) => asset.newPool === true)
+                        .filter(
+                          (asset) =>
+                            asset.baseAmount > 0 && asset.newPool === true,
+                        )
                         .sort((a, b) => b.baseAmount - a.baseAmount)
                         .map((asset) => (
                           <PoolItem key={asset.address} asset={asset} />

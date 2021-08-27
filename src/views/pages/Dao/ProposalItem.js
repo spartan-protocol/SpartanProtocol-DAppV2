@@ -17,6 +17,7 @@ import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { getExplorerContract, getExplorerWallet } from '../../../utils/extCalls'
 import { formatShortString } from '../../../utils/web3'
 import { proposalTypes } from './types'
+import { getTimeUntil } from '../../../utils/web3Utils'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
@@ -29,59 +30,24 @@ const ProposalItem = ({ proposal }) => {
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
   const cancelPeriod = BN('1209600')
 
-  const getSecondsCancel = () => {
-    const timeStamp = BN(Date.now()).div(1000)
-    const secondsLeft = BN(proposal.startTime)
-      .plus(cancelPeriod)
-      .minus(timeStamp)
-    if (secondsLeft > 86400) {
-      return [
-        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
-        ` ${t('days')}`,
-      ]
-    }
-    if (secondsLeft > 3600) {
-      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
-    }
-    if (secondsLeft > 60) {
-      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
-    }
-    if (secondsLeft > 0) {
-      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
-    }
-    return [0, ` ${t('seconds')} (now)`]
+  const getTimeCancel = () => {
+    const timeStamp = BN(proposal.startTime).plus(cancelPeriod)
+    return getTimeUntil(timeStamp, t)
   }
 
-  const getSecondsCooloff = () => {
-    const timeStamp = BN(Date.now()).div(1000)
-    const endDate = BN(proposal.coolOffTime).plus(dao.global.coolOffPeriod)
-    const secondsLeft = endDate.minus(timeStamp)
-    if (secondsLeft > 86400) {
-      return [
-        formatFromUnits(secondsLeft.div(60).div(60).div(24), 2),
-        ` ${t('days')}`,
-      ]
-    }
-    if (secondsLeft > 3600) {
-      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ` ${t('hours')}`]
-    }
-    if (secondsLeft > 60) {
-      return [formatFromUnits(secondsLeft.div(60), 2), ` ${t('minutes')}`]
-    }
-    if (secondsLeft > 0) {
-      return [formatFromUnits(secondsLeft, 0), ` ${t('seconds')}`]
-    }
-    return [0, ` ${t('seconds')} (now)`]
+  const getTimeCooloff = () => {
+    const timeStamp = BN(proposal.coolOffTime).plus(dao.global.coolOffPeriod)
+    return getTimeUntil(timeStamp, t)
   }
 
   const status = () => {
     if (proposal.open) {
-      if (proposal.finalising && getSecondsCooloff()[0] > 0) {
-        return `${getSecondsCooloff()[0] + getSecondsCooloff()[1]} ${t(
+      if (proposal.finalising && getTimeCooloff()[0] > 0) {
+        return `${getTimeCooloff()[0] + getTimeCooloff()[1]} ${t(
           'coolOffRemaining',
         )}`
       }
-      if (proposal.finalising && getSecondsCooloff()[0] <= 0) {
+      if (proposal.finalising && getTimeCooloff()[0] <= 0) {
         return t('readyFinalVoteCount')
       }
       return t('requiresMoreSupport')
@@ -266,8 +232,8 @@ const ProposalItem = ({ proposal }) => {
                     {t('canCancel')}
                   </Col>
                   <Col className="text-end output-card">
-                    {getSecondsCancel()[0] > 0
-                      ? getSecondsCancel()[0] + getSecondsCancel()[1]
+                    {getTimeCancel()[0] > 0
+                      ? getTimeCancel()[0] + getTimeCancel()[1]
                       : t('rightNow')}
                   </Col>
                 </Row>
@@ -330,9 +296,7 @@ const ProposalItem = ({ proposal }) => {
                     className="w-100"
                     size="sm"
                     onClick={() => dispatch(finaliseProposal(wallet))}
-                    disabled={
-                      !proposal.finalising || getSecondsCooloff()[0] > 0
-                    }
+                    disabled={!proposal.finalising || getTimeCooloff()[0] > 0}
                   >
                     {t('countVotes')}
                   </Button>
@@ -343,7 +307,7 @@ const ProposalItem = ({ proposal }) => {
                     className="w-100"
                     size="sm"
                     onClick={() => dispatch(cancelProposal(wallet))}
-                    disabled={getSecondsCancel()[0] > 0}
+                    disabled={getTimeCancel()[0] > 0}
                   >
                     {t('cancel')}
                   </Button>
