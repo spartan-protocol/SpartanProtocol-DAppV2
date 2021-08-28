@@ -12,6 +12,7 @@ import {
   FormControl,
   Button,
   Badge,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
@@ -39,6 +40,8 @@ import Approval from '../../../components/Approval/Approval'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
 import { removeLiq, removeLiqAsym } from '../../../utils/web3Router'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { balanceWidths } from './Components/Utils'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -132,8 +135,8 @@ const LiqRemove = () => {
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
       }
     }
-
     getAssetDetails()
+    balanceWidths()
   }, [
     pool.poolDetails,
     window.localStorage.getItem('assetSelected1'),
@@ -213,15 +216,15 @@ const LiqRemove = () => {
    */
   const getRemLiqAsym = () => {
     if (removeInput1 && assetRemove1 && activeTab === '2') {
-      const [tokensOut, swapFee] = removeLiqAsym(
+      const [tokensOut, swapFee, divi] = removeLiqAsym(
         convertToWei(removeInput1.value),
         poolRemove1,
         assetRemove1.tokenAddress === addr.spartav2,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [tokensOut, swapFee]
+      return [tokensOut, swapFee, divi]
     }
-    return ['0.00', '0.00']
+    return ['0.00', '0.00', '0.00']
   }
 
   //= =================================================================================//
@@ -349,7 +352,7 @@ const LiqRemove = () => {
                     <Row className="my-1">
                       <Col>
                         <InputGroup className="m-0">
-                          <InputGroup.Text>
+                          <InputGroup.Text id="assetSelect1">
                             <AssetSelect priority="1" filter={['pool']} />
                           </InputGroup.Text>
                           <FormControl
@@ -367,7 +370,7 @@ const LiqRemove = () => {
                             onKeyPress={() => clearInputs(1)}
                             onClick={() => clearInputs(1)}
                           >
-                            <Icon icon="close" size="12" fill="grey" />
+                            <Icon icon="close" size="10" fill="grey" />
                           </InputGroup.Text>
                         </InputGroup>
                         <div className="text-end text-sm-label pt-1">
@@ -409,7 +412,7 @@ const LiqRemove = () => {
                       <Row className="my-1">
                         <Col>
                           <InputGroup className="">
-                            <InputGroup.Text>
+                            <InputGroup.Text id="assetSelect2">
                               <AssetSelect
                                 priority="2"
                                 filter={['token']}
@@ -558,11 +561,38 @@ const LiqRemove = () => {
             ) : (
               <Row className="text-center">
                 <Col xs="12" sm="4" md="12">
-                  <Button className="w-100" disabled>
-                    {t('newPoolLockedFor')}: {getTimeNew()[0]} {getTimeNew()[1]}
+                  <Button className="w-auto" disabled>
+                    {t('unlocksIn')} {getTimeNew()[0]} {getTimeNew()[1]}
                   </Button>
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(
+                      t,
+                      'newPool',
+                      `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
+                    )}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </Col>
               </Row>
+            )}
+            {activeTab === '2' && getRemLiqAsym()[2] > 0 && (
+              <div className="text-card text-center mt-2">
+                {`${
+                  getToken(assetRemove1.tokenAddress)?.symbol
+                }:SPARTA pool will also receive a ${formatFromWei(
+                  getRemLiqAsym()[2],
+                  4,
+                )} SPARTA dividend`}
+              </div>
             )}
           </Card.Footer>
         </Card>

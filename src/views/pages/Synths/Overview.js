@@ -23,12 +23,7 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
-import {
-  calcSwapOutput,
-  calcSwapFee,
-  calcSpotValueInBase,
-  minusFeeBurn,
-} from '../../../utils/web3Utils'
+import { calcSpotValueInBase } from '../../../utils/web3Utils'
 import {
   swapAssetToSynth,
   swapSynthToAsset,
@@ -40,9 +35,11 @@ import Approval from '../../../components/Approval/Approval'
 import SwapPair from '../Swap/SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-import { useSparta } from '../../../store/sparta'
 import NewSynth from './NewSynth'
 import { Icon } from '../../../components/Icons/icons'
+import { burnSynth, mintSynth } from '../../../utils/web3Router'
+import { useSparta } from '../../../store/sparta'
+import { balanceWidths } from '../Pools/Components/Utils'
 
 const Swap = () => {
   const wallet = useWallet()
@@ -52,8 +49,8 @@ const Swap = () => {
   const dispatch = useDispatch()
   const addr = getAddresses()
   const pool = usePool()
-  const location = useLocation()
   const sparta = useSparta()
+  const location = useLocation()
   const [activeTab, setActiveTab] = useState('mint')
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
@@ -158,6 +155,7 @@ const Swap = () => {
     }
 
     getAssetDetails()
+    balanceWidths()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activeTab,
@@ -191,9 +189,6 @@ const Swap = () => {
     }
   }
 
-  const _minusFeeBurn = (_amount) =>
-    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-
   //= =================================================================================//
   // Functions SWAP calculations
 
@@ -223,98 +218,43 @@ const Swap = () => {
     clearInputs(1)
   }
 
-  //= =================================================================================//
-  // Base-To-Synths Calcs
-
-  // STEP 1 - ADD ASSETs TO POOL (FEEBURN: YES)
-  const getAddedBase = (getFee) => {
-    const input = BN(convertToWei(swapInput1?.value))
-    const fromToken = assetSwap1
-    const fromBase = fromToken.tokenAddress === addr.spartav2
-    if (fromBase) {
-      if (getFee) {
-        return '0'
-      }
-      return _minusFeeBurn(input)
+  /**
+   * Get synth mint txn details
+   * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
+   */
+  const getMint = () => {
+    if (swapInput1 && assetSwap1 && assetSwap2) {
+      const [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped] =
+        mintSynth(
+          convertToWei(swapInput1.value),
+          assetSwap1,
+          assetSwap2,
+          getSynth(assetSwap2.tokenAddress),
+          sparta.globalDetails.feeOnTransfer,
+          assetSwap1.tokenAddress === addr.spartav2,
+        )
+      return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
     }
-    const [_baseSwapped, swapFee] = calcSwapOutput(input, assetSwap1, true)
-    const baseSwapped = _minusFeeBurn(_baseSwapped)
-    if (getFee) {
-      return swapFee
-    }
-    return _minusFeeBurn(baseSwapped)
+    return ['0.00', '0.00', '0.00', '0.00', '0.00', '0.00']
   }
 
-  // STEP 2 - ADD LPs TO SYNTH (FEEBURN: NO)
-  // const getAddedLPs = () => {
-  //   const input = getAddedBase()
-  //   const _pool = assetSwap2
-  //   const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
-  //   const { poolUnits } = _pool
-  //   const { baseAmount } = _pool
-  //   const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
-  //   return calcLiquidityUnitsAsym(input, actualBase, poolUnits)
-  // }
-
-  // STEP 3 - ADD SYNTHs TO USER (FEEBURN: NO)
-  const getAddedSynths = (getFee) => {
-    const input = getAddedBase()
-    const _pool = assetSwap2
-    const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
-    const tokenAmount = BN(_pool.tokenAmount)
-    const actualToken = sameLayer1
-      ? tokenAmount.plus(convertToWei(swapInput1?.value))
-      : tokenAmount
-    const baseAmount = BN(_pool.baseAmount)
-    const actualBase = sameLayer1 ? baseAmount.minus(input) : baseAmount
-    if (getFee) {
-      const swapFee = calcSwapFee(input, actualToken, actualBase, false)
-      return calcSpotValueInBase(swapFee, _pool)
+  /**
+   * Get synth burn txn details
+   * @returns [tokenOut, slipFee, diviSynth, diviSwap]
+   */
+  const getBurn = () => {
+    if (swapInput1 && assetSwap1 && assetSwap2) {
+      const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
+        convertToWei(swapInput1.value),
+        assetSwap2,
+        assetSwap1,
+        getSynth(assetSwap1.tokenAddress),
+        sparta.globalDetails.feeOnTransfer,
+        assetSwap2.tokenAddress === addr.spartav2,
+      )
+      return [tokenOut, slipFee, diviSynth, diviSwap]
     }
-    return calcSwapOutput(input, actualToken, actualBase, false)[0]
-  }
-
-  // STEP 1A - Get fee from swap in step 1
-  const getSynthSwapFee = () => {
-    const swapFee1 = BN(getAddedBase(true))
-    const swapFee2 = BN(getAddedSynths(true))
-    return swapFee1.minus(swapFee2)
-  }
-
-  //= =================================================================================//
-  // Synth-To-Base Calcs
-  const getRemovedBase = (getFee) => {
-    const input = BN(convertToWei(swapInput1?.value))
-    const toToken = assetSwap2
-    const toBase = toToken.tokenAddress === addr.spartav2
-    const sameLayer1 = assetSwap1.tokenAddress === assetSwap2.tokenAddress
-    let baseAmount = BN(assetSwap1.baseAmount)
-    let { tokenAmount } = assetSwap1
-    const [swapped, swapFee1] = calcSwapOutput(
-      input,
-      tokenAmount,
-      baseAmount,
-      true,
-    )
-    let output = _minusFeeBurn(swapped)
-    if (toBase) {
-      if (getFee) {
-        return swapFee1
-      }
-      return output
-    }
-    if (sameLayer1) {
-      baseAmount = baseAmount.minus(swapped)
-    } else {
-      tokenAmount = assetSwap2.tokenAmount
-      baseAmount = assetSwap2.baseAmount
-    }
-    output = _minusFeeBurn(output)
-    const swapFee2 = calcSwapFee(output, tokenAmount, baseAmount, false)
-    if (getFee) {
-      return BN(swapFee1).plus(swapFee2)
-    }
-    return calcSwapOutput(output, tokenAmount, baseAmount, false)[0]
+    return ['0.00', '0.00', '0.00', '0.00']
   }
 
   //= =================================================================================//
@@ -323,12 +263,12 @@ const Swap = () => {
   const handleZapInputChange = () => {
     if (activeTab === 'mint') {
       if (swapInput1?.value) {
-        swapInput2.value = convertFromWei(getAddedSynths(), 18)
+        swapInput2.value = convertFromWei(getMint()[0], 18)
       } else {
         clearInputs()
       }
     } else if (swapInput1?.value) {
-      swapInput2.value = convertFromWei(getRemovedBase(), 18)
+      swapInput2.value = convertFromWei(getBurn()[0], 18)
     } else {
       clearInputs()
     }
@@ -486,7 +426,7 @@ const Swap = () => {
                                 <Row className="my-1">
                                   <Col>
                                     <InputGroup className="">
-                                      <InputGroup.Text>
+                                      <InputGroup.Text id="assetSelect1">
                                         <AssetSelect
                                           priority="1"
                                           filter={
@@ -515,7 +455,7 @@ const Swap = () => {
                                       >
                                         <Icon
                                           icon="close"
-                                          size="12"
+                                          size="10"
                                           fill="grey"
                                         />
                                       </InputGroup.Text>
@@ -580,7 +520,7 @@ const Swap = () => {
                                   <Row className="my-1">
                                     <Col>
                                       <InputGroup className="m-0">
-                                        <InputGroup.Text>
+                                        <InputGroup.Text id="assetSelect2">
                                           <AssetSelect
                                             priority="2"
                                             filter={['synth']}
@@ -636,7 +576,7 @@ const Swap = () => {
                                   <Row className="my-1">
                                     <Col>
                                       <InputGroup className="m-0">
-                                        <InputGroup.Text>
+                                        <InputGroup.Text id="assetSelect2">
                                           <AssetSelect
                                             priority="2"
                                             filter={['token']}
@@ -691,7 +631,7 @@ const Swap = () => {
                                 {activeTab === 'mint' && (
                                   <div className="text-card">
                                     {swapInput1?.value
-                                      ? formatFromWei(getSynthSwapFee(), 6)
+                                      ? formatFromWei(getMint()[1], 6)
                                       : '0.00'}{' '}
                                     SPARTA
                                   </div>
@@ -699,7 +639,7 @@ const Swap = () => {
                                 {activeTab === 'burn' && (
                                   <div className="text-card">
                                     {swapInput1?.value
-                                      ? formatFromWei(getRemovedBase(true), 6)
+                                      ? formatFromWei(getBurn()[1], 6)
                                       : '0.00'}{' '}
                                     SPARTA
                                   </div>
@@ -717,7 +657,7 @@ const Swap = () => {
                                 {activeTab === 'mint' && (
                                   <span className="subtitle-card">
                                     {swapInput1?.value
-                                      ? formatFromWei(getAddedSynths(), 6)
+                                      ? formatFromWei(getMint()[0], 6)
                                       : '0.00'}{' '}
                                     {getToken(assetSwap2.tokenAddress)?.symbol}s
                                   </span>
@@ -726,7 +666,7 @@ const Swap = () => {
                                 {activeTab === 'burn' && (
                                   <span className="subtitle-card">
                                     {swapInput1?.value
-                                      ? formatFromWei(getRemovedBase(), 6)
+                                      ? formatFromWei(getBurn()[0], 6)
                                       : '0.00'}{' '}
                                     {getToken(assetSwap2.tokenAddress)?.symbol}
                                   </span>
@@ -816,6 +756,54 @@ const Swap = () => {
                             </>
                           )}
                         </Row>
+                        {activeTab === 'mint' && getMint()[2] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(
+                                assetSwap1.tokenAddress === addr.spartav2
+                                  ? assetSwap2.tokenAddress
+                                  : assetSwap1.tokenAddress,
+                              )?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getMint()[2],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {activeTab === 'mint' && getMint()[3] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(assetSwap2.tokenAddress)?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getMint()[3],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {activeTab === 'burn' && getBurn()[2] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(
+                                assetSwap1.tokenAddress === addr.spartav2
+                                  ? assetSwap2.tokenAddress
+                                  : assetSwap1.tokenAddress,
+                              )?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getBurn()[2],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {activeTab === 'burn' && getBurn()[3] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(assetSwap2.tokenAddress)?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getBurn()[3],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
                       </Card.Footer>
                     </Card>
                   </Col>

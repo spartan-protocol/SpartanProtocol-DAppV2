@@ -233,7 +233,7 @@ const LiqBond = () => {
                                 onKeyPress={() => clearInputs()}
                                 onClick={() => clearInputs()}
                               >
-                                <Icon icon="close" size="12" fill="grey" />
+                                <Icon icon="close" size="10" fill="grey" />
                               </InputGroup.Text>
                             </InputGroup>
                             <div className="text-end text-sm-label pt-1">

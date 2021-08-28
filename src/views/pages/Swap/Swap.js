@@ -11,6 +11,7 @@ import {
   FormControl,
   Button,
   Badge,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray, getNetwork } from '../../../utils/web3'
@@ -22,7 +23,11 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
-import { calcSpotValueInBase, calcLiqValue } from '../../../utils/web3Utils'
+import {
+  calcSpotValueInBase,
+  calcLiqValue,
+  getTimeUntil,
+} from '../../../utils/web3Utils'
 import {
   swap,
   swapAssetToSynth,
@@ -40,6 +45,8 @@ import { useSparta } from '../../../store/sparta'
 import NewPool from '../Home/NewPool'
 import { Icon } from '../../../components/Icons/icons'
 import { burnSynth, mintSynth, swapTo, zapLiq } from '../../../utils/web3Router'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { balanceWidths } from '../Pools/Components/Utils'
 
 const Swap = () => {
   const synth = useSynth()
@@ -195,6 +202,7 @@ const Swap = () => {
     }
 
     getAssetDetails()
+    balanceWidths()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     mode,
@@ -240,9 +248,6 @@ const Swap = () => {
     clearInputs()
   }
 
-  //= =================================================================================//
-  // Functions SWAP calculations
-
   const getBalance = (asset) => {
     let item = ''
     let type = ''
@@ -263,6 +268,11 @@ const Swap = () => {
       return getSynth(item.tokenAddress)?.balance
     }
     return item.balanceTokens
+  }
+
+  const getTimeNew = () => {
+    const timeStamp = BN(assetSwap1?.genesis).plus(604800)
+    return getTimeUntil(timeStamp, t)
   }
 
   //= =================================================================================//
@@ -549,7 +559,7 @@ const Swap = () => {
                                 <Row className="my-1">
                                   <Col>
                                     <InputGroup className="m-0">
-                                      <InputGroup.Text>
+                                      <InputGroup.Text id="assetSelect1">
                                         <AssetSelect
                                           priority="1"
                                           filter={['token', 'pool', 'synth']}
@@ -574,7 +584,7 @@ const Swap = () => {
                                       >
                                         <Icon
                                           icon="close"
-                                          size="12"
+                                          size="10"
                                           fill="grey"
                                         />
                                       </InputGroup.Text>
@@ -629,7 +639,7 @@ const Swap = () => {
                                 <Row className="my-1">
                                   <Col>
                                     <InputGroup className="m-0">
-                                      <InputGroup.Text>
+                                      <InputGroup.Text id="assetSelect2">
                                         <AssetSelect
                                           priority="2"
                                           filter={filter}
@@ -654,7 +664,7 @@ const Swap = () => {
                                       >
                                         <Icon
                                           icon="close"
-                                          size="12"
+                                          size="10"
                                           fill="grey"
                                         />
                                       </InputGroup.Text>
@@ -908,7 +918,7 @@ const Swap = () => {
                       {/* 'Approval/Allowance' row */}
                       <Card.Footer>
                         {mode === 'token' && (
-                          <>
+                          <Row className="text-center">
                             {assetSwap1?.tokenAddress !== addr.bnb &&
                               wallet?.account &&
                               swapInput1?.value && (
@@ -938,53 +948,86 @@ const Swap = () => {
                                 {getToken(assetSwap1.tokenAddress)?.symbol}
                               </Button>
                             </Col>
-                          </>
+                          </Row>
                         )}
 
                         {mode === 'pool' && (
                           <>
-                            {wallet?.account && swapInput1?.value && (
-                              <Approval
-                                tokenAddress={assetSwap1?.address}
-                                symbol={`${
-                                  getToken(assetSwap1.tokenAddress)?.symbol
-                                }p`}
-                                walletAddress={wallet?.account}
-                                contractAddress={addr.router}
-                                txnAmount={convertToWei(swapInput1?.value)}
-                                assetNumber="1"
-                              />
+                            {!assetSwap1?.newPool ? (
+                              <Row className="text-center">
+                                {wallet?.account && swapInput1?.value && (
+                                  <Approval
+                                    tokenAddress={assetSwap1?.address}
+                                    symbol={`${
+                                      getToken(assetSwap1.tokenAddress)?.symbol
+                                    }p`}
+                                    walletAddress={wallet?.account}
+                                    contractAddress={addr.router}
+                                    txnAmount={convertToWei(swapInput1?.value)}
+                                    assetNumber="1"
+                                  />
+                                )}
+                                <Col className="hide-if-siblings">
+                                  <Button
+                                    className="w-100"
+                                    onClick={() =>
+                                      dispatch(
+                                        zapLiquidity(
+                                          convertToWei(swapInput1?.value),
+                                          assetSwap1.address,
+                                          assetSwap2.address,
+                                          wallet,
+                                        ),
+                                      )
+                                    }
+                                    disabled={
+                                      swapInput1?.value <= 0 ||
+                                      BN(
+                                        convertToWei(swapInput1?.value),
+                                      ).isGreaterThan(getBalance(1))
+                                    }
+                                  >
+                                    {t('sell')}{' '}
+                                    {getToken(assetSwap1.tokenAddress)?.symbol}p
+                                  </Button>
+                                </Col>
+                              </Row>
+                            ) : (
+                              <Row className="text-center">
+                                <Col xs="12" sm="4" md="12">
+                                  <Button className="w-auto" disabled>
+                                    {t('unlocksIn')} {getTimeNew()[0]}{' '}
+                                    {getTimeNew()[1]}
+                                  </Button>
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(
+                                      t,
+                                      'newPool',
+                                      `${
+                                        getToken(assetSwap1.tokenAddress)
+                                          ?.symbol
+                                      }p`,
+                                    )}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1"
+                                        size="17"
+                                        fill="white"
+                                      />
+                                    </span>
+                                  </OverlayTrigger>
+                                </Col>
+                              </Row>
                             )}
-                            <Col className="hide-if-siblings">
-                              <Button
-                                className="w-100"
-                                onClick={() =>
-                                  dispatch(
-                                    zapLiquidity(
-                                      convertToWei(swapInput1?.value),
-                                      assetSwap1.address,
-                                      assetSwap2.address,
-                                      wallet,
-                                    ),
-                                  )
-                                }
-                                disabled={
-                                  swapInput1?.value <= 0 ||
-                                  BN(
-                                    convertToWei(swapInput1?.value),
-                                  ).isGreaterThan(getBalance(1))
-                                }
-                              >
-                                {t('sell')}{' '}
-                                {getToken(assetSwap1.tokenAddress)?.symbol}p
-                              </Button>
-                            </Col>
                           </>
                         )}
 
                         {window.localStorage.getItem('assetType2') ===
                           'synth' && (
-                          <>
+                          <Row className="text-center">
                             {assetSwap1?.tokenAddress !== addr.bnb &&
                               wallet?.account &&
                               swapInput1?.value && (
@@ -1014,12 +1057,12 @@ const Swap = () => {
                                 {getToken(assetSwap1.tokenAddress)?.symbol}
                               </Button>
                             </Col>
-                          </>
+                          </Row>
                         )}
 
                         {window.localStorage.getItem('assetType1') ===
                           'synth' && (
-                          <>
+                          <Row className="text-center">
                             {wallet?.account && swapInput1?.value && (
                               <Approval
                                 tokenAddress={
@@ -1059,7 +1102,75 @@ const Swap = () => {
                                 {getToken(assetSwap1.tokenAddress)?.symbol}s
                               </Button>
                             </Col>
-                          </>
+                          </Row>
+                        )}
+                        {mode === 'token' && getSwap()[2] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(assetSwap1.tokenAddress)?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getSwap()[2],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {mode === 'token' && getSwap()[3] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(assetSwap2.tokenAddress)?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getSwap()[3],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {mode === 'synthOut' && getMint()[2] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(
+                                assetSwap1.tokenAddress === addr.spartav2
+                                  ? assetSwap2.tokenAddress
+                                  : assetSwap1.tokenAddress,
+                              )?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getMint()[2],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {mode === 'synthOut' && getMint()[3] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(assetSwap2.tokenAddress)?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getMint()[3],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {mode === 'synthIn' && getBurn()[2] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(
+                                assetSwap1.tokenAddress === addr.spartav2
+                                  ? assetSwap2.tokenAddress
+                                  : assetSwap1.tokenAddress,
+                              )?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getBurn()[2],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
+                        )}
+                        {mode === 'synthIn' && getBurn()[3] > 0 && (
+                          <div className="text-card text-center mt-2">
+                            {`${
+                              getToken(assetSwap2.tokenAddress)?.symbol
+                            }:SPARTA pool will receive a ${formatFromWei(
+                              getBurn()[3],
+                              4,
+                            )} SPARTA dividend`}
+                          </div>
                         )}
                       </Card.Footer>
                     </Card>

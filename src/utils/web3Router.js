@@ -74,7 +74,7 @@ export const removeLiq = (inputLP, pool, feeOnTsf) => {
  * @param pool poolDetails
  * @param toBase
  * @param feeOnTsf
- * @returns [tokensOut, swapFee]
+ * @returns [tokensOut, swapFee, divi]
  */
 export const removeLiqAsym = (inputLP, pool, toBase, feeOnTsf) => {
   const _inputLP = BN(inputLP) // LP units received by pool
@@ -88,7 +88,9 @@ export const removeLiqAsym = (inputLP, pool, toBase, feeOnTsf) => {
     ? minusFeeBurn(_swapOut, feeOnTsf).plus(_recSparta)
     : _swapOut.plus(_tokenOut) // Swap output + previous received by Router (after feeBurn)
   const tokensOut = toBase ? minusFeeBurn(_swapOutRec, feeOnTsf) : _swapOutRec // Swap output received by User (after feeBurn)
-  return [tokensOut, swapFee]
+  const divi =
+    pool.curated && swapFee.isGreaterThanOrEqualTo(one) ? swapFee : BN(0)
+  return [tokensOut, swapFee, divi]
 }
 
 /**
@@ -135,7 +137,7 @@ export const swapTo = (
     // Simple swap SPARTA -> TOKEN
     const _spartaRec = minusFeeBurn(input, feeOnTsf) // Tsf SPARTA in (User -> outPool) (feeBurn)
     const [_tokenOut, swapFee] = calcSwapOutput(_spartaRec, outPool, false) // Swap SPARTA to TOKEN (outPool -> User)
-    divi1 = outPool.curated && swapFee.isGreaterThan(one) && swapFee
+    divi2 = outPool.curated && swapFee.isGreaterThan(one) && swapFee
     return [_tokenOut, swapFee, divi1, divi2]
   }
   if (toBase) {
@@ -277,7 +279,7 @@ export const burnSynth = (
   if (swapPool.tokenAddress === synthPool.tokenAddress) {
     updatedPool.baseAmount = baseAmount.plus(_spartaRec1)
   }
-  const [tokenOut, swapFee, _diviSwap] = swapTo(
+  const [tokenOut, swapFee, , _diviSwap] = swapTo(
     _spartaRec1,
     updatedPool,
     updatedPool,

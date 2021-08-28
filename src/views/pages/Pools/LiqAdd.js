@@ -37,8 +37,9 @@ import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
-import TxnModal from './Modals/TxnModal'
+import TxnModal from './Components/TxnModal'
 import { addLiq, addLiqAsym } from '../../../utils/web3Router'
+import { balanceWidths } from './Components/Utils'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -133,6 +134,7 @@ const LiqAdd = () => {
     }
 
     getAssetDetails()
+    balanceWidths()
   }, [
     pool.poolDetails,
     window.localStorage.getItem('assetSelected1'),
@@ -270,7 +272,12 @@ const LiqAdd = () => {
   // General Functions
 
   const handleInputChange = () => {
-    if (activeTab === 'addTab1' && addInput1 && addInput2) {
+    if (
+      activeTab === 'addTab1' &&
+      addInput1 &&
+      addInput2 &&
+      addInput1.value > 0
+    ) {
       if (addInput2 !== document.activeElement) {
         addInput2.value = convertFromWei(getAddLiq()[1])
         setOutputLp(getAddLiq()[0])
@@ -408,7 +415,7 @@ const LiqAdd = () => {
                     <Row className="my-1">
                       <Col>
                         <InputGroup className="">
-                          <InputGroup.Text>
+                          <InputGroup.Text id="assetSelect1">
                             <AssetSelect
                               priority="1"
                               filter={['token']}
@@ -434,7 +441,7 @@ const LiqAdd = () => {
                             onKeyPress={() => clearInputs(1)}
                             onClick={() => clearInputs(1)}
                           >
-                            <Icon icon="close" size="12" fill="grey" />
+                            <Icon icon="close" size="10" fill="grey" />
                           </InputGroup.Text>
                         </InputGroup>
                         <div className="text-end text-sm-label pt-1">
@@ -501,7 +508,7 @@ const LiqAdd = () => {
                       <Row className="my-1">
                         <Col>
                           <InputGroup className="">
-                            <InputGroup.Text>
+                            <InputGroup.Text id="assetSelect2">
                               <AssetSelect
                                 priority="2"
                                 filter={['token']}
@@ -524,7 +531,7 @@ const LiqAdd = () => {
                               onKeyPress={() => clearInputs(2)}
                               onClick={() => clearInputs(2)}
                             >
-                              <Icon icon="close" size="12" fill="grey" />
+                              <Icon icon="close" size="10" fill="grey" />
                             </InputGroup.Text>
                           </InputGroup>
                           <div className="text-end text-sm-label pt-1">
@@ -555,7 +562,7 @@ const LiqAdd = () => {
                       <Row className="my-1">
                         <Col>
                           <InputGroup className="">
-                            <InputGroup.Text>
+                            <InputGroup.Text id="assetSelect3">
                               <AssetSelect
                                 priority="3"
                                 filter={['pool']}
@@ -605,7 +612,6 @@ const LiqAdd = () => {
                         </span>
                       </Col>
                     </Row>
-
                     {activeTab === 'addTab1' && (
                       <Row className="mb-2">
                         <Col xs="auto">
@@ -622,7 +628,6 @@ const LiqAdd = () => {
                         </Col>
                       </Row>
                     )}
-
                     {activeTab === 'addTab2' && (
                       <Row className="mb-2">
                         <Col xs="auto" className="title-card">
@@ -638,7 +643,6 @@ const LiqAdd = () => {
                         </Col>
                       </Row>
                     )}
-
                     <Row className="">
                       <Col xs="auto" className="title-card">
                         <span className="subtitle-card">{t('receive')}</span>

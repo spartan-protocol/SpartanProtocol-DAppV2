@@ -11,6 +11,7 @@ import {
   FormControl,
   InputGroup,
   Modal,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import Approval from '../../../components/Approval/Approval'
 import {
@@ -24,6 +25,7 @@ import { useWeb3 } from '../../../store/web3'
 import { getTokenContract } from '../../../utils/web3Contracts'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const NewPool = () => {
   const dispatch = useDispatch()
@@ -36,6 +38,7 @@ const NewPool = () => {
 
   const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
+  const [feeConfirm, setFeeConfirm] = useState(false)
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -303,8 +306,11 @@ const NewPool = () => {
                   )
                 </Form.Control.Feedback>
               </InputGroup>
+              Initial liquidity-add:
               <InputGroup className="my-2">
-                <InputGroup.Text>{t('input')}</InputGroup.Text>
+                <InputGroup.Text style={{ width: '73.6719px' }}>
+                  SPARTA
+                </InputGroup.Text>
                 <FormControl
                   id="spartaInput"
                   placeholder="$SPARTA"
@@ -315,13 +321,14 @@ const NewPool = () => {
                   isInvalid={!spartaValid && addrValid}
                   disabled={!addrValid}
                 />
-                <InputGroup.Text>SPARTA</InputGroup.Text>
                 <Form.Control.Feedback type="invalid">
                   Minimum of 10,000 SPARTA required
                 </Form.Control.Feedback>
               </InputGroup>
               <InputGroup className="my-2">
-                <InputGroup.Text>{t('input')}</InputGroup.Text>
+                <InputGroup.Text style={{ width: '73.6719px' }}>
+                  {tokenSymbol}
+                </InputGroup.Text>
                 <FormControl
                   id="tokenInput"
                   placeholder={`$${tokenSymbol}`}
@@ -332,31 +339,71 @@ const NewPool = () => {
                   isInvalid={!tokenValid && addrValid && spartaValid}
                   disabled={!addrValid}
                 />
-                <InputGroup.Text>{tokenSymbol}</InputGroup.Text>
                 <Form.Control.Feedback type="invalid">
                   Make sure you thoroughly check the ratio of the assets being
                   added
                 </Form.Control.Feedback>
               </InputGroup>
-
               <div className="output-card text-center my-2">
                 1 SPARTA = {priceInSparta()} {tokenSymbol}
                 <br />1 {tokenSymbol} = {priceInToken()} SPARTA
                 <br />1 {tokenSymbol} = ~${priceinUSD()} USD
               </div>
               <Form>
-                <Form.Check
-                  id="inputConfirmRatio"
-                  type="switch"
-                  className="text-center"
-                  label="Confirm ratio! Avoid getting rekt!"
-                  checked={ratioConfirm}
-                  isValid={ratioConfirm}
-                  isInvalid={!ratioConfirm}
-                  onChange={() => {
-                    setRatioConfirm(!ratioConfirm)
-                  }}
-                />
+                <div className="text-center">
+                  <Form.Check
+                    id="inputConfirmRatio"
+                    type="switch"
+                    className="d-inline-block"
+                    label="Confirm ratio!"
+                    checked={ratioConfirm}
+                    isValid={ratioConfirm}
+                    isInvalid={!ratioConfirm}
+                    onChange={() => {
+                      setRatioConfirm(!ratioConfirm)
+                    }}
+                  />
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'newPoolRatio')}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+                <div className="text-center">
+                  <Form.Check
+                    id="feeConfirm"
+                    type="switch"
+                    className="d-inline-block"
+                    label="Confirm 1% fee!"
+                    checked={feeConfirm}
+                    isValid={feeConfirm}
+                    isInvalid={!feeConfirm}
+                    onChange={() => {
+                      setFeeConfirm(!feeConfirm)
+                    }}
+                  />
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'newPoolFee')}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </div>
               </Form>
             </Modal.Body>
             <Modal.Footer className="text-center">
@@ -373,7 +420,7 @@ const NewPool = () => {
               <Col xs="12" className="hide-if-siblings">
                 <Button
                   variant="primary"
-                  disabled={!ratioConfirm || !formValid}
+                  disabled={!ratioConfirm || !formValid || !feeConfirm}
                   onClick={() => handleSubmit()}
                 >
                   {t('confirm')}

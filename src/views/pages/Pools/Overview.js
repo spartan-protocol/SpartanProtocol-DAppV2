@@ -10,6 +10,7 @@ import SharePool from '../../../components/Share/SharePool'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import NewPool from '../Home/NewPool'
+import { balanceWidths } from './Components/Utils'
 
 const Overview = () => {
   const { t } = useTranslation()
@@ -32,6 +33,10 @@ const Overview = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  useEffect(() => {
+    balanceWidths()
+  }, [activeTab])
 
   return (
     <>
