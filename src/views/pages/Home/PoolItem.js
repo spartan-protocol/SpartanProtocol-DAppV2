@@ -71,13 +71,13 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320 pt-3 pb-2 card-underlay">
+        <Card className="card-320 pt-1 pb-2 card-underlay card-alt">
           <Card.Body>
             <Row className="mb-2">
-              <Col xs="auto" className="pr-0">
+              <Col xs="auto" className="pe-0">
                 <img src={token.symbolUrl} alt={token.symbol} height="50" />
               </Col>
-              <Col xs="auto">
+              <Col xs="auto" className="pe-0">
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
                   ${formatFromUnits(tokenValueUSD, 2)}
@@ -239,6 +239,7 @@ const PoolItem = ({ asset }) => {
               <Col>
                 <Button
                   size="sm"
+                  variant="primary"
                   className="w-100 rounded-pill"
                   onClick={() =>
                     history.push(`/pools/swap?asset1=${tokenAddress}`)
@@ -250,6 +251,7 @@ const PoolItem = ({ asset }) => {
               <Col>
                 <Button
                   size="sm"
+                  variant="primary"
                   className="w-100 rounded-pill"
                   onClick={() =>
                     history.push(`/pools/liquidity?asset1=${tokenAddress}`)
@@ -261,6 +263,7 @@ const PoolItem = ({ asset }) => {
               <Col>
                 <Button
                   size="sm"
+                  variant="primary"
                   className="w-100 rounded-pill"
                   onClick={() => history.push('/vault')}
                 >

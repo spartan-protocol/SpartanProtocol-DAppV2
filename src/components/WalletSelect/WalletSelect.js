@@ -306,14 +306,16 @@ const WalletSelect = (props) => {
                     {t('wallet')}:{' '}
                     <span className="output-card">
                       {formatShortString(wallet.account)}
-                      <ShareLink url={wallet.account}>
-                        <Icon
-                          icon="copy"
-                          className="ms-2 mb-1"
-                          size="18"
-                          role="button"
-                        />
-                      </ShareLink>
+                      <div className="d-inline-block">
+                        <ShareLink url={wallet.account}>
+                          <Icon
+                            icon="copy"
+                            className="ms-2 mb-1"
+                            size="18"
+                            role="button"
+                          />
+                        </ShareLink>
+                      </div>
                     </span>
                   </>
                 ) : (
@@ -389,10 +391,10 @@ const WalletSelect = (props) => {
                     }
                   >
                     <Row>
-                      <Col xs="3">
-                        <div className="float-end">{x.icon}</div>
+                      <Col xs="auto" className="pe-0">
+                        <div>{x.icon}</div>
                       </Col>
-                      <Col xs="9">
+                      <Col>
                         <div className="float-start mt-1">
                           {x.title === 'Others' ? t('others') : x.title}
                         </div>

@@ -39,6 +39,8 @@ import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
+import NewPool from '../Home/NewPool'
+import Share from '../../../components/Share/SharePool'
 
 const LiqBond = () => {
   const { t } = useTranslation()
@@ -177,6 +179,17 @@ const LiqBond = () => {
     <Row>
       <Col xs="auto">
         <Card xs="auto" className="card-480">
+          <Card.Header className="">
+            <Row className="px-2 py-2">
+              <Col xs="auto">
+                {t('bond')}
+                {pool.poolDetails.length > 0 && <Share />}
+              </Col>
+              <Col className="text-end">
+                <NewPool />
+              </Col>
+            </Row>
+          </Card.Header>
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">

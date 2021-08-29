@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { Col, Row, Tab, Tabs } from 'react-bootstrap'
+import { Card, Col, Nav, Row } from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork } from '../../../utils/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-import NewPool from './NewPool'
 import SummaryItem from './SummaryItem'
 
 const Overview = () => {
@@ -17,6 +16,8 @@ const Overview = () => {
   const wallet = useWallet()
   const { t } = useTranslation()
   const pool = usePool()
+
+  const [activeTab, setActiveTab] = useState('1')
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -54,76 +55,87 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('home')}</h2>
-              <NewPool />
-            </div>
-          </Col>
-        </Row>
         {network.chainId === 97 && (
           <>
             <Row className="row-480">
               <Col xs="12">
-                <Tabs className="mb-3">
-                  <Tab eventKey="curated" title={t('curated')}>
-                    <SummaryItem />
+                <SummaryItem />
+                <Card>
+                  <Card.Header className="p-0 border-0 mb-2 rounded-pill-top-left">
+                    <Nav activeKey={activeTab} fill>
+                      <Nav.Item key="1" className="rounded-pill-top-left">
+                        <Nav.Link
+                          eventKey="1"
+                          className="rounded-pill-top-left"
+                          onClick={() => {
+                            setActiveTab('1')
+                          }}
+                        >
+                          {t('curated')}
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item key="2">
+                        <Nav.Link
+                          eventKey="2"
+                          onClick={() => {
+                            setActiveTab('2')
+                          }}
+                        >
+                          {t('standard')}
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item key="3" className="rounded-pill-top-right">
+                        <Nav.Link
+                          className="rounded-pill-top-right"
+                          eventKey="3"
+                          onClick={() => {
+                            setActiveTab('3')
+                          }}
+                        >
+                          {t('new')}
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Card.Header>
+                  <Card.Body>
                     <Row>
-                      {pool?.poolDetails
-                        .filter(
-                          (asset) =>
-                            asset.baseAmount > 0 &&
-                            asset.curated === true &&
-                            asset.newPool === false,
-                        )
-                        .sort((a, b) => b.baseAmount - a.baseAmount)
-                        .map((asset) => (
-                          <PoolItem key={asset.address} asset={asset} />
-                        ))}
+                      {activeTab === '1' &&
+                        pool?.poolDetails
+                          .filter(
+                            (asset) =>
+                              asset.baseAmount > 0 &&
+                              asset.curated === true &&
+                              asset.newPool === false,
+                          )
+                          .sort((a, b) => b.baseAmount - a.baseAmount)
+                          .map((asset) => (
+                            <PoolItem key={asset.address} asset={asset} />
+                          ))}
+                      {activeTab === '2' &&
+                        pool?.poolDetails
+                          .filter(
+                            (asset) =>
+                              asset.baseAmount > 0 &&
+                              asset.curated === false &&
+                              asset.newPool === false,
+                          )
+                          .sort((a, b) => b.baseAmount - a.baseAmount)
+                          .map((asset) => (
+                            <PoolItem key={asset.address} asset={asset} />
+                          ))}
+                      {activeTab === '3' &&
+                        pool?.poolDetails
+                          .filter(
+                            (asset) =>
+                              asset.baseAmount > 0 && asset.newPool === true,
+                          )
+                          .sort((a, b) => b.baseAmount - a.baseAmount)
+                          .map((asset) => (
+                            <PoolItem key={asset.address} asset={asset} />
+                          ))}
                     </Row>
-                  </Tab>
-                  <Tab eventKey="standard" title={t('standard')}>
-                    <SummaryItem />
-                    <Row>
-                      {pool?.poolDetails
-                        .filter(
-                          (asset) =>
-                            asset.baseAmount > 0 &&
-                            asset.curated === false &&
-                            asset.newPool === false,
-                        )
-                        .sort((a, b) => b.baseAmount - a.baseAmount)
-                        .map((asset) => (
-                          <PoolItem key={asset.address} asset={asset} />
-                        ))}
-                    </Row>
-                  </Tab>
-                  <Tab eventKey="new" title={t('new')}>
-                    <SummaryItem />
-                    <Row>
-                      {pool?.poolDetails
-                        .filter(
-                          (asset) =>
-                            asset.baseAmount > 0 && asset.newPool === true,
-                        )
-                        .sort((a, b) => b.baseAmount - a.baseAmount)
-                        .map((asset) => (
-                          <PoolItem key={asset.address} asset={asset} />
-                        ))}
-                    </Row>
-                  </Tab>
-                  {/* <MDBTabsItem>
-                    <MDBTabsLink
-                      active={activeTab === 'positions'}
-                      onClick={() => {
-                        setActiveTab('positions')
-                      }}
-                    >
-                      {t('positions')}
-                    </MDBTabsLink>
-                  </MDBTabsItem> */}
-                </Tabs>
+                  </Card.Body>
+                </Card>
               </Col>
 
               {pool.poolDetails.length <= 0 && (

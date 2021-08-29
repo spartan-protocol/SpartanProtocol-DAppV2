@@ -507,15 +507,6 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('swap')}</h2>
-              <NewPool />
-              {pool.poolDetails.length > 0 && <SharePool />}
-            </div>
-          </Col>
-        </Row>
         {network.chainId === 97 && (
           <>
             {pool.poolDetails?.length > 0 && (
@@ -523,6 +514,17 @@ const Swap = () => {
                 <Row className="row-480">
                   <Col xs="auto">
                     <Card xs="auto" className="card-480">
+                      <Card.Header>
+                        <Row className="px-1">
+                          <Col>
+                            {t('swap')}
+                            {pool.poolDetails.length > 0 && <SharePool />}
+                          </Col>
+                          <Col className="text-end">
+                            <NewPool />
+                          </Col>
+                        </Row>
+                      </Card.Header>
                       <Card.Body>
                         {/* Top 'Input' Row */}
                         <Row>

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Col, Row, Tabs, Tab } from 'react-bootstrap'
+import { Col, Row, ButtonGroup, Button } from 'react-bootstrap'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import LiqBond from './LiqBond'
 import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import SharePool from '../../../components/Share/SharePool'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-import NewPool from '../Home/NewPool'
 import { balanceWidths } from './Components/Utils'
 
 const Overview = () => {
@@ -41,39 +39,37 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('liquidity')}</h2>
-              <NewPool />
-              {pool.poolDetails.length > 0 && <SharePool />}
-            </div>
-          </Col>
-        </Row>
         {network.chainId === 97 && (
           <>
             <Row className="row-480">
-              <Tabs
-                activeKey={activeTab}
-                onSelect={(k) => setActiveTab(k)}
-                className="mb-3 card-480"
-              >
-                <Tab eventKey="1" title={t('add')}>
-                  {pool.poolDetails.length > 0 && activeTab === '1' && (
-                    <LiqAdd />
-                  )}
-                </Tab>
-                <Tab eventKey="2" title={t('remove')}>
-                  {pool.poolDetails.length > 0 && activeTab === '2' && (
-                    <LiqRemove />
-                  )}
-                </Tab>
-                <Tab eventKey="4" title={t('bond')}>
-                  {pool.poolDetails.length > 0 && activeTab === '4' && (
-                    <LiqBond />
-                  )}
-                </Tab>
-              </Tabs>
+              <ButtonGroup size="sm" className="mb-3">
+                <Button
+                  active={activeTab === '1'}
+                  onClick={() => setActiveTab('1')}
+                  variant="dark"
+                >
+                  {t('add')}
+                </Button>
+                <Button
+                  active={activeTab === '2'}
+                  onClick={() => setActiveTab('2')}
+                  variant="dark"
+                >
+                  {t('remove')}
+                </Button>
+                <Button
+                  active={activeTab === '4'}
+                  onClick={() => setActiveTab('4')}
+                  variant="dark"
+                >
+                  {t('bond')}
+                </Button>
+              </ButtonGroup>
+              {pool.poolDetails.length > 0 && activeTab === '1' && <LiqAdd />}
+              {pool.poolDetails.length > 0 && activeTab === '2' && (
+                <LiqRemove />
+              )}
+              {pool.poolDetails.length > 0 && activeTab === '4' && <LiqBond />}
             </Row>
             <Row className="row-480">
               <Col className="card-480">

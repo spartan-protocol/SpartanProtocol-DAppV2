@@ -10,6 +10,7 @@ import {
   Accordion,
   Overlay,
   Form,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useBond } from '../../store/bond'
 import { useReserve } from '../../store/reserve/selector'
@@ -166,6 +167,13 @@ const Supply = () => {
         <Popover>
           <Popover.Header className="mt-2">
             Tokenomics
+            <a
+              href="https://docs.spartanprotocol.org/tokenomics-1/sparta"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Icon icon="scan" size="15" className="ms-2 mb-2" />
+            </a>
             <Form className="mb-0">
               <span className="output-card">
                 {t('network')}:{' '}
@@ -184,63 +192,74 @@ const Supply = () => {
           </Popover.Header>
           <Popover.Body>
             <Row>
-              <Col xs="6" className="popover-text mb-4">
+              <Col xs="6" className="popover-text mb-2">
                 {t('marketcap')}
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Header as="h3">{t('marketcap')}</Popover.Header>
+                      <Popover.Body className="text-center">
+                        Marketcap is derived by multiplying the circulating
+                        supply of SPARTA by the current USD market value of each
+                        SPARTA token.
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                  </span>
+                </OverlayTrigger>
               </Col>
-              <Col xs="6 mb-2" className="popover-text text-end mb-4">
+              <Col xs="6 mb-2" className="popover-text text-end mb-2">
                 ${formatFromWei(getMarketCap(), 0)}
+                <Icon icon="usdt" className="ms-1" size="15" />
               </Col>
 
               <Col xs="6" className="popover-text mb-2">
-                {t('circulating')}
+                {t('totalSupply')}
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Header as="h3">
+                        {t('totalSupply')}
+                      </Popover.Header>
+                      <Popover.Body className="text-center">
+                        <div className="mb-3">
+                          The max supply of SPARTA is 300M. This has however
+                          been programmed to be impossible to reach. Getting
+                          close to 300M would take many years even without the
+                          deflationary feeBurn.
+                        </div>
+                        <Row>
+                          <Col xs="4" className="text-center">
+                            <Badge bg="primary">{t('burn')}</Badge>
+                          </Col>
+                          <Col xs="4" className="text-center">
+                            <Badge bg="info">{t('bond')}</Badge>
+                          </Col>
+                          <Col xs="4" className="text-center">
+                            <Badge bg="danger">{t('emission')}</Badge>
+                          </Col>
+                        </Row>
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                  </span>
+                </OverlayTrigger>
               </Col>
               <Col xs="6" className="popover-text text-end mb-2">
-                {formatFromWei(getCirculatingSupply(), 0)}
-              </Col>
-
-              <Col xs="12" className="mb-2">
-                <ProgressBar>
-                  <ProgressBar
-                    id="sparta1supply"
-                    variant="warning"
-                    key={1}
-                    now={formatFromWei(
-                      BN(sparta.globalDetails.oldTotalSupply)
-                        .div(300000000)
-                        .times(100),
-                    )}
-                  />
-                  <ProgressBar variant="black" now={0.25} />
-                  <ProgressBar
-                    id="sparta2supply"
-                    variant="primary"
-                    key={2}
-                    now={formatFromWei(
-                      BN(getCirculatingSupply())
-                        .minus(sparta.globalDetails.oldTotalSupply)
-                        .div(300000000)
-                        .times(100),
-                    )}
-                  />
-                  <ProgressBar variant="black" now={0.25} />
-                </ProgressBar>
-              </Col>
-              <Col xs="6" className="text-center">
-                <Badge bg="warning">SPARTAv1</Badge>
-              </Col>
-              <Col xs="6" className="text-center">
-                <Badge bg="primary">SPARTAv2</Badge>
-              </Col>
-
-              <Col xs="6" className="popover-text my-2">
-                {t('totalSupply')}
-              </Col>
-              <Col xs="6" className="popover-text text-end my-2">
                 {formatFromWei(getTotalSupply(), 0)}
+                <Icon icon="spartav2" className="ms-1" size="15" />
               </Col>
 
               <Col xs="12 mb-2">
-                <ProgressBar>
+                <ProgressBar height="10">
                   <ProgressBar
                     variant="primary"
                     key={1}
@@ -253,7 +272,7 @@ const Supply = () => {
                         : '1'
                     }
                   />
-                  <ProgressBar variant="black" now={0.25} />
+                  <ProgressBar variant="black" now={0.5} />
                   <ProgressBar
                     variant="info"
                     key={2}
@@ -269,7 +288,7 @@ const Supply = () => {
                         : '1'
                     }
                   />
-                  <ProgressBar variant="black" now={0.25} />
+                  <ProgressBar variant="black" now={0.5} />
                   <ProgressBar
                     variant="danger"
                     key={3}
@@ -292,24 +311,80 @@ const Supply = () => {
                           )
                     }
                   />
-                  <ProgressBar variant="black" now={0.25} />
                 </ProgressBar>
               </Col>
-              <Col xs="4" className="text-center">
-                <Badge bg="primary">{t('burn')}</Badge>
+
+              <Col xs="6" className="popover-text mb-2">
+                {t('circulating')}
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Header as="h3">
+                        {t('circulatingSupply')}
+                      </Popover.Header>
+                      <Popover.Body className="text-center">
+                        Circulating supply includes only SPARTA tokens that have
+                        entered circulation. SPARTA tokens that have not entered
+                        circulation include RESERVE contract holdings (released
+                        via programmed incentives like dividends, harvest & DAO
+                        grants) & DAO contract holdings (released via the Bond
+                        program)
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                  </span>
+                </OverlayTrigger>
               </Col>
-              <Col xs="4" className="text-center">
-                <Badge bg="info">{t('bond')}</Badge>
-              </Col>
-              <Col xs="4" className="text-center">
-                <Badge bg="danger">{t('emission')}</Badge>
+              <Col xs="6" className="popover-text text-end mb-2">
+                {formatFromWei(getCirculatingSupply(), 0)}
+                <Icon icon="spartav2" className="ms-1" size="15" />
               </Col>
 
-              <Col xs="6" className="popover-text mt-3">
-                {t('totalFeeBurn')}
+              <Col xs="12" className="mb-2">
+                <ProgressBar>
+                  <ProgressBar
+                    id="sparta2supply"
+                    variant="primary"
+                    key={2}
+                    now={formatFromWei(
+                      BN(getCirculatingSupply())
+                        .div(convertFromWei(getTotalSupply()))
+                        .times(100),
+                    )}
+                  />
+                </ProgressBar>
               </Col>
-              <Col xs="6" className="popover-text text-end mt-3">
-                {formatFromWei(feeBurn, 2)}
+
+              <Col xs="6" className="popover-text">
+                {t('burnedSupply')}
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Header as="h3">
+                        {t('burnedSupply')}
+                      </Popover.Header>
+                      <Popover.Body className="text-center">
+                        The SPARTAv2 token has a deflationary aspect built into
+                        it. Every time SPARTA tokens are transferred; a small
+                        percentage is burned out of the supply permanently. This
+                        is referred to as the feeBurn.
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                  </span>
+                </OverlayTrigger>
+              </Col>
+              <Col xs="6" className="popover-text text-end">
+                {formatFromWei(feeBurn, 0)}
+                <Icon icon="fire" className="ms-1" size="15" />
               </Col>
             </Row>
 

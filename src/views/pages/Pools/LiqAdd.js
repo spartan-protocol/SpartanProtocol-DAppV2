@@ -40,6 +40,8 @@ import { Icon } from '../../../components/Icons/icons'
 import TxnModal from './Components/TxnModal'
 import { addLiq, addLiqAsym } from '../../../utils/web3Router'
 import { balanceWidths } from './Components/Utils'
+import NewPool from '../Home/NewPool'
+import Share from '../../../components/Share/SharePool'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -362,10 +364,18 @@ const LiqAdd = () => {
       <Col xs="auto">
         <Card xs="auto" className="card-480">
           <Card.Header className="p-0 border-0 mb-3">
-            <Nav activeKey={activeTab} fill className="rounded-top">
-              <Nav.Item key="addTab1" className="rounded-top">
+            <Row className="px-4 pt-3 pb-1">
+              <Col xs="auto">
+                {t('liquidity')}
+                {pool.poolDetails.length > 0 && <Share />}
+              </Col>
+              <Col className="text-end">
+                <NewPool />
+              </Col>
+            </Row>
+            <Nav activeKey={activeTab} fill>
+              <Nav.Item key="addTab1">
                 <Nav.Link
-                  className="rounded-top"
                   eventKey="addTab1"
                   onClick={() => {
                     toggle('addTab1')
@@ -374,9 +384,8 @@ const LiqAdd = () => {
                   {t('addBoth')}
                 </Nav.Link>
               </Nav.Item>
-              <Nav.Item key="addTab2" className="rounded-top">
+              <Nav.Item key="addTab2">
                 <Nav.Link
-                  className="rounded-top"
                   eventKey="addTab2"
                   onClick={() => {
                     toggle('addTab2')
@@ -387,6 +396,7 @@ const LiqAdd = () => {
               </Nav.Item>
             </Nav>
           </Card.Header>
+
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">

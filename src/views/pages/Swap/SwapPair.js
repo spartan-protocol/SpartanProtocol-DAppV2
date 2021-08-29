@@ -45,36 +45,33 @@ const SwapPair = ({ assetSwap }) => {
 
   return (
     <>
-      <Card className="card-480 card-underlay mb-2">
-        <Card.Body>
-          <Row className="my-2">
+      <Card className="card-320 card-underlay mb-2">
+        <Card.Header className="border-0">
+          <Row className="mt-2">
+            <Col xs="auto" className="mt-1 pe-2 position-relative">
+              <img
+                src={getToken(assetSwap.tokenAddress)?.symbolUrl}
+                alt="Token logo"
+                height="50"
+              />
+              <Icon icon="spartav2" size="25" className="token-badge-pair" />
+            </Col>
             <Col xs="auto">
-              <div className="output-card">
-                <img
-                  className="me-2"
-                  src={getToken(assetSwap.tokenAddress)?.symbolUrl}
-                  alt="Logo"
-                  height="32"
-                />
+              <h5 className="mb-1">
                 {getToken(assetSwap.tokenAddress)?.symbol}
-              </div>
-            </Col>
-            <Col className="output-card text-end">
-              ${formatFromUnits(tokenPrice, 6)}
-            </Col>
-          </Row>
-
-          <Row className="my-2">
-            <Col xs="auto">
-              <div className="output-card">
-                <Icon icon="spartav2" size="32" className="me-2" />
+                <span className="output-card ms-2">
+                  ${formatFromUnits(tokenPrice, 6)}
+                </span>
+              </h5>
+              <h5 className="mb-0">
                 SPARTA
-              </div>
+                <span className="output-card ms-2">${web3?.spartaPrice}</span>
+              </h5>
             </Col>
-            <Col className="output-card text-end">${web3?.spartaPrice}</Col>
           </Row>
-
-          <Row className="my-2">
+        </Card.Header>
+        <Card.Body>
+          <Row className="mb-2">
             <Col xs="auto" className="text-card">
               {t('spotPrice')}
             </Col>
@@ -103,7 +100,7 @@ const SwapPair = ({ assetSwap }) => {
             </Col>
           </Row>
           <Row className="my-2">
-            <Col xs="auto" className="text-card">
+            <Col xs="auto" className="text-card mt-2">
               {t('depth')}
             </Col>
             <Col className="output-card text-end">

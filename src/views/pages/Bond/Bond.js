@@ -39,13 +39,6 @@ const Bond = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('bond')}</h2>
-            </div>
-          </Col>
-        </Row>
         {network.chainId === 97 && (
           <Row className="row-480">
             <Col xs="auto">

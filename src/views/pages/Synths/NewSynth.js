@@ -72,10 +72,10 @@ const NewSynth = () => {
       <Button
         variant={isLightMode ? 'secondary' : 'info'}
         onClick={() => setShowModal(true)}
-        className="rounded"
+        className="rounded-pill pe-3 subtitle-label"
       >
+        <Icon icon="plus" fill="white" size="17" className="me-1 mb-1" />
         {t('synth')}
-        <Icon icon="plus" fill="white" size="20" className="ms-1" />
       </Button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>

@@ -42,6 +42,8 @@ import { Icon } from '../../../components/Icons/icons'
 import { removeLiq, removeLiqAsym } from '../../../utils/web3Router'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from './Components/Utils'
+import Share from '../../../components/Share/SharePool'
+import NewPool from '../Home/NewPool'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
@@ -298,10 +300,18 @@ const LiqRemove = () => {
       <Col xs="auto">
         <Card xs="auto" className="card-480">
           <Card.Header className="p-0 border-0 mb-3">
-            <Nav activeKey={activeTab} fill className="rounded-top">
-              <Nav.Item key="addTab1" className="rounded-top">
+            <Row className="px-4 pt-3 pb-1">
+              <Col xs="auto">
+                {t('liquidity')}
+                {pool.poolDetails.length > 0 && <Share />}
+              </Col>
+              <Col className="text-end">
+                <NewPool />
+              </Col>
+            </Row>
+            <Nav activeKey={activeTab} fill>
+              <Nav.Item key="addTab1">
                 <Nav.Link
-                  className="rounded-top"
                   eventKey="1"
                   onClick={() => {
                     toggle('1')
@@ -312,7 +322,6 @@ const LiqRemove = () => {
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link
-                  className="rounded-top"
                   eventKey="2"
                   onClick={() => {
                     toggle('2')
@@ -323,6 +332,7 @@ const LiqRemove = () => {
               </Nav.Item>
             </Nav>
           </Card.Header>
+
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
@@ -587,8 +597,8 @@ const LiqRemove = () => {
             {activeTab === '2' && getRemLiqAsym()[2] > 0 && (
               <div className="text-card text-center mt-2">
                 {`${
-                  getToken(assetRemove1.tokenAddress)?.symbol
-                }:SPARTA pool will also receive a ${formatFromWei(
+                  getToken(poolRemove1.tokenAddress)?.symbol
+                }:SPARTA pool will receive a ${formatFromWei(
                   getRemLiqAsym()[2],
                   4,
                 )} SPARTA dividend`}

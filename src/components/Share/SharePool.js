@@ -80,10 +80,10 @@ const Share = () => {
     <>
       <Button
         variant="transparent"
-        className="ms-3"
+        className="ms-2 mb-1"
         onClick={() => setShowShare(true)}
       >
-        <Icon icon="connect" size="25" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="connect" size="20" fill={isLightMode ? 'black' : 'white'} />
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)} centered>
         <Modal.Header closeButton closeVariant="white">

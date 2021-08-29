@@ -33,7 +33,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSynth } from '../../../store/synth/selector'
 import Approval from '../../../components/Approval/Approval'
 import SwapPair from '../Swap/SwapPair'
-import SharePool from '../../../components/Share/SharePool'
+import Share from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import NewSynth from './NewSynth'
 import { Icon } from '../../../components/Icons/icons'
@@ -223,7 +223,12 @@ const Swap = () => {
    * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
    */
   const getMint = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2) {
+    if (
+      swapInput1 &&
+      assetSwap1 &&
+      assetSwap2 &&
+      getSynth(assetSwap2.tokenAddress)
+    ) {
       const [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped] =
         mintSynth(
           convertToWei(swapInput1.value),
@@ -344,15 +349,6 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('synths')}</h2>
-              <NewSynth />
-              {pool.poolDetails.length > 0 && <SharePool />}
-            </div>
-          </Col>
-        </Row>
         {network.chainId === 97 && (
           <>
             {pool.poolDetails?.length > 0 && (
@@ -361,10 +357,18 @@ const Swap = () => {
                   <Col xs="auto">
                     <Card xs="auto" className="card-480">
                       <Card.Header className="p-0 border-0 mb-3">
-                        <Nav activeKey={activeTab} fill className="rounded-top">
-                          <Nav.Item key="mint" className="rounded-top">
+                        <Row className="px-4 pt-3 pb-1">
+                          <Col xs="auto">
+                            {t('synths')}
+                            {pool.poolDetails.length > 0 && <Share />}
+                          </Col>
+                          <Col className="text-end">
+                            <NewSynth />
+                          </Col>
+                        </Row>
+                        <Nav activeKey={activeTab} fill>
+                          <Nav.Item key="mint">
                             <Nav.Link
-                              className="rounded-top"
                               eventKey="mint"
                               onClick={() => {
                                 toggle('mint')
@@ -373,9 +377,8 @@ const Swap = () => {
                               {t('forgeSynths')}
                             </Nav.Link>
                           </Nav.Item>
-                          <Nav.Item key="burn" className="rounded-top">
+                          <Nav.Item key="burn">
                             <Nav.Link
-                              className="rounded-top"
                               eventKey="burn"
                               onClick={() => {
                                 toggle('burn')
@@ -386,6 +389,7 @@ const Swap = () => {
                           </Nav.Item>
                         </Nav>
                       </Card.Header>
+
                       <Card.Body>
                         <Row>
                           <Col xs="12" className="px-1 px-sm-3">

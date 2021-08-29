@@ -5,3 +5,11 @@
 @import "utilities/sizing.scss";
 @import "utilities/shadows.scss";
 @import "utilities/text.scss";
+
+.rounded-pill-top-left {
+  border-top-left-radius: 50rem !important;
+}
+
+.rounded-pill-top-right {
+  border-top-right-radius: 50rem !important;
+}
