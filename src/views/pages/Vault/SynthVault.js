@@ -13,6 +13,7 @@ import {
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 import { useReserve } from '../../../store/reserve/selector'
+import { getTimeSince } from '../../../utils/web3Utils'
 
 const SynthVault = () => {
   const { t } = useTranslation()
@@ -37,6 +38,18 @@ const SynthVault = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  const [claimArray, setClaimArray] = useState([])
+  useEffect(() => {
+    if (synth.synthDetails.length > 0) {
+      const tempArray = []
+      synth.synthDetails
+        .filter((x) => x.staked > 0 && getTimeSince(x.lastHarvest, t)[0] > 0)
+        .map((x) => tempArray.push(x.address))
+      setClaimArray(tempArray)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.synthDetails])
 
   return (
     <Row>
@@ -71,14 +84,6 @@ const SynthVault = () => {
                 {synth.globalDetails?.erasToEarn}
               </Col>
             </Row>
-            {/* <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                Block Delay
-              </Col>
-              <Col className="text-end output-card">
-                {synth.globalDetails?.blockDelay}
-              </Col>
-            </Row> */}
             <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('vaultClaim')}
@@ -118,7 +123,7 @@ const SynthVault = () => {
             {reserve.globalDetails.emissions ? (
               <Button
                 className="w-100"
-                onClick={() => dispatch(synthHarvest(wallet))}
+                onClick={() => dispatch(synthHarvest(claimArray))}
                 disabled={synth.memberDetails?.totalWeight <= 0}
               >
                 {t('harvestAll')}

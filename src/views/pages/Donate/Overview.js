@@ -229,13 +229,6 @@ ethereum(network: $network){
     <>
       <div className="content">
         <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 mr-3">{t('donations')}</h2>
-            </div>
-          </Col>
-        </Row>
-        <Row className="row-480">
           <Col className="">
             <Card className="card-480">
               <Card.Header>
@@ -244,18 +237,23 @@ ethereum(network: $network){
               <Card.Body>
                 <Row>
                   <Col xs="12" className="my-2">
-                    The Spartan Protocol V2 contracts will undergo a{' '}
+                    The Spartan Protocol V2 contracts went through a{' '}
                     <a
                       href="https://code423n4.com/"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      CodeArena audit
+                      CodeArena contest
                     </a>{' '}
-                    in July.
+                    in July. $96k was put forward by a Spartan community member
+                    in advance to pay for the contest.
                     <br />
                     <br />
-                    {t('codeArenaInfo')}
+                    The funds (up to $96k) from the community wallet will be
+                    sent to that Spartan once the C4 details are finalised. This
+                    donation page will then be repurposed into a general
+                    donations page to help fund general costs for the community
+                    project ongoing.
                     <br />
                     <div className="output-card mt-4">
                       {t('viewCommunityWallet')}:{' '}
