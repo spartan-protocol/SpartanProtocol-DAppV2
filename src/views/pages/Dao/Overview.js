@@ -9,15 +9,18 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
+  // proposalWeight, // uncomment after next testnet deploy
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
 import { bondMemberDetails } from '../../../store/bond'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+// import { usePool } from '../../../store/pool/selector' // uncomment after next testnet deploy
 
 const Overview = () => {
   const dispatch = useDispatch()
   const dao = useDao()
+  // const pool = usePool() // uncomment after next testnet deploy
   const wallet = useWallet()
   const { t } = useTranslation()
 
@@ -62,7 +65,10 @@ const Overview = () => {
     if (network.chainId === 97) {
       dispatch(daoMemberDetails(wallet))
       dispatch(bondMemberDetails(wallet))
-      dispatch(daoProposalDetails(dao.global?.proposalCount, wallet))
+      dispatch(daoProposalDetails(dao.global?.currentProposal, wallet))
+      // dispatch( // uncomment after next testnet deploy
+      //   proposalWeight(dao.global?.currentProposal, pool.poolDetails, wallet), // uncomment after next testnet deploy
+      // ) // uncomment after next testnet deploy
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])

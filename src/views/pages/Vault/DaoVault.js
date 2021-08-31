@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { usePool } from '../../../store/pool'
-import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useDao } from '../../../store/dao/selector'
 import {
   daoHarvest,
@@ -14,12 +14,17 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
 } from '../../../store/dao/actions'
-import { calcFeeBurn, calcShare } from '../../../utils/web3Utils'
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
 import { useSparta } from '../../../store/sparta'
 import { bondMemberDetails, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
+import {
+  calcFeeBurn,
+  getSecsSince,
+  getTimeUntil,
+} from '../../../utils/math/nonContract'
+import { calcShare } from '../../../utils/math/utils'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -61,31 +66,15 @@ const DaoVault = () => {
   }
 
   const getLockedSecs = () => {
-    const timeStamp = BN(Date.now()).div(1000)
     const depositTime = BN('1623400000') // Remove this line after next DaoVault deploy
     // const depositTime = BN(dao.member?.depositTime) // Uncomment this line after next DaoVault deploy
     const lockUpSecs = BN('86400')
-    const secondsLeft = depositTime.plus(lockUpSecs).minus(timeStamp)
-    if (secondsLeft > 86400) {
-      return [formatFromUnits(secondsLeft.div(60).div(60).div(24), 2), ' days']
-    }
-    if (secondsLeft > 3600) {
-      return [formatFromUnits(secondsLeft.div(60).div(60), 2), ' hours']
-    }
-    if (secondsLeft > 60) {
-      return [formatFromUnits(secondsLeft.div(60), 2), ' minutes']
-    }
-    if (secondsLeft > 0) {
-      return [formatFromUnits(secondsLeft, 0), ' seconds']
-    }
-    return [0, ' secs (now)']
+    const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
+    return [units, time]
   }
 
   const getClaimable = () => {
-    // get seconds passed since last harvest
-    const timeStamp = BN(Date.now()).div(1000)
-    const lastHarvest = BN(dao.member?.lastHarvest)
-    const secondsSince = timeStamp.minus(lastHarvest)
+    const secondsSince = getSecsSince(dao.member?.lastHarvest)
     // get the members share
     const weight = BN(dao.member?.weight).plus(bond.member?.weight)
     const reserveShare = BN(reserve.globalDetails.spartaBalance).div(
@@ -172,8 +161,7 @@ const DaoVault = () => {
               </Col>
               <Col className="text-end output-card">
                 {reserve.globalDetails.emissions
-                  ? BN(dao.member?.weight).plus(bond.member?.weight) > 0 &&
-                    dao.member?.isMember
+                  ? BN(dao.member?.weight).plus(bond.member?.weight) > 0
                     ? `${formatFromWei(getClaimable())} SPARTA`
                     : '0.00 SPARTA'
                   : t('incentivesDisabled')}

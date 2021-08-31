@@ -26,12 +26,6 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import { useBond } from '../../../store/bond/selector'
-import {
-  calcLiquidityUnits,
-  calcSwapOutput,
-  calcSpotValueInBase,
-  minusFeeBurn,
-} from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
 import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
@@ -41,6 +35,12 @@ import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
 import NewPool from '../Home/NewPool'
 import Share from '../../../components/Share/SharePool'
+import {
+  calcLiquidityUnits,
+  calcSpotValueInBase,
+  calcSwapOutput,
+} from '../../../utils/math/utils'
+import { minusFeeBurn } from '../../../utils/math/nonContract'
 
 const LiqBond = () => {
   const { t } = useTranslation()

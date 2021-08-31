@@ -9,18 +9,17 @@ import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { useReserve } from '../../../store/reserve/selector'
-import {
-  calcAPY,
-  calcFeeBurn,
-  calcLiquidityUnitsAsym,
-  calcShare,
-  calcSwapOutput,
-} from '../../../utils/web3Utils'
 import { useSparta } from '../../../store/sparta/selector'
 import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { calcAPY, calcFeeBurn } from '../../../utils/math/nonContract'
+import {
+  calcLiquidityUnitsAsym,
+  calcShare,
+  calcSwapOutput,
+} from '../../../utils/math/utils'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -38,17 +37,17 @@ const SynthVaultItem = ({ synthItem }) => {
   const getPool = (_tokenAddress) =>
     pool.poolDetails.filter((i) => i.tokenAddress === _tokenAddress)[0]
 
-  const APY = formatFromUnits(
-    calcAPY(
-      0,
-      0,
-      synth.globalDetails.recentRevenue,
-      synth.globalDetails.lastMonthRevenue,
-      synth.globalDetails.genesis,
-      BN(synth.globalDetails.totalWeight).div(2),
-    ),
-    2,
-  )
+  const APY = () => {
+    const _object = {
+      recentDivis: 0,
+      lastMonthDivis: 0,
+      recentFees: synth.globalDetails.recentRevenue,
+      lastMonthFees: synth.globalDetails.lastMonthRevenue,
+      genesis: synth.globalDetails.genesis,
+      baseAmount: BN(synth.globalDetails.totalWeight).div(2),
+    }
+    formatFromUnits(calcAPY(_object), 2)
+  }
 
   const toggleModal = (_tokenAddr) => {
     settokenAddress(_tokenAddr)

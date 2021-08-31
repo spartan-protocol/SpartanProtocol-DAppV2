@@ -4,12 +4,14 @@ const initialState = {
   global: [],
   member: [],
   proposal: [],
+  proposalWeight: 0,
   deposit: {},
   withdraw: {},
   harvest: {},
   newProp: {},
   propVote: 0,
   propRemoveVote: 0,
+  pollVotes: 0,
   propCancel: 0,
   propFinalise: 0,
   error: null,
@@ -40,6 +42,15 @@ export const daoReducer = (state = initialState, action) => {
       return {
         ...state,
         proposal: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.DAO_PROPOSAL_WEIGHT: {
+      return {
+        ...state,
+        proposalWeight: action.payload,
         error: null,
         loading: false,
       }
@@ -121,6 +132,15 @@ export const daoReducer = (state = initialState, action) => {
       return {
         ...state,
         propRemoveVote: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.DAO_POLL_VOTES: {
+      return {
+        ...state,
+        pollVotes: action.payload,
         error: null,
         loading: false,
       }

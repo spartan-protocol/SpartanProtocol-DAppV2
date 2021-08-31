@@ -24,11 +24,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import {
-  calcLiqValue,
-  calcSpotValueInBase,
-  getTimeUntil,
-} from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import {
@@ -39,11 +34,13 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import Approval from '../../../components/Approval/Approval'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
-import { removeLiq, removeLiqAsym } from '../../../utils/web3Router'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from './Components/Utils'
 import Share from '../../../components/Share/SharePool'
 import NewPool from '../Home/NewPool'
+import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
+import { getTimeUntil } from '../../../utils/math/nonContract'
+import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()

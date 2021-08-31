@@ -11,9 +11,9 @@ import {
   fallenSpartansClaim,
   spartaUpgrade,
 } from '../../../store/sparta/actions'
-import { calcFeeBurn } from '../../../utils/web3Utils'
 import { getTokenContract } from '../../../utils/web3Contracts'
 import { Icon } from '../../../components/Icons/icons'
+import { calcFeeBurn } from '../../../utils/math/nonContract'
 
 const Upgrade = () => {
   const addr = getAddresses()

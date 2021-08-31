@@ -5,9 +5,9 @@ import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
-import { calcAPY } from '../../../utils/web3Utils'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { calcAPY } from '../../../utils/math/nonContract'
 
 // NOTES:
 // ADD INITIALISATION PERIOD CHECK (GENESIS + 604800) CANT REMOVELIQ; SHOW WARNING ON ADDLIQ; SHOW BADGE? OR DIFFERENT TAB (NEW POOLS???)
@@ -34,17 +34,7 @@ const PoolItem = ({ asset }) => {
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
-  const APY = formatFromUnits(
-    calcAPY(
-      recentDivis,
-      lastMonthDivis,
-      recentFees,
-      lastMonthFees,
-      genesis,
-      baseAmount,
-    ),
-    2,
-  )
+  const APY = formatFromUnits(calcAPY(asset), 2)
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 

@@ -1,27 +1,27 @@
-import { BN } from './bigNumber'
-import { getAddresses } from './web3'
 import {
   calcLiqValue,
   calcLiquidityUnits,
   calcSpotValueInBase,
   calcSwapOutput,
-  minusFeeBurn,
-} from './web3Utils'
+} from './utils'
+import { BN } from '../bigNumber'
+import { getAddresses } from '../web3'
+import { minusFeeBurn } from './nonContract'
 
 export const one = BN(1).times(10).pow(18)
 
-// ////////////// ROUTER CALCS //////////////////////////
-
 /**
  * Calculate LP tokens from liquidity-add
- * @param inputToken
- * @param pool poolDetails
- * @param feeOnTsf
+ * @param inputToken @param pool poolDetails @param feeOnTsf
+ * @param inputSparta optional; if omitted will calc spotValue
  * @returns [unitsLP, _inputSparta]
  */
-export const addLiq = (inputToken, pool, feeOnTsf) => {
+export const addLiq = (inputToken, pool, feeOnTsf, inputSparta) => {
   const _inputToken = BN(inputToken) // TOKEN received by pool
-  const _inputSparta = calcSpotValueInBase(_inputToken, pool) // SPARTA sent to pool
+  let _inputSparta = calcSpotValueInBase(_inputToken, pool)
+  if (inputSparta) {
+    _inputSparta = inputSparta // SPARTA sent to pool
+  }
   const _recSparta = minusFeeBurn(_inputSparta, feeOnTsf) // SPARTA received by pool
   const unitsLP = calcLiquidityUnits(_recSparta, _inputToken, pool) // Calc LP units
   return [unitsLP, _inputSparta]

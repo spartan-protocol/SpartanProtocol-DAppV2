@@ -6,6 +6,7 @@ export {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
+  proposalWeight,
   daoDeposit,
   daoWithdraw,
   daoHarvest,
@@ -15,6 +16,7 @@ export {
   newGrantProposal,
   voteProposal,
   removeVote,
+  pollVotes,
   cancelProposal,
   finaliseProposal,
 } from './actions'

@@ -89,7 +89,7 @@ export const bondMemberDetails = (wallet) => async (dispatch) => {
 // --------------------------------------- BOND FUNCTIONS ---------------------------------------
 
 /**
- * Deposit asset via bond+mint contract
+ * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract)
  * @param {address} asset
  * @param {uint256} amount
  * @param {object} wallet
@@ -98,7 +98,6 @@ export const bondMemberDetails = (wallet) => async (dispatch) => {
 export const bondDeposit = (asset, amount, wallet) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getDaoContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
     const ORs = {
@@ -113,42 +112,19 @@ export const bondDeposit = (asset, amount, wallet) => async (dispatch) => {
 }
 
 /**
- * Claim bond by asset
- * @param {address} asset
- * @returns {boolean}
- */
-export const claimForMember = (asset, wallet) => async (dispatch) => {
-  dispatch(bondLoading())
-  const contract = getDaoContract(wallet)
-
-  try {
-    const gPrice = await getProviderGasPrice()
-    const bondClaim = await contract.claimForMember(asset, {
-      gasPrice: gPrice,
-    })
-
-    dispatch(payloadToDispatch(Types.BOND_CLAIM, bondClaim))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Claim all available bond by member
+ * Claim an array of Bond assets by poolAddresses
  * @param {object} wallet
  * @returns {boolean}
  */
-export const claimAllForMember = (wallet) => async (dispatch) => {
+export const claimBond = (bondAssets, wallet) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getDaoContract(wallet)
-
   try {
     const gPrice = await getProviderGasPrice()
-    const bondClaimAll = await contract.claimAllForMember(wallet.account, {
+    const bondClaim = await contract.claimAll(bondAssets, {
       gasPrice: gPrice,
     })
-
-    dispatch(payloadToDispatch(Types.BOND_CLAIM_ALL, bondClaimAll))
+    dispatch(payloadToDispatch(Types.BOND_CLAIM, bondClaim))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }

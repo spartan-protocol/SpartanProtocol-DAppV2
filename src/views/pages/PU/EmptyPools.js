@@ -22,7 +22,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import { calcLiquidityUnits, minusFeeBurn } from '../../../utils/web3Utils'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -30,6 +29,8 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
+import { calcLiquidityUnits } from '../../../utils/math/utils'
+import { minusFeeBurn } from '../../../utils/math/nonContract'
 
 const EmptyPools = (props) => {
   const { t } = useTranslation()

@@ -23,7 +23,6 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
-import { calcSpotValueInBase } from '../../../utils/web3Utils'
 import {
   swapAssetToSynth,
   swapSynthToAsset,
@@ -37,9 +36,10 @@ import Share from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import NewSynth from './NewSynth'
 import { Icon } from '../../../components/Icons/icons'
-import { burnSynth, mintSynth } from '../../../utils/web3Router'
 import { useSparta } from '../../../store/sparta'
 import { balanceWidths } from '../Pools/Components/Utils'
+import { burnSynth, mintSynth } from '../../../utils/math/router'
+import { calcSpotValueInBase } from '../../../utils/math/utils'
 
 const Swap = () => {
   const wallet = useWallet()

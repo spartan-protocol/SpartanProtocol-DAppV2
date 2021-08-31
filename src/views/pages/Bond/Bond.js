@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Card, Button } from 'react-bootstrap'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork } from '../../../utils/web3'
 import BondItem from './BondItem'
-import { claimAllForMember } from '../../../store/bond/actions'
+import { claimBond } from '../../../store/bond/actions'
 
 const Bond = () => {
   const pool = usePool()
+  const wallet = useWallet()
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
@@ -80,7 +82,7 @@ const Bond = () => {
                 <Card.Footer>
                   <Button
                     className="w-100"
-                    onClick={() => dispatch(claimAllForMember(claimArray))}
+                    onClick={() => dispatch(claimBond(claimArray, wallet))}
                   >
                     {t('claimAll')}
                     {' ( '}

@@ -6,7 +6,6 @@ const initialState = {
   member: {},
   deposit: '0',
   bondClaim: '0',
-  bondClaimAll: '0',
 }
 
 export const bondReducer = (state = initialState, action) => {
@@ -51,15 +50,6 @@ export const bondReducer = (state = initialState, action) => {
       return {
         ...state,
         bondClaim: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_CLAIM_ALL: {
-      return {
-        ...state,
-        bondClaimAll: action.payload,
         loading: false,
         error: null,
       }

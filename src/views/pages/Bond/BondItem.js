@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Row, Col, Card, Button } from 'react-bootstrap'
-import { claimForMember } from '../../../store/bond/actions'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { Icon } from '../../../components/Icons/icons'
+import { claimBond } from '../../../store/bond'
+import { calcBondedLP } from '../../../utils/math/bondVault'
+import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
 
 const BondItem = ({ asset }) => {
   const pool = usePool()
@@ -19,24 +21,6 @@ const BondItem = ({ asset }) => {
   const { tokenAddress } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const isLightMode = window.localStorage.getItem('theme')
-
-  const formatDate = (unixTime) => {
-    const date = new Date(unixTime * 1000)
-    return date.toLocaleDateString()
-  }
-
-  const getClaimable = (_bondedLP, _lastClaim, _claimRate) => {
-    const timeStamp = BN(Date.now()).div(1000)
-    const bondedLP = BN(_bondedLP)
-    const lastClaim = BN(_lastClaim)
-    const claimRate = BN(_claimRate)
-    const secondsSince = timeStamp.minus(lastClaim)
-    const claimAmount = secondsSince.times(claimRate)
-    if (claimAmount.isGreaterThan(bondedLP)) {
-      return bondedLP
-    }
-    return claimAmount
-  }
 
   const getEndDate = (_bondedLP, _lastClaim, _claimRate) => {
     const timeStamp = BN(Date.now()).div(1000)
@@ -132,14 +116,7 @@ const BondItem = ({ asset }) => {
                 {t('claimable')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(
-                  getClaimable(
-                    asset.bonded,
-                    asset.bondLastClaim,
-                    asset.bondClaimRate,
-                  ),
-                )}{' '}
-                {token.symbol}p
+                {formatFromWei(calcBondedLP(asset))} {token.symbol}p
               </Col>
             </Row>
             {showDetails === true && (
@@ -149,7 +126,8 @@ const BondItem = ({ asset }) => {
                     {t('lastClaim')}
                   </Col>
                   <Col className="text-end output-card">
-                    {formatDate(asset.bondLastClaim)}
+                    {getTimeSince(asset.bondLastClaim, t)[0]}
+                    {getTimeSince(asset.bondLastClaim, t)[1]} ago
                   </Col>
                 </Row>
 
@@ -180,9 +158,7 @@ const BondItem = ({ asset }) => {
               <Col xs="6" className="px-2">
                 <Button
                   className="w-100"
-                  onClick={() =>
-                    dispatch(claimForMember(asset.tokenAddress, wallet))
-                  }
+                  onClick={() => dispatch(claimBond([asset.address], wallet))}
                 >
                   {t('claim')}
                 </Button>

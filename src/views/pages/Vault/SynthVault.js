@@ -13,7 +13,7 @@ import {
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 import { useReserve } from '../../../store/reserve/selector'
-import { getTimeSince } from '../../../utils/web3Utils'
+import { getTimeSince } from '../../../utils/math/nonContract'
 
 const SynthVault = () => {
   const { t } = useTranslation()

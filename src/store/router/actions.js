@@ -11,15 +11,12 @@ export const routerLoading = () => ({
 
 /**
  * Add Liquidity to a pool symmetrically
- * @param {uint} inputBase
- * @param {address} inputToken
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} units
- * @returns {unit} fee
+ * @param inputToken uint @param inputBase uint
+ * @param token address @param wallet object
+ * @returns units @returns fee
  */
 export const addLiquidity =
-  (inputBase, inputToken, token, wallet) => async (dispatch) => {
+  (inputToken, inputBase, token, wallet) => async (dispatch) => {
     dispatch(routerLoading())
     const contract = getRouterContract(wallet)
     try {

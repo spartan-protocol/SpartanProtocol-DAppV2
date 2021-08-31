@@ -24,11 +24,6 @@ import {
   formatFromUnits,
 } from '../../../utils/bigNumber'
 import {
-  calcSpotValueInBase,
-  calcLiqValue,
-  getTimeUntil,
-} from '../../../utils/web3Utils'
-import {
   swap,
   swapAssetToSynth,
   swapSynthToAsset,
@@ -44,9 +39,16 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
 import NewPool from '../Home/NewPool'
 import { Icon } from '../../../components/Icons/icons'
-import { burnSynth, mintSynth, swapTo, zapLiq } from '../../../utils/web3Router'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from '../Pools/Components/Utils'
+import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
+import { getTimeUntil } from '../../../utils/math/nonContract'
+import {
+  burnSynth,
+  mintSynth,
+  swapTo,
+  zapLiq,
+} from '../../../utils/math/router'
 
 const Swap = () => {
   const synth = useSynth()

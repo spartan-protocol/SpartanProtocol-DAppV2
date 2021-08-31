@@ -4,9 +4,9 @@ import { Card, Row, Col, OverlayTrigger } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { formatFromWei, formatFromUnits, BN } from '../../../utils/bigNumber'
-import { calcAPY } from '../../../utils/web3Utils'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
+import { calcAPY } from '../../../utils/math/nonContract'
 
 const SwapPair = ({ assetSwap }) => {
   const web3 = useWeb3()
@@ -22,23 +22,9 @@ const SwapPair = ({ assetSwap }) => {
     .times(web3?.spartaPrice)
   const spotPrice = BN(assetSwap?.baseAmount).div(assetSwap?.tokenAmount)
   const recentDivis = asset ? asset.recentDivis : 0
-  const lastMonthDivis = asset ? asset.lastMonthDivis : 0
   const recentFees = asset ? asset.recentFees : 0
-  const lastMonthFees = asset ? asset.lastMonthFees : 0
   const APY =
-    recentFees && recentDivis
-      ? formatFromUnits(
-          calcAPY(
-            recentDivis,
-            lastMonthDivis,
-            recentFees,
-            lastMonthFees,
-            assetSwap.genesis,
-            assetSwap.baseAmount,
-          ),
-          2,
-        )
-      : 0
+    recentFees && recentDivis ? formatFromUnits(calcAPY(assetSwap), 2) : 0
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]

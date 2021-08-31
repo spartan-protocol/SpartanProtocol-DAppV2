@@ -24,12 +24,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import {
-  calcLiqValue,
-  calcSpotValueInBase,
-  calcSpotValueInToken,
-  getTimeUntil,
-} from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity, addLiquiditySingle } from '../../../store/router/actions'
@@ -38,10 +32,16 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
 import TxnModal from './Components/TxnModal'
-import { addLiq, addLiqAsym } from '../../../utils/web3Router'
 import { balanceWidths } from './Components/Utils'
 import NewPool from '../Home/NewPool'
 import Share from '../../../components/Share/SharePool'
+import {
+  calcLiqValue,
+  calcSpotValueInBase,
+  calcSpotValueInToken,
+} from '../../../utils/math/utils'
+import { getTimeUntil } from '../../../utils/math/nonContract'
+import { addLiq, addLiqAsym } from '../../../utils/math/router'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -343,6 +343,7 @@ const LiqAdd = () => {
       dispatch(
         addLiquidity(
           convertToWei(addInput1.value),
+          convertToWei(addInput2.value),
           assetAdd1.tokenAddress,
           wallet,
         ),

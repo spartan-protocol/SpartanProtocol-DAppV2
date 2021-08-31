@@ -6,6 +6,5 @@ export {
   allListedAssets,
   bondMemberDetails,
   bondDeposit,
-  claimForMember,
-  claimAllForMember,
+  claimBond,
 } from './actions'

@@ -1,10 +1,6 @@
-import { BN, formatFromUnits } from './bigNumber'
+import { BN } from '../bigNumber'
 
 export const one = BN(1).times(10).pow(18)
-
-// ************** CORE MATHEMATICS (USE THESE IN UI WHERE NEAR-INSTANT-RETURN IS REQUIRED) ************** //
-
-// /////////////////////////////// UTILS FUNCTIONS ////////////////////////////////////////////////////
 
 /**
  * Calculate basis points (10,000 basis points = 100.00%)
@@ -217,82 +213,6 @@ export const calcLiquidityShare = (input, pool) => {
 }
 
 /**
- * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%)
- * Uses the feeOnTransfer if already called
- * @param {uint} feeOnTransfer
- * @param {uint} amount
- * @returns {uint} fee
- */
-export const calcFeeBurn = (feeOnTransfer, amount) => {
-  const fee = calcPart(feeOnTransfer, amount)
-  return fee
-}
-
-/**
- * Return SPARTA after feeBurn
- * @param {uint} amount
- * @param {uint} feeOnTsf
- * @returns {uint} fee
- */
-export const minusFeeBurn = (amount, feeOnTsf) => {
-  const _amount = BN(amount)
-  const burnFee = calcFeeBurn(feeOnTsf, _amount)
-  const afterFeeBurn = _amount.minus(burnFee)
-  return afterFeeBurn
-}
-
-/**
- * Return seconds/minutes/hours/days
- * @param {uint} seconds uint seconds to convert
- * @param {uint} t hand in the {t} translation obj
- * @returns [string, string] [0 = time] [1 = string label ie. 'seconds' 'minutes']
- */
-export const convertTimeUnits = (seconds, t) => {
-  if (seconds > 86400) {
-    return [
-      formatFromUnits(seconds.div(60).div(60).div(24), 2),
-      ` ${t('days')}`,
-    ]
-  }
-  if (seconds > 3600) {
-    return [formatFromUnits(seconds.div(60).div(60), 2), ` ${t('hours')}`]
-  }
-  if (seconds > 60) {
-    return [formatFromUnits(seconds.div(60), 2), ` ${t('minutes')}`]
-  }
-  if (seconds > 0) {
-    return [formatFromUnits(seconds, 0), ` ${t('seconds')}`]
-  }
-  return [0, ` ${t('seconds')} (now)`]
-}
-
-/**
- * Return time left until a timestamp
- * @param {uint} timestamp to compare current time to
- * @param {uint} t hand in the {t} translation obj
- * @returns [string, string] [0 = time uints] [1 = string label ie. 'seconds' 'minutes']
- */
-export const getTimeUntil = (timestamp, t) => {
-  const _timeStamp = BN(timestamp)
-  const timeNow = BN(Date.now()).div(1000)
-  const secondsUntil = _timeStamp.minus(timeNow)
-  return convertTimeUnits(secondsUntil, t)
-}
-
-/**
- * Return time passed since a timestamp
- * @param {uint} timestamp to compare current time to
- * @param {uint} t hand in the {t} translation obj
- * @returns [string, string] [0 = time uints] [1 = string label ie. 'seconds' 'minutes']
- */
-export const getTimeSince = (timestamp, t) => {
-  const _timeStamp = BN(timestamp)
-  const timeNow = BN(Date.now()).div(1000)
-  const secondsSince = timeNow.minus(_timeStamp)
-  return convertTimeUnits(secondsSince, t)
-}
-
-/**
  * Calculate value of synthetic assets *** ASSESS/REMOVE AT THE END ***
  * @param amount uint - amount of synths?
  * @param tokensInPool uint - amount of TOKENS held by the pool
@@ -402,41 +322,4 @@ export const calcDoubleSwapInput = (
   const x = getSwapInput(outputAmount, pool1Token, pool1Sparta, true)
   const output = getSwapInput(x, pool2Token, pool2Sparta, false)
   return output
-}
-
-/**
- * Calculate APY using full month divis + fees and pool's depth *** UPDATE WITH GENESIS/LASTMONTH ***
- * @param {uint} recentDivis
- * @param {uint} lastMonthDivis
- * @param {uint} recentFees
- * @param {uint} lastMonthFees
- * @param {uint} poolGenesis
- * @param {uint} poolBaseDepth
- * @returns {uint} apy
- */
-export const calcAPY = (
-  recentDivis,
-  lastMonthDivis,
-  recentFees,
-  lastMonthFees,
-  poolGenesis,
-  poolBaseDepth,
-) => {
-  let apy = '0'
-  const actualDepth = BN(poolBaseDepth).times(2)
-  const monthFraction = ((Date.now() / 1000).toFixed() - poolGenesis) / 2592000
-  if (monthFraction > 1) {
-    apy = BN(lastMonthDivis > 0 ? lastMonthDivis : recentDivis)
-      .plus(lastMonthFees > 0 ? lastMonthFees : recentFees)
-      .times(12)
-      .div(actualDepth)
-      .times(100)
-  } else {
-    apy = BN(recentDivis)
-      .plus(recentFees)
-      .times(12 / monthFraction)
-      .div(actualDepth)
-      .times(100)
-  }
-  return apy
 }

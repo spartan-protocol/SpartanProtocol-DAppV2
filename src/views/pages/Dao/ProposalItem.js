@@ -17,7 +17,7 @@ import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { getExplorerContract, getExplorerWallet } from '../../../utils/extCalls'
 import { formatShortString } from '../../../utils/web3'
 import { proposalTypes } from './types'
-import { getTimeUntil } from '../../../utils/web3Utils'
+import { getTimeUntil } from '../../../utils/math/nonContract'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
