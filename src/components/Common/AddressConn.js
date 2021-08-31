@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Button } from 'react-bootstrap'
 import WalletSelect from '../WalletSelect/WalletSelect'
@@ -13,6 +13,15 @@ const AddressConn = () => {
   const [walletModalShow, setWalletModalShow] = useState(false)
 
   const btnClass = 'btn-round btn-icon btn-transparent align-self-center mx-2'
+
+  useEffect(() => {
+    async function listenAccountsChanged() {
+      window.ethereum.on('accountsChanged', async () => {
+        document.location.reload()
+      })
+    }
+    listenAccountsChanged()
+  }, [])
 
   return (
     <>
