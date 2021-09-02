@@ -1,14 +1,13 @@
 import { BN, formatFromUnits } from '../bigNumber'
-import { calcPart } from './utils'
+import { calcPart, getPoolShareWeight } from './utils'
 
 export const one = BN(1).times(10).pow(18)
 
 /**
  * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%)
  * Uses the feeOnTransfer if already called
- * @param {uint} feeOnTransfer
- * @param {uint} amount
- * @returns {uint} fee
+ * @param {number} feeOnTransfer @param {number} amount
+ * @returns {number} fee
  */
 export const calcFeeBurn = (feeOnTransfer, amount) => {
   const fee = calcPart(feeOnTransfer, amount)
@@ -17,15 +16,42 @@ export const calcFeeBurn = (feeOnTransfer, amount) => {
 
 /**
  * Return SPARTA after feeBurn
- * @param {uint} amount
- * @param {uint} feeOnTsf
- * @returns {uint} fee
+ * @param {number} amount @param {number} feeOnTsf
+ * @returns {number} fee
  */
 export const minusFeeBurn = (amount, feeOnTsf) => {
   const _amount = BN(amount)
   const burnFee = calcFeeBurn(feeOnTsf, _amount)
   const afterFeeBurn = _amount.minus(burnFee)
   return afterFeeBurn
+}
+
+/**
+ * Get all relevant weights from the PoolDetails object
+ * @param {object} poolDetails
+ * @returns {[number, number]} [memberWeight, totalWeight]
+ */
+export const getVaultWeights = (poolDetails) => {
+  const _poolDetails = poolDetails.filter((x) => x.curated === true)
+  let memberWeight = BN(0)
+  let totalWeight = BN(0)
+  for (let i = 0; i < _poolDetails.length; i++) {
+    memberWeight = memberWeight.plus(
+      getPoolShareWeight(
+        BN(_poolDetails.staked).plus(_poolDetails.bonded),
+        _poolDetails.poolUnits,
+        _poolDetails.baseAmount,
+      ),
+    )
+    totalWeight = totalWeight.plus(
+      getPoolShareWeight(
+        BN(_poolDetails.staked).plus(_poolDetails.bonded),
+        _poolDetails.poolUnits,
+        _poolDetails.baseAmount,
+      ),
+    )
+  }
+  return [memberWeight, totalWeight]
 }
 
 /**

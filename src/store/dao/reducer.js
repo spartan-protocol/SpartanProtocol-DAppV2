@@ -2,6 +2,7 @@ import * as Types from './types'
 
 const initialState = {
   global: [],
+  totalWeight: 0,
   member: [],
   proposal: [],
   proposalWeight: 0,
@@ -24,6 +25,15 @@ export const daoReducer = (state = initialState, action) => {
       return {
         ...state,
         global: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.DAO_TOTAL_WEIGHT: {
+      return {
+        ...state,
+        totalWeight: action.payload,
         error: null,
         loading: false,
       }

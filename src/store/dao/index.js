@@ -4,6 +4,7 @@ export { daoReducer } from './reducer'
 
 export {
   daoGlobalDetails,
+  daoVaultWeight,
   daoMemberDetails,
   daoProposalDetails,
   proposalWeight,

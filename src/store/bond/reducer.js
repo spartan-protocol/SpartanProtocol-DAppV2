@@ -2,6 +2,7 @@ import * as Types from './types'
 
 const initialState = {
   global: {},
+  totalWeight: '0',
   listedAssets: [],
   member: {},
   deposit: '0',
@@ -14,6 +15,15 @@ export const bondReducer = (state = initialState, action) => {
       return {
         ...state,
         global: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.BOND_TOTAL_WEIGHT: {
+      return {
+        ...state,
+        totalWeight: action.payload,
         loading: false,
         error: null,
       }

@@ -46,7 +46,9 @@ const DaoVault = () => {
   const getData = () => {
     dispatch(daoGlobalDetails(wallet))
     dispatch(daoMemberDetails(wallet))
-    dispatch(bondMemberDetails(wallet))
+    dispatch(bondMemberDetails(wallet)) // delete after next testnet deploy
+    // dispatch(daoVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
+    // dispatch(bondVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
   }
   useEffect(() => {
     if (trigger0 === 0) {

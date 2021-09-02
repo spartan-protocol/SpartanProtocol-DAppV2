@@ -1,7 +1,7 @@
 import * as Types from './types'
 import { getProviderGasPrice, getWalletProvider } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getDaoContract } from '../../utils/web3Contracts'
+import { getDaoContract, getDaoVaultContract } from '../../utils/web3Contracts'
 import { BN } from '../../utils/bigNumber'
 import { getPoolShareWeight } from '../../utils/math/utils'
 
@@ -22,7 +22,7 @@ export const daoGlobalDetails = (wallet) => async (dispatch) => {
   try {
     let awaitArray = [
       // contract.callStatic.running(), // Uncomment after new Testnet
-      true,
+      true, // Delete after new Testnet
       contract.callStatic.coolOffPeriod(),
       contract.callStatic.erasToEarn(),
       contract.callStatic.daoClaim(),
@@ -41,6 +41,41 @@ export const daoGlobalDetails = (wallet) => async (dispatch) => {
       memberCount: awaitArray[6].toString(), // DaoVault memberCount
     }
     dispatch(payloadToDispatch(Types.DAO_GLOBAL_DETAILS, global))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
+  }
+}
+
+/**
+ * Get the current daoVault's total weight
+ * @param {[string]} poolDetails @param {object} wallet
+ * @returns {number} spartaWeight
+ */
+export const daoVaultWeight = (poolDetails, wallet) => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoVaultContract(wallet)
+  try {
+    const vaultPools = poolDetails.filter((x) => x.curated === true)
+    if (vaultPools.length > 0) {
+      const awaitArray = []
+      for (let i = 0; i < vaultPools.length; i++) {
+        awaitArray.push(
+          contract.callStatic.mapTotalPool_balance(vaultPools[i].address),
+        )
+      }
+      const totalStaked = await Promise.all(awaitArray)
+      let totalWeight = BN(0)
+      for (let i = 0; i < totalStaked.length; i++) {
+        totalWeight = totalWeight.plus(
+          getPoolShareWeight(
+            totalStaked[i],
+            vaultPools[i].poolUnits,
+            vaultPools[i].baseAmount,
+          ),
+        )
+      }
+      dispatch(payloadToDispatch(Types.DAO_TOTAL_WEIGHT, totalWeight))
+    }
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, `${error}.`))
   }

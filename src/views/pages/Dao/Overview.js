@@ -9,6 +9,7 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
+  // daoVaultWeight,
   // proposalWeight, // uncomment after next testnet deploy
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
@@ -64,11 +65,13 @@ const Overview = () => {
   useEffect(() => {
     if (network.chainId === 97) {
       dispatch(daoMemberDetails(wallet))
-      dispatch(bondMemberDetails(wallet))
+      dispatch(bondMemberDetails(wallet)) // delete after next testnet deploy
       dispatch(daoProposalDetails(dao.global?.currentProposal, wallet))
       // dispatch( // uncomment after next testnet deploy
       //   proposalWeight(dao.global?.currentProposal, pool.poolDetails, wallet), // uncomment after next testnet deploy
       // ) // uncomment after next testnet deploy
+      // dispatch(daoVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
+      // dispatch(bondVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
