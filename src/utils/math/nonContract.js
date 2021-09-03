@@ -28,13 +28,12 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
 
 /**
  * Get all relevant weights from the PoolDetails object
- * @param {object} poolDetails
- * @returns {[number, number]} [memberWeight, totalWeight]
+ * @param {[object]} poolDetails
+ * @returns {number} memberWeight
  */
 export const getVaultWeights = (poolDetails) => {
   const _poolDetails = poolDetails.filter((x) => x.curated === true)
   let memberWeight = BN(0)
-  let totalWeight = BN(0)
   for (let i = 0; i < _poolDetails.length; i++) {
     memberWeight = memberWeight.plus(
       getPoolShareWeight(
@@ -43,15 +42,8 @@ export const getVaultWeights = (poolDetails) => {
         _poolDetails.baseAmount,
       ),
     )
-    totalWeight = totalWeight.plus(
-      getPoolShareWeight(
-        BN(_poolDetails.staked).plus(_poolDetails.bonded),
-        _poolDetails.poolUnits,
-        _poolDetails.baseAmount,
-      ),
-    )
   }
-  return [memberWeight, totalWeight]
+  return memberWeight
 }
 
 /**
