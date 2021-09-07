@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <url>
+    <loc>https://dapp.spartanprotocol.org/</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/home</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/liquidity</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/swap</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/synths</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/bond</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/vault</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/dao</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/upgrade</loc>
+  </url>
+  <url>
+    <loc>https://dapp.spartanprotocol.org/donate</loc>
+  </url>
+</urlset>

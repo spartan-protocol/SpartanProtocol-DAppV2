@@ -37,7 +37,7 @@ export const routes = [
   },
 
   {
-    path: '/pools/liquidity',
+    path: '/liquidity',
     name: 'liquidity',
     icon: 'sword',
     component: Liquidity,
@@ -45,7 +45,7 @@ export const routes = [
   },
 
   {
-    path: '/pools/swap',
+    path: '/swap',
     name: 'swap',
     icon: 'swords',
     component: Swap,
