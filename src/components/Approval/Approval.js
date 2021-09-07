@@ -1,5 +1,5 @@
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import {
@@ -33,6 +33,8 @@ const Approval = ({
   const web3 = useWeb3()
   const wallet = useWallet()
 
+  const [pending, setPending] = useState(false)
+
   const getAllowance = () => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
@@ -44,7 +46,9 @@ const Approval = ({
   }
 
   const handleApproval = async () => {
+    setPending(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
+    setPending(false)
     getAllowance()
   }
 
@@ -74,6 +78,7 @@ const Approval = ({
           >
             <Icon icon="lock" fill="white" size="20" className="me-1" />
             Approve {symbol}
+            {pending && <Icon icon="cycle" size="25" className="anim-spin" />}
           </Button>
         </Col>
       )}

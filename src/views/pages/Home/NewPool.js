@@ -12,6 +12,7 @@ import {
   InputGroup,
   Modal,
   OverlayTrigger,
+  Row,
 } from 'react-bootstrap'
 import Approval from '../../../components/Approval/Approval'
 import {
@@ -20,16 +21,18 @@ import {
   getWalletProvider,
 } from '../../../utils/web3'
 import { BN, convertToWei, formatFromUnits } from '../../../utils/bigNumber'
-import { createPoolADD } from '../../../store/pool'
+import { createPoolADD, usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { getTokenContract } from '../../../utils/web3Contracts'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { getExplorerTxn } from '../../../utils/extCalls'
 
 const NewPool = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
+  const pool = usePool()
   const wallet = useWallet()
   const addr = getAddresses()
   const { t } = useTranslation()
@@ -39,6 +42,7 @@ const NewPool = () => {
   const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
   const [feeConfirm, setFeeConfirm] = useState(false)
+  const [stage, setStage] = useState(1)
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -184,8 +188,8 @@ const NewPool = () => {
     }
   }, [addrValid, spartaValid, tokenValid])
 
-  const handleSubmit = () => {
-    dispatch(
+  const handleSubmit = async () => {
+    await dispatch(
       createPoolADD(
         convertToWei(spartaInput?.value),
         convertToWei(tokenInput?.value),
@@ -262,7 +266,14 @@ const NewPool = () => {
         {t('pool')}
       </Button>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false)
+          setStage(1)
+        }}
+        centered
+      >
         {network.chainId === 97 && (
           <>
             <Modal.Header closeButton>
@@ -407,37 +418,95 @@ const NewPool = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer className="text-center">
-              {wallet?.account && spartaInput?.value > 0 && (
-                <Approval
-                  tokenAddress={addr.spartav2}
-                  symbol="SPARTA"
-                  walletAddress={wallet.account}
-                  contractAddress={addr.poolFactory}
-                  txnAmount={convertToWei(spartaInput?.value)}
-                  assetNumber="1"
-                />
-              )}
-              <Col xs="12" className="hide-if-siblings">
-                <Button
-                  variant="primary"
-                  disabled={!ratioConfirm || !formValid || !feeConfirm}
-                  onClick={() => handleSubmit()}
-                >
-                  {t('confirm')}
-                </Button>
-              </Col>
-              {wallet?.account &&
-                tokenInput?.value > 0 &&
-                addrInput?.value !== addr.bnb && (
-                  <Approval
-                    tokenAddress={addrInput?.value}
-                    symbol={tokenSymbol}
-                    walletAddress={wallet.account}
-                    contractAddress={addr.poolFactory}
-                    txnAmount={convertToWei(tokenInput?.value)}
-                    assetNumber="2"
-                  />
+              <Row xs="12" className="w-100">
+                {stage === 1 && (
+                  <>
+                    {wallet?.account && spartaInput?.value > 0 && (
+                      <Approval
+                        tokenAddress={addr.spartav2}
+                        symbol="SPARTA"
+                        walletAddress={wallet.account}
+                        contractAddress={addr.poolFactory}
+                        txnAmount={convertToWei(spartaInput?.value)}
+                        assetNumber="1"
+                      />
+                    )}
+                    <Col xs="12" className="hide-if-siblings">
+                      <Button
+                        variant="primary"
+                        disabled={!ratioConfirm || !formValid || !feeConfirm}
+                        onClick={async () => {
+                          setStage(2)
+                          await handleSubmit()
+                          setStage(3)
+                        }}
+                      >
+                        {t('confirm')}
+                      </Button>
+                    </Col>
+                    {wallet?.account &&
+                      tokenInput?.value > 0 &&
+                      addrInput?.value !== addr.bnb && (
+                        <Approval
+                          tokenAddress={addrInput?.value}
+                          symbol={tokenSymbol}
+                          walletAddress={wallet.account}
+                          contractAddress={addr.poolFactory}
+                          txnAmount={convertToWei(tokenInput?.value)}
+                          assetNumber="2"
+                        />
+                      )}
+                  </>
                 )}
+                {stage === 2 && (
+                  <>
+                    <Col xs="3">
+                      <Button
+                        variant="primary"
+                        className="w-100"
+                        onClick={() => setStage(1)}
+                      >
+                        <Icon icon="arrowLeft" size="25" className="pb-1" />
+                      </Button>
+                    </Col>
+                    <Col xs="9">
+                      <Button variant="primary" className="w-100" disabled>
+                        {t('viewBscScan')}{' '}
+                        <Icon icon="cycle" size="25" className="anim-spin" />
+                      </Button>
+                    </Col>
+                  </>
+                )}
+                {stage === 3 && (
+                  <>
+                    <Col xs="3">
+                      <Button
+                        variant="primary"
+                        className="w-100"
+                        onClick={() => setStage(1)}
+                      >
+                        <Icon
+                          icon="arrowLeft"
+                          size="25"
+                          className="pb-1 pe-1"
+                        />
+                      </Button>
+                    </Col>
+                    <Col xs="9">
+                      <a
+                        href={getExplorerTxn(pool.newPool.transactionHash)}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <Button variant="primary" className="w-100">
+                          {t('viewBscScan')}{' '}
+                          <Icon icon="scan" size="15" className="ms-1 mb-1" />
+                        </Button>
+                      </a>
+                    </Col>
+                  </>
+                )}
+              </Row>
             </Modal.Footer>
           </>
         )}

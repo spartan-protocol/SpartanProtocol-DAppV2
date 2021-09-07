@@ -11,8 +11,11 @@ import {
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
-import { convertToWei } from '../../utils/bigNumber'
+import {
+  getAddresses,
+  getProviderGasPrice,
+  getWalletProvider,
+} from '../../utils/web3'
 
 export const poolLoading = () => ({
   type: Types.POOL_LOADING,
@@ -34,14 +37,12 @@ export const getListedTokens = (wallet) => async (dispatch) => {
   const contract = check === true ? getPoolFactoryContract(wallet) : ''
 
   try {
-    let listedTokens = []
+    const listedTokens = []
     if (check === true) {
-      const tokenCount = await contract.callStatic.tokenCount()
-      const tempArray = []
-      for (let i = 0; i < tokenCount; i++) {
-        tempArray.push(contract.callStatic.getToken(i))
+      const _listedTokens = await contract.callStatic.getTokenAssets()
+      for (let i = 0; i < _listedTokens.length; i++) {
+        listedTokens.push(_listedTokens[i])
       }
-      listedTokens = await Promise.all(tempArray)
       const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
       if (wbnbIndex > -1)
         listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
@@ -176,19 +177,14 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
         poolUnits: tempArray[i].poolUnits.toString(),
         // baseCap: tempArray[i].baseCap.toString(),
         // synthCap: tempArray[i].synthCap.toString(),
-        // minSynth: tempArray[i].minSynth.toString(),
-        // collateral: tempArray[i].collateral.toString(),
-        baseCap: convertToWei(100000000).toString(), // DELETE THIS AFTER V2 TESTNET
-        synthCap: '3000', // DELETE THIS AFTER V2 TESTNET
-        minSynth: '500', // DELETE THIS AFTER V2 TESTNET
-        collateral: '0', // DELETE THIS AFTER V2 TESTNET
         recentFees: '0',
         lastMonthFees: '0',
         recentDivis: '0',
         lastMonthDivis: '0',
         genesis: tempArray[i].genesis.toString(),
-        newPool:
-          Date.now() / 1000 - tempArray[i].genesis.toString() * 1 < 604800,
+        // newPool:                                                             // Uncomment this line for mainnet
+        //   Date.now() / 1000 - tempArray[i].genesis.toString() * 1 < 604800,  // Uncomment this line for mainnet
+        newPool: false, // Remove this line for mainnet
         bondMember: false,
         bondClaimRate: '0',
         bondLastClaim: '0',
@@ -217,7 +213,6 @@ export const getPoolDetails =
         const routerContract = getRouterContract(wallet)
         const daoVaultContract = getDaoVaultContract(wallet)
         const bondVaultContract = getBondVaultContract(wallet)
-        const pfContract = getPoolFactoryContract(wallet)
         const poolContract =
           listedPools[i].poolUnits <= 0
             ? null
@@ -271,11 +266,10 @@ export const getPoolDetails =
                 wallet.account,
                 listedPools[i].tokenAddress,
               ),
-        ) // bondDetails - bondMember, bondClaimRate, bondLastClaim
+        ) // bondDetails - isMember, bondedLP, claimRate, lastBlockTime
         tempArray.push(
           listedPools[i].poolUnits > 0
-            ? // ? curatedPools.includes(listedPools[i].address) // UNCOMMENT AFTER NEXT TESTNET
-              pfContract.callStatic.isCuratedPool(listedPools[i].address) // DELETE AFTER NEXT TESTNET
+            ? curatedPools.includes(listedPools[i].address)
             : false,
         ) // check if pool is curated
       }
@@ -315,18 +309,23 @@ export const createPoolADD =
     dispatch(poolLoading())
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet)
+    let provider = getWalletProvider(wallet?.ethereum)
+    if (provider._isSigner === true) {
+      provider = provider.provider
+    }
     try {
       const gPrice = await getProviderGasPrice()
       const ORs = {
         value: token === addr.bnb ? inputToken : null,
         gasPrice: gPrice,
       }
-      const newPool = await contract.createPoolADD(
+      let newPool = await contract.createPoolADD(
         inputBase,
         inputToken,
         token,
         ORs,
       )
+      newPool = await provider.waitForTransaction(newPool.hash, 1)
       dispatch(payloadToDispatch(Types.POOL_NEW_POOL, newPool))
     } catch (error) {
       dispatch(
