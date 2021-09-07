@@ -29,12 +29,12 @@ export const addLiquidity =
         gasPrice: gPrice,
       }
       const addLiq = await contract.addLiquidity(
-        inputBase,
         inputToken,
+        inputBase,
         token,
         ORs,
       )
-      dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, addLiq))
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['addLiq', addLiq]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -57,7 +57,7 @@ export const zapLiquidity =
       const zapLiq = await contract.zapLiquidity(unitsInput, fromPool, toPool, {
         gasPrice: gPrice,
       })
-      dispatch(payloadToDispatch(Types.ROUTER_ZAP_LIQ, zapLiq))
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['zapLiq', zapLiq]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -88,7 +88,9 @@ export const addLiquiditySingle =
         token,
         ORs,
       )
-      dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_SINGLE, addLiqSingle))
+      dispatch(
+        payloadToDispatch(Types.ROUTER_TXN, ['addLiqSingle', addLiqSingle]),
+      )
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -110,8 +112,7 @@ export const removeLiquidityExact =
       const remLiq = await contract.removeLiquidityExact(units, token, {
         gasPrice: gPrice,
       })
-
-      dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, remLiq))
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['remLiq', remLiq]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -139,8 +140,9 @@ export const removeLiquiditySingle =
           gasPrice: gPrice,
         },
       )
-
-      dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ_SINGLE, remLiqSingle))
+      dispatch(
+        payloadToDispatch(Types.ROUTER_TXN, ['remLiqSingle', remLiqSingle]),
+      )
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -167,7 +169,7 @@ export const swap =
         gasPrice: gPrice,
       }
       const swapped = await contract.swap(inputAmount, fromToken, toToken, ORs)
-      dispatch(payloadToDispatch(Types.ROUTER_SWAP, swapped))
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['swapped', swapped]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -198,7 +200,7 @@ export const swapAssetToSynth =
         toSynth,
         ORs,
       )
-      dispatch(payloadToDispatch(Types.ROUTER_MINT_SYNTH, mintSynth))
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['mintSynth', mintSynth]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -226,7 +228,7 @@ export const swapSynthToAsset =
           gasPrice: gPrice,
         },
       )
-      dispatch(payloadToDispatch(Types.ROUTER_BURN_SYNTH, burnSynth))
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['burnSynth', burnSynth]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }

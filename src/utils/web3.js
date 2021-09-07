@@ -370,3 +370,21 @@ export const getWalletWindowObj = () => {
   }
   return connectedWalletType
 }
+
+/**
+ * Add txn to history array in localStorage
+ */
+export const addTxn = async (walletAddr, newTxn) => {
+  let txnArray = tryParse(window.localStorage.getItem('txnArray'))
+  if (!txnArray) {
+    txnArray = []
+    txnArray.push({ wallet: walletAddr, txns: [] })
+  }
+  let index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+  if (index === -1) {
+    txnArray.push({ wallet: walletAddr, txns: [] })
+    index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+  }
+  txnArray[index].txns.push(newTxn)
+  window.localStorage.setItem('txnArray', JSON.stringify(txnArray))
+}

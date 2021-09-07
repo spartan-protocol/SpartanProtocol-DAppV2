@@ -1,20 +1,46 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Table } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { getExplorerTxn } from '../../utils/extCalls'
-import { formatShortString, getAddresses } from '../../utils/web3'
-import { formatFromWei } from '../../utils/bigNumber'
-import { usePool } from '../../store/pool'
-import { useWeb3 } from '../../store/web3'
+import { formatShortString } from '../../utils/web3'
 
 const RecentTxns = () => {
-  const web3 = useWeb3()
-  const pool = usePool()
-  const addr = getAddresses()
+  const wallet = useWallet()
   const { t } = useTranslation()
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  const [txnArray, setTxnArray] = useState([])
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return false
+    }
+  }
+
+  const getTxns = () => {
+    const unfiltered = tryParse(window.localStorage.getItem('txnArray'))
+    if (!unfiltered) {
+      return []
+    }
+    return unfiltered
+  }
+
+  useEffect(() => {
+    const unfiltered = getTxns()
+    const network = tryParse(window.localStorage.getItem('network'))
+    if (unfiltered.length > 0 && wallet.account) {
+      let filtered = unfiltered.filter(
+        (group) => group.wallet === wallet.account,
+      )[0]?.txns
+      if (filtered?.length > 0) {
+        filtered = filtered.filter((txn) => txn[1]?.chainId === network.chainId)
+        setTxnArray(filtered)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wallet.account, window.localStorage.getItem('txnArray')])
 
   return (
     <>
@@ -22,15 +48,28 @@ const RecentTxns = () => {
         <Table borderless striped className="m-3">
           <thead className="text-primary text-center">
             <tr>
-              <th>{t('block')}</th>
-              <th>{t('event')}</th>
-              <th>{t('input')}</th>
-              <th>{t('output')}</th>
+              <th>{t('type')}</th>
               <th>{t('txHash')}</th>
             </tr>
           </thead>
           <tbody>
-            {web3.eventArray?.length > 0 &&
+            {txnArray?.length > 0 &&
+              wallet.account &&
+              txnArray?.map((txn) => (
+                <tr key={txn[1].hash} className="text-center">
+                  <td>{txn[0]}</td>
+                  <td>
+                    <a
+                      href={getExplorerTxn(txn[1].hash)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {formatShortString(txn[1].hash)}
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            {/* {web3.eventArray?.length > 0 &&
               web3.eventArray
                 ?.filter((e) => e.event !== 'Transfer')
                 .map((txn) => (
@@ -131,7 +170,7 @@ const RecentTxns = () => {
                       </a>
                     </td>
                   </tr>
-                ))}
+                ))} */}
           </tbody>
         </Table>
       </Row>
