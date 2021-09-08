@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Col,
+  Form,
   FormControl,
   InputGroup,
   Nav,
@@ -31,7 +32,6 @@ import Approval from '../../../components/Approval/Approval'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
-import TxnModal from './Components/TxnModal'
 import { balanceWidths } from './Components/Utils'
 import NewPool from '../Home/NewPool'
 import Share from '../../../components/Share/SharePool'
@@ -53,6 +53,7 @@ const LiqAdd = () => {
   const sparta = useSparta()
   const location = useLocation()
   const [activeTab, setActiveTab] = useState('addTab1')
+  const [confirm, setConfirm] = useState(false)
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [poolAdd1, setPoolAdd1] = useState('...')
@@ -196,36 +197,37 @@ const LiqAdd = () => {
 
   /**
    * Get liqAdd txn details
-   * @returns [outputLP, inputSparta, slipRevert]
+   * @returns [outputLP, slipRevert, capRevert]
    */
   const getAddLiq = () => {
     if (addInput1 && activeTab === 'addTab1') {
-      const [outputLP, inputSparta, slipRevert] = addLiq(
+      const [outputLP, slipRevert, capRevert] = addLiq(
         convertToWei(addInput1.value),
         assetAdd1,
         sparta.globalDetails.feeOnTransfer,
+        convertToWei(addInput2.value),
       )
-      return [outputLP, inputSparta, slipRevert]
+      return [outputLP, slipRevert, capRevert]
     }
-    return ['0.00', '0.00', false]
+    return ['0.00', '0.00', false, false]
   }
 
   /**
    * Get liqAddAsym txn details
-   * @returns [unitsLP, swapFee, slipRevert]
+   * @returns [unitsLP, swapFee, slipRevert, capRevert]
    */
   const getAddLiqAsym = () => {
     if (addInput1 && assetAdd1 && activeTab === 'addTab2') {
       const fromBase = assetAdd1.tokenAddress === addr.spartav2
-      const [unitsLP, swapFee, slipRevert] = addLiqAsym(
+      const [unitsLP, swapFee, slipRevert, capRevert] = addLiqAsym(
         convertToWei(addInput1.value),
         poolAdd1,
         fromBase,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [unitsLP, swapFee, slipRevert]
+      return [unitsLP, swapFee, slipRevert, capRevert]
     }
-    return ['0.00', '0.00', false]
+    return ['0.00', '0.00', false, false]
   }
 
   const getInput1ValueUSD = () => {
@@ -280,8 +282,14 @@ const LiqAdd = () => {
     ) {
       return [false, 'checkBalance']
     }
-    if (getAddLiqAsym()[2] || getAddLiq()[2]) {
+    if (getAddLiqAsym()[2] || getAddLiq()[1]) {
       return [false, 'slipTooHigh']
+    }
+    if (getAddLiqAsym()[3] || getAddLiq()[2]) {
+      return [false, 'poolAtCapacity']
+    }
+    if (poolAdd1.newPool && !confirm) {
+      return [false, 'confirmLockup']
     }
     if (activeTab === 'addTab1') {
       return [true, 'addBoth']
@@ -293,19 +301,14 @@ const LiqAdd = () => {
   // General Functions
 
   const handleInputChange = () => {
-    if (
-      activeTab === 'addTab1' &&
-      addInput1 &&
-      addInput2 &&
-      addInput1.value > 0
-    ) {
+    if (activeTab === 'addTab1' && addInput1 && addInput2) {
       if (addInput2 !== document.activeElement) {
-        addInput2.value = convertFromWei(getAddLiq()[1])
+        addInput2.value = calcSpotValueInBase(addInput1.value, poolAdd1)
         setOutputLp(getAddLiq()[0])
       } else if (addInput1 !== document.activeElement) {
         addInput1.value = calcSpotValueInToken(
           addInput2.value > 0 ? addInput2.value : '0.00',
-          assetAdd1,
+          poolAdd1,
         )
         setOutputLp(getAddLiq()[0])
       }
@@ -696,6 +699,31 @@ const LiqAdd = () => {
           </Card.Body>
 
           <Card.Footer>
+            {poolAdd1.newPool && (
+              <Row>
+                <Col>
+                  <div className="output-card text-center">
+                    This pool is currently in its initialization phase. Please
+                    be aware you will not be able to withdraw your liquidity
+                    until this pool is fully established
+                  </div>
+                  <Form className="my-2 text-center">
+                    <span className="output-card">
+                      {`Confirm; your liquidity will be locked for ${
+                        getTimeNew()[0]
+                      }${getTimeNew()[1]}`}
+                      <Form.Check
+                        type="switch"
+                        id="confirmLockout"
+                        className="ms-2 d-inline-flex"
+                        checked={confirm}
+                        onChange={() => setConfirm(!confirm)}
+                      />
+                    </span>
+                  </Form>
+                </Col>
+              </Row>
+            )}
             <Row className="text-center">
               {assetAdd1?.tokenAddress &&
                 assetAdd1?.tokenAddress !== addr.bnb &&
@@ -710,69 +738,14 @@ const LiqAdd = () => {
                     assetNumber="1"
                   />
                 )}
-              <Col xs="12" sm="4" md="12" className="hide-if-siblings">
-                <TxnModal
-                  btnText={t(checkValid()[1])}
-                  btnDisabled={!checkValid()[0]}
-                  header="Join Pool"
-                  body={
-                    poolAdd1.newPool
-                      ? `This pool is currently in it's initialization phase. Please be aware you will not be able to withdraw your liquidity until this pool is fully established in ${
-                          getTimeNew()[0]
-                        }${getTimeNew()[1]}`
-                      : 'Please confirm the details of your liquidity-add below'
-                  }
-                  txnInputs={[
-                    {
-                      id: 0,
-                      amount: addInput1?.value,
-                      symbol: getToken(assetAdd1.tokenAddress)?.symbol,
-                      icon: getToken(assetAdd1.tokenAddress)?.symbolUrl,
-                    },
-                    {
-                      id: 1,
-                      amount: addInput2?.value,
-                      symbol: getToken(assetAdd2.tokenAddress)?.symbol,
-                      icon: getToken(assetAdd2.tokenAddress)?.symbolUrl,
-                    },
-                  ]}
-                  txnOutputs={[
-                    {
-                      id: 0,
-                      amount: outputLp,
-                      symbol: `${getToken(poolAdd1.tokenAddress)?.symbol}p`,
-                      icon: getToken(poolAdd1.tokenAddress)?.symbolUrl,
-                      assetType: 'pool',
-                      class: 'subtitle-card',
-                    },
-                  ]}
-                  confirmMessage={
-                    poolAdd1.newPool
-                      ? `Confirm; your liquidity will be locked for ${
-                          getTimeNew()[0]
-                        }${getTimeNew()[1]}`
-                      : null
-                  }
-                  confirmButton={
-                    <Button
-                      className="w-100"
-                      disabled={
-                        addInput1?.value <= 0 ||
-                        BN(convertToWei(addInput1?.value)).isGreaterThan(
-                          getBalance(1),
-                        ) ||
-                        BN(convertToWei(addInput2?.value)).isGreaterThan(
-                          getBalance(2),
-                        ) ||
-                        poolAdd1.baseAmount <= 0
-                      }
-                      onClick={() => handleAddLiq()}
-                    >
-                      {t('joinPool')}
-                    </Button>
-                  }
-                  tokenAddress={assetAdd1?.tokenAddress}
-                />
+              <Col xs="12" className="hide-if-siblings">
+                <Button
+                  className="w-100"
+                  onClick={() => handleAddLiq()}
+                  disabled={!checkValid()[0]}
+                >
+                  {t(checkValid()[1])}
+                </Button>
               </Col>
               {assetAdd2?.tokenAddress &&
                 assetAdd2?.tokenAddress !== addr.bnb &&

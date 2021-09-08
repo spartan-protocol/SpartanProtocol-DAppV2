@@ -1,9 +1,4 @@
-import {
-  calcLiqValue,
-  calcLiquidityUnits,
-  calcSpotValueInBase,
-  calcSwapOutput,
-} from './utils'
+import { calcLiqValue, calcLiquidityUnits, calcSwapOutput } from './utils'
 import { BN } from '../bigNumber'
 import { getAddresses } from '../web3'
 import { minusFeeBurn } from './nonContract'
@@ -13,25 +8,23 @@ export const one = BN(1).times(10).pow(18)
 /**
  * Calculate LP tokens from liquidity-add
  * @param inputToken @param pool poolDetails @param feeOnTsf
- * @param inputSparta optional; if omitted will calc spotValue
- * @returns [unitsLP, _inputSparta, slipRevert]
+ * @returns [unitsLP, slipRevert, capRevert]
  */
 export const addLiq = (inputToken, pool, feeOnTsf, inputSparta) => {
   if (pool) {
+    const _baseAmount = BN(pool.baseAmount) // TOKEN received by pool
     const _inputToken = BN(inputToken) // TOKEN received by pool
-    let _inputSparta = calcSpotValueInBase(_inputToken, pool)
-    if (inputSparta) {
-      _inputSparta = inputSparta // SPARTA sent to pool
-    }
+    const _inputSparta = BN(inputSparta) // SPARTA sent to pool
     const _recSparta = minusFeeBurn(_inputSparta, feeOnTsf) // SPARTA received by pool
+    const capRevert = _baseAmount.plus(_recSparta).isGreaterThan(pool.baseCap)
     const [unitsLP, slipRevert] = calcLiquidityUnits(
       _recSparta,
       _inputToken,
       pool,
     ) // Calc LP units
-    return [unitsLP, _inputSparta, slipRevert]
+    return [unitsLP, slipRevert, capRevert]
   }
-  return ['0.00', '0.00', false]
+  return ['0.00', '0.00', false, false]
 }
 
 /**
@@ -70,9 +63,10 @@ export const addLiqAsym = (input, pool, fromBase, feeOnTsf) => {
       _recToken,
       _pool,
     ) // Calc LP units
-    return [unitsLP, swapFee, slipRevert]
+    const capRevert = baseAmnt.plus(_recSparta).isGreaterThan(pool.baseCap)
+    return [unitsLP, swapFee, slipRevert, capRevert]
   }
-  return ['0.00', '0.00', false]
+  return ['0.00', '0.00', false, false]
 }
 
 /**

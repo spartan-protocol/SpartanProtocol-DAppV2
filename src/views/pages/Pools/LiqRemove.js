@@ -262,6 +262,22 @@ const LiqRemove = () => {
     return '0.00'
   }
 
+  const checkValid = () => {
+    if (removeInput1?.value <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (BN(convertToWei(removeInput1?.value)).isGreaterThan(getBalance(1))) {
+      return [false, t('checkBalance')]
+    }
+    if (poolRemove1.newPool) {
+      return [false, `${t('unlocksIn')} ${getTimeNew()[0]}${getTimeNew()[1]}`]
+    }
+    if (activeTab === '1') {
+      return [true, t('removeBoth')]
+    }
+    return [true, t('removeSingle')]
+  }
+
   //= =================================================================================//
   // Handlers
 
@@ -519,78 +535,66 @@ const LiqRemove = () => {
             </Row>
           </Card.Body>
           <Card.Footer>
-            {!poolRemove1?.newPool ? (
-              <Row className="text-center">
-                {poolRemove1?.tokenAddress &&
-                  wallet?.account &&
-                  removeInput1?.value && (
-                    <Approval
-                      tokenAddress={poolRemove1?.address}
-                      symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
-                      walletAddress={wallet?.account}
-                      contractAddress={addr.router}
-                      txnAmount={convertToWei(removeInput1?.value)}
-                      assetNumber="1"
-                    />
+            <Row className="text-center">
+              {poolRemove1?.tokenAddress &&
+                wallet?.account &&
+                removeInput1?.value && (
+                  <Approval
+                    tokenAddress={poolRemove1?.address}
+                    symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
+                    walletAddress={wallet?.account}
+                    contractAddress={addr.router}
+                    txnAmount={convertToWei(removeInput1?.value)}
+                    assetNumber="1"
+                  />
+                )}
+              <Col xs="12" sm="4" md="12" className="hide-if-siblings">
+                <Button
+                  className="w-100"
+                  disabled={!checkValid()[0]}
+                  onClick={() =>
+                    activeTab === '1'
+                      ? dispatch(
+                          removeLiquidityExact(
+                            convertToWei(removeInput1.value),
+                            poolRemove1.tokenAddress,
+                            wallet,
+                          ),
+                        )
+                      : dispatch(
+                          removeLiquiditySingle(
+                            convertToWei(removeInput1.value),
+                            assetRemove1.tokenAddress === addr.spartav2,
+                            poolRemove1.tokenAddress,
+                            wallet,
+                          ),
+                        )
+                  }
+                >
+                  {checkValid()[1]}
+                  {poolRemove1.newPool && (
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(
+                        t,
+                        'newPool',
+                        `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
+                      )}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1 mb-1"
+                          size="17"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
                   )}
-                <Col xs="12" sm="4" md="12" className="hide-if-siblings">
-                  <Button
-                    className="w-100"
-                    disabled={
-                      removeInput1?.value <= 0 ||
-                      BN(convertToWei(removeInput1?.value)).isGreaterThan(
-                        getBalance(1),
-                      )
-                    }
-                    onClick={() =>
-                      activeTab === '1'
-                        ? dispatch(
-                            removeLiquidityExact(
-                              convertToWei(removeInput1.value),
-                              poolRemove1.tokenAddress,
-                              wallet,
-                            ),
-                          )
-                        : dispatch(
-                            removeLiquiditySingle(
-                              convertToWei(removeInput1.value),
-                              assetRemove1.tokenAddress === addr.spartav2,
-                              poolRemove1.tokenAddress,
-                              wallet,
-                            ),
-                          )
-                    }
-                  >
-                    {t('removeLiq')}
-                  </Button>
-                </Col>
-              </Row>
-            ) : (
-              <Row className="text-center">
-                <Col xs="12" sm="4" md="12">
-                  <Button className="w-auto" disabled>
-                    {t('unlocksIn')} {getTimeNew()[0]} {getTimeNew()[1]}
-                  </Button>
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(
-                      t,
-                      'newPool',
-                      `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
-                    )}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="17"
-                        fill="white"
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Col>
-              </Row>
-            )}
+                </Button>
+              </Col>
+            </Row>
+
             {activeTab === '2' && getRemLiqAsym()[2] > 0 && (
               <div className="text-card text-center mt-2">
                 {`${

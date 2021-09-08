@@ -155,8 +155,8 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
           baseAmount: '0',
           tokenAmount: '0',
           poolUnits: '0',
-          // baseCap: '0',
-          // synthCap: '0',
+          synthCap: '0',
+          baseCap: '0',
         })
       } else {
         tempArray.push(contract.callStatic.getPoolData(tokenDetails[i].address))
@@ -175,8 +175,8 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
-        // baseCap: tempArray[i].baseCap.toString(),
-        // synthCap: tempArray[i].synthCap.toString(),
+        synthCap: tempArray[i].synthCap.toString(),
+        baseCap: tempArray[i].baseCap.toString(),
         recentFees: '0',
         lastMonthFees: '0',
         recentDivis: '0',

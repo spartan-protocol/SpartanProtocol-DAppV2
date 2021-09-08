@@ -14,8 +14,13 @@ export const bondLiq = (inputToken, pool, feeOnTsf) => {
   const _bondToken = BN(inputToken) // TOKEN received by DAO
   const _bondSparta = BN(calcSwapOutput(_bondToken, pool, true)) // SPARTA bonded in
   const _spartaRec = minusFeeBurn(_bondSparta) // SPARTA received by ROUTER (feeBurn)
-  const [unitsLP, _inputSparta] = addLiq(inputToken, pool, feeOnTsf, _spartaRec) // LP units received by BondVault
-  return [unitsLP, _inputSparta]
+  const [unitsLP, slipRevert, capRevert] = addLiq(
+    inputToken,
+    pool,
+    feeOnTsf,
+    _spartaRec,
+  ) // LP units received by BondVault
+  return [unitsLP, slipRevert, capRevert]
 }
 
 /**

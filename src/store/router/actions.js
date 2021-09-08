@@ -96,10 +96,8 @@ export const addLiquiditySingle =
 
 /**
  * Remove liquidity symmetrically
- * @param {uint} units
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} units
+ * @param units @param token @param token @param wallet
+ * @returns units
  */
 export const removeLiquidityExact =
   (units, token, wallet) => async (dispatch) => {
@@ -130,7 +128,7 @@ export const removeLiquiditySingle =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const remLiqSingle = await contract.removeLiquidityAsym(
+      const remLiqSingle = await contract.removeLiquidityExactAsym(
         units,
         toBase,
         token,
