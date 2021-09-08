@@ -385,6 +385,31 @@ export const addTxn = async (walletAddr, newTxn) => {
     txnArray.push({ wallet: walletAddr, txns: [] })
     index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
   }
-  txnArray[index].txns.push(newTxn)
+  txnArray[index].txns.unshift(newTxn)
+  window.localStorage.setItem('txnArray', JSON.stringify(txnArray))
+}
+
+/**
+ * Clear current wallet/chain txn history array in localStorage
+ */
+export const clearTxns = async (walletAddr) => {
+  let txnArray = tryParse(window.localStorage.getItem('txnArray'))
+  if (!txnArray) {
+    txnArray = []
+    txnArray.push({ wallet: walletAddr, txns: [] })
+  } else {
+    let index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+    if (index === -1) {
+      txnArray.push({ wallet: walletAddr, txns: [] })
+      index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+    }
+    const network = tryParse(window.localStorage.getItem('network'))
+    console.log(txnArray[index])
+    let filtered = txnArray[index].txns
+    if (filtered?.length > 0) {
+      filtered = filtered.filter((txn) => txn[1]?.chainId !== network.chainId)
+      txnArray[index].txns = filtered
+    }
+  }
   window.localStorage.setItem('txnArray', JSON.stringify(txnArray))
 }

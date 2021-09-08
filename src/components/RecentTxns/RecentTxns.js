@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Table } from 'react-bootstrap'
+import { Row, Table, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { getExplorerTxn } from '../../utils/extCalls'
-import { formatShortString } from '../../utils/web3'
+import { clearTxns, formatShortString } from '../../utils/web3'
 
 const RecentTxns = () => {
   const wallet = useWallet()
@@ -173,6 +173,9 @@ const RecentTxns = () => {
                 ))} */}
           </tbody>
         </Table>
+        <Button onClick={() => clearTxns(wallet.account)}>
+          {t('clearTxns')}
+        </Button>
       </Row>
     </>
   )

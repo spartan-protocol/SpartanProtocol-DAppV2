@@ -18,14 +18,12 @@ export const routerLoading = () => ({
 export const addLiquidity =
   (inputToken, inputBase, token, wallet) => async (dispatch) => {
     dispatch(routerLoading())
+    const addr = getAddresses()
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
       const ORs = {
-        value:
-          token === '0x0000000000000000000000000000000000000000'
-            ? inputToken
-            : null,
+        value: token === addr.bnb ? inputToken : null,
         gasPrice: gPrice,
       }
       const addLiq = await contract.addLiquidity(
@@ -82,7 +80,7 @@ export const addLiquiditySingle =
         value: token === addr.bnb && fromBase !== true ? input : null,
         gasPrice: gPrice,
       }
-      const addLiqSingle = await contract.addLiquiditySingle(
+      const addLiqSingle = await contract.addLiquidityAsym(
         input,
         fromBase,
         token,

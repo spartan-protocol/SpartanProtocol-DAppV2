@@ -196,36 +196,36 @@ const LiqAdd = () => {
 
   /**
    * Get liqAdd txn details
-   * @returns outputLP @returns inputSparta
+   * @returns [outputLP, inputSparta, slipRevert]
    */
   const getAddLiq = () => {
     if (addInput1 && activeTab === 'addTab1') {
-      const [outputLP, inputSparta] = addLiq(
+      const [outputLP, inputSparta, slipRevert] = addLiq(
         convertToWei(addInput1.value),
         assetAdd1,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [outputLP, inputSparta]
+      return [outputLP, inputSparta, slipRevert]
     }
-    return ['0.00', '0.00']
+    return ['0.00', '0.00', false]
   }
 
   /**
    * Get liqAddAsym txn details
-   * @returns outputLP @returns swapFee
+   * @returns [unitsLP, swapFee, slipRevert]
    */
   const getAddLiqAsym = () => {
     if (addInput1 && assetAdd1 && activeTab === 'addTab2') {
       const fromBase = assetAdd1.tokenAddress === addr.spartav2
-      const [unitsLP, swapFee] = addLiqAsym(
+      const [unitsLP, swapFee, slipRevert] = addLiqAsym(
         convertToWei(addInput1.value),
         poolAdd1,
         fromBase,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [unitsLP, swapFee]
+      return [unitsLP, swapFee, slipRevert]
     }
-    return ['0.00', '0.00']
+    return ['0.00', '0.00', false]
   }
 
   const getInput1ValueUSD = () => {
@@ -268,6 +268,25 @@ const LiqAdd = () => {
         .times(web3.spartaPrice)
     }
     return '0.00'
+  }
+
+  const checkValid = () => {
+    if (addInput1?.value <= 0) {
+      return [false, 'checkInput']
+    }
+    if (
+      BN(convertToWei(addInput1?.value)).isGreaterThan(getBalance(1)) ||
+      BN(convertToWei(addInput2?.value)).isGreaterThan(getBalance(2))
+    ) {
+      return [false, 'checkBalance']
+    }
+    if (getAddLiqAsym()[2] || getAddLiq()[2]) {
+      return [false, 'slipTooHigh']
+    }
+    if (activeTab === 'addTab1') {
+      return [true, 'addBoth']
+    }
+    return [true, 'addSingle']
   }
 
   //= =================================================================================//
@@ -693,17 +712,8 @@ const LiqAdd = () => {
                 )}
               <Col xs="12" sm="4" md="12" className="hide-if-siblings">
                 <TxnModal
-                  btnText="Join Pool (Modal)"
-                  btnDisabled={
-                    addInput1?.value <= 0 ||
-                    BN(convertToWei(addInput1?.value)).isGreaterThan(
-                      getBalance(1),
-                    ) ||
-                    BN(convertToWei(addInput2?.value)).isGreaterThan(
-                      getBalance(2),
-                    ) ||
-                    poolAdd1.baseAmount <= 0
-                  }
+                  btnText={t(checkValid()[1])}
+                  btnDisabled={!checkValid()[0]}
                   header="Join Pool"
                   body={
                     poolAdd1.newPool

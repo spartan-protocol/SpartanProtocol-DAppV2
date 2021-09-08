@@ -14,40 +14,65 @@ export const one = BN(1).times(10).pow(18)
  * Calculate LP tokens from liquidity-add
  * @param inputToken @param pool poolDetails @param feeOnTsf
  * @param inputSparta optional; if omitted will calc spotValue
- * @returns [unitsLP, _inputSparta]
+ * @returns [unitsLP, _inputSparta, slipRevert]
  */
 export const addLiq = (inputToken, pool, feeOnTsf, inputSparta) => {
-  const _inputToken = BN(inputToken) // TOKEN received by pool
-  let _inputSparta = calcSpotValueInBase(_inputToken, pool)
-  if (inputSparta) {
-    _inputSparta = inputSparta // SPARTA sent to pool
+  if (pool) {
+    const _inputToken = BN(inputToken) // TOKEN received by pool
+    let _inputSparta = calcSpotValueInBase(_inputToken, pool)
+    if (inputSparta) {
+      _inputSparta = inputSparta // SPARTA sent to pool
+    }
+    const _recSparta = minusFeeBurn(_inputSparta, feeOnTsf) // SPARTA received by pool
+    const [unitsLP, slipRevert] = calcLiquidityUnits(
+      _recSparta,
+      _inputToken,
+      pool,
+    ) // Calc LP units
+    return [unitsLP, _inputSparta, slipRevert]
   }
-  const _recSparta = minusFeeBurn(_inputSparta, feeOnTsf) // SPARTA received by pool
-  const unitsLP = calcLiquidityUnits(_recSparta, _inputToken, pool) // Calc LP units
-  return [unitsLP, _inputSparta]
+  return ['0.00', '0.00', false]
 }
 
 /**
  * Calculate LP tokens from asym-liquidity-add
- * @param input
- * @param pool poolDetails
- * @param fromBase
- * @param feeOnTsf
- * @returns [unitsLP, swapFee]
+ * @param input @param pool poolDetails
+ * @param fromBase @param feeOnTsf
+ * @returns [unitsLP, swapFee, slipRevert]
  */
 export const addLiqAsym = (input, pool, fromBase, feeOnTsf) => {
-  const _input = BN(input) // TOKEN1 sent to Router
-  const _received = fromBase ? minusFeeBurn(_input, feeOnTsf) : _input // TOKEN1 received by Router (after feeBurn)
-  const _swapIn = _input.div(2) // TOKEN1 leaving the Router
-  const _swapInRec = fromBase ? minusFeeBurn(_swapIn, feeOnTsf) : _swapIn // TOKEN1 received by Pool (after feeBurn)
-  const [_swapOut, swapFee] = calcSwapOutput(_swapInRec, pool, !fromBase) // TOKEN2 leaving the Pool
-  const _swapOutRec = fromBase ? _swapOut : minusFeeBurn(_swapOut, feeOnTsf) // TOKEN2 received by Router (after feeBurn)
-  const _recSparta = fromBase
-    ? _received.minus(_swapIn)
-    : minusFeeBurn(_swapOutRec, feeOnTsf) // SPARTA received by Pool
-  const _recToken = fromBase ? _swapOutRec : _received.minus(_swapIn) // TOKEN received by Pool
-  const unitsLP = calcLiquidityUnits(_recSparta, _recToken, pool) // Calc LP units
-  return [unitsLP, swapFee]
+  if (pool) {
+    const _input = BN(input) // TOKEN1 sent to Router
+    const _received = fromBase ? minusFeeBurn(_input, feeOnTsf) : _input // TOKEN1 received by Router (after feeBurn)
+    const _swapIn = _input.div(2) // TOKEN1 leaving the Router
+    const _swapInRec = fromBase ? minusFeeBurn(_swapIn, feeOnTsf) : _swapIn // TOKEN1 received by Pool (after feeBurn)
+    const [_swapOut, swapFee] = calcSwapOutput(_swapInRec, pool, !fromBase) // TOKEN2 leaving the Pool
+    const _swapOutRec = fromBase ? _swapOut : minusFeeBurn(_swapOut, feeOnTsf) // TOKEN2 received by Router (after feeBurn)
+    const _recSparta = fromBase
+      ? _received.minus(_swapIn)
+      : minusFeeBurn(_swapOutRec, feeOnTsf) // SPARTA received by Pool
+    const _recToken = fromBase ? _swapOutRec : _received.minus(_swapIn) // TOKEN received by Pool
+    // Update pools balances
+    let baseAmnt = BN(pool.baseAmount)
+    let tokenAmnt = BN(pool.tokenAmount)
+    const totSupp = pool.poolUnits
+    baseAmnt = fromBase ? baseAmnt.plus(_swapInRec) : baseAmnt.minus(_swapOut)
+    tokenAmnt = fromBase
+      ? tokenAmnt.minus(_swapOut)
+      : tokenAmnt.plus(_swapInRec)
+    const _pool = {
+      baseAmount: baseAmnt,
+      tokenAmount: tokenAmnt,
+      poolUnits: totSupp,
+    }
+    const [unitsLP, slipRevert] = calcLiquidityUnits(
+      _recSparta,
+      _recToken,
+      _pool,
+    ) // Calc LP units
+    return [unitsLP, swapFee, slipRevert]
+  }
+  return ['0.00', '0.00', false]
 }
 
 /**
@@ -111,9 +136,9 @@ export const zapLiq = (input, pool1, pool2, feeOnTsf) => {
   const _spartaHalfRec = minusFeeBurn(_spartaHalf, feeOnTsf) // SPARTA received by pool2 (after feeBurn)
   const [_token2, fee2] = calcSwapOutput(_spartaHalfRec, pool2, false) // SPARTA swapped for token2
   const _spartaRec2 = _spartaHalfRec // SPARTA received by pool2 (other half after feeBurn)
-  const unitsLP = calcLiquidityUnits(_spartaRec2, _token2, pool2) // Calc LP units
+  const [unitsLP, slipRevert] = calcLiquidityUnits(_spartaRec2, _token2, pool2) // Calc LP units
   const swapFee = fee1.plus(fee2)
-  return [unitsLP, swapFee]
+  return [unitsLP, swapFee, slipRevert]
 }
 
 /**

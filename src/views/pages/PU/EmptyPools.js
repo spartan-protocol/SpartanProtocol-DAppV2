@@ -122,15 +122,14 @@ const EmptyPools = (props) => {
 
   const getAddBothOutputLP = () => {
     if (addInput1 && addInput2) {
-      return convertFromWei(
-        calcLiquidityUnits(
-          _minusFeeBurn(convertToWei(addInput2?.value)),
-          convertToWei(addInput1?.value),
-          poolAdd1,
-        ),
+      const [output, slipRevert] = calcLiquidityUnits(
+        _minusFeeBurn(convertToWei(addInput2?.value)),
+        convertToWei(addInput1?.value),
+        poolAdd1,
       )
+      return [output, slipRevert]
     }
-    return '0.00'
+    return ['0.00', false]
   }
 
   const getInput2ValueUSD = () => {

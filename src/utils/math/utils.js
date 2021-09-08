@@ -87,16 +87,16 @@ export const calcSlipAdjustment = (spartaInput, tokenInput, poolDetails) => {
   const T = BN(poolDetails.tokenAmount)
   const part1 = B.times(t) // baseDepth * tokenInput
   const part2 = b.times(T) // baseInput * tokenDepth
-  const part3 = b.times(2).plus(B) // 2 * baseInput + baseDepth (Modified to reduce slip adjustment)
+  const part3 = BN(2).times(b).plus(B) // 2 * baseInput + baseDepth (Modified to reduce slip adjustment)
   const part4 = t.plus(T) // tokenInput + tokenDepth
-  let numerator = ''
+  let numerator = BN(0)
   if (part1.isGreaterThan(part2)) {
     numerator = part1.minus(part2)
   } else {
     numerator = part2.minus(part1)
   }
   const denominator = part3.times(part4)
-  return one.minus(numerator.times(one).div(denominator)).toFixed(0, 1)
+  return BN(one.minus(numerator.times(one).div(denominator)).toFixed(0, 1))
 }
 
 // Calculate liquidity units
@@ -114,12 +114,13 @@ export const calcLiquidityUnits = (spartaInput, tokenInput, poolDetails) => {
     tokenInput,
     poolDetails,
   )
+  const slipRevert = slipAdjustment.isLessThan(one.times(0.98))
   const part1 = t.times(B) // tokenInput * baseDepth
   const part2 = T.times(b) // tokenDepth * baseInput
   const part3 = T.times(B).times(2) // tokenDepth * baseDepth * 2
   const part4 = P.times(part1.plus(part2)).div(part3) // P == totalSupply
   const result = BN(part4).times(slipAdjustment).div(one)
-  return result.toFixed(0, 1)
+  return [result.toFixed(0, 1), slipRevert]
 }
 
 /**

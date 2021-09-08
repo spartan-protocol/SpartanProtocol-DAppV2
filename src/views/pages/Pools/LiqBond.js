@@ -124,16 +124,16 @@ const LiqBond = () => {
 
   const calcOutput = () => {
     if (bondInput1) {
-      const output = calcLiquidityUnits(
+      const [output, slipRevert] = calcLiquidityUnits(
         _minusFeeBurn(calcSpartaMinted()),
         convertToWei(bondInput1.value),
         assetBond1.baseAmount,
         assetBond1.tokenAmount,
         assetBond1.poolUnits,
       )
-      return output
+      return [output, slipRevert]
     }
-    return '0'
+    return ['0', false]
   }
 
   const getInput1ValueUSD = () => {
@@ -343,8 +343,8 @@ const LiqBond = () => {
                       <Col className="text-end">
                         <span className="subtitle-card">
                           ~
-                          {calcOutput() > 0
-                            ? formatFromWei(calcOutput(), 6)
+                          {calcOutput()[0] > 0
+                            ? formatFromWei(calcOutput()[0], 6)
                             : '0.00'}{' '}
                           <span className="output-card">
                             {getToken(assetBond1.tokenAddress)?.symbol}p

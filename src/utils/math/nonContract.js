@@ -6,8 +6,8 @@ export const one = BN(1).times(10).pow(18)
 /**
  * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%)
  * Uses the feeOnTransfer if already called
- * @param {number} feeOnTransfer @param {number} amount
- * @returns {number} fee
+ * @param feeOnTransfer @param amount
+ * @returns fee
  */
 export const calcFeeBurn = (feeOnTransfer, amount) => {
   const fee = calcPart(feeOnTransfer, amount)
@@ -16,8 +16,8 @@ export const calcFeeBurn = (feeOnTransfer, amount) => {
 
 /**
  * Return SPARTA after feeBurn
- * @param {number} amount @param {number} feeOnTsf
- * @returns {number} fee
+ * @param amount @param feeOnTsf
+ * @returns fee
  */
 export const minusFeeBurn = (amount, feeOnTsf) => {
   const _amount = BN(amount)
@@ -29,7 +29,7 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
 /**
  * Get all relevant weights from the PoolDetails object
  * @param {[object]} poolDetails
- * @returns {number} memberWeight
+ * @returns memberWeight
  */
 export const getVaultWeights = (poolDetails) => {
   const _poolDetails = poolDetails.filter((x) => x.curated === true)
