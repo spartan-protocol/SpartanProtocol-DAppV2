@@ -156,7 +156,7 @@ export const removeLiquiditySingle =
  * @param {object} wallet
  */
 export const swap =
-  (inputAmount, fromToken, toToken, wallet) => async (dispatch) => {
+  (inputAmount, fromToken, toToken, minAmount, wallet) => async (dispatch) => {
     dispatch(routerLoading())
     const addr = getAddresses()
     const contract = getRouterContract(wallet)
@@ -166,7 +166,13 @@ export const swap =
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
-      const swapped = await contract.swap(inputAmount, fromToken, toToken, ORs)
+      const swapped = await contract.swap(
+        inputAmount,
+        fromToken,
+        toToken,
+        minAmount,
+        ORs,
+      )
       dispatch(payloadToDispatch(Types.ROUTER_TXN, ['swapped', swapped]))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))

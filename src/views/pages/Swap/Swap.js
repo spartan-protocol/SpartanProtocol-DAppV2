@@ -478,6 +478,7 @@ const Swap = () => {
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
         assetSwap2.tokenAddress,
+        BN(getSwap()[0]).times(0.95).toFixed(0, 1),
         wallet,
       ),
     )
