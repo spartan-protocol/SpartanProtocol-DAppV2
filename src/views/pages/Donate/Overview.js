@@ -147,16 +147,16 @@ ethereum(network: $network){
   const [totalWidth, settotalWidth] = useState(0)
   useEffect(() => {
     settotalWidth(
-      BN(totalUSD).div(100000000000000000000000).times(100).toString(),
+      BN(totalUSD).div(20000000000000000000000).times(100).toString(),
     )
   }, [totalUSD])
 
   const [progColor, setprogColor] = useState('primary')
   useEffect(() => {
     let _progColor = 'primary'
-    if (totalWidth >= 96) {
+    if (totalWidth >= 9) {
       _progColor = 'green'
-    } else if (totalWidth >= 30) {
+    } else if (totalWidth >= 4.5) {
       _progColor = 'info'
     }
     setprogColor(_progColor)
@@ -237,23 +237,22 @@ ethereum(network: $network){
               <Card.Body>
                 <Row>
                   <Col xs="12" className="my-2">
-                    The Spartan Protocol V2 contracts went through a{' '}
-                    <a
-                      href="https://code423n4.com/"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      CodeArena contest
-                    </a>{' '}
-                    in July. $96k was put forward by a Spartan community member
-                    in advance to pay for the contest.
+                    After the great community support with the codeArena
+                    crowdfund campaign, we continue building our shield wall.
+                    <br />
+                    We are going to need $9k to run two AMAs with Binance, to
+                    explain to the wider community what Spartan Protocol really
+                    is. Binance global doesn&apos;t charge a fee, they just
+                    request to do some sort of a campaign to give out at least
+                    $4k to the community.
+                    <br />
+                    The next step that follows are videos explaining and
+                    promoting Spartan Protocol. All support is welcome!
                     <br />
                     <br />
-                    The funds (up to $96k) from the community wallet will be
-                    sent to that Spartan once the C4 details are finalised. This
-                    donation page will then be repurposed into a general
-                    donations page to help fund general costs for the community
-                    project ongoing.
+                    Once the goal is achieved, this donation page will then be
+                    repurposed into a general donations page to help fund
+                    general costs for the community project ongoing.
                     <br />
                     <div className="output-card mt-4">
                       {t('viewCommunityWallet')}:{' '}
@@ -270,26 +269,30 @@ ethereum(network: $network){
                     <ProgressBar style={{ height: '30px' }}>
                       <ProgressBar
                         variant={progColor}
-                        now={totalWidth}
+                        now={totalWidth * 5}
                         label={`$${formatFromWei(totalUSD, 0)} (${t(
                           'donations',
                         )})`}
                       />
-                      <ProgressBar variant="black" now={100 - totalWidth} />
+                      <ProgressBar variant="black" now={100 - totalWidth * 5} />
                     </ProgressBar>
                   </Col>
 
                   <Col xs="12" className="my-2">
                     <ProgressBar style={{ height: '30px' }}>
-                      <ProgressBar now="30" label="$30K (Min)" />
+                      <ProgressBar now="22.5" label="$4.5K (AMA 1)" />
                       <ProgressBar variant="black" now="0.25" />
                       <ProgressBar
                         variant="info"
-                        now="66"
-                        label={`$96K (${t('target')})`}
+                        now="22.5"
+                        label={`$4.5K (${t('AMA 2')})`}
                       />
                       <ProgressBar variant="black" now="0.25" />
-                      <ProgressBar variant="green" now="14" label="$110K" />
+                      <ProgressBar
+                        variant="green"
+                        now="55"
+                        label="$11K (promoting videos)"
+                      />
                     </ProgressBar>
                   </Col>
                 </Row>
