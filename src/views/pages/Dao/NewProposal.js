@@ -66,6 +66,7 @@ const NewProposal = () => {
   const noAddrInput = [
     'LIST_BOND',
     'DELIST_BOND',
+    'REALISE',
     'REMOVE_CURATED_POOL',
     'ADD_CURATED_POOL',
   ]

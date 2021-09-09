@@ -33,6 +33,13 @@ const AssetSelect = (props) => {
           asset.curated === false && !filter.includes(asset.tokenAddress),
       )
     }
+    if (props.selectedType === 'REALISE') {
+      poolMode = true
+      return pool.poolDetails?.filter(
+        (asset) =>
+          asset.curated === true && !filter.includes(asset.tokenAddress),
+      )
+    }
     if (props.selectedType === 'LIST_BOND') {
       poolMode = false
       return pool.tokenDetails?.filter(

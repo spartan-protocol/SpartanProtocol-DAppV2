@@ -24,6 +24,12 @@ export const proposalTypes = [
     type: 'Action',
   },
   {
+    value: 'REALISE',
+    label: 'Synths: Attribute Premium to LPs',
+    desc: 'Burn excess LP collateral:',
+    type: 'Address',
+  },
+  {
     value: 'ADD_CURATED_POOL',
     label: 'Pools: Add Curated',
     desc: 'Add to the curated list:',
