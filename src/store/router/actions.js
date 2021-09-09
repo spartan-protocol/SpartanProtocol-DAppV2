@@ -11,9 +11,7 @@ export const routerLoading = () => ({
 
 /**
  * Add Liquidity to a pool symmetrically
- * @param inputToken uint @param inputBase uint
- * @param token address @param wallet object
- * @returns units @returns fee
+ * @param inputToken @param inputBase @param token @param wallet
  */
 export const addLiquidity =
   (inputToken, inputBase, token, wallet) => async (dispatch) => {
@@ -40,11 +38,7 @@ export const addLiquidity =
 
 /**
  * Swap LP tokens for other LP tokens
- * @param {uint} unitsInput
- * @param {address} fromPool
- * @param {address} toPool
- * @param {object} wallet
- * @returns {unit} units
+ * @param unitsInput @param fromPool @param toPool @param wallet
  */
 export const zapLiquidity =
   (unitsInput, fromPool, toPool, wallet) => async (dispatch) => {
@@ -63,11 +57,7 @@ export const zapLiquidity =
 
 /**
  * Add liquidity asymmetrically
- * @param {uint} input
- * @param {bool} fromBase
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} units
+ * @param input @param fromBase @param token @param wallet
  */
 export const addLiquiditySingle =
   (input, fromBase, token, wallet) => async (dispatch) => {
@@ -96,8 +86,7 @@ export const addLiquiditySingle =
 
 /**
  * Remove liquidity symmetrically
- * @param units @param token @param token @param wallet
- * @returns units
+ * @param units @param token @param wallet
  */
 export const removeLiquidityExact =
   (units, token, wallet) => async (dispatch) => {
@@ -116,11 +105,7 @@ export const removeLiquidityExact =
 
 /**
  * Remove liquidity asymmetrically
- * @param {uint} units
- * @param {bool} toBase
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} fee
+ * @param units @param toBase @param token @param wallet
  */
 export const removeLiquiditySingle =
   (units, toBase, token, wallet) => async (dispatch) => {
@@ -148,10 +133,7 @@ export const removeLiquiditySingle =
 
 /**
  * Swap BEP20 assets
- * @param {uint} inputAmount
- * @param {address} fromToken
- * @param {address} toToken
- * @param {object} wallet
+ * @param inputAmount @param fromToken @param toToken @param wallet
  */
 export const swap =
   (inputAmount, fromToken, toToken, minAmount, wallet) => async (dispatch) => {
@@ -179,11 +161,7 @@ export const swap =
 
 /**
  * Swap BEP20 for synthetic assets
- * @param {uint} inputAmount
- * @param {address} fromToken
- * @param {address} toSynth
- * @param {object} wallet
- * @returns {unit} outputSynth
+ * @param inputAmount @param fromToken @param toSynth @param wallet
  */
 export const swapAssetToSynth =
   (inputAmount, fromToken, toSynth, wallet) => async (dispatch) => {
@@ -210,11 +188,7 @@ export const swapAssetToSynth =
 
 /**
  * Swap synthetic assets for SPARTA
- * @param {uint} inputAmount
- * @param {address} fromSynth
- * @param {address} toToken
- * @param {object} wallet
- * @returns {unit} output
+ * @param inputAmount @param fromSynth @param toToken @param wallet
  */
 export const swapSynthToAsset =
   (inputAmount, fromSynth, toToken, wallet) => async (dispatch) => {

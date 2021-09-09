@@ -166,14 +166,14 @@ const Swap = () => {
         if (type1 !== 'synth' && type2 !== 'synth') {
           if (asset2?.tokenAddress === asset1?.tokenAddress) {
             asset2 =
-              asset1?.tokenAddress !== poolDetails[1].tokenAddress
-                ? { tokenAddress: poolDetails[1].tokenAddress }
-                : { tokenAddress: poolDetails[2].tokenAddress }
+              asset1?.tokenAddress !== poolDetails[0].tokenAddress
+                ? { tokenAddress: poolDetails[0].tokenAddress }
+                : { tokenAddress: poolDetails[1].tokenAddress }
           }
         }
 
         if (type1 === 'pool') {
-          if (asset2?.tokenAddress === addr.spartav2) {
+          if (asset2?.address === '') {
             asset2 = { tokenAddress: addr.bnb }
           }
         }
@@ -301,19 +301,19 @@ const Swap = () => {
 
   /**
    * Get zap txn details
-   * @returns [unitsLP, swapFee]
+   * @returns [unitsLP, swapFee, slipRevert, capRevert]
    */
   const getZap = () => {
     if (swapInput1 && assetSwap1 && assetSwap2) {
-      const [unitsLP, swapFee] = zapLiq(
+      const [unitsLP, swapFee, slipRevert, capRevert] = zapLiq(
         convertToWei(swapInput1.value),
         assetSwap1,
         assetSwap2,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [unitsLP, swapFee]
+      return [unitsLP, swapFee, slipRevert, capRevert]
     }
-    return ['0.00', '0.00']
+    return ['0.00', '0.00', false, false]
   }
 
   /**
@@ -429,6 +429,29 @@ const Swap = () => {
       return BN(getInput2USD()).div(getInput1USD()).minus('1').times('100')
     }
     return '0'
+  }
+
+  const checkValid = () => {
+    if (swapInput1?.value <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
+      return [false, t('checkBalance')]
+    }
+    const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    if (mode === 'pool') {
+      if (getZap()[2]) {
+        return [false, 'slipTooHigh']
+      }
+      if (getZap()[3]) {
+        return [false, 'poolAtCapacity']
+      }
+      return [true, `${t('sell')} ${_symbol}p`]
+    }
+    if (window.localStorage.getItem('assetType1') === 'synth') {
+      return [true, `${t('sell')} ${_symbol}s`]
+    }
+    return [true, `${t('sell')} ${_symbol}`]
   }
 
   const handleTokenInputChange = (e) => {
@@ -942,15 +965,9 @@ const Swap = () => {
                               <Button
                                 className="w-100"
                                 onClick={() => handleSwapAssets()}
-                                disabled={
-                                  swapInput1?.value <= 0 ||
-                                  BN(
-                                    convertToWei(swapInput1?.value),
-                                  ).isGreaterThan(getBalance(1))
-                                }
+                                disabled={!checkValid()[0]}
                               >
-                                {t('sell')}{' '}
-                                {getToken(assetSwap1.tokenAddress)?.symbol}
+                                {checkValid()[1]}
                               </Button>
                             </Col>
                           </Row>
@@ -985,15 +1002,9 @@ const Swap = () => {
                                         ),
                                       )
                                     }
-                                    disabled={
-                                      swapInput1?.value <= 0 ||
-                                      BN(
-                                        convertToWei(swapInput1?.value),
-                                      ).isGreaterThan(getBalance(1))
-                                    }
+                                    disabled={!checkValid()[0]}
                                   >
-                                    {t('sell')}{' '}
-                                    {getToken(assetSwap1.tokenAddress)?.symbol}p
+                                    {checkValid()[1]}
                                   </Button>
                                 </Col>
                               </Row>
@@ -1051,15 +1062,9 @@ const Swap = () => {
                               <Button
                                 className="w-100"
                                 onClick={() => handleSwapToSynth()}
-                                disabled={
-                                  swapInput1?.value <= 0 ||
-                                  BN(
-                                    convertToWei(swapInput1?.value),
-                                  ).isGreaterThan(getBalance(1))
-                                }
+                                disabled={!checkValid()[0]}
                               >
-                                {t('sell')}{' '}
-                                {getToken(assetSwap1.tokenAddress)?.symbol}
+                                {checkValid()[1]}
                               </Button>
                             </Col>
                           </Row>
@@ -1096,15 +1101,9 @@ const Swap = () => {
                                     ),
                                   )
                                 }
-                                disabled={
-                                  swapInput1?.value <= 0 ||
-                                  BN(
-                                    convertToWei(swapInput1?.value),
-                                  ).isGreaterThan(getBalance(1))
-                                }
+                                disabled={!checkValid()[0]}
                               >
-                                {t('sell')}{' '}
-                                {getToken(assetSwap1.tokenAddress)?.symbol}s
+                                {checkValid()[1]}
                               </Button>
                             </Col>
                           </Row>

@@ -35,12 +35,8 @@ import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
 import NewPool from '../Home/NewPool'
 import Share from '../../../components/Share/SharePool'
-import {
-  calcLiquidityUnits,
-  calcSpotValueInBase,
-  calcSwapOutput,
-} from '../../../utils/math/utils'
-import { minusFeeBurn } from '../../../utils/math/nonContract'
+import { calcSpotValueInBase } from '../../../utils/math/utils'
+import { bondLiq } from '../../../utils/math/dao'
 
 const LiqBond = () => {
   const { t } = useTranslation()
@@ -80,7 +76,7 @@ const LiqBond = () => {
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
+          asset1.address !== '' &&
           bond.listedAssets.includes(asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
@@ -105,33 +101,14 @@ const LiqBond = () => {
     }
   }
 
-  const _minusFeeBurn = (_amount) =>
-    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-
-  // Bond Functions
-  const calcSpartaMinted = () => {
+  const getBondLiq = () => {
     if (bondInput1) {
-      const minted = calcSwapOutput(
+      const [unitsLP, bondedSparta, slipRevert, capRevert] = bondLiq(
         convertToWei(bondInput1.value),
-        assetBond1.tokenAmount,
-        assetBond1.baseAmount,
-        true,
+        assetBond1,
+        sparta.globalDetails.feeOnTransfer,
       )
-      return minted[0]
-    }
-    return '0'
-  }
-
-  const calcOutput = () => {
-    if (bondInput1) {
-      const [output, slipRevert] = calcLiquidityUnits(
-        _minusFeeBurn(calcSpartaMinted()),
-        convertToWei(bondInput1.value),
-        assetBond1.baseAmount,
-        assetBond1.tokenAmount,
-        assetBond1.poolUnits,
-      )
-      return [output, slipRevert]
+      return [unitsLP, bondedSparta, slipRevert, capRevert]
     }
     return ['0', false]
   }
@@ -173,6 +150,29 @@ const LiqBond = () => {
         wallet,
       ),
     )
+  }
+
+  const checkValid = () => {
+    if (bondInput1?.value <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (
+      BN(convertToWei(bondInput1?.value)).isGreaterThan(
+        getToken(assetBond1.tokenAddress)?.balance,
+      )
+    ) {
+      return [false, t('checkBalance')]
+    }
+    if (BN(getBondLiq()[1]).isGreaterThan(bond.global.spartaRemaining)) {
+      return [false, t('checkAllocation')]
+    }
+    if (getBondLiq()[2]) {
+      return [false, 'slipTooHigh']
+    }
+    if (getBondLiq()[3]) {
+      return [false, 'poolAtCapacity']
+    }
+    return [true, t('bond')]
   }
 
   return (
@@ -329,8 +329,8 @@ const LiqBond = () => {
                       <Col className="text-end">
                         <span className="text-card">
                           ~
-                          {calcSpartaMinted() > 0
-                            ? formatFromWei(calcSpartaMinted(), 6)
+                          {getBondLiq()[1] > 0
+                            ? formatFromWei(getBondLiq()[1], 6)
                             : '0.00'}{' '}
                           SPARTA
                         </span>
@@ -343,8 +343,8 @@ const LiqBond = () => {
                       <Col className="text-end">
                         <span className="subtitle-card">
                           ~
-                          {calcOutput()[0] > 0
-                            ? formatFromWei(calcOutput()[0], 6)
+                          {getBondLiq()[0] > 0
+                            ? formatFromWei(getBondLiq()[0], 6)
                             : '0.00'}{' '}
                           <span className="output-card">
                             {getToken(assetBond1.tokenAddress)?.symbol}p
@@ -378,18 +378,11 @@ const LiqBond = () => {
                   <Col xs="12" sm="4" md="12" className="hide-if-siblings">
                     <Button
                       className="w-100"
-                      disabled={
-                        bondInput1?.value <= 0 ||
-                        BN(convertToWei(bondInput1?.value)).isGreaterThan(
-                          getToken(assetBond1.tokenAddress)?.balance,
-                        ) ||
-                        BN(calcSpartaMinted()).isGreaterThan(
-                          bond.global.spartaRemaining,
-                        )
-                      }
+                      disabled={!checkValid()[0]}
                       onClick={() => handleBondDeposit()}
                     >
-                      {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
+                      {checkValid()[1]}{' '}
+                      {getToken(assetBond1.tokenAddress)?.symbol}
                     </Button>
                   </Col>
                 </Row>

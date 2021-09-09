@@ -79,14 +79,11 @@ const LiqRemove = () => {
 
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
+          asset1.address !== '' &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset2 =
-          asset1.tokenAddress !== addr.spartav2
-            ? asset1
-            : { tokenAddress: addr.bnb }
+        asset2 = asset1.address !== '' ? asset1 : { tokenAddress: addr.bnb }
         asset3 = { tokenAddress: addr.spartav2 }
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
@@ -109,7 +106,7 @@ const LiqRemove = () => {
 
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
+          asset1.address !== '' &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
@@ -119,8 +116,7 @@ const LiqRemove = () => {
           ? asset2
           : { tokenAddress: addr.spartav2 }
         asset2 =
-          asset2.tokenAddress === asset1.tokenAddress ||
-          asset2.tokenAddress === addr.spartav2
+          asset2.tokenAddress === asset1.tokenAddress || asset2.address === ''
             ? asset2
             : { tokenAddress: addr.spartav2 }
 

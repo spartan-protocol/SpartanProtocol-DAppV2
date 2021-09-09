@@ -124,7 +124,7 @@ const Swap = () => {
         } else {
           window.localStorage.setItem('assetType1', 'synth')
           window.localStorage.setItem('assetType2', 'token')
-          if (asset1.tokenAddress === addr.spartav2) {
+          if (asset1.address === '') {
             asset1 = { tokenAddress: addr.bnb }
           }
         }

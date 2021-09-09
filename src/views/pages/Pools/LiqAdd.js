@@ -90,15 +90,12 @@ const LiqAdd = () => {
         }
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
+          asset1.address !== '' &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset2 = { tokenAddress: addr.spartav2 }
-        asset3 =
-          asset1.tokenAddress !== addr.spartav2
-            ? asset1
-            : { tokenAddress: addr.bnb }
+        asset3 = asset1.address !== '' ? asset1 : { tokenAddress: addr.bnb }
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset2 = getItemFromArray(asset2, pool.poolDetails)
@@ -123,7 +120,7 @@ const LiqAdd = () => {
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset3 = asset1.tokenAddress !== addr.spartav2 ? asset1 : asset3
+        asset3 = asset1.address !== '' ? asset1 : asset3
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset3 = getItemFromArray(asset3, pool.poolDetails)
