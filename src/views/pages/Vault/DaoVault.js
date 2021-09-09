@@ -13,11 +13,12 @@ import {
   daoWithdraw,
   daoGlobalDetails,
   daoMemberDetails,
+  daoVaultWeight,
 } from '../../../store/dao/actions'
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
 import { useSparta } from '../../../store/sparta'
-import { bondMemberDetails, useBond } from '../../../store/bond'
+import { bondVaultWeight, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
 import {
   calcFeeBurn,
@@ -46,9 +47,8 @@ const DaoVault = () => {
   const getData = () => {
     dispatch(daoGlobalDetails(wallet))
     dispatch(daoMemberDetails(wallet))
-    dispatch(bondMemberDetails(wallet)) // delete after next testnet deploy
-    // dispatch(daoVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
-    // dispatch(bondVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
+    dispatch(daoVaultWeight(pool.poolDetails, wallet))
+    dispatch(bondVaultWeight(pool.poolDetails, wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -68,8 +68,7 @@ const DaoVault = () => {
   }
 
   const getLockedSecs = () => {
-    const depositTime = BN('1623400000') // Remove this line after next DaoVault deploy
-    // const depositTime = BN(dao.member?.depositTime) // Uncomment this line after next DaoVault deploy
+    const depositTime = BN(dao.member?.depositTime)
     const lockUpSecs = BN('86400')
     const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
     return [units, time]

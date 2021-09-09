@@ -21,8 +21,7 @@ export const daoGlobalDetails = (wallet) => async (dispatch) => {
 
   try {
     let awaitArray = [
-      // contract.callStatic.running(), // Uncomment after new Testnet
-      true, // Delete after new Testnet
+      contract.callStatic.running(),
       contract.callStatic.coolOffPeriod(),
       contract.callStatic.erasToEarn(),
       contract.callStatic.daoClaim(),
@@ -117,8 +116,7 @@ export const daoProposalDetails =
           awaitArray.push(contract.callStatic.getProposalDetails(i))
           awaitArray.push(
             wallet.account
-              ? // ? contract.callStatic.memberVoted(i, wallet.account) // uncomment after new Testnet
-                contract.callStatic.mapPIDMember_votes(i, wallet.account) // Remove this after new testnet
+              ? contract.callStatic.memberVoted(i, wallet.account)
               : '0',
           )
         }
@@ -133,7 +131,6 @@ export const daoProposalDetails =
           proposal.push({
             id: proposalArray[i].id.toString(),
             proposalType: proposalArray[i].proposalType,
-            votes: proposalArray[i].votes.toString(), // Remove this line after new testnet
             coolOffTime: proposalArray[i].coolOffTime.toString(), // timestamp of coolOff
             finalising: proposalArray[i].finalising,
             finalised: proposalArray[i].finalised,
@@ -141,8 +138,7 @@ export const daoProposalDetails =
             proposedAddress: proposalArray[i].proposedAddress.toString(),
             open: proposalArray[i].open,
             startTime: proposalArray[i].startTime.toString(), // timestamp of proposal genesis
-            memberVotes: proposalArray[i + 1].toString(), // Remove this after new testnet
-            // memberVoted: proposalArray[i + 1].toString(), // uncomment after new Testnet
+            memberVoted: proposalArray[i + 1].toString(),
           })
         }
         dispatch(payloadToDispatch(Types.DAO_PROPOSAL_DETAILS, proposal))

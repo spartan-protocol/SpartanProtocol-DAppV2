@@ -5,7 +5,6 @@ export {
   bondGlobalDetails,
   bondVaultWeight,
   allListedAssets,
-  bondMemberDetails,
   bondDeposit,
   claimBond,
 } from './actions'

@@ -38,15 +38,6 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.BOND_MEMBER: {
-      return {
-        ...state,
-        member: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
     case Types.BOND_DEPOSIT: {
       return {
         ...state,

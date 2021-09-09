@@ -302,10 +302,10 @@ const LiqAdd = () => {
 
   const handleInputChange = () => {
     if (activeTab === 'addTab1' && addInput1 && addInput2) {
-      if (addInput2 !== document.activeElement) {
+      if (addInput2 !== document.activeElement && addInput1.value) {
         addInput2.value = calcSpotValueInBase(addInput1.value, poolAdd1)
         setOutputLp(getAddLiq()[0])
-      } else if (addInput1 !== document.activeElement) {
+      } else if (addInput1 !== document.activeElement && addInput2.value) {
         addInput1.value = calcSpotValueInToken(
           addInput2.value > 0 ? addInput2.value : '0.00',
           poolAdd1,

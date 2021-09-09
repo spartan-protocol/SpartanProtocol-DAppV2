@@ -17,21 +17,18 @@ export const bondLoading = () => ({
 
 /**
  * Get the global bond details
- * @returns {object} globalDetails
+ * @returns globalDetails
  */
 export const bondGlobalDetails = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
   const addr = getAddresses()
   const contract = getSpartaV2Contract(wallet)
-  const bondContract = getBondVaultContract(wallet)
   try {
     let awaitArray = []
     awaitArray.push(contract ? contract.callStatic.balanceOf(addr?.dao) : '0')
-    awaitArray.push(bondContract ? bondContract.callStatic.totalWeight() : '0') // remove after next testnet deploy
     awaitArray = await Promise.all(awaitArray)
     const global = {
       spartaRemaining: awaitArray[0].toString(), // Bond allocation left
-      weight: awaitArray[1].toString(), // BondVault totalWeight // remove after next testnet deploy
     }
     dispatch(payloadToDispatch(Types.BOND_GLOBAL, global))
   } catch (error) {
@@ -41,8 +38,8 @@ export const bondGlobalDetails = (wallet) => async (dispatch) => {
 
 /**
  * Get the current bondVault's total weight
- * @param {[string]} poolDetails @param {object} wallet
- * @returns {number} spartaWeight
+ * @param poolDetails @param wallet
+ * @returns spartaWeight
  */
 export const bondVaultWeight = (poolDetails, wallet) => async (dispatch) => {
   dispatch(bondLoading())
@@ -76,35 +73,15 @@ export const bondVaultWeight = (poolDetails, wallet) => async (dispatch) => {
 
 /**
  * Get all current bond listed assets
- * @returns {number} count
+ * @returns count
  */
 export const allListedAssets = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getDaoContract(wallet)
-  try {
-    const listedAssets = await contract.callStatic.allListedAssets()
-    dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
-  }
-}
-
-// --------------------------------------- BOND MEMBER SCOPE ---------------------------------------
-
-/**
- * Get the bond member details *** DELETE THIS AFTER NEXT TESTNET ***
- * @returns {object} memberDetails
- */
-export const bondMemberDetails = (wallet) => async (dispatch) => {
-  dispatch(bondLoading())
   const contract = getBondVaultContract(wallet)
+  console.log(contract)
   try {
-    let awaitArray = [contract.callStatic.getMemberWeight(wallet.account)]
-    awaitArray = await Promise.all(awaitArray)
-    const member = {
-      weight: awaitArray[0].toString(),
-    }
-    dispatch(payloadToDispatch(Types.BOND_MEMBER, member))
+    const listedAssets = await contract.callStatic.getBondedAssets()
+    dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
   }
@@ -114,7 +91,7 @@ export const bondMemberDetails = (wallet) => async (dispatch) => {
 
 /**
  * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract)
- * @param {string} tokenAddr @param {number} amount @param {object} wallet
+ * @param tokenAddr @param amount @param wallet
  * @returns {boolean}
  */
 export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
@@ -135,7 +112,7 @@ export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
 
 /**
  * Claim an array of Bond assets by poolAddresses
- * @param {object} wallet
+ * @param wallet
  * @returns {boolean}
  */
 export const claimBond = (bondAssets, wallet) => async (dispatch) => {

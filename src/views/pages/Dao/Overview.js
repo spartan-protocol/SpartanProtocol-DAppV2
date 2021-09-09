@@ -9,19 +9,19 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
-  // daoVaultWeight,
-  // proposalWeight, // uncomment after next testnet deploy
+  daoVaultWeight,
+  proposalWeight,
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
-import { bondMemberDetails } from '../../../store/bond'
 import { getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-// import { usePool } from '../../../store/pool/selector' // uncomment after next testnet deploy
+import { usePool } from '../../../store/pool/selector'
+import { bondVaultWeight } from '../../../store/bond'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const dao = useDao()
-  // const pool = usePool() // uncomment after next testnet deploy
+  const pool = usePool()
   const wallet = useWallet()
   const { t } = useTranslation()
 
@@ -65,13 +65,12 @@ const Overview = () => {
   useEffect(() => {
     if (network.chainId === 97) {
       dispatch(daoMemberDetails(wallet))
-      dispatch(bondMemberDetails(wallet)) // delete after next testnet deploy
       dispatch(daoProposalDetails(dao.global?.currentProposal, wallet))
-      // dispatch( // uncomment after next testnet deploy
-      //   proposalWeight(dao.global?.currentProposal, pool.poolDetails, wallet), // uncomment after next testnet deploy
-      // ) // uncomment after next testnet deploy
-      // dispatch(daoVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
-      // dispatch(bondVaultWeight(pool.poolDetails, wallet)) // uncomment after next testnet deploy
+      dispatch(
+        proposalWeight(dao.global?.currentProposal, pool.poolDetails, wallet),
+      )
+      dispatch(daoVaultWeight(pool.poolDetails, wallet))
+      dispatch(bondVaultWeight(pool.poolDetails, wallet))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
