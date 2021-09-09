@@ -4,7 +4,7 @@ import { Card, Col, Row } from 'react-bootstrap'
 import { Icon } from '../../../components/Icons/icons'
 import NewPool from './NewPool'
 
-const SummaryItem = () => {
+const SummaryItem = (props) => {
   const { t } = useTranslation()
 
   return (
@@ -25,7 +25,14 @@ const SummaryItem = () => {
                 <Icon height="30" />
               </Col>
               <Col xs="auto">
-                {t('add info for each tab here (and icon/badge)')}
+                {props.activeTab === '1' &&
+                  t(
+                    'pools add info for each tab here (and icon/badge). make sure to explain normal pools and also curated pools',
+                  )}
+                {props.activeTab === '2' &&
+                  t(
+                    'new pools add info for each tab here (and icon/badge) make sure to explain these initializing pools',
+                  )}
               </Col>
             </Row>
           </Card.Body>

@@ -231,9 +231,7 @@ const PoolItem = ({ asset }) => {
                   size="sm"
                   variant="primary"
                   className="w-100 rounded-pill"
-                  onClick={() =>
-                    history.push(`/pools/swap?asset1=${tokenAddress}`)
-                  }
+                  onClick={() => history.push(`/swap?asset1=${tokenAddress}`)}
                 >
                   {t('swap')}
                 </Button>
@@ -244,7 +242,7 @@ const PoolItem = ({ asset }) => {
                   variant="primary"
                   className="w-100 rounded-pill"
                   onClick={() =>
-                    history.push(`/pools/liquidity?asset1=${tokenAddress}`)
+                    history.push(`/liquidity?asset1=${tokenAddress}`)
                   }
                 >
                   {t('join')}

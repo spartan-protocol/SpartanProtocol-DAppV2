@@ -59,7 +59,7 @@ const Overview = () => {
           <>
             <Row className="row-480">
               <Col xs="12">
-                <SummaryItem />
+                <SummaryItem activeTab={activeTab} />
                 <Card>
                   <Card.Header className="p-0 border-0 mb-2 rounded-pill-top-left">
                     <Nav activeKey={activeTab} fill>
@@ -71,25 +71,16 @@ const Overview = () => {
                             setActiveTab('1')
                           }}
                         >
-                          {t('curated')}
+                          {t('pools')}
                         </Nav.Link>
                       </Nav.Item>
-                      <Nav.Item key="2">
+
+                      <Nav.Item key="2" className="rounded-pill-top-right">
                         <Nav.Link
+                          className="rounded-pill-top-right"
                           eventKey="2"
                           onClick={() => {
                             setActiveTab('2')
-                          }}
-                        >
-                          {t('standard')}
-                        </Nav.Link>
-                      </Nav.Item>
-                      <Nav.Item key="3" className="rounded-pill-top-right">
-                        <Nav.Link
-                          className="rounded-pill-top-right"
-                          eventKey="3"
-                          onClick={() => {
-                            setActiveTab('3')
                           }}
                         >
                           {t('new')}
@@ -103,27 +94,13 @@ const Overview = () => {
                         pool?.poolDetails
                           .filter(
                             (asset) =>
-                              asset.baseAmount > 0 &&
-                              asset.curated === true &&
-                              asset.newPool === false,
+                              asset.baseAmount > 0 && asset.newPool === false,
                           )
                           .sort((a, b) => b.baseAmount - a.baseAmount)
                           .map((asset) => (
                             <PoolItem key={asset.address} asset={asset} />
                           ))}
                       {activeTab === '2' &&
-                        pool?.poolDetails
-                          .filter(
-                            (asset) =>
-                              asset.baseAmount > 0 &&
-                              asset.curated === false &&
-                              asset.newPool === false,
-                          )
-                          .sort((a, b) => b.baseAmount - a.baseAmount)
-                          .map((asset) => (
-                            <PoolItem key={asset.address} asset={asset} />
-                          ))}
-                      {activeTab === '3' &&
                         pool?.poolDetails
                           .filter(
                             (asset) =>
