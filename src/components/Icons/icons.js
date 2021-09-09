@@ -1,6 +1,8 @@
 import React from 'react'
 // BRANDS
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
+// FLAGS
+import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
 import { ReactComponent as ArrowDown } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ArrowLeft } from '../../assets/icons/arrow-left.svg'
@@ -60,6 +62,8 @@ import { ReactComponent as TrustWallet } from '../../assets/brands/trust-wallet.
 const icons = {
   // BRANDS
   apple: Apple,
+  // FLAGS
+  turkeyFlag: TurkeyFlag,
   // ICONS
   arrowDown: ArrowDown,
   arrowLeft: ArrowLeft,

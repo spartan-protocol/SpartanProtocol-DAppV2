@@ -210,7 +210,7 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
       spartaCont.callStatic.balanceOf(comWal),
       busdCont.callStatic.balanceOf(comWal),
       usdtCont.callStatic.balanceOf(comWal),
-      // wallet ? spartaCont.callStatic.balanceOf(wallet.account) : '0',
+      wallet ? spartaCont.callStatic.balanceOf(wallet.account) : '0',
       wallet?.account ? busdCont.callStatic.balanceOf(wallet.account) : '0',
       wallet?.account ? usdtCont.callStatic.balanceOf(wallet.account) : '0',
     ]
@@ -220,11 +220,12 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
       sparta: awaitArray[0].toString(),
       busd: awaitArray[1].toString(),
       usdt: awaitArray[2].toString(),
+      userSparta: awaitArray[3].toString(),
       userBnb: wallet?.account
         ? (await provider.getBalance(wallet.account)).toString()
         : '0',
-      userBusd: awaitArray[3].toString(),
-      userUsdt: awaitArray[4].toString(),
+      userBusd: awaitArray[4].toString(),
+      userUsdt: awaitArray[5].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_COMMUNITY_WALLET, communityWallet))
   } catch (error) {

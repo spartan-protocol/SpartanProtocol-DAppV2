@@ -20,7 +20,13 @@ const AddressConn = () => {
         document.location.reload()
       })
     }
+    async function listenNetworkChanged() {
+      window.ethereum.on('chainChanged', async () => {
+        document.location.reload()
+      })
+    }
     listenAccountsChanged()
+    listenNetworkChanged()
   }, [])
 
   return (
