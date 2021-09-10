@@ -27,8 +27,8 @@ export const poolDetailsLoading = () => ({
 
 /**
  * Get array of all listed token addresses
- * @param {object} wallet
- * @returns {array} tokenArray
+ * @param wallet
+ * @returns tokenArray
  */
 export const getListedTokens = (wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -56,8 +56,8 @@ export const getListedTokens = (wallet) => async (dispatch) => {
 
 /**
  * Get detailed array of token information
- * @param {array} tokenArray
- * @returns {array} tokenDetails
+ * @param listedTokens @param wallet
+ * @returns tokenDetails
  */
 export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -118,8 +118,8 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
 
 /**
  * Return array of curated pool addresses
- * @param {object} wallet
- * @returns {[string]} curatedPools
+ * @param wallet
+ * @returns curatedPools
  */
 export const getCuratedPools = (wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -134,9 +134,8 @@ export const getCuratedPools = (wallet) => async (dispatch) => {
 
 /**
  * Get LP token addresses and setup the object
- * @param {array} tokenDetails
- * @param {object} wallet
- * @returns {array} listedPools
+ * @param tokenDetails @param wallet
+ * @returns listedPools
  */
 export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -201,8 +200,8 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
 
 /**
  * Add LP wallet-details to final array
- * @param {[string]} listedPools  @param {[string]} curatedPools  @param {object} wallet
- * @returns {array} poolDetails
+ * @param listedPools @param curatedPools @param wallet
+ * @returns poolDetails
  */
 export const getPoolDetails =
   (listedPools, curatedPools, wallet) => async (dispatch) => {
@@ -264,7 +263,7 @@ export const getPoolDetails =
               }
             : bondVaultContract.callStatic.getMemberDetails(
                 wallet.account,
-                listedPools[i].tokenAddress,
+                listedPools[i].address,
               ),
         ) // bondDetails - isMember, bondedLP, claimRate, lastBlockTime
         tempArray.push(
