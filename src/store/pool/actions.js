@@ -44,8 +44,9 @@ export const getListedTokens = (wallet) => async (dispatch) => {
         listedTokens.push(_listedTokens[i])
       }
       const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
-      if (wbnbIndex > -1)
-        listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
+      if (wbnbIndex > -1) {
+        listedTokens[wbnbIndex] = addr.bnb
+      }
     }
     listedTokens.push(addr.spartav1, addr.spartav2)
     dispatch(payloadToDispatch(Types.POOL_LISTED_TOKENS, listedTokens))
@@ -65,15 +66,14 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   const trustWalletIndex = await axios.get(
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
   )
-
   try {
     let tempArray = []
     for (let i = 0; i < listedTokens.length; i++) {
       const contract = getTokenContract(listedTokens[i], wallet)
       tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
-      if (wallet.account !== null) {
+      if (wallet.account) {
         if (listedTokens[i] === addr.bnb) {
-          tempArray.push(wallet.balance)
+          tempArray.push(wallet.library.getBalance(wallet.account))
         } else {
           tempArray.push(contract.callStatic.balanceOf(wallet?.account)) // TOKEN BALANCE (2)
         }
@@ -308,7 +308,7 @@ export const createPoolADD =
     dispatch(poolLoading())
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet)
-    let provider = getWalletProvider(window?.ethereum)
+    let provider = getWalletProvider(wallet?.library)
     if (provider._isSigner === true) {
       provider = provider.provider
     }

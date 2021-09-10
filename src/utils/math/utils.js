@@ -45,6 +45,9 @@ export const getPoolShareWeight = (units, totalSupply, totalAmount) => {
   return weight
 }
 
+export const getToken = (tokenAddr, tokenDetails) =>
+  tokenDetails.filter((i) => i.address === tokenAddr)[0]
+
 export const getPool = (tokenAddr, poolDetails) =>
   poolDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
 

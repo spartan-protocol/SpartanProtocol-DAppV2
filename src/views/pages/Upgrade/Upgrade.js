@@ -6,45 +6,40 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
-import { getAddresses, getWalletProvider } from '../../../utils/web3'
+import { getAddresses } from '../../../utils/web3'
 import {
   fallenSpartansClaim,
   spartaUpgrade,
 } from '../../../store/sparta/actions'
-import { getTokenContract } from '../../../utils/web3Contracts'
 import { Icon } from '../../../components/Icons/icons'
 import { calcFeeBurn } from '../../../utils/math/nonContract'
+import { usePool } from '../../../store/pool'
+import { getToken } from '../../../utils/math/utils'
 
 const Upgrade = () => {
   const addr = getAddresses()
+  const pool = usePool()
   const dispatch = useDispatch()
   const sparta = useSparta()
   const wallet = useWeb3React()
   const { t } = useTranslation()
-  const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
-  const [newSpartaBalance, setnewSpartaBalance] = useState('0')
   const [bnbBalance, setbnbBalance] = useState('0')
   const fsGenesis = '1620795586'
   const [loadingBalance, setloadingBalance] = useState(false)
 
+  const getSpartav1 = () => getToken(addr.spartav1, pool.tokenDetails)
+  const getSpartav2 = () => getToken(addr.spartav2, pool.tokenDetails)
+
   const [trigger0, settrigger0] = useState(0)
   const getData = async () => {
     if (
-      wallet?.status === 'connected' &&
+      wallet?.active &&
       loadingBalance === false &&
       ethers.utils.isAddress(wallet.account)
     ) {
       setloadingBalance(true)
-      let awaitArray = []
-      awaitArray.push(
-        getTokenContract(addr.spartav1, wallet).balanceOf(wallet.account),
-        getTokenContract(addr.spartav2, wallet).balanceOf(wallet.account),
-        getWalletProvider(window?.ethereum).getBalance(),
-      )
-      awaitArray = await Promise.all(awaitArray)
-      setoldSpartaBalance(awaitArray[0].toString())
-      setnewSpartaBalance(awaitArray[1].toString())
-      setbnbBalance(awaitArray[2].toString())
+      const bnbBal = await wallet.library.getBalance(wallet.account)
+      setbnbBalance(bnbBal.toString())
       setloadingBalance(false)
     }
   }
@@ -65,8 +60,6 @@ const Upgrade = () => {
 
   useEffect(() => {
     if (wallet.status === 'disconnected') {
-      setoldSpartaBalance('0')
-      setnewSpartaBalance('0')
       setbnbBalance('0')
     }
   }, [wallet.status])
@@ -96,151 +89,155 @@ const Upgrade = () => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320">
-          <Card.Header>
-            <Card.Title>{t('upgrade')}</Card.Title>
-            <Card.Subtitle>{t('upgradeSubtitle')}</Card.Subtitle>
-          </Card.Header>
-          <Card.Body>
-            <Row className="">
-              <Col xs="auto" className="text-card">
-                {t('input')}
-              </Col>
-              <Col className="text-end output-card">
-                {formatFromWei(oldSpartaBalance)} SPARTAv1
-              </Col>
-            </Row>
-            <Row className="my-2">
-              <Col xs="auto" className="text-card">
-                {t('output')}
-              </Col>
-              <Col className="text-end output-card">
-                {formatFromWei(oldSpartaBalance)} SPARTAv2
-              </Col>
-            </Row>
-          </Card.Body>
-          <Card.Footer>
-            {bnbBalance > 5000000000000000 && (
-              <Row className="">
-                <Col xs="12" className="">
-                  <Button
-                    className="w-100"
-                    onClick={() => dispatch(spartaUpgrade(wallet))}
-                    disabled={oldSpartaBalance <= 0}
-                  >
-                    {t('upgrade')} SPARTA
-                  </Button>
-                </Col>
-              </Row>
-            )}
-            {bnbBalance <= 5000000000000000 && (
-              <Row className="">
-                <Col xs="12" className="">
-                  <Button variant="info" className="w-100" disabled>
-                    Not Enough BNB
-                  </Button>
-                </Col>
-              </Row>
-            )}
-          </Card.Footer>
-        </Card>
-      </Col>
+      {pool.tokenDetails.length > 0 && (
+        <>
+          <Col xs="auto">
+            <Card className="card-320">
+              <Card.Header>
+                <Card.Title>{t('upgrade')}</Card.Title>
+                <Card.Subtitle>{t('upgradeSubtitle')}</Card.Subtitle>
+              </Card.Header>
+              <Card.Body>
+                <Row className="">
+                  <Col xs="auto" className="text-card">
+                    {t('input')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatFromWei(getSpartav1().balance)} SPARTAv1
+                  </Col>
+                </Row>
+                <Row className="my-2">
+                  <Col xs="auto" className="text-card">
+                    {t('output')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatFromWei(getSpartav1().balance)} SPARTAv2
+                  </Col>
+                </Row>
+              </Card.Body>
+              <Card.Footer>
+                {bnbBalance > 5000000000000000 && (
+                  <Row className="">
+                    <Col xs="12" className="">
+                      <Button
+                        className="w-100"
+                        onClick={() => dispatch(spartaUpgrade(wallet))}
+                        disabled={getSpartav1().balance <= 0}
+                      >
+                        {t('upgrade')} SPARTA
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+                {bnbBalance <= 5000000000000000 && (
+                  <Row className="">
+                    <Col xs="12" className="">
+                      <Button variant="info" className="w-100" disabled>
+                        Not Enough BNB
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+              </Card.Footer>
+            </Card>
+          </Col>
 
-      <Col xs="auto">
-        <Card className="card-320">
-          <Card.Header>
-            <Card.Title className="">{t('claim')}</Card.Title>
-            <Card.Subtitle className="">{t('claimSubtitle')}</Card.Subtitle>
-          </Card.Header>
-          <Card.Body>
-            <Row className="">
-              <Col xs="auto" className="text-card">
-                {t('claim')}
-              </Col>
-              <Col className="text-end output-card">
-                {sparta.globalDetails.feeOnTransfer > 0
-                  ? formatFromWei(getClaimAmount())
-                  : 'Loading'}{' '}
-                SPARTAv2
-              </Col>
-            </Row>
-            <Row className="my-2">
-              <Col xs="auto" className="text-card">
-                {t('expiry')}
-              </Col>
-              <Col className="text-end output-card">
-                {formatDate(getExpiry())}
-              </Col>
-            </Row>
-          </Card.Body>
-          <Card.Footer>
-            {bnbBalance > 5000000000000000 && (
-              <Row className="">
-                <Col xs="12" className="">
-                  <Button
-                    className="w-100"
-                    onClick={() => dispatch(fallenSpartansClaim(wallet))}
-                    disabled={sparta?.claimCheck <= 0}
-                  >
-                    {t('claim')} SPARTA
-                  </Button>
-                </Col>
-              </Row>
-            )}
-            {bnbBalance <= 5000000000000000 && (
-              <Row className="">
-                <Col xs="12" className="">
-                  <Button variant="info" className="w-100" disabled>
-                    Not Enough BNB
-                  </Button>
-                </Col>
-              </Row>
-            )}
-          </Card.Footer>
-        </Card>
-      </Col>
+          <Col xs="auto">
+            <Card className="card-320">
+              <Card.Header>
+                <Card.Title className="">{t('claim')}</Card.Title>
+                <Card.Subtitle className="">{t('claimSubtitle')}</Card.Subtitle>
+              </Card.Header>
+              <Card.Body>
+                <Row className="">
+                  <Col xs="auto" className="text-card">
+                    {t('claim')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {sparta.globalDetails.feeOnTransfer > 0
+                      ? formatFromWei(getClaimAmount())
+                      : 'Loading'}{' '}
+                    SPARTAv2
+                  </Col>
+                </Row>
+                <Row className="my-2">
+                  <Col xs="auto" className="text-card">
+                    {t('expiry')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatDate(getExpiry())}
+                  </Col>
+                </Row>
+              </Card.Body>
+              <Card.Footer>
+                {bnbBalance > 5000000000000000 && (
+                  <Row className="">
+                    <Col xs="12" className="">
+                      <Button
+                        className="w-100"
+                        onClick={() => dispatch(fallenSpartansClaim(wallet))}
+                        disabled={sparta?.claimCheck <= 0}
+                      >
+                        {t('claim')} SPARTA
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+                {bnbBalance <= 5000000000000000 && (
+                  <Row className="">
+                    <Col xs="12" className="">
+                      <Button variant="info" className="w-100" disabled>
+                        Not Enough BNB
+                      </Button>
+                    </Col>
+                  </Row>
+                )}
+              </Card.Footer>
+            </Card>
+          </Col>
 
-      <Col xs="auto">
-        <Card className="card-320 card-underlay">
-          <Card.Body>
-            <Col>
-              <h3 className="mb-0">
-                {t('yourBalance')}
-                <Icon icon="spartav2" className="float-end" size="35" />
-              </h3>
+          <Col xs="auto">
+            <Card className="card-320 card-underlay">
+              <Card.Body>
+                <Col>
+                  <h3 className="mb-0">
+                    {t('yourBalance')}
+                    <Icon icon="spartav2" className="float-end" size="35" />
+                  </h3>
 
-              <span className="subtitle-label">{t('balanceSubtitle')}</span>
-              <Row className="mb-2 mt-4">
-                <Col xs="auto" className="text-card">
-                  {t('balance')}
+                  <span className="subtitle-label">{t('balanceSubtitle')}</span>
+                  <Row className="mb-2 mt-4">
+                    <Col xs="auto" className="text-card">
+                      {t('balance')}
+                    </Col>
+                    <Col className="text-end output-card">
+                      {formatFromWei(getSpartav1().balance)} SPARTAv1
+                    </Col>
+                  </Row>
+                  <Row className="my-2">
+                    <Col xs="auto" className="text-card">
+                      {t('balance')}
+                    </Col>
+                    <Col className="text-end output-card">
+                      {formatFromWei(getSpartav2().balance)} SPARTAv2
+                    </Col>
+                  </Row>
                 </Col>
-                <Col className="text-end output-card">
-                  {formatFromWei(oldSpartaBalance)} SPARTAv1
-                </Col>
-              </Row>
-              <Row className="my-2">
-                <Col xs="auto" className="text-card">
-                  {t('balance')}
-                </Col>
-                <Col className="text-end output-card">
-                  {formatFromWei(newSpartaBalance)} SPARTAv2
-                </Col>
-              </Row>
-            </Col>
-          </Card.Body>
-          <Card.Footer>
-            <Button
-              className="w-100"
-              variant="info"
-              onClick={() => settrigger0(trigger0 + 1)}
-              disabled={loadingBalance === true}
-            >
-              {t('refreshBalance')}
-            </Button>
-          </Card.Footer>
-        </Card>
-      </Col>
+              </Card.Body>
+              <Card.Footer>
+                <Button
+                  className="w-100"
+                  variant="info"
+                  onClick={() => settrigger0(trigger0 + 1)}
+                  disabled={loadingBalance === true}
+                >
+                  {t('refreshBalance')}
+                </Button>
+              </Card.Footer>
+            </Card>
+          </Col>
+        </>
+      )}
     </>
   )
 }

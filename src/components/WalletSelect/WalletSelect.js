@@ -98,7 +98,8 @@ export const spartanRanks = [
 ]
 
 const WalletSelect = (props) => {
-  const wallet = useWeb3React()
+  const { activate, deactivate, active, error, connector, account } =
+    useWeb3React()
   const bond = useBond()
   const dao = useDao()
   const synth = useSynth()
@@ -119,85 +120,62 @@ const WalletSelect = (props) => {
     window.location.reload()
   }
 
+  const [activatingConnector, setActivatingConnector] = useState()
   useEffect(() => {
-    const checkWallet = () => {
-      if (wallet.active) {
-        window.sessionStorage.setItem('walletConnected', '1')
-      }
-      if (!wallet.active) {
-        window.sessionStorage.removeItem('walletConnected')
-      }
-      if (wallet.error) {
-        window.sessionStorage.removeItem('walletConnected')
-      }
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
     }
-    checkWallet()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet.active, wallet.error])
-
-  const connectWallet = async (x) => {
-    window.localStorage.removeItem('disableWallet')
-    if (x) {
-      await wallet.activate(connectorsByName(x?.connector))
-    }
-    window.localStorage.setItem('lastWallet', x?.id)
-  }
+  }, [activatingConnector, connector])
 
   const onWalletDisconnect = async () => {
     props.onHide()
+    deactivate()
+    window.localStorage.removeItem('walletconnect')
     window.localStorage.setItem('disableWallet', '1')
     window.location.reload()
   }
 
-  // *** ADD IN LEDGER FOR TESTING ***
-  const [trigger0, settrigger0] = useState(0)
-  const checkWallets = async () => {
+  const onWalletConnect = async (x) => {
+    window.localStorage.removeItem('disableWallet')
+    window.localStorage.setItem('lastWallet', x?.id)
+    setActivatingConnector(connectorsByName(x.connector))
+    activate(connectorsByName(x.connector))
+  }
+
+  const checkWallet = () => {
     if (
       window.localStorage.getItem('disableWallet') !== '1' &&
-      !wallet.account &&
-      !wallet.active &&
-      !wallet.error
+      !account &&
+      !active &&
+      !error
     ) {
+      // *** ADD IN LEDGER FOR TESTING ***
       if (window.localStorage.getItem('lastWallet') === 'BC') {
-        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+        onWalletConnect(walletTypes.filter((x) => x.id === 'BC')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'MM') {
-        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+        onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
-        connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
-      } else if (window.localStorage.getItem('lastWallet') === 'WC') {
-        connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+        onWalletConnect(walletTypes.filter((x) => x.id === 'TW')[0])
+      } else if (
+        window.localStorage.getItem('lastWallet') === 'WC' &&
+        network?.chainId === 56 // WalletConnect does not support testnet
+      ) {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'WC')[0])
       } else {
-        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
+        onWalletConnect(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
       }
     }
   }
 
   useEffect(() => {
-    if (trigger0 === 0) {
-      checkWallets()
-      settrigger0(trigger0 + 1)
-    }
-    const timer = setTimeout(() => {
-      checkWallets()
-      settrigger0(trigger0 + 1)
-    }, 500)
-    return () => {
-      clearTimeout(timer)
-    }
+    checkWallet()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    trigger0,
-    wallet.account,
-    wallet.active,
-    wallet.error,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('lastWallet'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('disableWallet'),
-  ])
+  }, [])
+
+  // ------------------------------------------------------------------------
 
   const getWeight = () => {
-    if (wallet.account && pool.tokenDetails.length > 1) {
+    if (account && pool.tokenDetails.length > 1) {
       const validate = (value) => (value > 0 ? BN(value) : BN('0'))
       const getPoolWeight = () => {
         let weight = BN('0')
@@ -288,13 +266,13 @@ const WalletSelect = (props) => {
           <Modal.Title>
             <Row>
               <Col xs="12">
-                {wallet.account ? (
+                {account ? (
                   <>
                     {t('wallet')}:{' '}
                     <span className="output-card">
-                      {formatShortString(wallet.account)}
+                      {formatShortString(account)}
                       <div className="d-inline-block">
-                        <ShareLink url={wallet.account}>
+                        <ShareLink url={account}>
                           <Icon
                             icon="copy"
                             className="ms-2 mb-1"
@@ -351,7 +329,7 @@ const WalletSelect = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          {wallet.error && (
+          {error && (
             <Alert variant="primary">
               {t('wrongNetwork', {
                 network: network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
@@ -360,16 +338,17 @@ const WalletSelect = (props) => {
           )}
 
           {/* Wallet overview */}
-          {!wallet.account ? (
+          {!account ? (
             <Row>
               {walletTypes.map((x) => (
                 <Col key={x.id} xs="12" sm="6">
                   <Button
                     key={x.id}
+                    disabled={x.id === 'WC' && network.chainId !== 56}
                     variant="info"
                     className="w-100 my-1"
                     onClick={() => {
-                      connectWallet(x)
+                      onWalletConnect(x)
                     }}
                     href={
                       x.id === 'TW'
@@ -440,28 +419,30 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
-        <Modal.Footer className="justify-content-center">
-          <Button
-            href={getExplorerWallet(wallet.account)}
-            target="_blank"
-            rel="noreferrer"
-            size="sm"
-            variant="primary"
-          >
-            {t('viewBscScan')}{' '}
-            <Icon icon="scan" size="16" fill="white" className="mb-1" />
-          </Button>
-          <Button
-            size="sm"
-            variant="primary"
-            onClick={() => {
-              onWalletDisconnect()
-            }}
-          >
-            {t('disconnect')}
-            <Icon icon="walletRed" size="17" fill="white" className="mb-1" />
-          </Button>
-        </Modal.Footer>
+        {active && (
+          <Modal.Footer className="justify-content-center">
+            <Button
+              href={getExplorerWallet(account)}
+              target="_blank"
+              rel="noreferrer"
+              size="sm"
+              variant="primary"
+            >
+              {t('viewBscScan')}{' '}
+              <Icon icon="scan" size="16" fill="white" className="mb-1" />
+            </Button>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => {
+                onWalletDisconnect()
+              }}
+            >
+              {t('disconnect')}
+              <Icon icon="walletRed" size="17" fill="white" className="mb-1" />
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </>
   )

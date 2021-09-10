@@ -111,16 +111,16 @@ export const addressesTN = {
   synthVault11: '0x30cDEA06826836145c9203b1D4d54e321Cc32B1f', // 9170b11ac4ce8b424f44aa5d503bdb7b0e85b4be
   utils11: '0x1C7437c145bD0bb7EE0dcFD30434173893596ee1', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
   // CURRENT ADDRESSES
-  bondVault: '0x219c2A945CFFa47bdE80644E824E2448F0EDABE4', // ae58801ac19aa0dd0c63b0d3565d7f4424056268
-  dao: '0x973379b06794e49017C77e6699b7339ce791A9Af', // 0cf58d0c134f358895653410961aa2886f304a44
-  daoVault: '0x07d8BDE4c0654707F9C294246faAd270E90bffcf', // 0cf58d0c134f358895653410961aa2886f304a44
+  bondVault: '0xD5e1a14342C1BCFD596ce41f0aeB0636709b56E8', // be2ff57e8b983d414a847516dafd8bfc7973de96
+  dao: '0x240b1d4E531DA605E0A21b93347dC22F398a63CC', // be2ff57e8b983d414a847516dafd8bfc7973de96
+  daoVault: '0xB871928F31385D800B771B5982Ffd45ebd0F68fE', // be2ff57e8b983d414a847516dafd8bfc7973de96
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
-  poolFactory: '0x4bb5F6A9A23c698fb888bE213EB4b5130C541e35', // ee4ee5a96668dd504f694ac3501a3cc0a656e83b
+  poolFactory: '0xd82078Df500Ad6Faf42DB3Db2D9e644aa8350971', // be2ff57e8b983d414a847516dafd8bfc7973de96
   reserve: '0xA2D707b530971ED80a85Bb354626CE6b2fBB762a', // 0cf58d0c134f358895653410961aa2886f304a44
-  router: '0x6c143E134C21ebfBcC963FF0B5e13c10BFe8b2C4', // 0cf58d0c134f358895653410961aa2886f304a44
-  synthFactory: '0x96732B25a1745172a686fd84705F230C2C3CCfde', // 0cf58d0c134f358895653410961aa2886f304a44
-  synthVault: '0xd70fEC070d360209cB4E76A66b7D98CA4Aa68666', // 0cf58d0c134f358895653410961aa2886f304a44
-  utils: '0xC19589fb2F92088494B5279e9a3F759012B18D7f', // ee4ee5a96668dd504f694ac3501a3cc0a656e83b
+  router: '0x4eB735D7e16CAB94FA1c0cff4bF88F010FD97D34', // be2ff57e8b983d414a847516dafd8bfc7973de96
+  synthFactory: '0x380a8DE0Bfb97C02F7F2142c870694572f787D45', // be2ff57e8b983d414a847516dafd8bfc7973de96
+  synthVault: '0xa7fB9E5b7c03cff7FbB8A7eBD22920A771F2Db35', // be2ff57e8b983d414a847516dafd8bfc7973de96
+  utils: '0x05E1dd9699C2C6A569a8080e952C8e0d368035a1', // be2ff57e8b983d414a847516dafd8bfc7973de96
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -341,10 +341,9 @@ export const getNetwork = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider) => {
   const network = getNetwork()
-  let provider = new ethers.providers.JsonRpcProvider(network.rpc)
+  let provider = new ethers.providers.JsonRpcProvider(network.rpc) // simple provider unsigned
   if (_provider) {
-    provider = new ethers.providers.Web3Provider(_provider)
-    provider = provider.getSigner()
+    provider = _provider.getSigner()
   }
   return provider
 }
@@ -404,7 +403,6 @@ export const clearTxns = async (walletAddr) => {
       index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
     }
     const network = tryParse(window.localStorage.getItem('network'))
-    console.log(txnArray[index])
     let filtered = txnArray[index].txns
     if (filtered?.length > 0) {
       filtered = filtered.filter((txn) => txn[1]?.chainId !== network.chainId)

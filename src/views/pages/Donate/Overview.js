@@ -215,7 +215,7 @@ ethereum(network: $network){
   const handleDonation = async () => {
     const asset = getAsset(selectedAsset)
     if (asset.symbol === 'BNB') {
-      const signer = getWalletProvider(window?.ethereum)
+      const signer = getWalletProvider(wallet?.library)
       await signer.sendTransaction({
         to: communityWallet,
         value: ethers.utils.parseEther(inputDonation?.value),

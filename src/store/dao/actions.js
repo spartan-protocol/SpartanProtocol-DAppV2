@@ -190,10 +190,10 @@ export const proposalWeight = (proposalID, poolDetails) => async (dispatch) => {
  * Deposit / Stake LP Tokens (Lock them in the DAO)
  * @param pool @param amount
  */
-export const daoDeposit = (pool, amount) => async (dispatch) => {
+export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract()
-  let provider = getWalletProvider(window?.ethereum)
+  let provider = getWalletProvider(wallet?.library)
   if (provider._isSigner === true) {
     provider = provider.provider
   }

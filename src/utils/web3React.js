@@ -20,7 +20,7 @@ const ledgerConnect = new LedgerConnector({
 const walletConnect = new WalletConnectConnector({
   rpc: { [chainId]: rpcUrl },
   qrcode: true,
-  // pollingInterval: pollingInt,
+  pollingInterval: pollingInt,
 })
 
 export const connectorsByName = (connectorName) => {

@@ -39,11 +39,9 @@ export const getExplorerTxn = (txnHash) => {
 
 // GET CURRENT USD PRICE OF SPARTA TOKEN
 export const getPriceSparta = async () => {
-  console.log('start get sparta price')
   const resp = await axios.get(
     'https://api.coingecko.com/api/v3/simple/price?ids=spartan-protocol-token&vs_currencies=usd',
   )
-  // console.log(resp)
   return resp.data['spartan-protocol-token'].usd
 }
 
@@ -52,7 +50,6 @@ export const getPriceByID = async (ID) => {
   const resp = await axios.get(
     `https://api.coingecko.com/api/v3/simple/price?ids=${ID}&vs_currencies=usd`,
   )
-  // console.log(resp)
   return resp.data[ID].usd
 }
 
@@ -62,9 +59,7 @@ export const getPastPriceByID = async (ID, date) => {
   const resp = await axios.get(
     `https://api.coingecko.com/api/v3/coins/${ID}/history?date=${date}`,
   )
-  // console.log(resp)
   let data = ''
-  // console.log(ID, date, resp.data)
   if (!resp.data.market_data) {
     let theDate = new Date(date)
     theDate.setDate(theDate.getDate() + 1)

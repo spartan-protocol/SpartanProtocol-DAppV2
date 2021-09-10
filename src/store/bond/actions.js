@@ -75,9 +75,9 @@ export const bondVaultWeight = (poolDetails) => async (dispatch) => {
  * Get all current bond listed assets
  * @returns count
  */
-export const allListedAssets = () => async (dispatch) => {
+export const allListedAssets = (wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondVaultContract()
+  const contract = getBondVaultContract(wallet)
   try {
     const listedAssets = await contract.callStatic.getBondedAssets()
     dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))

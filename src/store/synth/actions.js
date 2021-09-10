@@ -205,7 +205,7 @@ export const getSynthDetails =
 export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
-  let provider = getWalletProvider(window?.ethereum)
+  let provider = getWalletProvider(wallet?.library)
   if (provider._isSigner === true) {
     provider = provider.provider
   }

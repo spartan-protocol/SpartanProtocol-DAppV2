@@ -117,7 +117,7 @@ const DataManager = () => {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
       dispatch(getCuratedPools(wallet)) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails(wallet))
-      dispatch(bondGlobalDetails())
+      dispatch(bondGlobalDetails(wallet))
       dispatch(getReserveGlobalDetails(wallet))
     }
   }

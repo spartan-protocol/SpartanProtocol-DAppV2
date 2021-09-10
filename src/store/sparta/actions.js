@@ -82,7 +82,6 @@ export const spartaUpgrade = (wallet) => async (dispatch) => {
 export const fallenSpartansCheck = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getFallenSpartansContract(wallet)
-
   try {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck.toString()))
@@ -102,7 +101,6 @@ export const fallenSpartansClaim = (wallet) => async (dispatch) => {
     const claim = await contract.claim({
       gasPrice: gPrice,
     })
-
     dispatch(payloadToDispatch(Types.FALLENSPARTA_CLAIM, claim))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
