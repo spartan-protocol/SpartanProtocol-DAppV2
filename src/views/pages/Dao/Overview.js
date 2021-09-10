@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Card, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import ProposalItem from './ProposalItem'
 import { useDao } from '../../../store/dao/selector'
 import {
@@ -22,7 +22,7 @@ const Overview = () => {
   const dispatch = useDispatch()
   const dao = useDao()
   const pool = usePool()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const [selectedView, setSelectedView] = useState('current')

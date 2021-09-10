@@ -1,14 +1,14 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Row, Col } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import { fallenSpartansCheck } from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
 
 const Overview = () => {
   const dispatch = useDispatch()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const [trigger0, settrigger0] = useState(0)

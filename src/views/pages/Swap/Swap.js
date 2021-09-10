@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -13,6 +12,7 @@ import {
   Badge,
   OverlayTrigger,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getAddresses, getItemFromArray, getNetwork } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
@@ -54,7 +54,7 @@ const Swap = () => {
   const synth = useSynth()
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const addr = getAddresses()
   const pool = usePool()

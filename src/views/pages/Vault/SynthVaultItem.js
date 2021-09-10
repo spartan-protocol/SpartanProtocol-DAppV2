@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { synthWithdraw } from '../../../store/synth/actions'
@@ -27,7 +27,7 @@ const SynthVaultItem = ({ synthItem }) => {
   const reserve = useReserve()
   const synth = useSynth()
   const pool = usePool()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const [tokenAddress, settokenAddress] = useState('')
   const [showModal, setShowModal] = useState(false)

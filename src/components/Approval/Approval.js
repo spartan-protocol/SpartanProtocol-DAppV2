@@ -1,4 +1,4 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { Button, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
@@ -31,7 +31,7 @@ const Approval = ({
 }) => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
 
   const [pending, setPending] = useState(false)
 

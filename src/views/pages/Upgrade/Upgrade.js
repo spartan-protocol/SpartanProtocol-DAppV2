@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'react-bootstrap'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
+import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { useSparta } from '../../../store/sparta/selector'
 import { getAddresses, getWalletProvider } from '../../../utils/web3'
@@ -19,7 +19,7 @@ const Upgrade = () => {
   const addr = getAddresses()
   const dispatch = useDispatch()
   const sparta = useSparta()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
   const [oldSpartaBalance, setoldSpartaBalance] = useState('0')
   const [newSpartaBalance, setnewSpartaBalance] = useState('0')
@@ -39,7 +39,7 @@ const Upgrade = () => {
       awaitArray.push(
         getTokenContract(addr.spartav1, wallet).balanceOf(wallet.account),
         getTokenContract(addr.spartav2, wallet).balanceOf(wallet.account),
-        getWalletProvider(wallet?.ethereum).getBalance(),
+        getWalletProvider(window?.ethereum).getBalance(),
       )
       awaitArray = await Promise.all(awaitArray)
       setoldSpartaBalance(awaitArray[0].toString())

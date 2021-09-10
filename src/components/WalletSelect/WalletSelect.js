@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-
+import { useWeb3React } from '@web3-react/core'
 import {
   Alert,
   Form,
@@ -33,6 +32,7 @@ import { useDao } from '../../store/dao/selector'
 import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { BN, convertFromWei } from '../../utils/bigNumber'
+import { connectorsByName } from '../../utils/web3React'
 
 export const spartanRanks = [
   {
@@ -98,7 +98,7 @@ export const spartanRanks = [
 ]
 
 const WalletSelect = (props) => {
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const bond = useBond()
   const dao = useDao()
   const synth = useSynth()
@@ -121,34 +121,24 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     const checkWallet = () => {
-      // console.log('Wallet Status:', wallet.status)
-      if (wallet.status === 'connected') {
+      if (wallet.active) {
         window.sessionStorage.setItem('walletConnected', '1')
       }
-      if (wallet.status === 'disconnected') {
+      if (!wallet.active) {
         window.sessionStorage.removeItem('walletConnected')
       }
-      if (wallet.status === 'error') {
+      if (wallet.error) {
         window.sessionStorage.removeItem('walletConnected')
       }
     }
-
     checkWallet()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet.status])
-
-  const resetWallet = async () => {
-    wallet.reset()
-    // console.log('Wallet Status: cleared')
-  }
+  }, [wallet.active, wallet.error])
 
   const connectWallet = async (x) => {
     window.localStorage.removeItem('disableWallet')
-    if (wallet) {
-      resetWallet()
-    }
     if (x) {
-      await wallet.connect(x?.inject)
+      await wallet.activate(connectorsByName(x?.connector))
     }
     window.localStorage.setItem('lastWallet', x?.id)
   }
@@ -156,20 +146,17 @@ const WalletSelect = (props) => {
   const onWalletDisconnect = async () => {
     props.onHide()
     window.localStorage.setItem('disableWallet', '1')
-    resetWallet()
     window.location.reload()
   }
 
+  // *** ADD IN LEDGER FOR TESTING ***
   const [trigger0, settrigger0] = useState(0)
-  /**
-   * Check wallet-loop
-   */
   const checkWallets = async () => {
     if (
       window.localStorage.getItem('disableWallet') !== '1' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting' &&
-      wallet.status !== 'error'
+      !wallet.account &&
+      !wallet.active &&
+      !wallet.error
     ) {
       if (window.localStorage.getItem('lastWallet') === 'BC') {
         connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
@@ -177,15 +164,14 @@ const WalletSelect = (props) => {
         connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
         connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
-      }
-      // else if (window.localStorage.getItem('lastWallet') === 'WC') {
-      //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
-      // }
-      else {
+      } else if (window.localStorage.getItem('lastWallet') === 'WC') {
+        connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
+      } else {
         connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
       }
     }
   }
+
   useEffect(() => {
     if (trigger0 === 0) {
       checkWallets()
@@ -202,7 +188,8 @@ const WalletSelect = (props) => {
   }, [
     trigger0,
     wallet.account,
-    wallet.status,
+    wallet.active,
+    wallet.error,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('lastWallet'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -364,7 +351,7 @@ const WalletSelect = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          {wallet.status === 'error' && (
+          {wallet.error && (
             <Alert variant="primary">
               {t('wrongNetwork', {
                 network: network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
@@ -373,7 +360,7 @@ const WalletSelect = (props) => {
           )}
 
           {/* Wallet overview */}
-          {wallet.account === null ? (
+          {!wallet.account ? (
             <Row>
               {walletTypes.map((x) => (
                 <Col key={x.id} xs="12" sm="6">

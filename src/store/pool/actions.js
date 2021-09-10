@@ -217,12 +217,12 @@ export const getPoolDetails =
             ? null
             : getPoolContract(listedPools[i].address, wallet)
         tempArray.push(
-          listedPools[i].poolUnits <= 0 || wallet.account === null
+          listedPools[i].poolUnits <= 0 || !wallet.account
             ? '0'
             : poolContract.callStatic.balanceOf(wallet.account),
         ) // balance
         tempArray.push(
-          listedPools[i].poolUnits <= 0 || wallet.account === null
+          listedPools[i].poolUnits <= 0 || !wallet.account
             ? '0'
             : daoVaultContract.callStatic.getMemberPoolBalance(
                 listedPools[i].address,
@@ -254,7 +254,7 @@ export const getPoolDetails =
               ),
         ) // lastMonthDivis
         tempArray.push(
-          listedPools[i].poolUnits <= 0 || wallet.account === null
+          listedPools[i].poolUnits <= 0 || !wallet.account
             ? {
                 isMember: false,
                 bondedLP: '0',
@@ -308,7 +308,7 @@ export const createPoolADD =
     dispatch(poolLoading())
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet)
-    let provider = getWalletProvider(wallet?.ethereum)
+    let provider = getWalletProvider(window?.ethereum)
     if (provider._isSigner === true) {
       provider = provider.provider
     }

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import {
   Card,
   Col,
@@ -14,6 +13,7 @@ import {
   Badge,
   OverlayTrigger,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -47,7 +47,7 @@ const LiqRemove = () => {
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const sparta = useSparta()
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('1')

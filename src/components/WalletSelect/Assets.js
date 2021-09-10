@@ -1,4 +1,3 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -12,17 +11,16 @@ import { Icon } from '../Icons/icons'
 const Assets = () => {
   const { t } = useTranslation()
   const pool = usePool()
-  const wallet = useWallet()
   const dispatch = useDispatch()
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getWalletType = () => {
-    if (wallet.ethereum?.isMetaMask) {
+    if (window.ethereum?.isMetaMask) {
       return 'MM'
     }
-    if (wallet.ethereum?.isTrust) {
+    if (window.ethereum?.isTrust) {
       return 'TW'
     }
     return false

@@ -11,8 +11,8 @@ import {
 } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 import {
   formatShortString,
   getNetwork,
@@ -35,7 +35,7 @@ const Overview = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const sparta = useSparta()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const web3 = useWeb3()
   const apiUrl = apiUrlBQ
   const header = headerBQ
@@ -215,7 +215,7 @@ ethereum(network: $network){
   const handleDonation = async () => {
     const asset = getAsset(selectedAsset)
     if (asset.symbol === 'BNB') {
-      const signer = getWalletProvider(wallet?.ethereum)
+      const signer = getWalletProvider(window?.ethereum)
       await signer.sendTransaction({
         to: communityWallet,
         value: ethers.utils.parseEther(inputDonation?.value),

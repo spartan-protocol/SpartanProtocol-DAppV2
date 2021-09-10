@@ -133,7 +133,7 @@ export const getSynthDetails =
     try {
       let tempArray = []
       for (let i = 0; i < synthArray.length; i++) {
-        if (wallet.account === null || synthArray[i].address === false) {
+        if (!wallet.account || synthArray[i].address === false) {
           tempArray.push('0') // balance
           tempArray.push('0') // staked
           tempArray.push('0') // synthWeight
@@ -205,7 +205,7 @@ export const getSynthDetails =
 export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
-  let provider = getWalletProvider(wallet?.ethereum)
+  let provider = getWalletProvider(window?.ethereum)
   if (provider._isSigner === true) {
     provider = provider.provider
   }

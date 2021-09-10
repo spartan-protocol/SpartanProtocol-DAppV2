@@ -10,8 +10,8 @@ import {
   Row,
 } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses } from '../../../utils/web3'
@@ -34,7 +34,7 @@ import { minusFeeBurn } from '../../../utils/math/nonContract'
 
 const EmptyPools = (props) => {
   const { t } = useTranslation()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()

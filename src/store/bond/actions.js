@@ -19,10 +19,10 @@ export const bondLoading = () => ({
  * Get the global bond details
  * @returns globalDetails
  */
-export const bondGlobalDetails = (wallet) => async (dispatch) => {
+export const bondGlobalDetails = () => async (dispatch) => {
   dispatch(bondLoading())
   const addr = getAddresses()
-  const contract = getSpartaV2Contract(wallet)
+  const contract = getSpartaV2Contract()
   try {
     let awaitArray = []
     awaitArray.push(contract ? contract.callStatic.balanceOf(addr?.dao) : '0')
@@ -38,12 +38,12 @@ export const bondGlobalDetails = (wallet) => async (dispatch) => {
 
 /**
  * Get the current bondVault's total weight
- * @param poolDetails @param wallet
+ * @param poolDetails
  * @returns spartaWeight
  */
-export const bondVaultWeight = (poolDetails, wallet) => async (dispatch) => {
+export const bondVaultWeight = (poolDetails) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondVaultContract(wallet)
+  const contract = getBondVaultContract()
   try {
     const vaultPools = poolDetails.filter((x) => x.curated === true)
     if (vaultPools.length > 0) {
@@ -75,9 +75,9 @@ export const bondVaultWeight = (poolDetails, wallet) => async (dispatch) => {
  * Get all current bond listed assets
  * @returns count
  */
-export const allListedAssets = (wallet) => async (dispatch) => {
+export const allListedAssets = () => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondVaultContract(wallet)
+  const contract = getBondVaultContract()
   try {
     const listedAssets = await contract.callStatic.getBondedAssets()
     dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))
@@ -90,12 +90,12 @@ export const allListedAssets = (wallet) => async (dispatch) => {
 
 /**
  * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract)
- * @param tokenAddr @param amount @param wallet
+ * @param tokenAddr @param amount
  * @returns {boolean}
  */
-export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
+export const bondDeposit = (tokenAddr, amount) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getDaoContract(wallet)
+  const contract = getDaoContract()
   try {
     const gPrice = await getProviderGasPrice()
     const ORs = {
@@ -110,13 +110,13 @@ export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
 }
 
 /**
- * Claim an array of Bond assets by poolAddresses
- * @param wallet
+ * Claim an array of Bond assets by poolAddresses *** NEED TO CHANGE THIS TO SINGLE CLAIM AT A TIME
+ * @param bondAssets
  * @returns {boolean}
  */
-export const claimBond = (bondAssets, wallet) => async (dispatch) => {
+export const claimBond = (bondAssets) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getDaoContract(wallet)
+  const contract = getDaoContract()
   try {
     const gPrice = await getProviderGasPrice()
     const bondClaim = await contract.claimAll(bondAssets, {

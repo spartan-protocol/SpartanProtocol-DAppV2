@@ -1,8 +1,8 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col, ProgressBar } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { useWeb3React } from '@web3-react/core'
 import { useBond } from '../../../store/bond'
 import {
   cancelProposal,
@@ -24,7 +24,7 @@ const ProposalItem = ({ proposal }) => {
   const sparta = useSparta()
   const pool = usePool()
   const bond = useBond()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]

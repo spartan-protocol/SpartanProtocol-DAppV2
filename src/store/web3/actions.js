@@ -98,7 +98,7 @@ export const getApproval =
   (tokenAddress, contractAddress, wallet) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-    let provider = getWalletProvider(wallet?.ethereum)
+    let provider = getWalletProvider(window?.ethereum)
     if (provider._isSigner === true) {
       provider = provider.provider
     }

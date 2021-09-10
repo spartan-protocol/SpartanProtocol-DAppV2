@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Card, Button } from 'react-bootstrap'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
@@ -12,7 +12,7 @@ import { claimBond } from '../../../store/bond/actions'
 
 const Bond = () => {
   const pool = usePool()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const { t } = useTranslation()
 

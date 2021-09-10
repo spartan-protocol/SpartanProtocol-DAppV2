@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
 import axios from 'axios'
 import {
@@ -14,6 +13,7 @@ import {
   OverlayTrigger,
   Row,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import Approval from '../../../components/Approval/Approval'
 import {
   getAddresses,
@@ -33,7 +33,7 @@ const NewPool = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const addr = getAddresses()
   const { t } = useTranslation()
 

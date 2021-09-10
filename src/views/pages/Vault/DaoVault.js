@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Col, Row } from 'react-bootstrap'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useWeb3React } from '@web3-react/core'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -29,7 +29,7 @@ import { calcShare } from '../../../utils/math/utils'
 
 const DaoVault = () => {
   const reserve = useReserve()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dao = useDao()
   const bond = useBond()
   const pool = usePool()

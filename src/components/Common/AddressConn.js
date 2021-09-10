@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { Button } from 'react-bootstrap'
 import WalletSelect from '../WalletSelect/WalletSelect'
 import { usePool } from '../../store/pool/selector'
@@ -8,7 +8,7 @@ import { ReactComponent as WalletIconB } from '../../assets/icons/wallet-yellow.
 import { ReactComponent as WalletIconC } from '../../assets/icons/wallet-red.svg'
 
 const AddressConn = () => {
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const pool = usePool()
   const [walletModalShow, setWalletModalShow] = useState(false)
 
@@ -31,7 +31,7 @@ const AddressConn = () => {
 
   return (
     <>
-      {!wallet && (
+      {(!wallet || !wallet?.active || wallet?.error) && (
         <Button
           type="button"
           className={btnClass}
@@ -42,7 +42,7 @@ const AddressConn = () => {
         </Button>
       )}
 
-      {wallet?.status === 'connecting' && (
+      {pool.loadingFinal === true && wallet?.active && (
         <Button
           type="button"
           className={btnClass}
@@ -53,40 +53,7 @@ const AddressConn = () => {
         </Button>
       )}
 
-      {wallet?.status === 'disconnected' && (
-        <Button
-          type="button"
-          className={btnClass}
-          onClick={() => setWalletModalShow(true)}
-          onKeyPress={() => setWalletModalShow(true)}
-        >
-          <WalletIconC fill="#aacdff" />
-        </Button>
-      )}
-
-      {wallet?.status === 'error' && (
-        <Button
-          type="button"
-          className={btnClass}
-          onClick={() => setWalletModalShow(true)}
-          onKeyPress={() => setWalletModalShow(true)}
-        >
-          <WalletIconC fill="#aacdff" />
-        </Button>
-      )}
-
-      {pool.loadingFinal === true && wallet?.status === 'connected' && (
-        <Button
-          type="button"
-          className={btnClass}
-          onClick={() => setWalletModalShow(true)}
-          onKeyPress={() => setWalletModalShow(true)}
-        >
-          <WalletIconB fill="#aacdff" />
-        </Button>
-      )}
-
-      {pool.loadingFinal === false && wallet?.status === 'connected' && (
+      {pool.loadingFinal === false && wallet?.active && (
         <Button
           type="button"
           className={btnClass}

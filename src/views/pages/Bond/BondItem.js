@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Row, Col, Card, Button } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
@@ -15,7 +15,7 @@ import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
 const BondItem = ({ asset }) => {
   const pool = usePool()
   const dispatch = useDispatch()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
   const [showDetails, setShowDetails] = useState(false)
   const { tokenAddress } = asset

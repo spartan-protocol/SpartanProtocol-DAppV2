@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
-import { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
+import { Web3ReactProvider } from '@web3-react/core'
 import Common from './components/layout/Common'
 
 import { bondReducer } from './store/bond'
@@ -17,6 +17,7 @@ import { synthReducer } from './store/synth'
 import { utilsReducer } from './store/utils'
 import { web3Reducer } from './store/web3'
 import { getNetwork } from './utils/web3'
+import { getLibrary } from './utils/web3React'
 
 const globalFormat = {
   prefix: '',
@@ -74,21 +75,14 @@ const Providers = () => {
 
   return (
     <Provider store={store}>
-      <UseWalletProvider
-        chainId={parseInt(network.chainId, 10)}
-        connectors={{
-          injected: {},
-          walletconnect: { rpcUrl: network.rpc },
-          bsc: {},
-        }}
-      >
+      <Web3ReactProvider getLibrary={getLibrary}>
         <BrowserRouter>
           <Switch>
             <Route path="/" component={Common} />
             <Redirect from="/" to="/home" />
           </Switch>
         </BrowserRouter>
-      </UseWalletProvider>
+      </Web3ReactProvider>
     </Provider>
   )
 }

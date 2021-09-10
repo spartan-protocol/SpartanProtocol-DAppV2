@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../../store/synth'
 import { getNetwork } from '../../../utils/web3'
@@ -20,7 +20,7 @@ import { Icon } from '../../../components/Icons/icons'
 
 const NewSynth = () => {
   const dispatch = useDispatch()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const isLightMode = window.localStorage.getItem('theme')

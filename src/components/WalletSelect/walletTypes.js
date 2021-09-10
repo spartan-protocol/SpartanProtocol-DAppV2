@@ -8,32 +8,32 @@ const walletTypes = [
     id: 'BC',
     title: 'BinanceChain',
     icon: <Icon size={size} icon="binanceChain" />,
-    inject: 'bsc',
+    connector: 'bsc',
   },
   {
     id: 'MM',
     title: 'MetaMask',
     icon: <Icon size={size} icon="metamask" />,
-    inject: undefined,
+    connector: 'injected',
   },
   {
     id: 'TW',
     title: 'TrustWallet',
     icon: <Icon size={size} icon="trustwallet" />,
-    inject: 'injected',
+    connector: 'injected',
   },
   {
     id: 'OOT',
     title: 'Others',
     icon: <Icon size={size} icon="mathwallet" />,
-    inject: 'injected',
+    connector: 'injected',
   },
-  // {
-  //   id: 'WC',
-  //   title: 'WalletConnect',
-  //   icon: <Icon icon="binanceChain" />,
-  //   inject: 'walletconnect',
-  // },
+  {
+    id: 'WC',
+    title: 'WalletConnect',
+    icon: <Icon size={size} icon="walletconnect" />,
+    connector: 'walletconnect',
+  },
 ]
 
 export default walletTypes

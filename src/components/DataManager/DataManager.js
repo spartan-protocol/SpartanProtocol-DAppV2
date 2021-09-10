@@ -1,4 +1,4 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { bondGlobalDetails } from '../../store/bond'
@@ -33,7 +33,7 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const pool = usePool()
   const router = useRouter()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const addr = getAddresses()
 
   const [prevNetwork, setPrevNetwork] = useState(false)
@@ -117,7 +117,7 @@ const DataManager = () => {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
       dispatch(getCuratedPools(wallet)) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails(wallet))
-      dispatch(bondGlobalDetails(wallet))
+      dispatch(bondGlobalDetails())
       dispatch(getReserveGlobalDetails(wallet))
     }
   }

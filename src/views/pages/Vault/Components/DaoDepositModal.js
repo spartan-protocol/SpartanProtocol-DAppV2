@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Col, Row, Modal, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
 import { daoDeposit } from '../../../../store/dao/actions'
 import { useDao } from '../../../../store/dao/selector'
@@ -19,7 +19,7 @@ const DaoDepositModal = (props) => {
   const { t } = useTranslation()
   const pool = usePool()
   const dao = useDao()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const addr = getAddresses()
   const [showModal, setshowModal] = useState(false)
   const [loading, setloading] = useState(false)

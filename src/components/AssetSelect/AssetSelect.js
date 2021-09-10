@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Row, Col, InputGroup, FormControl, Nav, Modal } from 'react-bootstrap'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -26,7 +25,6 @@ import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 const AssetSelect = (props) => {
   const addr = getAddresses()
   const synth = useSynth()
-  const wallet = useWallet()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -246,10 +244,10 @@ const AssetSelect = (props) => {
   ])
 
   const getWalletType = () => {
-    if (wallet.ethereum?.isMetaMask) {
+    if (window.ethereum?.isMetaMask) {
       return 'MM'
     }
-    if (wallet.ethereum?.isTrust) {
+    if (window.ethereum?.isTrust) {
       return 'TW'
     }
     return false

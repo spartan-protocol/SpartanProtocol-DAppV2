@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Link } from 'react-router-dom'
+import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
@@ -17,7 +17,7 @@ import { getTimeSince } from '../../../utils/math/nonContract'
 
 const SynthVault = () => {
   const { t } = useTranslation()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const reserve = useReserve()
   const synth = useSynth()
   const dispatch = useDispatch()

@@ -1,12 +1,12 @@
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { Row, Table, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../utils/web3'
 
 const RecentTxns = () => {
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const [txnArray, setTxnArray] = useState([])

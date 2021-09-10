@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Col, Modal, Row, Card, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import HelmetLoading from '../../../../components/Loaders/HelmetLoading'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
@@ -19,7 +19,7 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const addr = getAddresses()
   const [loading, setloading] = useState(false)
   const [stage, setstage] = useState(0)

@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
@@ -15,6 +14,7 @@ import {
   ProgressBar,
   Badge,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -41,7 +41,7 @@ import { bondLiq } from '../../../utils/math/dao'
 const LiqBond = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const bond = useBond()
   const dispatch = useDispatch()
   const pool = usePool()

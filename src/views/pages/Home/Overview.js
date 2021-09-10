@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { Card, Col, Nav, Row } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork } from '../../../utils/web3'
@@ -13,7 +13,7 @@ import SummaryItem from './SummaryItem'
 
 const Overview = () => {
   const dispatch = useDispatch()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
   const pool = usePool()
 

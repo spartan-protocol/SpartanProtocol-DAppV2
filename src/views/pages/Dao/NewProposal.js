@@ -12,8 +12,8 @@ import {
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 import { proposalTypes } from './types'
 import {
   newActionProposal,
@@ -35,7 +35,7 @@ import { useDao } from '../../../store/dao/selector'
 const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dao = useDao()
   const addr = getAddresses()
   const { t } = useTranslation()
