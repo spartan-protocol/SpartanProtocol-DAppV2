@@ -65,7 +65,7 @@ const PoolItem = ({ asset }) => {
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="pe-0">
-                <img src={token.symbolUrl} alt={token.symbol} height="50" />
+                <img src={token.symbolUrl} alt={token.symbol} height="45" />
               </Col>
               <Col xs="auto" className="pe-0">
                 <h3 className="mb-0">{token.symbol}</h3>
@@ -73,7 +73,7 @@ const PoolItem = ({ asset }) => {
                   ${formatFromUnits(tokenValueUSD, 2)}
                 </p>
               </Col>
-              <Col className="text-end mt-2 p-0 pr-2">
+              <Col className="text-end mt-1 p-0 pr-2">
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
                     <Icon
@@ -89,7 +89,7 @@ const PoolItem = ({ asset }) => {
               </Col>
               <Col
                 xs="auto"
-                className="text-end my-auto p-0 px-2"
+                className="text-end my-auto p-0 px-1"
                 onClick={() => toggleCollapse()}
                 role="button"
               >

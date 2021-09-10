@@ -441,7 +441,7 @@ const NewPool = () => {
                           setStage(3)
                         }}
                       >
-                        {t('confirm')}
+                        {t('createPool')}
                       </Button>
                     </Col>
                     {wallet?.account &&
