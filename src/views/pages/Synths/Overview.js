@@ -318,6 +318,8 @@ const Swap = () => {
       .replace(/(\..*?)\..*/g, '$1')
   }
 
+  const synthCount = () => synth.synthDetails.filter((x) => x.address).length
+
   useEffect(() => {
     handleZapInputChange()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -351,7 +353,7 @@ const Swap = () => {
       <div className="content">
         {network.chainId === 97 && (
           <>
-            {pool.poolDetails?.length > 0 && (
+            {pool.poolDetails?.length > 0 && synthCount() > 0 && (
               <>
                 <Row className="row-480">
                   <Col xs="auto">
@@ -829,6 +831,19 @@ const Swap = () => {
               <div>
                 <HelmetLoading height={300} width={300} />
               </div>
+            )}
+            {synthCount() <= 0 && (
+              <Card xs="auto" className="card-480">
+                <Card.Header className="p-0 border-0 mb-3">
+                  <Row className="px-4 pt-3 pb-1">
+                    <Col xs="auto">{t('synths')}</Col>
+                    <Col className="text-end">
+                      <NewSynth />
+                    </Col>
+                    No synths have been deployed yet
+                  </Row>
+                </Card.Header>
+              </Card>
             )}
           </>
         )}

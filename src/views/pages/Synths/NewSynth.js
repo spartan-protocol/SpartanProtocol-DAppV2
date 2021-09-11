@@ -94,7 +94,6 @@ const NewSynth = () => {
                 <FormControl
                   id="addrInput"
                   placeholder="0x..."
-                  type="number"
                   autoComplete="off"
                   autoCorrect="off"
                   disabled
@@ -103,8 +102,8 @@ const NewSynth = () => {
                   isInvalid={!addrValid}
                 />
                 <Form.Control.Feedback type="invalid">
-                  Only listed pools that are also curated are able to be
-                  deployed as a synthetic asset
+                  Only curated pools are able to be deployed as a synthetic
+                  asset
                 </Form.Control.Feedback>
               </InputGroup>
 

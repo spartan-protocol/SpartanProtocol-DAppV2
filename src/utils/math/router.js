@@ -202,29 +202,19 @@ export const mintSynth = (
   let diviSynth = BN(0)
   let diviSwap = BN(0)
   let baseCapped = false
-  let synthCapped = false
+  // let synthCapped = false
   let baseAmount = BN(synthPool.baseAmount)
-  let tokenAmount = BN(synthPool.tokenAmount)
-  const minSynth = BN(synthPool.minSynth)
-  const collateral = BN(synthPool.collateral)
-  const synthSupply = BN(synth.totalSupply)
-  let synthCap = tokenAmount.times(synthPool.synthCap).div(10000)
-  let minDebt = minSynth.times(tokenAmount).div(10000)
-  let minCollat = minSynth.times(baseAmount).div(10000)
-  let collat = collateral > minCollat ? collateral : minCollat
-  let debt = synthSupply > minDebt ? synthSupply : minDebt
-  let virtualPool = {
-    baseAmount: baseAmount.plus(collat),
-    tokenAmount: tokenAmount.minus(debt),
-  }
+  // let tokenAmount = BN(synthPool.tokenAmount)
+  // const synthSupply = BN(synth.totalSupply)
+  // let synthCap = tokenAmount.times(synthPool.synthCap).div(10000)
   if (fromBase) {
     // Simple mint SPARTA -> SYNTH
     const _spartaRec = minusFeeBurn(input, feeOnTsf) // Pool receives SPARTA (feeBurn)
     baseCapped = baseAmount.plus(_spartaRec).isGreaterThan(synthPool.baseCap) // Check if this will exceed the base cap
-    const [synthOut, synthFee] = calcSwapOutput(_spartaRec, virtualPool, false) // Swap SPARTA for SYNTH (Pool -> User)
-    synthCapped = synthSupply.plus(synthOut).isGreaterThan(synthCap) // Check if this will exceed the synth cap
+    const [synthOut, synthFee] = calcSwapOutput(_spartaRec, synthPool, false) // Swap SPARTA for SYNTH (Pool -> User)
+    // synthCapped = synthSupply.plus(synthOut).isGreaterThan(synthCap) // Check if this will exceed the synth cap
     diviSynth = synthFee.isGreaterThan(one) && synthFee
-    return [synthOut, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
+    return [synthOut, synthFee, diviSynth, diviSwap, baseCapped]
   }
   // Swap & mint TOKEN -> SPARTA -> SYNTH
   const [_spartaSwap, swapFee, _diviSwap] = swapTo(
@@ -237,26 +227,18 @@ export const mintSynth = (
   ) // Swap TOKEN to SPARTA (User -> Pool -> Router)
   if (swapPool.tokenAddress === synthPool.tokenAddress) {
     baseAmount = baseAmount.minus(_spartaSwap)
-    tokenAmount = tokenAmount.plus(input)
-    synthCap = tokenAmount.times(synthPool.synthCap).div(10000)
-    minDebt = minSynth.times(tokenAmount).div(10000)
-    minCollat = minSynth.times(baseAmount).div(10000)
-    collat = collateral.isGreaterThan(minCollat) ? collateral : minCollat
-    debt = synthSupply.isGreaterThan(minDebt) ? synthSupply : minDebt
-    virtualPool = {
-      baseAmount: baseAmount.plus(collat),
-      tokenAmount: tokenAmount.minus(debt),
-    }
+    // tokenAmount = tokenAmount.plus(input)
+    // synthCap = tokenAmount.times(synthPool.synthCap).div(10000)
   }
   const _spartaRec = minusFeeBurn(_spartaSwap, feeOnTsf) // Router receives SPARTA (feeBurn)
   const _spartaRec1 = minusFeeBurn(_spartaRec, feeOnTsf) // Pool receives SPARTA (feeBurn)
   baseCapped = baseAmount.plus(_spartaRec1).isGreaterThan(synthPool.baseCap) // Check if this will exceed the base cap
-  const [synthOut, synthFee] = calcSwapOutput(_spartaRec1, virtualPool, false) // Swap SPARTA for SYNTH (Pool -> User)
-  synthCapped = synthSupply.plus(synthOut).isGreaterThan(synthCap) // Check if this will exceed the synth cap
+  const [synthOut, synthFee] = calcSwapOutput(_spartaRec1, synthPool, false) // Swap SPARTA for SYNTH (Pool -> User)
+  // synthCapped = synthSupply.plus(synthOut).isGreaterThan(synthCap) // Check if this will exceed the synth cap
   const slipFee = swapFee.plus(synthFee)
   diviSwap = _diviSwap
   diviSynth = synthFee.isGreaterThan(one) && synthFee
-  return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
+  return [synthOut, slipFee, diviSynth, diviSwap, baseCapped]
 }
 
 /**

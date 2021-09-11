@@ -1,5 +1,10 @@
 import { BN, formatFromUnits } from '../bigNumber'
-import { calcPart, getPoolShareWeight } from './utils'
+import {
+  calcPart,
+  getPoolShareWeight,
+  calcSpotValueInBase,
+  getPool,
+} from './utils'
 
 export const one = BN(1).times(10).pow(18)
 
@@ -31,8 +36,31 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
  * @param {[object]} poolDetails
  * @returns memberWeight
  */
+export const getLPWeights = (poolDetails) => {
+  let memberWeight = BN(0)
+  for (let i = 0; i < poolDetails.length; i++) {
+    if (poolDetails[i].baseAmount > 0) {
+      memberWeight = memberWeight.plus(
+        getPoolShareWeight(
+          BN(poolDetails[i].staked)
+            .plus(poolDetails[i].bonded)
+            .plus(poolDetails[i].balance),
+          poolDetails[i].poolUnits,
+          poolDetails[i].baseAmount,
+        ),
+      )
+    }
+  }
+  return memberWeight
+}
+
+/**
+ * Get all relevant weights from the curated pools in PoolDetails object
+ * @param {[object]} poolDetails
+ * @returns memberWeight
+ */
 export const getVaultWeights = (poolDetails) => {
-  const _poolDetails = poolDetails.filter((x) => x.curated === true)
+  const _poolDetails = poolDetails.filter((x) => x.curated && x.baseAmount > 0)
   let memberWeight = BN(0)
   for (let i = 0; i < _poolDetails.length; i++) {
     memberWeight = memberWeight.plus(
@@ -42,6 +70,37 @@ export const getVaultWeights = (poolDetails) => {
         _poolDetails.baseAmount,
       ),
     )
+  }
+  return memberWeight
+}
+
+/**
+ * Get the member's weight of a staked synthVault asset
+ * @param synth @param pool
+ * @returns memberWeight
+ */
+export const getSynthWeight = (synth, pool) => {
+  const memberWeight = calcSpotValueInBase(synth.staked, pool)
+  return memberWeight
+}
+
+/**
+ * Get the member's SPARTA value of all held/staked synths
+ * @param synthDetails @param poolDetails
+ * @returns memberWeight
+ */
+export const getSynthWeights = (synthDetails, poolDetails) => {
+  let memberWeight = BN(0)
+  for (let i = 0; i < synthDetails.length; i++) {
+    if (synthDetails[i].address) {
+      const _total = BN(synthDetails[i].staked).plus(synthDetails[i].balance)
+      memberWeight = memberWeight.plus(
+        calcSpotValueInBase(
+          _total,
+          getPool(synthDetails[i].tokenAddress, poolDetails),
+        ),
+      )
+    }
   }
   return memberWeight
 }

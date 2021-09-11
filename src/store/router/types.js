@@ -1,3 +1,4 @@
 export const ROUTER_TXN = 'ROUTER_TXN'
+export const ROUTER_UNFREEZE = 'ROUTER_UNFREEZE'
 export const ROUTER_LOADING = 'ROUTER_LOADING'
 export const ROUTER_ERROR = 'ROUTER_ERROR'

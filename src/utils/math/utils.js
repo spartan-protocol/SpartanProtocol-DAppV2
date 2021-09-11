@@ -72,17 +72,6 @@ export const calcSpotValueInToken = (inputAmount, poolDetails) => {
   return result
 }
 
-// Get spot value of synths in base? For realise() function calc
-export const calcSynthSpotValueInBase = (inputAmount, poolDetails) => {
-  const _input = BN(inputAmount)
-  const _spartaDepth = BN(poolDetails.baseAmount)
-  const _tokenDepth = BN(poolDetails.tokenAmount)
-  const numerator = _input.times(_spartaDepth)
-  const denominator = _tokenDepth.times(2)
-  const result = numerator.div(denominator)
-  return result
-}
-
 export const calcSlipAdjustment = (spartaInput, tokenInput, poolDetails) => {
   const b = BN(spartaInput)
   const B = BN(poolDetails.baseAmount)

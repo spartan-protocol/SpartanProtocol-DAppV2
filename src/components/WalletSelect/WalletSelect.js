@@ -27,12 +27,12 @@ import LPs from './LPs'
 import Synths from './Synths'
 import { Icon } from '../Icons/icons'
 import { Tooltip } from '../Tooltip/tooltip'
-import { useBond } from '../../store/bond/selector'
-import { useDao } from '../../store/dao/selector'
 import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
-import { BN, convertFromWei } from '../../utils/bigNumber'
+import { convertFromWei } from '../../utils/bigNumber'
 import { connectorsByName } from '../../utils/web3React'
+import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
+import { getToken } from '../../utils/math/utils'
 
 export const spartanRanks = [
   {
@@ -100,8 +100,6 @@ export const spartanRanks = [
 const WalletSelect = (props) => {
   const { activate, deactivate, active, error, connector, account } =
     useWeb3React()
-  const bond = useBond()
-  const dao = useDao()
   const synth = useSynth()
   const pool = usePool()
   const addr = getAddresses()
@@ -176,57 +174,10 @@ const WalletSelect = (props) => {
 
   const getWeight = () => {
     if (account && pool.tokenDetails.length > 1) {
-      const validate = (value) => (value > 0 ? BN(value) : BN('0'))
-      const getPoolWeight = () => {
-        let weight = BN('0')
-        for (let i = 0; i < pool.poolDetails.length; i++) {
-          const thePool = pool.poolDetails[i]
-          if (thePool.address !== '') {
-            weight = weight.plus(
-              BN(thePool.balance)
-                .div(BN(thePool.poolUnits))
-                .times(BN(thePool.baseAmount)),
-            )
-          }
-        }
-        return validate(weight)
-      }
-      const getSynthWeight = () => {
-        let weight = BN('0')
-        for (let i = 0; i < synth.synthDetails.length; i++) {
-          const theSynth = synth.synthDetails[i]
-          const thePool = pool.poolDetails.filter(
-            (pewl) => pewl.tokenAddress === theSynth.tokenAddress,
-          )[0]
-          if (theSynth.balance > 0) {
-            weight = weight.plus(
-              BN(theSynth.balance).times(
-                BN(thePool.baseAmount).div(BN(thePool.tokenAmount)),
-              ),
-            )
-          }
-        }
-        return validate(weight)
-      }
-
-      const bondWeight = validate(bond.member.weight)
-      const daoWeight = validate(dao.member.weight)
-      const synthVaultWeight = validate(synth.memberDetails.totalWeight)
-      const spartaWeight = validate(
-        pool.tokenDetails.filter((token) => token.address === addr.spartav2)[0]
-          .balance,
-      )
-      const poolWeight = getPoolWeight()
-      const synthWeight = getSynthWeight()
-
-      return convertFromWei(
-        bondWeight
-          .plus(daoWeight)
-          .plus(synthVaultWeight)
-          .plus(spartaWeight)
-          .plus(poolWeight)
-          .plus(synthWeight),
-      )
+      const lpWeight = getLPWeights(pool.poolDetails)
+      const synthWeight = getSynthWeights(synth.synthDetails, pool.poolDetails)
+      const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
+      return convertFromWei(lpWeight.plus(synthWeight).plus(spartaWeight))
     }
     return '0'
   }

@@ -209,3 +209,20 @@ export const swapSynthToAsset =
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
   }
+
+/**
+ * Attempt to unfreeze the protocol
+ */
+export const updatePoolStatus = (wallet) => async (dispatch) => {
+  dispatch(routerLoading())
+  const contract = getRouterContract(wallet)
+  try {
+    const gPrice = await getProviderGasPrice()
+    const unfreeze = await contract.updatePoolStatus({
+      gasPrice: gPrice,
+    })
+    dispatch(payloadToDispatch(Types.ROUTER_UNFREEZE, unfreeze))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
+  }
+}

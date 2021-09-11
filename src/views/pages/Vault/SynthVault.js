@@ -3,29 +3,29 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
-  getSynthMemberDetails,
   synthHarvest,
+  synthVaultWeight,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 import { useReserve } from '../../../store/reserve/selector'
 import { getTimeSince } from '../../../utils/math/nonContract'
+import { usePool } from '../../../store/pool'
 
 const SynthVault = () => {
   const { t } = useTranslation()
-  const wallet = useWeb3React()
   const reserve = useReserve()
   const synth = useSynth()
+  const pool = usePool()
   const dispatch = useDispatch()
   const [trigger0, settrigger0] = useState(0)
 
   const getData = () => {
     dispatch(getSynthGlobalDetails())
-    dispatch(getSynthMemberDetails(wallet))
+    dispatch(synthVaultWeight(synth.synthDetails, pool.poolDetails))
   }
   useEffect(() => {
     if (trigger0 === 0) {

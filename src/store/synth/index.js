@@ -3,7 +3,6 @@ export { synthReducer } from './reducer'
 
 export {
   getSynthGlobalDetails,
-  getSynthMemberDetails,
   getSynthArray,
   getSynthDetails,
   synthDeposit,
@@ -11,4 +10,5 @@ export {
   synthHarvestSingle,
   synthWithdraw,
   createSynth,
+  synthVaultWeight,
 } from './actions'

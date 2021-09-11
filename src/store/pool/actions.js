@@ -167,26 +167,15 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
       listedPools.push({
         tokenAddress: tokenDetails[i].address,
         address: tempArray[i].poolAddress,
-        curated: false,
-        balance: '0',
-        staked: '0',
-        bonded: '0',
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
         synthCap: tempArray[i].synthCap.toString(),
         baseCap: tempArray[i].baseCap.toString(),
-        recentFees: '0',
-        lastMonthFees: '0',
-        recentDivis: '0',
-        lastMonthDivis: '0',
         genesis: tempArray[i].genesis.toString(),
         // newPool:                                                             // Uncomment this line for mainnet
         //   Date.now() / 1000 - tempArray[i].genesis.toString() * 1 < 604800,  // Uncomment this line for mainnet
         newPool: false, // Remove this line for mainnet
-        bondMember: false,
-        bondClaimRate: '0',
-        bondLastClaim: '0',
         hide:
           tokenDetails[i].address !== addr.spartav2 &&
           tempArray[i].baseAmount.toString() <= 0,
@@ -271,10 +260,15 @@ export const getPoolDetails =
             ? curatedPools.includes(listedPools[i].address)
             : false,
         ) // check if pool is curated
+        tempArray.push(
+          listedPools[i].poolUnits > 0
+            ? poolContract.callStatic.freeze()
+            : false,
+        ) // check if pool is frozen
       }
       tempArray = await Promise.all(tempArray)
       const poolDetails = listedPools
-      const varCount = 8
+      const varCount = 9
       for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
         const ii = i / varCount
         poolDetails[ii].balance = tempArray[i].toString()
@@ -289,6 +283,7 @@ export const getPoolDetails =
         poolDetails[ii].bondLastClaim =
           tempArray[i + 6].lastBlockTime.toString()
         poolDetails[ii].curated = tempArray[i + 7]
+        poolDetails[ii].frozen = tempArray[i + 8]
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {

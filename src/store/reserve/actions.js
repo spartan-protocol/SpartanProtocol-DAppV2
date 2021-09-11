@@ -19,16 +19,17 @@ export const getReserveGlobalDetails = (wallet) => async (dispatch) => {
   const addr = getAddresses()
   const contract = getReserveContract(wallet)
   const spartaContract = getSpartaV2Contract(wallet)
-
   try {
     let awaitArray = [
       contract.callStatic.emissions(),
+      contract.callStatic.globalFreeze(),
       spartaContract.callStatic.balanceOf(addr.reserve),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
       emissions: awaitArray[0],
-      spartaBalance: awaitArray[1].toString(),
+      globalFreeze: awaitArray[1],
+      spartaBalance: awaitArray[2].toString(),
     }
     dispatch(payloadToDispatch(Types.RESERVE_GLOBAL_DETAILS, globalDetails))
   } catch (error) {

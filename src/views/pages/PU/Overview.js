@@ -4,6 +4,7 @@ import { getAddresses, getNetwork } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
 import EmptyPools from './EmptyPools'
+import PoolStatus from './FrozenPools'
 
 const Overview = () => {
   const pool = usePool()
@@ -14,6 +15,7 @@ const Overview = () => {
   const emptyPools = pool.poolDetails?.filter(
     (asset) => asset.hide && asset.tokenAddress !== addr.spartav1,
   )
+  const frozenPools = pool.poolDetails?.filter((asset) => asset.frozen)
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((asset) => asset.address === tokenAddress)[0]
@@ -60,11 +62,39 @@ const Overview = () => {
                       Overview
                     </Nav.Link>
                   </Nav.Item>
+                  <Nav.Item key="pools">
+                    <Nav.Link
+                      eventKey="pools"
+                      onClick={() => {
+                        setActiveTab('pools')
+                      }}
+                    >
+                      Pools
+                    </Nav.Link>
+                  </Nav.Item>
                 </Nav>
               </Col>
 
               {activeTab === 'overview' && (
                 <Col xs="12">
+                  <Card className="card-480">
+                    <Card.Header>Ratio-Check Pools</Card.Header>
+                    <Card.Body>
+                      There are {frozenPools?.length} pool(s) that have
+                      triggered a warning. Ensure their ratios match the
+                      external markets. It may take some time for the ratios to
+                      repair themselves.
+                    </Card.Body>
+                    <Card.Footer>
+                      <Button
+                        className="w-100"
+                        onClick={() => setActiveTab('pools')}
+                        disabled={!selectedAsset}
+                      >
+                        View Pool Status
+                      </Button>
+                    </Card.Footer>
+                  </Card>
                   <Card className="card-480">
                     <Card.Header>Empty Pools</Card.Header>
                     <Card.Body>
@@ -86,18 +116,21 @@ const Overview = () => {
                         </Form>
                       ))}
                     </Card.Body>
-                    <Card.Footer>
-                      <Button
-                        className="w-100"
-                        onClick={() => setActiveTab('emptyPools')}
-                        disabled={!selectedAsset}
-                      >
-                        Add {getToken(selectedAsset)?.symbol}:SPARTA
-                      </Button>
-                    </Card.Footer>
+                    {emptyPools?.length > 0 && (
+                      <Card.Footer>
+                        <Button
+                          className="w-100"
+                          onClick={() => setActiveTab('emptyPools')}
+                          disabled={!selectedAsset}
+                        >
+                          Add {getToken(selectedAsset)?.symbol}:SPARTA
+                        </Button>
+                      </Card.Footer>
+                    )}
                   </Card>
                 </Col>
               )}
+              {activeTab === 'pools' && <PoolStatus />}
               {activeTab === 'emptyPools' && (
                 <EmptyPools selectedAsset={selectedAsset} />
               )}

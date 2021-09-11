@@ -211,7 +211,7 @@ const DataManager = () => {
           // setPrevPoolDetails(pool.poolDetails)
         }
         if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthDetails(synthArray, listedPools, wallet))
+          dispatch(getSynthDetails(synthArray, wallet))
         }
       }
     }
