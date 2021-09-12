@@ -13,10 +13,8 @@ export const bondLoading = () => ({
   type: Types.BOND_LOADING,
 })
 
-// --------------------------------------- BOND GLOBAL SCOPE ---------------------------------------
-
 /**
- * Get the global bond details
+ * Get the global bond details *VIEW*
  * @returns globalDetails
  */
 export const bondGlobalDetails = () => async (dispatch) => {
@@ -32,12 +30,12 @@ export const bondGlobalDetails = () => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.BOND_GLOBAL, global))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
 }
 
 /**
- * Get the current bondVault's total weight
+ * Get the current bondVault's total weight *VIEW*
  * @param poolDetails
  * @returns spartaWeight
  */
@@ -45,7 +43,8 @@ export const bondVaultWeight = (poolDetails) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getBondVaultContract()
   try {
-    const vaultPools = poolDetails.filter((x) => x.curated === true)
+    let totalWeight = BN(0)
+    const vaultPools = poolDetails.filter((x) => x.curated && x.baseAmount > 0)
     if (vaultPools.length > 0) {
       const awaitArray = []
       for (let i = 0; i < vaultPools.length; i++) {
@@ -54,25 +53,24 @@ export const bondVaultWeight = (poolDetails) => async (dispatch) => {
         )
       }
       const totalBonded = await Promise.all(awaitArray)
-      let totalWeight = BN(0)
       for (let i = 0; i < totalBonded.length; i++) {
         totalWeight = totalWeight.plus(
           getPoolShareWeight(
-            totalBonded[i],
+            totalBonded[i].toString(),
             vaultPools[i].poolUnits,
             vaultPools[i].baseAmount,
           ),
         )
       }
-      dispatch(payloadToDispatch(Types.BOND_TOTAL_WEIGHT, totalWeight))
     }
+    dispatch(payloadToDispatch(Types.BOND_TOTAL_WEIGHT, totalWeight.toString()))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
 }
 
 /**
- * Get all current bond listed assets
+ * Get all current bond listed assets *VIEW*
  * @returns count
  */
 export const allListedAssets = (wallet) => async (dispatch) => {
@@ -82,16 +80,13 @@ export const allListedAssets = (wallet) => async (dispatch) => {
     const listedAssets = await contract.callStatic.getBondedAssets()
     dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
 }
 
-// --------------------------------------- BOND FUNCTIONS ---------------------------------------
-
 /**
- * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract)
+ * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract) *STATE*
  * @param tokenAddr @param amount
- * @returns {boolean}
  */
 export const bondDeposit = (tokenAddr, amount) => async (dispatch) => {
   dispatch(bondLoading())
@@ -103,27 +98,26 @@ export const bondDeposit = (tokenAddr, amount) => async (dispatch) => {
       gasPrice: gPrice,
     }
     const deposit = await contract.bond(tokenAddr, amount, ORs)
-    dispatch(payloadToDispatch(Types.BOND_DEPOSIT, deposit))
+    dispatch(payloadToDispatch(Types.BOND_TXN, ['bondDeposit', deposit]))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
 }
 
 /**
- * Claim an array of Bond assets by poolAddresses *** NEED TO CHANGE THIS TO SINGLE CLAIM AT A TIME
- * @param bondAssets
- * @returns {boolean}
+ * Claim a Bond assets by poolAddress *STATE*
+ * @param poolAddr
  */
-export const claimBond = (bondAssets) => async (dispatch) => {
+export const claimBond = (poolAddr) => async (dispatch) => {
   dispatch(bondLoading())
   const contract = getDaoContract()
   try {
     const gPrice = await getProviderGasPrice()
-    const bondClaim = await contract.claimAll(bondAssets, {
+    const bondClaim = await contract.claim(poolAddr, {
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.BOND_CLAIM, bondClaim))
+    dispatch(payloadToDispatch(Types.BOND_TXN, ['bondClaim', bondClaim]))
   } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
 }

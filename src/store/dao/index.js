@@ -7,6 +7,7 @@ export {
   daoVaultWeight,
   daoMemberDetails,
   daoProposalDetails,
+  daoDepositTimes,
   proposalWeight,
   daoDeposit,
   daoWithdraw,

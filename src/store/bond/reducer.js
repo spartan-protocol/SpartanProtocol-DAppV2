@@ -5,8 +5,7 @@ const initialState = {
   totalWeight: '0',
   listedAssets: [],
   member: {},
-  deposit: '0',
-  bondClaim: '0',
+  txn: [],
 }
 
 export const bondReducer = (state = initialState, action) => {
@@ -38,19 +37,10 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.BOND_DEPOSIT: {
+    case Types.BOND_TXN: {
       return {
         ...state,
-        deposit: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_CLAIM: {
-      return {
-        ...state,
-        bondClaim: action.payload,
+        txn: action.payload,
         loading: false,
         error: null,
       }

@@ -1,31 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Card, Button } from 'react-bootstrap'
-import { useWeb3React } from '@web3-react/core'
+import { Row, Col, Card } from 'react-bootstrap'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork } from '../../../utils/web3'
 import BondItem from './BondItem'
-import { claimBond } from '../../../store/bond/actions'
 
 const Bond = () => {
   const pool = usePool()
-  const wallet = useWeb3React()
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-
-  const [claimArray, setClaimArray] = useState([])
-  useEffect(() => {
-    if (pool.poolDetails.length > 0) {
-      const tempArray = []
-      pool.poolDetails
-        .filter((x) => x.bonded > 0)
-        .map((x) => tempArray.push(x.address))
-      setClaimArray(tempArray)
-    }
-  }, [pool.poolDetails])
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -79,19 +63,6 @@ const Bond = () => {
                     </Row>
                   )}
                 </Card.Body>
-                <Card.Footer>
-                  <Button
-                    className="w-100"
-                    onClick={() => dispatch(claimBond(claimArray, wallet))}
-                  >
-                    {t('claimAll')}
-                    {' ( '}
-                    {pool.poolDetails?.length > 0 &&
-                      pool.poolDetails.filter((asset) => asset.bonded > 0)
-                        .length}
-                    {' )'}
-                  </Button>
-                </Card.Footer>
               </Card>
             </Col>
             {pool.poolDetails?.length > 0 &&

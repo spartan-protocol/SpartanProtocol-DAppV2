@@ -5,8 +5,8 @@ export const one = BN(1).times(10).pow(18)
 
 /**
  * Calculate claimable LP tokens from BondVault for member
- * @param {object} pool poolDetails
- * @returns {number} claimAmount
+ * @param pool poolDetails
+ * @returns claimAmount
  */
 export const calcBondedLP = (pool) => {
   const _secondsSinceClaim = getSecsSince(pool.bondLastClaim)

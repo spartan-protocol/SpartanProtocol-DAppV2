@@ -14,6 +14,7 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
   daoVaultWeight,
+  daoDepositTimes,
 } from '../../../store/dao/actions'
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
@@ -49,6 +50,7 @@ const DaoVault = () => {
     dispatch(daoMemberDetails(wallet))
     dispatch(daoVaultWeight(pool.poolDetails, wallet))
     dispatch(bondVaultWeight(pool.poolDetails, wallet))
+    dispatch(daoDepositTimes(pool.poolDetails, wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -110,14 +112,6 @@ const DaoVault = () => {
                   0,
                 )}{' '}
                 SPARTA
-              </Col>
-            </Row>
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('memberCount')}
-              </Col>
-              <Col className="text-end output-card">
-                {dao.global?.memberCount} {t('members')}
               </Col>
             </Row>
             <Row className="my-1">

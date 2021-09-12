@@ -1,7 +1,6 @@
 export const BOND_GLOBAL = 'BOND_GLOBAL'
 export const BOND_TOTAL_WEIGHT = 'BOND_TOTAL_WEIGHT'
 export const BOND_LISTED_ASSETS = 'BOND_LISTED_ASSETS'
-export const BOND_DEPOSIT = 'BOND_DEPOSIT'
-export const BOND_CLAIM = 'BOND_CLAIM'
+export const BOND_TXN = 'BOND_TXN'
 export const BOND_LOADING = 'BOND_LOADING'
 export const BOND_ERROR = 'BOND_ERROR'

@@ -6,7 +6,7 @@ import { calcShare, calcSwapOutput } from './utils'
 export const one = BN(1).times(10).pow(18)
 
 /**
- * Calculate LP tokens from bond
+ * Calculate LP tokens minted from a new bond deposit
  * @param inputToken @param pool @param feeOnTsf
  * @returns [unitsLP, bondedSparta, slipRevert, capRevert]
  */
@@ -20,9 +20,8 @@ export const bondLiq = (inputToken, pool, feeOnTsf) => {
 
 /**
  * Calculate the user's current total claimable incentive
- * @param {number} reserveBal @param {number} daoClaim
- * @param {number} memberWeight @param {number} totalWeight
- * @returns {number} claimAmount
+ * @param reserveBal @param daoClaim @param memberWeight @param totalWeight
+ * @returns claimAmount
  */
 export const calcReward = (reserveBal, daoClaim, memberWeight, totalWeight) => {
   const _reserve = BN(reserveBal) // Aim to deplete reserve over a number of days
@@ -32,9 +31,8 @@ export const calcReward = (reserveBal, daoClaim, memberWeight, totalWeight) => {
 
 /**
  * Calculate the user's current incentive-claim per era
- * @param {object} pools @param {object} bond @param {object} dao
- * @param {number} secsPerEra @param {number} reserveBal
- * @returns {number} claimAmount
+ * @param pools @param bond @param dao @param secsPerEra @param reserveBal
+ * @returns claimAmount
  */
 export const calcCurrentReward = (pools, bond, dao, secsPerEra, reserveBal) => {
   const _memberW = getVaultWeights(pools)
@@ -43,4 +41,28 @@ export const calcCurrentReward = (pools, bond, dao, secsPerEra, reserveBal) => {
   const share = calcReward(reserveBal, dao.global.daoClaim, _memberW, _totalW)
   const reward = share.times(_secsSinceClaim).div(secsPerEra)
   return reward
+}
+
+/**
+ * Check if proposal has quorum
+ * @param bondWeight @param daoWeight @param proposalWeight
+ * @returns
+ */
+export const hasQuorum = (bondWeight, daoWeight, proposalWeight) => {
+  const _totalWeight = BN(bondWeight).plus(daoWeight) // Get combined total DAO weight
+  const consensus = BN(_totalWeight).div(2) // Quorum > 50%
+  const quorum = BN(proposalWeight).isGreaterThan(consensus)
+  return quorum
+}
+
+/**
+ * Check if proposal has quorum
+ * @param bondWeight @param daoWeight @param proposalWeight
+ * @returns
+ */
+export const hasMajority = (bondWeight, daoWeight, proposalWeight) => {
+  const _totalWeight = BN(bondWeight).plus(daoWeight) // Get combined total DAO weight
+  const consensus = BN(_totalWeight).times(6666).div(10000) // Majority > 66.6%
+  const quorum = BN(proposalWeight).isGreaterThan(consensus)
+  return quorum
 }

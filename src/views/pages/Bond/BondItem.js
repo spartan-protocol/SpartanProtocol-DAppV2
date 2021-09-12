@@ -12,13 +12,13 @@ import { claimBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
 import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
 
-const BondItem = ({ asset }) => {
+const BondItem = ({ poolDetails }) => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const { t } = useTranslation()
   const [showDetails, setShowDetails] = useState(false)
-  const { tokenAddress } = asset
+  const { tokenAddress } = poolDetails
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const isLightMode = window.localStorage.getItem('theme')
 
@@ -39,7 +39,7 @@ const BondItem = ({ asset }) => {
 
   return (
     <>
-      <Col xs="auto" key={asset.address}>
+      <Col xs="auto" key={poolDetails.address}>
         <Card className="card-320">
           <Card.Body>
             <Row className="">
@@ -107,7 +107,7 @@ const BondItem = ({ asset }) => {
                 {t('remaining')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(asset.bonded)} {token.symbol}p
+                {formatFromWei(poolDetails.bonded)} {token.symbol}p
               </Col>
             </Row>
 
@@ -116,7 +116,7 @@ const BondItem = ({ asset }) => {
                 {t('claimable')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(calcBondedLP(asset))} {token.symbol}p
+                {formatFromWei(calcBondedLP(poolDetails))} {token.symbol}p
               </Col>
             </Row>
             {showDetails === true && (
@@ -126,8 +126,8 @@ const BondItem = ({ asset }) => {
                     {t('lastClaim')}
                   </Col>
                   <Col className="text-end output-card">
-                    {getTimeSince(asset.bondLastClaim, t)[0]}
-                    {getTimeSince(asset.bondLastClaim, t)[1]} ago
+                    {getTimeSince(poolDetails.bondLastClaim, t)[0]}
+                    {getTimeSince(poolDetails.bondLastClaim, t)[1]} ago
                   </Col>
                 </Row>
 
@@ -138,9 +138,9 @@ const BondItem = ({ asset }) => {
                   <Col className="text-end output-card">
                     {formatDate(
                       getEndDate(
-                        asset.bonded,
-                        asset.bondLastClaim,
-                        asset.bondClaimRate,
+                        poolDetails.bonded,
+                        poolDetails.bondLastClaim,
+                        poolDetails.bondClaimRate,
                       ),
                     )}
                   </Col>
@@ -158,7 +158,9 @@ const BondItem = ({ asset }) => {
               <Col xs="6" className="px-2">
                 <Button
                   className="w-100"
-                  onClick={() => dispatch(claimBond([asset.address], wallet))}
+                  onClick={() =>
+                    dispatch(claimBond(poolDetails.address, wallet))
+                  }
                 >
                   {t('claim')}
                 </Button>
