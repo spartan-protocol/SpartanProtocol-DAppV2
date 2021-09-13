@@ -69,6 +69,16 @@ const DaoVault = () => {
     return burnFee
   }
 
+  const getTotalWeight = (_amount) => {
+    let weight
+    if (_amount === 'NaN') {
+      weight = 0
+    } else {
+      weight = _amount
+    }
+    return weight
+  }
+
   const getLockedSecs = () => {
     const depositTime = BN(dao.member?.depositTime)
     const lockUpSecs = BN('86400')
@@ -107,9 +117,11 @@ const DaoVault = () => {
                 {t('totalWeight')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(
-                  BN(dao.global?.totalWeight).plus(bond.global?.weight),
-                  0,
+                {getTotalWeight(
+                  formatFromWei(
+                    BN(dao.global?.totalWeight).plus(bond.global?.weight),
+                    0,
+                  ),
                 )}{' '}
                 SPARTA
               </Col>
