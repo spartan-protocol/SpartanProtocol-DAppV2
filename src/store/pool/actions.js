@@ -28,7 +28,6 @@ export const poolDetailsLoading = () => ({
 /**
  * Get array of all listed token addresses
  * @param wallet
- * @returns tokenArray
  */
 export const getListedTokens = (wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -51,14 +50,13 @@ export const getListedTokens = (wallet) => async (dispatch) => {
     listedTokens.push(addr.spartav1, addr.spartav2)
     dispatch(payloadToDispatch(Types.POOL_LISTED_TOKENS, listedTokens))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
  * Get detailed array of token information
  * @param listedTokens @param wallet
- * @returns tokenDetails
  */
 export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -112,14 +110,13 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.POOL_TOKEN_DETAILS, tokenDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
  * Return array of curated pool addresses
  * @param wallet
- * @returns curatedPools
  */
 export const getCuratedPools = (wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -128,14 +125,13 @@ export const getCuratedPools = (wallet) => async (dispatch) => {
     const curatedPools = await contract.callStatic.getVaultAssets()
     dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error} `))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
  * Get LP token addresses and setup the object
  * @param tokenDetails @param wallet
- * @returns listedPools
  */
 export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -183,14 +179,13 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.POOL_LISTED_POOLS, listedPools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error} `))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
  * Add LP wallet-details to final array
  * @param listedPools @param curatedPools @param wallet
- * @returns poolDetails
  */
 export const getPoolDetails =
   (listedPools, curatedPools, wallet) => async (dispatch) => {
@@ -287,16 +282,13 @@ export const getPoolDetails =
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {
-      dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }
   }
 
 /**
  * Create a new pool
- * @param {uint} inputBase
- * @param {uint} inputToken
- * @param {address} token
- * @param {object} wallet
+ * @param inputBase @param inputToken @param token @param wallet
  */
 export const createPoolADD =
   (inputBase, inputToken, token, wallet) => async (dispatch) => {
@@ -322,8 +314,6 @@ export const createPoolADD =
       newPool = await provider.waitForTransaction(newPool.hash, 1)
       dispatch(payloadToDispatch(Types.POOL_NEW_POOL, newPool))
     } catch (error) {
-      dispatch(
-        errorToDispatch(Types.POOL_ERROR, `${error} - ${error.data?.message}.`),
-      )
+      dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }
   }

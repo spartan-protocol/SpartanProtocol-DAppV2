@@ -4,7 +4,7 @@ import {
   getReserveContract,
   getSpartaV2Contract,
 } from '../../utils/web3Contracts'
-import { getAddresses } from '../../utils/web3'
+import { getAddresses, getNetwork } from '../../utils/web3'
 
 export const reserveLoading = () => ({
   type: Types.RESERVE_LOADING,
@@ -14,22 +14,22 @@ export const reserveLoading = () => ({
  * Get the Reserve contract details
  * @returns {object} emissions, spartaBalance
  */
-export const getReserveGlobalDetails = (wallet) => async (dispatch) => {
+export const getReserveGlobalDetails = () => async (dispatch) => {
   dispatch(reserveLoading())
   const addr = getAddresses()
-  const contract = getReserveContract(wallet)
-  const spartaContract = getSpartaV2Contract(wallet)
+  const contract = getReserveContract()
+  const spartaContract = getSpartaV2Contract()
   try {
     let awaitArray = [
       contract.callStatic.emissions(),
-      contract.callStatic.globalFreeze(),
       spartaContract.callStatic.balanceOf(addr.reserve),
+      getNetwork().chainId === 56 ? false : contract.callStatic.globalFreeze(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
       emissions: awaitArray[0],
-      globalFreeze: awaitArray[1],
-      spartaBalance: awaitArray[2].toString(),
+      spartaBalance: awaitArray[1].toString(),
+      globalFreeze: awaitArray[2],
     }
     dispatch(payloadToDispatch(Types.RESERVE_GLOBAL_DETAILS, globalDetails))
   } catch (error) {

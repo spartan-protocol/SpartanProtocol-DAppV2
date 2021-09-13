@@ -110,7 +110,7 @@ const LiqBond = () => {
       )
       return [unitsLP, bondedSparta, slipRevert, capRevert]
     }
-    return ['0', false]
+    return ['0', '0', false, false]
   }
 
   const getInput1ValueUSD = () => {

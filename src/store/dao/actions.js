@@ -149,7 +149,7 @@ export const proposalWeight = (proposalID, poolDetails) => async (dispatch) => {
   const contract = getDaoContract()
   try {
     let _proposalWeight = BN(0)
-    const vaultPools = poolDetails.filter((x) => x.curated && x.baseAmount > 0)
+    const vaultPools = poolDetails.filter((x) => x.curated && !x.hide)
     if (vaultPools.length > 0) {
       const awaitArray = []
       for (let i = 0; i < vaultPools.length; i++) {
@@ -188,7 +188,7 @@ export const daoVaultWeight = (poolDetails) => async (dispatch) => {
   const contract = getDaoVaultContract()
   try {
     let totalWeight = BN(0)
-    const vaultPools = poolDetails.filter((x) => x.curated && x.baseAmount > 0)
+    const vaultPools = poolDetails.filter((x) => x.curated && !x.hide)
     if (vaultPools.length > 0) {
       const awaitArray = []
       for (let i = 0; i < vaultPools.length; i++) {

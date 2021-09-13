@@ -60,7 +60,7 @@ export const getLPWeights = (poolDetails) => {
  * @returns memberWeight
  */
 export const getVaultWeights = (poolDetails) => {
-  const _poolDetails = poolDetails.filter((x) => x.curated && x.baseAmount > 0)
+  const _poolDetails = poolDetails.filter((x) => x.curated && !x.hide)
   let memberWeight = BN(0)
   for (let i = 0; i < _poolDetails.length; i++) {
     memberWeight = memberWeight.plus(
