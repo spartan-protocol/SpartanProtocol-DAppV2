@@ -70,13 +70,10 @@ const DaoVault = () => {
   }
 
   const getTotalWeight = (_amount) => {
-    let weight
-    if (_amount === 'NaN') {
-      weight = 0
-    } else {
-      weight = _amount
+    if (_amount > 0) {
+      return _amount
     }
-    return weight
+    return '0.00'
   }
 
   const getLockedSecs = () => {
@@ -123,7 +120,7 @@ const DaoVault = () => {
                     0,
                   ),
                 )}{' '}
-                SPARTA
+                <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
               </Col>
             </Row>
             <Row className="my-1">
