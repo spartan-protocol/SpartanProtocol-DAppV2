@@ -109,14 +109,51 @@ export const daoMemberDetails = (wallet) => async (dispatch) => {
 }
 
 /**
- * Get the daoVault member deposit times
- * @param poolDetails @param wallet
+ * Get the member daoVault details *VIEW*
+ * @param listedPools @param wallet
+ * @returns daoDetails
  */
-export const daoDepositTimes = (poolDetails, wallet) => async (dispatch) => {
+export const getDaoDetails = (listedPools, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoVaultContract()
   try {
-    const loopPools = poolDetails.filter((x) => x.staked > 0)
+    let awaitArray = []
+    for (let i = 0; i < listedPools.length; i++) {
+      if (!wallet.account || listedPools[i].baseAmount <= 0) {
+        awaitArray.push('0')
+      } else {
+        awaitArray.push(
+          contract.callStatic.getMemberPoolBalance(
+            listedPools[i].address,
+            wallet.account,
+          ),
+        )
+      }
+    }
+    awaitArray = await Promise.all(awaitArray)
+    const daoDetails = []
+    for (let i = 0; i < awaitArray.length; i++) {
+      daoDetails.push({
+        tokenAddress: listedPools[i].tokenAddress,
+        address: listedPools[i].address,
+        staked: awaitArray[i].toString(),
+      })
+    }
+    dispatch(payloadToDispatch(Types.DAO_DETAILS, daoDetails))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.DAO_ERROR, error))
+  }
+}
+
+/**
+ * Get the daoVault member deposit times
+ * @param daoDetails @param wallet
+ */
+export const daoDepositTimes = (daoDetails, wallet) => async (dispatch) => {
+  dispatch(daoLoading())
+  const contract = getDaoVaultContract()
+  try {
+    const loopPools = daoDetails.filter((x) => x.staked > 0)
     let awaitArray = []
     for (let i = 0; i < loopPools.length; i++) {
       awaitArray.push(

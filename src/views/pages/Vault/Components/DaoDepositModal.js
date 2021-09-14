@@ -119,7 +119,7 @@ const DaoDepositModal = (props) => {
                   {formatFromWei(deposit())} {token.symbol}p
                 </Col>
               </Row>
-              {pool.poolDetails
+              {dao.daoDetails
                 .filter((i) => i.staked > 0)
                 .map((i) => (
                   <Row xs="12" key={i.address} className="">

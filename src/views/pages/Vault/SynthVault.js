@@ -3,23 +3,27 @@ import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
   synthHarvest,
   synthVaultWeight,
+  getSynthDetails,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 import { useReserve } from '../../../store/reserve/selector'
 import { getTimeSince } from '../../../utils/math/nonContract'
 import { usePool } from '../../../store/pool'
+import { getNetwork } from '../../../utils/web3'
 
 const SynthVault = () => {
   const { t } = useTranslation()
   const reserve = useReserve()
   const synth = useSynth()
   const pool = usePool()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const [trigger0, settrigger0] = useState(0)
 
@@ -38,6 +42,28 @@ const SynthVault = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return getNetwork()
+    }
+  }
+
+  useEffect(() => {
+    const { listedPools } = pool
+    const { synthArray } = synth
+    const checkDetails = () => {
+      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+        if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthDetails(synthArray, wallet))
+        }
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
 
   const [claimArray, setClaimArray] = useState([])
   useEffect(() => {

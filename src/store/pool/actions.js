@@ -6,8 +6,6 @@ import {
   getPoolFactoryContract,
   getUtilsContract,
   getRouterContract,
-  getDaoVaultContract,
-  getBondVaultContract,
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
@@ -16,6 +14,7 @@ import {
   getProviderGasPrice,
   getWalletProvider,
 } from '../../utils/web3'
+import { getSecsSince } from '../../utils/math/nonContract'
 
 export const poolLoading = () => ({
   type: Types.POOL_LOADING,
@@ -193,73 +192,43 @@ export const getPoolDetails =
     try {
       let tempArray = []
       for (let i = 0; i < listedPools.length; i++) {
+        const ready = getSecsSince(listedPools[i].genesis).toString() > 2592000
+        const validPool = listedPools[i].baseAmount.toString() > 0
+        const curated = validPool
+          ? curatedPools.includes(listedPools[i].address)
+          : false
         const routerContract = getRouterContract(wallet)
-        const daoVaultContract = getDaoVaultContract(wallet)
-        const bondVaultContract = getBondVaultContract(wallet)
-        const poolContract =
-          listedPools[i].poolUnits <= 0
-            ? null
-            : getPoolContract(listedPools[i].address, wallet)
+        const poolContract = validPool
+          ? getPoolContract(listedPools[i].address, wallet)
+          : null
         tempArray.push(
-          listedPools[i].poolUnits <= 0 || !wallet.account
+          !validPool || !wallet.account
             ? '0'
             : poolContract.callStatic.balanceOf(wallet.account),
         ) // balance
         tempArray.push(
-          listedPools[i].poolUnits <= 0 || !wallet.account
+          !validPool
             ? '0'
-            : daoVaultContract.callStatic.getMemberPoolBalance(
-                listedPools[i].address,
-                wallet.account,
-              ),
-        ) // staked
-        tempArray.push(
-          listedPools[i].poolUnits <= 0
-            ? '0'
-            : poolContract.callStatic.map30DPoolRevenue(),
+            : !ready
+            ? poolContract.callStatic.map30DPoolRevenue()
+            : poolContract.callStatic.mapPast30DPoolRevenue(),
         ) // recentFees
         tempArray.push(
-          listedPools[i].poolUnits <= 0
-            ? '0'
-            : poolContract.callStatic.mapPast30DPoolRevenue(),
-        ) // lastMonthFees
-        tempArray.push(
-          listedPools[i].poolUnits <= 0
+          !validPool || !curated
             ? '0'
             : routerContract.callStatic.mapAddress_30DayDividends(
                 listedPools[i].address,
               ),
         ) // recentDivis
         tempArray.push(
-          listedPools[i].poolUnits <= 0
+          !validPool || !curated
             ? '0'
             : routerContract.callStatic.mapAddress_Past30DayPoolDividends(
                 listedPools[i].address,
               ),
         ) // lastMonthDivis
-        tempArray.push(
-          listedPools[i].poolUnits <= 0 || !wallet.account
-            ? {
-                isMember: false,
-                bondedLP: '0',
-                claimRate: '0',
-                lastBlockTime: '0',
-              }
-            : bondVaultContract.callStatic.getMemberDetails(
-                wallet.account,
-                listedPools[i].address,
-              ),
-        ) // bondDetails - isMember, bondedLP, claimRate, lastBlockTime
-        tempArray.push(
-          listedPools[i].poolUnits > 0
-            ? curatedPools.includes(listedPools[i].address)
-            : false,
-        ) // check if pool is curated
-        tempArray.push(
-          listedPools[i].poolUnits > 0
-            ? poolContract.callStatic.freeze()
-            : false,
-        ) // check if pool is frozen
+        tempArray.push(curated) // check if pool is curated
+        tempArray.push(validPool ? poolContract.callStatic.freeze() : false) // check if pool is frozen
       }
       tempArray = await Promise.all(tempArray)
       const poolDetails = listedPools
@@ -267,18 +236,11 @@ export const getPoolDetails =
       for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
         const ii = i / varCount
         poolDetails[ii].balance = tempArray[i].toString()
-        poolDetails[ii].staked = tempArray[i + 1].toString()
-        poolDetails[ii].recentFees = tempArray[i + 2].toString()
-        poolDetails[ii].lastMonthFees = tempArray[i + 3].toString()
-        poolDetails[ii].recentDivis = tempArray[i + 4].toString()
-        poolDetails[ii].lastMonthDivis = tempArray[i + 5].toString()
-        poolDetails[ii].bonded = tempArray[i + 6].bondedLP.toString()
-        poolDetails[ii].bondMember = tempArray[i + 6].isMember
-        poolDetails[ii].bondClaimRate = tempArray[i + 6].claimRate.toString()
-        poolDetails[ii].bondLastClaim =
-          tempArray[i + 6].lastBlockTime.toString()
-        poolDetails[ii].curated = tempArray[i + 7]
-        poolDetails[ii].frozen = tempArray[i + 8]
+        poolDetails[ii].fees = tempArray[i + 1].toString()
+        poolDetails[ii].recentDivis = tempArray[i + 2].toString()
+        poolDetails[ii].lastMonthDivis = tempArray[i + 3].toString()
+        poolDetails[ii].curated = tempArray[i + 4]
+        poolDetails[ii].frozen = tempArray[i + 5]
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {

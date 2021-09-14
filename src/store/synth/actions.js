@@ -85,7 +85,7 @@ export const getSynthArray = (tokenArray, wallet) => async (dispatch) => {
 
 /**
  * Get the synth details relevant to the member
- * @param synthArray @param listedPools @param wallet
+ * @param synthArray @param wallet
  * @returns [synthDetails]
  */
 export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {

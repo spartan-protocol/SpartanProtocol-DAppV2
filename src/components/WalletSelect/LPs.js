@@ -1,21 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { watchAsset } from '../../store/web3'
 import { formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
+import { getToken } from '../../utils/math/utils'
+import { getDaoDetails, useDao } from '../../store/dao'
+import { getBondDetails, useBond } from '../../store/bond'
+import { getNetwork } from '../../utils/web3'
 
 const LPs = () => {
   const { t } = useTranslation()
   const pool = usePool()
+  const dao = useDao()
+  const bond = useBond()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
   const getWalletType = () => {
     if (window.ethereum?.isMetaMask) {
@@ -27,9 +34,31 @@ const LPs = () => {
     return false
   }
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return getNetwork()
+    }
+  }
+
+  useEffect(() => {
+    const { listedPools } = pool
+    const checkDetails = () => {
+      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+        if (listedPools?.length > 0) {
+          dispatch(getBondDetails(listedPools, wallet))
+          dispatch(getDaoDetails(listedPools, wallet))
+        }
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
+
   const handleWatchAsset = (assetType, asset) => {
     const walletType = getWalletType()
-    const token = getToken(asset.tokenAddress)
+    const token = _getToken(asset.tokenAddress)
     if (walletType === 'MM') {
       if (assetType === 'token') {
         dispatch(
@@ -72,20 +101,20 @@ const LPs = () => {
             <Col xs="auto" className="position-relative">
               <img
                 height="35px"
-                src={getToken(asset.tokenAddress)?.symbolUrl}
-                alt={getToken(asset.tokenAddress)?.name}
+                src={_getToken(asset.tokenAddress)?.symbolUrl}
+                alt={_getToken(asset.tokenAddress)?.name}
               />
               <img
                 src={spartaLpIcon}
                 height="20px"
                 className="token-badge"
-                alt={`${getToken(asset.tokenAddress)?.symbol} LP token icon`}
+                alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {`${getToken(asset.tokenAddress)?.symbol}p - ${t('wallet')}`}
+                  {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('wallet')}`}
                   <div className="description">
                     {formatFromWei(asset.balance)}
                   </div>
@@ -130,30 +159,28 @@ const LPs = () => {
           </Row>
         ))}
       {/* STAKED LP TOKENS */}
-      {pool.poolDetails?.filter((asset) => asset.staked > 0).length > 0 && (
-        <hr />
-      )}
-      {pool.poolDetails
+      {dao.daoDetails?.filter((asset) => asset.staked > 0).length > 0 && <hr />}
+      {dao.daoDetails
         ?.filter((asset) => asset.staked > 0)
         .map((asset) => (
           <Row key={`${asset.address}-lpdao`} className="mb-3 output-card">
             <Col xs="auto" className="position-relative">
               <img
                 height="35px"
-                src={getToken(asset.tokenAddress)?.symbolUrl}
-                alt={getToken(asset.tokenAddress)?.name}
+                src={_getToken(asset.tokenAddress)?.symbolUrl}
+                alt={_getToken(asset.tokenAddress)?.name}
               />
               <img
                 src={spartaLpIcon}
                 height="20px"
                 className="token-badge"
-                alt={`${getToken(asset.tokenAddress)?.symbol} LP token icon`}
+                alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {`${getToken(asset.tokenAddress)?.symbol}p - ${t('staked')}`}
+                  {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('staked')}`}
                   <div className="description">
                     {formatFromWei(asset.staked)}
                   </div>
@@ -198,32 +225,32 @@ const LPs = () => {
           </Row>
         ))}
       {/* BONDED LP TOKENS */}
-      {pool.poolDetails?.filter((asset) => asset.bonded > 0).length > 0 && (
+      {bond.bondDetails?.filter((asset) => asset.staked > 0).length > 0 && (
         <hr />
       )}
-      {pool.poolDetails
-        ?.filter((asset) => asset.bonded > 0)
+      {bond.bondDetails
+        ?.filter((asset) => asset.staked > 0)
         .map((asset) => (
           <Row key={`${asset.address}-lpbond`} className="mb-3 output-card">
             <Col xs="auto" className="position-relative">
               <img
                 height="35px"
-                src={getToken(asset.tokenAddress)?.symbolUrl}
-                alt={getToken(asset.tokenAddress)?.name}
+                src={_getToken(asset.tokenAddress)?.symbolUrl}
+                alt={_getToken(asset.tokenAddress)?.name}
               />
               <img
                 src={spartaLpIcon}
                 height="20px"
                 className="token-badge"
-                alt={`${getToken(asset.tokenAddress)?.symbol} LP token icon`}
+                alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
               />
             </Col>
             <Col xs="5" sm="7" className="align-items-center">
               <Row>
                 <Col xs="12" className="float-left">
-                  {`${getToken(asset.tokenAddress)?.symbol}p - ${t('bond')}`}
+                  {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('bond')}`}
                   <div className="description">
-                    {formatFromWei(asset.bonded)}
+                    {formatFromWei(asset.staked)}
                   </div>
                 </Col>
               </Row>

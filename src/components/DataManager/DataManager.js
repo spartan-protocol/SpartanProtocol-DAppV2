@@ -17,7 +17,7 @@ import {
   spartaFeeBurnRecent,
   spartaFeeBurnTally,
 } from '../../store/sparta'
-import { useSynth, getSynthArray, getSynthDetails } from '../../store/synth'
+import { getSynthArray } from '../../store/synth'
 import { addNetworkMM, addNetworkBC, getSpartaPrice } from '../../store/web3'
 import { BN } from '../../utils/bigNumber'
 import {
@@ -29,7 +29,6 @@ import {
 import { getSpartaV2Contract } from '../../utils/web3Contracts'
 
 const DataManager = () => {
-  const synth = useSynth()
   const dispatch = useDispatch()
   const pool = usePool()
   const router = useRouter()
@@ -59,6 +58,7 @@ const DataManager = () => {
     dispatch(spartaFeeBurnTally())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   useEffect(() => {
     const contract = getSpartaV2Contract()
     const filter = contract.filters.Transfer(null, addr.bnb)
@@ -109,7 +109,7 @@ const DataManager = () => {
   }, [window.localStorage.getItem('network')])
 
   /**
-   * Get the initial arrays (tokens & curateds)
+   * Get the initial arrays (tokens, curated & global details)
    */
   const checkArrays = async () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
@@ -171,18 +171,12 @@ const DataManager = () => {
     const timer = setTimeout(() => {
       checkArraysNext()
       settrigger3(trigger3 + 1)
-    }, 5000)
+    }, 7500)
     return () => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('network'),
-    pool.listedTokens,
-    wallet.account,
-    trigger3,
-  ])
+  }, [pool.listedTokens, trigger3])
 
   /**
    * Get listed pools details
@@ -203,15 +197,11 @@ const DataManager = () => {
    */
   useEffect(() => {
     const { listedPools, curatedPools } = pool
-    const { synthArray } = synth
     const checkDetails = () => {
       if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
         if (listedPools?.length > 0) {
           dispatch(getPoolDetails(listedPools, curatedPools, wallet))
           // setPrevPoolDetails(pool.poolDetails)
-        }
-        if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthDetails(synthArray, wallet))
         }
       }
     }

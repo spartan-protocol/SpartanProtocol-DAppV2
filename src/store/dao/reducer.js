@@ -4,6 +4,7 @@ const initialState = {
   global: [],
   totalWeight: '0',
   member: [],
+  daoDetails: [],
   proposal: [],
   lastDeposits: [],
   proposalWeight: '0',
@@ -37,6 +38,15 @@ export const daoReducer = (state = initialState, action) => {
       return {
         ...state,
         member: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.DAO_DETAILS: {
+      return {
+        ...state,
+        daoDetails: action.payload,
         error: null,
         loading: false,
       }

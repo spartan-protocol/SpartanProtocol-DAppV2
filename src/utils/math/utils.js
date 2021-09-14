@@ -54,6 +54,12 @@ export const getPool = (tokenAddr, poolDetails) =>
 export const getSynth = (tokenAddr, synthDetails) =>
   synthDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
 
+export const getDao = (tokenAddr, daoDetails) =>
+  daoDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
+
+export const getBond = (tokenAddr, bondDetails) =>
+  bondDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
+
 // Get spot value of tokens in base
 export const calcSpotValueInBase = (inputAmount, poolDetails) => {
   const _input = BN(inputAmount)

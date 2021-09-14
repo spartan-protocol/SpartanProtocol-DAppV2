@@ -40,6 +40,7 @@ import { useSparta } from '../../../store/sparta'
 import { balanceWidths } from '../Pools/Components/Utils'
 import { burnSynth, mintSynth } from '../../../utils/math/router'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
+import { getSynthDetails } from '../../../store/synth'
 
 const Swap = () => {
   const wallet = useWeb3React()
@@ -88,6 +89,20 @@ const Swap = () => {
       return pool.poolDetails[0]
     }
   }
+
+  useEffect(() => {
+    const { listedPools } = pool
+    const { synthArray } = synth
+    const checkDetails = () => {
+      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+        if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthDetails(synthArray, wallet))
+        }
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
 
   useEffect(() => {
     const { poolDetails } = pool

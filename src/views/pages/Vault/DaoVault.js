@@ -15,6 +15,7 @@ import {
   daoMemberDetails,
   daoVaultWeight,
   daoDepositTimes,
+  getDaoDetails,
 } from '../../../store/dao/actions'
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
@@ -26,7 +27,7 @@ import {
   getSecsSince,
   getTimeUntil,
 } from '../../../utils/math/nonContract'
-import { calcShare } from '../../../utils/math/utils'
+import { calcShare, getPool } from '../../../utils/math/utils'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -50,7 +51,8 @@ const DaoVault = () => {
     dispatch(daoMemberDetails(wallet))
     dispatch(daoVaultWeight(pool.poolDetails, wallet))
     dispatch(bondVaultWeight(pool.poolDetails, wallet))
-    dispatch(daoDepositTimes(pool.poolDetails, wallet))
+    dispatch(daoDepositTimes(dao.daoDetails, wallet))
+    dispatch(getDaoDetails(pool.listedPools, wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -200,9 +202,12 @@ const DaoVault = () => {
         </Card>
       </Col>
 
-      {pool?.poolDetails?.length > 0 &&
-        pool.poolDetails
-          .filter((i) => i.curated === true || i.staked > 0)
+      {dao?.daoDetails?.length > 0 &&
+        dao.daoDetails
+          .filter(
+            (i) =>
+              i.staked > 0 || getPool(i.tokenAddress, pool.poolDetails).curated,
+          )
           .map((i) => (
             <Col xs="auto" key={i.address}>
               <Card className="card-320">
@@ -239,23 +244,6 @@ const DaoVault = () => {
                         </p>
                       </Link>
                     </Col>
-
-                    {/* <Col className="text-end my-auto">
-                    {showDetails && (
-                      <i
-                        role="button"
-                        className="icon-small icon-up icon-light"
-                        onClick={() => toggleCollapse()}
-                      />
-                    )}
-                    {!showDetails && (
-                      <i
-                        role="button"
-                        className="icon-small icon-down icon-light"
-                        onClick={() => toggleCollapse()}
-                      />
-                    )}
-                  </Col> */}
                   </Row>
 
                   <Row className="my-1">

@@ -4,6 +4,7 @@ import {
   getPoolShareWeight,
   calcSpotValueInBase,
   getPool,
+  getDao,
 } from './utils'
 
 export const one = BN(1).times(10).pow(18)
@@ -32,19 +33,19 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
 }
 
 /**
- * Get all relevant weights from the PoolDetails object
- * @param {[object]} poolDetails
+ * Get member's total SPARTA value of all LP tokens attributable to them
+ * @param poolDetails @param daoDetails @param bondDetails
  * @returns memberWeight
  */
-export const getLPWeights = (poolDetails) => {
+export const getLPWeights = (poolDetails, daoDetails, bondDetails) => {
   let memberWeight = BN(0)
   for (let i = 0; i < poolDetails.length; i++) {
     if (poolDetails[i].baseAmount > 0) {
+      const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
+      const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
-          BN(poolDetails[i].staked)
-            .plus(poolDetails[i].bonded)
-            .plus(poolDetails[i].balance),
+          BN(poolDetails[i].balance).plus(dao.staked).plus(bond.staked),
           poolDetails[i].poolUnits,
           poolDetails[i].baseAmount,
         ),
@@ -55,17 +56,19 @@ export const getLPWeights = (poolDetails) => {
 }
 
 /**
- * Get all relevant weights from the curated pools in PoolDetails object
- * @param {[object]} poolDetails
+ * Get members actual vault weights (Members SPARTA value of curated assets in the vaults)
+ * @param poolDetails @param daoDetails @param bondDetails
  * @returns memberWeight
  */
-export const getVaultWeights = (poolDetails) => {
+export const getVaultWeights = (poolDetails, daoDetails, bondDetails) => {
   const _poolDetails = poolDetails.filter((x) => x.curated && !x.hide)
   let memberWeight = BN(0)
   for (let i = 0; i < _poolDetails.length; i++) {
+    const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
+    const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
     memberWeight = memberWeight.plus(
       getPoolShareWeight(
-        BN(_poolDetails.staked).plus(_poolDetails.bonded),
+        BN(dao.staked).plus(bond.staked),
         _poolDetails.poolUnits,
         _poolDetails.baseAmount,
       ),
@@ -186,16 +189,18 @@ export const formatDate = (unixTime) => {
 export const calcAPY = (pool) => {
   let apy = '0'
   const actualDepth = BN(pool.baseAmount).times(2)
+  const _divis = BN(pool.recentDivis)
+  const _prevDivis = BN(pool.lastMonthDivis)
   const monthFraction = ((Date.now() / 1000).toFixed() - pool.genesis) / 2592000
   if (monthFraction > 1) {
-    apy = BN(pool.lastMonthDivis > 0 ? pool.lastMonthDivis : pool.recentDivis)
-      .plus(pool.lastMonthFees > 0 ? pool.lastMonthFees : pool.recentFees)
+    apy = BN(_prevDivis.isGreaterThan(_divis) ? _prevDivis : _divis)
+      .plus(pool.fees)
       .times(12)
       .div(actualDepth)
       .times(100)
   } else {
-    apy = BN(pool.recentDivis)
-      .plus(pool.recentFees)
+    apy = BN(_divis)
+      .plus(pool.fees)
       .times(12 / monthFraction)
       .div(actualDepth)
       .times(100)

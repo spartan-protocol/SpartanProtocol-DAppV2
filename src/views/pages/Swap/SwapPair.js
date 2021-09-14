@@ -21,10 +21,13 @@ const SwapPair = ({ assetSwap }) => {
     .div(assetSwap?.tokenAmount)
     .times(web3?.spartaPrice)
   const spotPrice = BN(assetSwap?.baseAmount).div(assetSwap?.tokenAmount)
-  const recentDivis = asset ? asset.recentDivis : 0
-  const recentFees = asset ? asset.recentFees : 0
-  const APY =
-    recentFees && recentDivis ? formatFromUnits(calcAPY(assetSwap), 2) : 0
+  const recentFees = asset ? asset.fees : 0
+  const APY = recentFees && asset ? formatFromUnits(calcAPY(assetSwap), 2) : 0
+
+  const getDivis = () =>
+    BN(asset.recentDivis).isGreaterThan(asset.lastMonthDivis)
+      ? asset.recentDivis
+      : asset.lastMonthDivis
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -81,7 +84,7 @@ const SwapPair = ({ assetSwap }) => {
             </Col>
             <Col className="output-card text-end">
               {assetSwap.curated === true
-                ? `${formatFromWei(recentDivis, 0)} SPARTA`
+                ? `${formatFromWei(getDivis(), 0)} SPARTA`
                 : t('notCurated')}
             </Col>
           </Row>

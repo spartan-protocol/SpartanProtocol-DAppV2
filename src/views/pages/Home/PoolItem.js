@@ -26,8 +26,7 @@ const PoolItem = ({ asset }) => {
     tokenAmount,
     recentDivis,
     lastMonthDivis,
-    recentFees,
-    lastMonthFees,
+    fees,
     genesis,
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -35,6 +34,9 @@ const PoolItem = ({ asset }) => {
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
   const APY = formatFromUnits(calcAPY(asset), 2)
+
+  const getDivis = () =>
+    BN(recentDivis).isGreaterThan(lastMonthDivis) ? recentDivis : lastMonthDivis
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 
@@ -158,17 +160,10 @@ const PoolItem = ({ asset }) => {
               </Col>
               <Col className="text-end output-card">
                 $
-                {lastMonthFees + lastMonthDivis > 0
-                  ? formatFromWei(
-                      BN(lastMonthFees)
-                        .plus(lastMonthDivis)
-                        .times(web3?.spartaPrice),
-                      0,
-                    )
-                  : formatFromWei(
-                      BN(recentFees).plus(recentDivis).times(web3?.spartaPrice),
-                      0,
-                    )}{' '}
+                {formatFromWei(
+                  BN(fees).plus(getDivis()).times(web3?.spartaPrice),
+                  0,
+                )}{' '}
                 USD
               </Col>
             </Row>
@@ -189,10 +184,7 @@ const PoolItem = ({ asset }) => {
                     </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {lastMonthFees > 0
-                      ? formatFromWei(lastMonthFees, 0)
-                      : formatFromWei(recentFees, 0)}{' '}
-                    SPARTA
+                    {formatFromWei(fees, 0)} SPARTA
                   </Col>
                 </Row>
 
@@ -212,11 +204,7 @@ const PoolItem = ({ asset }) => {
                   </Col>
                   <Col className="text-end output-card fw-light">
                     {asset.curated === true &&
-                      lastMonthDivis > 0 &&
-                      `${formatFromWei(lastMonthDivis, 0)} SPARTA`}
-                    {asset.curated === true &&
-                      lastMonthDivis <= 0 &&
-                      `${formatFromWei(recentDivis, 0)} SPARTA`}
+                      `${formatFromWei(getDivis(), 0)} SPARTA`}
                     {asset.curated === false && t('notCurated')}
                   </Col>
                 </Row>

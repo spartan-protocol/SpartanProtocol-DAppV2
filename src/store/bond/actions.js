@@ -35,6 +35,51 @@ export const bondGlobalDetails = () => async (dispatch) => {
 }
 
 /**
+ * Get the member bond details *VIEW*
+ * @param listedPools @param wallet
+ * @returns bondDetails
+ */
+export const getBondDetails = (listedPools, wallet) => async (dispatch) => {
+  dispatch(bondLoading())
+  const contract = getBondVaultContract()
+  try {
+    let awaitArray = []
+    for (let i = 0; i < listedPools.length; i++) {
+      if (!wallet.account || listedPools[i].baseAmount <= 0) {
+        awaitArray.push({
+          isMember: false,
+          bondedLP: '0',
+          claimRate: '0',
+          lastBlockTime: '0',
+        })
+      } else {
+        awaitArray.push(
+          contract.callStatic.getMemberDetails(
+            wallet.account,
+            listedPools[i].address,
+          ),
+        )
+      }
+    }
+    awaitArray = await Promise.all(awaitArray)
+    const bondDetails = []
+    for (let i = 0; i < awaitArray.length; i++) {
+      bondDetails.push({
+        tokenAddress: listedPools[i].tokenAddress,
+        address: listedPools[i].address,
+        isMember: awaitArray[i].isMember,
+        staked: awaitArray[i].toString(),
+        claimRate: awaitArray[i].toString(),
+        lastBlockTime: awaitArray[i].toString(),
+      })
+    }
+    dispatch(payloadToDispatch(Types.BOND_DETAILS, bondDetails))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+  }
+}
+
+/**
  * Get the current bondVault's total weight *VIEW*
  * @param poolDetails
  * @returns spartaWeight

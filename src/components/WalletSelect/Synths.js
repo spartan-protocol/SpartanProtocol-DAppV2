@@ -1,23 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { watchAsset } from '../../store/web3'
 import { formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
-import { useSynth } from '../../store/synth'
+import { useSynth, getSynthDetails } from '../../store/synth'
 import { Icon } from '../Icons/icons'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
+import { getNetwork } from '../../utils/web3'
 
 const Synths = () => {
   const { t } = useTranslation()
   const pool = usePool()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const synth = useSynth()
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return getNetwork()
+    }
+  }
+
+  useEffect(() => {
+    const { listedPools } = pool
+    const { synthArray } = synth
+    const checkDetails = () => {
+      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+        if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthDetails(synthArray, wallet))
+        }
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
 
   const getWalletType = () => {
     if (window.ethereum?.isMetaMask) {

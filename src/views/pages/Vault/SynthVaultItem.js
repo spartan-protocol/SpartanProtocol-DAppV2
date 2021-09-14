@@ -38,11 +38,13 @@ const SynthVaultItem = ({ synthItem }) => {
     pool.poolDetails.filter((i) => i.tokenAddress === _tokenAddress)[0]
 
   const APY = () => {
+    const _recentRev = BN(synth.globalDetails.recentRevenue)
+    const _prevRev = BN(synth.globalDetails.lastMonthRevenue)
+    const fees = _recentRev.isGreaterThan(_prevRev) ? _recentRev : _prevRev
     const _object = {
       recentDivis: 0,
       lastMonthDivis: 0,
-      recentFees: synth.globalDetails.recentRevenue,
-      lastMonthFees: synth.globalDetails.lastMonthRevenue,
+      fees: fees.toString(),
       genesis: synth.globalDetails.genesis,
       baseAmount: BN(synth.globalDetails.totalWeight).div(2),
     }

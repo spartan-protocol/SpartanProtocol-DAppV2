@@ -49,6 +49,7 @@ import {
   swapTo,
   zapLiq,
 } from '../../../utils/math/router'
+import { getSynthDetails } from '../../../store/synth'
 
 const Swap = () => {
   const synth = useSynth()
@@ -101,6 +102,20 @@ const Swap = () => {
       return pool.poolDetails[0]
     }
   }
+
+  useEffect(() => {
+    const { listedPools } = pool
+    const { synthArray } = synth
+    const checkDetails = () => {
+      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+        if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthDetails(synthArray, wallet))
+        }
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
 
   useEffect(() => {
     const { poolDetails } = pool
