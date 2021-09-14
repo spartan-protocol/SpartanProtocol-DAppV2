@@ -51,7 +51,7 @@ const LiqBond = () => {
   const [assetBond1, setAssetBond1] = useState('...')
 
   const spartaRemainingLoop = async () => {
-    dispatch(allListedAssets(wallet))
+    dispatch(allListedAssets())
     await pause(10000)
     spartaRemainingLoop()
   }

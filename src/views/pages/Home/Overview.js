@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Card, Col, Nav, Row } from 'react-bootstrap'
-import { useWeb3React } from '@web3-react/core'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork } from '../../../utils/web3'
@@ -13,7 +12,6 @@ import SummaryItem from './SummaryItem'
 
 const Overview = () => {
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
   const { t } = useTranslation()
   const pool = usePool()
 
@@ -39,11 +37,11 @@ const Overview = () => {
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
     if (trigger1 === 0 && network.chainId === 97) {
-      dispatch(allListedAssets(wallet))
+      dispatch(allListedAssets())
     }
     const timer = setTimeout(() => {
       if (network.chainId === 97) {
-        dispatch(allListedAssets(wallet))
+        dispatch(allListedAssets())
         settrigger1(trigger1 + 1)
       }
     }, 10000)

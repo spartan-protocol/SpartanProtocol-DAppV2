@@ -21,10 +21,10 @@ export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
 })
 
-export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
+export const getSpartaGlobalDetails = () => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract1 = getSpartaV1Contract(wallet)
-  const contract2 = getSpartaV2Contract(wallet)
+  const contract1 = getSpartaV1Contract()
+  const contract2 = getSpartaV2Contract()
 
   try {
     let awaitArray = [

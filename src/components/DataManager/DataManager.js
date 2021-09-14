@@ -114,11 +114,11 @@ const DataManager = () => {
   const checkArrays = async () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (chainId === 97 || chainId === 56) {
-      dispatch(getListedTokens(wallet)) // TOKEN ARRAY
-      dispatch(getCuratedPools(wallet)) // CURATED ARRAY
-      dispatch(getSpartaGlobalDetails(wallet))
-      dispatch(bondGlobalDetails(wallet))
-      dispatch(getReserveGlobalDetails(wallet))
+      dispatch(getListedTokens()) // TOKEN ARRAY
+      dispatch(getCuratedPools()) // CURATED ARRAY
+      dispatch(getSpartaGlobalDetails())
+      dispatch(bondGlobalDetails())
+      dispatch(getReserveGlobalDetails())
     }
   }
   useEffect(() => {
@@ -159,7 +159,7 @@ const DataManager = () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (listedTokens.length > 0) {
       if (chainId === 97 || chainId === 56) {
-        dispatch(getSynthArray(listedTokens, wallet))
+        dispatch(getSynthArray(listedTokens))
         dispatch(getTokenDetails(listedTokens, wallet))
       }
     }
@@ -185,7 +185,7 @@ const DataManager = () => {
     const { tokenDetails } = pool
     const checkListedPools = () => {
       if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails, wallet))
+        dispatch(getListedPools(tokenDetails))
       }
     }
     checkListedPools()

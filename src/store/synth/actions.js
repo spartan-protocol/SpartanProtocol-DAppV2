@@ -21,7 +21,6 @@ export const synthLoading = () => ({
 
 /**
  * Get the global synth details
- * @param wallet
  * @returns {object} minimumDepositTime, totalWeight, erasToEarn, blockDelay, vaultClaim, stakedSynthLength
  */
 export const getSynthGlobalDetails = () => async (dispatch) => {
@@ -53,13 +52,13 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
 
 /**
  * Get the synth addresses and setup the object
- * @param tokenArray @param wallet
+ * @param tokenArray
  * @returns synthArray
  */
-export const getSynthArray = (tokenArray, wallet) => async (dispatch) => {
+export const getSynthArray = (tokenArray) => async (dispatch) => {
   dispatch(synthLoading())
   const addr = getAddresses()
-  const contract = getSynthFactoryContract(wallet)
+  const contract = getSynthFactoryContract()
   try {
     let tempArray = []
     for (let i = 0; i < tokenArray.length; i++) {

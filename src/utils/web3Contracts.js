@@ -12,7 +12,7 @@ const isAddress = (addrToCheck) => ethers.utils.isAddress(addrToCheck)
 export const getTokenContract = (tokenAddr, wallet) => {
   let contract = isAddress(tokenAddr)
   const abiErc20 = getAbis().erc20
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(tokenAddr, abiErc20, provider)
   }
@@ -26,7 +26,7 @@ export const getTokenContract = (tokenAddr, wallet) => {
 export const getReserveContract = (wallet) => {
   let contract = isAddress(getAddresses().reserve)
   const abiReserve = getAbis().reserve
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().reserve, abiReserve, provider)
   }
@@ -41,7 +41,7 @@ export const getReserveContract = (wallet) => {
 export const getOldBondContract = (bondAddress, wallet) => {
   let contract = isAddress(bondAddress)
   const abiBond = getAbis().bond
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(bondAddress, abiBond, provider)
   }
@@ -55,7 +55,7 @@ export const getOldBondContract = (bondAddress, wallet) => {
 export const getBondVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().bondVault)
   const abiBondVault = getAbis().bondVault
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().bondVault,
@@ -73,7 +73,7 @@ export const getBondVaultContract = (wallet) => {
 export const getDaoContract = (wallet) => {
   let contract = isAddress(getAddresses().dao)
   const abiDao = getAbis().dao
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().dao, abiDao, provider)
   }
@@ -87,7 +87,7 @@ export const getDaoContract = (wallet) => {
 export const getDaoVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().daoVault)
   const abiDaoVault = getAbis().daoVault
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().daoVault,
@@ -102,7 +102,7 @@ export const getDaoVaultContract = (wallet) => {
 export const getLoanContract = (wallet) => {
   let contract = isAddress(getAddresses().loan)
   const abiLoan = getAbis().daoLoan
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().loan, abiLoan, provider)
   }
@@ -113,7 +113,7 @@ export const getLoanContract = (wallet) => {
 export const getLoanVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().loanVault)
   const abiLoanVault = getAbis().daoLoanVault
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().loanVault,
@@ -132,7 +132,7 @@ export const getLoanVaultContract = (wallet) => {
 export const getPoolContract = (poolAddress, wallet) => {
   let contract = isAddress(poolAddress)
   const abiPool = getAbis().pool
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(poolAddress, abiPool, provider)
   }
@@ -146,7 +146,7 @@ export const getPoolContract = (poolAddress, wallet) => {
 export const getPoolFactoryContract = (wallet) => {
   let contract = isAddress(getAddresses().poolFactory)
   const abiPoolFactory = getAbis().poolFactory
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().poolFactory,
@@ -164,7 +164,7 @@ export const getPoolFactoryContract = (wallet) => {
 export const getRouterContract = (wallet) => {
   let contract = isAddress(getAddresses().router)
   const abiRouter = getAbis().router
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().router, abiRouter, provider)
   }
@@ -178,7 +178,7 @@ export const getRouterContract = (wallet) => {
 export const getSpartaV1Contract = (wallet) => {
   let contract = isAddress(getAddresses().spartav1)
   const abiBase = getAbis().sparta
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().spartav1, abiBase, provider)
   }
@@ -192,7 +192,7 @@ export const getSpartaV1Contract = (wallet) => {
 export const getSpartaV2Contract = (wallet) => {
   let contract = isAddress(getAddresses().spartav2)
   const abiSparta = getAbis().sparta
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().spartav2, abiSparta, provider)
   }
@@ -223,7 +223,7 @@ export const getSpartaV2API = () => {
 export const getFallenSpartansContract = (wallet) => {
   let contract = isAddress(getAddresses().fallenSpartans)
   const abiFS = getAbis().fallenSpartans
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().fallenSpartans,
@@ -242,7 +242,7 @@ export const getFallenSpartansContract = (wallet) => {
 export const getSynthContract = (synthAddress, wallet) => {
   let contract = isAddress(synthAddress)
   const abiSynth = getAbis().synth
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(synthAddress, abiSynth, provider)
   }
@@ -256,7 +256,7 @@ export const getSynthContract = (synthAddress, wallet) => {
 export const getSynthFactoryContract = (wallet) => {
   let contract = isAddress(getAddresses().synthFactory)
   const abiSynthFactory = getAbis().synthFactory
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().synthFactory,
@@ -274,7 +274,7 @@ export const getSynthFactoryContract = (wallet) => {
 export const getSynthVaultContract = (wallet) => {
   let contract = isAddress(getAddresses().synthVault)
   const abiSynthVault = getAbis().synthVault
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(
       getAddresses().synthVault,
@@ -292,7 +292,7 @@ export const getSynthVaultContract = (wallet) => {
 export const getUtilsContract = (wallet) => {
   let contract = isAddress(getAddresses().utils)
   const abiUtils = getAbis().utils
-  const provider = getWalletProvider(wallet?.library)
+  const provider = getWalletProvider(wallet ? wallet.library : null)
   if (contract === true) {
     contract = new ethers.Contract(getAddresses().utils, abiUtils, provider)
   }

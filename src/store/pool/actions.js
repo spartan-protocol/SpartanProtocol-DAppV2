@@ -28,11 +28,11 @@ export const poolDetailsLoading = () => ({
  * Get array of all listed token addresses
  * @param wallet
  */
-export const getListedTokens = (wallet) => async (dispatch) => {
+export const getListedTokens = () => async (dispatch) => {
   dispatch(poolLoading())
   const addr = getAddresses()
   const check = ethers.utils.isAddress(addr.poolFactory)
-  const contract = check === true ? getPoolFactoryContract(wallet) : ''
+  const contract = check === true ? getPoolFactoryContract() : ''
 
   try {
     const listedTokens = []
@@ -117,9 +117,9 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
  * Return array of curated pool addresses
  * @param wallet
  */
-export const getCuratedPools = (wallet) => async (dispatch) => {
+export const getCuratedPools = () => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getPoolFactoryContract(wallet)
+  const contract = getPoolFactoryContract()
   try {
     const curatedPools = await contract.callStatic.getVaultAssets()
     dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
@@ -130,11 +130,11 @@ export const getCuratedPools = (wallet) => async (dispatch) => {
 
 /**
  * Get LP token addresses and setup the object
- * @param tokenDetails @param wallet
+ * @param tokenDetails
  */
-export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
+export const getListedPools = (tokenDetails) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getUtilsContract(wallet)
+  const contract = getUtilsContract()
   const addr = getAddresses()
   try {
     let tempArray = []
