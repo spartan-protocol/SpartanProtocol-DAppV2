@@ -1,6 +1,7 @@
 import * as Types from './types'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import {
+  getRouterContract,
   getSynthContract,
   getSynthFactoryContract,
   getSynthVaultContract,
@@ -45,6 +46,21 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
       lastMonthRevenue: awaitArray[5].toString(),
     }
     dispatch(payloadToDispatch(Types.SYNTH_GLOBAL_DETAILS, globalDetails))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+  }
+}
+
+/**
+ * Get the global synthMinting bool (from router)
+ * @returns {bool} synthMinting
+ */
+export const getSynthMinting = () => async (dispatch) => {
+  dispatch(synthLoading())
+  const contract = getRouterContract()
+  try {
+    const synthMinting = await contract.callStatic.synthMinting()
+    dispatch(payloadToDispatch(Types.SYNTH_MINTING, synthMinting))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }

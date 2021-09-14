@@ -342,194 +342,217 @@ const LiqRemove = () => {
             </Nav>
           </Card.Header>
 
-          <Card.Body>
-            <Row>
-              <Col xs="12" className="px-1 px-sm-3">
-                <Card className="card-alt">
-                  <Card.Body>
-                    <Row>
-                      <Col xs="auto" className="text-sm-label">
-                        {t('redeem')}
-                      </Col>
-                      <Col
-                        className="text-sm-label float-end text-end"
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          clearInputs(1)
-                          removeInput1.value = convertFromWei(getBalance(1))
-                        }}
-                      >
-                        <Badge bg="primary" className="me-1">
-                          MAX
-                        </Badge>
-                        {t('balance')}:{' '}
-                        {pool.poolDetails && formatFromWei(getBalance(1))}
-                      </Col>
-                    </Row>
-
-                    <Row className="my-1">
-                      <Col>
-                        <InputGroup className="m-0">
-                          <InputGroup.Text id="assetSelect1">
-                            <AssetSelect priority="1" filter={['pool']} />
-                          </InputGroup.Text>
-                          <FormControl
-                            className="text-end ms-0"
-                            type="number"
-                            placeholder={`${t('redeem')}...`}
-                            id="removeInput1"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            onInput={(e) => handleTokenInputChange(e)}
-                          />
-                          <InputGroup.Text
+          {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
+            <>
+              <Card.Body>
+                <Row>
+                  <Col xs="12" className="px-1 px-sm-3">
+                    <Card className="card-alt">
+                      <Card.Body>
+                        <Row>
+                          <Col xs="auto" className="text-sm-label">
+                            {t('redeem')}
+                          </Col>
+                          <Col
+                            className="text-sm-label float-end text-end"
                             role="button"
-                            tabIndex={-1}
-                            onKeyPress={() => clearInputs(1)}
-                            onClick={() => clearInputs(1)}
+                            aria-hidden="true"
+                            onClick={() => {
+                              clearInputs(1)
+                              removeInput1.value = convertFromWei(getBalance(1))
+                            }}
                           >
-                            <Icon icon="close" size="10" fill="grey" />
-                          </InputGroup.Text>
-                        </InputGroup>
-                        <div className="text-end text-sm-label pt-1">
-                          ~$
-                          {removeInput1?.value
-                            ? formatFromWei(getLpValueUSD(), 2)
-                            : '0.00'}
-                        </div>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
+                            <Badge bg="primary" className="me-1">
+                              MAX
+                            </Badge>
+                            {t('balance')}:{' '}
+                            {pool.poolDetails && formatFromWei(getBalance(1))}
+                          </Col>
+                        </Row>
 
-                <Row style={{ height: '2px' }}>
-                  {activeTab === '2' && (
-                    <Icon
-                      icon="swapAdd"
-                      size="25"
-                      fill="#fb2715"
-                      className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-20px', zIndex: '1000' }}
-                    />
-                  )}
-                </Row>
-
-                {activeTab === '2' && (
-                  <Card className="card-alt">
-                    <Card.Body>
-                      <Row>
-                        <Col xs="auto" className="text-sm-label">
-                          {t('receive')}
-                        </Col>
-                        <Col className="text-sm-label float-end text-end">
-                          {t('balance')}:{' '}
-                          {pool.tokenDetails && formatFromWei(getBalance(2))}
-                        </Col>
-                      </Row>
-
-                      <Row className="my-1">
-                        <Col>
-                          <InputGroup className="">
-                            <InputGroup.Text id="assetSelect2">
-                              <AssetSelect
-                                priority="2"
-                                filter={['token']}
-                                blackList={[
-                                  activeTab === '1' ? addr.spartav2 : '',
-                                ]}
-                                whiteList={
-                                  activeTab === '2'
-                                    ? [addr.spartav2, poolRemove1.tokenAddress]
-                                    : ['']
-                                }
-                                disabled={activeTab === '1'}
+                        <Row className="my-1">
+                          <Col>
+                            <InputGroup className="m-0">
+                              <InputGroup.Text id="assetSelect1">
+                                <AssetSelect priority="1" filter={['pool']} />
+                              </InputGroup.Text>
+                              <FormControl
+                                className="text-end ms-0"
+                                type="number"
+                                placeholder={`${t('redeem')}...`}
+                                id="removeInput1"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                onInput={(e) => handleTokenInputChange(e)}
                               />
-                            </InputGroup.Text>
-                            <FormControl
-                              className="text-end ms-0"
-                              type="number"
-                              placeholder={`${t('receive')}...`}
-                              id="removeInput2"
-                              disabled
-                            />
-                          </InputGroup>
-                          <div className="text-end text-sm-label pt-1">
-                            ~$
-                            {removeInput2?.value
-                              ? formatFromWei(getOutput1ValueUSD(), 2)
-                              : '0.00'}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                )}
+                              <InputGroup.Text
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs(1)}
+                                onClick={() => clearInputs(1)}
+                              >
+                                <Icon icon="close" size="10" fill="grey" />
+                              </InputGroup.Text>
+                            </InputGroup>
+                            <div className="text-end text-sm-label pt-1">
+                              ~$
+                              {removeInput1?.value
+                                ? formatFromWei(getLpValueUSD(), 2)
+                                : '0.00'}
+                            </div>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
 
-                {pool.poolDetails && (
-                  <>
-                    <Row className="mb-2 mt-3">
-                      <Col xs="auto">
-                        <div className="text-card">{t('redeem')}</div>
-                      </Col>
-                      <Col className="text-end">
-                        <div className="text-card">
-                          {removeInput1?.value > 0
-                            ? formatFromUnits(removeInput1?.value, 6)
-                            : '0.00'}{' '}
-                          {getToken(poolRemove1?.tokenAddress)?.symbol}p
-                        </div>
-                      </Col>
+                    <Row style={{ height: '2px' }}>
+                      {activeTab === '2' && (
+                        <Icon
+                          icon="swapAdd"
+                          size="25"
+                          fill="#fb2715"
+                          className="mx-auto position-relative"
+                          style={{
+                            height: '35px',
+                            top: '-20px',
+                            zIndex: '1000',
+                          }}
+                        />
+                      )}
                     </Row>
 
                     {activeTab === '2' && (
-                      <Row className="mb-2">
-                        <Col xs="auto">
-                          <div className="text-card">{t('fee')}</div>
-                        </Col>
-                        <Col className="text-end">
-                          <div className="text-card">
-                            {getRemLiqAsym()[1] > 0
-                              ? formatFromWei(getRemLiqAsym()[1], 6)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </div>
-                        </Col>
-                      </Row>
+                      <Card className="card-alt">
+                        <Card.Body>
+                          <Row>
+                            <Col xs="auto" className="text-sm-label">
+                              {t('receive')}
+                            </Col>
+                            <Col className="text-sm-label float-end text-end">
+                              {t('balance')}:{' '}
+                              {pool.tokenDetails &&
+                                formatFromWei(getBalance(2))}
+                            </Col>
+                          </Row>
+
+                          <Row className="my-1">
+                            <Col>
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect2">
+                                  <AssetSelect
+                                    priority="2"
+                                    filter={['token']}
+                                    blackList={[
+                                      activeTab === '1' ? addr.spartav2 : '',
+                                    ]}
+                                    whiteList={
+                                      activeTab === '2'
+                                        ? [
+                                            addr.spartav2,
+                                            poolRemove1.tokenAddress,
+                                          ]
+                                        : ['']
+                                    }
+                                    disabled={activeTab === '1'}
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('receive')}...`}
+                                  id="removeInput2"
+                                  disabled
+                                />
+                              </InputGroup>
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {removeInput2?.value
+                                  ? formatFromWei(getOutput1ValueUSD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
                     )}
 
-                    <Row className="">
-                      <Col xs="auto" className="title-card">
-                        <span className="subtitle-card">{t('receive')}</span>
-                        {activeTab === '1' && (
-                          <div className="subtitle-card">{t('receive')}</div>
-                        )}
-                      </Col>
-                      <Col className="text-end">
-                        <span className="subtitle-card">
-                          ~{output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
-                          <span className="output-card">
-                            {getToken(assetRemove1?.tokenAddress)?.symbol}
-                          </span>
-                        </span>
-                        {activeTab === '1' && (
-                          <span className="subtitle-card">
-                            <br />~
-                            {output2 > 0 ? formatFromWei(output2, 6) : '0.00'}{' '}
-                            <span className="output-card">SPARTA</span>
-                          </span>
-                        )}
-                      </Col>
-                    </Row>
-                  </>
-                )}
+                    {pool.poolDetails && (
+                      <>
+                        <Row className="mb-2 mt-3">
+                          <Col xs="auto">
+                            <div className="text-card">{t('redeem')}</div>
+                          </Col>
+                          <Col className="text-end">
+                            <div className="text-card">
+                              {removeInput1?.value > 0
+                                ? formatFromUnits(removeInput1?.value, 6)
+                                : '0.00'}{' '}
+                              {getToken(poolRemove1?.tokenAddress)?.symbol}p
+                            </div>
+                          </Col>
+                        </Row>
 
-                {!pool.poolDetails && (
-                  <HelmetLoading height="150px" width="150px" />
-                )}
-              </Col>
-            </Row>
-          </Card.Body>
+                        {activeTab === '2' && (
+                          <Row className="mb-2">
+                            <Col xs="auto">
+                              <div className="text-card">{t('fee')}</div>
+                            </Col>
+                            <Col className="text-end">
+                              <div className="text-card">
+                                {getRemLiqAsym()[1] > 0
+                                  ? formatFromWei(getRemLiqAsym()[1], 6)
+                                  : '0.00'}{' '}
+                                <span className="">SPARTA</span>
+                              </div>
+                            </Col>
+                          </Row>
+                        )}
+
+                        <Row className="">
+                          <Col xs="auto" className="title-card">
+                            <span className="subtitle-card">
+                              {t('receive')}
+                            </span>
+                            {activeTab === '1' && (
+                              <div className="subtitle-card">
+                                {t('receive')}
+                              </div>
+                            )}
+                          </Col>
+                          <Col className="text-end">
+                            <span className="subtitle-card">
+                              ~
+                              {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
+                              <span className="output-card">
+                                {getToken(assetRemove1?.tokenAddress)?.symbol}
+                              </span>
+                            </span>
+                            {activeTab === '1' && (
+                              <span className="subtitle-card">
+                                <br />~
+                                {output2 > 0
+                                  ? formatFromWei(output2, 6)
+                                  : '0.00'}{' '}
+                                <span className="output-card">SPARTA</span>
+                              </span>
+                            )}
+                          </Col>
+                        </Row>
+                      </>
+                    )}
+
+                    {!pool.poolDetails && (
+                      <HelmetLoading height="150px" width="150px" />
+                    )}
+                  </Col>
+                </Row>
+              </Card.Body>
+            </>
+          ) : (
+            <Card.Body className="output-card">
+              No pools are currently listed
+            </Card.Body>
+          )}
           <Card.Footer>
             <Row className="text-center">
               {poolRemove1?.tokenAddress &&

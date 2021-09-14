@@ -1,4 +1,5 @@
 export const SYNTH_GLOBAL_DETAILS = 'SYNTH_GLOBAL_DETAILS'
+export const SYNTH_MINTING = 'SYNTH_MINTING'
 export const SYNTH_ARRAY = 'SYNTH_ARRAY'
 export const SYNTH_DETAILS = 'SYNTH_DETAILS'
 export const SYNTH_TXN = 'SYNTH_TXN'

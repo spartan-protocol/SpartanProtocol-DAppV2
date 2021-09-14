@@ -239,6 +239,7 @@ const Swap = () => {
    */
   const getMint = () => {
     if (
+      activeTab === 'mint' &&
       swapInput1 &&
       assetSwap1 &&
       assetSwap2 &&
@@ -255,7 +256,7 @@ const Swap = () => {
         )
       return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
     }
-    return ['0.00', '0.00', '0.00', '0.00', '0.00', '0.00']
+    return ['0.00', '0.00', '0.00', '0.00', false, false]
   }
 
   /**
@@ -263,12 +264,11 @@ const Swap = () => {
    * @returns [tokenOut, slipFee, diviSynth, diviSwap]
    */
   const getBurn = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2) {
+    if (activeTab === 'burn' && swapInput1 && assetSwap1 && assetSwap2) {
       const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
         convertToWei(swapInput1.value),
         assetSwap2,
         assetSwap1,
-        getSynth(assetSwap1.tokenAddress),
         sparta.globalDetails.feeOnTransfer,
         assetSwap2.tokenAddress === addr.spartav2,
       )
@@ -855,9 +855,11 @@ const Swap = () => {
                     <Col className="text-end">
                       <NewSynth />
                     </Col>
-                    No synths have been deployed yet
                   </Row>
                 </Card.Header>
+                <Card.Body className="output-card">
+                  No synth assets have been deployed yet
+                </Card.Body>
               </Card>
             )}
           </>

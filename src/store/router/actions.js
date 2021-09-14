@@ -7,8 +7,6 @@ export const routerLoading = () => ({
   type: Types.ROUTER_LOADING,
 })
 
-// --------------------------------------- LIQUIDITY FUNCTIONS ---------------------------------------
-
 /**
  * Add Liquidity to a pool symmetrically
  * @param inputToken @param inputBase @param token @param wallet

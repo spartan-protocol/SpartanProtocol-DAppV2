@@ -177,7 +177,7 @@ const WalletSelect = (props) => {
   // ------------------------------------------------------------------------
 
   const getWeight = () => {
-    if (account && pool.tokenDetails.length > 1) {
+    if (account && pool.poolDetails.length > 1) {
       const lpWeight = getLPWeights(
         pool.poolDetails,
         dao.daoDetails,

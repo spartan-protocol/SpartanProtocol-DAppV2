@@ -109,6 +109,15 @@ export const getSynthWeights = (synthDetails, poolDetails) => {
 }
 
 /**
+ * Return time in block.timeStamp format
+ * @returns timeStamp
+ */
+export const getBlockTimestamp = () => {
+  const timeNow = BN(Date.now()).div(1000).toFixed(0)
+  return timeNow
+}
+
+/**
  * Return seconds/minutes/hours/days
  * @param {uint} seconds uint seconds to convert
  * @param {uint} t hand in the {t} translation obj
@@ -141,7 +150,7 @@ export const convertTimeUnits = (seconds, t) => {
  */
 export const getTimeUntil = (timestamp, t) => {
   const _timeStamp = BN(timestamp)
-  const timeNow = BN(Date.now()).div(1000)
+  const timeNow = BN(getBlockTimestamp())
   const secondsUntil = _timeStamp.minus(timeNow)
   return convertTimeUnits(secondsUntil, t)
 }
@@ -154,7 +163,7 @@ export const getTimeUntil = (timestamp, t) => {
  */
 export const getTimeSince = (timestamp, t) => {
   const _timeStamp = BN(timestamp)
-  const timeNow = BN(Date.now()).div(1000)
+  const timeNow = BN(getBlockTimestamp())
   const secondsSince = timeNow.minus(_timeStamp)
   return convertTimeUnits(secondsSince, t)
 }
@@ -166,7 +175,7 @@ export const getTimeSince = (timestamp, t) => {
  */
 export const getSecsSince = (timestamp) => {
   const _timeStamp = BN(timestamp)
-  const timeNow = BN(Date.now()).div(1000)
+  const timeNow = BN(getBlockTimestamp())
   const secondsSince = timeNow.minus(_timeStamp)
   return secondsSince
 }
@@ -191,7 +200,7 @@ export const calcAPY = (pool) => {
   const actualDepth = BN(pool.baseAmount).times(2)
   const _divis = BN(pool.recentDivis)
   const _prevDivis = BN(pool.lastMonthDivis)
-  const monthFraction = ((Date.now() / 1000).toFixed() - pool.genesis) / 2592000
+  const monthFraction = BN(getBlockTimestamp()).minus(pool.genesis).div(2592000)
   if (monthFraction > 1) {
     apy = BN(_prevDivis.isGreaterThan(_divis) ? _prevDivis : _divis)
       .plus(pool.fees)

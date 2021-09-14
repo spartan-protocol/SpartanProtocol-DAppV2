@@ -2,6 +2,7 @@ import * as Types from './types'
 
 const initialState = {
   globalDetails: [],
+  synthMinting: false,
   synthArray: [],
   synthDetails: [],
   txn: [],
@@ -15,6 +16,15 @@ export const synthReducer = (state = initialState, action) => {
       return {
         ...state,
         globalDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SYNTH_MINTING: {
+      return {
+        ...state,
+        synthMinting: action.payload,
         error: null,
         loading: false,
       }

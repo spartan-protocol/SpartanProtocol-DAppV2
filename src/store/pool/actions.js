@@ -167,7 +167,8 @@ export const getListedPools = (tokenDetails) => async (dispatch) => {
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
         synthCap: tempArray[i].synthCap.toString(),
-        baseCap: tempArray[i].baseCap.toString(),
+        // baseCap: tempArray[i].baseCap.toString(),                          // Uncomment this for next testnet
+        baseCap: BN(10000).times(tempArray[i].baseCap.toString()).toString(), // Delete this for next testnet
         genesis: tempArray[i].genesis.toString(),
         // newPool:                                                             // Uncomment this line for mainnet
         //   Date.now() / 1000 - tempArray[i].genesis.toString() * 1 < 604800,  // Uncomment this line for mainnet
@@ -193,7 +194,9 @@ export const getPoolDetails =
     try {
       let tempArray = []
       for (let i = 0; i < listedPools.length; i++) {
-        const ready = getSecsSince(listedPools[i].genesis).toString() > 2592000
+        const ready = getSecsSince(
+          listedPools[i].genesis.toString(),
+        ).isGreaterThan(2592000)
         const validPool = listedPools[i].baseAmount.toString() > 0
         const curated = validPool
           ? curatedPools.includes(listedPools[i].address)

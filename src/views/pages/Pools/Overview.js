@@ -65,11 +65,9 @@ const Overview = () => {
                   {t('bond')}
                 </Button>
               </ButtonGroup>
-              {pool.poolDetails.length > 0 && activeTab === '1' && <LiqAdd />}
-              {pool.poolDetails.length > 0 && activeTab === '2' && (
-                <LiqRemove />
-              )}
-              {pool.poolDetails.length > 0 && activeTab === '4' && <LiqBond />}
+              {activeTab === '1' && <LiqAdd />}
+              {activeTab === '2' && <LiqRemove />}
+              {activeTab === '4' && <LiqBond />}
             </Row>
             <Row className="row-480">
               <Col className="card-480">

@@ -117,6 +117,19 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
 
+  const synthCount = () => synth.synthDetails.filter((x) => x.address).length
+
+  const getFilter = () => {
+    const validModes = ['token']
+    if (pool.poolDetails.filter((x) => !x.hide).length > 2) {
+      validModes.push('pool')
+    }
+    if (synthCount() > 0) {
+      validModes.push('synth')
+    }
+    return validModes
+  }
+
   useEffect(() => {
     const { poolDetails } = pool
 
@@ -156,11 +169,19 @@ const Swap = () => {
           setTypeParam2('')
         }
 
+        if (!getFilter().includes(type1)) {
+          type1 = 'token'
+        }
+        if (!getFilter().includes(type2)) {
+          type2 = 'token'
+        }
         window.localStorage.setItem('assetType1', type1)
         window.localStorage.setItem('assetType2', type2)
 
+        const tempFilter = []
         if (type1 === 'token') {
-          setFilter(['token', 'synth'])
+          tempFilter.push('token')
+          if (getFilter().includes('synth')) tempFilter.push('synth')
           if (type2 === 'token') {
             setMode('token')
           } else if (type2 === 'synth') {
@@ -169,14 +190,15 @@ const Swap = () => {
             window.localStorage.setItem('assetType2', 'token')
           }
         } else if (type1 === 'pool') {
-          setFilter(['pool'])
+          if (getFilter().includes('pool')) tempFilter.push('pool')
           setMode('pool')
           window.localStorage.setItem('assetType2', 'pool')
         } else if (type1 === 'synth') {
-          setFilter(['token'])
+          tempFilter.push(['token'])
           setMode('synthIn')
           window.localStorage.setItem('assetType2', 'token')
         }
+        setFilter(tempFilter)
 
         if (type1 !== 'synth' && type2 !== 'synth') {
           if (asset2?.tokenAddress === asset1?.tokenAddress) {
@@ -209,6 +231,12 @@ const Swap = () => {
 
         asset1 = getItemFromArray(asset1, poolDetails)
         asset2 = getItemFromArray(asset2, poolDetails)
+        asset1 = asset1.hide
+          ? getItemFromArray(addr.spartav2, poolDetails)
+          : asset1
+        asset2 = asset2.hide
+          ? getItemFromArray(addr.spartav2, poolDetails)
+          : asset2
 
         setAssetSwap1(asset1)
         setAssetSwap2(asset2)
@@ -300,7 +328,7 @@ const Swap = () => {
    * @returns [output, swapFee, divi1, divi2]
    */
   const getSwap = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2) {
+    if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'token') {
       const [output, swapFee, divi1, divi2] = swapTo(
         convertToWei(swapInput1.value),
         assetSwap1,
@@ -319,7 +347,7 @@ const Swap = () => {
    * @returns [unitsLP, swapFee, slipRevert, capRevert]
    */
   const getZap = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2) {
+    if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'pool') {
       const [unitsLP, swapFee, slipRevert, capRevert] = zapLiq(
         convertToWei(swapInput1.value),
         assetSwap1,
@@ -336,7 +364,7 @@ const Swap = () => {
    * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
    */
   const getMint = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2) {
+    if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'synthOut') {
       const [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped] =
         mintSynth(
           convertToWei(swapInput1.value),
@@ -348,7 +376,7 @@ const Swap = () => {
         )
       return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
     }
-    return ['0.00', '0.00', '0.00', '0.00', '0.00', '0.00']
+    return ['0.00', '0.00', '0.00', '0.00', false, false]
   }
 
   /**
@@ -356,12 +384,11 @@ const Swap = () => {
    * @returns [tokenOut, slipFee, diviSynth, diviSwap]
    */
   const getBurn = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2) {
+    if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'synthIn') {
       const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
         convertToWei(swapInput1.value),
         assetSwap2,
         assetSwap1,
-        getSynth(assetSwap1.tokenAddress),
         sparta.globalDetails.feeOnTransfer,
         assetSwap2.tokenAddress === addr.spartav2,
       )
@@ -454,16 +481,19 @@ const Swap = () => {
       return [false, t('checkBalance')]
     }
     const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    if (mode === 'synthOut' && !synth.synthMinting) {
+      return [false, t('synthsDisabled')]
+    }
     if (mode === 'pool') {
       if (getZap()[2]) {
-        return [false, 'slipTooHigh']
+        return [false, t('slipTooHigh')]
       }
       if (getZap()[3]) {
-        return [false, 'poolAtCapacity']
+        return [false, t('poolAtCapacity')]
       }
       return [true, `${t('sell')} ${_symbol}p`]
     }
-    if (window.localStorage.getItem('assetType1') === 'synth') {
+    if (mode === 'synthIn') {
       return [true, `${t('sell')} ${_symbol}s`]
     }
     return [true, `${t('sell')} ${_symbol}`]
@@ -605,7 +635,7 @@ const Swap = () => {
                                       <InputGroup.Text id="assetSelect1">
                                         <AssetSelect
                                           priority="1"
-                                          filter={['token', 'pool', 'synth']}
+                                          filter={getFilter()}
                                         />
                                       </InputGroup.Text>
                                       <FormControl

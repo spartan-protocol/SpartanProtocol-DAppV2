@@ -124,6 +124,8 @@ const LiqAdd = () => {
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         asset3 = getItemFromArray(asset3, pool.poolDetails)
+        asset1 = asset1.hide ? getItemFromArray(addr.bnb, poolDetails) : asset1
+        asset3 = asset3.hide ? getItemFromArray(addr.bnb, poolDetails) : asset3
 
         setAssetAdd1(asset1)
         setPoolAdd1(asset3)
@@ -279,7 +281,7 @@ const LiqAdd = () => {
     ) {
       return [false, 'checkBalance']
     }
-    if (getAddLiqAsym()[2] || getAddLiq()[1]) {
+    if (getAddLiqAsym()[2]) {
       return [false, 'slipTooHigh']
     }
     if (getAddLiqAsym()[3] || getAddLiq()[2]) {
@@ -417,283 +419,300 @@ const LiqAdd = () => {
             </Nav>
           </Card.Header>
 
-          <Card.Body>
-            <Row>
-              <Col xs="12" className="px-1 px-sm-3">
-                <Card className="card-alt">
-                  <Card.Body>
-                    <Row className="">
-                      <Col xs="auto" className="text-sm-label">
-                        {t('add')}
-                      </Col>
-                      <Col
-                        className="text-sm-label float-end text-end"
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          addInput1.value = convertFromWei(getBalance(1))
-                        }}
-                      >
-                        <Badge bg="primary" className="me-1">
-                          MAX
-                        </Badge>
-                        {t('balance')}:{' '}
-                        {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
-                      </Col>
-                    </Row>
-
-                    <Row className="my-1">
-                      <Col>
-                        <InputGroup className="">
-                          <InputGroup.Text id="assetSelect1">
-                            <AssetSelect
-                              priority="1"
-                              filter={['token']}
-                              blackList={
-                                activeTab === 'addTab1'
-                                  ? [addr.spartav1, addr.spartav2]
-                                  : []
-                              }
-                            />
-                          </InputGroup.Text>
-                          <FormControl
-                            className="text-end ms-0"
-                            type="number"
-                            placeholder={`${t('add')}...`}
-                            id="addInput1"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            onInput={(e) => handleTokenInputChange(e)}
-                          />
-                          <InputGroup.Text
+          {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
+            <>
+              <Card.Body>
+                <Row>
+                  <Col xs="12" className="px-1 px-sm-3">
+                    <Card className="card-alt">
+                      <Card.Body>
+                        <Row className="">
+                          <Col xs="auto" className="text-sm-label">
+                            {t('add')}
+                          </Col>
+                          <Col
+                            className="text-sm-label float-end text-end"
                             role="button"
-                            tabIndex={-1}
-                            onKeyPress={() => clearInputs(1)}
-                            onClick={() => clearInputs(1)}
+                            aria-hidden="true"
+                            onClick={() => {
+                              addInput1.value = convertFromWei(getBalance(1))
+                            }}
                           >
-                            <Icon icon="close" size="10" fill="grey" />
-                          </InputGroup.Text>
-                        </InputGroup>
-                        <div className="text-end text-sm-label pt-1">
-                          ~$
-                          {addInput1?.value
-                            ? formatFromWei(getInput1ValueUSD(), 2)
-                            : '0.00'}
-                        </div>
+                            <Badge bg="primary" className="me-1">
+                              MAX
+                            </Badge>
+                            {t('balance')}:{' '}
+                            {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
+                          </Col>
+                        </Row>
+
+                        <Row className="my-1">
+                          <Col>
+                            <InputGroup className="">
+                              <InputGroup.Text id="assetSelect1">
+                                <AssetSelect
+                                  priority="1"
+                                  filter={['token']}
+                                  blackList={
+                                    activeTab === 'addTab1'
+                                      ? [addr.spartav1, addr.spartav2]
+                                      : []
+                                  }
+                                />
+                              </InputGroup.Text>
+                              <FormControl
+                                className="text-end ms-0"
+                                type="number"
+                                placeholder={`${t('add')}...`}
+                                id="addInput1"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                onInput={(e) => handleTokenInputChange(e)}
+                              />
+                              <InputGroup.Text
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs(1)}
+                                onClick={() => clearInputs(1)}
+                              >
+                                <Icon icon="close" size="10" fill="grey" />
+                              </InputGroup.Text>
+                            </InputGroup>
+                            <div className="text-end text-sm-label pt-1">
+                              ~$
+                              {addInput1?.value
+                                ? formatFromWei(getInput1ValueUSD(), 2)
+                                : '0.00'}
+                            </div>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
+
+                    <Row style={{ height: '2px' }}>
+                      <Col xs="auto" className="mx-auto">
+                        {activeTab === 'addTab1' && (
+                          <Icon
+                            icon="plus"
+                            size="35"
+                            stroke="white"
+                            className="position-relative bg-primary rounded-circle px-1"
+                            style={{
+                              top: '-20px',
+                              zIndex: '1000',
+                            }}
+                          />
+                        )}
+                        {activeTab === 'addTab2' && (
+                          <Icon
+                            icon="swapAdd"
+                            size="35"
+                            fill="#fb2715"
+                            className="mx-auto position-relative"
+                            style={{
+                              height: '35px',
+                              top: '-20px',
+                              zIndex: '1000',
+                            }}
+                          />
+                        )}
                       </Col>
                     </Row>
-                  </Card.Body>
-                </Card>
 
-                <Row style={{ height: '2px' }}>
-                  <Col xs="auto" className="mx-auto">
                     {activeTab === 'addTab1' && (
-                      <Icon
-                        icon="plus"
-                        size="35"
-                        stroke="white"
-                        className="position-relative bg-primary rounded-circle px-1"
-                        style={{
-                          top: '-20px',
-                          zIndex: '1000',
-                        }}
-                      />
+                      <Card className="card-alt">
+                        <Card.Body>
+                          <Row className="">
+                            <Col xs="auto" className="text-sm-label">
+                              {t('add')} (~)
+                            </Col>
+                            <Col
+                              className="text-sm-label float-end text-end"
+                              role="button"
+                              aria-hidden="true"
+                              onClick={() => {
+                                addInput2.focus()
+                                addInput2.value = convertFromWei(getBalance(2))
+                              }}
+                            >
+                              <Badge bg="primary" className="me-1">
+                                MAX
+                              </Badge>
+                              {t('balance')}:{' '}
+                              {pool.poolDetails && formatFromWei(getBalance(2))}
+                            </Col>
+                          </Row>
+
+                          <Row className="my-1">
+                            <Col>
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect2">
+                                  <AssetSelect
+                                    priority="2"
+                                    filter={['token']}
+                                    whiteList={[addr.spartav2]}
+                                    disabled={activeTab === 'addTab1'}
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('add')}...`}
+                                  id="addInput2"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                  onInput={(e) => handleTokenInputChange(e)}
+                                />
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs(2)}
+                                  onClick={() => clearInputs(2)}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {addInput2?.value
+                                  ? formatFromWei(getInput2ValueUSD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
                     )}
+
                     {activeTab === 'addTab2' && (
-                      <Icon
-                        icon="swapAdd"
-                        size="35"
-                        fill="#fb2715"
-                        className="mx-auto position-relative"
-                        style={{ height: '35px', top: '-20px', zIndex: '1000' }}
-                      />
+                      <Card className="card-alt">
+                        <Card.Body>
+                          <Row className="">
+                            <Col xs="auto" className="text-sm-label">
+                              {t('receive')}
+                            </Col>
+                            <Col className="text-sm-label float-end text-end">
+                              {t('balance')}:{' '}
+                              {pool.poolDetails && formatFromWei(getBalance(3))}
+                            </Col>
+                          </Row>
+
+                          <Row className="my-1">
+                            <Col>
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect3">
+                                  <AssetSelect
+                                    priority="3"
+                                    filter={['pool']}
+                                    disabled={
+                                      activeTab === 'addTab1' ||
+                                      assetAdd1.tokenAddress !== addr.spartav2
+                                    }
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder="0.00"
+                                  id="addInput3"
+                                  disabled
+                                />
+                              </InputGroup>
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {addInput1?.value
+                                  ? formatFromWei(getLpValueUSD(), 2)
+                                  : '0.00'}
+                                {' ('}
+                                {addInput1?.value
+                                  ? formatFromUnits(getRateSlip(), 2)
+                                  : '0.00'}
+                                {'%)'}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
+                    )}
+
+                    {pool.poolDetails && (
+                      <>
+                        <Row className="mb-2 mt-3">
+                          <Col xs="auto">
+                            <span className="text-card">{t('add')}</span>
+                          </Col>
+                          <Col className="text-end">
+                            <span className="text-card">
+                              {addInput1?.value > 0
+                                ? formatFromUnits(addInput1?.value, 6)
+                                : '0.00'}{' '}
+                              {getToken(assetAdd1.tokenAddress)?.symbol}
+                            </span>
+                          </Col>
+                        </Row>
+                        {activeTab === 'addTab1' && (
+                          <Row className="mb-2">
+                            <Col xs="auto">
+                              <span className="text-card">{t('add')}</span>
+                            </Col>
+                            <Col className="text-end">
+                              <span className="text-card">
+                                ~
+                                {addInput2?.value > 0
+                                  ? formatFromUnits(addInput2?.value, 6)
+                                  : '0.00'}{' '}
+                                <span className="">SPARTA</span>
+                              </span>
+                            </Col>
+                          </Row>
+                        )}
+                        {activeTab === 'addTab2' && (
+                          <Row className="mb-2">
+                            <Col xs="auto" className="title-card">
+                              <span className="text-card">{t('fee')}</span>
+                            </Col>
+                            <Col className="text-end">
+                              <span className="text-card">
+                                {getAddLiqAsym()[1] > 0
+                                  ? formatFromWei(getAddLiqAsym()[1], 4)
+                                  : '0.00'}{' '}
+                                <span className="">SPARTA</span>
+                              </span>
+                            </Col>
+                          </Row>
+                        )}
+                        <Row className="">
+                          <Col xs="auto" className="title-card">
+                            <span className="subtitle-card">
+                              {t('receive')}
+                            </span>
+                          </Col>
+                          <Col className="text-end">
+                            <span className="subtitle-card">
+                              ~
+                              {outputLp > 0
+                                ? formatFromWei(outputLp, 6)
+                                : '0.00'}{' '}
+                              <span className="output-card">
+                                {getToken(poolAdd1.tokenAddress)?.symbol}p
+                              </span>
+                            </span>
+                          </Col>
+                        </Row>
+                      </>
+                    )}
+                    {!pool.poolDetails && (
+                      <HelmetLoading height="150px" width="150px" />
                     )}
                   </Col>
                 </Row>
-
-                {activeTab === 'addTab1' && (
-                  <Card className="card-alt">
-                    <Card.Body>
-                      <Row className="">
-                        <Col xs="auto" className="text-sm-label">
-                          {t('add')} (~)
-                        </Col>
-                        <Col
-                          className="text-sm-label float-end text-end"
-                          role="button"
-                          aria-hidden="true"
-                          onClick={() => {
-                            addInput2.focus()
-                            addInput2.value = convertFromWei(getBalance(2))
-                          }}
-                        >
-                          <Badge bg="primary" className="me-1">
-                            MAX
-                          </Badge>
-                          {t('balance')}:{' '}
-                          {pool.poolDetails && formatFromWei(getBalance(2))}
-                        </Col>
-                      </Row>
-
-                      <Row className="my-1">
-                        <Col>
-                          <InputGroup className="">
-                            <InputGroup.Text id="assetSelect2">
-                              <AssetSelect
-                                priority="2"
-                                filter={['token']}
-                                whiteList={[addr.spartav2]}
-                                disabled={activeTab === 'addTab1'}
-                              />
-                            </InputGroup.Text>
-                            <FormControl
-                              className="text-end ms-0"
-                              type="number"
-                              placeholder={`${t('add')}...`}
-                              id="addInput2"
-                              autoComplete="off"
-                              autoCorrect="off"
-                              onInput={(e) => handleTokenInputChange(e)}
-                            />
-                            <InputGroup.Text
-                              role="button"
-                              tabIndex={-1}
-                              onKeyPress={() => clearInputs(2)}
-                              onClick={() => clearInputs(2)}
-                            >
-                              <Icon icon="close" size="10" fill="grey" />
-                            </InputGroup.Text>
-                          </InputGroup>
-                          <div className="text-end text-sm-label pt-1">
-                            ~$
-                            {addInput2?.value
-                              ? formatFromWei(getInput2ValueUSD(), 2)
-                              : '0.00'}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                )}
-
-                {activeTab === 'addTab2' && (
-                  <Card className="card-alt">
-                    <Card.Body>
-                      <Row className="">
-                        <Col xs="auto" className="text-sm-label">
-                          {t('receive')}
-                        </Col>
-                        <Col className="text-sm-label float-end text-end">
-                          {t('balance')}:{' '}
-                          {pool.poolDetails && formatFromWei(getBalance(3))}
-                        </Col>
-                      </Row>
-
-                      <Row className="my-1">
-                        <Col>
-                          <InputGroup className="">
-                            <InputGroup.Text id="assetSelect3">
-                              <AssetSelect
-                                priority="3"
-                                filter={['pool']}
-                                disabled={
-                                  activeTab === 'addTab1' ||
-                                  assetAdd1.tokenAddress !== addr.spartav2
-                                }
-                              />
-                            </InputGroup.Text>
-                            <FormControl
-                              className="text-end ms-0"
-                              type="number"
-                              placeholder="0.00"
-                              id="addInput3"
-                              disabled
-                            />
-                          </InputGroup>
-                          <div className="text-end text-sm-label pt-1">
-                            ~$
-                            {addInput1?.value
-                              ? formatFromWei(getLpValueUSD(), 2)
-                              : '0.00'}
-                            {' ('}
-                            {addInput1?.value
-                              ? formatFromUnits(getRateSlip(), 2)
-                              : '0.00'}
-                            {'%)'}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                )}
-
-                {pool.poolDetails && (
-                  <>
-                    <Row className="mb-2 mt-3">
-                      <Col xs="auto">
-                        <span className="text-card">{t('add')}</span>
-                      </Col>
-                      <Col className="text-end">
-                        <span className="text-card">
-                          {addInput1?.value > 0
-                            ? formatFromUnits(addInput1?.value, 6)
-                            : '0.00'}{' '}
-                          {getToken(assetAdd1.tokenAddress)?.symbol}
-                        </span>
-                      </Col>
-                    </Row>
-                    {activeTab === 'addTab1' && (
-                      <Row className="mb-2">
-                        <Col xs="auto">
-                          <span className="text-card">{t('add')}</span>
-                        </Col>
-                        <Col className="text-end">
-                          <span className="text-card">
-                            ~
-                            {addInput2?.value > 0
-                              ? formatFromUnits(addInput2?.value, 6)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </span>
-                        </Col>
-                      </Row>
-                    )}
-                    {activeTab === 'addTab2' && (
-                      <Row className="mb-2">
-                        <Col xs="auto" className="title-card">
-                          <span className="text-card">{t('fee')}</span>
-                        </Col>
-                        <Col className="text-end">
-                          <span className="text-card">
-                            {getAddLiqAsym()[1] > 0
-                              ? formatFromWei(getAddLiqAsym()[1], 4)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </span>
-                        </Col>
-                      </Row>
-                    )}
-                    <Row className="">
-                      <Col xs="auto" className="title-card">
-                        <span className="subtitle-card">{t('receive')}</span>
-                      </Col>
-                      <Col className="text-end">
-                        <span className="subtitle-card">
-                          ~{outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
-                          <span className="output-card">
-                            {getToken(poolAdd1.tokenAddress)?.symbol}p
-                          </span>
-                        </span>
-                      </Col>
-                    </Row>
-                  </>
-                )}
-                {!pool.poolDetails && (
-                  <HelmetLoading height="150px" width="150px" />
-                )}
-              </Col>
-            </Row>
-          </Card.Body>
+              </Card.Body>
+            </>
+          ) : (
+            <Card.Body className="output-card">
+              No pools are currently listed
+            </Card.Body>
+          )}
 
           <Card.Footer>
             {poolAdd1.newPool && (
