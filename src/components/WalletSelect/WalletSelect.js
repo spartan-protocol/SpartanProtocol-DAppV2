@@ -33,6 +33,8 @@ import { convertFromWei } from '../../utils/bigNumber'
 import { connectorsByName } from '../../utils/web3React'
 import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
+import { useDao } from '../../store/dao'
+import { useBond } from '../../store/bond'
 
 export const spartanRanks = [
   {
@@ -102,6 +104,8 @@ const WalletSelect = (props) => {
     useWeb3React()
   const synth = useSynth()
   const pool = usePool()
+  const dao = useDao()
+  const bond = useBond()
   const addr = getAddresses()
   const [network, setNetwork] = useState(getNetwork)
   const { t } = useTranslation()
@@ -174,7 +178,11 @@ const WalletSelect = (props) => {
 
   const getWeight = () => {
     if (account && pool.tokenDetails.length > 1) {
-      const lpWeight = getLPWeights(pool.poolDetails)
+      const lpWeight = getLPWeights(
+        pool.poolDetails,
+        dao.daoDetails,
+        bond.bondDetails,
+      )
       const synthWeight = getSynthWeights(synth.synthDetails, pool.poolDetails)
       const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
       return convertFromWei(lpWeight.plus(synthWeight).plus(spartaWeight))

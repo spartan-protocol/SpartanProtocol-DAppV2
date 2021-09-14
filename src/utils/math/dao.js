@@ -35,7 +35,7 @@ export const calcReward = (reserveBal, daoClaim, memberWeight, totalWeight) => {
  * @returns claimAmount
  */
 export const calcCurrentReward = (pools, bond, dao, secsPerEra, reserveBal) => {
-  const _memberW = getVaultWeights(pools)
+  const _memberW = getVaultWeights(pools, dao.daoDetails, bond.bondDetails)
   const _totalW = BN(bond.totalWeight).plus(dao.totalWeight)
   const _secsSinceClaim = getSecsSince(dao.member.lastHarvest)
   const share = calcReward(reserveBal, dao.global.daoClaim, _memberW, _totalW)

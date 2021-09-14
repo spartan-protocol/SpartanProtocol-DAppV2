@@ -115,10 +115,10 @@ export const addressesTN = {
   dao: '0x240b1d4E531DA605E0A21b93347dC22F398a63CC', // be2ff57e8b983d414a847516dafd8bfc7973de96
   daoVault: '0xB871928F31385D800B771B5982Ffd45ebd0F68fE', // be2ff57e8b983d414a847516dafd8bfc7973de96
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
-  poolFactory: '0xDd8ab11DDCcc1025f345C8521C58792bC01EFA4b', // 5d431ce657a02ff9b44a9a2e03bea4dc4c05133f
+  poolFactory: '0x89D3e45c56479Bf79862733F5664E53229C190Cf', // 1 COMMIT AFTER -> 5d431ce657a02ff9b44a9a2e03bea4dc4c05133f
   reserve: '0xA2D707b530971ED80a85Bb354626CE6b2fBB762a', // 0cf58d0c134f358895653410961aa2886f304a44
   router: '0x8e8c6811A6DEE277F6817A538e7D14BF36943550', // 1 COMMIT AFTER -> 5d431ce657a02ff9b44a9a2e03bea4dc4c05133f
-  synthFactory: '0xe9d858D715A850396CFdAD63C209E2E9173b9f4d', // 130fe376690ebee086d6ee56b816aab3656303dd
+  synthFactory: '0x959bEa62d9A62Fdca149A5A3560dC1a4b642a962', // 130fe376690ebee086d6ee56b816aab3656303dd
   synthVault: '0xa7fB9E5b7c03cff7FbB8A7eBD22920A771F2Db35', // be2ff57e8b983d414a847516dafd8bfc7973de96
   utils: '0x1E762642D3b1BA5Db7607Aa577e3bd99Be6FB3b5', // 91465434c69989db1cd01924358298e1a6834662
   // TOKEN ADDRESSES
@@ -296,7 +296,7 @@ export const changeRpc = (_network) => {
 }
 
 /**
- * Trigger change between mainnet and testnet
+ * Trigger change between mainnet and testnet (localstorage)
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
@@ -341,7 +341,9 @@ export const getNetwork = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider) => {
   const network = getNetwork()
-  let provider = new ethers.providers.JsonRpcProvider(network.rpc) // simple provider unsigned
+  let provider = new ethers.providers.JsonRpcProvider(
+    changeRpc(network.chainId),
+  ) // simple provider unsigned
   if (_provider) {
     provider = _provider.getSigner()
   }

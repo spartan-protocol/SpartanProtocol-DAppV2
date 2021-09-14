@@ -68,9 +68,9 @@ export const getBondDetails = (listedPools, wallet) => async (dispatch) => {
         tokenAddress: listedPools[i].tokenAddress,
         address: listedPools[i].address,
         isMember: awaitArray[i].isMember,
-        staked: awaitArray[i].toString(),
-        claimRate: awaitArray[i].toString(),
-        lastBlockTime: awaitArray[i].toString(),
+        staked: awaitArray[i].bondedLP.toString(),
+        claimRate: awaitArray[i].claimRate.toString(),
+        lastBlockTime: awaitArray[i].lastBlockTime.toString(),
       })
     }
     dispatch(payloadToDispatch(Types.BOND_DETAILS, bondDetails))

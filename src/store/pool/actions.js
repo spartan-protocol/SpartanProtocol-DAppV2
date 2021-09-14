@@ -15,6 +15,7 @@ import {
   getWalletProvider,
 } from '../../utils/web3'
 import { getSecsSince } from '../../utils/math/nonContract'
+import { BN } from '../../utils/bigNumber'
 
 export const poolLoading = () => ({
   type: Types.POOL_LOADING,
@@ -229,18 +230,38 @@ export const getPoolDetails =
         ) // lastMonthDivis
         tempArray.push(curated) // check if pool is curated
         tempArray.push(validPool ? poolContract.callStatic.freeze() : false) // check if pool is frozen
+        tempArray.push(validPool ? poolContract.callStatic.oldRate() : '0') // get pool safety zone
       }
       tempArray = await Promise.all(tempArray)
       const poolDetails = listedPools
-      const varCount = 9
+      const varCount = 7
       for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
         const ii = i / varCount
+        const _base = poolDetails[ii].baseAmount
+        const newRate =
+          _base > 0
+            ? BN(10)
+                .pow(18)
+                .times(_base)
+                .div(poolDetails[ii].tokenAmount)
+                .toFixed(0)
+            : '0'
         poolDetails[ii].balance = tempArray[i].toString()
         poolDetails[ii].fees = tempArray[i + 1].toString()
         poolDetails[ii].recentDivis = tempArray[i + 2].toString()
         poolDetails[ii].lastMonthDivis = tempArray[i + 3].toString()
         poolDetails[ii].curated = tempArray[i + 4]
         poolDetails[ii].frozen = tempArray[i + 5]
+        const oldRate = tempArray[i + 6]
+        poolDetails[ii].oldRate = oldRate.toString()
+        poolDetails[ii].newRate = newRate.toString()
+        const safetyPrice =
+          _base > 0
+            ? BN(1)
+                .minus(BN(newRate.toString()).div(oldRate.toString()))
+                .toString()
+            : '0'
+        poolDetails[ii].safetyPrice = safetyPrice.toString()
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {
