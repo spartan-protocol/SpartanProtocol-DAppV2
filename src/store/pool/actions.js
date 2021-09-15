@@ -258,13 +258,13 @@ export const getPoolDetails =
         const oldRate = tempArray[i + 6]
         poolDetails[ii].oldRate = oldRate.toString()
         poolDetails[ii].newRate = newRate.toString()
-        const safetyPrice =
+        const safety =
           _base > 0
             ? BN(1)
                 .minus(BN(newRate.toString()).div(oldRate.toString()))
                 .toString()
             : '0'
-        poolDetails[ii].safetyPrice = safetyPrice.toString()
+        poolDetails[ii].safety = safety.toString()
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {

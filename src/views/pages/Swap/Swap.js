@@ -49,7 +49,7 @@ import {
   swapTo,
   zapLiq,
 } from '../../../utils/math/router'
-import { getSynthDetails } from '../../../store/synth'
+import { getSynthDetails, getSynthMinting } from '../../../store/synth'
 
 const Swap = () => {
   const synth = useSynth()
@@ -110,6 +110,7 @@ const Swap = () => {
       if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
           dispatch(getSynthDetails(synthArray, wallet))
+          dispatch(getSynthMinting())
         }
       }
     }

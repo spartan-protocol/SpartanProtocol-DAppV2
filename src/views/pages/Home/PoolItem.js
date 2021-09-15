@@ -5,6 +5,7 @@ import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { getAddresses } from '../../../utils/web3'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY } from '../../../utils/math/nonContract'
@@ -18,6 +19,7 @@ const PoolItem = ({ asset }) => {
   const pool = usePool()
   const history = useHistory()
   const web3 = useWeb3()
+  const addr = getAddresses()
   const [showDetails, setShowDetails] = useState(false)
   const isLightMode = window.localStorage.getItem('theme')
   const {
@@ -219,7 +221,11 @@ const PoolItem = ({ asset }) => {
                   size="sm"
                   variant="primary"
                   className="w-100 rounded-pill"
-                  onClick={() => history.push(`/swap?asset1=${tokenAddress}`)}
+                  onClick={() =>
+                    history.push(
+                      `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}`,
+                    )
+                  }
                 >
                   {t('swap')}
                 </Button>

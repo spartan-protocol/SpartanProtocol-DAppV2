@@ -118,8 +118,8 @@ export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
         tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
         tempArray.push(
           contract.callStatic.getMemberDeposit(
-            synthArray[i].address,
             wallet.account,
+            synthArray[i].address,
           ),
         ) // staked
         tempArray.push(
@@ -165,8 +165,7 @@ export const synthVaultWeight =
     const contract = getSynthVaultContract()
     try {
       const vaultPools = synthDetails.filter(
-        (x) =>
-          x.address !== false && getPool(x.tokenAddress, poolDetails).curated,
+        (x) => x.address && getPool(x.tokenAddress, poolDetails).curated,
       )
       let totalWeight = BN(0)
       if (vaultPools.length > 0) {
@@ -180,11 +179,12 @@ export const synthVaultWeight =
         for (let i = 0; i < totalStaked.length; i++) {
           totalWeight = totalWeight.plus(
             calcSpotValueInBase(
-              totalStaked[i],
+              totalStaked[i].toString(),
               getPool(vaultPools[i].tokenAddress, poolDetails),
             ),
           )
         }
+        totalWeight = totalWeight.toFixed(0).toString()
       }
       dispatch(payloadToDispatch(Types.SYNTH_WEIGHT, totalWeight))
     } catch (error) {
@@ -225,6 +225,9 @@ export const synthHarvest = (synthArray, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
   try {
+    console.log(
+      await getSynthFactoryContract().callStatic.isSynth(synthArray[0]),
+    )
     const gPrice = await getProviderGasPrice()
     const harvest = await contract.harvestAll(synthArray, {
       gasPrice: gPrice,

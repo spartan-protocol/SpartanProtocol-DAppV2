@@ -14,9 +14,9 @@ import {
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 import { useReserve } from '../../../store/reserve/selector'
-import { getTimeSince } from '../../../utils/math/nonContract'
+import { getSynthWeights, getTimeSince } from '../../../utils/math/nonContract'
 import { usePool } from '../../../store/pool'
-import { getNetwork } from '../../../utils/web3'
+import { Icon } from '../../../components/Icons/icons'
 
 const SynthVault = () => {
   const { t } = useTranslation()
@@ -27,47 +27,44 @@ const SynthVault = () => {
   const dispatch = useDispatch()
   const [trigger0, settrigger0] = useState(0)
 
-  const getData = () => {
+  const getGlobals = () => {
     dispatch(getSynthGlobalDetails())
-    dispatch(synthVaultWeight(synth.synthDetails, pool.poolDetails))
   }
   useEffect(() => {
     if (trigger0 === 0) {
-      getData()
+      getGlobals()
     }
     const timer = setTimeout(() => {
-      getData()
+      getGlobals()
       settrigger0(trigger0 + 1)
     }, 7500)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return getNetwork()
-    }
-  }
-
   useEffect(() => {
-    const { listedPools } = pool
-    const { synthArray } = synth
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
-        if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthDetails(synthArray, wallet))
-        }
+      if (synth.synthArray?.length > 1) {
+        dispatch(getSynthDetails(synth.synthArray, wallet))
       }
     }
     checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [synth.synthArray])
+
+  useEffect(() => {
+    const checkWeight = () => {
+      if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
+        dispatch(synthVaultWeight(synth.synthDetails, pool.poolDetails))
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.synthDetails])
 
   const [claimArray, setClaimArray] = useState([])
   useEffect(() => {
-    if (synth.synthDetails.length > 0) {
+    if (synth.synthDetails.length > 1) {
       const tempArray = []
       synth.synthDetails
         .filter((x) => x.staked > 0 && getTimeSince(x.lastHarvest, t)[0] > 0)
@@ -96,10 +93,10 @@ const SynthVault = () => {
                 {t('totalWeight')}
               </Col>
               <Col className="text-end output-card">
-                {synth.globalDetails?.totalWeight > 0
-                  ? formatFromWei(synth.globalDetails?.totalWeight, 0)
+                {synth.totalWeight > 0
+                  ? formatFromWei(synth.totalWeight, 0)
                   : '0.00'}{' '}
-                SPARTA
+                <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
               </Col>
             </Row>
             <Row className="my-1">
@@ -131,14 +128,25 @@ const SynthVault = () => {
         <Card className="card-320 card-underlay">
           <Card.Header>{t('memberDetails')}</Card.Header>
           <Card.Body>
-            <Row className="my-4 pb-2">
+            <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('yourWeight')}
               </Col>
               <Col className="text-end output-card">
-                {synth.memberDetails?.totalWeight > 0
-                  ? `${BN(synth.memberDetails?.totalWeight)
-                      .div(synth.globalDetails?.totalWeight)
+                {formatFromWei(
+                  getSynthWeights(synth.synthDetails, pool.poolDetails),
+                )}
+              </Col>
+            </Row>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('yourPercentWeight')}
+              </Col>
+              <Col className="text-end output-card">
+                {synth.totalWeight > 0 &&
+                getSynthWeights(synth.synthDetails, pool.poolDetails) > 0
+                  ? `${BN(getSynthWeights(synth.synthDetails, pool.poolDetails))
+                      .div(synth.totalWeight)
                       .times(100)
                       .toFixed(4)}%`
                   : t('noWeight')}
@@ -149,7 +157,7 @@ const SynthVault = () => {
             {reserve.globalDetails.emissions ? (
               <Button
                 className="w-100"
-                onClick={() => dispatch(synthHarvest(claimArray))}
+                onClick={() => dispatch(synthHarvest(claimArray, wallet))}
                 disabled={synth.memberDetails?.totalWeight <= 0}
               >
                 {t('harvestAll')}

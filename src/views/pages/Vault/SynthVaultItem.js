@@ -46,7 +46,7 @@ const SynthVaultItem = ({ synthItem }) => {
       lastMonthDivis: 0,
       fees: fees.toString(),
       genesis: synth.globalDetails.genesis,
-      baseAmount: BN(synth.globalDetails.totalWeight).div(2),
+      baseAmount: BN(synth.totalWeight).div(2).toString(),
     }
     formatFromUnits(calcAPY(_object), 2)
   }
@@ -181,25 +181,8 @@ const SynthVaultItem = ({ synthItem }) => {
                   </span>
                 </OverlayTrigger>
                 <p className="text-sm-label d-inline-block">APY</p>
-                <p className="output-card">{APY}%</p>
+                <p className="output-card">{APY()}%</p>
               </Col>
-
-              {/* <Col className="text-end my-auto">
-              {showDetails && (
-                <i
-                  role="button"
-                  className="icon-small icon-up icon-light"
-                  onClick={() => toggleCollapse()}
-                />
-              )}
-              {!showDetails && (
-                <i
-                  role="button"
-                  className="icon-small icon-down icon-light"
-                  onClick={() => toggleCollapse()}
-                />
-              )}
-            </Col> */}
             </Row>
 
             <Row className="my-1">

@@ -78,7 +78,9 @@ const Approval = ({
           >
             <Icon icon="lock" fill="white" size="20" className="me-1" />
             Approve {symbol}
-            {pending && <Icon icon="cycle" size="25" className="anim-spin" />}
+            {pending && (
+              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+            )}
           </Button>
         </Col>
       )}

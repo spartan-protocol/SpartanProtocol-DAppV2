@@ -214,5 +214,8 @@ export const calcAPY = (pool) => {
       .div(actualDepth)
       .times(100)
   }
-  return apy
+  if (apy > 0) {
+    return apy
+  }
+  return '0.00'
 }
