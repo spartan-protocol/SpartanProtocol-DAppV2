@@ -107,13 +107,17 @@ const DaoVault = () => {
   }
 
   const getClaimable = () => {
-    calcCurrentRewardDao(
+    const reward = calcCurrentRewardDao(
       pool.poolDetails,
       bond,
       dao,
       sparta.globalDetails.secondsPerEra,
       reserve.globalDetails.spartaBalance,
     )
+    if (reward > 0) {
+      return reward
+    }
+    return '0.00'
   }
 
   const isLoading = () => {
@@ -188,9 +192,7 @@ const DaoVault = () => {
                   </Col>
                   <Col className="text-end output-card">
                     {reserve.globalDetails.emissions
-                      ? BN(dao.member?.weight).plus(bond.member?.weight) > 0
-                        ? `${formatFromWei(getClaimable())} SPARTA`
-                        : '0.00 SPARTA'
+                      ? `${formatFromWei(getClaimable())} SPARTA`
                       : t('incentivesDisabled')}
                   </Col>
                 </Row>
@@ -268,7 +270,9 @@ const DaoVault = () => {
                       {t('balance')}
                     </Col>
                     <Col className="text-end output-card">
-                      {formatFromWei(i.balance)}{' '}
+                      {formatFromWei(
+                        getPool(i.tokenAddress, pool.poolDetails).balance,
+                      )}{' '}
                       {getToken(i.tokenAddress)?.symbol}p
                     </Col>
                   </Row>

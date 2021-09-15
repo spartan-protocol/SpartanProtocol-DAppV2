@@ -5,6 +5,7 @@ import {
   calcSpotValueInBase,
   getPool,
   getDao,
+  getBond,
 } from './utils'
 
 export const one = BN(1).times(10).pow(18)
@@ -65,13 +66,13 @@ export const getVaultWeights = (poolDetails, daoDetails, bondDetails) => {
   if (poolDetails && daoDetails && bondDetails) {
     const _poolDetails = poolDetails.filter((x) => x.curated && !x.hide)
     for (let i = 0; i < _poolDetails.length; i++) {
-      const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
-      const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
+      const dao = getDao(_poolDetails[i].tokenAddress, daoDetails)
+      const bond = getBond(_poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
-          BN(dao.staked).plus(bond.staked),
-          _poolDetails.poolUnits,
-          _poolDetails.baseAmount,
+          BN(dao.staked).plus(bond.staked).toString(),
+          _poolDetails[i].poolUnits,
+          _poolDetails[i].baseAmount,
         ),
       )
     }

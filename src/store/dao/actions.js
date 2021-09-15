@@ -290,9 +290,9 @@ export const daoWithdraw = (pool, wallet) => async (dispatch) => {
 /**
  * Harvest SPARTA DAOVault rewards
  */
-export const daoHarvest = () => async (dispatch) => {
+export const daoHarvest = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
-  const contract = getDaoContract()
+  const contract = getDaoContract(wallet)
   try {
     let harvest = {}
     const gPrice = await getProviderGasPrice()
