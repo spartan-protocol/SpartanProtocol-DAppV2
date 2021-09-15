@@ -329,12 +329,6 @@ const LiqAdd = () => {
     return '0.00'
   }
 
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
-  }
-
   useEffect(() => {
     handleInputChange()
   }, [
@@ -467,7 +461,6 @@ const LiqAdd = () => {
                                 id="addInput1"
                                 autoComplete="off"
                                 autoCorrect="off"
-                                onInput={(e) => handleTokenInputChange(e)}
                               />
                               <InputGroup.Text
                                 role="button"
@@ -561,7 +554,6 @@ const LiqAdd = () => {
                                   id="addInput2"
                                   autoComplete="off"
                                   autoCorrect="off"
-                                  onInput={(e) => handleTokenInputChange(e)}
                                 />
                                 <InputGroup.Text
                                   role="button"

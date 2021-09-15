@@ -35,6 +35,7 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
       contract.callStatic.genesis(),
       contract.callStatic.map30DVaultRevenue(),
       contract.callStatic.mapPast30DVaultRevenue(),
+      getSynthFactoryContract().callStatic.synthCount(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
@@ -44,6 +45,7 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
       genesis: awaitArray[3].toString(),
       recentRevenue: awaitArray[4].toString(),
       lastMonthRevenue: awaitArray[5].toString(),
+      synthCount: awaitArray[6].toString(),
     }
     dispatch(payloadToDispatch(Types.SYNTH_GLOBAL_DETAILS, globalDetails))
   } catch (error) {

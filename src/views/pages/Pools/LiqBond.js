@@ -123,12 +123,6 @@ const LiqBond = () => {
     return '0'
   }
 
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
-  }
-
   const handleBondDeposit = () => {
     if (
       assetBond1?.tokenAddress === addr.bnb ||
@@ -238,7 +232,6 @@ const LiqBond = () => {
                                 id="bondInput1"
                                 autoComplete="off"
                                 autoCorrect="off"
-                                onInput={(e) => handleTokenInputChange(e)}
                               />
                               <InputGroup.Text
                                 role="button"

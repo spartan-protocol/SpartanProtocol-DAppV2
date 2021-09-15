@@ -61,20 +61,25 @@ export const getLPWeights = (poolDetails, daoDetails, bondDetails) => {
  * @returns memberWeight
  */
 export const getVaultWeights = (poolDetails, daoDetails, bondDetails) => {
-  const _poolDetails = poolDetails.filter((x) => x.curated && !x.hide)
   let memberWeight = BN(0)
-  for (let i = 0; i < _poolDetails.length; i++) {
-    const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
-    const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
-    memberWeight = memberWeight.plus(
-      getPoolShareWeight(
-        BN(dao.staked).plus(bond.staked),
-        _poolDetails.poolUnits,
-        _poolDetails.baseAmount,
-      ),
-    )
+  if (poolDetails && daoDetails && bondDetails) {
+    const _poolDetails = poolDetails.filter((x) => x.curated && !x.hide)
+    for (let i = 0; i < _poolDetails.length; i++) {
+      const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
+      const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
+      memberWeight = memberWeight.plus(
+        getPoolShareWeight(
+          BN(dao.staked).plus(bond.staked),
+          _poolDetails.poolUnits,
+          _poolDetails.baseAmount,
+        ),
+      )
+    }
   }
-  return memberWeight
+  if (memberWeight > 0) {
+    return memberWeight
+  }
+  return '0.00'
 }
 
 /**

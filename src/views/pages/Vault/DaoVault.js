@@ -20,14 +20,12 @@ import {
 import { useReserve } from '../../../store/reserve/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
 import { useSparta } from '../../../store/sparta'
-import { bondVaultWeight, useBond } from '../../../store/bond'
+import { bondVaultWeight, getBondDetails, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
-import {
-  calcFeeBurn,
-  getSecsSince,
-  getTimeUntil,
-} from '../../../utils/math/nonContract'
-import { calcShare, getPool } from '../../../utils/math/utils'
+import { getTimeUntil, getVaultWeights } from '../../../utils/math/nonContract'
+import { getPool } from '../../../utils/math/utils'
+import { calcCurrentRewardDao } from '../../../utils/math/dao'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -38,7 +36,6 @@ const DaoVault = () => {
   const sparta = useSparta()
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  // const [showDetails, setShowDetails] = useState(false)
 
   const isLightMode = window.localStorage.getItem('theme')
 
@@ -49,10 +46,6 @@ const DaoVault = () => {
   const getData = () => {
     dispatch(daoGlobalDetails(wallet))
     dispatch(daoMemberDetails(wallet))
-    dispatch(daoVaultWeight(pool.poolDetails, wallet))
-    dispatch(bondVaultWeight(pool.poolDetails, wallet))
-    dispatch(daoDepositTimes(dao.daoDetails, wallet))
-    dispatch(getDaoDetails(pool.listedPools, wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -66,12 +59,40 @@ const DaoVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
+  useEffect(() => {
+    const checkDetails = () => {
+      if (pool.listedPools?.length > 1) {
+        dispatch(getDaoDetails(pool.listedPools, wallet))
+        dispatch(getBondDetails(pool.listedPools, wallet))
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
 
-  const getTotalWeight = (_amount) => {
+  useEffect(() => {
+    const checkWeight = () => {
+      if (pool.poolDetails?.length > 1) {
+        dispatch(daoVaultWeight(pool.poolDetails, wallet))
+        dispatch(bondVaultWeight(pool.poolDetails, wallet))
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.poolDetails])
+
+  useEffect(() => {
+    const checkWeight = () => {
+      if (dao.daoDetails?.length > 1) {
+        dispatch(daoDepositTimes(dao.daoDetails, wallet))
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dao.daoDetails])
+
+  const getTotalWeight = () => {
+    const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
     if (_amount > 0) {
       return _amount
     }
@@ -86,52 +107,52 @@ const DaoVault = () => {
   }
 
   const getClaimable = () => {
-    const secondsSince = getSecsSince(dao.member?.lastHarvest)
-    // get the members share
-    const weight = BN(dao.member?.weight).plus(bond.member?.weight)
-    const reserveShare = BN(reserve.globalDetails.spartaBalance).div(
-      dao.global.erasToEarn,
+    calcCurrentRewardDao(
+      pool.poolDetails,
+      bond,
+      dao,
+      sparta.globalDetails.secondsPerEra,
+      reserve.globalDetails.spartaBalance,
     )
-    const vaultShare = reserveShare.times(dao.global.daoClaim).div('10000')
-    const totalWeight = BN(dao.global?.totalWeight).plus(bond.global?.weight)
-    const share = calcShare(weight, totalWeight, vaultShare)
-    // get the members claimable amount
-    const claimAmount = share.times(secondsSince).div(dao.global.secondsPerEra)
-    const feeBurn = getFeeBurn(claimAmount) // feeBurn - Reserve to User
-    return BN(claimAmount).minus(feeBurn)
   }
 
-  // const toggleCollapse = () => {
-  //   setShowDetails(!showDetails)
-  // }
+  const isLoading = () => {
+    if (
+      bond.bondDetails.length > 1 &&
+      dao.daoDetails.length > 1 &&
+      pool.poolDetails.length > 1
+    ) {
+      return false
+    }
+    return true
+  }
 
   return (
     <Row>
       <Col xs="auto" className="">
         <Card xs="auto" className="card-320">
           <Card.Header className="">{t('daoVaultDetails')}</Card.Header>
-          <Card.Body>
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('totalWeight')}
-              </Col>
-              <Col className="text-end output-card">
-                {getTotalWeight(
-                  formatFromWei(
-                    BN(dao.global?.totalWeight).plus(bond.global?.weight),
-                    0,
-                  ),
-                )}{' '}
-                <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
-              </Col>
-            </Row>
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('lockupPeriod')}
-              </Col>
-              <Col className="text-end output-card">24 {t('hours')}</Col>
-            </Row>
-          </Card.Body>
+          {!isLoading() ? (
+            <Card.Body>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  {t('totalWeight')}
+                </Col>
+                <Col className="text-end output-card">
+                  {formatFromWei(getTotalWeight())}
+                  <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                </Col>
+              </Row>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  {t('lockupPeriod')}
+                </Col>
+                <Col className="text-end output-card">24 {t('hours')}</Col>
+              </Row>
+            </Card.Body>
+          ) : (
+            <HelmetLoading />
+          )}
           <Card.Footer>
             <Link to="/pools/liquidity">
               <Button className="w-100">{t('joinPools')}</Button>
@@ -143,66 +164,62 @@ const DaoVault = () => {
       <Col xs="auto">
         <Card className="card-320 card-underlay">
           <Card.Header>{t('memberDetails')}</Card.Header>
-          <Card.Body>
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('yourWeight')}
-              </Col>
-              <Col className="text-end output-card">
-                {BN(dao.member?.weight).plus(bond.member?.weight) > 0
-                  ? BN(dao.member?.weight)
-                      .plus(bond.member?.weight)
-                      .div(
-                        BN(dao.global?.totalWeight).plus(bond.global?.weight),
-                      )
-                      .times(100)
-                      .toFixed(4)
-                  : '0.00'}
-                %
-              </Col>
-            </Row>
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('harvestable')}
-              </Col>
-              <Col className="text-end output-card">
-                {reserve.globalDetails.emissions
-                  ? BN(dao.member?.weight).plus(bond.member?.weight) > 0
-                    ? `${formatFromWei(getClaimable())} SPARTA`
-                    : '0.00 SPARTA'
-                  : t('incentivesDisabled')}
-              </Col>
-            </Row>
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('Locked for')}
-              </Col>
-              <Col className="text-end output-card">
-                {getLockedSecs()[0] > 0
-                  ? getLockedSecs()[0] + getLockedSecs()[1]
-                  : t('unlocked')}
-              </Col>
-            </Row>
-          </Card.Body>
-          <Card.Footer className="card-body text-center">
-            {reserve.globalDetails.emissions ? (
-              <Button
-                className="w-100"
-                onClick={() => dispatch(daoHarvest(wallet))}
-                disabled={BN(dao.member?.weight).plus(bond.member?.weight) <= 0}
-              >
-                {t('harvestAll')}
-              </Button>
-            ) : (
-              <Button className="w-100" disabled>
-                {t('incentivesDisabled')}
-              </Button>
-            )}
-          </Card.Footer>
+          {!isLoading() ? (
+            <>
+              <Card.Body>
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    {t('yourWeight')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatFromWei(
+                      getVaultWeights(
+                        pool.poolDetails,
+                        dao.daoDetails,
+                        bond.bondDetails,
+                      ),
+                    )}
+                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                  </Col>
+                </Row>
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    {t('harvestable')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {reserve.globalDetails.emissions
+                      ? BN(dao.member?.weight).plus(bond.member?.weight) > 0
+                        ? `${formatFromWei(getClaimable())} SPARTA`
+                        : '0.00 SPARTA'
+                      : t('incentivesDisabled')}
+                  </Col>
+                </Row>
+              </Card.Body>
+              <Card.Footer className="card-body text-center">
+                {reserve.globalDetails.emissions ? (
+                  <Button
+                    className="w-100"
+                    onClick={() => dispatch(daoHarvest(wallet))}
+                    disabled={
+                      BN(dao.member?.weight).plus(bond.member?.weight) <= 0
+                    }
+                  >
+                    {t('harvestAll')}
+                  </Button>
+                ) : (
+                  <Button className="w-100" disabled>
+                    {t('incentivesDisabled')}
+                  </Button>
+                )}
+              </Card.Footer>
+            </>
+          ) : (
+            <HelmetLoading />
+          )}
         </Card>
       </Col>
 
-      {dao?.daoDetails?.length > 0 &&
+      {!isLoading() &&
         dao.daoDetails
           .filter(
             (i) =>

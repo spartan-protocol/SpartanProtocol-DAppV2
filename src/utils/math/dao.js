@@ -19,26 +19,27 @@ export const bondLiq = (inputToken, pool, feeOnTsf) => {
 }
 
 /**
- * Calculate the user's current total claimable incentive
- * @param reserveBal @param daoClaim @param memberWeight @param totalWeight
+ * Calculate the user's current total claimable incentive (per Era)
+ * @param reserveBal @param erasToEarn @param daoClaim @param memberWeight @param totalWeight
  * @returns claimAmount
  */
-export const calcReward = (reserveBal, daoClaim, memberWeight, totalWeight) => {
-  const _reserve = BN(reserveBal) // Aim to deplete reserve over a number of days
+export const calcRewardDao = (reserve, erasEarn, daoClaim, memberW, totalW) => {
+  const _reserve = BN(reserve).div(erasEarn) // Aim to deplete reserve over a number of days
   const daoReward = _reserve.times(daoClaim).div(10000) // Get the DAO's share of that
-  return calcShare(memberWeight, totalWeight, daoReward) // Get users's share of that (1 era worth)
+  return calcShare(memberW, totalW, daoReward) // Get users's share of that (1 era worth)
 }
 
 /**
- * Calculate the user's current incentive-claim per era
+ * Calculate the user's current incentive-claim since last harvest
  * @param pools @param bond @param dao @param secsPerEra @param reserveBal
  * @returns claimAmount
  */
-export const calcCurrentReward = (pools, bond, dao, secsPerEra, reserveBal) => {
+export const calcCurrentRewardDao = (pools, bond, dao, secsPerEra, reserve) => {
+  const { daoClaim, erasToEarn } = dao.global
   const _memberW = getVaultWeights(pools, dao.daoDetails, bond.bondDetails)
   const _totalW = BN(bond.totalWeight).plus(dao.totalWeight)
   const _secsSinceClaim = getSecsSince(dao.member.lastHarvest)
-  const share = calcReward(reserveBal, dao.global.daoClaim, _memberW, _totalW)
+  const share = calcRewardDao(reserve, erasToEarn, daoClaim, _memberW, _totalW)
   const reward = share.times(_secsSinceClaim).div(secsPerEra)
   return reward
 }

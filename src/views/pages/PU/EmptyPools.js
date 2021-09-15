@@ -146,12 +146,6 @@ const EmptyPools = (props) => {
     setOutputLp(convertToWei(getAddBothOutputLP()))
   }
 
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
-  }
-
   useEffect(() => {
     handleInputChange()
   }, [addInput1?.value, addInput2?.value, assetAdd1, assetAdd2, poolAdd1])
@@ -272,7 +266,6 @@ const EmptyPools = (props) => {
                         id="addInput1"
                         autoComplete="off"
                         autoCorrect="off"
-                        onInput={(e) => handleTokenInputChange(e)}
                       />
                       <InputGroup.Text
                         role="button"
@@ -338,7 +331,6 @@ const EmptyPools = (props) => {
                         id="addInput2"
                         autoComplete="off"
                         autoCorrect="off"
-                        onInput={(e) => handleTokenInputChange(e)}
                       />
                       <InputGroup.Text
                         role="button"

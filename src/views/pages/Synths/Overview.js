@@ -328,12 +328,6 @@ const Swap = () => {
     return '0'
   }
 
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
-  }
-
   const synthCount = () => synth.synthDetails.filter((x) => x.address).length
 
   useEffect(() => {
@@ -465,9 +459,6 @@ const Swap = () => {
                                         id="swapInput1"
                                         autoComplete="off"
                                         autoCorrect="off"
-                                        onInput={(e) =>
-                                          handleTokenInputChange(e)
-                                        }
                                       />
                                       <InputGroup.Text
                                         role="button"
@@ -555,9 +546,6 @@ const Swap = () => {
                                           id="swapInput2"
                                           autoComplete="off"
                                           autoCorrect="off"
-                                          onInput={(e) =>
-                                            handleTokenInputChange(e)
-                                          }
                                           disabled
                                         />
                                       </InputGroup>

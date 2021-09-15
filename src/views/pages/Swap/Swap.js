@@ -11,6 +11,7 @@ import {
   Button,
   Badge,
   OverlayTrigger,
+  Form,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -61,6 +62,8 @@ const Swap = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+  const [confirm, setConfirm] = useState(false)
+  const [confirmSynth, setConfirmSynth] = useState(false)
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
   const [filter, setFilter] = useState(['token'])
@@ -482,8 +485,13 @@ const Swap = () => {
       return [false, t('checkBalance')]
     }
     const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
-    if (mode === 'synthOut' && !synth.synthMinting) {
-      return [false, t('synthsDisabled')]
+    if (mode === 'synthOut') {
+      if (!synth.synthMinting) {
+        return [false, t('synthsDisabled')]
+      }
+      if (!confirmSynth) {
+        return [false, t('confirmLockup')]
+      }
     }
     if (mode === 'pool') {
       if (getZap()[2]) {
@@ -492,18 +500,18 @@ const Swap = () => {
       if (getZap()[3]) {
         return [false, t('poolAtCapacity')]
       }
+      if (assetSwap1.newPool) {
+        return [false, `${t('unlocksIn')} ${getTimeNew()[0]}${getTimeNew()[1]}`]
+      }
+      if (assetSwap2.newPool && !confirm) {
+        return [true, t('confirmLockup')]
+      }
       return [true, `${t('sell')} ${_symbol}p`]
     }
     if (mode === 'synthIn') {
       return [true, `${t('sell')} ${_symbol}s`]
     }
     return [true, `${t('sell')} ${_symbol}`]
-  }
-
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
   }
 
   useEffect(() => {
@@ -646,9 +654,6 @@ const Swap = () => {
                                         id="swapInput1"
                                         autoComplete="off"
                                         autoCorrect="off"
-                                        onInput={(e) =>
-                                          handleTokenInputChange(e)
-                                        }
                                       />
                                       <InputGroup.Text
                                         role="button"
@@ -927,7 +932,9 @@ const Swap = () => {
                                 <Row className="">
                                   <Col xs="auto" className="title-card">
                                     <span className="subtitle-card">
-                                      {t('output')}
+                                      {mode === 'synthIn'
+                                        ? t('output')
+                                        : t('forgeStake')}
                                     </span>
                                   </Col>
                                   <Col className="text-end">
@@ -1021,6 +1028,32 @@ const Swap = () => {
 
                         {mode === 'pool' && (
                           <>
+                            {assetSwap2.newPool && (
+                              <Row>
+                                <Col>
+                                  <div className="output-card text-center">
+                                    The destination pool is currently in its
+                                    initialization phase. Please be aware you
+                                    will not be able to withdraw your liquidity
+                                    until this pool is fully established
+                                  </div>
+                                  <Form className="my-2 text-center">
+                                    <span className="output-card">
+                                      {`Confirm; your liquidity will be locked for ${
+                                        getTimeNew()[0]
+                                      }${getTimeNew()[1]}`}
+                                      <Form.Check
+                                        type="switch"
+                                        id="confirmLockout"
+                                        className="ms-2 d-inline-flex"
+                                        checked={confirm}
+                                        onChange={() => setConfirm(!confirm)}
+                                      />
+                                    </span>
+                                  </Form>
+                                </Col>
+                              </Row>
+                            )}
                             {!assetSwap1?.newPool ? (
                               <Row className="text-center">
                                 {wallet?.account && swapInput1?.value && (
@@ -1058,8 +1091,7 @@ const Swap = () => {
                               <Row className="text-center">
                                 <Col xs="12" sm="4" md="12">
                                   <Button className="w-auto" disabled>
-                                    {t('unlocksIn')} {getTimeNew()[0]}{' '}
-                                    {getTimeNew()[1]}
+                                    {checkValid()[1]}
                                   </Button>
                                   <OverlayTrigger
                                     placement="auto"
@@ -1085,6 +1117,34 @@ const Swap = () => {
                               </Row>
                             )}
                           </>
+                        )}
+
+                        {mode === 'synthOut' && (
+                          <Row>
+                            <Col>
+                              <div className="output-card text-center">
+                                The minted synths will be deposited directly
+                                into the SynthVault & locked for 1 hour. You
+                                also will not be able to mint or stake the
+                                same-synth asset until after the 1 hour lockout
+                                so choose your forge-size carefully.
+                              </div>
+                              <Form className="my-2 text-center">
+                                <span className="output-card">
+                                  Confirm; your synths will be locked for 1 hour
+                                  <Form.Check
+                                    type="switch"
+                                    id="confirmLockout"
+                                    className="ms-2 d-inline-flex"
+                                    checked={confirmSynth}
+                                    onChange={() =>
+                                      setConfirmSynth(!confirmSynth)
+                                    }
+                                  />
+                                </span>
+                              </Form>
+                            </Col>
+                          </Row>
                         )}
 
                         {window.localStorage.getItem('assetType2') ===

@@ -294,12 +294,6 @@ const LiqRemove = () => {
     }
   }
 
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
-  }
-
   useEffect(() => {
     handleInputChange()
   }, [removeInput1?.value, assetRemove1, assetRemove2, poolRemove1, activeTab])
@@ -383,7 +377,6 @@ const LiqRemove = () => {
                                 id="removeInput1"
                                 autoComplete="off"
                                 autoCorrect="off"
-                                onInput={(e) => handleTokenInputChange(e)}
                               />
                               <InputGroup.Text
                                 role="button"

@@ -1,12 +1,12 @@
 .input-group-text {
-  background-color: #403A4B;
+  background-color: #403a4b;
   border-color: #1d171f;
-  color: #FFF;
+  color: #fff;
   padding: 0.25rem 0.5rem;
 }
 
 .form-control {
-  background-color: #403A4B;
+  background-color: #403a4b;
   border-color: #1d171f;
   color: #fff;
 
@@ -17,8 +17,8 @@
   }
 
   &:disabled {
-    background-color: #403A4B;
-    color: #A5ADAF;
+    background-color: #403a4b;
+    color: #a5adaf;
     border-color: #1d171f;
   }
 }
@@ -31,21 +31,33 @@
   border-left: none;
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 // WHITE MODE
 .white-content {
   .input-group-text {
-    background-color: #F5F8FC;
-    border-color: #605E68;
+    background-color: #f5f8fc;
+    border-color: #605e68;
   }
-  
+
   .form-control {
-    background-color: #F5F8FC;
-    border-color: #605E68;
+    background-color: #f5f8fc;
+    border-color: #605e68;
     color: #000;
-  
+
     &:focus {
-      background-color: #A5ADAF;
-      border-color: #605E68;
+      background-color: #a5adaf;
+      border-color: #605e68;
       color: #000;
     }
   }

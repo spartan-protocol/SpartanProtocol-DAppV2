@@ -14,12 +14,12 @@ import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
-import { calcAPY, calcFeeBurn } from '../../../utils/math/nonContract'
 import {
-  calcLiquidityUnitsAsym,
-  calcShare,
-  calcSwapOutput,
-} from '../../../utils/math/utils'
+  calcAPY,
+  getSynthWeight,
+  getTimeSince,
+} from '../../../utils/math/nonContract'
+import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -31,7 +31,6 @@ const SynthVaultItem = ({ synthItem }) => {
   const dispatch = useDispatch()
   const [tokenAddress, settokenAddress] = useState('')
   const [showModal, setShowModal] = useState(false)
-  // const [showDetails, setShowDetails] = useState(false)
   const getToken = (_tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddress)[0]
   const getPool = (_tokenAddress) =>
@@ -48,7 +47,7 @@ const SynthVaultItem = ({ synthItem }) => {
       genesis: synth.globalDetails.genesis,
       baseAmount: BN(synth.totalWeight).div(2).toString(),
     }
-    formatFromUnits(calcAPY(_object), 2)
+    return formatFromUnits(calcAPY(_object), 2)
   }
 
   const toggleModal = (_tokenAddr) => {
@@ -56,78 +55,17 @@ const SynthVaultItem = ({ synthItem }) => {
     setShowModal(!showModal)
   }
 
-  const formatDate = (unixTime) => {
-    const date = new Date(unixTime * 1000)
-    return date.toLocaleDateString()
-  }
-
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
-
   // Calculations
-  const getClaimable = () => {
-    // get seconds passed since last harvest
-    const timeStamp = BN(Date.now()).div(1000)
-    const lastHarvest = BN(synthItem.lastHarvest)
-    const secondsSince = timeStamp.minus(lastHarvest)
-    // get the members share
-    const weight = BN(synthItem.weight)
-    const reserveShare = BN(reserve.globalDetails.spartaBalance).div(
-      synth.globalDetails.erasToEarn,
+  const getClaimable = () =>
+    calcCurrentRewardSynth(
+      pool.poolDetails,
+      synth,
+      synthItem,
+      sparta.globalDetails.secondsPerEra,
+      reserve.globalDetails.spartaBalance,
     )
-    const vaultShare = reserveShare
-      .times(synth.globalDetails.vaultClaim)
-      .div('10000')
-    const totalWeight = BN(synth.globalDetails.totalWeight)
-    const share = calcShare(weight, totalWeight, vaultShare)
-    // get the members claimable amount
-    const claimAmount = share
-      .times(secondsSince)
-      .div(sparta.globalDetails.secondsPerEra)
-    const feeBurn = getFeeBurn(claimAmount)
-    return BN(claimAmount).minus(feeBurn)
-  }
 
   const isLightMode = window.localStorage.getItem('theme')
-
-  const getSynthLPsFromBase = () => {
-    const temp = calcLiquidityUnitsAsym(
-      getClaimable(),
-      getPool(synthItem.tokenAddress)?.baseAmount,
-      getPool(synthItem.tokenAddress)?.poolUnits,
-    )
-    return temp
-  }
-
-  const getSynthOutputFromBase = () => {
-    const lpUnits = getSynthLPsFromBase()
-    const baseAmount = calcShare(
-      lpUnits,
-      BN(getPool(synthItem.tokenAddress)?.poolUnits).plus(lpUnits),
-      BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
-    )
-    const tokenAmount = calcShare(
-      lpUnits,
-      BN(getPool(synthItem.tokenAddress)?.poolUnits).plus(lpUnits),
-      getPool(synthItem.tokenAddress)?.tokenAmount,
-    )
-    const baseSwapped = calcSwapOutput(
-      baseAmount,
-      getPool(synthItem.tokenAddress)?.tokenAmount,
-      BN(getPool(synthItem.tokenAddress)?.baseAmount).plus(getClaimable()),
-    )[0]
-    const tokenValue = BN(tokenAmount).plus(baseSwapped)
-    if (tokenValue > 0) {
-      return tokenValue
-    }
-    return '0.00'
-  }
-
-  // const toggleCollapse = () => {
-  //   setShowDetails(!showDetails)
-  // }
 
   return (
     <>
@@ -211,8 +149,9 @@ const SynthVaultItem = ({ synthItem }) => {
               </Col>
               <Col className="text-end output-card">
                 {reserve.globalDetails.emissions
-                  ? synthItem.weight > 0
-                    ? `${formatFromWei(getSynthOutputFromBase())} ${
+                  ? getSynthWeight(synthItem, getPool(synthItem.tokenAddress)) >
+                    0
+                    ? `${formatFromWei(getClaimable())} ${
                         getToken(synthItem.tokenAddress)?.symbol
                       }s`
                     : `0.00 ${getToken(synthItem.tokenAddress)?.symbol}s`
@@ -226,7 +165,10 @@ const SynthVaultItem = ({ synthItem }) => {
               </Col>
               <Col className="text-end output-card">
                 {synthItem.lastHarvest > 0
-                  ? formatDate(synthItem.lastHarvest)
+                  ? `${
+                      getTimeSince(synthItem.lastHarvest, t)[0] +
+                      getTimeSince(synthItem.lastHarvest, t)[1]
+                    } ago`
                   : t('never')}
               </Col>
             </Row>

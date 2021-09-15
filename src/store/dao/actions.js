@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getProviderGasPrice, getWalletProvider } from '../../utils/web3'
+import { getProviderGasPrice } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getDaoContract, getDaoVaultContract } from '../../utils/web3Contracts'
 import { BN } from '../../utils/bigNumber'
@@ -256,11 +256,7 @@ export const daoVaultWeight = (poolDetails) => async (dispatch) => {
  */
 export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
   dispatch(daoLoading())
-  const contract = getDaoContract()
-  let provider = getWalletProvider(wallet?.library)
-  if (provider._isSigner === true) {
-    provider = provider.provider
-  }
+  const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
     const deposit = await contract.deposit(pool, amount, {
@@ -274,11 +270,11 @@ export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
 
 /**
  * Withdraw / Unstake LP Tokens (Unlock them from the DAO)
- * @param pool
+ * @param pool @param wallet
  */
-export const daoWithdraw = (pool) => async (dispatch) => {
+export const daoWithdraw = (pool, wallet) => async (dispatch) => {
   dispatch(daoLoading())
-  const contract = getDaoContract()
+  const contract = getDaoContract(wallet)
   try {
     let withdraw = {}
     const gPrice = await getProviderGasPrice()

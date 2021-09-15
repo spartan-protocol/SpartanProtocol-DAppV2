@@ -1,7 +1,7 @@
 import * as Types from './types'
 
 const initialState = {
-  globalDetails: [],
+  globalDetails: false,
   synthMinting: false,
   synthArray: [],
   synthDetails: [],
