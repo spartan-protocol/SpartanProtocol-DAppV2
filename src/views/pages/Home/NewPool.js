@@ -172,7 +172,7 @@ const NewPool = () => {
 
   const [tokenValid, setTokenValid] = useState(false)
   useEffect(() => {
-    if (tokenInput?.value > 0) {
+    if (tokenInput?.value > 0.0000000000001) {
       setTokenValid(true)
     } else {
       setTokenValid(false)

@@ -213,7 +213,7 @@ export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
     deposit = await provider.waitForTransaction(deposit.hash, 1)
     dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthDeposit', deposit]))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
 }
 
@@ -225,16 +225,13 @@ export const synthHarvest = (synthArray, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
   try {
-    console.log(
-      await getSynthFactoryContract().callStatic.isSynth(synthArray[0]),
-    )
     const gPrice = await getProviderGasPrice()
     const harvest = await contract.harvestAll(synthArray, {
       gasPrice: gPrice,
     })
     dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthHarvest', harvest]))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
 }
 
@@ -253,7 +250,7 @@ export const synthHarvestSingle = (synth, wallet) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthHarvest', harvest]))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
 }
 
@@ -273,7 +270,7 @@ export const synthWithdraw =
       })
       dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthWithdraw', withdraw]))
     } catch (error) {
-      dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
     }
   }
 
@@ -292,6 +289,6 @@ export const createSynth = (token, wallet) => async (dispatch) => {
     })
     dispatch(payloadToDispatch(Types.SYNTH_CREATE, newSynth))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
 }
