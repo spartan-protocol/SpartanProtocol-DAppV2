@@ -14,11 +14,7 @@ import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
-import {
-  calcAPY,
-  getSynthWeight,
-  getTimeSince,
-} from '../../../utils/math/nonContract'
+import { calcAPY, getTimeSince } from '../../../utils/math/nonContract'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 
 const SynthVaultItem = ({ synthItem }) => {
@@ -33,8 +29,6 @@ const SynthVaultItem = ({ synthItem }) => {
   const [showModal, setShowModal] = useState(false)
   const getToken = (_tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddress)[0]
-  const getPool = (_tokenAddress) =>
-    pool.poolDetails.filter((i) => i.tokenAddress === _tokenAddress)[0]
 
   const APY = () => {
     const _recentRev = BN(synth.globalDetails.recentRevenue)
@@ -56,14 +50,30 @@ const SynthVaultItem = ({ synthItem }) => {
   }
 
   // Calculations
-  const getClaimable = () =>
-    calcCurrentRewardSynth(
+  const getClaimable = () => {
+    const [synthOut, baseCapped, synthCapped] = calcCurrentRewardSynth(
       pool.poolDetails,
       synth,
       synthItem,
-      sparta.globalDetails.secondsPerEra,
+      sparta.globalDetails,
       reserve.globalDetails.spartaBalance,
     )
+    return [synthOut, baseCapped, synthCapped]
+  }
+
+  const checkValid = () => {
+    const reward = formatFromWei(getClaimable()[0], 4)
+    if (!reserve.globalDetails.emissions) {
+      return [false, t('incentivesDisabled'), '']
+    }
+    if (getClaimable()[1]) {
+      return [false, t('baseCap'), '']
+    }
+    if (getClaimable()[2]) {
+      return [true, reward, ' SPARTA']
+    }
+    return [true, reward, ` ${getToken(synthItem.tokenAddress)?.symbol}s`]
+  }
 
   const isLightMode = window.localStorage.getItem('theme')
 
@@ -148,14 +158,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 {t('harvestable')}
               </Col>
               <Col className="text-end output-card">
-                {reserve.globalDetails.emissions
-                  ? getSynthWeight(synthItem, getPool(synthItem.tokenAddress)) >
-                    0
-                    ? `${formatFromWei(getClaimable())} ${
-                        getToken(synthItem.tokenAddress)?.symbol
-                      }s`
-                    : `0.00 ${getToken(synthItem.tokenAddress)?.symbol}s`
-                  : t('incentivesDisabled')}
+                {checkValid()[1] + checkValid()[2]}
               </Col>
             </Row>
 

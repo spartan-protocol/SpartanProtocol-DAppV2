@@ -1,5 +1,6 @@
 import { BN } from '../bigNumber'
-import { getSecsSince, getSynthWeight } from './nonContract'
+import { getSecsSince, getSynthWeight, minusFeeBurn } from './nonContract'
+import { mintSynth } from './router'
 import { calcShare, getPool } from './utils'
 
 export const one = BN(1).times(10).pow(18)
@@ -19,20 +20,20 @@ export const calcRewardSynth = (reserve, globalDetails, membW, totalW) => {
 
 /**
  * Calculate the user's current incentive-claim since last harvest
- * @param pools @param synth @param synthItem @param secsPerEra @param reserveBal
- * @returns claimAmount
+ * @param pools @param synth @param synthItem
+ * @param spartaGlobals @param reserveBal
+ * @returns [output, baseCapped, synthCapped]
  */
 export const calcCurrentRewardSynth = (
   pools,
   synth,
   synthItem,
-  secsEra,
+  spartaGlobals,
   reserveBal,
 ) => {
-  const _memberW = getSynthWeight(
-    synthItem,
-    getPool(synthItem.tokenAddress, pools),
-  )
+  const _pool = getPool(synthItem.tokenAddress, pools)
+  const _feeOnTsf = spartaGlobals.feeOnTransfer
+  const _memberW = getSynthWeight(synthItem, _pool)
   const _totalW = BN(synth.totalWeight)
   const _secsSinceClaim = getSecsSince(synthItem.lastHarvest)
   const [share, vaultReward] = calcRewardSynth(
@@ -41,9 +42,24 @@ export const calcCurrentRewardSynth = (
     _memberW,
     _totalW,
   )
-  const reward = share.times(_secsSinceClaim).div(secsEra)
-  if (reward.isGreaterThan(vaultReward)) {
-    return vaultReward
+  let spartaOut = share.times(_secsSinceClaim).div(spartaGlobals.secondsPerEra)
+  if (spartaOut.isGreaterThan(vaultReward)) {
+    spartaOut = vaultReward
   }
-  return reward
+  const spartaRec = minusFeeBurn(spartaOut, _feeOnTsf)
+  const [synthOut, , , , baseCapped, synthCapped] = mintSynth(
+    spartaRec,
+    _pool,
+    _pool,
+    synthItem,
+    _feeOnTsf,
+    true,
+  )
+  if (synthCapped) {
+    return [spartaRec, baseCapped, synthCapped]
+  }
+  if (synthOut > 0) {
+    return [synthOut, baseCapped, synthCapped]
+  }
+  return ['0.00', false, false]
 }

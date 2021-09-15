@@ -93,6 +93,31 @@ export const getSynthWeight = (synth, pool) => {
 }
 
 /**
+ * Get the member's SPARTA value of all staked synths
+ * @param synthDetails @param poolDetails
+ * @returns memberWeight
+ */
+export const getSynthVaultWeights = (synthDetails, poolDetails) => {
+  let memberWeight = BN(0)
+  const _vaultSynths = synthDetails.filter(
+    (x) =>
+      x.address && x.staked > 0 && getPool(x.tokenAddress, poolDetails).curated,
+  )
+  for (let i = 0; i < _vaultSynths.length; i++) {
+    memberWeight = memberWeight.plus(
+      calcSpotValueInBase(
+        BN(_vaultSynths[i].staked),
+        getPool(synthDetails[i].tokenAddress, poolDetails),
+      ),
+    )
+  }
+  if (memberWeight > 0) {
+    return memberWeight
+  }
+  return '0.00'
+}
+
+/**
  * Get the member's SPARTA value of all held/staked synths
  * @param synthDetails @param poolDetails
  * @returns memberWeight

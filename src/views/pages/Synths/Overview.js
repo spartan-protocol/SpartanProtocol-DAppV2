@@ -11,6 +11,7 @@ import {
   FormControl,
   Button,
   Badge,
+  Form,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -53,6 +54,7 @@ const Swap = () => {
   const sparta = useSparta()
   const location = useLocation()
   const [activeTab, setActiveTab] = useState('mint')
+  const [confirmSynth, setConfirmSynth] = useState(false)
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
   const [assetParam1, setAssetParam1] = useState(
@@ -104,6 +106,10 @@ const Swap = () => {
     checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
+
+  useEffect(() => {
+    setConfirmSynth(false)
+  }, [activeTab])
 
   useEffect(() => {
     const { poolDetails } = pool
@@ -326,6 +332,29 @@ const Swap = () => {
       return BN(getInput2USD()).div(getInput1USD()).minus('1').times('100')
     }
     return '0'
+  }
+
+  const checkValid = () => {
+    if (swapInput1?.value <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
+      return [false, t('checkBalance')]
+    }
+    const _symbolIn = getToken(assetSwap1.tokenAddress)?.symbol
+    const _symbolOut = getToken(assetSwap2.tokenAddress)?.symbol
+    if (activeTab === 'mint') {
+      if (!synth.synthMinting) {
+        return [false, t('synthsDisabled')]
+      }
+      if (!confirmSynth) {
+        return [false, t('confirmLockup')]
+      }
+    }
+    if (activeTab === 'burn') {
+      return [true, `${t('melt')} ${_symbolIn}s`]
+    }
+    return [true, `${t('forge')} ${_symbolOut}s`]
   }
 
   const synthCount = () => synth.synthDetails.filter((x) => x.address).length
@@ -687,6 +716,34 @@ const Swap = () => {
                         </Row>
                       </Card.Body>
                       <Card.Footer>
+                        {activeTab === 'mint' && (
+                          <Row>
+                            <Col>
+                              <div className="output-card text-center">
+                                The minted SynthYield tokens will be deposited
+                                directly into the SynthVault & locked for 1
+                                hour. You will also not be able to mint nor
+                                stake any more{' '}
+                                {getToken(assetSwap2.tokenAddress)?.symbol}s for
+                                1 hour so choose your forge-size carefully.
+                              </div>
+                              <Form className="my-2 text-center">
+                                <span className="output-card">
+                                  Confirm; your synths will be locked for 1 hour
+                                  <Form.Check
+                                    type="switch"
+                                    id="confirmLockout"
+                                    className="ms-2 d-inline-flex"
+                                    checked={confirmSynth}
+                                    onChange={() =>
+                                      setConfirmSynth(!confirmSynth)
+                                    }
+                                  />
+                                </span>
+                              </Form>
+                            </Col>
+                          </Row>
+                        )}
                         {/* 'Approval/Allowance' row */}
                         <Row>
                           {activeTab === 'mint' && (
@@ -709,15 +766,9 @@ const Swap = () => {
                                 <Button
                                   onClick={() => handleSwapToSynth()}
                                   className="w-100"
-                                  disabled={
-                                    swapInput1?.value <= 0 ||
-                                    BN(
-                                      convertToWei(swapInput1?.value),
-                                    ).isGreaterThan(getBalance(1))
-                                  }
+                                  disabled={!checkValid()[0]}
                                 >
-                                  {t('forge')}{' '}
-                                  {getToken(assetSwap2.tokenAddress)?.symbol}s
+                                  {checkValid()[1]}
                                 </Button>
                               </Col>
                             </>
@@ -752,15 +803,9 @@ const Swap = () => {
                                       ),
                                     )
                                   }
-                                  disabled={
-                                    swapInput1?.value <= 0 ||
-                                    BN(
-                                      convertToWei(swapInput1?.value),
-                                    ).isGreaterThan(getBalance(1))
-                                  }
+                                  disabled={!checkValid()[0]}
                                 >
-                                  {t('melt')}{' '}
-                                  {getToken(assetSwap1.tokenAddress)?.symbol}s
+                                  {checkValid()[1]}
                                 </Button>
                               </Col>
                             </>

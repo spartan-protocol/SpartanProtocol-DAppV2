@@ -121,6 +121,11 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
 
+  useEffect(() => {
+    setConfirm(false)
+    setConfirmSynth(false)
+  }, [mode])
+
   const synthCount = () => synth.synthDetails.filter((x) => x.address).length
 
   const getFilter = () => {
@@ -1123,11 +1128,12 @@ const Swap = () => {
                           <Row>
                             <Col>
                               <div className="output-card text-center">
-                                The minted synths will be deposited directly
-                                into the SynthVault & locked for 1 hour. You
-                                also will not be able to mint or stake the
-                                same-synth asset until after the 1 hour lockout
-                                so choose your forge-size carefully.
+                                The minted SynthYield tokens will be deposited
+                                directly into the SynthVault & locked for 1
+                                hour. You will also not be able to mint nor
+                                stake any more{' '}
+                                {getToken(assetSwap2.tokenAddress)?.symbol}s for
+                                1 hour so choose your forge-size carefully.
                               </div>
                               <Form className="my-2 text-center">
                                 <span className="output-card">

@@ -14,7 +14,10 @@ import {
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
 import { useReserve } from '../../../store/reserve/selector'
-import { getSynthWeights, getTimeSince } from '../../../utils/math/nonContract'
+import {
+  getSecsSince,
+  getSynthVaultWeights,
+} from '../../../utils/math/nonContract'
 import { usePool } from '../../../store/pool'
 import { Icon } from '../../../components/Icons/icons'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -68,7 +71,13 @@ const SynthVault = () => {
     if (synth.synthDetails.length > 1) {
       const tempArray = []
       synth.synthDetails
-        .filter((x) => x.staked > 0 && getTimeSince(x.lastHarvest, t)[0] > 0)
+        .filter(
+          (x) =>
+            x.staked > 0 &&
+            getSecsSince(x.lastHarvest).isGreaterThan(
+              synth.globalDetails.minTime,
+            ),
+        )
         .map((x) => tempArray.push(x.address))
       setClaimArray(tempArray)
     }
@@ -91,21 +100,21 @@ const SynthVault = () => {
             <Card.Body>
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
-                  {t('minTime')}
-                </Col>
-                <Col className="text-end output-card">
-                  {synth.globalDetails?.minTime} seconds
-                </Col>
-              </Row>
-              <Row className="my-1">
-                <Col xs="auto" className="text-card">
                   {t('totalWeight')}
                 </Col>
                 <Col className="text-end output-card">
                   {synth.totalWeight > 0
-                    ? formatFromWei(synth.totalWeight, 0)
+                    ? formatFromWei(synth.totalWeight, 2)
                     : '0.00'}{' '}
                   <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                </Col>
+              </Row>
+              <Row className="my-1">
+                <Col xs="auto" className="text-card">
+                  {t('minTime')}
+                </Col>
+                <Col className="text-end output-card">
+                  {synth.globalDetails?.minTime} seconds
                 </Col>
               </Row>
               <Row className="my-1">
@@ -148,8 +157,13 @@ const SynthVault = () => {
                   </Col>
                   <Col className="text-end output-card">
                     {formatFromWei(
-                      getSynthWeights(synth.synthDetails, pool.poolDetails),
+                      getSynthVaultWeights(
+                        synth.synthDetails,
+                        pool.poolDetails,
+                      ),
+                      2,
                     )}
+                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
                   </Col>
                 </Row>
                 <Row className="my-1">
@@ -158,9 +172,13 @@ const SynthVault = () => {
                   </Col>
                   <Col className="text-end output-card">
                     {synth.totalWeight > 0 &&
-                    getSynthWeights(synth.synthDetails, pool.poolDetails) > 0
+                    getSynthVaultWeights(synth.synthDetails, pool.poolDetails) >
+                      0
                       ? `${BN(
-                          getSynthWeights(synth.synthDetails, pool.poolDetails),
+                          getSynthVaultWeights(
+                            synth.synthDetails,
+                            pool.poolDetails,
+                          ),
                         )
                           .div(synth.totalWeight)
                           .times(100)
@@ -174,7 +192,10 @@ const SynthVault = () => {
                   <Button
                     className="w-100"
                     onClick={() => dispatch(synthHarvest(claimArray, wallet))}
-                    disabled={synth.memberDetails?.totalWeight <= 0}
+                    disabled={
+                      synth.memberDetails?.totalWeight <= 0 ||
+                      claimArray.length <= 0
+                    }
                   >
                     {t('harvestAll')}
                   </Button>

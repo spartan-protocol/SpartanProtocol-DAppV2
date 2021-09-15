@@ -103,6 +103,11 @@ $warning: #b70000 !default;
 $danger: #d4630d !default;
 $black: #0a0001 !default;
 
+$dark: #1d171f !default;
+$dark-states: #2a262b !default;
+$light: #ececec !default;
+$light-states: #c0c0c0 !default;
+
 // gradient
 $default-states: #403a4b !default;
 $primary-states: #fc5d50 !default;
@@ -136,7 +141,6 @@ $calendar-gray: #9499a7 !default;
 $active-blue: #00bbff !default;
 
 $light: $gray-500 !default;
-$dark: $gray-900 !default;
 $darker: darken($gray-900, 15%) !default;
 
 $facebook: #3b5998 !default;
