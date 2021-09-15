@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { Row, Table, Button } from 'react-bootstrap'
+import Pagination from 'react-bootstrap/Pagination'
 import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../utils/web3'
@@ -8,8 +9,35 @@ import { clearTxns, formatShortString } from '../../utils/web3'
 const RecentTxns = () => {
   const wallet = useWeb3React()
   const { t } = useTranslation()
-
   const [txnArray, setTxnArray] = useState([])
+  const [shownArray, setShownArray] = useState([])
+  const [active, setActive] = useState(1)
+  const [txnsPerPage, setTxnsPerPage] = useState(6)
+
+  const handleOnClick = (elem) => {
+    setActive(elem)
+    setTxnsPerPage(6)
+    // TODO change this depending on the device
+  }
+  const [items, setItems] = useState([])
+
+  const createPagination = (len) => {
+    let newItem
+    let auxItems = []
+    for (let number = 1; number <= len; number++) {
+      newItem = (
+        <Pagination.Item
+          key={number}
+          active={number === active}
+          onClick={() => handleOnClick(number)}
+        >
+          {number}
+        </Pagination.Item>
+      )
+      auxItems = [...auxItems, newItem]
+    }
+    setItems(auxItems)
+  }
 
   const tryParse = (data) => {
     try {
@@ -30,6 +58,7 @@ const RecentTxns = () => {
   useEffect(() => {
     const unfiltered = getTxns()
     const network = tryParse(window.localStorage.getItem('network'))
+    let amountOfPages = 0
     if (unfiltered.length > 0 && wallet.account) {
       let filtered = unfiltered.filter(
         (group) => group.wallet === wallet.account,
@@ -37,10 +66,17 @@ const RecentTxns = () => {
       if (filtered?.length > 0) {
         filtered = filtered.filter((txn) => txn[1]?.chainId === network.chainId)
         setTxnArray(filtered)
+        setShownArray(
+          txnArray.slice((active - 1) * txnsPerPage, active * txnsPerPage),
+        )
+        amountOfPages = Math.ceil(filtered.length / txnsPerPage)
+        createPagination(amountOfPages > 10 ? 10 : amountOfPages)
       }
+
+      // TODO change the txnsPerPage depending on device
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet.account, window.localStorage.getItem('txnArray')])
+  }, [shownArray, active, wallet.account])
 
   return (
     <>
@@ -48,28 +84,68 @@ const RecentTxns = () => {
         <Table borderless striped className="m-3">
           <thead className="text-primary text-center">
             <tr>
-              <th>{t('type')}</th>
+              <th>{t('Type')}</th>
+              <th>{t('Input')}</th>
+              <th>{t('Value')}</th>
+              <th>{t('Output')}</th>
+              <th>{t('Value')}</th>
               <th>{t('txHash')}</th>
             </tr>
           </thead>
           <tbody>
-            {txnArray?.length > 0 &&
+            {shownArray?.length > 0 &&
               wallet.account &&
-              txnArray?.map((txn) => (
-                <tr key={txn[1].hash} className="text-center">
-                  <td>{txn[0]}</td>
-                  <td>
-                    <a
-                      href={getExplorerTxn(txn[1].hash)}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {formatShortString(txn[1].hash)}
-                    </a>
-                  </td>
-                </tr>
+              shownArray?.map((txn) => (
+                <>
+                  <tr key={txn[1].hash} className="text-center">
+                    <td>{txn[0]}</td>
+                    <td>{txn[0]}</td>
+                    <td>{txn[0]}</td>
+                    <td>{txn[0]}</td>
+                    <td>{txn[0]}</td>
+                    <td>
+                      <a
+                        href={getExplorerTxn(txn[1].hash)}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {formatShortString(txn[1].hash)}
+                      </a>
+                    </td>
+                  </tr>
+                </>
               ))}
-            {/* {web3.eventArray?.length > 0 &&
+          </tbody>
+        </Table>
+        <div
+          className="pagAndDel"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Pagination>{items}</Pagination>
+          <Button
+            className="clearTxns"
+            style={{
+              float: 'left',
+              marginBottom: '16px',
+              marginLeft: '8px',
+            }}
+            onClick={() => clearTxns(wallet.account)}
+          >
+            {t('clearTxns')}
+          </Button>
+        </div>
+      </Row>
+    </>
+  )
+}
+
+export default RecentTxns
+
+/* {web3.eventArray?.length > 0 &&
               web3.eventArray
                 ?.filter((e) => e.event !== 'Transfer')
                 .map((txn) => (
@@ -170,15 +246,4 @@ const RecentTxns = () => {
                       </a>
                     </td>
                   </tr>
-                ))} */}
-          </tbody>
-        </Table>
-        <Button onClick={() => clearTxns(wallet.account)}>
-          {t('clearTxns')}
-        </Button>
-      </Row>
-    </>
-  )
-}
-
-export default RecentTxns
+                ))} */
