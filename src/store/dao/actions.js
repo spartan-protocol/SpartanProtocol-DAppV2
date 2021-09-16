@@ -80,7 +80,7 @@ export const daoProposalDetails =
             proposedAddress: proposalArray[i].proposedAddress.toString(),
             open: proposalArray[i].open,
             startTime: proposalArray[i].startTime.toString(), // timestamp of proposal genesis
-            memberVoted: proposalArray[i + 1].toString(),
+            memberVoted: proposalArray[i + 1],
           })
         }
         dispatch(payloadToDispatch(Types.DAO_PROPOSAL_DETAILS, proposal))
@@ -252,7 +252,7 @@ export const daoVaultWeight = (poolDetails) => async (dispatch) => {
 
 /**
  * Deposit / Stake LP Tokens (Lock them in the DAOVault)
- * @param pool @param amount
+ * @param pool @param amount @param wallet
  */
 export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
   dispatch(daoLoading())
@@ -289,6 +289,7 @@ export const daoWithdraw = (pool, wallet) => async (dispatch) => {
 
 /**
  * Harvest SPARTA DAOVault rewards
+ * @param wallet
  */
 export const daoHarvest = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
@@ -307,11 +308,11 @@ export const daoHarvest = (wallet) => async (dispatch) => {
 
 /**
  * New action proposal
- * @param typeStr
+ * @param typeStr @param wallet
  */
-export const newActionProposal = (typeStr) => async (dispatch) => {
+export const newActionProposal = (typeStr, wallet) => async (dispatch) => {
   dispatch(daoLoading())
-  const contract = getDaoContract()
+  const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
     const newProp = await contract.newActionProposal(typeStr, {
@@ -411,7 +412,7 @@ export const removeVote = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const propRemoveVote = await contract.removeVote({
+    const propRemoveVote = await contract.unvoteProposal({
       gasPrice: gPrice,
     })
     dispatch(

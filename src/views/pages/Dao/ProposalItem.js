@@ -7,6 +7,7 @@ import { useBond } from '../../../store/bond'
 import {
   cancelProposal,
   finaliseProposal,
+  pollVotes,
   removeVote,
   voteProposal,
 } from '../../../store/dao/actions'
@@ -17,7 +18,12 @@ import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { getExplorerContract, getExplorerWallet } from '../../../utils/extCalls'
 import { formatShortString } from '../../../utils/web3'
 import { proposalTypes } from './types'
-import { getTimeUntil } from '../../../utils/math/nonContract'
+import {
+  formatDate,
+  getTimeUntil,
+  getVaultWeights,
+} from '../../../utils/math/nonContract'
+import { Icon } from '../../../components/Icons/icons'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
@@ -28,16 +34,73 @@ const ProposalItem = ({ proposal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
-  const cancelPeriod = BN('1209600')
+
+  const isLoading = () => {
+    if (
+      pool.poolDetails.length > 1 &&
+      dao.daoDetails.length > 1 &&
+      bond.bondDetails.length > 1
+    ) {
+      return false
+    }
+    return true
+  }
 
   const getTimeCancel = () => {
-    const timeStamp = BN(proposal.startTime).plus(cancelPeriod)
+    const timeStamp = BN(proposal.startTime).plus(dao.global.cancelPeriod)
     return getTimeUntil(timeStamp, t)
   }
 
   const getTimeCooloff = () => {
     const timeStamp = BN(proposal.coolOffTime).plus(dao.global.coolOffPeriod)
     return getTimeUntil(timeStamp, t)
+  }
+
+  const totalPercent = () => {
+    if (dao.totalWeight && bond.totalWeight) {
+      const _totalPercent = BN(dao.proposalWeight)
+        .div(BN(dao.totalWeight).plus(bond.totalWeight))
+        .times(100)
+        .toString()
+      if (_totalPercent > 0) {
+        return _totalPercent
+      }
+    }
+    return '0'
+  }
+
+  const majorities = [
+    'DAO',
+    'UTILS',
+    'RESERVE',
+    'GET_SPARTA',
+    'ROUTER',
+    'LIST_BOND',
+    'GRANT',
+    'ADD_CURATED_POOL',
+  ]
+
+  const weightClass = () => {
+    if (totalPercent() > (100 / 3) * 2) {
+      return [t('majority'), 3]
+    }
+    if (totalPercent() > 100 / 2) {
+      return [t('quorum'), 2]
+    }
+    if (totalPercent() > 100 / 6) {
+      return [t('minority'), 1]
+    }
+    return [t('weakSupport'), 0]
+  }
+
+  const canPoll = () => {
+    if (majorities.includes(proposal.proposalType) && weightClass()[1] > 2) {
+      return true
+    }
+    if (weightClass()[1] > 1) {
+      return true
+    }
+    return false
   }
 
   const status = () => {
@@ -50,51 +113,15 @@ const ProposalItem = ({ proposal }) => {
       if (proposal.finalising && getTimeCooloff()[0] <= 0) {
         return t('readyFinalVoteCount')
       }
+      if (canPoll()) {
+        return t('readyToPollVotes')
+      }
       return t('requiresMoreSupport')
     }
     if (proposal.finalised) {
       return t('successfulProposal')
     }
     return t('failedProposal')
-  }
-
-  const memberPercent = () => {
-    if (dao.member.weight && bond.member.weight && proposal.memberVotes) {
-      const _memberPercent = BN(proposal.memberVotes)
-        .div(BN(dao.member.weight).plus(bond.member.weight))
-        .times(100)
-        .toString()
-      if (_memberPercent > 0) {
-        return _memberPercent
-      }
-    }
-    return '0'
-  }
-
-  const totalPercent = () => {
-    if (dao.global.totalWeight && bond.global.weight && proposal.votes) {
-      const _totalPercent = BN(proposal.votes)
-        .div(BN(dao.global.totalWeight).plus(bond.global.weight))
-        .times(100)
-        .toString()
-      if (_totalPercent > 0) {
-        return _totalPercent
-      }
-    }
-    return '0'
-  }
-
-  const weightClass = () => {
-    if (totalPercent() > (100 / 3) * 2) {
-      return t('majority')
-    }
-    if (totalPercent() > 100 / 2) {
-      return t('quorum')
-    }
-    if (totalPercent() > 100 / 6) {
-      return t('minority')
-    }
-    return t('weakSupport')
   }
 
   const getToken = (tokenAddress) =>
@@ -225,7 +252,7 @@ const ProposalItem = ({ proposal }) => {
                 <div className="output-card mb-2">{getDetails()}</div>
               </Col>
             </Row>
-            {proposal.open && (
+            {proposal.open && !isLoading() && (
               <>
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
@@ -243,8 +270,15 @@ const ProposalItem = ({ proposal }) => {
                     {t('yourVotes')}
                   </Col>
                   <Col className="text-end output-card">
-                    {formatFromWei(proposal.memberVotes, 0)} (
-                    {formatFromUnits(memberPercent(), 2)}%)
+                    {formatFromWei(
+                      getVaultWeights(
+                        pool.poolDetails,
+                        dao.daoDetails,
+                        bond.bondDetails,
+                      ),
+                      0,
+                    )}{' '}
+                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
                   </Col>
                 </Row>
 
@@ -253,7 +287,7 @@ const ProposalItem = ({ proposal }) => {
                     {t('totalVotes')}
                   </Col>
                   <Col className="text-end output-card">
-                    {weightClass()} ({formatFromUnits(totalPercent(), 2)}%)
+                    {weightClass()[0]} ({formatFromUnits(totalPercent(), 2)}%)
                   </Col>
                 </Row>
 
@@ -264,57 +298,79 @@ const ProposalItem = ({ proposal }) => {
               </>
             )}
           </Card.Body>
-          {proposal.open && (
-            <Card.Footer>
-              <Row>
-                <Col className="mb-2">
-                  <Button
-                    className="w-100"
-                    size="sm"
-                    onClick={() => dispatch(voteProposal(wallet))}
-                    disabled={memberPercent() >= 100}
-                  >
-                    {t('voteUp')}
-                  </Button>
-                </Col>
-                <Col className="mb-2">
-                  <Button
-                    className="w-100"
-                    size="sm"
-                    onClick={() => dispatch(removeVote(wallet))}
-                    disabled={memberPercent() <= 0}
-                  >
-                    {t('voteDown')}
-                  </Button>
-                </Col>
-              </Row>
+          <Card.Footer>
+            {proposal.open ? (
+              <>
+                <Row>
+                  <Col className="mb-2">
+                    <Button
+                      className="w-100"
+                      size="sm"
+                      onClick={() => dispatch(voteProposal(wallet))}
+                      disabled={proposal.memberVoted}
+                    >
+                      {t('voteUp')}
+                    </Button>
+                  </Col>
+                  <Col className="mb-2">
+                    <Button
+                      className="w-100"
+                      size="sm"
+                      onClick={() => dispatch(removeVote(wallet))}
+                      disabled={!proposal.memberVoted}
+                    >
+                      {t('voteDown')}
+                    </Button>
+                  </Col>
+                </Row>
 
+                <Row>
+                  <Col className="">
+                    {proposal.finalising ? (
+                      <Button
+                        variant="secondary"
+                        className="w-100"
+                        size="sm"
+                        onClick={() => dispatch(finaliseProposal(wallet))}
+                        disabled={
+                          !proposal.finalising || getTimeCooloff()[0] > 0
+                        }
+                      >
+                        {t('countVotes')}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        className="w-100"
+                        size="sm"
+                        onClick={() => dispatch(pollVotes(wallet))}
+                        disabled={!canPoll()}
+                      >
+                        {t('pollVotes')}
+                      </Button>
+                    )}
+                  </Col>
+                  <Col className="">
+                    <Button
+                      variant="secondary"
+                      className="w-100"
+                      size="sm"
+                      onClick={() => dispatch(cancelProposal(wallet))}
+                      disabled={getTimeCancel()[0] > 0}
+                    >
+                      {t('cancel')}
+                    </Button>
+                  </Col>
+                </Row>
+              </>
+            ) : (
               <Row>
-                <Col className="">
-                  <Button
-                    variant="secondary"
-                    className="w-100"
-                    size="sm"
-                    onClick={() => dispatch(finaliseProposal(wallet))}
-                    disabled={!proposal.finalising || getTimeCooloff()[0] > 0}
-                  >
-                    {t('countVotes')}
-                  </Button>
-                </Col>
-                <Col className="">
-                  <Button
-                    variant="secondary"
-                    className="w-100"
-                    size="sm"
-                    onClick={() => dispatch(cancelProposal(wallet))}
-                    disabled={getTimeCancel()[0] > 0}
-                  >
-                    {t('cancel')}
-                  </Button>
+                <Col className="output-card">
+                  Proposed on {formatDate(proposal.startTime)}
                 </Col>
               </Row>
-            </Card.Footer>
-          )}
+            )}
+          </Card.Footer>
         </Card>
       </Col>
     </>

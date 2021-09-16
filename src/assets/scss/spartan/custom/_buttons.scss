@@ -10,6 +10,9 @@
 .btn-secondary {
   @include btn-styles($secondary, $secondary-states);
   color: #000;
+  &:disabled {
+    color: #000;
+  }
 }
 
 .btn-success {

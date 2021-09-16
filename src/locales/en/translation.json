@@ -153,6 +153,7 @@
   "rankInfo": "A tiered ranking system based on the SPARTA-value sum of all your Spartan Protocol ecosystem tokens, whether held, staked or bonded.",
   "ready": "Ready",
   "readyFinalVoteCount": "Ready for final vote count!",
+  "readyToPollVotes": "Ready to poll votes!",
   "receive": "Receive",
   "recent": "Recent",
   "recentDonations": "Recent Donations",

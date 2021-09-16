@@ -10,13 +10,14 @@ import {
   daoMemberDetails,
   daoProposalDetails,
   daoVaultWeight,
+  getDaoDetails,
   proposalWeight,
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
-import { bondVaultWeight } from '../../../store/bond'
+import { bondVaultWeight, getBondDetails } from '../../../store/bond'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -71,6 +72,8 @@ const Overview = () => {
       )
       dispatch(daoVaultWeight(pool.poolDetails, wallet))
       dispatch(bondVaultWeight(pool.poolDetails, wallet))
+      dispatch(getDaoDetails(pool.listedPools, wallet))
+      dispatch(getBondDetails(pool.listedPools, wallet))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
