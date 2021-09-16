@@ -14,10 +14,14 @@ const RecentTxns = () => {
   const [active, setActive] = useState(1)
   const [txnsPerPage, setTxnsPerPage] = useState(6)
 
+  useEffect(() => {
+    const drawerHeight = document.querySelector('#txnDrawer').offsetHeight
+    const rows = Math.floor(drawerHeight / 55)
+    setTxnsPerPage(rows)
+  }, [])
+
   const handleOnClick = (elem) => {
     setActive(elem)
-    setTxnsPerPage(6)
-    // TODO change this depending on the device
   }
   const [items, setItems] = useState([])
 
@@ -55,10 +59,9 @@ const RecentTxns = () => {
     return unfiltered
   }
 
-  useEffect(() => {
+  const updateFiltered = () => {
     const unfiltered = getTxns()
     const network = tryParse(window.localStorage.getItem('network'))
-    let amountOfPages = 0
     if (unfiltered.length > 0 && wallet.account) {
       let filtered = unfiltered.filter(
         (group) => group.wallet === wallet.account,
@@ -66,17 +69,30 @@ const RecentTxns = () => {
       if (filtered?.length > 0) {
         filtered = filtered.filter((txn) => txn[1]?.chainId === network.chainId)
         setTxnArray(filtered)
-        setShownArray(
-          txnArray.slice((active - 1) * txnsPerPage, active * txnsPerPage),
-        )
-        amountOfPages = Math.ceil(filtered.length / txnsPerPage)
-        createPagination(amountOfPages > 10 ? 10 : amountOfPages)
       }
-
       // TODO change the txnsPerPage depending on device
     }
+  }
+  useEffect(() => {
+    updateFiltered()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shownArray, active, wallet.account])
+  }, [active, wallet.account])
+
+  const updateShown = () => {
+    let amountOfPages = 0
+    if (txnArray.length > 0 && wallet.account) {
+      setShownArray(
+        txnArray.slice((active - 1) * txnsPerPage, active * txnsPerPage),
+      )
+      amountOfPages = Math.ceil(txnArray.length / txnsPerPage)
+      createPagination(amountOfPages)
+      // TODO change the txnsPerPage depending on device
+    }
+  }
+  useEffect(() => {
+    updateShown()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txnArray])
 
   return (
     <>
@@ -84,11 +100,9 @@ const RecentTxns = () => {
         <Table borderless striped className="m-3">
           <thead className="text-primary text-center">
             <tr>
-              <th>{t('Type')}</th>
-              <th>{t('Input')}</th>
-              <th>{t('Value')}</th>
-              <th>{t('Output')}</th>
-              <th>{t('Value')}</th>
+              <th>{t('type')}</th>
+              <th>{t('input')}</th>
+              <th>{t('output')}</th>
               <th>{t('txHash')}</th>
             </tr>
           </thead>
@@ -96,24 +110,20 @@ const RecentTxns = () => {
             {shownArray?.length > 0 &&
               wallet.account &&
               shownArray?.map((txn) => (
-                <>
-                  <tr key={txn[1].hash} className="text-center">
-                    <td>{txn[0]}</td>
-                    <td>{txn[0]}</td>
-                    <td>{txn[0]}</td>
-                    <td>{txn[0]}</td>
-                    <td>{txn[0]}</td>
-                    <td>
-                      <a
-                        href={getExplorerTxn(txn[1].hash)}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {formatShortString(txn[1].hash)}
-                      </a>
-                    </td>
-                  </tr>
-                </>
+                <tr key={txn[1].hash} className="text-center output-card">
+                  <td>{txn[0]}</td>
+                  <td>#,###.#### TOKEN</td>
+                  <td>#,###.#### TOKEN</td>
+                  <td>
+                    <a
+                      href={getExplorerTxn(txn[1].hash)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {formatShortString(txn[1].hash)}
+                    </a>
+                  </td>
+                </tr>
               ))}
           </tbody>
         </Table>
@@ -125,7 +135,15 @@ const RecentTxns = () => {
             alignItems: 'center',
           }}
         >
-          <Pagination>{items}</Pagination>
+          <Pagination>
+            <Pagination.First onClick={() => handleOnClick(1)} />
+            <Pagination.Prev
+              onClick={() => active > 1 && handleOnClick(active - 1)}
+            />
+            {items[active - 1]}
+            {items[active]}
+            <Pagination.Next onClick={() => handleOnClick(active + 1)} />
+          </Pagination>
           <Button
             className="clearTxns"
             style={{
