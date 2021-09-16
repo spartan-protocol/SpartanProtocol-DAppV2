@@ -50,6 +50,17 @@ const LiqBond = () => {
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   const [assetBond1, setAssetBond1] = useState('...')
 
+  const getWhiteList = () => {
+    const whiteList = []
+    for (let i = 0; i < bond.listedAssets.length; i++) {
+      whiteList.push(
+        pool.poolDetails.filter((x) => x.address === bond.listedAssets[i])[0]
+          .tokenAddress,
+      )
+    }
+    return whiteList
+  }
+
   const spartaRemainingLoop = async () => {
     dispatch(allListedAssets())
     await pause(10000)
@@ -222,7 +233,7 @@ const LiqBond = () => {
                                 <AssetSelect
                                   priority="1"
                                   filter={['token']}
-                                  whiteList={bond.listedAssets}
+                                  whiteList={getWhiteList()}
                                 />
                               </InputGroup.Text>
                               <FormControl

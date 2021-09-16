@@ -11,15 +11,16 @@ import { Icon } from '../../../components/Icons/icons'
 import { claimBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
 import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
+import { getToken } from '../../../utils/math/utils'
 
-const BondItem = ({ bondDetails }) => {
+const BondItem = (props) => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
+  const { asset } = props
   const { t } = useTranslation()
   const [showDetails, setShowDetails] = useState(false)
-  const { tokenAddress } = bondDetails
-  const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  const token = () => getToken(asset.tokenAddress, pool.tokenDetails)
   const isLightMode = window.localStorage.getItem('theme')
 
   const getEndDate = (_bondedLP, _lastClaim, _claimRate) => {
@@ -39,15 +40,15 @@ const BondItem = ({ bondDetails }) => {
 
   return (
     <>
-      <Col xs="auto" key={bondDetails.address}>
+      <Col xs="auto" key={asset.address}>
         <Card className="card-320">
           <Card.Body>
             <Row className="">
               <Col xs="auto" className="position-relative pt-1">
                 <img
                   className="mr-3"
-                  src={token.symbolUrl}
-                  alt={token.symbol}
+                  src={token().symbolUrl}
+                  alt={token().symbol}
                   height="50px"
                 />
                 <img
@@ -59,10 +60,10 @@ const BondItem = ({ bondDetails }) => {
                 />
               </Col>
               <Col xs="auto" className="pl-1">
-                <h3 className="mb-0">{token.symbol}p</h3>
-                <Link to={`/pools/liquidity?asset1=${token.address}`}>
+                <h3 className="mb-0">{token().symbol}p</h3>
+                <Link to={`/liquidity?asset1=${token().address}`}>
                   <p className="text-sm-label-alt">
-                    {t('obtain')} {token.symbol}p
+                    {t('obtain')} {token().symbol}p
                     <Icon
                       icon="scan"
                       size="13"
@@ -107,7 +108,7 @@ const BondItem = ({ bondDetails }) => {
                 {t('remaining')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(bondDetails.staked)} {token.symbol}p
+                {formatFromWei(asset.staked, 4)} {token().symbol}p
               </Col>
             </Row>
 
@@ -116,7 +117,7 @@ const BondItem = ({ bondDetails }) => {
                 {t('claimable')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(calcBondedLP(bondDetails))} {token.symbol}p
+                {formatFromWei(calcBondedLP(asset), 4)} {token().symbol}p
               </Col>
             </Row>
             {showDetails === true && (
@@ -126,8 +127,8 @@ const BondItem = ({ bondDetails }) => {
                     {t('lastClaim')}
                   </Col>
                   <Col className="text-end output-card">
-                    {getTimeSince(bondDetails.lastBlockTime, t)[0]}
-                    {getTimeSince(bondDetails.lastBlockTime, t)[1]} ago
+                    {getTimeSince(asset.lastBlockTime, t)[0]}
+                    {getTimeSince(asset.lastBlockTime, t)[1]} ago
                   </Col>
                 </Row>
 
@@ -138,9 +139,9 @@ const BondItem = ({ bondDetails }) => {
                   <Col className="text-end output-card">
                     {formatDate(
                       getEndDate(
-                        bondDetails.staked,
-                        bondDetails.lastBlockTime,
-                        bondDetails.claimRate,
+                        asset.staked,
+                        asset.lastBlockTime,
+                        asset.claimRate,
                       ),
                     )}
                   </Col>
@@ -159,7 +160,7 @@ const BondItem = ({ bondDetails }) => {
                 <Button
                   className="w-100"
                   onClick={() =>
-                    dispatch(claimBond(bondDetails.address, wallet))
+                    dispatch(claimBond(asset.tokenAddress, wallet))
                   }
                 >
                   {t('claim')}

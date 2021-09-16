@@ -251,7 +251,7 @@ const DaoVault = () => {
                       <h3 className="mb-0">
                         {getToken(i.tokenAddress)?.symbol}p
                       </h3>
-                      <Link to={`/pools/liquidity?asset1=${i.tokenAddress}`}>
+                      <Link to={`/liquidity?asset1=${i.tokenAddress}`}>
                         <p className="text-sm-label-alt">
                           {t('obtain')} {getToken(i.tokenAddress)?.symbol}p
                           <Icon

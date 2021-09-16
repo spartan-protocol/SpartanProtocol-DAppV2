@@ -71,7 +71,7 @@ const Bond = () => {
               <Card xs="auto" className="card-320">
                 <Card.Header>{t('bondPositions')}</Card.Header>
                 <Card.Body>
-                  {bond.bondDetails?.length > 0 &&
+                  {bond.bondDetails?.length > 1 &&
                     bond.bondDetails
                       .filter((asset) => asset.staked > 0)
                       .map((asset) => (
@@ -96,7 +96,7 @@ const Bond = () => {
                 </Card.Body>
               </Card>
             </Col>
-            {bond.bondDetails?.length > 0 &&
+            {bond.bondDetails?.length > 1 &&
               bond.bondDetails
                 .filter((asset) => asset.lastBlockTime > 0)
                 .sort((a, b) => b.staked - a.staked)

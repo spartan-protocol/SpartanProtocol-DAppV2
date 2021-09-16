@@ -131,11 +131,11 @@ export const allListedAssets = () => async (dispatch) => {
 
 /**
  * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract) *STATE*
- * @param tokenAddr @param amount
+ * @param tokenAddr @param amount @param wallet
  */
-export const bondDeposit = (tokenAddr, amount) => async (dispatch) => {
+export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getDaoContract()
+  const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
     const ORs = {
@@ -151,14 +151,14 @@ export const bondDeposit = (tokenAddr, amount) => async (dispatch) => {
 
 /**
  * Claim a Bond assets by poolAddress *STATE*
- * @param poolAddr
+ * @param tokenAddr @param wallet
  */
-export const claimBond = (poolAddr) => async (dispatch) => {
+export const claimBond = (tokenAddr, wallet) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getDaoContract()
+  const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const bondClaim = await contract.claim(poolAddr, {
+    const bondClaim = await contract.claim(tokenAddr, {
       gasPrice: gPrice,
     })
     dispatch(payloadToDispatch(Types.BOND_TXN, ['bondClaim', bondClaim]))
