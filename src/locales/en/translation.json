@@ -231,6 +231,7 @@
   "withdraw": "Withdraw",
   "withdrawAll": "Withdraw all",
   "wrongNetwork": "You have selected {{network}} in the DApp. Make sure you have selected {{network}} in your wallet too!",
+  "youHaventVoted": "You Have Not Voted",
   "yourBalance": "Your Balance",
   "yourVotes": "Your votes",
   "yourWallet": "Your wallet",

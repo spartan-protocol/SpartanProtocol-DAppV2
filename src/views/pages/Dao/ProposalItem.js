@@ -24,12 +24,15 @@ import {
   getVaultWeights,
 } from '../../../utils/math/nonContract'
 import { Icon } from '../../../components/Icons/icons'
+import { useSynth } from '../../../store/synth/selector'
+import { realise } from '../../../utils/math/synth'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
   const sparta = useSparta()
   const pool = usePool()
   const bond = useBond()
+  const synth = useSynth()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -153,7 +156,11 @@ const ProposalItem = ({ proposal }) => {
     }
     // 'FLIP_EMISSIONS' = 'on' or 'off'
     if (proposal.proposalType === 'FLIP_EMISSIONS') {
-      return sparta.globalDetails.emitting ? 'off' : 'on'
+      return proposal.open
+        ? sparta.globalDetails.emitting
+          ? 'off'
+          : 'on'
+        : 'Flipped'
     }
     // 'ADD_CURATED_POOL', 'REMOVE_CURATED_POOL' = proposal.proposedAddress + 'pool details'
     if (
@@ -212,6 +219,22 @@ const ProposalItem = ({ proposal }) => {
         </>
       )
     }
+    if (['REALISE'].includes(proposal.proposalType)) {
+      const _synth = synth.synthDetails.filter(
+        (x) => x.address === proposal.proposedAddress,
+      )[0]
+      const _pool = pool.poolDetails.filter(
+        (x) => x.tokenAddress === _synth.tokenAddress,
+      )[0]
+      return (
+        <>
+          {proposal.open &&
+            `${formatFromWei(realise(_synth, _pool)[0])} ${
+              getToken(_synth.tokenAddress).symbol
+            }p = ${formatFromWei(realise(_synth, _pool)[1])} SPARTA`}
+        </>
+      )
+    }
     return '0'
   }
 
@@ -249,7 +272,9 @@ const ProposalItem = ({ proposal }) => {
             </Row>
             <Row>
               <Col>
-                <div className="output-card mb-2">{getDetails()}</div>
+                <div className="output-card mb-2">
+                  {synth.synthDetails.length > 1 && getDetails()}
+                </div>
               </Col>
             </Row>
             {proposal.open && !isLoading() && (
@@ -270,14 +295,16 @@ const ProposalItem = ({ proposal }) => {
                     {t('yourVotes')}
                   </Col>
                   <Col className="text-end output-card">
-                    {formatFromWei(
-                      getVaultWeights(
-                        pool.poolDetails,
-                        dao.daoDetails,
-                        bond.bondDetails,
-                      ),
-                      0,
-                    )}{' '}
+                    {proposal.memberVoted
+                      ? formatFromWei(
+                          getVaultWeights(
+                            pool.poolDetails,
+                            dao.daoDetails,
+                            bond.bondDetails,
+                          ),
+                          0,
+                        )
+                      : t('youHaventVoted')}{' '}
                     <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
                   </Col>
                 </Row>

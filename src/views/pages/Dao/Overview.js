@@ -18,11 +18,14 @@ import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
 import { bondVaultWeight, getBondDetails } from '../../../store/bond'
+import { getSynthDetails } from '../../../store/synth/actions'
+import { useSynth } from '../../../store/synth/selector'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const dao = useDao()
   const pool = usePool()
+  const synth = useSynth()
   const wallet = useWeb3React()
   const { t } = useTranslation()
 
@@ -74,6 +77,7 @@ const Overview = () => {
       dispatch(bondVaultWeight(pool.poolDetails, wallet))
       dispatch(getDaoDetails(pool.listedPools, wallet))
       dispatch(getBondDetails(pool.listedPools, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])

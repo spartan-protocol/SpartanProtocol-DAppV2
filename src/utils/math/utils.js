@@ -78,6 +78,15 @@ export const calcSpotValueInToken = (inputAmount, poolDetails) => {
   return result
 }
 
+export const calcActualSynthUnits = (pool, amount) => {
+  const _amount = BN(amount)
+  const _baseAmount = BN(pool.baseAmount)
+  const _tokenAmount = BN(pool.tokenAmount)
+  const numerator = _amount.times(_baseAmount)
+  const denominator = BN(2).times(_tokenAmount)
+  return numerator.div(denominator)
+}
+
 export const calcSlipAdjustment = (spartaInput, tokenInput, poolDetails) => {
   const b = BN(spartaInput)
   const B = BN(poolDetails.baseAmount)

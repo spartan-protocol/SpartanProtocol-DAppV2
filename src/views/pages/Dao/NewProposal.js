@@ -31,10 +31,14 @@ import { useSparta } from '../../../store/sparta/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
 import { useDao } from '../../../store/dao/selector'
+import { useSynth } from '../../../store/synth/selector'
+import { usePool } from '../../../store/pool'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
+  const synth = useSynth()
+  const pool = usePool()
   const wallet = useWeb3React()
   const dao = useDao()
   const addr = getAddresses()
@@ -167,6 +171,17 @@ const NewProposal = () => {
     setinputParam('')
   }
 
+  const isLoading = () => {
+    if (
+      pool.tokenDetails.length > 1 &&
+      synth.synthDetails.length > 1 &&
+      pool.poolDetails.length > 1
+    ) {
+      return false
+    }
+    return true
+  }
+
   return (
     <>
       <Button
@@ -179,7 +194,7 @@ const NewProposal = () => {
       </Button>
 
       <Modal show={showModal} onHide={() => handleOnHide()} centered>
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(network.chainId) && !isLoading() && (
           <>
             <Modal.Header closeButton>
               <Modal.Title>{t('newProposal')}</Modal.Title>
@@ -306,7 +321,7 @@ const NewProposal = () => {
                         <Form.Switch
                           type="switch"
                           id="inputConfirmFee"
-                          label="Confirm 100 SPARTA Proposal-Fee (Add tooltip)"
+                          label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee (Add tooltip)`}
                           checked={feeConfirm}
                           onChange={() => setfeeConfirm(!feeConfirm)}
                         />
