@@ -13,7 +13,7 @@ import {
   proposalWeight,
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
 import { bondVaultWeight } from '../../../store/bond'
@@ -46,7 +46,7 @@ const Overview = () => {
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    if (network.chainId === 97) {
+    if (tempChains.includes(network.chainId)) {
       dispatch(daoGlobalDetails(wallet))
     }
   }
@@ -63,7 +63,7 @@ const Overview = () => {
   }, [trigger0])
 
   useEffect(() => {
-    if (network.chainId === 97) {
+    if (tempChains.includes(network.chainId)) {
       dispatch(daoMemberDetails(wallet))
       dispatch(daoProposalDetails(dao.global?.currentProposal, wallet))
       dispatch(
@@ -86,7 +86,7 @@ const Overview = () => {
             </div>
           </Col>
         </Row>
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Form.Group as={Row} className="row-480 mb-3">
               <Col xs="12">

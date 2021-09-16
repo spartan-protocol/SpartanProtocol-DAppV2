@@ -2,12 +2,12 @@ import axios from 'axios'
 import * as Types from './types'
 
 import {
-  getWalletWindowObj,
   bscRpcsMN,
   bscRpcsTN,
   getNetwork,
   getProviderGasPrice,
   getWalletProvider,
+  getWalletWindowObj,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
@@ -167,11 +167,11 @@ export const getAllowance2 =
  * @returns {boolean} true if succeeds
  */
 export const watchAsset =
-  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage) =>
+  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage, wallet) =>
   async (dispatch) => {
     dispatch(web3Loading())
     const connectedWalletType = getWalletWindowObj()
-    if (window.sessionStorage.getItem('walletConnected')) {
+    if (wallet.account) {
       try {
         const watchingAsset = await connectedWalletType.request({
           method: 'wallet_watchAsset',

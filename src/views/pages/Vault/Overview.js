@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Row, Col, Tabs, Tab } from 'react-bootstrap'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -32,7 +32,7 @@ const Vault = () => {
   return (
     <>
       <div className="content">
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Row className="row-480">
               <Tabs

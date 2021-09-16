@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Button, Card, Col, Form, Nav, Row } from 'react-bootstrap'
-import { getAddresses, getNetwork } from '../../../utils/web3'
+import { getAddresses, getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
 import EmptyPools from './EmptyPools'
@@ -47,7 +47,7 @@ const Overview = () => {
             </div>
           </Col>
         </Row>
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Row className="row-480">
               <Col xs="12" className="mb-3">

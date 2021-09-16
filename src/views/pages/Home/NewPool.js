@@ -19,6 +19,7 @@ import {
   getAddresses,
   getNetwork,
   getWalletProvider,
+  tempChains,
 } from '../../../utils/web3'
 import { BN, convertToWei, formatFromUnits } from '../../../utils/bigNumber'
 import { createPoolADD, usePool } from '../../../store/pool'
@@ -138,13 +139,13 @@ const NewPool = () => {
       ethers.utils.isAddress(addrInput?.value)
     ) {
       if (
-        network.chainId === 97 ||
+        tempChains.includes(network.chainId) ||
         trustWalletIndex.data.includes(addrInput?.value)
       ) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
         }
-        if (network.chainId === 97 || tokenInfo.decimals === 18) {
+        if (tempChains.includes(network.chainId) || tokenInfo.decimals === 18) {
           setaddrValid(true)
         } else {
           handleInvalid()
@@ -274,7 +275,7 @@ const NewPool = () => {
         }}
         centered
       >
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Modal.Header closeButton>
               <Modal.Title>{t('createPool')}</Modal.Title>

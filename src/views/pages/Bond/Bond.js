@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import BondItem from './BondItem'
 import { getBondDetails, useBond } from '../../../store/bond'
 
@@ -48,7 +48,11 @@ const Bond = () => {
   useEffect(() => {
     const { listedPools } = pool
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
         if (listedPools?.length > 0) {
           dispatch(getBondDetails(listedPools, wallet))
         }
@@ -61,7 +65,7 @@ const Bond = () => {
   return (
     <>
       <div className="content">
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <Row className="row-480">
             <Col xs="auto">
               <Card xs="auto" className="card-320">

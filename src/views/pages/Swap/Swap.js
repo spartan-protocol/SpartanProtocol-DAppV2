@@ -15,7 +15,12 @@ import {
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
-import { getAddresses, getItemFromArray, getNetwork } from '../../../utils/web3'
+import {
+  getAddresses,
+  getItemFromArray,
+  getNetwork,
+  tempChains,
+} from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
 import {
   BN,
@@ -110,7 +115,11 @@ const Swap = () => {
     const { listedPools } = pool
     const { synthArray } = synth
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
           dispatch(getSynthDetails(synthArray, wallet))
           dispatch(getSynthMinting())
@@ -592,7 +601,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             {pool.poolDetails?.length > 0 && (
               <>

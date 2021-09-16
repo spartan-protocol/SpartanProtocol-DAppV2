@@ -12,7 +12,7 @@ import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import { getToken } from '../../utils/math/utils'
 import { getDaoDetails, useDao } from '../../store/dao'
 import { getBondDetails, useBond } from '../../store/bond'
-import { getNetwork } from '../../utils/web3'
+import { getNetwork, tempChains } from '../../utils/web3'
 
 const LPs = () => {
   const { t } = useTranslation()
@@ -45,7 +45,11 @@ const LPs = () => {
   useEffect(() => {
     const { listedPools } = pool
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
         if (listedPools?.length > 0) {
           dispatch(getBondDetails(listedPools, wallet))
           dispatch(getDaoDetails(listedPools, wallet))
@@ -56,38 +60,19 @@ const LPs = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
 
-  const handleWatchAsset = (assetType, asset) => {
+  const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
     const token = _getToken(asset.tokenAddress)
     if (walletType === 'MM') {
-      if (assetType === 'token') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            asset.symbol.substring(0, 11),
-            '18',
-            asset.symbolUrl,
-          ),
-        )
-      } else if (assetType === 'pool') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            `${token?.symbol.substring(0, 10)}p`,
-            '18',
-            token?.symbolUrl,
-          ),
-        )
-      } else if (assetType === 'synth') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            `${token?.symbol.substring(0, 10)}s`,
-            '18',
-            token?.symbolUrl,
-          ),
-        )
-      }
+      dispatch(
+        watchAsset(
+          asset.address,
+          `${token?.symbol.substring(0, 10)}p`,
+          '18',
+          token?.symbolUrl,
+          wallet,
+        ),
+      )
     }
   }
 
@@ -142,7 +127,7 @@ const LPs = () => {
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          handleWatchAsset('pool', asset)
+                          handleWatchAsset(asset)
                         }}
                       >
                         {getWalletType() === 'MM' ? (
@@ -208,7 +193,7 @@ const LPs = () => {
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          handleWatchAsset('pool', asset)
+                          handleWatchAsset(asset)
                         }}
                       >
                         {getWalletType() === 'MM' ? (
@@ -276,7 +261,7 @@ const LPs = () => {
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          handleWatchAsset('pool', asset)
+                          handleWatchAsset(asset)
                         }}
                       >
                         {getWalletType() === 'MM' ? (

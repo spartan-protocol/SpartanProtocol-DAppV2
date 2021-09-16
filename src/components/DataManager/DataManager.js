@@ -25,6 +25,8 @@ import {
   changeNetwork,
   getAddresses,
   getNetwork,
+  liveChains,
+  tempChains,
 } from '../../utils/web3'
 import { getSpartaV2Contract } from '../../utils/web3Contracts'
 
@@ -113,7 +115,7 @@ const DataManager = () => {
    */
   const checkArrays = async () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (chainId === 97 || chainId === 56) {
+    if (liveChains.includes(chainId)) {
       dispatch(getListedTokens()) // TOKEN ARRAY
       dispatch(getCuratedPools()) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails())
@@ -158,7 +160,7 @@ const DataManager = () => {
     const { listedTokens } = pool
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (listedTokens.length > 0) {
-      if (chainId === 97 || chainId === 56) {
+      if (liveChains.includes(chainId)) {
         dispatch(getSynthArray(listedTokens))
         dispatch(getTokenDetails(listedTokens, wallet))
       }
@@ -198,7 +200,11 @@ const DataManager = () => {
   useEffect(() => {
     const { listedPools, curatedPools } = pool
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
         if (listedPools?.length > 0) {
           dispatch(getPoolDetails(listedPools, curatedPools, wallet))
           // setPrevPoolDetails(pool.poolDetails)

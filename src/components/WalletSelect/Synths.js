@@ -10,7 +10,7 @@ import ShareLink from '../Share/ShareLink'
 import { useSynth, getSynthDetails } from '../../store/synth'
 import { Icon } from '../Icons/icons'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
-import { getNetwork } from '../../utils/web3'
+import { getNetwork, tempChains } from '../../utils/web3'
 
 const Synths = () => {
   const { t } = useTranslation()
@@ -34,7 +34,11 @@ const Synths = () => {
     const { listedPools } = pool
     const { synthArray } = synth
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
           dispatch(getSynthDetails(synthArray, wallet))
         }
@@ -54,38 +58,19 @@ const Synths = () => {
     return false
   }
 
-  const handleWatchAsset = (assetType, asset) => {
+  const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
     const token = getToken(asset.tokenAddress)
     if (walletType === 'MM') {
-      if (assetType === 'token') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            asset.symbol.substring(0, 11),
-            '18',
-            asset.symbolUrl,
-          ),
-        )
-      } else if (assetType === 'pool') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            `${token?.symbol.substring(0, 10)}p`,
-            '18',
-            token?.symbolUrl,
-          ),
-        )
-      } else if (assetType === 'synth') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            `${token?.symbol.substring(0, 10)}s`,
-            '18',
-            token?.symbolUrl,
-          ),
-        )
-      }
+      dispatch(
+        watchAsset(
+          asset.address,
+          `${token?.symbol.substring(0, 10)}s`,
+          '18',
+          token?.symbolUrl,
+          wallet,
+        ),
+      )
     }
   }
 
@@ -147,7 +132,7 @@ const Synths = () => {
                             role="button"
                             aria-hidden="true"
                             onClick={() => {
-                              handleWatchAsset('synth', asset)
+                              handleWatchAsset(asset)
                             }}
                           >
                             {getWalletType() === 'MM' ? (
@@ -223,7 +208,7 @@ const Synths = () => {
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          handleWatchAsset('synth', asset)
+                          handleWatchAsset(asset)
                         }}
                       >
                         {getWalletType() === 'MM' ? (

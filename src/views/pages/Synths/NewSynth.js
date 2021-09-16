@@ -14,7 +14,7 @@ import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../../store/synth'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
 
@@ -83,7 +83,7 @@ const NewSynth = () => {
           <Modal.Title>{t('newSynth')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {network.chainId === 97 && (
+          {tempChains.includes(network.chainId) && (
             <>
               <Modal.Title>Choose Synth Asset to Deploy</Modal.Title>
 

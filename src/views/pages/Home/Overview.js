@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Card, Col, Nav, Row } from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
@@ -36,11 +36,11 @@ const Overview = () => {
 
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
-    if (trigger1 === 0 && network.chainId === 97) {
+    if (trigger1 === 0 && tempChains.includes(network.chainId)) {
       dispatch(allListedAssets())
     }
     const timer = setTimeout(() => {
-      if (network.chainId === 97) {
+      if (tempChains.includes(network.chainId)) {
         dispatch(allListedAssets())
         settrigger1(trigger1 + 1)
       }
@@ -53,7 +53,7 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Row className="row-480">
               <Col xs="12">

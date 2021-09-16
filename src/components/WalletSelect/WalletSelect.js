@@ -19,6 +19,7 @@ import {
   formatShortString,
   getAddresses,
   getNetwork,
+  liveChains,
 } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
 import { isAppleDevice } from '../../utils/helpers'
@@ -351,7 +352,7 @@ const WalletSelect = (props) => {
           ) : (
             <>
               {/* wallet navigation tabs */}
-              {network.chainId === 97 || network.chainId === 56 ? (
+              {liveChains.includes(network.chainId) ? (
                 <>
                   <Row>
                     <Tabs

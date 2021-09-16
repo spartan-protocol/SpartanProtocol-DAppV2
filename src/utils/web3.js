@@ -197,6 +197,9 @@ export const bscRpcsMN = [
   // 'https://bsc-dataseed4.binance.org/',
 ]
 
+export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
+export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+
 /**
  * Format long string into a string with '...' separator (ideally for anchor text)
  * @param {string} longString

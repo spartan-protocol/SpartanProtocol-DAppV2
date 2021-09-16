@@ -4,7 +4,7 @@ import {
   getReserveContract,
   getSpartaV2Contract,
 } from '../../utils/web3Contracts'
-import { getAddresses, getNetwork } from '../../utils/web3'
+import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
 
 export const reserveLoading = () => ({
   type: Types.RESERVE_LOADING,
@@ -23,7 +23,9 @@ export const getReserveGlobalDetails = () => async (dispatch) => {
     let awaitArray = [
       contract.callStatic.emissions(),
       spartaContract.callStatic.balanceOf(addr.reserve),
-      getNetwork().chainId === 56 ? false : contract.callStatic.globalFreeze(),
+      tempChains.includes(getNetwork().chainId)
+        ? contract.callStatic.globalFreeze()
+        : false,
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {

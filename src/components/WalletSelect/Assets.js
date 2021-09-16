@@ -2,6 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { watchAsset } from '../../store/web3'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -11,10 +12,8 @@ import { Icon } from '../Icons/icons'
 const Assets = () => {
   const { t } = useTranslation()
   const pool = usePool()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
-
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getWalletType = () => {
     if (window.ethereum?.isMetaMask) {
@@ -26,38 +25,18 @@ const Assets = () => {
     return false
   }
 
-  const handleWatchAsset = (assetType, asset) => {
+  const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
-    const token = getToken(asset.tokenAddress)
     if (walletType === 'MM') {
-      if (assetType === 'token') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            asset.symbol.substring(0, 11),
-            '18',
-            asset.symbolUrl,
-          ),
-        )
-      } else if (assetType === 'pool') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            `${token?.symbol.substring(0, 10)}p`,
-            '18',
-            token?.symbolUrl,
-          ),
-        )
-      } else if (assetType === 'synth') {
-        dispatch(
-          watchAsset(
-            asset.address,
-            `${token?.symbol.substring(0, 10)}s`,
-            '18',
-            token?.symbolUrl,
-          ),
-        )
-      }
+      dispatch(
+        watchAsset(
+          asset.address,
+          asset.symbol.substring(0, 11),
+          '18',
+          asset.symbolUrl,
+          wallet,
+        ),
+      )
     }
   }
 
@@ -106,7 +85,7 @@ const Assets = () => {
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          handleWatchAsset('token', asset)
+                          handleWatchAsset(asset)
                         }}
                       >
                         {getWalletType() === 'MM' ? (

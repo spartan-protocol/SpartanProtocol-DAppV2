@@ -22,7 +22,7 @@ import {
   newGrantProposal,
 } from '../../../store/dao/actions'
 import Approval from '../../../components/Approval/Approval'
-import { getAddresses, getNetwork } from '../../../utils/web3'
+import { getAddresses, getNetwork, tempChains } from '../../../utils/web3'
 import { convertToWei } from '../../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
@@ -179,7 +179,7 @@ const NewProposal = () => {
       </Button>
 
       <Modal show={showModal} onHide={() => handleOnHide()} centered>
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Modal.Header closeButton>
               <Modal.Title>{t('newProposal')}</Modal.Title>
