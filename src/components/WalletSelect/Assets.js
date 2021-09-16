@@ -44,6 +44,17 @@ const Assets = () => {
     <>
       {pool.tokenDetails
         ?.filter((asset) => asset.balance > 0)
+        .sort(
+          (a, b) =>
+            Number(formatFromWei(a.balance)) - Number(formatFromWei(b.balance)),
+          //  sorted by balance,
+          //  should multiply it by
+          //  pool.poolDetails.find(
+          //    (x) => x.tokenAddress === asset.address,
+          //  ).newRate
+          //  and then
+          //  divide it to have the real Spot Price and multiply it by the SPARTAN value
+        )
         .map((asset) => (
           <Row key={`${asset.address}-asset`} className="mb-3 output-card">
             <Col xs="auto">
@@ -60,6 +71,24 @@ const Assets = () => {
                   {asset.symbol} - {t('wallet')}
                   <div className="description">
                     {formatFromWei(asset.balance)}
+                    {'  $'}
+                    {
+                      pool.poolDetails.find(
+                        (x) => x.tokenAddress === asset.address,
+                      ).newRate > 0
+                        ? pool.poolDetails.find(
+                            (x) => x.tokenAddress === asset.address,
+                          ).newRate
+                        : 1
+                      //  pool.poolDetails.find(
+                      //    (x) => x.tokenAddress === asset.address,
+                      //  ).newRate
+                      //  divide it to have the real Spot Price and multiply it by the SPARTAN value
+
+                      // the greater than 0 is because Spartan has the newRate value on poolDetails set to 0
+                      // this gets the value newRate from the poolDetails,
+                      // aka Spot Price (as Number, has to get divided by an amount)
+                    }
                   </div>
                 </Col>
               </Row>
