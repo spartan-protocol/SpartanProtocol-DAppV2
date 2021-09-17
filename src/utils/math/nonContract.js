@@ -6,6 +6,7 @@ import {
   getPool,
   getDao,
   getBond,
+  calcLiqValue,
 } from './utils'
 
 export const one = BN(1).times(10).pow(18)
@@ -31,6 +32,18 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
   const burnFee = calcFeeBurn(feeOnTsf, _amount)
   const afterFeeBurn = _amount.minus(burnFee)
   return afterFeeBurn
+}
+
+/**
+ * Calculate spot value of LP tokens in SPARTA
+ * @param inputLP uints @param poolDetails item
+ * @returns spartaValue
+ */
+export const calcLiqValueInBase = (inputLP, poolDetails) => {
+  const [_sparta1, _token] = calcLiqValue(inputLP, poolDetails)
+  const _sparta2 = calcSpotValueInBase(_token, poolDetails)
+  const spartaValue = _sparta1.plus(_sparta2)
+  return spartaValue
 }
 
 /**
