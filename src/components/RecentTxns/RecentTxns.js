@@ -5,9 +5,21 @@ import Pagination from 'react-bootstrap/Pagination'
 import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../utils/web3'
+import { useBond } from '../../store/bond'
+import { useDao } from '../../store/dao/selector'
+import { useSynth } from '../../store/synth/selector'
+import { useRouter } from '../../store/router/selector'
+
+// ## NOTES ## //
+// Dont forget to add in any new/changed txn actions to the dep list for the updateShown-useEffect
+// This is to ensure the txnArray list show to the user is updated whenever a new txn is picked up
 
 const RecentTxns = () => {
   const wallet = useWeb3React()
+  const bond = useBond()
+  const dao = useDao()
+  const synth = useSynth()
+  const router = useRouter()
   const { t } = useTranslation()
   const [txnArray, setTxnArray] = useState([])
   const [shownArray, setShownArray] = useState([])
@@ -76,7 +88,7 @@ const RecentTxns = () => {
   useEffect(() => {
     updateFiltered()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, wallet.account])
+  }, [active, wallet.account, bond.txn, dao.txn, router.txn, synth.txn]) // add in any other txn-related deps here
 
   const updateShown = () => {
     let amountOfPages = 0
