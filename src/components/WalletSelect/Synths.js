@@ -74,6 +74,11 @@ const Synths = () => {
     }
   }
 
+  // ADD IN A _getPool() HELPER HERE
+
+  // ADD IN A getUSD() HELPER HERE
+  // USE math/utils.js -> calcSpotValueInBase(synthAmount, poolDetails)
+
   return (
     <>
       {/* HELD SYNTHS */}
@@ -83,7 +88,7 @@ const Synths = () => {
             ?.filter((asset) => asset.balance > 0)
             .map((asset) => (
               <Row key={`${asset.address}-synth`} className="mb-3 output-card">
-                <Col xs="auto" className="position-relative">
+                <Col xs="auto" className="position-relative pe-1">
                   <img
                     height="35px"
                     src={getToken(asset.tokenAddress)?.symbolUrl}
@@ -99,9 +104,9 @@ const Synths = () => {
                   />
                 </Col>
 
-                <Col xs="5" sm="7" className="align-items-center">
+                <Col className="align-items-center">
                   <Row>
-                    <Col xs="12" className="float-left">
+                    <Col xs="auto">
                       {`${getToken(asset.tokenAddress)?.symbol}s - ${t(
                         'wallet',
                       )}`}
@@ -109,10 +114,13 @@ const Synths = () => {
                         {formatFromWei(asset.balance)}
                       </div>
                     </Col>
+                    <Col className="hide-i5">
+                      <div className="text-end mt-2">~$SYNTH-USD</div>
+                    </Col>
                   </Row>
                 </Col>
 
-                <Col xs="3" className="text-right">
+                <Col xs="auto" className="text-right">
                   <Row>
                     <Col xs="6" className="mt-1">
                       <ShareLink url={asset.address}>
@@ -164,7 +172,7 @@ const Synths = () => {
         ?.filter((asset) => asset.staked > 0)
         .map((asset) => (
           <Row key={`${asset.address}-synthstake`} className="mb-3 output-card">
-            <Col xs="auto" className="position-relative">
+            <Col xs="auto" className="position-relative pe-1">
               <img
                 height="35px"
                 src={getToken(asset.tokenAddress)?.symbolUrl}
@@ -177,18 +185,21 @@ const Synths = () => {
                 alt={`${getToken(asset.tokenAddress)?.symbol} synth token icon`}
               />
             </Col>
-            <Col xs="5" sm="7" className="align-items-center">
+            <Col className="align-items-center">
               <Row>
-                <Col xs="12" className="float-left">
+                <Col xs="auto">
                   {`${getToken(asset.tokenAddress)?.symbol}s - ${t('staked')}`}
                   <div className="description">
                     {formatFromWei(asset.staked)}
                   </div>
                 </Col>
+                <Col className="hide-i5">
+                  <div className="text-end mt-2">~$SYNTH-USD</div>
+                </Col>
               </Row>
             </Col>
 
-            <Col xs="3" className="text-right">
+            <Col xs="auto" className="text-right">
               <Row>
                 <Col xs="6" className="mt-1">
                   <ShareLink url={asset.address}>
