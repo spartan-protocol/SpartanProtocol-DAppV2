@@ -103,7 +103,13 @@ const NewProposal = () => {
 
   const [paramValid, setparamValid] = useState(false)
   useEffect(() => {
-    if (inputParam > 0) {
+    if (selectedType.value === 'COOL_OFF') {
+      if (inputParam > 0) {
+        setparamValid(true)
+      } else {
+        setparamValid(false)
+      }
+    } else if (inputParam <= 1500) {
       setparamValid(true)
     } else {
       setparamValid(false)

@@ -184,9 +184,15 @@ const ProposalItem = ({ proposal }) => {
         </>
       )
     }
-    // 'COOL_OFF', 'ERAS_TO_EARN' = proposal.param + type.units
-    if (['COOL_OFF', 'ERAS_TO_EARN'].includes(proposal.proposalType)) {
-      return `${proposal.param} ${type.units}`
+    // 'COOL_OFF' = proposal.param + type.units
+    if (
+      ['COOL_OFF', 'DAO_CLAIM', 'SYNTH_CLAIM'].includes(proposal.proposalType)
+    ) {
+      return `${formatFromUnits(proposal.param)} ${type.units} ${
+        ['DAO_CLAIM', 'SYNTH_CLAIM'].includes(proposal.proposalType)
+          ? `(${proposal.param / 100}%)`
+          : ''
+      }`
     }
     // 'GRANT' = proposal.param + 'to' + proposal.proposedAddress
     if (proposal.proposalType === 'GRANT') {

@@ -25,8 +25,8 @@ export const proposalTypes = [
   },
   {
     value: 'REALISE',
-    label: 'Synths: Attribute Premium to LPs',
-    desc: 'Burn excess LP collateral:',
+    label: 'Pools: Burn synth-premium',
+    desc: 'Increase liquidity provider pool-ownership:',
     type: 'Address',
   },
   {
@@ -42,17 +42,24 @@ export const proposalTypes = [
     type: 'Address',
   },
   {
+    value: 'SYNTH_CLAIM',
+    label: 'SynthVault: Regulate Claim %',
+    desc: 'Change SynthVault claim % to:',
+    units: 'basis points',
+    type: 'Param',
+  },
+  {
+    value: 'DAO_CLAIM',
+    label: 'DAOVault: Regulate Claim %',
+    desc: 'Change DaoVault claim % to:',
+    units: 'basis points',
+    type: 'Param',
+  },
+  {
     value: 'COOL_OFF',
     label: 'DAO: Change Cooloff',
     desc: 'Change DAO CoolOff period to:',
     units: 'seconds',
-    type: 'Param',
-  },
-  {
-    value: 'ERAS_TO_EARN',
-    label: 'DAO: Change ErasToEarn',
-    desc: 'Change DAO ErasToEarn to:',
-    units: 'eras',
     type: 'Param',
   },
   {
