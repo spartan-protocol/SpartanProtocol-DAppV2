@@ -9,6 +9,7 @@ import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import Approval from '../../../../components/Approval/Approval'
 import { getAddresses } from '../../../../utils/web3'
+import { getDao } from '../../../../utils/math/utils'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
@@ -26,15 +27,13 @@ const DaoDepositModal = (props) => {
   const token = pool.tokenDetails.filter(
     (i) => i.address === props.tokenAddress,
   )[0]
+  const _dao = getDao(pool1.tokenAddress, dao.daoDetails)
 
   const handleCloseModal = () => {
     setshowModal(false)
     setLockoutConfirm(false)
     setpercentage('0')
   }
-
-  const getToken = (_tokenAddr) =>
-    pool.tokenDetails.filter((i) => i.address === _tokenAddr)[0]
 
   const deposit = () => BN(percentage).div(100).times(pool1.balance).toFixed(0)
 
@@ -86,18 +85,16 @@ const DaoDepositModal = (props) => {
               {formatFromWei(deposit())} {token.symbol}p
             </Col>
           </Row>
-          {dao.daoDetails
-            .filter((i) => i.staked > 0)
-            .map((i) => (
-              <Row xs="12" key={i.address} className="">
-                <Col xs="auto" className="text-card">
-                  Existing stake locked
-                </Col>
-                <Col className="text-end output-card">
-                  {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}p
-                </Col>
-              </Row>
-            ))}
+          {_dao.staked > 0 && (
+            <Row xs="12">
+              <Col xs="auto" className="text-card">
+                Existing stake locked
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromWei(_dao.staked)} {token.symbol}p
+              </Col>
+            </Row>
+          )}
           <hr />
           <Form className="my-2 text-center">
             <span className="output-card">
