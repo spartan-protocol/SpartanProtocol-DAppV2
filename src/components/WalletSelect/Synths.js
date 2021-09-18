@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { useWeb3, watchAsset } from '../../store/web3'
 import { getNetwork, tempChains } from '../../utils/web3'
-import { formatFromWei } from '../../utils/bigNumber'
+import { convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { useSynth, getSynthDetails } from '../../store/synth'
 import { Icon } from '../Icons/icons'
@@ -100,7 +100,13 @@ const Synths = () => {
   return (
     <>
       {/* HELD SYNTHS */}
-      {synth.synthDetails?.filter((asset) => asset.balance > 0).length > 0 ? (
+      {synth.synthDetails
+        ?.filter((asset) => asset.balance > 0)
+        .sort(
+          (a, b) =>
+            convertFromWei(getUSD(b.tokenAddress, b.balance)) -
+            convertFromWei(getUSD(a.tokenAddress, a.balance)),
+        ).length > 0 ? (
         <>
           {synth.synthDetails
             ?.filter((asset) => asset.balance > 0)
@@ -194,6 +200,11 @@ const Synths = () => {
       )}
       {synth.synthDetails
         ?.filter((asset) => asset.staked > 0)
+        .sort(
+          (a, b) =>
+            convertFromWei(getUSD(b.tokenAddress, b.balance)) -
+            convertFromWei(getUSD(a.tokenAddress, a.balance)),
+        )
         .map((asset) => (
           <Row key={`${asset.address}-synthstake`} className="mb-3 output-card">
             <Col xs="auto" className="position-relative pe-1">
