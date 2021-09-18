@@ -32,27 +32,6 @@ const Synths = () => {
     }
   }
 
-  /** @returns {object} poolDetails item */
-  const _getPool = (tokenAddr) => {
-    const _pool = getPool(tokenAddr, pool.poolDetails)
-    if (_pool !== '') {
-      return _pool
-    }
-    return false
-  }
-
-  /** @returns BN(usdValue) */
-  const getUSD = (tokenAddr, amount) => {
-    if (pool.poolDetails.length > 1) {
-      if (_getPool) {
-        return calcSpotValueInBase(amount, _getPool(tokenAddr)).times(
-          web3.spartaPrice,
-        )
-      }
-    }
-    return '0.00'
-  }
-
   useEffect(() => {
     const { listedPools } = pool
     const { synthArray } = synth
@@ -97,10 +76,26 @@ const Synths = () => {
     }
   }
 
-  // ADD IN A _getPool() HELPER HERE
+  /** @returns {object} poolDetails item */
+  const _getPool = (tokenAddr) => {
+    const _pool = getPool(tokenAddr, pool.poolDetails)
+    if (_pool !== '') {
+      return _pool
+    }
+    return false
+  }
 
-  // ADD IN A getUSD() HELPER HERE
-  // USE math/utils.js -> calcSpotValueInBase(synthAmount, poolDetails)
+  /** @returns BN(usdValue) */
+  const getUSD = (tokenAddr, amount) => {
+    if (pool.poolDetails.length > 1) {
+      if (_getPool) {
+        return calcSpotValueInBase(amount, _getPool(tokenAddr)).times(
+          web3.spartaPrice,
+        )
+      }
+    }
+    return '0.00'
+  }
 
   return (
     <>
@@ -139,8 +134,11 @@ const Synths = () => {
                     </Col>
                     <Col className="hide-i5">
                       <div className="text-end mt-2">
-                        ~$SYNTH-USD{' '}
-                        {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                        ~$
+                        {formatFromWei(
+                          getUSD(asset.tokenAddress, asset.balance),
+                          0,
+                        )}
                       </div>
                     </Col>
                   </Row>
@@ -221,8 +219,8 @@ const Synths = () => {
                 </Col>
                 <Col className="hide-i5">
                   <div className="text-end mt-2">
-                    ~$SYNTH-USD{' '}
-                    {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                    ~$
+                    {formatFromWei(getUSD(asset.tokenAddress, asset.staked), 0)}
                   </div>
                 </Col>
               </Row>
