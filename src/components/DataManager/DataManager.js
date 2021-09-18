@@ -12,6 +12,9 @@ import {
 } from '../../store/pool'
 import { getReserveGlobalDetails } from '../../store/reserve'
 import { useRouter } from '../../store/router/selector'
+import { useBond } from '../../store/bond/selector'
+import { useDao } from '../../store/dao/selector'
+import { useSynth } from '../../store/synth/selector'
 import {
   getSpartaGlobalDetails,
   spartaFeeBurnRecent,
@@ -34,6 +37,9 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const pool = usePool()
   const router = useRouter()
+  const dao = useDao()
+  const synth = useSynth()
+  const bond = useBond()
   const wallet = useWeb3React()
   const addr = getAddresses()
 
@@ -216,7 +222,31 @@ const DataManager = () => {
   }, [pool.listedPools])
 
   /**
-   * Update txnArray whenever a new txn is picked up
+   * Update txnArray whenever a new bond txn is picked up
+   */
+  useEffect(() => {
+    // eslint-disable-next-line no-constant-condition
+    if (bond.txn.length > 0) {
+      addTxn(wallet.account, bond.txn)
+      bond.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bond.txn])
+
+  /**
+   * Update txnArray whenever a new dao txn is picked up
+   */
+  useEffect(() => {
+    // eslint-disable-next-line no-constant-condition
+    if (dao.txn.length > 0) {
+      addTxn(wallet.account, dao.txn)
+      dao.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dao.txn])
+
+  /**
+   * Update txnArray whenever a new router txn is picked up
    */
   useEffect(() => {
     // eslint-disable-next-line no-constant-condition
@@ -226,6 +256,18 @@ const DataManager = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.txn])
+
+  /**
+   * Update txnArray whenever a new synth txn is picked up
+   */
+  useEffect(() => {
+    // eslint-disable-next-line no-constant-condition
+    if (synth.txn.length > 0) {
+      addTxn(wallet.account, synth.txn)
+      synth.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.txn])
 
   // /**
   //  * Listen to all contracts
