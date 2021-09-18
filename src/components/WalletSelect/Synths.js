@@ -4,13 +4,14 @@ import { useDispatch } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
-import { watchAsset } from '../../store/web3'
+import { useWeb3, watchAsset } from '../../store/web3'
+import { getNetwork, tempChains } from '../../utils/web3'
 import { formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { useSynth, getSynthDetails } from '../../store/synth'
 import { Icon } from '../Icons/icons'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
 
 const Synths = () => {
   const { t } = useTranslation()
@@ -18,6 +19,7 @@ const Synths = () => {
   const wallet = useWeb3React()
   const dispatch = useDispatch()
   const synth = useSynth()
+  const web3 = useWeb3()
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -74,10 +76,26 @@ const Synths = () => {
     }
   }
 
-  // ADD IN A _getPool() HELPER HERE
+  /** @returns {object} poolDetails item */
+  const _getPool = (tokenAddr) => {
+    const _pool = getPool(tokenAddr, pool.poolDetails)
+    if (_pool !== '') {
+      return _pool
+    }
+    return false
+  }
 
-  // ADD IN A getUSD() HELPER HERE
-  // USE math/utils.js -> calcSpotValueInBase(synthAmount, poolDetails)
+  /** @returns BN(usdValue) */
+  const getUSD = (tokenAddr, amount) => {
+    if (pool.poolDetails.length > 1) {
+      if (_getPool) {
+        return calcSpotValueInBase(amount, _getPool(tokenAddr)).times(
+          web3.spartaPrice,
+        )
+      }
+    }
+    return '0.00'
+  }
 
   return (
     <>
@@ -115,7 +133,13 @@ const Synths = () => {
                       </div>
                     </Col>
                     <Col className="hide-i5">
-                      <div className="text-end mt-2">~$SYNTH-USD</div>
+                      <div className="text-end mt-2">
+                        ~$
+                        {formatFromWei(
+                          getUSD(asset.tokenAddress, asset.balance),
+                          0,
+                        )}
+                      </div>
                     </Col>
                   </Row>
                 </Col>
@@ -194,7 +218,10 @@ const Synths = () => {
                   </div>
                 </Col>
                 <Col className="hide-i5">
-                  <div className="text-end mt-2">~$SYNTH-USD</div>
+                  <div className="text-end mt-2">
+                    ~$
+                    {formatFromWei(getUSD(asset.tokenAddress, asset.staked), 0)}
+                  </div>
                 </Col>
               </Row>
             </Col>
