@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getProviderGasPrice } from '../../utils/web3'
+import { getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getDaoContract, getDaoVaultContract } from '../../utils/web3Contracts'
 import { BN } from '../../utils/bigNumber'
@@ -259,10 +259,9 @@ export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const deposit = await contract.deposit(pool, amount, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoDeposit', deposit]))
+    let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoDeposit', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -276,12 +275,10 @@ export const daoWithdraw = (pool, wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
   try {
-    let withdraw = {}
     const gPrice = await getProviderGasPrice()
-    withdraw = await contract.withdraw(pool, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoWithdraw', withdraw]))
+    let txn = await contract.withdraw(pool, { gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoWithdraw', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -295,12 +292,10 @@ export const daoHarvest = (wallet) => async (dispatch) => {
   dispatch(daoLoading())
   const contract = getDaoContract(wallet)
   try {
-    let harvest = {}
     const gPrice = await getProviderGasPrice()
-    harvest = await contract.harvest({
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoHarvest', harvest]))
+    let txn = await contract.harvest({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'daoHarvest')
+    dispatch(payloadToDispatch(Types.DAO_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -315,10 +310,9 @@ export const newActionProposal = (typeStr, wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const newProp = await contract.newActionProposal(typeStr, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['newActionProposal', newProp]))
+    let txn = await contract.newActionProposal(typeStr, { gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.PROP_TXN, ['newActionProposal', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -334,10 +328,10 @@ export const newParamProposal =
     const contract = getDaoContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const newProp = await contract.newParamProposal(param, typeStr, {
-        gasPrice: gPrice,
-      })
-      dispatch(payloadToDispatch(Types.PROP_TXN, ['newParamProposal', newProp]))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.newParamProposal(param, typeStr, ORs)
+      txn = await parseTxn(txn)
+      dispatch(payloadToDispatch(Types.PROP_TXN, ['newParamProposal', txn]))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
     }
@@ -353,14 +347,10 @@ export const newAddressProposal =
     const contract = getDaoContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const newProp = await contract.newAddressProposal(
-        proposedAddress,
-        typeStr,
-        {
-          gasPrice: gPrice,
-        },
-      )
-      dispatch(payloadToDispatch(Types.PROP_TXN, ['newAddrProposal', newProp]))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.newAddressProposal(proposedAddress, typeStr, ORs)
+      txn = await parseTxn(txn)
+      dispatch(payloadToDispatch(Types.PROP_TXN, ['newAddrProposal', txn]))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
     }
@@ -376,10 +366,10 @@ export const newGrantProposal =
     const contract = getDaoContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const newProp = await contract.newGrantProposal(recipient, amount, {
-        gasPrice: gPrice,
-      })
-      dispatch(payloadToDispatch(Types.PROP_TXN, ['newGrantProposal', newProp]))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.newGrantProposal(recipient, amount, ORs)
+      txn = await parseTxn(txn)
+      dispatch(payloadToDispatch(Types.PROP_TXN, ['newGrantProposal', txn]))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
     }
@@ -394,10 +384,9 @@ export const voteProposal = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const propVote = await contract.voteProposal({
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['voteProposal', propVote]))
+    let txn = await contract.voteProposal({ gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.PROP_TXN, ['voteProposal', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -412,12 +401,9 @@ export const removeVote = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const propRemoveVote = await contract.unvoteProposal({
-      gasPrice: gPrice,
-    })
-    dispatch(
-      payloadToDispatch(Types.PROP_TXN, ['removeVoteProposal', propRemoveVote]),
-    )
+    let txn = await contract.unvoteProposal({ gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.PROP_TXN, ['removeVoteProposal', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -432,10 +418,9 @@ export const pollVotes = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const _pollVotes = await contract.pollVotes({
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['pollVotes', _pollVotes]))
+    let txn = await contract.pollVotes({ gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.PROP_TXN, ['pollVotes', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -450,10 +435,9 @@ export const cancelProposal = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const propCancel = await contract.cancelProposal({
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['cancelProposal', propCancel]))
+    let txn = await contract.cancelProposal({ gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.PROP_TXN, ['cancelProposal', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -468,12 +452,9 @@ export const finaliseProposal = (wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const propFinalise = await contract.finaliseProposal({
-      gasPrice: gPrice,
-    })
-    dispatch(
-      payloadToDispatch(Types.PROP_TXN, ['finaliseProposal', propFinalise]),
-    )
+    let txn = await contract.finaliseProposal({ gasPrice: gPrice })
+    txn = await parseTxn(txn)
+    dispatch(payloadToDispatch(Types.PROP_TXN, ['finaliseProposal', txn]))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }

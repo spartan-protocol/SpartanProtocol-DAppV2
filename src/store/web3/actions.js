@@ -27,7 +27,6 @@ export const addNetworkMM = () => async (dispatch) => {
   const providerETH = window.ethereum ? window.ethereum : null
   const network = getNetwork()
   const chainId = parseInt(network.chainId, 10)
-
   if (providerETH) {
     try {
       const addedNetworkMM = await providerETH.request({
@@ -70,7 +69,6 @@ export const addNetworkBC = () => async (dispatch) => {
   const providerBC = window.BinanceChain ? window.BinanceChain : null
   const network = getNetwork()
   const chainId = parseInt(network.chainId, 10)
-
   if (providerBC && parseInt(providerBC?.chainId, 16) !== chainId) {
     const chainIdString = network.chainId === 97 ? 'bsc-testnet' : 'bsc-mainnet'
     try {
@@ -98,11 +96,6 @@ export const getApproval =
   (tokenAddress, contractAddress, wallet) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-    let provider = getWalletProvider(wallet?.library)
-    if (provider._isSigner === true) {
-      provider = provider.provider
-    }
-
     try {
       const gPrice = await getProviderGasPrice()
       let approval = await contract.approve(
@@ -112,7 +105,7 @@ export const getApproval =
           gasPrice: gPrice,
         },
       )
-      approval = await provider.waitForTransaction(approval.hash, 1)
+      approval = await getWalletProvider().waitForTransaction(approval.hash, 1)
       dispatch(payloadToDispatch(Types.WEB3_TXN, ['approval', approval]))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
@@ -128,7 +121,6 @@ export const getAllowance1 =
   (tokenAddress, wallet, contractAddress) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-
     try {
       const allowance1 = await contract.allowance(
         wallet.account,
@@ -149,7 +141,6 @@ export const getAllowance2 =
   (tokenAddress, wallet, contractAddress) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-
     try {
       const allowance2 = await contract.allowance(
         wallet.account,

@@ -5,7 +5,11 @@ import {
   getSpartaV2Contract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import {
+  getAddresses,
+  getProviderGasPrice,
+  getWalletProvider,
+} from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 import { getPoolShareWeight } from '../../utils/math/utils'
 
@@ -142,7 +146,8 @@ export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
       value: tokenAddr === getAddresses().bnb ? amount : null,
       gasPrice: gPrice,
     }
-    const deposit = await contract.bond(tokenAddr, amount, ORs)
+    let deposit = await contract.bond(tokenAddr, amount, ORs)
+    deposit = await getWalletProvider().waitForTransaction(deposit.hash, 1)
     dispatch(payloadToDispatch(Types.BOND_TXN, ['bondDeposit', deposit]))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))
@@ -158,9 +163,10 @@ export const claimBond = (tokenAddr, wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const bondClaim = await contract.claim(tokenAddr, {
+    let bondClaim = await contract.claim(tokenAddr, {
       gasPrice: gPrice,
     })
+    bondClaim = await getWalletProvider().waitForTransaction(bondClaim.hash, 1)
     dispatch(payloadToDispatch(Types.BOND_TXN, ['bondClaim', bondClaim]))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))

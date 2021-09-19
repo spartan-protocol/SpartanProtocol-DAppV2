@@ -280,10 +280,6 @@ export const createPoolADD =
     dispatch(poolLoading())
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet)
-    let provider = getWalletProvider(wallet?.library)
-    if (provider._isSigner === true) {
-      provider = provider.provider
-    }
     try {
       const gPrice = await getProviderGasPrice()
       const ORs = {
@@ -296,7 +292,7 @@ export const createPoolADD =
         token,
         ORs,
       )
-      newPool = await provider.waitForTransaction(newPool.hash, 1)
+      newPool = await getWalletProvider().waitForTransaction(newPool.hash, 1)
       dispatch(payloadToDispatch(Types.POOL_TXN, ['createPool', newPool]))
     } catch (error) {
       dispatch(errorToDispatch(Types.POOL_ERROR, error))

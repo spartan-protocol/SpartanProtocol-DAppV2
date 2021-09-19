@@ -375,9 +375,46 @@ export const getWalletWindowObj = () => {
   return connectedWalletType
 }
 
-/**
- * Add txn to history array in localStorage
- */
+/** Parse raw txn's logs before localStorage */
+export const parseTxnLogs = (txn, txnType) => {
+  const addr = getAddresses()
+  // get the list of ABIs
+  let abiArray = abisMN
+  if (getNetwork().chainId === 97) {
+    abiArray = abisTN
+  }
+  // parse data by txn type
+  if (txnType === 'daoHarvest') {
+    let log = txn.logs[1]
+    const abi = abiArray.erc20
+    const iface = new ethers.utils.Interface(abi)
+    log = iface.parseLog(log).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: 'iconIDString',
+      sendAmnt1: log.value.toString(),
+      sendToken1: addr.spartav2,
+      send1: 'RESERVE',
+      recAmnt1: log.value.toString(),
+      recToken1: addr.spartav2,
+      rec1: log.to,
+    }
+  }
+  return false
+}
+
+/** Parse raw txn before localStorage */
+export const parseTxn = async (txn, txnType) => {
+  const { chainId } = txn // get chainId from the raw txn data
+  let _txn = await getWalletProvider().waitForTransaction(txn.hash, 1) // wait for the txn object
+  _txn = parseTxnLogs(_txn, txnType)
+  _txn.chainId = chainId // add the chainId into the txn object
+  return _txn
+}
+
+/** Add txn to history array in localStorage */
 export const addTxn = async (walletAddr, newTxn) => {
   let txnArray = tryParse(window.localStorage.getItem('txnArray'))
   if (!txnArray) {
@@ -393,9 +430,7 @@ export const addTxn = async (walletAddr, newTxn) => {
   window.localStorage.setItem('txnArray', JSON.stringify(txnArray))
 }
 
-/**
- * Clear current wallet/chain txn history array in localStorage
- */
+/** Clear current wallet/chain txn history array in localStorage */
 export const clearTxns = async (walletAddr) => {
   let txnArray = tryParse(window.localStorage.getItem('txnArray'))
   if (!txnArray) {
@@ -410,7 +445,7 @@ export const clearTxns = async (walletAddr) => {
     const network = tryParse(window.localStorage.getItem('network'))
     let filtered = txnArray[index].txns
     if (filtered?.length > 0) {
-      filtered = filtered.filter((txn) => txn[1]?.chainId !== network.chainId)
+      filtered = filtered.filter((txn) => txn.chainId !== network.chainId)
       txnArray[index].txns = filtered
     }
   }

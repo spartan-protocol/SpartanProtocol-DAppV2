@@ -203,16 +203,12 @@ export const synthVaultWeight =
 export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
-  let provider = getWalletProvider(wallet?.library)
-  if (provider._isSigner === true) {
-    provider = provider.provider
-  }
   try {
     const gPrice = await getProviderGasPrice()
     let deposit = await contract.deposit(synth, amount, {
       gasPrice: gPrice,
     })
-    deposit = await provider.waitForTransaction(deposit.hash, 1)
+    deposit = await getWalletProvider().waitForTransaction(deposit.hash, 1)
     dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthDeposit', deposit]))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
