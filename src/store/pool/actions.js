@@ -297,7 +297,7 @@ export const createPoolADD =
         ORs,
       )
       newPool = await provider.waitForTransaction(newPool.hash, 1)
-      dispatch(payloadToDispatch(Types.POOL_NEW_POOL, newPool))
+      dispatch(payloadToDispatch(Types.POOL_TXN, ['createPool', newPool]))
     } catch (error) {
       dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }

@@ -57,24 +57,6 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
 }
 
 /**
- * Upgrade SPARTA(old V1) to SPARTA(New V2)
- */
-export const spartaUpgrade = (wallet) => async (dispatch) => {
-  dispatch(spartaLoading())
-  const contract = getSpartaV2Contract(wallet)
-  try {
-    const gPrice = await getProviderGasPrice()
-    const upgrade = await contract.upgrade({
-      gasPrice: gPrice,
-    })
-
-    dispatch(payloadToDispatch(Types.SPARTA_UPGRADE, upgrade))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
-  }
-}
-
-/**
  * Check if your wallet was affected by the attacks and your SPARTA amount available to claim
  * @param {object} wallet
  * @returns {uint} claimAmount
@@ -86,7 +68,25 @@ export const fallenSpartansCheck = (wallet) => async (dispatch) => {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck.toString()))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
+  }
+}
+
+/**
+ * Upgrade SPARTA(old V1) to SPARTA(New V2)
+ */
+export const spartaUpgrade = (wallet) => async (dispatch) => {
+  dispatch(spartaLoading())
+  const contract = getSpartaV2Contract(wallet)
+  try {
+    const gPrice = await getProviderGasPrice()
+    const upgrade = await contract.upgrade({
+      gasPrice: gPrice,
+    })
+
+    dispatch(payloadToDispatch(Types.SPARTA_TXN, ['upgrade', upgrade]))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -98,12 +98,12 @@ export const fallenSpartansClaim = (wallet) => async (dispatch) => {
   const contract = getFallenSpartansContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const claim = await contract.claim({
+    const fsClaim = await contract.claim({
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.FALLENSPARTA_CLAIM, claim))
+    dispatch(payloadToDispatch(Types.SPARTA_TXN, ['fsClaim', fsClaim]))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -163,7 +163,7 @@ export const spartaFeeBurnTally = () => async (dispatch) => {
       ),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -176,7 +176,7 @@ export const spartaFeeBurnRecent = (amount) => async (dispatch) => {
     const feeBurnRecent = amount
     dispatch(payloadToDispatch(Types.SPARTA_FEEBURN_RECENT, feeBurnRecent))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -227,6 +227,6 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.SPARTA_COMMUNITY_WALLET, communityWallet))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }

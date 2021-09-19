@@ -219,7 +219,7 @@ export const updatePoolStatus = (wallet) => async (dispatch) => {
     const unfreeze = await contract.updatePoolStatus({
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.ROUTER_UNFREEZE, unfreeze))
+    dispatch(payloadToDispatch(Types.ROUTER_TXN, ['unfreeze', unfreeze]))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }

@@ -289,7 +289,7 @@ export const createSynth = (token, wallet) => async (dispatch) => {
     const newSynth = await contract.createSynth(token, {
       gasPrice: gPrice,
     })
-    dispatch(payloadToDispatch(Types.SYNTH_CREATE, newSynth))
+    dispatch(payloadToDispatch(Types.SYNTH_TXN, ['createSynth', newSynth]))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
