@@ -6,7 +6,7 @@ const initialState = {
   curatedPools: [],
   listedPools: [],
   poolDetails: [],
-  newPool: {},
+  txn: [],
   loading: false,
   error: null,
   loadingFinal: false,
@@ -59,10 +59,10 @@ export const poolReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOL_NEW_POOL: {
+    case Types.POOL_TXN: {
       return {
         ...state,
-        newPool: action.payload,
+        txn: action.payload,
         error: null,
         loadingFinal: false,
       }

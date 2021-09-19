@@ -113,14 +113,14 @@ export const getApproval =
         },
       )
       approval = await provider.waitForTransaction(approval.hash, 1)
-      dispatch(payloadToDispatch(Types.GET_APPROVAL, approval))
+      dispatch(payloadToDispatch(Types.WEB3_TXN, ['approval', approval]))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
     }
   }
 
 /**
- * Get the current allowance-limit for a smart contract to handle transferring a token on behlf of a wallet
+ * Get the current allowance-limit for a smart contract to handle transferring a token on behalf of a wallet
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */
@@ -141,7 +141,7 @@ export const getAllowance1 =
   }
 
 /**
- * Get the current allowance-limit for a smart contract to handle transferring a token on behlf of a wallet
+ * Get the current allowance-limit for a smart contract to handle transferring a token on behalf of a wallet
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */

@@ -1,6 +1,6 @@
 export const ADD_NETWORK_MM = 'ADD_NETWORK_MM'
 export const ADD_NETWORK_BC = 'ADD_NETWORK_BC'
-export const GET_APPROVAL = 'GET_APPROVAL'
+export const WEB3_TXN = 'WEB3_TXN'
 export const GET_ALLOWANCE1 = 'GET_ALLOWANCE1'
 export const GET_ALLOWANCE2 = 'GET_ALLOWANCE2'
 export const WATCH_ASSET = 'WATCH_ASSET'

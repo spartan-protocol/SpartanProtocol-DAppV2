@@ -57,15 +57,6 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.SYNTH_CREATE: {
-      return {
-        ...state,
-        newSynth: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
     case Types.SYNTH_WEIGHT: {
       return {
         ...state,

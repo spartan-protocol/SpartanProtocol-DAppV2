@@ -17,15 +17,6 @@ export const routerReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.ROUTER_UNFREEZE: {
-      return {
-        ...state,
-        unfreeze: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
     case Types.ROUTER_LOADING: {
       return {
         ...state,
