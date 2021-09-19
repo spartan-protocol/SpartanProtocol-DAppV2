@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { useWeb3, watchAsset } from '../../store/web3'
 import { getNetwork, tempChains } from '../../utils/web3'
-import { formatFromWei } from '../../utils/bigNumber'
+import { convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { useSynth, getSynthDetails } from '../../store/synth'
 import { Icon } from '../Icons/icons'
@@ -104,6 +104,11 @@ const Synths = () => {
         <>
           {synth.synthDetails
             ?.filter((asset) => asset.balance > 0)
+            .sort(
+              (a, b) =>
+                convertFromWei(getUSD(b.tokenAddress, b.balance)) -
+                convertFromWei(getUSD(a.tokenAddress, a.balance)),
+            )
             .map((asset) => (
               <Row key={`${asset.address}-synth`} className="mb-3 output-card">
                 <Col xs="auto" className="position-relative pe-1">
@@ -190,78 +195,99 @@ const Synths = () => {
       )}
       {/* STAKED SYNTHS */}
       {synth.synthDetails?.filter((asset) => asset.staked > 0).length > 0 && (
-        <hr />
-      )}
-      {synth.synthDetails
-        ?.filter((asset) => asset.staked > 0)
-        .map((asset) => (
-          <Row key={`${asset.address}-synthstake`} className="mb-3 output-card">
-            <Col xs="auto" className="position-relative pe-1">
-              <img
-                height="35px"
-                src={getToken(asset.tokenAddress)?.symbolUrl}
-                alt={getToken(asset.tokenAddress)?.name}
-              />
-              <img
-                src={spartaSynthIcon}
-                height="20px"
-                className="token-badge"
-                alt={`${getToken(asset.tokenAddress)?.symbol} synth token icon`}
-              />
-            </Col>
-            <Col className="align-items-center">
-              <Row>
-                <Col xs="auto">
-                  {`${getToken(asset.tokenAddress)?.symbol}s - ${t('staked')}`}
-                  <div className="description">
-                    {formatFromWei(asset.staked)}
-                  </div>
+        <>
+          <hr />
+          {synth.synthDetails
+            ?.filter((asset) => asset.staked > 0)
+            .sort(
+              (a, b) =>
+                convertFromWei(getUSD(b.tokenAddress, b.staked)) -
+                convertFromWei(getUSD(a.tokenAddress, a.staked)),
+            )
+            .map((asset) => (
+              <Row
+                key={`${asset.address}-synthstake`}
+                className="mb-3 output-card"
+              >
+                <Col xs="auto" className="position-relative pe-1">
+                  <img
+                    height="35px"
+                    src={getToken(asset.tokenAddress)?.symbolUrl}
+                    alt={getToken(asset.tokenAddress)?.name}
+                  />
+                  <img
+                    src={spartaSynthIcon}
+                    height="20px"
+                    className="token-badge"
+                    alt={`${
+                      getToken(asset.tokenAddress)?.symbol
+                    } synth token icon`}
+                  />
                 </Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$
-                    {formatFromWei(getUSD(asset.tokenAddress, asset.staked), 0)}
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <ShareLink url={asset.address}>
-                    <Icon icon="copy" role="button" size="24" />
-                  </ShareLink>
-                </Col>
-                {getWalletType() && (
-                  <Col xs="6" className="mt-1">
-                    <a
-                      href={
-                        getWalletType() === 'TW'
-                          ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                          : '#section'
-                      }
-                    >
-                      <div
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          handleWatchAsset(asset)
-                        }}
-                      >
-                        {getWalletType() === 'MM' ? (
-                          <Icon icon="metamask" role="button" size="24" />
-                        ) : (
-                          <Icon icon="trustwallet" role="button" size="24" />
+                <Col className="align-items-center">
+                  <Row>
+                    <Col xs="auto">
+                      {`${getToken(asset.tokenAddress)?.symbol}s - ${t(
+                        'staked',
+                      )}`}
+                      <div className="description">
+                        {formatFromWei(asset.staked)}
+                      </div>
+                    </Col>
+                    <Col className="hide-i5">
+                      <div className="text-end mt-2">
+                        ~$
+                        {formatFromWei(
+                          getUSD(asset.tokenAddress, asset.staked),
+                          0,
                         )}
                       </div>
-                    </a>
-                  </Col>
-                )}
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col xs="auto" className="text-right">
+                  <Row>
+                    <Col xs="6" className="mt-1">
+                      <ShareLink url={asset.address}>
+                        <Icon icon="copy" role="button" size="24" />
+                      </ShareLink>
+                    </Col>
+                    {getWalletType() && (
+                      <Col xs="6" className="mt-1">
+                        <a
+                          href={
+                            getWalletType() === 'TW'
+                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                              : '#section'
+                          }
+                        >
+                          <div
+                            role="button"
+                            aria-hidden="true"
+                            onClick={() => {
+                              handleWatchAsset(asset)
+                            }}
+                          >
+                            {getWalletType() === 'MM' ? (
+                              <Icon icon="metamask" role="button" size="24" />
+                            ) : (
+                              <Icon
+                                icon="trustwallet"
+                                role="button"
+                                size="24"
+                              />
+                            )}
+                          </div>
+                        </a>
+                      </Col>
+                    )}
+                  </Row>
+                </Col>
               </Row>
-            </Col>
-          </Row>
-        ))}
+            ))}
+        </>
+      )}
     </>
   )
 }
