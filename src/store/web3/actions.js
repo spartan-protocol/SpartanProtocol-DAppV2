@@ -6,8 +6,8 @@ import {
   bscRpcsTN,
   getNetwork,
   getProviderGasPrice,
-  getWalletProvider,
   getWalletWindowObj,
+  parseTxn,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
@@ -47,7 +47,7 @@ export const addNetworkMM = () => async (dispatch) => {
       })
       dispatch(payloadToDispatch(Types.ADD_NETWORK_MM, addedNetworkMM))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   } else {
     dispatch(
@@ -75,7 +75,7 @@ export const addNetworkBC = () => async (dispatch) => {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(payloadToDispatch(Types.ADD_NETWORK_BC, addedNetworkBC))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   } else {
     dispatch(
@@ -98,17 +98,15 @@ export const getApproval =
     const contract = getTokenContract(tokenAddress, wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      let approval = await contract.approve(
+      let txn = await contract.approve(
         contractAddress,
         convertToWei(1000000000),
-        {
-          gasPrice: gPrice,
-        },
+        { gasPrice: gPrice },
       )
-      approval = await getWalletProvider().waitForTransaction(approval.hash, 1)
-      dispatch(payloadToDispatch(Types.WEB3_TXN, ['approval', approval]))
+      txn = await parseTxn(txn, 'approval')
+      dispatch(payloadToDispatch(Types.WEB3_TXN, txn))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   }
 
@@ -128,7 +126,7 @@ export const getAllowance1 =
       )
       dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   }
 
@@ -148,7 +146,7 @@ export const getAllowance2 =
       )
       dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   }
 
@@ -183,7 +181,7 @@ export const watchAsset =
         }
         dispatch(payloadToDispatch(Types.WATCH_ASSET, watchingAsset))
       } catch (error) {
-        dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+        dispatch(errorToDispatch(Types.WEB3_ERROR, error))
       }
     } else {
       dispatch(
@@ -209,7 +207,7 @@ export const getSpartaPrice = () => async (dispatch) => {
       ),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }
 
@@ -223,6 +221,6 @@ export const getEventArray = (array) => async (dispatch) => {
     const eventArray = array
     dispatch(payloadToDispatch(Types.EVENT_ARRAY, eventArray))
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }

@@ -152,7 +152,7 @@ const RecentTxns = () => {
           ? formatShortString(txn.send2)
           : txn.send2
         : ''
-      send2 = `${txn.sendAmnt2} ${txn.send2}`
+      send2 = `${sendAmnt} ${sendAddr}`
     }
     return [send1, send2]
   }

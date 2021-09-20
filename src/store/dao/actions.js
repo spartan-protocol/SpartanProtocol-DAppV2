@@ -260,8 +260,8 @@ export const daoDeposit = (pool, amount, wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoDeposit', txn]))
+    txn = await parseTxn(txn, 'daoDeposit')
+    dispatch(payloadToDispatch(Types.DAO_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -277,8 +277,8 @@ export const daoWithdraw = (pool, wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.withdraw(pool, { gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.DAO_TXN, ['daoWithdraw', txn]))
+    txn = await parseTxn(txn, 'daoWithdraw')
+    dispatch(payloadToDispatch(Types.DAO_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -311,8 +311,8 @@ export const newActionProposal = (typeStr, wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.newActionProposal(typeStr, { gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['newActionProposal', txn]))
+    txn = await parseTxn(txn, 'newActionProposal')
+    dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -330,8 +330,8 @@ export const newParamProposal =
       const gPrice = await getProviderGasPrice()
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newParamProposal(param, typeStr, ORs)
-      txn = await parseTxn(txn)
-      dispatch(payloadToDispatch(Types.PROP_TXN, ['newParamProposal', txn]))
+      txn = await parseTxn(txn, 'newParamProposal')
+      dispatch(payloadToDispatch(Types.PROP_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
     }
@@ -349,8 +349,8 @@ export const newAddressProposal =
       const gPrice = await getProviderGasPrice()
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newAddressProposal(proposedAddress, typeStr, ORs)
-      txn = await parseTxn(txn)
-      dispatch(payloadToDispatch(Types.PROP_TXN, ['newAddrProposal', txn]))
+      txn = await parseTxn(txn, 'newAddrProposal')
+      dispatch(payloadToDispatch(Types.PROP_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
     }
@@ -368,8 +368,8 @@ export const newGrantProposal =
       const gPrice = await getProviderGasPrice()
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newGrantProposal(recipient, amount, ORs)
-      txn = await parseTxn(txn)
-      dispatch(payloadToDispatch(Types.PROP_TXN, ['newGrantProposal', txn]))
+      txn = await parseTxn(txn, 'newGrantProposal')
+      dispatch(payloadToDispatch(Types.PROP_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
     }
@@ -385,8 +385,8 @@ export const voteProposal = (wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.voteProposal({ gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['voteProposal', txn]))
+    txn = await parseTxn(txn, 'voteProposal')
+    dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -402,8 +402,8 @@ export const removeVote = (wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.unvoteProposal({ gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['removeVoteProposal', txn]))
+    txn = await parseTxn(txn, 'removeVoteProposal')
+    dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -419,8 +419,8 @@ export const pollVotes = (wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.pollVotes({ gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['pollVotes', txn]))
+    txn = await parseTxn(txn, 'pollVotes')
+    dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -436,8 +436,8 @@ export const cancelProposal = (wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.cancelProposal({ gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['cancelProposal', txn]))
+    txn = await parseTxn(txn, 'cancelProposal')
+    dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }
@@ -453,8 +453,8 @@ export const finaliseProposal = (wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.finaliseProposal({ gasPrice: gPrice })
-    txn = await parseTxn(txn)
-    dispatch(payloadToDispatch(Types.PROP_TXN, ['finaliseProposal', txn]))
+    txn = await parseTxn(txn, 'finaliseProposal')
+    dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
   }

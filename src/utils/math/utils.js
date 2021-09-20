@@ -1,4 +1,5 @@
 import { BN } from '../bigNumber'
+import { getAddresses } from '../web3'
 
 export const one = BN(1).times(10).pow(18)
 
@@ -48,10 +49,19 @@ export const getPoolShareWeight = (units, totalSupply, totalAmount) => {
   return weight
 }
 
+const handleWBNB = (tokenAddr) => {
+  const addr = getAddresses()
+  if (tokenAddr === addr.wbnb) {
+    return addr.bnb
+  }
+  return tokenAddr
+}
+
 /** @returns tokenDetails item || false (boolean) */
 export const getToken = (tokenAddr, tokenDetails) => {
-  const _token = tokenDetails.filter((i) => i.address === tokenAddr)[0]
-  if (_token !== '') {
+  const _addr = handleWBNB(tokenAddr)
+  const _token = tokenDetails.filter((i) => i.address === _addr)[0]
+  if (_token !== undefined) {
     return _token
   }
   return false
@@ -59,8 +69,11 @@ export const getToken = (tokenAddr, tokenDetails) => {
 
 /** @returns poolDetails item || false (boolean) */
 export const getPool = (tokenAddr, poolDetails) => {
-  const _pool = poolDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
-  if (_pool !== '') {
+  const _addr = handleWBNB(tokenAddr)
+  const _pool = poolDetails.filter(
+    (i) => i.tokenAddress === _addr || i.address === _addr,
+  )[0]
+  if (_pool !== undefined) {
     return _pool
   }
   return false
@@ -68,8 +81,11 @@ export const getPool = (tokenAddr, poolDetails) => {
 
 /** @returns synthDetails item || false (boolean) */
 export const getSynth = (tokenAddr, synthDetails) => {
-  const _synth = synthDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
-  if (_synth !== '') {
+  const _addr = handleWBNB(tokenAddr)
+  const _synth = synthDetails.filter(
+    (i) => i.tokenAddress === _addr || i.address === _addr,
+  )[0]
+  if (_synth !== undefined) {
     return _synth
   }
   return false
@@ -77,8 +93,11 @@ export const getSynth = (tokenAddr, synthDetails) => {
 
 /** @returns daoDetails item || false (boolean) */
 export const getDao = (tokenAddr, daoDetails) => {
-  const _dao = daoDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
-  if (_dao !== '') {
+  const _addr = handleWBNB(tokenAddr)
+  const _dao = daoDetails.filter(
+    (i) => i.tokenAddress === _addr || i.address === _addr,
+  )[0]
+  if (_dao !== undefined) {
     return _dao
   }
   return false
@@ -86,8 +105,11 @@ export const getDao = (tokenAddr, daoDetails) => {
 
 /** @returns bondDetails item || false (boolean) */
 export const getBond = (tokenAddr, bondDetails) => {
-  const _bond = bondDetails.filter((i) => i.tokenAddress === tokenAddr)[0]
-  if (_bond !== '') {
+  const _addr = handleWBNB(tokenAddr)
+  const _bond = bondDetails.filter(
+    (i) => i.tokenAddress === _addr || i.address === _addr,
+  )[0]
+  if (_bond !== undefined) {
     return _bond
   }
   return false

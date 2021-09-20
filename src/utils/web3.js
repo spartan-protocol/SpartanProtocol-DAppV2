@@ -384,6 +384,35 @@ export const parseTxnLogs = (txn, txnType) => {
     abiArray = abisTN
   }
   // parse data by txn type
+  if (txnType === 'bondDeposit') {
+    let log1 = txn.logs[1] // Sent/Bonded Sparta.Transfer event
+    let log2 = txn.logs[4] // Sent/Bonded Token.Transfer event
+    let log3 = txn.logs[7] // Received LP.Transfer event
+    let log4 = txn.logs[8] // Dao.DepositAsset event
+    const sendToken1 = log2.address // Deposited tokenAddr
+    const recToken1 = log3.address // Received LP tokenAddr
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
+    log1 = ercInterface.parseLog(log1).args
+    log2 = ercInterface.parseLog(log2).args
+    log3 = ercInterface.parseLog(log3).args
+    log4 = daoInterface.parseLog(log4).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: log4.depositAmount.toString(),
+      sendToken1,
+      send1: log4.owner,
+      sendAmnt2: log1.value.toString(),
+      sendToken2: addr.spartav2,
+      send2: 'DAO',
+      recAmnt1: log3.value.toString(),
+      recToken1,
+      rec1: 'BONDVAULT',
+    }
+  }
   if (txnType === 'daoHarvest') {
     let log = txn.logs[1]
     const abi = abiArray.erc20
@@ -393,7 +422,7 @@ export const parseTxnLogs = (txn, txnType) => {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
-      txnTypeIcon: 'iconIDString',
+      txnTypeIcon: txnType,
       sendAmnt1: log.value.toString(),
       sendToken1: addr.spartav2,
       send1: 'RESERVE',
@@ -402,13 +431,14 @@ export const parseTxnLogs = (txn, txnType) => {
       rec1: log.to,
     }
   }
-  return false
+  return false // Only txns that have parse-logic will make it to the array
 }
 
 /** Parse raw txn before localStorage */
 export const parseTxn = async (txn, txnType) => {
   const { chainId } = txn // get chainId from the raw txn data
   let _txn = await getWalletProvider().waitForTransaction(txn.hash, 1) // wait for the txn object
+  console.log(_txn)
   _txn = parseTxnLogs(_txn, txnType)
   _txn.chainId = chainId // add the chainId into the txn object
   return _txn

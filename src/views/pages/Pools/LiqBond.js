@@ -61,6 +61,17 @@ const LiqBond = () => {
     return whiteList
   }
 
+  const isLoading = () => {
+    if (
+      assetBond1 &&
+      pool.poolDetails.length > 1 &&
+      bond.listedAssets.length > 0
+    ) {
+      return false
+    }
+    return true
+  }
+
   const spartaRemainingLoop = async () => {
     dispatch(allListedAssets())
     await pause(10000)
@@ -88,7 +99,7 @@ const LiqBond = () => {
         asset1 =
           asset1 &&
           asset1.address !== '' &&
-          bond.listedAssets.includes(asset1.tokenAddress)
+          bond.listedAssets.includes(asset1.address)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset1 = getItemFromArray(asset1, pool.poolDetails)
@@ -200,7 +211,7 @@ const LiqBond = () => {
               <Col xs="12" className="px-1 px-sm-3">
                 <Card className="card-alt">
                   <Card.Body>
-                    {bond.listedAssets?.length > 0 ? (
+                    {!isLoading() ? (
                       <>
                         <Row>
                           <Col xs="auto" className="text-sm-label">
@@ -311,7 +322,7 @@ const LiqBond = () => {
                   )} SPARTA`}
                 />
 
-                {bond.listedAssets?.length > 0 && (
+                {!isLoading() && (
                   <>
                     <Row className="mb-2">
                       <Col xs="auto">
@@ -362,7 +373,7 @@ const LiqBond = () => {
             </Row>
           </Card.Body>
           <Card.Footer>
-            {bond.listedAssets?.length > 0 && (
+            {!isLoading() && (
               <>
                 <Row className="text-center">
                   {assetBond1?.tokenAddress &&
@@ -395,7 +406,7 @@ const LiqBond = () => {
           </Card.Footer>
         </Card>
       </Col>
-      {pool.poolDetails && (
+      {!isLoading() && (
         <Col xs="auto">
           <SwapPair assetSwap={assetBond1} />
         </Col>

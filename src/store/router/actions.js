@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { getRouterContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
@@ -22,13 +22,9 @@ export const addLiquidity =
         value: token === addr.bnb ? inputToken : null,
         gasPrice: gPrice,
       }
-      const addLiq = await contract.addLiquidity(
-        inputToken,
-        inputBase,
-        token,
-        ORs,
-      )
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['addLiq', addLiq]))
+      let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
+      txn = await parseTxn(txn, 'addLiq')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -44,10 +40,10 @@ export const zapLiquidity =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const zapLiq = await contract.zapLiquidity(unitsInput, fromPool, toPool, {
-        gasPrice: gPrice,
-      })
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['zapLiq', zapLiq]))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
+      txn = await parseTxn(txn, 'zapLiq')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -68,15 +64,9 @@ export const addLiquiditySingle =
         value: token === addr.bnb && fromBase !== true ? input : null,
         gasPrice: gPrice,
       }
-      const addLiqSingle = await contract.addLiquidityAsym(
-        input,
-        fromBase,
-        token,
-        ORs,
-      )
-      dispatch(
-        payloadToDispatch(Types.ROUTER_TXN, ['addLiqSingle', addLiqSingle]),
-      )
+      let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
+      txn = await parseTxn(txn, 'addLiqSingle')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -92,10 +82,10 @@ export const removeLiquidityExact =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const remLiq = await contract.removeLiquidityExact(units, token, {
-        gasPrice: gPrice,
-      })
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['remLiq', remLiq]))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.removeLiquidityExact(units, token, ORs)
+      txn = await parseTxn(txn, 'remLiq')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -111,17 +101,11 @@ export const removeLiquiditySingle =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const remLiqSingle = await contract.removeLiquidityExactAsym(
-        units,
-        toBase,
-        token,
-        {
-          gasPrice: gPrice,
-        },
-      )
-      dispatch(
-        payloadToDispatch(Types.ROUTER_TXN, ['remLiqSingle', remLiqSingle]),
-      )
+      let txn = await contract.removeLiquidityExactAsym(units, toBase, token, {
+        gasPrice: gPrice,
+      })
+      txn = await parseTxn(txn, 'remLiqSingle')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -144,14 +128,15 @@ export const swap =
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
-      const swapped = await contract.swap(
+      let txn = await contract.swap(
         inputAmount,
         fromToken,
         toToken,
         minAmount,
         ORs,
       )
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['swapped', swapped]))
+      txn = await parseTxn(txn, 'swapped')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -172,13 +157,14 @@ export const swapAssetToSynth =
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
-      const mintSynth = await contract.swapAssetToSynth(
+      let txn = await contract.swapAssetToSynth(
         inputAmount,
         fromToken,
         toSynth,
         ORs,
       )
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['mintSynth', mintSynth]))
+      txn = await parseTxn(txn, 'mintSynth')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -194,15 +180,14 @@ export const swapSynthToAsset =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const burnSynth = await contract.swapSynthToAsset(
+      let txn = await contract.swapSynthToAsset(
         inputAmount,
         fromSynth,
         toToken,
-        {
-          gasPrice: gPrice,
-        },
+        { gasPrice: gPrice },
       )
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, ['burnSynth', burnSynth]))
+      txn = await parseTxn(txn, 'burnSynth')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -216,10 +201,9 @@ export const updatePoolStatus = (wallet) => async (dispatch) => {
   const contract = getRouterContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const unfreeze = await contract.updatePoolStatus({
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.ROUTER_TXN, ['unfreeze', unfreeze]))
+    let txn = await contract.updatePoolStatus({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'unfreeze')
+    dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
   }
