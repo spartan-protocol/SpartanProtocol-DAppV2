@@ -218,7 +218,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new bond txn is picked up */
   useEffect(() => {
-    if (bond.txn.length > 0) {
+    if (bond.txn.txnType) {
       addTxn(wallet.account, bond.txn)
       bond.txn = []
     }
@@ -227,7 +227,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {
-    if (dao.txn.length > 0) {
+    if (dao.txn.txnType) {
       addTxn(wallet.account, dao.txn)
       dao.txn = []
     }
@@ -236,7 +236,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new dao-proposal txn is picked up */
   useEffect(() => {
-    if (dao.propTxn.length > 0) {
+    if (dao.propTxn.txnType) {
       addTxn(wallet.account, dao.propTxn)
       dao.propTxn = []
     }
@@ -245,7 +245,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new pool txn is picked up */
   useEffect(() => {
-    if (pool.txn.length > 0) {
+    if (pool.txn.txnType) {
       addTxn(wallet.account, pool.txn)
       pool.txn = []
     }
@@ -254,7 +254,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new router txn is picked up */
   useEffect(() => {
-    if (router.txn.length > 0) {
+    if (router.txn.txnType) {
       addTxn(wallet.account, router.txn)
       router.txn = []
     }
@@ -263,7 +263,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new sparta txn is picked up */
   useEffect(() => {
-    if (sparta.txn.length > 0) {
+    if (sparta.txn.txnType) {
       addTxn(wallet.account, sparta.txn)
       sparta.txn = []
     }
@@ -272,7 +272,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new synth txn is picked up */
   useEffect(() => {
-    if (synth.txn.length > 0) {
+    if (synth.txn.txnType) {
       addTxn(wallet.account, synth.txn)
       synth.txn = []
     }
@@ -281,7 +281,7 @@ const DataManager = () => {
 
   /** Update txnArray whenever a new web3/misc txn is picked up */
   useEffect(() => {
-    if (web3.txn.length > 0) {
+    if (web3.txn.txnType) {
       addTxn(wallet.account, web3.txn)
       web3.txn = []
     }

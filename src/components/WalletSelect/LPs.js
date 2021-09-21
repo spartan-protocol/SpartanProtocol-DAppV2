@@ -79,13 +79,7 @@ const LPs = () => {
   }
 
   /** @returns {object} poolDetails item */
-  const _getPool = (tokenAddr) => {
-    const _pool = getPool(tokenAddr, pool.poolDetails)
-    if (_pool !== '') {
-      return _pool
-    }
-    return false
-  }
+  const _getPool = (tokenAddr) => getPool(tokenAddr, pool.poolDetails)
 
   /** @returns BN(usdValue) */
   const getUSD = (tokenAddr, amount) => {

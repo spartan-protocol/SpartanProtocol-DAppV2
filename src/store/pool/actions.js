@@ -9,11 +9,7 @@ import {
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import {
-  getAddresses,
-  getProviderGasPrice,
-  getWalletProvider,
-} from '../../utils/web3'
+import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { getSecsSince } from '../../utils/math/nonContract'
 import { BN } from '../../utils/bigNumber'
 
@@ -280,24 +276,13 @@ export const createPoolADD =
     dispatch(poolLoading())
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet)
-    let provider = getWalletProvider(wallet?.library)
-    if (provider._isSigner === true) {
-      provider = provider.provider
-    }
     try {
       const gPrice = await getProviderGasPrice()
-      const ORs = {
-        value: token === addr.bnb ? inputToken : null,
-        gasPrice: gPrice,
-      }
-      let newPool = await contract.createPoolADD(
-        inputBase,
-        inputToken,
-        token,
-        ORs,
-      )
-      newPool = await provider.waitForTransaction(newPool.hash, 1)
-      dispatch(payloadToDispatch(Types.POOL_TXN, ['createPool', newPool]))
+      const _value = token === addr.bnb ? inputToken : null
+      const ORs = { value: _value, gasPrice: gPrice }
+      let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
+      txn = await parseTxn(txn, 'createPool')
+      dispatch(payloadToDispatch(Types.POOL_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }

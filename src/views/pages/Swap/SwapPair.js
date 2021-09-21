@@ -39,7 +39,7 @@ const SwapPair = ({ assetSwap }) => {
           <Row className="mt-2">
             <Col xs="auto" className="mt-1 pe-2 position-relative">
               <img
-                src={getToken(assetSwap.tokenAddress)?.symbolUrl}
+                src={getToken(assetSwap?.tokenAddress)?.symbolUrl}
                 alt="Token logo"
                 height="50"
               />

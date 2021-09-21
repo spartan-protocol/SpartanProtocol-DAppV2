@@ -19,6 +19,7 @@ const BondItem = (props) => {
   const wallet = useWeb3React()
   const { asset } = props
   const { t } = useTranslation()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const token = () => getToken(asset.tokenAddress, pool.tokenDetails)
   const isLightMode = window.localStorage.getItem('theme')
@@ -36,6 +37,12 @@ const BondItem = (props) => {
 
   const toggleCollapse = () => {
     setShowDetails(!showDetails)
+  }
+
+  const handleTxn = async () => {
+    setTxnLoading(true)
+    await dispatch(claimBond(asset.tokenAddress, wallet))
+    setTxnLoading(false)
   }
 
   return (
@@ -157,13 +164,11 @@ const BondItem = (props) => {
                 </Button>
               </Col>
               <Col xs="6" className="px-2">
-                <Button
-                  className="w-100"
-                  onClick={() =>
-                    dispatch(claimBond(asset.tokenAddress, wallet))
-                  }
-                >
+                <Button className="w-100" onClick={() => handleTxn()}>
                   {t('claim')}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
                 </Button>
               </Col>
             </Row>

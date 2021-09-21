@@ -6,11 +6,7 @@ import {
   getSynthFactoryContract,
   getSynthVaultContract,
 } from '../../utils/web3Contracts'
-import {
-  getAddresses,
-  getProviderGasPrice,
-  getWalletProvider,
-} from '../../utils/web3'
+import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
 import { BN } from '../../utils/bigNumber'
 
@@ -203,17 +199,11 @@ export const synthVaultWeight =
 export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
   dispatch(synthLoading())
   const contract = getSynthVaultContract(wallet)
-  let provider = getWalletProvider(wallet?.library)
-  if (provider._isSigner === true) {
-    provider = provider.provider
-  }
   try {
     const gPrice = await getProviderGasPrice()
-    let deposit = await contract.deposit(synth, amount, {
-      gasPrice: gPrice,
-    })
-    deposit = await provider.waitForTransaction(deposit.hash, 1)
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthDeposit', deposit]))
+    let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
+    txn = await parseTxn(txn, 'synthDeposit')
+    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
@@ -228,10 +218,9 @@ export const synthHarvest = (synthArray, wallet) => async (dispatch) => {
   const contract = getSynthVaultContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const harvest = await contract.harvestAll(synthArray, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthHarvest', harvest]))
+    let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
+    txn = await parseTxn(txn, 'synthHarvest')
+    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
@@ -247,10 +236,9 @@ export const synthHarvestSingle = (synth, wallet) => async (dispatch) => {
 
   try {
     const gPrice = await getProviderGasPrice()
-    const harvest = await contract.harvestSingle(synth, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthHarvest', harvest]))
+    let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
+    txn = await parseTxn(txn, 'synthHarvest')
+    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
@@ -267,10 +255,10 @@ export const synthWithdraw =
     const contract = getSynthVaultContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const withdraw = await contract.withdraw(synth, basisPoints, {
-        gasPrice: gPrice,
-      })
-      dispatch(payloadToDispatch(Types.SYNTH_TXN, ['synthWithdraw', withdraw]))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.withdraw(synth, basisPoints, ORs)
+      txn = await parseTxn(txn, 'synthWithdraw')
+      dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
     }
@@ -286,10 +274,9 @@ export const createSynth = (token, wallet) => async (dispatch) => {
   const contract = getSynthFactoryContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const newSynth = await contract.createSynth(token, {
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, ['createSynth', newSynth]))
+    let txn = await contract.createSynth(token, { gasPrice: gPrice })
+    txn = await parseTxn(txn, 'createSynth')
+    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }

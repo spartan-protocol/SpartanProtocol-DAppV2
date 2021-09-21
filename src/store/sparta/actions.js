@@ -13,6 +13,7 @@ import {
   getAbis,
   getAddresses,
   getProviderGasPrice,
+  parseTxn,
 } from '../../utils/web3'
 import { apiUrlBQ, headerBQ } from '../../utils/extCalls'
 import { convertToWei } from '../../utils/bigNumber'
@@ -52,7 +53,7 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -80,11 +81,9 @@ export const spartaUpgrade = (wallet) => async (dispatch) => {
   const contract = getSpartaV2Contract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const upgrade = await contract.upgrade({
-      gasPrice: gPrice,
-    })
-
-    dispatch(payloadToDispatch(Types.SPARTA_TXN, ['upgrade', upgrade]))
+    let txn = await contract.upgrade({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'upgrade')
+    dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
@@ -98,10 +97,9 @@ export const fallenSpartansClaim = (wallet) => async (dispatch) => {
   const contract = getFallenSpartansContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const fsClaim = await contract.claim({
-      gasPrice: gPrice,
-    })
-    dispatch(payloadToDispatch(Types.SPARTA_TXN, ['fsClaim', fsClaim]))
+    let txn = await contract.claim({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'fsClaim')
+    dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
