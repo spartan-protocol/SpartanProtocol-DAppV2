@@ -48,6 +48,7 @@ const LiqBond = () => {
   const sparta = useSparta()
   const addr = getAddresses()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+  const [txnLoading, setTxnLoading] = useState(false)
   const [assetBond1, setAssetBond1] = useState('...')
 
   const getWhiteList = () => {
@@ -145,7 +146,7 @@ const LiqBond = () => {
     return '0'
   }
 
-  const handleBondDeposit = () => {
+  const handleBondDeposit = async () => {
     if (
       assetBond1?.tokenAddress === addr.bnb ||
       assetBond1?.tokenAddress === addr.wbnb
@@ -159,13 +160,16 @@ const LiqBond = () => {
         bondInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
       }
     }
-    dispatch(
+    setTxnLoading(true)
+    await dispatch(
       bondDeposit(
         assetBond1?.tokenAddress,
         convertToWei(bondInput1?.value),
         wallet,
       ),
     )
+    setTxnLoading(false)
+    clearInputs()
   }
 
   const checkValid = () => {
@@ -398,6 +402,13 @@ const LiqBond = () => {
                     >
                       {checkValid()[1]}{' '}
                       {getToken(assetBond1.tokenAddress)?.symbol}
+                      {txnLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
                     </Button>
                   </Col>
                 </Row>

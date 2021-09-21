@@ -67,6 +67,7 @@ const Swap = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [confirmSynth, setConfirmSynth] = useState(false)
   const [assetSwap1, setAssetSwap1] = useState('...')
@@ -545,7 +546,7 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2])
 
-  const handleSwapAssets = () => {
+  const handleSwapAssets = async () => {
     let gasSafety = '5000000000000000'
     if (
       assetSwap1?.tokenAddress !== addr.spartav2 &&
@@ -564,7 +565,8 @@ const Swap = () => {
         swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
       }
     }
-    dispatch(
+    setTxnLoading(true)
+    await dispatch(
       swap(
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
@@ -573,9 +575,11 @@ const Swap = () => {
         wallet,
       ),
     )
+    setTxnLoading(false)
+    clearInputs()
   }
 
-  const handleSwapToSynth = () => {
+  const handleSwapToSynth = async () => {
     const gasSafety = '10000000000000000'
     if (
       assetSwap1?.tokenAddress === addr.bnb ||
@@ -588,7 +592,8 @@ const Swap = () => {
         swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
       }
     }
-    dispatch(
+    setTxnLoading(true)
+    await dispatch(
       swapAssetToSynth(
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
@@ -596,6 +601,36 @@ const Swap = () => {
         wallet,
       ),
     )
+    setTxnLoading(false)
+    clearInputs()
+  }
+
+  const handleSwapFromSynth = async () => {
+    setTxnLoading(true)
+    await dispatch(
+      swapSynthToAsset(
+        convertToWei(swapInput1?.value),
+        getSynth(assetSwap1.tokenAddress)?.address,
+        assetSwap2.tokenAddress,
+        wallet,
+      ),
+    )
+    setTxnLoading(false)
+    clearInputs()
+  }
+
+  const handleZap = async () => {
+    setTxnLoading(true)
+    await dispatch(
+      zapLiquidity(
+        convertToWei(swapInput1?.value),
+        assetSwap1.address,
+        assetSwap2.address,
+        wallet,
+      ),
+    )
+    setTxnLoading(false)
+    clearInputs()
   }
 
   return (
@@ -1035,6 +1070,13 @@ const Swap = () => {
                                 disabled={!checkValid()[0]}
                               >
                                 {checkValid()[1]}
+                                {txnLoading && (
+                                  <Icon
+                                    icon="cycle"
+                                    size="20"
+                                    className="anim-spin ms-1"
+                                  />
+                                )}
                               </Button>
                             </Col>
                           </Row>
@@ -1085,19 +1127,17 @@ const Swap = () => {
                                 <Col className="hide-if-siblings">
                                   <Button
                                     className="w-100"
-                                    onClick={() =>
-                                      dispatch(
-                                        zapLiquidity(
-                                          convertToWei(swapInput1?.value),
-                                          assetSwap1.address,
-                                          assetSwap2.address,
-                                          wallet,
-                                        ),
-                                      )
-                                    }
+                                    onClick={() => handleZap()}
                                     disabled={!checkValid()[0]}
                                   >
                                     {checkValid()[1]}
+                                    {txnLoading && (
+                                      <Icon
+                                        icon="cycle"
+                                        size="20"
+                                        className="anim-spin ms-1"
+                                      />
+                                    )}
                                   </Button>
                                 </Col>
                               </Row>
@@ -1186,6 +1226,13 @@ const Swap = () => {
                                 disabled={!checkValid()[0]}
                               >
                                 {checkValid()[1]}
+                                {txnLoading && (
+                                  <Icon
+                                    icon="cycle"
+                                    size="20"
+                                    className="anim-spin ms-1"
+                                  />
+                                )}
                               </Button>
                             </Col>
                           </Row>
@@ -1211,20 +1258,17 @@ const Swap = () => {
                             <Col className="hide-if-siblings">
                               <Button
                                 className="w-100"
-                                onClick={() =>
-                                  dispatch(
-                                    swapSynthToAsset(
-                                      convertToWei(swapInput1?.value),
-                                      getSynth(assetSwap1.tokenAddress)
-                                        ?.address,
-                                      assetSwap2.tokenAddress,
-                                      wallet,
-                                    ),
-                                  )
-                                }
+                                onClick={() => handleSwapFromSynth()}
                                 disabled={!checkValid()[0]}
                               >
                                 {checkValid()[1]}
+                                {txnLoading && (
+                                  <Icon
+                                    icon="cycle"
+                                    size="20"
+                                    className="anim-spin ms-1"
+                                  />
+                                )}
                               </Button>
                             </Col>
                           </Row>

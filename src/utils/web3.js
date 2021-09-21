@@ -1021,7 +1021,7 @@ const parseTxnLogs = (txn, txnType) => {
 export const parseTxn = async (txn, txnType) => {
   const { chainId } = txn // get chainId from the raw txn data
   let _txn = await getWalletProvider().waitForTransaction(txn.hash, 1) // wait for the txn object
-  console.log(_txn)
+  // console.log(_txn)
   _txn = parseTxnLogs(_txn, txnType)
   _txn.chainId = chainId // add the chainId into the txn object
   return _txn

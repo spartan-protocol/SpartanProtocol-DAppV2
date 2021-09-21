@@ -52,6 +52,7 @@ const LiqAdd = () => {
   const addr = getAddresses()
   const sparta = useSparta()
   const location = useLocation()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('addTab1')
   const [confirm, setConfirm] = useState(false)
   const [assetAdd1, setAssetAdd1] = useState('...')
@@ -340,7 +341,7 @@ const LiqAdd = () => {
     activeTab,
   ])
 
-  const handleAddLiq = () => {
+  const handleAddLiq = async () => {
     if (
       assetAdd1?.tokenAddress === addr.bnb ||
       assetAdd1?.tokenAddress === addr.wbnb
@@ -354,8 +355,9 @@ const LiqAdd = () => {
         addInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
       }
     }
+    setTxnLoading(true)
     if (activeTab === 'addTab1') {
-      dispatch(
+      await dispatch(
         addLiquidity(
           convertToWei(addInput1.value),
           convertToWei(addInput2.value),
@@ -364,7 +366,7 @@ const LiqAdd = () => {
         ),
       )
     } else {
-      dispatch(
+      await dispatch(
         addLiquiditySingle(
           convertToWei(addInput1.value),
           assetAdd1.tokenAddress === addr.spartav2,
@@ -373,6 +375,8 @@ const LiqAdd = () => {
         ),
       )
     }
+    setTxnLoading(false)
+    clearInputs()
   }
 
   return (
@@ -753,6 +757,9 @@ const LiqAdd = () => {
                   disabled={!checkValid()[0]}
                 >
                   {t(checkValid()[1])}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
                 </Button>
               </Col>
               {assetAdd2?.tokenAddress &&

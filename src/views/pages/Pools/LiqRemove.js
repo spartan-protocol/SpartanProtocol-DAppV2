@@ -50,6 +50,7 @@ const LiqRemove = () => {
   const wallet = useWeb3React()
   const sparta = useSparta()
   const { t } = useTranslation()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
   const [assetRemove2, setAssetRemove2] = useState('...')
@@ -297,6 +298,30 @@ const LiqRemove = () => {
   useEffect(() => {
     handleInputChange()
   }, [removeInput1?.value, assetRemove1, assetRemove2, poolRemove1, activeTab])
+
+  const handleRemLiq = async () => {
+    setTxnLoading(true)
+    if (activeTab === '1') {
+      await dispatch(
+        removeLiquidityExact(
+          convertToWei(removeInput1.value),
+          poolRemove1.tokenAddress,
+          wallet,
+        ),
+      )
+    } else {
+      await dispatch(
+        removeLiquiditySingle(
+          convertToWei(removeInput1.value),
+          assetRemove1.tokenAddress === addr.spartav2,
+          poolRemove1.tokenAddress,
+          wallet,
+        ),
+      )
+    }
+    setTxnLoading(false)
+    clearInputs()
+  }
 
   return (
     <Row>
@@ -564,26 +589,12 @@ const LiqRemove = () => {
                 <Button
                   className="w-100"
                   disabled={!checkValid()[0]}
-                  onClick={() =>
-                    activeTab === '1'
-                      ? dispatch(
-                          removeLiquidityExact(
-                            convertToWei(removeInput1.value),
-                            poolRemove1.tokenAddress,
-                            wallet,
-                          ),
-                        )
-                      : dispatch(
-                          removeLiquiditySingle(
-                            convertToWei(removeInput1.value),
-                            assetRemove1.tokenAddress === addr.spartav2,
-                            poolRemove1.tokenAddress,
-                            wallet,
-                          ),
-                        )
-                  }
+                  onClick={() => handleRemLiq()}
                 >
                   {checkValid()[1]}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
                   {poolRemove1.newPool && (
                     <OverlayTrigger
                       placement="auto"
