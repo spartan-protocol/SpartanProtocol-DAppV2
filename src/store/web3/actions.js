@@ -124,7 +124,7 @@ export const getAllowance1 =
         wallet.account,
         contractAddress,
       )
-      dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1))
+      dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1.toString()))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
@@ -144,7 +144,7 @@ export const getAllowance2 =
         wallet.account,
         contractAddress,
       )
-      dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2))
+      dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2.toString()))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }

@@ -14,6 +14,8 @@ import { useRouter } from '../../store/router/selector'
 import { useWeb3 } from '../../store/web3/selector'
 import { formatFromWei } from '../../utils/bigNumber'
 import { getPool, getSynth, getToken } from '../../utils/math/utils'
+import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
+import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 
 // ## NOTES ## //
 // Dont forget to add in any new/changed txn actions to the dep list for the updateShown-useEffect
@@ -114,7 +116,7 @@ const RecentTxns = () => {
 
   const updateShown = () => {
     let amountOfPages = 0
-    if (txnArray.length > 0 && wallet.account) {
+    if (txnArray?.length > 0 && wallet.account) {
       setShownArray(
         txnArray.slice((active - 1) * txnsPerPage, active * txnsPerPage),
       )
@@ -139,20 +141,24 @@ const RecentTxns = () => {
   const getFrom = (txn) => {
     let sendAmnt = txn.sendAmnt1 ? formatFromWei(txn.sendAmnt1) : ''
     let sendAddr = txn.send1
-      ? txn.send1.length > 10
-        ? formatShortString(txn.send1)
+      ? txn.send1.length > 15
+        ? txn.send1 === wallet.account
+          ? 'Your Wallet'
+          : formatShortString(txn.send1)
         : txn.send1
       : ''
-    const send1 = `${sendAmnt} ${sendAddr}`
+    const send1 = `${sendAmnt} ${sendAmnt && sendAddr && 'from'} ${sendAddr}`
     let send2 = ''
     if (txn.send2) {
       sendAmnt = txn.sendAmnt2 ? formatFromWei(txn.sendAmnt2) : ''
       sendAddr = txn.send2
-        ? txn.send2.length > 10
-          ? formatShortString(txn.send2)
+        ? txn.send2.length > 15
+          ? txn.send2 === wallet.account
+            ? 'Your Wallet'
+            : formatShortString(txn.send2)
           : txn.send2
         : ''
-      send2 = `${sendAmnt} ${sendAddr}`
+      send2 = `${sendAmnt} ${sendAmnt && sendAddr && 'from'} ${sendAddr}`
     }
     return [send1, send2]
   }
@@ -160,20 +166,24 @@ const RecentTxns = () => {
   const getTo = (txn) => {
     let recAmnt = txn.recAmnt1 ? formatFromWei(txn.recAmnt1) : ''
     let recAddr = txn.rec1
-      ? txn.rec1.length > 10
-        ? formatShortString(txn.rec1)
+      ? txn.rec1.length > 15
+        ? txn.rec1 === wallet.account
+          ? 'Your Wallet'
+          : formatShortString(txn.rec1)
         : txn.rec1
       : ''
-    const rec1 = `${recAmnt} ${recAddr}`
+    const rec1 = `${recAmnt} ${recAmnt && recAddr && 'to'} ${recAddr}`
     let rec2 = ''
     if (txn.rec2) {
       recAmnt = txn.recAmnt2 ? formatFromWei(txn.recAmnt2) : ''
       recAddr = txn.rec2
-        ? txn.rec2.length > 10
-          ? formatShortString(txn.rec2)
+        ? txn.rec2.length > 15
+          ? txn.rec2 === wallet.account
+            ? 'Your Wallet'
+            : formatShortString(txn.rec2)
           : txn.rec2
         : ''
-      rec2 = `${txn.recAmnt2} ${txn.rec2}`
+      rec2 = `${recAmnt} ${recAmnt && recAddr && 'to'} ${recAddr}`
     }
     return [rec1, rec2]
   }
@@ -181,122 +191,168 @@ const RecentTxns = () => {
   const _getToken = (address) => {
     const pools = pool.tokenDetails
     if (getToken(address, pools)) {
-      return getToken(address, pools)
+      return [getToken(address, pools), 'token']
     }
     if (getPool(address, pool.poolDetails)) {
-      return getToken(getPool(address, pool.poolDetails).tokenAddress, pools)
+      return [
+        getToken(getPool(address, pool.poolDetails).tokenAddress, pools),
+        'pool',
+      ]
     }
     if (getSynth(address, synth.synthDetails)) {
-      return getToken(getSynth(address, synth.synthDetails).tokenAddress, pools)
+      return [
+        getToken(getSynth(address, synth.synthDetails).tokenAddress, pools),
+        'synth',
+      ]
     }
     return false
+  }
+
+  const getBadge = (address) => {
+    if (_getToken(address)[1] === 'pool') {
+      return (
+        <img
+          height="12px"
+          src={spartaLpIcon}
+          alt="token badge"
+          className="token-badge-recent-txns"
+        />
+      )
+    }
+    if (_getToken(address)[1] === 'synth') {
+      return (
+        <img
+          height="12px"
+          src={spartaSynthIcon}
+          alt="token badge"
+          className="token-badge-recent-txns"
+        />
+      )
+    }
+    return ''
   }
 
   return (
     <>
       <Row>
-        <Table borderless striped className="m-3">
-          <thead className="text-primary text-center">
+        {pool.poolDetails.length > 1 && (
+          <>
+            <Table borderless striped className="m-3">
+              {/* <thead className="text-primary text-center">
             <tr>
               <th>{t('type')}</th>
               <th className="d-none d-sm-table-cell">{t('from')}</th>
               <th className="d-none d-sm-table-cell">{t('to')}</th>
               <th>{t('txHash')}</th>
             </tr>
-          </thead>
-          <tbody>
-            {shownArray?.length > 0 &&
-              wallet.account &&
-              shownArray?.map((txn) => (
-                <tr
-                  key={txn.txnHash + txn.txnIndex}
-                  className="text-center output-card"
-                >
-                  <td>{txn.txnType}</td>
-                  <td className="d-none d-sm-table-cell">
-                    {txn.sendToken1 && (
-                      <img
-                        height="20px"
-                        src={_getToken(txn.sendToken1)?.symbolUrl}
-                        alt="token icon"
-                        className="mb-1 me-1"
-                      />
-                    )}
-                    {getFrom(txn)[0]}
-                    <br />
-                    {txn.sendToken2 && (
-                      <img
-                        height="20px"
-                        src={_getToken(txn.sendToken2)?.symbolUrl}
-                        alt="token icon"
-                        className="mb-1 me-1"
-                      />
-                    )}
-                    {getFrom(txn)[1]}
-                  </td>
-                  <td className="d-none d-sm-table-cell">
-                    {txn.recToken1 && (
-                      <img
-                        height="20px"
-                        src={_getToken(txn.recToken1)?.symbolUrl}
-                        alt="token icon"
-                        className="mb-1 me-1"
-                      />
-                    )}
-                    {getTo(txn)[0]}
-                    <br />
-                    {txn.recToken2 && (
-                      <img
-                        height="20px"
-                        src={_getToken(txn.recToken2)?.symbolUrl}
-                        alt="token icon"
-                        className="mb-1 me-1"
-                      />
-                    )}
-                    {getTo(txn)[1]}
-                  </td>
-                  <td>
-                    <a
-                      href={getExplorerTxn(txn.txnHash)}
-                      target="_blank"
-                      rel="noreferrer"
+          </thead> */}
+              <tbody className="align-middle">
+                {shownArray?.length > 0 &&
+                  wallet.account &&
+                  shownArray?.map((txn) => (
+                    <tr
+                      key={txn.txnHash + txn.txnIndex}
+                      className="text-center output-card"
                     >
-                      {formatShortString(txn.txnHash)}
-                    </a>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
-        <div
-          className="pagAndDel"
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Pagination>
-            <Pagination.First onClick={() => handleOnClick(1)} />
-            <Pagination.Prev
-              onClick={() => active > 1 && handleOnClick(active - 1)}
-            />
-            {items[active - 1]}
-            {items[active]}
-            <Pagination.Next onClick={() => handleOnClick(active + 1)} />
-          </Pagination>
-          <Button
-            className="clearTxns"
-            style={{
-              float: 'left',
-              marginBottom: '16px',
-              marginLeft: '8px',
-            }}
-            onClick={() => onClear()}
-          >
-            {t('clearTxns')}
-          </Button>
-        </div>
+                      <td>{txn.txnType}</td>
+                      <td className="d-none d-sm-table-cell">
+                        {txn.sendToken1 && (
+                          <div className="d-inline position-relative">
+                            <img
+                              height="20px"
+                              src={_getToken(txn.sendToken1)[0]?.symbolUrl}
+                              alt="token icon"
+                              className="mb-1 me-2"
+                            />
+                            {getBadge(txn.sendToken1)}
+                          </div>
+                        )}
+                        {getFrom(txn)[0]}
+                        <br />
+                        {txn.sendToken2 && (
+                          <div className="d-inline position-relative">
+                            <img
+                              height="20px"
+                              src={_getToken(txn.sendToken2)[0]?.symbolUrl}
+                              alt="token icon"
+                              className="mb-1 me-2"
+                            />
+                            {getBadge(txn.sendToken2)}
+                          </div>
+                        )}
+                        {getFrom(txn)[1]}
+                      </td>
+                      <td className="d-none d-sm-table-cell">
+                        {txn.recToken1 && (
+                          <div className="d-inline position-relative">
+                            <img
+                              height="20px"
+                              src={_getToken(txn.recToken1)[0]?.symbolUrl}
+                              alt="token icon"
+                              className="mb-1 me-2"
+                            />
+                            {getBadge(txn.recToken1)}
+                          </div>
+                        )}
+                        {getTo(txn)[0]}
+                        <br />
+                        {txn.recToken2 && (
+                          <div className="d-inline position-relative">
+                            <img
+                              height="20px"
+                              src={_getToken(txn.recToken2)[0]?.symbolUrl}
+                              alt="token icon"
+                              className="mb-1 me-2"
+                            />
+                            {getBadge(txn.recToken2)}
+                          </div>
+                        )}
+                        {getTo(txn)[1]}
+                      </td>
+                      <td>
+                        <a
+                          href={getExplorerTxn(txn.txnHash)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {formatShortString(txn.txnHash)}
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </Table>
+            <div
+              className="pagAndDel"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Pagination>
+                <Pagination.First onClick={() => handleOnClick(1)} />
+                <Pagination.Prev
+                  onClick={() => active > 1 && handleOnClick(active - 1)}
+                />
+                {items[active - 1]}
+                {items[active]}
+                <Pagination.Next onClick={() => handleOnClick(active + 1)} />
+              </Pagination>
+              <Button
+                className="clearTxns"
+                style={{
+                  float: 'left',
+                  marginBottom: '16px',
+                  marginLeft: '8px',
+                }}
+                onClick={() => onClear()}
+              >
+                {t('clearTxns')}
+              </Button>
+            </div>
+          </>
+        )}
       </Row>
     </>
   )

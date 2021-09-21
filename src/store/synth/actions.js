@@ -219,7 +219,7 @@ export const synthHarvest = (synthArray, wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'synthHarvestArray')
+    txn = await parseTxn(txn, 'synthHarvest')
     dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))

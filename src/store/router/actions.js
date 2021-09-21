@@ -31,25 +31,6 @@ export const addLiquidity =
   }
 
 /**
- * Swap LP tokens for other LP tokens
- * @param unitsInput @param fromPool @param toPool @param wallet
- */
-export const zapLiquidity =
-  (unitsInput, fromPool, toPool, wallet) => async (dispatch) => {
-    dispatch(routerLoading())
-    const contract = getRouterContract(wallet)
-    try {
-      const gPrice = await getProviderGasPrice()
-      const ORs = { gasPrice: gPrice }
-      let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
-      txn = await parseTxn(txn, 'zapLiq')
-      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
-    } catch (error) {
-      dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
-    }
-  }
-
-/**
  * Add liquidity asymmetrically
  * @param input @param fromBase @param token @param wallet
  */
@@ -66,6 +47,25 @@ export const addLiquiditySingle =
       }
       let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
       txn = await parseTxn(txn, 'addLiqSingle')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
+    }
+  }
+
+/**
+ * Swap LP tokens for other LP tokens
+ * @param unitsInput @param fromPool @param toPool @param wallet
+ */
+export const zapLiquidity =
+  (unitsInput, fromPool, toPool, wallet) => async (dispatch) => {
+    dispatch(routerLoading())
+    const contract = getRouterContract(wallet)
+    try {
+      const gPrice = await getProviderGasPrice()
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
+      txn = await parseTxn(txn, 'zapLiq')
       dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))

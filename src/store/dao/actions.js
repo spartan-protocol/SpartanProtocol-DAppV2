@@ -311,7 +311,7 @@ export const newActionProposal = (typeStr, wallet) => async (dispatch) => {
   try {
     const gPrice = await getProviderGasPrice()
     let txn = await contract.newActionProposal(typeStr, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'newActionProposal')
+    txn = await parseTxn(txn, 'newProposal')
     dispatch(payloadToDispatch(Types.PROP_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.DAO_ERROR, error))
@@ -330,7 +330,7 @@ export const newParamProposal =
       const gPrice = await getProviderGasPrice()
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newParamProposal(param, typeStr, ORs)
-      txn = await parseTxn(txn, 'newParamProposal')
+      txn = await parseTxn(txn, 'newProposal')
       dispatch(payloadToDispatch(Types.PROP_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
@@ -349,7 +349,7 @@ export const newAddressProposal =
       const gPrice = await getProviderGasPrice()
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newAddressProposal(proposedAddress, typeStr, ORs)
-      txn = await parseTxn(txn, 'newAddrProposal')
+      txn = await parseTxn(txn, 'newProposal')
       dispatch(payloadToDispatch(Types.PROP_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
@@ -368,7 +368,7 @@ export const newGrantProposal =
       const gPrice = await getProviderGasPrice()
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newGrantProposal(recipient, amount, ORs)
-      txn = await parseTxn(txn, 'newGrantProposal')
+      txn = await parseTxn(txn, 'newProposal')
       dispatch(payloadToDispatch(Types.PROP_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.DAO_ERROR, error))
