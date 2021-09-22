@@ -48,14 +48,18 @@ import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from '../Pools/Components/Utils'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
-import { getTimeUntil } from '../../../utils/math/nonContract'
+import { convertTimeUnits, getTimeUntil } from '../../../utils/math/nonContract'
 import {
   burnSynth,
   mintSynth,
   swapTo,
   zapLiq,
 } from '../../../utils/math/router'
-import { getSynthDetails, getSynthMinting } from '../../../store/synth'
+import {
+  getSynthDetails,
+  getSynthGlobalDetails,
+  getSynthMinting,
+} from '../../../store/synth'
 
 const Swap = () => {
   const synth = useSynth()
@@ -122,6 +126,7 @@ const Swap = () => {
         )
       ) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthGlobalDetails())
           dispatch(getSynthDetails(synthArray, wallet))
           dispatch(getSynthMinting())
         }
@@ -337,6 +342,17 @@ const Swap = () => {
   const getTimeNew = () => {
     const timeStamp = BN(assetSwap1?.genesis).plus(604800)
     return getTimeUntil(timeStamp, t)
+  }
+
+  const _convertTimeUnits = () => {
+    if (synth.globalDetails) {
+      const [units, timeString] = convertTimeUnits(
+        synth.globalDetails.minTime,
+        t,
+      )
+      return [units, timeString]
+    }
+    return ['1', 'day']
   }
 
   //= =================================================================================//
@@ -1173,20 +1189,20 @@ const Swap = () => {
                           </>
                         )}
 
-                        {mode === 'synthOut' && (
+                        {mode === 'synthOut' && synth.globalDetails && (
                           <Row>
                             <Col>
                               <div className="output-card text-center">
                                 The minted SynthYield tokens will be deposited
-                                directly into the SynthVault & locked for 1
-                                hour. You will also not be able to mint nor
-                                stake any more{' '}
-                                {getToken(assetSwap2.tokenAddress)?.symbol}s for
-                                1 hour so choose your forge-size carefully.
+                                directly into the SynthVault & locked for{' '}
+                                {_convertTimeUnits()[0]}{' '}
+                                {_convertTimeUnits()[1]}.
                               </div>
                               <Form className="my-2 text-center">
                                 <span className="output-card">
-                                  Confirm; your synths will be locked for 1 hour
+                                  Confirm; your synths will be locked for{' '}
+                                  {_convertTimeUnits()[0]}{' '}
+                                  {_convertTimeUnits()[1]}
                                   <Form.Check
                                     type="switch"
                                     id="confirmLockout"

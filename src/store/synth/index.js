@@ -3,6 +3,7 @@ export { synthReducer } from './reducer'
 
 export {
   getSynthGlobalDetails,
+  getSynthMemberDetails,
   getSynthMinting,
   getSynthArray,
   getSynthDetails,

@@ -128,7 +128,7 @@ const DaoVault = () => {
   return (
     <Row>
       <Col xs="auto" className="">
-        <Card xs="auto" className="card-320">
+        <Card xs="auto" className="card-320" style={{ minHeight: '202' }}>
           <Card.Header className="">{t('daoVaultDetails')}</Card.Header>
           {!isLoading() ? (
             <Card.Body>
@@ -160,7 +160,7 @@ const DaoVault = () => {
       </Col>
 
       <Col xs="auto">
-        <Card className="card-320 card-underlay">
+        <Card className="card-320 card-underlay" style={{ minHeight: '202' }}>
           <Card.Header>{t('memberDetails')}</Card.Header>
           {!isLoading() ? (
             <>
@@ -191,14 +191,12 @@ const DaoVault = () => {
                   </Col>
                 </Row>
               </Card.Body>
-              <Card.Footer className="card-body text-center">
+              <Card.Footer>
                 {reserve.globalDetails.emissions ? (
                   <Button
                     className="w-100"
                     onClick={() => handleHarvest()}
-                    disabled={
-                      BN(dao.member?.weight).plus(bond.member?.weight) <= 0
-                    }
+                    disabled={getClaimable() <= 0}
                   >
                     {t('harvestAll')}
                     {txnLoading && (
@@ -224,7 +222,9 @@ const DaoVault = () => {
             (i) =>
               i.staked > 0 || getPool(i.tokenAddress, pool.poolDetails).curated,
           )
-          .map((i) => <DaoVaultItem key={i.address} i={i} />)}
+          .map((i) => (
+            <DaoVaultItem key={i.address} i={i} claimable={getClaimable()} />
+          ))}
     </Row>
   )
 }

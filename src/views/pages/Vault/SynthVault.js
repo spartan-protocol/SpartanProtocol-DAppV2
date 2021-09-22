@@ -10,6 +10,7 @@ import {
   synthHarvest,
   synthVaultWeight,
   getSynthDetails,
+  getSynthMemberDetails,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
@@ -34,6 +35,7 @@ const SynthVault = () => {
 
   const getGlobals = () => {
     dispatch(getSynthGlobalDetails())
+    dispatch(getSynthMemberDetails(wallet))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -86,7 +88,11 @@ const SynthVault = () => {
   }, [synth.synthDetails])
 
   const isLoading = () => {
-    if (synth.synthDetails.length > 1 && synth.globalDetails) {
+    if (
+      synth.synthDetails.length > 1 &&
+      synth.globalDetails &&
+      pool.tokenDetails.length > 1
+    ) {
       return false
     }
     return true
@@ -101,7 +107,7 @@ const SynthVault = () => {
   return (
     <Row>
       <Col xs="auto" className="">
-        <Card className="card-320 card-underlay">
+        <Card className="card-320 card-underlay" style={{ minHeight: '255' }}>
           <Card.Header>{t('synthVaultDetails')}</Card.Header>
           {!isLoading() ? (
             <Card.Body>
@@ -153,7 +159,7 @@ const SynthVault = () => {
       </Col>
 
       <Col xs="auto">
-        <Card className="card-320 card-underlay">
+        <Card className="card-320 card-underlay" style={{ minHeight: '255' }}>
           <Card.Header>{t('memberDetails')}</Card.Header>
           {!isLoading() ? (
             <>
@@ -224,7 +230,13 @@ const SynthVault = () => {
       {!isLoading() &&
         synth.synthDetails
           .filter((i) => i.address !== false)
-          .map((i) => <SynthVaultItem key={i.address} synthItem={i} />)}
+          .map((i) => (
+            <SynthVaultItem
+              key={i.address}
+              synthItem={i}
+              claimArray={claimArray}
+            />
+          ))}
     </Row>
   )
 }

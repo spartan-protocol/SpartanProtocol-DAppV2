@@ -50,6 +50,25 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
 }
 
 /**
+ * Get the member's synth details
+ * @returns depositTime
+ */
+export const getSynthMemberDetails = (wallet) => async (dispatch) => {
+  dispatch(synthLoading())
+  const contract = getSynthVaultContract()
+  try {
+    let awaitArray = [contract.callStatic.mapMember_depositTime(wallet.account)]
+    awaitArray = await Promise.all(awaitArray)
+    const member = {
+      depositTime: awaitArray[0].toString(),
+    }
+    dispatch(payloadToDispatch(Types.SYNTH_MEMBER_DETAILS, member))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+  }
+}
+
+/**
  * Get the global synthMinting bool (from router)
  * @returns {bool} synthMinting
  */

@@ -14,7 +14,7 @@ import { getTimeUntil } from '../../../utils/math/nonContract'
 import { useDao } from '../../../store/dao/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
 
-const DaoVaultItem = ({ i }) => {
+const DaoVaultItem = ({ i, claimable }) => {
   const { t } = useTranslation()
   const wallet = useWeb3React()
   const pool = usePool()
@@ -27,28 +27,47 @@ const DaoVaultItem = ({ i }) => {
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((x) => x.address === _tokenAddr)[0]
 
+  // eslint-disable-next-line no-unused-vars
   const handleWithdraw = async () => {
     setTxnLoading(true)
     await dispatch(daoWithdraw(i.address, wallet))
     setTxnLoading(false)
   }
 
+  const getLastDeposit = () => {
+    if (dao.lastDeposits.length > 0) {
+      let lastDeposit = dao.lastDeposits.filter((x) => x.address === i.address)
+      lastDeposit = lastDeposit[0].lastDeposit
+      return lastDeposit
+    }
+    return '99999999999999999999999999999'
+  }
+
   const getLockedSecs = () => {
-    const depositTime = BN(dao.member?.depositTime)
+    const depositTime = BN(getLastDeposit())
     const lockUpSecs = BN('86400')
     const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
     return [units, time]
   }
 
+  const checkValid = () => {
+    if (i.staked > 0) {
+      if (getLockedSecs()[0] > 0) {
+        return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
+      }
+      return [true, t('withdraw'), false]
+    }
+    return [false, t('nothingStaked'), false]
+  }
+
   return (
     <>
       <Col xs="auto" key={i.address}>
-        <Card className="card-320">
+        <Card className="card-320" style={{ minHeight: '202' }}>
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="position-relative">
                 <img
-                  className="mr-3"
                   src={getToken(i.tokenAddress)?.symbolUrl}
                   alt={getToken(i.tokenAddress)?.symbol}
                   height="50px"
@@ -57,8 +76,7 @@ const DaoVaultItem = ({ i }) => {
                   height="25px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="position-absolute"
-                  style={{ right: '8px', bottom: '7px' }}
+                  className="token-badge-pair"
                 />
               </Col>
               <Col xs="auto" className="pl-1">
@@ -104,15 +122,19 @@ const DaoVaultItem = ({ i }) => {
                 <DaoDepositModal
                   tokenAddress={i.tokenAddress}
                   disabled={i.balance <= 0}
+                  claimable={claimable}
                 />
               </Col>
               <Col xs="6" className="ps-1">
                 <Button
                   className="w-100"
                   onClick={() => handleWithdraw()}
-                  disabled={i.staked <= 0 || getLockedSecs()[0] > 0}
+                  disabled={!checkValid()[0]}
                 >
-                  {t('withdraw')}
+                  {checkValid()[2] && (
+                    <Icon icon={checkValid()[2]} size="15" className="mb-1" />
+                  )}
+                  {checkValid()[1]}
                   {txnLoading && (
                     <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                   )}

@@ -2,6 +2,7 @@ import * as Types from './types'
 
 const initialState = {
   globalDetails: false,
+  member: false,
   synthMinting: false,
   synthArray: [],
   synthDetails: [],
@@ -16,6 +17,15 @@ export const synthReducer = (state = initialState, action) => {
       return {
         ...state,
         globalDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SYNTH_MEMBER_DETAILS: {
+      return {
+        ...state,
+        member: action.payload,
         error: null,
         loading: false,
       }

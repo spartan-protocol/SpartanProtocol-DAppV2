@@ -46,7 +46,12 @@ import { useSparta } from '../../../store/sparta'
 import { balanceWidths } from '../Pools/Components/Utils'
 import { burnSynth, mintSynth } from '../../../utils/math/router'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
-import { getSynthDetails, getSynthMinting } from '../../../store/synth'
+import {
+  getSynthDetails,
+  getSynthGlobalDetails,
+  getSynthMinting,
+} from '../../../store/synth'
+import { convertTimeUnits } from '../../../utils/math/nonContract'
 
 const Swap = () => {
   const wallet = useWeb3React()
@@ -108,6 +113,7 @@ const Swap = () => {
         )
       ) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
+          dispatch(getSynthGlobalDetails())
           dispatch(getSynthDetails(synthArray, wallet))
           dispatch(getSynthMinting())
         }
@@ -219,6 +225,17 @@ const Swap = () => {
     if (swapInput2) {
       swapInput2.value = ''
     }
+  }
+
+  const _convertTimeUnits = () => {
+    if (synth.globalDetails) {
+      const [units, timeString] = convertTimeUnits(
+        synth.globalDetails.minTime,
+        t,
+      )
+      return [units, timeString]
+    }
+    return ['1', 'day']
   }
 
   //= =================================================================================//
@@ -748,15 +765,15 @@ const Swap = () => {
                             <Col>
                               <div className="output-card text-center">
                                 The minted SynthYield tokens will be deposited
-                                directly into the SynthVault & locked for 1
-                                hour. You will also not be able to mint nor
-                                stake any more{' '}
-                                {getToken(assetSwap2.tokenAddress)?.symbol}s for
-                                1 hour so choose your forge-size carefully.
+                                directly into the SynthVault & locked for{' '}
+                                {_convertTimeUnits()[0]}{' '}
+                                {_convertTimeUnits()[1]}.
                               </div>
                               <Form className="my-2 text-center">
                                 <span className="output-card">
-                                  Confirm; your synths will be locked for 1 hour
+                                  Confirm; your synths will be locked for{' '}
+                                  {_convertTimeUnits()[0]}{' '}
+                                  {_convertTimeUnits()[1]}
                                   <Form.Check
                                     type="switch"
                                     id="confirmLockout"

@@ -17,7 +17,7 @@ import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY, getTimeSince } from '../../../utils/math/nonContract'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 
-const SynthVaultItem = ({ synthItem }) => {
+const SynthVaultItem = ({ synthItem, claimArray }) => {
   const { t } = useTranslation()
   const sparta = useSparta()
   const reserve = useReserve()
@@ -27,8 +27,7 @@ const SynthVaultItem = ({ synthItem }) => {
   const dispatch = useDispatch()
 
   const [txnLoading, setTxnLoading] = useState(false)
-  const [tokenAddress, settokenAddress] = useState('')
-  const [showModal, setShowModal] = useState(false)
+
   const getToken = (_tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddress)[0]
 
@@ -44,11 +43,6 @@ const SynthVaultItem = ({ synthItem }) => {
       baseAmount: BN(synth.totalWeight).div(2).toString(),
     }
     return formatFromUnits(calcAPY(_object), 2)
-  }
-
-  const toggleModal = (_tokenAddr) => {
-    settokenAddress(_tokenAddr)
-    setShowModal(!showModal)
   }
 
   // Calculations
@@ -88,7 +82,7 @@ const SynthVaultItem = ({ synthItem }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320">
+        <Card className="card-320" style={{ minHeight: '255' }}>
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="position-relative">
@@ -187,13 +181,11 @@ const SynthVaultItem = ({ synthItem }) => {
           <Card.Footer className="">
             <Row>
               <Col xs="6" className="pe-1">
-                <Button
-                  className="w-100"
-                  onClick={() => toggleModal(synthItem.tokenAddress)}
+                <SynthDepositModal
+                  tokenAddress={synthItem.tokenAddress}
                   disabled={synthItem.balance <= 0}
-                >
-                  {t('deposit')}
-                </Button>
+                  claimArray={claimArray}
+                />
               </Col>
               <Col xs="6" className="ps-1">
                 <Button
@@ -209,13 +201,6 @@ const SynthVaultItem = ({ synthItem }) => {
               </Col>
             </Row>
           </Card.Footer>
-          {showModal && (
-            <SynthDepositModal
-              showModal={showModal}
-              toggleModal={toggleModal}
-              tokenAddress={tokenAddress}
-            />
-          )}
         </Card>
       </Col>
     </>
