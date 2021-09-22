@@ -575,123 +575,160 @@ const parseTxnLogs = (txn, txnType) => {
   }
   // POOL.TXN TYPES
   if (txnType === 'createPool') {
-    const logsPF = txn.logs.filter((x) => x.address === addr.poolFactory)
-    const pfInterface = new ethers.utils.Interface(abiArray.poolFactory)
-    logsPF[0] = pfInterface.parseLog(logsPF[0]).args // PoolFactory.CreatePool event (token, pool)
-    const poolAddr = logsPF[0].pool
-    const logsPool = txn.logs.filter((x) => x.address === poolAddr)
-    const poolInterface = new ethers.utils.Interface(abiArray.pool)
-    const index = logsPool.length - 1
-    logsPool[index] = poolInterface.parseLog(logsPool[index]).args // Pool.AddLiquidity event (member, inputBase, inputToken, unitsIssued) *** ADD TOKENADDR ***
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.poolFactory,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // PoolFactory.CreatePool event (token, pool)
+    const createLog = logs.filter((x) => x.name === 'CreatePool')[0].args
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const liqLog = logs.filter((x) => x.name === 'AddLiquidity')[0].args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: logsPool[index].inputBase.toString(),
+      sendAmnt1: liqLog.inputBase.toString(),
       sendToken1: addr.spartav2,
       send1: member,
-      sendAmnt2: logsPool[index].inputToken.toString(),
-      // sendToken2: logsPool[index].*tokenAddr*, // Change to this after next deploy & update the prop *** ADD TOKENADDR TO EVENT ***
+      sendAmnt2: liqLog.inputToken.toString(),
+      sendToken2: liqLog.tokenAddress,
       send2: member,
-      recAmnt1: logsPool[index].unitsIssued.toString(),
-      recToken1: poolAddr,
+      recAmnt1: liqLog.unitsIssued.toString(),
+      recToken1: createLog.pool,
       rec1: member,
     }
   }
   // ROUTER.TXN TYPES
   if (txnType === 'addLiq') {
-    let logPool = txn.logs[txn.logs.length - 1]
-    const poolAddr = logPool.address
-    const poolInterface = new ethers.utils.Interface(abiArray.pool)
-    // Pool.AddLiquidity event (member, inputBase, inputToken, unitsIssued) *** ADD TOKENADDR TO EVENT ***
-    logPool = poolInterface.parseLog(logPool).args
+    let log = txn.logs[txn.logs.length - 1]
+    const poolAddr = log.address
+    const iface = new ethers.utils.Interface(abiArray.pool)
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    log = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: logPool.inputBase.toString(),
+      sendAmnt1: log.inputBase.toString(),
       sendToken1: addr.spartav2,
       send1: member,
-      sendAmnt2: logPool.inputToken.toString(),
-      // sendToken2: logPool.*tokenaddr*, // Change to this after next deploy & update the prop *** ADD TOKENADDR TO EVENT ***
+      sendAmnt2: log.inputToken.toString(),
+      sendToken2: log.tokenAddress,
       send2: member,
-      recAmnt1: logPool.unitsIssued.toString(),
+      recAmnt1: log.unitsIssued.toString(),
       recToken1: poolAddr,
       rec1: member,
     }
   }
   if (txnType === 'addLiqSingle') {
-    const tokenAddr = txn.logs[0].address
-    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
-    let tokenInput = BN(0)
-    if (tokenAddr === addr.spartav2) {
-      const log1 = ercInterface.parseLog(txn.logs[0]).args.value.toString()
-      const log2 = ercInterface.parseLog(txn.logs[1]).args.value.toString()
-      tokenInput = BN(log1).plus(log2)
-    } else if (tokenAddr === addr.wbnb) {
-      tokenInput = ercInterface.parseLog(txn.logs[1]).args.value
-    } else {
-      tokenInput = ercInterface.parseLog(txn.logs[0]).args.value
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
     }
-    let logPool = txn.logs[txn.logs.length - 1]
-    const poolAddr = logPool.address
-    const poolInterface = new ethers.utils.Interface(abiArray.pool)
-    logPool = poolInterface.parseLog(logPool).args // Pool.AddLiquidity event (member, inputBase, inputToken, unitsIssued) *** ADD TOKENADDR TO EVENT ***
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const liqIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
+    const poolAddr = txn.logs[liqIndex].address
+    const liqLog = logs[liqIndex].args
+    // Token.Transfer event (1st one to the Pool * 2 is ~input) (from, to, value)
+    const tsfLog = logs.filter(
+      (x) => x.name === 'Transfer' && x.args.to === poolAddr,
+    )[0].args
+    const halfInput = tsfLog.value.toString()
+    const inputAmnt = BN(halfInput).times(2)
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: tokenInput.toString(),
-      sendToken1: tokenAddr,
+      sendAmnt1: inputAmnt.toString(),
+      sendToken1: liqLog.tokenAddress,
       send1: member,
-      recAmnt1: logPool.unitsIssued.toString(),
+      recAmnt1: liqLog.unitsIssued.toString(),
       recToken1: poolAddr,
       rec1: member,
     }
   }
   if (txnType === 'zapLiq') {
-    let logPoolIn = txn.logs[6] // Pool.RemoveLiquidity event
-    let logPoolOut = txn.logs[txn.logs.length - 1] // Pool.AddLiquidity event
-    const poolInAddr = logPoolIn.address
-    const poolOutAddr = logPoolOut.address
-    const poolInterface = new ethers.utils.Interface(abiArray.pool)
-    logPoolIn = poolInterface.parseLog(logPoolIn).args // Pool.RemoveLiquidity event (member, outputBase, outputToken, unitsClaimed) *** ADD TOKENADDR TO EVENT ***
-    logPoolOut = poolInterface.parseLog(logPoolOut).args // Pool.AddLiquidity event (member, inputBase, inputToken, unitsIssued) *** ADD TOKENADDR TO EVENT ***
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
+    const remAddr = txn.logs[remIndex].address
+    const remLog = logs[remIndex].args
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const addIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
+    const addAddr = txn.logs[addIndex].address
+    const addLog = logs[addIndex].args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: logPoolIn.unitsClaimed.toString(),
-      sendToken1: poolInAddr,
+      sendAmnt1: remLog.unitsClaimed.toString(),
+      sendToken1: remAddr,
       send1: member,
-      recAmnt1: logPoolOut.unitsIssued.toString(),
-      recToken1: poolOutAddr,
+      recAmnt1: addLog.unitsIssued.toString(),
+      recToken1: addAddr,
       rec1: member,
     }
   }
   if (txnType === 'remLiq') {
-    const poolAddr = txn.logs[0].address // Get pool address
-    const logsPool = txn.logs.filter((x) => x.address === poolAddr) // Filter logs by pool
-    let logPool = logsPool[logsPool.length - 1] // Pool.RemoveLiquidity event (member, outputBase, outputToken, unitsClaimed) *** ADD TOKENADDR TO EVENT ***
-    const poolInterface = new ethers.utils.Interface(abiArray.pool)
-    logPool = poolInterface.parseLog(logPool).args // Pool.RemoveLiquidity event (member, outputBase, outputToken, unitsClaimed) *** ADD TOKENADDR TO EVENT ***
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
+    const poolAddr = txn.logs[remIndex].address
+    const remLog = logs[remIndex].args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: logPool.unitsClaimed.toString(),
+
+      sendAmnt1: remLog.unitsClaimed.toString(),
       sendToken1: poolAddr,
       send1: member,
-      recAmnt1: logPool.outputBase.toString(),
+
+      recAmnt1: remLog.outputBase.toString(),
       recToken1: addr.spartav2,
       rec1: member,
-      recAmnt2: logPool.outputToken.toString(),
-      // recToken2: logPool.*tokenaddr*, // Change to this after next deploy & update the prop *** ADD TOKENADDR TO EVENT ***
+
+      recAmnt2: remLog.outputToken.toString(),
+      recToken2: remLog.tokenAddress,
       rec2: member,
     }
   }
@@ -713,7 +750,7 @@ const parseTxnLogs = (txn, txnType) => {
     const poolAddr = txn.logs[swapIndex].address
     const toBase = swapLog.tokenTo === addr.spartav2
     const _out1 = swapLog.outputAmount.toString()
-    // Pool.RemoveLiquidity event (member, outputBase, outputToken, unitsClaimed) *** ADD TOKENADDR TO EVENT ***
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
     const remLiqLog = logs.filter((x) => x.name === 'RemoveLiquidity')[0].args
     const _baseOut = remLiqLog.outputBase.toString()
     const _tokenOut = remLiqLog.outputToken.toString()
@@ -794,7 +831,7 @@ const parseTxnLogs = (txn, txnType) => {
       fromBase = false
       swapLog = swapLog[0].args
     }
-    // Pool.MintSynth (member, baseAmount, liqUnits, synthAmount, fee) *** ADD SYNTHADDR TO EVENT ***
+    // Pool.MintSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
     const mintLog = logs.filter((x) => x.name === 'MintSynth')[0].args
     const sendAmnt1 = fromBase ? mintLog.baseAmount : swapLog.inputAmount
     const sendToken1 = fromBase ? addr.spartav2 : swapLog.tokenFrom
@@ -807,7 +844,7 @@ const parseTxnLogs = (txn, txnType) => {
       sendToken1,
       send1: member,
       recAmnt1: mintLog.synthAmount.toString(),
-      // recToken1: mintLog.synthAddr, *** ADD SYNTHADDR TO EVENT ***
+      recToken1: mintLog.synthAddress,
       rec1: 'SynthVault',
     }
   }
@@ -830,7 +867,7 @@ const parseTxnLogs = (txn, txnType) => {
       toBase = false
       swapLog = swapLog[0].args
     }
-    // Pool.BurnSynth (member, baseAmount, liqUnits, synthAmount, fee) *** ADD SYNTHADDR TO EVENT ***
+    // Pool.BurnSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
     const burnLog = logs.filter((x) => x.name === 'BurnSynth')[0].args
     const recAmnt1 = toBase ? burnLog.baseAmount : swapLog.outputAmount
     const recToken1 = toBase ? addr.spartav2 : swapLog.tokenTo
@@ -840,7 +877,7 @@ const parseTxnLogs = (txn, txnType) => {
       txnType,
       txnTypeIcon: txnType,
       sendAmnt1: burnLog.synthAmount.toString(),
-      // sendToken1: burnLog.synthAddress, *** ADD SYNTHADDR TO EVENT ***
+      sendToken1: burnLog.synthAddress,
       send1: member,
       recAmnt1: recAmnt1.toString(),
       recToken1,
