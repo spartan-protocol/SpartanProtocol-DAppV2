@@ -25,6 +25,8 @@ const SynthVaultItem = ({ synthItem }) => {
   const pool = usePool()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
+
+  const [txnLoading, setTxnLoading] = useState(false)
   const [tokenAddress, settokenAddress] = useState('')
   const [showModal, setShowModal] = useState(false)
   const getToken = (_tokenAddress) =>
@@ -76,6 +78,12 @@ const SynthVaultItem = ({ synthItem }) => {
   }
 
   const isLightMode = window.localStorage.getItem('theme')
+
+  const handleWithdraw = async () => {
+    setTxnLoading(true)
+    await dispatch(synthWithdraw(synthItem.address, '10000', wallet))
+    setTxnLoading(false)
+  }
 
   return (
     <>
@@ -190,12 +198,13 @@ const SynthVaultItem = ({ synthItem }) => {
               <Col xs="6" className="ps-1">
                 <Button
                   className="w-100"
-                  onClick={() =>
-                    dispatch(synthWithdraw(synthItem.address, '10000', wallet))
-                  }
+                  onClick={() => handleWithdraw()}
                   disabled={synthItem.staked <= 0}
                 >
-                  {t('withdrawAll')}
+                  {t('withdraw')}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
                 </Button>
               </Col>
             </Row>

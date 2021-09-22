@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Card, Row, Col, ProgressBar } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
@@ -37,6 +37,42 @@ const ProposalItem = ({ proposal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
+
+  const [voteLoading, setVoteLoading] = useState(false)
+  const [unvoteLoading, setUnvoteLoading] = useState(false)
+  const [cancelLoading, setCancelLoading] = useState(false)
+  const [pollLoading, setPollLoading] = useState(false)
+  const [finalLoading, setFinalLoading] = useState(false)
+
+  const handleVote = async () => {
+    setVoteLoading(true)
+    await dispatch(voteProposal(wallet))
+    setVoteLoading(false)
+  }
+
+  const handleUnvote = async () => {
+    setUnvoteLoading(true)
+    await dispatch(removeVote(wallet))
+    setUnvoteLoading(false)
+  }
+
+  const handleCancel = async () => {
+    setCancelLoading(true)
+    await dispatch(cancelProposal(wallet))
+    setCancelLoading(false)
+  }
+
+  const handlePoll = async () => {
+    setPollLoading(true)
+    await dispatch(pollVotes(wallet))
+    setPollLoading(false)
+  }
+
+  const handleFinal = async () => {
+    setFinalLoading(true)
+    await dispatch(finaliseProposal(wallet))
+    setFinalLoading(false)
+  }
 
   const isLoading = () => {
     if (
@@ -339,20 +375,34 @@ const ProposalItem = ({ proposal }) => {
                     <Button
                       className="w-100"
                       size="sm"
-                      onClick={() => dispatch(voteProposal(wallet))}
+                      onClick={() => handleVote()}
                       disabled={proposal.memberVoted}
                     >
                       {t('voteUp')}
+                      {voteLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
                     </Button>
                   </Col>
                   <Col className="mb-2">
                     <Button
                       className="w-100"
                       size="sm"
-                      onClick={() => dispatch(removeVote(wallet))}
+                      onClick={() => handleUnvote()}
                       disabled={!proposal.memberVoted}
                     >
                       {t('voteDown')}
+                      {unvoteLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
                     </Button>
                   </Col>
                 </Row>
@@ -364,22 +414,36 @@ const ProposalItem = ({ proposal }) => {
                         variant="secondary"
                         className="w-100"
                         size="sm"
-                        onClick={() => dispatch(finaliseProposal(wallet))}
+                        onClick={() => handleFinal()}
                         disabled={
                           !proposal.finalising || getTimeCooloff()[0] > 0
                         }
                       >
-                        {t('countVotes')}
+                        {t('finalise')}
+                        {finalLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
                       </Button>
                     ) : (
                       <Button
                         variant="secondary"
                         className="w-100"
                         size="sm"
-                        onClick={() => dispatch(pollVotes(wallet))}
+                        onClick={() => handlePoll()}
                         disabled={!canPoll()}
                       >
                         {t('pollVotes')}
+                        {pollLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
                       </Button>
                     )}
                   </Col>
@@ -388,10 +452,17 @@ const ProposalItem = ({ proposal }) => {
                       variant="secondary"
                       className="w-100"
                       size="sm"
-                      onClick={() => dispatch(cancelProposal(wallet))}
+                      onClick={() => handleCancel()}
                       disabled={getTimeCancel()[0] > 0}
                     >
                       {t('cancel')}
+                      {cancelLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
                     </Button>
                   </Col>
                 </Row>

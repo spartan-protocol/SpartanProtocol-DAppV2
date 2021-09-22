@@ -42,6 +42,7 @@ const NewSynth = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
+  const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
 
@@ -63,8 +64,11 @@ const NewSynth = () => {
     }
   }, [inputAddress, showModal])
 
-  const handleSubmit = () => {
-    dispatch(createSynth(inputAddress, wallet))
+  const handleSubmit = async () => {
+    setTxnLoading(true)
+    await dispatch(createSynth(inputAddress, wallet))
+    setTxnLoading(false)
+    setShowModal(false)
   }
 
   return (
@@ -132,6 +136,9 @@ const NewSynth = () => {
                 onClick={() => handleSubmit()}
               >
                 {t('confirm')}
+                {txnLoading && (
+                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                )}
               </Button>
             </Col>
           </Row>

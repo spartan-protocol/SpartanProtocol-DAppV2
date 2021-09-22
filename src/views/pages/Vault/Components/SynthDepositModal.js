@@ -9,6 +9,7 @@ import Approval from '../../../../components/Approval/Approval'
 import { getAddresses } from '../../../../utils/web3'
 import { synthDeposit } from '../../../../store/synth/actions'
 import { useSynth } from '../../../../store/synth/selector'
+import { Icon } from '../../../../components/Icons/icons'
 
 const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const [percentage, setpercentage] = useState('0')
@@ -18,6 +19,9 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const synth = useSynth()
   const wallet = useWeb3React()
   const addr = getAddresses()
+
+  const [txnLoading, setTxnLoading] = useState(false)
+
   const synth1 = synth.synthDetails.filter(
     (i) => i.tokenAddress === tokenAddress,
   )[0]
@@ -28,6 +32,12 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
   const handleCloseModal = () => {
     toggleModal()
     setpercentage('0')
+  }
+
+  const handleDeposit = async () => {
+    setTxnLoading(true)
+    await dispatch(synthDeposit(synth1.address, deposit(), wallet))
+    setTxnLoading(false)
   }
 
   return (
@@ -68,13 +78,11 @@ const SynthDepositModal = ({ showModal, toggleModal, tokenAddress }) => {
               />
             )}
             <Col className="hide-if-prior-sibling">
-              <Button
-                className="w-100"
-                onClick={() =>
-                  dispatch(synthDeposit(synth1.address, deposit(), wallet))
-                }
-              >
+              <Button className="w-100" onClick={() => handleDeposit()}>
                 {t('confirm')}
+                {txnLoading && (
+                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                )}
               </Button>
             </Col>
           </Row>

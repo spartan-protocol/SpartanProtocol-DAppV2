@@ -39,8 +39,11 @@ const Overview = () => {
   const web3 = useWeb3()
   const apiUrl = apiUrlBQ
   const header = headerBQ
+
+  const [txnLoading, setTxnLoading] = useState(false)
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
+
   const getData = () => {
     setnetwork(getNetwork())
   }
@@ -213,6 +216,7 @@ ethereum(network: $network){
   }
 
   const handleDonation = async () => {
+    setTxnLoading(true)
     const asset = getAsset(selectedAsset)
     if (asset.symbol === 'BNB') {
       const signer = getWalletProvider(wallet?.library)
@@ -242,6 +246,7 @@ ethereum(network: $network){
         convertToWei(inputDonation?.value),
       )
     }
+    setTxnLoading(false)
   }
 
   return (
@@ -446,6 +451,13 @@ ethereum(network: $network){
                       onClick={() => handleDonation()}
                     >
                       {t('donate')}
+                      {txnLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
                     </Button>
                   </>
                 )}

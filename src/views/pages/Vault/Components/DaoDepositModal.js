@@ -10,6 +10,7 @@ import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import Approval from '../../../../components/Approval/Approval'
 import { getAddresses } from '../../../../utils/web3'
 import { getDao } from '../../../../utils/math/utils'
+import { Icon } from '../../../../components/Icons/icons'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
@@ -19,6 +20,7 @@ const DaoDepositModal = (props) => {
   const dao = useDao()
   const wallet = useWeb3React()
   const addr = getAddresses()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
   const [lockoutConfirm, setLockoutConfirm] = useState(false)
   const pool1 = pool.poolDetails.filter(
@@ -36,6 +38,13 @@ const DaoDepositModal = (props) => {
   }
 
   const deposit = () => BN(percentage).div(100).times(pool1.balance).toFixed(0)
+
+  const handleDeposit = async () => {
+    setTxnLoading(true)
+    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
+    setTxnLoading(false)
+    handleCloseModal()
+  }
 
   return (
     <>
@@ -110,7 +119,7 @@ const DaoDepositModal = (props) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Row className="text-center">
+          <Row className="text-center w-100">
             {wallet?.account && (
               <Approval
                 tokenAddress={pool1.address}
@@ -124,12 +133,13 @@ const DaoDepositModal = (props) => {
             <Col xs="12" className="hide-if-prior-sibling">
               <Button
                 className="w-100"
-                onClick={() =>
-                  dispatch(daoDeposit(pool1.address, deposit(), wallet))
-                }
+                onClick={() => handleDeposit()}
                 disabled={deposit() <= 0 || !lockoutConfirm}
               >
                 {t('confirm')}
+                {txnLoading && (
+                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                )}
               </Button>
             </Col>
           </Row>

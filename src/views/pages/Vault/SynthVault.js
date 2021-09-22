@@ -29,6 +29,7 @@ const SynthVault = () => {
   const pool = usePool()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [trigger0, settrigger0] = useState(0)
 
   const getGlobals = () => {
@@ -89,6 +90,12 @@ const SynthVault = () => {
       return false
     }
     return true
+  }
+
+  const handleHarvest = async () => {
+    setTxnLoading(true)
+    await dispatch(synthHarvest(claimArray, wallet))
+    setTxnLoading(false)
   }
 
   return (
@@ -191,13 +198,16 @@ const SynthVault = () => {
                 {reserve.globalDetails.emissions ? (
                   <Button
                     className="w-100"
-                    onClick={() => dispatch(synthHarvest(claimArray, wallet))}
+                    onClick={() => handleHarvest()}
                     disabled={
                       synth.memberDetails?.totalWeight <= 0 ||
                       claimArray.length <= 0
                     }
                   >
                     {t('harvestAll')}
+                    {txnLoading && (
+                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                    )}
                   </Button>
                 ) : (
                   <Button className="w-100" disabled>

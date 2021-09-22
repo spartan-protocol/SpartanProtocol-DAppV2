@@ -44,6 +44,7 @@ const NewProposal = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
 
+  const [txnLoading, setTxnLoading] = useState(false)
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
   const getNet = () => {
@@ -153,28 +154,35 @@ const NewProposal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType])
 
-  const handleSubmit = () => {
-    if (selectedType?.type === 'Action') {
-      dispatch(newActionProposal(selectedType.value, wallet))
-    } else if (selectedType?.type === 'Param') {
-      dispatch(newParamProposal(inputParam, selectedType.value, wallet))
-    } else if (selectedType?.type === 'Address') {
-      dispatch(newAddressProposal(inputAddress, selectedType.value, wallet))
-    } else if (selectedType?.type === 'Grant') {
-      dispatch(newGrantProposal(inputAddress, convertToWei(inputParam), wallet))
-    }
-  }
-
-  const handleTypeSelect = (value) => {
-    setSelectedType(proposalTypes.filter((i) => i.value === value)[0])
-  }
-
   const handleOnHide = () => {
     setShowModal(false)
     setSelectedType(proposalTypes[0])
     setfeeConfirm(false)
     setinputAddress('')
     setinputParam('')
+  }
+
+  const handleSubmit = async () => {
+    setTxnLoading(true)
+    if (selectedType?.type === 'Action') {
+      await dispatch(newActionProposal(selectedType.value, wallet))
+    } else if (selectedType?.type === 'Param') {
+      await dispatch(newParamProposal(inputParam, selectedType.value, wallet))
+    } else if (selectedType?.type === 'Address') {
+      await dispatch(
+        newAddressProposal(inputAddress, selectedType.value, wallet),
+      )
+    } else if (selectedType?.type === 'Grant') {
+      await dispatch(
+        newGrantProposal(inputAddress, convertToWei(inputParam), wallet),
+      )
+    }
+    setTxnLoading(false)
+    handleOnHide()
+  }
+
+  const handleTypeSelect = (value) => {
+    setSelectedType(proposalTypes.filter((i) => i.value === value)[0])
   }
 
   const isLoading = () => {
@@ -341,7 +349,7 @@ const NewProposal = () => {
         )}
         {network.chainId !== 97 && <WrongNetwork />}
         <Modal.Footer>
-          <Row className="">
+          <Row className="w-100">
             {wallet?.account && !existingPid && (
               <Approval
                 tokenAddress={addr.spartav2}
@@ -364,6 +372,9 @@ const NewProposal = () => {
                 onClick={() => handleSubmit()}
               >
                 {t('confirm')}
+                {txnLoading && (
+                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                )}
               </Button>
             </Col>
           </Row>

@@ -23,8 +23,11 @@ const Upgrade = () => {
   const sparta = useSparta()
   const wallet = useWeb3React()
   const { t } = useTranslation()
-  const [bnbBalance, setbnbBalance] = useState('0')
   const fsGenesis = '1620795586'
+
+  const [upgradeLoading, setUpgradeLoading] = useState(false)
+  const [claimLoading, setClaimLoading] = useState(false)
+  const [bnbBalance, setbnbBalance] = useState('0')
   const [loadingBalance, setloadingBalance] = useState(false)
 
   const getSpartav1 = () => getToken(addr.spartav1, pool.tokenDetails)
@@ -87,6 +90,18 @@ const Upgrade = () => {
     return claimAmount
   }
 
+  const handleUpgrade = async () => {
+    setUpgradeLoading(true)
+    await dispatch(spartaUpgrade(wallet))
+    setUpgradeLoading(false)
+  }
+
+  const handleClaim = async () => {
+    setClaimLoading(true)
+    await dispatch(fallenSpartansClaim(wallet))
+    setClaimLoading(false)
+  }
+
   return (
     <>
       {pool.tokenDetails.length > 0 && (
@@ -121,10 +136,17 @@ const Upgrade = () => {
                     <Col xs="12" className="">
                       <Button
                         className="w-100"
-                        onClick={() => dispatch(spartaUpgrade(wallet))}
+                        onClick={() => handleUpgrade()}
                         disabled={getSpartav1().balance <= 0}
                       >
                         {t('upgrade')} SPARTA
+                        {upgradeLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
                       </Button>
                     </Col>
                   </Row>
@@ -175,10 +197,17 @@ const Upgrade = () => {
                     <Col xs="12" className="">
                       <Button
                         className="w-100"
-                        onClick={() => dispatch(fallenSpartansClaim(wallet))}
+                        onClick={() => handleClaim()}
                         disabled={sparta?.claimCheck <= 0}
                       >
                         {t('claim')} SPARTA
+                        {claimLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
                       </Button>
                     </Col>
                   </Row>
