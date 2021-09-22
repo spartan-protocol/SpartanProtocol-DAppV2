@@ -5,6 +5,7 @@ import thunk from 'redux-thunk'
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Web3ReactProvider } from '@web3-react/core'
+import { ethers } from 'ethers'
 import Common from './components/layout/Common'
 
 import { bondReducer } from './store/bond'
@@ -18,6 +19,8 @@ import { utilsReducer } from './store/utils'
 import { web3Reducer } from './store/web3'
 import { getNetwork } from './utils/web3'
 import { getLibrary } from './utils/web3React'
+
+ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR) // turn off warnings
 
 const globalFormat = {
   prefix: '',

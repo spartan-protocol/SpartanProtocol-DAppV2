@@ -301,7 +301,6 @@ export const burnSynth = (
   const _spartaRec = BN(spartaOut.times(0.95).toFixed(0)) // SPARTA after 5% slip
   const _spartaRec0 = minusFeeBurn(_spartaRec, feeOnTsf) // Router receives SPARTA (feeBurn)
   diviSynth = synthFee.isGreaterThan(one) && synthFee
-  const _spartaRec1 = minusFeeBurn(_spartaRec0, feeOnTsf) // Pool receives SPARTA (feeBurn)
   const updatedPool = {}
   updatedPool.curated = swapPool.curated
   updatedPool.baseAmount = swapPool.baseAmount
@@ -310,7 +309,7 @@ export const burnSynth = (
     updatedPool.baseAmount = baseAmount.minus(_spartaRec)
   }
   const [tokenOut, swapFee, , _diviSwap] = swapTo(
-    _spartaRec1,
+    _spartaRec0,
     updatedPool,
     updatedPool,
     feeOnTsf,

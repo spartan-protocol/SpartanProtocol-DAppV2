@@ -213,7 +213,7 @@ const Swap = () => {
           setMode('pool')
           window.localStorage.setItem('assetType2', 'pool')
         } else if (type1 === 'synth') {
-          tempFilter.push(['token'])
+          tempFilter.push('token')
           setMode('synthIn')
           window.localStorage.setItem('assetType2', 'token')
         }
