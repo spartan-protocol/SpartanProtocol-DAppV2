@@ -397,48 +397,38 @@ const parseTxnLogs = (txn, txnType) => {
   }
   // BOND.TXN TYPES
   if (txnType === 'bondDeposit') {
-    // let log1 = txn.logs[1] // Sent/Bonded Sparta.Transfer event (from, to, value)
-    const log2 = txn.logs[4] // Sent/Bonded Token.Transfer event (from, to, value)
-    const log3 = txn.logs[7] // Received LP.Transfer event (from, to, value)
-    let log4 = txn.logs[txn.logs.length - 1] // Dao.DepositAsset event (owner, depositAmount, bondedLP) ***EVENT NEEDS DEPOSITED ASSET ADDR && POOL ADDR ADDED***
-    const sendToken1 = log2.address // Deposited tokenAddr
-    const recToken1 = log3.address // Received LP tokenAddr
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
-    // const ercInterface = new ethers.utils.Interface(abiArray.erc20)
-    // log1 = ercInterface.parseLog(log1).args
-    log4 = daoInterface.parseLog(log4).args
+    const iface = new ethers.utils.Interface(abiArray.dao)
+    const log = txn.logs[txn.logs.length - 1]
+    // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const bondLog = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: log4.depositAmount.toString(),
-      sendToken1,
+      sendAmnt1: bondLog.depositAmount.toString(),
+      sendToken1: bondLog.tokenAddress,
       send1: member,
-      // sendAmnt2: log1.value.toString(),
-      // sendToken2: addr.spartav2,
-      // send2: 'DAO',
-      recAmnt1: log4.bondedLP.toString(),
-      recToken1,
+      recAmnt1: bondLog.bondedLP.toString(),
+      recToken1: bondLog.poolAddress,
       rec1: 'BondVault',
     }
   }
   if (txnType === 'bondClaim') {
-    let log1 = txn.logs[0] // Received LP.Transfer event (from, to, value)
-    const recToken1 = log1.address // Received LP tokenAddr
-    // ***IDEALLY NEED TO ADD A BONDCLAIM EVENT*** WITH: (member, pool, value)
-    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
-    log1 = ercInterface.parseLog(log1).args
+    const iface = new ethers.utils.Interface(abiArray.bondVault)
+    const log = txn.logs[txn.logs.length - 1]
+    // BondVault.Claimed (owner, poolAddress, amount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const claimLog = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: log1.value.toString(),
-      sendToken1: recToken1,
+      sendAmnt1: claimLog.amount.toString(),
+      sendToken1: claimLog.poolAddress,
       send1: 'BondVault',
-      recAmnt1: log1.value.toString(),
-      recToken1,
+      recAmnt1: claimLog.amount.toString(),
+      recToken1: claimLog.poolAddress,
       rec1: member,
     }
   }
@@ -478,20 +468,19 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'daoHarvest') {
-    let log = txn.logs[1] // SPARTA.Transfer event (from, to, value)
-    // ***IDEALLY NEED TO ADD A HARVEST EVENT*** WITH: (member, value)
-    const abi = abiArray.erc20
-    const iface = new ethers.utils.Interface(abi)
-    log = iface.parseLog(log).args
+    const iface = new ethers.utils.Interface(abiArray.dao)
+    const log = txn.logs[txn.logs.length - 1]
+    // Dao.Harvest (owner, amount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    const harvestLog = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
       txnType,
       txnTypeIcon: txnType,
-      sendAmnt1: log.value.toString(),
+      sendAmnt1: harvestLog.amount.toString(),
       sendToken1: addr.spartav2,
       send1: 'Reserve',
-      recAmnt1: log.value.toString(),
+      recAmnt1: harvestLog.amount.toString(),
       recToken1: addr.spartav2,
       rec1: member,
     }
@@ -961,7 +950,7 @@ const parseTxnLogs = (txn, txnType) => {
       send1: 'Reserve',
       recAmnt1: recAmnt1.toString(),
       recToken1: addr.spartav2,
-      rec1: 'SynthVault',
+      rec1: 'Harvest',
     }
   }
   if (txnType === 'synthWithdraw') {
