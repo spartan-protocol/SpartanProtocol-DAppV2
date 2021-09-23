@@ -520,6 +520,12 @@ const Swap = () => {
       if (!synth.synthMinting) {
         return [false, t('synthsDisabled')]
       }
+      if (getMint()[4]) {
+        return [false, t('poolAtCapacity')]
+      }
+      if (getMint()[5]) {
+        return [false, t('synthAtCapacity')]
+      }
       if (!confirmSynth) {
         return [false, t('confirmLockup')]
       }

@@ -241,7 +241,7 @@ export const mintSynth = (
     const [synthOut, synthFee] = calcSwapOutput(_spartaRec, synthPool, false) // Swap SPARTA for SYNTH (Pool -> User)
     const _synthRec = BN(synthOut.times(0.99).toFixed(0)) // Synths after 1% slip
     synthCapped = _totalSupply
-      .plus(synthOut)
+      .plus(_synthRec)
       .isGreaterThan(stirCauldron(synthPool.synthCap, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
     diviSynth = synthFee.isGreaterThan(one) && synthFee
     return [_synthRec, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
