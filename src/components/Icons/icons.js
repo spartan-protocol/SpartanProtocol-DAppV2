@@ -1,14 +1,19 @@
 import React from 'react'
 // BRANDS
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
+// FLAGS
+import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
 import { ReactComponent as ArrowDown } from '../../assets/icons/arrow-down.svg'
+import { ReactComponent as ArrowLeft } from '../../assets/icons/arrow-left.svg'
+import { ReactComponent as ArrowRight } from '../../assets/icons/arrow-right.svg'
 import { ReactComponent as ArrowUp } from '../../assets/icons/arrow-up.svg'
 import { ReactComponent as Close } from '../../assets/icons/close.svg'
 import { ReactComponent as Colosseum } from '../../assets/icons/colosseum.svg'
 import { ReactComponent as Connect } from '../../assets/icons/connect.svg'
 import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
+import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
 import { ReactComponent as Helmet } from '../../assets/icons/helmet.svg'
 import { ReactComponent as Home } from '../../assets/icons/home.svg'
@@ -53,18 +58,24 @@ import { ReactComponent as BinanceChain } from '../../assets/brands/binance-chai
 import { ReactComponent as MathWallet } from '../../assets/brands/math.svg'
 import { ReactComponent as MetaMask } from '../../assets/brands/metamask.svg'
 import { ReactComponent as TrustWallet } from '../../assets/brands/trust-wallet.svg'
+import { ReactComponent as WalletConnect } from '../../assets/brands/walletconnect.svg'
 
 const icons = {
   // BRANDS
   apple: Apple,
+  // FLAGS
+  turkeyFlag: TurkeyFlag,
   // ICONS
   arrowDown: ArrowDown,
+  arrowLeft: ArrowLeft,
+  arrowRight: ArrowRight,
   arrowUp: ArrowUp,
   close: Close,
   colosseum: Colosseum,
   connect: Connect,
   contract: Contract,
   copy: Copy,
+  cycle: Cycle,
   fire: Fire,
   helmet: Helmet,
   home: Home,
@@ -109,6 +120,7 @@ const icons = {
   mathwallet: MathWallet,
   metamask: MetaMask,
   trustwallet: TrustWallet,
+  walletconnect: WalletConnect,
 }
 
 /**

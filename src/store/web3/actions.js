@@ -2,12 +2,12 @@ import axios from 'axios'
 import * as Types from './types'
 
 import {
-  getWalletWindowObj,
   bscRpcsMN,
   bscRpcsTN,
   getNetwork,
   getProviderGasPrice,
-  getWalletProvider,
+  getWalletWindowObj,
+  parseTxn,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
@@ -27,7 +27,6 @@ export const addNetworkMM = () => async (dispatch) => {
   const providerETH = window.ethereum ? window.ethereum : null
   const network = getNetwork()
   const chainId = parseInt(network.chainId, 10)
-
   if (providerETH) {
     try {
       const addedNetworkMM = await providerETH.request({
@@ -48,7 +47,7 @@ export const addNetworkMM = () => async (dispatch) => {
       })
       dispatch(payloadToDispatch(Types.ADD_NETWORK_MM, addedNetworkMM))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   } else {
     dispatch(
@@ -70,14 +69,13 @@ export const addNetworkBC = () => async (dispatch) => {
   const providerBC = window.BinanceChain ? window.BinanceChain : null
   const network = getNetwork()
   const chainId = parseInt(network.chainId, 10)
-
   if (providerBC && parseInt(providerBC?.chainId, 16) !== chainId) {
     const chainIdString = network.chainId === 97 ? 'bsc-testnet' : 'bsc-mainnet'
     try {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(payloadToDispatch(Types.ADD_NETWORK_BC, addedNetworkBC))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   } else {
     dispatch(
@@ -98,29 +96,22 @@ export const getApproval =
   (tokenAddress, contractAddress, wallet) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-    let provider = getWalletProvider(wallet?.ethereum)
-    if (provider._isSigner === true) {
-      provider = provider.provider
-    }
-
     try {
       const gPrice = await getProviderGasPrice()
-      let approval = await contract.approve(
+      let txn = await contract.approve(
         contractAddress,
         convertToWei(1000000000),
-        {
-          gasPrice: gPrice,
-        },
+        { gasPrice: gPrice },
       )
-      approval = await provider.waitForTransaction(approval.hash, 1)
-      dispatch(payloadToDispatch(Types.GET_APPROVAL, approval))
+      txn = await parseTxn(txn, 'approval')
+      dispatch(payloadToDispatch(Types.WEB3_TXN, txn))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   }
 
 /**
- * Get the current allowance-limit for a smart contract to handle transferring a token on behlf of a wallet
+ * Get the current allowance-limit for a smart contract to handle transferring a token on behalf of a wallet
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */
@@ -128,20 +119,19 @@ export const getAllowance1 =
   (tokenAddress, wallet, contractAddress) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-
     try {
       const allowance1 = await contract.allowance(
         wallet.account,
         contractAddress,
       )
-      dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1))
+      dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1.toString()))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   }
 
 /**
- * Get the current allowance-limit for a smart contract to handle transferring a token on behlf of a wallet
+ * Get the current allowance-limit for a smart contract to handle transferring a token on behalf of a wallet
  * @param {string} address - Address of the token being transferred & the address of the smart contract handling the token
  * @returns {BigNumber?}
  */
@@ -149,15 +139,14 @@ export const getAllowance2 =
   (tokenAddress, wallet, contractAddress) => async (dispatch) => {
     dispatch(web3Loading())
     const contract = getTokenContract(tokenAddress, wallet)
-
     try {
       const allowance2 = await contract.allowance(
         wallet.account,
         contractAddress,
       )
-      dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2))
+      dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2.toString()))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
     }
   }
 
@@ -167,11 +156,11 @@ export const getAllowance2 =
  * @returns {boolean} true if succeeds
  */
 export const watchAsset =
-  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage) =>
+  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage, wallet) =>
   async (dispatch) => {
     dispatch(web3Loading())
     const connectedWalletType = getWalletWindowObj()
-    if (window.sessionStorage.getItem('walletConnected')) {
+    if (wallet.account) {
       try {
         const watchingAsset = await connectedWalletType.request({
           method: 'wallet_watchAsset',
@@ -192,7 +181,7 @@ export const watchAsset =
         }
         dispatch(payloadToDispatch(Types.WATCH_ASSET, watchingAsset))
       } catch (error) {
-        dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+        dispatch(errorToDispatch(Types.WEB3_ERROR, error))
       }
     } else {
       dispatch(
@@ -218,7 +207,7 @@ export const getSpartaPrice = () => async (dispatch) => {
       ),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }
 
@@ -232,6 +221,6 @@ export const getEventArray = (array) => async (dispatch) => {
     const eventArray = array
     dispatch(payloadToDispatch(Types.EVENT_ARRAY, eventArray))
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }
 }

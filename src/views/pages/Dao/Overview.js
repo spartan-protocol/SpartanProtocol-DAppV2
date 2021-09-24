@@ -2,23 +2,32 @@ import React, { useState, useEffect } from 'react'
 import { Row, Col, Card, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import ProposalItem from './ProposalItem'
 import { useDao } from '../../../store/dao/selector'
 import {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
+  daoVaultWeight,
+  getDaoDetails,
+  proposalWeight,
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
-import { bondMemberDetails } from '../../../store/bond'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import { usePool } from '../../../store/pool/selector'
+import { bondVaultWeight, getBondDetails } from '../../../store/bond'
+import { getSynthDetails } from '../../../store/synth/actions'
+import { useSynth } from '../../../store/synth/selector'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const dao = useDao()
-  const wallet = useWallet()
+  const pool = usePool()
+  const synth = useSynth()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const [selectedView, setSelectedView] = useState('current')
@@ -42,7 +51,7 @@ const Overview = () => {
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    if (network.chainId === 97) {
+    if (tempChains.includes(network.chainId)) {
       dispatch(daoGlobalDetails(wallet))
     }
   }
@@ -59,13 +68,27 @@ const Overview = () => {
   }, [trigger0])
 
   useEffect(() => {
-    if (network.chainId === 97) {
+    if (tempChains.includes(network.chainId)) {
       dispatch(daoMemberDetails(wallet))
-      dispatch(bondMemberDetails(wallet))
-      dispatch(daoProposalDetails(dao.global?.proposalCount, wallet))
+      dispatch(daoProposalDetails(dao.global?.currentProposal, wallet))
+      dispatch(
+        proposalWeight(dao.global?.currentProposal, pool.poolDetails, wallet),
+      )
+      dispatch(daoVaultWeight(pool.poolDetails, wallet))
+      dispatch(bondVaultWeight(pool.poolDetails, wallet))
+      dispatch(getDaoDetails(pool.listedPools, wallet))
+      dispatch(getBondDetails(pool.listedPools, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
+
+  const isLoading = () => {
+    if (dao.global.currentProposal === 0 && !dao.proposal) {
+      return true
+    }
+    return false
+  }
 
   return (
     <>
@@ -78,7 +101,7 @@ const Overview = () => {
             </div>
           </Col>
         </Row>
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Form.Group as={Row} className="row-480 mb-3">
               <Col xs="12">
@@ -109,42 +132,44 @@ const Overview = () => {
                 />
               </Col>
             </Form.Group>
-            <Row className="row-480">
-              {dao?.proposal.length > 0 && (
-                <>
-                  {selectedView === 'current' &&
-                    (dao?.proposal.filter((pid) => pid.open).length > 0
-                      ? dao?.proposal
-                          .filter((pid) => pid.open)
-                          .map((pid) => (
-                            <ProposalItem key={pid.id} proposal={pid} />
-                          ))
-                      : t('noOpenProposalsInfo'))}
-                  {selectedView === 'complete' &&
-                    dao?.proposal
-                      .filter((pid) => pid.finalised)
-                      .sort((a, b) => b.id - a.id)
-                      .map((pid) => (
-                        <ProposalItem key={pid.id} proposal={pid} />
-                      ))}
-                  {selectedView === 'failed' &&
-                    dao?.proposal
-                      .filter((pid) => !pid.open && !pid.finalised)
-                      .sort((a, b) => b.id - a.id)
-                      .map((pid) => (
-                        <ProposalItem key={pid.id} proposal={pid} />
-                      ))}
-                </>
-              )}
-
-              {dao?.proposal.length <= 0 && (
-                <Col xs="auto">
-                  <Card className="card-320 card-underlay">
-                    <Card.Body>{t('noValidProposals')}</Card.Body>
-                  </Card>
-                </Col>
-              )}
-            </Row>
+            {!isLoading() ? (
+              <Row className="row-480">
+                {dao.proposal.length > 0 ? (
+                  <>
+                    {selectedView === 'current' &&
+                      (dao.proposal.filter((pid) => pid.open).length > 0
+                        ? dao?.proposal
+                            .filter((pid) => pid.open)
+                            .map((pid) => (
+                              <ProposalItem key={pid.id} proposal={pid} />
+                            ))
+                        : t('noOpenProposalsInfo'))}
+                    {selectedView === 'complete' &&
+                      dao.proposal
+                        .filter((pid) => pid.finalised)
+                        .sort((a, b) => b.id - a.id)
+                        .map((pid) => (
+                          <ProposalItem key={pid.id} proposal={pid} />
+                        ))}
+                    {selectedView === 'failed' &&
+                      dao.proposal
+                        .filter((pid) => !pid.open && !pid.finalised)
+                        .sort((a, b) => b.id - a.id)
+                        .map((pid) => (
+                          <ProposalItem key={pid.id} proposal={pid} />
+                        ))}
+                  </>
+                ) : (
+                  <Col xs="auto">
+                    <Card className="card-320 card-underlay">
+                      <Card.Body>{t('noValidProposals')}</Card.Body>
+                    </Card>
+                  </Col>
+                )}
+              </Row>
+            ) : (
+              <HelmetLoading height={200} width={200} />
+            )}
           </>
         )}
         {network.chainId !== 97 && <WrongNetwork />}

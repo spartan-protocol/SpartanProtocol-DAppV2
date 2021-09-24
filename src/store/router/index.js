@@ -9,4 +9,5 @@ export {
   swap,
   swapAssetToSynth,
   swapSynthToAsset,
+  updatePoolStatus,
 } from './actions'

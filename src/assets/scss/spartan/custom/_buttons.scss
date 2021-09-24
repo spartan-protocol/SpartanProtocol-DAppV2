@@ -1,6 +1,6 @@
 .btn {
   border: none;
-  color: #FFF;
+  color: #fff;
 }
 
 .btn-primary {
@@ -10,6 +10,9 @@
 .btn-secondary {
   @include btn-styles($secondary, $secondary-states);
   color: #000;
+  &:disabled {
+    color: #000;
+  }
 }
 
 .btn-success {
@@ -32,6 +35,10 @@
   @include btn-styles(#25212d, #25212d);
 }
 
+.btn-dark {
+  @include btn-styles($dark, $dark-states);
+}
+
 .btn-transparent {
   background: transparent;
   padding: 2px;
@@ -44,5 +51,13 @@
     background-color: transparent !important;
     background-image: none !important;
     box-shadow: none;
+  }
+}
+
+// LIGHT THEME
+.white-content {
+  .btn-dark {
+    @include btn-styles($light, $light-states);
+    color: #000;
   }
 }

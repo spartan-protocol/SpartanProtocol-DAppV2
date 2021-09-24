@@ -13,6 +13,7 @@ import {
   getAbis,
   getAddresses,
   getProviderGasPrice,
+  parseTxn,
 } from '../../utils/web3'
 import { apiUrlBQ, headerBQ } from '../../utils/extCalls'
 import { convertToWei } from '../../utils/bigNumber'
@@ -21,10 +22,10 @@ export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
 })
 
-export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
+export const getSpartaGlobalDetails = () => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract1 = getSpartaV1Contract(wallet)
-  const contract2 = getSpartaV2Contract(wallet)
+  const contract1 = getSpartaV1Contract()
+  const contract2 = getSpartaV2Contract()
 
   try {
     let awaitArray = [
@@ -52,25 +53,7 @@ export const getSpartaGlobalDetails = (wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Upgrade SPARTA(old V1) to SPARTA(New V2)
- */
-export const spartaUpgrade = (wallet) => async (dispatch) => {
-  dispatch(spartaLoading())
-  const contract = getSpartaV2Contract(wallet)
-  try {
-    const gPrice = await getProviderGasPrice()
-    const upgrade = await contract.upgrade({
-      gasPrice: gPrice,
-    })
-
-    dispatch(payloadToDispatch(Types.SPARTA_UPGRADE, upgrade))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -82,12 +65,27 @@ export const spartaUpgrade = (wallet) => async (dispatch) => {
 export const fallenSpartansCheck = (wallet) => async (dispatch) => {
   dispatch(spartaLoading())
   const contract = getFallenSpartansContract(wallet)
-
   try {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck.toString()))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
+  }
+}
+
+/**
+ * Upgrade SPARTA(old V1) to SPARTA(New V2)
+ */
+export const spartaUpgrade = (wallet) => async (dispatch) => {
+  dispatch(spartaLoading())
+  const contract = getSpartaV2Contract(wallet)
+  try {
+    const gPrice = await getProviderGasPrice()
+    let txn = await contract.upgrade({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'upgrade')
+    dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -99,13 +97,11 @@ export const fallenSpartansClaim = (wallet) => async (dispatch) => {
   const contract = getFallenSpartansContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const claim = await contract.claim({
-      gasPrice: gPrice,
-    })
-
-    dispatch(payloadToDispatch(Types.FALLENSPARTA_CLAIM, claim))
+    let txn = await contract.claim({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'fsClaim')
+    dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -165,7 +161,7 @@ export const spartaFeeBurnTally = () => async (dispatch) => {
       ),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -178,7 +174,7 @@ export const spartaFeeBurnRecent = (amount) => async (dispatch) => {
     const feeBurnRecent = amount
     dispatch(payloadToDispatch(Types.SPARTA_FEEBURN_RECENT, feeBurnRecent))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }
 
@@ -210,7 +206,7 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
       spartaCont.callStatic.balanceOf(comWal),
       busdCont.callStatic.balanceOf(comWal),
       usdtCont.callStatic.balanceOf(comWal),
-      // wallet ? spartaCont.callStatic.balanceOf(wallet.account) : '0',
+      wallet ? spartaCont.callStatic.balanceOf(wallet.account) : '0',
       wallet?.account ? busdCont.callStatic.balanceOf(wallet.account) : '0',
       wallet?.account ? usdtCont.callStatic.balanceOf(wallet.account) : '0',
     ]
@@ -220,14 +216,15 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
       sparta: awaitArray[0].toString(),
       busd: awaitArray[1].toString(),
       usdt: awaitArray[2].toString(),
+      userSparta: awaitArray[3].toString(),
       userBnb: wallet?.account
         ? (await provider.getBalance(wallet.account)).toString()
         : '0',
-      userBusd: awaitArray[3].toString(),
-      userUsdt: awaitArray[4].toString(),
+      userBusd: awaitArray[4].toString(),
+      userUsdt: awaitArray[5].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_COMMUNITY_WALLET, communityWallet))
   } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
 }

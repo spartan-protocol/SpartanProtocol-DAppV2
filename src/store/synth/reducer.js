@@ -1,15 +1,14 @@
 import * as Types from './types'
 
 const initialState = {
-  globalDetails: [],
-  memberDetails: [],
-  synthArray: [],
-  synthDetails: [],
-  deposit: '0',
-  harvest: '0',
-  harvestSingle: '0',
-  withdrawAmount: '0',
+  globalDetails: false,
+  member: false,
+  synthMinting: false,
+  synthArray: false,
+  synthDetails: false,
+  txn: [],
   newSynth: {},
+  totalWeight: '0',
 }
 
 export const synthReducer = (state = initialState, action) => {
@@ -26,7 +25,16 @@ export const synthReducer = (state = initialState, action) => {
     case Types.SYNTH_MEMBER_DETAILS: {
       return {
         ...state,
-        memberDetails: action.payload,
+        member: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.SYNTH_MINTING: {
+      return {
+        ...state,
+        synthMinting: action.payload,
         error: null,
         loading: false,
       }
@@ -50,46 +58,19 @@ export const synthReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.SYNTH_DEPOSIT: {
+    case Types.SYNTH_TXN: {
       return {
         ...state,
-        deposit: action.payload,
+        txn: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.SYNTH_HARVEST: {
+    case Types.SYNTH_WEIGHT: {
       return {
         ...state,
-        harvest: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.SYNTH_HARVEST_SINGLE: {
-      return {
-        ...state,
-        harvestSingle: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.SYNTH_WITHDRAW_AMOUNT: {
-      return {
-        ...state,
-        withdrawAmount: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.SYNTH_CREATE: {
-      return {
-        ...state,
-        newSynth: action.payload,
+        totalWeight: action.payload,
         error: null,
         loading: false,
       }

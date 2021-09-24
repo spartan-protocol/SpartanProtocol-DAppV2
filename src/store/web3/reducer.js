@@ -3,7 +3,7 @@ import * as Types from './types'
 const initialState = {
   addedNetworkMM: {},
   addedNetworkBC: {},
-  approval: false,
+  txn: [],
   allowance1: {},
   allowance2: {},
   watchingAsset: false,
@@ -33,10 +33,10 @@ export const web3Reducer = (state = initialState, action) => {
       }
     }
 
-    case Types.GET_APPROVAL: {
+    case Types.WEB3_TXN: {
       return {
         ...state,
-        approval: action.payload,
+        txn: action.payload,
         loading: false,
         error: null,
       }

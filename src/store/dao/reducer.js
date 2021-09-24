@@ -1,17 +1,15 @@
 import * as Types from './types'
 
 const initialState = {
-  global: [],
-  member: [],
-  proposal: [],
-  deposit: {},
-  withdraw: {},
-  harvest: {},
-  newProp: {},
-  propVote: 0,
-  propRemoveVote: 0,
-  propCancel: 0,
-  propFinalise: 0,
+  global: false,
+  totalWeight: '0',
+  member: false,
+  daoDetails: false,
+  proposal: false,
+  lastDeposits: false,
+  proposalWeight: '0',
+  txn: [],
+  propTxn: [],
   error: null,
   loading: false,
 }
@@ -27,10 +25,28 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
+    case Types.DAO_TOTAL_WEIGHT: {
+      return {
+        ...state,
+        totalWeight: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
     case Types.DAO_MEMBER_DETAILS: {
       return {
         ...state,
         member: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.DAO_DETAILS: {
+      return {
+        ...state,
+        daoDetails: action.payload,
         error: null,
         loading: false,
       }
@@ -45,100 +61,37 @@ export const daoReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.DAO_DEPOSIT: {
+    case Types.DAO_LASTDEPOSITS: {
       return {
         ...state,
-        deposit: action.payload,
+        lastDeposits: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.DAO_WITHDRAW: {
+    case Types.DAO_PROPOSAL_WEIGHT: {
       return {
         ...state,
-        withdraw: action.payload,
+        proposalWeight: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.DAO_HARVEST: {
+    case Types.DAO_TXN: {
       return {
         ...state,
-        harvest: action.payload,
+        txn: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.DAO_NEW_ACTION: {
+    case Types.PROP_TXN: {
       return {
         ...state,
-        newProp: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_NEW_PARAM: {
-      return {
-        ...state,
-        newProp: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_NEW_ADDRESS: {
-      return {
-        ...state,
-        newProp: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_NEW_GRANT: {
-      return {
-        ...state,
-        newProp: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_VOTE: {
-      return {
-        ...state,
-        propVote: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_REMOTE_VOTE: {
-      return {
-        ...state,
-        propRemoveVote: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_CANCEL: {
-      return {
-        ...state,
-        propCancel: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.DAO_FINALISE: {
-      return {
-        ...state,
-        propFinalise: action.payload,
+        propTxn: action.payload,
         error: null,
         loading: false,
       }

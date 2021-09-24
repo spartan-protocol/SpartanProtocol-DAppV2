@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ethers } from 'ethers'
 import axios from 'axios'
 import {
@@ -11,12 +10,16 @@ import {
   FormControl,
   InputGroup,
   Modal,
+  OverlayTrigger,
+  Row,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import Approval from '../../../components/Approval/Approval'
 import {
   getAddresses,
   getNetwork,
   getWalletProvider,
+  tempChains,
 } from '../../../utils/web3'
 import { BN, convertToWei, formatFromUnits } from '../../../utils/bigNumber'
 import { createPoolADD } from '../../../store/pool'
@@ -24,18 +27,21 @@ import { useWeb3 } from '../../../store/web3'
 import { getTokenContract } from '../../../utils/web3Contracts'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const NewPool = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const addr = getAddresses()
   const { t } = useTranslation()
 
   const isLightMode = window.localStorage.getItem('theme')
 
+  const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
+  const [feeConfirm, setFeeConfirm] = useState(false)
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -131,13 +137,13 @@ const NewPool = () => {
       ethers.utils.isAddress(addrInput?.value)
     ) {
       if (
-        network.chainId === 97 ||
+        tempChains.includes(network.chainId) ||
         trustWalletIndex.data.includes(addrInput?.value)
       ) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
         }
-        if (network.chainId === 97 || tokenInfo.decimals === 18) {
+        if (tempChains.includes(network.chainId) || tokenInfo.decimals === 18) {
           setaddrValid(true)
         } else {
           handleInvalid()
@@ -165,7 +171,7 @@ const NewPool = () => {
 
   const [tokenValid, setTokenValid] = useState(false)
   useEffect(() => {
-    if (tokenInput?.value > 0) {
+    if (tokenInput?.value > 0.0000000000001) {
       setTokenValid(true)
     } else {
       setTokenValid(false)
@@ -181,8 +187,9 @@ const NewPool = () => {
     }
   }, [addrValid, spartaValid, tokenValid])
 
-  const handleSubmit = () => {
-    dispatch(
+  const handleSubmit = async () => {
+    setTxnLoading(true)
+    await dispatch(
       createPoolADD(
         convertToWei(spartaInput?.value),
         convertToWei(tokenInput?.value),
@@ -190,12 +197,16 @@ const NewPool = () => {
         wallet,
       ),
     )
+    setTxnLoading(false)
+    setShowModal(false)
   }
 
   const handleModalClear = () => {
     handleAddrChange('')
     handleSpartaChange('')
     handleTokenChange('')
+    setRatioConfirm(false)
+    setFeeConfirm(false)
     setTokenSymbol('TOKEN')
   }
   useEffect(() => {
@@ -253,14 +264,14 @@ const NewPool = () => {
       <Button
         variant={isLightMode ? 'secondary' : 'info'}
         onClick={() => setShowModal(true)}
-        className="rounded"
+        className="rounded-pill pe-3 subtitle-label"
       >
+        <Icon icon="plus" fill="white" size="17" className="me-1 mb-1" />
         {t('pool')}
-        <Icon icon="plus" fill="white" size="20" className="ms-2" />
       </Button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        {network.chainId === 97 && (
+        {tempChains.includes(network.chainId) && (
           <>
             <Modal.Header closeButton>
               <Modal.Title>{t('createPool')}</Modal.Title>
@@ -303,8 +314,11 @@ const NewPool = () => {
                   )
                 </Form.Control.Feedback>
               </InputGroup>
+              Initial liquidity-add:
               <InputGroup className="my-2">
-                <InputGroup.Text>{t('input')}</InputGroup.Text>
+                <InputGroup.Text style={{ width: '73.6719px' }}>
+                  SPARTA
+                </InputGroup.Text>
                 <FormControl
                   id="spartaInput"
                   placeholder="$SPARTA"
@@ -315,13 +329,14 @@ const NewPool = () => {
                   isInvalid={!spartaValid && addrValid}
                   disabled={!addrValid}
                 />
-                <InputGroup.Text>SPARTA</InputGroup.Text>
                 <Form.Control.Feedback type="invalid">
                   Minimum of 10,000 SPARTA required
                 </Form.Control.Feedback>
               </InputGroup>
               <InputGroup className="my-2">
-                <InputGroup.Text>{t('input')}</InputGroup.Text>
+                <InputGroup.Text style={{ width: '73.6719px' }}>
+                  {tokenSymbol}
+                </InputGroup.Text>
                 <FormControl
                   id="tokenInput"
                   placeholder={`$${tokenSymbol}`}
@@ -332,65 +347,108 @@ const NewPool = () => {
                   isInvalid={!tokenValid && addrValid && spartaValid}
                   disabled={!addrValid}
                 />
-                <InputGroup.Text>{tokenSymbol}</InputGroup.Text>
                 <Form.Control.Feedback type="invalid">
                   Make sure you thoroughly check the ratio of the assets being
                   added
                 </Form.Control.Feedback>
               </InputGroup>
-
               <div className="output-card text-center my-2">
                 1 SPARTA = {priceInSparta()} {tokenSymbol}
                 <br />1 {tokenSymbol} = {priceInToken()} SPARTA
                 <br />1 {tokenSymbol} = ~${priceinUSD()} USD
               </div>
               <Form>
-                <Form.Check
-                  id="inputConfirmRatio"
-                  type="switch"
-                  className="text-center"
-                  label="Confirm ratio! Avoid getting rekt!"
-                  checked={ratioConfirm}
-                  isValid={ratioConfirm}
-                  isInvalid={!ratioConfirm}
-                  onChange={() => {
-                    setRatioConfirm(!ratioConfirm)
-                  }}
-                />
+                <div className="text-center">
+                  <Form.Check
+                    id="inputConfirmRatio"
+                    type="switch"
+                    className="d-inline-block"
+                    label="Confirm ratio!"
+                    checked={ratioConfirm}
+                    isValid={ratioConfirm}
+                    isInvalid={!ratioConfirm}
+                    onChange={() => setRatioConfirm(!ratioConfirm)}
+                  />
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'newPoolRatio')}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+                <div className="text-center">
+                  <Form.Check
+                    id="feeConfirm"
+                    type="switch"
+                    className="d-inline-block"
+                    label="Confirm 1% fee!"
+                    checked={feeConfirm}
+                    isValid={feeConfirm}
+                    isInvalid={!feeConfirm}
+                    onChange={() => {
+                      setFeeConfirm(!feeConfirm)
+                    }}
+                  />
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'newPoolFee')}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="17"
+                        fill="white"
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </div>
               </Form>
             </Modal.Body>
             <Modal.Footer className="text-center">
-              {wallet?.account && spartaInput?.value > 0 && (
-                <Approval
-                  tokenAddress={addr.spartav2}
-                  symbol="SPARTA"
-                  walletAddress={wallet.account}
-                  contractAddress={addr.poolFactory}
-                  txnAmount={convertToWei(spartaInput?.value)}
-                  assetNumber="1"
-                />
-              )}
-              <Col xs="12" className="hide-if-siblings">
-                <Button
-                  variant="primary"
-                  disabled={!ratioConfirm || !formValid}
-                  onClick={() => handleSubmit()}
-                >
-                  {t('confirm')}
-                </Button>
-              </Col>
-              {wallet?.account &&
-                tokenInput?.value > 0 &&
-                addrInput?.value !== addr.bnb && (
+              <Row xs="12" className="w-100">
+                {wallet?.account && spartaInput?.value > 0 && (
                   <Approval
-                    tokenAddress={addrInput?.value}
-                    symbol={tokenSymbol}
+                    tokenAddress={addr.spartav2}
+                    symbol="SPARTA"
                     walletAddress={wallet.account}
                     contractAddress={addr.poolFactory}
-                    txnAmount={convertToWei(tokenInput?.value)}
-                    assetNumber="2"
+                    txnAmount={convertToWei(spartaInput?.value)}
+                    assetNumber="1"
                   />
                 )}
+                <Col xs="12" className="hide-if-siblings">
+                  <Button
+                    variant="primary"
+                    disabled={!ratioConfirm || !formValid || !feeConfirm}
+                    onClick={() => handleSubmit()}
+                  >
+                    {t('createPool')}
+                    {txnLoading && (
+                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                    )}
+                  </Button>
+                </Col>
+                {wallet?.account &&
+                  tokenInput?.value > 0 &&
+                  addrInput?.value !== addr.bnb && (
+                    <Approval
+                      tokenAddress={addrInput?.value}
+                      symbol={tokenSymbol}
+                      walletAddress={wallet.account}
+                      contractAddress={addr.poolFactory}
+                      txnAmount={convertToWei(tokenInput?.value)}
+                      assetNumber="2"
+                    />
+                  )}
+              </Row>
             </Modal.Footer>
           </>
         )}

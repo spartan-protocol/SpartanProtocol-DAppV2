@@ -8,7 +8,7 @@ import Bond from './views/pages/Bond/Bond'
 import Vault from './views/pages/Vault/Overview'
 import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
-import CodeArena from './views/pages/CodeArena/Overview'
+import Donate from './views/pages/Donate/Overview'
 import PU from './views/pages/PU/Overview'
 // import Loaders from './views/pages/Samples/Loaders'
 // import Icons from './views/pages/Samples/Icons'
@@ -37,7 +37,7 @@ export const routes = [
   },
 
   {
-    path: '/pools/liquidity',
+    path: '/liquidity',
     name: 'liquidity',
     icon: 'sword',
     component: Liquidity,
@@ -45,7 +45,7 @@ export const routes = [
   },
 
   {
-    path: '/pools/swap',
+    path: '/swap',
     name: 'swap',
     icon: 'swords',
     component: Swap,
@@ -93,10 +93,10 @@ export const routes = [
   },
 
   {
-    path: '/codearena',
-    name: 'codeArena',
+    path: '/donate',
+    name: 'donate',
     icon: 'list',
-    component: CodeArena,
+    component: Donate,
     layout: '',
   },
 

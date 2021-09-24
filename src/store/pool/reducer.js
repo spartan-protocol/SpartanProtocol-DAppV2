@@ -1,12 +1,12 @@
 import * as Types from './types'
 
 const initialState = {
-  listedTokens: [],
-  curatedPools: [],
-  tokenDetails: [],
-  listedPools: [],
-  poolDetails: [],
-  newPool: {},
+  listedTokens: false,
+  tokenDetails: false,
+  curatedPools: false,
+  listedPools: false,
+  poolDetails: false,
+  txn: [],
   loading: false,
   error: null,
   loadingFinal: false,
@@ -23,19 +23,19 @@ export const poolReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOL_CURATED_POOLS: {
+    case Types.POOL_TOKEN_DETAILS: {
       return {
         ...state,
-        curatedPools: action.payload,
+        tokenDetails: action.payload,
         error: null,
         loading: false,
       }
     }
 
-    case Types.POOL_TOKEN_DETAILS: {
+    case Types.POOL_CURATED_POOLS: {
       return {
         ...state,
-        tokenDetails: action.payload,
+        curatedPools: action.payload,
         error: null,
         loading: false,
       }
@@ -59,10 +59,10 @@ export const poolReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.POOL_NEW_POOL: {
+    case Types.POOL_TXN: {
       return {
         ...state,
-        newPool: action.payload,
+        txn: action.payload,
         error: null,
         loadingFinal: false,
       }

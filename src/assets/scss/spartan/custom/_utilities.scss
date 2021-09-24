@@ -1,7 +1,22 @@
-@import "utilities/backgrounds.scss";
-@import "utilities/floating.scss";
-@import "utilities/helper.scss";
-@import "utilities/position.scss";
-@import "utilities/sizing.scss";
-@import "utilities/shadows.scss";
-@import "utilities/text.scss";
+@import 'utilities/animations.scss';
+@import 'utilities/backgrounds.scss';
+@import 'utilities/floating.scss';
+@import 'utilities/helper.scss';
+@import 'utilities/position.scss';
+@import 'utilities/sizing.scss';
+@import 'utilities/shadows.scss';
+@import 'utilities/text.scss';
+
+.rounded-pill-top-left {
+  border-top-left-radius: 50rem !important;
+}
+
+.rounded-pill-top-right {
+  border-top-right-radius: 50rem !important;
+}
+
+@media only screen and (max-width: 320px) {
+  .hide-i5 {
+    display: none;
+  }
+}

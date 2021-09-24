@@ -6,12 +6,17 @@ import {
   getPoolFactoryContract,
   getUtilsContract,
   getRouterContract,
-  getDaoVaultContract,
-  getBondVaultContract,
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import {
+  getAddresses,
+  getProviderGasPrice,
+  oneWeek,
+  parseTxn,
+} from '../../utils/web3'
+import { getSecsSince } from '../../utils/math/nonContract'
+import { BN } from '../../utils/bigNumber'
 
 export const poolLoading = () => ({
   type: Types.POOL_LOADING,
@@ -23,68 +28,36 @@ export const poolDetailsLoading = () => ({
 
 /**
  * Get array of all listed token addresses
- * @param {object} wallet
- * @returns {array} tokenArray
+ * @param wallet
  */
-export const getListedTokens = (wallet) => async (dispatch) => {
+export const getListedTokens = () => async (dispatch) => {
   dispatch(poolLoading())
   const addr = getAddresses()
   const check = ethers.utils.isAddress(addr.poolFactory)
-  const contract = check === true ? getPoolFactoryContract(wallet) : ''
+  const contract = check === true ? getPoolFactoryContract() : ''
 
   try {
-    let listedTokens = []
+    const listedTokens = []
     if (check === true) {
-      const tokenCount = await contract.callStatic.tokenCount()
-      const tempArray = []
-      for (let i = 0; i < tokenCount; i++) {
-        tempArray.push(contract.callStatic.getToken(i))
+      const _listedTokens = await contract.callStatic.getTokenAssets()
+      for (let i = 0; i < _listedTokens.length; i++) {
+        listedTokens.push(_listedTokens[i])
       }
-      listedTokens = await Promise.all(tempArray)
       const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
-      if (wbnbIndex > -1)
-        listedTokens[wbnbIndex] = '0x0000000000000000000000000000000000000000'
+      if (wbnbIndex > -1) {
+        listedTokens[wbnbIndex] = addr.bnb
+      }
     }
     listedTokens.push(addr.spartav1, addr.spartav2)
     dispatch(payloadToDispatch(Types.POOL_LISTED_TOKENS, listedTokens))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
-  }
-}
-
-/**
- * Get array of curated pool addresses
- * @param {object} wallet
- * @returns {array} curatedPoolArray
- */
-export const getCuratedPools = (wallet) => async (dispatch) => {
-  dispatch(poolLoading())
-  const addr = getAddresses()
-  const check = ethers.utils.isAddress(addr.poolFactory)
-  const contract = check === true ? getPoolFactoryContract(wallet) : ''
-
-  try {
-    let curatedPools = []
-    if (check === true) {
-      const curatedPoolCount = await contract.callStatic.getCuratedPoolsLength()
-      const tempArray = []
-      for (let i = 0; i < curatedPoolCount; i++) {
-        tempArray.push(contract.callStatic.getCuratedPool(i))
-      }
-      curatedPools = await Promise.all(tempArray)
-    } else {
-      curatedPools = []
-    }
-    dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
  * Get detailed array of token information
- * @param {array} tokenArray
- * @returns {array} tokenDetails
+ * @param listedTokens @param wallet
  */
 export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   dispatch(poolLoading())
@@ -92,15 +65,14 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   const trustWalletIndex = await axios.get(
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
   )
-
   try {
     let tempArray = []
     for (let i = 0; i < listedTokens.length; i++) {
       const contract = getTokenContract(listedTokens[i], wallet)
       tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
-      if (wallet.account !== null) {
+      if (wallet.account) {
         if (listedTokens[i] === addr.bnb) {
-          tempArray.push(wallet.balance)
+          tempArray.push(wallet.library.getBalance(wallet.account))
         } else {
           tempArray.push(contract.callStatic.balanceOf(wallet?.account)) // TOKEN BALANCE (2)
         }
@@ -139,19 +111,32 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.POOL_TOKEN_DETAILS, tokenDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
+  }
+}
+
+/**
+ * Return array of curated pool addresses
+ * @param wallet
+ */
+export const getCuratedPools = () => async (dispatch) => {
+  dispatch(poolLoading())
+  const contract = getPoolFactoryContract()
+  try {
+    const curatedPools = await contract.callStatic.getVaultAssets()
+    dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
  * Get LP token addresses and setup the object
- * @param {array} tokenDetails
- * @param {object} wallet
- * @returns {array} listedPools
+ * @param tokenDetails
  */
-export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
+export const getListedPools = (tokenDetails) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getUtilsContract(wallet)
+  const contract = getUtilsContract()
   const addr = getAddresses()
   try {
     let tempArray = []
@@ -162,10 +147,12 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
       ) {
         tempArray.push({
           poolAddress: '',
+          genesis: '0',
           baseAmount: '0',
           tokenAmount: '0',
           poolUnits: '0',
-          genesis: '0',
+          synthCap: '0',
+          baseCap: '0',
         })
       } else {
         tempArray.push(contract.callStatic.getPoolData(tokenDetails[i].address))
@@ -177,21 +164,13 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
       listedPools.push({
         tokenAddress: tokenDetails[i].address,
         address: tempArray[i].poolAddress,
-        curated: false,
-        balance: '0',
-        staked: '0',
-        bonded: '0',
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
-        recentFees: '0',
-        lastMonthFees: '0',
-        recentDivis: '0',
-        lastMonthDivis: '0',
+        synthCap: tempArray[i].synthCap.toString(),
+        baseCap: tempArray[i].baseCap.toString(),
         genesis: tempArray[i].genesis.toString(),
-        bondMember: false,
-        bondClaimRate: '0',
-        bondLastClaim: '0',
+        newPool: getSecsSince(tempArray[i].genesis.toString()) < oneWeek,
         hide:
           tokenDetails[i].address !== addr.spartav2 &&
           tempArray[i].baseAmount.toString() <= 0,
@@ -199,149 +178,115 @@ export const getListedPools = (tokenDetails, wallet) => async (dispatch) => {
     }
     dispatch(payloadToDispatch(Types.POOL_LISTED_POOLS, listedPools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error} `))
+    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
 }
 
 /**
- * Add LP holdings to final array (maybe add the other LP calls here too?)
- * @param {array} listedPools
- * @param {array} wallet
- * @returns {array} poolDetails
+ * Add LP wallet-details to final array
+ * @param listedPools @param curatedPools @param wallet
  */
-export const getPoolDetails = (listedPools, wallet) => async (dispatch) => {
-  dispatch(poolDetailsLoading())
-  const addr = getAddresses()
-
-  try {
-    let tempArray = []
-    for (let i = 0; i < listedPools.length; i++) {
-      const routerContract = getRouterContract(wallet)
-      const daoVaultContract = getDaoVaultContract(wallet)
-      const bondVaultContract = getBondVaultContract(wallet)
-      const pfContract = getPoolFactoryContract(wallet)
-      const poolContract =
-        listedPools[i].tokenAddress === addr.spartav1 ||
-        listedPools[i].tokenAddress === addr.spartav2
-          ? null
-          : getPoolContract(listedPools[i].address, wallet)
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2 ||
-          wallet.account === null
-          ? '0'
-          : poolContract.callStatic.balanceOf(wallet.account),
-      ) // balance
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2 ||
-          wallet.account === null
-          ? '0'
-          : daoVaultContract.callStatic.getMemberPoolBalance(
-              listedPools[i].address,
-              wallet.account,
-            ),
-      ) // staked
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2
-          ? '0'
-          : poolContract.callStatic.map30DPoolRevenue(),
-      ) // recentFees
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2
-          ? '0'
-          : poolContract.callStatic.mapPast30DPoolRevenue(),
-      ) // lastMonthFees
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2
-          ? '0'
-          : routerContract.callStatic.currentPoolRevenue(
-              listedPools[i].address,
-            ),
-      ) // recentDivis
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2
-          ? '0'
-          : routerContract.callStatic.pastPoolRevenue(listedPools[i].address),
-      ) // lastMonthDivis
-      tempArray.push(
-        listedPools[i].tokenAddress === addr.spartav1 ||
-          listedPools[i].tokenAddress === addr.spartav2 ||
-          wallet.account === null
-          ? {
-              isMember: false,
-              bondedLP: '0',
-              claimRate: '0',
-              lastBlockTime: '0',
-            }
-          : bondVaultContract.callStatic.getMemberDetails(
-              wallet.account,
-              listedPools[i].tokenAddress,
-            ),
-      ) // bondDetails - bondMember, bondClaimRate, bondLastClaim
-      tempArray.push(
-        listedPools[i].address !== ''
-          ? pfContract.callStatic.isCuratedPool(listedPools[i].address)
-          : false,
-      ) // check if pool is curated
+export const getPoolDetails =
+  (listedPools, curatedPools, wallet) => async (dispatch) => {
+    dispatch(poolDetailsLoading())
+    try {
+      let tempArray = []
+      for (let i = 0; i < listedPools.length; i++) {
+        const ready = getSecsSince(
+          listedPools[i].genesis.toString(),
+        ).isGreaterThan(2592000)
+        const validPool = listedPools[i].baseAmount.toString() > 0
+        const curated = validPool
+          ? curatedPools.includes(listedPools[i].address)
+          : false
+        const routerContract = getRouterContract(wallet)
+        const poolContract = validPool
+          ? getPoolContract(listedPools[i].address, wallet)
+          : null
+        tempArray.push(
+          !validPool || !wallet.account
+            ? '0'
+            : poolContract.callStatic.balanceOf(wallet.account),
+        ) // balance
+        tempArray.push(
+          !validPool
+            ? '0'
+            : !ready
+            ? poolContract.callStatic.map30DPoolRevenue()
+            : poolContract.callStatic.mapPast30DPoolRevenue(),
+        ) // recentFees
+        tempArray.push(
+          !validPool || !curated
+            ? '0'
+            : routerContract.callStatic.mapAddress_30DayDividends(
+                listedPools[i].address,
+              ),
+        ) // recentDivis
+        tempArray.push(
+          !validPool || !curated
+            ? '0'
+            : routerContract.callStatic.mapAddress_Past30DayPoolDividends(
+                listedPools[i].address,
+              ),
+        ) // lastMonthDivis
+        tempArray.push(curated) // check if pool is curated
+        tempArray.push(validPool ? poolContract.callStatic.freeze() : false) // check if pool is frozen
+        tempArray.push(validPool ? poolContract.callStatic.oldRate() : '0') // get pool safety zone
+      }
+      tempArray = await Promise.all(tempArray)
+      const poolDetails = listedPools
+      const varCount = 7
+      for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
+        const ii = i / varCount
+        const _base = poolDetails[ii].baseAmount
+        const newRate =
+          _base > 0
+            ? BN(10)
+                .pow(18)
+                .times(_base)
+                .div(poolDetails[ii].tokenAmount)
+                .toFixed(0)
+            : '0'
+        poolDetails[ii].balance = tempArray[i].toString()
+        poolDetails[ii].fees = tempArray[i + 1].toString()
+        poolDetails[ii].recentDivis = tempArray[i + 2].toString()
+        poolDetails[ii].lastMonthDivis = tempArray[i + 3].toString()
+        poolDetails[ii].curated = tempArray[i + 4]
+        poolDetails[ii].frozen = tempArray[i + 5]
+        const oldRate = tempArray[i + 6]
+        poolDetails[ii].oldRate = oldRate.toString()
+        poolDetails[ii].newRate = newRate.toString()
+        const safety =
+          _base > 0
+            ? BN(1)
+                .minus(BN(newRate.toString()).div(oldRate.toString()))
+                .toString()
+            : '0'
+        poolDetails[ii].safety = safety.toString()
+      }
+      dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }
-    tempArray = await Promise.all(tempArray)
-    const poolDetails = listedPools
-    const varCount = 8
-    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
-      const ii = i / varCount
-      poolDetails[ii].balance = tempArray[i].toString()
-      poolDetails[ii].staked = tempArray[i + 1].toString()
-      poolDetails[ii].bonded = tempArray[i + 6].bondedLP.toString()
-      poolDetails[ii].recentFees = tempArray[i + 2].toString()
-      poolDetails[ii].lastMonthFees = tempArray[i + 3].toString()
-      poolDetails[ii].recentDivis = tempArray[i + 4].toString()
-      poolDetails[ii].lastMonthDivis = tempArray[i + 5].toString()
-      poolDetails[ii].bondMember = tempArray[i + 6].isMember
-      poolDetails[ii].bondClaimRate = tempArray[i + 6].claimRate.toString()
-      poolDetails[ii].bondLastClaim = tempArray[i + 6].lastBlockTime.toString()
-      poolDetails[ii].curated = tempArray[i + 7]
-    }
-    dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, `${error}.`))
   }
-}
 
 /**
  * Create a new pool
- * @param {uint} inputBase
- * @param {uint} inputToken
- * @param {address} token
- * @param {object} wallet
+ * @param inputBase @param inputToken @param token @param wallet
  */
 export const createPoolADD =
   (inputBase, inputToken, token, wallet) => async (dispatch) => {
     dispatch(poolLoading())
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet)
-
     try {
       const gPrice = await getProviderGasPrice()
-      const ORs = {
-        value: token === addr.bnb ? inputToken : null,
-        gasPrice: gPrice,
-      }
-      const newPool = await contract.createPoolADD(
-        inputBase,
-        inputToken,
-        token,
-        ORs,
-      )
-      console.log(newPool)
-      dispatch(payloadToDispatch(Types.POOL_NEW_POOL, newPool))
+      const _value = token === addr.bnb ? inputToken : null
+      const ORs = { value: _value, gasPrice: gPrice }
+      let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
+      txn = await parseTxn(txn, 'createPool')
+      dispatch(payloadToDispatch(Types.POOL_TXN, txn))
     } catch (error) {
-      dispatch(
-        errorToDispatch(Types.POOL_ERROR, `${error} - ${error.data?.message}.`),
-      )
+      dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }
   }

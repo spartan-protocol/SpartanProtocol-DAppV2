@@ -1,12 +1,12 @@
 import * as Types from './types'
 
 const initialState = {
-  global: {},
-  listedAssets: [],
-  member: {},
-  deposit: '0',
-  bondClaim: '0',
-  bondClaimAll: '0',
+  global: false,
+  bondDetails: false,
+  totalWeight: '0',
+  listedAssets: false,
+  member: false,
+  txn: [],
 }
 
 export const bondReducer = (state = initialState, action) => {
@@ -15,6 +15,24 @@ export const bondReducer = (state = initialState, action) => {
       return {
         ...state,
         global: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.BOND_DETAILS: {
+      return {
+        ...state,
+        bondDetails: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.BOND_TOTAL_WEIGHT: {
+      return {
+        ...state,
+        totalWeight: action.payload,
         loading: false,
         error: null,
       }
@@ -29,37 +47,10 @@ export const bondReducer = (state = initialState, action) => {
       }
     }
 
-    case Types.BOND_MEMBER: {
+    case Types.BOND_TXN: {
       return {
         ...state,
-        member: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_DEPOSIT: {
-      return {
-        ...state,
-        deposit: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_CLAIM: {
-      return {
-        ...state,
-        bondClaim: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.BOND_CLAIM_ALL: {
-      return {
-        ...state,
-        bondClaimAll: action.payload,
+        txn: action.payload,
         loading: false,
         error: null,
       }

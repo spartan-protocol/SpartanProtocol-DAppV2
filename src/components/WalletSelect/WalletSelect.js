@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-
+import { useWeb3React } from '@web3-react/core'
 import {
   Alert,
   Form,
@@ -13,6 +12,7 @@ import {
   OverlayTrigger,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import {
@@ -20,6 +20,8 @@ import {
   formatShortString,
   getAddresses,
   getNetwork,
+  liveChains,
+  tempChains,
 } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
 import { isAppleDevice } from '../../utils/helpers'
@@ -28,11 +30,14 @@ import LPs from './LPs'
 import Synths from './Synths'
 import { Icon } from '../Icons/icons'
 import { Tooltip } from '../Tooltip/tooltip'
-import { useBond } from '../../store/bond/selector'
-import { useDao } from '../../store/dao/selector'
-import { useSynth } from '../../store/synth'
+import { getSynthDetails, useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
-import { BN, convertFromWei } from '../../utils/bigNumber'
+import { convertFromWei } from '../../utils/bigNumber'
+import { connectorsByName } from '../../utils/web3React'
+import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
+import { getToken } from '../../utils/math/utils'
+import { getDaoDetails, useDao } from '../../store/dao'
+import { getBondDetails, useBond } from '../../store/bond'
 
 export const spartanRanks = [
   {
@@ -98,14 +103,19 @@ export const spartanRanks = [
 ]
 
 const WalletSelect = (props) => {
-  const wallet = useWallet()
-  const bond = useBond()
-  const dao = useDao()
+  const { activate, deactivate, active, error, connector, account } =
+    useWeb3React()
   const synth = useSynth()
   const pool = usePool()
+  const dao = useDao()
+  const bond = useBond()
   const addr = getAddresses()
-  const [network, setNetwork] = useState(getNetwork)
+  const wallet = useWeb3React()
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+
+  const [network, setNetwork] = useState(getNetwork)
+  const [activeTab, setactiveTab] = useState('tokens')
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
@@ -119,171 +129,131 @@ const WalletSelect = (props) => {
     window.location.reload()
   }
 
+  const [activatingConnector, setActivatingConnector] = useState()
   useEffect(() => {
-    const checkWallet = () => {
-      // console.log('Wallet Status:', wallet.status)
-      if (wallet.status === 'connected') {
-        window.sessionStorage.setItem('walletConnected', '1')
-      }
-      if (wallet.status === 'disconnected') {
-        window.sessionStorage.removeItem('walletConnected')
-      }
-      if (wallet.status === 'error') {
-        window.sessionStorage.removeItem('walletConnected')
-      }
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
     }
-
-    checkWallet()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet.status])
-
-  const resetWallet = async () => {
-    wallet.reset()
-    // console.log('Wallet Status: cleared')
-  }
-
-  const connectWallet = async (x) => {
-    window.localStorage.removeItem('disableWallet')
-    if (wallet) {
-      resetWallet()
-    }
-    if (x) {
-      await wallet.connect(x?.inject)
-    }
-    window.localStorage.setItem('lastWallet', x?.id)
-  }
+  }, [activatingConnector, connector])
 
   const onWalletDisconnect = async () => {
     props.onHide()
+    deactivate()
+    window.localStorage.removeItem('walletconnect')
     window.localStorage.setItem('disableWallet', '1')
-    resetWallet()
     window.location.reload()
   }
 
-  const [trigger0, settrigger0] = useState(0)
-  /**
-   * Check wallet-loop
-   */
-  const checkWallets = async () => {
+  const onWalletConnect = async (x) => {
+    window.localStorage.removeItem('disableWallet')
+    window.localStorage.setItem('lastWallet', x?.id)
+    setActivatingConnector(connectorsByName(x.connector))
+    activate(connectorsByName(x.connector))
+  }
+
+  const checkWallet = () => {
     if (
       window.localStorage.getItem('disableWallet') !== '1' &&
-      wallet.account === null &&
-      wallet.status !== 'connecting' &&
-      wallet.status !== 'error'
+      !account &&
+      !active &&
+      !error
     ) {
+      // *** ADD IN LEDGER FOR TESTING ***
       if (window.localStorage.getItem('lastWallet') === 'BC') {
-        connectWallet(walletTypes.filter((x) => x.id === 'BC')[0])
+        onWalletConnect(walletTypes.filter((x) => x.id === 'BC')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'MM') {
-        connectWallet(walletTypes.filter((x) => x.id === 'MM')[0])
+        onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
-        connectWallet(walletTypes.filter((x) => x.id === 'TW')[0])
-      }
-      // else if (window.localStorage.getItem('lastWallet') === 'WC') {
-      //   connectWallet(walletTypes.filter((x) => x.id === 'WC')[0])
-      // }
-      else {
-        connectWallet(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
+        onWalletConnect(walletTypes.filter((x) => x.id === 'TW')[0])
+      } else if (
+        window.localStorage.getItem('lastWallet') === 'WC' &&
+        network?.chainId === 56 // WalletConnect does not support testnet
+      ) {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'WC')[0])
+      } else {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
       }
     }
   }
+
   useEffect(() => {
-    if (trigger0 === 0) {
-      checkWallets()
-      settrigger0(trigger0 + 1)
+    checkWallet()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return getNetwork()
     }
-    const timer = setTimeout(() => {
-      checkWallets()
-      settrigger0(trigger0 + 1)
-    }, 500)
-    return () => {
-      clearTimeout(timer)
+  }
+
+  useEffect(() => {
+    const checkDetails = () => {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
+        if (pool.listedPools?.length > 0) {
+          dispatch(getBondDetails(pool.listedPools, wallet))
+          dispatch(getDaoDetails(pool.listedPools, wallet))
+        }
+        if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
+          dispatch(getSynthDetails(synth.synthArray, wallet))
+        }
+      }
     }
+    checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    trigger0,
-    wallet.account,
-    wallet.status,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('lastWallet'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('disableWallet'),
-  ])
+  }, [pool.listedPools])
+
+  // ------------------------------------------------------------------------
+
+  const rankLoading = () => {
+    if (
+      !pool.tokenDetails ||
+      !pool.poolDetails ||
+      !dao.daoDetails ||
+      !bond.bondDetails ||
+      !synth.synthDetails
+    ) {
+      return true
+    }
+    return false
+  }
 
   const getWeight = () => {
-    if (wallet.account && pool.tokenDetails.length > 1) {
-      const validate = (value) => (value > 0 ? BN(value) : BN('0'))
-      const getPoolWeight = () => {
-        let weight = BN('0')
-        for (let i = 0; i < pool.poolDetails.length; i++) {
-          const thePool = pool.poolDetails[i]
-          if (thePool.address !== '') {
-            weight = weight.plus(
-              BN(thePool.balance)
-                .div(BN(thePool.poolUnits))
-                .times(BN(thePool.baseAmount)),
-            )
-          }
-        }
-        return validate(weight)
-      }
-      const getSynthWeight = () => {
-        let weight = BN('0')
-        for (let i = 0; i < synth.synthDetails.length; i++) {
-          const theSynth = synth.synthDetails[i]
-          const thePool = pool.poolDetails.filter(
-            (pewl) => pewl.tokenAddress === theSynth.tokenAddress,
-          )[0]
-          if (theSynth.balance > 0) {
-            weight = weight.plus(
-              BN(theSynth.balance).times(
-                BN(thePool.baseAmount).div(BN(thePool.tokenAmount)),
-              ),
-            )
-          }
-        }
-        return validate(weight)
-      }
-
-      const bondWeight = validate(bond.member.weight)
-      const daoWeight = validate(dao.member.weight)
-      const synthVaultWeight = validate(synth.memberDetails.totalWeight)
-      const spartaWeight = validate(
-        pool.tokenDetails.filter((token) => token.address === addr.spartav2)[0]
-          .balance,
+    if (account && pool.poolDetails.length > 1) {
+      const lpWeight = getLPWeights(
+        pool.poolDetails,
+        dao.daoDetails,
+        bond.bondDetails,
       )
-      const poolWeight = getPoolWeight()
-      const synthWeight = getSynthWeight()
-
-      return convertFromWei(
-        bondWeight
-          .plus(daoWeight)
-          .plus(synthVaultWeight)
-          .plus(spartaWeight)
-          .plus(poolWeight)
-          .plus(synthWeight),
-      )
+      const synthWeight = getSynthWeights(synth.synthDetails, pool.poolDetails)
+      const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
+      return convertFromWei(lpWeight.plus(synthWeight).plus(spartaWeight))
     }
     return '0'
   }
 
-  const [rank, setrank] = useState('0')
+  const [rank, setrank] = useState('Loading')
   const getRank = () => {
-    const weight = getWeight()
-    const ranksArray = spartanRanks.filter((i) => i.weight < weight)
-    const { length } = ranksArray
-    if (length > 0) {
-      setrank(ranksArray[length - 1].id)
-    } else {
-      setrank('Peasant')
+    if (props.show && !rankLoading()) {
+      const weight = getWeight()
+      const ranksArray = spartanRanks.filter((i) => i.weight < weight)
+      const { length } = ranksArray
+      if (length > 0) {
+        setrank(ranksArray[length - 1].id)
+      } else {
+        setrank('Peasant')
+      }
     }
   }
 
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
-    if (trigger1 === 0) {
-      getRank()
-      settrigger1(trigger1 + 1)
-    }
     const timer = setTimeout(() => {
       getRank()
       settrigger1(trigger1 + 1)
@@ -292,7 +262,7 @@ const WalletSelect = (props) => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1])
+  }, [trigger1, props.show])
 
   return (
     <>
@@ -301,19 +271,21 @@ const WalletSelect = (props) => {
           <Modal.Title>
             <Row>
               <Col xs="12">
-                {wallet.account ? (
+                {account ? (
                   <>
                     {t('wallet')}:{' '}
                     <span className="output-card">
-                      {formatShortString(wallet.account)}
-                      <ShareLink url={wallet.account}>
-                        <Icon
-                          icon="copy"
-                          className="ms-2 mb-1"
-                          size="18"
-                          role="button"
-                        />
-                      </ShareLink>
+                      {formatShortString(account)}
+                      <div className="d-inline-block">
+                        <ShareLink url={account}>
+                          <Icon
+                            icon="copy"
+                            className="ms-2 mb-1"
+                            size="18"
+                            role="button"
+                          />
+                        </ShareLink>
+                      </div>
                     </span>
                   </>
                 ) : (
@@ -362,7 +334,7 @@ const WalletSelect = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          {wallet.status === 'error' && (
+          {error && (
             <Alert variant="primary">
               {t('wrongNetwork', {
                 network: network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
@@ -371,16 +343,17 @@ const WalletSelect = (props) => {
           )}
 
           {/* Wallet overview */}
-          {wallet.account === null ? (
+          {!account ? (
             <Row>
               {walletTypes.map((x) => (
                 <Col key={x.id} xs="12" sm="6">
                   <Button
                     key={x.id}
+                    disabled={x.id === 'WC' && network.chainId !== 56}
                     variant="info"
                     className="w-100 my-1"
                     onClick={() => {
-                      connectWallet(x)
+                      onWalletConnect(x)
                     }}
                     href={
                       x.id === 'TW'
@@ -389,10 +362,10 @@ const WalletSelect = (props) => {
                     }
                   >
                     <Row>
-                      <Col xs="3">
-                        <div className="float-end">{x.icon}</div>
+                      <Col xs="auto" className="pe-0">
+                        <div>{x.icon}</div>
                       </Col>
-                      <Col xs="9">
+                      <Col>
                         <div className="float-start mt-1">
                           {x.title === 'Others' ? t('others') : x.title}
                         </div>
@@ -424,23 +397,24 @@ const WalletSelect = (props) => {
           ) : (
             <>
               {/* wallet navigation tabs */}
-              {network.chainId === 97 || network.chainId === 56 ? (
+              {liveChains.includes(network.chainId) ? (
                 <>
                   <Row>
                     <Tabs
-                      defaultActiveKey="assets"
-                      id="uncontrolled-tab-example"
+                      activeKey={activeTab}
+                      onSelect={(tab) => setactiveTab(tab)}
+                      id="wallet-tabs"
                       className="flex-row px-2 mb-3"
                       fill
                     >
-                      <Tab eventKey="assets" title={t('assets')}>
-                        <Assets />
+                      <Tab eventKey="tokens" title={t('tokens')}>
+                        {activeTab === 'tokens' && <Assets />}
                       </Tab>
-                      <Tab eventKey="lps" title={t('lpTokens')}>
-                        <LPs />
+                      <Tab eventKey="lps" title={t('lps')}>
+                        {activeTab === 'lps' && <LPs />}
                       </Tab>
                       <Tab eventKey="synths" title={t('synths')}>
-                        <Synths />
+                        {activeTab === 'synths' && <Synths />}
                       </Tab>
                     </Tabs>
                   </Row>
@@ -451,28 +425,30 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
-        <Modal.Footer className="justify-content-center">
-          <Button
-            href={getExplorerWallet(wallet.account)}
-            target="_blank"
-            rel="noreferrer"
-            size="sm"
-            variant="primary"
-          >
-            {t('viewBscScan')}{' '}
-            <Icon icon="scan" size="16" fill="white" className="mb-1" />
-          </Button>
-          <Button
-            size="sm"
-            variant="primary"
-            onClick={() => {
-              onWalletDisconnect()
-            }}
-          >
-            {t('disconnect')}
-            <Icon icon="walletRed" size="17" fill="white" className="mb-1" />
-          </Button>
-        </Modal.Footer>
+        {active && (
+          <Modal.Footer className="justify-content-center">
+            <Button
+              href={getExplorerWallet(account)}
+              target="_blank"
+              rel="noreferrer"
+              size="sm"
+              variant="primary"
+            >
+              {t('viewBscScan')}{' '}
+              <Icon icon="scan" size="16" fill="white" className="mb-1" />
+            </Button>
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => {
+                onWalletDisconnect()
+              }}
+            >
+              {t('disconnect')}
+              <Icon icon="walletRed" size="17" fill="white" className="mb-1" />
+            </Button>
+          </Modal.Footer>
+        )}
       </Modal>
     </>
   )

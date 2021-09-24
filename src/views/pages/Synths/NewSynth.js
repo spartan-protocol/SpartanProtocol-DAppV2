@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Modal,
-  Row,
-  Col,
-  InputGroup,
-  FormControl,
-  Form,
-} from 'react-bootstrap'
+import { Button, Modal, InputGroup, FormControl, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../../store/synth'
-import { getNetwork } from '../../../utils/web3'
+import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
 
 const NewSynth = () => {
   const dispatch = useDispatch()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const isLightMode = window.localStorage.getItem('theme')
@@ -42,6 +34,7 @@ const NewSynth = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
+  const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
 
@@ -63,8 +56,11 @@ const NewSynth = () => {
     }
   }, [inputAddress, showModal])
 
-  const handleSubmit = () => {
-    dispatch(createSynth(inputAddress, wallet))
+  const handleSubmit = async () => {
+    setTxnLoading(true)
+    await dispatch(createSynth(inputAddress, wallet))
+    setTxnLoading(false)
+    setShowModal(false)
   }
 
   return (
@@ -72,10 +68,10 @@ const NewSynth = () => {
       <Button
         variant={isLightMode ? 'secondary' : 'info'}
         onClick={() => setShowModal(true)}
-        className="rounded"
+        className="rounded-pill pe-3 subtitle-label"
       >
+        <Icon icon="plus" fill="white" size="17" className="me-1 mb-1" />
         {t('synth')}
-        <Icon icon="plus" fill="white" size="20" className="ms-1" />
       </Button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -83,7 +79,7 @@ const NewSynth = () => {
           <Modal.Title>{t('newSynth')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {network.chainId === 97 && (
+          {tempChains.includes(network.chainId) && (
             <>
               <Modal.Title>Choose Synth Asset to Deploy</Modal.Title>
 
@@ -94,7 +90,6 @@ const NewSynth = () => {
                 <FormControl
                   id="addrInput"
                   placeholder="0x..."
-                  type="number"
                   autoComplete="off"
                   autoCorrect="off"
                   disabled
@@ -103,12 +98,12 @@ const NewSynth = () => {
                   isInvalid={!addrValid}
                 />
                 <Form.Control.Feedback type="invalid">
-                  Only listed pools that are also curated are able to be
-                  deployed as a synthetic asset
+                  Only curated pools are able to be deployed as a synthetic
+                  asset
                 </Form.Control.Feedback>
               </InputGroup>
 
-              <Form className="mb-0">
+              <Form className="mb-0 mt-2 text-center">
                 <span className="output-card">
                   Pay gas to deploy Synth BEP20
                   <Form.Check
@@ -125,17 +120,16 @@ const NewSynth = () => {
           {network.chainId !== 97 && <WrongNetwork />}
         </Modal.Body>
         <Modal.Footer>
-          <Row className="card-body">
-            <Col xs="12" className="hide-if-prior-sibling">
-              <Button
-                className="w-100"
-                disabled={!feeConfirm || !addrValid}
-                onClick={() => handleSubmit()}
-              >
-                {t('confirm')}
-              </Button>
-            </Col>
-          </Row>
+          <Button
+            className="w-100"
+            disabled={!feeConfirm || !addrValid}
+            onClick={() => handleSubmit()}
+          >
+            {t('confirm')}
+            {txnLoading && (
+              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+            )}
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

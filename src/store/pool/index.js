@@ -2,8 +2,8 @@ export { usePool } from './selector'
 export { poolReducer } from './reducer'
 export {
   getListedTokens,
-  getCuratedPools,
   getTokenDetails,
+  getCuratedPools,
   getListedPools,
   getPoolDetails,
   createPoolADD,

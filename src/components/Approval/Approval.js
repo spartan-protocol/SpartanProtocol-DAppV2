@@ -1,7 +1,8 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import React, { useEffect } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import React, { useEffect, useState } from 'react'
 import { Button, Col } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
+import { usePool } from '../../store/pool'
 import {
   getAllowance1,
   getAllowance2,
@@ -14,12 +15,12 @@ import { Icon } from '../Icons/icons'
 
 /**
  * An approval/allowance check + actioner
- * @param {address} tokenAddress
- * @param {address} symbol
- * @param {address} walletAddress
- * @param {address} contractAddress
- * @param {string} txnAmount
- * @param {string} assetNumber (1 or 2)
+ * @param tokenAddress
+ * @param symbol
+ * @param walletAddress
+ * @param contractAddress
+ * @param txnAmount
+ * @param assetNumber (1 or 2)
  */
 const Approval = ({
   tokenAddress,
@@ -31,40 +32,46 @@ const Approval = ({
 }) => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
-  const wallet = useWallet()
+  const pool = usePool()
+  const wallet = useWeb3React()
 
-  const getAllowance = () => {
+  const [pending, setPending] = useState(false)
+
+  const getAllowance = async () => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+        await dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
       } else if (assetNumber === '2') {
-        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+        await dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
       }
     }
   }
 
   const handleApproval = async () => {
+    setPending(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
-    getAllowance()
+    await getAllowance()
+    setPending(false)
   }
 
   useEffect(() => {
     getAllowance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    pending,
+    pool.poolDetails,
     tokenAddress,
     symbol,
     walletAddress,
     contractAddress,
     txnAmount,
     assetNumber,
-    web3.approval,
+    web3.txn,
   ])
 
   return (
     <>
-      {BN(web3[`allowance${assetNumber}`].toString()).comparedTo(txnAmount) ===
-        -1 && (
+      {BN(web3[`allowance${assetNumber}`]).isLessThan(txnAmount) && (
         <Col>
           <Button
             variant="info"
@@ -74,6 +81,9 @@ const Approval = ({
           >
             <Icon icon="lock" fill="white" size="20" className="me-1" />
             Approve {symbol}
+            {pending && (
+              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+            )}
           </Button>
         </Col>
       )}

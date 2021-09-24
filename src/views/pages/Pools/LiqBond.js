@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
@@ -15,6 +14,7 @@ import {
   ProgressBar,
   Badge,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses, getItemFromArray } from '../../../utils/web3'
@@ -26,12 +26,6 @@ import {
   formatFromWei,
 } from '../../../utils/bigNumber'
 import { useBond } from '../../../store/bond/selector'
-import {
-  calcFeeBurn,
-  calcLiquidityUnits,
-  calcSwapOutput,
-  calcValueInBase,
-} from '../../../utils/web3Utils'
 import Approval from '../../../components/Approval/Approval'
 import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
@@ -39,21 +33,44 @@ import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
+import NewPool from '../Home/NewPool'
+import Share from '../../../components/Share/SharePool'
+import { calcSpotValueInBase } from '../../../utils/math/utils'
+import { bondLiq } from '../../../utils/math/dao'
 
 const LiqBond = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const bond = useBond()
   const dispatch = useDispatch()
   const pool = usePool()
   const sparta = useSparta()
   const addr = getAddresses()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+  const [txnLoading, setTxnLoading] = useState(false)
   const [assetBond1, setAssetBond1] = useState('...')
 
+  const getWhiteList = () => {
+    const whiteList = []
+    for (let i = 0; i < bond.listedAssets.length; i++) {
+      whiteList.push(
+        pool.poolDetails.filter((x) => x.address === bond.listedAssets[i])[0]
+          .tokenAddress,
+      )
+    }
+    return whiteList
+  }
+
+  const isLoading = () => {
+    if (assetBond1 && pool.poolDetails && bond.listedAssets) {
+      return false
+    }
+    return true
+  }
+
   const spartaRemainingLoop = async () => {
-    dispatch(allListedAssets(wallet))
+    dispatch(allListedAssets())
     await pause(10000)
     spartaRemainingLoop()
   }
@@ -71,15 +88,14 @@ const LiqBond = () => {
   }
 
   useEffect(() => {
-    const { poolDetails } = pool
     const getAssetDetails = () => {
-      if (poolDetails) {
+      if (!isLoading()) {
         window.localStorage.setItem('assetType1', 'token')
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
-          bond.listedAssets.includes(asset1.tokenAddress)
+          asset1.address !== '' &&
+          bond.listedAssets.includes(asset1.address)
             ? asset1
             : { tokenAddress: addr.bnb }
         asset1 = getItemFromArray(asset1, pool.poolDetails)
@@ -89,7 +105,11 @@ const LiqBond = () => {
     }
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
+  }, [
+    bond.listedAssets,
+    pool.poolDetails,
+    window.localStorage.getItem('assetSelected1'),
+  ])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -103,57 +123,29 @@ const LiqBond = () => {
     }
   }
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
-
-  // Bond Functions
-  const calcSpartaMinted = () => {
+  const getBondLiq = () => {
     if (bondInput1) {
-      const minted = calcSwapOutput(
+      const [unitsLP, bondedSparta, slipRevert, capRevert] = bondLiq(
         convertToWei(bondInput1.value),
-        assetBond1.tokenAmount,
-        assetBond1.baseAmount,
-        true,
+        assetBond1,
+        sparta.globalDetails.feeOnTransfer,
       )
-      return minted
+      return [unitsLP, bondedSparta, slipRevert, capRevert]
     }
-    return '0'
-  }
-
-  const calcOutput = () => {
-    if (bondInput1) {
-      const output = calcLiquidityUnits(
-        BN(calcSpartaMinted()).minus(getFeeBurn(calcSpartaMinted())),
-        convertToWei(bondInput1.value),
-        assetBond1.baseAmount,
-        assetBond1.tokenAmount,
-        assetBond1.poolUnits,
-      )
-      return output
-    }
-    return '0'
+    return ['0', '0', false, false]
   }
 
   const getInput1ValueUSD = () => {
     if (assetBond1 && bondInput1?.value) {
-      return calcValueInBase(
-        assetBond1.tokenAmount,
-        assetBond1.baseAmount,
+      return calcSpotValueInBase(
         convertToWei(bondInput1.value),
+        assetBond1,
       ).times(web3.spartaPrice)
     }
     return '0'
   }
 
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
-  }
-
-  const handleBondDeposit = () => {
+  const handleBondDeposit = async () => {
     if (
       assetBond1?.tokenAddress === addr.bnb ||
       assetBond1?.tokenAddress === addr.wbnb
@@ -167,25 +159,62 @@ const LiqBond = () => {
         bondInput1.value = convertFromWei(BN(balance).minus('5000000000000000'))
       }
     }
-    dispatch(
+    setTxnLoading(true)
+    await dispatch(
       bondDeposit(
         assetBond1?.tokenAddress,
         convertToWei(bondInput1?.value),
         wallet,
       ),
     )
+    setTxnLoading(false)
+    clearInputs()
+  }
+
+  const checkValid = () => {
+    if (bondInput1?.value <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (
+      BN(convertToWei(bondInput1?.value)).isGreaterThan(
+        getToken(assetBond1.tokenAddress)?.balance,
+      )
+    ) {
+      return [false, t('checkBalance')]
+    }
+    if (BN(getBondLiq()[1]).isGreaterThan(bond.global.spartaRemaining)) {
+      return [false, t('checkAllocation')]
+    }
+    if (getBondLiq()[2]) {
+      return [false, 'slipTooHigh']
+    }
+    if (getBondLiq()[3]) {
+      return [false, 'poolAtCapacity']
+    }
+    return [true, t('bond')]
   }
 
   return (
     <Row>
       <Col xs="auto">
         <Card xs="auto" className="card-480">
+          <Card.Header className="">
+            <Row className="px-2 py-2">
+              <Col xs="auto">
+                {t('bond')}
+                <Share />
+              </Col>
+              <Col className="text-end">
+                <NewPool />
+              </Col>
+            </Row>
+          </Card.Header>
           <Card.Body>
             <Row>
               <Col xs="12" className="px-1 px-sm-3">
                 <Card className="card-alt">
                   <Card.Body>
-                    {bond.listedAssets?.length > 0 ? (
+                    {!isLoading() ? (
                       <>
                         <Row>
                           <Col xs="auto" className="text-sm-label">
@@ -218,7 +247,7 @@ const LiqBond = () => {
                                 <AssetSelect
                                   priority="1"
                                   filter={['token']}
-                                  whiteList={bond.listedAssets}
+                                  whiteList={getWhiteList()}
                                 />
                               </InputGroup.Text>
                               <FormControl
@@ -228,7 +257,6 @@ const LiqBond = () => {
                                 id="bondInput1"
                                 autoComplete="off"
                                 autoCorrect="off"
-                                onInput={(e) => handleTokenInputChange(e)}
                               />
                               <InputGroup.Text
                                 role="button"
@@ -236,7 +264,7 @@ const LiqBond = () => {
                                 onKeyPress={() => clearInputs()}
                                 onClick={() => clearInputs()}
                               >
-                                <Icon icon="close" size="12" fill="grey" />
+                                <Icon icon="close" size="10" fill="grey" />
                               </InputGroup.Text>
                             </InputGroup>
                             <div className="text-end text-sm-label pt-1">
@@ -297,7 +325,7 @@ const LiqBond = () => {
                   )} SPARTA`}
                 />
 
-                {bond.listedAssets?.length > 0 && (
+                {!isLoading() && (
                   <>
                     <Row className="mb-2">
                       <Col xs="auto">
@@ -318,8 +346,9 @@ const LiqBond = () => {
                       </Col>
                       <Col className="text-end">
                         <span className="text-card">
-                          {calcSpartaMinted() > 0
-                            ? formatFromWei(calcSpartaMinted(), 6)
+                          ~
+                          {getBondLiq()[1] > 0
+                            ? formatFromWei(getBondLiq()[1], 6)
                             : '0.00'}{' '}
                           SPARTA
                         </span>
@@ -331,8 +360,9 @@ const LiqBond = () => {
                       </Col>
                       <Col className="text-end">
                         <span className="subtitle-card">
-                          {calcOutput() > 0
-                            ? formatFromWei(calcOutput(), 6)
+                          ~
+                          {getBondLiq()[0] > 0
+                            ? formatFromWei(getBondLiq()[0], 6)
                             : '0.00'}{' '}
                           <span className="output-card">
                             {getToken(assetBond1.tokenAddress)?.symbol}p
@@ -346,7 +376,7 @@ const LiqBond = () => {
             </Row>
           </Card.Body>
           <Card.Footer>
-            {bond.listedAssets?.length > 0 && (
+            {!isLoading() && (
               <>
                 <Row className="text-center">
                   {assetBond1?.tokenAddress &&
@@ -366,18 +396,18 @@ const LiqBond = () => {
                   <Col xs="12" sm="4" md="12" className="hide-if-siblings">
                     <Button
                       className="w-100"
-                      disabled={
-                        bondInput1?.value <= 0 ||
-                        BN(convertToWei(bondInput1?.value)).isGreaterThan(
-                          getToken(assetBond1.tokenAddress)?.balance,
-                        ) ||
-                        BN(calcSpartaMinted()).isGreaterThan(
-                          bond.global.spartaRemaining,
-                        )
-                      }
+                      disabled={!checkValid()[0]}
                       onClick={() => handleBondDeposit()}
                     >
-                      {t('bond')} {getToken(assetBond1.tokenAddress)?.symbol}
+                      {checkValid()[1]}{' '}
+                      {getToken(assetBond1.tokenAddress)?.symbol}
+                      {txnLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
                     </Button>
                   </Col>
                 </Row>
@@ -386,7 +416,7 @@ const LiqBond = () => {
           </Card.Footer>
         </Card>
       </Col>
-      {pool.poolDetails && (
+      {!isLoading() && (
         <Col xs="auto">
           <SwapPair assetSwap={assetBond1} />
         </Col>

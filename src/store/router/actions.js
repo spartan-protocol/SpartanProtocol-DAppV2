@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getAddresses, getProviderGasPrice } from '../../utils/web3'
+import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { getRouterContract } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
@@ -7,60 +7,24 @@ export const routerLoading = () => ({
   type: Types.ROUTER_LOADING,
 })
 
-// --------------------------------------- LIQUIDITY FUNCTIONS ---------------------------------------
-
 /**
  * Add Liquidity to a pool symmetrically
- * @param {uint} inputBase
- * @param {address} inputToken
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} units
- * @returns {unit} fee
+ * @param inputToken @param inputBase @param token @param wallet
  */
 export const addLiquidity =
-  (inputBase, inputToken, token, wallet) => async (dispatch) => {
+  (inputToken, inputBase, token, wallet) => async (dispatch) => {
     dispatch(routerLoading())
+    const addr = getAddresses()
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
       const ORs = {
-        value:
-          token === '0x0000000000000000000000000000000000000000'
-            ? inputToken
-            : null,
+        value: token === addr.bnb ? inputToken : null,
         gasPrice: gPrice,
       }
-      const addLiq = await contract.addLiquidity(
-        inputBase,
-        inputToken,
-        token,
-        ORs,
-      )
-      dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ, addLiq))
-    } catch (error) {
-      dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
-    }
-  }
-
-/**
- * Swap LP tokens for other LP tokens
- * @param {uint} unitsInput
- * @param {address} fromPool
- * @param {address} toPool
- * @param {object} wallet
- * @returns {unit} units
- */
-export const zapLiquidity =
-  (unitsInput, fromPool, toPool, wallet) => async (dispatch) => {
-    dispatch(routerLoading())
-    const contract = getRouterContract(wallet)
-    try {
-      const gPrice = await getProviderGasPrice()
-      const zapLiq = await contract.zapLiquidity(unitsInput, fromPool, toPool, {
-        gasPrice: gPrice,
-      })
-      dispatch(payloadToDispatch(Types.ROUTER_ZAP_LIQ, zapLiq))
+      let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
+      txn = await parseTxn(txn, 'addLiq')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -68,11 +32,7 @@ export const zapLiquidity =
 
 /**
  * Add liquidity asymmetrically
- * @param {uint} input
- * @param {bool} fromBase
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} units
+ * @param input @param fromBase @param token @param wallet
  */
 export const addLiquiditySingle =
   (input, fromBase, token, wallet) => async (dispatch) => {
@@ -85,13 +45,28 @@ export const addLiquiditySingle =
         value: token === addr.bnb && fromBase !== true ? input : null,
         gasPrice: gPrice,
       }
-      const addLiqSingle = await contract.addLiquiditySingle(
-        input,
-        fromBase,
-        token,
-        ORs,
-      )
-      dispatch(payloadToDispatch(Types.ROUTER_ADD_LIQ_SINGLE, addLiqSingle))
+      let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
+      txn = await parseTxn(txn, 'addLiqSingle')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
+    }
+  }
+
+/**
+ * Swap LP tokens for other LP tokens
+ * @param unitsInput @param fromPool @param toPool @param wallet
+ */
+export const zapLiquidity =
+  (unitsInput, fromPool, toPool, wallet) => async (dispatch) => {
+    dispatch(routerLoading())
+    const contract = getRouterContract(wallet)
+    try {
+      const gPrice = await getProviderGasPrice()
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
+      txn = await parseTxn(txn, 'zapLiq')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -99,10 +74,7 @@ export const addLiquiditySingle =
 
 /**
  * Remove liquidity symmetrically
- * @param {uint} units
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} units
+ * @param units @param token @param wallet
  */
 export const removeLiquidityExact =
   (units, token, wallet) => async (dispatch) => {
@@ -110,11 +82,10 @@ export const removeLiquidityExact =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const remLiq = await contract.removeLiquidityExact(units, token, {
-        gasPrice: gPrice,
-      })
-
-      dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ, remLiq))
+      const ORs = { gasPrice: gPrice }
+      let txn = await contract.removeLiquidityExact(units, token, ORs)
+      txn = await parseTxn(txn, 'remLiq')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -122,11 +93,7 @@ export const removeLiquidityExact =
 
 /**
  * Remove liquidity asymmetrically
- * @param {uint} units
- * @param {bool} toBase
- * @param {address} token
- * @param {object} wallet
- * @returns {unit} fee
+ * @param units @param toBase @param token @param wallet
  */
 export const removeLiquiditySingle =
   (units, toBase, token, wallet) => async (dispatch) => {
@@ -134,16 +101,11 @@ export const removeLiquiditySingle =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const remLiqSingle = await contract.removeLiquiditySingle(
-        units,
-        toBase,
-        token,
-        {
-          gasPrice: gPrice,
-        },
-      )
-
-      dispatch(payloadToDispatch(Types.ROUTER_REMOVE_LIQ_SINGLE, remLiqSingle))
+      let txn = await contract.removeLiquidityExactAsym(units, toBase, token, {
+        gasPrice: gPrice,
+      })
+      txn = await parseTxn(txn, 'remLiqSingle')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -153,13 +115,10 @@ export const removeLiquiditySingle =
 
 /**
  * Swap BEP20 assets
- * @param {uint} inputAmount
- * @param {address} fromToken
- * @param {address} toToken
- * @param {object} wallet
+ * @param inputAmount @param fromToken @param toToken @param wallet
  */
 export const swap =
-  (inputAmount, fromToken, toToken, wallet) => async (dispatch) => {
+  (inputAmount, fromToken, toToken, minAmount, wallet) => async (dispatch) => {
     dispatch(routerLoading())
     const addr = getAddresses()
     const contract = getRouterContract(wallet)
@@ -169,8 +128,15 @@ export const swap =
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
-      const swapped = await contract.swap(inputAmount, fromToken, toToken, ORs)
-      dispatch(payloadToDispatch(Types.ROUTER_SWAP, swapped))
+      let txn = await contract.swap(
+        inputAmount,
+        fromToken,
+        toToken,
+        minAmount,
+        ORs,
+      )
+      txn = await parseTxn(txn, 'swapped')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -178,11 +144,7 @@ export const swap =
 
 /**
  * Swap BEP20 for synthetic assets
- * @param {uint} inputAmount
- * @param {address} fromToken
- * @param {address} toSynth
- * @param {object} wallet
- * @returns {unit} outputSynth
+ * @param inputAmount @param fromToken @param toSynth @param wallet
  */
 export const swapAssetToSynth =
   (inputAmount, fromToken, toSynth, wallet) => async (dispatch) => {
@@ -195,13 +157,14 @@ export const swapAssetToSynth =
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
-      const mintSynth = await contract.swapAssetToSynth(
+      let txn = await contract.swapAssetToSynth(
         inputAmount,
         fromToken,
         toSynth,
         ORs,
       )
-      dispatch(payloadToDispatch(Types.ROUTER_MINT_SYNTH, mintSynth))
+      txn = await parseTxn(txn, 'mintSynth')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
@@ -209,11 +172,7 @@ export const swapAssetToSynth =
 
 /**
  * Swap synthetic assets for SPARTA
- * @param {uint} inputAmount
- * @param {address} fromSynth
- * @param {address} toToken
- * @param {object} wallet
- * @returns {unit} output
+ * @param inputAmount @param fromSynth @param toToken @param wallet
  */
 export const swapSynthToAsset =
   (inputAmount, fromSynth, toToken, wallet) => async (dispatch) => {
@@ -221,16 +180,31 @@ export const swapSynthToAsset =
     const contract = getRouterContract(wallet)
     try {
       const gPrice = await getProviderGasPrice()
-      const burnSynth = await contract.swapSynthToAsset(
+      let txn = await contract.swapSynthToAsset(
         inputAmount,
         fromSynth,
         toToken,
-        {
-          gasPrice: gPrice,
-        },
+        { gasPrice: gPrice },
       )
-      dispatch(payloadToDispatch(Types.ROUTER_BURN_SYNTH, burnSynth))
+      txn = await parseTxn(txn, 'burnSynth')
+      dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
     }
   }
+
+/**
+ * Attempt to unfreeze the protocol
+ */
+export const updatePoolStatus = (wallet) => async (dispatch) => {
+  dispatch(routerLoading())
+  const contract = getRouterContract(wallet)
+  try {
+    const gPrice = await getProviderGasPrice()
+    let txn = await contract.updatePoolStatus({ gasPrice: gPrice })
+    txn = await parseTxn(txn, 'unfreeze')
+    dispatch(payloadToDispatch(Types.ROUTER_TXN, txn))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.ROUTER_ERROR, `${error}.`))
+  }
+}

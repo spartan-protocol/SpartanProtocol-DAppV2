@@ -10,8 +10,8 @@ import {
   Row,
 } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useTranslation } from 'react-i18next'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
 import { getAddresses } from '../../../utils/web3'
@@ -22,7 +22,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import { calcFeeBurn, calcLiquidityUnits } from '../../../utils/web3Utils'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -30,10 +29,12 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import plusIcon from '../../../assets/icons/plus.svg'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
+import { calcLiquidityUnits } from '../../../utils/math/utils'
+import { minusFeeBurn } from '../../../utils/math/nonContract'
 
 const EmptyPools = (props) => {
   const { t } = useTranslation()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -113,29 +114,22 @@ const EmptyPools = (props) => {
     return poolAdd1?.balance
   }
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
-  }
+  const _minusFeeBurn = (_amount) =>
+    minusFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
 
   //= =================================================================================//
   // 'Add Both' Functions (Re-Factor)
 
   const getAddBothOutputLP = () => {
     if (addInput1 && addInput2) {
-      return convertFromWei(
-        calcLiquidityUnits(
-          BN(convertToWei(addInput2?.value)).minus(
-            getFeeBurn(convertToWei(addInput2?.value)),
-          ),
-          convertToWei(addInput1?.value),
-          poolAdd1.baseAmount,
-          poolAdd1.tokenAmount,
-          poolAdd1.poolUnits,
-        ),
+      const [output, slipRevert] = calcLiquidityUnits(
+        _minusFeeBurn(convertToWei(addInput2?.value)),
+        convertToWei(addInput1?.value),
+        poolAdd1,
       )
+      return [output, slipRevert]
     }
-    return '0.00'
+    return ['0.00', false]
   }
 
   const getInput2ValueUSD = () => {
@@ -150,12 +144,6 @@ const EmptyPools = (props) => {
 
   const handleInputChange = () => {
     setOutputLp(convertToWei(getAddBothOutputLP()))
-  }
-
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
   }
 
   useEffect(() => {
@@ -278,7 +266,6 @@ const EmptyPools = (props) => {
                         id="addInput1"
                         autoComplete="off"
                         autoCorrect="off"
-                        onInput={(e) => handleTokenInputChange(e)}
                       />
                       <InputGroup.Text
                         role="button"
@@ -344,7 +331,6 @@ const EmptyPools = (props) => {
                         id="addInput2"
                         autoComplete="off"
                         autoCorrect="off"
-                        onInput={(e) => handleTokenInputChange(e)}
                       />
                       <InputGroup.Text
                         role="button"

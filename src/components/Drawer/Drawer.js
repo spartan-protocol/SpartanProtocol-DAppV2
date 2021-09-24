@@ -8,7 +8,7 @@ const Drawer = (props) => {
     drawerClasses = 'side-drawer open'
   }
   return (
-    <div className={drawerClasses}>
+    <div className={drawerClasses} id="txnDrawer">
       <RecentTxns />
     </div>
   )

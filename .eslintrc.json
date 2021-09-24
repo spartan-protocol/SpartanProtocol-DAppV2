@@ -3,7 +3,8 @@
     "react-app",
     "airbnb",
     "plugin:jsx-a11y/recommended",
-    "prettier"
+    "prettier",
+    "plugin:import/typescript"
   ],
   "plugins": [
     "jsx-a11y",

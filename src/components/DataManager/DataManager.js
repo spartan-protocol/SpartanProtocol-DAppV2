@@ -1,8 +1,9 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { bondGlobalDetails } from '../../store/bond'
 import {
+  getCuratedPools,
   getListedPools,
   getListedTokens,
   getPoolDetails,
@@ -10,38 +11,47 @@ import {
   usePool,
 } from '../../store/pool'
 import { getReserveGlobalDetails } from '../../store/reserve'
+import { useRouter } from '../../store/router/selector'
+import { useBond } from '../../store/bond/selector'
+import { useDao } from '../../store/dao/selector'
+import { useSynth } from '../../store/synth/selector'
 import {
   getSpartaGlobalDetails,
   spartaFeeBurnRecent,
   spartaFeeBurnTally,
+  useSparta,
 } from '../../store/sparta'
-import { useSynth, getSynthArray, getSynthDetails } from '../../store/synth'
+import { getSynthArray } from '../../store/synth'
 import {
   addNetworkMM,
   addNetworkBC,
   getSpartaPrice,
-  getEventArray,
+  useWeb3,
 } from '../../store/web3'
 import { BN } from '../../utils/bigNumber'
-import { changeNetwork, getAddresses, getNetwork } from '../../utils/web3'
 import {
-  getSpartaV2Contract,
-  getBondVaultContract,
-  getDaoContract,
-  getPoolContract,
-  getRouterContract,
-  getSynthContract,
-} from '../../utils/web3Contracts'
+  addTxn,
+  changeNetwork,
+  getAddresses,
+  getNetwork,
+  liveChains,
+  tempChains,
+} from '../../utils/web3'
+import { getSpartaV2Contract } from '../../utils/web3Contracts'
 
 const DataManager = () => {
-  const synth = useSynth()
   const dispatch = useDispatch()
-  const pool = usePool()
-  const wallet = useWallet()
-  const addr = getAddresses()
+  const wallet = useWeb3React()
 
-  const getSynth = (tokenAddress) =>
-    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+  const bond = useBond()
+  const dao = useDao()
+  const pool = usePool()
+  const router = useRouter()
+  const sparta = useSparta()
+  const synth = useSynth()
+  const web3 = useWeb3()
+
+  const addr = getAddresses()
 
   const [prevNetwork, setPrevNetwork] = useState(false)
   const [netLoading, setnetLoading] = useState(false)
@@ -58,14 +68,13 @@ const DataManager = () => {
     }
   }
 
-  /**
-   * Get feeBurn tally *JUST ONCE* on load
-   */
+  /** Get feeBurn tally *JUST ONCE* on load */
   const [addFeeBurn, setaddFeeBurn] = useState('0')
   useEffect(() => {
     dispatch(spartaFeeBurnTally())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   useEffect(() => {
     const contract = getSpartaV2Contract()
     const filter = contract.filters.Transfer(null, addr.bnb)
@@ -89,9 +98,7 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addFeeBurn])
 
-  /**
-   * On DApp load check network and get the party started
-   */
+  /** On DApp load check network and get the party started */
   const checkNetwork = async () => {
     const network = tryParse(window.localStorage.getItem('network'))
     if (netLoading === false) {
@@ -115,16 +122,15 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem('network')])
 
-  /**
-   * Get the initial arrays (tokens & curateds)
-   */
+  /** Get the initial arrays (tokens, curated & global details) */
   const checkArrays = async () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (chainId === 97 || chainId === 56) {
-      dispatch(getListedTokens(wallet)) // TOKEN ARRAY
-      dispatch(getSpartaGlobalDetails(wallet))
-      dispatch(bondGlobalDetails(wallet))
-      dispatch(getReserveGlobalDetails(wallet))
+    if (liveChains.includes(chainId)) {
+      dispatch(getListedTokens()) // TOKEN ARRAY
+      dispatch(getCuratedPools()) // CURATED ARRAY
+      dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
+      dispatch(bondGlobalDetails()) // BOND GLOBAL DETAILS
+      dispatch(getReserveGlobalDetails()) // RESERVE GLOBAL DETAILS
     }
   }
   useEffect(() => {
@@ -142,9 +148,7 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem('network'), trigger1])
 
-  /**
-   * Check SPARTA token price
-   */
+  /** Check SPARTA token price */
   useEffect(() => {
     if (trigger2 === 0) {
       dispatch(getSpartaPrice())
@@ -157,15 +161,13 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger2])
 
-  /**
-   * Update synthArray & tokenDetails
-   */
+  /** Update synthArray & tokenDetails */
   const checkArraysNext = async () => {
     const { listedTokens } = pool
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (listedTokens.length > 0) {
-      if (chainId === 97 || chainId === 56) {
-        dispatch(getSynthArray(listedTokens, wallet))
+      if (liveChains.includes(chainId)) {
+        dispatch(getSynthArray(listedTokens))
         dispatch(getTokenDetails(listedTokens, wallet))
       }
     }
@@ -177,49 +179,36 @@ const DataManager = () => {
     const timer = setTimeout(() => {
       checkArraysNext()
       settrigger3(trigger3 + 1)
-    }, 5000)
+    }, 7500)
     return () => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('network'),
-    pool.listedTokens,
-    wallet.account,
-    trigger3,
-  ])
+  }, [pool.listedTokens, trigger3])
 
-  /**
-   * Get listed pools details
-   */
+  /** Get listed pools details */
   useEffect(() => {
     const { tokenDetails } = pool
     const checkListedPools = () => {
       if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails, wallet))
+        dispatch(getListedPools(tokenDetails))
       }
     }
     checkListedPools()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.tokenDetails])
 
-  const [prevPoolDetails] = useState('')
-
-  /**
-   * Get final pool details
-   */
+  /** Get final pool details */
   useEffect(() => {
-    const { listedPools } = pool
-    const { synthArray } = synth
+    const { listedPools, curatedPools } = pool
     const checkDetails = () => {
-      if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
         if (listedPools?.length > 0) {
-          dispatch(getPoolDetails(listedPools, wallet))
-          // setPrevPoolDetails(pool.poolDetails)
-        }
-        if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthDetails(synthArray, listedPools, wallet))
+          dispatch(getPoolDetails(listedPools, curatedPools, wallet))
         }
       }
     }
@@ -227,71 +216,77 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
 
-  /**
-   * Listen to all contracts
-   */
-  const [eventArray, setEventArray] = useState([])
+  /** Update txnArray whenever a new bond txn is picked up */
   useEffect(() => {
-    let contracts = []
-    const { poolDetails } = pool
-    if (tryParse(window.localStorage.getItem('network'))?.chainId === 97) {
-      contracts = [
-        getBondVaultContract(wallet),
-        getRouterContract(wallet),
-        getDaoContract(wallet),
-      ]
-    }
-
-    const listen = (contract) => {
-      contract.on('*', (eventObject) => {
-        setEventArray((oldArray) => [...oldArray, eventObject])
-      })
-    }
-
-    const mapOut = () => {
-      if (
-        poolDetails?.length !== prevPoolDetails?.length &&
-        poolDetails?.length > 0
-      ) {
-        for (let i = 0; i < poolDetails.length; i++) {
-          if (poolDetails[i]?.address) {
-            contracts.push(getPoolContract(poolDetails[i].address, wallet))
-          }
-          if (getSynth(poolDetails[i].tokenAddress)?.address) {
-            contracts.push(
-              getSynthContract(
-                getSynth(poolDetails[i].tokenAddress)?.address,
-                wallet,
-              ),
-            )
-          }
-        }
-
-        contracts.forEach((contract) => {
-          listen(contract)
-        })
-      }
-    }
-    mapOut()
-    return () => {
-      for (let i = 0; i < contracts.length; i++) {
-        try {
-          contracts[i]?.removeAllListeners()
-        } catch (e) {
-          console.log(e)
-        }
-      }
+    if (bond.txn.txnType) {
+      addTxn(wallet.account, bond.txn)
+      bond.txn = []
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
+  }, [bond.txn])
 
-  /**
-   * Update store whenever a new txn is picked up
-   */
+  /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {
-    dispatch(getEventArray(eventArray))
+    if (dao.txn.txnType) {
+      addTxn(wallet.account, dao.txn)
+      dao.txn = []
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [eventArray])
+  }, [dao.txn])
+
+  /** Update txnArray whenever a new dao-proposal txn is picked up */
+  useEffect(() => {
+    if (dao.propTxn.txnType) {
+      addTxn(wallet.account, dao.propTxn)
+      dao.propTxn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dao.propTxn])
+
+  /** Update txnArray whenever a new pool txn is picked up */
+  useEffect(() => {
+    if (pool.txn.txnType) {
+      addTxn(wallet.account, pool.txn)
+      pool.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.txn])
+
+  /** Update txnArray whenever a new router txn is picked up */
+  useEffect(() => {
+    if (router.txn.txnType) {
+      addTxn(wallet.account, router.txn)
+      router.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.txn])
+
+  /** Update txnArray whenever a new sparta txn is picked up */
+  useEffect(() => {
+    if (sparta.txn.txnType) {
+      addTxn(wallet.account, sparta.txn)
+      sparta.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sparta.txn])
+
+  /** Update txnArray whenever a new synth txn is picked up */
+  useEffect(() => {
+    if (synth.txn.txnType) {
+      addTxn(wallet.account, synth.txn)
+      synth.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.txn])
+
+  /** Update txnArray whenever a new web3/misc txn is picked up */
+  useEffect(() => {
+    if (web3.txn.txnType) {
+      addTxn(wallet.account, web3.txn)
+      web3.txn = []
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [web3.txn])
 
   return <></>
 }

@@ -33,6 +33,7 @@ import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
+import { BN } from './bigNumber'
 
 export const abisTN = {
   bondVault: abiTnBondVault.abi,
@@ -100,17 +101,27 @@ export const addressesTN = {
   synthFactoryv1: '0x18f48fB0881B263B26266B4db2bF034fEe7a2b43',
   synthVaultv1: '0x8db384Ee61F6F56750e64f8011dD3e323d885d2C',
   utilsv2: '0x7c5bBc0A7E21c22936f3788F5d58fB732659B76E',
+  // LAST TN ADDRESSES
+  bondVault11: '0x91A0862f8fb5B9b430BF634720114c7173A1D0FC', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  dao11: '0x4F45fB8C7cFeAFeFA4B9159F92396dC19B437517', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  daoVault11: '0x7f5E5A443001D85d9f7a13E566fD9E1423B6Eac8', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  poolFactory11: '0x88B0A87189d140EfD460D5A1b9b8Cbc77F2910E5', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  reserve11: '0xf5aB990cdC7B69717AA378A76eB8538F71318478', // 1d882f10adf42b4e2696ff9868b0e27226d5f370 ???
+  router11: '0x20e41Cc498CF27efD62EBFAD9B633Ad7a45bDC48', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  synthFactory11: '0x16e6c2ba0A0d90203Cc592Ff1E6776f3dd0C6e4f', // 56c9c1dd3d25f5545cb8194b4095b4a49087c460
+  synthVault11: '0x30cDEA06826836145c9203b1D4d54e321Cc32B1f', // 9170b11ac4ce8b424f44aa5d503bdb7b0e85b4be
+  utils11: '0x1C7437c145bD0bb7EE0dcFD30434173893596ee1', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
   // CURRENT ADDRESSES
-  bondVault: '0x91A0862f8fb5B9b430BF634720114c7173A1D0FC', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
-  dao: '0x4F45fB8C7cFeAFeFA4B9159F92396dC19B437517', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
-  daoVault: '0x7f5E5A443001D85d9f7a13E566fD9E1423B6Eac8', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  bondVault: '0xF935EF68dda8d0bc7bfD10738f761C5675d15A54', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  dao: '0x590A77bD2E439E0B3e2C4cCdBB3d4fe5313D5915', // 245f24f92bda1b100fcc315121463d5df44836e9
+  daoVault: '0x802B266388D54eb00CaE497F03C83fc05173AD56', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
-  poolFactory: '0x88B0A87189d140EfD460D5A1b9b8Cbc77F2910E5', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
-  reserve: '0xf5aB990cdC7B69717AA378A76eB8538F71318478', // 1d882f10adf42b4e2696ff9868b0e27226d5f370 ???
-  router: '0x20e41Cc498CF27efD62EBFAD9B633Ad7a45bDC48', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
-  synthFactory: '0x16e6c2ba0A0d90203Cc592Ff1E6776f3dd0C6e4f', // 56c9c1dd3d25f5545cb8194b4095b4a49087c460
-  synthVault: '0x30cDEA06826836145c9203b1D4d54e321Cc32B1f', // 9170b11ac4ce8b424f44aa5d503bdb7b0e85b4be
-  utils: '0x1C7437c145bD0bb7EE0dcFD30434173893596ee1', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
+  poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  reserve: '0xA2D707b530971ED80a85Bb354626CE6b2fBB762a', // 0cf58d0c134f358895653410961aa2886f304a44 // UNCHANGED
+  router: '0xD760c5be88D3E746DD6F6421C4A6854417d6781b', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  utils: '0x28938DCC5D4Cb15FF70E097A5632103F2c4996aB', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -162,12 +173,12 @@ export const addressesMN = {
 }
 
 export const bscRpcsTN = [
-  'https://data-seed-prebsc-1-s1.binance.org:8545/',
-  'https://data-seed-prebsc-2-s1.binance.org:8545/',
-  'https://data-seed-prebsc-1-s2.binance.org:8545/',
-  'https://data-seed-prebsc-2-s2.binance.org:8545/',
-  'https://data-seed-prebsc-1-s3.binance.org:8545/',
-  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', MAJOR ISSUES WITH THIS ONE
+  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (14/09/21)
+  'https://data-seed-prebsc-2-s1.binance.org:8545/', // Good (14/09/21)
+  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (14/09/21)
+  // 'https://data-seed-prebsc-2-s2.binance.org:8545/', // MAJOR ISSUES (14/09/21)
+  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (14/09/21)
+  'https://data-seed-prebsc-2-s3.binance.org:8545/', // Good (14/09/21)
 ]
 
 export const bscRpcsMN = [
@@ -186,6 +197,10 @@ export const bscRpcsMN = [
   // 'https://bsc-dataseed3.binance.org/',
   // 'https://bsc-dataseed4.binance.org/',
 ]
+
+export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
+export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+export const oneWeek = 60480 // change to 604800 for mainnet
 
 /**
  * Format long string into a string with '...' separator (ideally for anchor text)
@@ -286,7 +301,7 @@ export const changeRpc = (_network) => {
 }
 
 /**
- * Trigger change between mainnet and testnet
+ * Trigger change between mainnet and testnet (localstorage)
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
@@ -331,10 +346,11 @@ export const getNetwork = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider) => {
   const network = getNetwork()
-  let provider = new ethers.providers.JsonRpcProvider(network.rpc)
+  let provider = new ethers.providers.JsonRpcProvider(
+    changeRpc(network.chainId),
+  ) // simple provider unsigned
   if (_provider) {
-    provider = new ethers.providers.Web3Provider(_provider)
-    provider = provider.getSigner()
+    provider = _provider.getSigner()
   }
   return provider
 }
@@ -359,4 +375,726 @@ export const getWalletWindowObj = () => {
     connectedWalletType = window.ethereum
   }
   return connectedWalletType
+}
+
+const mergeAbis = (abiArray) => {
+  const masterAbi = []
+  for (let i = 0; i < abiArray.length; i++) {
+    for (let ii = 0; ii < abiArray[i].length; ii++) {
+      masterAbi.push(abiArray[i][ii])
+    }
+  }
+  return masterAbi
+}
+
+/** Parse raw txn's logs before localStorage */
+const parseTxnLogs = (txn, txnType) => {
+  const addr = getAddresses()
+  const member = txn.from
+  // get the list of ABIs
+  let abiArray = abisMN
+  if (getNetwork().chainId === 97) {
+    abiArray = abisTN
+  }
+  // BOND.TXN TYPES
+  if (txnType === 'bondDeposit') {
+    const iface = new ethers.utils.Interface(abiArray.dao)
+    const log = txn.logs[txn.logs.length - 1]
+    // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** NEEDS CHECKING ***
+    const bondLog = iface.parseLog(log).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: bondLog.depositAmount.toString(),
+      sendToken1: bondLog.tokenAddress,
+      send1: member,
+      recAmnt1: bondLog.bondedLP.toString(),
+      recToken1: bondLog.poolAddress,
+      rec1: 'BondVault',
+    }
+  }
+  if (txnType === 'bondClaim') {
+    const iface = new ethers.utils.Interface(abiArray.bondVault)
+    const log = txn.logs[txn.logs.length - 1]
+    // BondVault.Claimed (owner, poolAddress, amount) *** NEEDS CHECKING ***
+    const claimLog = iface.parseLog(log).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: claimLog.amount.toString(),
+      sendToken1: claimLog.poolAddress,
+      send1: 'BondVault',
+      recAmnt1: claimLog.amount.toString(),
+      recToken1: claimLog.poolAddress,
+      rec1: member,
+    }
+  }
+  // DAO.TXN TYPES
+  if (txnType === 'daoDeposit') {
+    let log3 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.MemberDeposits event (member, pool, amount)
+    log3 = daoInterface.parseLog(log3).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: log3.amount.toString(),
+      sendToken1: log3.pool,
+      send1: member,
+      recAmnt1: log3.amount.toString(),
+      recToken1: log3.pool,
+      rec1: 'DaoVault',
+    }
+  }
+  if (txnType === 'daoWithdraw') {
+    let log1 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.MemberWithdraws event (member, pool, balance)
+    log1 = daoInterface.parseLog(log1).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: log1.balance.toString(),
+      sendToken1: log1.pool,
+      send1: 'DaoVault',
+      recAmnt1: log1.balance.toString(),
+      recToken1: log1.pool,
+      rec1: member,
+    }
+  }
+  if (txnType === 'daoHarvest') {
+    const iface = new ethers.utils.Interface(abiArray.dao)
+    const log = txn.logs[txn.logs.length - 1]
+    // Dao.Harvest (owner, amount)
+    const harvestLog = iface.parseLog(log).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: harvestLog.amount.toString(),
+      sendToken1: addr.spartav2,
+      send1: 'Reserve',
+      recAmnt1: harvestLog.amount.toString(),
+      recToken1: addr.spartav2,
+      rec1: member,
+    }
+  }
+  // DAO.PROP_TXN TYPES
+  if (txnType === 'newProposal') {
+    let log0 = txn.logs[0] // DaoFee SPARTA.Transfer event (from, to, value)
+    let log1 = txn.logs[1] // FeeBurn SPARTA.Transfer event (from, to, value)
+    let log3 = txn.logs[txn.logs.length - 1] // DAO.NewProposal event (member, proposalID, proposalType)
+    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    log0 = ercInterface.parseLog(log0).args
+    log1 = ercInterface.parseLog(log1).args
+    log3 = daoInterface.parseLog(log3).args
+    const fee1 = log0.value.toString()
+    const fee2 = log1.value.toString()
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: BN(fee1).plus(fee2).toString(),
+      sendToken1: addr.spartav2,
+      send1: member,
+      rec1: `Proposal:#${log3.proposalID}`,
+    }
+  }
+  if (txnType === 'voteProposal') {
+    let log0 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.NewVote event (member, proposalID, proposalType)
+    log0 = daoInterface.parseLog(log0).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: `Proposal:#${log0.proposalID}`,
+    }
+  }
+  if (txnType === 'removeVoteProposal') {
+    let log0 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.RemovedVote event (member, proposalID, proposalType)
+    log0 = daoInterface.parseLog(log0).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: `Proposal:#${log0.proposalID}`,
+    }
+  }
+  if (txnType === 'pollVotes') {
+    let log0 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.ProposalFinalising event (member, proposalID, timeFinalised, proposalType)
+    log0 = daoInterface.parseLog(log0).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: `Proposal:#${log0.proposalID}`,
+    }
+  }
+  if (txnType === 'cancelProposal') {
+    let log0 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.CancelProposal event (member, proposalID)
+    log0 = daoInterface.parseLog(log0).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: `Proposal:#${log0.proposalID}`,
+    }
+  }
+  if (txnType === 'finaliseProposal') {
+    let log0 = txn.logs[txn.logs.length - 1]
+    const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.FinalisedProposal event (member, proposalID, proposalType)
+    log0 = daoInterface.parseLog(log0).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: `Proposal:#${log0.proposalID}`,
+    }
+  }
+  // POOL.TXN TYPES
+  if (txnType === 'createPool') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.poolFactory,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // PoolFactory.CreatePool event (token, pool)
+    const createLog = logs.filter((x) => x.name === 'CreatePool')[0].args
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** NEEDS CHECKING ***
+    const liqLog = logs.filter((x) => x.name === 'AddLiquidity')[0].args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: liqLog.inputBase.toString(),
+      sendToken1: addr.spartav2,
+      send1: member,
+      sendAmnt2: liqLog.inputToken.toString(),
+      sendToken2: liqLog.tokenAddress,
+      send2: member,
+      recAmnt1: liqLog.unitsIssued.toString(),
+      recToken1: createLog.pool,
+      rec1: member,
+    }
+  }
+  // ROUTER.TXN TYPES
+  if (txnType === 'addLiq') {
+    let log = txn.logs[txn.logs.length - 1]
+    const poolAddr = log.address
+    const iface = new ethers.utils.Interface(abiArray.pool)
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued)
+    log = iface.parseLog(log).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: log.inputBase.toString(),
+      sendToken1: addr.spartav2,
+      send1: member,
+      sendAmnt2: log.inputToken.toString(),
+      sendToken2: log.tokenAddress,
+      send2: member,
+      recAmnt1: log.unitsIssued.toString(),
+      recToken1: poolAddr,
+      rec1: member,
+    }
+  }
+  if (txnType === 'addLiqSingle') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued)
+    const liqIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
+    const poolAddr = txn.logs[liqIndex].address
+    const liqLog = logs[liqIndex].args
+    // Token.Transfer event (1st one to the Pool * 2 is ~input) (from, to, value)
+    const tsfLog = logs.filter(
+      (x) => x.name === 'Transfer' && x.args.to === poolAddr,
+    )[0].args
+    const halfInput = tsfLog.value.toString()
+    const inputAmnt = BN(halfInput).times(2)
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: inputAmnt.toString(),
+      sendToken1: liqLog.tokenAddress,
+      send1: member,
+      recAmnt1: liqLog.unitsIssued.toString(),
+      recToken1: poolAddr,
+      rec1: member,
+    }
+  }
+  if (txnType === 'zapLiq') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
+    const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
+    const remAddr = txn.logs[remIndex].address
+    const remLog = logs[remIndex].args
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** NEEDS CHECKING ***
+    const addIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
+    const addAddr = txn.logs[addIndex].address
+    const addLog = logs[addIndex].args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: remLog.unitsClaimed.toString(),
+      sendToken1: remAddr,
+      send1: member,
+      recAmnt1: addLog.unitsIssued.toString(),
+      recToken1: addAddr,
+      rec1: member,
+    }
+  }
+  if (txnType === 'remLiq') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
+    const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
+    const poolAddr = txn.logs[remIndex].address
+    const remLog = logs[remIndex].args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+
+      sendAmnt1: remLog.unitsClaimed.toString(),
+      sendToken1: poolAddr,
+      send1: member,
+
+      recAmnt1: remLog.outputBase.toString(),
+      recToken1: addr.spartav2,
+      rec1: member,
+
+      recAmnt2: remLog.outputToken.toString(),
+      recToken2: remLog.tokenAddress,
+      rec2: member,
+    }
+  }
+  if (txnType === 'remLiqSingle') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
+    const swapIndex = logs.findIndex((x) => x.name === 'Swapped')
+    const swapLog = logs[swapIndex].args
+    const poolAddr = txn.logs[swapIndex].address
+    const toBase = swapLog.tokenTo === addr.spartav2
+    const _out1 = swapLog.outputAmount.toString()
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
+    const remLiqLog = logs.filter((x) => x.name === 'RemoveLiquidity')[0].args
+    const _baseOut = remLiqLog.outputBase.toString()
+    const _tokenOut = remLiqLog.outputToken.toString()
+    const _out2 = toBase ? _baseOut : _tokenOut
+    // Output sum (not inc feeBurn for SPARTA)
+    const recAmnt1 = BN(_out1).plus(_out2)
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: remLiqLog.unitsClaimed.toString(),
+      sendToken1: poolAddr,
+      send1: member,
+      recAmnt1: recAmnt1.toString(),
+      recToken1: swapLog.tokenTo,
+      rec1: member,
+    }
+  }
+  if (txnType === 'swapped') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    const swapLogs = logs.filter((x) => x.name === 'Swapped')
+    const doubleSwap = swapLogs.length > 1
+    // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
+    const swapLog1 = swapLogs[0].args
+    let swapLog2 = []
+    if (doubleSwap) {
+      // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
+      swapLog2 = swapLogs[1].args
+    }
+    const { tokenFrom } = swapLog1
+    const { inputAmount } = swapLog1
+    let { tokenTo } = swapLog1
+    let { outputAmount } = swapLog1
+    if (doubleSwap) {
+      tokenTo = swapLog2.tokenTo
+      outputAmount = swapLog2.outputAmount
+    }
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: inputAmount.toString(),
+      sendToken1: tokenFrom,
+      send1: member,
+      recAmnt1: outputAmount.toString(),
+      recToken1: tokenTo,
+      rec1: member,
+    }
+  }
+  if (txnType === 'mintSynth') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.synthVault,
+      abiArray.sparta,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
+    let fromBase = true
+    let swapLog = logs.filter((x) => x.name === 'Swapped')
+    if (swapLog.length > 0) {
+      fromBase = false
+      swapLog = swapLog[0].args
+    }
+    // Pool.MintSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** NEEDS CHECKING ***
+    const mintLog = logs.filter((x) => x.name === 'MintSynth')[0].args
+    const sendAmnt1 = fromBase ? mintLog.baseAmount : swapLog.inputAmount
+    const sendToken1 = fromBase ? addr.spartav2 : swapLog.tokenFrom
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: sendAmnt1.toString(),
+      sendToken1,
+      send1: member,
+      recAmnt1: mintLog.synthAmount.toString(),
+      recToken1: mintLog.synthAddress,
+      rec1: 'SynthVault',
+    }
+  }
+  if (txnType === 'burnSynth') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.pool,
+      abiArray.sparta,
+      abiArray.wbnb,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
+    let toBase = true
+    let swapLog = logs.filter((x) => x.name === 'Swapped')
+    if (swapLog.length > 0) {
+      toBase = false
+      swapLog = swapLog[0].args
+    }
+    // Pool.BurnSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** NEEDS CHECKING ***
+    const burnLog = logs.filter((x) => x.name === 'BurnSynth')[0].args
+    const recAmnt1 = toBase ? burnLog.baseAmount : swapLog.outputAmount
+    const recToken1 = toBase ? addr.spartav2 : swapLog.tokenTo
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: burnLog.synthAmount.toString(),
+      sendToken1: burnLog.synthAddress,
+      send1: member,
+      recAmnt1: recAmnt1.toString(),
+      recToken1,
+      rec1: member,
+    }
+  }
+  if (txnType === 'unfreeze') {
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: `Try Unfreeze`,
+    }
+  }
+  // SPARTA.TXN TYPES
+  if (txnType === 'upgrade') {
+    const masterAbi = mergeAbis([abiArray.erc20, abiArray.sparta])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // Spartav1.Transfer (Tsf In) (from, to, value)
+    const sendAmnt1 = logs[0].args.value
+    // Spartav2.Transfer (Upgraded) (from, to, value)
+    const recAmnt1 = logs[2].args.value
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: sendAmnt1.toString(),
+      sendToken1: addr.spartav1,
+      send1: member,
+      recAmnt1: recAmnt1.toString(),
+      recToken1: addr.spartav2,
+      rec1: member,
+    }
+  }
+  if (txnType === 'fsClaim') {
+    const iface = new ethers.utils.Interface(abiArray.erc20)
+    let log = txn.logs[txn.logs.length - 1]
+    log = iface.parseLog(log).args
+    // FallenSpartans.SpartanClaimed (spartanAddress, amount)
+    const recAmnt1 = log.amount
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: recAmnt1.toString(),
+      sendToken1: addr.spartav2,
+      send1: 'FallenSpartans',
+      recAmnt1: recAmnt1.toString(),
+      recToken1: addr.spartav2,
+      rec1: member,
+    }
+  }
+  // SYNTH.TXN TYPES
+  if (txnType === 'synthDeposit') {
+    const iface = new ethers.utils.Interface(abiArray.synthVault)
+    let log = txn.logs[txn.logs.length - 1]
+    log = iface.parseLog(log).args
+    // SynthVault.MemberDeposits (synth, member, newDeposit)
+    const recAmnt1 = log.newDeposit
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: recAmnt1.toString(),
+      sendToken1: log.synth,
+      send1: member,
+      recAmnt1: recAmnt1.toString(),
+      recToken1: log.synth,
+      rec1: 'SynthVault',
+    }
+  }
+  if (txnType === 'synthHarvest') {
+    const masterAbi = mergeAbis([
+      abiArray.erc20,
+      abiArray.synthVault,
+      abiArray.pool,
+      abiArray.sparta,
+    ])
+    const iface = new ethers.utils.Interface(masterAbi)
+    const logs = []
+    for (let i = 0; i < txn.logs.length; i++) {
+      logs.push(iface.parseLog(txn.logs[i]))
+    }
+    // SynthVault.MemberHarvests (synth, member, amount)
+    const harvLogs = logs.filter((x) => x.name === 'MemberHarvests')
+    let recAmnt1 = BN(0)
+    for (let i = 0; i < harvLogs.length; i++) {
+      const harvest = harvLogs[i].args.amount.toString()
+      recAmnt1 = recAmnt1.plus(harvest)
+    }
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: recAmnt1.toString(),
+      sendToken1: addr.spartav2,
+      send1: 'Reserve',
+      recAmnt1: recAmnt1.toString(),
+      recToken1: addr.spartav2,
+      rec1: 'Harvest',
+    }
+  }
+  if (txnType === 'synthWithdraw') {
+    const iface = new ethers.utils.Interface(abiArray.synthVault)
+    let log = txn.logs[txn.logs.length - 1]
+    log = iface.parseLog(log).args
+    // SynthVault.MemberWithdraws (synth, member, amount)
+    const recAmnt1 = log.amount
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendAmnt1: recAmnt1.toString(),
+      sendToken1: log.synth,
+      send1: 'SynthVault',
+      recAmnt1: recAmnt1.toString(),
+      recToken1: log.synth,
+      rec1: member,
+    }
+  }
+  if (txnType === 'createSynth') {
+    const iface = new ethers.utils.Interface(abiArray.synthFactory)
+    let log = txn.logs[txn.logs.length - 1]
+    log = iface.parseLog(log).args
+    // SynthFactory.CreateSynth (token, pool, synth)
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      send1: member,
+      rec1: log.synth,
+    }
+  }
+  // WEB3.TXN TYPES
+  if (txnType === 'approval') {
+    let log1 = txn.logs[0] // Token.Approval event
+    const recToken1 = log1.address // Approved tokenAddr
+    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
+    log1 = ercInterface.parseLog(log1).args
+    return {
+      txnHash: txn.transactionHash,
+      txnIndex: txn.transactionIndex,
+      txnType,
+      txnTypeIcon: txnType,
+      sendToken1: recToken1,
+      send1: log1.owner,
+      recToken1,
+      rec1: log1.spender,
+    }
+  }
+  return false // Only txns that have parse-logic will make it to the array
+}
+
+/** Parse raw txn before localStorage */
+export const parseTxn = async (txn, txnType) => {
+  const { chainId } = txn // get chainId from the raw txn data
+  let _txn = await getWalletProvider().waitForTransaction(txn.hash, 1) // wait for the txn object
+  // console.log(_txn)
+  _txn = parseTxnLogs(_txn, txnType)
+  _txn.chainId = chainId // add the chainId into the txn object
+  return _txn
+}
+
+/** Add txn to history array in localStorage */
+export const addTxn = async (walletAddr, newTxn) => {
+  let txnArray = tryParse(window.localStorage.getItem('txnArray'))
+  if (!txnArray) {
+    txnArray = []
+    txnArray.push({ wallet: walletAddr, txns: [] })
+  }
+  let index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+  if (index === -1) {
+    txnArray.push({ wallet: walletAddr, txns: [] })
+    index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+  }
+  txnArray[index].txns.unshift(newTxn)
+  window.localStorage.setItem('txnArray', JSON.stringify(txnArray))
+}
+
+/** Clear current wallet/chain txn history array in localStorage */
+export const clearTxns = async (walletAddr) => {
+  let txnArray = tryParse(window.localStorage.getItem('txnArray'))
+  if (!txnArray) {
+    txnArray = []
+    txnArray.push({ wallet: walletAddr, txns: [] })
+  } else {
+    let index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+    if (index === -1) {
+      txnArray.push({ wallet: walletAddr, txns: [] })
+      index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
+    }
+    const network = tryParse(window.localStorage.getItem('network'))
+    let filtered = txnArray[index].txns
+    if (filtered?.length > 0) {
+      filtered = filtered.filter((txn) => txn.chainId !== network.chainId)
+      txnArray[index].txns = filtered
+    }
+  }
+  window.localStorage.setItem('txnArray', JSON.stringify(txnArray))
 }

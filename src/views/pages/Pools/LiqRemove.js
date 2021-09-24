@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import {
   Card,
   Col,
@@ -12,10 +11,12 @@ import {
   FormControl,
   Button,
   Badge,
+  OverlayTrigger,
 } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
-import { getAddresses, getItemFromArray } from '../../../utils/web3'
+import { getAddresses, getItemFromArray, oneWeek } from '../../../utils/web3'
 import {
   BN,
   convertFromWei,
@@ -23,13 +24,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import {
-  calcFeeBurn,
-  calcLiquidityHoldings,
-  calcSwapFee,
-  calcSwapOutput,
-  calcValueInBase,
-} from '../../../utils/web3Utils'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import {
@@ -40,15 +34,23 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import Approval from '../../../components/Approval/Approval'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { balanceWidths } from './Components/Utils'
+import Share from '../../../components/Share/SharePool'
+import NewPool from '../Home/NewPool'
+import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
+import { getTimeUntil } from '../../../utils/math/nonContract'
+import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
   const addr = getAddresses()
-  const wallet = useWallet()
+  const wallet = useWeb3React()
   const sparta = useSparta()
   const { t } = useTranslation()
+  const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
   const [assetRemove2, setAssetRemove2] = useState('...')
@@ -78,14 +80,11 @@ const LiqRemove = () => {
 
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
+          asset1.address !== '' &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-        asset2 =
-          asset1.tokenAddress !== addr.spartav2
-            ? asset1
-            : { tokenAddress: addr.bnb }
+        asset2 = asset1.address !== '' ? asset1 : { tokenAddress: addr.bnb }
         asset3 = { tokenAddress: addr.spartav2 }
 
         asset1 = getItemFromArray(asset1, pool.poolDetails)
@@ -108,7 +107,7 @@ const LiqRemove = () => {
 
         asset1 =
           asset1 &&
-          asset1.tokenAddress !== addr.spartav2 &&
+          asset1.address !== '' &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
@@ -118,8 +117,7 @@ const LiqRemove = () => {
           ? asset2
           : { tokenAddress: addr.spartav2 }
         asset2 =
-          asset2.tokenAddress === asset1.tokenAddress ||
-          asset2.tokenAddress === addr.spartav2
+          asset2.tokenAddress === asset1.tokenAddress || asset2.address === ''
             ? asset2
             : { tokenAddress: addr.spartav2 }
 
@@ -133,8 +131,8 @@ const LiqRemove = () => {
         window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
       }
     }
-
     getAssetDetails()
+    balanceWidths()
   }, [
     pool.poolDetails,
     window.localStorage.getItem('assetSelected1'),
@@ -148,18 +146,16 @@ const LiqRemove = () => {
 
   const removeInput1 = document.getElementById('removeInput1')
   const removeInput2 = document.getElementById('removeInput2')
-  // const removeInput3 = document.getElementById('removeInput3')
 
   const clearInputs = (focusAfter) => {
+    setoutput1('0.00')
+    setoutput2('0.00')
     if (removeInput1) {
       removeInput1.value = ''
     }
     if (removeInput2) {
       removeInput2.value = ''
     }
-    // if (removeInput3) {
-    //   removeInput3.value = ''
-    // }
     if (focusAfter === 1) {
       removeInput1.focus()
     }
@@ -186,222 +182,164 @@ const LiqRemove = () => {
     return poolRemove1?.balance
   }
 
-  const getFeeBurn = (_amount) => {
-    const burnFee = calcFeeBurn(sparta.globalDetails.feeOnTransfer, _amount)
-    return burnFee
+  const getTimeNew = () => {
+    const timeStamp = BN(poolRemove1?.genesis).plus(oneWeek)
+    return getTimeUntil(timeStamp, t)
   }
 
   //= =================================================================================//
-  // 'Remove Both' Functions (Re-Factor to just getOutput)
+  // Remove Liquidity Txn Details
 
-  const getRemoveTokenOutput = () => {
-    if (removeInput1 && poolRemove1) {
-      return calcLiquidityHoldings(
-        poolRemove1?.tokenAmount,
-        convertToWei(removeInput1?.value),
-        poolRemove1?.poolUnits,
+  /**
+   * Get remove liquidity equal (sym) txn details
+   * @returns spartaOutput @returns tokenOutput
+   */
+  const getRemLiq = () => {
+    if (removeInput1 && poolRemove1 && activeTab === '1') {
+      const [spartaOutput, tokenOutput] = removeLiq(
+        convertToWei(removeInput1.value),
+        poolRemove1,
+        sparta.globalDetails.feeOnTransfer,
       )
+      return [spartaOutput, tokenOutput]
     }
-    return '0.00'
+    return ['0.00', '0.00']
   }
 
-  const getRemoveSparta = () => {
-    if (removeInput1 && poolRemove1) {
-      return BN(
-        calcLiquidityHoldings(
-          poolRemove1?.baseAmount,
-          convertToWei(removeInput1?.value),
-          poolRemove1?.poolUnits,
-        ),
+  /**
+   * Get remove liquidity one-sided (asym) txn details
+   * @returns tokensOut @returns swapFee
+   */
+  const getRemLiqAsym = () => {
+    if (removeInput1 && assetRemove1 && activeTab === '2') {
+      const [tokensOut, swapFee, divi] = removeLiqAsym(
+        convertToWei(removeInput1.value),
+        poolRemove1,
+        assetRemove1.tokenAddress === addr.spartav2,
+        sparta.globalDetails.feeOnTransfer,
       )
+      return [tokensOut, swapFee, divi]
     }
-    return '0.00'
-  }
-
-  const getRemoveSpartaBurn1 = () => {
-    if (removeInput1 && poolRemove1) {
-      let _sparta = getRemoveSparta()
-      if (poolRemove1.tokenAddress === addr.bnb) {
-        _sparta = _sparta.minus(getFeeBurn(_sparta))
-      }
-      return _sparta
-    }
-    return '0.00'
-  }
-
-  const getRemoveSpartaOutput = () => {
-    if (removeInput1 && poolRemove1) {
-      const _sparta = getRemoveSpartaBurn1()
-      return _sparta.minus(getFeeBurn(_sparta))
-    }
-    return '0.00'
+    return ['0.00', '0.00', '0.00']
   }
 
   //= =================================================================================//
-  // 'Remove Single' Functions (Re-Factor)
-
-  const getRemoveOneSwapFee = () => {
-    if (removeInput1 && assetRemove1) {
-      const swapFee = calcSwapFee(
-        assetRemove1?.tokenAddress === addr.spartav2
-          ? getRemoveTokenOutput()
-          : getRemoveSpartaOutput(),
-        BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-        BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-        assetRemove1?.tokenAddress === addr.spartav2,
-      )
-      return swapFee
-    }
-    return '0.00'
-  }
-
-  const getRemoveOneSwapOutput = () => {
-    if (removeInput1 && assetRemove1) {
-      let result = ''
-      if (assetRemove1?.tokenAddress === addr.spartav2) {
-        result = calcSwapOutput(
-          getRemoveTokenOutput(),
-          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-          true,
-        )
-        result = result.minus(getFeeBurn(result))
-      } else if (poolRemove1.tokenAddress === addr.bnb) {
-        result = calcSwapOutput(
-          getRemoveSpartaOutput(),
-          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-        )
-      } else {
-        result = calcSwapOutput(
-          BN(getRemoveSpartaOutput()).minus(
-            getFeeBurn(getRemoveSpartaOutput()),
-          ),
-          BN(poolRemove1?.tokenAmount).minus(getRemoveTokenOutput()),
-          BN(poolRemove1?.baseAmount).minus(getRemoveSparta()),
-        )
-      }
-
-      return result
-    }
-    return '0.00'
-  }
-
-  const getRemoveOneFinalOutput = () => {
-    if (removeInput1 && assetRemove1) {
-      let result = ''
-      if (assetRemove1?.tokenAddress === addr.spartav2) {
-        if (poolRemove1.tokenAddress === addr.bnb) {
-          result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveSpartaBurn1()))
-        } else {
-          result = BN(getRemoveOneSwapOutput()).plus(
-            BN(getRemoveSpartaOutput()),
-          )
-        }
-        result = result.minus(getFeeBurn(result))
-      } else {
-        result = BN(getRemoveOneSwapOutput()).plus(BN(getRemoveTokenOutput()))
-      }
-      return result
-    }
-    return '0.00'
-  }
-
-  //= =================================================================================//
-  // General Functions
+  // Remove liquidity get-value-of functions
 
   const getOutput1ValueUSD = () => {
     if (assetRemove1 && output1) {
-      return calcValueInBase(
-        poolRemove1.tokenAmount,
-        poolRemove1.baseAmount,
-        output1,
-      ).times(web3.spartaPrice)
+      if (assetRemove1.tokenAddress === addr.spartav2) {
+        return output1.times(web3.spartaPrice)
+      }
+      return calcSpotValueInBase(output1, poolRemove1).times(web3.spartaPrice)
     }
     return '0.00'
   }
 
-  // const getOutput2ValueUSD = () => {
-  //   if (assetRemove2 && removeInput3?.value) {
-  //     return BN(convertToWei(removeInput3.value)).times(web3.spartaPrice)
-  //   }
-  //   return '0.00'
-  // }
-
   const getLpValueBase = () => {
     if (assetRemove1 && removeInput1?.value) {
-      return calcLiquidityHoldings(
-        poolRemove1.baseAmount,
-        convertToWei(removeInput1.value),
-        poolRemove1.poolUnits,
-      )
+      return calcLiqValue(convertToWei(removeInput1.value), poolRemove1)[0]
     }
     return '0.00'
   }
 
   const getLpValueToken = () => {
     if (assetRemove1 && removeInput1?.value) {
-      return calcLiquidityHoldings(
-        poolRemove1.tokenAmount,
-        convertToWei(removeInput1.value),
-        poolRemove1.poolUnits,
-      )
+      return calcLiqValue(convertToWei(removeInput1.value), poolRemove1)[1]
     }
     return '0.00'
   }
 
   const getLpValueUSD = () => {
     if (assetRemove1 && removeInput1?.value) {
-      return BN(
-        calcValueInBase(
-          poolRemove1?.tokenAmount,
-          poolRemove1?.baseAmount,
-          getLpValueToken(),
-        ),
-      )
+      return BN(calcSpotValueInBase(getLpValueToken(), poolRemove1))
         .plus(getLpValueBase())
         .times(web3.spartaPrice)
     }
-
     return '0.00'
   }
+
+  const checkValid = () => {
+    if (removeInput1?.value <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (BN(convertToWei(removeInput1?.value)).isGreaterThan(getBalance(1))) {
+      return [false, t('checkBalance')]
+    }
+    if (poolRemove1.newPool) {
+      return [false, `${t('unlocksIn')} ${getTimeNew()[0]}${getTimeNew()[1]}`]
+    }
+    if (activeTab === '1') {
+      return [true, t('removeBoth')]
+    }
+    return [true, t('removeSingle')]
+  }
+
+  //= =================================================================================//
+  // Handlers
 
   const handleInputChange = () => {
     if (activeTab === '1') {
       if (removeInput1?.value) {
-        setoutput1(getRemoveTokenOutput())
-        setoutput2(getRemoveSpartaOutput())
+        setoutput1(getRemLiq()[1])
+        setoutput2(getRemLiq()[0])
       }
     }
     if (activeTab === '2') {
       if (removeInput1?.value && document.getElementById('removeInput2')) {
         document.getElementById('removeInput2').value = convertFromWei(
-          getRemoveOneFinalOutput(),
+          getRemLiqAsym()[0],
         )
-        setoutput1(getRemoveOneFinalOutput())
+        setoutput1(getRemLiqAsym()[0])
       }
     }
-  }
-
-  const handleTokenInputChange = (e) => {
-    e.currentTarget.value = e.currentTarget.value
-      .replace(/[^0-9.]/g, '')
-      .replace(/(\..*?)\..*/g, '$1')
   }
 
   useEffect(() => {
     handleInputChange()
   }, [removeInput1?.value, assetRemove1, assetRemove2, poolRemove1, activeTab])
 
+  const handleRemLiq = async () => {
+    setTxnLoading(true)
+    if (activeTab === '1') {
+      await dispatch(
+        removeLiquidityExact(
+          convertToWei(removeInput1.value),
+          poolRemove1.tokenAddress,
+          wallet,
+        ),
+      )
+    } else {
+      await dispatch(
+        removeLiquiditySingle(
+          convertToWei(removeInput1.value),
+          assetRemove1.tokenAddress === addr.spartav2,
+          poolRemove1.tokenAddress,
+          wallet,
+        ),
+      )
+    }
+    setTxnLoading(false)
+    clearInputs()
+  }
+
   return (
     <Row>
       <Col xs="auto">
         <Card xs="auto" className="card-480">
           <Card.Header className="p-0 border-0 mb-3">
-            <Nav activeKey={activeTab} fill className="rounded-top">
-              <Nav.Item key="addTab1" className="rounded-top">
+            <Row className="px-4 pt-3 pb-1">
+              <Col xs="auto">
+                {t('liquidity')}
+                {pool.poolDetails.length > 0 && <Share />}
+              </Col>
+              <Col className="text-end">
+                <NewPool />
+              </Col>
+            </Row>
+            <Nav activeKey={activeTab} fill>
+              <Nav.Item key="addTab1">
                 <Nav.Link
-                  className="rounded-top"
                   eventKey="1"
                   onClick={() => {
                     toggle('1')
@@ -412,7 +350,6 @@ const LiqRemove = () => {
               </Nav.Item>
               <Nav.Item>
                 <Nav.Link
-                  className="rounded-top"
                   eventKey="2"
                   onClick={() => {
                     toggle('2')
@@ -423,242 +360,217 @@ const LiqRemove = () => {
               </Nav.Item>
             </Nav>
           </Card.Header>
-          <Card.Body>
-            <Row>
-              <Col xs="12" className="px-1 px-sm-3">
-                <Card className="card-alt">
-                  <Card.Body>
-                    <Row>
-                      <Col xs="auto" className="text-sm-label">
-                        {t('redeem')}
-                      </Col>
-                      <Col
-                        className="text-sm-label float-end text-end"
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          clearInputs(1)
-                          removeInput1.value = convertFromWei(getBalance(1))
-                        }}
-                      >
-                        <Badge bg="primary" className="me-1">
-                          MAX
-                        </Badge>
-                        {t('balance')}:{' '}
-                        {pool.poolDetails && formatFromWei(getBalance(1))}
-                      </Col>
-                    </Row>
 
-                    <Row className="my-1">
-                      <Col>
-                        <InputGroup className="m-0">
-                          <InputGroup.Text>
-                            <AssetSelect priority="1" filter={['pool']} />
-                          </InputGroup.Text>
-                          <FormControl
-                            className="text-end ms-0"
-                            type="number"
-                            placeholder={`${t('redeem')}...`}
-                            id="removeInput1"
-                            autoComplete="off"
-                            autoCorrect="off"
-                            onInput={(e) => handleTokenInputChange(e)}
-                          />
-                          <InputGroup.Text
+          {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
+            <>
+              <Card.Body>
+                <Row>
+                  <Col xs="12" className="px-1 px-sm-3">
+                    <Card className="card-alt">
+                      <Card.Body>
+                        <Row>
+                          <Col xs="auto" className="text-sm-label">
+                            {t('redeem')}
+                          </Col>
+                          <Col
+                            className="text-sm-label float-end text-end"
                             role="button"
-                            tabIndex={-1}
-                            onKeyPress={() => clearInputs(1)}
-                            onClick={() => clearInputs(1)}
+                            aria-hidden="true"
+                            onClick={() => {
+                              clearInputs(1)
+                              removeInput1.value = convertFromWei(getBalance(1))
+                            }}
                           >
-                            <Icon icon="close" size="12" fill="grey" />
-                          </InputGroup.Text>
-                        </InputGroup>
-                        <div className="text-end text-sm-label pt-1">
-                          ~$
-                          {removeInput1?.value
-                            ? formatFromWei(getLpValueUSD(), 2)
-                            : '0.00'}
-                        </div>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
+                            <Badge bg="primary" className="me-1">
+                              MAX
+                            </Badge>
+                            {t('balance')}:{' '}
+                            {pool.poolDetails && formatFromWei(getBalance(1))}
+                          </Col>
+                        </Row>
 
-                <Row style={{ height: '2px' }}>
-                  {activeTab === '2' && (
-                    <Icon
-                      icon="swapAdd"
-                      size="25"
-                      fill="#fb2715"
-                      className="mx-auto position-relative"
-                      style={{ height: '35px', top: '-20px', zIndex: '1000' }}
-                    />
-                  )}
-                </Row>
-
-                {activeTab === '2' && (
-                  <Card className="card-alt">
-                    <Card.Body>
-                      <Row>
-                        <Col xs="auto" className="text-sm-label">
-                          {t('receive')}
-                        </Col>
-                        <Col className="text-sm-label float-end text-end">
-                          {t('balance')}:{' '}
-                          {pool.tokenDetails && formatFromWei(getBalance(2))}
-                        </Col>
-                      </Row>
-
-                      <Row className="my-1">
-                        <Col>
-                          <InputGroup className="">
-                            <InputGroup.Text>
-                              <AssetSelect
-                                priority="2"
-                                filter={['token']}
-                                blackList={[
-                                  activeTab === '1' ? addr.spartav2 : '',
-                                ]}
-                                whiteList={
-                                  activeTab === '2'
-                                    ? [addr.spartav2, poolRemove1.tokenAddress]
-                                    : ['']
-                                }
-                                disabled={activeTab === '1'}
+                        <Row className="my-1">
+                          <Col>
+                            <InputGroup className="m-0">
+                              <InputGroup.Text id="assetSelect1">
+                                <AssetSelect priority="1" filter={['pool']} />
+                              </InputGroup.Text>
+                              <FormControl
+                                className="text-end ms-0"
+                                type="number"
+                                placeholder={`${t('redeem')}...`}
+                                id="removeInput1"
+                                autoComplete="off"
+                                autoCorrect="off"
                               />
-                            </InputGroup.Text>
-                            <FormControl
-                              className="text-end ms-0"
-                              type="number"
-                              placeholder={`${t('receive')}...`}
-                              id="removeInput2"
-                              disabled
-                            />
-                          </InputGroup>
-                          <div className="text-end text-sm-label pt-1">
-                            ~$
-                            {removeInput2?.value
-                              ? formatFromWei(getOutput1ValueUSD(), 2)
-                              : '0.00'}
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  </Card>
-                )}
+                              <InputGroup.Text
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs(1)}
+                                onClick={() => clearInputs(1)}
+                              >
+                                <Icon icon="close" size="10" fill="grey" />
+                              </InputGroup.Text>
+                            </InputGroup>
+                            <div className="text-end text-sm-label pt-1">
+                              ~$
+                              {removeInput1?.value
+                                ? formatFromWei(getLpValueUSD(), 2)
+                                : '0.00'}
+                            </div>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
 
-                {/* {activeTab === '1' && (
-                  <>
-                    <hr className="m-1" />
-                    <Row className="my-2">
-                      <Col xs="4" className="">
-                        <div className="">Output</div>
-                      </Col>
-                      <Col xs="8" className="text-right">
-                        <div className="">
-                          Balance:{' '}
-                          {pool.tokenDetails && formatFromWei(getBalance(3))}
-                        </div>
-                      </Col>
-                    </Row>
-                    <Row className="">
-                      <Col xs="6">
-                        <div className="output-card ml-2">
-                          <AssetSelect
-                            priority="3"
-                            filter={['token']}
-                            whiteList={[addr.spartav2]}
-                            disabled
-                          />
-                        </div>
-                      </Col>
-                      <Col className="text-right" xs="6">
-                        <InputGroup className="">
-                          <Input
-                            className="text-right ml-0 p-2"
-                            type="text"
-                            placeholder="0.00"
-                            id="removeInput3"
-                            disabled
-                          />
-                        </InputGroup>
-                        <div className="text-right">
-                          ~$
-                          {removeInput3?.value
-                            ? formatFromWei(getOutput2ValueUSD(), 2)
-                            : '0.00'}
-                        </div>
-                      </Col>
-                    </Row>
-                  </>
-                )} */}
-
-                {pool.poolDetails && (
-                  <>
-                    <Row className="mb-2 mt-3">
-                      <Col xs="auto">
-                        <div className="text-card">{t('redeem')}</div>
-                      </Col>
-                      <Col className="text-end">
-                        <div className="text-card">
-                          {removeInput1?.value > 0
-                            ? formatFromUnits(removeInput1?.value, 6)
-                            : '0.00'}{' '}
-                          {getToken(poolRemove1?.tokenAddress)?.symbol}p
-                        </div>
-                      </Col>
+                    <Row style={{ height: '2px' }}>
+                      {activeTab === '2' && (
+                        <Icon
+                          icon="swapAdd"
+                          size="25"
+                          fill="#fb2715"
+                          className="mx-auto position-relative"
+                          style={{
+                            height: '35px',
+                            top: '-20px',
+                            zIndex: '1000',
+                          }}
+                        />
+                      )}
                     </Row>
 
                     {activeTab === '2' && (
-                      <Row className="mb-2">
-                        <Col xs="auto">
-                          <div className="text-card">{t('fee')}</div>
-                        </Col>
-                        <Col className="text-end">
-                          <div className="text-card">
-                            {getRemoveOneSwapFee() > 0
-                              ? formatFromWei(getRemoveOneSwapFee(), 6)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </div>
-                        </Col>
-                      </Row>
+                      <Card className="card-alt">
+                        <Card.Body>
+                          <Row>
+                            <Col xs="auto" className="text-sm-label">
+                              {t('receive')}
+                            </Col>
+                            <Col className="text-sm-label float-end text-end">
+                              {t('balance')}:{' '}
+                              {pool.tokenDetails &&
+                                formatFromWei(getBalance(2))}
+                            </Col>
+                          </Row>
+
+                          <Row className="my-1">
+                            <Col>
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect2">
+                                  <AssetSelect
+                                    priority="2"
+                                    filter={['token']}
+                                    blackList={[
+                                      activeTab === '1' ? addr.spartav2 : '',
+                                    ]}
+                                    whiteList={
+                                      activeTab === '2'
+                                        ? [
+                                            addr.spartav2,
+                                            poolRemove1.tokenAddress,
+                                          ]
+                                        : ['']
+                                    }
+                                    disabled={activeTab === '1'}
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('receive')}...`}
+                                  id="removeInput2"
+                                  disabled
+                                />
+                              </InputGroup>
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {removeInput2?.value
+                                  ? formatFromWei(getOutput1ValueUSD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
                     )}
 
-                    <Row className="">
-                      <Col xs="auto" className="title-card">
-                        <span className="subtitle-card">{t('receive')}</span>
-                        {activeTab === '1' && (
-                          <div className="subtitle-card">{t('receive')}</div>
-                        )}
-                      </Col>
-                      <Col className="text-end">
-                        <span className="subtitle-card">
-                          {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
-                          <span className="output-card">
-                            {getToken(assetRemove1?.tokenAddress)?.symbol}
-                          </span>
-                        </span>
-                        {activeTab === '1' && (
-                          <span className="subtitle-card">
-                            <br />
-                            {output2 > 0
-                              ? formatFromWei(output2, 6)
-                              : '0.00'}{' '}
-                            <span className="output-card">SPARTA</span>
-                          </span>
-                        )}
-                      </Col>
-                    </Row>
-                  </>
-                )}
+                    {pool.poolDetails && (
+                      <>
+                        <Row className="mb-2 mt-3">
+                          <Col xs="auto">
+                            <div className="text-card">{t('redeem')}</div>
+                          </Col>
+                          <Col className="text-end">
+                            <div className="text-card">
+                              {removeInput1?.value > 0
+                                ? formatFromUnits(removeInput1?.value, 6)
+                                : '0.00'}{' '}
+                              {getToken(poolRemove1?.tokenAddress)?.symbol}p
+                            </div>
+                          </Col>
+                        </Row>
 
-                {!pool.poolDetails && (
-                  <HelmetLoading height="150px" width="150px" />
-                )}
-              </Col>
-            </Row>
-          </Card.Body>
+                        {activeTab === '2' && (
+                          <Row className="mb-2">
+                            <Col xs="auto">
+                              <div className="text-card">{t('fee')}</div>
+                            </Col>
+                            <Col className="text-end">
+                              <div className="text-card">
+                                {getRemLiqAsym()[1] > 0
+                                  ? formatFromWei(getRemLiqAsym()[1], 6)
+                                  : '0.00'}{' '}
+                                <span className="">SPARTA</span>
+                              </div>
+                            </Col>
+                          </Row>
+                        )}
+
+                        <Row className="">
+                          <Col xs="auto" className="title-card">
+                            <span className="subtitle-card">
+                              {t('receive')}
+                            </span>
+                            {activeTab === '1' && (
+                              <div className="subtitle-card">
+                                {t('receive')}
+                              </div>
+                            )}
+                          </Col>
+                          <Col className="text-end">
+                            <span className="subtitle-card">
+                              ~
+                              {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
+                              <span className="output-card">
+                                {getToken(assetRemove1?.tokenAddress)?.symbol}
+                              </span>
+                            </span>
+                            {activeTab === '1' && (
+                              <span className="subtitle-card">
+                                <br />~
+                                {output2 > 0
+                                  ? formatFromWei(output2, 6)
+                                  : '0.00'}{' '}
+                                <span className="output-card">SPARTA</span>
+                              </span>
+                            )}
+                          </Col>
+                        </Row>
+                      </>
+                    )}
+
+                    {!pool.poolDetails && (
+                      <HelmetLoading height="150px" width="150px" />
+                    )}
+                  </Col>
+                </Row>
+              </Card.Body>
+            </>
+          ) : (
+            <Card.Body className="output-card">
+              No pools are currently listed
+            </Card.Body>
+          )}
           <Card.Footer>
             <Row className="text-center">
               {poolRemove1?.tokenAddress &&
@@ -673,39 +585,49 @@ const LiqRemove = () => {
                     assetNumber="1"
                   />
                 )}
-
               <Col xs="12" sm="4" md="12" className="hide-if-siblings">
                 <Button
                   className="w-100"
-                  disabled={
-                    removeInput1?.value <= 0 ||
-                    BN(convertToWei(removeInput1?.value)).isGreaterThan(
-                      getBalance(1),
-                    )
-                  }
-                  onClick={() =>
-                    activeTab === '1'
-                      ? dispatch(
-                          removeLiquidityExact(
-                            convertToWei(removeInput1.value),
-                            poolRemove1.tokenAddress,
-                            wallet,
-                          ),
-                        )
-                      : dispatch(
-                          removeLiquiditySingle(
-                            convertToWei(removeInput1.value),
-                            assetRemove1.tokenAddress === addr.spartav2,
-                            poolRemove1.tokenAddress,
-                            wallet,
-                          ),
-                        )
-                  }
+                  disabled={!checkValid()[0]}
+                  onClick={() => handleRemLiq()}
                 >
-                  {t('removeLiq')}
+                  {checkValid()[1]}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
+                  {poolRemove1.newPool && (
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(
+                        t,
+                        'newPool',
+                        `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
+                      )}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1 mb-1"
+                          size="17"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  )}
                 </Button>
               </Col>
             </Row>
+
+            {activeTab === '2' && getRemLiqAsym()[2] > 0 && (
+              <div className="text-card text-center mt-2">
+                {`${
+                  getToken(poolRemove1.tokenAddress)?.symbol
+                }:SPARTA pool will receive a ${formatFromWei(
+                  getRemLiqAsym()[2],
+                  4,
+                )} SPARTA dividend`}
+              </div>
+            )}
           </Card.Footer>
         </Card>
       </Col>

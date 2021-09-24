@@ -4,8 +4,12 @@ export { daoReducer } from './reducer'
 
 export {
   daoGlobalDetails,
+  daoVaultWeight,
   daoMemberDetails,
+  getDaoDetails,
   daoProposalDetails,
+  daoDepositTimes,
+  proposalWeight,
   daoDeposit,
   daoWithdraw,
   daoHarvest,
@@ -15,6 +19,7 @@ export {
   newGrantProposal,
   voteProposal,
   removeVote,
+  pollVotes,
   cancelProposal,
   finaliseProposal,
 } from './actions'

@@ -28,7 +28,7 @@ textarea {
   h4,
   h5,
   h6 {
-    font-family: $font-family-base;
+    font-family: $font-family-headers;
     color: $opacity-8;
     font-weight: $font-weight-extra-bold;
   }
@@ -40,7 +40,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: $font-family-base;
+  font-family: $font-family-headers;
   font-weight: $font-weight-normal;
   color: $opacity-8;
 }
@@ -164,7 +164,7 @@ p {
 }
 
 .title {
-  font-family: $font-family-base;
+  font-family: $font-family-headers;
   font-style: normal;
   font-weight: bold;
   font-size: 14px;
@@ -284,7 +284,7 @@ hr {
 }
 
 .page-header {
-  font-family: Kreon;
+  font-family: $font-family-headers;
   font-style: normal;
   font-weight: bold;
   font-size: 28px;
@@ -293,7 +293,7 @@ hr {
 }
 
 .text-footer {
-  font-family: Kreon;
+  font-family: $font-family-headers;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
@@ -311,7 +311,7 @@ hr {
 }
 
 .subtitle-label {
-  font-family: Roboto;
+  font-family: $font-family-base;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
@@ -379,7 +379,7 @@ hr {
 .output-card {
   font-family: $font-family-base;
   font-style: normal;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 20px;
   color: #ffffff;
@@ -404,7 +404,7 @@ hr {
 }
 
 .accent {
-  font-family: Roboto;
+  font-family: $font-family-base;
   font-style: normal;
   font-weight: bold;
   text-transform: uppercase;

@@ -4,6 +4,7 @@ export { synthReducer } from './reducer'
 export {
   getSynthGlobalDetails,
   getSynthMemberDetails,
+  getSynthMinting,
   getSynthArray,
   getSynthDetails,
   synthDeposit,
@@ -11,4 +12,5 @@ export {
   synthHarvestSingle,
   synthWithdraw,
   createSynth,
+  synthVaultWeight,
 } from './actions'

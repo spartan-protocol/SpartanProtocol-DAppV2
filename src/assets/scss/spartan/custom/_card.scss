@@ -9,12 +9,16 @@
 
 .card-header {
   border-bottom: 1px solid #fb2715;
-  font: $font-family-headers;
+  font-family: $font-family-headers;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
   line-height: 32px;
   border-radius: 12px 12px 0 0;
+}
+
+.card-body {
+  padding: 0.9rem;
 }
 
 .card-underlay {

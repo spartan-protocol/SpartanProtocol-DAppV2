@@ -25,6 +25,28 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'bondInfo',
     },
     {
+      id: 'dividendRevenue',
+      title: 'dividendRevenueTitle',
+      body: 'dividendRevenue',
+      variable: { days: variable },
+    },
+    {
+      id: 'newPool',
+      title: 'poolInitializing',
+      body: 'newPoolInfo',
+      variable: { pool: variable },
+    },
+    {
+      id: 'newPoolRatio',
+      title: 'newPoolRatioTitle',
+      body: 'newPoolRatio',
+    },
+    {
+      id: 'newPoolFee',
+      title: 'newPoolFeeTitle',
+      body: 'newPoolFee',
+    },
+    {
       id: 'rank',
       title: 'rank',
       body: 'rankInfo',
@@ -39,12 +61,6 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'swapRevenue',
       title: 'swapRevenueTitle',
       body: 'swapRevenue',
-      variable: { days: variable },
-    },
-    {
-      id: 'dividendRevenue',
-      title: 'dividendRevenueTitle',
-      body: 'dividendRevenue',
       variable: { days: variable },
     },
   ]

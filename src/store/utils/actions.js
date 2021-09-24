@@ -20,7 +20,7 @@ export const getListedPools = (wallet) => async (dispatch) => {
     const pools = await contract.callStatic.allPools()
     dispatch(payloadToDispatch(Types.GET_LISTED_POOLS, pools))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -37,7 +37,7 @@ export const getListedPoolsRange =
       const pools = await contract.callStatic.poolsInRange(first, count)
       dispatch(payloadToDispatch(Types.GET_LISTED_POOLS_RANGE, pools))
     } catch (error) {
-      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.UTILS_ERROR, error))
     }
   }
 
@@ -54,7 +54,7 @@ export const getGlobalDetails = (wallet) => async (dispatch) => {
     const globalDetails = await contract.callStatic.getGlobalDetails()
     dispatch(payloadToDispatch(Types.GET_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -71,7 +71,7 @@ export const getTokenDetails = (token, wallet) => async (dispatch) => {
     const tokenDetails = await contract.callStatic.getTokenDetails(token)
     dispatch(payloadToDispatch(Types.GET_TOKEN_DETAILS, tokenDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -88,7 +88,7 @@ export const getPoolDetails = (pool, wallet) => async (dispatch) => {
     const poolDetails = await contract.callStatic.getPoolData(pool)
     dispatch(payloadToDispatch(Types.GET_POOL_DETAILS, poolDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -107,7 +107,7 @@ export const getMemberShare = (token, wallet) => async (dispatch) => {
     )
     dispatch(payloadToDispatch(Types.GET_MEMBER_SHARE, memberShare))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -124,7 +124,7 @@ export const getPoolShare = (token, units, wallet) => async (dispatch) => {
     const poolShare = await contract.callStatic.getPoolShare(token, units)
     dispatch(payloadToDispatch(Types.GET_POOL_SHARE, poolShare))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -146,7 +146,7 @@ export const getShareOfBaseAmount = (token, wallet) => async (dispatch) => {
       payloadToDispatch(Types.GET_SHARE_OF_BASE_AMAOUNT, shareOfBaseAmount),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -168,7 +168,7 @@ export const getShareOfTokenAmount = (token, wallet) => async (dispatch) => {
       payloadToDispatch(Types.GET_SHARE_OF_TOKEN_AMAOUNT, shareOfTokenAmount),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -191,7 +191,7 @@ export const getPoolShareAssym =
       )
       dispatch(payloadToDispatch(Types.GET_POOL_SHARE_ASSYM, poolShareAssym))
     } catch (error) {
-      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.UTILS_ERROR, error))
     }
   }
 
@@ -208,7 +208,7 @@ export const getPoolAge = (token, wallet) => async (dispatch) => {
     const poolAge = await contract.callStatic.getPoolAge(token)
     dispatch(payloadToDispatch(Types.GET_POOL_AGE, poolAge))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -225,7 +225,7 @@ export const isMember = (token, wallet) => async (dispatch) => {
     const result = await contract.callStatic.isMember(token, wallet?.account)
     dispatch(payloadToDispatch(Types.IS_MEMBER, result))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -245,7 +245,7 @@ export const getPool = (token, wallet) => async (dispatch) => {
     const pool = await contract.callStatic.getPool(token)
     dispatch(payloadToDispatch(Types.GET_POOL, pool))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -262,7 +262,7 @@ export const getPoolCount = (wallet) => async (dispatch) => {
     const count = await contract.callStatic.poolCount()
     dispatch(payloadToDispatch(Types.GET_POOL_COUNT, count))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -285,7 +285,7 @@ export const getMemberPoolShare = (pool, wallet) => async (dispatch) => {
     )
     dispatch(payloadToDispatch(Types.GET_MEMBER_POOL_SHARE, outputAmount))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -305,7 +305,7 @@ export const getPoolShareWeight =
       const weight = await contract.callStatic.getPoolShareWeight(tokens, units)
       dispatch(payloadToDispatch(Types.GET_POOL_SHARE_WEIGHT, weight))
     } catch (error) {
-      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.UTILS_ERROR, error))
     }
   }
 
@@ -324,7 +324,7 @@ export const getDepth = (pool, wallet) => async (dispatch) => {
     const baseAmount = await contract.callStatic.getDepth(pool)
     dispatch(payloadToDispatch(Types.GET_DEPTH, baseAmount))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -342,7 +342,7 @@ export const getSynth = (token, wallet) => async (dispatch) => {
     const synth = await contract.callStatic.getSynth(token)
     dispatch(payloadToDispatch(Types.GET_SYNTH, synth))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -360,7 +360,7 @@ export const getSynthData = (token, wallet) => async (dispatch) => {
     const synthData = await contract.callStatic.getSynthData(token)
     dispatch(payloadToDispatch(Types.GET_SYNTH_DATA, synthData))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
 
@@ -388,6 +388,6 @@ export const getDebtShare =
       )
       dispatch(payloadToDispatch(Types.GET_DEBT_SHARE, share))
     } catch (error) {
-      dispatch(errorToDispatch(Types.UTILS_ERROR, `${error}.`))
+      dispatch(errorToDispatch(Types.UTILS_ERROR, error))
     }
   }
