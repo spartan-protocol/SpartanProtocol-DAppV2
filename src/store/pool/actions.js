@@ -63,7 +63,7 @@ export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
   dispatch(poolLoading())
   const addr = getAddresses()
   const trustWalletIndex = await axios.get(
-    'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
+    'https://raw.githubusercontent.com/trustwallet/assets/87ef35f621e9c24fd092e608fb6b97e19fa48a13/blockchains/smartchain/allowlist.json',
   )
   try {
     let tempArray = []
