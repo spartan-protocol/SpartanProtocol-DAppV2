@@ -9,7 +9,12 @@ import {
   getTokenContract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
+import {
+  getAddresses,
+  getProviderGasPrice,
+  oneWeek,
+  parseTxn,
+} from '../../utils/web3'
 import { getSecsSince } from '../../utils/math/nonContract'
 import { BN } from '../../utils/bigNumber'
 
@@ -165,9 +170,7 @@ export const getListedPools = (tokenDetails) => async (dispatch) => {
         synthCap: tempArray[i].synthCap.toString(),
         baseCap: tempArray[i].baseCap.toString(),
         genesis: tempArray[i].genesis.toString(),
-        // newPool:                                                             // Uncomment this line for mainnet
-        //   Date.now() / 1000 - tempArray[i].genesis.toString() * 1 < 604800,  // Uncomment this line for mainnet
-        newPool: false, // Remove this line for mainnet
+        newPool: getSecsSince(tempArray[i].genesis.toString()) < oneWeek,
         hide:
           tokenDetails[i].address !== addr.spartav2 &&
           tempArray[i].baseAmount.toString() <= 0,

@@ -1,11 +1,11 @@
 import * as Types from './types'
 
 const initialState = {
-  listedTokens: [],
-  tokenDetails: [],
-  curatedPools: [],
-  listedPools: [],
-  poolDetails: [],
+  listedTokens: false,
+  tokenDetails: false,
+  curatedPools: false,
+  listedPools: false,
+  poolDetails: false,
   txn: [],
   loading: false,
   error: null,

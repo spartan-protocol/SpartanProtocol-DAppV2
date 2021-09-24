@@ -112,16 +112,16 @@ export const addressesTN = {
   synthVault11: '0x30cDEA06826836145c9203b1D4d54e321Cc32B1f', // 9170b11ac4ce8b424f44aa5d503bdb7b0e85b4be
   utils11: '0x1C7437c145bD0bb7EE0dcFD30434173893596ee1', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
   // CURRENT ADDRESSES
-  bondVault: '0xD8D7Dbf5Ee32e7A9052d3FD6361AC7AC604e67c6', // 7d34418e37398c3fcd9ba14dfe768b209d6ee210
-  dao: '0xDe0cD66BC1D8Fb2e26208C83Ff2cd7Fc3B0Ba3F1', // 7d34418e37398c3fcd9ba14dfe768b209d6ee210
-  daoVault: '0xB871928F31385D800B771B5982Ffd45ebd0F68fE', // be2ff57e8b983d414a847516dafd8bfc7973de96
+  bondVault: '0xF935EF68dda8d0bc7bfD10738f761C5675d15A54', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  dao: '0x590A77bD2E439E0B3e2C4cCdBB3d4fe5313D5915', // 245f24f92bda1b100fcc315121463d5df44836e9
+  daoVault: '0x802B266388D54eb00CaE497F03C83fc05173AD56', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
-  poolFactory: '0xC54b437e56bbe8D43b3CEfe50dE2dc634693Bc70', // 064be2ac2d01db818e0883c8349f1013158c22cd
-  reserve: '0xA2D707b530971ED80a85Bb354626CE6b2fBB762a', // 0cf58d0c134f358895653410961aa2886f304a44
-  router: '0xcBE84a687907b36B4de3AdfD2ad03fa20bA631B2', // 064be2ac2d01db818e0883c8349f1013158c22cd
-  synthFactory: '0x99eF709eF89Cb044A85A4D222707799991DE029a', // 064be2ac2d01db818e0883c8349f1013158c22cd
-  synthVault: '0x054A57283c9C8126D4a0C5d0a859d69AC2313E25', // 7d34418e37398c3fcd9ba14dfe768b209d6ee210
-  utils: '0xF958b41A09F6cFC076eC2223C1485E45B98228FE', // 064be2ac2d01db818e0883c8349f1013158c22cd
+  poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  reserve: '0xA2D707b530971ED80a85Bb354626CE6b2fBB762a', // 0cf58d0c134f358895653410961aa2886f304a44 // UNCHANGED
+  router: '0xD760c5be88D3E746DD6F6421C4A6854417d6781b', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  utils: '0x28938DCC5D4Cb15FF70E097A5632103F2c4996aB', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -200,6 +200,7 @@ export const bscRpcsMN = [
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+export const oneWeek = 60480 // change to 604800 for mainnet
 
 /**
  * Format long string into a string with '...' separator (ideally for anchor text)
@@ -1046,7 +1047,7 @@ const parseTxnLogs = (txn, txnType) => {
 /** Parse raw txn before localStorage */
 export const parseTxn = async (txn, txnType) => {
   const { chainId } = txn // get chainId from the raw txn data
-  let _txn = await getWalletProvider().waitForTransaction(txn.hash, 1) // wait for the txn object
+  let _txn = await getWalletProvider().waitForTransaction(txn.hash, 2) // wait for the txn object
   // console.log(_txn)
   _txn = parseTxnLogs(_txn, txnType)
   _txn.chainId = chainId // add the chainId into the txn object

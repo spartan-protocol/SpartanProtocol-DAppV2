@@ -36,6 +36,13 @@ const Overview = () => {
     balanceWidths()
   }, [activeTab])
 
+  const isLoading = () => {
+    if (!pool.poolDetails) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
       <div className="content">
@@ -65,14 +72,17 @@ const Overview = () => {
                   {t('bond')}
                 </Button>
               </ButtonGroup>
-              {activeTab === '1' && <LiqAdd />}
-              {activeTab === '2' && <LiqRemove />}
-              {activeTab === '4' && <LiqBond />}
-            </Row>
-            <Row className="row-480">
-              <Col className="card-480">
-                {pool.poolDetails.length <= 0 && <HelmetLoading />}
-              </Col>
+              {!isLoading() ? (
+                <>
+                  {activeTab === '1' && <LiqAdd />}
+                  {activeTab === '2' && <LiqRemove />}
+                  {activeTab === '4' && <LiqBond />}
+                </>
+              ) : (
+                <Col className="card-480">
+                  <HelmetLoading />
+                </Col>
+              )}
             </Row>
           </>
         )}

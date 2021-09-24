@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Col, Row } from 'react-bootstrap'
@@ -10,10 +10,10 @@ import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import { getPool, getToken } from '../../utils/math/utils'
-import { getDaoDetails, useDao } from '../../store/dao'
-import { getBondDetails, useBond } from '../../store/bond'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { useDao } from '../../store/dao'
+import { useBond } from '../../store/bond'
 import { calcLiqValueInBase } from '../../utils/math/nonContract'
+import HelmetLoading from '../Loaders/HelmetLoading'
 
 const LPs = () => {
   const { t } = useTranslation()
@@ -35,32 +35,6 @@ const LPs = () => {
     }
     return false
   }
-
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return getNetwork()
-    }
-  }
-
-  useEffect(() => {
-    const { listedPools } = pool
-    const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (listedPools?.length > 0) {
-          dispatch(getBondDetails(listedPools, wallet))
-          dispatch(getDaoDetails(listedPools, wallet))
-        }
-      }
-    }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
 
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
@@ -93,243 +67,272 @@ const LPs = () => {
     return '0.00'
   }
 
+  const isLoading = () => {
+    if (!pool.poolDetails || !dao.daoDetails || !bond.bondDetails) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
       {/* HELD LP TOKENS */}
-      {pool.poolDetails
-        ?.filter((asset) => asset.balance > 0)
-        .sort(
-          (a, b) =>
-            convertFromWei(getUSD(b.tokenAddress, b.balance)) -
-            convertFromWei(getUSD(a.tokenAddress, a.balance)),
-        )
-        .map((asset) => (
-          <Row key={`${asset.address}-lp`} className="mb-3 output-card">
-            <Col xs="auto" className="position-relative pe-1">
-              <img
-                height="35px"
-                src={_getToken(asset.tokenAddress)?.symbolUrl}
-                alt={_getToken(asset.tokenAddress)?.name}
-              />
-              <img
-                src={spartaLpIcon}
-                height="20px"
-                className="token-badge"
-                alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
-              />
-            </Col>
-            <Col className="align-items-center">
-              <Row>
-                <Col xs="auto">
-                  {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('wallet')}`}
-                  <div className="description">
-                    {formatFromWei(asset.balance)}
-                  </div>
-                </Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$
-                    {formatFromWei(
-                      getUSD(asset.tokenAddress, asset.balance),
-                      0,
-                    )}
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <ShareLink url={asset.address}>
-                    <Icon icon="copy" role="button" size="24" />
-                  </ShareLink>
-                </Col>
-                {getWalletType() && (
-                  <Col xs="6" className="mt-1">
-                    <a
-                      href={
-                        getWalletType() === 'TW'
-                          ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                          : '#section'
-                      }
-                    >
-                      <div
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          handleWatchAsset(asset)
-                        }}
-                      >
-                        {getWalletType() === 'MM' ? (
-                          <Icon icon="metamask" role="button" size="24" />
-                        ) : (
-                          <Icon icon="trustwallet" role="button" size="24" />
-                        )}
-                      </div>
-                    </a>
+      {!isLoading() &&
+        pool.poolDetails
+          ?.filter((asset) => asset.balance > 0)
+          .sort(
+            (a, b) =>
+              convertFromWei(getUSD(b.tokenAddress, b.balance)) -
+              convertFromWei(getUSD(a.tokenAddress, a.balance)),
+          )
+          .map((asset) => (
+            <Row key={`${asset.address}-lp`} className="mb-3 output-card">
+              <Col xs="auto" className="position-relative pe-1">
+                <img
+                  height="35px"
+                  src={_getToken(asset.tokenAddress)?.symbolUrl}
+                  alt={_getToken(asset.tokenAddress)?.name}
+                />
+                <img
+                  src={spartaLpIcon}
+                  height="20px"
+                  className="token-badge"
+                  alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
+                />
+              </Col>
+              <Col className="align-items-center">
+                <Row>
+                  <Col xs="auto">
+                    {`${_getToken(asset.tokenAddress)?.symbol}p - ${t(
+                      'wallet',
+                    )}`}
+                    <div className="description">
+                      {formatFromWei(asset.balance)}
+                    </div>
                   </Col>
-                )}
-              </Row>
-            </Col>
-          </Row>
-        ))}
+                  <Col className="hide-i5">
+                    <div className="text-end mt-2">
+                      ~$
+                      {formatFromWei(
+                        getUSD(asset.tokenAddress, asset.balance),
+                        0,
+                      )}
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+
+              <Col xs="auto" className="text-right">
+                <Row>
+                  <Col xs="6" className="mt-1">
+                    <ShareLink url={asset.address}>
+                      <Icon icon="copy" role="button" size="24" />
+                    </ShareLink>
+                  </Col>
+                  {getWalletType() && (
+                    <Col xs="6" className="mt-1">
+                      <a
+                        href={
+                          getWalletType() === 'TW'
+                            ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                            : '#section'
+                        }
+                      >
+                        <div
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => {
+                            handleWatchAsset(asset)
+                          }}
+                        >
+                          {getWalletType() === 'MM' ? (
+                            <Icon icon="metamask" role="button" size="24" />
+                          ) : (
+                            <Icon icon="trustwallet" role="button" size="24" />
+                          )}
+                        </div>
+                      </a>
+                    </Col>
+                  )}
+                </Row>
+              </Col>
+            </Row>
+          ))}
       {/* STAKED LP TOKENS */}
-      {dao.daoDetails?.filter((asset) => asset.staked > 0).length > 0 && <hr />}
-      {dao.daoDetails
-        ?.filter((asset) => asset.staked > 0)
-        .sort(
-          (a, b) =>
-            convertFromWei(getUSD(b.tokenAddress, b.balance)) -
-            convertFromWei(getUSD(a.tokenAddress, a.balance)),
-        )
-        .map((asset) => (
-          <Row key={`${asset.address}-lpdao`} className="mb-3 output-card">
-            <Col xs="auto" className="position-relative pe-1">
-              <img
-                height="35px"
-                src={_getToken(asset.tokenAddress)?.symbolUrl}
-                alt={_getToken(asset.tokenAddress)?.name}
-              />
-              <img
-                src={spartaLpIcon}
-                height="20px"
-                className="token-badge"
-                alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
-              />
-            </Col>
-            <Col className="align-items-center">
-              <Row>
-                <Col xs="auto">
-                  {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('staked')}`}
-                  <div className="description">
-                    {formatFromWei(asset.staked)}
-                  </div>
-                </Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$
-                    {formatFromWei(getUSD(asset.tokenAddress, asset.staked), 0)}
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <ShareLink url={asset.address}>
-                    <Icon icon="copy" role="button" size="24" />
-                  </ShareLink>
-                </Col>
-                {getWalletType() && (
-                  <Col xs="6" className="mt-1">
-                    <a
-                      href={
-                        getWalletType() === 'TW'
-                          ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                          : '#section'
-                      }
-                    >
-                      <div
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          handleWatchAsset(asset)
-                        }}
-                      >
-                        {getWalletType() === 'MM' ? (
-                          <Icon icon="metamask" role="button" size="24" />
-                        ) : (
-                          <Icon icon="trustwallet" role="button" size="24" />
-                        )}
-                      </div>
-                    </a>
+      {!isLoading() &&
+        dao.daoDetails?.filter((asset) => asset.staked > 0).length > 0 && (
+          <hr />
+        )}
+      {!isLoading() &&
+        dao.daoDetails
+          ?.filter((asset) => asset.staked > 0)
+          .sort(
+            (a, b) =>
+              convertFromWei(getUSD(b.tokenAddress, b.balance)) -
+              convertFromWei(getUSD(a.tokenAddress, a.balance)),
+          )
+          .map((asset) => (
+            <Row key={`${asset.address}-lpdao`} className="mb-3 output-card">
+              <Col xs="auto" className="position-relative pe-1">
+                <img
+                  height="35px"
+                  src={_getToken(asset.tokenAddress)?.symbolUrl}
+                  alt={_getToken(asset.tokenAddress)?.name}
+                />
+                <img
+                  src={spartaLpIcon}
+                  height="20px"
+                  className="token-badge"
+                  alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
+                />
+              </Col>
+              <Col className="align-items-center">
+                <Row>
+                  <Col xs="auto">
+                    {`${_getToken(asset.tokenAddress)?.symbol}p - ${t(
+                      'staked',
+                    )}`}
+                    <div className="description">
+                      {formatFromWei(asset.staked)}
+                    </div>
                   </Col>
-                )}
-              </Row>
-            </Col>
-          </Row>
-        ))}
+                  <Col className="hide-i5">
+                    <div className="text-end mt-2">
+                      ~$
+                      {formatFromWei(
+                        getUSD(asset.tokenAddress, asset.staked),
+                        0,
+                      )}
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+
+              <Col xs="auto" className="text-right">
+                <Row>
+                  <Col xs="6" className="mt-1">
+                    <ShareLink url={asset.address}>
+                      <Icon icon="copy" role="button" size="24" />
+                    </ShareLink>
+                  </Col>
+                  {getWalletType() && (
+                    <Col xs="6" className="mt-1">
+                      <a
+                        href={
+                          getWalletType() === 'TW'
+                            ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                            : '#section'
+                        }
+                      >
+                        <div
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => {
+                            handleWatchAsset(asset)
+                          }}
+                        >
+                          {getWalletType() === 'MM' ? (
+                            <Icon icon="metamask" role="button" size="24" />
+                          ) : (
+                            <Icon icon="trustwallet" role="button" size="24" />
+                          )}
+                        </div>
+                      </a>
+                    </Col>
+                  )}
+                </Row>
+              </Col>
+            </Row>
+          ))}
       {/* BONDED LP TOKENS */}
-      {bond.bondDetails?.filter((asset) => asset.staked > 0).length > 0 && (
-        <hr />
-      )}
-      {bond.bondDetails
-        ?.filter((asset) => asset.staked > 0)
-        .sort(
-          (a, b) =>
-            convertFromWei(getUSD(b.tokenAddress, b.balance)) -
-            convertFromWei(getUSD(a.tokenAddress, a.balance)),
-        )
-        .map((asset) => (
-          <Row key={`${asset.address}-lpbond`} className="mb-3 output-card">
-            <Col xs="auto" className="position-relative pe-1">
-              <img
-                height="35px"
-                src={_getToken(asset.tokenAddress)?.symbolUrl}
-                alt={_getToken(asset.tokenAddress)?.name}
-              />
-              <img
-                src={spartaLpIcon}
-                height="20px"
-                className="token-badge"
-                alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
-              />
-            </Col>
-            <Col className="align-items-center">
-              <Row>
-                <Col xs="auto">
-                  {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('bond')}`}
-                  <div className="description">
-                    {formatFromWei(asset.staked)}
-                  </div>
-                </Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$
-                    {formatFromWei(getUSD(asset.tokenAddress, asset.staked), 0)}
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <ShareLink url={asset.address}>
-                    <Icon icon="copy" role="button" size="24" />
-                  </ShareLink>
-                </Col>
-                {getWalletType() && (
-                  <Col xs="6" className="mt-1">
-                    <a
-                      href={
-                        getWalletType() === 'TW'
-                          ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                          : '#section'
-                      }
-                    >
-                      <div
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          handleWatchAsset(asset)
-                        }}
-                      >
-                        {getWalletType() === 'MM' ? (
-                          <Icon icon="metamask" role="button" size="24" />
-                        ) : (
-                          <Icon icon="trustwallet" role="button" size="24" />
-                        )}
-                      </div>
-                    </a>
+      {!isLoading() &&
+        bond.bondDetails?.filter((asset) => asset.staked > 0).length > 0 && (
+          <hr />
+        )}
+      {!isLoading() &&
+        bond.bondDetails
+          ?.filter((asset) => asset.staked > 0)
+          .sort(
+            (a, b) =>
+              convertFromWei(getUSD(b.tokenAddress, b.balance)) -
+              convertFromWei(getUSD(a.tokenAddress, a.balance)),
+          )
+          .map((asset) => (
+            <Row key={`${asset.address}-lpbond`} className="mb-3 output-card">
+              <Col xs="auto" className="position-relative pe-1">
+                <img
+                  height="35px"
+                  src={_getToken(asset.tokenAddress)?.symbolUrl}
+                  alt={_getToken(asset.tokenAddress)?.name}
+                />
+                <img
+                  src={spartaLpIcon}
+                  height="20px"
+                  className="token-badge"
+                  alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
+                />
+              </Col>
+              <Col className="align-items-center">
+                <Row>
+                  <Col xs="auto">
+                    {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('bond')}`}
+                    <div className="description">
+                      {formatFromWei(asset.staked)}
+                    </div>
                   </Col>
-                )}
-              </Row>
-            </Col>
-          </Row>
-        ))}
+                  <Col className="hide-i5">
+                    <div className="text-end mt-2">
+                      ~$
+                      {formatFromWei(
+                        getUSD(asset.tokenAddress, asset.staked),
+                        0,
+                      )}
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+
+              <Col xs="auto" className="text-right">
+                <Row>
+                  <Col xs="6" className="mt-1">
+                    <ShareLink url={asset.address}>
+                      <Icon icon="copy" role="button" size="24" />
+                    </ShareLink>
+                  </Col>
+                  {getWalletType() && (
+                    <Col xs="6" className="mt-1">
+                      <a
+                        href={
+                          getWalletType() === 'TW'
+                            ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                            : '#section'
+                        }
+                      >
+                        <div
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => {
+                            handleWatchAsset(asset)
+                          }}
+                        >
+                          {getWalletType() === 'MM' ? (
+                            <Icon icon="metamask" role="button" size="24" />
+                          ) : (
+                            <Icon icon="trustwallet" role="button" size="24" />
+                          )}
+                        </div>
+                      </a>
+                    </Col>
+                  )}
+                </Row>
+              </Col>
+            </Row>
+          ))}
+      {isLoading() && (
+        <Col className="card-480">
+          <HelmetLoading height={300} width={300} />
+        </Col>
+      )}
     </>
   )
 }

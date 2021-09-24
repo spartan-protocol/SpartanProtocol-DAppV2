@@ -10,6 +10,7 @@ import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
 import { getAddresses } from '../../utils/web3'
+import HelmetLoading from '../Loaders/HelmetLoading'
 
 const Assets = () => {
   const { t } = useTranslation()
@@ -76,77 +77,91 @@ const Assets = () => {
     return '0.00'
   }
 
+  const isLoading = () => {
+    if (!pool.poolDetails) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
-      {pool.tokenDetails
-        ?.filter((asset) => asset.balance > 0)
-        .sort(
-          (a, b) =>
-            convertFromWei(getUSD(b.address, b.balance)) -
-            convertFromWei(getUSD(a.address, a.balance)),
-        )
-        .map((asset) => (
-          <Row key={`${asset.address}-asset`} className="mb-3 output-card">
-            <Col xs="auto" className="pe-1">
-              <img
-                height="35px"
-                src={asset.symbolUrl}
-                alt={asset.name}
-                className=""
-              />
-            </Col>
-            <Col className="align-items-center">
-              <Row>
-                <Col xs="auto">
-                  {asset.symbol} - {t('wallet')}
-                  <div className="description">
-                    {formatFromWei(asset.balance)}
-                  </div>
-                </Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~${formatFromWei(getUSD(asset.address, asset.balance), 0)}
-                  </div>
-                </Col>
-              </Row>
-            </Col>
-
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <ShareLink url={asset.address}>
-                    <Icon icon="copy" role="button" size="24" />
-                  </ShareLink>
-                </Col>
-                {getWalletType() && (
-                  <Col xs="6" className="mt-1">
-                    <a
-                      href={
-                        getWalletType() === 'TW'
-                          ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                          : '#section'
-                      }
-                    >
-                      <div
-                        role="button"
-                        aria-hidden="true"
-                        onClick={() => {
-                          handleWatchAsset(asset)
-                        }}
-                      >
-                        {getWalletType() === 'MM' ? (
-                          <Icon icon="metamask" role="button" size="24" />
-                        ) : (
-                          <Icon icon="trustwallet" role="button" size="24" />
-                        )}
-                      </div>
-                    </a>
+      {!isLoading() ? (
+        pool.tokenDetails
+          ?.filter((asset) => asset.balance > 0)
+          .sort(
+            (a, b) =>
+              convertFromWei(getUSD(b.address, b.balance)) -
+              convertFromWei(getUSD(a.address, a.balance)),
+          )
+          .map((asset) => (
+            <Row key={`${asset.address}-asset`} className="mb-3 output-card">
+              <Col xs="auto" className="pe-1">
+                <img
+                  height="35px"
+                  src={asset.symbolUrl}
+                  alt={asset.name}
+                  className=""
+                />
+              </Col>
+              <Col className="align-items-center">
+                <Row>
+                  <Col xs="auto">
+                    {asset.symbol} - {t('wallet')}
+                    <div className="description">
+                      {formatFromWei(asset.balance)}
+                    </div>
                   </Col>
-                )}
-              </Row>
-            </Col>
-          </Row>
-        ))}
+                  <Col className="hide-i5">
+                    <div className="text-end mt-2">
+                      ~$
+                      {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+
+              <Col xs="auto" className="text-right">
+                <Row>
+                  <Col xs="6" className="mt-1">
+                    <ShareLink url={asset.address}>
+                      <Icon icon="copy" role="button" size="24" />
+                    </ShareLink>
+                  </Col>
+                  {getWalletType() && (
+                    <Col xs="6" className="mt-1">
+                      <a
+                        href={
+                          getWalletType() === 'TW'
+                            ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                            : '#section'
+                        }
+                      >
+                        <div
+                          role="button"
+                          aria-hidden="true"
+                          onClick={() => {
+                            handleWatchAsset(asset)
+                          }}
+                        >
+                          {getWalletType() === 'MM' ? (
+                            <Icon icon="metamask" role="button" size="24" />
+                          ) : (
+                            <Icon icon="trustwallet" role="button" size="24" />
+                          )}
+                        </div>
+                      </a>
+                    </Col>
+                  )}
+                </Row>
+              </Col>
+            </Row>
+          ))
+      ) : (
+        <Col className="card-480">
+          <HelmetLoading height={300} width={300} />
+        </Col>
+      )}
     </>
   )
 }

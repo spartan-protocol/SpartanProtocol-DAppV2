@@ -65,8 +65,20 @@ const NewProposal = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedType, setSelectedType] = useState(proposalTypes[0])
   const [feeConfirm, setfeeConfirm] = useState(false)
-
   const [inputAddress, setinputAddress] = useState(null)
+
+  const isLoading = () => {
+    if (
+      !pool.tokenDetails &&
+      !pool.poolDetails &&
+      !synth.synthDetails &&
+      !dao.proposal
+    ) {
+      return true
+    }
+    return false
+  }
+
   const showAddrInput = ['Address', 'Grant']
   const noAddrInput = [
     'LIST_BOND',
@@ -128,16 +140,20 @@ const NewProposal = () => {
 
   const [formValid, setformValid] = useState(false)
   useEffect(() => {
-    checkExistingOpen()
-    if (!existingPid) {
-      if (selectedType?.type === 'Action') {
-        setformValid(true)
-      } else if (selectedType?.type === 'Param' && paramValid) {
-        setformValid(true)
-      } else if (selectedType?.type === 'Address' && addrValid) {
-        setformValid(true)
-      } else if (selectedType?.type === 'Grant' && paramValid && addrValid) {
-        setformValid(true)
+    if (!isLoading()) {
+      checkExistingOpen()
+      if (!existingPid) {
+        if (selectedType?.type === 'Action') {
+          setformValid(true)
+        } else if (selectedType?.type === 'Param' && paramValid) {
+          setformValid(true)
+        } else if (selectedType?.type === 'Address' && addrValid) {
+          setformValid(true)
+        } else if (selectedType?.type === 'Grant' && paramValid && addrValid) {
+          setformValid(true)
+        } else {
+          setformValid(false)
+        }
       } else {
         setformValid(false)
       }
@@ -183,17 +199,6 @@ const NewProposal = () => {
 
   const handleTypeSelect = (value) => {
     setSelectedType(proposalTypes.filter((i) => i.value === value)[0])
-  }
-
-  const isLoading = () => {
-    if (
-      pool.tokenDetails.length > 1 &&
-      synth.synthDetails.length > 1 &&
-      pool.poolDetails.length > 1
-    ) {
-      return false
-    }
-    return true
   }
 
   return (

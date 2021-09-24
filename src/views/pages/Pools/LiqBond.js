@@ -63,11 +63,7 @@ const LiqBond = () => {
   }
 
   const isLoading = () => {
-    if (
-      assetBond1 &&
-      pool.poolDetails.length > 1 &&
-      bond.listedAssets.length > 0
-    ) {
+    if (assetBond1 && pool.poolDetails && bond.listedAssets) {
       return false
     }
     return true
@@ -92,9 +88,8 @@ const LiqBond = () => {
   }
 
   useEffect(() => {
-    const { poolDetails } = pool
     const getAssetDetails = () => {
-      if (poolDetails) {
+      if (!isLoading()) {
         window.localStorage.setItem('assetType1', 'token')
         let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
         asset1 =
@@ -110,7 +105,11 @@ const LiqBond = () => {
     }
     getAssetDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
+  }, [
+    bond.listedAssets,
+    pool.poolDetails,
+    window.localStorage.getItem('assetSelected1'),
+  ])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -203,7 +202,7 @@ const LiqBond = () => {
             <Row className="px-2 py-2">
               <Col xs="auto">
                 {t('bond')}
-                {pool.poolDetails.length > 0 && <Share />}
+                <Share />
               </Col>
               <Col className="text-end">
                 <NewPool />

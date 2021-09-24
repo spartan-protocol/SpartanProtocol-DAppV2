@@ -12,6 +12,7 @@ import {
   OverlayTrigger,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import {
@@ -20,6 +21,7 @@ import {
   getAddresses,
   getNetwork,
   liveChains,
+  tempChains,
 } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
 import { isAppleDevice } from '../../utils/helpers'
@@ -28,14 +30,14 @@ import LPs from './LPs'
 import Synths from './Synths'
 import { Icon } from '../Icons/icons'
 import { Tooltip } from '../Tooltip/tooltip'
-import { useSynth } from '../../store/synth'
+import { getSynthDetails, useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { convertFromWei } from '../../utils/bigNumber'
 import { connectorsByName } from '../../utils/web3React'
 import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
-import { useDao } from '../../store/dao'
-import { useBond } from '../../store/bond'
+import { getDaoDetails, useDao } from '../../store/dao'
+import { getBondDetails, useBond } from '../../store/bond'
 
 export const spartanRanks = [
   {
@@ -108,8 +110,12 @@ const WalletSelect = (props) => {
   const dao = useDao()
   const bond = useBond()
   const addr = getAddresses()
-  const [network, setNetwork] = useState(getNetwork)
+  const wallet = useWeb3React()
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+
+  const [network, setNetwork] = useState(getNetwork)
+  const [activeTab, setactiveTab] = useState('tokens')
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
@@ -175,7 +181,48 @@ const WalletSelect = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return getNetwork()
+    }
+  }
+
+  useEffect(() => {
+    const checkDetails = () => {
+      if (
+        tempChains.includes(
+          tryParse(window.localStorage.getItem('network'))?.chainId,
+        )
+      ) {
+        if (pool.listedPools?.length > 0) {
+          dispatch(getBondDetails(pool.listedPools, wallet))
+          dispatch(getDaoDetails(pool.listedPools, wallet))
+        }
+        if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
+          dispatch(getSynthDetails(synth.synthArray, wallet))
+        }
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
+
   // ------------------------------------------------------------------------
+
+  const rankLoading = () => {
+    if (
+      !pool.tokenDetails ||
+      !pool.poolDetails ||
+      !dao.daoDetails ||
+      !bond.bondDetails ||
+      !synth.synthDetails
+    ) {
+      return true
+    }
+    return false
+  }
 
   const getWeight = () => {
     if (account && pool.poolDetails.length > 1) {
@@ -191,24 +238,22 @@ const WalletSelect = (props) => {
     return '0'
   }
 
-  const [rank, setrank] = useState('0')
+  const [rank, setrank] = useState('Loading')
   const getRank = () => {
-    const weight = getWeight()
-    const ranksArray = spartanRanks.filter((i) => i.weight < weight)
-    const { length } = ranksArray
-    if (length > 0) {
-      setrank(ranksArray[length - 1].id)
-    } else {
-      setrank('Peasant')
+    if (props.show && !rankLoading()) {
+      const weight = getWeight()
+      const ranksArray = spartanRanks.filter((i) => i.weight < weight)
+      const { length } = ranksArray
+      if (length > 0) {
+        setrank(ranksArray[length - 1].id)
+      } else {
+        setrank('Peasant')
+      }
     }
   }
 
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
-    if (trigger1 === 0) {
-      getRank()
-      settrigger1(trigger1 + 1)
-    }
     const timer = setTimeout(() => {
       getRank()
       settrigger1(trigger1 + 1)
@@ -217,7 +262,7 @@ const WalletSelect = (props) => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1])
+  }, [trigger1, props.show])
 
   return (
     <>
@@ -356,19 +401,20 @@ const WalletSelect = (props) => {
                 <>
                   <Row>
                     <Tabs
-                      defaultActiveKey="assets"
-                      id="uncontrolled-tab-example"
+                      activeKey={activeTab}
+                      onSelect={(tab) => setactiveTab(tab)}
+                      id="wallet-tabs"
                       className="flex-row px-2 mb-3"
                       fill
                     >
-                      <Tab eventKey="assets" title={t('assets')}>
-                        <Assets />
+                      <Tab eventKey="tokens" title={t('tokens')}>
+                        {activeTab === 'tokens' && <Assets />}
                       </Tab>
-                      <Tab eventKey="lps" title={t('lpTokens')}>
-                        <LPs />
+                      <Tab eventKey="lps" title={t('lps')}>
+                        {activeTab === 'lps' && <LPs />}
                       </Tab>
                       <Tab eventKey="synths" title={t('synths')}>
-                        <Synths />
+                        {activeTab === 'synths' && <Synths />}
                       </Tab>
                     </Tabs>
                   </Row>

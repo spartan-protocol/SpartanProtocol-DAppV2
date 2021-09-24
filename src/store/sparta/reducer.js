@@ -1,7 +1,7 @@
 import * as Types from './types'
 
 const initialState = {
-  globalDetails: [],
+  globalDetails: false,
   claimCheck: '0',
   txn: [],
   feeBurnTally: '0',

@@ -1,11 +1,11 @@
 import * as Types from './types'
 
 const initialState = {
-  global: {},
-  bondDetails: [],
+  global: false,
+  bondDetails: false,
   totalWeight: '0',
-  listedAssets: [],
-  member: {},
+  listedAssets: false,
+  member: false,
   txn: [],
 }
 

@@ -9,6 +9,7 @@ import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import BondItem from './BondItem'
 import { getBondDetails, useBond } from '../../../store/bond'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Bond = () => {
   const pool = usePool()
@@ -62,6 +63,13 @@ const Bond = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
 
+  const isLoading = () => {
+    if (!bond.bondDetails) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
       <div className="content">
@@ -71,32 +79,38 @@ const Bond = () => {
               <Card xs="auto" className="card-320">
                 <Card.Header>{t('bondPositions')}</Card.Header>
                 <Card.Body>
-                  {bond.bondDetails?.length > 1 &&
-                    bond.bondDetails
-                      .filter((asset) => asset.staked > 0)
-                      .map((asset) => (
-                        <Row key={asset.address} className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('remaining')}
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(asset.staked)}{' '}
-                            {getToken(asset.tokenAddress)?.symbol}p
-                          </Col>
-                        </Row>
-                      ))}
-                  {bond.bondDetails.filter((asset) => asset.staked > 0)
-                    .length <= 0 && (
-                    <Row className="my-1">
-                      <Col xs="auto" className="text-card">
-                        {t('noBondPosition')}
-                      </Col>
-                    </Row>
+                  {!isLoading() ? (
+                    <>
+                      {bond.bondDetails
+                        .filter((asset) => asset.staked > 0)
+                        .map((asset) => (
+                          <Row key={asset.address} className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('remaining')}
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(asset.staked)}{' '}
+                              {getToken(asset.tokenAddress)?.symbol}p
+                            </Col>
+                          </Row>
+                        ))}
+                    </>
+                  ) : (
+                    <HelmetLoading height={200} width={200} />
                   )}
+                  {!isLoading() &&
+                    bond.bondDetails.filter((asset) => asset.staked > 0)
+                      .length <= 0 && (
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('noBondPosition')}
+                        </Col>
+                      </Row>
+                    )}
                 </Card.Body>
               </Card>
             </Col>
-            {bond.bondDetails?.length > 1 &&
+            {!isLoading() &&
               bond.bondDetails
                 .filter((asset) => asset.lastBlockTime > 0)
                 .sort((a, b) => b.staked - a.staked)

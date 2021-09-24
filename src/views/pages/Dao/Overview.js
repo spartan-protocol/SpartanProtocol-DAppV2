@@ -20,6 +20,7 @@ import { usePool } from '../../../store/pool/selector'
 import { bondVaultWeight, getBondDetails } from '../../../store/bond'
 import { getSynthDetails } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -82,6 +83,13 @@ const Overview = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
 
+  const isLoading = () => {
+    if (!dao.proposal) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
       <div className="content">
@@ -124,42 +132,44 @@ const Overview = () => {
                 />
               </Col>
             </Form.Group>
-            <Row className="row-480">
-              {dao?.proposal.length > 0 && (
-                <>
-                  {selectedView === 'current' &&
-                    (dao?.proposal.filter((pid) => pid.open).length > 0
-                      ? dao?.proposal
-                          .filter((pid) => pid.open)
-                          .map((pid) => (
-                            <ProposalItem key={pid.id} proposal={pid} />
-                          ))
-                      : t('noOpenProposalsInfo'))}
-                  {selectedView === 'complete' &&
-                    dao?.proposal
-                      .filter((pid) => pid.finalised)
-                      .sort((a, b) => b.id - a.id)
-                      .map((pid) => (
-                        <ProposalItem key={pid.id} proposal={pid} />
-                      ))}
-                  {selectedView === 'failed' &&
-                    dao?.proposal
-                      .filter((pid) => !pid.open && !pid.finalised)
-                      .sort((a, b) => b.id - a.id)
-                      .map((pid) => (
-                        <ProposalItem key={pid.id} proposal={pid} />
-                      ))}
-                </>
-              )}
-
-              {dao?.proposal.length <= 0 && (
-                <Col xs="auto">
-                  <Card className="card-320 card-underlay">
-                    <Card.Body>{t('noValidProposals')}</Card.Body>
-                  </Card>
-                </Col>
-              )}
-            </Row>
+            {!isLoading() ? (
+              <Row className="row-480">
+                {dao.proposal.length > 0 ? (
+                  <>
+                    {selectedView === 'current' &&
+                      (dao.proposal.filter((pid) => pid.open).length > 0
+                        ? dao?.proposal
+                            .filter((pid) => pid.open)
+                            .map((pid) => (
+                              <ProposalItem key={pid.id} proposal={pid} />
+                            ))
+                        : t('noOpenProposalsInfo'))}
+                    {selectedView === 'complete' &&
+                      dao.proposal
+                        .filter((pid) => pid.finalised)
+                        .sort((a, b) => b.id - a.id)
+                        .map((pid) => (
+                          <ProposalItem key={pid.id} proposal={pid} />
+                        ))}
+                    {selectedView === 'failed' &&
+                      dao.proposal
+                        .filter((pid) => !pid.open && !pid.finalised)
+                        .sort((a, b) => b.id - a.id)
+                        .map((pid) => (
+                          <ProposalItem key={pid.id} proposal={pid} />
+                        ))}
+                  </>
+                ) : (
+                  <Col xs="auto">
+                    <Card className="card-320 card-underlay">
+                      <Card.Body>{t('noValidProposals')}</Card.Body>
+                    </Card>
+                  </Col>
+                )}
+              </Row>
+            ) : (
+              <HelmetLoading height={200} width={200} />
+            )}
           </>
         )}
         {network.chainId !== 97 && <WrongNetwork />}

@@ -1,6 +1,6 @@
 import { calcLiqValue, calcLiquidityUnits, calcSwapOutput } from './utils'
 import { BN } from '../bigNumber'
-import { getAddresses } from '../web3'
+import { getAddresses, oneWeek } from '../web3'
 import { getSecsSince, minusFeeBurn } from './nonContract'
 
 export const one = BN(1).times(10).pow(18)
@@ -191,7 +191,7 @@ export const swapTo = (
  * @returns steamedSynths
  */
 export const stirCauldron = (synthPoolSynthCap, synthPoolTokenAmnt, synth) => {
-  const oneWeek = BN(604800) // this is 1 on testnet; 604800 on mainnet
+  const _oneWeek = BN(oneWeek)
   const totalSup = BN(synth.totalSupply)
   const _lastStirred = BN(synth.lastStirred)
   let _stirRate = BN(synth.stirRate)
@@ -207,7 +207,7 @@ export const stirCauldron = (synthPoolSynthCap, synthPoolTokenAmnt, synth) => {
     const secsSinceStir = getSecsSince(_lastStirred) // Get time passed since stirred
     steamedSynths = secsSinceStir.times(_stirRate) // time since last minted
   } else {
-    _stirRate = liquidSynths.div(oneWeek)
+    _stirRate = liquidSynths.div(_oneWeek)
     steamedSynths = BN(14400).times(_stirRate) // 4hrs
   }
   return steamedSynths

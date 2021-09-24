@@ -16,7 +16,7 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
-import { getAddresses, getItemFromArray } from '../../../utils/web3'
+import { getAddresses, getItemFromArray, oneWeek } from '../../../utils/web3'
 import {
   BN,
   convertFromWei,
@@ -183,7 +183,7 @@ const LiqRemove = () => {
   }
 
   const getTimeNew = () => {
-    const timeStamp = BN(poolRemove1?.genesis).plus(604800)
+    const timeStamp = BN(poolRemove1?.genesis).plus(oneWeek)
     return getTimeUntil(timeStamp, t)
   }
 

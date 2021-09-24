@@ -19,6 +19,7 @@ import {
   getAddresses,
   getItemFromArray,
   getNetwork,
+  oneWeek,
   tempChains,
 } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
@@ -340,7 +341,7 @@ const Swap = () => {
   }
 
   const getTimeNew = () => {
-    const timeStamp = BN(assetSwap1?.genesis).plus(604800)
+    const timeStamp = BN(assetSwap1?.genesis).plus(oneWeek)
     return getTimeUntil(timeStamp, t)
   }
 

@@ -58,6 +58,7 @@ const Approval = ({
     getAllowance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    pending,
     pool.poolDetails,
     tokenAddress,
     symbol,
