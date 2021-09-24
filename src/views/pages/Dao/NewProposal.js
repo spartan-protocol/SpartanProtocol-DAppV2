@@ -69,9 +69,9 @@ const NewProposal = () => {
 
   const isLoading = () => {
     if (
-      !pool.tokenDetails &&
-      !pool.poolDetails &&
-      !synth.synthDetails &&
+      !pool.tokenDetails ||
+      !pool.poolDetails ||
+      !synth.synthDetails ||
       !dao.proposal
     ) {
       return true
@@ -131,7 +131,10 @@ const NewProposal = () => {
 
   const [existingPid, setexistingPid] = useState(false)
   const checkExistingOpen = () => {
-    if (dao.global.currentProposal > 0) {
+    if (
+      dao.global.currentProposal !== 0 &&
+      dao.proposal?.filter((pid) => pid.open).length > 0
+    ) {
       setexistingPid(true)
     } else {
       setexistingPid(false)

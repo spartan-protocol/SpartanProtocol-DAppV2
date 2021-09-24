@@ -36,7 +36,7 @@ const SummaryItem = (props) => {
                 )}
                 {props.activeTab === '2' && (
                   <>
-                    <Badge bg="secondary">NEW POOLS:</Badge> {t('poolNewInfo')}
+                    <Badge bg="primary">NEW POOLS:</Badge> {t('poolNewInfo')}
                   </>
                 )}
               </Col>

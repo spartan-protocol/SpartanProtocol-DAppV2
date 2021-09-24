@@ -64,11 +64,12 @@ const PoolItem = ({ asset }) => {
     <>
       <Col xs="auto">
         <Card className="card-320 pb-2 card-underlay card-alt">
-          {newPool && <Badge bg="secondary">NEW</Badge>}
-          {curated ? (
+          {newPool ? (
+            <Badge bg="primary">NEW</Badge>
+          ) : curated ? (
             <Badge bg="primary">CURATED</Badge>
           ) : (
-            <Badge bg="dark">NORMAL</Badge>
+            <Badge bg="alert">NORMAL</Badge>
           )}
           <Card.Body>
             <Row className="mb-2">

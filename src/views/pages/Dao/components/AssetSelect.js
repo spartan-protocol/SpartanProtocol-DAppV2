@@ -70,7 +70,7 @@ const AssetSelect = (props) => {
       const assets = pool.tokenDetails?.filter(
         (asset) =>
           !filter.includes(asset.address) &&
-          asset.curated &&
+          getPool(asset.address, pool.poolDetails).curated &&
           !bond.listedAssets.includes(
             getPool(asset.address, pool.poolDetails).address,
           ),

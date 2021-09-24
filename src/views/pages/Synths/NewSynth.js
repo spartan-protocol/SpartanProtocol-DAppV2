@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Modal,
-  Row,
-  Col,
-  InputGroup,
-  FormControl,
-  Form,
-} from 'react-bootstrap'
+import { Button, Modal, InputGroup, FormControl, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
@@ -111,7 +103,7 @@ const NewSynth = () => {
                 </Form.Control.Feedback>
               </InputGroup>
 
-              <Form className="mb-0">
+              <Form className="mb-0 mt-2 text-center">
                 <span className="output-card">
                   Pay gas to deploy Synth BEP20
                   <Form.Check
@@ -128,20 +120,16 @@ const NewSynth = () => {
           {network.chainId !== 97 && <WrongNetwork />}
         </Modal.Body>
         <Modal.Footer>
-          <Row className="card-body">
-            <Col xs="12" className="hide-if-prior-sibling">
-              <Button
-                className="w-100"
-                disabled={!feeConfirm || !addrValid}
-                onClick={() => handleSubmit()}
-              >
-                {t('confirm')}
-                {txnLoading && (
-                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                )}
-              </Button>
-            </Col>
-          </Row>
+          <Button
+            className="w-100"
+            disabled={!feeConfirm || !addrValid}
+            onClick={() => handleSubmit()}
+          >
+            {t('confirm')}
+            {txnLoading && (
+              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+            )}
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
