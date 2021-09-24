@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Col, Row } from 'react-bootstrap'
-import { Icon } from '../../../components/Icons/icons'
+import { Badge, Card, Col, Row } from 'react-bootstrap'
+// import { Icon } from '../../../components/Icons/icons'
 import NewPool from './NewPool'
 
 const SummaryItem = (props) => {
@@ -21,18 +21,24 @@ const SummaryItem = (props) => {
           </Card.Header>
           <Card.Body>
             <Row className="">
-              <Col xs="auto" className="pr-0">
+              {/* <Col xs="auto" className="pr-0">
                 <Icon height="30" />
-              </Col>
+              </Col> */}
               <Col xs="auto">
-                {props.activeTab === '1' &&
-                  t(
-                    'pools add info for each tab here (and icon/badge). make sure to explain normal pools and also curated pools',
-                  )}
-                {props.activeTab === '2' &&
-                  t(
-                    'new pools add info for each tab here (and icon/badge) make sure to explain these initializing pools',
-                  )}
+                {props.activeTab === '1' && (
+                  <>
+                    <Badge bg="dark">NORMAL POOLS:</Badge> {t('poolNormalInfo')}
+                    <br />
+                    <Badge bg="primary">CURATED POOLS:</Badge>{' '}
+                    {t('poolCuratedInfo')}
+                    <br />
+                  </>
+                )}
+                {props.activeTab === '2' && (
+                  <>
+                    <Badge bg="secondary">NEW POOLS:</Badge> {t('poolNewInfo')}
+                  </>
+                )}
               </Col>
             </Row>
           </Card.Body>

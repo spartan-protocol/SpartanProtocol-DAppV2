@@ -656,12 +656,19 @@ const Swap = () => {
     clearInputs()
   }
 
+  const isLoading = () => {
+    if (!pool.poolDetails) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
       <div className="content">
         {tempChains.includes(network.chainId) && (
           <>
-            {pool.poolDetails?.length > 0 && (
+            {!isLoading() ? (
               <>
                 <Row className="row-480">
                   <Col xs="auto">
@@ -1381,8 +1388,7 @@ const Swap = () => {
                   </Col>
                 </Row>
               </>
-            )}
-            {pool.poolDetails.length <= 0 && (
+            ) : (
               <Row className="row-480">
                 <Col className="card-480">
                   <HelmetLoading height={300} width={300} />

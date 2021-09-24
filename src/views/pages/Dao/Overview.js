@@ -84,7 +84,7 @@ const Overview = () => {
   }, [dao.global, dao.newProp])
 
   const isLoading = () => {
-    if (!dao.proposal) {
+    if (dao.global.currentProposal === 0 && !dao.proposal) {
       return true
     }
     return false

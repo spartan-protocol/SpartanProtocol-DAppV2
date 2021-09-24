@@ -400,7 +400,7 @@ const parseTxnLogs = (txn, txnType) => {
   if (txnType === 'bondDeposit') {
     const iface = new ethers.utils.Interface(abiArray.dao)
     const log = txn.logs[txn.logs.length - 1]
-    // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** NEEDS CHECKING ***
     const bondLog = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
@@ -418,7 +418,7 @@ const parseTxnLogs = (txn, txnType) => {
   if (txnType === 'bondClaim') {
     const iface = new ethers.utils.Interface(abiArray.bondVault)
     const log = txn.logs[txn.logs.length - 1]
-    // BondVault.Claimed (owner, poolAddress, amount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // BondVault.Claimed (owner, poolAddress, amount) *** NEEDS CHECKING ***
     const claimLog = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
@@ -435,8 +435,9 @@ const parseTxnLogs = (txn, txnType) => {
   }
   // DAO.TXN TYPES
   if (txnType === 'daoDeposit') {
-    let log3 = txn.logs[txn.logs.length - 1] // DAO.MemberDeposits event (member, pool, amount)
+    let log3 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.MemberDeposits event (member, pool, amount)
     log3 = daoInterface.parseLog(log3).args
     return {
       txnHash: txn.transactionHash,
@@ -452,8 +453,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'daoWithdraw') {
-    let log1 = txn.logs[txn.logs.length - 1] // DAO.MemberWithdraws event (member, pool, balance)
+    let log1 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.MemberWithdraws event (member, pool, balance)
     log1 = daoInterface.parseLog(log1).args
     return {
       txnHash: txn.transactionHash,
@@ -471,7 +473,7 @@ const parseTxnLogs = (txn, txnType) => {
   if (txnType === 'daoHarvest') {
     const iface = new ethers.utils.Interface(abiArray.dao)
     const log = txn.logs[txn.logs.length - 1]
-    // Dao.Harvest (owner, amount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Dao.Harvest (owner, amount)
     const harvestLog = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
@@ -510,8 +512,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'voteProposal') {
-    let log0 = txn.logs[txn.logs.length - 1] // DAO.NewVote event (member, proposalID, proposalType)
+    let log0 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.NewVote event (member, proposalID, proposalType)
     log0 = daoInterface.parseLog(log0).args
     return {
       txnHash: txn.transactionHash,
@@ -523,8 +526,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'removeVoteProposal') {
-    let log0 = txn.logs[txn.logs.length - 1] // DAO.RemovedVote event (member, proposalID, proposalType)
+    let log0 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.RemovedVote event (member, proposalID, proposalType)
     log0 = daoInterface.parseLog(log0).args
     return {
       txnHash: txn.transactionHash,
@@ -536,8 +540,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'pollVotes') {
-    let log0 = txn.logs[txn.logs.length - 1] // DAO.ProposalFinalising event (member, proposalID, timeFinalised, proposalType)
+    let log0 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.ProposalFinalising event (member, proposalID, timeFinalised, proposalType)
     log0 = daoInterface.parseLog(log0).args
     return {
       txnHash: txn.transactionHash,
@@ -549,8 +554,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'cancelProposal') {
-    let log0 = txn.logs[txn.logs.length - 1] // DAO.CancelProposal event (member, proposalID)
+    let log0 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.CancelProposal event (member, proposalID)
     log0 = daoInterface.parseLog(log0).args
     return {
       txnHash: txn.transactionHash,
@@ -562,8 +568,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'finaliseProposal') {
-    let log0 = txn.logs[txn.logs.length - 1] // DAO.FinalisedProposal event (member, proposalID, proposalType)
+    let log0 = txn.logs[txn.logs.length - 1]
     const daoInterface = new ethers.utils.Interface(abiArray.dao)
+    // DAO.FinalisedProposal event (member, proposalID, proposalType)
     log0 = daoInterface.parseLog(log0).args
     return {
       txnHash: txn.transactionHash,
@@ -590,7 +597,7 @@ const parseTxnLogs = (txn, txnType) => {
     }
     // PoolFactory.CreatePool event (token, pool)
     const createLog = logs.filter((x) => x.name === 'CreatePool')[0].args
-    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** NEEDS CHECKING ***
     const liqLog = logs.filter((x) => x.name === 'AddLiquidity')[0].args
     return {
       txnHash: txn.transactionHash,
@@ -613,7 +620,7 @@ const parseTxnLogs = (txn, txnType) => {
     let log = txn.logs[txn.logs.length - 1]
     const poolAddr = log.address
     const iface = new ethers.utils.Interface(abiArray.pool)
-    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued)
     log = iface.parseLog(log).args
     return {
       txnHash: txn.transactionHash,
@@ -643,7 +650,7 @@ const parseTxnLogs = (txn, txnType) => {
     for (let i = 0; i < txn.logs.length; i++) {
       logs.push(iface.parseLog(txn.logs[i]))
     }
-    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued)
     const liqIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
     const poolAddr = txn.logs[liqIndex].address
     const liqLog = logs[liqIndex].args
@@ -677,11 +684,11 @@ const parseTxnLogs = (txn, txnType) => {
     for (let i = 0; i < txn.logs.length; i++) {
       logs.push(iface.parseLog(txn.logs[i]))
     }
-    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
     const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
     const remAddr = txn.logs[remIndex].address
     const remLog = logs[remIndex].args
-    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued) *** NEEDS CHECKING ***
     const addIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
     const addAddr = txn.logs[addIndex].address
     const addLog = logs[addIndex].args
@@ -710,7 +717,7 @@ const parseTxnLogs = (txn, txnType) => {
     for (let i = 0; i < txn.logs.length; i++) {
       logs.push(iface.parseLog(txn.logs[i]))
     }
-    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
     const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
     const poolAddr = txn.logs[remIndex].address
     const remLog = logs[remIndex].args
@@ -751,7 +758,7 @@ const parseTxnLogs = (txn, txnType) => {
     const poolAddr = txn.logs[swapIndex].address
     const toBase = swapLog.tokenTo === addr.spartav2
     const _out1 = swapLog.outputAmount.toString()
-    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
     const remLiqLog = logs.filter((x) => x.name === 'RemoveLiquidity')[0].args
     const _baseOut = remLiqLog.outputBase.toString()
     const _tokenOut = remLiqLog.outputToken.toString()
@@ -832,7 +839,7 @@ const parseTxnLogs = (txn, txnType) => {
       fromBase = false
       swapLog = swapLog[0].args
     }
-    // Pool.MintSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.MintSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** NEEDS CHECKING ***
     const mintLog = logs.filter((x) => x.name === 'MintSynth')[0].args
     const sendAmnt1 = fromBase ? mintLog.baseAmount : swapLog.inputAmount
     const sendToken1 = fromBase ? addr.spartav2 : swapLog.tokenFrom
@@ -868,7 +875,7 @@ const parseTxnLogs = (txn, txnType) => {
       toBase = false
       swapLog = swapLog[0].args
     }
-    // Pool.BurnSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** THIS WONT WORK UNTIL NEXT REDEPLOY ***
+    // Pool.BurnSynth (member, synthAddress, baseAmount, liqUnits, synthAmount) *** NEEDS CHECKING ***
     const burnLog = logs.filter((x) => x.name === 'BurnSynth')[0].args
     const recAmnt1 = toBase ? burnLog.baseAmount : swapLog.outputAmount
     const recToken1 = toBase ? addr.spartav2 : swapLog.tokenTo

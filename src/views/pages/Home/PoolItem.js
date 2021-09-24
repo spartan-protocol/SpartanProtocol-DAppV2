@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
+import { Badge, Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
@@ -26,6 +26,8 @@ const PoolItem = ({ asset }) => {
     lastMonthDivis,
     fees,
     genesis,
+    newPool,
+    curated,
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
@@ -61,11 +63,17 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320 pt-1 pb-2 card-underlay card-alt">
+        <Card className="card-320 pb-2 card-underlay card-alt">
+          {newPool && <Badge bg="secondary">NEW</Badge>}
+          {curated ? (
+            <Badge bg="primary">CURATED</Badge>
+          ) : (
+            <Badge bg="dark">NORMAL</Badge>
+          )}
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="pe-0">
-                <img src={token.symbolUrl} alt={token.symbol} height="45" />
+                <img src={token.symbolUrl} alt={token.symbol} height="45" />{' '}
               </Col>
               <Col xs="auto" className="pe-0">
                 <h3 className="mb-0">{token.symbol}</h3>

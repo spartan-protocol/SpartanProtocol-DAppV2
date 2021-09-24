@@ -131,7 +131,7 @@ const NewProposal = () => {
 
   const [existingPid, setexistingPid] = useState(false)
   const checkExistingOpen = () => {
-    if (dao?.proposal.filter((pid) => pid.open).length > 0) {
+    if (dao.global.currentProposal > 0) {
       setexistingPid(true)
     } else {
       setexistingPid(false)
@@ -354,7 +354,7 @@ const NewProposal = () => {
         )}
         {network.chainId !== 97 && <WrongNetwork />}
         <Modal.Footer>
-          <Row className="w-100">
+          <Row className="w-100 text-center">
             {wallet?.account && !existingPid && (
               <Approval
                 tokenAddress={addr.spartav2}
