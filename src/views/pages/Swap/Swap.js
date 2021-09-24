@@ -149,7 +149,7 @@ const Swap = () => {
     if (pool.poolDetails.filter((x) => !x.hide).length > 2) {
       validModes.push('pool')
     }
-    if (synthCount() > 0) {
+    if (synth.synthDetails && synthCount() > 0) {
       validModes.push('synth')
     }
     return validModes
@@ -657,7 +657,7 @@ const Swap = () => {
   }
 
   const isLoading = () => {
-    if (!pool.poolDetails) {
+    if (!pool.poolDetails || !synth.synthDetails) {
       return true
     }
     return false
