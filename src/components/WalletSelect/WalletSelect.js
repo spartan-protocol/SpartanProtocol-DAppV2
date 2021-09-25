@@ -24,7 +24,6 @@ import {
   tempChains,
 } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
-import { isAppleDevice } from '../../utils/helpers'
 import Assets from './Assets'
 import LPs from './LPs'
 import Synths from './Synths'
@@ -240,6 +239,9 @@ const WalletSelect = (props) => {
 
   const [rank, setrank] = useState('Loading')
   const getRank = () => {
+    if (!tempChains.includes(wallet.chainId)) {
+      setrank('Wait for Mainnet')
+    }
     if (props.show && !rankLoading()) {
       const weight = getWeight()
       const ranksArray = spartanRanks.filter((i) => i.weight < weight)
@@ -374,25 +376,6 @@ const WalletSelect = (props) => {
                   </Button>
                 </Col>
               ))}
-              {isAppleDevice() && (
-                <Col>
-                  <Button
-                    href="trust://browser_enable"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Row>
-                      <Col xs="2" className="float-right">
-                        <Icon icon="apple" size="40" />
-                      </Col>
-                      <Col xs="10" className="float-left">
-                        Apple iOS devices click here to enable the TrustWallet
-                        in-app browser
-                      </Col>
-                    </Row>
-                  </Button>
-                </Col>
-              )}
             </Row>
           ) : (
             <>
@@ -411,10 +394,12 @@ const WalletSelect = (props) => {
                         {activeTab === 'tokens' && <Assets />}
                       </Tab>
                       <Tab eventKey="lps" title={t('lps')}>
-                        {activeTab === 'lps' && <LPs />}
+                        {tempChains.includes(wallet.chainId) &&
+                          activeTab === 'lps' && <LPs />}
                       </Tab>
                       <Tab eventKey="synths" title={t('synths')}>
-                        {activeTab === 'synths' && <Synths />}
+                        {tempChains.includes(wallet.chainId) &&
+                          activeTab === 'synths' && <Synths />}
                       </Tab>
                     </Tabs>
                   </Row>
