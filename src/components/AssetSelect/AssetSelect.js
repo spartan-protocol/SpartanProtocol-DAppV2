@@ -260,11 +260,18 @@ const AssetSelect = (props) => {
     }
   }
 
+  const handleOnClick = () => {
+    toggleModal()
+    if (props.onClick) {
+      props.onClick()
+    }
+  }
+
   return (
     <>
       <Row
         onClick={() =>
-          !props.disabled ? toggleModal() : console.log('button disabled')
+          !props.disabled ? handleOnClick() : console.log('button disabled')
         }
         role="button"
       >

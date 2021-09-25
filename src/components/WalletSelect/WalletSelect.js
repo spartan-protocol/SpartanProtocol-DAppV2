@@ -10,6 +10,7 @@ import {
   Tabs,
   Tab,
   OverlayTrigger,
+  Badge,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -266,6 +267,37 @@ const WalletSelect = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger1, props.show])
 
+  const getTokenCount = () => {
+    if (!pool.tokenDetails || !pool.poolDetails) {
+      return <Icon icon="cycle" size="15" className="anim-spin" />
+    }
+    return pool.tokenDetails?.filter((asset) => asset.balance > 0).length
+  }
+
+  const getLpsCount = () => {
+    if (
+      !pool.tokenDetails ||
+      !pool.poolDetails ||
+      !bond.bondDetails ||
+      !dao.daoDetails
+    ) {
+      return <Icon icon="cycle" size="15" className="anim-spin" />
+    }
+    let count = pool.poolDetails.filter((asset) => asset.balance > 0).length
+    count += dao.daoDetails.filter((asset) => asset.staked > 0).length
+    count += bond.bondDetails.filter((asset) => asset.staked > 0).length
+    return count
+  }
+
+  const getSynthsCount = () => {
+    if (!pool.tokenDetails || !pool.poolDetails || !synth.synthDetails) {
+      return <Icon icon="cycle" size="15" className="anim-spin" />
+    }
+    let count = synth.synthDetails.filter((asset) => asset.balance > 0).length
+    count += synth.synthDetails.filter((asset) => asset.staked > 0).length
+    return count
+  }
+
   return (
     <>
       <Modal show={props.show} onHide={props.onHide} centered>
@@ -390,14 +422,35 @@ const WalletSelect = (props) => {
                       className="flex-row px-2 mb-3"
                       fill
                     >
-                      <Tab eventKey="tokens" title={t('tokens')}>
+                      <Tab
+                        eventKey="tokens"
+                        title={
+                          <>
+                            {t('tokens')} <Badge>{getTokenCount()}</Badge>
+                          </>
+                        }
+                      >
                         {activeTab === 'tokens' && <Assets />}
                       </Tab>
-                      <Tab eventKey="lps" title={t('lps')}>
+                      <Tab
+                        eventKey="lps"
+                        title={
+                          <>
+                            {t('lps')} <Badge>{getLpsCount()}</Badge>
+                          </>
+                        }
+                      >
                         {tempChains.includes(wallet.chainId) &&
                           activeTab === 'lps' && <LPs />}
                       </Tab>
-                      <Tab eventKey="synths" title={t('synths')}>
+                      <Tab
+                        eventKey="synths"
+                        title={
+                          <>
+                            {t('synths')} <Badge>{getSynthsCount()}</Badge>
+                          </>
+                        }
+                      >
                         {tempChains.includes(wallet.chainId) &&
                           activeTab === 'synths' && <Synths />}
                       </Tab>
