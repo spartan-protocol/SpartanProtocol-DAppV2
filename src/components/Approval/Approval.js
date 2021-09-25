@@ -37,12 +37,12 @@ const Approval = ({
 
   const [pending, setPending] = useState(false)
 
-  const getAllowance = async () => {
+  const getAllowance = () => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        await dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
       } else if (assetNumber === '2') {
-        await dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
       }
     }
   }
@@ -50,15 +50,14 @@ const Approval = ({
   const handleApproval = async () => {
     setPending(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
-    await getAllowance()
     setPending(false)
+    getAllowance()
   }
 
   useEffect(() => {
     getAllowance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    pending,
     pool.poolDetails,
     tokenAddress,
     symbol,
@@ -66,7 +65,6 @@ const Approval = ({
     contractAddress,
     txnAmount,
     assetNumber,
-    web3.txn,
   ])
 
   return (
