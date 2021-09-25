@@ -867,6 +867,7 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.pool,
       abiArray.synthVault,
       abiArray.sparta,
+      abiArray.wbnb,
     ])
     const iface = new ethers.utils.Interface(masterAbi)
     const logs = []

@@ -153,7 +153,12 @@ const LiqAdd = () => {
   const addInput2 = document.getElementById('addInput2')
   const addInput3 = document.getElementById('addInput3')
 
+  const handleConfClear = () => {
+    setConfirm(false)
+  }
+
   const clearInputs = (focusAfter) => {
+    handleConfClear()
     setOutputLp('0.00')
     if (addInput1) {
       addInput1.value = ''
@@ -456,6 +461,7 @@ const LiqAdd = () => {
                                       ? [addr.spartav1, addr.spartav2]
                                       : []
                                   }
+                                  onClick={handleConfClear}
                                 />
                               </InputGroup.Text>
                               <FormControl
@@ -549,6 +555,7 @@ const LiqAdd = () => {
                                     filter={['token']}
                                     whiteList={[addr.spartav2]}
                                     disabled={activeTab === 'addTab1'}
+                                    onClick={handleConfClear}
                                   />
                                 </InputGroup.Text>
                                 <FormControl
@@ -604,6 +611,7 @@ const LiqAdd = () => {
                                       activeTab === 'addTab1' ||
                                       assetAdd1.tokenAddress !== addr.spartav2
                                     }
+                                    onClick={handleConfClear}
                                   />
                                 </InputGroup.Text>
                                 <FormControl

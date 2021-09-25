@@ -72,6 +72,7 @@ const Swap = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [confirmSynth, setConfirmSynth] = useState(false)
@@ -91,8 +92,8 @@ const Swap = () => {
   const [typeParam2, setTypeParam2] = useState(
     new URLSearchParams(location.search).get(`type2`),
   )
-
   const [network, setnetwork] = useState(getNetwork())
+
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
     setnetwork(getNetwork())
@@ -136,11 +137,6 @@ const Swap = () => {
     checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
-
-  useEffect(() => {
-    setConfirm(false)
-    setConfirmSynth(false)
-  }, [mode])
 
   const synthCount = () => synth.synthDetails.filter((x) => x.address).length
 
@@ -296,7 +292,13 @@ const Swap = () => {
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
+  const handleConfClear = () => {
+    setConfirm(false)
+    setConfirmSynth(false)
+  }
+
   const clearInputs = () => {
+    handleConfClear()
     if (swapInput1) {
       swapInput1.value = ''
       swapInput1.focus()
@@ -724,6 +726,7 @@ const Swap = () => {
                                         <AssetSelect
                                           priority="1"
                                           filter={getFilter()}
+                                          onClick={handleConfClear}
                                         />
                                       </InputGroup.Text>
                                       <FormControl
@@ -805,6 +808,7 @@ const Swap = () => {
                                             assetSwap1.tokenAddress ===
                                               addr.spartav2 && [addr.spartav2]
                                           }
+                                          onClick={handleConfClear}
                                         />
                                       </InputGroup.Text>
                                       <FormControl

@@ -63,6 +63,7 @@ const Swap = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('mint')
   const [confirmSynth, setConfirmSynth] = useState(false)
@@ -122,10 +123,6 @@ const Swap = () => {
     checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
-
-  useEffect(() => {
-    setConfirmSynth(false)
-  }, [activeTab])
 
   useEffect(() => {
     const { poolDetails } = pool
@@ -217,7 +214,16 @@ const Swap = () => {
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
+  const handleConfClear = () => {
+    setConfirmSynth(false)
+  }
+
+  useEffect(() => {
+    handleConfClear()
+  }, [activeTab])
+
   const clearInputs = () => {
+    handleConfClear()
     if (swapInput1) {
       swapInput1.value = ''
       swapInput1.focus()
@@ -318,13 +324,9 @@ const Swap = () => {
     if (activeTab === 'mint') {
       if (swapInput1?.value) {
         swapInput2.value = convertFromWei(getMint()[0], 18)
-      } else {
-        clearInputs()
       }
     } else if (swapInput1?.value) {
       swapInput2.value = convertFromWei(getBurn()[0], 18)
-    } else {
-      clearInputs()
     }
   }
 
@@ -537,6 +539,7 @@ const Swap = () => {
                                                 ? ['token']
                                                 : ['synth']
                                             }
+                                            onClick={handleConfClear}
                                           />
                                         </InputGroup.Text>
                                         <FormControl
@@ -624,6 +627,7 @@ const Swap = () => {
                                             <AssetSelect
                                               priority="2"
                                               filter={['synth']}
+                                              onClick={handleConfClear}
                                             />
                                           </InputGroup.Text>
                                           <FormControl
@@ -677,6 +681,7 @@ const Swap = () => {
                                             <AssetSelect
                                               priority="2"
                                               filter={['token']}
+                                              onClick={handleConfClear}
                                             />
                                           </InputGroup.Text>
                                           <FormControl

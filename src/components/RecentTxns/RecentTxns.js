@@ -16,6 +16,7 @@ import { formatFromWei } from '../../utils/bigNumber'
 import { getPool, getSynth, getToken } from '../../utils/math/utils'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
+import HelmetLoading from '../Loaders/HelmetLoading'
 
 // ## NOTES ## //
 // Dont forget to add in any new/changed txn actions to the dep list for the updateShown-useEffect
@@ -232,96 +233,105 @@ const RecentTxns = () => {
     return ''
   }
 
+  const isLoading = () => {
+    if (
+      !pool.tokenDetails ||
+      !pool.poolDetails ||
+      !dao.daoDetails ||
+      !bond.bondDetails ||
+      !synth.synthDetails
+    ) {
+      return true
+    }
+    return false
+  }
+
   return (
     <>
       <Row>
         {pool.poolDetails.length > 1 && (
           <>
-            <Table borderless striped className="m-3">
-              {/* <thead className="text-primary text-center">
-            <tr>
-              <th>{t('type')}</th>
-              <th className="d-none d-sm-table-cell">{t('from')}</th>
-              <th className="d-none d-sm-table-cell">{t('to')}</th>
-              <th>{t('txHash')}</th>
-            </tr>
-          </thead> */}
-              <tbody className="align-middle">
-                {shownArray?.length > 0 &&
-                  wallet.account &&
-                  shownArray?.map((txn) => (
-                    <tr
-                      key={txn.txnHash + txn.txnIndex}
-                      className="text-center output-card"
-                    >
-                      <td>{txn.txnType}</td>
-                      <td className="d-none d-sm-table-cell">
-                        {txn.sendToken1 && (
-                          <div className="d-inline position-relative">
-                            <img
-                              height="20px"
-                              src={_getToken(txn.sendToken1)[0]?.symbolUrl}
-                              alt="token icon"
-                              className="mb-1 me-2"
-                            />
-                            {getBadge(txn.sendToken1)}
-                          </div>
-                        )}
-                        {getFrom(txn)[0]}
-                        <br />
-                        {txn.sendToken2 && (
-                          <div className="d-inline position-relative">
-                            <img
-                              height="20px"
-                              src={_getToken(txn.sendToken2)[0]?.symbolUrl}
-                              alt="token icon"
-                              className="mb-1 me-2"
-                            />
-                            {getBadge(txn.sendToken2)}
-                          </div>
-                        )}
-                        {getFrom(txn)[1]}
-                      </td>
-                      <td className="d-none d-sm-table-cell">
-                        {txn.recToken1 && (
-                          <div className="d-inline position-relative">
-                            <img
-                              height="20px"
-                              src={_getToken(txn.recToken1)[0]?.symbolUrl}
-                              alt="token icon"
-                              className="mb-1 me-2"
-                            />
-                            {getBadge(txn.recToken1)}
-                          </div>
-                        )}
-                        {getTo(txn)[0]}
-                        <br />
-                        {txn.recToken2 && (
-                          <div className="d-inline position-relative">
-                            <img
-                              height="20px"
-                              src={_getToken(txn.recToken2)[0]?.symbolUrl}
-                              alt="token icon"
-                              className="mb-1 me-2"
-                            />
-                            {getBadge(txn.recToken2)}
-                          </div>
-                        )}
-                        {getTo(txn)[1]}
-                      </td>
-                      <td>
-                        <a
-                          href={getExplorerTxn(txn.txnHash)}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {formatShortString(txn.txnHash)}
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
+            {!isLoading() ? (
+              <Table borderless striped className="m-3">
+                <tbody className="align-middle">
+                  {shownArray?.length > 0 &&
+                    wallet.account &&
+                    shownArray?.map((txn) => (
+                      <tr
+                        key={txn.txnHash + txn.txnIndex}
+                        className="text-center output-card"
+                      >
+                        <td>{txn.txnType}</td>
+                        <td className="d-none d-sm-table-cell">
+                          {txn.sendToken1 && (
+                            <div className="d-inline position-relative">
+                              <img
+                                height="20px"
+                                src={_getToken(txn.sendToken1)[0]?.symbolUrl}
+                                alt="token icon"
+                                className="mb-1 me-2"
+                              />
+                              {getBadge(txn.sendToken1)}
+                            </div>
+                          )}
+                          {getFrom(txn)[0]}
+                          <br />
+                          {txn.sendToken2 && (
+                            <div className="d-inline position-relative">
+                              <img
+                                height="20px"
+                                src={_getToken(txn.sendToken2)[0]?.symbolUrl}
+                                alt="token icon"
+                                className="mb-1 me-2"
+                              />
+                              {getBadge(txn.sendToken2)}
+                            </div>
+                          )}
+                          {getFrom(txn)[1]}
+                        </td>
+                        <td className="d-none d-sm-table-cell">
+                          {txn.recToken1 && (
+                            <div className="d-inline position-relative">
+                              <img
+                                height="20px"
+                                src={_getToken(txn.recToken1)[0]?.symbolUrl}
+                                alt="token icon"
+                                className="mb-1 me-2"
+                              />
+                              {getBadge(txn.recToken1)}
+                            </div>
+                          )}
+                          {getTo(txn)[0]}
+                          <br />
+                          {txn.recToken2 && (
+                            <div className="d-inline position-relative">
+                              <img
+                                height="20px"
+                                src={_getToken(txn.recToken2)[0]?.symbolUrl}
+                                alt="token icon"
+                                className="mb-1 me-2"
+                              />
+                              {getBadge(txn.recToken2)}
+                            </div>
+                          )}
+                          {getTo(txn)[1]}
+                        </td>
+                        <td>
+                          <a
+                            href={getExplorerTxn(txn.txnHash)}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            {formatShortString(txn.txnHash)}
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </Table>
+            ) : (
+              <HelmetLoading height={200} width={200} />
+            )}
             <div
               className="pagAndDel"
               style={{
@@ -359,106 +369,3 @@ const RecentTxns = () => {
 }
 
 export default RecentTxns
-
-/* {web3.eventArray?.length > 0 &&
-              web3.eventArray
-                ?.filter((e) => e.event !== 'Transfer')
-                .map((txn) => (
-                  <tr
-                    key={txn.transactionHash + txn.event + txn.logIndex}
-                    className="text-center"
-                  >
-                    <td>{txn.blockNumber}</td>
-                    <td>{txn.event}</td>
-                    <td>
-                      {txn.event === 'AddLiquidity' &&
-                        `${formatFromWei(
-                          txn.args?.inputBase.toString(),
-                          2,
-                        )} SPARTA : ${formatFromWei(
-                          txn.args?.inputToken.toString(),
-                          2,
-                        )} ${
-                          getToken(
-                            pool.poolDetails?.filter(
-                              (asset) => asset.address === txn.address,
-                            )[0].tokenAddress,
-                          )?.symbol
-                        }`}
-
-                      {txn.event === 'RemoveLiquidity' &&
-                        `${formatFromWei(
-                          txn.args?.unitsClaimed.toString(),
-                          2,
-                        )} ${
-                          getToken(
-                            pool.poolDetails?.filter(
-                              (asset) => asset.address === txn.address,
-                            )[0].tokenAddress,
-                          )?.symbol
-                        }p`}
-                      {txn.event === 'Swapped' &&
-                        `${formatFromWei(
-                          txn.args?.inputAmount.toString(),
-                          2,
-                        )} ${
-                          pool.tokenDetails?.filter((asset) => {
-                            let targetToken = txn.args.tokenFrom
-                            if (targetToken === addr.wbnb) {
-                              targetToken = addr.bnb
-                            }
-                            return asset.address === targetToken
-                          })[0]?.symbol
-                        }`}
-                    </td>
-                    <td>
-                      {txn.event === 'AddLiquidity' &&
-                        `${formatFromWei(
-                          txn.args?.unitsIssued.toString(),
-                          2,
-                        )} ${
-                          getToken(
-                            pool.poolDetails?.filter(
-                              (asset) => asset.address === txn.address,
-                            )[0],
-                          )?.symbol
-                        }p`}
-                      {txn.event === 'RemoveLiquidity' &&
-                        `${formatFromWei(
-                          txn.args?.outputBase.toString(),
-                          2,
-                        )} SPARTA : ${formatFromWei(
-                          txn.args?.outputToken.toString(),
-                          2,
-                        )} ${
-                          getToken(
-                            pool.poolDetails?.filter(
-                              (asset) => asset.address === txn.address,
-                            )[0],
-                          )?.symbol
-                        }`}
-                      {txn.event === 'Swapped' &&
-                        `${formatFromWei(
-                          txn.args?.outputAmount.toString(),
-                          2,
-                        )} ${
-                          pool.tokenDetails?.filter((asset) => {
-                            let targetToken = txn.args.tokenTo
-                            if (targetToken === addr.wbnb) {
-                              targetToken = addr.bnb
-                            }
-                            return asset.address === targetToken
-                          })[0]?.symbol
-                        }`}
-                    </td>
-                    <td>
-                      <a
-                        href={getExplorerTxn(txn.transactionHash)}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {formatShortString(txn.transactionHash)}
-                      </a>
-                    </td>
-                  </tr>
-                ))} */
