@@ -159,7 +159,7 @@ export const getListedPools = (tokenDetails) => async (dispatch) => {
         baseAmount: tempArray[i].baseAmount.toString(),
         tokenAmount: tempArray[i].tokenAmount.toString(),
         poolUnits: tempArray[i].poolUnits.toString(),
-        synthCap: tempArray[i].synthCap.toString(),
+        synthCapBPs: tempArray[i].synthCap.toString(),
         baseCap: tempArray[i].baseCap.toString(),
         genesis: tempArray[i].genesis.toString(),
         newPool: getSecsSince(tempArray[i].genesis.toString()) < oneWeek,
@@ -224,10 +224,12 @@ export const getPoolDetails =
         tempArray.push(curated) // check if pool is curated
         tempArray.push(validPool ? poolContract.callStatic.freeze() : false) // check if pool is frozen
         tempArray.push(validPool ? poolContract.callStatic.oldRate() : '0') // get pool safety zone
+        tempArray.push(validPool ? poolContract.callStatic.stirRate() : '0') // stirRate
+        tempArray.push(validPool ? poolContract.callStatic.lastStirred() : '0') // lastStirred
       }
       tempArray = await Promise.all(tempArray)
       const poolDetails = listedPools
-      const varCount = 7
+      const varCount = 9
       for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
         const ii = i / varCount
         const _base = poolDetails[ii].baseAmount
@@ -255,6 +257,8 @@ export const getPoolDetails =
                 .toString()
             : '0'
         poolDetails[ii].safety = safety.toString()
+        poolDetails[ii].stirRate = tempArray[i + 7].toString()
+        poolDetails[ii].lastStirred = tempArray[i + 8].toString()
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {

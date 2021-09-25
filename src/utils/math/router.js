@@ -190,13 +190,13 @@ export const swapTo = (
  * @param synthPoolSynthCap @param synthPoolTokenAmnt @param synth
  * @returns steamedSynths
  */
-export const stirCauldron = (synthPoolSynthCap, synthPoolTokenAmnt, synth) => {
+export const stirCauldron = (synthPool, synthPoolTokenAmnt, synth) => {
   const _oneWeek = BN(oneWeek)
   const totalSup = BN(synth.totalSupply)
-  const _lastStirred = BN(synth.lastStirred)
-  let _stirRate = BN(synth.stirRate)
+  const _lastStirred = BN(synthPool.lastStirred)
+  let _stirRate = BN(synthPool.stirRate)
   const _tokenAmount = BN(synthPoolTokenAmnt)
-  const _cap = BN(synthPoolSynthCap)
+  const _cap = BN(synthPool.synthCapBPs)
   const synthsCap = _tokenAmount.times(_cap).div(10000)
   let liquidSynths = BN(0)
   let steamedSynths = BN(0)
@@ -242,7 +242,7 @@ export const mintSynth = (
     const _synthRec = BN(synthOut.times(0.99).toFixed(0)) // Synths after 1% slip
     synthCapped = _totalSupply
       .plus(_synthRec)
-      .isGreaterThan(stirCauldron(synthPool.synthCap, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
+      .isGreaterThan(stirCauldron(synthPool, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
     diviSynth = synthFee.isGreaterThan(one) && synthFee
     return [_synthRec, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
   }
@@ -264,12 +264,12 @@ export const mintSynth = (
   const [synthOut, synthFee] = calcSwapOutput(_spartaRec1, synthPool, false) // Swap SPARTA for SYNTH (Pool -> User)
   const _synthRec = BN(synthOut.times(0.99).toFixed(0)) // Synths after 1% slip
   synthCapped = _totalSupply
-    .plus(synthOut)
-    .isGreaterThan(stirCauldron(synthPool.synthCap, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
+    .plus(_synthRec)
+    .isGreaterThan(stirCauldron(synthPool, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
   const slipFee = swapFee.plus(synthFee)
   diviSwap = _diviSwap
   diviSynth = synthFee.isGreaterThan(one) && synthFee
-  return [_synthRec, slipFee, diviSynth, diviSwap, baseCapped]
+  return [_synthRec, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
 }
 
 /**
