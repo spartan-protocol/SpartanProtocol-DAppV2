@@ -9,7 +9,7 @@ import { BN, convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
-import { getAddresses } from '../../utils/web3'
+import { getAddresses, tempChains } from '../../utils/web3'
 import HelmetLoading from '../Loaders/HelmetLoading'
 
 const Assets = () => {
@@ -64,7 +64,7 @@ const Assets = () => {
 
   /** @returns BN(usdValue) */
   const getUSD = (tokenAddr, amount) => {
-    if (pool.poolDetails.length > 1) {
+    if (pool.poolDetails.length > 1 && tempChains.includes(wallet.chainId)) {
       if (isSparta(tokenAddr)) {
         return BN(amount).times(web3.spartaPrice)
       }
@@ -78,7 +78,7 @@ const Assets = () => {
   }
 
   const isLoading = () => {
-    if (!pool.poolDetails) {
+    if (!pool.poolDetails && tempChains.includes(wallet.chainId)) {
       return true
     }
     return false

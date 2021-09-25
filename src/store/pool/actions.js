@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { ethers } from 'ethers'
 import * as Types from './types'
 import {
@@ -12,6 +11,7 @@ import { payloadToDispatch, errorToDispatch } from '../helpers'
 import {
   getAddresses,
   getProviderGasPrice,
+  getTwTokenLogo,
   oneWeek,
   parseTxn,
 } from '../../utils/web3'
@@ -34,11 +34,10 @@ export const getListedTokens = () => async (dispatch) => {
   dispatch(poolLoading())
   const addr = getAddresses()
   const check = ethers.utils.isAddress(addr.poolFactory)
-  const contract = check === true ? getPoolFactoryContract() : ''
-
+  const contract = check ? getPoolFactoryContract() : ''
   try {
     const listedTokens = []
-    if (check === true) {
+    if (check) {
       const _listedTokens = await contract.callStatic.getTokenAssets()
       for (let i = 0; i < _listedTokens.length; i++) {
         listedTokens.push(_listedTokens[i])
@@ -59,61 +58,54 @@ export const getListedTokens = () => async (dispatch) => {
  * Get detailed array of token information
  * @param listedTokens @param wallet
  */
-export const getTokenDetails = (listedTokens, wallet) => async (dispatch) => {
-  dispatch(poolLoading())
-  const addr = getAddresses()
-  const trustWalletIndex = await axios.get(
-    'https://raw.githubusercontent.com/trustwallet/assets/87ef35f621e9c24fd092e608fb6b97e19fa48a13/blockchains/smartchain/allowlist.json',
-  )
-  try {
-    let tempArray = []
-    for (let i = 0; i < listedTokens.length; i++) {
-      const contract = getTokenContract(listedTokens[i], wallet)
-      tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
-      if (wallet.account) {
-        if (listedTokens[i] === addr.bnb) {
-          tempArray.push(wallet.library.getBalance(wallet.account))
+export const getTokenDetails =
+  (listedTokens, wallet, chainId) => async (dispatch) => {
+    dispatch(poolLoading())
+    const addr = getAddresses()
+    try {
+      let tempArray = []
+      for (let i = 0; i < listedTokens.length; i++) {
+        const contract = getTokenContract(listedTokens[i], wallet)
+        tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
+        if (wallet.account) {
+          if (listedTokens[i] === addr.bnb) {
+            tempArray.push(wallet.library.getBalance(wallet.account))
+          } else {
+            tempArray.push(contract.callStatic.balanceOf(wallet?.account)) // TOKEN BALANCE (2)
+          }
         } else {
-          tempArray.push(contract.callStatic.balanceOf(wallet?.account)) // TOKEN BALANCE (2)
+          tempArray.push('0')
         }
-      } else {
-        tempArray.push('0')
+        if (listedTokens[i] === addr.bnb) {
+          tempArray.push('BNB')
+          tempArray.push(`${window.location.origin}/images/icons/BNB.svg`)
+        } else if (listedTokens[i] === addr.spartav1) {
+          tempArray.push('SPARTA (old)')
+          tempArray.push(`${window.location.origin}/images/icons/SPARTA1.svg`)
+        } else if (listedTokens[i] === addr.spartav2) {
+          tempArray.push('SPARTA')
+          tempArray.push(`${window.location.origin}/images/icons/SPARTA2.svg`)
+        } else {
+          tempArray.push(contract.callStatic.symbol()) // TOKEN SYMBOL (3)
+          tempArray.push(getTwTokenLogo(listedTokens[i], chainId)) // SYMBOL URL (4)
+        }
       }
-      if (listedTokens[i] === addr.bnb) {
-        tempArray.push('BNB')
-        tempArray.push(`${window.location.origin}/images/icons/BNB.svg`)
-      } else if (listedTokens[i] === addr.spartav1) {
-        tempArray.push('SPARTA (old)')
-        tempArray.push(`${window.location.origin}/images/icons/SPARTA1.svg`)
-      } else if (listedTokens[i] === addr.spartav2) {
-        tempArray.push('SPARTA')
-        tempArray.push(`${window.location.origin}/images/icons/SPARTA2.svg`)
-      } else {
-        tempArray.push(contract.callStatic.symbol()) // TOKEN SYMBOL (3)
-        tempArray.push(
-          trustWalletIndex.data.filter((asset) => asset === listedTokens[i])
-            .length > 0
-            ? `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${listedTokens[i]}/logo.png`
-            : `${window.location.origin}/images/icons/Fallback.svg`,
-        ) // SYMBOL URL (4)
+      tempArray = await Promise.all(tempArray)
+      const varCount = 4
+      const tokenDetails = []
+      for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
+        tokenDetails.push({
+          address: tempArray[i],
+          balance: tempArray[i + 1].toString(),
+          symbol: tempArray[i + 2],
+          symbolUrl: tempArray[i + 3],
+        })
       }
+      dispatch(payloadToDispatch(Types.POOL_TOKEN_DETAILS, tokenDetails))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.POOL_ERROR, error))
     }
-    tempArray = await Promise.all(tempArray)
-    const varCount = 4
-    const tokenDetails = []
-    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
-      tokenDetails.push({
-        address: tempArray[i],
-        balance: tempArray[i + 1].toString(),
-        symbol: tempArray[i + 2],
-        symbolUrl: tempArray[i + 3],
-      })
-    }
-    dispatch(payloadToDispatch(Types.POOL_TOKEN_DETAILS, tokenDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.POOL_ERROR, error))
   }
-}
 
 /**
  * Return array of curated pool addresses

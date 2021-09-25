@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import axios from 'axios'
 import {
   Button,
   Col,
@@ -18,6 +17,8 @@ import Approval from '../../../components/Approval/Approval'
 import {
   getAddresses,
   getNetwork,
+  getTwTokenInfo,
+  getTwTokenLogo,
   getWalletProvider,
   tempChains,
 } from '../../../utils/web3'
@@ -60,18 +61,6 @@ const NewPool = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  const [trustWalletIndex, setTrustWalletIndex] = useState([])
-  const getTrustWalletIndex = async () => {
-    setTrustWalletIndex(
-      await axios.get(
-        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/allowlist.json',
-      ),
-    )
-  }
-  useEffect(() => {
-    getTrustWalletIndex()
-  }, [])
-
   const addrInput = document.getElementById('addrInput')
   const handleAddrChange = (newValue) => {
     if (addrInput) {
@@ -81,16 +70,16 @@ const NewPool = () => {
 
   const [tokenInfo, setTokenInfo] = useState(null)
   const [tokenSymbol, setTokenSymbol] = useState('TOKEN')
-  const [tokenIcon, setTokenIcon] = useState(null)
+  const [tokenIcon, setTokenIcon] = useState(
+    `${window.location.origin}/images/icons/Fallback.svg`,
+  )
   const getTokenInfo = async () => {
     if (network.chainId === 56) {
-      const info = await axios.get(
-        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${addrInput?.value}/info.json`,
-      )
-      setTokenInfo(info.data)
-      setTokenIcon(
-        `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/smartchain/assets/${addrInput?.value}/logo.png`,
-      )
+      const info = getTwTokenInfo(addrInput?.value)
+      if (info) {
+        setTokenInfo(info)
+      }
+      setTokenIcon(getTwTokenLogo(addrInput?.value, network.chainId))
     }
     const provider = getWalletProvider()
     const deployed = await provider.getCode(addrInput?.value)
@@ -128,7 +117,7 @@ const NewPool = () => {
   }
   const clearTokenInfo = () => {
     setTokenInfo(false)
-    setTokenIcon('')
+    setTokenIcon(`${window.location.origin}/images/icons/Fallback.svg`)
     setTokenSymbol('TOKEN')
   }
   useEffect(() => {
@@ -136,10 +125,7 @@ const NewPool = () => {
       addrInput?.value?.length === 42 &&
       ethers.utils.isAddress(addrInput?.value)
     ) {
-      if (
-        tempChains.includes(network.chainId) ||
-        trustWalletIndex.data.includes(addrInput?.value)
-      ) {
+      if (tempChains.includes(network.chainId)) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
         }
@@ -158,7 +144,7 @@ const NewPool = () => {
       clearTokenInfo()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addrInput?.value, trustWalletIndex, showModal, tokenInfo])
+  }, [addrInput?.value, showModal, tokenInfo])
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
@@ -277,19 +263,17 @@ const NewPool = () => {
               <Modal.Title>{t('createPool')}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {network.chainId === 56 &&
-                trustWalletIndex.data?.includes(addrInput?.value) &&
-                tokenInfo && (
-                  <div className="text-sm-label-alt text-center">
-                    <img
-                      src={tokenIcon}
-                      height="30px"
-                      alt="tokenIcon"
-                      className="me-2"
-                    />
-                    {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
-                  </div>
-                )}
+              {network.chainId === 56 && tokenInfo && (
+                <div className="text-sm-label-alt text-center">
+                  <img
+                    src={tokenIcon}
+                    height="30px"
+                    alt="tokenIcon"
+                    className="me-2"
+                  />
+                  {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                </div>
+              )}
               <InputGroup className="my-2">
                 <InputGroup.Text>{t('address')}</InputGroup.Text>
                 <FormControl

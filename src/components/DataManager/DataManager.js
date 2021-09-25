@@ -184,7 +184,7 @@ const DataManager = () => {
       clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedTokens, trigger3])
+  }, [pool.listedTokens, trigger3, wallet.account])
 
   /** Get listed pools details */
   useEffect(() => {

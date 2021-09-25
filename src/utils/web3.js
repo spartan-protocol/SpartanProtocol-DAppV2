@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 
 // Testnet ABI Imports
+import axios from 'axios'
 import abiTnBondVault from '../ABI/TN/BondVault.json'
 import abiTnDao from '../ABI/TN/Dao.json'
 import abiTnDaoVault from '../ABI/TN/DaoVault.json'
@@ -201,6 +202,46 @@ export const bscRpcsMN = [
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 60480 // change to 604800 for mainnet
+
+export const getTwAssetId = (tokenAddr) => {
+  const _tokenAddr = ethers.utils.getAddress(tokenAddr)
+  if (tokenAddr.length > 0) {
+    return `20000714_t${_tokenAddr}`
+  }
+  return false
+}
+
+export const getTwTokenInfo = async (tokenAddr) => {
+  const assetID = getTwAssetId(tokenAddr)
+  if (assetID) {
+    try {
+      const apiUrl = `https://api.trustwallet.com/v1/assets/${assetID}`
+      const result = await axios.get(apiUrl).then((r) => r.data)
+      if (!result || !result.asset_id) {
+        return false
+      }
+      const info = result
+      return info
+    } catch (err) {
+      return false
+    }
+  }
+  return false
+}
+
+export const getTwTokenLogo = async (tokenAddr, chainId) => {
+  let tokenInfo = false
+  if (chainId === 56) {
+    tokenInfo = await getTwTokenInfo(tokenAddr)
+  }
+  if (tokenInfo) {
+    if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
+      return `${window.location.origin}/images/icons/BNB.svg`
+    }
+    return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+  }
+  return `${window.location.origin}/images/icons/Fallback.svg`
+}
 
 /**
  * Format long string into a string with '...' separator (ideally for anchor text)
