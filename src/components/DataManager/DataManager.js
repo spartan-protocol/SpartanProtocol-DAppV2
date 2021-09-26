@@ -38,6 +38,7 @@ import {
   tempChains,
 } from '../../utils/web3'
 import { getSpartaV2Contract } from '../../utils/web3Contracts'
+import Notifications from '../Notifications/Notifications'
 
 const DataManager = () => {
   const dispatch = useDispatch()
@@ -59,6 +60,9 @@ const DataManager = () => {
   const [trigger1, settrigger1] = useState(0)
   const [trigger2, settrigger2] = useState(0)
   const [trigger3, settrigger3] = useState(0)
+
+  const [show, setShow] = useState(false)
+  const [txnHash, setTxnHash] = useState('')
 
   const tryParse = (data) => {
     try {
@@ -256,7 +260,19 @@ const DataManager = () => {
   useEffect(() => {
     if (router.txn.txnType) {
       addTxn(wallet.account, router.txn)
+      console.log(router.txn)
+      setTxnHash(router.txn.txnHash)
       router.txn = []
+      setShow(true)
+    }
+    // correct this, should be inside the if, but it gives an error
+    // Expected to return a value at the end of arrow function  consistent-return
+
+    const timer = setTimeout(() => {
+      setShow(false)
+    }, 4000)
+    return () => {
+      clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.txn])
@@ -288,7 +304,11 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.txn])
 
-  return <></>
+  return (
+    <>
+      <Notifications show={show} txnHash={txnHash} />
+    </>
+  )
 }
 
 export default DataManager
