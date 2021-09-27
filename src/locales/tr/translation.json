@@ -28,7 +28,7 @@
   "cancel": "İptal",
   "changeToMainnet": "Devam etmek için lütfen ağı 'BSC Mainnet' olarak değiştirin...",
   "changeWallet": "Cüzdan Değiştir",
-  "changeToTestnet": "Ağınızı testnet'e geçirebilir ve testnet'i dağıtılmış V2 ile oynayabilirsiniz. <1>BSC testnet musluğundan bazı testnet varlıklarını buradan edinin</1>. Önce BNB'yi talep edin (gaz için)" ,
+  "changeToTestnet": "Ağınızı testnet'e geçirebilir ve testnet'i dağıtılmış V2 ile oynayabilirsiniz. <1>BSC testnet musluğundan bazı testnet varlıklarını buradan edinin</1>. Önce BNB'yi talep edin (gaz için)",
   "chooseProposalType": "Teklif türünü seç",
   "checkAllocation": "Tahsisi kontrol et",
   "checkBalance": "Bakiyeyi kontrol et",
@@ -48,7 +48,7 @@
   "confirmLockup": "Kilitlemeyi Onayla",
   "connectWallet": "Cüzdanı Bağla",
   "contracts": "Sözleşmeler",
-  "coolOffRemaining": "Kalan soğuma,
+  "coolOffRemaining": "Kalan soğuma",
   "copyLink": "Bağlantıyı kopyala",
   "copyNotification": "Bu sayfaya ait bir bağlantı panonuza kopyalandı!",
   "countVotes": "Oyları Say",
@@ -243,5 +243,3 @@
   "yourWallet": "Cüzdanın",
   "yourWeight": "Senin Ağırlığın"
 }
-
- 
