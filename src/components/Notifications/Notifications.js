@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
+import { getExplorerTxn } from '../../utils/extCalls'
+import { formatShortString } from '../../utils/web3'
 
-const Notifications = (info) => {
+const Notifications = ({ show, txn }) => {
   const [showA, setShowA] = useState(true)
 
   const closeAction = () => {
@@ -17,21 +19,27 @@ const Notifications = (info) => {
   }
 
   return (
-    <ToastContainer
-      className="p-3"
-      position="middle-start"
-      Style="z-index:1000"
-    >
+    <ToastContainer className="p-3 mt-4" position="top-end">
       <Toast
         onClose={() => closeAction()}
-        show={info.show && showA}
-        delay={3000}
+        bg="info"
+        show={show && showA}
+        delay={5000}
         autohide
       >
         <Toast.Header closeButton={false}>
-          <strong className="me-auto">Txn confirmed!</strong>
+          <strong className="me-auto">{txn.txnType} started!</strong>
         </Toast.Header>
-        <Toast.Body>Txn has: {info.txnHash}</Toast.Body>
+        <Toast.Body>
+          Txn hash:{' '}
+          <a
+            href={getExplorerTxn(txn.txnHash)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {formatShortString(txn.txnHash)}
+          </a>
+        </Toast.Body>
       </Toast>
     </ToastContainer>
   )

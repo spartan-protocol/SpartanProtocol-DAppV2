@@ -62,7 +62,7 @@ const DataManager = () => {
   const [trigger3, settrigger3] = useState(0)
 
   const [show, setShow] = useState(false)
-  const [txnHash, setTxnHash] = useState('')
+  const [txn, setTxn] = useState('')
 
   const tryParse = (data) => {
     try {
@@ -260,8 +260,7 @@ const DataManager = () => {
   useEffect(() => {
     if (router.txn.txnType) {
       addTxn(wallet.account, router.txn)
-      console.log(router.txn)
-      setTxnHash(router.txn.txnHash)
+      setTxn(router.txn)
       router.txn = []
       setShow(true)
     }
@@ -270,7 +269,7 @@ const DataManager = () => {
 
     const timer = setTimeout(() => {
       setShow(false)
-    }, 4000)
+    }, 5000)
     return () => {
       clearTimeout(timer)
     }
@@ -306,7 +305,7 @@ const DataManager = () => {
 
   return (
     <>
-      <Notifications show={show} txnHash={txnHash} />
+      <Notifications show={show} txn={txn} />
     </>
   )
 }
