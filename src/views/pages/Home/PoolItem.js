@@ -228,7 +228,7 @@ const PoolItem = ({ asset }) => {
                   className="w-100 rounded-pill"
                   onClick={() =>
                     history.push(
-                      `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}`,
+                      `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
                     )
                   }
                 >

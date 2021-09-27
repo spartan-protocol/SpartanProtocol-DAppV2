@@ -138,7 +138,7 @@ export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
   const contract = getDaoContract(wallet)
   try {
     const gPrice = await getProviderGasPrice()
-    const _value = getAddresses().bnb ? amount : null
+    const _value = tokenAddr === getAddresses().bnb ? amount : null
     const ORs = { value: _value, gasPrice: gPrice }
     let txn = await contract.bond(tokenAddr, amount, ORs)
     txn = await parseTxn(txn, 'bondDeposit')
