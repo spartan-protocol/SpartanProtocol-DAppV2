@@ -1,7 +1,53 @@
-import React from 'react'
-import { Alert, Button, Card, Row, Col } from 'react-bootstrap'
+import React, { useState } from 'react'
 
-const Notifications = () => {
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
+import { getExplorerTxn } from '../../utils/extCalls'
+import { formatShortString } from '../../utils/web3'
+
+const Notifications = ({ show, txn }) => {
+  const [showA, setShowA] = useState(true)
+
+  const closeAction = () => {
+    setShowA(false)
+    const timer = setTimeout(() => {
+      setShowA(true)
+    }, 2000)
+    return () => {
+      clearTimeout(timer)
+    }
+  }
+
+  return (
+    <ToastContainer className="p-3 mt-4" position="top-end">
+      <Toast
+        onClose={() => closeAction()}
+        bg="info"
+        show={show && showA}
+        delay={5000}
+        autohide
+      >
+        <Toast.Header closeButton={false}>
+          <strong className="me-auto">{txn.txnType} started!</strong>
+        </Toast.Header>
+        <Toast.Body>
+          Txn hash:{' '}
+          <a
+            href={getExplorerTxn(txn.txnHash)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {formatShortString(txn.txnHash)}
+          </a>
+        </Toast.Body>
+      </Toast>
+    </ToastContainer>
+  )
+}
+
+export default Notifications
+
+/*
   const notificationAlertRef = React.useRef(null)
   const notify = (message, type) => {
     let options = {}
@@ -27,7 +73,7 @@ const Notifications = () => {
             <h2 className="d-inline text-title ml-1">Notifications</h2>
           </Col>
           <Col xs="6" xl="4">
-            {/* Buttons? */}
+            
           </Col>
         </Row>
 
@@ -82,6 +128,4 @@ const Notifications = () => {
       </div>
     </>
   )
-}
-
-export default Notifications
+  */

@@ -22,11 +22,10 @@ const Common = () => {
 
   return (
     <div className="wrapper">
-      <div className="rna-container">
+      <div className="rna-container" />
+      <div className="main-panel">
         <DataManager />
         {/* <NotificationAlert ref={notificationAlertRef} /> */}
-      </div>
-      <div className="main-panel">
         <Header />
         <Switch>
           {getRoutes(routes)}
