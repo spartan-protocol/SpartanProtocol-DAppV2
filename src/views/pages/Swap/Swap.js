@@ -62,6 +62,7 @@ import {
   getSynthGlobalDetails,
   getSynthMinting,
 } from '../../../store/synth'
+import Notifications from '../../../components/Notifications/Notifications'
 
 const Swap = () => {
   const synth = useSynth()
@@ -74,6 +75,7 @@ const Swap = () => {
   const sparta = useSparta()
   const location = useLocation()
 
+  const [notify, setNotify] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
@@ -661,6 +663,14 @@ const Swap = () => {
     clearInputs()
   }
 
+  useEffect(() => {
+    if (txnLoading) {
+      setNotify(true)
+    } else {
+      setNotify(false)
+    }
+  }, [txnLoading])
+
   const isLoading = () => {
     if (!pool.poolDetails || !synth.synthDetails) {
       return true
@@ -681,6 +691,7 @@ const Swap = () => {
           <>
             {!isLoading() ? (
               <>
+                <Notifications show={notify} txnType="approve" />
                 <Row className="row-480">
                   <Col xs="auto">
                     <Card xs="auto" className="card-480">

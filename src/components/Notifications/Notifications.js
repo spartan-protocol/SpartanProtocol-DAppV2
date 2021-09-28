@@ -1,131 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import Toast from 'react-bootstrap/Toast'
 import ToastContainer from 'react-bootstrap/ToastContainer'
-import { getExplorerTxn } from '../../utils/extCalls'
-import { formatShortString } from '../../utils/web3'
 
-const Notifications = ({ show, txn }) => {
-  const [showA, setShowA] = useState(true)
-
-  const closeAction = () => {
-    setShowA(false)
-    const timer = setTimeout(() => {
-      setShowA(true)
-    }, 2000)
-    return () => {
-      clearTimeout(timer)
-    }
-  }
-
-  return (
-    <ToastContainer className="p-3 mt-4" position="top-end">
-      <Toast
-        onClose={() => closeAction()}
-        bg="info"
-        show={show && showA}
-        delay={5000}
-        autohide
-      >
-        <Toast.Header closeButton={false}>
-          <strong className="me-auto">{txn.txnType} started!</strong>
-        </Toast.Header>
-        <Toast.Body>
-          Txn hash:{' '}
-          <a
-            href={getExplorerTxn(txn.txnHash)}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {formatShortString(txn.txnHash)}
-          </a>
-        </Toast.Body>
-      </Toast>
-    </ToastContainer>
-  )
-}
+const Notifications = ({ show, txnType }) => (
+  <ToastContainer className="p-3 mt-4" position="top-end">
+    <Toast bg="info" show={show} animation>
+      <Toast.Header closeButton={false}>
+        <strong className="me-auto">{txnType} started!</strong>
+      </Toast.Header>
+      <Toast.Body>
+        See Latest Transactions at the bottom of the screen for more info
+      </Toast.Body>
+    </Toast>
+  </ToastContainer>
+)
 
 export default Notifications
-
-/*
-  const notificationAlertRef = React.useRef(null)
-  const notify = (message, type) => {
-    let options = {}
-    options = {
-      place: 'tr',
-      message: (
-        <div>
-          <div>{message}</div>
-        </div>
-      ),
-      type,
-      icon: 'bd-icons icon-bell-55',
-      autoDismiss: 7,
-    }
-    notificationAlertRef.current.notificationAlert(options)
-  }
-
-  return (
-    <>
-      <div className="content">
-        <Row className="card-body justify-content-center">
-          <Col xs="6" xl="5">
-            <h2 className="d-inline text-title ml-1">Notifications</h2>
-          </Col>
-          <Col xs="6" xl="4">
-            
-          </Col>
-        </Row>
-
-        <Row className="justify-content-center">
-          <Col xs="12" xl="9">
-            <div className="content">
-              <Row>
-                <Col md="6">
-                  <Card>
-                    <Card.Header>
-                      <Card.Title tag="h4">Notification states</Card.Title>
-                    </Card.Header>
-                    <Card.Body>
-                      <Alert color="success" fade={false}>
-                        <span>
-                          <b>Success - </b>
-                          Message
-                        </span>
-                      </Alert>
-                      <Alert color="warning" fade={false}>
-                        <span>
-                          <b>Error - </b>
-                          Message
-                        </span>
-                      </Alert>
-                      <Button
-                        type="Button"
-                        className="mx-1 btn btn-success"
-                        onClick={() => notify('Message text ok', 'success')}
-                      >
-                        <div className="d-none d-sm-inline-block ml-1">
-                          Trigger message success
-                        </div>
-                      </Button>
-
-                      <Button
-                        type="Button"
-                        className="mx-1 btn btn-warning"
-                        onClick={() => notify('Message text error', 'warning')}
-                      >
-                        <div className="d-none d-sm-inline-block ml-1">
-                          Trigger message error
-                        </div>
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
-      </div>
-    </>
-  )
-  */
