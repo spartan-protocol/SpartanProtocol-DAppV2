@@ -12,6 +12,8 @@ import {
   Button,
   Badge,
   Form,
+  Popover,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -529,47 +531,104 @@ const Swap = () => {
                                   </Row>
 
                                   <Row className="my-1">
-                                    <Col>
-                                      <InputGroup className="">
-                                        <InputGroup.Text id="assetSelect1">
-                                          <AssetSelect
-                                            priority="1"
-                                            filter={
-                                              activeTab === 'mint'
-                                                ? ['token']
-                                                : ['synth']
-                                            }
-                                            onClick={handleConfClear}
-                                          />
-                                        </InputGroup.Text>
-                                        <FormControl
-                                          className="text-end ms-0"
-                                          type="number"
-                                          placeholder={`${t('add')}...`}
-                                          id="swapInput1"
-                                          autoComplete="off"
-                                          autoCorrect="off"
-                                        />
-                                        <InputGroup.Text
-                                          role="button"
-                                          tabIndex={-1}
-                                          onKeyPress={() => clearInputs(1)}
-                                          onClick={() => clearInputs(1)}
+                                    {typeof wallet.account === 'undefined' ? (
+                                      <Col>
+                                        <OverlayTrigger
+                                          placement="auto"
+                                          overlay={
+                                            <Popover>
+                                              <Popover.Header />
+                                              <Popover.Body>
+                                                {t('connectWalletFirst')}
+                                              </Popover.Body>
+                                            </Popover>
+                                          }
                                         >
-                                          <Icon
-                                            icon="close"
-                                            size="10"
-                                            fill="grey"
+                                          <InputGroup className="">
+                                            <InputGroup.Text id="assetSelect1">
+                                              <AssetSelect
+                                                priority="1"
+                                                filter={
+                                                  activeTab === 'mint'
+                                                    ? ['token']
+                                                    : ['synth']
+                                                }
+                                                onClick={handleConfClear}
+                                              />
+                                            </InputGroup.Text>
+                                            <FormControl
+                                              className="text-end ms-0"
+                                              type="number"
+                                              placeholder={`${t('add')}...`}
+                                              id="swapInput1"
+                                              autoComplete="off"
+                                              autoCorrect="off"
+                                            />
+                                            <InputGroup.Text
+                                              role="button"
+                                              tabIndex={-1}
+                                              onKeyPress={() => clearInputs(1)}
+                                              onClick={() => clearInputs(1)}
+                                            >
+                                              <Icon
+                                                icon="close"
+                                                size="10"
+                                                fill="grey"
+                                              />
+                                            </InputGroup.Text>
+                                          </InputGroup>
+                                        </OverlayTrigger>
+
+                                        <div className="text-end text-sm-label pt-1">
+                                          ~$
+                                          {swapInput1?.value
+                                            ? formatFromWei(getInput1USD(), 2)
+                                            : '0.00'}
+                                        </div>
+                                      </Col>
+                                    ) : (
+                                      <Col>
+                                        <InputGroup className="">
+                                          <InputGroup.Text id="assetSelect1">
+                                            <AssetSelect
+                                              priority="1"
+                                              filter={
+                                                activeTab === 'mint'
+                                                  ? ['token']
+                                                  : ['synth']
+                                              }
+                                              onClick={handleConfClear}
+                                            />
+                                          </InputGroup.Text>
+                                          <FormControl
+                                            className="text-end ms-0"
+                                            type="number"
+                                            placeholder={`${t('add')}...`}
+                                            id="swapInput1"
+                                            autoComplete="off"
+                                            autoCorrect="off"
                                           />
-                                        </InputGroup.Text>
-                                      </InputGroup>
-                                      <div className="text-end text-sm-label pt-1">
-                                        ~$
-                                        {swapInput1?.value
-                                          ? formatFromWei(getInput1USD(), 2)
-                                          : '0.00'}
-                                      </div>
-                                    </Col>
+                                          <InputGroup.Text
+                                            role="button"
+                                            tabIndex={-1}
+                                            onKeyPress={() => clearInputs(1)}
+                                            onClick={() => clearInputs(1)}
+                                          >
+                                            <Icon
+                                              icon="close"
+                                              size="10"
+                                              fill="grey"
+                                            />
+                                          </InputGroup.Text>
+                                        </InputGroup>
+                                        <div className="text-end text-sm-label pt-1">
+                                          ~$
+                                          {swapInput1?.value
+                                            ? formatFromWei(getInput1USD(), 2)
+                                            : '0.00'}
+                                        </div>
+                                      </Col>
+                                    )}
                                   </Row>
                                 </Card.Body>
                               </Card>
