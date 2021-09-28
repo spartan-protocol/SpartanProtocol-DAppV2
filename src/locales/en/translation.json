@@ -47,6 +47,8 @@
   "confirm": "Confirm",
   "confirmLockup": "Confirm Lockup",
   "connectWallet": "Connect Wallet",
+  "checkConnectWallet": "Click here to connect your Wallet",
+  "connectWalletFirst": "Connect your Wallet first",
   "contracts": "Contracts",
   "coolOffRemaining": "Cool-off Remaining",
   "copyLink": "Copy link",
