@@ -22,12 +22,7 @@ import {
   useSparta,
 } from '../../store/sparta'
 import { getSynthArray } from '../../store/synth'
-import {
-  addNetworkMM,
-  addNetworkBC,
-  getSpartaPrice,
-  useWeb3,
-} from '../../store/web3'
+import { getSpartaPrice, useWeb3 } from '../../store/web3'
 import { BN } from '../../utils/bigNumber'
 import {
   addTxn,
@@ -106,12 +101,8 @@ const DataManager = () => {
       if (network?.chainId !== prevNetwork?.chainId) {
         changeNetwork(network?.chainId)
         settrigger1(0)
-        await dispatch(addNetworkMM())
-        dispatch(addNetworkBC())
         setPrevNetwork(tryParse(network))
       } else {
-        await dispatch(addNetworkMM())
-        dispatch(addNetworkBC())
         setPrevNetwork(tryParse(network))
       }
       setnetLoading(false)
