@@ -43,12 +43,11 @@ const AddressConn = () => {
       setShowPopConnect(true)
       setTimeout(() => {
         setShowPopConnect(false)
-      }, 3000)
-    }, 4000)
+      }, 5000)
+    }, 2500)
   }, [])
 
   // if a user tries to do something and is not connected
-
   useEffect(() => {
     if (triesAndNotConnected) {
       setShowPopConnectHover(true)
