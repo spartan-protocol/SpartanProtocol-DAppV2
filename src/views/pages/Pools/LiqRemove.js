@@ -403,24 +403,24 @@ const LiqRemove = () => {
 
                         <Row className="my-1">
                           <Col>
-                            <OverlayTrigger
-                              placement="auto"
-                              onToggle={() => checkWallet()}
-                              show={showWalletWarning1}
-                              trigger={['focus']}
-                              overlay={
-                                <Popover>
-                                  <Popover.Header />
-                                  <Popover.Body>
-                                    {t('connectWalletFirst')}
-                                  </Popover.Body>
-                                </Popover>
-                              }
-                            >
-                              <InputGroup className="m-0">
-                                <InputGroup.Text id="assetSelect1">
-                                  <AssetSelect priority="1" filter={['pool']} />
-                                </InputGroup.Text>
+                            <InputGroup className="m-0">
+                              <InputGroup.Text id="assetSelect1">
+                                <AssetSelect priority="1" filter={['pool']} />
+                              </InputGroup.Text>
+                              <OverlayTrigger
+                                placement="auto"
+                                onToggle={() => checkWallet()}
+                                show={showWalletWarning1}
+                                trigger={['focus']}
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header />
+                                    <Popover.Body>
+                                      {t('connectWalletFirst')}
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
                                 <FormControl
                                   className="text-end ms-0"
                                   type="number"
@@ -429,16 +429,17 @@ const LiqRemove = () => {
                                   autoComplete="off"
                                   autoCorrect="off"
                                 />
-                                <InputGroup.Text
-                                  role="button"
-                                  tabIndex={-1}
-                                  onKeyPress={() => clearInputs(1)}
-                                  onClick={() => clearInputs(1)}
-                                >
-                                  <Icon icon="close" size="10" fill="grey" />
-                                </InputGroup.Text>
-                              </InputGroup>
-                            </OverlayTrigger>
+                              </OverlayTrigger>
+
+                              <InputGroup.Text
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs(1)}
+                                onClick={() => clearInputs(1)}
+                              >
+                                <Icon icon="close" size="10" fill="grey" />
+                              </InputGroup.Text>
+                            </InputGroup>
                             <div className="text-end text-sm-label pt-1">
                               ~$
                               {removeInput1?.value
