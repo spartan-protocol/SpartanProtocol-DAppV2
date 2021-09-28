@@ -514,6 +514,9 @@ const Swap = () => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
     if (swapInput1?.value <= 0) {
       return [false, t('checkInput')]
     }

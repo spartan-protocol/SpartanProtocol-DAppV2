@@ -169,14 +169,20 @@ const SynthVault = () => {
                     {t('yourWeight')}
                   </Col>
                   <Col className="text-end output-card">
-                    {formatFromWei(
-                      getSynthVaultWeights(
-                        synth.synthDetails,
-                        pool.poolDetails,
-                      ),
-                      2,
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : (
+                      <>
+                        {formatFromWei(
+                          getSynthVaultWeights(
+                            synth.synthDetails,
+                            pool.poolDetails,
+                          ),
+                          2,
+                        )}
+                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                      </>
                     )}
-                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
                   </Col>
                 </Row>
                 <Row className="my-1">
@@ -184,9 +190,13 @@ const SynthVault = () => {
                     {t('percentWeight')}
                   </Col>
                   <Col className="text-end output-card">
-                    {synth.totalWeight > 0 &&
-                    getSynthVaultWeights(synth.synthDetails, pool.poolDetails) >
-                      0
+                    {!wallet.account
+                      ? t('connectWallet')
+                      : synth.totalWeight > 0 &&
+                        getSynthVaultWeights(
+                          synth.synthDetails,
+                          pool.poolDetails,
+                        ) > 0
                       ? `${BN(
                           getSynthVaultWeights(
                             synth.synthDetails,

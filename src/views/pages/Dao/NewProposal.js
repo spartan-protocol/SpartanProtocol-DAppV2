@@ -33,11 +33,13 @@ import { Icon } from '../../../components/Icons/icons'
 import { useDao } from '../../../store/dao/selector'
 import { useSynth } from '../../../store/synth/selector'
 import { usePool } from '../../../store/pool'
+import { useBond } from '../../../store/bond'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
+  const bond = useBond()
   const pool = usePool()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -72,7 +74,8 @@ const NewProposal = () => {
       !pool.tokenDetails ||
       !pool.poolDetails ||
       !synth.synthDetails ||
-      !dao.proposal
+      !dao.proposal ||
+      !bond.listedAssets
     ) {
       return true
     }
@@ -376,10 +379,10 @@ const NewProposal = () => {
             <Col xs="12" className="hide-if-prior-sibling">
               <Button
                 className="w-100"
-                disabled={!feeConfirm || !formValid}
+                disabled={!wallet.account || !feeConfirm || !formValid}
                 onClick={() => handleSubmit()}
               >
-                {t('confirm')}
+                {!wallet.account ? t('checkWallet') : t('confirm')}
                 {txnLoading && (
                   <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                 )}

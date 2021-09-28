@@ -180,16 +180,20 @@ const DaoVault = () => {
                     {t('yourWeight')}
                   </Col>
                   <Col className="text-end output-card">
-                    {!wallet.account
-                      ? t('connectWallet')
-                      : formatFromWei(
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : (
+                      <>
+                        {formatFromWei(
                           getVaultWeights(
                             pool.poolDetails,
                             dao.daoDetails,
                             bond.bondDetails,
                           ),
                         )}
-                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                      </>
+                    )}
                   </Col>
                 </Row>
                 <Row className="my-1">

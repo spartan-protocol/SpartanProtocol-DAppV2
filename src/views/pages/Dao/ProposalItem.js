@@ -337,17 +337,23 @@ const ProposalItem = ({ proposal }) => {
                     {t('yourVotes')}
                   </Col>
                   <Col className="text-end output-card">
-                    {proposal.memberVoted
-                      ? formatFromWei(
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : proposal.memberVoted ? (
+                      <>
+                        {formatFromWei(
                           getVaultWeights(
                             pool.poolDetails,
                             dao.daoDetails,
                             bond.bondDetails,
                           ),
                           0,
-                        )
-                      : t('youHaventVoted')}{' '}
-                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                        )}
+                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                      </>
+                    ) : (
+                      t('youHaventVoted')
+                    )}{' '}
                   </Col>
                 </Row>
 

@@ -140,8 +140,14 @@ const SynthVaultItem = ({ synthItem, claimArray }) => {
                 {t('balance')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(synthItem.balance)}{' '}
-                {getToken(synthItem.tokenAddress)?.symbol}s
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {formatFromWei(synthItem.balance)}{' '}
+                    {getToken(synthItem.tokenAddress)?.symbol}s
+                  </>
+                )}
               </Col>
             </Row>
 
@@ -150,8 +156,14 @@ const SynthVaultItem = ({ synthItem, claimArray }) => {
                 {t('staked')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(synthItem.staked)}{' '}
-                {getToken(synthItem.tokenAddress)?.symbol}s
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {formatFromWei(synthItem.staked)}{' '}
+                    {getToken(synthItem.tokenAddress)?.symbol}s
+                  </>
+                )}
               </Col>
             </Row>
 
@@ -160,7 +172,11 @@ const SynthVaultItem = ({ synthItem, claimArray }) => {
                 {t('harvestable')}
               </Col>
               <Col className="text-end output-card">
-                {checkValid()[1] + checkValid()[2]}
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>{checkValid()[1] + checkValid()[2]}</>
+                )}
               </Col>
             </Row>
 
@@ -169,12 +185,18 @@ const SynthVaultItem = ({ synthItem, claimArray }) => {
                 {t('lastHarvest')}
               </Col>
               <Col className="text-end output-card">
-                {synthItem.lastHarvest > 0
-                  ? `${
-                      getTimeSince(synthItem.lastHarvest, t)[0] +
-                      getTimeSince(synthItem.lastHarvest, t)[1]
-                    } ago`
-                  : t('never')}
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {synthItem.lastHarvest > 0
+                      ? `${
+                          getTimeSince(synthItem.lastHarvest, t)[0] +
+                          getTimeSince(synthItem.lastHarvest, t)[1]
+                        } ago`
+                      : t('never')}
+                  </>
+                )}
               </Col>
             </Row>
           </Card.Body>

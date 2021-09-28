@@ -103,10 +103,16 @@ const DaoVaultItem = ({ i, claimable }) => {
                 {t('balance')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(
-                  getPool(i.tokenAddress, pool.poolDetails).balance,
-                )}{' '}
-                {getToken(i.tokenAddress)?.symbol}p
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {formatFromWei(
+                      getPool(i.tokenAddress, pool.poolDetails).balance,
+                    )}{' '}
+                    {getToken(i.tokenAddress)?.symbol}p
+                  </>
+                )}
               </Col>
             </Row>
 
@@ -115,7 +121,14 @@ const DaoVaultItem = ({ i, claimable }) => {
                 {t('staked')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}p
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}
+                    p
+                  </>
+                )}
               </Col>
             </Row>
           </Card.Body>

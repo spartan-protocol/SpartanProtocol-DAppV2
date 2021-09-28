@@ -284,28 +284,31 @@ const LiqAdd = () => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
     if (addInput1?.value <= 0) {
-      return [false, 'checkInput']
+      return [false, t('checkInput')]
     }
     if (
       BN(convertToWei(addInput1?.value)).isGreaterThan(getBalance(1)) ||
       BN(convertToWei(addInput2?.value)).isGreaterThan(getBalance(2))
     ) {
-      return [false, 'checkBalance']
+      return [false, t('checkBalance')]
     }
     if (getAddLiqAsym()[2]) {
-      return [false, 'slipTooHigh']
+      return [false, t('slipTooHigh')]
     }
     if (getAddLiqAsym()[3] || getAddLiq()[2]) {
-      return [false, 'poolAtCapacity']
+      return [false, t('poolAtCapacity')]
     }
     if (poolAdd1.newPool && !confirm) {
-      return [false, 'confirmLockup']
+      return [false, t('confirmLockup')]
     }
     if (activeTab === 'addTab1') {
-      return [true, 'addBoth']
+      return [true, t('addBoth')]
     }
-    return [true, 'addSingle']
+    return [true, t('addSingle')]
   }
 
   //= =================================================================================//
@@ -830,7 +833,7 @@ const LiqAdd = () => {
                   onClick={() => handleAddLiq()}
                   disabled={!checkValid()[0]}
                 >
-                  {t(checkValid()[1])}
+                  {checkValid()[1]}
                   {txnLoading && (
                     <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                   )}
