@@ -137,7 +137,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
       <Button
         className="w-100"
         onClick={() => setshowModal(true)}
-        disabled={!disabled}
+        disabled={disabled}
       >
         {t('deposit')}
       </Button>
