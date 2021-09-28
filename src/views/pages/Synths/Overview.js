@@ -366,12 +366,30 @@ const Swap = () => {
     return '0'
   }
 
+  const estMaxGasSynthOut = '5000000000000000'
+  const estMaxGasSynthIn = '5000000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (activeTab === 'mint') {
+      if (BN(bal).isLessThan(estMaxGasSynthOut)) {
+        return false
+      }
+    }
+    if (BN(bal).isLessThan(estMaxGasSynthIn)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
     if (swapInput1?.value <= 0) {
       return [false, t('checkInput')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]

@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Popover,
-  OverlayTrigger,
-} from 'react-bootstrap'
+import { Button, Card, Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -27,10 +20,11 @@ import { useSparta } from '../../../store/sparta'
 import { bondVaultWeight, getBondDetails, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
 import { getVaultWeights } from '../../../utils/math/nonContract'
-import { getPool } from '../../../utils/math/utils'
+import { getPool, getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardDao } from '../../../utils/math/dao'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import DaoVaultItem from './DaoVaultItem'
+import { getAddresses } from '../../../utils/web3'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -39,6 +33,7 @@ const DaoVault = () => {
   const bond = useBond()
   const pool = usePool()
   const sparta = useSparta()
+  const addr = getAddresses()
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
@@ -132,6 +127,32 @@ const DaoVault = () => {
     setTxnLoading(false)
   }
 
+  // 0.0023 === 0.0012
+  const estMaxGas = '1500000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
+  const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
+    if (!reserve.globalDetails.emissions) {
+      return [false, t('incentivesDisabled')]
+    }
+    if (getClaimable() <= 0) {
+      return [false, t('noClaim')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
+    }
+    return [true, t('harvestAll')]
+  }
+
   return (
     <Row>
       <Col xs="auto" className="">
@@ -210,77 +231,16 @@ const DaoVault = () => {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {!wallet.account ? (
-                  <>
-                    {reserve.globalDetails.emissions ? (
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Popover>
-                            <Popover.Header />
-                            <Popover.Body>
-                              {t('connectWalletFirst')}
-                            </Popover.Body>
-                          </Popover>
-                        }
-                      >
-                        <Button
-                          className="w-100"
-                          onClick={() => handleHarvest()}
-                          disabled={!wallet.account || getClaimable() <= 0}
-                        >
-                          {t('harvestAll')}
-                          {txnLoading && (
-                            <Icon
-                              icon="cycle"
-                              size="20"
-                              className="anim-spin ms-1"
-                            />
-                          )}
-                        </Button>
-                      </OverlayTrigger>
-                    ) : (
-                      <OverlayTrigger
-                        placement="bottom"
-                        overlay={
-                          <Popover>
-                            <Popover.Header />
-                            <Popover.Body>
-                              {t('connectWalletFirst')}
-                            </Popover.Body>
-                          </Popover>
-                        }
-                      >
-                        <Button className="w-100" disabled>
-                          {t('incentivesDisabled')}
-                        </Button>
-                      </OverlayTrigger>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {reserve.globalDetails.emissions ? (
-                      <Button
-                        className="w-100"
-                        onClick={() => handleHarvest()}
-                        disabled={getClaimable() <= 0}
-                      >
-                        {t('harvestAll')}
-                        {txnLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    ) : (
-                      <Button className="w-100" disabled>
-                        {t('incentivesDisabled')}
-                      </Button>
-                    )}
-                  </>
-                )}
+                <Button
+                  className="w-100"
+                  onClick={() => handleHarvest()}
+                  disabled={!checkValid()[0]}
+                >
+                  {checkValid()[1]}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
+                </Button>
               </Card.Footer>
             </>
           ) : (

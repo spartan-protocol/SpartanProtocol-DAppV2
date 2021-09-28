@@ -283,12 +283,25 @@ const LiqAdd = () => {
     return '0.00'
   }
 
+  // ~0.00288 BNB gas (addLiqSingle) on TN || ~0.0015 BNB on MN
+  const estMaxGas = '1500000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
     if (addInput1?.value <= 0) {
       return [false, t('checkInput')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (
       BN(convertToWei(addInput1?.value)).isGreaterThan(getBalance(1)) ||

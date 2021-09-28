@@ -1,67 +1,25 @@
-import React, { useState } from 'react'
-import { Button, Card, Col, Row } from 'react-bootstrap'
+import React from 'react'
+import { Card, Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
-import { BN, formatFromWei } from '../../../utils/bigNumber'
+import { formatFromWei } from '../../../utils/bigNumber'
 import { Icon } from '../../../components/Icons/icons'
-import { daoWithdraw } from '../../../store/dao/actions'
 import { usePool } from '../../../store/pool'
 import { getPool } from '../../../utils/math/utils'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
-import { getTimeUntil } from '../../../utils/math/nonContract'
-import { useDao } from '../../../store/dao/selector'
 import DaoDepositModal from './Components/DaoDepositModal'
+import DaoWithdrawModal from './Components/DaoWithdrawModal'
 
 const DaoVaultItem = ({ i, claimable }) => {
   const { t } = useTranslation()
   const wallet = useWeb3React()
   const pool = usePool()
-  const dao = useDao()
-  const dispatch = useDispatch()
-  const [txnLoading, setTxnLoading] = useState(false)
 
   const isLightMode = window.localStorage.getItem('theme')
 
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((x) => x.address === _tokenAddr)[0]
-
-  // eslint-disable-next-line no-unused-vars
-  const handleWithdraw = async () => {
-    setTxnLoading(true)
-    await dispatch(daoWithdraw(i.address, wallet))
-    setTxnLoading(false)
-  }
-
-  const getLastDeposit = () => {
-    if (dao.lastDeposits.length > 0) {
-      let lastDeposit = dao.lastDeposits.filter((x) => x.address === i.address)
-      lastDeposit = lastDeposit[0].lastDeposit
-      return lastDeposit
-    }
-    return '99999999999999999999999999999'
-  }
-
-  const getLockedSecs = () => {
-    const depositTime = BN(getLastDeposit())
-    const lockUpSecs = BN('86400')
-    const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
-    return [units, time]
-  }
-
-  const checkValid = () => {
-    if (!wallet.account) {
-      return [false, t('checkWallet'), false]
-    }
-    if (i.staked > 0) {
-      if (getLockedSecs()[0] > 0) {
-        return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
-      }
-      return [true, t('withdraw'), false]
-    }
-    return [false, t('nothingStaked'), false]
-  }
 
   return (
     <>
@@ -142,19 +100,12 @@ const DaoVaultItem = ({ i, claimable }) => {
                 />
               </Col>
               <Col xs="6" className="ps-1">
-                <Button
-                  className="w-100"
-                  onClick={() => handleWithdraw()}
-                  disabled={!wallet.account || !checkValid()[0]}
-                >
-                  {checkValid()[2] && (
-                    <Icon icon={checkValid()[2]} size="15" className="mb-1" />
-                  )}
-                  {checkValid()[1]}
-                  {txnLoading && (
-                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                  )}
-                </Button>
+                <DaoWithdrawModal
+                  tokenAddress={i.tokenAddress}
+                  address={i.address}
+                  disabled={i.balance <= 0}
+                  claimable={claimable}
+                />
               </Col>
             </Row>
           </Card.Footer>

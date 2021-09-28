@@ -4,33 +4,28 @@ import { Button, Col, Row, Modal, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import {
-  daoDeposit,
   daoHarvest,
   daoMemberDetails,
+  daoWithdraw,
 } from '../../../../store/dao/actions'
 import { useDao } from '../../../../store/dao/selector'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
-import Approval from '../../../../components/Approval/Approval'
-import { getAddresses } from '../../../../utils/web3'
 import { getDao } from '../../../../utils/math/utils'
 import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
-import { getSecsSince } from '../../../../utils/math/nonContract'
+import { getSecsSince, getTimeUntil } from '../../../../utils/math/nonContract'
 
-const DaoDepositModal = (props) => {
-  const [percentage, setpercentage] = useState('0')
+const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
   const dao = useDao()
   const wallet = useWeb3React()
-  const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
-  const [lockoutConfirm, setLockoutConfirm] = useState(false)
   const [harvestConfirm, setHarvestConfirm] = useState(false)
 
   const secsSinceHarvest = () => {
@@ -38,6 +33,39 @@ const DaoDepositModal = (props) => {
       return getSecsSince(dao.member.lastHarvest)
     }
     return '0'
+  }
+
+  const getLastDeposit = () => {
+    if (dao.lastDeposits.length > 0) {
+      let lastDeposit = dao.lastDeposits.filter(
+        (x) => x.address === props.address,
+      )
+      lastDeposit = lastDeposit[0].lastDeposit
+      return lastDeposit
+    }
+    return '99999999999999999999999999999'
+  }
+
+  const getLockedSecs = () => {
+    const depositTime = BN(getLastDeposit())
+    const lockUpSecs = BN('86400')
+    const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
+    return [units, time]
+  }
+
+  const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet'), false]
+    }
+    if (getLockedSecs()[0] > 0) {
+      return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
+    }
+    if (secsSinceHarvest() > 300) {
+      if (!harvestConfirm) {
+        return [false, t('confirmHarvest'), false]
+      }
+    }
+    return [true, t('withdraw'), false]
   }
 
   const pool1 = pool.poolDetails.filter(
@@ -50,12 +78,8 @@ const DaoDepositModal = (props) => {
 
   const handleCloseModal = () => {
     setshowModal(false)
-    setLockoutConfirm(false)
     setHarvestConfirm(false)
-    setpercentage('0')
   }
-
-  const deposit = () => BN(percentage).div(100).times(pool1.balance).toFixed(0)
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
@@ -64,29 +88,11 @@ const DaoDepositModal = (props) => {
     dispatch(daoMemberDetails(wallet))
   }
 
-  const handleDeposit = async () => {
+  const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
+    await dispatch(daoWithdraw(pool1.address, wallet))
     setTxnLoading(false)
     handleCloseModal()
-  }
-
-  const checkValid = () => {
-    if (!wallet.account) {
-      return [false, t('checkWallet')]
-    }
-    if (deposit() <= 0) {
-      return [false, t('checkInput')]
-    }
-    if (!lockoutConfirm) {
-      return [false, t('confirmLockup')]
-    }
-    if (secsSinceHarvest() > 300) {
-      if (!harvestConfirm) {
-        return [false, t('confirmHarvest')]
-      }
-    }
-    return [true, t('deposit')]
   }
 
   return (
@@ -96,7 +102,7 @@ const DaoDepositModal = (props) => {
         onClick={() => setshowModal(true)}
         disabled={props.disabled || !wallet.account}
       >
-        {t('deposit')}
+        {t('withdraw')}
       </Button>
 
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
@@ -110,7 +116,7 @@ const DaoDepositModal = (props) => {
               className="token-badge-modal-header"
             />
           </div>
-          {t('deposit')} {token.symbol}p
+          {t('withdraw')} {token.symbol}p
         </Modal.Header>
         <Modal.Body>
           <Row className="my-1">
@@ -118,64 +124,22 @@ const DaoDepositModal = (props) => {
               {t('amount')}
             </Col>
             <Col className="text-end output-card">
-              {formatFromWei(deposit())} {token.symbol}p
+              {formatFromWei(_dao.staked)} {token.symbol}p
             </Col>
           </Row>
-          <Row className="">
-            <Col xs="12">
-              <Form.Range
-                id="daoVaultSlider"
-                onChange={(e) => setpercentage(e.target.value)}
-                min="0"
-                max="100"
-                defaultValue="0"
-              />
-            </Col>
-          </Row>
-          <hr />
           <Row xs="12" className="my-2">
             <Col xs="12" className="output-card">
-              This deposit will disable withdraw on all staked {token.symbol}p
-              tokens for 24 hours:
+              You will be withdrawing all your staked {token.symbol}p tokens
+              from the DAOVault to your wallet
             </Col>
           </Row>
-          <Row xs="12" className="">
-            <Col xs="auto" className="text-card">
-              This stake locked
-            </Col>
-            <Col className="text-end output-card">
-              {formatFromWei(deposit())} {token.symbol}p
-            </Col>
-          </Row>
-          {_dao.staked > 0 && (
-            <Row xs="12">
-              <Col xs="auto" className="text-card">
-                Existing stake locked
-              </Col>
-              <Col className="text-end output-card">
-                {formatFromWei(_dao.staked)} {token.symbol}p
-              </Col>
-            </Row>
-          )}
-          <Form className="my-2 text-center">
-            <span className="output-card">
-              Confirm 24hr withdraw lockout
-              <Form.Check
-                type="switch"
-                id="confirmLockout"
-                className="ms-2 d-inline-flex"
-                checked={lockoutConfirm}
-                onChange={() => setLockoutConfirm(!lockoutConfirm)}
-              />
-            </span>
-          </Form>
           {secsSinceHarvest() > 300 && (
             <>
               <hr />
               <Row xs="12" className="my-2">
                 <Col xs="12" className="output-card">
                   Your existing harvest timer will be reset, harvest before this
-                  deposit to avoid forfeiting any accumulated rewards:
+                  withdrawal to avoid forfeiting any accumulated rewards:
                 </Col>
               </Row>
               <Row xs="12" className="">
@@ -203,16 +167,6 @@ const DaoDepositModal = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Row className="text-center w-100">
-            {wallet?.account && (
-              <Approval
-                tokenAddress={pool1.address}
-                symbol={`${token.symbol}p`}
-                walletAddress={wallet?.account}
-                contractAddress={addr.dao}
-                txnAmount={deposit()}
-                assetNumber="1"
-              />
-            )}
             <Col xs="12" className="hide-if-prior-sibling">
               <Row>
                 {props.claimable > 0 && secsSinceHarvest() > 300 && (
@@ -236,9 +190,12 @@ const DaoDepositModal = (props) => {
                 <Col>
                   <Button
                     className="w-100"
-                    onClick={() => handleDeposit()}
+                    onClick={() => handleWithdraw()}
                     disabled={!checkValid()[0]}
                   >
+                    {checkValid()[2] && (
+                      <Icon icon={checkValid()[2]} size="15" className="mb-1" />
+                    )}
                     {checkValid()[1]}
                     {txnLoading && (
                       <Icon icon="cycle" size="20" className="anim-spin ms-1" />
@@ -254,4 +211,4 @@ const DaoDepositModal = (props) => {
   )
 }
 
-export default DaoDepositModal
+export default DaoWithdrawModal

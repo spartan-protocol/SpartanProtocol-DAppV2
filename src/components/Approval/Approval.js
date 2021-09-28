@@ -12,6 +12,7 @@ import {
 
 import { BN } from '../../utils/bigNumber'
 import { Icon } from '../Icons/icons'
+import Notifications from '../Notifications/Notifications'
 
 /**
  * An approval/allowance check + actioner
@@ -35,6 +36,7 @@ const Approval = ({
   const pool = usePool()
   const wallet = useWeb3React()
 
+  const [notify, setNotify] = useState(false)
   const [pending, setPending] = useState(false)
 
   const getAllowance = () => {
@@ -49,7 +51,9 @@ const Approval = ({
 
   const handleApproval = async () => {
     setPending(true)
+    setNotify(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
+    setNotify(false)
     setPending(false)
     getAllowance()
   }
@@ -71,6 +75,7 @@ const Approval = ({
     <>
       {BN(web3[`allowance${assetNumber}`]).isLessThan(txnAmount) && (
         <Col>
+          <Notifications show={notify} txnType="approve" />
           <Button
             variant="info"
             onClick={async () => {

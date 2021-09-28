@@ -22,12 +22,7 @@ import {
   useSparta,
 } from '../../store/sparta'
 import { getSynthArray } from '../../store/synth'
-import {
-  addNetworkMM,
-  addNetworkBC,
-  getSpartaPrice,
-  useWeb3,
-} from '../../store/web3'
+import { getSpartaPrice, useWeb3 } from '../../store/web3'
 import { BN } from '../../utils/bigNumber'
 import {
   addTxn,
@@ -38,7 +33,6 @@ import {
   tempChains,
 } from '../../utils/web3'
 import { getSpartaV2Contract } from '../../utils/web3Contracts'
-import Notifications from '../Notifications/Notifications'
 
 const DataManager = () => {
   const dispatch = useDispatch()
@@ -60,9 +54,6 @@ const DataManager = () => {
   const [trigger1, settrigger1] = useState(0)
   const [trigger2, settrigger2] = useState(0)
   const [trigger3, settrigger3] = useState(0)
-
-  const [show, setShow] = useState(false)
-  const [txn, setTxn] = useState('')
 
   const tryParse = (data) => {
     try {
@@ -110,12 +101,8 @@ const DataManager = () => {
       if (network?.chainId !== prevNetwork?.chainId) {
         changeNetwork(network?.chainId)
         settrigger1(0)
-        await dispatch(addNetworkMM())
-        dispatch(addNetworkBC())
         setPrevNetwork(tryParse(network))
       } else {
-        await dispatch(addNetworkMM())
-        dispatch(addNetworkBC())
         setPrevNetwork(tryParse(network))
       }
       setnetLoading(false)
@@ -260,18 +247,7 @@ const DataManager = () => {
   useEffect(() => {
     if (router.txn.txnType) {
       addTxn(wallet.account, router.txn)
-      setTxn(router.txn)
       router.txn = []
-      setShow(true)
-    }
-    // correct this, should be inside the if, but it gives an error
-    // Expected to return a value at the end of arrow function  consistent-return
-
-    const timer = setTimeout(() => {
-      setShow(false)
-    }, 5000)
-    return () => {
-      clearTimeout(timer)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.txn])
@@ -303,11 +279,7 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.txn])
 
-  return (
-    <>
-      <Notifications show={show} txn={txn} />
-    </>
-  )
+  return <></>
 }
 
 export default DataManager

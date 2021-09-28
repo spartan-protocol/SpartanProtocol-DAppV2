@@ -38,6 +38,7 @@ import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { getDaoDetails, useDao } from '../../store/dao'
 import { getBondDetails, useBond } from '../../store/bond'
+import { addNetworkBC, addNetworkMM } from '../../store/web3'
 
 export const spartanRanks = [
   {
@@ -145,13 +146,18 @@ const WalletSelect = (props) => {
   }
 
   const onWalletConnect = async (x) => {
+    if (x.id === 'BC') {
+      await dispatch(addNetworkBC())
+    } else if (x.id === 'MM') {
+      await dispatch(addNetworkMM())
+    }
     window.localStorage.removeItem('disableWallet')
     window.localStorage.setItem('lastWallet', x?.id)
     setActivatingConnector(connectorsByName(x.connector))
     activate(connectorsByName(x.connector))
   }
 
-  const checkWallet = () => {
+  const checkWallet = async () => {
     if (
       window.localStorage.getItem('disableWallet') !== '1' &&
       !account &&
@@ -175,7 +181,6 @@ const WalletSelect = (props) => {
       }
     }
   }
-
   useEffect(() => {
     checkWallet()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -268,7 +273,16 @@ const WalletSelect = (props) => {
   }, [trigger1, props.show])
 
   const getTokenCount = () => {
-    if (!pool.tokenDetails || !pool.poolDetails) {
+    if (
+      tempChains.includes(
+        tryParse(window.localStorage.getItem('network'))?.chainId,
+      )
+    ) {
+      if (!pool.tokenDetails || !pool.poolDetails) {
+        return <Icon icon="cycle" size="15" className="anim-spin" />
+      }
+    }
+    if (!pool.tokenDetails) {
       return <Icon icon="cycle" size="15" className="anim-spin" />
     }
     return pool.tokenDetails?.filter((asset) => asset.balance > 0).length
@@ -436,7 +450,11 @@ const WalletSelect = (props) => {
                         eventKey="lps"
                         title={
                           <>
-                            {t('lps')} <Badge>{getLpsCount()}</Badge>
+                            {t('lps')}{' '}
+                            <Badge>
+                              {tempChains.includes(wallet.chainId) &&
+                                getLpsCount()}
+                            </Badge>
                           </>
                         }
                       >
@@ -447,7 +465,11 @@ const WalletSelect = (props) => {
                         eventKey="synths"
                         title={
                           <>
-                            {t('synths')} <Badge>{getSynthsCount()}</Badge>
+                            {t('synths')}{' '}
+                            <Badge>
+                              {tempChains.includes(wallet.chainId) &&
+                                getSynthsCount()}
+                            </Badge>
                           </>
                         }
                       >

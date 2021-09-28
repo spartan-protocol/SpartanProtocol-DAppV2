@@ -232,7 +232,7 @@ const LiqRemove = () => {
   const getOutput1ValueUSD = () => {
     if (assetRemove1 && output1) {
       if (assetRemove1.tokenAddress === addr.spartav2) {
-        return output1.times(web3.spartaPrice)
+        return BN(output1).times(web3.spartaPrice)
       }
       return calcSpotValueInBase(output1, poolRemove1).times(web3.spartaPrice)
     }
@@ -262,12 +262,25 @@ const LiqRemove = () => {
     return '0.00'
   }
 
+  // ~0.0032 BNB gas (remSingle+swap) on TN || ~0.0016 BNB on MN
+  const estMaxGas = '1600000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
     if (removeInput1?.value <= 0) {
       return [false, t('checkInput')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (BN(convertToWei(removeInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]

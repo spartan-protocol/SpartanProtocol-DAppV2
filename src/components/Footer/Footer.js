@@ -20,8 +20,7 @@ const Footer = () => {
           style={{
             position: 'absolute',
             top: -25,
-            left: 0,
-            right: 0,
+            left: 'calc(50% - 80px)',
             zIndex: 100,
           }}
           onClick={() => setShowDrawer(true)}
