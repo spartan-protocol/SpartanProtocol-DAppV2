@@ -25,12 +25,12 @@ const AddressConn = () => {
 
   useEffect(() => {
     async function listenAccountsChanged() {
-      window.ethereum.on('accountsChanged', async () => {
+      window.ethereum?.on('accountsChanged', async () => {
         document.location.reload()
       })
     }
     async function listenNetworkChanged() {
-      window.ethereum.on('chainChanged', async () => {
+      window.ethereum?.on('chainChanged', async () => {
         document.location.reload()
       })
     }

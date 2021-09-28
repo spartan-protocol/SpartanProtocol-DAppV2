@@ -84,6 +84,9 @@ const Overview = () => {
   }, [dao.global, dao.newProp])
 
   const isLoading = () => {
+    if (!pool.poolDetails) {
+      return true
+    }
     if (dao.global.currentProposal === 0 && !dao.proposal) {
       return true
     }

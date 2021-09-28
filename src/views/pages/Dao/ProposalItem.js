@@ -284,12 +284,12 @@ const ProposalItem = ({ proposal }) => {
     <>
       <Col xs="auto" className="">
         <Card className="card-320 card-underlay">
-          <Card.Header>
-            <Row className="">
+          <Card.Header style={{ height: '98px' }}>
+            <Row className="h-100">
               <Col xs="auto" className="my-auto ps-2 pe-0">
                 <h5 className="my-auto">#{proposal.id}</h5>
               </Col>
-              <Col>
+              <Col className="my-auto">
                 <h5 className="mb-0">{type?.label}</h5>
                 <p className="text-sm-label-alt">{status()}</p>
               </Col>
