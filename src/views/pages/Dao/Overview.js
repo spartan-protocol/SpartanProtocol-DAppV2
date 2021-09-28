@@ -17,7 +17,11 @@ import NewProposal from './NewProposal'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
-import { bondVaultWeight, getBondDetails } from '../../../store/bond'
+import {
+  allListedAssets,
+  bondVaultWeight,
+  getBondDetails,
+} from '../../../store/bond'
 import { getSynthDetails } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -79,11 +83,15 @@ const Overview = () => {
       dispatch(getDaoDetails(pool.listedPools, wallet))
       dispatch(getBondDetails(pool.listedPools, wallet))
       dispatch(getSynthDetails(synth.synthArray, wallet))
+      dispatch(allListedAssets())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
 
   const isLoading = () => {
+    if (!pool.poolDetails) {
+      return true
+    }
     if (dao.global.currentProposal === 0 && !dao.proposal) {
       return true
     }

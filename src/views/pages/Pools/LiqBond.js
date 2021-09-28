@@ -13,6 +13,7 @@ import {
   OverlayTrigger,
   ProgressBar,
   Badge,
+  Popover,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -48,6 +49,8 @@ const LiqBond = () => {
   const sparta = useSparta()
   const addr = getAddresses()
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+  const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [assetBond1, setAssetBond1] = useState('...')
 
@@ -172,6 +175,9 @@ const LiqBond = () => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
     if (bondInput1?.value <= 0) {
       return [false, t('checkInput')]
     }
@@ -186,12 +192,18 @@ const LiqBond = () => {
       return [false, t('checkAllocation')]
     }
     if (getBondLiq()[2]) {
-      return [false, 'slipTooHigh']
+      return [false, t('slipTooHigh')]
     }
     if (getBondLiq()[3]) {
-      return [false, 'poolAtCapacity']
+      return [false, t('poolAtCapacity')]
     }
     return [true, t('bond')]
+  }
+
+  const checkWallet = () => {
+    if (!wallet.account) {
+      setShowWalletWarning1(!showWalletWarning1)
+    }
   }
 
   return (
@@ -242,31 +254,46 @@ const LiqBond = () => {
 
                         <Row className="my-1">
                           <Col>
-                            <InputGroup className="">
-                              <InputGroup.Text>
-                                <AssetSelect
-                                  priority="1"
-                                  filter={['token']}
-                                  whiteList={getWhiteList()}
+                            <OverlayTrigger
+                              placement="auto"
+                              onToggle={() => checkWallet()}
+                              show={showWalletWarning1}
+                              trigger={['focus']}
+                              overlay={
+                                <Popover>
+                                  <Popover.Header />
+                                  <Popover.Body>
+                                    {t('connectWalletFirst')}
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <InputGroup className="">
+                                <InputGroup.Text>
+                                  <AssetSelect
+                                    priority="1"
+                                    filter={['token']}
+                                    whiteList={getWhiteList()}
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('add')}...`}
+                                  id="bondInput1"
+                                  autoComplete="off"
+                                  autoCorrect="off"
                                 />
-                              </InputGroup.Text>
-                              <FormControl
-                                className="text-end ms-0"
-                                type="number"
-                                placeholder={`${t('add')}...`}
-                                id="bondInput1"
-                                autoComplete="off"
-                                autoCorrect="off"
-                              />
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs()}
-                                onClick={() => clearInputs()}
-                              >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs()}
+                                  onClick={() => clearInputs()}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
+                            </OverlayTrigger>
                             <div className="text-end text-sm-label pt-1">
                               ~$
                               {bondInput1?.value

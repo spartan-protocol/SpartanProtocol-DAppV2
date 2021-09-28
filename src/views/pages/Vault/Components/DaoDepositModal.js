@@ -89,10 +89,11 @@ const DaoDepositModal = (props) => {
       <Button
         className="w-100"
         onClick={() => setshowModal(true)}
-        disabled={props.disabled}
+        disabled={props.disabled || !wallet.account}
       >
         {t('deposit')}
       </Button>
+
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
         <Modal.Header closeButton closeVariant="white">
           <div xs="auto" className="position-relative me-3">

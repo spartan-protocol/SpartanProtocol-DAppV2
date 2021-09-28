@@ -13,6 +13,8 @@ import {
   InputGroup,
   Nav,
   Row,
+  Popover,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -52,6 +54,10 @@ const LiqAdd = () => {
   const addr = getAddresses()
   const sparta = useSparta()
   const location = useLocation()
+
+  const [showWalletWarning1, setShowWalletWarning1] = useState(false)
+  const [showWalletWarning2, setShowWalletWarning2] = useState(false)
+  const [showWalletWarning3, setShowWalletWarning3] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('addTab1')
   const [confirm, setConfirm] = useState(false)
@@ -278,28 +284,31 @@ const LiqAdd = () => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
     if (addInput1?.value <= 0) {
-      return [false, 'checkInput']
+      return [false, t('checkInput')]
     }
     if (
       BN(convertToWei(addInput1?.value)).isGreaterThan(getBalance(1)) ||
       BN(convertToWei(addInput2?.value)).isGreaterThan(getBalance(2))
     ) {
-      return [false, 'checkBalance']
+      return [false, t('checkBalance')]
     }
     if (getAddLiqAsym()[2]) {
-      return [false, 'slipTooHigh']
+      return [false, t('slipTooHigh')]
     }
     if (getAddLiqAsym()[3] || getAddLiq()[2]) {
-      return [false, 'poolAtCapacity']
+      return [false, t('poolAtCapacity')]
     }
     if (poolAdd1.newPool && !confirm) {
-      return [false, 'confirmLockup']
+      return [false, t('confirmLockup')]
     }
     if (activeTab === 'addTab1') {
-      return [true, 'addBoth']
+      return [true, t('addBoth')]
     }
-    return [true, 'addSingle']
+    return [true, t('addSingle')]
   }
 
   //= =================================================================================//
@@ -384,6 +393,20 @@ const LiqAdd = () => {
     clearInputs()
   }
 
+  const checkWallet = (id) => {
+    if (!wallet.account) {
+      if (id === 1) {
+        setShowWalletWarning1(!showWalletWarning1)
+      }
+      if (id === 2) {
+        setShowWalletWarning2(!showWalletWarning2)
+      }
+      if (id === 3) {
+        setShowWalletWarning3(!showWalletWarning3)
+      }
+    }
+  }
+
   return (
     <Row>
       <Col xs="auto">
@@ -451,36 +474,52 @@ const LiqAdd = () => {
 
                         <Row className="my-1">
                           <Col>
-                            <InputGroup className="">
-                              <InputGroup.Text id="assetSelect1">
-                                <AssetSelect
-                                  priority="1"
-                                  filter={['token']}
-                                  blackList={
-                                    activeTab === 'addTab1'
-                                      ? [addr.spartav1, addr.spartav2]
-                                      : []
-                                  }
-                                  onClick={handleConfClear}
+                            <OverlayTrigger
+                              placement="auto"
+                              onToggle={() => checkWallet(1)}
+                              show={showWalletWarning1}
+                              trigger={['focus']}
+                              overlay={
+                                <Popover>
+                                  <Popover.Header />
+                                  <Popover.Body>
+                                    {t('connectWalletFirst')}
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect1">
+                                  <AssetSelect
+                                    priority="1"
+                                    filter={['token']}
+                                    blackList={
+                                      activeTab === 'addTab1'
+                                        ? [addr.spartav1, addr.spartav2]
+                                        : []
+                                    }
+                                    onClick={handleConfClear}
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('add')}...`}
+                                  id="addInput1"
+                                  autoComplete="off"
+                                  autoCorrect="off"
                                 />
-                              </InputGroup.Text>
-                              <FormControl
-                                className="text-end ms-0"
-                                type="number"
-                                placeholder={`${t('add')}...`}
-                                id="addInput1"
-                                autoComplete="off"
-                                autoCorrect="off"
-                              />
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs(1)}
-                                onClick={() => clearInputs(1)}
-                              >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs(1)}
+                                  onClick={() => clearInputs(1)}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
+                            </OverlayTrigger>
+
                             <div className="text-end text-sm-label pt-1">
                               ~$
                               {addInput1?.value
@@ -548,33 +587,48 @@ const LiqAdd = () => {
 
                           <Row className="my-1">
                             <Col>
-                              <InputGroup className="">
-                                <InputGroup.Text id="assetSelect2">
-                                  <AssetSelect
-                                    priority="2"
-                                    filter={['token']}
-                                    whiteList={[addr.spartav2]}
-                                    disabled={activeTab === 'addTab1'}
-                                    onClick={handleConfClear}
+                              <OverlayTrigger
+                                placement="auto"
+                                onToggle={() => checkWallet(2)}
+                                show={showWalletWarning2}
+                                trigger={['focus']}
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header />
+                                    <Popover.Body>
+                                      {t('connectWalletFirst')}
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <InputGroup className="">
+                                  <InputGroup.Text id="assetSelect2">
+                                    <AssetSelect
+                                      priority="2"
+                                      filter={['token']}
+                                      whiteList={[addr.spartav2]}
+                                      disabled={activeTab === 'addTab1'}
+                                      onClick={handleConfClear}
+                                    />
+                                  </InputGroup.Text>
+                                  <FormControl
+                                    className="text-end ms-0"
+                                    type="number"
+                                    placeholder={`${t('add')}...`}
+                                    id="addInput2"
+                                    autoComplete="off"
+                                    autoCorrect="off"
                                   />
-                                </InputGroup.Text>
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  placeholder={`${t('add')}...`}
-                                  id="addInput2"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                />
-                                <InputGroup.Text
-                                  role="button"
-                                  tabIndex={-1}
-                                  onKeyPress={() => clearInputs(2)}
-                                  onClick={() => clearInputs(2)}
-                                >
-                                  <Icon icon="close" size="10" fill="grey" />
-                                </InputGroup.Text>
-                              </InputGroup>
+                                  <InputGroup.Text
+                                    role="button"
+                                    tabIndex={-1}
+                                    onKeyPress={() => clearInputs(2)}
+                                    onClick={() => clearInputs(2)}
+                                  >
+                                    <Icon icon="close" size="10" fill="grey" />
+                                  </InputGroup.Text>
+                                </InputGroup>
+                              </OverlayTrigger>
                               <div className="text-end text-sm-label pt-1">
                                 ~$
                                 {addInput2?.value
@@ -602,26 +656,41 @@ const LiqAdd = () => {
 
                           <Row className="my-1">
                             <Col>
-                              <InputGroup className="">
-                                <InputGroup.Text id="assetSelect3">
-                                  <AssetSelect
-                                    priority="3"
-                                    filter={['pool']}
-                                    disabled={
-                                      activeTab === 'addTab1' ||
-                                      assetAdd1.tokenAddress !== addr.spartav2
-                                    }
-                                    onClick={handleConfClear}
+                              <OverlayTrigger
+                                placement="auto"
+                                onToggle={() => checkWallet(3)}
+                                show={showWalletWarning3}
+                                trigger={['focus']}
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header />
+                                    <Popover.Body>
+                                      {t('connectWalletFirst')}
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <InputGroup className="">
+                                  <InputGroup.Text id="assetSelect3">
+                                    <AssetSelect
+                                      priority="3"
+                                      filter={['pool']}
+                                      disabled={
+                                        activeTab === 'addTab1' ||
+                                        assetAdd1.tokenAddress !== addr.spartav2
+                                      }
+                                      onClick={handleConfClear}
+                                    />
+                                  </InputGroup.Text>
+                                  <FormControl
+                                    className="text-end ms-0"
+                                    type="number"
+                                    placeholder="0.00"
+                                    id="addInput3"
+                                    disabled
                                   />
-                                </InputGroup.Text>
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  placeholder="0.00"
-                                  id="addInput3"
-                                  disabled
-                                />
-                              </InputGroup>
+                                </InputGroup>
+                              </OverlayTrigger>
                               <div className="text-end text-sm-label pt-1">
                                 ~$
                                 {addInput1?.value
@@ -764,7 +833,7 @@ const LiqAdd = () => {
                   onClick={() => handleAddLiq()}
                   disabled={!checkValid()[0]}
                 >
-                  {t(checkValid()[1])}
+                  {checkValid()[1]}
                   {txnLoading && (
                     <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                   )}

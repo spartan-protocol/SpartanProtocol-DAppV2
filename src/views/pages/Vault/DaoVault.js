@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Col, Row } from 'react-bootstrap'
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Popover,
+  OverlayTrigger,
+} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -151,11 +158,14 @@ const DaoVault = () => {
           ) : (
             <HelmetLoading />
           )}
-          <Card.Footer>
-            <Link to="/pools/liquidity">
-              <Button className="w-100">{t('joinPools')}</Button>
-            </Link>
-          </Card.Footer>
+
+          <Col>
+            <Card.Footer>
+              <Link to="/pools/liquidity">
+                <Button className="w-100">{t('joinPools')}</Button>
+              </Link>
+            </Card.Footer>
+          </Col>
         </Card>
       </Col>
 
@@ -170,14 +180,20 @@ const DaoVault = () => {
                     {t('yourWeight')}
                   </Col>
                   <Col className="text-end output-card">
-                    {formatFromWei(
-                      getVaultWeights(
-                        pool.poolDetails,
-                        dao.daoDetails,
-                        bond.bondDetails,
-                      ),
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : (
+                      <>
+                        {formatFromWei(
+                          getVaultWeights(
+                            pool.poolDetails,
+                            dao.daoDetails,
+                            bond.bondDetails,
+                          ),
+                        )}
+                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                      </>
                     )}
-                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
                   </Col>
                 </Row>
                 <Row className="my-1">
@@ -186,27 +202,84 @@ const DaoVault = () => {
                   </Col>
                   <Col className="text-end output-card">
                     {reserve.globalDetails.emissions
-                      ? `${formatFromWei(getClaimable())} SPARTA`
+                      ? !wallet.account
+                        ? t('connectWallet')
+                        : `${formatFromWei(getClaimable())} SPARTA`
                       : t('incentivesDisabled')}
                   </Col>
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {reserve.globalDetails.emissions ? (
-                  <Button
-                    className="w-100"
-                    onClick={() => handleHarvest()}
-                    disabled={getClaimable() <= 0}
-                  >
-                    {t('harvestAll')}
-                    {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                {!wallet.account ? (
+                  <>
+                    {reserve.globalDetails.emissions ? (
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Popover>
+                            <Popover.Header />
+                            <Popover.Body>
+                              {t('connectWalletFirst')}
+                            </Popover.Body>
+                          </Popover>
+                        }
+                      >
+                        <Button
+                          className="w-100"
+                          onClick={() => handleHarvest()}
+                          disabled={!wallet.account || getClaimable() <= 0}
+                        >
+                          {t('harvestAll')}
+                          {txnLoading && (
+                            <Icon
+                              icon="cycle"
+                              size="20"
+                              className="anim-spin ms-1"
+                            />
+                          )}
+                        </Button>
+                      </OverlayTrigger>
+                    ) : (
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Popover>
+                            <Popover.Header />
+                            <Popover.Body>
+                              {t('connectWalletFirst')}
+                            </Popover.Body>
+                          </Popover>
+                        }
+                      >
+                        <Button className="w-100" disabled>
+                          {t('incentivesDisabled')}
+                        </Button>
+                      </OverlayTrigger>
                     )}
-                  </Button>
+                  </>
                 ) : (
-                  <Button className="w-100" disabled>
-                    {t('incentivesDisabled')}
-                  </Button>
+                  <>
+                    {reserve.globalDetails.emissions ? (
+                      <Button
+                        className="w-100"
+                        onClick={() => handleHarvest()}
+                        disabled={getClaimable() <= 0}
+                      >
+                        {t('harvestAll')}
+                        {txnLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    ) : (
+                      <Button className="w-100" disabled>
+                        {t('incentivesDisabled')}
+                      </Button>
+                    )}
+                  </>
                 )}
               </Card.Footer>
             </>

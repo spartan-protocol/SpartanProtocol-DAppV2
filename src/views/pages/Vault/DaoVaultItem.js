@@ -51,6 +51,9 @@ const DaoVaultItem = ({ i, claimable }) => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet'), false]
+    }
     if (i.staked > 0) {
       if (getLockedSecs()[0] > 0) {
         return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
@@ -100,10 +103,16 @@ const DaoVaultItem = ({ i, claimable }) => {
                 {t('balance')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(
-                  getPool(i.tokenAddress, pool.poolDetails).balance,
-                )}{' '}
-                {getToken(i.tokenAddress)?.symbol}p
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {formatFromWei(
+                      getPool(i.tokenAddress, pool.poolDetails).balance,
+                    )}{' '}
+                    {getToken(i.tokenAddress)?.symbol}p
+                  </>
+                )}
               </Col>
             </Row>
 
@@ -112,7 +121,14 @@ const DaoVaultItem = ({ i, claimable }) => {
                 {t('staked')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}p
+                {!wallet.account ? (
+                  t('connectWallet')
+                ) : (
+                  <>
+                    {formatFromWei(i.staked)} {getToken(i.tokenAddress)?.symbol}
+                    p
+                  </>
+                )}
               </Col>
             </Row>
           </Card.Body>
@@ -129,7 +145,7 @@ const DaoVaultItem = ({ i, claimable }) => {
                 <Button
                   className="w-100"
                   onClick={() => handleWithdraw()}
-                  disabled={!checkValid()[0]}
+                  disabled={!wallet.account || !checkValid()[0]}
                 >
                   {checkValid()[2] && (
                     <Icon icon={checkValid()[2]} size="15" className="mb-1" />

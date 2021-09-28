@@ -12,6 +12,7 @@ import {
   Badge,
   OverlayTrigger,
   Form,
+  Popover,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -73,6 +74,7 @@ const Swap = () => {
   const sparta = useSparta()
   const location = useLocation()
 
+  const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [confirmSynth, setConfirmSynth] = useState(false)
@@ -512,6 +514,9 @@ const Swap = () => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
     if (swapInput1?.value <= 0) {
       return [false, t('checkInput')]
     }
@@ -565,8 +570,6 @@ const Swap = () => {
       } else if (mode === 'synthOut') {
         handleSynthInputChange()
       }
-    } else {
-      clearInputs()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2])
@@ -665,6 +668,12 @@ const Swap = () => {
     return false
   }
 
+  const checkWallet = () => {
+    if (!wallet.account) {
+      setShowWalletWarning1(!showWalletWarning1)
+    }
+  }
+
   return (
     <>
       <div className="content">
@@ -721,35 +730,50 @@ const Swap = () => {
                                 </Row>
                                 <Row className="my-1">
                                   <Col>
-                                    <InputGroup className="m-0">
-                                      <InputGroup.Text id="assetSelect1">
-                                        <AssetSelect
-                                          priority="1"
-                                          filter={getFilter()}
-                                          onClick={handleConfClear}
+                                    <OverlayTrigger
+                                      placement="auto"
+                                      onToggle={() => checkWallet()}
+                                      show={showWalletWarning1}
+                                      trigger={['focus']}
+                                      overlay={
+                                        <Popover>
+                                          <Popover.Header />
+                                          <Popover.Body>
+                                            {t('connectWalletFirst')}
+                                          </Popover.Body>
+                                        </Popover>
+                                      }
+                                    >
+                                      <InputGroup className="m-0">
+                                        <InputGroup.Text id="assetSelect1">
+                                          <AssetSelect
+                                            priority="1"
+                                            filter={getFilter()}
+                                            onClick={handleConfClear}
+                                          />
+                                        </InputGroup.Text>
+                                        <FormControl
+                                          className="text-end ms-0"
+                                          type="number"
+                                          placeholder={`${t('sell')}...`}
+                                          id="swapInput1"
+                                          autoComplete="off"
+                                          autoCorrect="off"
                                         />
-                                      </InputGroup.Text>
-                                      <FormControl
-                                        className="text-end ms-0"
-                                        type="number"
-                                        placeholder={`${t('sell')}...`}
-                                        id="swapInput1"
-                                        autoComplete="off"
-                                        autoCorrect="off"
-                                      />
-                                      <InputGroup.Text
-                                        role="button"
-                                        tabIndex={-1}
-                                        onKeyPress={() => clearInputs()}
-                                        onClick={() => clearInputs()}
-                                      >
-                                        <Icon
-                                          icon="close"
-                                          size="10"
-                                          fill="grey"
-                                        />
-                                      </InputGroup.Text>
-                                    </InputGroup>
+                                        <InputGroup.Text
+                                          role="button"
+                                          tabIndex={-1}
+                                          onKeyPress={() => clearInputs()}
+                                          onClick={() => clearInputs()}
+                                        >
+                                          <Icon
+                                            icon="close"
+                                            size="10"
+                                            fill="grey"
+                                          />
+                                        </InputGroup.Text>
+                                      </InputGroup>
+                                    </OverlayTrigger>
                                     <div className="text-end text-sm-label pt-1">
                                       ~$
                                       {swapInput1?.value

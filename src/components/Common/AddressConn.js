@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { Button, Overlay, Popover } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 import WalletSelect from '../WalletSelect/WalletSelect'
 // import { usePool } from '../../store/pool/selector'
 import { ReactComponent as WalletIconA } from '../../assets/icons/wallet-green.svg'
@@ -15,6 +16,7 @@ const AddressConn = () => {
   // only trigger this once when hover or click on input
   const [triesAndNotConnected, setTriesAndNotConnected] = useState(false)
   const [showPopConnectHover, setShowPopConnectHover] = useState(false)
+  const { t } = useTranslation()
 
   const target = useRef(null)
   const targetB = useRef(null)
@@ -23,12 +25,12 @@ const AddressConn = () => {
 
   useEffect(() => {
     async function listenAccountsChanged() {
-      window.ethereum.on('accountsChanged', async () => {
+      window.ethereum?.on('accountsChanged', async () => {
         document.location.reload()
       })
     }
     async function listenNetworkChanged() {
-      window.ethereum.on('chainChanged', async () => {
+      window.ethereum?.on('chainChanged', async () => {
         document.location.reload()
       })
     }
@@ -110,7 +112,7 @@ const AddressConn = () => {
             <Popover>
               <Popover.Header />
               <Popover.Body>
-                <b>Click here to connect your Wallet</b>
+                <b>{t('checkConnectWallet')}</b>
               </Popover.Body>
             </Popover>
           </Overlay>{' '}

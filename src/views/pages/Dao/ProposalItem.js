@@ -284,12 +284,12 @@ const ProposalItem = ({ proposal }) => {
     <>
       <Col xs="auto" className="">
         <Card className="card-320 card-underlay">
-          <Card.Header>
-            <Row className="">
+          <Card.Header style={{ height: '98px' }}>
+            <Row className="h-100">
               <Col xs="auto" className="my-auto ps-2 pe-0">
                 <h5 className="my-auto">#{proposal.id}</h5>
               </Col>
-              <Col>
+              <Col className="my-auto">
                 <h5 className="mb-0">{type?.label}</h5>
                 <p className="text-sm-label-alt">{status()}</p>
               </Col>
@@ -337,17 +337,23 @@ const ProposalItem = ({ proposal }) => {
                     {t('yourVotes')}
                   </Col>
                   <Col className="text-end output-card">
-                    {proposal.memberVoted
-                      ? formatFromWei(
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : proposal.memberVoted ? (
+                      <>
+                        {formatFromWei(
                           getVaultWeights(
                             pool.poolDetails,
                             dao.daoDetails,
                             bond.bondDetails,
                           ),
                           0,
-                        )
-                      : t('youHaventVoted')}{' '}
-                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                        )}
+                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                      </>
+                    ) : (
+                      t('youHaventVoted')
+                    )}{' '}
                   </Col>
                 </Row>
 
@@ -376,7 +382,7 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleVote()}
-                      disabled={proposal.memberVoted}
+                      disabled={!wallet.account || proposal.memberVoted}
                     >
                       {t('voteUp')}
                       {voteLoading && (
@@ -393,7 +399,7 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleUnvote()}
-                      disabled={!proposal.memberVoted}
+                      disabled={!wallet.account || !proposal.memberVoted}
                     >
                       {t('voteDown')}
                       {unvoteLoading && (
@@ -416,7 +422,9 @@ const ProposalItem = ({ proposal }) => {
                         size="sm"
                         onClick={() => handleFinal()}
                         disabled={
-                          !proposal.finalising || getTimeCooloff()[0] > 0
+                          !wallet.account ||
+                          !proposal.finalising ||
+                          getTimeCooloff()[0] > 0
                         }
                       >
                         {t('finalise')}
@@ -434,7 +442,7 @@ const ProposalItem = ({ proposal }) => {
                         className="w-100"
                         size="sm"
                         onClick={() => handlePoll()}
-                        disabled={!canPoll()}
+                        disabled={!wallet.account || !canPoll()}
                       >
                         {t('pollVotes')}
                         {pollLoading && (
@@ -453,7 +461,7 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleCancel()}
-                      disabled={getTimeCancel()[0] > 0}
+                      disabled={!wallet.account || getTimeCancel()[0] > 0}
                     >
                       {t('cancel')}
                       {cancelLoading && (

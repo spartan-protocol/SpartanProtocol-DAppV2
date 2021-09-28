@@ -12,6 +12,7 @@ import {
   Button,
   Badge,
   OverlayTrigger,
+  Popover,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -50,6 +51,8 @@ const LiqRemove = () => {
   const wallet = useWeb3React()
   const sparta = useSparta()
   const { t } = useTranslation()
+
+  const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('1')
   const [assetRemove1, setAssetRemove1] = useState('...')
@@ -260,6 +263,9 @@ const LiqRemove = () => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
     if (removeInput1?.value <= 0) {
       return [false, t('checkInput')]
     }
@@ -321,6 +327,12 @@ const LiqRemove = () => {
     }
     setTxnLoading(false)
     clearInputs()
+  }
+
+  const checkWallet = () => {
+    if (!wallet.account) {
+      setShowWalletWarning1(!showWalletWarning1)
+    }
   }
 
   return (
@@ -391,27 +403,42 @@ const LiqRemove = () => {
 
                         <Row className="my-1">
                           <Col>
-                            <InputGroup className="m-0">
-                              <InputGroup.Text id="assetSelect1">
-                                <AssetSelect priority="1" filter={['pool']} />
-                              </InputGroup.Text>
-                              <FormControl
-                                className="text-end ms-0"
-                                type="number"
-                                placeholder={`${t('redeem')}...`}
-                                id="removeInput1"
-                                autoComplete="off"
-                                autoCorrect="off"
-                              />
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs(1)}
-                                onClick={() => clearInputs(1)}
-                              >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
+                            <OverlayTrigger
+                              placement="auto"
+                              onToggle={() => checkWallet()}
+                              show={showWalletWarning1}
+                              trigger={['focus']}
+                              overlay={
+                                <Popover>
+                                  <Popover.Header />
+                                  <Popover.Body>
+                                    {t('connectWalletFirst')}
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <InputGroup className="m-0">
+                                <InputGroup.Text id="assetSelect1">
+                                  <AssetSelect priority="1" filter={['pool']} />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('redeem')}...`}
+                                  id="removeInput1"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                />
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs(1)}
+                                  onClick={() => clearInputs(1)}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
+                            </OverlayTrigger>
                             <div className="text-end text-sm-label pt-1">
                               ~$
                               {removeInput1?.value
