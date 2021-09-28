@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Col, Row } from 'react-bootstrap'
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Popover,
+  OverlayTrigger,
+} from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -151,11 +158,33 @@ const DaoVault = () => {
           ) : (
             <HelmetLoading />
           )}
-          <Card.Footer>
-            <Link to="/pools/liquidity">
-              <Button className="w-100">{t('joinPools')}</Button>
-            </Link>
-          </Card.Footer>
+          {typeof wallet.account === 'undefined' ? (
+            <Col>
+              <Card.Footer>
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Popover>
+                      <Popover.Header />
+                      <Popover.Body>{t('connectWalletFirst')}</Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <Link to="/pools/liquidity">
+                    <Button className="w-100">{t('joinPools')}</Button>
+                  </Link>
+                </OverlayTrigger>
+              </Card.Footer>
+            </Col>
+          ) : (
+            <Col>
+              <Card.Footer>
+                <Link to="/pools/liquidity">
+                  <Button className="w-100">{t('joinPools')}</Button>
+                </Link>
+              </Card.Footer>
+            </Col>
+          )}
         </Card>
       </Col>
 
@@ -192,21 +221,76 @@ const DaoVault = () => {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {reserve.globalDetails.emissions ? (
-                  <Button
-                    className="w-100"
-                    onClick={() => handleHarvest()}
-                    disabled={getClaimable() <= 0}
-                  >
-                    {t('harvestAll')}
-                    {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                {typeof wallet.account === 'undefined' ? (
+                  <>
+                    {reserve.globalDetails.emissions ? (
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Popover>
+                            <Popover.Header />
+                            <Popover.Body>
+                              {t('connectWalletFirst')}
+                            </Popover.Body>
+                          </Popover>
+                        }
+                      >
+                        <Button
+                          className="w-100"
+                          onClick={() => handleHarvest()}
+                          disabled={getClaimable() <= 0}
+                        >
+                          {t('harvestAll')}
+                          {txnLoading && (
+                            <Icon
+                              icon="cycle"
+                              size="20"
+                              className="anim-spin ms-1"
+                            />
+                          )}
+                        </Button>
+                      </OverlayTrigger>
+                    ) : (
+                      <OverlayTrigger
+                        placement="bottom"
+                        overlay={
+                          <Popover>
+                            <Popover.Header />
+                            <Popover.Body>
+                              {t('connectWalletFirst')}
+                            </Popover.Body>
+                          </Popover>
+                        }
+                      >
+                        <Button className="w-100" disabled>
+                          {t('incentivesDisabled')}
+                        </Button>
+                      </OverlayTrigger>
                     )}
-                  </Button>
+                  </>
                 ) : (
-                  <Button className="w-100" disabled>
-                    {t('incentivesDisabled')}
-                  </Button>
+                  <>
+                    {reserve.globalDetails.emissions ? (
+                      <Button
+                        className="w-100"
+                        onClick={() => handleHarvest()}
+                        disabled={getClaimable() <= 0}
+                      >
+                        {t('harvestAll')}
+                        {txnLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    ) : (
+                      <Button className="w-100" disabled>
+                        {t('incentivesDisabled')}
+                      </Button>
+                    )}
+                  </>
                 )}
               </Card.Footer>
             </>
