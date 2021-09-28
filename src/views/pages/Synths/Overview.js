@@ -542,32 +542,32 @@ const Swap = () => {
 
                                   <Row className="my-1">
                                     <Col>
-                                      <OverlayTrigger
-                                        placement="auto"
-                                        onToggle={() => checkWallet()}
-                                        show={showWalletWarning1}
-                                        trigger={['focus']}
-                                        overlay={
-                                          <Popover>
-                                            <Popover.Header />
-                                            <Popover.Body>
-                                              {t('connectWalletFirst')}
-                                            </Popover.Body>
-                                          </Popover>
-                                        }
-                                      >
-                                        <InputGroup className="">
-                                          <InputGroup.Text id="assetSelect1">
-                                            <AssetSelect
-                                              priority="1"
-                                              filter={
-                                                activeTab === 'mint'
-                                                  ? ['token']
-                                                  : ['synth']
-                                              }
-                                              onClick={handleConfClear}
-                                            />
-                                          </InputGroup.Text>
+                                      <InputGroup className="">
+                                        <InputGroup.Text id="assetSelect1">
+                                          <AssetSelect
+                                            priority="1"
+                                            filter={
+                                              activeTab === 'mint'
+                                                ? ['token']
+                                                : ['synth']
+                                            }
+                                            onClick={handleConfClear}
+                                          />
+                                        </InputGroup.Text>
+                                        <OverlayTrigger
+                                          placement="auto"
+                                          onToggle={() => checkWallet()}
+                                          show={showWalletWarning1}
+                                          trigger={['focus']}
+                                          overlay={
+                                            <Popover>
+                                              <Popover.Header />
+                                              <Popover.Body>
+                                                {t('connectWalletFirst')}
+                                              </Popover.Body>
+                                            </Popover>
+                                          }
+                                        >
                                           <FormControl
                                             className="text-end ms-0"
                                             type="number"
@@ -576,20 +576,21 @@ const Swap = () => {
                                             autoComplete="off"
                                             autoCorrect="off"
                                           />
-                                          <InputGroup.Text
-                                            role="button"
-                                            tabIndex={-1}
-                                            onKeyPress={() => clearInputs(1)}
-                                            onClick={() => clearInputs(1)}
-                                          >
-                                            <Icon
-                                              icon="close"
-                                              size="10"
-                                              fill="grey"
-                                            />
-                                          </InputGroup.Text>
-                                        </InputGroup>
-                                      </OverlayTrigger>
+                                        </OverlayTrigger>
+
+                                        <InputGroup.Text
+                                          role="button"
+                                          tabIndex={-1}
+                                          onKeyPress={() => clearInputs(1)}
+                                          onClick={() => clearInputs(1)}
+                                        >
+                                          <Icon
+                                            icon="close"
+                                            size="10"
+                                            fill="grey"
+                                          />
+                                        </InputGroup.Text>
+                                      </InputGroup>
 
                                       <div className="text-end text-sm-label pt-1">
                                         ~$
