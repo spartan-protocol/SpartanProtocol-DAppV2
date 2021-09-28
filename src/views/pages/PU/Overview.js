@@ -5,19 +5,33 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
 import EmptyPools from './EmptyPools'
 import PoolStatus from './FrozenPools'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Overview = () => {
   const pool = usePool()
   const addr = getAddresses()
-  const [activeTab, setActiveTab] = useState('overview')
 
+  const [activeTab, setActiveTab] = useState('overview')
   const [selectedAsset, setselectedAsset] = useState('')
-  const emptyPools = pool.poolDetails?.filter(
-    (asset) => asset.hide && asset.tokenAddress !== addr.spartav1,
-  )
-  const frozenPools = pool.poolDetails?.filter((asset) => asset.frozen)
+
+  const isLoading = () => {
+    if (!pool.poolDetails || !pool.tokenDetails) {
+      return true
+    }
+    return false
+  }
+
+  const emptyPools = !isLoading
+    ? pool.poolDetails?.filter(
+        (asset) => asset.hide && asset.tokenAddress !== addr.spartav1,
+      )
+    : []
+  const frozenPools = !isLoading
+    ? pool.poolDetails?.filter((asset) => asset.frozen)
+    : []
 
   const getToken = (tokenAddress) =>
+    !isLoading &&
     pool.tokenDetails.filter((asset) => asset.address === tokenAddress)[0]
 
   const [network, setnetwork] = useState(getNetwork())
@@ -47,95 +61,103 @@ const Overview = () => {
             </div>
           </Col>
         </Row>
-        {tempChains.includes(network.chainId) && (
-          <>
-            <Row className="row-480">
-              <Col xs="12" className="mb-3">
-                <Nav className="card-480" activeKey={activeTab}>
-                  <Nav.Item key="overview">
-                    <Nav.Link
-                      eventKey="overview"
-                      onClick={() => {
-                        setActiveTab('overview')
-                      }}
-                    >
-                      Overview
-                    </Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item key="pools">
-                    <Nav.Link
-                      eventKey="pools"
-                      onClick={() => {
-                        setActiveTab('pools')
-                      }}
-                    >
-                      Pools
-                    </Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Col>
-
-              {activeTab === 'overview' && (
-                <Col xs="12">
-                  <Card className="card-480">
-                    <Card.Header>Ratio-Check Pools</Card.Header>
-                    <Card.Body>
-                      There are {frozenPools?.length} pool(s) that have
-                      triggered a warning. Ensure their ratios match the
-                      external markets. It may take some time for the ratios to
-                      repair themselves.
-                    </Card.Body>
-                    <Card.Footer>
-                      <Button
-                        className="w-100"
-                        onClick={() => setActiveTab('pools')}
-                        disabled={!selectedAsset}
+        {!isLoading() ? (
+          tempChains.includes(network.chainId) && (
+            <>
+              <Row className="row-480">
+                <Col xs="12" className="mb-3">
+                  <Nav className="card-480" activeKey={activeTab}>
+                    <Nav.Item key="overview">
+                      <Nav.Link
+                        eventKey="overview"
+                        onClick={() => {
+                          setActiveTab('overview')
+                        }}
                       >
-                        View Pool Status
-                      </Button>
-                    </Card.Footer>
-                  </Card>
-                  <Card className="card-480">
-                    <Card.Header>Empty Pools</Card.Header>
-                    <Card.Body>
-                      There are {emptyPools?.length} pool(s) that have been
-                      created but have no depth. Add the initial liquidty to set
-                      the ratio of TOKEN:SPARTA for:
-                      {emptyPools.map((asset) => (
-                        <Form className="my-2" key={asset.tokenAddress}>
-                          <Form.Check
-                            id={asset.tokenAddress}
-                            type="radio"
-                            label={`${
-                              getToken(asset.tokenAddress)?.symbol
-                            }:SPARTA`}
-                            onClick={() => setselectedAsset(asset.tokenAddress)}
-                            checked={selectedAsset === asset.tokenAddress}
-                            readOnly
-                          />
-                        </Form>
-                      ))}
-                    </Card.Body>
-                    {emptyPools?.length > 0 && (
+                        Overview
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item key="pools">
+                      <Nav.Link
+                        eventKey="pools"
+                        onClick={() => {
+                          setActiveTab('pools')
+                        }}
+                      >
+                        Pools
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Col>
+
+                {activeTab === 'overview' && (
+                  <Col xs="12">
+                    <Card className="card-480">
+                      <Card.Header>Ratio-Check Pools</Card.Header>
+                      <Card.Body>
+                        There are {frozenPools?.length} pool(s) that have
+                        triggered a warning. Ensure their ratios match the
+                        external markets. It may take some time for the ratios
+                        to repair themselves.
+                      </Card.Body>
                       <Card.Footer>
                         <Button
                           className="w-100"
-                          onClick={() => setActiveTab('emptyPools')}
+                          onClick={() => setActiveTab('pools')}
                           disabled={!selectedAsset}
                         >
-                          Add {getToken(selectedAsset)?.symbol}:SPARTA
+                          View Pool Status
                         </Button>
                       </Card.Footer>
-                    )}
-                  </Card>
-                </Col>
-              )}
-              {activeTab === 'pools' && <PoolStatus />}
-              {activeTab === 'emptyPools' && (
-                <EmptyPools selectedAsset={selectedAsset} />
-              )}
-            </Row>
-          </>
+                    </Card>
+                    <Card className="card-480">
+                      <Card.Header>Empty Pools</Card.Header>
+                      <Card.Body>
+                        There are {emptyPools?.length} pool(s) that have been
+                        created but have no depth. Add the initial liquidty to
+                        set the ratio of TOKEN:SPARTA for:
+                        {emptyPools.map((asset) => (
+                          <Form className="my-2" key={asset.tokenAddress}>
+                            <Form.Check
+                              id={asset.tokenAddress}
+                              type="radio"
+                              label={`${
+                                getToken(asset.tokenAddress)?.symbol
+                              }:SPARTA`}
+                              onClick={() =>
+                                setselectedAsset(asset.tokenAddress)
+                              }
+                              checked={selectedAsset === asset.tokenAddress}
+                              readOnly
+                            />
+                          </Form>
+                        ))}
+                      </Card.Body>
+                      {emptyPools?.length > 0 && (
+                        <Card.Footer>
+                          <Button
+                            className="w-100"
+                            onClick={() => setActiveTab('emptyPools')}
+                            disabled={!selectedAsset}
+                          >
+                            Add {getToken(selectedAsset)?.symbol}:SPARTA
+                          </Button>
+                        </Card.Footer>
+                      )}
+                    </Card>
+                  </Col>
+                )}
+                {activeTab === 'pools' && <PoolStatus />}
+                {activeTab === 'emptyPools' && (
+                  <EmptyPools selectedAsset={selectedAsset} />
+                )}
+              </Row>
+            </>
+          )
+        ) : (
+          <Col className="card-480">
+            <HelmetLoading height={300} width={300} />
+          </Col>
         )}
         {network.chainId !== 97 && <WrongNetwork />}
       </div>
