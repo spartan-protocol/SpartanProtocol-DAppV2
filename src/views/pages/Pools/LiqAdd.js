@@ -13,6 +13,8 @@ import {
   InputGroup,
   Nav,
   Row,
+  Popover,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -450,44 +452,98 @@ const LiqAdd = () => {
                         </Row>
 
                         <Row className="my-1">
-                          <Col>
-                            <InputGroup className="">
-                              <InputGroup.Text id="assetSelect1">
-                                <AssetSelect
-                                  priority="1"
-                                  filter={['token']}
-                                  blackList={
-                                    activeTab === 'addTab1'
-                                      ? [addr.spartav1, addr.spartav2]
-                                      : []
-                                  }
-                                  onClick={handleConfClear}
-                                />
-                              </InputGroup.Text>
-                              <FormControl
-                                className="text-end ms-0"
-                                type="number"
-                                placeholder={`${t('add')}...`}
-                                id="addInput1"
-                                autoComplete="off"
-                                autoCorrect="off"
-                              />
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs(1)}
-                                onClick={() => clearInputs(1)}
+                          {typeof wallet.account === 'undefined' ? (
+                            <Col>
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header />
+                                    <Popover.Body>
+                                      {t('connectWalletFirst')}
+                                    </Popover.Body>
+                                  </Popover>
+                                }
                               >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
-                            <div className="text-end text-sm-label pt-1">
-                              ~$
-                              {addInput1?.value
-                                ? formatFromWei(getInput1ValueUSD(), 2)
-                                : '0.00'}
-                            </div>
-                          </Col>
+                                <InputGroup className="">
+                                  <InputGroup.Text id="assetSelect1">
+                                    <AssetSelect
+                                      priority="1"
+                                      filter={['token']}
+                                      blackList={
+                                        activeTab === 'addTab1'
+                                          ? [addr.spartav1, addr.spartav2]
+                                          : []
+                                      }
+                                      onClick={handleConfClear}
+                                    />
+                                  </InputGroup.Text>
+                                  <FormControl
+                                    className="text-end ms-0"
+                                    type="number"
+                                    placeholder={`${t('add')}...`}
+                                    id="addInput1"
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                  />
+                                  <InputGroup.Text
+                                    role="button"
+                                    tabIndex={-1}
+                                    onKeyPress={() => clearInputs(1)}
+                                    onClick={() => clearInputs(1)}
+                                  >
+                                    <Icon icon="close" size="10" fill="grey" />
+                                  </InputGroup.Text>
+                                </InputGroup>
+                              </OverlayTrigger>
+
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {addInput1?.value
+                                  ? formatFromWei(getInput1ValueUSD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          ) : (
+                            <Col>
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect1">
+                                  <AssetSelect
+                                    priority="1"
+                                    filter={['token']}
+                                    blackList={
+                                      activeTab === 'addTab1'
+                                        ? [addr.spartav1, addr.spartav2]
+                                        : []
+                                    }
+                                    onClick={handleConfClear}
+                                  />
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder={`${t('add')}...`}
+                                  id="addInput1"
+                                  autoComplete="off"
+                                  autoCorrect="off"
+                                />
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs(1)}
+                                  onClick={() => clearInputs(1)}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {addInput1?.value
+                                  ? formatFromWei(getInput1ValueUSD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          )}
                         </Row>
                       </Card.Body>
                     </Card>
