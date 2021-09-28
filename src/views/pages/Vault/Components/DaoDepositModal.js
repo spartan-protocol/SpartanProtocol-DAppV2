@@ -1,6 +1,14 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Col, Row, Modal, Form } from 'react-bootstrap'
+import {
+  Button,
+  Col,
+  Row,
+  Modal,
+  Form,
+  Popover,
+  OverlayTrigger,
+} from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import {
@@ -86,13 +94,33 @@ const DaoDepositModal = (props) => {
 
   return (
     <>
-      <Button
-        className="w-100"
-        onClick={() => setshowModal(true)}
-        disabled={props.disabled}
-      >
-        {t('deposit')}
-      </Button>
+      {typeof wallet.account === 'undefined' ? (
+        <OverlayTrigger
+          placement="bottom"
+          overlay={
+            <Popover>
+              <Popover.Header />
+              <Popover.Body>{t('connectWalletFirst')}</Popover.Body>
+            </Popover>
+          }
+        >
+          <Button
+            className="w-100"
+            onClick={() => setshowModal(true)}
+            disabled={props.disabled}
+          >
+            {t('deposit')}
+          </Button>
+        </OverlayTrigger>
+      ) : (
+        <Button
+          className="w-100"
+          onClick={() => setshowModal(true)}
+          disabled={props.disabled}
+        >
+          {t('deposit')}
+        </Button>
+      )}
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
         <Modal.Header closeButton closeVariant="white">
           <div xs="auto" className="position-relative me-3">
