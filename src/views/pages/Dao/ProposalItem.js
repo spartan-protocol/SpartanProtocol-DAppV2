@@ -389,21 +389,39 @@ const ProposalItem = ({ proposal }) => {
                     </Button>
                   </Col>
                   <Col className="mb-2">
-                    <Button
-                      className="w-100"
-                      size="sm"
-                      onClick={() => handleUnvote()}
-                      disabled={!proposal.memberVoted}
-                    >
-                      {t('voteDown')}
-                      {unvoteLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
+                    {typeof wallet.account === 'undefined' ? (
+                      <Button
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleUnvote()}
+                        disabled="disabled" // {!proposal.memberVoted}
+                      >
+                        {t('voteDown')}
+                        {unvoteLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleUnvote()}
+                        disabled={!proposal.memberVoted}
+                      >
+                        {t('voteDown')}
+                        {unvoteLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    )}
                   </Col>
                 </Row>
 
@@ -448,22 +466,41 @@ const ProposalItem = ({ proposal }) => {
                     )}
                   </Col>
                   <Col className="">
-                    <Button
-                      variant="secondary"
-                      className="w-100"
-                      size="sm"
-                      onClick={() => handleCancel()}
-                      disabled={getTimeCancel()[0] > 0}
-                    >
-                      {t('cancel')}
-                      {cancelLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
+                    {typeof wallet.account === 'undefined' ? (
+                      <Button
+                        variant="secondary"
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleCancel()}
+                        disabled="disabled" // {getTimeCancel()[0] > 0}
+                      >
+                        {t('cancel')}
+                        {cancelLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleCancel()}
+                        disabled={getTimeCancel()[0] > 0}
+                      >
+                        {t('cancel')}
+                        {cancelLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    )}
                   </Col>
                 </Row>
               </>
