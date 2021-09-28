@@ -61,21 +61,6 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     return true
   }
 
-  const isValid = () => {
-    if (secsUntilUnlocked() === true) {
-      if (lockoutConfirm) {
-        if (secsSinceHarvest() > 300) {
-          if (harvestConfirm) {
-            return true
-          }
-          return false
-        }
-        return true
-      }
-    }
-    return false
-  }
-
   const handleCloseModal = () => {
     setshowModal(false)
     setLockoutConfirm(false)
@@ -112,7 +97,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     return [reward, baseCapped, synthCapped]
   }
 
-  const checkValid = () => {
+  const checkValidHarvest = () => {
     const reward = formatFromWei(getClaimable()[0], 4)
     if (!reserve.globalDetails.emissions) {
       return [false, t('incentivesDisabled'), '']
@@ -126,12 +111,33 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     return [true, reward, ` ${token.symbol}s`]
   }
 
+  const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
+    if (secsUntilUnlocked() !== true) {
+      return [false, `in ${secsUntilUnlocked()} secs`]
+    }
+    if (deposit() <= 0) {
+      return [false, t('checkInput')]
+    }
+    if (!lockoutConfirm) {
+      return [false, t('confirmLockup')]
+    }
+    if (secsSinceHarvest() > 300) {
+      if (!harvestConfirm) {
+        return [false, t('confirmHarvest')]
+      }
+    }
+    return [true, t('deposit')]
+  }
+
   return (
     <>
       <Button
         className="w-100"
         onClick={() => setshowModal(true)}
-        disabled={disabled}
+        disabled={!disabled}
       >
         {t('deposit')}
       </Button>
@@ -146,7 +152,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
               className="token-badge-modal-header"
             />
           </div>
-          {t('deposit')}
+          {t('deposit')} {token.symbol}s
         </Modal.Header>
         <Card className="">
           <Card.Body>
@@ -224,7 +230,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                     Harvest forfeiting
                   </Col>
                   <Col className="text-end output-card">
-                    {checkValid()[1]} {checkValid()[2]}
+                    {checkValidHarvest()[1]} {checkValidHarvest()[2]}
                   </Col>
                 </Row>
                 <Form className="my-2 text-center">
@@ -278,15 +284,9 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                     <Button
                       className="w-100"
                       onClick={() => handleDeposit()}
-                      disabled={deposit() <= 0 || !isValid()}
+                      disabled={!checkValid()[0]}
                     >
-                      {secsUntilUnlocked() === true && t('confirm')}
-                      {secsUntilUnlocked() !== true && (
-                        <>
-                          <Icon icon="lock" size="15" className="mb-1" />
-                          {secsUntilUnlocked()} secs
-                        </>
-                      )}
+                      {checkValid()[1]}
                       {txnLoading && (
                         <Icon
                           icon="cycle"

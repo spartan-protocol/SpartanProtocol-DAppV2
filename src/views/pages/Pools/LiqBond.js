@@ -174,12 +174,25 @@ const LiqBond = () => {
     clearInputs()
   }
 
+  // ~*CHECK* BNB gas (bond) on TN || ~*CHECK* BNB on MN
+  const estMaxGas = '5000000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
     if (bondInput1?.value <= 0) {
       return [false, t('checkInput')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (
       BN(convertToWei(bondInput1?.value)).isGreaterThan(

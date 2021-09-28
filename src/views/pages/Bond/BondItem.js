@@ -12,11 +12,13 @@ import { claimBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
 import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
 import { getToken } from '../../../utils/math/utils'
+import { getAddresses } from '../../../utils/web3'
 
 const BondItem = (props) => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
+  const addr = getAddresses()
   const { asset } = props
   const { t } = useTranslation()
   const [txnLoading, setTxnLoading] = useState(false)
@@ -43,6 +45,25 @@ const BondItem = (props) => {
     setTxnLoading(true)
     await dispatch(claimBond(asset.tokenAddress, wallet))
     setTxnLoading(false)
+  }
+
+  const estMaxGas = ''
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
+  const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
+    }
+    return [true, t('claim')]
   }
 
   return (
@@ -164,8 +185,12 @@ const BondItem = (props) => {
                 </Button>
               </Col>
               <Col xs="6" className="px-2">
-                <Button className="w-100" onClick={() => handleTxn()}>
-                  {t('claim')}
+                <Button
+                  className="w-100"
+                  disabled={!checkValid()[0]}
+                  onClick={() => handleTxn()}
+                >
+                  {checkValid()[1]}
                   {txnLoading && (
                     <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                   )}

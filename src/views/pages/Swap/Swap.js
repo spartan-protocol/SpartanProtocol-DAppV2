@@ -515,12 +515,51 @@ const Swap = () => {
     return '0'
   }
 
+  const estMaxGasPool = '2600000000000000'
+  const estMaxGasSynthOut = '5000000000000000'
+  const estMaxGasSynthIn = '5000000000000000'
+  const estMaxGasDoubleSwap = '2000000000000000'
+  const estMaxGasSwap = '1500000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (mode === 'pool') {
+      if (BN(bal).isLessThan(estMaxGasPool)) {
+        return false
+      }
+    }
+    if (mode === 'synthOut') {
+      if (BN(bal).isLessThan(estMaxGasSynthOut)) {
+        return false
+      }
+    }
+    if (mode === 'synthIn') {
+      if (BN(bal).isLessThan(estMaxGasSynthIn)) {
+        return false
+      }
+    }
+    if (
+      assetSwap1?.tokenAddress !== addr.spartav2 &&
+      assetSwap2?.tokenAddress !== addr.spartav2
+    ) {
+      if (BN(bal).isLessThan(estMaxGasDoubleSwap)) {
+        return false
+      }
+    }
+    if (BN(bal).isLessThan(estMaxGasSwap)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
     if (swapInput1?.value <= 0) {
       return [false, t('checkInput')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]

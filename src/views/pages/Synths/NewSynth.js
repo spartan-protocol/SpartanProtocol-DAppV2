@@ -6,13 +6,18 @@ import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../../store/synth'
-import { getNetwork, tempChains } from '../../../utils/web3'
+import { getAddresses, getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { Icon } from '../../../components/Icons/icons'
+import { getToken } from '../../../utils/math/utils'
+import { usePool } from '../../../store/pool'
+import { BN } from '../../../utils/bigNumber'
 
 const NewSynth = () => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
+  const pool = usePool()
+  const addr = getAddresses()
   const { t } = useTranslation()
 
   const isLightMode = window.localStorage.getItem('theme')
@@ -61,6 +66,32 @@ const NewSynth = () => {
     await dispatch(createSynth(inputAddress, wallet))
     setTxnLoading(false)
     setShowModal(false)
+  }
+
+  // ~0.015 BNB gas on TN || ~0.008 BNB on MN
+  const estMaxGas = '8000000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
+  const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
+    }
+    if (!addrValid) {
+      return [false, t('checkInputs')]
+    }
+    if (!feeConfirm) {
+      return [false, t('confirmFee')]
+    }
+    return [true, t('createSynth')]
   }
 
   return (
@@ -122,10 +153,10 @@ const NewSynth = () => {
         <Modal.Footer>
           <Button
             className="w-100"
-            disabled={!feeConfirm || !addrValid}
+            disabled={!checkValid()[0]}
             onClick={() => handleSubmit()}
           >
-            {t('confirm')}
+            {checkValid()[1]}
             {txnLoading && (
               <Icon icon="cycle" size="20" className="anim-spin ms-1" />
             )}

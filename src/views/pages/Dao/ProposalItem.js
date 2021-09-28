@@ -136,7 +136,7 @@ const ProposalItem = ({ proposal }) => {
     if (majorities.includes(proposal.proposalType) && weightClass()[1] > 2) {
       return true
     }
-    if (weightClass()[1] > 1) {
+    if (!majorities.includes(proposal.proposalType) && weightClass()[1] > 1) {
       return true
     }
     return false
