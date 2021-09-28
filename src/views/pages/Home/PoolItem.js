@@ -252,6 +252,7 @@ const PoolItem = ({ asset }) => {
                   size="sm"
                   variant="primary"
                   className="w-100 rounded-pill"
+                  disabled={!asset.curated}
                   onClick={() => history.push('/vault')}
                 >
                   {t('stake')}
