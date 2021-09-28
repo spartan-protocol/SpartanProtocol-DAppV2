@@ -474,33 +474,33 @@ const LiqAdd = () => {
 
                         <Row className="my-1">
                           <Col>
-                            <OverlayTrigger
-                              placement="auto"
-                              onToggle={() => checkWallet(1)}
-                              show={showWalletWarning1}
-                              trigger={['focus']}
-                              overlay={
-                                <Popover>
-                                  <Popover.Header />
-                                  <Popover.Body>
-                                    {t('connectWalletFirst')}
-                                  </Popover.Body>
-                                </Popover>
-                              }
-                            >
-                              <InputGroup className="">
-                                <InputGroup.Text id="assetSelect1">
-                                  <AssetSelect
-                                    priority="1"
-                                    filter={['token']}
-                                    blackList={
-                                      activeTab === 'addTab1'
-                                        ? [addr.spartav1, addr.spartav2]
-                                        : []
-                                    }
-                                    onClick={handleConfClear}
-                                  />
-                                </InputGroup.Text>
+                            <InputGroup className="">
+                              <InputGroup.Text id="assetSelect1">
+                                <AssetSelect
+                                  priority="1"
+                                  filter={['token']}
+                                  blackList={
+                                    activeTab === 'addTab1'
+                                      ? [addr.spartav1, addr.spartav2]
+                                      : []
+                                  }
+                                  onClick={handleConfClear}
+                                />
+                              </InputGroup.Text>
+                              <OverlayTrigger
+                                placement="auto"
+                                onToggle={() => checkWallet(1)}
+                                show={showWalletWarning1}
+                                trigger={['focus']}
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header />
+                                    <Popover.Body>
+                                      {t('connectWalletFirst')}
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
                                 <FormControl
                                   className="text-end ms-0"
                                   type="number"
@@ -509,16 +509,17 @@ const LiqAdd = () => {
                                   autoComplete="off"
                                   autoCorrect="off"
                                 />
-                                <InputGroup.Text
-                                  role="button"
-                                  tabIndex={-1}
-                                  onKeyPress={() => clearInputs(1)}
-                                  onClick={() => clearInputs(1)}
-                                >
-                                  <Icon icon="close" size="10" fill="grey" />
-                                </InputGroup.Text>
-                              </InputGroup>
-                            </OverlayTrigger>
+                              </OverlayTrigger>
+
+                              <InputGroup.Text
+                                role="button"
+                                tabIndex={-1}
+                                onKeyPress={() => clearInputs(1)}
+                                onClick={() => clearInputs(1)}
+                              >
+                                <Icon icon="close" size="10" fill="grey" />
+                              </InputGroup.Text>
+                            </InputGroup>
 
                             <div className="text-end text-sm-label pt-1">
                               ~$
@@ -587,30 +588,30 @@ const LiqAdd = () => {
 
                           <Row className="my-1">
                             <Col>
-                              <OverlayTrigger
-                                placement="auto"
-                                onToggle={() => checkWallet(2)}
-                                show={showWalletWarning2}
-                                trigger={['focus']}
-                                overlay={
-                                  <Popover>
-                                    <Popover.Header />
-                                    <Popover.Body>
-                                      {t('connectWalletFirst')}
-                                    </Popover.Body>
-                                  </Popover>
-                                }
-                              >
-                                <InputGroup className="">
-                                  <InputGroup.Text id="assetSelect2">
-                                    <AssetSelect
-                                      priority="2"
-                                      filter={['token']}
-                                      whiteList={[addr.spartav2]}
-                                      disabled={activeTab === 'addTab1'}
-                                      onClick={handleConfClear}
-                                    />
-                                  </InputGroup.Text>
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect2">
+                                  <AssetSelect
+                                    priority="2"
+                                    filter={['token']}
+                                    whiteList={[addr.spartav2]}
+                                    disabled={activeTab === 'addTab1'}
+                                    onClick={handleConfClear}
+                                  />
+                                </InputGroup.Text>
+                                <OverlayTrigger
+                                  placement="auto"
+                                  onToggle={() => checkWallet(2)}
+                                  show={showWalletWarning2}
+                                  trigger={['focus']}
+                                  overlay={
+                                    <Popover>
+                                      <Popover.Header />
+                                      <Popover.Body>
+                                        {t('connectWalletFirst')}
+                                      </Popover.Body>
+                                    </Popover>
+                                  }
+                                >
                                   <FormControl
                                     className="text-end ms-0"
                                     type="number"
@@ -619,16 +620,17 @@ const LiqAdd = () => {
                                     autoComplete="off"
                                     autoCorrect="off"
                                   />
-                                  <InputGroup.Text
-                                    role="button"
-                                    tabIndex={-1}
-                                    onKeyPress={() => clearInputs(2)}
-                                    onClick={() => clearInputs(2)}
-                                  >
-                                    <Icon icon="close" size="10" fill="grey" />
-                                  </InputGroup.Text>
-                                </InputGroup>
-                              </OverlayTrigger>
+                                </OverlayTrigger>
+
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs(2)}
+                                  onClick={() => clearInputs(2)}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
                               <div className="text-end text-sm-label pt-1">
                                 ~$
                                 {addInput2?.value
@@ -656,41 +658,26 @@ const LiqAdd = () => {
 
                           <Row className="my-1">
                             <Col>
-                              <OverlayTrigger
-                                placement="auto"
-                                onToggle={() => checkWallet(3)}
-                                show={showWalletWarning3}
-                                trigger={['focus']}
-                                overlay={
-                                  <Popover>
-                                    <Popover.Header />
-                                    <Popover.Body>
-                                      {t('connectWalletFirst')}
-                                    </Popover.Body>
-                                  </Popover>
-                                }
-                              >
-                                <InputGroup className="">
-                                  <InputGroup.Text id="assetSelect3">
-                                    <AssetSelect
-                                      priority="3"
-                                      filter={['pool']}
-                                      disabled={
-                                        activeTab === 'addTab1' ||
-                                        assetAdd1.tokenAddress !== addr.spartav2
-                                      }
-                                      onClick={handleConfClear}
-                                    />
-                                  </InputGroup.Text>
-                                  <FormControl
-                                    className="text-end ms-0"
-                                    type="number"
-                                    placeholder="0.00"
-                                    id="addInput3"
-                                    disabled
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect3">
+                                  <AssetSelect
+                                    priority="3"
+                                    filter={['pool']}
+                                    disabled={
+                                      activeTab === 'addTab1' ||
+                                      assetAdd1.tokenAddress !== addr.spartav2
+                                    }
+                                    onClick={handleConfClear}
                                   />
-                                </InputGroup>
-                              </OverlayTrigger>
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder="0.00"
+                                  id="addInput3"
+                                  disabled
+                                />
+                              </InputGroup>
                               <div className="text-end text-sm-label pt-1">
                                 ~$
                                 {addInput1?.value
