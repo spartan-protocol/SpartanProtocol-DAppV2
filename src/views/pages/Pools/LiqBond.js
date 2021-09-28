@@ -285,7 +285,6 @@ const LiqBond = () => {
                                   autoCorrect="off"
                                 />
                               </OverlayTrigger>
-
                               <InputGroup.Text
                                 role="button"
                                 tabIndex={-1}

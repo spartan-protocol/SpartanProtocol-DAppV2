@@ -658,41 +658,26 @@ const LiqAdd = () => {
 
                           <Row className="my-1">
                             <Col>
-                              <OverlayTrigger
-                                placement="auto"
-                                onToggle={() => checkWallet(3)}
-                                show={showWalletWarning3}
-                                trigger={['focus']}
-                                overlay={
-                                  <Popover>
-                                    <Popover.Header />
-                                    <Popover.Body>
-                                      {t('connectWalletFirst')}
-                                    </Popover.Body>
-                                  </Popover>
-                                }
-                              >
-                                <InputGroup className="">
-                                  <InputGroup.Text id="assetSelect3">
-                                    <AssetSelect
-                                      priority="3"
-                                      filter={['pool']}
-                                      disabled={
-                                        activeTab === 'addTab1' ||
-                                        assetAdd1.tokenAddress !== addr.spartav2
-                                      }
-                                      onClick={handleConfClear}
-                                    />
-                                  </InputGroup.Text>
-                                  <FormControl
-                                    className="text-end ms-0"
-                                    type="number"
-                                    placeholder="0.00"
-                                    id="addInput3"
-                                    disabled
+                              <InputGroup className="">
+                                <InputGroup.Text id="assetSelect3">
+                                  <AssetSelect
+                                    priority="3"
+                                    filter={['pool']}
+                                    disabled={
+                                      activeTab === 'addTab1' ||
+                                      assetAdd1.tokenAddress !== addr.spartav2
+                                    }
+                                    onClick={handleConfClear}
                                   />
-                                </InputGroup>
-                              </OverlayTrigger>
+                                </InputGroup.Text>
+                                <FormControl
+                                  className="text-end ms-0"
+                                  type="number"
+                                  placeholder="0.00"
+                                  id="addInput3"
+                                  disabled
+                                />
+                              </InputGroup>
                               <div className="text-end text-sm-label pt-1">
                                 ~$
                                 {addInput1?.value
