@@ -158,33 +158,14 @@ const DaoVault = () => {
           ) : (
             <HelmetLoading />
           )}
-          {typeof wallet.account === 'undefined' ? (
-            <Col>
-              <Card.Footer>
-                <OverlayTrigger
-                  placement="bottom"
-                  overlay={
-                    <Popover>
-                      <Popover.Header />
-                      <Popover.Body>{t('connectWalletFirst')}</Popover.Body>
-                    </Popover>
-                  }
-                >
-                  <Link to="/pools/liquidity">
-                    <Button className="w-100">{t('joinPools')}</Button>
-                  </Link>
-                </OverlayTrigger>
-              </Card.Footer>
-            </Col>
-          ) : (
-            <Col>
-              <Card.Footer>
-                <Link to="/pools/liquidity">
-                  <Button className="w-100">{t('joinPools')}</Button>
-                </Link>
-              </Card.Footer>
-            </Col>
-          )}
+
+          <Col>
+            <Card.Footer>
+              <Link to="/pools/liquidity">
+                <Button className="w-100">{t('joinPools')}</Button>
+              </Link>
+            </Card.Footer>
+          </Col>
         </Card>
       </Col>
 
@@ -199,13 +180,15 @@ const DaoVault = () => {
                     {t('yourWeight')}
                   </Col>
                   <Col className="text-end output-card">
-                    {formatFromWei(
-                      getVaultWeights(
-                        pool.poolDetails,
-                        dao.daoDetails,
-                        bond.bondDetails,
-                      ),
-                    )}
+                    {!wallet.account
+                      ? t('connectWallet')
+                      : formatFromWei(
+                          getVaultWeights(
+                            pool.poolDetails,
+                            dao.daoDetails,
+                            bond.bondDetails,
+                          ),
+                        )}
                     <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
                   </Col>
                 </Row>
@@ -215,13 +198,15 @@ const DaoVault = () => {
                   </Col>
                   <Col className="text-end output-card">
                     {reserve.globalDetails.emissions
-                      ? `${formatFromWei(getClaimable())} SPARTA`
+                      ? !wallet.account
+                        ? t('connectWallet')
+                        : `${formatFromWei(getClaimable())} SPARTA`
                       : t('incentivesDisabled')}
                   </Col>
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {typeof wallet.account === 'undefined' ? (
+                {!wallet.account ? (
                   <>
                     {reserve.globalDetails.emissions ? (
                       <OverlayTrigger
@@ -238,7 +223,7 @@ const DaoVault = () => {
                         <Button
                           className="w-100"
                           onClick={() => handleHarvest()}
-                          disabled={getClaimable() <= 0}
+                          disabled={!wallet.account || getClaimable() <= 0}
                         >
                           {t('harvestAll')}
                           {txnLoading && (

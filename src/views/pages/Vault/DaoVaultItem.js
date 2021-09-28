@@ -1,12 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Button,
-  Card,
-  Col,
-  Row,
-  Popover,
-  OverlayTrigger,
-} from 'react-bootstrap'
+import { Button, Card, Col, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -58,6 +51,9 @@ const DaoVaultItem = ({ i, claimable }) => {
   }
 
   const checkValid = () => {
+    if (!wallet.account) {
+      return [false, t('checkWallet'), false]
+    }
     if (i.staked > 0) {
       if (getLockedSecs()[0] > 0) {
         return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
@@ -133,53 +129,19 @@ const DaoVaultItem = ({ i, claimable }) => {
                 />
               </Col>
               <Col xs="6" className="ps-1">
-                {typeof wallet.account === 'undefined' ? (
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={
-                      <Popover>
-                        <Popover.Header />
-                        <Popover.Body>{t('connectWalletFirst')}</Popover.Body>
-                      </Popover>
-                    }
-                  >
-                    <Button
-                      className="w-100"
-                      onClick={() => handleWithdraw()}
-                      disabled={!checkValid()[0]}
-                    >
-                      {checkValid()[2] && (
-                        <Icon
-                          icon={checkValid()[2]}
-                          size="15"
-                          className="mb-1"
-                        />
-                      )}
-                      {checkValid()[1]}
-                      {txnLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
-                  </OverlayTrigger>
-                ) : (
-                  <Button
-                    className="w-100"
-                    onClick={() => handleWithdraw()}
-                    disabled={!checkValid()[0]}
-                  >
-                    {checkValid()[2] && (
-                      <Icon icon={checkValid()[2]} size="15" className="mb-1" />
-                    )}
-                    {checkValid()[1]}
-                    {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                    )}
-                  </Button>
-                )}
+                <Button
+                  className="w-100"
+                  onClick={() => handleWithdraw()}
+                  disabled={!wallet.account || !checkValid()[0]}
+                >
+                  {checkValid()[2] && (
+                    <Icon icon={checkValid()[2]} size="15" className="mb-1" />
+                  )}
+                  {checkValid()[1]}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
+                </Button>
               </Col>
             </Row>
           </Card.Footer>

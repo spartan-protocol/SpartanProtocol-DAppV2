@@ -376,7 +376,7 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleVote()}
-                      disabled={proposal.memberVoted}
+                      disabled={!wallet.account || proposal.memberVoted}
                     >
                       {t('voteUp')}
                       {voteLoading && (
@@ -389,39 +389,21 @@ const ProposalItem = ({ proposal }) => {
                     </Button>
                   </Col>
                   <Col className="mb-2">
-                    {typeof wallet.account === 'undefined' ? (
-                      <Button
-                        className="w-100"
-                        size="sm"
-                        onClick={() => handleUnvote()}
-                        disabled="disabled" // {!proposal.memberVoted}
-                      >
-                        {t('voteDown')}
-                        {unvoteLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    ) : (
-                      <Button
-                        className="w-100"
-                        size="sm"
-                        onClick={() => handleUnvote()}
-                        disabled={!proposal.memberVoted}
-                      >
-                        {t('voteDown')}
-                        {unvoteLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    )}
+                    <Button
+                      className="w-100"
+                      size="sm"
+                      onClick={() => handleUnvote()}
+                      disabled={!wallet.account || !proposal.memberVoted}
+                    >
+                      {t('voteDown')}
+                      {unvoteLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
+                    </Button>
                   </Col>
                 </Row>
 
@@ -434,7 +416,9 @@ const ProposalItem = ({ proposal }) => {
                         size="sm"
                         onClick={() => handleFinal()}
                         disabled={
-                          !proposal.finalising || getTimeCooloff()[0] > 0
+                          !wallet.account ||
+                          !proposal.finalising ||
+                          getTimeCooloff()[0] > 0
                         }
                       >
                         {t('finalise')}
@@ -452,7 +436,7 @@ const ProposalItem = ({ proposal }) => {
                         className="w-100"
                         size="sm"
                         onClick={() => handlePoll()}
-                        disabled={!canPoll()}
+                        disabled={!wallet.account || !canPoll()}
                       >
                         {t('pollVotes')}
                         {pollLoading && (
@@ -466,41 +450,22 @@ const ProposalItem = ({ proposal }) => {
                     )}
                   </Col>
                   <Col className="">
-                    {typeof wallet.account === 'undefined' ? (
-                      <Button
-                        variant="secondary"
-                        className="w-100"
-                        size="sm"
-                        onClick={() => handleCancel()}
-                        disabled="disabled" // {getTimeCancel()[0] > 0}
-                      >
-                        {t('cancel')}
-                        {cancelLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="secondary"
-                        className="w-100"
-                        size="sm"
-                        onClick={() => handleCancel()}
-                        disabled={getTimeCancel()[0] > 0}
-                      >
-                        {t('cancel')}
-                        {cancelLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    )}
+                    <Button
+                      variant="secondary"
+                      className="w-100"
+                      size="sm"
+                      onClick={() => handleCancel()}
+                      disabled={!wallet.account || getTimeCancel()[0] > 0}
+                    >
+                      {t('cancel')}
+                      {cancelLoading && (
+                        <Icon
+                          icon="cycle"
+                          size="20"
+                          className="anim-spin ms-1"
+                        />
+                      )}
+                    </Button>
                   </Col>
                 </Row>
               </>
