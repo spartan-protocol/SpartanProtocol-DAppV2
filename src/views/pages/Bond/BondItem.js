@@ -49,7 +49,7 @@ const BondItem = (props) => {
 
   const estMaxGas = ''
   const enoughGas = () => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
