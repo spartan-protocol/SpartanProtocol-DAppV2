@@ -36,14 +36,12 @@ const DaoWithdrawModal = (props) => {
   }
 
   const getLastDeposit = () => {
+    let lastDeposit = '99999999999999999999999999999'
     if (dao.lastDeposits.length > 0) {
-      let lastDeposit = dao.lastDeposits.filter(
-        (x) => x.address === props.address,
-      )
-      lastDeposit = lastDeposit[0].lastDeposit
-      return lastDeposit
+      const _item = dao.lastDeposits.filter((x) => x.address === props.address)
+      lastDeposit = _item[0]?.lastDeposit
     }
-    return '99999999999999999999999999999'
+    return lastDeposit
   }
 
   const getLockedSecs = () => {
@@ -104,80 +102,104 @@ const DaoWithdrawModal = (props) => {
       >
         {t('withdraw')}
       </Button>
-
-      <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
-          <div xs="auto" className="position-relative me-3">
-            <img src={token.symbolUrl} alt={token.symbol} height="50px" />
-            <img
-              height="25px"
-              src={spartaIcon}
-              alt="Sparta LP token icon"
-              className="token-badge-modal-header"
-            />
-          </div>
-          {t('withdraw')} {token.symbol}p
-        </Modal.Header>
-        <Modal.Body>
-          <Row className="my-1">
-            <Col xs="auto" className="text-card">
-              {t('amount')}
-            </Col>
-            <Col className="text-end output-card">
-              {formatFromWei(_dao.staked)} {token.symbol}p
-            </Col>
-          </Row>
-          <Row xs="12" className="my-2">
-            <Col xs="12" className="output-card">
-              You will be withdrawing all your staked {token.symbol}p tokens
-              from the DAOVault to your wallet
-            </Col>
-          </Row>
-          {secsSinceHarvest() > 300 && (
-            <>
-              <hr />
-              <Row xs="12" className="my-2">
-                <Col xs="12" className="output-card">
-                  Your existing harvest timer will be reset, harvest before this
-                  withdrawal to avoid forfeiting any accumulated rewards:
-                </Col>
-              </Row>
-              <Row xs="12" className="">
-                <Col xs="auto" className="text-card">
-                  Harvest forfeiting
-                </Col>
-                <Col className="text-end output-card">
-                  {formatFromWei(props.claimable)} SPARTA
-                </Col>
-              </Row>
-              <Form className="my-2 text-center">
-                <span className="output-card">
-                  Confirm harvest time reset
-                  <Form.Check
-                    type="switch"
-                    id="confirmHarvest"
-                    className="ms-2 d-inline-flex"
-                    checked={harvestConfirm}
-                    onChange={() => setHarvestConfirm(!harvestConfirm)}
-                  />
-                </span>
-              </Form>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Row className="text-center w-100">
-            <Col xs="12" className="hide-if-prior-sibling">
-              <Row>
-                {props.claimable > 0 && secsSinceHarvest() > 300 && (
+      {!props.disabled && (
+        <Modal show={showModal} onHide={() => handleCloseModal()} centered>
+          <Modal.Header closeButton closeVariant="white">
+            <div xs="auto" className="position-relative me-3">
+              <img src={token.symbolUrl} alt={token.symbol} height="50px" />
+              <img
+                height="25px"
+                src={spartaIcon}
+                alt="Sparta LP token icon"
+                className="token-badge-modal-header"
+              />
+            </div>
+            {t('withdraw')} {token.symbol}p
+          </Modal.Header>
+          <Modal.Body>
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('amount')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromWei(_dao.staked)} {token.symbol}p
+              </Col>
+            </Row>
+            <Row xs="12" className="my-2">
+              <Col xs="12" className="output-card">
+                You will be withdrawing all your staked {token.symbol}p tokens
+                from the DAOVault to your wallet
+              </Col>
+            </Row>
+            {secsSinceHarvest() > 300 && (
+              <>
+                <hr />
+                <Row xs="12" className="my-2">
+                  <Col xs="12" className="output-card">
+                    Your existing harvest timer will be reset, harvest before
+                    this withdrawal to avoid forfeiting any accumulated rewards:
+                  </Col>
+                </Row>
+                <Row xs="12" className="">
+                  <Col xs="auto" className="text-card">
+                    Harvest forfeiting
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatFromWei(props.claimable)} SPARTA
+                  </Col>
+                </Row>
+                <Form className="my-2 text-center">
+                  <span className="output-card">
+                    Confirm harvest time reset
+                    <Form.Check
+                      type="switch"
+                      id="confirmHarvest"
+                      className="ms-2 d-inline-flex"
+                      checked={harvestConfirm}
+                      onChange={() => setHarvestConfirm(!harvestConfirm)}
+                    />
+                  </span>
+                </Form>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Row className="text-center w-100">
+              <Col xs="12" className="hide-if-prior-sibling">
+                <Row>
+                  {props.claimable > 0 && secsSinceHarvest() > 300 && (
+                    <Col>
+                      <Button
+                        className="w-100"
+                        onClick={() => handleHarvest()}
+                        disabled={props.claimable <= 0}
+                      >
+                        {t('harvest')}
+                        {harvestLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    </Col>
+                  )}
                   <Col>
                     <Button
                       className="w-100"
-                      onClick={() => handleHarvest()}
-                      disabled={props.claimable <= 0}
+                      onClick={() => handleWithdraw()}
+                      disabled={!checkValid()[0]}
                     >
-                      {t('harvest')}
-                      {harvestLoading && (
+                      {checkValid()[2] && (
+                        <Icon
+                          icon={checkValid()[2]}
+                          size="15"
+                          className="mb-1"
+                        />
+                      )}
+                      {checkValid()[1]}
+                      {txnLoading && (
                         <Icon
                           icon="cycle"
                           size="20"
@@ -186,27 +208,12 @@ const DaoWithdrawModal = (props) => {
                       )}
                     </Button>
                   </Col>
-                )}
-                <Col>
-                  <Button
-                    className="w-100"
-                    onClick={() => handleWithdraw()}
-                    disabled={!checkValid()[0]}
-                  >
-                    {checkValid()[2] && (
-                      <Icon icon={checkValid()[2]} size="15" className="mb-1" />
-                    )}
-                    {checkValid()[1]}
-                    {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                    )}
-                  </Button>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Modal.Footer>
-      </Modal>
+                </Row>
+              </Col>
+            </Row>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   )
 }

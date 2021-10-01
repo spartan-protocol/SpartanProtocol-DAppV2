@@ -103,7 +103,7 @@ const DaoVaultItem = ({ i, claimable }) => {
                 <DaoWithdrawModal
                   tokenAddress={i.tokenAddress}
                   address={i.address}
-                  disabled={i.balance <= 0}
+                  disabled={i.staked <= 0}
                   claimable={claimable}
                 />
               </Col>
