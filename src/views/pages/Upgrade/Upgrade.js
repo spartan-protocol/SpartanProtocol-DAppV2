@@ -131,7 +131,7 @@ const Upgrade = () => {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {bnbBalance > 5000000000000000 && (
+                {bnbBalance > 2000000000000000 && (
                   <Row className="">
                     <Col xs="12" className="">
                       <Button
@@ -151,7 +151,7 @@ const Upgrade = () => {
                     </Col>
                   </Row>
                 )}
-                {bnbBalance <= 5000000000000000 && (
+                {bnbBalance <= 2000000000000000 && (
                   <Row className="">
                     <Col xs="12" className="">
                       <Button variant="info" className="w-100" disabled>
@@ -192,7 +192,7 @@ const Upgrade = () => {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {bnbBalance > 5000000000000000 && (
+                {bnbBalance > 2000000000000000 && (
                   <Row className="">
                     <Col xs="12" className="">
                       <Button
@@ -212,7 +212,7 @@ const Upgrade = () => {
                     </Col>
                   </Row>
                 )}
-                {bnbBalance <= 5000000000000000 && (
+                {bnbBalance <= 2000000000000000 && (
                   <Row className="">
                     <Col xs="12" className="">
                       <Button variant="info" className="w-100" disabled>

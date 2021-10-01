@@ -1,32 +1,29 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
+import React from 'react'
+import { Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
-import { synthWithdraw } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import { useReserve } from '../../../store/reserve/selector'
 import { useSparta } from '../../../store/sparta/selector'
 import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
+import SynthWithdrawModal from './Components/SynthWithdrawModal'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY, getTimeSince } from '../../../utils/math/nonContract'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
+import SynthHarvestModal from './Components/SynthHarvestModal'
 
-const SynthVaultItem = ({ synthItem, claimArray }) => {
+const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
   const sparta = useSparta()
   const reserve = useReserve()
   const synth = useSynth()
   const pool = usePool()
   const wallet = useWeb3React()
-  const dispatch = useDispatch()
-
-  const [txnLoading, setTxnLoading] = useState(false)
 
   const getToken = (_tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddress)[0]
@@ -72,12 +69,6 @@ const SynthVaultItem = ({ synthItem, claimArray }) => {
   }
 
   const isLightMode = window.localStorage.getItem('theme')
-
-  const handleWithdraw = async () => {
-    setTxnLoading(true)
-    await dispatch(synthWithdraw(synthItem.address, '10000', wallet))
-    setTxnLoading(false)
-  }
 
   return (
     <>
@@ -206,20 +197,19 @@ const SynthVaultItem = ({ synthItem, claimArray }) => {
                 <SynthDepositModal
                   tokenAddress={synthItem.tokenAddress}
                   disabled={synthItem.balance <= 0}
-                  claimArray={claimArray}
                 />
               </Col>
               <Col xs="6" className="ps-1">
-                <Button
-                  className="w-100"
-                  onClick={() => handleWithdraw()}
+                <SynthWithdrawModal
+                  synthItem={synthItem}
                   disabled={synthItem.staked <= 0}
-                >
-                  {t('withdraw')}
-                  {txnLoading && (
-                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                  )}
-                </Button>
+                  claimable={checkValid()}
+                />
+              </Col>
+            </Row>
+            <Row className="mt-2">
+              <Col xs="12" className="">
+                <SynthHarvestModal synthItem={synthItem} />
               </Col>
             </Row>
           </Card.Footer>

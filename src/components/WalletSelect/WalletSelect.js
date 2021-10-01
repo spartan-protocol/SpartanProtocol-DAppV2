@@ -307,9 +307,12 @@ const WalletSelect = (props) => {
     if (!pool.tokenDetails || !pool.poolDetails || !synth.synthDetails) {
       return <Icon icon="cycle" size="15" className="anim-spin" />
     }
-    let count = synth.synthDetails.filter((asset) => asset.balance > 0).length
-    count += synth.synthDetails.filter((asset) => asset.staked > 0).length
-    return count
+    if (synth.synthDetails.length > 0) {
+      let count = synth.synthDetails.filter((asset) => asset.balance > 0).length
+      count += synth.synthDetails.filter((asset) => asset.staked > 0).length
+      return count
+    }
+    return 0
   }
 
   return (

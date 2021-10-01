@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { Button, Col } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import {
@@ -11,6 +12,8 @@ import {
 } from '../../store/web3'
 
 import { BN } from '../../utils/bigNumber'
+import { getToken } from '../../utils/math/utils'
+import { getAddresses } from '../../utils/web3'
 import { Icon } from '../Icons/icons'
 import Notifications from '../Notifications/Notifications'
 
@@ -35,6 +38,8 @@ const Approval = ({
   const web3 = useWeb3()
   const pool = usePool()
   const wallet = useWeb3React()
+  const { t } = useTranslation()
+  const addr = getAddresses()
 
   const [notify, setNotify] = useState(false)
   const [pending, setPending] = useState(false)
@@ -71,6 +76,16 @@ const Approval = ({
     assetNumber,
   ])
 
+  // ~0.00047 BNB gas (approval) on TN || ~0.00025 BNB on MN
+  const estMaxGas = '250000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   return (
     <>
       {BN(web3[`allowance${assetNumber}`]).isLessThan(txnAmount) && (
@@ -83,7 +98,7 @@ const Approval = ({
             }}
           >
             <Icon icon="lock" fill="white" size="20" className="me-1" />
-            Approve {symbol}
+            {enoughGas ? <>Approve {symbol}</> : t('checkBnbGas')}
             {pending && (
               <Icon icon="cycle" size="20" className="anim-spin ms-1" />
             )}

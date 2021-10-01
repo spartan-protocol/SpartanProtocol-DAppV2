@@ -23,7 +23,7 @@ import {
 } from '../../../store/dao/actions'
 import Approval from '../../../components/Approval/Approval'
 import { getAddresses, getNetwork, tempChains } from '../../../utils/web3'
-import { convertToWei } from '../../../utils/bigNumber'
+import { BN, convertToWei } from '../../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
@@ -34,6 +34,7 @@ import { useDao } from '../../../store/dao/selector'
 import { useSynth } from '../../../store/synth/selector'
 import { usePool } from '../../../store/pool'
 import { useBond } from '../../../store/bond'
+import { getToken } from '../../../utils/math/utils'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
@@ -207,6 +208,16 @@ const NewProposal = () => {
     setSelectedType(proposalTypes.filter((i) => i.value === value)[0])
   }
 
+  // 0.0015 BNB || 0.001 BNB
+  const estMaxGas = '1000000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   return (
     <>
       <Button
@@ -377,16 +388,22 @@ const NewProposal = () => {
               </Button>
             )}
             <Col xs="12" className="hide-if-prior-sibling">
-              <Button
-                className="w-100"
-                disabled={!wallet.account || !feeConfirm || !formValid}
-                onClick={() => handleSubmit()}
-              >
-                {!wallet.account ? t('checkWallet') : t('confirm')}
-                {txnLoading && (
-                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                )}
-              </Button>
+              {!enoughGas() ? (
+                <Button className="w-100" disabled>
+                  {t('checkBnbGas')}
+                </Button>
+              ) : (
+                <Button
+                  className="w-100"
+                  disabled={!wallet.account || !feeConfirm || !formValid}
+                  onClick={() => handleSubmit()}
+                >
+                  {!wallet.account ? t('checkWallet') : t('confirm')}
+                  {txnLoading && (
+                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                  )}
+                </Button>
+              )}
             </Col>
           </Row>
         </Modal.Footer>

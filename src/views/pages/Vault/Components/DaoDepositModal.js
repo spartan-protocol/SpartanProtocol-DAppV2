@@ -13,7 +13,7 @@ import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import Approval from '../../../../components/Approval/Approval'
 import { getAddresses } from '../../../../utils/web3'
-import { getDao } from '../../../../utils/math/utils'
+import { getDao, getToken } from '../../../../utils/math/utils'
 import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../../utils/math/nonContract'
@@ -71,9 +71,22 @@ const DaoDepositModal = (props) => {
     handleCloseModal()
   }
 
+  // 0.00088  === 0.0005
+  const estMaxGas = '500000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (deposit() <= 0) {
       return [false, t('checkInput')]
@@ -220,9 +233,9 @@ const DaoDepositModal = (props) => {
                     <Button
                       className="w-100"
                       onClick={() => handleHarvest()}
-                      disabled={props.claimable <= 0}
+                      disabled={props.claimable <= 0 || !enoughGas()}
                     >
-                      {t('harvest')}
+                      {enoughGas() ? t('harvest') : t('checkBnbGas')}
                       {harvestLoading && (
                         <Icon
                           icon="cycle"

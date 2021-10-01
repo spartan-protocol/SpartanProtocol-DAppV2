@@ -7,30 +7,25 @@ import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import {
   getSynthGlobalDetails,
-  synthHarvest,
   synthVaultWeight,
   getSynthDetails,
   getSynthMemberDetails,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
-import { useReserve } from '../../../store/reserve/selector'
-import {
-  getSecsSince,
-  getSynthVaultWeights,
-} from '../../../utils/math/nonContract'
+import { getSynthVaultWeights } from '../../../utils/math/nonContract'
 import { usePool } from '../../../store/pool'
 import { Icon } from '../../../components/Icons/icons'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import SynthHarvestAllModal from './Components/SynthHarvestAllModal'
 
 const SynthVault = () => {
   const { t } = useTranslation()
-  const reserve = useReserve()
   const synth = useSynth()
   const pool = usePool()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
-  const [txnLoading, setTxnLoading] = useState(false)
+
   const [trigger0, settrigger0] = useState(0)
 
   const getGlobals = () => {
@@ -69,24 +64,6 @@ const SynthVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [synth.synthDetails])
 
-  const [claimArray, setClaimArray] = useState([])
-  useEffect(() => {
-    if (synth.synthDetails.length > 1) {
-      const tempArray = []
-      synth.synthDetails
-        .filter(
-          (x) =>
-            x.staked > 0 &&
-            getSecsSince(x.lastHarvest).isGreaterThan(
-              synth.globalDetails.minTime,
-            ),
-        )
-        .map((x) => tempArray.push(x.address))
-      setClaimArray(tempArray)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthDetails])
-
   const isLoading = () => {
     if (
       synth.synthDetails.length > 1 &&
@@ -96,12 +73,6 @@ const SynthVault = () => {
       return false
     }
     return true
-  }
-
-  const handleHarvest = async () => {
-    setTxnLoading(true)
-    await dispatch(synthHarvest(claimArray, wallet))
-    setTxnLoading(false)
   }
 
   return (
@@ -211,25 +182,7 @@ const SynthVault = () => {
                 </Row>
               </Card.Body>
               <Card.Footer xs="12">
-                {reserve.globalDetails.emissions ? (
-                  <Button
-                    className="w-100"
-                    onClick={() => handleHarvest()}
-                    disabled={
-                      synth.memberDetails?.totalWeight <= 0 ||
-                      claimArray.length <= 0
-                    }
-                  >
-                    {t('harvestAll')}
-                    {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                    )}
-                  </Button>
-                ) : (
-                  <Button className="w-100" disabled>
-                    {t('incentivesDisabled')}
-                  </Button>
-                )}
+                <SynthHarvestAllModal />
               </Card.Footer>
             </>
           ) : (
@@ -240,13 +193,7 @@ const SynthVault = () => {
       {!isLoading() &&
         synth.synthDetails
           .filter((i) => i.address !== false)
-          .map((i) => (
-            <SynthVaultItem
-              key={i.address}
-              synthItem={i}
-              claimArray={claimArray}
-            />
-          ))}
+          .map((i) => <SynthVaultItem key={i.address} synthItem={i} />)}
     </Row>
   )
 }
