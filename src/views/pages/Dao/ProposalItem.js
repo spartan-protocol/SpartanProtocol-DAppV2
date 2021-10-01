@@ -16,7 +16,7 @@ import { usePool } from '../../../store/pool/selector'
 import { useSparta } from '../../../store/sparta/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { getExplorerContract, getExplorerWallet } from '../../../utils/extCalls'
-import { formatShortString } from '../../../utils/web3'
+import { formatShortString, getAddresses } from '../../../utils/web3'
 import { proposalTypes } from './types'
 import {
   formatDate,
@@ -36,6 +36,7 @@ const ProposalItem = ({ proposal }) => {
   const wallet = useWeb3React()
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const addr = getAddresses()
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
 
   const [voteLoading, setVoteLoading] = useState(false)
@@ -72,6 +73,24 @@ const ProposalItem = ({ proposal }) => {
     setFinalLoading(true)
     await dispatch(finaliseProposal(wallet))
     setFinalLoading(false)
+  }
+
+  const getToken = (tokenAddress) =>
+    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+
+  const getPool = (tokenAddress) =>
+    pool.poolDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+
+  const estMaxGasVote = '750000000000000' // 0.001 || 0.00075
+  const estMaxGasPoll = '1000000000000000' // 0.002 || 0.001
+  const estMaxGasCancel = '150000000000000' // 0.00025 || 0.00015
+  const estMaxGasFinal = '5000000000000000' // 0.005 || 0.005
+  const enoughGas = (maxGasAmnt) => {
+    const bal = getToken(addr.bnb).balance
+    if (BN(bal).isLessThan(maxGasAmnt)) {
+      return false
+    }
+    return true
   }
 
   const isLoading = () => {
@@ -162,12 +181,6 @@ const ProposalItem = ({ proposal }) => {
     }
     return t('failedProposal')
   }
-
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
-  const getPool = (tokenAddress) =>
-    pool.poolDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
 
   const getDetails = () => {
     // 'GET_SPARTA' = '2.5M SPARTA'
@@ -382,9 +395,15 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleVote()}
-                      disabled={!wallet.account || proposal.memberVoted}
+                      disabled={
+                        !wallet.account ||
+                        proposal.memberVoted ||
+                        !enoughGas(estMaxGasVote)
+                      }
                     >
-                      {t('voteUp')}
+                      {!enoughGas(estMaxGasVote)
+                        ? t('checkBnbGas')
+                        : t('voteUp')}
                       {voteLoading && (
                         <Icon
                           icon="cycle"
@@ -399,9 +418,15 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleUnvote()}
-                      disabled={!wallet.account || !proposal.memberVoted}
+                      disabled={
+                        !wallet.account ||
+                        !proposal.memberVoted ||
+                        !enoughGas(estMaxGasVote)
+                      }
                     >
-                      {t('voteDown')}
+                      {!enoughGas(estMaxGasVote)
+                        ? t('checkBnbGas')
+                        : t('voteDown')}
                       {unvoteLoading && (
                         <Icon
                           icon="cycle"
@@ -424,10 +449,13 @@ const ProposalItem = ({ proposal }) => {
                         disabled={
                           !wallet.account ||
                           !proposal.finalising ||
-                          getTimeCooloff()[0] > 0
+                          getTimeCooloff()[0] > 0 ||
+                          !enoughGas(estMaxGasFinal)
                         }
                       >
-                        {t('finalise')}
+                        {!enoughGas(estMaxGasFinal)
+                          ? t('checkBnbGas')
+                          : t('finalise')}
                         {finalLoading && (
                           <Icon
                             icon="cycle"
@@ -442,9 +470,15 @@ const ProposalItem = ({ proposal }) => {
                         className="w-100"
                         size="sm"
                         onClick={() => handlePoll()}
-                        disabled={!wallet.account || !canPoll()}
+                        disabled={
+                          !wallet.account ||
+                          !canPoll() ||
+                          !enoughGas(estMaxGasPoll)
+                        }
                       >
-                        {t('pollVotes')}
+                        {!enoughGas(estMaxGasPoll)
+                          ? t('checkBnbGas')
+                          : t('pollVotes')}
                         {pollLoading && (
                           <Icon
                             icon="cycle"
@@ -461,9 +495,15 @@ const ProposalItem = ({ proposal }) => {
                       className="w-100"
                       size="sm"
                       onClick={() => handleCancel()}
-                      disabled={!wallet.account || getTimeCancel()[0] > 0}
+                      disabled={
+                        !wallet.account ||
+                        getTimeCancel()[0] > 0 ||
+                        !enoughGas(estMaxGasCancel)
+                      }
                     >
-                      {t('cancel')}
+                      {!enoughGas(estMaxGasCancel)
+                        ? t('checkBnbGas')
+                        : t('cancel')}
                       {cancelLoading && (
                         <Icon
                           icon="cycle"

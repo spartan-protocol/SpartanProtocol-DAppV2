@@ -11,10 +11,11 @@ import {
 import { useDao } from '../../../../store/dao/selector'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
-import { getDao } from '../../../../utils/math/utils'
+import { getDao, getToken } from '../../../../utils/math/utils'
 import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../../utils/math/nonContract'
+import { getAddresses } from '../../../../utils/web3'
 
 const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
@@ -22,6 +23,7 @@ const DaoWithdrawModal = (props) => {
   const pool = usePool()
   const dao = useDao()
   const wallet = useWeb3React()
+  const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
@@ -51,9 +53,22 @@ const DaoWithdrawModal = (props) => {
     return [units, time]
   }
 
+  // *CHECK*  === *CHECK*
+  const estMaxGas = '1000000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet'), false]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (getLockedSecs()[0] > 0) {
       return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
@@ -172,9 +187,9 @@ const DaoWithdrawModal = (props) => {
                       <Button
                         className="w-100"
                         onClick={() => handleHarvest()}
-                        disabled={props.claimable <= 0}
+                        disabled={props.claimable <= 0 || !enoughGas()}
                       >
-                        {t('harvest')}
+                        {enoughGas() ? t('harvest') : t('checkBnbGas')}
                         {harvestLoading && (
                           <Icon
                             icon="cycle"

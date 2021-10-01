@@ -22,7 +22,6 @@ import { useReserve } from '../../../../store/reserve/selector'
 import { getSecsSince } from '../../../../utils/math/nonContract'
 
 const SynthDepositModal = ({ tokenAddress, disabled }) => {
-  const [percentage, setpercentage] = useState('0')
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
@@ -32,6 +31,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const wallet = useWeb3React()
   const addr = getAddresses()
 
+  const [percentage, setpercentage] = useState('0')
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
@@ -97,6 +97,16 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     return [reward, baseCapped, synthCapped]
   }
 
+  // *CHECK === *CHECK
+  const estMaxGas = '5000000000000000'
+  const enoughGas = () => {
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    if (BN(bal).isLessThan(estMaxGas)) {
+      return false
+    }
+    return true
+  }
+
   const checkValidHarvest = () => {
     const reward = formatFromWei(getClaimable()[0], 4)
     if (!reserve.globalDetails.emissions) {
@@ -117,6 +127,9 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     }
     if (secsUntilUnlocked() !== true) {
       return [false, `in ${secsUntilUnlocked()} secs`]
+    }
+    if (!enoughGas()) {
+      return [false, t('checkBnbGas')]
     }
     if (deposit() <= 0) {
       return [false, t('checkInput')]
@@ -179,7 +192,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
             <Row xs="12" className="my-2">
               <Col xs="12" className="output-card">
                 This deposit will disable withdraw on all staked SynthYield
-                tokens for 24 hours:
+                tokens for {synth.globalDetails.minTime} seconds:
               </Col>
             </Row>
             <Row xs="12" className="">
@@ -205,7 +218,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
               ))}
             <Form className="my-2 text-center">
               <span className="output-card">
-                Confirm 24hr withdraw lockout
+                Confirm {synth.globalDetails.minTime} seconds withdraw lockout
                 <Form.Check
                   type="switch"
                   id="confirmLockout"
@@ -267,9 +280,9 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                       <Button
                         className="w-100"
                         onClick={() => handleHarvest()}
-                        disabled={synth1.staked <= 0}
+                        disabled={synth1.staked <= 0 || !enoughGas()}
                       >
-                        {t('harvest')}
+                        {enoughGas() ? t('harvest') : t('checkBnbGas')}
                         {harvestLoading && (
                           <Icon
                             icon="cycle"
