@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, InputGroup, FormControl, Nav, Modal } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
@@ -32,6 +33,12 @@ const AssetSelect = (props) => {
   const [activeTab, setActiveTab] = useState('all')
   const pool = usePool()
 
+  const wallet = useWeb3React()
+
+  const isBNB = (asset) => {
+    if (asset.symbol === 'BNB') return true
+    return false
+  }
   const toggleModal = () => {
     setShowModal(!showModal)
   }
@@ -255,8 +262,17 @@ const AssetSelect = (props) => {
 
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
+
     if (walletType === 'MM') {
-      dispatch(watchAsset(asset.actualAddr, asset.symbol, '18', asset.iconUrl))
+      dispatch(
+        watchAsset(
+          asset.actualAddr,
+          `${asset?.symbol}`,
+          '18',
+          asset.iconUrl,
+          wallet,
+        ),
+      )
     }
   }
 
@@ -470,18 +486,28 @@ const AssetSelect = (props) => {
                               handleWatchAsset(asset)
                             }}
                           >
-                            {getWalletType() === 'MM' ? (
-                              <Icon
-                                icon="metamask"
-                                size="24"
-                                className="ms-2"
+                            {isBNB(asset) ? (
+                              <img
+                                width="24px"
+                                alt="empty"
+                                className="invisible"
                               />
                             ) : (
-                              <Icon
-                                icon="trustwallet"
-                                size="24"
-                                className="ms-2"
-                              />
+                              <>
+                                {getWalletType() === 'MM' ? (
+                                  <Icon
+                                    icon="metamask"
+                                    size="24"
+                                    className="ms-2"
+                                  />
+                                ) : (
+                                  <Icon
+                                    icon="trustwallet"
+                                    size="24"
+                                    className="ms-2"
+                                  />
+                                )}
+                              </>
                             )}
                           </div>
                         </a>
@@ -555,18 +581,28 @@ const AssetSelect = (props) => {
                                 handleWatchAsset(asset)
                               }}
                             >
-                              {getWalletType() === 'MM' ? (
-                                <Icon
-                                  icon="metamask"
-                                  size="24"
-                                  className="ms-2"
+                              {isBNB(asset) ? (
+                                <img
+                                  width="24px"
+                                  alt="empty"
+                                  className="invisible"
                                 />
                               ) : (
-                                <Icon
-                                  icon="trustwallet"
-                                  size="24"
-                                  className="ms-2"
-                                />
+                                <>
+                                  {getWalletType() === 'MM' ? (
+                                    <Icon
+                                      icon="metamask"
+                                      size="24"
+                                      className="ms-2"
+                                    />
+                                  ) : (
+                                    <Icon
+                                      icon="trustwallet"
+                                      size="24"
+                                      className="ms-2"
+                                    />
+                                  )}
+                                </>
                               )}
                             </div>
                           </a>

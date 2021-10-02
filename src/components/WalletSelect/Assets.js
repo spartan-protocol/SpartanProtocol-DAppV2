@@ -30,6 +30,11 @@ const Assets = () => {
     return false
   }
 
+  const isBNB = (asset) => {
+    if (asset.symbol === 'BNB') return true
+    return false
+  }
+
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
     if (walletType === 'MM') {
@@ -76,6 +81,51 @@ const Assets = () => {
     }
     return '0.00'
   }
+  /* eslint no-return-assign: "error" */
+
+  const getTotalValue = () => {
+    let total = BN(0)
+    pool.tokenDetails
+      ?.filter((asset) => asset.balance > 0)
+      .map(
+        (asset) => (total = total.plus(getUSD(asset.address, asset.balance))),
+      )
+
+    if (!total.isZero()) {
+      return (
+        <Row key="total-assets" className="mb-3 output-card">
+          <Col xs="auto" className="pe-1">
+            {' '}
+            <img width="35px" alt="empty" className="invisible" />
+          </Col>
+          <Col className="align-items-center">
+            <Row>
+              <hr />
+            </Row>
+            <Row>
+              <Col xs="auto">Total</Col>
+              <Col className="hide-i5">
+                <div className="text-end mt-2">
+                  ~$ {formatFromWei(total, 0)}
+                </div>
+              </Col>
+            </Row>
+          </Col>
+          <Col xs="auto" className="text-right">
+            <Row>
+              <Col xs="6" className="mt-1">
+                <Icon className="invisible" size="24" />
+              </Col>
+              <Col xs="6" className="mt-1">
+                <Icon className="invisible" size="24" />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      )
+    }
+    return ''
+  }
 
   const isLoading = () => {
     if (!pool.poolDetails && tempChains.includes(wallet.chainId)) {
@@ -87,76 +137,98 @@ const Assets = () => {
   return (
     <>
       {!isLoading() ? (
-        pool.tokenDetails
-          ?.filter((asset) => asset.balance > 0)
-          .sort(
-            (a, b) =>
-              convertFromWei(getUSD(b.address, b.balance)) -
-              convertFromWei(getUSD(a.address, a.balance)),
-          )
-          .map((asset) => (
-            <Row key={`${asset.address}-asset`} className="mb-3 output-card">
-              <Col xs="auto" className="pe-1">
-                <img
-                  height="35px"
-                  src={asset.symbolUrl}
-                  alt={asset.name}
-                  className=""
-                />
-              </Col>
-              <Col className="align-items-center">
-                <Row>
-                  <Col xs="auto">
-                    {asset.symbol} - {t('wallet')}
-                    <div className="description">
-                      {formatFromWei(asset.balance)}
-                    </div>
-                  </Col>
-                  <Col className="hide-i5">
-                    <div className="text-end mt-2">
-                      ~$
-                      {formatFromWei(getUSD(asset.address, asset.balance), 0)}
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
-
-              <Col xs="auto" className="text-right">
-                <Row>
-                  <Col xs="6" className="mt-1">
-                    <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
-                    </ShareLink>
-                  </Col>
-                  {getWalletType() && (
-                    <Col xs="6" className="mt-1">
-                      <a
-                        href={
-                          getWalletType() === 'TW'
-                            ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                            : '#section'
-                        }
-                      >
-                        <div
-                          role="button"
-                          aria-hidden="true"
-                          onClick={() => {
-                            handleWatchAsset(asset)
-                          }}
-                        >
-                          {getWalletType() === 'MM' ? (
-                            <Icon icon="metamask" role="button" size="24" />
-                          ) : (
-                            <Icon icon="trustwallet" role="button" size="24" />
-                          )}
-                        </div>
-                      </a>
+        <>
+          {pool.tokenDetails
+            ?.filter((asset) => asset.balance > 0)
+            .sort(
+              (a, b) =>
+                convertFromWei(getUSD(b.address, b.balance)) -
+                convertFromWei(getUSD(a.address, a.balance)),
+            )
+            .map((asset) => (
+              <Row key={`${asset.address}-asset`} className="mb-3 output-card">
+                <Col xs="auto" className="pe-1">
+                  <img
+                    height="35px"
+                    src={asset.symbolUrl}
+                    alt={asset.name}
+                    className=""
+                  />
+                </Col>
+                <Col className="align-items-center">
+                  <Row>
+                    <Col xs="auto">
+                      {asset.symbol} - {t('wallet')}
+                      <div className="description">
+                        {formatFromWei(asset.balance)}
+                      </div>
                     </Col>
-                  )}
-                </Row>
-              </Col>
-            </Row>
-          ))
+                    <Col className="hide-i5">
+                      <div className="text-end mt-2">
+                        ~$
+                        {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col xs="auto" className="text-right">
+                  <Row>
+                    <Col xs="6" className="mt-1">
+                      <ShareLink url={asset.address}>
+                        <Icon icon="copy" role="button" size="24" />
+                      </ShareLink>
+                    </Col>
+                    {getWalletType() && (
+                      <Col xs="6" className="mt-1">
+                        <a
+                          href={
+                            getWalletType() === 'TW'
+                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                              : '#section'
+                          }
+                        >
+                          <div
+                            role="button"
+                            aria-hidden="true"
+                            onClick={() => {
+                              handleWatchAsset(asset)
+                            }}
+                          >
+                            {' '}
+                            {isBNB(asset) ? (
+                              <img
+                                width="24px"
+                                alt="empty"
+                                className="invisible"
+                              />
+                            ) : (
+                              <>
+                                {getWalletType() === 'MM' ? (
+                                  <Icon
+                                    icon="metamask"
+                                    role="button"
+                                    size="24"
+                                  />
+                                ) : (
+                                  <Icon
+                                    icon="trustwallet"
+                                    role="button"
+                                    size="24"
+                                  />
+                                )}
+                              </>
+                            )}
+                          </div>
+                        </a>
+                      </Col>
+                    )}
+                  </Row>
+                </Col>
+              </Row>
+            ))}
+          {getTotalValue()}
+        </>
       ) : (
         <Col className="card-480">
           <HelmetLoading height={300} width={300} />

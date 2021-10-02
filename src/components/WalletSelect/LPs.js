@@ -5,7 +5,7 @@ import { Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { watchAsset, useWeb3 } from '../../store/web3'
-import { convertFromWei, formatFromWei } from '../../utils/bigNumber'
+import { BN, convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
@@ -73,10 +73,71 @@ const LPs = () => {
     }
     return false
   }
+  /* eslint no-return-assign: "error" */
+
+  const getTotalValue = () => {
+    let total = BN(0)
+    pool.poolDetails
+      ?.filter((asset) => asset.balance > 0)
+      .forEach(
+        (asset) =>
+          (total = total.plus(getUSD(asset.tokenAddress, asset.balance))),
+      )
+
+    bond.bondDetails
+      ?.filter((asset) => asset.staked > 0)
+      .forEach(
+        (asset) =>
+          (total = total.plus(getUSD(asset.tokenAddress, asset.staked))),
+      )
+
+    dao.daoDetails
+      ?.filter((asset) => asset.staked > 0)
+      .forEach(
+        (asset) =>
+          (total = total.plus(getUSD(asset.tokenAddress, asset.staked))),
+      )
+
+    if (!total.isZero()) {
+      return (
+        <>
+          <hr />
+          <Row key="total-assets" className="mb-3 output-card">
+            <Col xs="auto" className="pe-1">
+              {' '}
+              <img width="35px" alt="empty" className="invisible" />
+            </Col>
+            <Col className="align-items-center">
+              <Row>
+                <Col xs="auto">Total</Col>
+                <Col className="hide-i5">
+                  <div className="text-end mt-2">
+                    ~$ {formatFromWei(total, 0)}
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+            <Col xs="auto" className="text-right">
+              <Row>
+                <Col xs="6" className="mt-1">
+                  <Icon className="invisible" size="24" />
+                </Col>
+                <Col xs="6" className="mt-1">
+                  <Icon className="invisible" size="24" />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </>
+      )
+    }
+    return ''
+  }
 
   return (
     <>
       {/* HELD LP TOKENS */}
+      {console.log(1)}
       {!isLoading() &&
         pool.poolDetails
           ?.filter((asset) => asset.balance > 0)
@@ -328,6 +389,7 @@ const LPs = () => {
               </Col>
             </Row>
           ))}
+      {getTotalValue()}
       {isLoading() && (
         <Col className="card-480">
           <HelmetLoading height={300} width={300} />
