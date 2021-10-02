@@ -97,35 +97,35 @@ const Synths = () => {
 
     if (!total.isZero()) {
       return (
-        <Row key="total-assets" className="mb-3 output-card">
-          <Col xs="auto" className="pe-1">
-            {' '}
-            <img width="35px" alt="empty" className="invisible" />
-          </Col>
-          <Col className="align-items-center">
-            <Row>
-              <hr />
-            </Row>
-            <Row>
-              <Col xs="auto">Total</Col>
-              <Col className="hide-i5">
-                <div className="text-end mt-2">
-                  ~$ {formatFromWei(total, 0)}
-                </div>
-              </Col>
-            </Row>
-          </Col>
-          <Col xs="auto" className="text-right">
-            <Row>
-              <Col xs="6" className="mt-1">
-                <Icon className="invisible" size="24" />
-              </Col>
-              <Col xs="6" className="mt-1">
-                <Icon className="invisible" size="24" />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+        <>
+          <hr />
+          <Row key="total-assets" className="mb-3 output-card">
+            <Col xs="auto" className="pe-1">
+              {' '}
+              <img width="35px" alt="empty" className="invisible" />
+            </Col>
+            <Col className="align-items-center">
+              <Row>
+                <Col xs="auto">Total</Col>
+                <Col className="hide-i5">
+                  <div className="text-end mt-2">
+                    ~$ {formatFromWei(total, 0)}
+                  </div>
+                </Col>
+              </Row>
+            </Col>
+            <Col xs="auto" className="text-right">
+              <Row>
+                <Col xs="6" className="mt-1">
+                  <Icon className="invisible" size="24" />
+                </Col>
+                <Col xs="6" className="mt-1">
+                  <Icon className="invisible" size="24" />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </>
       )
     }
     return ''
