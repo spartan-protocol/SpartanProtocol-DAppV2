@@ -189,6 +189,16 @@ const Supply = () => {
                 />
               </span>
             </Form>
+            <span className="output-card">
+              Global Freeze:
+              <Badge
+                pill
+                className="ms-1 pt-1"
+                bg={reserve.globalDetails.globalFreeze ? 'primary' : 'success'}
+              >
+                {reserve.globalDetails.globalFreeze ? t('true') : t('false')}
+              </Badge>
+            </span>
           </Popover.Header>
           <Popover.Body>
             <Row>
