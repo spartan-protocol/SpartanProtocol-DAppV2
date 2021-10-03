@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Col, Row } from 'react-bootstrap'
+import { Badge, Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { useWeb3, watchAsset } from '../../store/web3'
@@ -97,14 +97,19 @@ const Assets = () => {
 
             <Col className="align-items-center">
               <Row>
-                <Col className="float-left">Total</Col>
+                <Col xs="auto" className="float-left">
+                  Total
+                </Col>
                 <Col>
-                  <div className="text-end">~$ {formatFromWei(total, 0)}</div>
+                  <div className="text-end">~${formatFromWei(total, 0)}</div>
                 </Col>
               </Row>
             </Col>
 
-            <Col xs="3" sm="2" className="text-center" />
+            <Col
+              className="text-center me-1 mt-1"
+              style={{ maxWidth: '80px' }}
+            />
           </Row>
         </div>
       )
@@ -143,8 +148,9 @@ const Assets = () => {
 
                 <Col className="align-items-center">
                   <Row>
-                    <Col className="float-left">
-                      {asset.symbol} - {t('wallet')}
+                    <Col xs="auto" className="float-left">
+                      <Badge className="me-1">{t('wallet')}</Badge>
+                      {asset.symbol}
                       <div className="description">
                         {formatFromWei(asset.balance)}
                       </div>
@@ -158,11 +164,14 @@ const Assets = () => {
                   </Row>
                 </Col>
 
-                <Col xs="3" sm="2" className="text-center">
+                <Col
+                  className="text-center me-1 mt-1"
+                  style={{ maxWidth: '80px' }}
+                >
                   <Row>
                     <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" size="24" className="" />
+                        <Icon icon="copy" size="24" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (

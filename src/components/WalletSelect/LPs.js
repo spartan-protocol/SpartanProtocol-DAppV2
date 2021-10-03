@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Col, Row } from 'react-bootstrap'
+import { Badge, Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { watchAsset, useWeb3 } from '../../store/web3'
@@ -43,9 +43,9 @@ const LPs = () => {
       dispatch(
         watchAsset(
           asset.address,
-          `${token?.symbol.substring(0, 10)}p`,
+          `${token.symbol.substring(0, 10)}p`,
           '18',
-          token?.symbolUrl,
+          token.symbolUrl,
           wallet,
         ),
       )
@@ -100,35 +100,31 @@ const LPs = () => {
 
     if (!total.isZero()) {
       return (
-        <>
+        <div className="hide-i5">
           <hr />
-          <Row key="total-assets" className="mb-3 output-card">
+          <Row key="total-assets" className="output-card">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />
             </Col>
+
             <Col className="align-items-center">
               <Row>
-                <Col xs="auto">Total</Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$ {formatFromWei(total, 0)}
-                  </div>
+                <Col xs="auto" className="float-left">
+                  Total
+                </Col>
+                <Col>
+                  <div className="text-end">~$ {formatFromWei(total, 0)}</div>
                 </Col>
               </Row>
             </Col>
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <Icon className="invisible" size="24" />
-                </Col>
-                <Col xs="6" className="mt-1">
-                  <Icon className="invisible" size="24" />
-                </Col>
-              </Row>
-            </Col>
+
+            <Col
+              className="text-center me-1 mt-1"
+              style={{ maxWidth: '80px' }}
+            />
           </Row>
-        </>
+        </div>
       )
     }
     return ''
@@ -161,12 +157,12 @@ const LPs = () => {
                   alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
                 />
               </Col>
+
               <Col className="align-items-center">
                 <Row>
-                  <Col xs="auto">
-                    {`${_getToken(asset.tokenAddress)?.symbol}p - ${t(
-                      'wallet',
-                    )}`}
+                  <Col className="float-left">
+                    <Badge className="me-1">{t('wallet')}</Badge>
+                    {`${_getToken(asset.tokenAddress)?.symbol}p`}
                     <div className="description">
                       {formatFromWei(asset.balance)}
                     </div>
@@ -183,15 +179,18 @@ const LPs = () => {
                 </Row>
               </Col>
 
-              <Col xs="auto" className="text-right">
+              <Col
+                className="text-center me-1 mt-1"
+                style={{ maxWidth: '80px' }}
+              >
                 <Row>
-                  <Col xs="6" className="mt-1">
+                  <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
+                      <Icon icon="copy" size="24" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
-                    <Col xs="6" className="mt-1">
+                    <Col xs="6" className="p-0">
                       <a
                         href={
                           getWalletType() === 'TW'
@@ -247,12 +246,12 @@ const LPs = () => {
                   alt={`${_getToken(asset.tokenAddress)?.symbol} LP token icon`}
                 />
               </Col>
+
               <Col className="align-items-center">
                 <Row>
-                  <Col xs="auto">
-                    {`${_getToken(asset.tokenAddress)?.symbol}p - ${t(
-                      'staked',
-                    )}`}
+                  <Col xs="auto" className="float-left">
+                    <Badge className="me-1">{t('staked')}</Badge>
+                    {`${_getToken(asset.tokenAddress)?.symbol}p`}
                     <div className="description">
                       {formatFromWei(asset.staked)}
                     </div>
@@ -269,15 +268,19 @@ const LPs = () => {
                 </Row>
               </Col>
 
-              <Col xs="auto" className="text-right">
+              <Col
+                className="text-center me-1 mt-1"
+                style={{ maxWidth: '80px' }}
+              >
+                {' '}
                 <Row>
-                  <Col xs="6" className="mt-1">
+                  <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
                       <Icon icon="copy" role="button" size="24" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
-                    <Col xs="6" className="mt-1">
+                    <Col xs="6" className="p-0">
                       <a
                         href={
                           getWalletType() === 'TW'
@@ -335,8 +338,9 @@ const LPs = () => {
               </Col>
               <Col className="align-items-center">
                 <Row>
-                  <Col xs="auto">
-                    {`${_getToken(asset.tokenAddress)?.symbol}p - ${t('bond')}`}
+                  <Col xs="auto" className="float-left">
+                    <Badge className="me-1">{t('bonded')}</Badge>
+                    {`${_getToken(asset.tokenAddress)?.symbol}p`}
                     <div className="description">
                       {formatFromWei(asset.staked)}
                     </div>
@@ -353,15 +357,18 @@ const LPs = () => {
                 </Row>
               </Col>
 
-              <Col xs="auto" className="text-right">
+              <Col
+                className="text-center me-1 mt-1"
+                style={{ maxWidth: '80px' }}
+              >
                 <Row>
-                  <Col xs="6" className="mt-1">
+                  <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
                       <Icon icon="copy" role="button" size="24" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
-                    <Col xs="6" className="mt-1">
+                    <Col xs="6" className="p-0">
                       <a
                         href={
                           getWalletType() === 'TW'

@@ -16,6 +16,7 @@
   "balanceSubtitle": "Overview v1 & v2 balances",
   "block": "Block",
   "bond": "Bond",
+  "bonded": "Bonded",
   "bondInfo": "SPARTA allocation remaining for the Bond program. If this runs out, it can be refilled via a DAO proposal.",
   "bondPositions": "Bond Positions",
   "bondVault": "Bond Vault",
