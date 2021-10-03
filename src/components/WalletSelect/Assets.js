@@ -31,21 +31,15 @@ const Assets = () => {
   }
 
   const isBNB = (asset) => {
-    if (asset.symbol === 'BNB') return true
+    if (asset.address === addr.bnb) return true
     return false
   }
 
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
-    if (walletType === 'MM') {
+    if (walletType === 'MM' && !isBNB(asset)) {
       dispatch(
-        watchAsset(
-          asset.address,
-          asset.symbol.substring(0, 11),
-          '18',
-          asset.symbolUrl,
-          wallet,
-        ),
+        watchAsset(asset.address, asset.symbol, '18', asset.symbolUrl, wallet),
       )
     }
   }
@@ -93,35 +87,26 @@ const Assets = () => {
 
     if (!total.isZero()) {
       return (
-        <>
+        <div className="hide-i5">
           <hr />
-          <Row key="total-assets" className="mb-3 output-card">
+          <Row key="total-assets" className="output-card">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />
             </Col>
+
             <Col className="align-items-center">
               <Row>
-                <Col xs="auto">Total</Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$ {formatFromWei(total, 0)}
-                  </div>
+                <Col className="float-left">Total</Col>
+                <Col>
+                  <div className="text-end">~$ {formatFromWei(total, 0)}</div>
                 </Col>
               </Row>
             </Col>
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <Icon className="invisible" size="24" />
-                </Col>
-                <Col xs="6" className="mt-1">
-                  <Icon className="invisible" size="24" />
-                </Col>
-              </Row>
-            </Col>
+
+            <Col xs="3" sm="2" className="text-center" />
           </Row>
-        </>
+        </div>
       )
     }
     return ''
@@ -155,9 +140,10 @@ const Assets = () => {
                     className=""
                   />
                 </Col>
+
                 <Col className="align-items-center">
                   <Row>
-                    <Col xs="auto">
+                    <Col className="float-left">
                       {asset.symbol} - {t('wallet')}
                       <div className="description">
                         {formatFromWei(asset.balance)}
@@ -172,15 +158,15 @@ const Assets = () => {
                   </Row>
                 </Col>
 
-                <Col xs="auto" className="text-right">
+                <Col xs="3" sm="2" className="text-center">
                   <Row>
-                    <Col xs="6" className="mt-1">
+                    <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" role="button" size="24" />
+                        <Icon icon="copy" size="24" className="" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
-                      <Col xs="6" className="mt-1">
+                      <Col xs="6" className="p-0">
                         <a
                           href={
                             getWalletType() === 'TW'
@@ -195,27 +181,12 @@ const Assets = () => {
                               handleWatchAsset(asset)
                             }}
                           >
-                            {' '}
-                            {isBNB(asset) ? (
-                              <img
-                                width="24px"
-                                alt="empty"
-                                className="invisible"
-                              />
-                            ) : (
+                            {!isBNB(asset) && (
                               <>
                                 {getWalletType() === 'MM' ? (
-                                  <Icon
-                                    icon="metamask"
-                                    role="button"
-                                    size="24"
-                                  />
+                                  <Icon icon="metamask" size="24" />
                                 ) : (
-                                  <Icon
-                                    icon="trustwallet"
-                                    role="button"
-                                    size="24"
-                                  />
+                                  <Icon icon="trustwallet" size="24" />
                                 )}
                               </>
                             )}
