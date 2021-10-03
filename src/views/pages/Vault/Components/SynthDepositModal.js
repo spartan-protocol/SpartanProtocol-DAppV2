@@ -280,9 +280,17 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                       <Button
                         className="w-100"
                         onClick={() => handleHarvest()}
-                        disabled={synth1.staked <= 0 || !enoughGas()}
+                        disabled={
+                          synth1.staked <= 0 ||
+                          !enoughGas() ||
+                          reserve.globalDetails.globalFreeze
+                        }
                       >
-                        {enoughGas() ? t('harvest') : t('checkBnbGas')}
+                        {enoughGas()
+                          ? reserve.globalDetails.globalFreeze
+                            ? t('globalFreeze')
+                            : t('harvest')
+                          : t('checkBnbGas')}
                         {harvestLoading && (
                           <Icon
                             icon="cycle"

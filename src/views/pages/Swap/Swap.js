@@ -63,6 +63,7 @@ import {
   getSynthMinting,
 } from '../../../store/synth'
 import Notifications from '../../../components/Notifications/Notifications'
+import { useReserve } from '../../../store/reserve'
 
 const Swap = () => {
   const synth = useSynth()
@@ -72,6 +73,7 @@ const Swap = () => {
   const dispatch = useDispatch()
   const addr = getAddresses()
   const pool = usePool()
+  const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
 
@@ -386,7 +388,7 @@ const Swap = () => {
 
   /**
    * Get zap txn details
-   * @returns [unitsLP, swapFee, slipRevert, capRevert]
+   * @returns [unitsLP, swapFee, slipRevert, capRevert, poolFrozen]
    */
   const getZap = () => {
     if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'pool') {
@@ -396,9 +398,9 @@ const Swap = () => {
         assetSwap2,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [unitsLP, swapFee, slipRevert, capRevert]
+      return [unitsLP, swapFee, slipRevert, capRevert, assetSwap1.frozen]
     }
-    return ['0.00', '0.00', false, false]
+    return ['0.00', '0.00', false, false, false]
   }
 
   /**
@@ -569,6 +571,9 @@ const Swap = () => {
       if (!synth.synthMinting) {
         return [false, t('synthsDisabled')]
       }
+      if (reserve.globalDetails.globalFreeze) {
+        return [false, t('globalFreeze')]
+      }
       if (getMint()[4]) {
         return [false, t('poolAtCapacity')]
       }
@@ -580,6 +585,9 @@ const Swap = () => {
       }
     }
     if (mode === 'pool') {
+      if (getZap()[4]) {
+        return [false, t('poolFrozen')]
+      }
       if (getZap()[2]) {
         return [false, t('slipTooHigh')]
       }
@@ -595,6 +603,9 @@ const Swap = () => {
       return [true, `${t('sell')} ${_symbol}p`]
     }
     if (mode === 'synthIn') {
+      if (reserve.globalDetails.globalFreeze) {
+        return [false, t('globalFreeze')]
+      }
       return [true, `${t('sell')} ${_symbol}s`]
     }
     return [true, `${t('sell')} ${_symbol}`]

@@ -38,12 +38,14 @@ import NewPool from '../Home/NewPool'
 import Share from '../../../components/Share/SharePool'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import { bondLiq } from '../../../utils/math/dao'
+import { useReserve } from '../../../store/reserve'
 
 const LiqBond = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWeb3React()
   const bond = useBond()
+  const reserve = useReserve()
   const dispatch = useDispatch()
   const pool = usePool()
   const sparta = useSparta()
@@ -187,6 +189,9 @@ const LiqBond = () => {
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
+    }
+    if (reserve.globalDetails.globalFreeze) {
+      return [false, t('globalFreeze')]
     }
     if (bondInput1?.value <= 0) {
       return [false, t('checkInput')]
@@ -357,7 +362,7 @@ const LiqBond = () => {
                   variant="info"
                   className="my-2"
                   now={BN(convertFromWei(bond.global.spartaRemaining))
-                    .div(2500000)
+                    .div(2000000)
                     .times(100)}
                   label={`${formatFromWei(
                     bond.global.spartaRemaining,

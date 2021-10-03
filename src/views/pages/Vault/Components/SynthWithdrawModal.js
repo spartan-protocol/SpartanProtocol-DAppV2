@@ -16,6 +16,7 @@ import {
   synthWithdraw,
 } from '../../../../store/synth/actions'
 import { useSynth } from '../../../../store/synth/selector'
+import { useReserve } from '../../../../store/reserve'
 
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
@@ -24,6 +25,7 @@ const SynthWithdrawModal = (props) => {
   const synth = useSynth()
   const wallet = useWeb3React()
   const addr = getAddresses()
+  const reserve = useReserve()
 
   const [percentage, setpercentage] = useState('0')
   const [txnLoading, setTxnLoading] = useState(false)
@@ -241,10 +243,15 @@ const SynthWithdrawModal = (props) => {
                           disabled={
                             !props.claimable[0] ||
                             !enoughGas() ||
-                            !harvestConfirm
+                            !harvestConfirm ||
+                            reserve.globalDetails.globalFreeze
                           }
                         >
-                          {enoughGas() ? t('harvest') : t('checkBnbGas')}
+                          {enoughGas()
+                            ? reserve.globalDetails.globalFreeze
+                              ? t('globalFreeze')
+                              : t('harvest')
+                            : t('checkBnbGas')}
                           {harvestLoading && (
                             <Icon
                               icon="cycle"

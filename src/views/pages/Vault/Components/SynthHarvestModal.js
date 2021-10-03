@@ -91,6 +91,9 @@ const SynthHarvestModal = ({ synthItem }) => {
     if (!reserve.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
+    if (reserve.globalDetails.globalFreeze) {
+      return [false, t('globalFreeze')]
+    }
     if (synth.memberDetails?.totalWeight <= 0) {
       return [false, t('noClaim')]
     }
