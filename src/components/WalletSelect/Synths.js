@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Col, Row } from 'react-bootstrap'
+import { Badge, Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { useWeb3, watchAsset } from '../../store/web3'
@@ -92,40 +92,36 @@ const Synths = () => {
       ?.filter((asset) => asset.staked > 0)
       .forEach(
         (asset) =>
-          (total = total.plus(getUSD(asset.tokenAddress, asset.balance))),
+          (total = total.plus(getUSD(asset.tokenAddress, asset.staked))),
       )
 
     if (!total.isZero()) {
       return (
-        <>
+        <div className="hide-i5">
           <hr />
-          <Row key="total-assets" className="mb-3 output-card">
+          <Row key="total-assets" className="output-card">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />
             </Col>
+
             <Col className="align-items-center">
               <Row>
-                <Col xs="auto">Total</Col>
-                <Col className="hide-i5">
-                  <div className="text-end mt-2">
-                    ~$ {formatFromWei(total, 0)}
-                  </div>
+                <Col xs="auto" className="float-left">
+                  Total
+                </Col>
+                <Col>
+                  <div className="text-end">~$ {formatFromWei(total, 0)}</div>
                 </Col>
               </Row>
             </Col>
-            <Col xs="auto" className="text-right">
-              <Row>
-                <Col xs="6" className="mt-1">
-                  <Icon className="invisible" size="24" />
-                </Col>
-                <Col xs="6" className="mt-1">
-                  <Icon className="invisible" size="24" />
-                </Col>
-              </Row>
-            </Col>
+
+            <Col
+              className="text-center me-1 mt-1"
+              style={{ maxWidth: '80px' }}
+            />
           </Row>
-        </>
+        </div>
       )
     }
     return ''
@@ -164,10 +160,9 @@ const Synths = () => {
 
                 <Col className="align-items-center">
                   <Row>
-                    <Col xs="auto">
-                      {`${getToken(asset.tokenAddress)?.symbol}s - ${t(
-                        'wallet',
-                      )}`}
+                    <Col xs="auto" className="float-left">
+                      <Badge className="me-1">{t('wallet')}</Badge>
+                      {`${getToken(asset.tokenAddress)?.symbol}s`}
                       <div className="description">
                         {formatFromWei(asset.balance)}
                       </div>
@@ -184,15 +179,19 @@ const Synths = () => {
                   </Row>
                 </Col>
 
-                <Col xs="auto" className="text-right">
+                <Col
+                  className="text-center me-1 mt-1"
+                  style={{ maxWidth: '80px' }}
+                >
+                  {' '}
                   <Row>
-                    <Col xs="6" className="mt-1">
+                    <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" role="button" size="24" />
+                        <Icon icon="copy" size="24" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
-                      <Col xs="6" className="mt-1">
+                      <Col xs="6" className="p-0">
                         <a
                           href={
                             getWalletType() === 'TW'
@@ -208,13 +207,9 @@ const Synths = () => {
                             }}
                           >
                             {getWalletType() === 'MM' ? (
-                              <Icon icon="metamask" role="button" size="24" />
+                              <Icon icon="metamask" size="24" />
                             ) : (
-                              <Icon
-                                icon="trustwallet"
-                                role="button"
-                                size="24"
-                              />
+                              <Icon icon="trustwallet" size="24" />
                             )}
                           </div>
                         </a>
@@ -262,10 +257,9 @@ const Synths = () => {
                   </Col>
                   <Col className="align-items-center">
                     <Row>
-                      <Col xs="auto">
-                        {`${getToken(asset.tokenAddress)?.symbol}s - ${t(
-                          'staked',
-                        )}`}
+                      <Col xs="auto" className="float-left">
+                        <Badge className="me-1">{t('staked')}</Badge>
+                        {`${getToken(asset.tokenAddress)?.symbol}s`}
                         <div className="description">
                           {formatFromWei(asset.staked)}
                         </div>
@@ -282,15 +276,18 @@ const Synths = () => {
                     </Row>
                   </Col>
 
-                  <Col xs="auto" className="text-right">
+                  <Col
+                    className="text-center me-1 mt-1"
+                    style={{ maxWidth: '80px' }}
+                  >
                     <Row>
-                      <Col xs="6" className="mt-1">
+                      <Col xs="6" className="p-0">
                         <ShareLink url={asset.address}>
-                          <Icon icon="copy" role="button" size="24" />
+                          <Icon icon="copy" size="24" />
                         </ShareLink>
                       </Col>
                       {getWalletType() && (
-                        <Col xs="6" className="mt-1">
+                        <Col xs="6" className="p-0">
                           <a
                             href={
                               getWalletType() === 'TW'
@@ -306,13 +303,9 @@ const Synths = () => {
                               }}
                             >
                               {getWalletType() === 'MM' ? (
-                                <Icon icon="metamask" role="button" size="24" />
+                                <Icon icon="metamask" size="24" />
                               ) : (
-                                <Icon
-                                  icon="trustwallet"
-                                  role="button"
-                                  size="24"
-                                />
+                                <Icon icon="trustwallet" size="24" />
                               )}
                             </div>
                           </a>
@@ -324,7 +317,7 @@ const Synths = () => {
               ))}
           </>
         )}
-      {getTotalValue()}
+      {!isLoading() && getTotalValue()}
 
       {isLoading() && (
         <Col className="card-480">

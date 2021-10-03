@@ -114,7 +114,7 @@ const LPs = () => {
                   Total
                 </Col>
                 <Col>
-                  <div className="text-end">~$ {formatFromWei(total, 0)}</div>
+                  <div className="text-end">~${formatFromWei(total, 0)}</div>
                 </Col>
               </Row>
             </Col>
@@ -396,7 +396,7 @@ const LPs = () => {
               </Col>
             </Row>
           ))}
-      {getTotalValue()}
+      {!isLoading() && getTotalValue()}
       {isLoading() && (
         <Col className="card-480">
           <HelmetLoading height={300} width={300} />

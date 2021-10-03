@@ -207,7 +207,7 @@ const Assets = () => {
                 </Col>
               </Row>
             ))}
-          {getTotalValue()}
+          {!isLoading() && getTotalValue()}
         </>
       ) : (
         <Col className="card-480">
