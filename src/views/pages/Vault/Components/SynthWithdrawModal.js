@@ -27,7 +27,7 @@ const SynthWithdrawModal = (props) => {
   const addr = getAddresses()
   const reserve = useReserve()
 
-  const [percentage, setpercentage] = useState('0')
+  const [percentage, setpercentage] = useState(0)
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
@@ -105,11 +105,11 @@ const SynthWithdrawModal = (props) => {
   const handleCloseModal = () => {
     setshowModal(false)
     setHarvestConfirm(false)
-    setpercentage('0')
+    setpercentage(0)
   }
 
   const withdrawal = () =>
-    BN(percentage).div(100).times(props.synthItem.staked).toFixed(0)
+    BN(percentage).div(10000).times(props.synthItem.staked).toFixed(0)
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
@@ -120,9 +120,7 @@ const SynthWithdrawModal = (props) => {
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(
-      synthWithdraw(props.synthItem.address, percentage.toFixed(0), wallet),
-    )
+    await dispatch(synthWithdraw(props.synthItem.address, percentage, wallet))
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -166,7 +164,7 @@ const SynthWithdrawModal = (props) => {
                     id="synthVaultSlider"
                     onChange={(e) => setpercentage(e.target.value)}
                     min="0"
-                    max="100"
+                    max="10000"
                     defaultValue="0"
                   />
                 </Col>
