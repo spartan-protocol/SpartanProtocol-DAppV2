@@ -36,9 +36,10 @@ const AssetSelect = (props) => {
   const wallet = useWeb3React()
 
   const isBNB = (asset) => {
-    if (asset.symbol === 'BNB') return true
+    if (asset.address === addr.bnb && asset.actualAddr === addr.bnb) return true
     return false
   }
+
   const toggleModal = () => {
     setShowModal(!showModal)
   }
@@ -262,16 +263,9 @@ const AssetSelect = (props) => {
 
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
-
-    if (walletType === 'MM') {
+    if (walletType === 'MM' && !isBNB(asset)) {
       dispatch(
-        watchAsset(
-          asset.actualAddr,
-          `${asset?.symbol}`,
-          '18',
-          asset.iconUrl,
-          wallet,
-        ),
+        watchAsset(asset.actualAddr, asset.symbol, '18', asset.iconUrl, wallet),
       )
     }
   }
@@ -486,13 +480,7 @@ const AssetSelect = (props) => {
                               handleWatchAsset(asset)
                             }}
                           >
-                            {isBNB(asset) ? (
-                              <img
-                                width="24px"
-                                alt="empty"
-                                className="invisible"
-                              />
-                            ) : (
+                            {!isBNB(asset) && (
                               <>
                                 {getWalletType() === 'MM' ? (
                                   <Icon
@@ -517,6 +505,7 @@ const AssetSelect = (props) => {
                 </Col>
               </Row>
             ))}
+
           {activeTab !== 'all' &&
             assetArray
               .filter((asset) => asset.type === activeTab)
@@ -581,13 +570,7 @@ const AssetSelect = (props) => {
                                 handleWatchAsset(asset)
                               }}
                             >
-                              {isBNB(asset) ? (
-                                <img
-                                  width="24px"
-                                  alt="empty"
-                                  className="invisible"
-                                />
-                              ) : (
+                              {!isBNB(asset) && (
                                 <>
                                   {getWalletType() === 'MM' ? (
                                     <Icon
