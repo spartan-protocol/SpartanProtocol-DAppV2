@@ -26,12 +26,14 @@ import {
 import { Icon } from '../../../components/Icons/icons'
 import { useSynth } from '../../../store/synth/selector'
 import { realise } from '../../../utils/math/synth'
+import { useReserve } from '../../../store/reserve'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
   const sparta = useSparta()
   const pool = usePool()
   const bond = useBond()
+  const reserve = useReserve()
   const synth = useSynth()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
@@ -185,7 +187,7 @@ const ProposalItem = ({ proposal }) => {
   const getDetails = () => {
     // 'GET_SPARTA' = '2.5M SPARTA'
     if (proposal.proposalType === 'GET_SPARTA') {
-      return '2.5M SPARTA'
+      return '2M SPARTA'
     }
     // 'LIST_BOND', 'DELIST_BOND' = proposal.proposedAddress + 'token details'
     if (['LIST_BOND', 'DELIST_BOND'].includes(proposal.proposalType)) {
@@ -403,6 +405,8 @@ const ProposalItem = ({ proposal }) => {
                     >
                       {!enoughGas(estMaxGasVote)
                         ? t('checkBnbGas')
+                        : reserve.globalDetails.globalFreeze
+                        ? t('globalFreeze')
                         : t('voteUp')}
                       {voteLoading && (
                         <Icon
@@ -455,6 +459,8 @@ const ProposalItem = ({ proposal }) => {
                       >
                         {!enoughGas(estMaxGasFinal)
                           ? t('checkBnbGas')
+                          : reserve.globalDetails.globalFreeze
+                          ? t('globalFreeze')
                           : t('finalise')}
                         {finalLoading && (
                           <Icon

@@ -35,6 +35,7 @@ import { useSynth } from '../../../store/synth/selector'
 import { usePool } from '../../../store/pool'
 import { useBond } from '../../../store/bond'
 import { getToken } from '../../../utils/math/utils'
+import { useReserve } from '../../../store/reserve'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
@@ -42,6 +43,7 @@ const NewProposal = () => {
   const synth = useSynth()
   const bond = useBond()
   const pool = usePool()
+  const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
   const addr = getAddresses()
@@ -398,7 +400,11 @@ const NewProposal = () => {
                   disabled={!wallet.account || !feeConfirm || !formValid}
                   onClick={() => handleSubmit()}
                 >
-                  {!wallet.account ? t('checkWallet') : t('confirm')}
+                  {!wallet.account
+                    ? t('checkWallet')
+                    : reserve.globalDetails.globalFreeze
+                    ? t('globalFreeze')
+                    : t('confirm')}
                   {txnLoading && (
                     <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                   )}

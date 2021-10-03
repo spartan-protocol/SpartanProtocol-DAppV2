@@ -144,6 +144,9 @@ const DaoVault = () => {
     if (!reserve.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
+    if (reserve.globalDetails.globalFreeze) {
+      return [false, t('globalFreeze')]
+    }
     if (getClaimable() <= 0) {
       return [false, t('noClaim')]
     }

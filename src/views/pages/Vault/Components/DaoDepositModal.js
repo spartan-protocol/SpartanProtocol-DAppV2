@@ -17,12 +17,14 @@ import { getDao, getToken } from '../../../../utils/math/utils'
 import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../../utils/math/nonContract'
+import { useReserve } from '../../../../store/reserve'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
+  const reserve = useReserve()
   const dao = useDao()
   const wallet = useWeb3React()
   const addr = getAddresses()
@@ -233,9 +235,17 @@ const DaoDepositModal = (props) => {
                     <Button
                       className="w-100"
                       onClick={() => handleHarvest()}
-                      disabled={props.claimable <= 0 || !enoughGas()}
+                      disabled={
+                        props.claimable <= 0 ||
+                        !enoughGas() ||
+                        reserve.globalDetails.globalFreeze
+                      }
                     >
-                      {enoughGas() ? t('harvest') : t('checkBnbGas')}
+                      {enoughGas()
+                        ? reserve.globalDetails.globalFreeze
+                          ? t('globalFreeze')
+                          : t('harvest')
+                        : t('checkBnbGas')}
                       {harvestLoading && (
                         <Icon
                           icon="cycle"

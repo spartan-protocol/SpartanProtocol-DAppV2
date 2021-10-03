@@ -16,11 +16,13 @@ import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../../utils/math/nonContract'
 import { getAddresses } from '../../../../utils/web3'
+import { useReserve } from '../../../../store/reserve'
 
 const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
+  const reserve = useReserve()
   const dao = useDao()
   const wallet = useWeb3React()
   const addr = getAddresses()
@@ -187,9 +189,17 @@ const DaoWithdrawModal = (props) => {
                       <Button
                         className="w-100"
                         onClick={() => handleHarvest()}
-                        disabled={props.claimable <= 0 || !enoughGas()}
+                        disabled={
+                          props.claimable <= 0 ||
+                          !enoughGas() ||
+                          reserve.globalDetails.globalFreeze
+                        }
                       >
-                        {enoughGas() ? t('harvest') : t('checkBnbGas')}
+                        {enoughGas()
+                          ? reserve.globalDetails.globalFreeze
+                            ? t('globalFreeze')
+                            : t('harvest')
+                          : t('checkBnbGas')}
                         {harvestLoading && (
                           <Icon
                             icon="cycle"

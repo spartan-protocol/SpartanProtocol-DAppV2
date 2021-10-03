@@ -133,7 +133,6 @@ const LPs = () => {
   return (
     <>
       {/* HELD LP TOKENS */}
-      {console.log(1)}
       {!isLoading() &&
         pool.poolDetails
           ?.filter((asset) => asset.balance > 0)
