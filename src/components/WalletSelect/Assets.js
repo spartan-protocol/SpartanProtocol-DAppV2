@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Col, Row } from 'react-bootstrap'
+import { Badge, Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { useWeb3, watchAsset } from '../../store/web3'
@@ -30,17 +30,16 @@ const Assets = () => {
     return false
   }
 
+  const isBNB = (asset) => {
+    if (asset.address === addr.bnb) return true
+    return false
+  }
+
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
-    if (walletType === 'MM') {
+    if (walletType === 'MM' && !isBNB(asset)) {
       dispatch(
-        watchAsset(
-          asset.address,
-          asset.symbol.substring(0, 11),
-          '18',
-          asset.symbolUrl,
-          wallet,
-        ),
+        watchAsset(asset.address, asset.symbol, '18', asset.symbolUrl, wallet),
       )
     }
   }
@@ -76,6 +75,47 @@ const Assets = () => {
     }
     return '0.00'
   }
+  /* eslint no-return-assign: "error" */
+
+  const getTotalValue = () => {
+    let total = BN(0)
+    pool.tokenDetails
+      ?.filter((asset) => asset.balance > 0)
+      .map(
+        (asset) => (total = total.plus(getUSD(asset.address, asset.balance))),
+      )
+
+    if (!total.isZero()) {
+      return (
+        <div className="hide-i5">
+          <hr />
+          <Row key="total-assets" className="output-card">
+            <Col xs="auto" className="pe-1">
+              {' '}
+              <img width="35px" alt="empty" className="invisible" />
+            </Col>
+
+            <Col className="align-items-center">
+              <Row>
+                <Col xs="auto" className="float-left">
+                  Total
+                </Col>
+                <Col>
+                  <div className="text-end">~${formatFromWei(total, 0)}</div>
+                </Col>
+              </Row>
+            </Col>
+
+            <Col
+              className="text-center me-1 mt-1"
+              style={{ maxWidth: '80px' }}
+            />
+          </Row>
+        </div>
+      )
+    }
+    return ''
+  }
 
   const isLoading = () => {
     if (!pool.poolDetails && tempChains.includes(wallet.chainId)) {
@@ -87,76 +127,88 @@ const Assets = () => {
   return (
     <>
       {!isLoading() ? (
-        pool.tokenDetails
-          ?.filter((asset) => asset.balance > 0)
-          .sort(
-            (a, b) =>
-              convertFromWei(getUSD(b.address, b.balance)) -
-              convertFromWei(getUSD(a.address, a.balance)),
-          )
-          .map((asset) => (
-            <Row key={`${asset.address}-asset`} className="mb-3 output-card">
-              <Col xs="auto" className="pe-1">
-                <img
-                  height="35px"
-                  src={asset.symbolUrl}
-                  alt={asset.name}
-                  className=""
-                />
-              </Col>
-              <Col className="align-items-center">
-                <Row>
-                  <Col xs="auto">
-                    {asset.symbol} - {t('wallet')}
-                    <div className="description">
-                      {formatFromWei(asset.balance)}
-                    </div>
-                  </Col>
-                  <Col className="hide-i5">
-                    <div className="text-end mt-2">
-                      ~$
-                      {formatFromWei(getUSD(asset.address, asset.balance), 0)}
-                    </div>
-                  </Col>
-                </Row>
-              </Col>
+        <>
+          {pool.tokenDetails
+            ?.filter((asset) => asset.balance > 0)
+            .sort(
+              (a, b) =>
+                convertFromWei(getUSD(b.address, b.balance)) -
+                convertFromWei(getUSD(a.address, a.balance)),
+            )
+            .map((asset) => (
+              <Row key={`${asset.address}-asset`} className="mb-3 output-card">
+                <Col xs="auto" className="pe-1">
+                  <img
+                    height="35px"
+                    src={asset.symbolUrl}
+                    alt={asset.name}
+                    className=""
+                  />
+                </Col>
 
-              <Col xs="auto" className="text-right">
-                <Row>
-                  <Col xs="6" className="mt-1">
-                    <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
-                    </ShareLink>
-                  </Col>
-                  {getWalletType() && (
-                    <Col xs="6" className="mt-1">
-                      <a
-                        href={
-                          getWalletType() === 'TW'
-                            ? `trust://add_asset?asset=c20000714_t${asset.address}`
-                            : '#section'
-                        }
-                      >
-                        <div
-                          role="button"
-                          aria-hidden="true"
-                          onClick={() => {
-                            handleWatchAsset(asset)
-                          }}
-                        >
-                          {getWalletType() === 'MM' ? (
-                            <Icon icon="metamask" role="button" size="24" />
-                          ) : (
-                            <Icon icon="trustwallet" role="button" size="24" />
-                          )}
-                        </div>
-                      </a>
+                <Col className="align-items-center">
+                  <Row>
+                    <Col xs="auto" className="float-left">
+                      <Badge className="me-1">{t('wallet')}</Badge>
+                      {asset.symbol}
+                      <div className="description">
+                        {formatFromWei(asset.balance)}
+                      </div>
                     </Col>
-                  )}
-                </Row>
-              </Col>
-            </Row>
-          ))
+                    <Col className="hide-i5">
+                      <div className="text-end mt-2">
+                        ~$
+                        {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col
+                  className="text-center me-1 mt-1"
+                  style={{ maxWidth: '80px' }}
+                >
+                  <Row>
+                    <Col xs="6" className="p-0">
+                      <ShareLink url={asset.address}>
+                        <Icon icon="copy" size="24" />
+                      </ShareLink>
+                    </Col>
+                    {getWalletType() && (
+                      <Col xs="6" className="p-0">
+                        <a
+                          href={
+                            getWalletType() === 'TW'
+                              ? `trust://add_asset?asset=c20000714_t${asset.address}`
+                              : '#section'
+                          }
+                        >
+                          <div
+                            role="button"
+                            aria-hidden="true"
+                            onClick={() => {
+                              handleWatchAsset(asset)
+                            }}
+                          >
+                            {!isBNB(asset) && (
+                              <>
+                                {getWalletType() === 'MM' ? (
+                                  <Icon icon="metamask" size="24" />
+                                ) : (
+                                  <Icon icon="trustwallet" size="24" />
+                                )}
+                              </>
+                            )}
+                          </div>
+                        </a>
+                      </Col>
+                    )}
+                  </Row>
+                </Col>
+              </Row>
+            ))}
+          {!isLoading() && getTotalValue()}
+        </>
       ) : (
         <Col className="card-480">
           <HelmetLoading height={300} width={300} />
