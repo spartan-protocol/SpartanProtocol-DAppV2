@@ -136,7 +136,10 @@ const Overview = () => {
                                 <PoolItem key={asset.address} asset={asset} />
                               ))
                             ) : (
-                              <Col>There are no initialised pools yet</Col>
+                              <Col>
+                                There are no initialised pools yet with more
+                                than 7 days of existance
+                              </Col>
                             )}
                           </>
                         )}
