@@ -237,15 +237,15 @@ export const getTwTokenLogo = async (tokenAddr, chainId) => {
   let tokenInfo = false
   if (chainId === 56) {
     tokenInfo = await getTwTokenInfo(tokenAddr)
-  }
-  if (tokenInfo) {
-    if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
-      return `${window.location.origin}/images/icons/BNB.svg`
+    if (tokenInfo) {
+      if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
+        return `${window.location.origin}/images/icons/BNB.svg`
+      }
+      return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
     }
-    return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
-  }
-  if (process.env.NODE_ENV === 'development') {
-    return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+    if (process.env.NODE_ENV === 'development') {
+      return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+    }
   }
   return `${window.location.origin}/images/icons/Fallback.svg`
 }
