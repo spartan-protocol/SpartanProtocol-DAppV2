@@ -159,7 +159,7 @@ const DataManager = () => {
     if (listedTokens.length > 0) {
       if (liveChains.includes(chainId)) {
         dispatch(getSynthArray(listedTokens))
-        dispatch(getTokenDetails(listedTokens, wallet))
+        dispatch(getTokenDetails(listedTokens, wallet, chainId))
       }
     }
   }

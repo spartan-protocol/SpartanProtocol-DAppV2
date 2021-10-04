@@ -217,7 +217,7 @@ export const getTwAssetId = (tokenAddr) => {
 
 export const getTwTokenInfo = async (tokenAddr) => {
   const assetID = getTwAssetId(tokenAddr)
-  if (assetID) {
+  if (assetID && process.env.NODE_ENV === 'production') {
     try {
       const apiUrl = `https://api.trustwallet.com/v1/assets/${assetID}`
       const result = await axios.get(apiUrl).then((r) => r.data)
@@ -242,6 +242,9 @@ export const getTwTokenLogo = async (tokenAddr, chainId) => {
     if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
       return `${window.location.origin}/images/icons/BNB.svg`
     }
+    return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+  }
+  if (process.env.NODE_ENV === 'development') {
     return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
   }
   return `${window.location.origin}/images/icons/Fallback.svg`
