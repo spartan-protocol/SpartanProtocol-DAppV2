@@ -68,6 +68,19 @@ const Overview = () => {
       .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
+  const [firstLoad, setFirstLoad] = useState(true)
+  useEffect(() => {
+    if (
+      firstLoad &&
+      pool.poolDetails &&
+      pool.poolDetails.filter((x) => x.newPool === false && x.baseAmount > 0)
+        .length === 0
+    ) {
+      setFirstLoad(false)
+      setActiveTab('2')
+    }
+  }, [pool.poolDetails, firstLoad])
+
   return (
     <>
       <div className="content">
@@ -137,8 +150,8 @@ const Overview = () => {
                               ))
                             ) : (
                               <Col>
-                                There are no initialised pools yet with more
-                                than 7 days of existance
+                                There are no initialised pools with more than 7
+                                days of existance yet; check the New tab
                               </Col>
                             )}
                           </>
