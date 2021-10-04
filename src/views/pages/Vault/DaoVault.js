@@ -183,13 +183,11 @@ const DaoVault = () => {
             <HelmetLoading />
           )}
 
-          <Col>
-            <Card.Footer>
-              <Link to="/pools/liquidity">
-                <Button className="w-100">{t('joinPools')}</Button>
-              </Link>
-            </Card.Footer>
-          </Col>
+          <Card.Footer>
+            <Link to="/pools/liquidity">
+              <Button className="w-100">{t('joinPools')}</Button>
+            </Link>
+          </Card.Footer>
         </Card>
       </Col>
 

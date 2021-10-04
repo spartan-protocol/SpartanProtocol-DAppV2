@@ -133,39 +133,43 @@ export const addressesTN = {
 // List of BSC Mainnet Addresses
 export const addressesMN = {
   // OLD ADDRESSES SPV1
-  bondv1: '0xDa7d913164C5611E5440aE8c1d3e06Df713a13Da',
-  bondv2: '0xE6844821B03828Fd4067167Bc258FA1EEFD1cCdf',
-  bondv3: '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43',
+  bondv1a: '0xDa7d913164C5611E5440aE8c1d3e06Df713a13Da',
+  bondv1b: '0xE6844821B03828Fd4067167Bc258FA1EEFD1cCdf', // ACTUALLY V2
+  bondv1c: '0xf2EbA4b92fAFD47a6403d24a567b38C07D7A5b43', // ACTUALLY V3
   daov1: '0x04e283c9350Bab8A1243ccfc1dd9BF1Ab72dF4f0',
   incentivev1: '0xdbe936901aeed4718608d0574cbaab01828ae016',
-  routerv1: '0x4ab5b40746566c09f4B90313D0801D3b93f56EF5',
-  routerv2a: '0xDbe936901aeed4718608D0574cbAAb01828AE016',
-  routerv2b: '0x9dB88952380c0E35B95e7047E5114971dFf20D07',
-  routerv2c: '0x6239891FC4030dc050fB9F7083aa68a2E4Fe426D',
+  routerv1a: '0x4ab5b40746566c09f4B90313D0801D3b93f56EF5',
+  routerv1b: '0xDbe936901aeed4718608D0574cbAAb01828AE016',
+  routerv1c: '0x9dB88952380c0E35B95e7047E5114971dFf20D07',
+  routerv1d: '0x6239891FC4030dc050fB9F7083aa68a2E4Fe426D',
   utilsv1: '0xCaF0366aF95E8A03E269E52DdB3DbB8a00295F91',
   tempUtilsv1a: '0x20d0270649c9f13c081FF98350148706A05557F8',
-  // OLD ADDRESSES SPV2
-  bondVaultv1: '',
-  daov2: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
-  daoVaultv1: '',
-  fallenSpartansv1: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
-  poolFactoryv1: '',
-  reservev1: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
-  routerv3: '',
-  synthFactoryv1: '',
-  synthVaultv1: '',
-  utilsv2: '',
+  // OLD ADDRESSES SPV2 (pre-actual mainnet)
+  daoPAM: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
+  fallenSpartansPAM: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
+  reservePAM: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
+  // OLD ADDRESSES SPV2 (post mainnet)
+  bondVaultv2a: '0x518F746Ab25432146f15f583845cFe3F56d2Bb1c', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  daov2a: '0x80531284f27d8b479aCA8dbA18fD6303B4bF1567', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  daoVaultv2a: '0x4102773565d82C8B0785f1262cfe75F04F170777', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  fallenSpartansv2a: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6', // EARLIER; CHECK
+  poolFactoryv2a: '0x2C577706579E08A88bd30df0Fd7A5778A707c3AD', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  reservev2a: '0x5aB5bbe3044E58303A189d3D28f6da31e9217F9F', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  routerv2a: '0x03662D8347aC1487e01FCE1CA679e8484ef954a3', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  synthFactoryv2a: '0x8b2643D95DeaD636EC3ba5F720809541c3355f4e', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  synthVaultv2a: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  utilsv2a: '0x82b67e7A325def377f62401126cc54eEE73719ec', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   // CURRENT ADDRESSES
-  bondVault: '',
-  dao: '0xaa1977d313C265982F24c59D49a35F0aB6F8C7bB',
-  daoVault: '',
-  fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6',
-  poolFactory: '',
-  reserve: '0x5304c4449b51ff774D0557cFACDbA6fF35DB33C1',
-  router: '',
-  synthFactory: '',
-  synthVault: '',
-  utils: '',
+  bondVault: '0x518F746Ab25432146f15f583845cFe3F56d2Bb1c', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  dao: '0x80531284f27d8b479aCA8dbA18fD6303B4bF1567', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  daoVault: '0x4102773565d82C8B0785f1262cfe75F04F170777', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6', // EARLIER; CHECK
+  poolFactory: '0x2C577706579E08A88bd30df0Fd7A5778A707c3AD', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  reserve: '0x5aB5bbe3044E58303A189d3D28f6da31e9217F9F', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  router: '0x03662D8347aC1487e01FCE1CA679e8484ef954a3', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  synthFactory: '0x8b2643D95DeaD636EC3ba5F720809541c3355f4e', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  utils: '0x82b67e7A325def377f62401126cc54eEE73719ec', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -200,13 +204,13 @@ export const bscRpcsMN = [
 ]
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
-export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
-export const oneWeek = 60480 // change to 604800 for mainnet
+export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+export const oneWeek = 604800 // change to 604800 for mainnet
 
 export const getTwAssetId = (tokenAddr) => {
   const _tokenAddr = ethers.utils.getAddress(tokenAddr)
   if (tokenAddr.length > 0) {
-    return `20000714_t${_tokenAddr}`
+    return `c20000714_t${_tokenAddr}`
   }
   return false
 }
@@ -696,9 +700,11 @@ const parseTxnLogs = (txn, txnType) => {
     const poolAddr = txn.logs[liqIndex].address
     const liqLog = logs[liqIndex].args
     // Token.Transfer event (1st one to the Pool * 2 is ~input) (from, to, value)
-    const tsfLog = logs.filter(
+    const tsfIndex = logs.findIndex(
       (x) => x.name === 'Transfer' && x.args.to === poolAddr,
-    )[0].args
+    )
+    const sendToken1 = txn.logs[tsfIndex].address
+    const tsfLog = logs[tsfIndex].args
     const halfInput = tsfLog.value.toString()
     const inputAmnt = BN(halfInput).times(2)
     return {
@@ -707,7 +713,7 @@ const parseTxnLogs = (txn, txnType) => {
       txnType,
       txnTypeIcon: txnType,
       sendAmnt1: inputAmnt.toString(),
-      sendToken1: liqLog.tokenAddress,
+      sendToken1,
       send1: member,
       recAmnt1: liqLog.unitsIssued.toString(),
       recToken1: poolAddr,

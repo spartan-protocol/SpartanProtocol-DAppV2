@@ -159,7 +159,7 @@ const Overview = () => {
             <HelmetLoading height={300} width={300} />
           </Col>
         )}
-        {network.chainId !== 97 && <WrongNetwork />}
+        {!tempChains.includes(network.chainId) && <WrongNetwork />}
       </div>
     </>
   )

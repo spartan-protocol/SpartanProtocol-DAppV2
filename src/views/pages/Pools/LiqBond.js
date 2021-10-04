@@ -39,6 +39,7 @@ import Share from '../../../components/Share/SharePool'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import { bondLiq } from '../../../utils/math/dao'
 import { useReserve } from '../../../store/reserve'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const LiqBond = () => {
   const { t } = useTranslation()
@@ -245,83 +246,88 @@ const LiqBond = () => {
                 <Card className="card-alt">
                   <Card.Body>
                     {!isLoading() ? (
-                      <>
-                        <Row>
-                          <Col xs="auto" className="text-sm-label">
-                            {t('bond')}
-                          </Col>
-                          <Col
-                            className="text-sm-label float-end text-end"
-                            role="button"
-                            aria-hidden="true"
-                            onClick={() => {
-                              bondInput1.value = convertFromWei(
+                      bond.listedAssets.length > 0 && (
+                        <>
+                          <Row>
+                            <Col xs="auto" className="text-sm-label">
+                              {t('bond')}
+                            </Col>
+                            <Col
+                              className="text-sm-label float-end text-end"
+                              role="button"
+                              aria-hidden="true"
+                              onClick={() => {
+                                bondInput1.value = convertFromWei(
+                                  getToken(assetBond1.tokenAddress)?.balance,
+                                )
+                              }}
+                            >
+                              <Badge bg="primary" className="me-1">
+                                MAX
+                              </Badge>
+                              {t('balance')}:{' '}
+                              {formatFromWei(
                                 getToken(assetBond1.tokenAddress)?.balance,
-                              )
-                            }}
-                          >
-                            <Badge bg="primary" className="me-1">
-                              MAX
-                            </Badge>
-                            {t('balance')}:{' '}
-                            {formatFromWei(
-                              getToken(assetBond1.tokenAddress)?.balance,
-                            )}
-                          </Col>
-                        </Row>
+                              )}
+                            </Col>
+                          </Row>
 
-                        <Row className="my-1">
-                          <Col>
-                            <InputGroup className="">
-                              <InputGroup.Text>
-                                <AssetSelect
-                                  priority="1"
-                                  filter={['token']}
-                                  whiteList={getWhiteList()}
-                                />
-                              </InputGroup.Text>
-                              <OverlayTrigger
-                                placement="auto"
-                                onToggle={() => checkWallet()}
-                                show={showWalletWarning1}
-                                trigger={['focus']}
-                                overlay={
-                                  <Popover>
-                                    <Popover.Header />
-                                    <Popover.Body>
-                                      {t('connectWalletFirst')}
-                                    </Popover.Body>
-                                  </Popover>
-                                }
-                              >
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  placeholder={`${t('add')}...`}
-                                  id="bondInput1"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                />
-                              </OverlayTrigger>
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs()}
-                                onClick={() => clearInputs()}
-                              >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
-                            <div className="text-end text-sm-label pt-1">
-                              ~$
-                              {bondInput1?.value
-                                ? formatFromWei(getInput1ValueUSD(), 2)
-                                : '0.00'}
-                            </div>
-                          </Col>
-                        </Row>
-                      </>
+                          <Row className="my-1">
+                            <Col>
+                              <InputGroup className="">
+                                <InputGroup.Text>
+                                  <AssetSelect
+                                    priority="1"
+                                    filter={['token']}
+                                    whiteList={getWhiteList()}
+                                  />
+                                </InputGroup.Text>
+                                <OverlayTrigger
+                                  placement="auto"
+                                  onToggle={() => checkWallet()}
+                                  show={showWalletWarning1}
+                                  trigger={['focus']}
+                                  overlay={
+                                    <Popover>
+                                      <Popover.Header />
+                                      <Popover.Body>
+                                        {t('connectWalletFirst')}
+                                      </Popover.Body>
+                                    </Popover>
+                                  }
+                                >
+                                  <FormControl
+                                    className="text-end ms-0"
+                                    type="number"
+                                    placeholder={`${t('add')}...`}
+                                    id="bondInput1"
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                  />
+                                </OverlayTrigger>
+                                <InputGroup.Text
+                                  role="button"
+                                  tabIndex={-1}
+                                  onKeyPress={() => clearInputs()}
+                                  onClick={() => clearInputs()}
+                                >
+                                  <Icon icon="close" size="10" fill="grey" />
+                                </InputGroup.Text>
+                              </InputGroup>
+                              <div className="text-end text-sm-label pt-1">
+                                ~$
+                                {bondInput1?.value
+                                  ? formatFromWei(getInput1ValueUSD(), 2)
+                                  : '0.00'}
+                              </div>
+                            </Col>
+                          </Row>
+                        </>
+                      )
                     ) : (
+                      <HelmetLoading height="150px" width="150px" />
+                    )}
+                    {bond.listedAssets.length <= 0 && (
                       <div className="output-card">
                         No assets are currently listed for Bond.{' '}
                         <Link to="/dao">Visit the DAO</Link> to propose a new
@@ -439,21 +445,23 @@ const LiqBond = () => {
                     )}
 
                   <Col xs="12" sm="4" md="12" className="hide-if-siblings">
-                    <Button
-                      className="w-100"
-                      disabled={!checkValid()[0]}
-                      onClick={() => handleBondDeposit()}
-                    >
-                      {checkValid()[1]}{' '}
-                      {getToken(assetBond1.tokenAddress)?.symbol}
-                      {txnLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
+                    {bond.listedAssets.length > 0 && (
+                      <Button
+                        className="w-100"
+                        disabled={!checkValid()[0]}
+                        onClick={() => handleBondDeposit()}
+                      >
+                        {checkValid()[1]}{' '}
+                        {getToken(assetBond1.tokenAddress)?.symbol}
+                        {txnLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    )}
                   </Col>
                 </Row>
               </>
