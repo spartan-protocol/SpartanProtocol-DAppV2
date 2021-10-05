@@ -67,7 +67,7 @@ const PoolItem = ({ asset }) => {
           <Card.Header>
             <h6 className="mb-0 text-center">
               {newPool && (
-                <Badge bg="dark" className="mx-1">
+                <Badge bg="dark" className="p-1 me-1">
                   NEW
                   <OverlayTrigger
                     placement="auto"
@@ -85,7 +85,7 @@ const PoolItem = ({ asset }) => {
                 </Badge>
               )}
               {curated && (
-                <Badge bg="dark" className="mx-1">
+                <Badge bg="dark" className="p-1 me-1">
                   CURATED
                   <OverlayTrigger
                     placement="auto"
@@ -103,7 +103,7 @@ const PoolItem = ({ asset }) => {
                 </Badge>
               )}
               {!curated && (
-                <Badge bg="dark" className="mx-1">
+                <Badge bg="dark" className="p-1 me-1">
                   NORMAL
                   <OverlayTrigger
                     placement="auto"
@@ -121,7 +121,7 @@ const PoolItem = ({ asset }) => {
                 </Badge>
               )}
               {!asset.frozen && (
-                <Badge bg="success" className="mx-1">
+                <Badge bg="success" className="p-1">
                   SAFE
                   <OverlayTrigger
                     placement="auto"
@@ -139,7 +139,7 @@ const PoolItem = ({ asset }) => {
                 </Badge>
               )}
               {asset.frozen && (
-                <Badge bg="danger" className="mx-1">
+                <Badge bg="danger" className="p-1">
                   FROZEN
                   <OverlayTrigger
                     placement="auto"
