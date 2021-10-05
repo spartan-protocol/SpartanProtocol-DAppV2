@@ -148,7 +148,7 @@ const NewSynth = () => {
               </Form>
             </>
           )}
-          {network.chainId !== 97 && <WrongNetwork />}
+          {!tempChains.includes(network.chainId) && <WrongNetwork />}
         </Modal.Body>
         <Modal.Footer>
           <Button

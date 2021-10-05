@@ -179,7 +179,7 @@ const Share = () => {
           </ShareLink>
           <TwitterShareButton
             url={url}
-            title="Sparta Protocol"
+            title="Spartan Protocol"
             style={{ width: '100%' }}
           >
             <Card className="card-share">

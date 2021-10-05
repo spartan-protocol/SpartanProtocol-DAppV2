@@ -371,7 +371,7 @@ const NewProposal = () => {
             </Modal.Body>
           </>
         )}
-        {network.chainId !== 97 && <WrongNetwork />}
+        {!tempChains.includes(network.chainId) && <WrongNetwork />}
         <Modal.Footer>
           <Row className="w-100 text-center">
             {wallet?.account && !existingPid && (

@@ -43,6 +43,7 @@ const Approval = ({
 
   const [notify, setNotify] = useState(false)
   const [pending, setPending] = useState(false)
+  const [valid, setValid] = useState(false)
 
   const getAllowance = () => {
     if (tokenAddress && walletAddress && contractAddress) {
@@ -59,7 +60,6 @@ const Approval = ({
     setNotify(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
     setNotify(false)
-    setPending(false)
     getAllowance()
   }
 
@@ -76,6 +76,37 @@ const Approval = ({
     assetNumber,
   ])
 
+  const getAllowanceObj = () => {
+    if (assetNumber === '1') {
+      return web3.allowance1
+    }
+    if (assetNumber === '2') {
+      return web3.allowance2
+    }
+    return 0
+  }
+
+  const checkValid = () => {
+    if (BN(getAllowanceObj()).isGreaterThanOrEqualTo(txnAmount)) {
+      setValid(true)
+      setPending(false)
+    } else {
+      setValid(false)
+    }
+  }
+
+  useEffect(() => {
+    checkValid()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [web3.allowance1, web3.allowance2, txnAmount, pool.poolDetails])
+
+  useEffect(() => {
+    web3.allowance1 = '0'
+    web3.allowance2 = '0'
+    getAllowance()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // ~0.00047 BNB gas (approval) on TN || ~0.00025 BNB on MN
   const estMaxGas = '250000000000000'
   const enoughGas = () => {
@@ -88,7 +119,7 @@ const Approval = ({
 
   return (
     <>
-      {BN(web3[`allowance${assetNumber}`]).isLessThan(txnAmount) && (
+      {!valid && (
         <Col>
           <Notifications show={notify} txnType="approve" />
           <Button

@@ -180,7 +180,7 @@ const Overview = () => {
             )}
           </>
         )}
-        {network.chainId !== 97 && <WrongNetwork />}
+        {!tempChains.includes(network.chainId) && <WrongNetwork />}
       </div>
     </>
   )

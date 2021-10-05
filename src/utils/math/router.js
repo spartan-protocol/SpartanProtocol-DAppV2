@@ -41,9 +41,10 @@ export const addLiqAsym = (input, pool, fromBase, feeOnTsf) => {
     const [_swapOut, swapFee] = calcSwapOutput(_swapInRec, pool, !fromBase) // TOKEN2 leaving the Pool
     const _swapOutRec = fromBase ? _swapOut : minusFeeBurn(_swapOut, feeOnTsf) // TOKEN2 received by Router (after feeBurn)
     const _recSparta = fromBase
-      ? _received.minus(_swapIn)
-      : minusFeeBurn(_swapOutRec, feeOnTsf) // SPARTA received by Pool
+      ? minusFeeBurn(_received.minus(_swapIn), feeOnTsf)
+      : minusFeeBurn(_swapOutRec, feeOnTsf) // SPARTA received by Pool (after feeBurn)
     const _recToken = fromBase ? _swapOutRec : _received.minus(_swapIn) // TOKEN received by Pool
+    // console.log(_recSparta.toString())
     // Update pools balances
     let baseAmnt = BN(pool.baseAmount)
     let tokenAmnt = BN(pool.tokenAmount)

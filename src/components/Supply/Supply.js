@@ -15,6 +15,7 @@ import {
 import { useBond } from '../../store/bond'
 import { useReserve } from '../../store/reserve/selector'
 import { useSparta } from '../../store/sparta/selector'
+import { usePool } from '../../store/pool/selector'
 import { useWeb3 } from '../../store/web3'
 import {
   BN,
@@ -30,6 +31,7 @@ const Supply = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
   const addr = getAddresses()
+  const pool = usePool()
   const sparta = useSparta()
   const reserve = useReserve()
   const bond = useBond()
@@ -72,6 +74,20 @@ const Supply = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  const getTVL = () => {
+    let tvl = BN(0)
+    if (pool.poolDetails) {
+      for (let i = 0; i < pool.poolDetails.length; i++) {
+        tvl = tvl.plus(pool.poolDetails[i].baseAmount)
+      }
+      tvl = tvl.times(2).times(web3.spartaPrice)
+    }
+    if (tvl > 0) {
+      return tvl
+    }
+    return '0.00'
+  }
 
   const getTotalSupply = () => {
     const _totalSupply = sparta.globalDetails.totalSupply
@@ -202,6 +218,32 @@ const Supply = () => {
           </Popover.Header>
           <Popover.Body>
             <Row>
+              <Col xs="6" className="popover-text mb-2">
+                {t('tvl')}
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Header as="h3">
+                        {t('totalValueLocked')}
+                      </Popover.Header>
+                      <Popover.Body className="text-center">
+                        Total Value Locked (TVL) is derived by multiplying the
+                        total SPARTA value of all locked tokens in the pools by
+                        the current USD market value of each SPARTA token.
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                  </span>
+                </OverlayTrigger>
+              </Col>
+              <Col xs="6 mb-2" className="popover-text text-end mb-2">
+                ${formatFromWei(getTVL(), 0)}
+                <Icon icon="usdt" className="ms-1" size="15" />
+              </Col>
               <Col xs="6" className="popover-text mb-2">
                 {t('marketcap')}
                 <OverlayTrigger

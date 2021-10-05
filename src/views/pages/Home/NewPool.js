@@ -486,7 +486,7 @@ const NewPool = () => {
             )}
           </>
         )}
-        {network.chainId !== 97 && (
+        {!tempChains.includes(network.chainId) && (
           <Modal.Body>
             <WrongNetwork />
           </Modal.Body>
