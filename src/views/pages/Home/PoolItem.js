@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Badge, Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  OverlayTrigger,
+  Row,
+  ProgressBar,
+} from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
@@ -59,6 +67,8 @@ const PoolItem = ({ asset }) => {
     'dividendRevenue',
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
+
+  const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
 
   return (
     <>
@@ -197,16 +207,18 @@ const PoolItem = ({ asset }) => {
                 />
               </Col>
             </Row>
+
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('spotPrice')}
-              </Col>
-              <Col className="text-end output-card">
-                {formatFromUnits(tokenValueBase, 2)} SPARTA
+              <Col xs="12" className="text-card mb-1">
+                <ProgressBar style={{ height: '5px' }}>
+                  <ProgressBar
+                    variant={getDepthPC() > 95 ? 'primary' : 'success'}
+                    key={1}
+                    now={getDepthPC()}
+                  />
+                </ProgressBar>
               </Col>
             </Row>
-            {showDetails === true && <hr className="my-0" />}
-
             <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('poolDepth')}
@@ -237,6 +249,16 @@ const PoolItem = ({ asset }) => {
                 <hr className="my-0" />
               </>
             )}
+
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('spotPrice')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromUnits(tokenValueBase, 2)} SPARTA
+              </Col>
+            </Row>
+            {showDetails === true && <hr className="my-0" />}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">
