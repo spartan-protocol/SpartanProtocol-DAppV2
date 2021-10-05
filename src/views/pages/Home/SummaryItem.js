@@ -1,10 +1,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge, Card, Col, Row } from 'react-bootstrap'
+import { Card, Col, Row } from 'react-bootstrap'
 // import { Icon } from '../../../components/Icons/icons'
 import NewPool from './NewPool'
 
-const SummaryItem = (props) => {
+const SummaryItem = () => {
   const { t } = useTranslation()
 
   return (
@@ -25,20 +25,12 @@ const SummaryItem = (props) => {
                 <Icon height="30" />
               </Col> */}
               <Col xs="auto">
-                {props.activeTab === '1' && (
-                  <>
-                    <Badge bg="dark">NORMAL POOLS:</Badge> {t('poolNormalInfo')}
-                    <br />
-                    <Badge bg="primary">CURATED POOLS:</Badge>{' '}
-                    {t('poolCuratedInfo')}
-                    <br />
-                  </>
-                )}
-                {props.activeTab === '2' && (
-                  <>
-                    <Badge bg="primary">NEW POOLS:</Badge> {t('poolNewInfo')}
-                  </>
-                )}
+                Listed Spartan Protocol Pools
+                {/* <Badge bg="secondary">NEW</Badge> {t('poolNewInfo')}
+                <br />
+                <Badge bg="dark">NORMAL</Badge> {t('poolNormalInfo')}
+                <br />
+                <Badge bg="primary">CURATED</Badge> {t('poolCuratedInfo')} */}
               </Col>
             </Row>
           </Card.Body>

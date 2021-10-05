@@ -291,11 +291,19 @@ ethereum(network: $network){
                       <ProgressBar
                         variant={progColor}
                         now={totalWidth * 5}
-                        label={`$${formatFromWei(totalUSD, 0)} (${t(
-                          'donations',
-                        )})`}
+                        label={
+                          totalWidth > 50 &&
+                          `$${formatFromWei(totalUSD, 0)} (${t('donations')})`
+                        }
                       />
-                      <ProgressBar variant="black" now={100 - totalWidth * 5} />
+                      <ProgressBar
+                        variant="black"
+                        now={100 - totalWidth * 5}
+                        label={
+                          totalWidth <= 50 &&
+                          `$${formatFromWei(totalUSD, 0)} (${t('donations')})`
+                        }
+                      />
                     </ProgressBar>
                   </Col>
 

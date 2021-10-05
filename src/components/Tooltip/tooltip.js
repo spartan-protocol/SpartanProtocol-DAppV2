@@ -47,6 +47,30 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'newPoolFee',
     },
     {
+      id: 'poolCurated',
+      title: 'poolCurated',
+      body: 'poolCuratedInfo',
+      variable: { pool: variable },
+    },
+    {
+      id: 'poolFrozen',
+      title: 'poolFrozen',
+      body: 'poolFrozenInfo',
+      variable: { pool: variable },
+    },
+    {
+      id: 'poolNormal',
+      title: 'poolNormal',
+      body: 'poolNormalInfo',
+      variable: { pool: variable },
+    },
+    {
+      id: 'poolSafe',
+      title: 'poolSafe',
+      body: 'poolSafeInfo',
+      variable: { pool: variable },
+    },
+    {
       id: 'rank',
       title: 'rank',
       body: 'rankInfo',

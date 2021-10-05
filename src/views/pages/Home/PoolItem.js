@@ -64,13 +64,100 @@ const PoolItem = ({ asset }) => {
     <>
       <Col xs="auto">
         <Card className="card-320 pb-2 card-underlay card-alt">
-          {newPool ? (
-            <Badge bg="primary">NEW</Badge>
-          ) : curated ? (
-            <Badge bg="primary">CURATED</Badge>
-          ) : (
-            <Badge bg="alert">NORMAL</Badge>
-          )}
+          <Card.Header>
+            <h6 className="mb-0 text-center">
+              {newPool && (
+                <Badge bg="dark" className="mx-1">
+                  NEW
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'newPool', token.symbol)}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="15"
+                        // fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Badge>
+              )}
+              {curated && (
+                <Badge bg="dark" className="mx-1">
+                  CURATED
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'poolCurated', token.symbol)}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="15"
+                        // fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Badge>
+              )}
+              {!curated && (
+                <Badge bg="dark" className="mx-1">
+                  NORMAL
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'poolNormal', token.symbol)}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="15"
+                        // fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Badge>
+              )}
+              {!asset.frozen && (
+                <Badge bg="success" className="mx-1">
+                  SAFE
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'poolSafe', token.symbol)}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="15"
+                        fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Badge>
+              )}
+              {asset.frozen && (
+                <Badge bg="danger" className="mx-1">
+                  FROZEN
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'poolFrozen', token.symbol)}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1"
+                        size="15"
+                        fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </Badge>
+              )}
+            </h6>
+          </Card.Header>
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="pe-0">
