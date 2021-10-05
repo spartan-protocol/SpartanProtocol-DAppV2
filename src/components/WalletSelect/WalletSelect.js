@@ -246,7 +246,7 @@ const WalletSelect = (props) => {
   const [rank, setrank] = useState('Loading')
   const getRank = () => {
     if (!tempChains.includes(wallet.chainId)) {
-      setrank('Wait for Mainnet')
+      setrank('Check Network')
     }
     if (props.show && !rankLoading()) {
       const weight = getWeight()

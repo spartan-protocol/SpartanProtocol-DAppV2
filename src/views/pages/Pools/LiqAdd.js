@@ -61,6 +61,7 @@ const LiqAdd = () => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('addTab1')
   const [confirm, setConfirm] = useState(false)
+  const [confirmFreeze, setConfirmFreeze] = useState(false)
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
   const [poolAdd1, setPoolAdd1] = useState('...')
@@ -161,6 +162,7 @@ const LiqAdd = () => {
 
   const handleConfClear = () => {
     setConfirm(false)
+    setConfirmFreeze(false)
   }
 
   const clearInputs = (focusAfter) => {
@@ -317,6 +319,9 @@ const LiqAdd = () => {
     }
     if (poolAdd1.newPool && !confirm) {
       return [false, t('confirmLockup')]
+    }
+    if (poolAdd1.frozen && !confirmFreeze) {
+      return [false, t('confirmFreeze')]
     }
     if (activeTab === 'addTab1') {
       return [true, t('addBoth')]
@@ -807,6 +812,30 @@ const LiqAdd = () => {
                         className="ms-2 d-inline-flex"
                         checked={confirm}
                         onChange={() => setConfirm(!confirm)}
+                      />
+                    </span>
+                  </Form>
+                </Col>
+              </Row>
+            )}
+            {poolAdd1.frozen && (
+              <Row>
+                <Col>
+                  <div className="output-card text-center">
+                    This pool is currently outside its safety zone. Please be
+                    aware you will not be able to withdraw your liquidity until
+                    this pool returns to a safe ratio.
+                  </div>
+                  <Form className="my-2 text-center">
+                    <span className="output-card">
+                      Confirm; your liquidity will be locked until pool is safe
+                      again
+                      <Form.Check
+                        type="switch"
+                        id="confirmFrozen"
+                        className="ms-2 d-inline-flex"
+                        checked={confirmFreeze}
+                        onChange={() => setConfirmFreeze(!confirmFreeze)}
                       />
                     </span>
                   </Form>

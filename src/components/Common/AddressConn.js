@@ -28,9 +28,15 @@ const AddressConn = () => {
       window.ethereum?.on('accountsChanged', async () => {
         document.location.reload()
       })
+      window.BinanceChain?.on('accountsChanged', async () => {
+        document.location.reload()
+      })
     }
     async function listenNetworkChanged() {
       window.ethereum?.on('chainChanged', async () => {
+        document.location.reload()
+      })
+      window.BinanceChain?.on('chainChanged', async () => {
         document.location.reload()
       })
     }
