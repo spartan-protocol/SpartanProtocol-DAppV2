@@ -142,7 +142,7 @@ const Assets = () => {
                     height="35px"
                     src={asset.symbolUrl}
                     alt={asset.name}
-                    className=""
+                    className="rounded-circle"
                   />
                 </Col>
 

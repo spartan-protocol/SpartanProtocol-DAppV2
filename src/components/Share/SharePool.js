@@ -98,7 +98,7 @@ const Share = () => {
                     height="35px"
                     src={getToken(asset1?.tokenAddress)?.symbolUrl}
                     alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
-                    className="mx-2"
+                    className="mx-2 rounded-circle"
                   />
                   {assetType1 === 'synth' && (
                     <Icon
@@ -125,7 +125,7 @@ const Share = () => {
                     height="35px"
                     src={getToken(asset2?.tokenAddress)?.symbolUrl}
                     alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
-                    className="mx-2"
+                    className="mx-2 rounded-circle"
                   />
                   {assetType2 === 'synth' && (
                     <Icon

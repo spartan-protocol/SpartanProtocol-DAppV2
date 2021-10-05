@@ -148,6 +148,7 @@ const LPs = () => {
                   height="35px"
                   src={_getToken(asset.tokenAddress)?.symbolUrl}
                   alt={_getToken(asset.tokenAddress)?.name}
+                  className="rounded-circle"
                 />
                 <img
                   src={spartaLpIcon}
@@ -237,6 +238,7 @@ const LPs = () => {
                   height="35px"
                   src={_getToken(asset.tokenAddress)?.symbolUrl}
                   alt={_getToken(asset.tokenAddress)?.name}
+                  className="rounded-circle"
                 />
                 <img
                   src={spartaLpIcon}
@@ -327,6 +329,7 @@ const LPs = () => {
                   height="35px"
                   src={_getToken(asset.tokenAddress)?.symbolUrl}
                   alt={_getToken(asset.tokenAddress)?.name}
+                  className="rounded-circle"
                 />
                 <img
                   src={spartaLpIcon}

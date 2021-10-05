@@ -168,20 +168,18 @@ export const getBlockTimestamp = () => {
  * @returns [string, string] [0 = time] [1 = string label ie. 'seconds' 'minutes']
  */
 export const convertTimeUnits = (seconds, t) => {
-  if (seconds > 86400) {
-    return [
-      formatFromUnits(seconds.div(60).div(60).div(24), 2),
-      ` ${t('days')}`,
-    ]
+  const _secs = BN(seconds)
+  if (_secs > 86400) {
+    return [formatFromUnits(_secs.div(60).div(60).div(24), 2), ` ${t('days')}`]
   }
-  if (seconds > 3600) {
-    return [formatFromUnits(seconds.div(60).div(60), 2), ` ${t('hours')}`]
+  if (_secs > 3600) {
+    return [formatFromUnits(_secs.div(60).div(60), 2), ` ${t('hours')}`]
   }
-  if (seconds > 60) {
-    return [formatFromUnits(seconds.div(60), 2), ` ${t('minutes')}`]
+  if (_secs > 60) {
+    return [formatFromUnits(_secs.div(60), 2), ` ${t('minutes')}`]
   }
-  if (seconds > 0) {
-    return [formatFromUnits(seconds, 0), ` ${t('seconds')}`]
+  if (_secs > 0) {
+    return [formatFromUnits(_secs, 0), ` ${t('seconds')}`]
   }
   return [0, ` ${t('seconds')} (now)`]
 }

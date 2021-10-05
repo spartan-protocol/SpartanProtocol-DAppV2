@@ -117,7 +117,12 @@ const AssetSelect = (props) => {
                 role="button"
               >
                 <Col xs="auto" className="">
-                  <img height="35px" src={asset.symbolUrl} alt={asset.name} />
+                  <img
+                    height="35px"
+                    className="rounded-circle"
+                    src={asset.symbolUrl}
+                    alt={asset.name}
+                  />
                 </Col>
                 <Col xs="auto" className="my-auto">
                   {asset.symbol}

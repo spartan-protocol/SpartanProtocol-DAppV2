@@ -117,7 +117,12 @@ const DaoDepositModal = (props) => {
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
         <Modal.Header closeButton closeVariant="white">
           <div xs="auto" className="position-relative me-3">
-            <img src={token.symbolUrl} alt={token.symbol} height="50px" />
+            <img
+              src={token.symbolUrl}
+              className="rounded-circle"
+              alt={token.symbol}
+              height="50px"
+            />
             <img
               height="25px"
               src={spartaIcon}

@@ -32,6 +32,7 @@ const DaoVaultItem = ({ i, claimable }) => {
                   src={getToken(i.tokenAddress)?.symbolUrl}
                   alt={getToken(i.tokenAddress)?.symbol}
                   height="50px"
+                  className="rounded-circle"
                 />
                 <img
                   height="25px"

@@ -40,7 +40,7 @@ const AssetSelect = (props) => {
                     height="35px"
                     src={asset.symbolUrl}
                     alt={asset.name}
-                    className=""
+                    className="rounded-circle"
                   />
                 </Col>
                 <Col xs="auto" className="my-auto">

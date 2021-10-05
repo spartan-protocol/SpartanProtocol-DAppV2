@@ -147,6 +147,7 @@ const Synths = () => {
                     height="35px"
                     src={getToken(asset.tokenAddress)?.symbolUrl}
                     alt={getToken(asset.tokenAddress)?.name}
+                    className="rounded-circle"
                   />
                   <img
                     src={spartaSynthIcon}
@@ -245,6 +246,7 @@ const Synths = () => {
                       height="35px"
                       src={getToken(asset.tokenAddress)?.symbolUrl}
                       alt={getToken(asset.tokenAddress)?.name}
+                      className="rounded-circle"
                     />
                     <img
                       src={spartaSynthIcon}

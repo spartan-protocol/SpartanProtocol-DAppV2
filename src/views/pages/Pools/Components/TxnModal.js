@@ -48,7 +48,12 @@ const TxnModal = (props) => {
                 )}
                 <Row className="my-2">
                   <Col xs="auto" className="position-relative">
-                    <img height="30px" src={txn.icon} alt={`${txn?.symbol}`} />
+                    <img
+                      height="30px"
+                      className="rounded-circle"
+                      src={txn.icon}
+                      alt={`${txn?.symbol}`}
+                    />
                     {txn.assetType && (
                       <img
                         src={
@@ -92,7 +97,12 @@ const TxnModal = (props) => {
                 )}
                 <Row className="my-2">
                   <Col xs="auto" className="position-relative">
-                    <img height="30px" src={txn.icon} alt={`${txn?.symbol}`} />
+                    <img
+                      height="30px"
+                      className="rounded-circle"
+                      src={txn.icon}
+                      alt={`${txn?.symbol}`}
+                    />
                     {txn.assetType && (
                       <img
                         src={

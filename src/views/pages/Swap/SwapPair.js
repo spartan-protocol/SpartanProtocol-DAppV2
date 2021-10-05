@@ -51,6 +51,7 @@ const SwapPair = ({ assetSwap }) => {
                   src={getToken(assetSwap.tokenAddress).symbolUrl}
                   alt="Token logo"
                   height="50"
+                  className="rounded-circle"
                 />
                 <Icon icon="spartav2" size="25" className="token-badge-pair" />
               </Col>

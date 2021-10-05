@@ -310,7 +310,7 @@ const NewPool = () => {
                         src={tokenIcon}
                         height="30px"
                         alt="tokenIcon"
-                        className="me-2"
+                        className="me-2 rounded-circle"
                       />
                       {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
                     </div>

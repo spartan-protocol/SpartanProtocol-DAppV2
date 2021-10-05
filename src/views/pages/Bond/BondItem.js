@@ -74,7 +74,7 @@ const BondItem = (props) => {
             <Row className="">
               <Col xs="auto" className="position-relative pt-1">
                 <img
-                  className="mr-3"
+                  className="mr-3 rounded-circle"
                   src={token().symbolUrl}
                   alt={token().symbol}
                   height="50px"

@@ -171,7 +171,12 @@ const PoolItem = ({ asset }) => {
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="pe-0">
-                <img src={token.symbolUrl} alt={token.symbol} height="45" />{' '}
+                <img
+                  src={token.symbolUrl}
+                  className="rounded-circle"
+                  alt={token.symbol}
+                  height="45"
+                />{' '}
               </Col>
               <Col xs="auto" className="pe-0">
                 <h3 className="mb-0">{token.symbol}</h3>

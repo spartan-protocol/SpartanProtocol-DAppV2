@@ -239,7 +239,7 @@ const Swap = () => {
   const _convertTimeUnits = () => {
     if (synth.globalDetails) {
       const [units, timeString] = convertTimeUnits(
-        BN(synth.globalDetails.minTime),
+        synth.globalDetails.minTime,
         t,
       )
       return [units, timeString]

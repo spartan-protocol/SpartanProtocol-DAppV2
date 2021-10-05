@@ -128,6 +128,7 @@ const AssetSelect = (props) => {
                 type: 'token',
                 icon: (
                   <img
+                    className="rounded-circle"
                     height="35px"
                     src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
                     alt={`${
@@ -150,6 +151,7 @@ const AssetSelect = (props) => {
               type: 'token',
               icon: (
                 <img
+                  className="rounded-circle"
                   height="35px"
                   src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
                   alt={`${
@@ -173,6 +175,7 @@ const AssetSelect = (props) => {
                 icon: (
                   <>
                     <img
+                      className="rounded-circle"
                       height="35px"
                       src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
                       alt={`${
@@ -207,6 +210,7 @@ const AssetSelect = (props) => {
                 icon: (
                   <>
                     <img
+                      className="rounded-circle"
                       height="35px"
                       src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
                       alt={`${
@@ -288,6 +292,7 @@ const AssetSelect = (props) => {
         <Col xs="auto" className="position-relative pe-1 ps-2">
           {selectedType === 'token' && (
             <img
+              className="rounded-circle"
               height="30px"
               src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
               alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
@@ -297,6 +302,7 @@ const AssetSelect = (props) => {
           {selectedType === 'pool' && (
             <>
               <img
+                className="rounded-circle"
                 height="30px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
@@ -315,6 +321,7 @@ const AssetSelect = (props) => {
           {selectedType === 'synth' && (
             <>
               <img
+                className="rounded-circle"
                 height="30px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}

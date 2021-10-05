@@ -122,6 +122,7 @@ const SynthHarvestModal = ({ synthItem }) => {
               src={_getToken().symbolUrl}
               alt={_getToken().symbol}
               height="50px"
+              className="rounded-circle"
             />
             <img
               height="25px"
