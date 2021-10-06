@@ -1208,10 +1208,7 @@ const Swap = () => {
                               <Row>
                                 <Col>
                                   <div className="output-card text-center">
-                                    The destination pool is currently in its
-                                    initialization phase. Please be aware you
-                                    will not be able to withdraw your liquidity
-                                    until this pool is fully established
+                                    {t('newPoolZapConfirm')}
                                   </div>
                                   <Form className="my-2 text-center">
                                     <span className="output-card">
@@ -1297,14 +1294,12 @@ const Swap = () => {
                           <Row>
                             <Col>
                               <div className="output-card text-center">
-                                The minted SynthYield tokens will be deposited
-                                directly into the SynthVault & locked for{' '}
-                                {_convertTimeUnits()[0]}{' '}
+                                {t('mintSynthConfirm')} {_convertTimeUnits()[0]}{' '}
                                 {_convertTimeUnits()[1]}.
                               </div>
                               <Form className="my-2 text-center">
                                 <span className="output-card">
-                                  Confirm; your synths will be locked for{' '}
+                                  {t('mintSynthConfirmShort')}{' '}
                                   {_convertTimeUnits()[0]}{' '}
                                   {_convertTimeUnits()[1]}
                                   <Form.Check

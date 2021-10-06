@@ -98,7 +98,7 @@ const Assets = () => {
             <Col className="align-items-center">
               <Row>
                 <Col xs="auto" className="float-left">
-                  Total
+                  {t('total')}
                 </Col>
                 <Col>
                   <div className="text-sm-label-wht text-end">

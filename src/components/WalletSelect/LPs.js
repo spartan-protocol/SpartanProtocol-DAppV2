@@ -130,7 +130,7 @@ const LPs = () => {
             <Col className="align-items-center">
               <Row>
                 <Col xs="auto" className="float-left output-card">
-                  Total
+                  {t('total')}
                 </Col>
                 <Col className="text-sm-label-wht">
                   <div className="text-end">

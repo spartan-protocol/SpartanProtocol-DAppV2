@@ -24,14 +24,7 @@ const SummaryItem = () => {
               {/* <Col xs="auto" className="pr-0">
                 <Icon height="30" />
               </Col> */}
-              <Col xs="auto">
-                Listed Spartan Protocol Pools
-                {/* <Badge bg="secondary">NEW</Badge> {t('poolNewInfo')}
-                <br />
-                <Badge bg="dark">NORMAL</Badge> {t('poolNormalInfo')}
-                <br />
-                <Badge bg="primary">CURATED</Badge> {t('poolCuratedInfo')} */}
-              </Col>
+              <Col xs="auto">{t('listedPoolsInfo')}</Col>
             </Row>
           </Card.Body>
         </Card>

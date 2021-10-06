@@ -363,7 +363,7 @@ const WalletSelect = (props) => {
               <Col xs="12">
                 <Form className="mb-0">
                   <span className="output-card">
-                    Rank: {rank}
+                    {t('rank')}: {rank}
                     <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'rank')}
