@@ -1,5 +1,23 @@
 .modal-content {
   background-color: #1d171f;
+  max-height: 95vh;
+  overflow: scroll;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 4px;
+  height: 0px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #970303;
+  outline: 1px solid #1d171f;
+  border-radius: 50px;
 }
 
 .modal-header {
@@ -46,7 +64,7 @@
   }
 
   .modal-header {
-    background-color: #F5F8FC;
+    background-color: #f5f8fc;
     color: #000000;
   }
 
@@ -55,6 +73,6 @@
   }
 
   .modal-footer {
-    background-color: #F5F8FC;
+    background-color: #f5f8fc;
   }
 }

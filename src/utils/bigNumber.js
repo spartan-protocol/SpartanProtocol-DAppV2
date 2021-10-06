@@ -28,8 +28,8 @@ export const convertToWei = (units) => {
  * @param {string} weiString
  * @returns {string} units
  */
-export const formatFromWei = (weiString, decs) => {
-  let decimals = decs || 4
+export const formatFromWei = (weiString, decs = 4) => {
+  let decimals = decs
   let units = BN(weiString).shiftedBy(-18)
   if (units < 0.1 && decimals < 3) {
     decimals = 3
@@ -56,8 +56,8 @@ export const formatFromWei = (weiString, decs) => {
  * @param {unit} formatDecimals
  * @returns {string} units
  */
-export const formatFromUnits = (unitString, formatDecimals) => {
-  let decimals = formatDecimals || 0
+export const formatFromUnits = (unitString, formatDecimals = 0) => {
+  let decimals = formatDecimals
   if (unitString < 0.1 && decimals < 3) {
     decimals = 3
   }

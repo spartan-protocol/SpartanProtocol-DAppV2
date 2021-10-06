@@ -124,7 +124,6 @@ const AddressConn = () => {
           </Overlay>{' '}
         </>
       )}
-
       <WalletSelect
         show={walletModalShow}
         onHide={() => setWalletModalShow(false)}

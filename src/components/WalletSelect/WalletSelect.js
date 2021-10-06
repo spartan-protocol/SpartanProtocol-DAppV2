@@ -447,7 +447,7 @@ const WalletSelect = (props) => {
                           </>
                         }
                       >
-                        {activeTab === 'tokens' && <Assets />}
+                        {activeTab === 'tokens' && props.show && <Assets />}
                       </Tab>
                       <Tab
                         eventKey="lps"

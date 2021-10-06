@@ -243,7 +243,8 @@ const PoolItem = ({ asset }) => {
                 {t('poolDepth')}
               </Col>
               <Col className="text-end output-card">
-                ${formatFromWei(poolDepthUsd, 0)} USD
+                ${formatFromWei(poolDepthUsd, 2)}
+                <Icon icon="usdc" className="ms-1" size="15" />
               </Col>
             </Row>
             {showDetails === true && (
@@ -253,7 +254,8 @@ const PoolItem = ({ asset }) => {
                     SPARTA
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {formatFromWei(baseAmount)}
+                    {formatFromWei(baseAmount, 0)}
+                    <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>
 
@@ -263,6 +265,12 @@ const PoolItem = ({ asset }) => {
                   </Col>
                   <Col className="text-end output-card fw-light">
                     {formatFromWei(tokenAmount)}
+                    <img
+                      height="15px"
+                      src={token.symbolUrl}
+                      alt={token.name}
+                      className="rounded-circle ms-1"
+                    />
                   </Col>
                 </Row>
                 <hr className="my-0" />
@@ -274,7 +282,8 @@ const PoolItem = ({ asset }) => {
                 {t('spotPrice')}
               </Col>
               <Col className="text-end output-card">
-                {formatFromUnits(tokenValueBase, 2)} SPARTA
+                {formatFromUnits(tokenValueBase, 2)}
+                <Icon icon="spartav2" className="ms-1" size="15" />
               </Col>
             </Row>
             {showDetails === true && <hr className="my-0" />}
@@ -298,8 +307,8 @@ const PoolItem = ({ asset }) => {
                 {formatFromWei(
                   BN(fees).plus(getDivis()).times(web3?.spartaPrice),
                   0,
-                )}{' '}
-                USD
+                )}
+                <Icon icon="usdc" className="ms-1" size="15" />
               </Col>
             </Row>
             {showDetails === true && (
@@ -319,7 +328,8 @@ const PoolItem = ({ asset }) => {
                     </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {formatFromWei(fees, 0)} SPARTA
+                    {formatFromWei(fees, 0)}
+                    <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>
 
@@ -338,8 +348,12 @@ const PoolItem = ({ asset }) => {
                     </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {asset.curated === true &&
-                      `${formatFromWei(getDivis(), 0)} SPARTA`}
+                    {asset.curated === true && (
+                      <>
+                        {formatFromWei(getDivis(), 0)}
+                        <Icon icon="spartav2" className="ms-1" size="15" />
+                      </>
+                    )}
                     {asset.curated === false && t('notCurated')}
                   </Col>
                 </Row>
