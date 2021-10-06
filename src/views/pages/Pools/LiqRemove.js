@@ -279,7 +279,7 @@ const LiqRemove = () => {
     if (removeInput1?.value <= 0) {
       return [false, t('checkInput')]
     }
-    if (poolRemove1.frozen) {
+    if (poolRemove1.curated && poolRemove1.frozen) {
       return [false, t('poolFrozen')]
     }
     if (!enoughGas()) {

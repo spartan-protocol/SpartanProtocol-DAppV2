@@ -52,6 +52,7 @@ import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
 import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
+import { ReactComponent as Usd } from '../../assets/tokens/usd.svg'
 import { ReactComponent as Usdc } from '../../assets/tokens/usdc.svg'
 import { ReactComponent as Usdt } from '../../assets/tokens/usdt.svg'
 // WALLETS
@@ -115,6 +116,7 @@ const icons = {
   spartaSynth: SpartaSynth,
   bnb: Bnb,
   busd: Busd,
+  usd: Usd,
   usdc: Usdc,
   usdt: Usdt,
   // WALLETS

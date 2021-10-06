@@ -243,8 +243,8 @@ const PoolItem = ({ asset }) => {
                 {t('poolDepth')}
               </Col>
               <Col className="text-end output-card">
-                ${formatFromWei(poolDepthUsd, 2)}
-                <Icon icon="usdc" className="ms-1" size="15" />
+                ${formatFromWei(poolDepthUsd, 0)}
+                <Icon icon="usd" className="ms-1" size="15" />
               </Col>
             </Row>
             {showDetails === true && (
@@ -254,7 +254,7 @@ const PoolItem = ({ asset }) => {
                     SPARTA
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {formatFromWei(baseAmount, 0)}
+                    {formatFromWei(baseAmount, 2)}
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>
@@ -264,7 +264,7 @@ const PoolItem = ({ asset }) => {
                     {token.symbol}
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {formatFromWei(tokenAmount)}
+                    {formatFromWei(tokenAmount, 2)}
                     <img
                       height="15px"
                       src={token.symbolUrl}
@@ -308,7 +308,7 @@ const PoolItem = ({ asset }) => {
                   BN(fees).plus(getDivis()).times(web3?.spartaPrice),
                   0,
                 )}
-                <Icon icon="usdc" className="ms-1" size="15" />
+                <Icon icon="usd" className="ms-1" size="15" />
               </Col>
             </Row>
             {showDetails === true && (

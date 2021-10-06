@@ -111,9 +111,9 @@ const Synths = () => {
                   Total
                 </Col>
                 <Col>
-                  <div className="text-sm-label-wht text-end">
-                    ~{formatFromWei(total, 0)}
-                    <Icon icon="usdc" size="15" fill="black" className="ms-1" />
+                  <div className="text-sm-label text-end">
+                    ~${formatFromWei(total, 0)}
+                    <Icon icon="usd" size="15" fill="black" className="ms-1" />
                   </div>
                 </Col>
               </Row>
@@ -167,19 +167,19 @@ const Synths = () => {
                     <Col xs="auto" className="float-left">
                       <Badge className="me-1">{t('wallet')}</Badge>
                       {`${getToken(asset.tokenAddress)?.symbol}s`}
-                      <div className="text-sm-label-wht">
+                      <div className="text-sm-label">
                         {formatFromWei(asset.balance)}
                       </div>
                     </Col>
                     <Col className="hide-i5">
-                      <div className="text-sm-label-wht text-end mt-2">
-                        ~
+                      <div className="text-sm-label text-end mt-2">
+                        ~$
                         {formatFromWei(
                           getUSD(asset.tokenAddress, asset.balance),
                           0,
                         )}
                         <Icon
-                          icon="usdc"
+                          icon="usd"
                           size="15"
                           fill="black"
                           className="ms-1"
@@ -271,19 +271,19 @@ const Synths = () => {
                       <Col xs="auto" className="float-left">
                         <Badge className="me-1">{t('staked')}</Badge>
                         {`${getToken(asset.tokenAddress)?.symbol}s`}
-                        <div className="text-sm-label-wht">
+                        <div className="text-sm-label">
                           {formatFromWei(asset.staked)}
                         </div>
                       </Col>
                       <Col className="hide-i5">
-                        <div className="text-sm-label-wht text-end mt-2">
-                          ~
+                        <div className="text-sm-label text-end mt-2">
+                          ~$
                           {formatFromWei(
                             getUSD(asset.tokenAddress, asset.staked),
                             0,
                           )}
                           <Icon
-                            icon="usdc"
+                            icon="usd"
                             size="15"
                             fill="black"
                             className="ms-1"

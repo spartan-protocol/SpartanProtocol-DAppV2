@@ -320,7 +320,7 @@ const LiqAdd = () => {
     if (poolAdd1.newPool && !confirm) {
       return [false, t('confirmLockup')]
     }
-    if (poolAdd1.frozen && !confirmFreeze) {
+    if (poolAdd1.curated && poolAdd1.frozen && !confirmFreeze) {
       return [false, t('confirmFreeze')]
     }
     if (activeTab === 'addTab1') {
