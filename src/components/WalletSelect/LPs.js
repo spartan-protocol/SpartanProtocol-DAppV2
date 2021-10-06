@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Badge, Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
+import { useSparta } from '../../store/sparta'
 import { watchAsset, useWeb3 } from '../../store/web3'
 import { BN, convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
@@ -12,6 +13,7 @@ import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import { getPool, getToken } from '../../utils/math/utils'
 import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
+import { removeLiq } from '../../utils/math/router'
 import { calcLiqValueInBase } from '../../utils/math/nonContract'
 import HelmetLoading from '../Loaders/HelmetLoading'
 
@@ -23,6 +25,16 @@ const LPs = () => {
   const web3 = useWeb3()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
+  const sparta = useSparta()
+
+  const getLPsValue = (asset) => {
+    const [spartaOutput, tokenOutput] = removeLiq(
+      asset.staked,
+      getPool(asset.tokenAddress, pool.poolDetails),
+      sparta.globalDetails.feeOnTransfer,
+    )
+    return [spartaOutput, tokenOutput]
+  }
 
   const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
@@ -257,6 +269,12 @@ const LPs = () => {
                       {formatFromWei(asset.staked)}
                     </div>
                   </Col>
+                  <Col className="hide-i5">
+                    {`${_getToken(asset.tokenAddress)?.symbol}`}
+                    :&nbsp;{getLPsValue(asset)[1]}
+                    <div>SPARTA :&nbsp;{getLPsValue(asset)[0]}</div>
+                  </Col>
+
                   <Col className="hide-i5">
                     <div className="text-end mt-2">
                       ~$
