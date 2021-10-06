@@ -67,6 +67,7 @@ const PoolItem = ({ asset }) => {
     'dividendRevenue',
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
+  const poolCapTooltip = Tooltip(t, 'poolCap')
 
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
 
@@ -214,8 +215,21 @@ const PoolItem = ({ asset }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="12" className="text-card mb-1">
-                <ProgressBar style={{ height: '5px' }}>
+              <Col xs="auto" className="text-card pe-0">
+                {t('poolCap')}
+                <OverlayTrigger placement="auto" overlay={poolCapTooltip}>
+                  <span role="button">
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="17"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
+                  </span>
+                </OverlayTrigger>
+              </Col>
+              <Col className="text-end output-card my-auto">
+                <ProgressBar style={{ height: '5px' }} className="">
                   <ProgressBar
                     variant={getDepthPC() > 95 ? 'primary' : 'success'}
                     key={1}

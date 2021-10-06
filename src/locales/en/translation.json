@@ -160,6 +160,8 @@
   "pollVotes": "Poll Votes",
   "pool": "Pool",
   "poolAtCapacity": "Pool At Capacity",
+  "poolCap": "Pool Cap",
+  "poolCapInfo": "Each pool has it's own liquidity caps. User's will not be able to add more liquidity to the pool if it's cap has been reached. If you would like the caps raised; please make some noise on Twitter and other socials using the hashtag #OpenTheGates and tag the pool like this: $SPARTA $BNB",
   "poolCurated": "Pool Curated",
   "poolCuratedInfo": "The {{pool}} pool is Curated. This means it is enabled for the full suite of features; swapping, managing liquidity, managing synths, dividends along with weight in the Vaults & DAO proposals",
   "poolDepth": "Pool Depth",

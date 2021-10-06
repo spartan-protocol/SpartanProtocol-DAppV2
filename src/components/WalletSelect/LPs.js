@@ -1,17 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Badge, Col, Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
+import { useSparta } from '../../store/sparta'
 import { watchAsset, useWeb3 } from '../../store/web3'
 import { BN, convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
+import spartaIcon from '../../assets/tokens/spartav2.svg'
 import { getPool, getToken } from '../../utils/math/utils'
 import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
+import { removeLiq } from '../../utils/math/router'
 import { calcLiqValueInBase } from '../../utils/math/nonContract'
 import HelmetLoading from '../Loaders/HelmetLoading'
 
@@ -23,6 +26,22 @@ const LPs = () => {
   const web3 = useWeb3()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
+  const sparta = useSparta()
+
+  const [showUsd, setShowUsd] = useState(false)
+
+  const handleChangeShow = () => {
+    setShowUsd(!showUsd)
+  }
+
+  const getLPsValue = (asset, units) => {
+    const [spartaOutput, tokenOutput] = removeLiq(
+      units,
+      getPool(asset.tokenAddress, pool.poolDetails),
+      sparta.globalDetails.feeOnTransfer,
+    )
+    return [spartaOutput, tokenOutput]
+  }
 
   const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
@@ -102,7 +121,7 @@ const LPs = () => {
       return (
         <div className="hide-i5">
           <hr />
-          <Row key="total-assets" className="output-card">
+          <Row key="total-assets">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />
@@ -110,11 +129,14 @@ const LPs = () => {
 
             <Col className="align-items-center">
               <Row>
-                <Col xs="auto" className="float-left">
+                <Col xs="auto" className="float-left output-card">
                   Total
                 </Col>
-                <Col>
-                  <div className="text-end">~${formatFromWei(total, 0)}</div>
+                <Col className="text-sm-label-wht">
+                  <div className="text-end">
+                    ~{formatFromWei(total, 0)}
+                    <Icon icon="usdc" size="15" className="ms-1" />
+                  </div>
                 </Col>
               </Row>
             </Col>
@@ -163,19 +185,52 @@ const LPs = () => {
                   <Col className="float-left">
                     <Badge className="me-1">{t('wallet')}</Badge>
                     {`${_getToken(asset.tokenAddress)?.symbol}p`}
-                    <div className="description">
+                    <div className="text-sm-label-wht">
                       {formatFromWei(asset.balance)}
                     </div>
                   </Col>
-                  <Col className="hide-i5">
-                    <div className="text-end mt-2">
-                      ~$
-                      {formatFromWei(
-                        getUSD(asset.tokenAddress, asset.balance),
-                        0,
-                      )}
-                    </div>
-                  </Col>
+
+                  {!showUsd ? (
+                    <Col
+                      className="text-sm-label-wht text-end hide-i5"
+                      role="button"
+                      onClick={() => handleChangeShow()}
+                    >
+                      <div>
+                        ~
+                        {formatFromWei(getLPsValue(asset, asset.balance)[1], 2)}
+                        <img
+                          height="15px"
+                          src={_getToken(asset.tokenAddress)?.symbolUrl}
+                          alt={_getToken(asset.tokenAddress)?.name}
+                          className="rounded-circle ms-1"
+                        />
+                        <br />~
+                        {formatFromWei(getLPsValue(asset, asset.balance)[0], 2)}
+                        <img
+                          src={spartaIcon}
+                          height="15px"
+                          className="rounded-circle ms-1"
+                          alt="sparta icon"
+                        />
+                      </div>
+                    </Col>
+                  ) : (
+                    <Col
+                      className="hide-i5"
+                      role="button"
+                      onClick={() => handleChangeShow()}
+                    >
+                      <div className="text-end mt-2 text-sm-label-wht">
+                        ~
+                        {formatFromWei(
+                          getUSD(asset.tokenAddress, asset.balance),
+                          0,
+                        )}
+                        <Icon icon="usdc" size="15" className="ms-1" />
+                      </div>
+                    </Col>
+                  )}
                 </Row>
               </Col>
 
@@ -253,19 +308,51 @@ const LPs = () => {
                   <Col xs="auto" className="float-left">
                     <Badge className="me-1">{t('staked')}</Badge>
                     {`${_getToken(asset.tokenAddress)?.symbol}p`}
-                    <div className="description">
-                      {formatFromWei(asset.staked)}
+                    <div className="text-sm-label-wht">
+                      {formatFromWei(asset.staked, 2)}
                     </div>
                   </Col>
-                  <Col className="hide-i5">
-                    <div className="text-end mt-2">
-                      ~$
-                      {formatFromWei(
-                        getUSD(asset.tokenAddress, asset.staked),
-                        0,
-                      )}
-                    </div>
-                  </Col>
+
+                  {!showUsd ? (
+                    <Col
+                      className="hide-i5 text-sm-label-wht text-end"
+                      role="button"
+                      onClick={() => handleChangeShow()}
+                    >
+                      <div>
+                        ~{formatFromWei(getLPsValue(asset, asset.staked)[1], 2)}
+                        <img
+                          height="15px"
+                          src={_getToken(asset.tokenAddress)?.symbolUrl}
+                          alt={_getToken(asset.tokenAddress)?.name}
+                          className="rounded-circle ms-1"
+                        />
+                        <br />~
+                        {formatFromWei(getLPsValue(asset, asset.staked)[0], 2)}
+                        <img
+                          src={spartaIcon}
+                          height="15px"
+                          className="rounded-circle ms-1"
+                          alt="sparta icon"
+                        />
+                      </div>
+                    </Col>
+                  ) : (
+                    <Col
+                      className="hide-i5 text-sm-label-wht text-end"
+                      role="button"
+                      onClick={() => handleChangeShow()}
+                    >
+                      <div className="text-end mt-2">
+                        ~$
+                        {formatFromWei(
+                          getUSD(asset.tokenAddress, asset.staked),
+                          0,
+                        )}
+                        <Icon icon="usdc" size="15" className="ms-1" />
+                      </div>
+                    </Col>
+                  )}
                 </Row>
               </Col>
 
@@ -343,19 +430,50 @@ const LPs = () => {
                   <Col xs="auto" className="float-left">
                     <Badge className="me-1">{t('bonded')}</Badge>
                     {`${_getToken(asset.tokenAddress)?.symbol}p`}
-                    <div className="description">
+                    <div className="text-sm-label-wht">
                       {formatFromWei(asset.staked)}
                     </div>
                   </Col>
-                  <Col className="hide-i5">
-                    <div className="text-end mt-2">
-                      ~$
-                      {formatFromWei(
-                        getUSD(asset.tokenAddress, asset.staked),
-                        0,
-                      )}
-                    </div>
-                  </Col>
+                  {!showUsd ? (
+                    <Col
+                      className="hide-i5 text-sm-label-wht text-end"
+                      role="button"
+                      onClick={() => handleChangeShow()}
+                    >
+                      <div>
+                        ~{formatFromWei(getLPsValue(asset, asset.staked)[1], 2)}
+                        <img
+                          height="15px"
+                          src={_getToken(asset.tokenAddress)?.symbolUrl}
+                          alt={_getToken(asset.tokenAddress)?.name}
+                          className="rounded-circle ms-1"
+                        />
+                        <br />~
+                        {formatFromWei(getLPsValue(asset, asset.staked)[0], 2)}
+                        <img
+                          src={spartaIcon}
+                          height="15px"
+                          className="rounded-circle ms-1"
+                          alt="sparta icon"
+                        />
+                      </div>
+                    </Col>
+                  ) : (
+                    <Col
+                      className="hide-i5"
+                      role="button"
+                      onClick={() => handleChangeShow()}
+                    >
+                      <div className="text-end mt-2 text-sm-label-wht">
+                        ~$
+                        {formatFromWei(
+                          getUSD(asset.tokenAddress, asset.staked),
+                          0,
+                        )}
+                        <Icon icon="usdc" size="15" className="ms-1" />
+                      </div>
+                    </Col>
+                  )}
                 </Row>
               </Col>
 

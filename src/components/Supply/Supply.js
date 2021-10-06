@@ -242,7 +242,7 @@ const Supply = () => {
               </Col>
               <Col xs="6 mb-2" className="popover-text text-end mb-2">
                 ${formatFromWei(getTVL(), 0)}
-                <Icon icon="usdt" className="ms-1" size="15" />
+                <Icon icon="usdc" className="ms-1" size="15" />
               </Col>
               <Col xs="6" className="popover-text mb-2">
                 {t('marketcap')}
@@ -266,7 +266,7 @@ const Supply = () => {
               </Col>
               <Col xs="6 mb-2" className="popover-text text-end mb-2">
                 ${formatFromWei(getMarketCap(), 0)}
-                <Icon icon="usdt" className="ms-1" size="15" />
+                <Icon icon="usdc" className="ms-1" size="15" />
               </Col>
 
               <Col xs="6" className="popover-text mb-2">
