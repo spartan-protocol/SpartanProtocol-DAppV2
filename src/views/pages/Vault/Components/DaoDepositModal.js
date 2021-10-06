@@ -155,13 +155,12 @@ const DaoDepositModal = (props) => {
           <hr />
           <Row xs="12" className="my-2">
             <Col xs="12" className="output-card">
-              This deposit will disable withdraw on all staked {token.symbol}p
-              tokens for 24 hours:
+              {t('daoVaultDepConf', { symbol: token.symbol })}:
             </Col>
           </Row>
           <Row xs="12" className="">
             <Col xs="auto" className="text-card">
-              This stake locked
+              {t('thisStakeLocked')}:
             </Col>
             <Col className="text-end output-card">
               {formatFromWei(deposit())} {token.symbol}p
@@ -170,7 +169,7 @@ const DaoDepositModal = (props) => {
           {_dao.staked > 0 && (
             <Row xs="12">
               <Col xs="auto" className="text-card">
-                Existing stake locked
+                {t('existingStakeLocked')}:
               </Col>
               <Col className="text-end output-card">
                 {formatFromWei(_dao.staked)} {token.symbol}p

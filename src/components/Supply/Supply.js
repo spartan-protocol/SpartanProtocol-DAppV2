@@ -182,7 +182,7 @@ const Supply = () => {
       >
         <Popover>
           <Popover.Header className="mt-2">
-            Tokenomics
+            {t('tokenomics')}
             <a
               href="https://docs.spartanprotocol.org/tokenomics-1/sparta"
               target="_blank"
@@ -206,7 +206,7 @@ const Supply = () => {
               </span>
             </Form>
             <span className="output-card">
-              Global Freeze:
+              {t('globalFreeze')}:
               <Badge
                 pill
                 className="ms-1 pt-1"

@@ -797,9 +797,7 @@ const LiqAdd = () => {
               <Row>
                 <Col>
                   <div className="output-card text-center">
-                    This pool is currently in its initialization phase. Please
-                    be aware you will not be able to withdraw your liquidity
-                    until this pool is fully established
+                    {t('newPoolConfirmInfo')}
                   </div>
                   <Form className="my-2 text-center">
                     <span className="output-card">
@@ -822,14 +820,11 @@ const LiqAdd = () => {
               <Row>
                 <Col>
                   <div className="output-card text-center">
-                    This pool is currently outside its safety zone. Please be
-                    aware you will not be able to withdraw your liquidity until
-                    this pool returns to a safe ratio.
+                    {t('poolFrozenConfirm')}
                   </div>
                   <Form className="my-2 text-center">
                     <span className="output-card">
-                      Confirm; your liquidity will be locked until pool is safe
-                      again
+                      {t('poolFrozenConfirmShort')}
                       <Form.Check
                         type="switch"
                         id="confirmFrozen"

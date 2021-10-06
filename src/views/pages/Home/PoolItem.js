@@ -79,7 +79,7 @@ const PoolItem = ({ asset }) => {
             <h6 className="mb-0 text-center">
               {newPool && (
                 <Badge bg="dark" className="p-1 me-1">
-                  NEW
+                  {t('new')}
                   <OverlayTrigger
                     placement="auto"
                     overlay={Tooltip(t, 'newPool', token.symbol)}
@@ -97,7 +97,7 @@ const PoolItem = ({ asset }) => {
               )}
               {curated && (
                 <Badge bg="dark" className="p-1 me-1">
-                  CURATED
+                  {t('curated')}
                   <OverlayTrigger
                     placement="auto"
                     overlay={Tooltip(t, 'poolCurated', token.symbol)}
@@ -115,7 +115,7 @@ const PoolItem = ({ asset }) => {
               )}
               {!curated && (
                 <Badge bg="dark" className="p-1 me-1">
-                  NORMAL
+                  {t('normal')}
                   <OverlayTrigger
                     placement="auto"
                     overlay={Tooltip(t, 'poolNormal', token.symbol)}
@@ -133,7 +133,7 @@ const PoolItem = ({ asset }) => {
               )}
               {!asset.frozen && (
                 <Badge bg="success" className="p-1">
-                  SAFE
+                  {t('safe')}
                   <OverlayTrigger
                     placement="auto"
                     overlay={Tooltip(t, 'poolSafe', token.symbol)}
@@ -151,7 +151,7 @@ const PoolItem = ({ asset }) => {
               )}
               {asset.frozen && (
                 <Badge bg="danger" className="p-1">
-                  FROZEN
+                  {t('frozen')}
                   <OverlayTrigger
                     placement="auto"
                     overlay={Tooltip(t, 'poolFrozen', token.symbol)}

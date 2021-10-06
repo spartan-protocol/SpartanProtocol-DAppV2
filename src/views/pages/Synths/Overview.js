@@ -837,14 +837,13 @@ const Swap = () => {
                             <Row>
                               <Col>
                                 <div className="output-card text-center">
-                                  The minted SynthYield tokens will be deposited
-                                  directly into the SynthVault & locked for{' '}
+                                  {t('mintSynthConfirm')}{' '}
                                   {_convertTimeUnits()[0]}{' '}
                                   {_convertTimeUnits()[1]}.
                                 </div>
                                 <Form className="my-2 text-center">
                                   <span className="output-card">
-                                    Confirm; your synths will be locked for{' '}
+                                    {t('mintSynthConfirmShort')}{' '}
                                     {_convertTimeUnits()[0]}{' '}
                                     {_convertTimeUnits()[1]}
                                     <Form.Check
