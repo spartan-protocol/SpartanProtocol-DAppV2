@@ -59,12 +59,14 @@ const SwapPair = ({ assetSwap }) => {
                 <h5 className="mb-1">
                   {getToken(assetSwap.tokenAddress).symbol}
                   <span className="output-card ms-2">
-                    ${formatFromUnits(tokenPrice, 6)}
+                    ${formatFromUnits(tokenPrice, 4)}
                   </span>
                 </h5>
                 <h5 className="mb-0">
                   SPARTA
-                  <span className="output-card ms-2">${web3.spartaPrice}</span>
+                  <span className="output-card ms-2">
+                    ${formatFromUnits(web3.spartaPrice, 4)}
+                  </span>
                 </h5>
               </Col>
             </Row>

@@ -28,8 +28,25 @@ export const convertToWei = (units) => {
  * @param {string} weiString
  * @returns {string} units
  */
-export const formatFromWei = (weiString, decs = 4) => {
-  const units = BN(weiString).shiftedBy(-18).toFormat(decs)
+export const formatFromWei = (weiString, decs) => {
+  let decimals = decs || 4
+  let units = BN(weiString).shiftedBy(-18)
+  if (units < 0.1 && decimals < 3) {
+    decimals = 3
+  }
+  if (units < 0.01 && decimals < 4) {
+    decimals = 4
+  }
+  if (units < 0.001 && decimals < 5) {
+    decimals = 5
+  }
+  if (units < 0.0001 && decimals < 6) {
+    decimals = 6
+  }
+  if (units <= 0) {
+    decimals = 2
+  }
+  units = BN(units).toFormat(decimals)
   return units
 }
 
@@ -40,7 +57,22 @@ export const formatFromWei = (weiString, decs = 4) => {
  * @returns {string} units
  */
 export const formatFromUnits = (unitString, formatDecimals) => {
-  const decimals = formatDecimals || 0
+  let decimals = formatDecimals || 0
+  if (unitString < 0.1 && decimals < 3) {
+    decimals = 3
+  }
+  if (unitString < 0.01 && decimals < 4) {
+    decimals = 4
+  }
+  if (unitString < 0.001 && decimals < 5) {
+    decimals = 5
+  }
+  if (unitString < 0.0001 && decimals < 6) {
+    decimals = 6
+  }
+  if (unitString <= 0) {
+    decimals = 2
+  }
   const units = BN(unitString).toFormat(decimals)
   return units
 }
