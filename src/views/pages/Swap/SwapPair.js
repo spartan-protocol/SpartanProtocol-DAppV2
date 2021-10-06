@@ -53,7 +53,7 @@ const SwapPair = ({ assetSwap }) => {
                   height="50"
                   className="rounded-circle"
                 />
-                <Icon icon="spartav2" size="25" className="token-badge-pair" />
+                {/* <Icon icon="spartav2" size="25" className="token-badge-pair" /> */}
               </Col>
               <Col xs="auto">
                 <h5 className="mb-1">

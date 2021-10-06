@@ -101,7 +101,10 @@ const Assets = () => {
                   Total
                 </Col>
                 <Col>
-                  <div className="text-end">~${formatFromWei(total, 0)}</div>
+                  <div className="text-sm-label-wht text-end">
+                    ~{formatFromWei(total, 0)}
+                    <Icon icon="usdc" size="15" fill="black" className="ms-1" />
+                  </div>
                 </Col>
               </Row>
             </Col>
@@ -151,14 +154,20 @@ const Assets = () => {
                     <Col xs="auto" className="float-left">
                       <Badge className="me-1">{t('wallet')}</Badge>
                       {asset.symbol}
-                      <div className="description">
+                      <div className="text-sm-label-wht">
                         {formatFromWei(asset.balance)}
                       </div>
                     </Col>
                     <Col className="hide-i5">
-                      <div className="text-end mt-2">
-                        ~$
+                      <div className="text-sm-label-wht text-end mt-2">
+                        ~
                         {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                        <Icon
+                          icon="usdc"
+                          size="15"
+                          fill="black"
+                          className="ms-1"
+                        />
                       </div>
                     </Col>
                   </Row>
