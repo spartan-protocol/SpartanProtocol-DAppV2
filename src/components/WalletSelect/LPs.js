@@ -132,10 +132,10 @@ const LPs = () => {
                 <Col xs="auto" className="float-left output-card">
                   Total
                 </Col>
-                <Col className="text-sm-label-wht">
+                <Col className="text-sm-label">
                   <div className="text-end">
-                    ~{formatFromWei(total, 0)}
-                    <Icon icon="usdc" size="15" className="ms-1" />
+                    ~${formatFromWei(total, 0)}
+                    <Icon icon="usd" size="15" className="ms-1" />
                   </div>
                 </Col>
               </Row>
@@ -185,14 +185,14 @@ const LPs = () => {
                   <Col className="float-left">
                     <Badge className="me-1">{t('wallet')}</Badge>
                     {`${_getToken(asset.tokenAddress)?.symbol}p`}
-                    <div className="text-sm-label-wht">
+                    <div className="text-sm-label">
                       {formatFromWei(asset.balance)}
                     </div>
                   </Col>
 
                   {!showUsd ? (
                     <Col
-                      className="text-sm-label-wht text-end hide-i5"
+                      className="text-sm-label text-end hide-i5"
                       role="button"
                       onClick={() => handleChangeShow()}
                     >
@@ -221,13 +221,13 @@ const LPs = () => {
                       role="button"
                       onClick={() => handleChangeShow()}
                     >
-                      <div className="text-end mt-2 text-sm-label-wht">
-                        ~
+                      <div className="text-end mt-2 text-sm-label">
+                        ~$
                         {formatFromWei(
                           getUSD(asset.tokenAddress, asset.balance),
                           0,
                         )}
-                        <Icon icon="usdc" size="15" className="ms-1" />
+                        <Icon icon="usd" size="15" className="ms-1" />
                       </div>
                     </Col>
                   )}
@@ -308,14 +308,14 @@ const LPs = () => {
                   <Col xs="auto" className="float-left">
                     <Badge className="me-1">{t('staked')}</Badge>
                     {`${_getToken(asset.tokenAddress)?.symbol}p`}
-                    <div className="text-sm-label-wht">
+                    <div className="text-sm-label">
                       {formatFromWei(asset.staked, 2)}
                     </div>
                   </Col>
 
                   {!showUsd ? (
                     <Col
-                      className="hide-i5 text-sm-label-wht text-end"
+                      className="hide-i5 text-sm-label text-end"
                       role="button"
                       onClick={() => handleChangeShow()}
                     >
@@ -339,7 +339,7 @@ const LPs = () => {
                     </Col>
                   ) : (
                     <Col
-                      className="hide-i5 text-sm-label-wht text-end"
+                      className="hide-i5 text-sm-label text-end"
                       role="button"
                       onClick={() => handleChangeShow()}
                     >
@@ -349,7 +349,7 @@ const LPs = () => {
                           getUSD(asset.tokenAddress, asset.staked),
                           0,
                         )}
-                        <Icon icon="usdc" size="15" className="ms-1" />
+                        <Icon icon="usd" size="15" className="ms-1" />
                       </div>
                     </Col>
                   )}
@@ -430,13 +430,13 @@ const LPs = () => {
                   <Col xs="auto" className="float-left">
                     <Badge className="me-1">{t('bonded')}</Badge>
                     {`${_getToken(asset.tokenAddress)?.symbol}p`}
-                    <div className="text-sm-label-wht">
+                    <div className="text-sm-label">
                       {formatFromWei(asset.staked)}
                     </div>
                   </Col>
                   {!showUsd ? (
                     <Col
-                      className="hide-i5 text-sm-label-wht text-end"
+                      className="hide-i5 text-sm-label text-end"
                       role="button"
                       onClick={() => handleChangeShow()}
                     >
@@ -464,13 +464,13 @@ const LPs = () => {
                       role="button"
                       onClick={() => handleChangeShow()}
                     >
-                      <div className="text-end mt-2 text-sm-label-wht">
+                      <div className="text-end mt-2 text-sm-label">
                         ~$
                         {formatFromWei(
                           getUSD(asset.tokenAddress, asset.staked),
                           0,
                         )}
-                        <Icon icon="usdc" size="15" className="ms-1" />
+                        <Icon icon="usd" size="15" className="ms-1" />
                       </div>
                     </Col>
                   )}
