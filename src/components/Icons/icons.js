@@ -57,6 +57,7 @@ import { ReactComponent as Usdc } from '../../assets/tokens/usdc.svg'
 import { ReactComponent as Usdt } from '../../assets/tokens/usdt.svg'
 // WALLETS
 import { ReactComponent as BinanceChain } from '../../assets/brands/binance-chain.svg'
+import { ReactComponent as Ledger } from '../../assets/brands/ledger.svg'
 import { ReactComponent as MathWallet } from '../../assets/brands/math.svg'
 import { ReactComponent as MetaMask } from '../../assets/brands/metamask.svg'
 import { ReactComponent as TrustWallet } from '../../assets/brands/trust-wallet.svg'
@@ -121,6 +122,7 @@ const icons = {
   usdt: Usdt,
   // WALLETS
   binanceChain: BinanceChain,
+  ledger: Ledger,
   mathwallet: MathWallet,
   metamask: MetaMask,
   trustwallet: TrustWallet,

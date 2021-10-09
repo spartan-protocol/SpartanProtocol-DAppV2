@@ -133,10 +133,10 @@ const PoolItem = ({ asset }) => {
               )}
               {!asset.frozen && (
                 <Badge bg="success" className="p-1">
-                  {t('safe')}
+                  {t('active')}
                   <OverlayTrigger
                     placement="auto"
-                    overlay={Tooltip(t, 'poolSafe', token.symbol)}
+                    overlay={Tooltip(t, 'poolActive', token.symbol)}
                   >
                     <span role="button">
                       <Icon
@@ -151,10 +151,10 @@ const PoolItem = ({ asset }) => {
               )}
               {asset.frozen && (
                 <Badge bg="danger" className="p-1">
-                  {t('frozen')}
+                  {t('inactive')}
                   <OverlayTrigger
                     placement="auto"
-                    overlay={Tooltip(t, 'poolFrozen', token.symbol)}
+                    overlay={Tooltip(t, 'poolInactive', token.symbol)}
                   >
                     <span role="button">
                       <Icon

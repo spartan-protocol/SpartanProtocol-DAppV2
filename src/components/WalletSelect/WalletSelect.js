@@ -104,8 +104,6 @@ export const spartanRanks = [
 ]
 
 const WalletSelect = (props) => {
-  const { activate, deactivate, active, error, connector, account } =
-    useWeb3React()
   const synth = useSynth()
   const pool = usePool()
   const dao = useDao()
@@ -130,16 +128,9 @@ const WalletSelect = (props) => {
     window.location.reload()
   }
 
-  const [activatingConnector, setActivatingConnector] = useState()
-  useEffect(() => {
-    if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined)
-    }
-  }, [activatingConnector, connector])
-
   const onWalletDisconnect = async () => {
     props.onHide()
-    deactivate()
+    wallet.deactivate()
     window.localStorage.removeItem('walletconnect')
     window.localStorage.setItem('disableWallet', '1')
     window.location.reload()
@@ -152,17 +143,19 @@ const WalletSelect = (props) => {
       await dispatch(addNetworkMM())
     }
     window.localStorage.removeItem('disableWallet')
-    window.localStorage.setItem('lastWallet', x?.id)
-    setActivatingConnector(connectorsByName(x.connector))
-    activate(connectorsByName(x.connector))
+    window.localStorage.setItem('lastWallet', x.id)
+    wallet.deactivate()
+    setTimeout(() => {
+      wallet.activate(connectorsByName(x.connector))
+    }, 1)
   }
 
   const checkWallet = async () => {
     if (
       window.localStorage.getItem('disableWallet') !== '1' &&
-      !account &&
-      !active &&
-      !error
+      !wallet.account &&
+      !wallet.active &&
+      !wallet.error
     ) {
       // *** ADD IN LEDGER FOR TESTING ***
       if (window.localStorage.getItem('lastWallet') === 'BC') {
@@ -230,7 +223,7 @@ const WalletSelect = (props) => {
   }
 
   const getWeight = () => {
-    if (account && pool.poolDetails.length > 1) {
+    if (wallet.account && pool.poolDetails.length > 1) {
       const lpWeight = getLPWeights(
         pool.poolDetails,
         dao.daoDetails,
@@ -322,13 +315,13 @@ const WalletSelect = (props) => {
           <Modal.Title>
             <Row>
               <Col xs="12">
-                {account ? (
+                {wallet.account ? (
                   <>
                     {t('wallet')}:{' '}
                     <span className="output-card">
-                      {formatShortString(account)}
+                      {formatShortString(wallet.account)}
                       <div className="d-inline-block">
-                        <ShareLink url={account}>
+                        <ShareLink url={wallet.account}>
                           <Icon
                             icon="copy"
                             className="ms-2 mb-1"
@@ -385,7 +378,7 @@ const WalletSelect = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          {error && (
+          {wallet.error && (
             <Alert variant="primary">
               {t('wrongNetwork', {
                 network: network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
@@ -394,13 +387,17 @@ const WalletSelect = (props) => {
           )}
 
           {/* Wallet overview */}
-          {!account ? (
+          {!wallet.account ? (
             <Row>
               {walletTypes.map((x) => (
                 <Col key={x.id} xs="12" sm="6">
                   <Button
                     key={x.id}
-                    disabled={x.id === 'WC' && network.chainId !== 56}
+                    disabled={
+                      (x.id === 'WC' && network.chainId !== 56) ||
+                      (x.id === 'BC' && !window.BinanceChain) ||
+                      (!['WC', 'BC'].includes(x.id) && !window.ethereum)
+                    }
                     variant="info"
                     className="w-100 my-1"
                     onClick={() => {
@@ -488,10 +485,10 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
-        {active && (
+        {wallet.active && (
           <Modal.Footer className="justify-content-center">
             <Button
-              href={getExplorerWallet(account)}
+              href={getExplorerWallet(wallet.account)}
               target="_blank"
               rel="noreferrer"
               size="sm"

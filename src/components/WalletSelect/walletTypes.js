@@ -23,16 +23,22 @@ const walletTypes = [
     connector: 'injected',
   },
   {
-    id: 'OOT',
-    title: 'Others',
-    icon: <Icon size={size} icon="mathwallet" />,
-    connector: 'injected',
-  },
-  {
     id: 'WC',
     title: 'WalletConnect',
     icon: <Icon size={size} icon="walletconnect" />,
     connector: 'walletconnect',
+  },
+  // {
+  //   id: 'LEDGER',
+  //   title: 'Ledger',
+  //   icon: <Icon size={size} icon="ledger" />,
+  //   connector: 'ledger',
+  // },
+  {
+    id: 'OOT',
+    title: 'Others',
+    icon: <Icon size={size} icon="mathwallet" />,
+    connector: 'injected',
   },
 ]
 

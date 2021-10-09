@@ -305,7 +305,10 @@ const NewPool = () => {
               <>
                 <Modal.Body>
                   {network.chainId === 56 && tokenInfo && (
-                    <div className="text-sm-label-alt text-center">
+                    <div
+                      style={{ display: 'none' }}
+                      className="text-sm-label-alt text-center"
+                    >
                       <img
                         src={tokenIcon}
                         height="30px"
