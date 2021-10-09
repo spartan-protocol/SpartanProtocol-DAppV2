@@ -151,7 +151,7 @@ const Overview = () => {
                             ) : (
                               <Col>
                                 There are no initialised pools with more than 7
-                                days of existance yet; check the New tab
+                                days of existence yet; check the New tab
                               </Col>
                             )}
                           </>
