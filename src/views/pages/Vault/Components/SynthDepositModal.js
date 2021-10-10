@@ -267,7 +267,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
             )}
           </Card.Body>
           <Card.Footer>
-            <Row>
+            <Row className="text-center">
               {wallet?.account && (
                 <Approval
                   tokenAddress={synth1.address}

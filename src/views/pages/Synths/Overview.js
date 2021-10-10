@@ -861,7 +861,7 @@ const Swap = () => {
                             </Row>
                           )}
                           {/* 'Approval/Allowance' row */}
-                          <Row>
+                          <Row className="text-center">
                             {activeTab === 'mint' && (
                               <>
                                 {assetSwap1?.tokenAddress !== addr.bnb &&
