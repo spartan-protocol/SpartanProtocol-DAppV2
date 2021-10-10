@@ -337,7 +337,10 @@ const AssetSelect = (props) => {
             </>
           )}
         </Col>
-        <Col className="output-card px-1 my-auto">
+        <Col
+          style={{ overflow: 'hidden' }}
+          className="output-card px-1 my-auto"
+        >
           {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
