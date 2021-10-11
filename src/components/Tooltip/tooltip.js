@@ -87,10 +87,20 @@ export const Tooltip = (t, tooltipId, variable) => {
       variable: { days: variable },
     },
     {
+      id: 'slipInfo',
+      title: 'slip',
+      body: 'slipInfo',
+    },
+    {
       id: 'swapRevenue',
       title: 'swapRevenueTitle',
       body: 'swapRevenue',
       variable: { days: variable },
+    },
+    {
+      id: 'swapRevInfo',
+      title: 'revenue',
+      body: 'swapRevInfo',
     },
   ]
 

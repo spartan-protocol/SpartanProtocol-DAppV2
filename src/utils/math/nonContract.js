@@ -7,6 +7,8 @@ import {
   getDao,
   getBond,
   calcLiqValue,
+  calcSpotValueInToken,
+  calcLiquidityUnits,
 } from './utils'
 
 export const one = BN(1).times(10).pow(18)
@@ -260,4 +262,42 @@ export const calcAPY = (pool) => {
     return apy
   }
   return '0.00'
+}
+
+/**
+ * Get spot rate of a swap
+ * @param inPool @param outPool
+ * @param toBase @param fromBase
+ * @returns spotRate
+ */
+export const getSwapSpot = (
+  inPool,
+  outPool,
+  toBase = false,
+  fromBase = false,
+) => {
+  if (fromBase) {
+    // Simple swap SPARTA -> TOKEN
+    return BN(outPool.tokenAmount).div(outPool.baseAmount)
+  }
+  if (toBase) {
+    // Simple swap TOKEN -> SPARTA
+    return BN(inPool.baseAmount).div(inPool.tokenAmount)
+  }
+  // Double swap TOKEN1 -> TOKEN2
+  return BN(outPool.tokenAmount)
+    .div(outPool.baseAmount)
+    .div(BN(inPool.tokenAmount).div(inPool.baseAmount))
+}
+
+/**
+ * Get spot rate of a zap
+ * @param fromPool @param toPool
+ * @returns spotRate
+ */
+export const getZapSpot = (fromPool, toPool) => {
+  const spartaRemove = BN(calcLiqValue(one, fromPool)[0])
+  const tokenAdd = BN(calcSpotValueInToken(spartaRemove, toPool))
+  const spot = calcLiquidityUnits(spartaRemove, tokenAdd, toPool)[0]
+  return spot
 }

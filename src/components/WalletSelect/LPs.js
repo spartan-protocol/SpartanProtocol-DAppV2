@@ -46,10 +46,10 @@ const LPs = () => {
   const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
   const getWalletType = () => {
-    if (window.ethereum?.isMetaMask) {
+    if (window.localStorage.getItem('lastWallet') === 'MM') {
       return 'MM'
     }
-    if (window.ethereum?.isTrust) {
+    if (window.localStorage.getItem('lastWallet') === 'TW') {
       return 'TW'
     }
     return false
@@ -263,7 +263,13 @@ const LPs = () => {
                           {getWalletType() === 'MM' ? (
                             <Icon icon="metamask" role="button" size="24" />
                           ) : (
-                            <Icon icon="trustwallet" role="button" size="24" />
+                            getWalletType() === 'TW' && (
+                              <Icon
+                                icon="trustwallet"
+                                role="button"
+                                size="24"
+                              />
+                            )
                           )}
                         </div>
                       </a>
@@ -386,7 +392,13 @@ const LPs = () => {
                           {getWalletType() === 'MM' ? (
                             <Icon icon="metamask" role="button" size="24" />
                           ) : (
-                            <Icon icon="trustwallet" role="button" size="24" />
+                            getWalletType() === 'TW' && (
+                              <Icon
+                                icon="trustwallet"
+                                role="button"
+                                size="24"
+                              />
+                            )
                           )}
                         </div>
                       </a>
@@ -506,7 +518,13 @@ const LPs = () => {
                           {getWalletType() === 'MM' ? (
                             <Icon icon="metamask" role="button" size="24" />
                           ) : (
-                            <Icon icon="trustwallet" role="button" size="24" />
+                            getWalletType() === 'TW' && (
+                              <Icon
+                                icon="trustwallet"
+                                role="button"
+                                size="24"
+                              />
+                            )
                           )}
                         </div>
                       </a>
