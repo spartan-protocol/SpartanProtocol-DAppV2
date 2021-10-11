@@ -256,10 +256,10 @@ const AssetSelect = (props) => {
   ])
 
   const getWalletType = () => {
-    if (window.ethereum?.isMetaMask) {
+    if (window.localStorage.getItem('lastWallet') === 'MM') {
       return 'MM'
     }
-    if (window.ethereum?.isTrust) {
+    if (window.localStorage.getItem('lastWallet') === 'TW') {
       return 'TW'
     }
     return false
@@ -499,11 +499,13 @@ const AssetSelect = (props) => {
                                     className="ms-2"
                                   />
                                 ) : (
-                                  <Icon
-                                    icon="trustwallet"
-                                    size="24"
-                                    className="ms-2"
-                                  />
+                                  getWalletType() === 'TW' && (
+                                    <Icon
+                                      icon="trustwallet"
+                                      size="24"
+                                      className="ms-2"
+                                    />
+                                  )
                                 )}
                               </>
                             )}
@@ -589,11 +591,13 @@ const AssetSelect = (props) => {
                                       className="ms-2"
                                     />
                                   ) : (
-                                    <Icon
-                                      icon="trustwallet"
-                                      size="24"
-                                      className="ms-2"
-                                    />
+                                    getWalletType() === 'TW' && (
+                                      <Icon
+                                        icon="trustwallet"
+                                        size="24"
+                                        className="ms-2"
+                                      />
+                                    )
                                   )}
                                 </>
                               )}
