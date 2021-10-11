@@ -50,7 +50,12 @@ import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from '../Pools/Components/Utils'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
-import { convertTimeUnits, getTimeUntil } from '../../../utils/math/nonContract'
+import {
+  convertTimeUnits,
+  getSwapSpot,
+  getTimeUntil,
+  getZapSpot,
+} from '../../../utils/math/nonContract'
 import {
   burnSynth,
   mintSynth,
@@ -77,6 +82,7 @@ const Swap = () => {
   const sparta = useSparta()
   const location = useLocation()
 
+  const [reverseRate, setReverseRate] = useState(false)
   const [notify, setNotify] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
@@ -439,6 +445,105 @@ const Swap = () => {
       return [tokenOut, slipFee, diviSynth, diviSwap]
     }
     return ['0.00', '0.00', '0.00', '0.00']
+  }
+
+  const getInput = () => {
+    const symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    if (swapInput1) {
+      const input = swapInput1.value
+      if (mode === 'token') {
+        return [input, symbol]
+      }
+      if (mode === 'pool') {
+        return [input, `${symbol}p`]
+      }
+      if (mode === 'synthOut') {
+        return [input, symbol]
+      }
+      if (mode === 'synthIn') {
+        return [input, `${symbol}s`]
+      }
+    }
+    return ['0.00', symbol]
+  }
+
+  const getOutput = () => {
+    const symbol = getToken(assetSwap2.tokenAddress)?.symbol
+    if (mode === 'token') {
+      return [getSwap()[0], symbol, t('output')]
+    }
+    if (mode === 'pool') {
+      return [getZap()[0], `${symbol}p`, t('output')]
+    }
+    if (mode === 'synthOut') {
+      return [getMint()[0], `${symbol}s`, t('forgeStake')]
+    }
+    if (mode === 'synthIn') {
+      return [getBurn()[0], symbol, t('output')]
+    }
+    return ['0.00', symbol, t('output')]
+  }
+
+  const getSpot = () => {
+    if (['token', 'synthOut', 'synthIn'].includes(mode)) {
+      let spot = getSwapSpot(
+        assetSwap1,
+        assetSwap2,
+        assetSwap2.tokenAddress === addr.spartav2,
+        assetSwap1.tokenAddress === addr.spartav2,
+      )
+      spot = spot > 0 ? spot : '0.00'
+      return reverseRate ? BN(1).div(spot) : spot
+    }
+    if (mode === 'pool') {
+      const spot = convertFromWei(getZapSpot(assetSwap1, assetSwap2))
+      return reverseRate ? BN(1).div(spot) : spot
+    }
+    return '0.00'
+  }
+
+  const getRate = () => {
+    let rate = '0'
+    if (!reverseRate) {
+      rate = BN(convertFromWei(getOutput()[0])).div(getInput()[0])
+    } else {
+      rate = BN(getInput()[0]).div(convertFromWei(getOutput()[0]))
+    }
+    rate = rate > 0 ? rate : getSpot()
+    return rate
+  }
+
+  const getSlip = () => {
+    let larger = getRate()
+    let smaller = getSpot()
+    if (BN(getSpot()).isGreaterThan(getRate())) {
+      larger = getSpot()
+      smaller = getRate()
+    }
+    let slip = BN(larger).div(smaller).minus(1).times(100)
+    slip = slip > 0 ? slip : '0.00'
+    return slip
+  }
+
+  const getRevenue = () => {
+    let result = '0.00'
+    if (mode === 'token') {
+      result = BN(getSwap()[1])
+      result = getSwap()[2] ? result.plus(getSwap()[2]) : result
+      result = getSwap()[3] ? result.plus(getSwap()[3]) : result
+    } else if (mode === 'pool') {
+      result = BN(getZap()[1])
+    } else if (mode === 'synthOut') {
+      result = BN(getMint()[1])
+      result = getMint()[2] ? result.plus(getMint()[2]) : result
+      result = getMint()[3] ? result.plus(getMint()[3]) : result
+    } else if (mode === 'synthIn') {
+      result = BN(getMint()[1])
+      result = getBurn()[2] ? result.plus(getBurn()[2]) : result
+      result = getBurn()[3] ? result.plus(getBurn()[3]) : result
+    }
+    result = result > 0 ? result : '0.00'
+    return result
   }
 
   //= =================================================================================//
@@ -933,234 +1038,100 @@ const Swap = () => {
                               </Card.Body>
                             </Card>
 
-                            {/* Bottom 'swap' txnDetails row */}
-                            {mode === 'token' && (
-                              <>
-                                <Row className="mb-2 mt-3">
-                                  <Col xs="auto">
-                                    <div className="text-card">{t('sell')}</div>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <div className="text-card">
-                                      {swapInput1?.value
-                                        ? formatFromUnits(swapInput1?.value, 6)
-                                        : '0.00'}{' '}
-                                      {
-                                        getToken(assetSwap1.tokenAddress)
-                                          ?.symbol
-                                      }
-                                    </div>
-                                  </Col>
-                                </Row>
+                            {/* Bottom txnDetails row */}
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('rate')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  1{' '}
+                                  {reverseRate ? getOutput()[1] : getInput()[1]}{' '}
+                                  = {formatFromUnits(getRate(), 3)}{' '}
+                                  {!reverseRate
+                                    ? getOutput()[1]
+                                    : getInput()[1]}{' '}
+                                  <span
+                                    onClick={() => setReverseRate(!reverseRate)}
+                                    role="button"
+                                    aria-hidden="true"
+                                  >
+                                    <Icon
+                                      icon="cycle"
+                                      className="ms-1 mb-1"
+                                      size="17"
+                                      fill="white"
+                                    />
+                                  </span>
+                                </div>
+                              </Col>
+                            </Row>
 
-                                <Row className="mb-2">
-                                  <Col xs="auto">
-                                    <div className="text-card">{t('fee')}</div>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <div className="text-card">
-                                      {swapInput1?.value
-                                        ? formatFromWei(getSwap()[1], 6)
-                                        : '0.00'}{' '}
-                                      SPARTA
-                                    </div>
-                                  </Col>
-                                </Row>
-
-                                <Row className="">
-                                  <Col xs="auto" className="title-card">
-                                    <span className="subtitle-card">
-                                      {t('receive')}
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('slip')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  {formatFromUnits(getSlip(), 3)}%
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'slipInfo')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1 mb-1"
+                                        size="17"
+                                        fill="white"
+                                      />
                                     </span>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <span className="subtitle-card">
-                                      {swapInput1?.value
-                                        ? formatFromWei(getSwap()[0], 6)
-                                        : '0.00'}{' '}
-                                      {
-                                        getToken(assetSwap2.tokenAddress)
-                                          ?.symbol
-                                      }
+                                  </OverlayTrigger>
+                                </div>
+                              </Col>
+                            </Row>
+
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('revenue')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  {formatFromWei(getRevenue(), 6)} SPARTA
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'swapRevInfo')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1 mb-1"
+                                        size="17"
+                                        fill="white"
+                                      />
                                     </span>
-                                  </Col>
-                                </Row>
-                              </>
-                            )}
+                                  </OverlayTrigger>
+                                </div>
+                              </Col>
+                            </Row>
 
-                            {/* Bottom 'zap' txnDetails row */}
-                            {mode === 'pool' && (
-                              <>
-                                <Row className="mb-2 mt-3">
-                                  <Col xs="auto">
-                                    <div className="text-card">
-                                      {t('input')}
-                                    </div>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <div className="text-card">
-                                      {swapInput1?.value
-                                        ? formatFromUnits(swapInput1?.value, 6)
-                                        : '0.00'}{' '}
-                                      {
-                                        getToken(assetSwap1.tokenAddress)
-                                          ?.symbol
-                                      }
-                                      p
-                                    </div>
-                                  </Col>
-                                </Row>
-
-                                <Row className="mb-2">
-                                  <Col xs="auto">
-                                    <div className="text-card">{t('fee')}</div>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <div className="text-card">
-                                      {swapInput1?.value
-                                        ? formatFromWei(getZap()[1], 6)
-                                        : '0.00'}{' '}
-                                      SPARTA
-                                    </div>
-                                  </Col>
-                                </Row>
-
-                                <Row className="">
-                                  <Col xs="auto" className="title-card">
-                                    <span className="subtitle-card">
-                                      {t('output')}
-                                    </span>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <span className="subtitle-card">
-                                      {swapInput1?.value
-                                        ? formatFromWei(getZap()[0], 6)
-                                        : '0.00'}{' '}
-                                      <span className="output-card">
-                                        {' '}
-                                        {
-                                          getToken(assetSwap2.tokenAddress)
-                                            ?.symbol
-                                        }
-                                        p
-                                      </span>
-                                    </span>
-                                  </Col>
-                                </Row>
-                              </>
-                            )}
-
-                            {/* Bottom 'synth' txnDetails row */}
-                            {(mode === 'synthIn' || mode === 'synthOut') && (
-                              <>
-                                <Row className="mb-2 mt-3">
-                                  <Col xs="auto">
-                                    <div className="text-card">
-                                      {t('input')}
-                                    </div>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <div className="text-card">
-                                      {swapInput1?.value
-                                        ? formatFromUnits(swapInput1?.value, 6)
-                                        : '0.00'}{' '}
-                                      {
-                                        getToken(assetSwap1.tokenAddress)
-                                          ?.symbol
-                                      }
-                                      {mode === 'synthIn' && 's'}
-                                    </div>
-                                  </Col>
-                                </Row>
-
-                                <Row className="mb-2">
-                                  <Col xs="auto">
-                                    <div className="text-card">{t('fee')} </div>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <div className="text-card">
-                                      {mode === 'synthOut' && (
-                                        <>
-                                          {swapInput1?.value
-                                            ? formatFromWei(getMint()[1], 6)
-                                            : '0.00'}
-                                        </>
-                                      )}
-                                      {mode === 'synthIn' && (
-                                        <>
-                                          {swapInput1?.value
-                                            ? formatFromWei(getBurn()[1], 6)
-                                            : '0.00'}
-                                        </>
-                                      )}{' '}
-                                      <span className="">SPARTA</span>
-                                    </div>
-                                  </Col>
-                                </Row>
-
-                                <Row className="">
-                                  <Col xs="auto" className="title-card">
-                                    <span className="subtitle-card">
-                                      {mode === 'synthIn'
-                                        ? t('output')
-                                        : t('forgeStake')}
-                                    </span>
-                                  </Col>
-                                  <Col className="text-end">
-                                    <span className="subtitle-card">
-                                      {assetSwap1?.tokenAddress ===
-                                        addr.spartav2 && (
-                                        <>
-                                          {swapInput1?.value
-                                            ? formatFromWei(getMint()[0], 6)
-                                            : '0.00'}{' '}
-                                          <span className="output-card">
-                                            {
-                                              getToken(assetSwap2.tokenAddress)
-                                                ?.symbol
-                                            }
-                                            s
-                                          </span>
-                                        </>
-                                      )}
-                                      {assetSwap1?.tokenAddress !==
-                                        addr.spartav2 &&
-                                        mode === 'synthOut' && (
-                                          <>
-                                            {swapInput1?.value
-                                              ? formatFromWei(getMint()[0], 6)
-                                              : '0.00'}{' '}
-                                            <span className="output-card">
-                                              {
-                                                getToken(
-                                                  assetSwap2.tokenAddress,
-                                                )?.symbol
-                                              }
-                                              s
-                                            </span>
-                                          </>
-                                        )}
-                                      {assetSwap1?.tokenAddress !==
-                                        addr.spartav2 &&
-                                        mode === 'synthIn' && (
-                                          <>
-                                            {swapInput1?.value
-                                              ? formatFromWei(getBurn()[0], 6)
-                                              : '0.00'}{' '}
-                                            <span className="output-card">
-                                              {
-                                                getToken(
-                                                  assetSwap2.tokenAddress,
-                                                )?.symbol
-                                              }
-                                            </span>
-                                          </>
-                                        )}
-                                    </span>
-                                  </Col>
-                                </Row>
-                              </>
-                            )}
+                            <Row className="">
+                              <Col xs="auto" className="title-card">
+                                <span className="subtitle-card">
+                                  {getOutput()[2]}
+                                </span>
+                              </Col>
+                              <Col className="text-end">
+                                <span className="subtitle-card">
+                                  {swapInput1?.value
+                                    ? formatFromWei(getOutput()[0], 6)
+                                    : '0.00'}{' '}
+                                  <span className="output-card">
+                                    {getOutput()[1]}
+                                  </span>
+                                </span>
+                              </Col>
+                            </Row>
                           </Col>
                         </Row>
                       </Card.Body>
@@ -1387,74 +1358,6 @@ const Swap = () => {
                               </Button>
                             </Col>
                           </Row>
-                        )}
-                        {mode === 'token' && getSwap()[2] > 0 && (
-                          <div className="text-card text-center mt-2">
-                            {`${
-                              getToken(assetSwap1.tokenAddress)?.symbol
-                            }:SPARTA pool will receive a ${formatFromWei(
-                              getSwap()[2],
-                              4,
-                            )} SPARTA dividend`}
-                          </div>
-                        )}
-                        {mode === 'token' && getSwap()[3] > 0 && (
-                          <div className="text-card text-center mt-2">
-                            {`${
-                              getToken(assetSwap2.tokenAddress)?.symbol
-                            }:SPARTA pool will receive a ${formatFromWei(
-                              getSwap()[3],
-                              4,
-                            )} SPARTA dividend`}
-                          </div>
-                        )}
-                        {mode === 'synthOut' && getMint()[2] > 0 && (
-                          <div className="text-card text-center mt-2">
-                            {`${
-                              getToken(
-                                assetSwap1.tokenAddress === addr.spartav2
-                                  ? assetSwap2.tokenAddress
-                                  : assetSwap1.tokenAddress,
-                              )?.symbol
-                            }:SPARTA pool will receive a ${formatFromWei(
-                              getMint()[2],
-                              4,
-                            )} SPARTA dividend`}
-                          </div>
-                        )}
-                        {mode === 'synthOut' && getMint()[3] > 0 && (
-                          <div className="text-card text-center mt-2">
-                            {`${
-                              getToken(assetSwap2.tokenAddress)?.symbol
-                            }:SPARTA pool will receive a ${formatFromWei(
-                              getMint()[3],
-                              4,
-                            )} SPARTA dividend`}
-                          </div>
-                        )}
-                        {mode === 'synthIn' && getBurn()[2] > 0 && (
-                          <div className="text-card text-center mt-2">
-                            {`${
-                              getToken(
-                                assetSwap1.tokenAddress === addr.spartav2
-                                  ? assetSwap2.tokenAddress
-                                  : assetSwap1.tokenAddress,
-                              )?.symbol
-                            }:SPARTA pool will receive a ${formatFromWei(
-                              getBurn()[2],
-                              4,
-                            )} SPARTA dividend`}
-                          </div>
-                        )}
-                        {mode === 'synthIn' && getBurn()[3] > 0 && (
-                          <div className="text-card text-center mt-2">
-                            {`${
-                              getToken(assetSwap2.tokenAddress)?.symbol
-                            }:SPARTA pool will receive a ${formatFromWei(
-                              getBurn()[3],
-                              4,
-                            )} SPARTA dividend`}
-                          </div>
                         )}
                       </Card.Footer>
                     </Card>
