@@ -217,7 +217,7 @@ export const getTwAssetId = (tokenAddr) => {
 
 export const getTwTokenInfo = async (tokenAddr) => {
   const assetID = getTwAssetId(tokenAddr)
-  if (assetID && process.env.NODE_ENV === 'production') {
+  if (assetID) {
     try {
       const apiUrl = `https://api.trustwallet.com/v1/assets/${assetID}`
       const result = await axios.get(apiUrl).then((r) => r.data)
@@ -234,19 +234,24 @@ export const getTwTokenInfo = async (tokenAddr) => {
   return false
 }
 
+const blacklist = [] // add array of addresses here to cause fallback token icon to display
+
 export const getTwTokenLogo = async (tokenAddr, chainId) => {
-  let tokenInfo = false
+  const tokenInfo = false
   if (chainId === 56) {
-    tokenInfo = await getTwTokenInfo(tokenAddr)
-    if (tokenInfo) {
-      if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
-        return `${window.location.origin}/images/icons/BNB.svg`
-      }
-      return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+    // tokenInfo = await getTwTokenInfo(tokenAddr)
+    // if (tokenInfo) {
+    // if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
+    if ([addressesMN.bnb, addressesMN.wbnb].includes(tokenInfo.symbol)) {
+      return `${window.location.origin}/images/icons/BNB.svg`
     }
-    if (process.env.NODE_ENV === 'development') {
-      return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+    if (!blacklist.includes(tokenAddr)) {
+      return `https://raw.githubusercontent.com/spartan-protocol/assets/master/blockchains/smartchain/assets/${tokenAddr}/logo.png`
     }
+    // }
+    // if (process.env.NODE_ENV === 'development') {
+    //   return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
+    // }
   }
   return `${window.location.origin}/images/icons/Fallback.svg`
 }
