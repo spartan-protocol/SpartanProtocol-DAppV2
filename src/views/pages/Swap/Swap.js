@@ -960,7 +960,7 @@ const Swap = () => {
                                 role="button"
                               >
                                 <Icon
-                                  icon="swap"
+                                  icon="arrowDownUp"
                                   size="35"
                                   stroke="white"
                                   className="position-relative bg-primary rounded-circle px-2"
@@ -1057,7 +1057,7 @@ const Swap = () => {
                                     aria-hidden="true"
                                   >
                                     <Icon
-                                      icon="cycle"
+                                      icon="arrowLeftRight"
                                       className="ms-1 mb-1"
                                       size="17"
                                       fill="white"
