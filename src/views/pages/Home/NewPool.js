@@ -76,13 +76,14 @@ const NewPool = () => {
   const [tokenIcon, setTokenIcon] = useState(
     `${window.location.origin}/images/icons/Fallback.svg`,
   )
+
   const getTokenInfo = async () => {
     if (network.chainId === 56) {
-      const info = getTwTokenInfo(addrInput?.value)
+      const info = await getTwTokenInfo(addrInput?.value)
       if (info) {
         setTokenInfo(info)
       }
-      setTokenIcon(getTwTokenLogo(addrInput?.value, network.chainId))
+      setTokenIcon(await getTwTokenLogo(addrInput?.value, network.chainId))
     }
     const provider = getWalletProvider()
     const deployed = await provider.getCode(addrInput?.value)
@@ -128,6 +129,7 @@ const NewPool = () => {
       addrInput?.value?.length === 42 &&
       ethers.utils.isAddress(addrInput?.value)
     ) {
+      setPrevToken(null)
       if (tempChains.includes(network.chainId)) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
@@ -294,207 +296,207 @@ const NewPool = () => {
         <Icon icon="plus" fill="white" size="17" className="me-1 mb-1" />
         {t('pool')}
       </Button>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        {tempChains.includes(network.chainId) && (
-          <>
-            <Modal.Header closeButton>
-              <Modal.Title>{t('createPool')}</Modal.Title>
-            </Modal.Header>
-            {!isLoading() ? (
-              <>
-                <Modal.Body>
-                  {network.chainId === 56 && tokenInfo && (
-                    <div
-                      style={{ display: 'none' }}
-                      className="text-sm-label-alt text-center"
-                    >
-                      <img
-                        src={tokenIcon}
-                        height="30px"
-                        alt="tokenIcon"
-                        className="me-2 rounded-circle"
-                      />
-                      {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
-                    </div>
-                  )}
-                  <InputGroup className="my-2">
-                    <InputGroup.Text>{t('address')}</InputGroup.Text>
-                    <FormControl
-                      id="addrInput"
-                      placeholder="0x..."
-                      inputMode="text"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      isValid={addrValid}
-                      isInvalid={!addrValid}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      Input a valid token address (18 decimal BEP20 asset listed
-                      in the{' '}
-                      <a
-                        href="https://github.com/trustwallet/assets/tree/master/blockchains/smartchain"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        TrustWallet repo
-                      </a>
-                      )
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                  Initial liquidity-add:
-                  <InputGroup className="my-2">
-                    <InputGroup.Text style={{ width: '73.6719px' }}>
-                      SPARTA
-                    </InputGroup.Text>
-                    <FormControl
-                      id="spartaInput"
-                      placeholder="$SPARTA"
-                      type="number"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      isValid={spartaValid}
-                      isInvalid={!spartaValid && addrValid}
-                      disabled={!addrValid}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      Minimum of 10,000 SPARTA required
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                  <InputGroup className="my-2">
-                    <InputGroup.Text style={{ width: '73.6719px' }}>
-                      {tokenSymbol}
-                    </InputGroup.Text>
-                    <FormControl
-                      id="tokenInput"
-                      placeholder={`$${tokenSymbol}`}
-                      type="number"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      isValid={tokenValid}
-                      isInvalid={!tokenValid && addrValid && spartaValid}
-                      disabled={!addrValid}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      Make sure you thoroughly check the ratio of the assets
-                      being added
-                    </Form.Control.Feedback>
-                  </InputGroup>
-                  <div className="output-card text-center my-2">
-                    1 SPARTA = {priceInSparta()} {tokenSymbol}
-                    <br />1 {tokenSymbol} = {priceInToken()} SPARTA
-                    <br />1 {tokenSymbol} = ~${priceinUSD()} USD
-                  </div>
-                  <Form>
-                    <div className="text-center">
-                      <Form.Check
-                        id="inputConfirmRatio"
-                        type="switch"
-                        className="d-inline-block"
-                        label="Confirm ratio!"
-                        checked={ratioConfirm}
-                        isValid={ratioConfirm}
-                        isInvalid={!ratioConfirm}
-                        onChange={() => setRatioConfirm(!ratioConfirm)}
-                      />
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(t, 'newPoolRatio')}
-                      >
-                        <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1"
-                            size="17"
-                            fill="white"
+      {showModal && (
+        <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+          {tempChains.includes(network.chainId) && (
+            <>
+              <Modal.Header closeButton>
+                <Modal.Title>{t('createPool')}</Modal.Title>
+              </Modal.Header>
+              {!isLoading() ? (
+                <>
+                  <Modal.Body>
+                    {network.chainId === 56 && tokenInfo && (
+                      <div className="text-sm-label-alt text-center">
+                        <>
+                          <img
+                            src={tokenIcon}
+                            height="30px"
+                            alt="tokenIcon"
+                            className="me-2 rounded-circle"
                           />
-                        </span>
-                      </OverlayTrigger>
-                    </div>
-                    <div className="text-center">
-                      <Form.Check
-                        id="feeConfirm"
-                        type="switch"
-                        className="d-inline-block"
-                        label="Confirm 1% fee!"
-                        checked={feeConfirm}
-                        isValid={feeConfirm}
-                        isInvalid={!feeConfirm}
-                        onChange={() => {
-                          setFeeConfirm(!feeConfirm)
-                        }}
-                      />
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(t, 'newPoolFee')}
-                      >
-                        <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1"
-                            size="17"
-                            fill="white"
-                          />
-                        </span>
-                      </OverlayTrigger>
-                    </div>
-                  </Form>
-                </Modal.Body>
-
-                <Modal.Footer className="text-center">
-                  <Row xs="12" className="w-100">
-                    {wallet?.account && spartaInput?.value > 0 && (
-                      <Approval
-                        tokenAddress={addr.spartav2}
-                        symbol="SPARTA"
-                        walletAddress={wallet.account}
-                        contractAddress={addr.poolFactory}
-                        txnAmount={convertToWei(spartaInput?.value)}
-                        assetNumber="1"
-                      />
+                          {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                        </>
+                      </div>
                     )}
-                    <Col xs="12" className="hide-if-siblings">
-                      <Button
-                        variant="primary"
-                        disabled={!checkValid()[0]}
-                        onClick={() => handleSubmit()}
-                      >
-                        {checkValid()[1]}
-                        {txnLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    </Col>
-                    {wallet?.account &&
-                      tokenInput?.value > 0 &&
-                      addrInput?.value !== addr.bnb && (
+                    <InputGroup className="my-2">
+                      <InputGroup.Text>{t('address')}</InputGroup.Text>
+                      <FormControl
+                        id="addrInput"
+                        placeholder="0x..."
+                        inputMode="text"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        isValid={addrValid}
+                        isInvalid={!addrValid}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Input a valid token address (18 decimal BEP20 asset
+                        listed in the{' '}
+                        <a
+                          href="https://github.com/trustwallet/assets/tree/master/blockchains/smartchain"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          TrustWallet repo
+                        </a>
+                        )
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                    Initial liquidity-add:
+                    <InputGroup className="my-2">
+                      <InputGroup.Text style={{ width: '73.6719px' }}>
+                        SPARTA
+                      </InputGroup.Text>
+                      <FormControl
+                        id="spartaInput"
+                        placeholder="$SPARTA"
+                        type="number"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        isValid={spartaValid}
+                        isInvalid={!spartaValid && addrValid}
+                        disabled={!addrValid}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Minimum of 10,000 SPARTA required
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                    <InputGroup className="my-2">
+                      <InputGroup.Text style={{ width: '73.6719px' }}>
+                        {tokenSymbol}
+                      </InputGroup.Text>
+                      <FormControl
+                        id="tokenInput"
+                        placeholder={`$${tokenSymbol}`}
+                        type="number"
+                        autoComplete="off"
+                        autoCorrect="off"
+                        isValid={tokenValid}
+                        isInvalid={!tokenValid && addrValid && spartaValid}
+                        disabled={!addrValid}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Make sure you thoroughly check the ratio of the assets
+                        being added
+                      </Form.Control.Feedback>
+                    </InputGroup>
+                    <div className="output-card text-center my-2">
+                      1 SPARTA = {priceInSparta()} {tokenSymbol}
+                      <br />1 {tokenSymbol} = {priceInToken()} SPARTA
+                      <br />1 {tokenSymbol} = ~${priceinUSD()} USD
+                    </div>
+                    <Form>
+                      <div className="text-center">
+                        <Form.Check
+                          id="inputConfirmRatio"
+                          type="switch"
+                          className="d-inline-block"
+                          label="Confirm ratio!"
+                          checked={ratioConfirm}
+                          isValid={ratioConfirm}
+                          isInvalid={!ratioConfirm}
+                          onChange={() => setRatioConfirm(!ratioConfirm)}
+                        />
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'newPoolRatio')}
+                        >
+                          <span role="button">
+                            <Icon
+                              icon="info"
+                              className="ms-1"
+                              size="17"
+                              fill="white"
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                      <div className="text-center">
+                        <Form.Check
+                          id="feeConfirm"
+                          type="switch"
+                          className="d-inline-block"
+                          label="Confirm 1% fee!"
+                          checked={feeConfirm}
+                          isValid={feeConfirm}
+                          isInvalid={!feeConfirm}
+                          onChange={() => {
+                            setFeeConfirm(!feeConfirm)
+                          }}
+                        />
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'newPoolFee')}
+                        >
+                          <span role="button">
+                            <Icon
+                              icon="info"
+                              className="ms-1"
+                              size="17"
+                              fill="white"
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      </div>
+                    </Form>
+                  </Modal.Body>
+
+                  <Modal.Footer className="text-center">
+                    <Row xs="12" className="w-100">
+                      {wallet?.account && spartaInput?.value > 0 && (
                         <Approval
-                          tokenAddress={addrInput?.value}
-                          symbol={tokenSymbol}
+                          tokenAddress={addr.spartav2}
+                          symbol="SPARTA"
                           walletAddress={wallet.account}
                           contractAddress={addr.poolFactory}
-                          txnAmount={convertToWei(tokenInput?.value)}
-                          assetNumber="2"
+                          txnAmount={convertToWei(spartaInput?.value)}
+                          assetNumber="1"
                         />
                       )}
-                  </Row>
-                </Modal.Footer>
-              </>
-            ) : (
-              <HelmetLoading height={200} width={200} />
-            )}
-          </>
-        )}
-        {!tempChains.includes(network.chainId) && (
-          <Modal.Body>
-            <WrongNetwork />
-          </Modal.Body>
-        )}
-      </Modal>
+                      <Col xs="12" className="hide-if-siblings">
+                        <Button
+                          variant="primary"
+                          disabled={!checkValid()[0]}
+                          onClick={() => handleSubmit()}
+                        >
+                          {checkValid()[1]}
+                          {txnLoading && (
+                            <Icon
+                              icon="cycle"
+                              size="20"
+                              className="anim-spin ms-1"
+                            />
+                          )}
+                        </Button>
+                      </Col>
+                      {wallet?.account &&
+                        tokenInput?.value > 0 &&
+                        addrInput?.value !== addr.bnb && (
+                          <Approval
+                            tokenAddress={addrInput?.value}
+                            symbol={tokenSymbol}
+                            walletAddress={wallet.account}
+                            contractAddress={addr.poolFactory}
+                            txnAmount={convertToWei(tokenInput?.value)}
+                            assetNumber="2"
+                          />
+                        )}
+                    </Row>
+                  </Modal.Footer>
+                </>
+              ) : (
+                <HelmetLoading height={200} width={200} />
+              )}
+            </>
+          )}
+          {!tempChains.includes(network.chainId) && (
+            <Modal.Body>
+              <WrongNetwork />
+            </Modal.Body>
+          )}
+        </Modal>
+      )}
     </>
   )
 }
