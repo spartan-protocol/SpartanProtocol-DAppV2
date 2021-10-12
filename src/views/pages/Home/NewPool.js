@@ -76,13 +76,14 @@ const NewPool = () => {
   const [tokenIcon, setTokenIcon] = useState(
     `${window.location.origin}/images/icons/Fallback.svg`,
   )
+
   const getTokenInfo = async () => {
     if (network.chainId === 56) {
-      const info = getTwTokenInfo(addrInput?.value)
+      const info = await getTwTokenInfo(addrInput?.value)
       if (info) {
         setTokenInfo(info)
       }
-      setTokenIcon(getTwTokenLogo(addrInput?.value, network.chainId))
+      setTokenIcon(await getTwTokenLogo(addrInput?.value, network.chainId))
     }
     const provider = getWalletProvider()
     const deployed = await provider.getCode(addrInput?.value)
@@ -305,17 +306,16 @@ const NewPool = () => {
               <>
                 <Modal.Body>
                   {network.chainId === 56 && tokenInfo && (
-                    <div
-                      style={{ display: 'none' }}
-                      className="text-sm-label-alt text-center"
-                    >
-                      <img
-                        src={tokenIcon}
-                        height="30px"
-                        alt="tokenIcon"
-                        className="me-2 rounded-circle"
-                      />
-                      {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                    <div className="text-sm-label-alt text-center">
+                      <>
+                        <img
+                          src={tokenIcon}
+                          height="30px"
+                          alt="tokenIcon"
+                          className="me-2 rounded-circle"
+                        />
+                        {`${tokenInfo.symbol} | ${tokenInfo.decimals} decimals | ${tokenInfo.name}`}
+                      </>
                     </div>
                   )}
                   <InputGroup className="my-2">
