@@ -44,6 +44,8 @@ import { getTimeUntil } from '../../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
 
 const LiqRemove = () => {
+  const isLightMode = window.localStorage.getItem('theme')
+
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -653,7 +655,7 @@ const LiqRemove = () => {
                           icon="info"
                           className="ms-1 mb-1"
                           size="17"
-                          fill="white"
+                          fill={isLightMode ? 'black' : 'white'}
                         />
                       </span>
                     </OverlayTrigger>

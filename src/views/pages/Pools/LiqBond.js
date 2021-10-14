@@ -42,6 +42,8 @@ import { useReserve } from '../../../store/reserve'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const LiqBond = () => {
+  const isLightMode = window.localStorage.getItem('theme')
+
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWeb3React()
@@ -350,7 +352,7 @@ const LiqBond = () => {
                             icon="info"
                             className="ms-1"
                             size="17"
-                            fill="white"
+                            fill={isLightMode ? 'black' : 'white'}
                           />
                         </span>
                       </OverlayTrigger>

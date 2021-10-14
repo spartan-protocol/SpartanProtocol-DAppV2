@@ -121,7 +121,7 @@ const LPs = () => {
       return (
         <div className="hide-i5">
           <hr />
-          <Row key="total-assets">
+          <Row key="total-assets" className="modal-body">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />

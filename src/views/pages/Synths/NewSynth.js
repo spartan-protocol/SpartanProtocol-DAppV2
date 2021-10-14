@@ -101,7 +101,12 @@ const NewSynth = () => {
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon icon="plus" fill="white" size="17" className="me-1 mb-1" />
+        <Icon
+          icon="plus"
+          fill={isLightMode ? 'black' : 'white'}
+          size="17"
+          className="me-1 mb-1"
+        />
         {t('synth')}
       </Button>
 

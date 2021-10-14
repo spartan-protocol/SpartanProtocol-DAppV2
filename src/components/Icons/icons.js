@@ -4,6 +4,7 @@ import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
+import { ReactComponent as TxnsHistory } from '../../assets/icons/txns-history.svg'
 import { ReactComponent as ArrowDown } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ArrowDownUp } from '../../assets/icons/arrow-down-up.svg'
 import { ReactComponent as ArrowLeftRight } from '../../assets/icons/arrow-left-right.svg'
@@ -71,6 +72,7 @@ const icons = {
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS
+  txnsHistory: TxnsHistory,
   arrowDown: ArrowDown,
   arrowDownUp: ArrowDownUp,
   arrowLeftRight: ArrowLeftRight,

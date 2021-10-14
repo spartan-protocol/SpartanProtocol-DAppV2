@@ -28,6 +28,7 @@ import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
 import { Icon } from '../Icons/icons'
 
 const Supply = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const web3 = useWeb3()
   const addr = getAddresses()
@@ -37,7 +38,7 @@ const Supply = () => {
   const bond = useBond()
   const target = useRef(null)
   const [showDropdown, setshowDropdown] = useState(false)
-  const isLightMode = window.localStorage.getItem('theme')
+
   const addrNames = [
     'spartav1',
     'spartav2',
@@ -236,7 +237,12 @@ const Supply = () => {
                   }
                 >
                   <span role="button">
-                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="15"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -260,7 +266,12 @@ const Supply = () => {
                   }
                 >
                   <span role="button">
-                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="15"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -301,7 +312,12 @@ const Supply = () => {
                   }
                 >
                   <span role="button">
-                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="15"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -387,7 +403,12 @@ const Supply = () => {
                   }
                 >
                   <span role="button">
-                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="15"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -430,13 +451,23 @@ const Supply = () => {
                   }
                 >
                   <span role="button">
-                    <Icon icon="info" className="ms-1" size="15" fill="white" />
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="15"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
                   </span>
                 </OverlayTrigger>
               </Col>
               <Col xs="6" className="popover-text text-end">
                 {formatFromWei(feeBurn, 0)}
-                <Icon icon="fire" className="ms-1" size="15" />
+                <Icon
+                  icon="fire"
+                  className="ms-1"
+                  size="15"
+                  fill={isLightMode ? 'black' : 'white'}
+                />
               </Col>
             </Row>
 

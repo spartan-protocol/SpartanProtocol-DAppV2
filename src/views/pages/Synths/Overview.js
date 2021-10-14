@@ -56,6 +56,7 @@ import {
 import { convertTimeUnits } from '../../../utils/math/nonContract'
 
 const Swap = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const wallet = useWeb3React()
   const synth = useSynth()
   const { t } = useTranslation()
@@ -627,7 +628,7 @@ const Swap = () => {
                                     <Icon
                                       icon="mint"
                                       size="35"
-                                      fill="white"
+                                      fill={isLightMode ? 'black' : 'white'}
                                       className="position-relative bg-primary rounded-circle px-2"
                                       style={{
                                         top: '-20px',
@@ -639,7 +640,7 @@ const Swap = () => {
                                     <Icon
                                       icon="fire"
                                       size="35"
-                                      fill="white"
+                                      fill={isLightMode ? 'black' : 'white'}
                                       className="position-relative bg-primary rounded-circle px-2"
                                       style={{
                                         top: '-20px',
