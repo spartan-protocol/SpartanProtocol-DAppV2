@@ -36,6 +36,9 @@ const PoolItem = ({ asset }) => {
     genesis,
     newPool,
     curated,
+    safety,
+    oldRate,
+    newRate,
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
@@ -68,8 +71,22 @@ const PoolItem = ({ asset }) => {
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
   const poolCapTooltip = Tooltip(t, 'poolCap')
+  const poolRatioTooltip = Tooltip(t, 'poolRatio')
 
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
+  const getRatioPC = () => BN(safety).times(100)
+  const getScaled = () => {
+    const scale = BN(200)
+    const multi = BN(100)
+    const ratio = getRatioPC()
+    if (BN(newRate).isLessThan(oldRate)) {
+      return BN(50).minus(ratio.div(scale).times(multi)) + 0
+    }
+    if (BN(newRate).isGreaterThan(oldRate)) {
+      return BN(50).plus(ratio.div(scale).times(multi)) + 0
+    }
+    return 50
+  }
 
   return (
     <>
@@ -271,6 +288,94 @@ const PoolItem = ({ asset }) => {
                       alt={token.name}
                       className="rounded-circle ms-1"
                     />
+                  </Col>
+                </Row>
+
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card pe-0">
+                    {t('poolRatio')}
+                    <OverlayTrigger placement="auto" overlay={poolRatioTooltip}>
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="17"
+                          fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col className="text-end output-card my-auto">
+                    <ProgressBar style={{ height: '5px' }} className="rounded">
+                      <ProgressBar
+                        variant="black"
+                        key={1}
+                        now={getScaled() <= 35 ? getScaled() : 16.5}
+                        className="rounded-start"
+                      />
+                      {getScaled() <= 35 && (
+                        <ProgressBar
+                          variant="primary"
+                          key={2}
+                          now={6}
+                          className="rounded"
+                        />
+                      )}
+                      <ProgressBar
+                        variant="black"
+                        key={3}
+                        now={getScaled() <= 35 ? getScaled() - 35 : 16.5}
+                      />
+
+                      <ProgressBar
+                        variant="info"
+                        key={5}
+                        now={
+                          getScaled() > 35 && getScaled() < 65
+                            ? getScaled() - 35
+                            : 14.5
+                        }
+                        className="rounded-start"
+                      />
+                      {getScaled() > 35 && getScaled() < 65 && (
+                        <ProgressBar
+                          variant="success"
+                          key={6}
+                          now={6}
+                          className="rounded"
+                        />
+                      )}
+                      <ProgressBar
+                        variant="info"
+                        key={7}
+                        now={
+                          getScaled() > 35 && getScaled() < 65
+                            ? 65 - getScaled()
+                            : 14.5
+                        }
+                        className="rounded-end"
+                      />
+
+                      <ProgressBar
+                        variant="black"
+                        key={9}
+                        now={getScaled() >= 65 ? getScaled() - 65 : 16.5}
+                      />
+                      {getScaled() >= 65 && (
+                        <ProgressBar
+                          variant="primary"
+                          key={10}
+                          now={6}
+                          className="rounded"
+                        />
+                      )}
+                      <ProgressBar
+                        variant="black"
+                        key={11}
+                        now={getScaled() >= 65 ? 100 - getScaled() : 16.5}
+                        className="rounded-end"
+                      />
+                    </ProgressBar>
                   </Col>
                 </Row>
                 <hr className="my-0" />

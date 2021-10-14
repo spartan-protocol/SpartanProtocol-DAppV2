@@ -76,6 +76,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       variable: { pool: variable },
     },
     {
+      id: 'poolRatio',
+      title: 'poolRatio',
+      body: 'poolRatioInfo',
+    },
+    {
       id: 'rank',
       title: 'rank',
       body: 'rankInfo',
