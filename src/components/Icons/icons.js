@@ -37,6 +37,7 @@ import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
 import { ReactComponent as Sword } from '../../assets/icons/sword.svg'
 import { ReactComponent as Swords } from '../../assets/icons/swords.svg'
 import { ReactComponent as Synth } from '../../assets/icons/synth.svg'
+import { ReactComponent as Trash } from '../../assets/icons/trash.svg'
 import { ReactComponent as Upgrade } from '../../assets/icons/upgrade.svg'
 import { ReactComponent as Vault } from '../../assets/icons/vault.svg'
 import { ReactComponent as WalletRed } from '../../assets/icons/wallet-red.svg'
@@ -79,6 +80,7 @@ const icons = {
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowUp: ArrowUp,
+  bin: Trash,
   close: Close,
   colosseum: Colosseum,
   connect: Connect,
@@ -105,6 +107,7 @@ const icons = {
   sword: Sword,
   swords: Swords,
   synth: Synth,
+  trash: Trash,
   upgrade: Upgrade,
   vault: Vault,
   walletRed: WalletRed,

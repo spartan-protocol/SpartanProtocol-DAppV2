@@ -44,6 +44,7 @@
   "claimAll": "Claim All",
   "claimSubtitle": "Claim SPARTA from v1 pools",
   "clearTxns": "Clear Txns",
+  "clearWallet": "Clear Wallet",
   "close": "Close",
   "codeArena": "CodeArena",
   "codeArenaInfo": "The scope of contracts to be audited has a recommended bounty requirement of $96K USD. Being a community built and run project; there is a drive to crowdfund the bounty. The audit will go ahead whether or not the target is reached, but raising $96K will ensure the entire suite of contracts are audited!",

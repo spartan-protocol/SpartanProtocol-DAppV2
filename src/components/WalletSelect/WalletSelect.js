@@ -484,7 +484,6 @@ const WalletSelect = (props) => {
                           <>
                             <Icon
                               icon="txnsHistory"
-                              className="ms-1 mb-1"
                               size="18"
                               fill={isLightMode ? 'black' : 'white'}
                             />
@@ -503,7 +502,7 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
-        {wallet.active && (
+        {wallet.active ? (
           <Modal.Footer className="justify-content-center">
             <Button
               href={getExplorerWallet(wallet.account)}
@@ -533,6 +532,24 @@ const WalletSelect = (props) => {
                 size="17"
                 fill={isLightMode ? 'black' : 'white'}
                 className="mb-1"
+              />
+            </Button>
+          </Modal.Footer>
+        ) : (
+          <Modal.Footer className="justify-content-center">
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => {
+                onWalletDisconnect()
+              }}
+            >
+              {t('clearWallet')}
+              <Icon
+                icon="walletRed"
+                size="17"
+                fill={isLightMode ? 'black' : 'white'}
+                className="mb-1 ms-1"
               />
             </Button>
           </Modal.Footer>
