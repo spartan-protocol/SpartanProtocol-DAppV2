@@ -38,12 +38,14 @@ import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from './Components/Utils'
 import Share from '../../../components/Share/SharePool'
-import NewPool from '../Home/NewPool'
+import NewPool from '../Pools/NewPool'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
 
 const LiqRemove = () => {
+  const isLightMode = window.localStorage.getItem('theme')
+
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -439,7 +441,9 @@ const LiqRemove = () => {
                               >
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="number"
+                                  type="text"
+                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  inputMode="decimal"
                                   placeholder={`${t('redeem')}...`}
                                   id="removeInput1"
                                   autoComplete="off"
@@ -520,7 +524,9 @@ const LiqRemove = () => {
                                 </InputGroup.Text>
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="number"
+                                  type="text"
+                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  inputMode="decimal"
                                   placeholder={`${t('receive')}...`}
                                   id="removeInput2"
                                   disabled
@@ -653,7 +659,7 @@ const LiqRemove = () => {
                           icon="info"
                           className="ms-1 mb-1"
                           size="17"
-                          fill="white"
+                          fill={isLightMode ? 'black' : 'white'}
                         />
                       </span>
                     </OverlayTrigger>

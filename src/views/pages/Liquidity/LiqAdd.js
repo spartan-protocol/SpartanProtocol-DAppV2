@@ -35,7 +35,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
 import { balanceWidths } from './Components/Utils'
-import NewPool from '../Home/NewPool'
+import NewPool from '../Pools/NewPool'
 import Share from '../../../components/Share/SharePool'
 import {
   calcLiqValue,
@@ -521,7 +521,8 @@ const LiqAdd = () => {
                               >
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="number"
+                                  type="text"
+                                  pattern="[0-9]+([\.][0-9]{1,2})?"
                                   placeholder={`${t('add')}...`}
                                   id="addInput1"
                                   autoComplete="off"
@@ -632,7 +633,9 @@ const LiqAdd = () => {
                                 >
                                   <FormControl
                                     className="text-end ms-0"
-                                    type="number"
+                                    type="text"
+                                    pattern="[0-9]+([\.][0-9]{1,2})?"
+                                    inputMode="decimal"
                                     placeholder={`${t('add')}...`}
                                     id="addInput2"
                                     autoComplete="off"
@@ -690,7 +693,9 @@ const LiqAdd = () => {
                                 </InputGroup.Text>
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="number"
+                                  type="text"
+                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  inputMode="decimal"
                                   placeholder="0.00"
                                   id="addInput3"
                                   disabled

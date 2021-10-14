@@ -293,7 +293,12 @@ const NewPool = () => {
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon icon="plus" fill="white" size="17" className="me-1 mb-1" />
+        <Icon
+          icon="plus"
+          fill={isLightMode ? 'black' : 'white'}
+          size="17"
+          className="me-1 mb-1"
+        />
         {t('pool')}
       </Button>
       {showModal && (
@@ -351,7 +356,9 @@ const NewPool = () => {
                       <FormControl
                         id="spartaInput"
                         placeholder="$SPARTA"
-                        type="number"
+                        type="text"
+                        pattern="[0-9]+([\.][0-9]{1,2})?"
+                        inputMode="decimal"
                         autoComplete="off"
                         autoCorrect="off"
                         isValid={spartaValid}
@@ -369,7 +376,9 @@ const NewPool = () => {
                       <FormControl
                         id="tokenInput"
                         placeholder={`$${tokenSymbol}`}
-                        type="number"
+                        type="text"
+                        pattern="[0-9]+([\.][0-9]{1,2})?"
+                        inputMode="decimal"
                         autoComplete="off"
                         autoCorrect="off"
                         isValid={tokenValid}
@@ -407,7 +416,7 @@ const NewPool = () => {
                               icon="info"
                               className="ms-1"
                               size="17"
-                              fill="white"
+                              fill={isLightMode ? 'black' : 'white'}
                             />
                           </span>
                         </OverlayTrigger>
@@ -434,7 +443,7 @@ const NewPool = () => {
                               icon="info"
                               className="ms-1"
                               size="17"
-                              fill="white"
+                              fill={isLightMode ? 'black' : 'white'}
                             />
                           </span>
                         </OverlayTrigger>

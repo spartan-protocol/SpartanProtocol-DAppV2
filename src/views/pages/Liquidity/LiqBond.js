@@ -34,7 +34,7 @@ import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
-import NewPool from '../Home/NewPool'
+import NewPool from '../Pools/NewPool'
 import Share from '../../../components/Share/SharePool'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import { bondLiq } from '../../../utils/math/dao'
@@ -42,6 +42,8 @@ import { useReserve } from '../../../store/reserve'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const LiqBond = () => {
+  const isLightMode = window.localStorage.getItem('theme')
+
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWeb3React()
@@ -298,7 +300,9 @@ const LiqBond = () => {
                                 >
                                   <FormControl
                                     className="text-end ms-0"
-                                    type="number"
+                                    type="text"
+                                    pattern="[0-9]+([\.][0-9]{1,2})?"
+                                    inputMode="decimal"
                                     placeholder={`${t('add')}...`}
                                     id="bondInput1"
                                     autoComplete="off"
@@ -350,7 +354,7 @@ const LiqBond = () => {
                             icon="info"
                             className="ms-1"
                             size="17"
-                            fill="white"
+                            fill={isLightMode ? 'black' : 'white'}
                           />
                         </span>
                       </OverlayTrigger>

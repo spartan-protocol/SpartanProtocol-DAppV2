@@ -45,7 +45,7 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import NewSynth from './NewSynth'
 import { Icon } from '../../../components/Icons/icons'
 import { useSparta } from '../../../store/sparta'
-import { balanceWidths } from '../Pools/Components/Utils'
+import { balanceWidths } from '../Liquidity/Components/Utils'
 import { burnSynth, mintSynth } from '../../../utils/math/router'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import {
@@ -56,6 +56,7 @@ import {
 import { convertTimeUnits } from '../../../utils/math/nonContract'
 
 const Swap = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const wallet = useWeb3React()
   const synth = useSynth()
   const { t } = useTranslation()
@@ -588,7 +589,9 @@ const Swap = () => {
                                         >
                                           <FormControl
                                             className="text-end ms-0"
-                                            type="number"
+                                            type="text"
+                                            pattern="[0-9]+([\.][0-9]{1,2})?"
+                                            inputMode="decimal"
                                             placeholder={`${t('add')}...`}
                                             id="swapInput1"
                                             autoComplete="off"
@@ -627,7 +630,7 @@ const Swap = () => {
                                     <Icon
                                       icon="mint"
                                       size="35"
-                                      fill="white"
+                                      fill={isLightMode ? 'black' : 'white'}
                                       className="position-relative bg-primary rounded-circle px-2"
                                       style={{
                                         top: '-20px',
@@ -639,7 +642,7 @@ const Swap = () => {
                                     <Icon
                                       icon="fire"
                                       size="35"
-                                      fill="white"
+                                      fill={isLightMode ? 'black' : 'white'}
                                       className="position-relative bg-primary rounded-circle px-2"
                                       style={{
                                         top: '-20px',
@@ -679,7 +682,9 @@ const Swap = () => {
                                           </InputGroup.Text>
                                           <FormControl
                                             className="text-end ms-0"
-                                            type="number"
+                                            type="text"
+                                            pattern="[0-9]+([\.][0-9]{1,2})?"
+                                            inputMode="decimal"
                                             placeholder="0.00"
                                             id="swapInput2"
                                             autoComplete="off"
@@ -733,7 +738,9 @@ const Swap = () => {
                                           </InputGroup.Text>
                                           <FormControl
                                             className="text-end ms-0"
-                                            type="number"
+                                            type="text"
+                                            pattern="[0-9]+([\.][0-9]{1,2})?"
+                                            inputMode="decimal"
                                             placeholder="0.00"
                                             id="swapInput2"
                                             disabled

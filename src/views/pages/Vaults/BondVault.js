@@ -7,11 +7,11 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork, tempChains } from '../../../utils/web3'
-import BondItem from './BondItem'
+import BondItem from './BondVaultItem'
 import { getBondDetails, useBond } from '../../../store/bond'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
-const Bond = () => {
+const BondVault = () => {
   const pool = usePool()
   const bond = useBond()
   const wallet = useWeb3React()
@@ -74,7 +74,7 @@ const Bond = () => {
     <>
       <div className="content">
         {tempChains.includes(network.chainId) && (
-          <Row className="row-480">
+          <>
             <Col xs="auto">
               <Card xs="auto" className="card-320">
                 <Card.Header>{t('bondPositions')}</Card.Header>
@@ -117,7 +117,7 @@ const Bond = () => {
                 .map((asset) => (
                   <BondItem asset={asset} key={asset.tokenAddress} />
                 ))}
-          </Row>
+          </>
         )}
         {!tempChains.includes(network.chainId) && <WrongNetwork />}
       </div>
@@ -125,4 +125,4 @@ const Bond = () => {
   )
 }
 
-export default Bond
+export default BondVault

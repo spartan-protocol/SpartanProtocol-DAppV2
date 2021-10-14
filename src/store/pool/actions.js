@@ -252,9 +252,13 @@ export const getPoolDetails =
         poolDetails[ii].newRate = newRate.toString()
         const safety =
           _base > 0
-            ? BN(1)
-                .minus(BN(newRate.toString()).div(oldRate.toString()))
-                .toString()
+            ? BN(newRate.toString()).isGreaterThan(oldRate.toString())
+              ? BN(1)
+                  .minus(BN(oldRate.toString()).div(newRate.toString()))
+                  .toString()
+              : BN(1)
+                  .minus(BN(newRate.toString()).div(oldRate.toString()))
+                  .toString()
             : '0'
         poolDetails[ii].safety = safety.toString()
         poolDetails[ii].stirRate = tempArray[i + 7].toString()

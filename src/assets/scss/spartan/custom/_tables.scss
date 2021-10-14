@@ -23,6 +23,12 @@
   }
 }
 
+.table-striped {
+  > tbody > tr:nth-of-type(odd) {
+    --bs-table-accent-bg: #222629;
+  }
+}
+
 // WHITE MODE
 .white-content {
   .table {
@@ -35,9 +41,14 @@
     --bs-table-active-bg: rgba(0, 0, 0, 0.1);
     --bs-table-hover-color: #212529;
     --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
-    
+
     > tbody > tr > td {
       color: #000;
+    }
+  }
+  .table-striped {
+    > tbody > tr:nth-of-type(odd) {
+      --bs-table-accent-bg: rgb(241, 241, 241);
     }
   }
 }

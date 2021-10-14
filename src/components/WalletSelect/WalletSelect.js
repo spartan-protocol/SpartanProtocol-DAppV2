@@ -28,6 +28,7 @@ import ShareLink from '../Share/ShareLink'
 import Assets from './Assets'
 import LPs from './LPs'
 import Synths from './Synths'
+import Txns from './Txns'
 import { Icon } from '../Icons/icons'
 import { Tooltip } from '../Tooltip/tooltip'
 import { getSynthDetails, useSynth } from '../../store/synth'
@@ -104,6 +105,7 @@ export const spartanRanks = [
 ]
 
 const WalletSelect = (props) => {
+  const isLightMode = window.localStorage.getItem('theme')
   const synth = useSynth()
   const pool = usePool()
   const dao = useDao()
@@ -147,7 +149,7 @@ const WalletSelect = (props) => {
     wallet.deactivate()
     setTimeout(() => {
       wallet.activate(connectorsByName(x.connector))
-    }, 1)
+    }, 35)
   }
 
   const checkWallet = async () => {
@@ -239,7 +241,7 @@ const WalletSelect = (props) => {
   const [rank, setrank] = useState('Loading')
   const getRank = () => {
     if (!tempChains.includes(wallet.chainId)) {
-      setrank('Check Network')
+      setrank('Check Network First')
     }
     if (props.show && !rankLoading()) {
       const weight = getWeight()
@@ -366,7 +368,7 @@ const WalletSelect = (props) => {
                           icon="info"
                           className="ms-1"
                           size="17"
-                          fill="white"
+                          fill={isLightMode ? 'black' : 'white'}
                         />
                       </span>
                     </OverlayTrigger>
@@ -476,6 +478,21 @@ const WalletSelect = (props) => {
                         {tempChains.includes(wallet.chainId) &&
                           activeTab === 'synths' && <Synths />}
                       </Tab>
+                      <Tab
+                        eventKey="txns"
+                        title={
+                          <>
+                            <Icon
+                              icon="txnsHistory"
+                              size="18"
+                              fill={isLightMode ? 'black' : 'white'}
+                            />
+                          </>
+                        }
+                      >
+                        {tempChains.includes(wallet.chainId) &&
+                          activeTab === 'txns' && <Txns />}
+                      </Tab>
                     </Tabs>
                   </Row>
                 </>
@@ -485,7 +502,7 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
-        {wallet.active && (
+        {wallet.active ? (
           <Modal.Footer className="justify-content-center">
             <Button
               href={getExplorerWallet(wallet.account)}
@@ -495,7 +512,12 @@ const WalletSelect = (props) => {
               variant="primary"
             >
               {t('viewBscScan')}{' '}
-              <Icon icon="scan" size="16" fill="white" className="mb-1" />
+              <Icon
+                icon="scan"
+                size="16"
+                fill={isLightMode ? 'black' : 'white'}
+                className="mb-1"
+              />
             </Button>
             <Button
               size="sm"
@@ -505,7 +527,30 @@ const WalletSelect = (props) => {
               }}
             >
               {t('disconnect')}
-              <Icon icon="walletRed" size="17" fill="white" className="mb-1" />
+              <Icon
+                icon="walletRed"
+                size="17"
+                fill={isLightMode ? 'black' : 'white'}
+                className="mb-1"
+              />
+            </Button>
+          </Modal.Footer>
+        ) : (
+          <Modal.Footer className="justify-content-center">
+            <Button
+              size="sm"
+              variant="primary"
+              onClick={() => {
+                onWalletDisconnect()
+              }}
+            >
+              {t('clearWallet')}
+              <Icon
+                icon="walletRed"
+                size="17"
+                fill={isLightMode ? 'black' : 'white'}
+                className="mb-1 ms-1"
+              />
             </Button>
           </Modal.Footer>
         )}

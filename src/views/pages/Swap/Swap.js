@@ -45,10 +45,10 @@ import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
-import NewPool from '../Home/NewPool'
+import NewPool from '../Pools/NewPool'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
-import { balanceWidths } from '../Pools/Components/Utils'
+import { balanceWidths } from '../Liquidity/Components/Utils'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import {
   convertTimeUnits,
@@ -71,6 +71,8 @@ import Notifications from '../../../components/Notifications/Notifications'
 import { useReserve } from '../../../store/reserve'
 
 const Swap = () => {
+  const isLightMode = window.localStorage.getItem('theme')
+
   const synth = useSynth()
   const { t } = useTranslation()
   const web3 = useWeb3()
@@ -920,7 +922,9 @@ const Swap = () => {
                                       >
                                         <FormControl
                                           className="text-end ms-0"
-                                          type="number"
+                                          type="text"
+                                          pattern="[0-9]+([\.][0-9]{1,2})?"
+                                          inputMode="decimal"
                                           placeholder={`${t('sell')}...`}
                                           id="swapInput1"
                                           autoComplete="off"
@@ -1004,7 +1008,9 @@ const Swap = () => {
                                       </InputGroup.Text>
                                       <FormControl
                                         className="text-end ms-0"
-                                        type="number"
+                                        type="text"
+                                        pattern="[0-9]+([\.][0-9]{1,2})?"
+                                        inputMode="decimal"
                                         placeholder={`${t('buy')}...`}
                                         id="swapInput2"
                                         disabled
@@ -1060,7 +1066,7 @@ const Swap = () => {
                                       icon="arrowLeftRight"
                                       className="ms-1 mb-1"
                                       size="17"
-                                      fill="white"
+                                      fill={isLightMode ? 'black' : 'white'}
                                     />
                                   </span>
                                 </div>
@@ -1083,7 +1089,7 @@ const Swap = () => {
                                         icon="info"
                                         className="ms-1 mb-1"
                                         size="17"
-                                        fill="white"
+                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>
@@ -1107,7 +1113,7 @@ const Swap = () => {
                                         icon="info"
                                         className="ms-1 mb-1"
                                         size="17"
-                                        fill="white"
+                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>
@@ -1251,7 +1257,7 @@ const Swap = () => {
                                         icon="info"
                                         className="ms-1"
                                         size="17"
-                                        fill="white"
+                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>

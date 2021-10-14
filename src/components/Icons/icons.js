@@ -4,6 +4,7 @@ import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
+import { ReactComponent as TxnsHistory } from '../../assets/icons/txns-history.svg'
 import { ReactComponent as ArrowDown } from '../../assets/icons/arrow-down.svg'
 import { ReactComponent as ArrowDownUp } from '../../assets/icons/arrow-down-up.svg'
 import { ReactComponent as ArrowLeftRight } from '../../assets/icons/arrow-left-right.svg'
@@ -36,6 +37,7 @@ import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
 import { ReactComponent as Sword } from '../../assets/icons/sword.svg'
 import { ReactComponent as Swords } from '../../assets/icons/swords.svg'
 import { ReactComponent as Synth } from '../../assets/icons/synth.svg'
+import { ReactComponent as Trash } from '../../assets/icons/trash.svg'
 import { ReactComponent as Upgrade } from '../../assets/icons/upgrade.svg'
 import { ReactComponent as Vault } from '../../assets/icons/vault.svg'
 import { ReactComponent as WalletRed } from '../../assets/icons/wallet-red.svg'
@@ -71,12 +73,14 @@ const icons = {
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS
+  txnsHistory: TxnsHistory,
   arrowDown: ArrowDown,
   arrowDownUp: ArrowDownUp,
   arrowLeftRight: ArrowLeftRight,
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowUp: ArrowUp,
+  bin: Trash,
   close: Close,
   colosseum: Colosseum,
   connect: Connect,
@@ -103,6 +107,7 @@ const icons = {
   sword: Sword,
   swords: Swords,
   synth: Synth,
+  trash: Trash,
   upgrade: Upgrade,
   vault: Vault,
   walletRed: WalletRed,

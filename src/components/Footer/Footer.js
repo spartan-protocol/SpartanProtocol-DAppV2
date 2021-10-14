@@ -1,33 +1,83 @@
-import React, { useState } from 'react'
-import { Container, Nav, Navbar, Tooltip, Button } from 'react-bootstrap'
+import React from 'react'
+import { Container, Nav, Navbar, Tooltip } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import Drawer from '../Drawer/Drawer'
-import Backdrop from '../Drawer/Backdrop'
+// import Drawer from '../Drawer/Drawer'
+// import Backdrop from '../Drawer/Backdrop'
 import { Icon } from '../Icons/icons'
 
 const Footer = () => {
-  const [showDrawer, setShowDrawer] = useState(false)
+  // const [showDrawer, setShowDrawer] = useState(false)
   const isLightMode = window.localStorage.getItem('theme')
+
+  // const [hasLatestTxns, setHasLatestTxns] = useState(false)
+  // const [triggerTxns, setTriggerTxns] = useState(0)
+
+  // const tryParse = (data) => {
+  // try {
+  // return JSON.parse(data)
+  // } catch (e) {
+  // return false
+  // }
+  // }
+
+  // const getTxns = () => {
+  // const unfiltered = tryParse(window.localStorage.getItem('txnArray'))
+  // if (!unfiltered) {
+  // return []
+  // }
+  // return unfiltered
+  // }
+
+  // const hasLatestTransactions = () => {
+  // const unfiltered = getTxns()
+  // if (unfiltered.length > 0 && wallet.account) {
+  // const filtered = unfiltered.filter(
+  // (group) => group.wallet === wallet.account,
+  // )[0]?.txns
+  // if (filtered?.length > 0) {
+  // return true
+  //       }
+  //   }
+  // return false
+  // }
+
+  // useEffect(() => {
+  // const timer = setTimeout(() => {
+  // if (hasLatestTransactions()) {
+  // setHasLatestTxns(true)
+  // } else {
+  // setHasLatestTxns(false)
+  // }
+  //  setTriggerTxns(triggerTxns + 1)
+  // }, 2000)
+  // return () => clearTimeout(timer)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [triggerTxns])
 
   return (
     <>
-      <div style={{ position: 'relative' }}>
-        <Backdrop show={showDrawer} onClick={() => setShowDrawer(false)} />
-        <Drawer show={showDrawer} onClick={() => setShowDrawer(false)} />
-        <Button
-          className="mx-auto"
-          variant="info"
-          style={{
-            position: 'absolute',
-            top: -25,
-            left: 'calc(50% - 80px)',
-            zIndex: 100,
-          }}
-          onClick={() => setShowDrawer(true)}
-        >
-          Latest transactions
-        </Button>
-      </div>
+      {/*
+      hasLatestTxns && (
+        <div style={{ position: 'relative' }}>
+          <Backdrop show={showDrawer} onClick={() => setShowDrawer(false)} />
+          <Drawer show={showDrawer} onClick={() => setShowDrawer(false)} />
+          <Button
+            className="mx-auto"
+            variant="info"
+            style={{
+              position: 'absolute',
+              top: -25,
+              left: 'calc(50% - 80px)',
+              zIndex: 100,
+            }}
+            onClick={() => setShowDrawer(true)}
+          >
+            Latest transactions
+          </Button>
+        </div>
+      )
+      */}
       <Navbar className="footer" sticky="bottom">
         <Container fluid>
           <div>

@@ -99,7 +99,7 @@ const Synths = () => {
       return (
         <div className="hide-i5">
           <hr />
-          <Row key="total-assets" className="output-card">
+          <Row key="total-assets" className="modal-body output-card">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />

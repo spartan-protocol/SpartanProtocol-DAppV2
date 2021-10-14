@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Row, Col, Tabs, Tab } from 'react-bootstrap'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
+import BondVault from './BondVault'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
-const Vault = () => {
+const Vaults = () => {
   const { t } = useTranslation()
   const [mode, setMode] = useState('Dao')
   const pool = usePool()
@@ -35,22 +36,29 @@ const Vault = () => {
         {tempChains.includes(network.chainId) && (
           <>
             <Row className="row-480">
-              <Tabs
-                activeKey={mode}
-                onSelect={(k) => setMode(k)}
-                className="mb-3 card-480"
-              >
-                <Tab eventKey="Dao" title={t('daoVault')}>
-                  {pool.poolDetails.length > 0 && mode === 'Dao' && (
-                    <DaoVault />
-                  )}
-                </Tab>
-                <Tab eventKey="Synth" title={t('synthVault')}>
-                  {pool.poolDetails.length > 0 && mode === 'Synth' && (
-                    <SynthVault />
-                  )}
-                </Tab>
-              </Tabs>
+              <Col>
+                <Tabs
+                  activeKey={mode}
+                  onSelect={(k) => setMode(k)}
+                  className="mb-3 card-480"
+                >
+                  <Tab eventKey="Dao" title={t('daoVault')}>
+                    {pool.poolDetails.length > 0 && mode === 'Dao' && (
+                      <DaoVault />
+                    )}
+                  </Tab>
+                  <Tab eventKey="Synth" title={t('synthVault')}>
+                    {pool.poolDetails.length > 0 && mode === 'Synth' && (
+                      <SynthVault />
+                    )}
+                  </Tab>
+                  <Tab eventKey="Bond" title={t('bondVault')}>
+                    {pool.poolDetails.length > 0 && mode === 'Bond' && (
+                      <BondVault />
+                    )}
+                  </Tab>
+                </Tabs>
+              </Col>
             </Row>
             <Row className="row-480">
               <Col className="card-480">
@@ -65,4 +73,4 @@ const Vault = () => {
   )
 }
 
-export default Vault
+export default Vaults
