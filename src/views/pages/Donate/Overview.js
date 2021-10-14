@@ -427,7 +427,9 @@ ethereum(network: $network){
                       <Col xs="12" className="my-2">
                         <InputGroup>
                           <FormControl
-                            type="number"
+                            type="text"
+                            pattern="[0-9]+([\.][0-9]{1,2})?"
+                            inputMode="decimal"
                             id="inputDonation"
                             placeholder={
                               !selectedAsset

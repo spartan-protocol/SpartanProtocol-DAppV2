@@ -356,7 +356,9 @@ const NewPool = () => {
                       <FormControl
                         id="spartaInput"
                         placeholder="$SPARTA"
-                        type="number"
+                        type="text"
+                        pattern="[0-9]+([\.][0-9]{1,2})?"
+                        inputMode="decimal"
                         autoComplete="off"
                         autoCorrect="off"
                         isValid={spartaValid}
@@ -374,7 +376,9 @@ const NewPool = () => {
                       <FormControl
                         id="tokenInput"
                         placeholder={`$${tokenSymbol}`}
-                        type="number"
+                        type="text"
+                        pattern="[0-9]+([\.][0-9]{1,2})?"
+                        inputMode="decimal"
                         autoComplete="off"
                         autoCorrect="off"
                         isValid={tokenValid}

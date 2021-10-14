@@ -922,7 +922,9 @@ const Swap = () => {
                                       >
                                         <FormControl
                                           className="text-end ms-0"
-                                          type="number"
+                                          type="text"
+                                          pattern="[0-9]+([\.][0-9]{1,2})?"
+                                          inputMode="decimal"
                                           placeholder={`${t('sell')}...`}
                                           id="swapInput1"
                                           autoComplete="off"
@@ -1006,7 +1008,9 @@ const Swap = () => {
                                       </InputGroup.Text>
                                       <FormControl
                                         className="text-end ms-0"
-                                        type="number"
+                                        type="text"
+                                        pattern="[0-9]+([\.][0-9]{1,2})?"
+                                        inputMode="decimal"
                                         placeholder={`${t('buy')}...`}
                                         id="swapInput2"
                                         disabled

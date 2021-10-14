@@ -441,7 +441,9 @@ const LiqRemove = () => {
                               >
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="number"
+                                  type="text"
+                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  inputMode="decimal"
                                   placeholder={`${t('redeem')}...`}
                                   id="removeInput1"
                                   autoComplete="off"
@@ -522,7 +524,9 @@ const LiqRemove = () => {
                                 </InputGroup.Text>
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="number"
+                                  type="text"
+                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  inputMode="decimal"
                                   placeholder={`${t('receive')}...`}
                                   id="removeInput2"
                                   disabled
