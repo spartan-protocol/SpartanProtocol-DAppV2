@@ -45,7 +45,7 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import NewSynth from './NewSynth'
 import { Icon } from '../../../components/Icons/icons'
 import { useSparta } from '../../../store/sparta'
-import { balanceWidths } from '../Pools/Components/Utils'
+import { balanceWidths } from '../Liquidity/Components/Utils'
 import { burnSynth, mintSynth } from '../../../utils/math/router'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import {

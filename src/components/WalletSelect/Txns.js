@@ -402,7 +402,7 @@ const Txns = () => {
                 >
                   <Icon icon="trash" size="20" />
                 </Button>
-                <Alert show={show} variant="">
+                <Alert show={show} variant="" className="mt-2">
                   <Alert.Heading>Clear History?</Alert.Heading>
                   <p>
                     Your wallet transaction history is stored in your browser

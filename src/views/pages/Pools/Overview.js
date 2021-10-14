@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Col, Row, ButtonGroup, Button } from 'react-bootstrap'
-import LiqAdd from './LiqAdd'
-import LiqRemove from './LiqRemove'
-import LiqBond from './LiqBond'
+import { useDispatch } from 'react-redux'
+import { Badge, Card, Col, Nav, Row } from 'react-bootstrap'
+import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
-import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getNetwork, tempChains } from '../../../utils/web3'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
-import { balanceWidths } from './Components/Utils'
+import SummaryItem from './SummaryItem'
+import { Icon } from '../../../components/Icons/icons'
 
 const Overview = () => {
+  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState('1')
   const pool = usePool()
-  const [network, setnetwork] = useState(getNetwork())
 
+  const [activeTab, setActiveTab] = useState('1')
+
+  const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
     setnetwork(getNetwork())
@@ -32,9 +35,21 @@ const Overview = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
+  const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
-    balanceWidths()
-  }, [activeTab])
+    if (trigger1 === 0 && tempChains.includes(network.chainId)) {
+      dispatch(allListedAssets())
+    }
+    const timer = setTimeout(() => {
+      if (tempChains.includes(network.chainId)) {
+        dispatch(allListedAssets())
+        settrigger1(trigger1 + 1)
+      }
+    }, 10000)
+
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger1])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -43,46 +58,124 @@ const Overview = () => {
     return false
   }
 
+  const getPools = () =>
+    pool.poolDetails
+      .filter((asset) => asset.baseAmount > 0 && asset.newPool === false)
+      .sort((a, b) => b.baseAmount - a.baseAmount)
+
+  const getNewPools = () =>
+    pool?.poolDetails
+      .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
+      .sort((a, b) => b.baseAmount - a.baseAmount)
+
+  const [firstLoad, setFirstLoad] = useState(true)
+  useEffect(() => {
+    if (
+      firstLoad &&
+      pool.poolDetails &&
+      pool.poolDetails.filter((x) => x.newPool === false && x.baseAmount > 0)
+        .length === 0
+    ) {
+      setFirstLoad(false)
+      setActiveTab('2')
+    }
+  }, [pool.poolDetails, firstLoad])
+
   return (
     <>
       <div className="content">
         {tempChains.includes(network.chainId) && (
           <>
             <Row className="row-480">
-              <ButtonGroup size="sm" className="mb-3">
-                <Button
-                  active={activeTab === '1'}
-                  onClick={() => setActiveTab('1')}
-                  variant="dark"
-                >
-                  {t('add')}
-                </Button>
-                <Button
-                  active={activeTab === '2'}
-                  onClick={() => setActiveTab('2')}
-                  variant="dark"
-                >
-                  {t('remove')}
-                </Button>
-                <Button
-                  active={activeTab === '4'}
-                  onClick={() => setActiveTab('4')}
-                  variant="dark"
-                >
-                  {t('bond')}
-                </Button>
-              </ButtonGroup>
-              {!isLoading() ? (
-                <>
-                  {activeTab === '1' && <LiqAdd />}
-                  {activeTab === '2' && <LiqRemove />}
-                  {activeTab === '4' && <LiqBond />}
-                </>
-              ) : (
-                <Col className="card-480">
-                  <HelmetLoading />
-                </Col>
-              )}
+              <Col xs="12">
+                <SummaryItem activeTab={activeTab} />
+                <Card>
+                  <Card.Header className="p-0 border-0 mb-2 rounded-pill-top-left">
+                    <Nav activeKey={activeTab} fill>
+                      <Nav.Item key="1" className="rounded-pill-top-left">
+                        <Nav.Link
+                          eventKey="1"
+                          className="rounded-pill-top-left"
+                          onClick={() => {
+                            setActiveTab('1')
+                          }}
+                        >
+                          {t('pools')}
+                          <Badge bg="primary" className="ms-2">
+                            {!isLoading() ? (
+                              getPools().length
+                            ) : (
+                              <Icon
+                                icon="cycle"
+                                size="15"
+                                className="anim-spin"
+                              />
+                            )}
+                          </Badge>
+                        </Nav.Link>
+                      </Nav.Item>
+
+                      <Nav.Item key="2" className="rounded-pill-top-right">
+                        <Nav.Link
+                          className="rounded-pill-top-right"
+                          eventKey="2"
+                          onClick={() => {
+                            setActiveTab('2')
+                          }}
+                        >
+                          {t('new')}
+                          <Badge bg="primary" className="ms-2">
+                            {!isLoading() ? (
+                              getNewPools().length
+                            ) : (
+                              <Icon
+                                icon="cycle"
+                                size="15"
+                                className="anim-spin"
+                              />
+                            )}
+                          </Badge>
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Card.Header>
+                  {!isLoading() ? (
+                    <Card.Body>
+                      <Row>
+                        {activeTab === '1' && (
+                          <>
+                            {getPools().length > 0 ? (
+                              getPools().map((asset) => (
+                                <PoolItem key={asset.address} asset={asset} />
+                              ))
+                            ) : (
+                              <Col>
+                                There are no initialised pools with more than 7
+                                days of existence yet; check the New tab
+                              </Col>
+                            )}
+                          </>
+                        )}
+                        {activeTab === '2' && (
+                          <>
+                            {getNewPools().length > 0 ? (
+                              getNewPools().map((asset) => (
+                                <PoolItem key={asset.address} asset={asset} />
+                              ))
+                            ) : (
+                              <Col>There are no new/initializing pools</Col>
+                            )}
+                          </>
+                        )}
+                      </Row>
+                    </Card.Body>
+                  ) : (
+                    <Col className="card-480">
+                      <HelmetLoading height={300} width={300} />
+                    </Col>
+                  )}
+                </Card>
+              </Col>
             </Row>
           </>
         )}

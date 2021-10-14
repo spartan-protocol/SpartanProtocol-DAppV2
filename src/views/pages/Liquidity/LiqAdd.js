@@ -35,7 +35,7 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
 import { balanceWidths } from './Components/Utils'
-import NewPool from '../Home/NewPool'
+import NewPool from '../Pools/NewPool'
 import Share from '../../../components/Share/SharePool'
 import {
   calcLiqValue,

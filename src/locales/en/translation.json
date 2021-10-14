@@ -271,6 +271,7 @@
   "upgradeSubtitle": "Upgrade your v1 SPARTA to v2",
   "utils": "Utils",
   "vault": "Vault",
+  "vaults": "Vaults",
   "vaultApyInfo": "Estimated APY from staking revenue. Calculated using the past month revenue * 12 vs vault total SPARTA weight. Does not take into account past or future asset value movements. This is *not* a guarantee of future performance!",
   "vaultClaim": "Vault Claim",
   "viewBscScan": "View BscScan",

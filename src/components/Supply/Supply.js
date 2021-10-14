@@ -104,7 +104,8 @@ const Supply = () => {
     const totalSupply = BN(getTotalSupply())
     const reserveSparta = BN(reserve.globalDetails.spartaBalance)
     const bondSparta = BN(bond.global.spartaRemaining)
-    if (totalSupply > 0) {
+    const valid = totalSupply > 0 && reserve.globalDetails && bond.global
+    if (valid) {
       return totalSupply.minus(reserveSparta).minus(bondSparta)
     }
     return '0.00'
@@ -247,7 +248,7 @@ const Supply = () => {
                 </OverlayTrigger>
               </Col>
               <Col xs="6 mb-2" className="popover-text text-end mb-2">
-                ${formatFromWei(getTVL(), 0)}
+                {getTVL() > 0 ? `$${formatFromWei(getTVL(), 0)}` : 'Loading...'}
                 <Icon icon="usd" className="ms-1" size="15" />
               </Col>
               <Col xs="6" className="popover-text mb-2">
@@ -276,7 +277,9 @@ const Supply = () => {
                 </OverlayTrigger>
               </Col>
               <Col xs="6 mb-2" className="popover-text text-end mb-2">
-                ${formatFromWei(getMarketCap(), 0)}
+                {getMarketCap() > 0
+                  ? `$${formatFromWei(getMarketCap(), 0)}`
+                  : 'Loading...'}
                 <Icon icon="usd" className="ms-1" size="15" />
               </Col>
 
@@ -322,7 +325,9 @@ const Supply = () => {
                 </OverlayTrigger>
               </Col>
               <Col xs="6" className="popover-text text-end mb-2">
-                {formatFromWei(getTotalSupply(), 0)}
+                {getTotalSupply() > 0
+                  ? formatFromWei(getTotalSupply(), 0)
+                  : 'Loading...'}
                 <Icon icon="spartav2" className="ms-1" size="15" />
               </Col>
 
@@ -413,7 +418,9 @@ const Supply = () => {
                 </OverlayTrigger>
               </Col>
               <Col xs="6" className="popover-text text-end mb-2">
-                {formatFromWei(getCirculatingSupply(), 0)}
+                {getCirculatingSupply() > 0
+                  ? formatFromWei(getCirculatingSupply(), 0)
+                  : 'Loading...'}
                 <Icon icon="spartav2" className="ms-1" size="15" />
               </Col>
 
@@ -461,7 +468,7 @@ const Supply = () => {
                 </OverlayTrigger>
               </Col>
               <Col xs="6" className="popover-text text-end">
-                {formatFromWei(feeBurn, 0)}
+                {feeBurn > 0 ? `${formatFromWei(feeBurn, 0)}` : 'Loading...'}
                 <Icon
                   icon="fire"
                   className="ms-1"

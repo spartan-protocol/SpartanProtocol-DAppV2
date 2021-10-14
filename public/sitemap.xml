@@ -18,10 +18,7 @@
     <loc>https://dapp.spartanprotocol.org/synths</loc>
   </url>
   <url>
-    <loc>https://dapp.spartanprotocol.org/bond</loc>
-  </url>
-  <url>
-    <loc>https://dapp.spartanprotocol.org/vault</loc>
+    <loc>https://dapp.spartanprotocol.org/vaults</loc>
   </url>
   <url>
     <loc>https://dapp.spartanprotocol.org/dao</loc>

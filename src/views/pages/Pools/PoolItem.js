@@ -395,7 +395,7 @@ const PoolItem = ({ asset }) => {
                   variant="primary"
                   className="w-100 rounded-pill"
                   disabled={!asset.curated}
-                  onClick={() => history.push('/vault')}
+                  onClick={() => history.push('/vaults')}
                 >
                   {t('stake')}
                 </Button>

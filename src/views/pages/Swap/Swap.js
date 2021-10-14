@@ -45,10 +45,10 @@ import SharePool from '../../../components/Share/SharePool'
 import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
-import NewPool from '../Home/NewPool'
+import NewPool from '../Pools/NewPool'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
-import { balanceWidths } from '../Pools/Components/Utils'
+import { balanceWidths } from '../Liquidity/Components/Utils'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import {
   convertTimeUnits,
