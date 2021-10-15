@@ -300,9 +300,8 @@ const LiqBond = () => {
                                 >
                                   <FormControl
                                     className="text-end ms-0"
-                                    type="text"
-                                    pattern="[0-9]+([\.][0-9]{1,2})?"
-                                    inputMode="decimal"
+                                    type="number"
+                                    min="0"
                                     placeholder={`${t('add')}...`}
                                     id="bondInput1"
                                     autoComplete="off"

@@ -105,17 +105,19 @@ const DaoVault = () => {
   }
 
   const getUSDFromSparta = () => {
-    if (formatFromWei(getTotalWeight()) !== '0.00')
+    if (getTotalWeight() > 0)
       return formatFromWei(BN(getTotalWeight()).times(web3.spartaPrice))
     return '0.00'
   }
   const getUSDFromSpartaOwnWeight = () => {
-    if (formatFromWei(getTotalWeight()) !== '0.00')
-      return formatFromWei(
-        BN(
-          getVaultWeights(pool.poolDetails, dao.daoDetails, bond.bondDetails),
-        ).times(web3.spartaPrice),
-      )
+    const _weight = getVaultWeights(
+      pool.poolDetails,
+      dao.daoDetails,
+      bond.bondDetails,
+    )
+    if (_weight > 0) {
+      return formatFromWei(BN(_weight).times(web3.spartaPrice))
+    }
     return '0.00'
   }
 
@@ -190,23 +192,20 @@ const DaoVault = () => {
                 <Col xs="auto" className="text-card">
                   {t('totalWeight')}
                 </Col>
-                {!showUsd ? (
-                  <Col
-                    className="text-end output-card"
-                    onClick={() => handleChangeShow()}
-                  >
-                    {formatFromWei(getTotalWeight())}
-                    <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
-                  </Col>
-                ) : (
-                  <Col
-                    className="text-end output-card"
-                    onClick={() => handleChangeShow()}
-                  >
-                    {getUSDFromSparta()}
-                    <Icon icon="usd" size="20" className="mb-1 ms-1" />
-                  </Col>
-                )}
+                <Col
+                  className="text-end output-card"
+                  onClick={() => handleChangeShow()}
+                  role="button"
+                >
+                  {!showUsd
+                    ? formatFromWei(getTotalWeight())
+                    : getUSDFromSparta()}
+                  <Icon
+                    icon={showUsd ? 'usd' : 'spartav2'}
+                    size="20"
+                    className="mb-1 ms-1"
+                  />
+                </Col>
               </Row>
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
@@ -238,46 +237,32 @@ const DaoVault = () => {
                     {t('yourWeight')}
                   </Col>
 
-                  {!showUsd ? (
-                    <Col
-                      className="text-end output-card"
-                      onClick={() => handleChangeShow()}
-                    >
-                      {!wallet.account ? (
-                        t('connectWallet')
-                      ) : (
-                        <>
-                          {formatFromWei(
-                            getVaultWeights(
-                              pool.poolDetails,
-                              dao.daoDetails,
-                              bond.bondDetails,
-                            ),
-                          )}
-                          <Icon
-                            icon="spartav2"
-                            size="20"
-                            className="mb-1 ms-1"
-                          />
-                        </>
-                      )}
-                    </Col>
-                  ) : (
-                    <Col
-                      className="text-end output-card"
-                      onClick={() => handleChangeShow()}
-                    >
-                      {!wallet.account ? (
-                        t('connectWallet')
-                      ) : (
-                        <>
-                          {getUSDFromSpartaOwnWeight()}
-
-                          <Icon icon="usd" size="20" className="mb-1 ms-1" />
-                        </>
-                      )}
-                    </Col>
-                  )}
+                  <Col
+                    className="text-end output-card"
+                    onClick={() => handleChangeShow()}
+                    role="button"
+                  >
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : (
+                      <>
+                        {!showUsd
+                          ? formatFromWei(
+                              getVaultWeights(
+                                pool.poolDetails,
+                                dao.daoDetails,
+                                bond.bondDetails,
+                              ),
+                            )
+                          : getUSDFromSpartaOwnWeight()}
+                        <Icon
+                          icon={showUsd ? 'usd' : 'spartav2'}
+                          size="20"
+                          className="mb-1 ms-1"
+                        />
+                      </>
+                    )}
+                  </Col>
                 </Row>
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
