@@ -330,9 +330,8 @@ const NewProposal = () => {
                                 <FormControl
                                   id="paramInput"
                                   placeholder=""
-                                  type="text"
-                                  pattern="[0-9]+([\.][0-9]{1,2})?"
-                                  inputMode="decimal"
+                                  type="number"
+                                  min="0"
                                   autoComplete="off"
                                   autoCorrect="off"
                                   onChange={(e) =>

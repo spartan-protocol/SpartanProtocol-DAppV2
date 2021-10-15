@@ -15,6 +15,7 @@ import {
   daoDepositTimes,
   getDaoDetails,
 } from '../../../store/dao/actions'
+import { useWeb3 } from '../../../store/web3'
 import { useReserve } from '../../../store/reserve/selector'
 import { useSparta } from '../../../store/sparta'
 import { bondVaultWeight, getBondDetails, useBond } from '../../../store/bond'
@@ -36,14 +37,21 @@ const DaoVault = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const web3 = useWeb3()
 
   const [txnLoading, setTxnLoading] = useState(false)
-
   const [trigger0, settrigger0] = useState(0)
+  const [showUsd, setShowUsd] = useState(false)
+
+  const handleChangeShow = () => {
+    setShowUsd(!showUsd)
+  }
+
   const getData = () => {
     dispatch(daoGlobalDetails(wallet))
     dispatch(daoMemberDetails(wallet))
   }
+
   useEffect(() => {
     if (trigger0 === 0) {
       getData()
@@ -92,6 +100,23 @@ const DaoVault = () => {
     const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
     if (_amount > 0) {
       return _amount
+    }
+    return '0.00'
+  }
+
+  const getUSDFromSparta = () => {
+    if (getTotalWeight() > 0)
+      return formatFromWei(BN(getTotalWeight()).times(web3.spartaPrice))
+    return '0.00'
+  }
+  const getUSDFromSpartaOwnWeight = () => {
+    const _weight = getVaultWeights(
+      pool.poolDetails,
+      dao.daoDetails,
+      bond.bondDetails,
+    )
+    if (_weight > 0) {
+      return formatFromWei(BN(_weight).times(web3.spartaPrice))
     }
     return '0.00'
   }
@@ -167,9 +192,19 @@ const DaoVault = () => {
                 <Col xs="auto" className="text-card">
                   {t('totalWeight')}
                 </Col>
-                <Col className="text-end output-card">
-                  {formatFromWei(getTotalWeight())}
-                  <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                <Col
+                  className="text-end output-card"
+                  onClick={() => handleChangeShow()}
+                  role="button"
+                >
+                  {!showUsd
+                    ? formatFromWei(getTotalWeight())
+                    : getUSDFromSparta()}
+                  <Icon
+                    icon={showUsd ? 'usd' : 'spartav2'}
+                    size="20"
+                    className="mb-1 ms-1"
+                  />
                 </Col>
               </Row>
               <Row className="my-1">
@@ -201,19 +236,30 @@ const DaoVault = () => {
                   <Col xs="auto" className="text-card">
                     {t('yourWeight')}
                   </Col>
-                  <Col className="text-end output-card">
+
+                  <Col
+                    className="text-end output-card"
+                    onClick={() => handleChangeShow()}
+                    role="button"
+                  >
                     {!wallet.account ? (
                       t('connectWallet')
                     ) : (
                       <>
-                        {formatFromWei(
-                          getVaultWeights(
-                            pool.poolDetails,
-                            dao.daoDetails,
-                            bond.bondDetails,
-                          ),
-                        )}
-                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                        {!showUsd
+                          ? formatFromWei(
+                              getVaultWeights(
+                                pool.poolDetails,
+                                dao.daoDetails,
+                                bond.bondDetails,
+                              ),
+                            )
+                          : getUSDFromSpartaOwnWeight()}
+                        <Icon
+                          icon={showUsd ? 'usd' : 'spartav2'}
+                          size="20"
+                          className="mb-1 ms-1"
+                        />
                       </>
                     )}
                   </Col>
