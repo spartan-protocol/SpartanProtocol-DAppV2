@@ -228,6 +228,7 @@ const NewProposal = () => {
         variant="info"
         className="rounded"
         onClick={() => setShowModal(true)}
+        disabled={isLoading()}
       >
         {t('proposal')}
         <Icon
@@ -237,74 +238,112 @@ const NewProposal = () => {
           className="ms-2"
         />
       </Button>
-
-      <Modal show={showModal} onHide={() => handleOnHide()} centered>
-        {tempChains.includes(network.chainId) && !isLoading() && (
-          <>
-            <Modal.Header closeButton>
-              <Modal.Title>{t('newProposal')}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <FloatingLabel
-                controlId="floatingSelect"
-                label={t('chooseProposalType')}
-              >
-                <Form.Select
-                  id="proposalTypeInput"
-                  value={selectedType.value}
-                  onChange={(e) => handleTypeSelect(e.target.value)}
-                  aria-label="Choose proposal type"
+      {showModal && (
+        <Modal show={showModal} onHide={() => handleOnHide()} centered>
+          {tempChains.includes(network.chainId) && !isLoading() && (
+            <>
+              <Modal.Header closeButton>
+                <Modal.Title>{t('newProposal')}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <FloatingLabel
+                  controlId="floatingSelect"
+                  label={t('chooseProposalType')}
                 >
-                  {proposalTypes.map((pid) => (
-                    <option key={pid.value} value={pid.value}>
-                      {pid.label}
-                    </option>
-                  ))}
-                </Form.Select>
-              </FloatingLabel>
+                  <Form.Select
+                    id="proposalTypeInput"
+                    value={selectedType.value}
+                    onChange={(e) => handleTypeSelect(e.target.value)}
+                    aria-label="Choose proposal type"
+                  >
+                    {proposalTypes.map((pid) => (
+                      <option key={pid.value} value={pid.value}>
+                        {pid.label}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </FloatingLabel>
 
-              {selectedType !== null && (
-                <Row className="card-body py-1">
-                  <Col xs="12">
-                    <Card className="card-share">
-                      <Card.Body className="py-3">
-                        <h4 className="card-title">
-                          {selectedType?.desc}
-                          {selectedType?.value === 'FLIP_EMISSIONS' && (
-                            <>
-                              {sparta.globalDetails.emitting ? ' off' : ' on'}
-                            </>
-                          )}
-                        </h4>
-                        <Row>
-                          <Col xs="12">
-                            {showAddrInput.includes(selectedType.type) && (
+                {selectedType !== null && (
+                  <Row className="card-body py-1">
+                    <Col xs="12">
+                      <Card className="card-share">
+                        <Card.Body className="py-3">
+                          <h4 className="card-title">
+                            {selectedType?.desc}
+                            {selectedType?.value === 'FLIP_EMISSIONS' && (
                               <>
-                                {noAddrInput.includes(selectedType.value) && (
-                                  <AssetSelect
-                                    handleAddrChange={handleAddrChange}
-                                    selectedType={selectedType.value}
-                                  />
-                                )}
+                                {sparta.globalDetails.emitting ? ' off' : ' on'}
+                              </>
+                            )}
+                          </h4>
+                          <Row>
+                            <Col xs="12">
+                              {showAddrInput.includes(selectedType.type) && (
+                                <>
+                                  {noAddrInput.includes(selectedType.value) && (
+                                    <AssetSelect
+                                      handleAddrChange={handleAddrChange}
+                                      selectedType={selectedType.value}
+                                    />
+                                  )}
+                                  <InputGroup>
+                                    <InputGroup.Text>
+                                      {t('address')}
+                                    </InputGroup.Text>
+                                    <FormControl
+                                      id="addrInput"
+                                      placeholder="0x..."
+                                      type="text"
+                                      autoComplete="off"
+                                      autoCorrect="off"
+                                      disabled={noAddrInput.includes(
+                                        selectedType.value,
+                                      )}
+                                      onChange={(e) =>
+                                        setinputAddress(e.target.value)
+                                      }
+                                    />
+                                    <InputGroup.Text className="p-1">
+                                      {addrValid ? (
+                                        <ValidIcon
+                                          fill="green"
+                                          height="30"
+                                          width="30"
+                                        />
+                                      ) : (
+                                        <InvalidIcon
+                                          fill="red"
+                                          height="30"
+                                          width="30"
+                                        />
+                                      )}
+                                    </InputGroup.Text>
+                                  </InputGroup>
+                                </>
+                              )}
+
+                              {showParamInput.includes(selectedType.type) && (
                                 <InputGroup>
                                   <InputGroup.Text>
-                                    {t('address')}
+                                    {selectedType.type}
                                   </InputGroup.Text>
                                   <FormControl
-                                    id="addrInput"
-                                    placeholder="0x..."
-                                    type="text"
+                                    id="paramInput"
+                                    placeholder=""
+                                    type="number"
+                                    min="0"
                                     autoComplete="off"
                                     autoCorrect="off"
-                                    disabled={noAddrInput.includes(
-                                      selectedType.value,
-                                    )}
                                     onChange={(e) =>
-                                      setinputAddress(e.target.value)
+                                      setinputParam(e.target.value)
                                     }
                                   />
-                                  <InputGroup.Text className="p-1">
-                                    {addrValid ? (
+                                  <InputGroup.Text className="">
+                                    {selectedType.units}
+                                  </InputGroup.Text>
+                                  <InputGroup.Text className="">
+                                    {paramValid ? (
                                       <ValidIcon
                                         fill="green"
                                         height="30"
@@ -319,109 +358,72 @@ const NewProposal = () => {
                                     )}
                                   </InputGroup.Text>
                                 </InputGroup>
-                              </>
-                            )}
-
-                            {showParamInput.includes(selectedType.type) && (
-                              <InputGroup>
-                                <InputGroup.Text>
-                                  {selectedType.type}
-                                </InputGroup.Text>
-                                <FormControl
-                                  id="paramInput"
-                                  placeholder=""
-                                  type="number"
-                                  min="0"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                  onChange={(e) =>
-                                    setinputParam(e.target.value)
-                                  }
-                                />
-                                <InputGroup.Text className="">
-                                  {selectedType.units}
-                                </InputGroup.Text>
-                                <InputGroup.Text className="">
-                                  {paramValid ? (
-                                    <ValidIcon
-                                      fill="green"
-                                      height="30"
-                                      width="30"
-                                    />
-                                  ) : (
-                                    <InvalidIcon
-                                      fill="red"
-                                      height="30"
-                                      width="30"
-                                    />
-                                  )}
-                                </InputGroup.Text>
-                              </InputGroup>
-                            )}
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                    </Card>
-                    <Form>
-                      <div className="text-center">
-                        <Form.Switch
-                          type="switch"
-                          id="inputConfirmFee"
-                          label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee (Add tooltip)`}
-                          checked={feeConfirm}
-                          onChange={() => setfeeConfirm(!feeConfirm)}
-                        />
-                      </div>
-                    </Form>
-                  </Col>
-                </Row>
+                              )}
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
+                      <Form>
+                        <div className="text-center">
+                          <Form.Switch
+                            type="switch"
+                            id="inputConfirmFee"
+                            label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee (Add tooltip)`}
+                            checked={feeConfirm}
+                            onChange={() => setfeeConfirm(!feeConfirm)}
+                          />
+                        </div>
+                      </Form>
+                    </Col>
+                  </Row>
+                )}
+              </Modal.Body>
+            </>
+          )}
+          {!tempChains.includes(network.chainId) && <WrongNetwork />}
+          <Modal.Footer>
+            <Row className="w-100 text-center">
+              {wallet?.account && !existingPid && (
+                <Approval
+                  tokenAddress={addr.spartav2}
+                  symbol="SPARTA"
+                  walletAddress={wallet.account}
+                  contractAddress={addr.dao}
+                  txnAmount={convertToWei('100')}
+                  assetNumber="1"
+                />
               )}
-            </Modal.Body>
-          </>
-        )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
-        <Modal.Footer>
-          <Row className="w-100 text-center">
-            {wallet?.account && !existingPid && (
-              <Approval
-                tokenAddress={addr.spartav2}
-                symbol="SPARTA"
-                walletAddress={wallet.account}
-                contractAddress={addr.dao}
-                txnAmount={convertToWei('100')}
-                assetNumber="1"
-              />
-            )}
-            {existingPid && (
-              <Button className="w-100" disabled>
-                Existing Proposal
-              </Button>
-            )}
-            <Col xs="12" className="hide-if-prior-sibling">
-              {!enoughGas() ? (
+              {existingPid && (
                 <Button className="w-100" disabled>
-                  {t('checkBnbGas')}
-                </Button>
-              ) : (
-                <Button
-                  className="w-100"
-                  disabled={!wallet.account || !feeConfirm || !formValid}
-                  onClick={() => handleSubmit()}
-                >
-                  {!wallet.account
-                    ? t('checkWallet')
-                    : reserve.globalDetails.globalFreeze
-                    ? t('globalFreeze')
-                    : t('confirm')}
-                  {txnLoading && (
-                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                  )}
+                  Existing Proposal
                 </Button>
               )}
-            </Col>
-          </Row>
-        </Modal.Footer>
-      </Modal>
+              <Col xs="12" className="hide-if-prior-sibling">
+                {!enoughGas() ? (
+                  <Button className="w-100" disabled>
+                    {t('checkBnbGas')}
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-100"
+                    disabled={!wallet.account || !feeConfirm || !formValid}
+                    onClick={() => handleSubmit()}
+                  >
+                    {!wallet.account
+                      ? t('checkWallet')
+                      : reserve.globalDetails.globalFreeze
+                      ? t('globalFreeze')
+                      : t('confirm')}
+                    {txnLoading && (
+                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                    )}
+                  </Button>
+                )}
+              </Col>
+            </Row>
+          </Modal.Footer>
+        </Modal>
+      )}
     </>
   )
 }
