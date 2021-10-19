@@ -10,8 +10,7 @@ import { ReactComponent as ContractIconR } from '../../assets/icons/contract-red
 import { Icon } from '../Icons/icons'
 
 const Contracts = () => {
-  const btnClass =
-    'btn-round btn-icon btn-transparent align-self-center mx-0 px-0'
+  const btnClass = 'btn-round btn-icon btn-transparent align-self-center me-1'
 
   // const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()

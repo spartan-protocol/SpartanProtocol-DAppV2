@@ -146,7 +146,7 @@ const Supply = () => {
         <Icon
           icon="arrowDown"
           fill={isLightMode ? 'black' : 'white'}
-          className="me-1"
+          className="me-1 hide-i5"
           size="15"
         />
         ${formatFromUnits(web3.spartaPrice, 2)}
