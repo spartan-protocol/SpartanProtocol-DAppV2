@@ -1,9 +1,17 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Popover, Badge, Overlay, Button } from 'react-bootstrap'
+import {
+  Row,
+  Col,
+  Popover,
+  Badge,
+  Overlay,
+  Button,
+  Form,
+} from 'react-bootstrap'
 import { useReserve } from '../../store/reserve/selector'
 import { getExplorerContract } from '../../utils/extCalls'
-import { getAddresses } from '../../utils/web3'
+import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
 import { ReactComponent as ContractIconG } from '../../assets/icons/contract-green.svg'
 import { ReactComponent as ContractIconR } from '../../assets/icons/contract-red.svg'
 
@@ -19,6 +27,23 @@ const Contracts = () => {
   const target = useRef(null)
   const [showDropdown, setshowDropdown] = useState(false)
 
+  const [network, setnetwork] = useState(getNetwork())
+  const [trigger0, settrigger0] = useState(0)
+  const getNet = () => {
+    setnetwork(getNetwork())
+  }
+  useEffect(() => {
+    if (trigger0 === 0) {
+      getNet()
+    }
+    const timer = setTimeout(() => {
+      getNet()
+      settrigger0(trigger0 + 1)
+    }, 2000)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger0])
+
   const addrNames = [
     'spartav1',
     'spartav2',
@@ -33,6 +58,18 @@ const Contracts = () => {
     'synthVault',
     'utils',
   ]
+
+  const onChangeNetwork = async (net) => {
+    if (net.target.checked === true) {
+      setnetwork(changeNetworkLsOnly(56))
+    }
+    if (net.target.checked === false) {
+      setnetwork(changeNetworkLsOnly(97))
+    } else {
+      setnetwork(changeNetworkLsOnly(net))
+    }
+    window.location.reload()
+  }
 
   return (
     <>
@@ -60,6 +97,21 @@ const Contracts = () => {
           <Popover.Header className="mt-2">
             {t('Contracts')}
             <br />
+            <Form className="mb-0">
+              <span className="output-card">
+                {t('network')}:{' '}
+                {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                <Form.Check
+                  type="switch"
+                  id="custom-switch"
+                  className="ms-2 d-inline-flex"
+                  checked={network?.chainId === 56}
+                  onChange={(value) => {
+                    onChangeNetwork(value)
+                  }}
+                />
+              </span>
+            </Form>
             <span className="output-card">
               {t('globalFreeze')}:
               <Badge
@@ -71,7 +123,7 @@ const Contracts = () => {
               </Badge>
             </span>
           </Popover.Header>
-          <Popover.Body>
+          <Popover.Body className="pb-0">
             <Row>
               <Col xs="12">
                 <Row className="card-body text-center p-2">

@@ -450,8 +450,6 @@ const Supply = () => {
                 />
               </Col>
             </Row>
-
-            <br />
           </Popover.Body>
         </Popover>
       </Overlay>
