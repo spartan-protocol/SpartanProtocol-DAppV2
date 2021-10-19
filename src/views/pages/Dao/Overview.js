@@ -145,13 +145,16 @@ const Overview = () => {
                 {dao.proposal.length > 0 ? (
                   <>
                     {selectedView === 'current' &&
-                      (dao.proposal.filter((pid) => pid.open).length > 0
-                        ? dao?.proposal
-                            .filter((pid) => pid.open)
-                            .map((pid) => (
-                              <ProposalItem key={pid.id} proposal={pid} />
-                            ))
-                        : t('noOpenProposalsInfo'))}
+                      (dao.proposal[dao.global.currentProposal - 1] ? (
+                        <ProposalItem
+                          key={dao.proposal[dao.global.currentProposal - 1].id}
+                          proposal={
+                            dao.proposal[dao.global.currentProposal - 1]
+                          }
+                        />
+                      ) : (
+                        t('noOpenProposalsInfo')
+                      ))}
                     {selectedView === 'complete' &&
                       dao.proposal
                         .filter((pid) => pid.finalised)
