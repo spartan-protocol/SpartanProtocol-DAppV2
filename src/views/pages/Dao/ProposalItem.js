@@ -99,7 +99,9 @@ const ProposalItem = ({ proposal }) => {
     if (
       pool.poolDetails.length > 1 &&
       dao.daoDetails.length > 1 &&
-      bond.bondDetails.length > 1
+      bond.bondDetails.length > 1 &&
+      dao.totalWeight &&
+      bond.totalWeight
     ) {
       return false
     }
@@ -141,6 +143,9 @@ const ProposalItem = ({ proposal }) => {
   ]
 
   const weightClass = () => {
+    if (isLoading()) {
+      return ['Loading...', 0]
+    }
     if (totalPercent() > (100 / 3) * 2) {
       return [t('majority'), 3]
     }
@@ -298,15 +303,14 @@ const ProposalItem = ({ proposal }) => {
   return (
     <>
       <Col xs="auto" className="">
-        <Card className="card-320 card-underlay">
-          <Card.Header style={{ height: '98px' }}>
+        <Card className="card-320 card-underlay" style={{ minHeight: '320px' }}>
+          <Card.Header>
             <Row className="h-100">
-              <Col xs="auto" className="my-auto ps-2 pe-0">
-                <h5 className="my-auto">#{proposal.id}</h5>
-              </Col>
-              <Col className="my-auto">
-                <h5 className="mb-0">{type?.label}</h5>
-                <p className="text-sm-label-alt">{status()}</p>
+              <Col className="">
+                <div className="mb-0">{type?.label}</div>
+                <Card.Subtitle>
+                  (#{proposal.id}) {status()}
+                </Card.Subtitle>
               </Col>
             </Row>
           </Card.Header>
@@ -324,7 +328,7 @@ const ProposalItem = ({ proposal }) => {
           )} */}
             <Row>
               <Col>
-                <div className="output-card mb-2">{type?.desc}</div>
+                <div className="output-card mb-2">{type?.desc}:</div>
               </Col>
             </Row>
             <Row>
@@ -334,7 +338,7 @@ const ProposalItem = ({ proposal }) => {
                 </div>
               </Col>
             </Row>
-            {proposal.open && !isLoading() && (
+            {proposal.open ? (
               <>
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
@@ -364,7 +368,7 @@ const ProposalItem = ({ proposal }) => {
                           ),
                           0,
                         )}
-                        <Icon icon="spartav2" size="20" className="mb-1 ms-1" />
+                        <Icon icon="spartav2" size="17" className="mb-1 ms-1" />
                       </>
                     ) : (
                       t('youHaventVoted')
@@ -386,6 +390,12 @@ const ProposalItem = ({ proposal }) => {
                   <ProgressBar now={totalPercent()} />
                 </div>
               </>
+            ) : (
+              <Row>
+                <Col>
+                  <div className="output-card mb-2">{type?.longDesc}</div>
+                </Col>
+              </Row>
             )}
           </Card.Body>
           <Card.Footer>
