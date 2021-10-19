@@ -7,7 +7,6 @@ import {
   Popover,
   ProgressBar,
   Badge,
-  Accordion,
   Overlay,
   Form,
   OverlayTrigger,
@@ -23,15 +22,13 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../utils/bigNumber'
-import { getExplorerContract } from '../../utils/extCalls'
-import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
+import { changeNetworkLsOnly, getNetwork } from '../../utils/web3'
 import { Icon } from '../Icons/icons'
 
 const Supply = () => {
   const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const web3 = useWeb3()
-  const addr = getAddresses()
   const pool = usePool()
   const sparta = useSparta()
   const reserve = useReserve()
@@ -39,20 +36,6 @@ const Supply = () => {
   const target = useRef(null)
   const [showDropdown, setshowDropdown] = useState(false)
 
-  const addrNames = [
-    'spartav1',
-    'spartav2',
-    'bondVault',
-    'dao',
-    'daoVault',
-    'fallenSpartans',
-    'poolFactory',
-    'reserve',
-    'router',
-    'synthFactory',
-    'synthVault',
-    'utils',
-  ]
   // V1 (Protocol) Token Distribution
   const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
   const distroMnBondV1 = '17500000' // SPARTA minted via Bond (V1 TOKEN)
@@ -207,16 +190,6 @@ const Supply = () => {
                 />
               </span>
             </Form>
-            <span className="output-card">
-              {t('globalFreeze')}:
-              <Badge
-                pill
-                className="ms-1 pt-1"
-                bg={reserve.globalDetails.globalFreeze ? 'primary' : 'success'}
-              >
-                {reserve.globalDetails.globalFreeze ? t('on') : t('off')}
-              </Badge>
-            </span>
           </Popover.Header>
           <Popover.Body>
             <Row>
@@ -479,51 +452,6 @@ const Supply = () => {
             </Row>
 
             <br />
-
-            <Row>
-              <Col xs="12">
-                <Accordion>
-                  <Accordion.Item eventKey="0">
-                    <Accordion.Header>
-                      <Icon
-                        icon="contract"
-                        size="20"
-                        fill="#fb2715"
-                        className="me-2"
-                      />
-                      {t('contracts')}
-                    </Accordion.Header>
-                    <Accordion.Body className="p-1">
-                      <Row className="card-body text-center p-2">
-                        {addrNames
-                          .filter((x) => addr[x] !== '')
-                          .map((c) => (
-                            <Col key={c} xs={6} className="mb-1 px-1">
-                              <a
-                                href={getExplorerContract(addr[c])}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                <h6>
-                                  <Badge bg="info" className="w-100">
-                                    {t(c)}
-                                    <br />
-                                    <Icon
-                                      icon="scan"
-                                      size="12"
-                                      className="mt-1"
-                                    />
-                                  </Badge>
-                                </h6>
-                              </a>
-                            </Col>
-                          ))}
-                      </Row>
-                    </Accordion.Body>
-                  </Accordion.Item>
-                </Accordion>
-              </Col>
-            </Row>
           </Popover.Body>
         </Popover>
       </Overlay>
