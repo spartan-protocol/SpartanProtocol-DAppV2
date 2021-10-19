@@ -3,7 +3,7 @@ import * as Types from './types'
 const initialState = {
   global: false,
   bondDetails: false,
-  totalWeight: '0',
+  totalWeight: false,
   listedAssets: false,
   member: false,
   txn: [],

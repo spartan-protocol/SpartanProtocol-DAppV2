@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col, Card, Form } from 'react-bootstrap'
+import { Row, Col, Card, Button, Tabs, Tab } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
+import { Link } from 'react-router-dom'
 import ProposalItem from './ProposalItem'
 import { useDao } from '../../../store/dao/selector'
 import {
@@ -15,19 +16,25 @@ import {
 } from '../../../store/dao/actions'
 import NewProposal from './NewProposal'
 import { getNetwork, tempChains } from '../../../utils/web3'
+import { convertTimeUnits } from '../../../utils/math/nonContract'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
 import {
   allListedAssets,
   bondVaultWeight,
   getBondDetails,
+  useBond,
 } from '../../../store/bond'
 import { getSynthDetails } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { BN, formatFromWei } from '../../../utils/bigNumber'
+import { Icon } from '../../../components/Icons/icons'
+import { proposalTypes } from './types'
 
 const Overview = () => {
   const dispatch = useDispatch()
+  const bond = useBond()
   const dao = useDao()
   const pool = usePool()
   const synth = useSynth()
@@ -98,89 +105,245 @@ const Overview = () => {
     return false
   }
 
+  const totalWeight = () => {
+    if (dao.totalWeight && bond.totalWeight) {
+      const _totalWeight = BN(dao.totalWeight).plus(bond.totalWeight)
+      if (_totalWeight > 0) {
+        return formatFromWei(_totalWeight, 0)
+      }
+      return '0.00'
+    }
+    return 'Loading...'
+  }
+
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('dao')}</h2>
-              <NewProposal />
-            </div>
-          </Col>
-        </Row>
         {tempChains.includes(network.chainId) && (
           <>
-            <Form.Group as={Row} className="row-480 mb-3">
-              <Col xs="12">
-                <Form.Check
-                  label={t('open')}
-                  inline
-                  name="group1"
-                  type="radio"
-                  id="viewCurrent"
-                  defaultChecked
-                  onClick={() => setSelectedView('current')}
-                />
-                <Form.Check
-                  label={t('completed')}
-                  inline
-                  name="group1"
-                  type="radio"
-                  id="viewComplete"
-                  onClick={() => setSelectedView('complete')}
-                />
-                <Form.Check
-                  label={t('failed')}
-                  inline
-                  name="group1"
-                  type="radio"
-                  id="viewFailed"
-                  onClick={() => setSelectedView('failed')}
-                />
+            <Row className="row-480">
+              <Col>
+                <Tabs
+                  activeKey={selectedView}
+                  onSelect={(k) => setSelectedView(k)}
+                  className="mb-3 card-480"
+                >
+                  <Tab eventKey="current" title={t('open')} />
+                  <Tab eventKey="complete" title={t('completed')} />
+                  <Tab eventKey="failed" title={t('failed')} />
+                </Tabs>
               </Col>
-            </Form.Group>
-            {!isLoading() ? (
-              <Row className="row-480">
-                {dao.proposal.length > 0 ? (
-                  <>
-                    {selectedView === 'current' &&
-                      (dao.proposal[dao.global.currentProposal - 1] ? (
-                        <ProposalItem
-                          key={dao.proposal[dao.global.currentProposal - 1].id}
-                          proposal={
-                            dao.proposal[dao.global.currentProposal - 1]
-                          }
-                        />
-                      ) : (
-                        t('noOpenProposalsInfo')
-                      ))}
-                    {selectedView === 'complete' &&
-                      dao.proposal
-                        .filter((pid) => pid.finalised)
-                        .sort((a, b) => b.id - a.id)
-                        .map((pid) => (
-                          <ProposalItem key={pid.id} proposal={pid} />
+            </Row>
+            <Row className="row-480">
+              <Col xs="auto" className="">
+                <Card
+                  xs="auto"
+                  className="card-320"
+                  style={{ minHeight: '320px' }}
+                >
+                  <Card.Header>
+                    {t('daoProposals')}
+                    <Card.Subtitle className="">
+                      {t('helpGovern')}
+                    </Card.Subtitle>
+                  </Card.Header>
+                  {!isLoading() ? (
+                    <Card.Body>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('proposalCount')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          {dao.global.currentProposal}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('daoRunning')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          {dao.global.running ? 'Yes' : 'No'}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('coolOffPeriod')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          {convertTimeUnits(dao.global.coolOffPeriod, t)}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('cancelPeriod')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          {convertTimeUnits(dao.global.cancelPeriod, t)}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('totalWeight')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          {totalWeight()}
+                          <Icon
+                            icon="spartav2"
+                            size="20"
+                            className="mb-1 ms-1"
+                          />
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  ) : (
+                    <HelmetLoading />
+                  )}
+
+                  <Card.Footer>
+                    <Link to="/vaults">
+                      <Button className="w-100">{t('addWeight')}</Button>
+                    </Link>
+                    <NewProposal />
+                  </Card.Footer>
+                </Card>
+              </Col>
+
+              {!isLoading() ? (
+                <>
+                  {dao.proposal.length > 0 ? (
+                    <>
+                      {selectedView === 'current' &&
+                        (dao.proposal[dao.global.currentProposal - 1] ? (
+                          <>
+                            <ProposalItem
+                              key={
+                                dao.proposal[dao.global.currentProposal - 1].id
+                              }
+                              proposal={
+                                dao.proposal[dao.global.currentProposal - 1]
+                              }
+                            />
+                            <Col>
+                              <Card
+                                className="card-320 card-underlay"
+                                style={{ minHeight: '320px' }}
+                              >
+                                <Card.Header>
+                                  {
+                                    proposalTypes.filter(
+                                      (i) =>
+                                        i.value ===
+                                        dao.proposal[
+                                          dao.global.currentProposal - 1
+                                        ].proposalType,
+                                    )[0].label
+                                  }
+                                  <Card.Subtitle className="">
+                                    {
+                                      proposalTypes.filter(
+                                        (i) =>
+                                          i.value ===
+                                          dao.proposal[
+                                            dao.global.currentProposal - 1
+                                          ].proposalType,
+                                      )[0].desc
+                                    }
+                                  </Card.Subtitle>
+                                </Card.Header>
+                                <Card.Body className="pb-0 output-card">
+                                  {
+                                    proposalTypes.filter(
+                                      (i) =>
+                                        i.value ===
+                                        dao.proposal[
+                                          dao.global.currentProposal - 1
+                                        ].proposalType,
+                                    )[0].longDesc
+                                  }
+                                </Card.Body>
+                                {proposalTypes.filter(
+                                  (i) =>
+                                    i.value ===
+                                    dao.proposal[dao.global.currentProposal - 1]
+                                      .proposalType,
+                                )[0].docsLink && (
+                                  <Card.Footer>
+                                    <a
+                                      href={
+                                        proposalTypes.filter(
+                                          (i) =>
+                                            i.value ===
+                                            dao.proposal[
+                                              dao.global.currentProposal - 1
+                                            ].proposalType,
+                                        )[0].docsLink
+                                      }
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      <Button className="w-100">
+                                        {t('viewInDocs')}
+                                        <Icon
+                                          icon="scan"
+                                          size="15"
+                                          className="ms-2 mb-1"
+                                        />
+                                      </Button>
+                                    </a>
+                                  </Card.Footer>
+                                )}
+                              </Card>
+                            </Col>
+                          </>
+                        ) : (
+                          t('noOpenProposalsInfo')
                         ))}
-                    {selectedView === 'failed' &&
-                      dao.proposal
-                        .filter((pid) => !pid.open && !pid.finalised)
-                        .sort((a, b) => b.id - a.id)
-                        .map((pid) => (
-                          <ProposalItem key={pid.id} proposal={pid} />
+                      {selectedView === 'complete' &&
+                        (dao.proposal.filter((pid) => pid.finalised).length >
+                        0 ? (
+                          dao.proposal
+                            .filter((pid) => pid.finalised)
+                            .sort((a, b) => b.id - a.id)
+                            .map((pid) => (
+                              <ProposalItem key={pid.id} proposal={pid} />
+                            ))
+                        ) : (
+                          <Col xs="auto">
+                            <Card className="card-320 card-underlay">
+                              <Card.Body>{t('noValidProposals')}</Card.Body>
+                            </Card>
+                          </Col>
                         ))}
-                  </>
-                ) : (
-                  <Col xs="auto">
-                    <Card className="card-320 card-underlay">
-                      <Card.Body>{t('noValidProposals')}</Card.Body>
-                    </Card>
-                  </Col>
-                )}
-              </Row>
-            ) : (
-              <HelmetLoading height={200} width={200} />
-            )}
+                      {selectedView === 'failed' &&
+                        (dao.proposal.filter(
+                          (pid) => !pid.open && !pid.finalised,
+                        ).length > 0 ? (
+                          dao.proposal
+                            .filter((pid) => !pid.open && !pid.finalised)
+                            .sort((a, b) => b.id - a.id)
+                            .map((pid) => (
+                              <ProposalItem key={pid.id} proposal={pid} />
+                            ))
+                        ) : (
+                          <Col xs="auto">
+                            <Card className="card-320 card-underlay">
+                              <Card.Body>{t('noValidProposals')}</Card.Body>
+                            </Card>
+                          </Col>
+                        ))}
+                    </>
+                  ) : (
+                    <Col xs="auto">
+                      <Card className="card-320 card-underlay">
+                        <Card.Body>{t('noValidProposals')}</Card.Body>
+                      </Card>
+                    </Col>
+                  )}
+                </>
+              ) : (
+                <HelmetLoading height={200} width={200} />
+              )}
+            </Row>
           </>
         )}
         {!tempChains.includes(network.chainId) && <WrongNetwork />}

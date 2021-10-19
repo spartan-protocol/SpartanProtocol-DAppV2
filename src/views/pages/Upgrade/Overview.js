@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Row, Col } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { fallenSpartansCheck } from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
@@ -9,7 +8,6 @@ import Upgrade from './Upgrade'
 const Overview = () => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
-  const { t } = useTranslation()
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -36,13 +34,6 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">{t('upgrade')}</h2>
-            </div>
-          </Col>
-        </Row>
         <Row className="row-480">
           <Upgrade />
         </Row>
