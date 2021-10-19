@@ -13,6 +13,7 @@
     font-size: 24px;
     line-height: 40px;
     color: #ffffff;
+    margin-right: 0.1rem;
   }
 }
 
@@ -45,20 +46,20 @@
 }
 
 .header {
-  height: 67px; 
-  margin-bottom:0;
+  height: 67px;
+  margin-bottom: 0;
   border-top: 2px solid #fb2715;
   border-bottom: 1px solid #00000020;
 }
 
 .footer {
   border-top: 1px solid #00000020;
-  height: 67px; 
+  height: 67px;
 }
 
 // WHITE MODE
 .white-content {
   .navbar {
-    background: #FFF;
+    background: #fff;
   }
 }

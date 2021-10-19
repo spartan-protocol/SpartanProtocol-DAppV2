@@ -25,7 +25,7 @@ const ThemeSwitcher = () => {
     document.body.classList.toggle('white-content')
   }
 
-  const btnClass = 'btn-transparent align-self-center mx-1'
+  const btnClass = 'btn-transparent align-self-center me-1'
 
   return (
     <>
