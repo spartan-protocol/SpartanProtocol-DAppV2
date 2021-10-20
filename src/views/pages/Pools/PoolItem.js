@@ -79,6 +79,9 @@ const PoolItem = ({ asset }) => {
     const scale = BN(200)
     const multi = BN(100)
     const ratio = getRatioPC()
+    if (safety <= 0) {
+      return 50
+    }
     if (BN(newRate).isLessThan(oldRate)) {
       return BN(50).minus(ratio.div(scale).times(multi)) + 0
     }

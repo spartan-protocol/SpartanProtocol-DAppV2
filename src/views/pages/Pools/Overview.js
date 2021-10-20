@@ -31,7 +31,6 @@ const Overview = () => {
     const timer = setTimeout(() => {
       getData()
       settrigger0(trigger0 + 1)
-      if (pool) console.log(pool.poolDetails)
     }, 2000)
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
