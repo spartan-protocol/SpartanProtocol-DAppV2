@@ -166,7 +166,7 @@ export const addressesMN = {
   fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6', // EARLIER; CHECK
   poolFactory: '0x2C577706579E08A88bd30df0Fd7A5778A707c3AD', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   reserve: '0x5aB5bbe3044E58303A189d3D28f6da31e9217F9F', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
-  router: '0x03662D8347aC1487e01FCE1CA679e8484ef954a3', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  router: '0x1Fe7230Ed8E4fe636d76BE497490b0d5440FC19a', // 2296f97f8a980ed4a838688be0e9f295d265dc8b
   synthFactory: '0x8b2643D95DeaD636EC3ba5F720809541c3355f4e', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   utils: '0x82b67e7A325def377f62401126cc54eEE73719ec', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
@@ -204,7 +204,7 @@ export const bscRpcsMN = [
 ]
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
-export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
 
 export const getTwAssetId = (tokenAddr) => {
