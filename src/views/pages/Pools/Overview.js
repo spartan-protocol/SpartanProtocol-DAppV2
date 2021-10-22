@@ -5,6 +5,7 @@ import { Badge, Card, Col, Nav, Row } from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork, tempChains } from '../../../utils/web3'
+import { convertToWei, BN } from '../../../utils/bigNumber'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
@@ -60,12 +61,27 @@ const Overview = () => {
 
   const getPools = () =>
     pool.poolDetails
-      .filter((asset) => asset.baseAmount > 0 && asset.newPool === false)
+      .filter(
+        (asset) =>
+          asset.baseAmount > 0 &&
+          asset.newPool === false &&
+          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('100000')),
+      )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getNewPools = () =>
     pool?.poolDetails
       .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
+      .sort((a, b) => b.baseAmount - a.baseAmount)
+
+  const getShallowPools = () =>
+    pool?.poolDetails
+      .filter(
+        (asset) =>
+          asset.baseAmount > 0 &&
+          asset.newPool === false &&
+          BN(asset.baseAmount).isLessThan(convertToWei('100000')),
+      )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const [firstLoad, setFirstLoad] = useState(true)
@@ -123,6 +139,29 @@ const Overview = () => {
                             setActiveTab('2')
                           }}
                         >
+                          {t('Shallow')}
+                          <Badge bg="primary" className="ms-2">
+                            {!isLoading() ? (
+                              getShallowPools().length
+                            ) : (
+                              <Icon
+                                icon="cycle"
+                                size="15"
+                                className="anim-spin"
+                              />
+                            )}
+                          </Badge>
+                        </Nav.Link>
+                      </Nav.Item>
+
+                      <Nav.Item key="3" className="rounded-pill-top-right">
+                        <Nav.Link
+                          className="rounded-pill-top-right"
+                          eventKey="3"
+                          onClick={() => {
+                            setActiveTab('3')
+                          }}
+                        >
                           {t('new')}
                           <Badge bg="primary" className="ms-2">
                             {!isLoading() ? (
@@ -157,6 +196,17 @@ const Overview = () => {
                           </>
                         )}
                         {activeTab === '2' && (
+                          <>
+                            {getShallowPools().length > 0 ? (
+                              getShallowPools().map((asset) => (
+                                <PoolItem key={asset.address} asset={asset} />
+                              ))
+                            ) : (
+                              <Col>There are no shallow pools</Col>
+                            )}
+                          </>
+                        )}
+                        {activeTab === '3' && (
                           <>
                             {getNewPools().length > 0 ? (
                               getNewPools().map((asset) => (
