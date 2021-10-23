@@ -197,23 +197,23 @@ const Overview = () => {
                         )}
                         {activeTab === '2' && (
                           <>
-                            {getShallowPools().length > 0 ? (
-                              getShallowPools().map((asset) => (
-                                <PoolItem key={asset.address} asset={asset} />
-                              ))
-                            ) : (
-                              <Col>There are no shallow pools</Col>
-                            )}
-                          </>
-                        )}
-                        {activeTab === '3' && (
-                          <>
                             {getNewPools().length > 0 ? (
                               getNewPools().map((asset) => (
                                 <PoolItem key={asset.address} asset={asset} />
                               ))
                             ) : (
                               <Col>There are no new/initializing pools</Col>
+                            )}
+                          </>
+                        )}
+                        {activeTab === '3' && (
+                          <>
+                            {getShallowPools().length > 0 ? (
+                              getShallowPools().map((asset) => (
+                                <PoolItem key={asset.address} asset={asset} />
+                              ))
+                            ) : (
+                              <Col>There are no shallow pools</Col>
                             )}
                           </>
                         )}
