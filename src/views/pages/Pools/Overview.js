@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Badge, Card, Col, Nav, Row } from 'react-bootstrap'
+import {
+  Badge,
+  Card,
+  Col,
+  Form,
+  Nav,
+  OverlayTrigger,
+  Row,
+} from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork, tempChains } from '../../../utils/web3'
@@ -11,6 +19,7 @@ import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -18,6 +27,7 @@ const Overview = () => {
   const pool = usePool()
 
   const [activeTab, setActiveTab] = useState('1')
+  const [showBabies, setShowBabies] = useState(false)
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -61,27 +71,16 @@ const Overview = () => {
 
   const getPools = () =>
     pool.poolDetails
-      .filter(
-        (asset) =>
-          asset.baseAmount > 0 &&
-          asset.newPool === false &&
-          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')),
+      .filter((asset) =>
+        asset.baseAmount > 0 && asset.newPool === false && showBabies
+          ? BN(asset.baseAmount).isGreaterThanOrEqualTo(1)
+          : BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')),
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getNewPools = () =>
     pool?.poolDetails
       .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
-      .sort((a, b) => b.baseAmount - a.baseAmount)
-
-  const getShallowPools = () =>
-    pool?.poolDetails
-      .filter(
-        (asset) =>
-          asset.baseAmount > 0 &&
-          asset.newPool === false &&
-          BN(asset.baseAmount).isLessThan(convertToWei('10000')),
-      )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const [firstLoad, setFirstLoad] = useState(true)
@@ -153,29 +152,6 @@ const Overview = () => {
                           </Badge>
                         </Nav.Link>
                       </Nav.Item>
-
-                      <Nav.Item key="3" className="rounded-pill-top-right">
-                        <Nav.Link
-                          className="rounded-pill-top-right"
-                          eventKey="3"
-                          onClick={() => {
-                            setActiveTab('3')
-                          }}
-                        >
-                          <Icon icon="bin" size="15" />
-                          <Badge bg="primary" className="ms-2">
-                            {!isLoading() ? (
-                              getShallowPools().length
-                            ) : (
-                              <Icon
-                                icon="cycle"
-                                size="15"
-                                className="anim-spin"
-                              />
-                            )}
-                          </Badge>
-                        </Nav.Link>
-                      </Nav.Item>
                     </Nav>
                   </Card.Header>
                   {!isLoading() ? (
@@ -183,6 +159,33 @@ const Overview = () => {
                       <Row>
                         {activeTab === '1' && (
                           <>
+                            <Form className="">
+                              <span className="output-card">
+                                {t('showHidden')}
+                                <OverlayTrigger
+                                  placement="auto"
+                                  overlay={Tooltip(t, 'hiddenPools')}
+                                >
+                                  <span role="button">
+                                    <Icon
+                                      icon="info"
+                                      className="ms-1 mb-1"
+                                      size="15"
+                                      // fill={isLightMode ? 'black' : 'white'}
+                                    />
+                                  </span>
+                                </OverlayTrigger>
+                                <Form.Check
+                                  type="switch"
+                                  id="custom-switch"
+                                  className="ms-2 d-inline-flex"
+                                  checked={showBabies}
+                                  onChange={() => {
+                                    setShowBabies(!showBabies)
+                                  }}
+                                />
+                              </span>
+                            </Form>
                             {getPools().length > 0 ? (
                               getPools().map((asset) => (
                                 <PoolItem key={asset.address} asset={asset} />
@@ -203,17 +206,6 @@ const Overview = () => {
                               ))
                             ) : (
                               <Col>There are no new/initializing pools</Col>
-                            )}
-                          </>
-                        )}
-                        {activeTab === '3' && (
-                          <>
-                            {getShallowPools().length > 0 ? (
-                              getShallowPools().map((asset) => (
-                                <PoolItem key={asset.address} asset={asset} />
-                              ))
-                            ) : (
-                              <Col>There are no shallow pools</Col>
                             )}
                           </>
                         )}

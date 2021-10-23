@@ -114,11 +114,11 @@ export const addressesTN = {
   utils11: '0x1C7437c145bD0bb7EE0dcFD30434173893596ee1', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
   // CURRENT ADDRESSES
   bondVault: '0xF935EF68dda8d0bc7bfD10738f761C5675d15A54', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  dao: '0x66290cAb4f046C364A221FA09D7fCD5e66d31BDb', // 2a6b2b28c94888387a7000519d9cbb799cde15e9
+  dao: '0x0081D00b0388A96D07B9a06B0F03E5a0296983Cc ', // 3 COMMITS AFTER de15e9
   daoVault: '0x802B266388D54eb00CaE497F03C83fc05173AD56', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
   poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  reserve: '0xE4D1b41c79b34dFFED8E3EC379377Ba957BFe55d ', // 2 COMMITS AFTER de15e9
+  reserve: '0xE4D1b41c79b34dFFED8E3EC379377Ba957BFe55d', // 2 COMMITS AFTER de15e9
   router: '0xBF180e2dcb6A23A894DA60894FC95dF2d6A681A3', // 2a6b2b28c94888387a7000519d9cbb799cde15e9
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
@@ -128,6 +128,7 @@ export const addressesTN = {
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
   spartav1: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
   spartav2: '0xd055ADFdD53963F578A929eaA440DBED95407472',
+  busdp: '0xd861414a977a25CbeDcb7167A171c0d129Ca55ba',
 }
 
 // List of BSC Mainnet Addresses
@@ -175,6 +176,7 @@ export const addressesMN = {
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   spartav1: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
   spartav2: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
+  busdp: '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
 }
 
 export const bscRpcsTN = [
@@ -205,6 +207,7 @@ export const bscRpcsMN = [
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+export const polChains = [97] // Currently enabled POL chains - add mainnet here once POL is merged on mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
 
 export const getTwAssetId = (tokenAddr) => {

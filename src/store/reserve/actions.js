@@ -3,6 +3,7 @@ import { payloadToDispatch, errorToDispatch } from '../helpers'
 import {
   getReserveContract,
   getSpartaV2Contract,
+  getTokenContract,
 } from '../../utils/web3Contracts'
 import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
 
@@ -19,6 +20,7 @@ export const getReserveGlobalDetails = () => async (dispatch) => {
   const addr = getAddresses()
   const contract = getReserveContract()
   const spartaContract = getSpartaV2Contract()
+  const busdpContract = getTokenContract(addr.busdp)
   try {
     let awaitArray = [
       contract.callStatic.emissions(),
@@ -26,12 +28,14 @@ export const getReserveGlobalDetails = () => async (dispatch) => {
       tempChains.includes(getNetwork().chainId)
         ? contract.callStatic.globalFreeze()
         : false,
+      busdpContract.callStatic.balanceOf(addr.reserve),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
       emissions: awaitArray[0],
       spartaBalance: awaitArray[1].toString(),
       globalFreeze: awaitArray[2],
+      busdpBalance: awaitArray[3].toString(),
     }
     dispatch(payloadToDispatch(Types.RESERVE_GLOBAL_DETAILS, globalDetails))
   } catch (error) {

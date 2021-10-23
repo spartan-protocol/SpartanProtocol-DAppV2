@@ -31,6 +31,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       variable: { days: variable },
     },
     {
+      id: 'hiddenPools',
+      title: 'hiddenPools',
+      body: 'hiddenPoolsInfo',
+    },
+    {
       id: 'newPool',
       title: 'poolInitializing',
       body: 'newPoolInfo',
