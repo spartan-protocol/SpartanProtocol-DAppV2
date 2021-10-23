@@ -65,7 +65,7 @@ const Overview = () => {
         (asset) =>
           asset.baseAmount > 0 &&
           asset.newPool === false &&
-          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('100000')),
+          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')),
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
@@ -80,7 +80,7 @@ const Overview = () => {
         (asset) =>
           asset.baseAmount > 0 &&
           asset.newPool === false &&
-          BN(asset.baseAmount).isLessThan(convertToWei('100000')),
+          BN(asset.baseAmount).isLessThan(convertToWei('10000')),
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
@@ -139,10 +139,10 @@ const Overview = () => {
                             setActiveTab('2')
                           }}
                         >
-                          {t('Shallow')}
+                          {t('new')}
                           <Badge bg="primary" className="ms-2">
                             {!isLoading() ? (
-                              getShallowPools().length
+                              getNewPools().length
                             ) : (
                               <Icon
                                 icon="cycle"
@@ -162,10 +162,10 @@ const Overview = () => {
                             setActiveTab('3')
                           }}
                         >
-                          {t('new')}
+                          <Icon icon="bin" size="15" />
                           <Badge bg="primary" className="ms-2">
                             {!isLoading() ? (
-                              getNewPools().length
+                              getShallowPools().length
                             ) : (
                               <Icon
                                 icon="cycle"
