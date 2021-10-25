@@ -155,7 +155,7 @@ ethereum(network: $network){
   const [totalWidth, settotalWidth] = useState(0)
   useEffect(() => {
     settotalWidth(
-      BN(totalUSD).div(100000000000000000000000).times(100).toString(),
+      BN(totalUSD).div(9000000000000000000000).times(100).toString(),
     )
   }, [totalUSD])
 
@@ -290,7 +290,7 @@ ethereum(network: $network){
                     <ProgressBar style={{ height: '26px' }}>
                       <ProgressBar
                         variant={progColor}
-                        now={totalWidth * 5}
+                        now={totalWidth}
                         label={
                           totalWidth > 50 &&
                           `$${formatFromWei(totalUSD, 0)} (${t('donations')})`
@@ -298,7 +298,7 @@ ethereum(network: $network){
                       />
                       <ProgressBar
                         variant="black"
-                        now={100 - totalWidth * 5}
+                        now={100 - totalWidth}
                         label={
                           totalWidth <= 50 &&
                           `$${formatFromWei(totalUSD, 0)} (${t('donations')})`

@@ -25,7 +25,7 @@ import { getPool, getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardDao } from '../../../utils/math/dao'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import DaoVaultItem from './DaoVaultItem'
-import { getAddresses, getNetwork, polChains } from '../../../utils/web3'
+import { getAddresses } from '../../../utils/web3'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -121,25 +121,13 @@ const DaoVault = () => {
     return '0.00'
   }
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return getNetwork()
-    }
-  }
-
   const getClaimable = () => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    const isPol = polChains.includes(chainId)
     const reward = calcCurrentRewardDao(
       pool.poolDetails,
       bond,
       dao,
       sparta.globalDetails.secondsPerEra,
-      isPol
-        ? reserve.globalDetails.busdpBalance
-        : reserve.globalDetails.spartaBalance,
+      reserve.globalDetails.spartaBalance,
     )
     if (reward > 0) {
       return reward
