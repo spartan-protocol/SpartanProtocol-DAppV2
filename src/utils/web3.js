@@ -118,11 +118,11 @@ export const addressesTN = {
   daoVault: '0x802B266388D54eb00CaE497F03C83fc05173AD56', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
   poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  reserve: '0x17F5B7E7141Fd284041B4aE00Ad5D6442c51FB09', // 1? COMMIT AFTER fb9129 ?
-  router: '0xb080D1530504bF2c9Fc7478841798a6A38749eee', // 1? COMMIT AFTER fb9129 ?
+  reserve: '0x17F5B7E7141Fd284041B4aE00Ad5D6442c51FB09', // e127b7a9b6d4ea55fe75f3b8e11f7f210599d27a
+  router: '0xb080D1530504bF2c9Fc7478841798a6A38749eee', // e127b7a9b6d4ea55fe75f3b8e11f7f210599d27a
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  utils: '0x914647126cfE1004bCF9d0a5EeBdE931CA78e0c4', // *CHECK*
+  utils: '0x914647126cfE1004bCF9d0a5EeBdE931CA78e0c4', // 61b80a66675c16e40741374353371595c1213c34 ???
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -207,7 +207,6 @@ export const bscRpcsMN = [
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
-export const polChains = [97] // Currently enabled POL chains - add mainnet here once POL is merged on mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
 
 export const getTwAssetId = (tokenAddr) => {
