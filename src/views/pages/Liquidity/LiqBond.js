@@ -35,6 +35,7 @@ import { useSparta } from '../../../store/sparta'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
 import NewPool from '../Pools/NewPool'
+import PoolSelect from '../../../components/PoolSelect/PoolSelect'
 import Share from '../../../components/Share/SharePool'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import { bondLiq } from '../../../utils/math/dao'
@@ -239,6 +240,8 @@ const LiqBond = () => {
               </Col>
               <Col className="text-end">
                 <NewPool />
+                &nbsp;
+                <PoolSelect />
               </Col>
             </Row>
           </Card.Header>

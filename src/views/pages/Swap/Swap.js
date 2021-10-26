@@ -40,6 +40,7 @@ import SharePool from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
 import NewPool from '../Pools/NewPool'
+import PoolSelect from '../../../components/PoolSelect/PoolSelect'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from '../Liquidity/Components/Utils'
@@ -636,6 +637,8 @@ const Swap = () => {
                           </Col>
                           <Col className="text-end">
                             <NewPool />
+                            &nbsp;
+                            <PoolSelect />
                           </Col>
                         </Row>
                       </Card.Header>
