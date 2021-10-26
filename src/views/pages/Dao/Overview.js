@@ -99,7 +99,7 @@ const Overview = () => {
     if (!pool.poolDetails) {
       return true
     }
-    if (dao.global.currentProposal === 0 && !dao.proposal) {
+    if (dao.global.currentProposal === 0 || !dao.proposal) {
       return true
     }
     return false
@@ -213,7 +213,7 @@ const Overview = () => {
                   {dao.proposal.length > 0 ? (
                     <>
                       {selectedView === 'current' &&
-                        (dao.proposal[dao.global.currentProposal - 1] ? (
+                        (dao.proposal[dao.global.currentProposal - 1].open ? (
                           <>
                             <ProposalItem
                               key={
@@ -296,7 +296,11 @@ const Overview = () => {
                             </Col>
                           </>
                         ) : (
-                          t('noOpenProposalsInfo')
+                          <Col xs="auto">
+                            <Card className="card-320 card-underlay">
+                              <Card.Body>{t('noOpenProposalsInfo')}</Card.Body>
+                            </Card>
+                          </Col>
                         ))}
                       {selectedView === 'complete' &&
                         (dao.proposal.filter((pid) => pid.finalised).length >
