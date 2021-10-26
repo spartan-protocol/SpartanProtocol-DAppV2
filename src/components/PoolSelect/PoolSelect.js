@@ -237,7 +237,7 @@ const PoolSelect = () => {
                           <Col xs="3" md="3" className="text-end p-0 pe-2">
                             <Button
                               size="xs"
-                              variant="primary"
+                              variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
                                 history.push(
@@ -252,7 +252,7 @@ const PoolSelect = () => {
                           <Col xs="3" md="3" className="text-end p-0 pe-2">
                             <Button
                               size="xs"
-                              variant="primary"
+                              variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
                                 history.push(
