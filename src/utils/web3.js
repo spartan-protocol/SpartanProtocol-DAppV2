@@ -118,7 +118,7 @@ export const addressesTN = {
   daoVault: '0x802B266388D54eb00CaE497F03C83fc05173AD56', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
   poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  reserve: '0x1436E44adA3A6b291c7c1fC9682E18e2EA71C161', // 0c94dee8ec91410e65b8f7c9c5b8b5f58ba3a152
+  reserve: '0x29f8e4CA0bF807F99DCEeBDbbC8e0d2332517565', //
   router: '0x61e3F2Fe1944E5C72f10bA2B1dd9bBe142249ED3', // 0c94dee8ec91410e65b8f7c9c5b8b5f58ba3a152
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
@@ -166,7 +166,7 @@ export const addressesMN = {
   daoVault: '0x4102773565d82C8B0785f1262cfe75F04F170777', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6', // EARLIER; CHECK
   poolFactory: '0x2C577706579E08A88bd30df0Fd7A5778A707c3AD', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
-  reserve: '0x3E22a572430C10ABB6D0508fD567dCf62FD83c0f', // 0c94dee8ec91410e65b8f7c9c5b8b5f58ba3a152
+  reserve: '0xe548561782c2F4f1145B654A41C47F49159913B0', //
   router: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be', // 0c94dee8ec91410e65b8f7c9c5b8b5f58ba3a152
   synthFactory: '0x8b2643D95DeaD636EC3ba5F720809541c3355f4e', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
@@ -402,9 +402,9 @@ export const getNetwork = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider) => {
   const network = getNetwork()
-  let provider = new ethers.providers.JsonRpcProvider(
+  let provider = new ethers.providers.StaticJsonRpcProvider(
     changeRpc(network.chainId),
-  ) // simple provider unsigned
+  ) // simple provider unsigned & cached chainId
   if (_provider) {
     provider = _provider.getSigner()
   }
