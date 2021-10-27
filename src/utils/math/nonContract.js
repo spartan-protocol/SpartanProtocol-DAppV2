@@ -155,6 +155,20 @@ export const getSynthWeights = (synthDetails, poolDetails) => {
 }
 
 /**
+ * Get the SPARTA value of all reserve LPs
+ * @param polDetails
+ * @returns polWeight
+ */
+export const getPOLWeights = (polDetails) => {
+  let polWeight = BN(0)
+  for (let i = 0; i < polDetails.length; i++) {
+    const _total = BN(polDetails[i].spartaLocked)
+    polWeight = polWeight.plus(_total)
+  }
+  return polWeight
+}
+
+/**
  * Return time in block.timeStamp format
  * @returns timeStamp
  */
