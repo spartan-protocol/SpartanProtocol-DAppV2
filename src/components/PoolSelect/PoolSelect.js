@@ -136,8 +136,6 @@ const PoolSelect = () => {
           asset.symbol.toLowerCase().includes(searchInput.value.toLowerCase()),
         )
       }
-
-      finalArray = finalArray.sort((a, b) => b.balance - a.balance)
       setLpsArray(finalArray)
     }
   }, [pool.poolDetails, searchInput?.value])
