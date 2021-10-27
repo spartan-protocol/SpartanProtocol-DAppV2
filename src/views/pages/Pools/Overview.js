@@ -187,9 +187,11 @@ const Overview = () => {
                               </span>
                             </Form>
                             {getPools().length > 0 ? (
-                              getPools().map((asset) => (
-                                <PoolItem key={asset.address} asset={asset} />
-                              ))
+                              getPools()
+                                .filter((x) => !x.newPool)
+                                .map((asset) => (
+                                  <PoolItem key={asset.address} asset={asset} />
+                                ))
                             ) : (
                               <Col>
                                 There are no initialised pools with more than 7
