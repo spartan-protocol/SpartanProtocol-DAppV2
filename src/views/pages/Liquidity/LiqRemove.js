@@ -39,7 +39,6 @@ import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from './Components/Utils'
 import Share from '../../../components/Share/SharePool'
 import NewPool from '../Pools/NewPool'
-import PoolSelect from '../../../components/PoolSelect/PoolSelect'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
@@ -366,8 +365,6 @@ const LiqRemove = () => {
               </Col>
               <Col className="text-end">
                 <NewPool />
-                &nbsp;
-                <PoolSelect />
               </Col>
             </Row>
             <Nav activeKey={activeTab} fill>

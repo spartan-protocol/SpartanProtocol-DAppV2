@@ -36,7 +36,6 @@ import { useSparta } from '../../../store/sparta'
 import { Icon } from '../../../components/Icons/icons'
 import { balanceWidths } from './Components/Utils'
 import NewPool from '../Pools/NewPool'
-import PoolSelect from '../../../components/PoolSelect/PoolSelect'
 import Share from '../../../components/Share/SharePool'
 import {
   calcLiqValue,
@@ -438,8 +437,6 @@ const LiqAdd = () => {
               </Col>
               <Col className="text-end">
                 <NewPool />
-                &nbsp;
-                <PoolSelect />
               </Col>
             </Row>
             <Nav activeKey={activeTab} fill>

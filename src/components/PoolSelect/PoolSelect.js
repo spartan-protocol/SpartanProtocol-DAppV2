@@ -43,7 +43,6 @@ const PoolSelect = () => {
   const web3 = useWeb3()
 
   const [trigger0, settrigger0] = useState(0)
-  const [times, setTimes] = useState(0)
 
   const [network, setnetwork] = useState(getNetwork())
 
@@ -75,7 +74,7 @@ const PoolSelect = () => {
 
   const getPools = () =>
     pool.poolDetails
-      .filter((asset) => asset.baseAmount > 0 && asset.newPool === false)
+      .filter((asset) => asset.baseAmount > 0)
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   useEffect(() => {
@@ -96,11 +95,6 @@ const PoolSelect = () => {
 
     if (!isLoading()) {
       const tempArray = getPools()
-      if (times === 0) {
-        console.log(pool.poolDetails)
-        console.log(tempArray[0].balance)
-        setTimes(1)
-      }
       for (let i = 0; i < tempArray.length; i++) {
         if (tempArray[i].address) {
           finalArray.push({
@@ -256,7 +250,7 @@ const PoolSelect = () => {
                               className="w-100 rounded-pill"
                               onClick={() =>
                                 history.push(
-                                  `/liquidity?asset1=${asset.tokenAddress}`,
+                                  `/liquidity?asset1=${asset.address}`,
                                 )
                               }
                             >
