@@ -22,6 +22,33 @@ html {
   padding-top: 30px;
 }
 
+.main-panel > .sidebarlg {
+  height: 100vh;
+  background-color: $navbar-color;
+  min-width: 50px;
+  -webkit-transition: width 0.5s ease-in-out;
+  -moz-transition: width 0.5s ease-in-out;
+  -o-transition: width 0.5s ease-in-out;
+  transition: width 0.5s ease-in-out;
+  position: fixed;
+  z-index: 1000;
+  border-right: 1px solid #00000020;
+}
+
+.sidebar-items {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  -webkit-transition: width 0.5s ease-in-out;
+  -moz-transition: width 0.5s ease-in-out;
+  -o-transition: width 0.5s ease-in-out;
+  transition: width 0.5s ease-in-out;
+
+  a {
+    padding-left: 0;
+  }
+}
+
 body::-webkit-scrollbar {
   display: none;
 }
@@ -67,5 +94,10 @@ body::-webkit-scrollbar {
 
   .main-panel > .content {
     background-color: rgb(249, 249, 255);
+  }
+
+  .main-panel > .sidebarlg {
+    background-color: #fff;
+    border-right: 1px solid #00000020;
   }
 }

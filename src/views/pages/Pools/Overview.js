@@ -116,7 +116,7 @@ const Overview = () => {
                           }}
                         >
                           {t('pools')}
-                          <Badge bg="primary" className="ms-2">
+                          <Badge bg="info" className="ms-2">
                             {!isLoading() ? (
                               getPools().length
                             ) : (
@@ -139,7 +139,7 @@ const Overview = () => {
                           }}
                         >
                           {t('new')}
-                          <Badge bg="primary" className="ms-2">
+                          <Badge bg="info" className="ms-2">
                             {!isLoading() ? (
                               getNewPools().length
                             ) : (

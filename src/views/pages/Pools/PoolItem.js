@@ -318,7 +318,7 @@ const PoolItem = ({ asset }) => {
                       />
                       {getScaled() <= 35 && (
                         <ProgressBar
-                          variant="primary"
+                          variant="info"
                           key={2}
                           now={6}
                           className="rounded"
@@ -366,7 +366,7 @@ const PoolItem = ({ asset }) => {
                       />
                       {getScaled() >= 65 && (
                         <ProgressBar
-                          variant="primary"
+                          variant="info"
                           key={10}
                           now={6}
                           className="rounded"
@@ -474,7 +474,7 @@ const PoolItem = ({ asset }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="primary"
+                  variant="info"
                   className="w-100 rounded-pill"
                   onClick={() =>
                     history.push(
@@ -488,7 +488,7 @@ const PoolItem = ({ asset }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="primary"
+                  variant="info"
                   className="w-100 rounded-pill"
                   onClick={() =>
                     history.push(`/liquidity?asset1=${tokenAddress}`)
@@ -497,17 +497,19 @@ const PoolItem = ({ asset }) => {
                   {t('join')}
                 </Button>
               </Col>
-              <Col>
-                <Button
-                  size="sm"
-                  variant="primary"
-                  className="w-100 rounded-pill"
-                  disabled={!asset.curated}
-                  onClick={() => history.push('/vaults')}
-                >
-                  {t('stake')}
-                </Button>
-              </Col>
+              {asset.curated && (
+                <Col>
+                  <Button
+                    size="sm"
+                    variant="info"
+                    className="w-100 rounded-pill"
+                    disabled={!asset.curated}
+                    onClick={() => history.push('/vaults')}
+                  >
+                    {t('stake')}
+                  </Button>
+                </Col>
+              )}
             </Row>
           </Card.Footer>
         </Card>
