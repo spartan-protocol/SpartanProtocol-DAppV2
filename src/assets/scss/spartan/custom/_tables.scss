@@ -26,6 +26,7 @@
 .table-striped {
   > tbody > tr:nth-of-type(odd) {
     --bs-table-accent-bg: #222629;
+    --bs-table-striped-color: rgba(255, 255, 255, 0.9);
   }
 }
 
