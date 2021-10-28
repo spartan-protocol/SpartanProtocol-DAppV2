@@ -7,6 +7,7 @@ import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
 import Donate from './views/pages/Donate/Overview'
 import PU from './views/pages/PU/Overview'
+import Security from './views/pages/Security/Overview'
 
 export const routes = [
   {
@@ -70,6 +71,14 @@ export const routes = [
     name: 'donate',
     icon: 'list',
     component: Donate,
+    layout: '',
+  },
+
+  {
+    path: '/security',
+    name: 'Security',
+    icon: 'lock',
+    component: Security,
     layout: '',
   },
 
