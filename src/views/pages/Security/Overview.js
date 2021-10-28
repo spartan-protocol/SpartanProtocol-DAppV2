@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card, Col, Row, Button } from 'react-bootstrap'
-import Immunefi from '../../../assets/brands/immunefi.svg'
+import Immunefi from '../../../assets/brands/immunefi-wht.svg'
 import C4 from '../../../assets/brands/C4.png'
 import Certik from '../../../assets/brands/certik.svg'
 import GitHub from '../../../assets/brands/github-wht.svg'
