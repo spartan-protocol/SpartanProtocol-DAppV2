@@ -1,5 +1,6 @@
 .card {
-  background-color: #1D171F;
+  // background-color: #1D171F;
+  background-color: rgba(64, 54, 54, 0.5);
   color: #ffffff;
   border: 0;
   box-shadow: $box-shadow;
@@ -41,7 +42,8 @@
 }
 
 .card-alt {
-  background-color: #25212D;
+  // background-color: #25212d;
+  background-color: rgba(64, 54, 54, 0.5);
 }
 
 // WHITE MODE
@@ -59,6 +61,6 @@
     color: #000;
   }
   .card-alt {
-    background-color: #F5F8FC;
+    background-color: #f5f8fc;
   }
 }

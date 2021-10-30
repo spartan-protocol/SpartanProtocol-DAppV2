@@ -1,19 +1,18 @@
-html {
-  background-color: #25212d;
-}
-
 .main-panel {
   min-height: 100vh;
   width: 100vw;
-  background-color: #000;
+  // background-color: #000;
   position: absolute;
   top: 0;
   padding-top: 67px;
+  background: linear-gradient(178deg, rgba(53, 8, 8, 0), rgba(10, 0, 0, 0.9)),
+    linear-gradient(325deg, rgba(255, 153, 153, 0.2), rgba(255, 180, 180, 0.08));
 }
 
 .main-panel > .content {
   min-height: calc(100vh - (67px + 67px)); /* view height - (header + footer) */
-  background-color: black;
+  // background-color: rgb(78, 69, 69);
+  background-color: transparent;
   padding: 10px;
   max-width: 1200px;
   margin-left: auto;
@@ -24,7 +23,8 @@ html {
 
 .main-panel > .sidebarlg {
   height: 100vh;
-  background-color: $navbar-color;
+  // background-color: $navbar-color;
+  background-color: rgba(64, 54, 54, 0.5);
   min-width: 50px;
   -webkit-transition: width 0.5s ease-in-out;
   -moz-transition: width 0.5s ease-in-out;
@@ -33,6 +33,7 @@ html {
   position: fixed;
   z-index: 1000;
   border-right: 1px solid #00000020;
+  backdrop-filter: blur(10px);
 }
 
 .sidebar-items {

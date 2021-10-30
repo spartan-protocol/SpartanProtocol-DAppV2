@@ -1,5 +1,5 @@
 .navbar {
-  background: $navbar-color;
+  background-color: rgba(64, 54, 54, 0.5);
   overflow: hidden;
 
   &.navbar-transparent {
@@ -50,11 +50,13 @@
   margin-bottom: 0;
   border-top: 2px solid #fb2715;
   border-bottom: 1px solid #00000020;
+  backdrop-filter: blur(10px);
 }
 
 .footer {
-  border-top: 1px solid #00000020;
+  // border-top: 1px solid #00000020;
   height: 67px;
+  background-color: rgba(64, 54, 54, 1);
 }
 
 // WHITE MODE
