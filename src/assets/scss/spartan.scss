@@ -52,5 +52,8 @@
 @import 'spartan/custom/cards/card-stats';
 @import 'spartan/custom/cards/card-subcategories';
 
+// Palette (comment to use the classic palette)
+@import 'spartan/custom/palette.scss';
+
 // React Differences
 @import 'spartan/react/react-differences';
