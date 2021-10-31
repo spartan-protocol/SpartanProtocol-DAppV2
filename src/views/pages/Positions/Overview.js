@@ -475,7 +475,7 @@ const Positions = () => {
                           {t('netAddUsd')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
+                          coming soon
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -485,7 +485,7 @@ const Positions = () => {
                           {t('netRemoveUsd')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
+                          coming soon
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -494,7 +494,7 @@ const Positions = () => {
                           {t('netRedeemable')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
+                          coming soon
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -504,7 +504,7 @@ const Positions = () => {
                           {t('gainLoss')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
+                          coming soon
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -532,63 +532,81 @@ const Positions = () => {
                           {t('netAddSparta')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
-                          <Icon icon="usd" className="ms-1" size="15" />
+                          coming soon
+                          <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netAdd*Token*')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          some numb
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <hr />
                       <Row className="my-1">
                         <Col xs="auto" className="text-card">
                           {t('netRemoveSparta')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
-                          <Icon icon="usd" className="ms-1" size="15" />
+                          coming soon
+                          <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
                       <Row className="my-1">
                         <Col xs="auto" className="text-card">
-                          {t('netRemove*Token*')}
+                          {t('netRedeemSparta')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRedeem*Sparta*')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          some numb
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRedeem*Token*')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          some numb
-                          <Icon icon="usd" className="ms-1" size="15" />
+                          coming soon
+                          <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
                       <hr />
                       <Row className="my-1">
                         <Col xs="auto" className="text-card">
-                          {t('gainLoss')}
+                          {t('netAddToken')}
                         </Col>
                         <Col className="text-end output-card">
-                          some numb
+                          coming soon
+                          {/* <Icon icon="usd" className="ms-1" size="15" /> */}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('netRemoveToken')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          coming soon
+                          {/* <Icon icon="usd" className="ms-1" size="15" /> */}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('netRedeemToken')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          coming soon
+                          {/* <Icon icon="usd" className="ms-1" size="15" /> */}
+                        </Col>
+                      </Row>
+                      <hr />
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('gainLossSparta')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          coming soon
+                          <Icon icon="spartav2" className="ms-1" size="15" />
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('gainLossToken')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          coming soon
+                          {/* <Icon icon="spartav2" className="ms-1" size="15" /> */}
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('gainLossUsd')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          coming soon
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
