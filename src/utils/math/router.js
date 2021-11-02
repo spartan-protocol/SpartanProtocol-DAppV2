@@ -4,7 +4,7 @@ import { getAddresses, oneWeek } from '../web3'
 import { getSecsSince, minusFeeBurn } from './nonContract'
 
 export const one = BN(1).times(10).pow(18)
-const minDivi = one
+const minDivi = one.times(3)
 
 /**
  * Calculate LP tokens from liquidity-add
@@ -190,11 +190,11 @@ export const swapTo = (
   }
   // Double swap TOKEN1 -> TOKEN2
   const [spartaOut, swapFee1] = calcSwapOutput(input, inPool, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> Pool2)
-  divi1 = inPool.curated
-    ? swapFee1.isGreaterThan(minDivi)
-      ? swapFee1
-      : BN(minDivi)
-    : BN(0)
+  // divi1 = inPool.curated
+  //   ? swapFee1.isGreaterThan(minDivi)
+  //     ? swapFee1
+  //     : BN(minDivi)
+  //   : BN(0)
   const _spartaOut = minusFeeBurn(spartaOut, feeOnTsf) // SPARTA received (Pool2) (feeBurn)
   const [_tokenOut, swapFee2] = calcSwapOutput(_spartaOut, outPool, false) // Swap SPARTA to TOKEN (Pool2 -> Router -> User)
   const swapFee = swapFee1.plus(swapFee2)
@@ -264,7 +264,7 @@ export const mintSynth = (
     synthCapped = _synthRec.isGreaterThan(
       stirCauldron(synthPool, tokenAmount, synth),
     ) // Check if this will exceed the dynamic synth cap
-    diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
+    // diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
     return [_synthRec, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
   }
   // Swap & mint TOKEN -> SPARTA -> SYNTH ---------------------------------------------------
