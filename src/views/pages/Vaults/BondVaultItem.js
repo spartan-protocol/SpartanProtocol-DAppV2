@@ -8,7 +8,7 @@ import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { Icon } from '../../../components/Icons/icons'
-import { claimBond } from '../../../store/bond'
+import { claimBond, useBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
 import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
 import { getToken } from '../../../utils/math/utils'
@@ -16,13 +16,14 @@ import { getAddresses } from '../../../utils/web3'
 
 const BondItem = (props) => {
   const pool = usePool()
+  const bond = useBond()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const addr = getAddresses()
   const { asset } = props
   const { t } = useTranslation()
   const [txnLoading, setTxnLoading] = useState(false)
-  const [showDetails, setShowDetails] = useState(false)
+  // const [showDetails, setShowDetails] = useState(false)
   const token = () => getToken(asset.tokenAddress, pool.tokenDetails)
   const isLightMode = window.localStorage.getItem('theme')
 
@@ -37,9 +38,9 @@ const BondItem = (props) => {
     return endDate.toFixed(0)
   }
 
-  const toggleCollapse = () => {
-    setShowDetails(!showDetails)
-  }
+  // const toggleCollapse = () => {
+  //   setShowDetails(!showDetails)
+  // }
 
   const handleTxn = async () => {
     setTxnLoading(true)
@@ -69,7 +70,7 @@ const BondItem = (props) => {
   return (
     <>
       <Col xs="auto" key={asset.address}>
-        <Card className="card-320">
+        <Card className="card-320" style={{ minHeight: '245' }}>
           <Card.Body>
             <Row className="">
               <Col xs="auto" className="position-relative pt-1">
@@ -103,7 +104,7 @@ const BondItem = (props) => {
               </Col>
 
               <Col className="text-end my-auto">
-                {showDetails && (
+                {/* {showDetails && (
                   <span
                     aria-hidden="true"
                     role="button"
@@ -128,7 +129,7 @@ const BondItem = (props) => {
                       fill={isLightMode ? 'black' : 'white'}
                     />
                   </span>
-                )}
+                )} */}
               </Col>
             </Row>
             <Row className="my-1 mt-2">
@@ -148,43 +149,40 @@ const BondItem = (props) => {
                 {formatFromWei(calcBondedLP(asset), 4)} {token().symbol}p
               </Col>
             </Row>
-            {showDetails === true && (
-              <>
-                <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('lastClaim')}
-                  </Col>
-                  <Col className="text-end output-card">
-                    {getTimeSince(asset.lastBlockTime, t)[0]}
-                    {getTimeSince(asset.lastBlockTime, t)[1]} ago
-                  </Col>
-                </Row>
 
-                <Row className="mt-1">
-                  <Col xs="auto" className="text-card">
-                    {t('finalDate')}
-                  </Col>
-                  <Col className="text-end output-card">
-                    {formatDate(
-                      getEndDate(
-                        asset.staked,
-                        asset.lastBlockTime,
-                        asset.claimRate,
-                      ),
-                    )}
-                  </Col>
-                </Row>
-              </>
-            )}
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('lastClaim')}
+              </Col>
+              <Col className="text-end output-card">
+                {getTimeSince(asset.lastBlockTime, t)[0]}
+                {getTimeSince(asset.lastBlockTime, t)[1]} ago
+              </Col>
+            </Row>
+
+            <Row className="mt-1">
+              <Col xs="auto" className="text-card">
+                {t('finalDate')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatDate(
+                  getEndDate(
+                    asset.staked,
+                    asset.lastBlockTime,
+                    asset.claimRate,
+                  ),
+                )}
+              </Col>
+            </Row>
           </Card.Body>
           <Card.Footer>
             <Row className="text-center">
-              <Col xs="6" className="px-2">
-                <Button className="w-100" disabled>
-                  {t('bond')}
-                </Button>
-              </Col>
-              <Col xs="6" className="px-2">
+              {bond.listedAssets.includes(asset.address) && (
+                <Col className="px-2">
+                  <Button className="w-100">{t('bond')}</Button>
+                </Col>
+              )}
+              <Col className="px-2">
                 <Button
                   className="w-100"
                   disabled={!checkValid()[0]}

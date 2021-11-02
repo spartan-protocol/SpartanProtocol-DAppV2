@@ -25,6 +25,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'bondInfo',
     },
     {
+      id: 'daoVaultWeight',
+      title: 'daoVaultWeight',
+      body: 'daoVaultWeightInfo',
+    },
+    {
       id: 'dividendRevenue',
       title: 'dividendRevenueTitle',
       body: 'dividendRevenue',

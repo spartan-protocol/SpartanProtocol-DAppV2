@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Col, Row } from 'react-bootstrap'
+import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -26,6 +26,7 @@ import { calcCurrentRewardDao } from '../../../utils/math/dao'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import DaoVaultItem from './DaoVaultItem'
 import { getAddresses } from '../../../utils/web3'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const DaoVault = () => {
   const reserve = useReserve()
@@ -191,6 +192,19 @@ const DaoVault = () => {
               <Row className="my-1">
                 <Col xs="auto" className="text-card">
                   {t('totalWeight')}
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(t, 'daoVaultWeight')}
+                  >
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1 mb-1"
+                        size="15"
+                        // fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
                 </Col>
                 <Col
                   className="text-end output-card"
@@ -235,6 +249,19 @@ const DaoVault = () => {
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
                     {t('yourWeight')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'daoVaultWeight')}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1 mb-1"
+                          size="15"
+                          // fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
                   </Col>
 
                   <Col

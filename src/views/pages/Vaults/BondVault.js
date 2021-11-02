@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Card } from 'react-bootstrap'
+import { Row, Col, Card, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool'
-import { formatFromWei } from '../../../utils/bigNumber'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import BondItem from './BondVaultItem'
-import { getBondDetails, useBond } from '../../../store/bond'
-import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { allListedAssets, getBondDetails, useBond } from '../../../store/bond'
+import { Icon } from '../../../components/Icons/icons'
 
 const BondVault = () => {
   const pool = usePool()
@@ -20,6 +19,7 @@ const BondVault = () => {
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
+
   const getData = () => {
     setnetwork(getNetwork())
   }
@@ -35,8 +35,8 @@ const BondVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
+  // const getToken = (tokenAddress) =>
+  //   pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const tryParse = (data) => {
     try {
@@ -56,6 +56,7 @@ const BondVault = () => {
       ) {
         if (listedPools?.length > 0) {
           dispatch(getBondDetails(listedPools, wallet))
+          dispatch(allListedAssets())
         }
       }
     }
@@ -64,64 +65,55 @@ const BondVault = () => {
   }, [pool.listedPools])
 
   const isLoading = () => {
-    if (!bond.bondDetails) {
+    if (!bond.bondDetails || !bond.listedAssets) {
       return true
     }
     return false
   }
 
   return (
-    <>
-      <div className="content">
-        {tempChains.includes(network.chainId) && (
-          <>
-            <Col xs="auto">
-              <Card xs="auto" className="card-320">
-                <Card.Header>{t('bondPositions')}</Card.Header>
-                <Card.Body>
-                  {!isLoading() ? (
-                    <>
-                      {bond.bondDetails
-                        .filter((asset) => asset.staked > 0)
-                        .map((asset) => (
-                          <Row key={asset.address} className="my-1">
-                            <Col xs="auto" className="text-card">
-                              {t('remaining')}
-                            </Col>
-                            <Col className="text-end output-card">
-                              {formatFromWei(asset.staked)}{' '}
-                              {getToken(asset.tokenAddress)?.symbol}p
-                            </Col>
-                          </Row>
-                        ))}
-                    </>
-                  ) : (
-                    <HelmetLoading height={200} width={200} />
-                  )}
-                  {!isLoading() &&
-                    bond.bondDetails.filter((asset) => asset.staked > 0)
-                      .length <= 0 && (
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('noBondPosition')}
-                        </Col>
-                      </Row>
-                    )}
-                </Card.Body>
-              </Card>
-            </Col>
-            {!isLoading() &&
-              bond.bondDetails
-                .filter((asset) => asset.lastBlockTime > 0)
-                .sort((a, b) => b.staked - a.staked)
-                .map((asset) => (
-                  <BondItem asset={asset} key={asset.tokenAddress} />
-                ))}
-          </>
-        )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
-      </div>
-    </>
+    <Row>
+      {tempChains.includes(network.chainId) && (
+        <>
+          <Col xs="auto" className="">
+            <Card xs="auto" className="card-320" style={{ minHeight: '245' }}>
+              <Card.Header>{t('bondVaultDetails')}</Card.Header>
+              <Card.Body className="text-card">
+                View & claim your Bond positions.
+              </Card.Body>
+              <Card.Footer>
+                <div className="text-card mb-1">
+                  Read more about the Bond program:
+                </div>
+                <a
+                  href="https://docs.spartanprotocol.org/education/bond"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Button className="w-100">
+                    {t('viewInDocs')}
+                    <Icon icon="scan" size="15" className="ms-2 mb-1" />
+                  </Button>
+                </a>
+              </Card.Footer>
+            </Card>
+          </Col>
+
+          {!isLoading() &&
+            bond.bondDetails
+              .filter(
+                (asset) =>
+                  asset.lastBlockTime > 0 ||
+                  bond.listedAssets.includes(asset.address),
+              )
+              .sort((a, b) => b.staked - a.staked)
+              .map((asset) => (
+                <BondItem asset={asset} key={asset.tokenAddress} />
+              ))}
+        </>
+      )}
+      {!tempChains.includes(network.chainId) && <WrongNetwork />}
+    </Row>
   )
 }
 
