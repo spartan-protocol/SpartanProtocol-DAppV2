@@ -333,6 +333,9 @@ const LiqBond = () => {
     }
   }
 
+  const getRemainPC = () =>
+    BN(convertFromWei(bond.global.spartaRemaining)).div(2000000).times(100)
+
   return (
     <Row>
       <Col xs="auto">
@@ -473,17 +476,26 @@ const LiqBond = () => {
                   </Col>
                 </Row>
 
-                <ProgressBar
-                  variant="info"
-                  className="my-2"
-                  now={BN(convertFromWei(bond.global.spartaRemaining))
-                    .div(2000000)
-                    .times(100)}
-                  label={`${formatFromWei(
-                    bond.global.spartaRemaining,
-                    0,
-                  )} SPARTA`}
-                />
+                <ProgressBar className="my-2" style={{ height: '20px' }}>
+                  <ProgressBar
+                    variant="info"
+                    key={1}
+                    now={getRemainPC()}
+                    label={
+                      getRemainPC() > 50 &&
+                      `${formatFromWei(bond.global.spartaRemaining, 0)} SPARTA`
+                    }
+                  />
+                  <ProgressBar
+                    variant="black"
+                    key={1}
+                    now={BN(100).minus(getRemainPC())}
+                    label={
+                      getRemainPC() <= 50 &&
+                      `${formatFromWei(bond.global.spartaRemaining, 0)} SPARTA`
+                    }
+                  />
+                </ProgressBar>
 
                 {!isLoading() && (
                   <>
