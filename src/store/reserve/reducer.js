@@ -2,6 +2,7 @@ import * as Types from './types'
 
 const initialState = {
   globalDetails: false,
+  polDetails: false,
   loading: false,
   error: null,
 }
@@ -12,6 +13,15 @@ export const reserveReducer = (state = initialState, action) => {
       return {
         ...state,
         globalDetails: action.payload,
+        error: null,
+        loading: false,
+      }
+    }
+
+    case Types.RESERVE_POL_DETAILS: {
+      return {
+        ...state,
+        polDetails: action.payload,
         error: null,
         loading: false,
       }

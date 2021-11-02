@@ -14,6 +14,7 @@ import {
   ProgressBar,
   Badge,
   Popover,
+  Form,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -28,7 +29,12 @@ import {
 } from '../../../utils/bigNumber'
 import { useBond } from '../../../store/bond/selector'
 import Approval from '../../../components/Approval/Approval'
-import { bondDeposit, allListedAssets } from '../../../store/bond/actions'
+import {
+  bondDeposit,
+  allListedAssets,
+  getBondDetails,
+  bondVaultWeight,
+} from '../../../store/bond/actions'
 import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
@@ -37,15 +43,26 @@ import { Icon } from '../../../components/Icons/icons'
 import NewPool from '../Pools/NewPool'
 import Share from '../../../components/Share/SharePool'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
-import { bondLiq } from '../../../utils/math/dao'
+import { bondLiq, calcCurrentRewardDao } from '../../../utils/math/dao'
 import { useReserve } from '../../../store/reserve'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { getSecsSince } from '../../../utils/math/nonContract'
+import {
+  daoDepositTimes,
+  daoGlobalDetails,
+  daoHarvest,
+  daoMemberDetails,
+  daoVaultWeight,
+  getDaoDetails,
+} from '../../../store/dao/actions'
+import { useDao } from '../../../store/dao/selector'
 
 const LiqBond = () => {
   const isLightMode = window.localStorage.getItem('theme')
 
   const { t } = useTranslation()
   const web3 = useWeb3()
+  const dao = useDao()
   const wallet = useWeb3React()
   const bond = useBond()
   const reserve = useReserve()
@@ -58,6 +75,9 @@ const LiqBond = () => {
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [assetBond1, setAssetBond1] = useState('...')
+  const [harvestLoading, setHarvestLoading] = useState(false)
+  const [harvestConfirm, setHarvestConfirm] = useState(false)
+  const [trigger0, settrigger0] = useState(0)
 
   const getWhiteList = () => {
     const whiteList = []
@@ -94,6 +114,55 @@ const LiqBond = () => {
       return pool.poolDetails[0]
     }
   }
+
+  const getData = () => {
+    dispatch(daoGlobalDetails(wallet))
+    dispatch(daoMemberDetails(wallet))
+  }
+
+  useEffect(() => {
+    if (trigger0 === 0) {
+      getData()
+    }
+    const timer = setTimeout(() => {
+      getData()
+      settrigger0(trigger0 + 1)
+    }, 7500)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger0])
+
+  useEffect(() => {
+    const checkDetails = () => {
+      if (pool.listedPools?.length > 1) {
+        dispatch(getDaoDetails(pool.listedPools, wallet))
+        dispatch(getBondDetails(pool.listedPools, wallet))
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.listedPools])
+
+  useEffect(() => {
+    const checkWeight = () => {
+      if (pool.poolDetails?.length > 1) {
+        dispatch(daoVaultWeight(pool.poolDetails, wallet))
+        dispatch(bondVaultWeight(pool.poolDetails, wallet))
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.poolDetails])
+
+  useEffect(() => {
+    const checkWeight = () => {
+      if (dao.daoDetails?.length > 1) {
+        dispatch(daoDepositTimes(dao.daoDetails, wallet))
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dao.daoDetails])
 
   useEffect(() => {
     const getAssetDetails = () => {
@@ -189,6 +258,34 @@ const LiqBond = () => {
     return true
   }
 
+  const secsSinceHarvest = () => {
+    if (dao.member.lastHarvest) {
+      return getSecsSince(dao.member.lastHarvest)
+    }
+    return '0'
+  }
+
+  const handleHarvest = async () => {
+    setHarvestLoading(true)
+    await dispatch(daoHarvest(wallet))
+    setHarvestLoading(false)
+    dispatch(daoMemberDetails(wallet))
+  }
+
+  const getClaimable = () => {
+    const reward = calcCurrentRewardDao(
+      pool.poolDetails,
+      bond,
+      dao,
+      sparta.globalDetails.secondsPerEra,
+      reserve.globalDetails.spartaBalance,
+    )
+    if (reward > 0) {
+      return reward
+    }
+    return '0.00'
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
@@ -218,7 +315,16 @@ const LiqBond = () => {
     if (getBondLiq()[3]) {
       return [false, t('poolAtCapacity')]
     }
-    return [true, t('bond')]
+    if (
+      dao.member.lastHarvest > 0 &&
+      secsSinceHarvest() > 300 &&
+      getClaimable() > 0
+    ) {
+      if (!harvestConfirm) {
+        return [false, t('confirmHarvest')]
+      }
+    }
+    return [true, `${t('bond')} ${getToken(assetBond1.tokenAddress)?.symbol}`]
   }
 
   const checkWallet = () => {
@@ -226,6 +332,9 @@ const LiqBond = () => {
       setShowWalletWarning1(!showWalletWarning1)
     }
   }
+
+  const getRemainPC = () =>
+    BN(convertFromWei(bond.global.spartaRemaining)).div(2000000).times(100)
 
   return (
     <Row>
@@ -367,17 +476,26 @@ const LiqBond = () => {
                   </Col>
                 </Row>
 
-                <ProgressBar
-                  variant="info"
-                  className="my-2"
-                  now={BN(convertFromWei(bond.global.spartaRemaining))
-                    .div(2000000)
-                    .times(100)}
-                  label={`${formatFromWei(
-                    bond.global.spartaRemaining,
-                    0,
-                  )} SPARTA`}
-                />
+                <ProgressBar className="my-2" style={{ height: '20px' }}>
+                  <ProgressBar
+                    variant="info"
+                    key={1}
+                    now={getRemainPC()}
+                    label={
+                      getRemainPC() > 50 &&
+                      `${formatFromWei(bond.global.spartaRemaining, 0)} SPARTA`
+                    }
+                  />
+                  <ProgressBar
+                    variant="black"
+                    key={1}
+                    now={BN(100).minus(getRemainPC())}
+                    label={
+                      getRemainPC() <= 50 &&
+                      `${formatFromWei(bond.global.spartaRemaining, 0)} SPARTA`
+                    }
+                  />
+                </ProgressBar>
 
                 {!isLoading() && (
                   <>
@@ -424,6 +542,40 @@ const LiqBond = () => {
                         </span>
                       </Col>
                     </Row>
+                    {secsSinceHarvest() > 300 && dao.member.lastHarvest > 0 && (
+                      <>
+                        <hr />
+                        <Row xs="12" className="my-2">
+                          <Col xs="12" className="output-card">
+                            Your existing harvest timer will be reset, harvest
+                            before this deposit to avoid forfeiting any
+                            accumulated rewards:
+                          </Col>
+                        </Row>
+                        <Row xs="12" className="">
+                          <Col xs="auto" className="text-card">
+                            Harvest forfeiting
+                          </Col>
+                          <Col className="text-end output-card">
+                            {formatFromWei(getClaimable())} SPARTA
+                          </Col>
+                        </Row>
+                        <Form className="my-2 text-center">
+                          <span className="output-card">
+                            Confirm harvest time reset
+                            <Form.Check
+                              type="switch"
+                              id="confirmHarvest"
+                              className="ms-2 d-inline-flex"
+                              checked={harvestConfirm}
+                              onChange={() =>
+                                setHarvestConfirm(!harvestConfirm)
+                              }
+                            />
+                          </span>
+                        </Form>
+                      </>
+                    )}
                   </>
                 )}
               </Col>
@@ -432,7 +584,7 @@ const LiqBond = () => {
           <Card.Footer>
             {!isLoading() && (
               <>
-                <Row className="text-center">
+                <Row className="text-center w-100 m-0">
                   {assetBond1?.tokenAddress &&
                     assetBond1?.tokenAddress !== addr.bnb &&
                     wallet?.account &&
@@ -447,24 +599,55 @@ const LiqBond = () => {
                       />
                     )}
 
-                  <Col xs="12" sm="4" md="12" className="hide-if-siblings">
-                    {bond.listedAssets.length > 0 && (
-                      <Button
-                        className="w-100"
-                        disabled={!checkValid()[0]}
-                        onClick={() => handleBondDeposit()}
-                      >
-                        {checkValid()[1]}{' '}
-                        {getToken(assetBond1.tokenAddress)?.symbol}
-                        {txnLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
+                  <Col xs="12" className="hide-if-prior-sibling">
+                    <Row>
+                      {getClaimable() > 0 &&
+                        secsSinceHarvest() > 300 &&
+                        dao.member.lastHarvest > 0 && (
+                          <Col>
+                            <Button
+                              className="w-100"
+                              onClick={() => handleHarvest()}
+                              disabled={
+                                getClaimable() <= 0 ||
+                                !enoughGas() ||
+                                reserve.globalDetails.globalFreeze
+                              }
+                            >
+                              {enoughGas()
+                                ? reserve.globalDetails.globalFreeze
+                                  ? t('globalFreeze')
+                                  : t('harvest')
+                                : t('checkBnbGas')}
+                              {harvestLoading && (
+                                <Icon
+                                  icon="cycle"
+                                  size="20"
+                                  className="anim-spin ms-1"
+                                />
+                              )}
+                            </Button>
+                          </Col>
                         )}
-                      </Button>
-                    )}
+                      {bond.listedAssets.length > 0 && (
+                        <Col>
+                          <Button
+                            className="w-100"
+                            disabled={!checkValid()[0]}
+                            onClick={() => handleBondDeposit()}
+                          >
+                            {checkValid()[1]}
+                            {txnLoading && (
+                              <Icon
+                                icon="cycle"
+                                size="20"
+                                className="anim-spin ms-1"
+                              />
+                            )}
+                          </Button>
+                        </Col>
+                      )}
+                    </Row>
                   </Col>
                 </Row>
               </>

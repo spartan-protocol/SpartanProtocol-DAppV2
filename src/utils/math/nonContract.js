@@ -37,15 +37,53 @@ export const minusFeeBurn = (amount, feeOnTsf) => {
 }
 
 /**
- * Calculate spot value of LP tokens in SPARTA
- * @param inputLP uints @param poolDetails item
- * @returns spartaValue
+ * Calculate spot value of single LP tokens in [SPARTA, USD]
+ * @param inputLP uints @param poolDetails item @param spartaPrice
+ * @returns [spartaValue, usdValue]
  */
-export const calcLiqValueInBase = (inputLP, poolDetails) => {
+export const calcLiqValueIn = (inputLP, poolDetails, spartaPrice) => {
   const [_sparta1, _token] = calcLiqValue(inputLP, poolDetails)
   const _sparta2 = calcSpotValueInBase(_token, poolDetails)
   const spartaValue = _sparta1.plus(_sparta2)
-  return spartaValue
+  let usdValue = BN(0)
+  if (spartaPrice) {
+    usdValue = spartaValue.times(spartaPrice)
+  }
+  return [spartaValue, usdValue]
+}
+
+/**
+ * Calculate spot value of array of LP tokens in [SPARTA, USD]
+ * @param poolDetails array @param daoDetails array @param bondDetails array @param spartaPrice
+ * @returns [spartaValue, usdValue]
+ */
+export const calcLiqValueAll = (poolDets, daoDets, bondDets, spartaPrice) => {
+  let spartaValue = BN(0)
+  let usdValue = BN(0)
+  const poolsFiltered = poolDets?.filter((asset) => asset.balance > 0)
+  for (let i = 0; i < poolsFiltered.length; i++) {
+    const poolItem = poolsFiltered[i]
+    const values = calcLiqValueIn(poolItem.balance, poolItem, spartaPrice)
+    spartaValue = spartaValue.plus(values[0])
+    usdValue = usdValue.plus(values[1])
+  }
+  const daoFiltered = daoDets?.filter((asset) => asset.staked > 0)
+  for (let i = 0; i < daoFiltered.length; i++) {
+    const daoItem = daoFiltered[i]
+    const poolItem = getPool(daoItem.tokenAddress, poolDets)
+    const values = calcLiqValueIn(daoItem.staked, poolItem, spartaPrice)
+    spartaValue = spartaValue.plus(values[0])
+    usdValue = usdValue.plus(values[1])
+  }
+  const bondFiltered = bondDets?.filter((asset) => asset.staked > 0)
+  for (let i = 0; i < bondFiltered.length; i++) {
+    const bondItem = bondFiltered[i]
+    const poolItem = getPool(bondItem.tokenAddress, poolDets)
+    const values = calcLiqValueIn(bondItem.staked, poolItem, spartaPrice)
+    spartaValue = spartaValue.plus(values[0])
+    usdValue = usdValue.plus(values[1])
+  }
+  return [spartaValue, usdValue]
 }
 
 /**
@@ -152,6 +190,20 @@ export const getSynthWeights = (synthDetails, poolDetails) => {
     }
   }
   return memberWeight
+}
+
+/**
+ * Get the SPARTA value of all reserve LPs
+ * @param polDetails
+ * @returns polWeight
+ */
+export const getPOLWeights = (polDetails) => {
+  let polWeight = BN(0)
+  for (let i = 0; i < polDetails.length; i++) {
+    const _total = BN(polDetails[i].spartaLocked)
+    polWeight = polWeight.plus(_total)
+  }
+  return polWeight
 }
 
 /**

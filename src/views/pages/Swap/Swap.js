@@ -31,18 +31,12 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
-import {
-  swap,
-  swapAssetToSynth,
-  swapSynthToAsset,
-  zapLiquidity,
-} from '../../../store/router/actions'
+import { swap, zapLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
-import { useSynth } from '../../../store/synth/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
 import NewPool from '../Pools/NewPool'
@@ -51,36 +45,22 @@ import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { balanceWidths } from '../Liquidity/Components/Utils'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import {
-  convertTimeUnits,
   getSwapSpot,
   getTimeUntil,
   getZapSpot,
 } from '../../../utils/math/nonContract'
-import {
-  burnSynth,
-  mintSynth,
-  swapTo,
-  zapLiq,
-} from '../../../utils/math/router'
-import {
-  getSynthDetails,
-  getSynthGlobalDetails,
-  getSynthMinting,
-} from '../../../store/synth'
+import { swapTo, zapLiq } from '../../../utils/math/router'
 import Notifications from '../../../components/Notifications/Notifications'
-import { useReserve } from '../../../store/reserve'
 
 const Swap = () => {
   const isLightMode = window.localStorage.getItem('theme')
 
-  const synth = useSynth()
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
   const addr = getAddresses()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
 
@@ -89,7 +69,6 @@ const Swap = () => {
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
-  const [confirmSynth, setConfirmSynth] = useState(false)
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
   const [filter, setFilter] = useState(['token'])
@@ -132,35 +111,10 @@ const Swap = () => {
     }
   }
 
-  useEffect(() => {
-    const { listedPools } = pool
-    const { synthArray } = synth
-    const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthGlobalDetails())
-          dispatch(getSynthDetails(synthArray, wallet))
-          dispatch(getSynthMinting())
-        }
-      }
-    }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
-
-  const synthCount = () => synth.synthDetails.filter((x) => x.address).length
-
   const getFilter = () => {
     const validModes = ['token']
     if (pool.poolDetails.filter((x) => !x.hide).length > 2) {
       validModes.push('pool')
-    }
-    if (synth.synthDetails && synthCount() > 0) {
-      validModes.push('synth')
     }
     return validModes
   }
@@ -187,19 +141,11 @@ const Swap = () => {
           )
           setAssetParam2('')
         }
-        if (
-          typeParam1 === 'token' ||
-          typeParam1 === 'pool' ||
-          typeParam1 === 'synth'
-        ) {
+        if (typeParam1 === 'token' || typeParam1 === 'pool') {
           type1 = typeParam1
           setTypeParam1('')
         }
-        if (
-          typeParam2 === 'token' ||
-          typeParam2 === 'pool' ||
-          typeParam2 === 'synth'
-        ) {
+        if (typeParam2 === 'token' || typeParam2 === 'pool') {
           type2 = typeParam2
           setTypeParam2('')
         }
@@ -216,11 +162,8 @@ const Swap = () => {
         const tempFilter = []
         if (type1 === 'token') {
           tempFilter.push('token')
-          if (getFilter().includes('synth')) tempFilter.push('synth')
           if (type2 === 'token') {
             setMode('token')
-          } else if (type2 === 'synth') {
-            setMode('synthOut')
           } else {
             window.localStorage.setItem('assetType2', 'token')
           }
@@ -228,10 +171,6 @@ const Swap = () => {
           if (getFilter().includes('pool')) tempFilter.push('pool')
           setMode('pool')
           window.localStorage.setItem('assetType2', 'pool')
-        } else if (type1 === 'synth') {
-          tempFilter.push('token')
-          setMode('synthIn')
-          window.localStorage.setItem('assetType2', 'token')
         }
         setFilter(tempFilter)
 
@@ -300,15 +239,11 @@ const Swap = () => {
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
-  const getSynth = (tokenAddress) =>
-    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
-
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
   const handleConfClear = () => {
     setConfirm(false)
-    setConfirmSynth(false)
   }
 
   const clearInputs = () => {
@@ -350,26 +285,12 @@ const Swap = () => {
     if (type === 'pool') {
       return item.balance
     }
-    if (type === 'synth') {
-      return getSynth(item.tokenAddress)?.balance
-    }
     return item.balanceTokens
   }
 
   const getTimeNew = () => {
     const timeStamp = BN(assetSwap1?.genesis).plus(oneWeek)
     return getTimeUntil(timeStamp, t)
-  }
-
-  const _convertTimeUnits = () => {
-    if (synth.globalDetails) {
-      const [units, timeString] = convertTimeUnits(
-        synth.globalDetails.minTime,
-        t,
-      )
-      return [units, timeString]
-    }
-    return ['1', 'day']
   }
 
   //= =================================================================================//
@@ -411,44 +332,6 @@ const Swap = () => {
     return ['0.00', '0.00', false, false, false]
   }
 
-  /**
-   * Get synth mint txn details
-   * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
-   */
-  const getMint = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'synthOut') {
-      const [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped] =
-        mintSynth(
-          convertToWei(swapInput1.value),
-          assetSwap1,
-          assetSwap2,
-          getSynth(assetSwap2.tokenAddress),
-          sparta.globalDetails.feeOnTransfer,
-          assetSwap1.tokenAddress === addr.spartav2,
-        )
-      return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
-    }
-    return ['0.00', '0.00', '0.00', '0.00', false, false]
-  }
-
-  /**
-   * Get synth burn txn details
-   * @returns [tokenOut, slipFee, diviSynth, diviSwap]
-   */
-  const getBurn = () => {
-    if (swapInput1 && assetSwap1 && assetSwap2 && mode === 'synthIn') {
-      const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
-        convertToWei(swapInput1.value),
-        assetSwap2,
-        assetSwap1,
-        sparta.globalDetails.feeOnTransfer,
-        assetSwap2.tokenAddress === addr.spartav2,
-      )
-      return [tokenOut, slipFee, diviSynth, diviSwap]
-    }
-    return ['0.00', '0.00', '0.00', '0.00']
-  }
-
   const getInput = () => {
     const symbol = getToken(assetSwap1.tokenAddress)?.symbol
     if (swapInput1) {
@@ -458,12 +341,6 @@ const Swap = () => {
       }
       if (mode === 'pool') {
         return [input, `${symbol}p`]
-      }
-      if (mode === 'synthOut') {
-        return [input, symbol]
-      }
-      if (mode === 'synthIn') {
-        return [input, `${symbol}s`]
       }
     }
     return ['0.00', symbol]
@@ -477,17 +354,11 @@ const Swap = () => {
     if (mode === 'pool') {
       return [getZap()[0], `${symbol}p`, t('output')]
     }
-    if (mode === 'synthOut') {
-      return [getMint()[0], `${symbol}s`, t('forgeStake')]
-    }
-    if (mode === 'synthIn') {
-      return [getBurn()[0], symbol, t('output')]
-    }
     return ['0.00', symbol, t('output')]
   }
 
   const getSpot = () => {
-    if (['token', 'synthOut', 'synthIn'].includes(mode)) {
+    if (['token'].includes(mode)) {
       let spot = getSwapSpot(
         assetSwap1,
         assetSwap2,
@@ -535,14 +406,6 @@ const Swap = () => {
       result = getSwap()[3] ? result.plus(getSwap()[3]) : result
     } else if (mode === 'pool') {
       result = BN(getZap()[1])
-    } else if (mode === 'synthOut') {
-      result = BN(getMint()[1])
-      result = getMint()[2] ? result.plus(getMint()[2]) : result
-      result = getMint()[3] ? result.plus(getMint()[3]) : result
-    } else if (mode === 'synthIn') {
-      result = BN(getMint()[1])
-      result = getBurn()[2] ? result.plus(getBurn()[2]) : result
-      result = getBurn()[3] ? result.plus(getBurn()[3]) : result
     }
     result = result > 0 ? result : '0.00'
     return result
@@ -559,14 +422,6 @@ const Swap = () => {
 
   const handleZapInputChange = () => {
     swapInput2.value = convertFromWei(getZap()[0], 18)
-  }
-
-  const handleSynthInputChange = () => {
-    if (mode === 'synthOut') {
-      swapInput2.value = convertFromWei(getMint()[0], 18)
-    } else if (mode === 'synthIn') {
-      swapInput2.value = convertFromWei(getBurn()[0], 18)
-    }
   }
 
   //= =================================================================================//
@@ -625,24 +480,12 @@ const Swap = () => {
   }
 
   const estMaxGasPool = '2600000000000000'
-  const estMaxGasSynthOut = '5000000000000000'
-  const estMaxGasSynthIn = '5000000000000000'
   const estMaxGasDoubleSwap = '2000000000000000'
   const estMaxGasSwap = '1500000000000000'
   const enoughGas = () => {
     const bal = getToken(addr.bnb).balance
     if (mode === 'pool') {
       if (BN(bal).isLessThan(estMaxGasPool)) {
-        return false
-      }
-    }
-    if (mode === 'synthOut') {
-      if (BN(bal).isLessThan(estMaxGasSynthOut)) {
-        return false
-      }
-    }
-    if (mode === 'synthIn') {
-      if (BN(bal).isLessThan(estMaxGasSynthIn)) {
         return false
       }
     }
@@ -674,23 +517,6 @@ const Swap = () => {
       return [false, t('checkBalance')]
     }
     const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
-    if (mode === 'synthOut') {
-      if (!synth.synthMinting) {
-        return [false, t('synthsDisabled')]
-      }
-      if (reserve.globalDetails.globalFreeze) {
-        return [false, t('globalFreeze')]
-      }
-      if (getMint()[4]) {
-        return [false, t('poolAtCapacity')]
-      }
-      if (getMint()[5]) {
-        return [false, t('synthAtCapacity')]
-      }
-      if (!confirmSynth) {
-        return [false, t('confirmLockup')]
-      }
-    }
     if (mode === 'pool') {
       if (getZap()[4]) {
         return [false, t('poolFrozen')]
@@ -709,12 +535,6 @@ const Swap = () => {
       }
       return [true, `${t('sell')} ${_symbol}p`]
     }
-    if (mode === 'synthIn') {
-      if (reserve.globalDetails.globalFreeze) {
-        return [false, t('globalFreeze')]
-      }
-      return [true, `${t('sell')} ${_symbol}s`]
-    }
     return [true, `${t('sell')} ${_symbol}`]
   }
 
@@ -724,10 +544,6 @@ const Swap = () => {
         handleInputChange()
       } else if (mode === 'pool') {
         handleZapInputChange()
-      } else if (mode === 'synthIn') {
-        handleSynthInputChange()
-      } else if (mode === 'synthOut') {
-        handleSynthInputChange()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -766,46 +582,6 @@ const Swap = () => {
     clearInputs()
   }
 
-  const handleSwapToSynth = async () => {
-    const gasSafety = '10000000000000000'
-    if (
-      assetSwap1?.tokenAddress === addr.bnb ||
-      assetSwap1?.tokenAddress === addr.wbnb
-    ) {
-      const balance = getToken(addr.bnb)?.balance
-      if (
-        BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
-      ) {
-        swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
-      }
-    }
-    setTxnLoading(true)
-    await dispatch(
-      swapAssetToSynth(
-        convertToWei(swapInput1?.value),
-        assetSwap1.tokenAddress,
-        getSynth(assetSwap2.tokenAddress)?.address,
-        wallet,
-      ),
-    )
-    setTxnLoading(false)
-    clearInputs()
-  }
-
-  const handleSwapFromSynth = async () => {
-    setTxnLoading(true)
-    await dispatch(
-      swapSynthToAsset(
-        convertToWei(swapInput1?.value),
-        getSynth(assetSwap1.tokenAddress)?.address,
-        assetSwap2.tokenAddress,
-        wallet,
-      ),
-    )
-    setTxnLoading(false)
-    clearInputs()
-  }
-
   const handleZap = async () => {
     setTxnLoading(true)
     await dispatch(
@@ -829,7 +605,7 @@ const Swap = () => {
   }, [txnLoading])
 
   const isLoading = () => {
-    if (!pool.poolDetails || !synth.synthDetails) {
+    if (!pool.poolDetails) {
       return true
     }
     return false
@@ -1263,105 +1039,6 @@ const Swap = () => {
                               </Row>
                             )}
                           </>
-                        )}
-
-                        {mode === 'synthOut' && synth.globalDetails && (
-                          <Row>
-                            <Col>
-                              <div className="output-card text-center">
-                                {t('mintSynthConfirm')} {_convertTimeUnits()[0]}{' '}
-                                {_convertTimeUnits()[1]}.
-                              </div>
-                              <Form className="my-2 text-center">
-                                <span className="output-card">
-                                  {t('mintSynthConfirmShort')}{' '}
-                                  {_convertTimeUnits()[0]}{' '}
-                                  {_convertTimeUnits()[1]}
-                                  <Form.Check
-                                    type="switch"
-                                    id="confirmLockout"
-                                    className="ms-2 d-inline-flex"
-                                    checked={confirmSynth}
-                                    onChange={() =>
-                                      setConfirmSynth(!confirmSynth)
-                                    }
-                                  />
-                                </span>
-                              </Form>
-                            </Col>
-                          </Row>
-                        )}
-
-                        {window.localStorage.getItem('assetType2') ===
-                          'synth' && (
-                          <Row className="text-center">
-                            {assetSwap1?.tokenAddress !== addr.bnb &&
-                              wallet?.account &&
-                              swapInput1?.value && (
-                                <Approval
-                                  tokenAddress={assetSwap1?.tokenAddress}
-                                  symbol={
-                                    getToken(assetSwap1.tokenAddress)?.symbol
-                                  }
-                                  walletAddress={wallet?.account}
-                                  contractAddress={addr.router}
-                                  txnAmount={convertToWei(swapInput1?.value)}
-                                  assetNumber="1"
-                                />
-                              )}
-                            <Col className="hide-if-siblings">
-                              <Button
-                                className="w-100"
-                                onClick={() => handleSwapToSynth()}
-                                disabled={!checkValid()[0]}
-                              >
-                                {checkValid()[1]}
-                                {txnLoading && (
-                                  <Icon
-                                    icon="cycle"
-                                    size="20"
-                                    className="anim-spin ms-1"
-                                  />
-                                )}
-                              </Button>
-                            </Col>
-                          </Row>
-                        )}
-
-                        {window.localStorage.getItem('assetType1') ===
-                          'synth' && (
-                          <Row className="text-center">
-                            {wallet?.account && swapInput1?.value && (
-                              <Approval
-                                tokenAddress={
-                                  getSynth(assetSwap1.tokenAddress)?.address
-                                }
-                                symbol={`${
-                                  getToken(assetSwap1.tokenAddress)?.symbol
-                                }s`}
-                                walletAddress={wallet?.account}
-                                contractAddress={addr.router}
-                                txnAmount={convertToWei(swapInput1?.value)}
-                                assetNumber="1"
-                              />
-                            )}
-                            <Col className="hide-if-siblings">
-                              <Button
-                                className="w-100"
-                                onClick={() => handleSwapFromSynth()}
-                                disabled={!checkValid()[0]}
-                              >
-                                {checkValid()[1]}
-                                {txnLoading && (
-                                  <Icon
-                                    icon="cycle"
-                                    size="20"
-                                    className="anim-spin ms-1"
-                                  />
-                                )}
-                              </Button>
-                            </Col>
-                          </Row>
                         )}
                       </Card.Footer>
                     </Card>

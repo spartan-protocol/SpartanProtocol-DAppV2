@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { useSparta } from '../../store/sparta'
 import { watchAsset, useWeb3 } from '../../store/web3'
-import { BN, convertFromWei, formatFromWei } from '../../utils/bigNumber'
+import { convertFromWei, formatFromWei } from '../../utils/bigNumber'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/icons'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
@@ -15,7 +15,7 @@ import { getPool, getToken } from '../../utils/math/utils'
 import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
 import { removeLiq } from '../../utils/math/router'
-import { calcLiqValueInBase } from '../../utils/math/nonContract'
+import { calcLiqValueAll, calcLiqValueIn } from '../../utils/math/nonContract'
 import HelmetLoading from '../Loaders/HelmetLoading'
 
 const LPs = () => {
@@ -78,9 +78,7 @@ const LPs = () => {
   const getUSD = (tokenAddr, amount) => {
     if (pool.poolDetails.length > 1) {
       if (_getPool) {
-        return calcLiqValueInBase(amount, _getPool(tokenAddr)).times(
-          web3.spartaPrice,
-        )
+        return calcLiqValueIn(amount, _getPool(tokenAddr), web3.spartaPrice)[1]
       }
     }
     return '0.00'
@@ -92,32 +90,15 @@ const LPs = () => {
     }
     return false
   }
-  /* eslint no-return-assign: "error" */
 
   const getTotalValue = () => {
-    let total = BN(0)
-    pool.poolDetails
-      ?.filter((asset) => asset.balance > 0)
-      .forEach(
-        (asset) =>
-          (total = total.plus(getUSD(asset.tokenAddress, asset.balance))),
-      )
-
-    bond.bondDetails
-      ?.filter((asset) => asset.staked > 0)
-      .forEach(
-        (asset) =>
-          (total = total.plus(getUSD(asset.tokenAddress, asset.staked))),
-      )
-
-    dao.daoDetails
-      ?.filter((asset) => asset.staked > 0)
-      .forEach(
-        (asset) =>
-          (total = total.plus(getUSD(asset.tokenAddress, asset.staked))),
-      )
-
-    if (!total.isZero()) {
+    const total = calcLiqValueAll(
+      pool.poolDetails,
+      dao.daoDetails,
+      bond.bondDetails,
+      web3.spartaPrice,
+    )[1]
+    if (total > 0) {
       return (
         <div className="hide-i5">
           <hr />

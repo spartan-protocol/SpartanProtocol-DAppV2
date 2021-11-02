@@ -2,12 +2,12 @@ import * as Types from './types'
 
 const initialState = {
   global: false,
-  totalWeight: '0',
+  totalWeight: false,
   member: false,
   daoDetails: false,
   proposal: false,
   lastDeposits: false,
-  proposalWeight: '0',
+  proposalWeight: false,
   txn: [],
   propTxn: [],
   error: null,

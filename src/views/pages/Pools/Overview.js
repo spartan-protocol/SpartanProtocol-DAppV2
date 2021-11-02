@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Badge, Card, Col, Nav, Row } from 'react-bootstrap'
+import {
+  Badge,
+  Card,
+  Col,
+  Form,
+  Nav,
+  OverlayTrigger,
+  Row,
+} from 'react-bootstrap'
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork, tempChains } from '../../../utils/web3'
+import { convertToWei, BN } from '../../../utils/bigNumber'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { allListedAssets } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../../components/Icons/icons'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -17,6 +27,7 @@ const Overview = () => {
   const pool = usePool()
 
   const [activeTab, setActiveTab] = useState('1')
+  const [showBabies, setShowBabies] = useState(false)
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -60,7 +71,11 @@ const Overview = () => {
 
   const getPools = () =>
     pool.poolDetails
-      .filter((asset) => asset.baseAmount > 0 && asset.newPool === false)
+      .filter((asset) =>
+        asset.baseAmount > 0 && asset.newPool === false && showBabies
+          ? BN(asset.baseAmount).isGreaterThanOrEqualTo(1)
+          : BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')),
+      )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getNewPools = () =>
@@ -101,7 +116,7 @@ const Overview = () => {
                           }}
                         >
                           {t('pools')}
-                          <Badge bg="primary" className="ms-2">
+                          <Badge bg="info" className="ms-2">
                             {!isLoading() ? (
                               getPools().length
                             ) : (
@@ -124,7 +139,7 @@ const Overview = () => {
                           }}
                         >
                           {t('new')}
-                          <Badge bg="primary" className="ms-2">
+                          <Badge bg="info" className="ms-2">
                             {!isLoading() ? (
                               getNewPools().length
                             ) : (
@@ -144,10 +159,39 @@ const Overview = () => {
                       <Row>
                         {activeTab === '1' && (
                           <>
+                            <Form className="">
+                              <span className="output-card">
+                                {t('showHidden')}
+                                <OverlayTrigger
+                                  placement="auto"
+                                  overlay={Tooltip(t, 'hiddenPools')}
+                                >
+                                  <span role="button">
+                                    <Icon
+                                      icon="info"
+                                      className="ms-1 mb-1"
+                                      size="15"
+                                      // fill={isLightMode ? 'black' : 'white'}
+                                    />
+                                  </span>
+                                </OverlayTrigger>
+                                <Form.Check
+                                  type="switch"
+                                  id="custom-switch"
+                                  className="ms-2 d-inline-flex"
+                                  checked={showBabies}
+                                  onChange={() => {
+                                    setShowBabies(!showBabies)
+                                  }}
+                                />
+                              </span>
+                            </Form>
                             {getPools().length > 0 ? (
-                              getPools().map((asset) => (
-                                <PoolItem key={asset.address} asset={asset} />
-                              ))
+                              getPools()
+                                .filter((x) => !x.newPool)
+                                .map((asset) => (
+                                  <PoolItem key={asset.address} asset={asset} />
+                                ))
                             ) : (
                               <Col>
                                 There are no initialised pools with more than 7

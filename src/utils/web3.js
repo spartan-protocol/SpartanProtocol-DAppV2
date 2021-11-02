@@ -114,20 +114,21 @@ export const addressesTN = {
   utils11: '0x1C7437c145bD0bb7EE0dcFD30434173893596ee1', // f2bb6131c8ae2c8242c9f72a4d49cdf29bf19771
   // CURRENT ADDRESSES
   bondVault: '0xF935EF68dda8d0bc7bfD10738f761C5675d15A54', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  dao: '0x590A77bD2E439E0B3e2C4cCdBB3d4fe5313D5915', // 245f24f92bda1b100fcc315121463d5df44836e9
+  dao: '0x590A77bD2E439E0B3e2C4cCdBB3d4fe5313D5915', // 0c94dee8ec91410e65b8f7c9c5b8b5f58ba3a152
   daoVault: '0x802B266388D54eb00CaE497F03C83fc05173AD56', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
   poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  reserve: '0xA2D707b530971ED80a85Bb354626CE6b2fBB762a', // 0cf58d0c134f358895653410961aa2886f304a44 // UNCHANGED
-  router: '0xD760c5be88D3E746DD6F6421C4A6854417d6781b', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  reserve: '0x29f8e4CA0bF807F99DCEeBDbbC8e0d2332517565', //
+  router: '0x740dB23a6e9FEa55DdcaDD63942fe3FF0210d130', //
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  utils: '0x28938DCC5D4Cb15FF70E097A5632103F2c4996aB', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
+  utils: '0x914647126cfE1004bCF9d0a5EeBdE931CA78e0c4', // 61b80a66675c16e40741374353371595c1213c34 ???
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
   spartav1: '0x6e812dD5B642334bbd17636d3865CE82C3D4d7eB',
   spartav2: '0xd055ADFdD53963F578A929eaA440DBED95407472',
+  busdp: '0xd861414a977a25CbeDcb7167A171c0d129Ca55ba',
 }
 
 // List of BSC Mainnet Addresses
@@ -165,8 +166,8 @@ export const addressesMN = {
   daoVault: '0x4102773565d82C8B0785f1262cfe75F04F170777', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6', // EARLIER; CHECK
   poolFactory: '0x2C577706579E08A88bd30df0Fd7A5778A707c3AD', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
-  reserve: '0x5aB5bbe3044E58303A189d3D28f6da31e9217F9F', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
-  router: '0x03662D8347aC1487e01FCE1CA679e8484ef954a3', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
+  reserve: '0xe548561782c2F4f1145B654A41C47F49159913B0', //
+  router: '0xf73d255d1E2b184cDb7ee0a8A064500eB3f6b352', //
   synthFactory: '0x8b2643D95DeaD636EC3ba5F720809541c3355f4e', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   utils: '0x82b67e7A325def377f62401126cc54eEE73719ec', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
@@ -175,6 +176,7 @@ export const addressesMN = {
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
   spartav1: '0xE4Ae305ebE1AbE663f261Bc00534067C80ad677C',
   spartav2: '0x3910db0600eA925F63C36DdB1351aB6E2c6eb102',
+  busdp: '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
 }
 
 export const bscRpcsTN = [
@@ -190,7 +192,7 @@ export const bscRpcsMN = [
   'https://bsc-dataseed.binance.org/',
   'https://bsc-dataseed1.defibit.io/',
   'https://bsc-dataseed1.ninicoin.io/',
-  // BACKUPS BELOW
+  // // BACKUPS BELOW
   'https://bsc-dataseed2.defibit.io/',
   'https://bsc-dataseed3.defibit.io/',
   'https://bsc-dataseed4.defibit.io/',
@@ -400,9 +402,9 @@ export const getNetwork = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider) => {
   const network = getNetwork()
-  let provider = new ethers.providers.JsonRpcProvider(
+  let provider = new ethers.providers.StaticJsonRpcProvider(
     changeRpc(network.chainId),
-  ) // simple provider unsigned
+  ) // simple provider unsigned & cached chainId
   if (_provider) {
     provider = _provider.getSigner()
   }

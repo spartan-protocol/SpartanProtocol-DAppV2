@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Card, Col, Row } from 'react-bootstrap'
 // import { Icon } from '../../../components/Icons/icons'
 import NewPool from './NewPool'
+import PoolSelect from '../../../components/PoolSelect/PoolSelect'
 
 const SummaryItem = () => {
   const { t } = useTranslation()
@@ -16,6 +17,8 @@ const SummaryItem = () => {
               <Col xs="auto">{t('pools')}</Col>
               <Col className="">
                 <NewPool />
+                &nbsp;
+                <PoolSelect />
               </Col>
             </Row>
           </Card.Header>

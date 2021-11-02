@@ -4,6 +4,7 @@ import { getAddresses, oneWeek } from '../web3'
 import { getSecsSince, minusFeeBurn } from './nonContract'
 
 export const one = BN(1).times(10).pow(18)
+const minDivi = one.times(3)
 
 /**
  * Calculate LP tokens from liquidity-add
@@ -108,8 +109,11 @@ export const removeLiqAsym = (inputLP, pool, toBase, feeOnTsf) => {
     ? minusFeeBurn(_swapOut, feeOnTsf).plus(_recSparta)
     : _swapOut.plus(_tokenOut) // Swap output + previous received by Router (after feeBurn)
   const tokensOut = toBase ? minusFeeBurn(_swapOutRec, feeOnTsf) : _swapOutRec // Swap output received by User (after feeBurn)
-  const divi =
-    pool.curated && swapFee.isGreaterThanOrEqualTo(one) ? swapFee : BN(0)
+  const divi = pool.curated
+    ? swapFee.isGreaterThanOrEqualTo(minDivi)
+      ? swapFee
+      : BN(minDivi)
+    : BN(0)
   return [tokensOut, swapFee, divi]
 }
 
@@ -166,23 +170,39 @@ export const swapTo = (
     // Simple swap SPARTA -> TOKEN
     const _spartaRec = minusFeeBurn(input, feeOnTsf) // Tsf SPARTA in (User -> outPool) (feeBurn)
     const [_tokenOut, swapFee] = calcSwapOutput(_spartaRec, outPool, false) // Swap SPARTA to TOKEN (outPool -> User)
-    divi2 = outPool.curated && swapFee.isGreaterThan(one) && swapFee
+    divi2 = outPool.curated
+      ? swapFee.isGreaterThan(minDivi)
+        ? swapFee
+        : BN(minDivi)
+      : BN(0)
     return [_tokenOut, swapFee, divi1, divi2, '0']
   }
   if (toBase) {
     // Simple swap TOKEN -> SPARTA
     const [spartaOut, swapFee] = calcSwapOutput(input, inPool, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> User)
     const _spartaRec = minusFeeBurn(spartaOut, feeOnTsf) // SPARTA received (User) (feeBurn)
-    divi1 = inPool.curated && swapFee.isGreaterThan(one) && swapFee
+    divi1 = inPool.curated
+      ? swapFee.isGreaterThan(minDivi)
+        ? swapFee
+        : BN(minDivi)
+      : BN(0)
     return [_spartaRec, swapFee, divi1, divi2, spartaOut]
   }
   // Double swap TOKEN1 -> TOKEN2
   const [spartaOut, swapFee1] = calcSwapOutput(input, inPool, true) // Tsf & Swap TOKEN to SPARTA (User -> Pool1 -> Pool2)
-  divi1 = inPool.curated && swapFee1.isGreaterThan(one) && swapFee1
+  // divi1 = inPool.curated
+  //   ? swapFee1.isGreaterThan(minDivi)
+  //     ? swapFee1
+  //     : BN(minDivi)
+  //   : BN(0)
   const _spartaOut = minusFeeBurn(spartaOut, feeOnTsf) // SPARTA received (Pool2) (feeBurn)
   const [_tokenOut, swapFee2] = calcSwapOutput(_spartaOut, outPool, false) // Swap SPARTA to TOKEN (Pool2 -> Router -> User)
   const swapFee = swapFee1.plus(swapFee2)
-  divi2 = outPool.curated && swapFee2.isGreaterThan(one) && swapFee2
+  divi2 = outPool.curated
+    ? swapFee2.isGreaterThan(minDivi)
+      ? swapFee2
+      : BN(minDivi)
+    : BN(0)
   return [_tokenOut, swapFee, divi1, divi2, spartaOut]
 }
 
@@ -244,7 +264,7 @@ export const mintSynth = (
     synthCapped = _synthRec.isGreaterThan(
       stirCauldron(synthPool, tokenAmount, synth),
     ) // Check if this will exceed the dynamic synth cap
-    diviSynth = synthFee.isGreaterThan(one) && synthFee
+    // diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
     return [_synthRec, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
   }
   // Swap & mint TOKEN -> SPARTA -> SYNTH ---------------------------------------------------
@@ -269,7 +289,7 @@ export const mintSynth = (
     .isGreaterThan(stirCauldron(synthPool, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
   const slipFee = swapFee.plus(synthFee)
   diviSwap = _diviSwap
-  diviSynth = synthFee.isGreaterThan(one) && synthFee
+  diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
   return [_synthRec, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
 }
 
@@ -294,14 +314,17 @@ export const burnSynth = (
     const [spartaOut, synthFee] = calcSwapOutput(input, synthPool, true) // Swap SYNTH for SPARTA (Pool -> User)
     const _spartaRec = BN(spartaOut.times(0.95).toFixed(0)) // SPARTA after 5% slip
     const tokenOut = minusFeeBurn(_spartaRec, feeOnTsf) // User receives SPARTA (feeBurn)
-    diviSynth = synthFee.isGreaterThan(one) && synthFee
+    diviSynth = synthPool.curated
+      ? synthFee.isGreaterThan(minDivi)
+        ? synthFee
+        : BN(minDivi)
+      : BN(0)
     return [tokenOut, synthFee, diviSynth, diviSwap]
   }
   // Burn SYNTH -> TOKEN -> ROUTER -> USER
   const [spartaOut, synthFee] = calcSwapOutput(input, synthPool, true) // Swap SYNTH for SPARTA (Pool -> Router)
   const _spartaRec = BN(spartaOut.times(0.95).toFixed(0)) // SPARTA after 5% slip
   const _spartaRec0 = minusFeeBurn(_spartaRec, feeOnTsf) // Router receives SPARTA (feeBurn)
-  diviSynth = synthFee.isGreaterThan(one) && synthFee
   const updatedPool = {}
   updatedPool.curated = swapPool.curated
   updatedPool.baseAmount = swapPool.baseAmount
@@ -318,7 +341,11 @@ export const burnSynth = (
     true,
   ) // Swap SPARTA to TOKEN (Pool -> User)
   const slipFee = synthFee.plus(swapFee)
-  diviSynth = synthFee.isGreaterThan(one) && synthFee
+  diviSynth = synthPool.curated
+    ? synthFee.isGreaterThan(minDivi)
+      ? synthFee
+      : BN(minDivi)
+    : BN(0)
   diviSwap = _diviSwap
   return [tokenOut, slipFee, diviSynth, diviSwap]
 }

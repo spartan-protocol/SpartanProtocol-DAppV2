@@ -38,7 +38,7 @@ import { getToken } from '../../../utils/math/utils'
 import { useReserve } from '../../../store/reserve'
 
 const NewProposal = () => {
-  const isLightMode = window.localStorage.getItem('theme')
+  // const isLightMode = window.localStorage.getItem('theme')
 
   const dispatch = useDispatch()
   const sparta = useSparta()
@@ -225,18 +225,18 @@ const NewProposal = () => {
   return (
     <>
       <Button
-        variant="info"
-        className="rounded"
+        variant="primary"
+        className="w-100 mt-2"
         onClick={() => setShowModal(true)}
         disabled={isLoading()}
       >
-        {t('proposal')}
-        <Icon
+        {/* <Icon
           icon="plus"
           fill={isLightMode ? 'black' : 'white'}
           size="20"
-          className="ms-2"
-        />
+          className="me-1 mb-1"
+        /> */}
+        {t('newProposal')}
       </Button>
       {showModal && (
         <Modal show={showModal} onHide={() => handleOnHide()} centered>
