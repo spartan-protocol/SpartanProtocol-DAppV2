@@ -23,6 +23,7 @@ import {
 import { useWeb3 } from '../../../store/web3'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { getToken } from '../../../utils/math/utils'
+import { getMemberPositions } from '../../../utils/extCalls'
 
 const Positions = () => {
   const { t } = useTranslation()
@@ -148,6 +149,7 @@ const Positions = () => {
 
   const getOverall = () => {
     // DUMMY DATA, ADD IN API CALLS TO GET THIS DATA
+    getMemberPositions(wallet.account)
     const overallData = {
       netAddSparta: '100000000000000000000',
       netRemoveSparta: '200000000000000000000',

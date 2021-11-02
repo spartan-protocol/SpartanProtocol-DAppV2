@@ -1,5 +1,13 @@
 import axios from 'axios'
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
 import { getNetwork } from './web3'
+
+export const subgraphAPI =
+  'https://api.thegraph.com/subgraphs/name/spartan-protocol/pool-factory'
+export const subgraphClient = new ApolloClient({
+  uri: subgraphAPI,
+  cache: new InMemoryCache(),
+})
 
 export const apiUrlBQ = 'https://graphql.bitquery.io'
 export const headerBQ = {
@@ -72,4 +80,31 @@ export const getPastPriceByID = async (ID, date) => {
     data = resp.data.market_data.current_price.usd
   }
   return data
+}
+
+//
+export const getMemberPositions = async (memberAddr) => {
+  const member = memberAddr.toString().toLowerCase()
+  const tokensQuery = `
+  query {
+    members(where: {id: "${member}"}) {
+      id
+      fees
+      netAddSparta
+      netRemSparta
+      netHarvestSparta
+      netAddUsd
+      netRemUsd
+      netHarvestUsd
+    }
+  }
+`
+  subgraphClient
+    .query({
+      query: gql(tokensQuery),
+    })
+    .then((data) => console.log('Subgraph data: ', data))
+    .catch((err) => {
+      console.log('Error fetching data: ', err)
+    })
 }
