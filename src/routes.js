@@ -3,6 +3,7 @@ import Liquidity from './views/pages/Liquidity/Overview'
 import Swap from './views/pages/Swap/Swap'
 import Synths from './views/pages/Synths/Overview'
 import Vaults from './views/pages/Vaults/Overview'
+import Positions from './views/pages/Positions/Overview'
 import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
 import Donate from './views/pages/Donate/Overview'
@@ -47,6 +48,15 @@ export const routes = [
     icon: 'vault',
     component: Vaults,
     layout: '',
+  },
+
+  {
+    path: '/positions',
+    name: 'Positions',
+    icon: '',
+    component: Positions,
+    layout: '',
+    hide: true,
   },
 
   {

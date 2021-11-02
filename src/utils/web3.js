@@ -167,7 +167,7 @@ export const addressesMN = {
   fallenSpartans: '0xfEB0a2A1AE523E4786f6916ff00E037fF82Ab1A6', // EARLIER; CHECK
   poolFactory: '0x2C577706579E08A88bd30df0Fd7A5778A707c3AD', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   reserve: '0xe548561782c2F4f1145B654A41C47F49159913B0', //
-  router: '0xfBcdd9270aA6f298851164B2b657EcEAF88469be', // 0c94dee8ec91410e65b8f7c9c5b8b5f58ba3a152
+  router: '0x8A45895eEFb2215cc3E3d698c6534a7f10262851', //
   synthFactory: '0x8b2643D95DeaD636EC3ba5F720809541c3355f4e', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
   utils: '0x82b67e7A325def377f62401126cc54eEE73719ec', // 48f7fc6a3788a625dc1858e95c316cda679f8f81
@@ -192,7 +192,7 @@ export const bscRpcsMN = [
   'https://bsc-dataseed.binance.org/',
   'https://bsc-dataseed1.defibit.io/',
   'https://bsc-dataseed1.ninicoin.io/',
-  // BACKUPS BELOW
+  // // BACKUPS BELOW
   'https://bsc-dataseed2.defibit.io/',
   'https://bsc-dataseed3.defibit.io/',
   'https://bsc-dataseed4.defibit.io/',
@@ -206,7 +206,7 @@ export const bscRpcsMN = [
 ]
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
-export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
+export const tempChains = [97] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
 
 export const getTwAssetId = (tokenAddr) => {
