@@ -10,7 +10,11 @@ import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { Icon } from '../../../components/Icons/icons'
 import { claimBond, useBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
-import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
+import {
+  formatDate,
+  getTimeSince,
+  isBonded,
+} from '../../../utils/math/nonContract'
 import { getToken } from '../../../utils/math/utils'
 import { getAddresses } from '../../../utils/web3'
 
@@ -155,8 +159,14 @@ const BondItem = (props) => {
                 {t('lastClaim')}
               </Col>
               <Col className="text-end output-card">
-                {getTimeSince(asset.lastBlockTime, t)[0]}
-                {getTimeSince(asset.lastBlockTime, t)[1]} ago
+                {isBonded(asset.lastBlockTime) ? (
+                  <>
+                    {getTimeSince(asset.lastBlockTime, t)[0]}
+                    {getTimeSince(asset.lastBlockTime, t)[1]} ago
+                  </>
+                ) : (
+                  t('never')
+                )}
               </Col>
             </Row>
 
