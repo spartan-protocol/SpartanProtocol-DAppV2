@@ -252,6 +252,18 @@ export const getTimeUntil = (timestamp, t) => {
 }
 
 /**
+ * Return if a user has bonded
+ * @param {uint} timestamp to compare if the time given is 0 (not bonded)
+ * @returns boolean, true if bonded
+ */
+export const isBonded = (timestamp) => {
+  if (parseInt(timestamp, 10) === 0) {
+    return false
+  }
+  return true
+}
+
+/**
  * Return time passed since a timestamp
  * @param {uint} timestamp to compare current time to
  * @param {uint} t hand in the {t} translation obj
