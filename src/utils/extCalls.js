@@ -96,15 +96,37 @@ export const getMemberPositions = async (memberAddr) => {
       netAddUsd
       netRemUsd
       netHarvestUsd
+      positions {
+        pool {
+          id
+          symbol
+        }
+        netAddSparta
+        netRemSparta
+        netAddToken
+        netRemToken
+        netAddUsd
+        netRemUsd
+        netLiqUnits
+      }
     }
   }
 `
-  subgraphClient
-    .query({
-      query: gql(tokensQuery),
-    })
-    .then((data) => console.log('Subgraph data: ', data))
-    .catch((err) => {
-      console.log('Error fetching data: ', err)
-    })
+
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.members[0])
+    if (!result) {
+      console.log('no result')
+      return false
+    }
+    const info = await result
+    return info
+  } catch (err) {
+    console.log(err)
+    return false
+  }
 }

@@ -96,7 +96,7 @@ export const getLPWeights = (poolDetails, daoDetails, bondDetails) => {
   for (let i = 0; i < poolDetails.length; i++) {
     if (poolDetails[i].baseAmount > 0) {
       const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
-      const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
+      const bond = getBond(poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
           BN(poolDetails[i].balance).plus(dao?.staked).plus(bond?.staked),

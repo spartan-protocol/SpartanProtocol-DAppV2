@@ -18,11 +18,19 @@ import { useDao } from '../../../store/dao'
 import {
   calcLiqValueAll,
   getBlockTimestamp,
+  getSecsSince,
   getTimeSince,
 } from '../../../utils/math/nonContract'
 import { useWeb3 } from '../../../store/web3'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
-import { getToken } from '../../../utils/math/utils'
+import {
+  calcLiqValue,
+  calcSpotValueInBase,
+  getBond,
+  getDao,
+  getPool,
+  getToken,
+} from '../../../utils/math/utils'
 import { getMemberPositions } from '../../../utils/extCalls'
 
 const Positions = () => {
@@ -70,11 +78,8 @@ const Positions = () => {
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
             : { tokenAddress: addr.bnb }
-
         asset1 = getItemFromArray(asset1, pool.poolDetails)
-
         setPoolPos(asset1)
-
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
       }
     }
@@ -86,6 +91,13 @@ const Positions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
   ])
+
+  const getWallet = () => {
+    if (wallet?.account) {
+      return wallet.account.toString().toLowerCase()
+    }
+    return false
+  }
 
   const _getToken = () => getToken(poolPos.tokenAddress, pool.tokenDetails)
 
@@ -100,9 +112,7 @@ const Positions = () => {
   const getFromLS = () => {
     let _position = false
     const _positions = tryParse(window.localStorage.getItem('sp_positions'))
-    _position = _positions?.filter(
-      (scope) => scope.wallet === wallet.account,
-    )[0]
+    _position = _positions?.filter((scope) => scope.id === getWallet())[0]
     if (_position) {
       setPosition(_position)
     }
@@ -124,154 +134,191 @@ const Positions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  const updateOverallLS = (overallData) => {
-    const walletAddr = wallet.account
-    let posArray = tryParse(window.localStorage.getItem('sp_positions'))
-    if (!posArray) {
-      posArray = []
-      posArray.push({ wallet: walletAddr, overall: {}, positions: [] })
+  const updateLS = (queryData) => {
+    const walletAddr = getWallet()
+    if (walletAddr) {
+      let posArray = tryParse(window.localStorage.getItem('sp_positions'))
+      if (!posArray) {
+        posArray = []
+        posArray.push({ id: walletAddr })
+      }
+      let indexWal = posArray.findIndex((pos) => pos.id === walletAddr)
+      if (indexWal === -1) {
+        posArray.push({ id: walletAddr })
+        indexWal = posArray.findIndex((pos) => pos.id === walletAddr)
+      }
+      posArray[indexWal].lastUpdated = getBlockTimestamp()
+      posArray[indexWal].fees = queryData.fees
+      posArray[indexWal].id = queryData.id
+      posArray[indexWal].netAddSparta = queryData.netAddSparta
+      posArray[indexWal].netAddUsd = queryData.netAddUsd
+      posArray[indexWal].netHarvestSparta = queryData.netHarvestSparta
+      posArray[indexWal].netHarvestUsd = queryData.netHarvestUsd
+      posArray[indexWal].netRemSparta = queryData.netRemSparta
+      posArray[indexWal].netRemUsd = queryData.netRemUsd
+      posArray[indexWal].positions = queryData.positions
+      window.localStorage.setItem('sp_positions', JSON.stringify(posArray))
+      getFromLS()
     }
-    let indexWal = posArray.findIndex((pos) => pos.wallet === walletAddr)
-    if (indexWal === -1) {
-      posArray.push({ wallet: walletAddr, overall: {}, positions: [] })
-      indexWal = posArray.findIndex((pos) => pos.wallet === walletAddr)
-    }
-    posArray[indexWal].overall.netAddSparta = overallData.netAddSparta
-    posArray[indexWal].overall.netRemoveSparta = overallData.netRemoveSparta
-    posArray[indexWal].overall.netHarvestSparta = overallData.netHarvestSparta
-    posArray[indexWal].overall.netAddUsd = overallData.netAddUsd
-    posArray[indexWal].overall.netRemoveUsd = overallData.netRemoveUsd
-    posArray[indexWal].overall.netHarvestUsd = overallData.netHarvestUsd
-    posArray[indexWal].overall.lastUpdated = overallData.lastUpdated
-    window.localStorage.setItem('sp_positions', JSON.stringify(posArray))
-    getFromLS()
   }
 
-  const getOverall = () => {
-    // DUMMY DATA, ADD IN API CALLS TO GET THIS DATA
-    getMemberPositions(wallet.account)
-    const overallData = {
-      netAddSparta: '100000000000000000000',
-      netRemoveSparta: '200000000000000000000',
-      netHarvestSparta: '300000000000000000000',
-      netAddUsd: '100000000000000000000',
-      netRemoveUsd: '200000000000000000000',
-      netHarvestUsd: '300000000000000000000',
-      lastUpdated: getBlockTimestamp(),
-    }
-    updateOverallLS(overallData)
+  const getOverall = async () => {
+    const memberPos = await getMemberPositions(wallet.account)
+    updateLS(memberPos)
   }
 
-  // /** @returns {object} poolDetails item */
-  // const _getPool = (tokenAddr) => getPool(tokenAddr, pool.poolDetails)
-
-  // /** @returns BN(usdValue) */
-  // const getUSD = (tokenAddr, amount) => {
-  //   if (pool.poolDetails.length > 1) {
-  //     if (_getPool(tokenAddr)) {
-  //       return calcLiqValueIn(amount, _getPool(tokenAddr), web3.spartaPrice)[1]
-  //     }
-  //   }
-  //   return '0.00'
-  // }
-
-  const getRedemptionValue = (inUsd) => {
-    const [spartaValue, usdValue] = calcLiqValueAll(
+  const getRedemptionValue = () => {
+    let [spartaValue, usdValue] = calcLiqValueAll(
       pool.poolDetails,
       dao.daoDetails,
       bond.bondDetails,
       web3.spartaPrice,
     )
-    if (inUsd) {
-      if (usdValue > 0) {
-        return usdValue
-      }
+    if (spartaValue <= 0) {
+      spartaValue = '0.00'
     }
-    if (spartaValue > 0) {
-      return spartaValue
+    if (usdValue <= 0) {
+      usdValue = '0.00'
     }
-    return '0.00'
+    return [spartaValue, usdValue]
   }
 
-  // const isPosition = () => {
-  //   if (position) {
-  //     return true
-  //   }
-  //   return false
-  // }
-
   const isOverall = () => {
-    if (position?.overall) {
+    if (position) {
       return true
     }
     return false
   }
 
-  const getNetAdd = (inUsd) => {
-    const value = inUsd
-      ? position?.overall?.netAddUsd
-      : position?.overall?.netAddSparta
-    if (value > 0) {
-      return value
-    }
-    return '0.00'
+  const getNetAdd = () => {
+    const _sparta = position?.netAddSparta > 0 ? position?.netAddSparta : '0.00'
+    const _usd = position?.netAddUsd > 0 ? position?.netAddUsd : '0.00'
+    return [_sparta, _usd]
   }
 
-  const getNetRemove = (inUsd) => {
-    const value = inUsd
-      ? position?.overall?.netRemoveUsd
-      : position?.overall?.netRemoveSparta
-    if (value > 0) {
-      return value
-    }
-    return '0.00'
+  const getNetRemove = () => {
+    const _sparta = position?.netRemSparta > 0 ? position?.netRemSparta : '0.00'
+    const _usd = position?.netRemUsd > 0 ? position?.netRemUsd : '0.00'
+    return [_sparta, _usd]
   }
 
-  const getNetHarvest = (inUsd) => {
-    const value = inUsd
-      ? position?.overall?.netHarvestUsd
-      : position?.overall?.netHarvestSparta
-    if (value > 0) {
-      return value
-    }
-    return '0.00'
+  const getNetHarvest = () => {
+    const netHarvestSparta = position?.netHarvestSparta
+    const _sparta = netHarvestSparta > 0 ? netHarvestSparta : '0.00'
+    const _usd = position?.netHarvestUsd > 0 ? position?.netHarvestUsd : '0.00'
+    return [_sparta, _usd]
   }
 
   const getNetGain = (inUsd) => {
     if (!isOverall) {
       return 'Generate First'
     }
-    const add = BN(getNetAdd(inUsd && true))
-    const remove = BN(getNetRemove(inUsd && true))
-    const harvest = BN(getNetHarvest(inUsd && true))
-    const value = BN(getRedemptionValue(inUsd && true))
+    const add = BN(getNetAdd()[inUsd ? 1 : 0])
+    const remove = BN(getNetRemove()[inUsd ? 1 : 0])
+    const harvest = BN(getNetHarvest()[inUsd ? 1 : 0])
+    const value = BN(getRedemptionValue()[inUsd ? 1 : 0])
     const gain = value.plus(harvest).plus(remove).minus(add)
-    if (gain > 0) {
-      return gain
-    }
-    return '0.00'
+    return gain
   }
 
   const getNetGainSpartaToUsd = () => {
     const netGainSparta = getNetGain(false)
-    if (netGainSparta > 0) {
-      const inUsd = netGainSparta.times(web3.spartaPrice)
-      if (inUsd > 0) {
-        return inUsd
-      }
-    }
-    return '0.00'
+    const inUsd = netGainSparta.times(web3.spartaPrice)
+    return inUsd
   }
 
   const getOverallTime = () => {
     if (!isOverall) {
       return 'Generate First'
     }
-    const time = position?.overall?.lastUpdated
+    const time = position?.lastUpdated
     if (time > 0) {
       return getTimeSince(time, t)
     }
     return 'Generate First'
+  }
+
+  const _getPoolPos = () => {
+    if (position) {
+      const { positions } = position
+      const _pos = positions.filter(
+        (x) => x.pool.id === poolPos.address.toString().toLowerCase(),
+      )[0]
+      if (_pos) {
+        return _pos
+      }
+    }
+    return {
+      netAddSparta: '0',
+      netAddToken: '0',
+      netAddUsd: '0',
+      netLiqUnits: '0',
+      netRemSparta: '0',
+      netRemToken: '0',
+      netRemUsd: '0',
+      pool: {
+        id: '',
+        symbol: 'Invalid',
+      },
+    }
+  }
+
+  const getPoolNetAdd = () => {
+    const pewl = _getPoolPos()
+    const netAddSparta = pewl.netAddSparta > 0 ? pewl.netAddSparta : '0.00'
+    const netAddToken = pewl.netAddToken > 0 ? pewl.netAddToken : '0.00'
+    const netAddUsd = pewl.netAddUsd > 0 ? pewl.netAddUsd : '0.00'
+    return [netAddSparta, netAddToken, netAddUsd]
+  }
+
+  const getPoolNetRem = () => {
+    const pewl = _getPoolPos()
+    const netRemSparta = pewl.netRemSparta > 0 ? pewl.netRemSparta : '0.00'
+    const netRemToken = pewl.netRemToken > 0 ? pewl.netRemToken : '0.00'
+    const netRemUsd = pewl.netRemUsd > 0 ? pewl.netRemUsd : '0.00'
+    return [netRemSparta, netRemToken, netRemUsd]
+  }
+
+  const getPoolRedValue = () => {
+    const poolDets = getPool(poolPos.tokenAddress, pool.poolDetails)
+    const daoDets = getDao(poolPos.tokenAddress, dao.daoDetails)
+    const bondDets = getBond(poolPos.tokenAddress, bond.bondDetails)
+    const totalLps = BN(poolDets.balance)
+      .plus(daoDets.staked)
+      .plus(bondDets.staked)
+    let [spartaValue, tokenValue] = calcLiqValue(totalLps, poolDets)
+    let usdValue = spartaValue.times(2).times(web3.spartaPrice)
+    if (spartaValue <= 0) {
+      spartaValue = '0.00'
+    }
+    if (tokenValue <= 0) {
+      tokenValue = '0.00'
+    }
+    if (usdValue <= 0) {
+      usdValue = '0.00'
+    }
+    return [spartaValue, tokenValue, usdValue]
+  }
+
+  const getPoolNetGain = (type) => {
+    const typeIndex = type === 'sparta' ? 0 : type === 'token' ? 1 : 2
+    if (!isOverall) {
+      return 'Generate First'
+    }
+    const add = BN(getPoolNetAdd()[typeIndex])
+    const remove = BN(getPoolNetRem()[typeIndex])
+    const value = BN(getPoolRedValue()[typeIndex])
+    const gain = value.plus(remove).minus(add)
+    return gain
+  }
+
+  const getPoolNetGainWorthUsd = () => {
+    const _pool = getPool(poolPos.tokenAddress, pool.poolDetails)
+    const netGainSparta = getPoolNetGain('sparta')
+    const netGainToken = getPoolNetGain('token')
+    const spartaValue = calcSpotValueInBase(netGainToken, _pool)
+    const inUsd = netGainSparta.plus(spartaValue).times(web3.spartaPrice)
+    return inUsd
   }
 
   return (
@@ -298,11 +345,8 @@ const Positions = () => {
                           <Col xs="auto" className="text-card">
                             {t('netAddUsd')}
                           </Col>
-                          <Col
-                            className="text-end output-card"
-                            onClick={() => console.log(position)}
-                          >
-                            {formatFromWei(getNetAdd(true), 2)}
+                          <Col className="text-end output-card">
+                            {formatFromWei(getNetAdd()[1], 2)}
                             <Icon icon="usd" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -312,7 +356,7 @@ const Positions = () => {
                             {t('netRemoveUsd')}
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetRemove(true), 2)}
+                            {formatFromWei(getNetRemove()[1], 2)}
                             <Icon icon="usd" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -321,7 +365,7 @@ const Positions = () => {
                             {t('netHarvestUsd')}
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetHarvest(true), 2)}
+                            {formatFromWei(getNetHarvest()[1], 2)}
                             <Icon icon="usd" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -330,7 +374,7 @@ const Positions = () => {
                             {t('redemptionValueUsd')}
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getRedemptionValue(true), 2)}
+                            {formatFromWei(getRedemptionValue()[1], 2)}
                             <Icon icon="usd" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -354,7 +398,15 @@ const Positions = () => {
                         </Row>
                       </Card.Body>
                       <Card.Footer>
-                        <Button onClick={() => getOverall()}>Reload</Button>
+                        <Button
+                          onClick={() => getOverall()}
+                          className="w-100"
+                          disabled={getSecsSince(position.lastUpdated) < 60}
+                        >
+                          {getSecsSince(position.lastUpdated) < 60
+                            ? 'Wait 60s'
+                            : 'Reload'}
+                        </Button>
                       </Card.Footer>
                     </>
                   ) : (
@@ -382,11 +434,8 @@ const Positions = () => {
                           <Col xs="auto" className="text-card">
                             {t('netAddSparta')}
                           </Col>
-                          <Col
-                            className="text-end output-card"
-                            onClick={() => console.log(position)}
-                          >
-                            {formatFromWei(getNetAdd(false), 2)}
+                          <Col className="text-end output-card">
+                            {formatFromWei(getNetAdd()[0], 2)}
                             <Icon icon="spartav2" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -396,7 +445,7 @@ const Positions = () => {
                             {t('netRemoveSparta')}
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetRemove(false), 2)}
+                            {formatFromWei(getNetRemove()[0], 2)}
                             <Icon icon="spartav2" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -405,7 +454,7 @@ const Positions = () => {
                             {t('netHarvestSparta')}
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetHarvest(false), 2)}
+                            {formatFromWei(getNetHarvest()[0], 2)}
                             <Icon icon="spartav2" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -414,14 +463,14 @@ const Positions = () => {
                             {t('redemptionValueSparta')}
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getRedemptionValue(false), 2)}
+                            {formatFromWei(getRedemptionValue()[0], 2)}
                             <Icon icon="spartav2" className="ms-1" size="15" />
                           </Col>
                         </Row>
                         <hr />
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('gainLossSparta')}
+                            {t('gainLoss')}($SPARTA)
                           </Col>
                           <Col className="text-end output-card">
                             {formatFromWei(getNetGain(false), 2)}
@@ -430,10 +479,10 @@ const Positions = () => {
                         </Row>
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('gainLossUsd')}
+                            {t('worthNow')}($USD)
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetGainSpartaToUsd())}
+                            {formatFromWei(getNetGainSpartaToUsd(), 2)}
                             <Icon icon="usd" className="ms-1" size="15" />
                           </Col>
                         </Row>
@@ -447,7 +496,15 @@ const Positions = () => {
                         </Row>
                       </Card.Body>
                       <Card.Footer>
-                        <Button onClick={() => getOverall()}>Reload</Button>
+                        <Button
+                          onClick={() => getOverall()}
+                          className="w-100"
+                          disabled={getSecsSince(position.lastUpdated) < 60}
+                        >
+                          {getSecsSince(position.lastUpdated) < 60
+                            ? 'Wait 60s'
+                            : 'Reload'}
+                        </Button>
                       </Card.Footer>
                     </>
                   ) : (
@@ -477,7 +534,7 @@ const Positions = () => {
                           {t('netAddUsd')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetAdd()[2], 2)}
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -487,7 +544,7 @@ const Positions = () => {
                           {t('netRemoveUsd')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetRem()[2], 2)}
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -496,7 +553,7 @@ const Positions = () => {
                           {t('netRedeemable')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolRedValue()[2], 2)}
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -506,7 +563,7 @@ const Positions = () => {
                           {t('gainLoss')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetGain('usd'), 2)}
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -521,7 +578,7 @@ const Positions = () => {
               <Col xs="auto">
                 <Card className="card-320">
                   <Card.Header className="">
-                    *Selected Pool* Position
+                    {!isLoading() ? `${_getToken().symbol}p` : 'Pool'} Position
                     <Card.Subtitle className="">Vs Hodl Units</Card.Subtitle>
                     <Card.Subtitle className="">
                       *Combine this with other tile*
@@ -534,7 +591,7 @@ const Positions = () => {
                           {t('netAddSparta')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetAdd()[0], 2)}
                           <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -543,7 +600,7 @@ const Positions = () => {
                           {t('netRemoveSparta')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetRem()[0], 2)}
                           <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -552,7 +609,16 @@ const Positions = () => {
                           {t('netRedeemSparta')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolRedValue()[0], 2)}
+                          <Icon icon="spartav2" className="ms-1" size="15" />
+                        </Col>
+                      </Row>
+                      <Row className="my-1">
+                        <Col xs="auto" className="text-card">
+                          {t('gainLossSparta')}
+                        </Col>
+                        <Col className="text-end output-card">
+                          {formatFromWei(getPoolNetGain('sparta'), 2)}
                           <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
@@ -562,7 +628,7 @@ const Positions = () => {
                           {t('netAddToken')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetAdd()[1], 2)}
                           {/* <Icon icon="usd" className="ms-1" size="15" /> */}
                         </Col>
                       </Row>
@@ -571,7 +637,7 @@ const Positions = () => {
                           {t('netRemoveToken')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetRem()[1], 2)}
                           {/* <Icon icon="usd" className="ms-1" size="15" /> */}
                         </Col>
                       </Row>
@@ -580,18 +646,8 @@ const Positions = () => {
                           {t('netRedeemToken')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolRedValue()[1], 2)}
                           {/* <Icon icon="usd" className="ms-1" size="15" /> */}
-                        </Col>
-                      </Row>
-                      <hr />
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('gainLossSparta')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          coming soon
-                          <Icon icon="spartav2" className="ms-1" size="15" />
                         </Col>
                       </Row>
                       <Row className="my-1">
@@ -599,16 +655,17 @@ const Positions = () => {
                           {t('gainLossToken')}
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetGain('token'), 2)}
                           {/* <Icon icon="spartav2" className="ms-1" size="15" /> */}
                         </Col>
                       </Row>
+                      <hr />
                       <Row className="my-1">
                         <Col xs="auto" className="text-card">
-                          {t('gainLossUsd')}
+                          {t('gainWorthNow')}($USD)
                         </Col>
                         <Col className="text-end output-card">
-                          coming soon
+                          {formatFromWei(getPoolNetGainWorthUsd(), 2)}
                           <Icon icon="usd" className="ms-1" size="15" />
                         </Col>
                       </Row>
