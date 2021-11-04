@@ -96,7 +96,7 @@ export const getLPWeights = (poolDetails, daoDetails, bondDetails) => {
   for (let i = 0; i < poolDetails.length; i++) {
     if (poolDetails[i].baseAmount > 0) {
       const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
-      const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
+      const bond = getBond(poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
           BN(poolDetails[i].balance).plus(dao?.staked).plus(bond?.staked),
@@ -249,6 +249,18 @@ export const getTimeUntil = (timestamp, t) => {
   const timeNow = BN(getBlockTimestamp())
   const secondsUntil = _timeStamp.minus(timeNow)
   return convertTimeUnits(secondsUntil, t)
+}
+
+/**
+ * Return if a user has bonded
+ * @param {uint} timestamp to compare if the time given is 0 (not bonded)
+ * @returns boolean, true if bonded
+ */
+export const isBonded = (timestamp) => {
+  if (parseInt(timestamp, 10) === 0) {
+    return false
+  }
+  return true
 }
 
 /**
