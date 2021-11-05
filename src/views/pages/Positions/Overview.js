@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Col, Row, Button } from 'react-bootstrap'
+import {
+  Card,
+  Col,
+  Row,
+  Button,
+  OverlayTrigger,
+  Popover,
+} from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
@@ -34,6 +41,7 @@ import {
 import { getMemberPositions } from '../../../utils/extCalls'
 
 const Positions = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const pool = usePool()
   const bond = useBond()
@@ -42,6 +50,8 @@ const Positions = () => {
   const wallet = useWeb3React()
   const addr = getAddresses()
 
+  const [showUsd, setShowUsd] = useState(true)
+  const [showUsdPool, setShowUsdPool] = useState(true)
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
   const [network, setnetwork] = useState(getNetwork())
@@ -227,6 +237,12 @@ const Positions = () => {
     return inUsd
   }
 
+  const getNetGainUsdToSparta = () => {
+    const netGainUsd = getNetGain(true)
+    const inSparta = netGainUsd.div(web3.spartaPrice)
+    return inSparta
+  }
+
   const getOverallTime = () => {
     if (!isOverall) {
       return 'Generate First'
@@ -239,7 +255,7 @@ const Positions = () => {
   }
 
   const _getPoolPos = () => {
-    if (position) {
+    if (position && poolPos) {
       const { positions } = position
       const _pos = positions.filter(
         (x) => x.pool.id === poolPos.address.toString().toLowerCase(),
@@ -328,167 +344,315 @@ const Positions = () => {
           <>
             <Row className="row-480">
               <Col xs="auto">
-                <Card className="card-320">
+                <Card className="card-320" style={{ minHeight: '445px' }}>
                   <Card.Header className="">
                     Overall Position
                     <Card.Subtitle className="">
-                      In USD (at time of)
-                    </Card.Subtitle>
-                    <Card.Subtitle className="">
-                      *Add switch to Hodl USD / Units*
+                      <div className="mt-2 d-inline-block me-2">
+                        vs Hodl {showUsd ? 'USD' : 'SPARTA'}
+                      </div>
+                      <Button
+                        variant="info"
+                        className="p-1 text-sm-label"
+                        onClick={() => setShowUsd(!showUsd)}
+                      >
+                        Change to:
+                        <Icon
+                          icon={!showUsd ? 'usd' : 'spartav2'}
+                          size="17"
+                          className="ms-1"
+                        />
+                      </Button>
                     </Card.Subtitle>
                   </Card.Header>
                   {!isLoading() ? (
                     <>
-                      <Card.Body>
+                      <Card.Body className="pb-1">
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('netAddUsd')}
+                            {t('liquidityAdded')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('liquidityAdded')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    Total sum of all liquidity added to the
+                                    pools by your wallet (including Bond). The
+                                    value is based on the price of the assets at
+                                    the time they were added, derived via the
+                                    pools internal pricing.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetAdd()[1], 2)}
-                            <Icon icon="usd" className="ms-1" size="15" />
+                            {formatFromWei(
+                              showUsd ? getNetAdd()[1] : getNetAdd()[0],
+                              2,
+                            )}
+                            <Icon
+                              icon={showUsd ? 'usd' : 'spartav2'}
+                              className="ms-1"
+                              size="15"
+                            />
                           </Col>
                         </Row>
                         <hr />
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('netRemoveUsd')}
+                            {t('liquidityRemoved')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('liquidityRemoved')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    Total sum of all liquidity removed from the
+                                    pools by your wallet. The value is based on
+                                    the price of the assets at the time they
+                                    were removed, derived via the pools internal
+                                    pricing.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetRemove()[1], 2)}
-                            <Icon icon="usd" className="ms-1" size="15" />
+                            {formatFromWei(
+                              showUsd ? getNetRemove()[1] : getNetRemove()[0],
+                              2,
+                            )}
+                            <Icon
+                              icon={showUsd ? 'usd' : 'spartav2'}
+                              className="ms-1"
+                              size="15"
+                            />
                           </Col>
                         </Row>
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('netHarvestUsd')}
+                            {t('totalHarvested')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('totalHarvested')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    Total sum of all harvests by your wallet.
+                                    The value is based on the price of the
+                                    SPARTA at the time they were harvested,
+                                    derived via the pools internal pricing.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetHarvest()[1], 2)}
-                            <Icon icon="usd" className="ms-1" size="15" />
+                            {formatFromWei(
+                              showUsd ? getNetHarvest()[1] : getNetHarvest()[0],
+                              2,
+                            )}
+                            <Icon
+                              icon={showUsd ? 'usd' : 'spartav2'}
+                              className="ms-1"
+                              size="15"
+                            />
                           </Col>
                         </Row>
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('redemptionValueUsd')}
+                            {t('redemptionValue')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('redemptionValue')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    Total value of all assets you would receive
+                                    if you were to redeem all LP tokens held or
+                                    attributed to this wallet. The value is
+                                    internally derived based on the current spot
+                                    prices of the assets in the pools.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getRedemptionValue()[1], 2)}
-                            <Icon icon="usd" className="ms-1" size="15" />
+                            {formatFromWei(
+                              showUsd
+                                ? getRedemptionValue()[1]
+                                : getRedemptionValue()[0],
+                              2,
+                            )}
+                            <Icon
+                              icon={showUsd ? 'usd' : 'spartav2'}
+                              className="ms-1"
+                              size="15"
+                            />
                           </Col>
                         </Row>
                         <hr />
                         <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('gainLossUsd')}
+                          <Col xs="auto" className="output-card">
+                            {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    Your NET position based on the sum of the
+                                    above rows. This is a comparison to if you
+                                    were to hold {showUsd ? 'USD' : 'SPARTA'}{' '}
+                                    instead of providing liquidity to the pools.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(getNetGain(true), 2)}
-                            <Icon icon="usd" className="ms-1" size="15" />
+                            {formatFromWei(
+                              showUsd ? getNetGain(true) : getNetGain(false),
+                              2,
+                            )}
+                            <Icon
+                              icon={showUsd ? 'usd' : 'spartav2'}
+                              className="ms-1"
+                              size="15"
+                            />
                           </Col>
                         </Row>
+                        <Row className="my-1">
+                          <Col xs="auto" className="text-card">
+                            {t('currentlyWorth')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('currentlyWorth')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    This is the current spot value of the Gain
+                                    vs Hodl figure above
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </Col>
+                          <Col className="text-end output-card">
+                            (
+                            {formatFromWei(
+                              !showUsd
+                                ? getNetGainSpartaToUsd()
+                                : getNetGainUsdToSparta(),
+                              2,
+                            )}
+                            )
+                            <Icon
+                              icon={!showUsd ? 'usd' : 'spartav2'}
+                              className="ms-1"
+                              size="15"
+                            />
+                          </Col>
+                        </Row>
+                        <hr />
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
                             {t('lastUpdated')}
-                          </Col>
-                          <Col className="text-end output-card">
-                            {getOverallTime()}
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                      <Card.Footer>
-                        <Button
-                          onClick={() => getOverall()}
-                          className="w-100"
-                          disabled={getSecsSince(position.lastUpdated) < 60}
-                        >
-                          {getSecsSince(position.lastUpdated) < 60
-                            ? 'Wait 60s'
-                            : 'Reload'}
-                        </Button>
-                      </Card.Footer>
-                    </>
-                  ) : (
-                    <Col className="">
-                      <HelmetLoading height={300} width={300} />
-                    </Col>
-                  )}
-                </Card>
-              </Col>
-              <Col xs="auto">
-                <Card className="card-320">
-                  <Card.Header className="">
-                    Overall Position
-                    <Card.Subtitle className="">
-                      In SPARTA (at time of)
-                    </Card.Subtitle>
-                    <Card.Subtitle className="">
-                      *Combine this with other tile*
-                    </Card.Subtitle>
-                  </Card.Header>
-                  {!isLoading() ? (
-                    <>
-                      <Card.Body>
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('netAddSparta')}
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(getNetAdd()[0], 2)}
-                            <Icon icon="spartav2" className="ms-1" size="15" />
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('netRemoveSparta')}
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(getNetRemove()[0], 2)}
-                            <Icon icon="spartav2" className="ms-1" size="15" />
-                          </Col>
-                        </Row>
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('netHarvestSparta')}
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(getNetHarvest()[0], 2)}
-                            <Icon icon="spartav2" className="ms-1" size="15" />
-                          </Col>
-                        </Row>
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('redemptionValueSparta')}
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(getRedemptionValue()[0], 2)}
-                            <Icon icon="spartav2" className="ms-1" size="15" />
-                          </Col>
-                        </Row>
-                        <hr />
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('gainLoss')}($SPARTA)
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(getNetGain(false), 2)}
-                            <Icon icon="spartav2" className="ms-1" size="15" />
-                          </Col>
-                        </Row>
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('worthNow')}($USD)
-                          </Col>
-                          <Col className="text-end output-card">
-                            {formatFromWei(getNetGainSpartaToUsd(), 2)}
-                            <Icon icon="usd" className="ms-1" size="15" />
-                          </Col>
-                        </Row>
-                        <Row className="my-1">
-                          <Col xs="auto" className="text-card">
-                            {t('lastUpdated')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('lastUpdated')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    The last time you clicked &apos;Reload&apos;
+                                    to update all &apos;realised&apos; position
+                                    events. Note that the &apos;Redemption
+                                    Value&apos; is dynamic and does not need to
+                                    be updated via the button.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
                             {getOverallTime()}
@@ -516,159 +680,529 @@ const Positions = () => {
               </Col>
 
               <Col xs="auto">
-                <Card className="card-320">
+                <Card className="card-320" style={{ minHeight: '445px' }}>
                   <Card.Header className="">
                     {!isLoading() ? `${_getToken().symbol}p` : 'Pool'} Position
-                    <Card.Subtitle className="">Vs Hodl USD</Card.Subtitle>
                     <Card.Subtitle className="">
-                      *Add switch to Hodl USD / Units*
+                      <div className="mt-2 d-inline-block me-2">
+                        vs Hodl {showUsdPool ? 'USD' : 'Units'}
+                      </div>
+                      <Button
+                        variant="info"
+                        className="p-1 text-sm-label"
+                        onClick={() => setShowUsdPool(!showUsdPool)}
+                      >
+                        Change to:
+                        <Icon
+                          icon={!showUsdPool ? 'usd' : 'spartav2'}
+                          size="17"
+                          className="ms-1"
+                        />
+                        {!isLoading() && showUsdPool && (
+                          <img
+                            src={_getToken().symbolUrl}
+                            height="17"
+                            alt="token"
+                          />
+                        )}
+                      </Button>
                     </Card.Subtitle>
                   </Card.Header>
                   {!isLoading() ? (
                     <Card.Body>
-                      <Row className="my-1">
-                        <AssetSelect priority="1" filter={['pool']} />
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netAddUsd')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetAdd()[2], 2)}
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
+                      <Row className="mb-2">
+                        <div className="ms-1">
+                          <AssetSelect priority="1" filter={['pool']} />
+                        </div>
                       </Row>
                       <hr />
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRemoveUsd')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetRem()[2], 2)}
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRedeemable')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolRedValue()[2], 2)}
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <hr />
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('gainLoss')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetGain('usd'), 2)}
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                    </Card.Body>
-                  ) : (
-                    <Col className="">
-                      <HelmetLoading height={300} width={300} />
-                    </Col>
-                  )}
-                </Card>
-              </Col>
-              <Col xs="auto">
-                <Card className="card-320">
-                  <Card.Header className="">
-                    {!isLoading() ? `${_getToken().symbol}p` : 'Pool'} Position
-                    <Card.Subtitle className="">Vs Hodl Units</Card.Subtitle>
-                    <Card.Subtitle className="">
-                      *Combine this with other tile*
-                    </Card.Subtitle>
-                  </Card.Header>
-                  {!isLoading() ? (
-                    <Card.Body>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netAddSparta')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetAdd()[0], 2)}
-                          <Icon icon="spartav2" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRemoveSparta')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetRem()[0], 2)}
-                          <Icon icon="spartav2" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRedeemSparta')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolRedValue()[0], 2)}
-                          <Icon icon="spartav2" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('gainLossSparta')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetGain('sparta'), 2)}
-                          <Icon icon="spartav2" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
-                      <hr />
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netAddToken')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetAdd()[1], 2)}
-                          {/* <Icon icon="usd" className="ms-1" size="15" /> */}
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRemoveToken')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetRem()[1], 2)}
-                          {/* <Icon icon="usd" className="ms-1" size="15" /> */}
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('netRedeemToken')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolRedValue()[1], 2)}
-                          {/* <Icon icon="usd" className="ms-1" size="15" /> */}
-                        </Col>
-                      </Row>
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('gainLossToken')}
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetGain('token'), 2)}
-                          {/* <Icon icon="spartav2" className="ms-1" size="15" /> */}
-                        </Col>
-                      </Row>
-                      <hr />
-                      <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('gainWorthNow')}($USD)
-                        </Col>
-                        <Col className="text-end output-card">
-                          {formatFromWei(getPoolNetGainWorthUsd(), 2)}
-                          <Icon icon="usd" className="ms-1" size="15" />
-                        </Col>
-                      </Row>
+                      {showUsdPool ? (
+                        <>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('liquidityAdded')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('liquidityAdded')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total sum of all liquidity added to the
+                                      pools by your wallet (including Bond). The
+                                      value is based on the price of the assets
+                                      at the time they were added, derived via
+                                      the pools internal pricing.
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetAdd()[2], 2)}
+                              <Icon icon="usd" className="ms-1" size="15" />
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('liquidityRemoved')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('liquidityRemoved')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total sum of all liquidity removed from
+                                      the pools by your wallet. The value is
+                                      based on the price of the assets at the
+                                      time they were removed, derived via the
+                                      pools internal pricing.
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetRem()[2], 2)}
+                              <Icon icon="usd" className="ms-1" size="15" />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('redemptionValue')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('redemptionValue')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total value of all assets you would
+                                      receive if you were to redeem all LP
+                                      tokens held or attributed to this wallet.
+                                      The value is internally derived based on
+                                      the current spot prices of the assets in
+                                      the pools.
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>{' '}
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolRedValue()[2], 2)}
+                              <Icon icon="usd" className="ms-1" size="15" />
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row className="my-1">
+                            <Col xs="auto" className="output-card">
+                              {t('gainVs')} {showUsdPool ? 'USD' : 'SPARTA'}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('gainVs')} USD
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Your NET position based on the sum of the
+                                      above rows. This is a comparison to if you
+                                      were to hold USD instead of providing
+                                      liquidity to the pools (Excluding Harvest
+                                      Rewards)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetGain('usd'), 2)}
+                              <Icon icon="usd" className="ms-1" size="15" />
+                            </Col>
+                          </Row>
+                        </>
+                      ) : (
+                        <>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('liquidityAdded')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('liquidityAdded')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total sum of all SPARTA units added to the
+                                      pools by your wallet (including Bond)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetAdd()[0], 2)}
+                              <Icon
+                                icon="spartav2"
+                                className="ms-1"
+                                size="15"
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('liquidityRemoved')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('liquidityRemoved')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total sum of all SPARTA units removed from
+                                      the pools by your wallet
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetRem()[0], 2)}
+                              <Icon
+                                icon="spartav2"
+                                className="ms-1"
+                                size="15"
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('redemptionValue')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('redemptionValue')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total SPARTA you would receive if you were
+                                      to redeem all LP tokens held or attributed
+                                      to this wallet (SPARTA-side / half)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolRedValue()[0], 2)}
+                              <Icon
+                                icon="spartav2"
+                                className="ms-1"
+                                size="15"
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="output-card">
+                              {t('gain')} (SPARTA)
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('redemptionValue')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Your NET SPARTA position based on the sum
+                                      of the above rows (Excluding Harvest
+                                      Rewards)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetGain('sparta'), 2)}
+                              <Icon
+                                icon="spartav2"
+                                className="ms-1"
+                                size="15"
+                              />
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('liquidityAdded')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('liquidityAdded')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total sum of all {_getToken().symbol}{' '}
+                                      units added to the pools by your wallet
+                                      (including Bond)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetAdd()[1], 2)}
+                              <img
+                                src={_getToken().symbolUrl}
+                                height="15"
+                                alt="token"
+                                className="mb-1 ms-1"
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('liquidityRemoved')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('liquidityRemoved')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total sum of all {_getToken().symbol}{' '}
+                                      units removed from the pools by your
+                                      wallet
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetRem()[1], 2)}
+                              <img
+                                src={_getToken().symbolUrl}
+                                height="15"
+                                alt="token"
+                                className="mb-1 ms-1"
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="text-card">
+                              {t('redemptionValue')}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('redemptionValue')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Total {_getToken().symbol} you would
+                                      receive if you were to redeem all LP
+                                      tokens held or attributed to this wallet (
+                                      {_getToken().symbol}-side / half)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolRedValue()[1], 2)}
+                              <img
+                                src={_getToken().symbolUrl}
+                                height="15"
+                                alt="token"
+                                className="mb-1 ms-1"
+                              />
+                            </Col>
+                          </Row>
+                          <Row className="my-1">
+                            <Col xs="auto" className="output-card">
+                              {t('gain')} ({_getToken().symbol})
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('redemptionValue')}
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Your NET {_getToken().symbol} position
+                                      based on the sum of the above rows
+                                      (Excluding Harvest Rewards)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetGain('token'), 2)}
+                              <img
+                                src={_getToken().symbolUrl}
+                                height="15"
+                                alt="token"
+                                className="mb-1 ms-1"
+                              />
+                            </Col>
+                          </Row>
+                          <hr />
+                          <Row className="my-1">
+                            <Col xs="auto" className="output-card">
+                              {t('gainVs')} Units
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={
+                                  <Popover>
+                                    <Popover.Header as="h3">
+                                      {t('gainVs')} Units
+                                    </Popover.Header>
+                                    <Popover.Body className="text-center">
+                                      Your NET position based on the sum of the
+                                      above rows. This is a comparison to if you
+                                      were to hold the underlying assets (SPARTA
+                                      + {_getToken().symbol}) instead of
+                                      providing them as liquidity to the pools
+                                      (Excluding Harvest Rewards)
+                                    </Popover.Body>
+                                  </Popover>
+                                }
+                              >
+                                <span role="button">
+                                  <Icon
+                                    icon="info"
+                                    className="ms-1 mb-1"
+                                    size="15"
+                                    fill={isLightMode ? 'black' : 'white'}
+                                  />
+                                </span>
+                              </OverlayTrigger>
+                            </Col>
+                            <Col className="text-end output-card">
+                              {formatFromWei(getPoolNetGainWorthUsd(), 2)}
+                              <Icon icon="usd" className="ms-1" size="15" />
+                            </Col>
+                          </Row>
+                        </>
+                      )}
                     </Card.Body>
                   ) : (
                     <Col className="">
