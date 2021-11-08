@@ -249,7 +249,6 @@ export const mintSynth = (
   fromBase = false,
 ) => {
   let diviSynth = BN(0)
-  let diviSwap = BN(0)
   let baseCapped = false
   let synthCapped = false
   let baseAmount = BN(synthPool.baseAmount)
@@ -265,10 +264,10 @@ export const mintSynth = (
       stirCauldron(synthPool, tokenAmount, synth),
     ) // Check if this will exceed the dynamic synth cap
     // diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
-    return [_synthRec, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
+    return [_synthRec, synthFee, diviSynth, '0', baseCapped, synthCapped]
   }
   // Swap & mint TOKEN -> SPARTA -> SYNTH ---------------------------------------------------
-  const [_spartaSwap, swapFee, _diviSwap, , spartaOut] = swapTo(
+  const [_spartaSwap, swapFee, , , spartaOut] = swapTo(
     input,
     swapPool,
     swapPool,
@@ -288,9 +287,8 @@ export const mintSynth = (
     .plus(_synthRec)
     .isGreaterThan(stirCauldron(synthPool, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
   const slipFee = swapFee.plus(synthFee)
-  diviSwap = _diviSwap
   diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
-  return [_synthRec, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
+  return [_synthRec, slipFee, diviSynth, '0', baseCapped, synthCapped]
 }
 
 /**

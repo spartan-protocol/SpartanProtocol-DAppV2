@@ -365,7 +365,7 @@ const NewPool = () => {
                         disabled={!addrValid}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Minimum of 10,000 SPARTA required
+                        Minimum of 20,000 SPARTA required
                       </Form.Control.Feedback>
                     </InputGroup>
                     <InputGroup className="my-2">
