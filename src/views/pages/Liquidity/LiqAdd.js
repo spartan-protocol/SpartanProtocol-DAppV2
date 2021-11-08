@@ -44,8 +44,10 @@ import {
 } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { addLiq, addLiqAsym } from '../../../utils/math/router'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const LiqAdd = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
@@ -283,6 +285,15 @@ const LiqAdd = () => {
         .times(web3.spartaPrice)
     }
     return '0.00'
+  }
+
+  const getRevenue = () => {
+    let result = '0.00'
+    if (activeTab === 'addTab2') {
+      result = BN(getAddLiqAsym()[1])
+    }
+    result = result > 0 ? result : '0.00'
+    return result
   }
 
   // ~0.00288 BNB gas (addLiqSingle) on TN || ~0.0015 BNB on MN
@@ -748,19 +759,44 @@ const LiqAdd = () => {
                           </Row>
                         )}
                         {activeTab === 'addTab2' && (
-                          <Row className="mb-2">
-                            <Col xs="auto" className="title-card">
-                              <span className="text-card">{t('fee')}</span>
-                            </Col>
-                            <Col className="text-end">
-                              <span className="text-card">
-                                {getAddLiqAsym()[1] > 0
-                                  ? formatFromWei(getAddLiqAsym()[1], 4)
-                                  : '0.00'}{' '}
-                                <span className="">SPARTA</span>
-                              </span>
-                            </Col>
-                          </Row>
+                          <>
+                            <Row className="mb-2">
+                              <Col xs="auto" className="title-card">
+                                <span className="text-card">{t('fee')}</span>
+                              </Col>
+                              <Col className="text-end">
+                                <span className="text-card">
+                                  {getAddLiqAsym()[1] > 0
+                                    ? formatFromWei(getAddLiqAsym()[1], 4)
+                                    : '0.00'}{' '}
+                                  <span className="">SPARTA</span>
+                                </span>
+                              </Col>
+                            </Row>
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('revenue')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  {formatFromWei(getRevenue(), 6)} SPARTA
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'swapRevInfo')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1 mb-1"
+                                        size="17"
+                                        fill={isLightMode ? 'black' : 'white'}
+                                      />
+                                    </span>
+                                  </OverlayTrigger>
+                                </div>
+                              </Col>
+                            </Row>
+                          </>
                         )}
                         <Row className="">
                           <Col xs="auto" className="title-card">
