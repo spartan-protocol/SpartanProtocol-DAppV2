@@ -122,6 +122,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       title: 'revenue',
       body: 'swapRevInfo',
     },
+    {
+      id: 'synthCap',
+      title: 'synthCap',
+      body: 'synthCapInfo',
+    },
   ]
 
   const tooltip = allTooltips.filter((i) => i.id === tooltipId)[0]

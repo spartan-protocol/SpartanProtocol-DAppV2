@@ -270,6 +270,7 @@
   "swapSpartanProtocol": "Swap on Spartan Protocol",
   "synthFactory": "Synth Factory",
   "synth": "Synth",
+  "synthCap": "Synth Cap",
   "synthAtCapacity": "Synth At Capacity",
   "synths": "Synths",
   "synthsDisabled": "Synths Disabled",

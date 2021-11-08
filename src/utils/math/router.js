@@ -208,15 +208,15 @@ export const swapTo = (
 
 /**
  *
- * @param synthPoolSynthCap @param synthPoolTokenAmnt @param synth
+ * @param synthPoolItem @param synthPoolTokenDepth @param synthItem
  * @returns steamedSynths
  */
-export const stirCauldron = (synthPool, synthPoolTokenAmnt, synth) => {
+export const stirCauldron = (synthPool, synthPoolTokenDepth, synth) => {
   const _oneWeek = BN(oneWeek)
   const totalSup = BN(synth.totalSupply)
   const _lastStirred = BN(synthPool.lastStirred)
   let _stirRate = BN(synthPool.stirRate)
-  const _tokenAmount = BN(synthPoolTokenAmnt)
+  const _tokenAmount = BN(synthPoolTokenDepth)
   const _cap = BN(synthPool.synthCapBPs)
   const synthsCap = _tokenAmount.times(_cap).div(10000)
   let liquidSynths = BN(0)
