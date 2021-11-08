@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, ButtonGroup, Button } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import LiqBond from './LiqBond'
@@ -15,6 +16,15 @@ const Overview = () => {
   const [activeTab, setActiveTab] = useState('1')
   const pool = usePool()
   const [network, setnetwork] = useState(getNetwork())
+  const location = useLocation()
+
+  const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
+
+  useEffect(() => {
+    if (tabParam1) {
+      setActiveTab(tabParam1)
+    }
+  }, [tabParam1])
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {

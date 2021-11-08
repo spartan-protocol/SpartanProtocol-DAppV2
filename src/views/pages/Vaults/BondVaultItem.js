@@ -94,9 +94,9 @@ const BondItem = (props) => {
               </Col>
               <Col xs="auto" className="pl-1">
                 <h3 className="mb-0">{token().symbol}p</h3>
-                <Link to={`/liquidity?asset1=${token().address}`}>
+                <Link to={`/liquidity?tab=4&asset1=${token().address}`}>
                   <p className="text-sm-label-alt">
-                    {t('obtain')} {token().symbol}p
+                    {t('bond')} {token().symbol}
                     <Icon
                       icon="scan"
                       size="13"
@@ -189,7 +189,9 @@ const BondItem = (props) => {
             <Row className="text-center">
               {bond.listedAssets.includes(asset.address) && (
                 <Col className="px-2">
-                  <Button className="w-100">{t('bond')}</Button>
+                  <Link to={`/liquidity?tab=4&asset1=${token().address}`}>
+                    <Button className="w-100">{t('bond')}</Button>
+                  </Link>
                 </Col>
               )}
               <Col className="px-2">

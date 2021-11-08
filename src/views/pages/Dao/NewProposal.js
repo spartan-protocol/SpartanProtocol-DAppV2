@@ -87,6 +87,8 @@ const NewProposal = () => {
     return false
   }
 
+  const tempHide = ['DAO', 'ROUTER', 'UTILS', 'RESERVE']
+
   const showAddrInput = ['Address', 'Grant']
   const noAddrInput = [
     'LIST_BOND',
@@ -256,11 +258,13 @@ const NewProposal = () => {
                     onChange={(e) => handleTypeSelect(e.target.value)}
                     aria-label="Choose proposal type"
                   >
-                    {proposalTypes.map((pid) => (
-                      <option key={pid.value} value={pid.value}>
-                        {pid.label}
-                      </option>
-                    ))}
+                    {proposalTypes
+                      .filter((x) => !tempHide.includes(x.value))
+                      .map((pid) => (
+                        <option key={pid.value} value={pid.value}>
+                          {pid.label}
+                        </option>
+                      ))}
                   </Form.Select>
                 </FloatingLabel>
 
@@ -277,6 +281,11 @@ const NewProposal = () => {
                               </>
                             )}
                           </h4>
+                          <h5>
+                            {' '}
+                            {selectedType?.value === 'ADD_CURATED_POOL' &&
+                              'SPARTA depth > 250k'}
+                          </h5>
                           <Row>
                             <Col xs="12">
                               {showAddrInput.includes(selectedType.type) && (

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { allListedAssets, useBond } from '../../../../store/bond'
 import { usePool } from '../../../../store/pool/selector'
 import { useSynth } from '../../../../store/synth/selector'
+import { BN, convertToWei } from '../../../../utils/bigNumber'
 import { getPool } from '../../../../utils/math/utils'
 import { formatShortString, getAddresses } from '../../../../utils/web3'
 
@@ -44,7 +45,10 @@ const AssetSelect = (props) => {
     }
     if (props.selectedType === 'ADD_CURATED_POOL') {
       const assets = pool.poolDetails?.filter(
-        (asset) => !asset.curated && !filter.includes(asset.tokenAddress),
+        (asset) =>
+          !asset.curated &&
+          !filter.includes(asset.tokenAddress) &&
+          BN(asset.baseAmount).isGreaterThan(convertToWei(250000)),
       )
       for (let i = 0; i < assets.length; i++) {
         finArray.push({

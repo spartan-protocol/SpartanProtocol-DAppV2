@@ -51,9 +51,17 @@ import { calcSpotValueInBase } from '../../../utils/math/utils'
 import {
   getSynthDetails,
   getSynthGlobalDetails,
+  getSynthMemberDetails,
   getSynthMinting,
+  synthHarvestSingle,
+  synthVaultWeight,
 } from '../../../store/synth'
-import { convertTimeUnits } from '../../../utils/math/nonContract'
+import { convertTimeUnits, getSecsSince } from '../../../utils/math/nonContract'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { useDao } from '../../../store/dao/selector'
+import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
+import { useReserve } from '../../../store/reserve'
+import { daoMemberDetails } from '../../../store/dao/actions'
 
 const Swap = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -63,10 +71,14 @@ const Swap = () => {
   const web3 = useWeb3()
   const dispatch = useDispatch()
   const addr = getAddresses()
+  const dao = useDao()
   const pool = usePool()
+  const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
 
+  const [harvestLoading, setHarvestLoading] = useState(false)
+  const [harvestConfirm, setHarvestConfirm] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('mint')
@@ -85,6 +97,8 @@ const Swap = () => {
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
+  const [trigger1, settrigger1] = useState(0)
+
   const getData = () => {
     setnetwork(getNetwork())
   }
@@ -99,6 +113,43 @@ const Swap = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  const getGlobals = () => {
+    dispatch(getSynthGlobalDetails())
+    dispatch(getSynthMemberDetails(wallet))
+    dispatch(daoMemberDetails(wallet))
+  }
+  useEffect(() => {
+    if (trigger1 === 0) {
+      getGlobals()
+    }
+    const timer = setTimeout(() => {
+      getGlobals()
+      settrigger1(trigger1 + 1)
+    }, 7500)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger1])
+
+  useEffect(() => {
+    const checkDetails = () => {
+      if (synth.synthArray?.length > 1) {
+        dispatch(getSynthDetails(synth.synthArray, wallet))
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.synthArray])
+
+  useEffect(() => {
+    const checkWeight = () => {
+      if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
+        dispatch(synthVaultWeight(synth.synthDetails, pool.poolDetails))
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.synthDetails])
 
   const tryParse = (data) => {
     try {
@@ -321,6 +372,17 @@ const Swap = () => {
     return ['0.00', '0.00', '0.00', '0.00']
   }
 
+  const getRevenue = () => {
+    let result = '0.00'
+    if (activeTab === 'mint') {
+      result = BN(getMint()[1]).plus(getMint()[2])
+    } else {
+      result = BN(getBurn()[1]).plus(getBurn()[2])
+    }
+    result = result > 0 ? result : '0.00'
+    return result
+  }
+
   //= =================================================================================//
   // Functions for input handling
 
@@ -382,6 +444,38 @@ const Swap = () => {
     return true
   }
 
+  const secsSinceHarvest = () => {
+    if (dao.member.lastHarvest) {
+      return getSecsSince(dao.member.lastHarvest)
+    }
+    return '0'
+  }
+
+  const getClaimable = () => {
+    const [reward, baseCapped, synthCapped] = calcCurrentRewardSynth(
+      pool.poolDetails,
+      synth,
+      getSynth(assetSwap2.tokenAddress),
+      sparta.globalDetails,
+      reserve.globalDetails.spartaBalance,
+    )
+    return [reward, baseCapped, synthCapped]
+  }
+
+  const checkValidHarvest = () => {
+    const reward = formatFromWei(getClaimable()[0], 4)
+    if (!reserve.globalDetails.emissions) {
+      return [false, t('incentivesDisabled'), '']
+    }
+    if (getClaimable()[1]) {
+      return [false, t('baseCap'), '']
+    }
+    if (getClaimable()[2]) {
+      return [true, reward, ' SPARTA']
+    }
+    return [true, reward, ` ${getToken(assetSwap2.tokenAddress)?.symbol}s`]
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
@@ -409,6 +503,11 @@ const Swap = () => {
       }
       if (!confirmSynth) {
         return [false, t('confirmLockup')]
+      }
+      if (secsSinceHarvest() > 300) {
+        if (!harvestConfirm) {
+          return [false, t('confirmHarvest')]
+        }
       }
     }
     if (activeTab === 'burn') {
@@ -464,8 +563,30 @@ const Swap = () => {
     clearInputs()
   }
 
+  const handleHarvest = async () => {
+    setHarvestLoading(true)
+    await dispatch(
+      synthHarvestSingle(getSynth(assetSwap2.tokenAddress)?.address, wallet),
+    )
+    setHarvestLoading(false)
+    if (synth.synthArray?.length > 1) {
+      dispatch(getSynthDetails(synth.synthArray, wallet))
+    }
+  }
+
   const isLoading = () => {
-    if (!pool.poolDetails || !synth.synthDetails) {
+    if (
+      !pool.poolDetails ||
+      !synth.synthDetails ||
+      !synth.globalDetails ||
+      synth.synthDetails.length <= 0 ||
+      pool.tokenDetails.length <= 0 ||
+      !assetSwap1 ||
+      !assetSwap2
+    ) {
+      return true
+    }
+    if (wallet.account && !dao.member) {
       return true
     }
     return false
@@ -800,6 +921,32 @@ const Swap = () => {
                                 </Col>
                               </Row>
 
+                              <Row className="mb-2">
+                                <Col xs="auto">
+                                  <div className="text-card">
+                                    {t('revenue')}
+                                  </div>
+                                </Col>
+                                <Col className="text-end">
+                                  <div className="text-card">
+                                    {formatFromWei(getRevenue(), 6)} SPARTA
+                                    <OverlayTrigger
+                                      placement="auto"
+                                      overlay={Tooltip(t, 'swapRevInfo')}
+                                    >
+                                      <span role="button">
+                                        <Icon
+                                          icon="info"
+                                          className="ms-1 mb-1"
+                                          size="17"
+                                          fill={isLightMode ? 'black' : 'white'}
+                                        />
+                                      </span>
+                                    </OverlayTrigger>
+                                  </div>
+                                </Col>
+                              </Row>
+
                               <Row className="">
                                 <Col xs="auto" className="title-card">
                                   <span className="subtitle-card">
@@ -838,31 +985,72 @@ const Swap = () => {
                         </Card.Body>
                         <Card.Footer>
                           {activeTab === 'mint' && (
-                            <Row>
-                              <Col>
-                                <div className="output-card text-center">
-                                  {t('mintSynthConfirm')}{' '}
-                                  {_convertTimeUnits()[0]}{' '}
-                                  {_convertTimeUnits()[1]}.
-                                </div>
-                                <Form className="my-2 text-center">
-                                  <span className="output-card">
-                                    {t('mintSynthConfirmShort')}{' '}
+                            <>
+                              <Row>
+                                <Col>
+                                  <div className="output-card text-center">
+                                    {t('mintSynthConfirm')}{' '}
                                     {_convertTimeUnits()[0]}{' '}
-                                    {_convertTimeUnits()[1]}
-                                    <Form.Check
-                                      type="switch"
-                                      id="confirmLockout"
-                                      className="ms-2 d-inline-flex"
-                                      checked={confirmSynth}
-                                      onChange={() =>
-                                        setConfirmSynth(!confirmSynth)
-                                      }
-                                    />
-                                  </span>
-                                </Form>
-                              </Col>
-                            </Row>
+                                    {_convertTimeUnits()[1]}.
+                                  </div>
+                                  <Form className="my-2 text-center">
+                                    <span className="output-card">
+                                      {t('mintSynthConfirmShort')}{' '}
+                                      {_convertTimeUnits()[0]}{' '}
+                                      {_convertTimeUnits()[1]}
+                                      <Form.Check
+                                        type="switch"
+                                        id="confirmLockout"
+                                        className="ms-2 d-inline-flex"
+                                        checked={confirmSynth}
+                                        onChange={() =>
+                                          setConfirmSynth(!confirmSynth)
+                                        }
+                                      />
+                                    </span>
+                                  </Form>
+                                </Col>
+                              </Row>
+                              {getSynth(assetSwap2.tokenAddress)?.staked > 0 &&
+                                secsSinceHarvest() > 300 && (
+                                  <>
+                                    <Row xs="12" className="my-2">
+                                      <Col xs="12" className="output-card">
+                                        Existing harvest timer will be reset for{' '}
+                                        {
+                                          getToken(assetSwap2.tokenAddress)
+                                            ?.symbol
+                                        }
+                                        s, harvest before minting to avoid
+                                        forfeiting any accumulated rewards:
+                                      </Col>
+                                    </Row>
+                                    <Row xs="12" className="">
+                                      <Col xs="auto" className="text-card">
+                                        Harvest forfeiting
+                                      </Col>
+                                      <Col className="text-end output-card">
+                                        {checkValidHarvest()[1]}{' '}
+                                        {checkValidHarvest()[2]}
+                                      </Col>
+                                    </Row>
+                                    <Form className="my-2 text-center">
+                                      <span className="output-card">
+                                        Confirm harvest time reset
+                                        <Form.Check
+                                          type="switch"
+                                          id="confirmHarvest"
+                                          className="ms-2 d-inline-flex"
+                                          checked={harvestConfirm}
+                                          onChange={() =>
+                                            setHarvestConfirm(!harvestConfirm)
+                                          }
+                                        />
+                                      </span>
+                                    </Form>
+                                  </>
+                                )}
+                            </>
                           )}
                           {/* 'Approval/Allowance' row */}
                           <Row className="text-center">
@@ -886,20 +1074,54 @@ const Swap = () => {
                                     />
                                   )}
                                 <Col className="hide-if-siblings">
-                                  <Button
-                                    onClick={() => handleSwapToSynth()}
-                                    className="w-100"
-                                    disabled={!checkValid()[0]}
-                                  >
-                                    {checkValid()[1]}
-                                    {txnLoading && (
-                                      <Icon
-                                        icon="cycle"
-                                        size="20"
-                                        className="anim-spin ms-1"
-                                      />
-                                    )}
-                                  </Button>
+                                  <Row>
+                                    {getSynth(assetSwap2.tokenAddress)?.staked >
+                                      0 &&
+                                      secsSinceHarvest() > 300 && (
+                                        <Col>
+                                          <Button
+                                            className="w-100"
+                                            onClick={() => handleHarvest()}
+                                            disabled={
+                                              getSynth(assetSwap2.tokenAddress)
+                                                .staked <= 0 ||
+                                              !enoughGas() ||
+                                              reserve.globalDetails.globalFreeze
+                                            }
+                                          >
+                                            {enoughGas()
+                                              ? reserve.globalDetails
+                                                  .globalFreeze
+                                                ? t('globalFreeze')
+                                                : t('harvest')
+                                              : t('checkBnbGas')}
+                                            {harvestLoading && (
+                                              <Icon
+                                                icon="cycle"
+                                                size="20"
+                                                className="anim-spin ms-1"
+                                              />
+                                            )}
+                                          </Button>
+                                        </Col>
+                                      )}
+                                    <Col>
+                                      <Button
+                                        onClick={() => handleSwapToSynth()}
+                                        className="w-100"
+                                        disabled={!checkValid()[0]}
+                                      >
+                                        {checkValid()[1]}
+                                        {txnLoading && (
+                                          <Icon
+                                            icon="cycle"
+                                            size="20"
+                                            className="anim-spin ms-1"
+                                          />
+                                        )}
+                                      </Button>
+                                    </Col>
+                                  </Row>
                                 </Col>
                               </>
                             )}
@@ -939,54 +1161,6 @@ const Swap = () => {
                               </>
                             )}
                           </Row>
-                          {activeTab === 'mint' && getMint()[2] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(
-                                  assetSwap1.tokenAddress === addr.spartav2
-                                    ? assetSwap2.tokenAddress
-                                    : assetSwap1.tokenAddress,
-                                )?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getMint()[2],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
-                          {activeTab === 'mint' && getMint()[3] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(assetSwap2.tokenAddress)?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getMint()[3],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
-                          {activeTab === 'burn' && getBurn()[2] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(
-                                  assetSwap1.tokenAddress === addr.spartav2
-                                    ? assetSwap2.tokenAddress
-                                    : assetSwap1.tokenAddress,
-                                )?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getBurn()[2],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
-                          {activeTab === 'burn' && getBurn()[3] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(assetSwap2.tokenAddress)?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getBurn()[3],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
                         </Card.Footer>
                       </Card>
                     ) : (

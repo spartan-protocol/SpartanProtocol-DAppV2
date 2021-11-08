@@ -72,9 +72,11 @@ const Overview = () => {
   const getPools = () =>
     pool.poolDetails
       .filter((asset) =>
-        asset.baseAmount > 0 && asset.newPool === false && showBabies
-          ? BN(asset.baseAmount).isGreaterThanOrEqualTo(1)
-          : BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')),
+        asset.baseAmount > 0 && showBabies
+          ? BN(asset.baseAmount).isGreaterThanOrEqualTo(1) && !asset.newPool
+          : BN(asset.baseAmount).isGreaterThanOrEqualTo(
+              convertToWei('10000'),
+            ) && !asset.newPool,
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
