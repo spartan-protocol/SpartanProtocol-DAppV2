@@ -153,7 +153,7 @@ const NewPool = () => {
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
-    if (spartaInput?.value >= 10000) {
+    if (spartaInput?.value >= 20000) {
       setSpartaValid(true)
     } else {
       setSpartaValid(false)

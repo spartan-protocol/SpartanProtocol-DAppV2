@@ -488,7 +488,7 @@ const LiqBond = () => {
                   />
                   <ProgressBar
                     variant="black"
-                    key={1}
+                    key={2}
                     now={BN(100).minus(getRemainPC())}
                     label={
                       getRemainPC() <= 50 &&
