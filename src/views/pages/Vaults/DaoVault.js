@@ -294,6 +294,19 @@ const DaoVault = () => {
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
                     {t('harvestable')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'daoHarvestable')}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1 mb-1"
+                          size="15"
+                          // fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card">
                     {reserve.globalDetails.emissions

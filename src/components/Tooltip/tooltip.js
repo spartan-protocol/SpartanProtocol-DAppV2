@@ -30,6 +30,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'daoVaultWeightInfo',
     },
     {
+      id: 'daoHarvestable',
+      title: 'daoHarvestable',
+      body: 'daoHarvestableInfo',
+    },
+    {
       id: 'dividendRevenue',
       title: 'dividendRevenueTitle',
       body: 'dividendRevenue',
