@@ -802,6 +802,7 @@ const parseTxnLogs = (txn, txnType) => {
     const masterAbi = mergeAbis([
       abiArray.erc20,
       abiArray.pool,
+      abiArray.router,
       abiArray.sparta,
       abiArray.wbnb,
     ])
@@ -840,6 +841,7 @@ const parseTxnLogs = (txn, txnType) => {
     const masterAbi = mergeAbis([
       abiArray.erc20,
       abiArray.pool,
+      abiArray.router,
       abiArray.sparta,
       abiArray.wbnb,
     ])
@@ -882,6 +884,7 @@ const parseTxnLogs = (txn, txnType) => {
     const masterAbi = mergeAbis([
       abiArray.erc20,
       abiArray.pool,
+      abiArray.router,
       abiArray.synthVault,
       abiArray.sparta,
       abiArray.wbnb,
@@ -919,6 +922,7 @@ const parseTxnLogs = (txn, txnType) => {
     const masterAbi = mergeAbis([
       abiArray.erc20,
       abiArray.pool,
+      abiArray.router,
       abiArray.sparta,
       abiArray.wbnb,
     ])
