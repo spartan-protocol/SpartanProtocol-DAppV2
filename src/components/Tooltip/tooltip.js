@@ -130,12 +130,12 @@ export const Tooltip = (t, tooltipId, variable) => {
   ]
 
   const tooltip = allTooltips.filter((i) => i.id === tooltipId)[0]
-  const { title } = tooltip
-  const body = t(tooltip.body, tooltip.variable)
+  const title = tooltip ? tooltip.title : false
+  const body = tooltip ? t(tooltip.body, tooltip.variable) : tooltipId
 
   return (
     <Popover>
-      <Popover.Header as="h3">{t(title)}</Popover.Header>
+      {title && <Popover.Header as="h3">{t(title)}</Popover.Header>}
       <Popover.Body>{body}</Popover.Body>
     </Popover>
   )

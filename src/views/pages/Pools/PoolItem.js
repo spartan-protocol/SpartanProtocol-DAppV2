@@ -211,12 +211,22 @@ const PoolItem = ({ asset }) => {
                   className="rounded-circle"
                   alt={token.symbol}
                   height="45"
-                />{' '}
+                />
               </Col>
               <Col xs="auto" className="pe-0">
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
-                  ${formatFromUnits(tokenValueUSD, 2)}
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(
+                      t,
+                      `$${formatFromUnits(tokenValueUSD, 18)}`,
+                    )}
+                  >
+                    <span role="button">
+                      ${formatFromUnits(tokenValueUSD, 2)}
+                    </span>
+                  </OverlayTrigger>
                 </p>
               </Col>
               <Col className="text-end mt-1 p-0 pr-2">

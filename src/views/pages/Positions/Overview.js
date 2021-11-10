@@ -399,10 +399,12 @@ const Positions = () => {
                             </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(
-                              showUsd ? getNetAdd()[1] : getNetAdd()[0],
-                              2,
-                            )}
+                            {isOverall()
+                              ? formatFromWei(
+                                  showUsd ? getNetAdd()[1] : getNetAdd()[0],
+                                  2,
+                                )
+                              : 'Generate First'}
                             <Icon
                               icon={showUsd ? 'usd' : 'spartav2'}
                               className="ms-1"
@@ -442,10 +444,14 @@ const Positions = () => {
                             </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(
-                              showUsd ? getNetRemove()[1] : getNetRemove()[0],
-                              2,
-                            )}
+                            {isOverall()
+                              ? formatFromWei(
+                                  showUsd
+                                    ? getNetRemove()[1]
+                                    : getNetRemove()[0],
+                                  2,
+                                )
+                              : 'Generate First'}
                             <Icon
                               icon={showUsd ? 'usd' : 'spartav2'}
                               className="ms-1"
@@ -483,10 +489,14 @@ const Positions = () => {
                             </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(
-                              showUsd ? getNetHarvest()[1] : getNetHarvest()[0],
-                              2,
-                            )}
+                            {isOverall()
+                              ? formatFromWei(
+                                  showUsd
+                                    ? getNetHarvest()[1]
+                                    : getNetHarvest()[0],
+                                  2,
+                                )
+                              : 'Generate First'}
                             <Icon
                               icon={showUsd ? 'usd' : 'spartav2'}
                               className="ms-1"
@@ -569,10 +579,14 @@ const Positions = () => {
                             </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {formatFromWei(
-                              showUsd ? getNetGain(true) : getNetGain(false),
-                              2,
-                            )}
+                            {isOverall()
+                              ? formatFromWei(
+                                  showUsd
+                                    ? getNetGain(true)
+                                    : getNetGain(false),
+                                  2,
+                                )
+                              : 'Generate First'}
                             <Icon
                               icon={showUsd ? 'usd' : 'spartav2'}
                               className="ms-1"
@@ -608,14 +622,14 @@ const Positions = () => {
                             </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            (
-                            {formatFromWei(
-                              !showUsd
-                                ? getNetGainSpartaToUsd()
-                                : getNetGainUsdToSparta(),
-                              2,
-                            )}
-                            )
+                            {isOverall()
+                              ? formatFromWei(
+                                  !showUsd
+                                    ? getNetGainSpartaToUsd()
+                                    : getNetGainUsdToSparta(),
+                                  2,
+                                )
+                              : 'Generate First'}
                             <Icon
                               icon={!showUsd ? 'usd' : 'spartav2'}
                               className="ms-1"
@@ -749,7 +763,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetAdd()[2], 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetAdd()[2], 2)
+                                : 'Generate First'}
                               <Icon icon="usd" className="ms-1" size="15" />
                             </Col>
                           </Row>
@@ -785,7 +801,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetRem()[2], 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetRem()[2], 2)
+                                : 'Generate First'}
                               <Icon icon="usd" className="ms-1" size="15" />
                             </Col>
                           </Row>
@@ -857,7 +875,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetGain('usd'), 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetGain('usd'), 2)
+                                : 'Generate First'}
                               <Icon icon="usd" className="ms-1" size="15" />
                             </Col>
                           </Row>
@@ -892,7 +912,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetAdd()[0], 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetAdd()[0], 2)
+                                : 'Generate First'}
                               <Icon
                                 icon="spartav2"
                                 className="ms-1"
@@ -928,7 +950,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetRem()[0], 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetRem()[0], 2)
+                                : 'Generate First'}
                               <Icon
                                 icon="spartav2"
                                 className="ms-1"
@@ -981,7 +1005,7 @@ const Positions = () => {
                                 overlay={
                                   <Popover>
                                     <Popover.Header as="h3">
-                                      {t('redemptionValue')}
+                                      {t('gain')}
                                     </Popover.Header>
                                     <Popover.Body className="text-center">
                                       Your NET SPARTA position based on the sum
@@ -1002,7 +1026,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetGain('sparta'), 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetGain('sparta'), 2)
+                                : 'Generate First'}
                               <Icon
                                 icon="spartav2"
                                 className="ms-1"
@@ -1040,7 +1066,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetAdd()[1], 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetAdd()[1], 2)
+                                : 'Generate First'}
                               <img
                                 src={_getToken().symbolUrl}
                                 height="15"
@@ -1078,7 +1106,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetRem()[1], 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetRem()[1], 2)
+                                : 'Generate First'}
                               <img
                                 src={_getToken().symbolUrl}
                                 height="15"
@@ -1134,7 +1164,7 @@ const Positions = () => {
                                 overlay={
                                   <Popover>
                                     <Popover.Header as="h3">
-                                      {t('redemptionValue')}
+                                      {t('gain')}
                                     </Popover.Header>
                                     <Popover.Body className="text-center">
                                       Your NET {_getToken().symbol} position
@@ -1155,7 +1185,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetGain('token'), 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetGain('token'), 2)
+                                : 'Generate First'}
                               <img
                                 src={_getToken().symbolUrl}
                                 height="15"
@@ -1197,7 +1229,9 @@ const Positions = () => {
                               </OverlayTrigger>
                             </Col>
                             <Col className="text-end output-card">
-                              {formatFromWei(getPoolNetGainWorthUsd(), 2)}
+                              {isOverall()
+                                ? formatFromWei(getPoolNetGainWorthUsd(), 2)
+                                : 'Generate First'}
                               <Icon icon="usd" className="ms-1" size="15" />
                             </Col>
                           </Row>
