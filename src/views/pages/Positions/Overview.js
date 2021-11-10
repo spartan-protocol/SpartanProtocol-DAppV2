@@ -677,7 +677,10 @@ const Positions = () => {
                         <Button
                           onClick={() => getOverall()}
                           className="w-100"
-                          disabled={getSecsSince(position.lastUpdated) < 60}
+                          disabled={
+                            getSecsSince(position.lastUpdated) < 60 ||
+                            !wallet.account
+                          }
                         >
                           {getSecsSince(position.lastUpdated) < 60
                             ? 'Wait 60s'
