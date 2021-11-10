@@ -424,7 +424,19 @@ const LiqRemove = () => {
                               MAX
                             </Badge>
                             {t('balance')}:{' '}
-                            {pool.poolDetails && formatFromWei(getBalance(1))}
+                            {pool.poolDetails && (
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={Tooltip(
+                                  t,
+                                  formatFromWei(getBalance(1), 18),
+                                )}
+                              >
+                                <span role="button">
+                                  {formatFromWei(getBalance(1))}
+                                </span>
+                              </OverlayTrigger>
+                            )}
                           </Col>
                         </Row>
 

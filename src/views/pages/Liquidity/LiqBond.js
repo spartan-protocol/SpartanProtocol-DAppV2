@@ -377,9 +377,22 @@ const LiqBond = () => {
                                 MAX
                               </Badge>
                               {t('balance')}:{' '}
-                              {formatFromWei(
-                                getToken(assetBond1.tokenAddress)?.balance,
-                              )}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={Tooltip(
+                                  t,
+                                  formatFromWei(
+                                    getToken(assetBond1.tokenAddress)?.balance,
+                                    18,
+                                  ),
+                                )}
+                              >
+                                <span role="button">
+                                  {formatFromWei(
+                                    getToken(assetBond1.tokenAddress)?.balance,
+                                  )}
+                                </span>
+                              </OverlayTrigger>
                             </Col>
                           </Row>
 

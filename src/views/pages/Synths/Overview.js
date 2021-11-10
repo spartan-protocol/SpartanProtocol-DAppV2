@@ -676,7 +676,17 @@ const Swap = () => {
                                       </Badge>
                                       {t('balance')}
                                       {': '}
-                                      {formatFromWei(getBalance(1), 4)}
+                                      <OverlayTrigger
+                                        placement="auto"
+                                        overlay={Tooltip(
+                                          t,
+                                          formatFromWei(getBalance(1), 18),
+                                        )}
+                                      >
+                                        <span role="button">
+                                          {formatFromWei(getBalance(1))}
+                                        </span>
+                                      </OverlayTrigger>
                                     </Col>
                                   </Row>
 

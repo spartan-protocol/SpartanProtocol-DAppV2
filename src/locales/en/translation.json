@@ -271,6 +271,7 @@
   "synthFactory": "Synth Factory",
   "synth": "Synth",
   "synthCap": "Synth Cap",
+  "synthCapInfo": "Synths are capped to a percentage of the pool's token-depth for economic sustainability & responsibility. Users will not be able to forge more Synths if it's cap has been reached. As the pool gets deeper, the Synth Cap will scale up with it over time.",
   "synthAtCapacity": "Synth At Capacity",
   "synths": "Synths",
   "synthsDisabled": "Synths Disabled",

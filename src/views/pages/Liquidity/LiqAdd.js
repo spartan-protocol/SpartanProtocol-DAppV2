@@ -497,7 +497,19 @@ const LiqAdd = () => {
                               MAX
                             </Badge>
                             {t('balance')}:{' '}
-                            {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
+                            {pool.poolDetails && (
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={Tooltip(
+                                  t,
+                                  formatFromWei(getBalance(1), 18),
+                                )}
+                              >
+                                <span role="button">
+                                  {formatFromWei(getBalance(1))}
+                                </span>
+                              </OverlayTrigger>
+                            )}{' '}
                           </Col>
                         </Row>
 
@@ -612,7 +624,19 @@ const LiqAdd = () => {
                                 MAX
                               </Badge>
                               {t('balance')}:{' '}
-                              {pool.poolDetails && formatFromWei(getBalance(2))}
+                              {pool.poolDetails && (
+                                <OverlayTrigger
+                                  placement="auto"
+                                  overlay={Tooltip(
+                                    t,
+                                    formatFromWei(getBalance(2), 18),
+                                  )}
+                                >
+                                  <span role="button">
+                                    {formatFromWei(getBalance(2))}
+                                  </span>
+                                </OverlayTrigger>
+                              )}
                             </Col>
                           </Row>
 
