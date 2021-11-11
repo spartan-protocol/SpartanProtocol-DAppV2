@@ -17,12 +17,14 @@ import {
 } from '../../../../store/synth/actions'
 import { useSynth } from '../../../../store/synth/selector'
 import { useReserve } from '../../../../store/reserve'
+import { useWeb3 } from '../../../../store/web3'
 
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
+  const web3 = useWeb3()
   const wallet = useWeb3React()
   const addr = getAddresses()
   const reserve = useReserve()
@@ -113,14 +115,16 @@ const SynthWithdrawModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvest([props.synthItem.address], wallet))
+    await dispatch(synthHarvest([props.synthItem.address], wallet, web3.rpcs))
     setHarvestLoading(false)
-    dispatch(getSynthDetails(synth.synthArray, wallet))
+    dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
   }
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(synthWithdraw(props.synthItem.address, percentage, wallet))
+    await dispatch(
+      synthWithdraw(props.synthItem.address, percentage, wallet, web3.rpcs),
+    )
     setTxnLoading(false)
     handleCloseModal()
   }

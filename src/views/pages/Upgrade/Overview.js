@@ -4,14 +4,16 @@ import { Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { fallenSpartansCheck } from '../../../store/sparta/actions'
 import Upgrade from './Upgrade'
+import { useWeb3 } from '../../../store/web3'
 
 const Overview = () => {
   const dispatch = useDispatch()
+  const web3 = useWeb3()
   const wallet = useWeb3React()
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
-    dispatch(fallenSpartansCheck(wallet))
+    dispatch(fallenSpartansCheck(wallet, web3.rpcs))
   }
   useEffect(() => {
     if (trigger0 === 0) {

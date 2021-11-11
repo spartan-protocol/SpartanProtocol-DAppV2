@@ -219,28 +219,40 @@ ethereum(network: $network){
     setTxnLoading(true)
     const asset = getAsset(selectedAsset)
     if (asset.symbol === 'BNB') {
-      const signer = getWalletProvider(wallet?.library)
+      const signer = getWalletProvider(wallet?.library, web3.rpcs)
       await signer.sendTransaction({
         to: communityWallet,
         value: ethers.utils.parseEther(inputDonation?.value),
       })
     }
     if (asset.symbol === 'BUSD') {
-      const contract = getTokenContract(getAsset('BUSD').addr, wallet)
+      const contract = getTokenContract(
+        getAsset('BUSD').addr,
+        wallet,
+        web3.rpcs,
+      )
       await contract.transfer(
         communityWallet,
         convertToWei(inputDonation?.value),
       )
     }
     if (asset.symbol === 'USDT') {
-      const contract = getTokenContract(getAsset('USDT').addr, wallet)
+      const contract = getTokenContract(
+        getAsset('USDT').addr,
+        wallet,
+        web3.rpcs,
+      )
       await contract.transfer(
         communityWallet,
         convertToWei(inputDonation?.value),
       )
     }
     if (asset.symbol === 'SPARTA') {
-      const contract = getTokenContract(getAsset('SPARTA').addr, wallet)
+      const contract = getTokenContract(
+        getAsset('SPARTA').addr,
+        wallet,
+        web3.rpcs,
+      )
       await contract.transfer(
         communityWallet,
         convertToWei(inputDonation?.value),

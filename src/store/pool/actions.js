@@ -30,11 +30,11 @@ export const poolDetailsLoading = () => ({
  * Get array of all listed token addresses
  * @param wallet
  */
-export const getListedTokens = () => async (dispatch) => {
+export const getListedTokens = (rpcUrls) => async (dispatch) => {
   dispatch(poolLoading())
   const addr = getAddresses()
   const check = ethers.utils.isAddress(addr.poolFactory)
-  const contract = check ? getPoolFactoryContract() : ''
+  const contract = check ? getPoolFactoryContract(null, rpcUrls) : ''
   try {
     const listedTokens = []
     if (check) {
@@ -59,13 +59,13 @@ export const getListedTokens = () => async (dispatch) => {
  * @param listedTokens @param wallet
  */
 export const getTokenDetails =
-  (listedTokens, wallet, chainId) => async (dispatch) => {
+  (listedTokens, wallet, chainId, rpcUrls) => async (dispatch) => {
     dispatch(poolLoading())
     const addr = getAddresses()
     try {
       let tempArray = []
       for (let i = 0; i < listedTokens.length; i++) {
-        const contract = getTokenContract(listedTokens[i], wallet)
+        const contract = getTokenContract(listedTokens[i], wallet, rpcUrls)
         tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
         if (wallet.account) {
           if (listedTokens[i] === addr.bnb) {
@@ -111,9 +111,9 @@ export const getTokenDetails =
  * Return array of curated pool addresses
  * @param wallet
  */
-export const getCuratedPools = () => async (dispatch) => {
+export const getCuratedPools = (rpcUrls) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getPoolFactoryContract()
+  const contract = getPoolFactoryContract(null, rpcUrls)
   try {
     const curatedPools = await contract.callStatic.getVaultAssets()
     dispatch(payloadToDispatch(Types.POOL_CURATED_POOLS, curatedPools))
@@ -126,9 +126,9 @@ export const getCuratedPools = () => async (dispatch) => {
  * Get LP token addresses and setup the object
  * @param tokenDetails
  */
-export const getListedPools = (tokenDetails) => async (dispatch) => {
+export const getListedPools = (tokenDetails, rpcUrls) => async (dispatch) => {
   dispatch(poolLoading())
-  const contract = getUtilsContract()
+  const contract = getUtilsContract(null, rpcUrls)
   const addr = getAddresses()
   try {
     let tempArray = []
@@ -179,7 +179,7 @@ export const getListedPools = (tokenDetails) => async (dispatch) => {
  * @param listedPools @param curatedPools @param wallet
  */
 export const getPoolDetails =
-  (listedPools, curatedPools, wallet) => async (dispatch) => {
+  (listedPools, curatedPools, wallet, rpcUrls) => async (dispatch) => {
     dispatch(poolDetailsLoading())
     try {
       let tempArray = []
@@ -191,9 +191,9 @@ export const getPoolDetails =
         const curated = validPool
           ? curatedPools.includes(listedPools[i].address)
           : false
-        const routerContract = getRouterContract(wallet)
+        const routerContract = getRouterContract(wallet, rpcUrls)
         const poolContract = validPool
-          ? getPoolContract(listedPools[i].address, wallet)
+          ? getPoolContract(listedPools[i].address, wallet, rpcUrls)
           : null
         tempArray.push(
           !validPool || !wallet.account
@@ -275,16 +275,16 @@ export const getPoolDetails =
  * @param inputBase @param inputToken @param token @param wallet
  */
 export const createPoolADD =
-  (inputBase, inputToken, token, wallet) => async (dispatch) => {
+  (inputBase, inputToken, token, wallet, rpcUrls) => async (dispatch) => {
     dispatch(poolLoading())
     const addr = getAddresses()
-    const contract = getPoolFactoryContract(wallet)
+    const contract = getPoolFactoryContract(wallet, rpcUrls)
     try {
-      const gPrice = await getProviderGasPrice()
+      const gPrice = await getProviderGasPrice(rpcUrls)
       const _value = token === addr.bnb ? inputToken : null
       const ORs = { value: _value, gasPrice: gPrice }
       let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
-      txn = await parseTxn(txn, 'createPool')
+      txn = await parseTxn(txn, 'createPool', rpcUrls)
       dispatch(payloadToDispatch(Types.POOL_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.POOL_ERROR, error))

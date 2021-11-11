@@ -17,12 +17,14 @@ import { useReserve } from '../../../../store/reserve/selector'
 import { calcCurrentRewardSynth } from '../../../../utils/math/synthVault'
 import { useSparta } from '../../../../store/sparta'
 import spartaIcon from '../../../../assets/tokens/sparta-synth.svg'
+import { useWeb3 } from '../../../../store/web3'
 
 const SynthHarvestModal = ({ synthItem }) => {
   const dispatch = useDispatch()
   const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
+  const web3 = useWeb3()
   const synth = useSynth()
   const { t } = useTranslation()
   const wallet = useWeb3React()
@@ -39,10 +41,10 @@ const SynthHarvestModal = ({ synthItem }) => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvestSingle(synthItem.address, wallet))
+    await dispatch(synthHarvestSingle(synthItem.address, wallet, web3.rpcs))
     setTxnLoading(false)
     if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
     handleCloseModal()
   }

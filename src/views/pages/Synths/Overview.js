@@ -115,9 +115,9 @@ const Swap = () => {
   }, [trigger0])
 
   const getGlobals = () => {
-    dispatch(getSynthGlobalDetails())
-    dispatch(getSynthMemberDetails(wallet))
-    dispatch(daoMemberDetails(wallet))
+    dispatch(getSynthGlobalDetails(web3.rpcs))
+    dispatch(getSynthMemberDetails(wallet, web3.rpcs))
+    dispatch(daoMemberDetails(wallet, web3.rpcs))
   }
   useEffect(() => {
     if (trigger1 === 0) {
@@ -134,7 +134,7 @@ const Swap = () => {
   useEffect(() => {
     const checkDetails = () => {
       if (synth.synthArray?.length > 1) {
-        dispatch(getSynthDetails(synth.synthArray, wallet))
+        dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
       }
     }
     checkDetails()
@@ -144,7 +144,9 @@ const Swap = () => {
   useEffect(() => {
     const checkWeight = () => {
       if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
-        dispatch(synthVaultWeight(synth.synthDetails, pool.poolDetails))
+        dispatch(
+          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
+        )
       }
     }
     checkWeight()
@@ -169,9 +171,9 @@ const Swap = () => {
         )
       ) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthGlobalDetails())
-          dispatch(getSynthDetails(synthArray, wallet))
-          dispatch(getSynthMinting())
+          dispatch(getSynthGlobalDetails(web3.rpcs))
+          dispatch(getSynthDetails(synthArray, wallet, web3.rpcs))
+          dispatch(getSynthMinting(web3.rpcs))
         }
       }
     }
@@ -543,6 +545,7 @@ const Swap = () => {
         assetSwap1.tokenAddress,
         getSynth(assetSwap2.tokenAddress)?.address,
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -557,6 +560,7 @@ const Swap = () => {
         getSynth(assetSwap1.tokenAddress)?.address,
         assetSwap2.tokenAddress,
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -566,11 +570,15 @@ const Swap = () => {
   const handleHarvest = async () => {
     setHarvestLoading(true)
     await dispatch(
-      synthHarvestSingle(getSynth(assetSwap2.tokenAddress)?.address, wallet),
+      synthHarvestSingle(
+        getSynth(assetSwap2.tokenAddress)?.address,
+        wallet,
+        web3.rpcs,
+      ),
     )
     setHarvestLoading(false)
     if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
   }
 

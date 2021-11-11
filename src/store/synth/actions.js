@@ -20,9 +20,9 @@ export const synthLoading = () => ({
  * Get the global synth details
  * @returns {object} minimumDepositTime, totalWeight, erasToEarn, blockDelay, vaultClaim, stakedSynthLength
  */
-export const getSynthGlobalDetails = () => async (dispatch) => {
+export const getSynthGlobalDetails = (rpcUrls) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(null, rpcUrls)
   try {
     let awaitArray = [
       contract.callStatic.minimumDepositTime(),
@@ -31,7 +31,7 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
       contract.callStatic.genesis(),
       contract.callStatic.map30DVaultRevenue(),
       contract.callStatic.mapPast30DVaultRevenue(),
-      getSynthFactoryContract().callStatic.synthCount(),
+      getSynthFactoryContract(null, rpcUrls).callStatic.synthCount(),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
@@ -53,9 +53,9 @@ export const getSynthGlobalDetails = () => async (dispatch) => {
  * Get the member's synth details
  * @returns depositTime
  */
-export const getSynthMemberDetails = (wallet) => async (dispatch) => {
+export const getSynthMemberDetails = (wallet, rpcUrls) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthVaultContract()
+  const contract = getSynthVaultContract(null, rpcUrls)
   try {
     let awaitArray = [contract.callStatic.mapMember_depositTime(wallet.account)]
     awaitArray = await Promise.all(awaitArray)
@@ -72,9 +72,9 @@ export const getSynthMemberDetails = (wallet) => async (dispatch) => {
  * Get the global synthMinting bool (from router)
  * @returns {bool} synthMinting
  */
-export const getSynthMinting = () => async (dispatch) => {
+export const getSynthMinting = (rpcUrls) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getRouterContract()
+  const contract = getRouterContract(rpcUrls)
   try {
     const synthMinting = await contract.callStatic.synthMinting()
     dispatch(payloadToDispatch(Types.SYNTH_MINTING, synthMinting))
@@ -88,10 +88,10 @@ export const getSynthMinting = () => async (dispatch) => {
  * @param tokenArray
  * @returns synthArray
  */
-export const getSynthArray = (tokenArray) => async (dispatch) => {
+export const getSynthArray = (tokenArray, rpcUrls) => async (dispatch) => {
   dispatch(synthLoading())
   const addr = getAddresses()
-  const contract = getSynthFactoryContract()
+  const contract = getSynthFactoryContract(null, rpcUrls)
   try {
     let tempArray = []
     for (let i = 0; i < tokenArray.length; i++) {
@@ -120,56 +120,65 @@ export const getSynthArray = (tokenArray) => async (dispatch) => {
  * @param synthArray @param wallet
  * @returns [synthDetails]
  */
-export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract(wallet)
-  try {
-    let tempArray = []
-    for (let i = 0; i < synthArray.length; i++) {
-      if (!wallet.account || synthArray[i].address === false) {
-        tempArray.push('0') // balance
-        tempArray.push('0') // staked
-        tempArray.push('0') // lastHarvest
-      } else {
-        const synthContract = getSynthContract(synthArray[i].address, wallet)
-        tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
-        tempArray.push(
-          contract.callStatic.getMemberDeposit(
-            wallet.account,
+export const getSynthDetails =
+  (synthArray, wallet, rpcUrls) => async (dispatch) => {
+    dispatch(synthLoading())
+    const contract = getSynthVaultContract(wallet, rpcUrls)
+    try {
+      let tempArray = []
+      for (let i = 0; i < synthArray.length; i++) {
+        if (!wallet.account || synthArray[i].address === false) {
+          tempArray.push('0') // balance
+          tempArray.push('0') // staked
+          tempArray.push('0') // lastHarvest
+        } else {
+          const synthContract = getSynthContract(
             synthArray[i].address,
-          ),
-        ) // staked
-        tempArray.push(
-          contract.callStatic.getMemberLastSynthTime(
+            wallet,
+            rpcUrls,
+          )
+          tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
+          tempArray.push(
+            contract.callStatic.getMemberDeposit(
+              wallet.account,
+              synthArray[i].address,
+            ),
+          ) // staked
+          tempArray.push(
+            contract.callStatic.getMemberLastSynthTime(
+              synthArray[i].address,
+              wallet.account,
+            ),
+          ) // lastHarvest
+        }
+        if (synthArray[i].address === false) {
+          tempArray.push('0') // lpBalance
+          tempArray.push('0') // totalSupply / debt
+        } else {
+          const synthContract = getSynthContract(
             synthArray[i].address,
-            wallet.account,
-          ),
-        ) // lastHarvest
+            wallet,
+            rpcUrls,
+          )
+          tempArray.push(synthContract.callStatic.collateral()) // lpBalance
+          tempArray.push(synthContract.callStatic.totalSupply()) // totalSupply / debt
+        }
       }
-      if (synthArray[i].address === false) {
-        tempArray.push('0') // lpBalance
-        tempArray.push('0') // totalSupply / debt
-      } else {
-        const synthContract = getSynthContract(synthArray[i].address, wallet)
-        tempArray.push(synthContract.callStatic.collateral()) // lpBalance
-        tempArray.push(synthContract.callStatic.totalSupply()) // totalSupply / debt
+      const synthDetails = synthArray
+      tempArray = await Promise.all(tempArray)
+      const varCount = 5
+      for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
+        synthDetails[i / varCount].balance = tempArray[i].toString()
+        synthDetails[i / varCount].staked = tempArray[i + 1].toString()
+        synthDetails[i / varCount].lastHarvest = tempArray[i + 2].toString()
+        synthDetails[i / varCount].lpBalance = tempArray[i + 3].toString()
+        synthDetails[i / varCount].totalSupply = tempArray[i + 4].toString()
       }
+      dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
     }
-    const synthDetails = synthArray
-    tempArray = await Promise.all(tempArray)
-    const varCount = 5
-    for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
-      synthDetails[i / varCount].balance = tempArray[i].toString()
-      synthDetails[i / varCount].staked = tempArray[i + 1].toString()
-      synthDetails[i / varCount].lastHarvest = tempArray[i + 2].toString()
-      synthDetails[i / varCount].lpBalance = tempArray[i + 3].toString()
-      synthDetails[i / varCount].totalSupply = tempArray[i + 4].toString()
-    }
-    dispatch(payloadToDispatch(Types.SYNTH_DETAILS, synthDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
   }
-}
 
 /**
  * Get the current synthVault's total weight
@@ -177,9 +186,9 @@ export const getSynthDetails = (synthArray, wallet) => async (dispatch) => {
  * @returns spartaWeight
  */
 export const synthVaultWeight =
-  (synthDetails, poolDetails) => async (dispatch) => {
+  (synthDetails, poolDetails, rpcUrls) => async (dispatch) => {
     dispatch(synthLoading())
-    const contract = getSynthVaultContract()
+    const contract = getSynthVaultContract(null, rpcUrls)
     try {
       const vaultPools = synthDetails.filter(
         (x) => x.address && getPool(x.tokenAddress, poolDetails).curated,
@@ -215,53 +224,56 @@ export const synthVaultWeight =
  * Deposit synths to synthVault
  * @param synth @param amount @param wallet
  */
-export const synthDeposit = (synth, amount, wallet) => async (dispatch) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract(wallet)
-  try {
-    const gPrice = await getProviderGasPrice()
-    let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'synthDeposit')
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+export const synthDeposit =
+  (synth, amount, wallet, rpcUrls) => async (dispatch) => {
+    dispatch(synthLoading())
+    const contract = getSynthVaultContract(wallet, rpcUrls)
+    try {
+      const gPrice = await getProviderGasPrice(rpcUrls)
+      let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
+      txn = await parseTxn(txn, 'synthDeposit', rpcUrls)
+      dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+    }
   }
-}
 
 /**
  * Harvest synths from synthVault
  * @param {array} synthArray @param wallet
  */
-export const synthHarvest = (synthArray, wallet) => async (dispatch) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract(wallet)
-  try {
-    const gPrice = await getProviderGasPrice()
-    let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'synthHarvest')
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+export const synthHarvest =
+  (synthArray, wallet, rpcUrls) => async (dispatch) => {
+    dispatch(synthLoading())
+    const contract = getSynthVaultContract(wallet, rpcUrls)
+    try {
+      const gPrice = await getProviderGasPrice(rpcUrls)
+      let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
+      txn = await parseTxn(txn, 'synthHarvest', rpcUrls)
+      dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+    }
   }
-}
 
 /**
  * Harvest a single synthetic stake position from synthVault
  * @param synth @param wallet
  */
-export const synthHarvestSingle = (synth, wallet) => async (dispatch) => {
-  dispatch(synthLoading())
-  const contract = getSynthVaultContract(wallet)
+export const synthHarvestSingle =
+  (synth, wallet, rpcUrls) => async (dispatch) => {
+    dispatch(synthLoading())
+    const contract = getSynthVaultContract(wallet, rpcUrls)
 
-  try {
-    const gPrice = await getProviderGasPrice()
-    let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'synthHarvest')
-    dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+    try {
+      const gPrice = await getProviderGasPrice(rpcUrls)
+      let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
+      txn = await parseTxn(txn, 'synthHarvest', rpcUrls)
+      dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
+    }
   }
-}
 
 /**
  * Withdraw synths from synthVault
@@ -269,14 +281,14 @@ export const synthHarvestSingle = (synth, wallet) => async (dispatch) => {
  * @returns withdrawAmount
  */
 export const synthWithdraw =
-  (synth, basisPoints, wallet) => async (dispatch) => {
+  (synth, basisPoints, wallet, rpcUrls) => async (dispatch) => {
     dispatch(synthLoading())
-    const contract = getSynthVaultContract(wallet)
+    const contract = getSynthVaultContract(wallet, rpcUrls)
     try {
-      const gPrice = await getProviderGasPrice()
+      const gPrice = await getProviderGasPrice(rpcUrls)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.withdraw(synth, basisPoints, ORs)
-      txn = await parseTxn(txn, 'synthWithdraw')
+      txn = await parseTxn(txn, 'synthWithdraw', rpcUrls)
       dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.SYNTH_ERROR, error))
@@ -288,13 +300,13 @@ export const synthWithdraw =
  * @param token
  * @returns synth
  */
-export const createSynth = (token, wallet) => async (dispatch) => {
+export const createSynth = (token, wallet, rpcUrls) => async (dispatch) => {
   dispatch(synthLoading())
-  const contract = getSynthFactoryContract(wallet)
+  const contract = getSynthFactoryContract(wallet, rpcUrls)
   try {
-    const gPrice = await getProviderGasPrice()
+    const gPrice = await getProviderGasPrice(rpcUrls)
     let txn = await contract.createSynth(token, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'createSynth')
+    txn = await parseTxn(txn, 'createSynth', rpcUrls)
     dispatch(payloadToDispatch(Types.SYNTH_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SYNTH_ERROR, error))

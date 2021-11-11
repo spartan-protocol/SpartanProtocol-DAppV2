@@ -14,6 +14,7 @@ import { getSecsSince } from '../../../../utils/math/nonContract'
 import { useReserve } from '../../../../store/reserve/selector'
 import { calcCurrentRewardSynth } from '../../../../utils/math/synthVault'
 import { useSparta } from '../../../../store/sparta'
+import { useWeb3 } from '../../../../store/web3'
 
 const SynthHarvestAllModal = () => {
   const dispatch = useDispatch()
@@ -21,6 +22,7 @@ const SynthHarvestAllModal = () => {
   const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
+  const web3 = useWeb3()
   const { t } = useTranslation()
   const wallet = useWeb3React()
   const addr = getAddresses()
@@ -46,10 +48,10 @@ const SynthHarvestAllModal = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvest(getArray(), wallet))
+    await dispatch(synthHarvest(getArray(), wallet, web3.rpcs))
     setTxnLoading(false)
     if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
     handleCloseModal()
   }

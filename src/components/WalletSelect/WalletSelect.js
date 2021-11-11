@@ -39,7 +39,7 @@ import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { getDaoDetails, useDao } from '../../store/dao'
 import { getBondDetails, useBond } from '../../store/bond'
-import { addNetworkBC, addNetworkMM } from '../../store/web3'
+import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 
 export const spartanRanks = [
   {
@@ -111,6 +111,7 @@ const WalletSelect = (props) => {
   const dao = useDao()
   const bond = useBond()
   const addr = getAddresses()
+  const web3 = useWeb3()
   const wallet = useWeb3React()
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -120,12 +121,12 @@ const WalletSelect = (props) => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setNetwork(changeNetworkLsOnly(56))
+      setNetwork(changeNetworkLsOnly(56, web3.rpcs))
     }
     if (net.target.checked === false) {
-      setNetwork(changeNetworkLsOnly(97))
+      setNetwork(changeNetworkLsOnly(97, web3.rpcs))
     } else {
-      setNetwork(changeNetworkLsOnly(net))
+      setNetwork(changeNetworkLsOnly(net, web3.rpcs))
     }
     window.location.reload()
   }
@@ -148,7 +149,7 @@ const WalletSelect = (props) => {
     window.localStorage.setItem('lastWallet', x.id)
     wallet.deactivate()
     setTimeout(() => {
-      wallet.activate(connectorsByName(x.connector))
+      wallet.activate(connectorsByName(x.connector, web3.rpcs))
     }, 35)
   }
 
@@ -197,11 +198,11 @@ const WalletSelect = (props) => {
         )
       ) {
         if (pool.listedPools?.length > 0) {
-          dispatch(getBondDetails(pool.listedPools, wallet))
-          dispatch(getDaoDetails(pool.listedPools, wallet))
+          dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
+          dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
         }
         if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
-          dispatch(getSynthDetails(synth.synthArray, wallet))
+          dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
         }
       }
     }

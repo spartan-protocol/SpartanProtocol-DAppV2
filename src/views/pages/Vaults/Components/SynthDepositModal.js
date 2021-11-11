@@ -20,12 +20,14 @@ import { calcCurrentRewardSynth } from '../../../../utils/math/synthVault'
 import { useSparta } from '../../../../store/sparta'
 import { useReserve } from '../../../../store/reserve/selector'
 import { getSecsSince } from '../../../../utils/math/nonContract'
+import { useWeb3 } from '../../../../store/web3'
 
 const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
+  const web3 = useWeb3()
   const sparta = useSparta()
   const reserve = useReserve()
   const wallet = useWeb3React()
@@ -72,16 +74,16 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvestSingle(synth1.address, wallet))
+    await dispatch(synthHarvestSingle(synth1.address, wallet, web3.rpcs))
     setHarvestLoading(false)
     if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(synthDeposit(synth1.address, deposit(), wallet))
+    await dispatch(synthDeposit(synth1.address, deposit(), wallet, web3.rpcs))
     setTxnLoading(false)
     handleCloseModal()
   }

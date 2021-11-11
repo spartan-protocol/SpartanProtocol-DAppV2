@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ethers } from 'ethers'
 import * as Types from './types'
 
 import {
@@ -93,17 +94,17 @@ export const addNetworkBC = () => async (dispatch) => {
  * @returns {boolean} true if succeeds
  */
 export const getApproval =
-  (tokenAddress, contractAddress, wallet) => async (dispatch) => {
+  (tokenAddress, contractAddress, wallet, rpcUrls) => async (dispatch) => {
     dispatch(web3Loading())
-    const contract = getTokenContract(tokenAddress, wallet)
+    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
     try {
-      const gPrice = await getProviderGasPrice()
+      const gPrice = await getProviderGasPrice(rpcUrls)
       let txn = await contract.approve(
         contractAddress,
         convertToWei(1000000000),
         { gasPrice: gPrice },
       )
-      txn = await parseTxn(txn, 'approval')
+      txn = await parseTxn(txn, 'approval', rpcUrls)
       dispatch(payloadToDispatch(Types.WEB3_TXN, txn))
     } catch (error) {
       dispatch(errorToDispatch(Types.WEB3_ERROR, error))
@@ -116,9 +117,9 @@ export const getApproval =
  * @returns {BigNumber?}
  */
 export const getAllowance1 =
-  (tokenAddress, wallet, contractAddress) => async (dispatch) => {
+  (tokenAddress, wallet, contractAddress, rpcUrls) => async (dispatch) => {
     dispatch(web3Loading())
-    const contract = getTokenContract(tokenAddress, wallet)
+    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
     try {
       const allowance1 = await contract.allowance(
         wallet.account,
@@ -136,9 +137,9 @@ export const getAllowance1 =
  * @returns {BigNumber?}
  */
 export const getAllowance2 =
-  (tokenAddress, wallet, contractAddress) => async (dispatch) => {
+  (tokenAddress, wallet, contractAddress, rpcUrls) => async (dispatch) => {
     dispatch(web3Loading())
-    const contract = getTokenContract(tokenAddress, wallet)
+    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
     try {
       const allowance2 = await contract.allowance(
         wallet.account,
@@ -220,6 +221,37 @@ export const getEventArray = (array) => async (dispatch) => {
   try {
     const eventArray = array
     dispatch(payloadToDispatch(Types.EVENT_ARRAY, eventArray))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+  }
+}
+
+/**
+ * Get the current blocks from all RPCs
+ * @returns {array} eventArray
+ */
+export const getRPCBlocks = () => async (dispatch) => {
+  dispatch(web3Loading())
+  try {
+    let awaitArray = []
+    const network = getNetwork()
+    const rpcUrls = network.chainId === 97 ? bscRpcsTN : bscRpcsMN
+    for (let i = 0; i < rpcUrls.length; i++) {
+      const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
+      awaitArray.push(provider.getBlockNumber())
+    }
+    awaitArray = await Promise.allSettled(awaitArray)
+    let rpcs = []
+    for (let i = 0; i < rpcUrls.length; i++) {
+      rpcs.push({
+        url: rpcUrls[i],
+        block: awaitArray[i].status === 'fulfilled' ? awaitArray[i].value : 0,
+        good: awaitArray[i].status === 'fulfilled',
+      })
+    }
+    rpcs = rpcs.sort((a, b) => b.block - a.block)
+    // console.log(rpcs)
+    dispatch(payloadToDispatch(Types.RPC_BLOCKS, rpcs))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }

@@ -17,19 +17,21 @@ import { usePool } from '../../../store/pool'
 import { Icon } from '../../../components/Icons/icons'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import SynthHarvestAllModal from './Components/SynthHarvestAllModal'
+import { useWeb3 } from '../../../store/web3'
 
 const SynthVault = () => {
   const { t } = useTranslation()
   const synth = useSynth()
   const pool = usePool()
+  const web3 = useWeb3()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
 
   const [trigger0, settrigger0] = useState(0)
 
   const getGlobals = () => {
-    dispatch(getSynthGlobalDetails())
-    dispatch(getSynthMemberDetails(wallet))
+    dispatch(getSynthGlobalDetails(web3.rpcs))
+    dispatch(getSynthMemberDetails(wallet, web3.rpcs))
   }
   useEffect(() => {
     if (trigger0 === 0) {
@@ -46,7 +48,7 @@ const SynthVault = () => {
   useEffect(() => {
     const checkDetails = () => {
       if (synth.synthArray?.length > 1) {
-        dispatch(getSynthDetails(synth.synthArray, wallet))
+        dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
       }
     }
     checkDetails()
@@ -56,7 +58,9 @@ const SynthVault = () => {
   useEffect(() => {
     const checkWeight = () => {
       if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
-        dispatch(synthVaultWeight(synth.synthDetails, pool.poolDetails))
+        dispatch(
+          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
+        )
       }
     }
     checkWeight()

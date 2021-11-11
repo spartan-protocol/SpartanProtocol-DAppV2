@@ -50,9 +50,13 @@ const Approval = ({
   const getAllowance = () => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+        dispatch(
+          getAllowance1(tokenAddress, wallet, contractAddress, web3.rpcs),
+        )
       } else if (assetNumber === '2') {
-        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+        dispatch(
+          getAllowance2(tokenAddress, wallet, contractAddress, web3.rpcs),
+        )
       }
     }
   }
@@ -60,7 +64,9 @@ const Approval = ({
   const handleApproval = async () => {
     setPending(true)
     setNotify(true)
-    await dispatch(getApproval(tokenAddress, contractAddress, wallet))
+    await dispatch(
+      getApproval(tokenAddress, contractAddress, wallet, web3.rpcs),
+    )
     setNotify(false)
     getAllowance()
   }

@@ -31,12 +31,14 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { Icon } from '../../../components/Icons/icons'
 import { proposalTypes } from './types'
+import { useWeb3 } from '../../../store/web3'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
+  const web3 = useWeb3()
   const synth = useSynth()
   const wallet = useWeb3React()
   const { t } = useTranslation()
@@ -63,7 +65,7 @@ const Overview = () => {
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
     if (tempChains.includes(network.chainId)) {
-      dispatch(daoGlobalDetails(wallet))
+      dispatch(daoGlobalDetails(web3.rpcs))
     }
   }
   useEffect(() => {
@@ -80,17 +82,23 @@ const Overview = () => {
 
   useEffect(() => {
     if (tempChains.includes(network.chainId)) {
-      dispatch(daoMemberDetails(wallet))
-      dispatch(daoProposalDetails(dao.global?.currentProposal, wallet))
+      dispatch(daoMemberDetails(wallet, web3.rpcs))
       dispatch(
-        proposalWeight(dao.global?.currentProposal, pool.poolDetails, wallet),
+        daoProposalDetails(dao.global?.currentProposal, wallet, web3.rpcs),
       )
-      dispatch(daoVaultWeight(pool.poolDetails, wallet))
-      dispatch(bondVaultWeight(pool.poolDetails, wallet))
-      dispatch(getDaoDetails(pool.listedPools, wallet))
-      dispatch(getBondDetails(pool.listedPools, wallet))
-      dispatch(getSynthDetails(synth.synthArray, wallet))
-      dispatch(allListedAssets())
+      dispatch(
+        proposalWeight(
+          dao.global?.currentProposal,
+          pool.poolDetails,
+          web3.rpcs,
+        ),
+      )
+      dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
+      dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
+      dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
+      dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
+      dispatch(allListedAssets(web3.rpcs))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
