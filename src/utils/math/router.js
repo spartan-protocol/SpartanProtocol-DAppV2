@@ -253,7 +253,7 @@ export const mintSynth = (
   let synthCapped = false
   let baseAmount = BN(synthPool.baseAmount)
   let tokenAmount = BN(synthPool.tokenAmount)
-  const _totalSupply = BN(synth.totalSupply)
+  // const _totalSupply = BN(synth.totalSupply)
   // Simple mint SPARTA -> SYNTH ------------------------------------------------------------
   if (fromBase) {
     const _spartaRec = minusFeeBurn(input, feeOnTsf) // Pool receives SPARTA (feeBurn)
@@ -283,9 +283,9 @@ export const mintSynth = (
   baseCapped = baseAmount.plus(_spartaRec1).isGreaterThan(synthPool.baseCap) // Check if this will exceed the base cap
   const [synthOut, synthFee] = calcSwapOutput(_spartaRec1, synthPool, false) // Swap SPARTA for SYNTH (Pool -> User)
   const _synthRec = BN(synthOut.times(0.99).toFixed(0)) // Synths after 1% slip
-  synthCapped = _totalSupply
-    .plus(_synthRec)
-    .isGreaterThan(stirCauldron(synthPool, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
+  synthCapped = _synthRec.isGreaterThan(
+    stirCauldron(synthPool, tokenAmount, synth),
+  ) // Check if this will exceed the dynamic synth cap
   const slipFee = swapFee.plus(synthFee)
   diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
   return [_synthRec, slipFee, diviSynth, '0', baseCapped, synthCapped]
