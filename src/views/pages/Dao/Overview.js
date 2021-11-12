@@ -221,7 +221,7 @@ const Overview = () => {
                   {dao.proposal.length > 0 ? (
                     <>
                       {selectedView === 'current' &&
-                        (dao.proposal[dao.global.currentProposal - 1].open ? (
+                        (dao.proposal[dao.global.currentProposal - 1]?.open ? (
                           <>
                             <ProposalItem
                               key={

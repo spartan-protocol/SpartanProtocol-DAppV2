@@ -404,54 +404,58 @@ const ProposalItem = ({ proposal }) => {
             {proposal.open ? (
               <>
                 <Row>
-                  <Col className="mb-2">
-                    <Button
-                      className="w-100"
-                      size="sm"
-                      onClick={() => handleVote()}
-                      disabled={
-                        !wallet.account ||
-                        proposal.memberVoted ||
-                        !enoughGas(estMaxGasVote)
-                      }
-                    >
-                      {!enoughGas(estMaxGasVote)
-                        ? t('checkBnbGas')
-                        : reserve.globalDetails.globalFreeze
-                        ? t('globalFreeze')
-                        : t('voteUp')}
-                      {voteLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
-                  </Col>
-                  <Col className="mb-2">
-                    <Button
-                      className="w-100"
-                      size="sm"
-                      onClick={() => handleUnvote()}
-                      disabled={
-                        !wallet.account ||
-                        !proposal.memberVoted ||
-                        !enoughGas(estMaxGasVote)
-                      }
-                    >
-                      {!enoughGas(estMaxGasVote)
-                        ? t('checkBnbGas')
-                        : t('voteDown')}
-                      {unvoteLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
-                  </Col>
+                  {!proposal.memberVoted && (
+                    <Col className="mb-2">
+                      <Button
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleVote()}
+                        disabled={
+                          !wallet.account ||
+                          proposal.memberVoted ||
+                          !enoughGas(estMaxGasVote)
+                        }
+                      >
+                        {!enoughGas(estMaxGasVote)
+                          ? t('checkBnbGas')
+                          : reserve.globalDetails.globalFreeze
+                          ? t('globalFreeze')
+                          : t('addVote')}
+                        {voteLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    </Col>
+                  )}
+                  {proposal.memberVoted && (
+                    <Col className="mb-2">
+                      <Button
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleUnvote()}
+                        disabled={
+                          !wallet.account ||
+                          !proposal.memberVoted ||
+                          !enoughGas(estMaxGasVote)
+                        }
+                      >
+                        {!enoughGas(estMaxGasVote)
+                          ? t('checkBnbGas')
+                          : t('removeVote')}
+                        {unvoteLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    </Col>
+                  )}
                 </Row>
 
                 <Row>

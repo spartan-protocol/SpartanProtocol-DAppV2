@@ -9,6 +9,7 @@ import {
   Form,
   Modal,
   FloatingLabel,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -29,6 +30,7 @@ import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
 import { useSparta } from '../../../store/sparta/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
 import { useDao } from '../../../store/dao/selector'
 import { useSynth } from '../../../store/synth/selector'
@@ -39,6 +41,7 @@ import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
 
 const NewProposal = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
@@ -379,16 +382,29 @@ const NewProposal = () => {
                           </Row>
                         </Card.Body>
                       </Card>
-                      <Form>
-                        <div className="text-center">
+                      <Form className="text-center">
+                        <div className="d-inline-block">
                           <Form.Switch
                             type="switch"
                             id="inputConfirmFee"
-                            label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee (Add tooltip)`}
+                            label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee`}
                             checked={feeConfirm}
                             onChange={() => setfeeConfirm(!feeConfirm)}
                           />
                         </div>
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'newProposalFee')}
+                        >
+                          <span role="button">
+                            <Icon
+                              icon="info"
+                              className="ms-1 mb-1"
+                              size="17"
+                              fill={isLightMode ? 'black' : 'white'}
+                            />
+                          </span>
+                        </OverlayTrigger>
                       </Form>
                     </Col>
                   </Row>
