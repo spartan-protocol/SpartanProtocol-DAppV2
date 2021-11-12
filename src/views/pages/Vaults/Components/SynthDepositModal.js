@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
 import Approval from '../../../../components/Approval/Approval'
-import { getAddresses } from '../../../../utils/web3'
+import { getAddresses, synthHarvestLive } from '../../../../utils/web3'
 import {
   getSynthDetails,
   synthDeposit,
@@ -255,7 +255,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                 </Row>
                 <Form className="my-2 text-center">
                   <span className="output-card">
-                    Confirm harvest time reset
+                    Confirm you want to skip Harvesting
                     <Form.Check
                       type="switch"
                       id="confirmHarvest"
@@ -282,32 +282,41 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
               )}
               <Col className="hide-if-prior-sibling">
                 <Row>
-                  {synth1.staked > 0 && secsSinceHarvest() > 300 && (
+                  {!synthHarvestLive && (
                     <Col>
-                      <Button
-                        className="w-100"
-                        onClick={() => handleHarvest()}
-                        disabled={
-                          synth1.staked <= 0 ||
-                          !enoughGas() ||
-                          reserve.globalDetails.globalFreeze
-                        }
-                      >
-                        {enoughGas()
-                          ? reserve.globalDetails.globalFreeze
-                            ? t('globalFreeze')
-                            : t('harvest')
-                          : t('checkBnbGas')}
-                        {harvestLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
+                      <Button className="w-100" disabled>
+                        {t('harvestDisabled')}
                       </Button>
                     </Col>
                   )}
+                  {synthHarvestLive &&
+                    synth1.staked > 0 &&
+                    secsSinceHarvest() > 300 && (
+                      <Col>
+                        <Button
+                          className="w-100"
+                          onClick={() => handleHarvest()}
+                          disabled={
+                            synth1.staked <= 0 ||
+                            !enoughGas() ||
+                            reserve.globalDetails.globalFreeze
+                          }
+                        >
+                          {enoughGas()
+                            ? reserve.globalDetails.globalFreeze
+                              ? t('globalFreeze')
+                              : t('harvest')
+                            : t('checkBnbGas')}
+                          {harvestLoading && (
+                            <Icon
+                              icon="cycle"
+                              size="20"
+                              className="anim-spin ms-1"
+                            />
+                          )}
+                        </Button>
+                      </Col>
+                    )}
                   <Col>
                     <Button
                       className="w-100"

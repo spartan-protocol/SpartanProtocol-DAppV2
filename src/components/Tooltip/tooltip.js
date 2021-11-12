@@ -127,6 +127,22 @@ export const Tooltip = (t, tooltipId, variable) => {
       title: 'synthCap',
       body: 'synthCapInfo',
     },
+    {
+      id: 'yourForge',
+      title: 'yourForge',
+      body: 'yourForgeInfo',
+    },
+    {
+      id: 'mintSynthConfirm',
+      title: 'warning',
+      body: 'mintSynthConfirm',
+    },
+    {
+      id: 'mintHarvestConfirm',
+      title: 'warning',
+      body: 'mintHarvestConfirm',
+      variable: { symbol: variable },
+    },
   ]
 
   const tooltip = allTooltips.filter((i) => i.id === tooltipId)[0]

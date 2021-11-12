@@ -9,7 +9,7 @@ import { getToken } from '../../../../utils/math/utils'
 import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../../utils/math/nonContract'
-import { getAddresses } from '../../../../utils/web3'
+import { getAddresses, synthHarvestLive } from '../../../../utils/web3'
 import {
   getSynthDetails,
   synthHarvest,
@@ -195,9 +195,24 @@ const SynthWithdrawModal = (props) => {
                       withdraw.
                     </Col>
                     <Col xs="12" className="output-card">
-                      - If you harvest; you will not be able to withdraw staked{' '}
-                      {token.symbol}s for {synth.globalDetails.minTime} seconds
+                      <br />- If you harvest, you will not be able to withdraw
+                      any staked Synths for {synth.globalDetails.minTime}{' '}
+                      seconds
                     </Col>
+                    {synth.synthDetails
+                      .filter((x) => x.staked > 0)
+                      .map((x) => (
+                        <Row xs="12" key={x.address}>
+                          <Col xs="auto" className="text-card">
+                            Existing stake locked
+                          </Col>
+                          <Col className="text-end output-card">
+                            {formatFromWei(x.staked)}{' '}
+                            {getToken(x.tokenAddress, pool.tokenDetails).symbol}
+                            s
+                          </Col>
+                        </Row>
+                      ))}
                     <Form className="my-2 text-center">
                       <span className="output-card">
                         I choose harvest!
@@ -211,8 +226,8 @@ const SynthWithdrawModal = (props) => {
                       </span>
                     </Form>
                     <Col xs="12" className="output-card">
-                      <br />- If you withdraw; you will forfeit{' '}
-                      {props.claimable[1] + props.claimable[2]}
+                      <br />- If you withdraw, you will lose{' '}
+                      {props.claimable[1] + props.claimable[2]} Harvest
                     </Col>
                   </Row>
                   <Row xs="12" className="">
@@ -244,29 +259,36 @@ const SynthWithdrawModal = (props) => {
                   <Row>
                     {props.claimable[0] && secsSinceHarvest() > 300 && (
                       <Col>
-                        <Button
-                          className="w-100"
-                          onClick={() => handleHarvest()}
-                          disabled={
-                            !props.claimable[0] ||
-                            !enoughGas() ||
-                            !harvestConfirm ||
-                            reserve.globalDetails.globalFreeze
-                          }
-                        >
-                          {enoughGas()
-                            ? reserve.globalDetails.globalFreeze
-                              ? t('globalFreeze')
-                              : t('harvest')
-                            : t('checkBnbGas')}
-                          {harvestLoading && (
-                            <Icon
-                              icon="cycle"
-                              size="20"
-                              className="anim-spin ms-1"
-                            />
-                          )}
-                        </Button>
+                        {synthHarvestLive && (
+                          <Button
+                            className="w-100"
+                            onClick={() => handleHarvest()}
+                            disabled={
+                              !props.claimable[0] ||
+                              !enoughGas() ||
+                              !harvestConfirm ||
+                              reserve.globalDetails.globalFreeze
+                            }
+                          >
+                            {enoughGas()
+                              ? reserve.globalDetails.globalFreeze
+                                ? t('globalFreeze')
+                                : t('harvest')
+                              : t('checkBnbGas')}
+                            {harvestLoading && (
+                              <Icon
+                                icon="cycle"
+                                size="20"
+                                className="anim-spin ms-1"
+                              />
+                            )}
+                          </Button>
+                        )}
+                        {!synthHarvestLive && (
+                          <Button className="w-100" disabled>
+                            {t('harvestDisabled')}
+                          </Button>
+                        )}
                       </Col>
                     )}
                     <Col>

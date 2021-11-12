@@ -180,13 +180,12 @@ export const addressesMN = {
 }
 
 export const bscRpcsTN = [
-  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-2-s2.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-2-s3.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-2-s1.binance.org:8545/', // BAD! (11/11/21)
-  'https://test:8545/', // BAD! (11/11/21)
+  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (12/11/21)
+  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (12/11/21)
+  'https://data-seed-prebsc-2-s2.binance.org:8545/', // Good (12/11/21)
+  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (12/11/21)
+  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', // OUT OF SYNC! (12/11/21)
+  // 'https://data-seed-prebsc-2-s1.binance.org:8545/', // BROKEN! (12/11/21)
 ]
 
 export const bscRpcsMN = [
@@ -210,6 +209,7 @@ export const bscRpcsMN = [
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
+export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
   const _tokenAddr = ethers.utils.getAddress(tokenAddr)
