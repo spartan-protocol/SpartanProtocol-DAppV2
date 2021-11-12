@@ -340,6 +340,7 @@ const LiqRemove = () => {
           convertToWei(removeInput1.value),
           poolRemove1.tokenAddress,
           wallet,
+          web3.rpcs,
         ),
       )
     } else {
@@ -349,6 +350,7 @@ const LiqRemove = () => {
           assetRemove1.tokenAddress === addr.spartav2,
           poolRemove1.tokenAddress,
           wallet,
+          web3.rpcs,
         ),
       )
     }

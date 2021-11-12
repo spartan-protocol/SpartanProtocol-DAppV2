@@ -71,7 +71,9 @@ const Supply = () => {
       pool.curatedPools &&
       pool.poolDetails
     ) {
-      dispatch(getReservePOLDetails(pool.curatedPools, pool.poolDetails))
+      dispatch(
+        getReservePOLDetails(pool.curatedPools, pool.poolDetails, web3.rpcs),
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.curatedPools, pool.poolDetails])
@@ -149,12 +151,12 @@ const Supply = () => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setnetwork(changeNetworkLsOnly(56))
+      setnetwork(changeNetworkLsOnly(56, web3.rpcs))
     }
     if (net.target.checked === false) {
-      setnetwork(changeNetworkLsOnly(97))
+      setnetwork(changeNetworkLsOnly(97, web3.rpcs))
     } else {
-      setnetwork(changeNetworkLsOnly(net))
+      setnetwork(changeNetworkLsOnly(net, web3.rpcs))
     }
     window.location.reload()
   }

@@ -27,6 +27,7 @@ import { Icon } from '../../../components/Icons/icons'
 import { useSynth } from '../../../store/synth/selector'
 import { realise } from '../../../utils/math/synth'
 import { useReserve } from '../../../store/reserve'
+import { useWeb3 } from '../../../store/web3'
 
 const ProposalItem = ({ proposal }) => {
   const dao = useDao()
@@ -34,6 +35,7 @@ const ProposalItem = ({ proposal }) => {
   const pool = usePool()
   const bond = useBond()
   const reserve = useReserve()
+  const web3 = useWeb3()
   const synth = useSynth()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
@@ -49,31 +51,31 @@ const ProposalItem = ({ proposal }) => {
 
   const handleVote = async () => {
     setVoteLoading(true)
-    await dispatch(voteProposal(wallet))
+    await dispatch(voteProposal(wallet, web3.rpcs))
     setVoteLoading(false)
   }
 
   const handleUnvote = async () => {
     setUnvoteLoading(true)
-    await dispatch(removeVote(wallet))
+    await dispatch(removeVote(wallet, web3.rpcs))
     setUnvoteLoading(false)
   }
 
   const handleCancel = async () => {
     setCancelLoading(true)
-    await dispatch(cancelProposal(wallet))
+    await dispatch(cancelProposal(wallet, web3.rpcs))
     setCancelLoading(false)
   }
 
   const handlePoll = async () => {
     setPollLoading(true)
-    await dispatch(pollVotes(wallet))
+    await dispatch(pollVotes(wallet, web3.rpcs))
     setPollLoading(false)
   }
 
   const handleFinal = async () => {
     setFinalLoading(true)
-    await dispatch(finaliseProposal(wallet))
+    await dispatch(finaliseProposal(wallet, web3.rpcs))
     setFinalLoading(false)
   }
 
@@ -402,54 +404,58 @@ const ProposalItem = ({ proposal }) => {
             {proposal.open ? (
               <>
                 <Row>
-                  <Col className="mb-2">
-                    <Button
-                      className="w-100"
-                      size="sm"
-                      onClick={() => handleVote()}
-                      disabled={
-                        !wallet.account ||
-                        proposal.memberVoted ||
-                        !enoughGas(estMaxGasVote)
-                      }
-                    >
-                      {!enoughGas(estMaxGasVote)
-                        ? t('checkBnbGas')
-                        : reserve.globalDetails.globalFreeze
-                        ? t('globalFreeze')
-                        : t('voteUp')}
-                      {voteLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
-                  </Col>
-                  <Col className="mb-2">
-                    <Button
-                      className="w-100"
-                      size="sm"
-                      onClick={() => handleUnvote()}
-                      disabled={
-                        !wallet.account ||
-                        !proposal.memberVoted ||
-                        !enoughGas(estMaxGasVote)
-                      }
-                    >
-                      {!enoughGas(estMaxGasVote)
-                        ? t('checkBnbGas')
-                        : t('voteDown')}
-                      {unvoteLoading && (
-                        <Icon
-                          icon="cycle"
-                          size="20"
-                          className="anim-spin ms-1"
-                        />
-                      )}
-                    </Button>
-                  </Col>
+                  {!proposal.memberVoted && (
+                    <Col className="mb-2">
+                      <Button
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleVote()}
+                        disabled={
+                          !wallet.account ||
+                          proposal.memberVoted ||
+                          !enoughGas(estMaxGasVote)
+                        }
+                      >
+                        {!enoughGas(estMaxGasVote)
+                          ? t('checkBnbGas')
+                          : reserve.globalDetails.globalFreeze
+                          ? t('globalFreeze')
+                          : t('addVote')}
+                        {voteLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    </Col>
+                  )}
+                  {proposal.memberVoted && (
+                    <Col className="mb-2">
+                      <Button
+                        className="w-100"
+                        size="sm"
+                        onClick={() => handleUnvote()}
+                        disabled={
+                          !wallet.account ||
+                          !proposal.memberVoted ||
+                          !enoughGas(estMaxGasVote)
+                        }
+                      >
+                        {!enoughGas(estMaxGasVote)
+                          ? t('checkBnbGas')
+                          : t('removeVote')}
+                        {unvoteLoading && (
+                          <Icon
+                            icon="cycle"
+                            size="20"
+                            className="anim-spin ms-1"
+                          />
+                        )}
+                      </Button>
+                    </Col>
+                  )}
                 </Row>
 
                 <Row>

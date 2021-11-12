@@ -6,9 +6,11 @@ import { usePool } from '../../../store/pool/selector'
 import EmptyPools from './EmptyPools'
 import PoolStatus from './FrozenPools'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
+import { useWeb3 } from '../../../store/web3'
 
 const Overview = () => {
   const pool = usePool()
+  const web3 = useWeb3()
   const addr = getAddresses()
 
   const [activeTab, setActiveTab] = useState('overview')
@@ -54,19 +56,12 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col xs="12">
-            <div className="card-480 my-3">
-              <h2 className="text-title-small mb-0 me-3">Power User</h2>
-            </div>
-          </Col>
-        </Row>
         {!isLoading() ? (
           tempChains.includes(network.chainId) && (
             <>
               <Row className="row-480">
-                <Col xs="12" className="mb-3">
-                  <Nav className="card-480" activeKey={activeTab}>
+                <Col>
+                  <Nav className="card-480 mb-2" activeKey={activeTab}>
                     <Nav.Item key="overview">
                       <Nav.Link
                         eventKey="overview"
@@ -89,63 +84,89 @@ const Overview = () => {
                     </Nav.Item>
                   </Nav>
                 </Col>
-
+              </Row>
+              <Row className="row-480">
                 {activeTab === 'overview' && (
-                  <Col xs="12">
-                    <Card className="card-480">
-                      <Card.Header>Ratio-Check Pools</Card.Header>
-                      <Card.Body>
-                        There are {frozenPools?.length} pool(s) that have
-                        triggered a warning. Ensure their ratios match the
-                        external markets. It may take some time for the ratios
-                        to repair themselves.
-                      </Card.Body>
-                      <Card.Footer>
-                        <Button
-                          className="w-100"
-                          onClick={() => setActiveTab('pools')}
-                          disabled={!selectedAsset}
-                        >
-                          View Pool Status
-                        </Button>
-                      </Card.Footer>
-                    </Card>
-                    <Card className="card-480">
-                      <Card.Header>Empty Pools</Card.Header>
-                      <Card.Body>
-                        There are {emptyPools?.length} pool(s) that have been
-                        created but have no depth. Add the initial liquidty to
-                        set the ratio of TOKEN:SPARTA for:
-                        {emptyPools.map((asset) => (
-                          <Form className="my-2" key={asset.tokenAddress}>
-                            <Form.Check
-                              id={asset.tokenAddress}
-                              type="radio"
-                              label={`${
-                                getToken(asset.tokenAddress)?.symbol
-                              }:SPARTA`}
-                              onClick={() =>
-                                setselectedAsset(asset.tokenAddress)
-                              }
-                              checked={selectedAsset === asset.tokenAddress}
-                              readOnly
-                            />
-                          </Form>
-                        ))}
-                      </Card.Body>
-                      {emptyPools?.length > 0 && (
+                  <>
+                    <Col xs="auto">
+                      <Card className="card-480">
+                        <Card.Header>Ratio-Check Pools</Card.Header>
+                        <Card.Body>
+                          <li>
+                            {frozenPools?.length} pool(s) have triggered a
+                            warning
+                          </li>
+                          <li>
+                            Ensure their ratios match the external markets.
+                          </li>
+                          <li>
+                            It may take some time for the ratios to repair
+                            themselves.
+                          </li>
+                        </Card.Body>
                         <Card.Footer>
                           <Button
                             className="w-100"
-                            onClick={() => setActiveTab('emptyPools')}
+                            onClick={() => setActiveTab('pools')}
                             disabled={!selectedAsset}
                           >
-                            Add {getToken(selectedAsset)?.symbol}:SPARTA
+                            View Pool Status
                           </Button>
                         </Card.Footer>
-                      )}
-                    </Card>
-                  </Col>
+                      </Card>
+                    </Col>
+                    <Col xs="auto">
+                      <Card className="card-480">
+                        <Card.Header>Empty Pools</Card.Header>
+                        <Card.Body>
+                          There are {emptyPools?.length} pool(s) that have been
+                          created but have no depth. Add the initial liquidty to
+                          set the ratio of TOKEN:SPARTA for:
+                          {emptyPools.map((asset) => (
+                            <Form className="my-2" key={asset.tokenAddress}>
+                              <Form.Check
+                                id={asset.tokenAddress}
+                                type="radio"
+                                label={`${
+                                  getToken(asset.tokenAddress)?.symbol
+                                }:SPARTA`}
+                                onClick={() =>
+                                  setselectedAsset(asset.tokenAddress)
+                                }
+                                checked={selectedAsset === asset.tokenAddress}
+                                readOnly
+                              />
+                            </Form>
+                          ))}
+                        </Card.Body>
+                        {emptyPools?.length > 0 && (
+                          <Card.Footer>
+                            <Button
+                              className="w-100"
+                              onClick={() => setActiveTab('emptyPools')}
+                              disabled={!selectedAsset}
+                            >
+                              Add {getToken(selectedAsset)?.symbol}:SPARTA
+                            </Button>
+                          </Card.Footer>
+                        )}
+                      </Card>
+                    </Col>
+                    <Col xs="auto">
+                      <Card className="card-480">
+                        <Card.Header>Status of RPCs</Card.Header>
+                        <Card.Body>
+                          {web3.rpcs.map((x) => (
+                            <Row key={x.url}>
+                              <Col>
+                                {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
+                              </Col>
+                            </Row>
+                          ))}
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </>
                 )}
                 {activeTab === 'pools' && <PoolStatus />}
                 {activeTab === 'emptyPools' && (

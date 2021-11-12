@@ -283,32 +283,34 @@ const PoolItem = ({ asset }) => {
               </Col>
             </Row>
 
-            {showDetails === true && synth.synthDetails && (
-              <Row className="my-1">
-                <Col xs="auto" className="text-card pe-0">
-                  {t('synthCap')}
-                  <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="17"
-                        fill={isLightMode ? 'black' : 'white'}
+            {showDetails === true &&
+              synth.synthDetails &&
+              asset.lastStirred > 0 && (
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card pe-0">
+                    {t('synthCap')}
+                    <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="17"
+                          fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col className="text-end output-card my-auto">
+                    <ProgressBar style={{ height: '5px' }} className="">
+                      <ProgressBar
+                        variant={getSynthCapPC() > 95 ? 'primary' : 'success'}
+                        key={1}
+                        now={getSynthCapPC()}
                       />
-                    </span>
-                  </OverlayTrigger>
-                </Col>
-                <Col className="text-end output-card my-auto">
-                  <ProgressBar style={{ height: '5px' }} className="">
-                    <ProgressBar
-                      variant={getSynthCapPC() > 95 ? 'primary' : 'success'}
-                      key={1}
-                      now={getSynthCapPC()}
-                    />
-                  </ProgressBar>
-                </Col>
-              </Row>
-            )}
+                    </ProgressBar>
+                  </Col>
+                </Row>
+              )}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">

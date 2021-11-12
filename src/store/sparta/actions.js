@@ -22,10 +22,10 @@ export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
 })
 
-export const getSpartaGlobalDetails = () => async (dispatch) => {
+export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract1 = getSpartaV1Contract()
-  const contract2 = getSpartaV2Contract()
+  const contract1 = getSpartaV1Contract(null, rpcUrls)
+  const contract2 = getSpartaV2Contract(null, rpcUrls)
 
   try {
     let awaitArray = [
@@ -62,9 +62,9 @@ export const getSpartaGlobalDetails = () => async (dispatch) => {
  * @param {object} wallet
  * @returns {uint} claimAmount
  */
-export const fallenSpartansCheck = (wallet) => async (dispatch) => {
+export const fallenSpartansCheck = (wallet, rpcUrls) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getFallenSpartansContract(wallet)
+  const contract = getFallenSpartansContract(wallet, rpcUrls)
   try {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(payloadToDispatch(Types.FALLENSPARTA_CHECK, claimCheck.toString()))
@@ -76,13 +76,13 @@ export const fallenSpartansCheck = (wallet) => async (dispatch) => {
 /**
  * Upgrade SPARTA(old V1) to SPARTA(New V2)
  */
-export const spartaUpgrade = (wallet) => async (dispatch) => {
+export const spartaUpgrade = (wallet, rpcUrls) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getSpartaV2Contract(wallet)
+  const contract = getSpartaV2Contract(wallet, rpcUrls)
   try {
-    const gPrice = await getProviderGasPrice()
+    const gPrice = await getProviderGasPrice(rpcUrls)
     let txn = await contract.upgrade({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'upgrade')
+    txn = await parseTxn(txn, 'upgrade', rpcUrls)
     dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
@@ -92,13 +92,13 @@ export const spartaUpgrade = (wallet) => async (dispatch) => {
 /**
  * Claim your wallet portion from the fallenSparta fund
  */
-export const fallenSpartansClaim = (wallet) => async (dispatch) => {
+export const fallenSpartansClaim = (wallet, rpcUrls) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract = getFallenSpartansContract(wallet)
+  const contract = getFallenSpartansContract(wallet, rpcUrls)
   try {
-    const gPrice = await getProviderGasPrice()
+    const gPrice = await getProviderGasPrice(rpcUrls)
     let txn = await contract.claim({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'fsClaim')
+    txn = await parseTxn(txn, 'fsClaim', rpcUrls)
     dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))

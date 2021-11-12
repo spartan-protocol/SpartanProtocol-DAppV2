@@ -576,6 +576,7 @@ const Swap = () => {
         assetSwap2.tokenAddress,
         BN(getSwap()[0]).times(0.95).toFixed(0, 1),
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -590,6 +591,7 @@ const Swap = () => {
         assetSwap1.address,
         assetSwap2.address,
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)

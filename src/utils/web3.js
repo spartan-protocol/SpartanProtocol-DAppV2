@@ -180,19 +180,19 @@ export const addressesMN = {
 }
 
 export const bscRpcsTN = [
-  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-2-s1.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-2-s2.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (09/10/21)
-  'https://data-seed-prebsc-2-s3.binance.org:8545/', // Good (09/10/21)
+  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (12/11/21)
+  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (12/11/21)
+  'https://data-seed-prebsc-2-s2.binance.org:8545/', // Good (12/11/21)
+  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (12/11/21)
+  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', // OUT OF SYNC! (12/11/21)
+  // 'https://data-seed-prebsc-2-s1.binance.org:8545/', // BROKEN! (12/11/21)
 ]
 
 export const bscRpcsMN = [
   'https://bsc-dataseed.binance.org/',
   'https://bsc-dataseed1.defibit.io/',
   'https://bsc-dataseed1.ninicoin.io/',
-  // // BACKUPS BELOW
+  // BACKUPS BELOW
   'https://bsc-dataseed2.defibit.io/',
   'https://bsc-dataseed3.defibit.io/',
   'https://bsc-dataseed4.defibit.io/',
@@ -203,11 +203,13 @@ export const bscRpcsMN = [
   'https://bsc-dataseed2.binance.org/',
   'https://bsc-dataseed3.binance.org/',
   'https://bsc-dataseed4.binance.org/',
+  'https://binance.ankr.com/',
 ]
 
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
+export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
   const _tokenAddr = ethers.utils.getAddress(tokenAddr)
@@ -349,10 +351,24 @@ export const getAbis = () => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} RPC URL
  */
-export const changeRpc = (_network) => {
-  const rpcUrls = _network === 97 ? bscRpcsTN : bscRpcsMN
-  const rpcIndex = Math.floor(Math.random() * rpcUrls.length)
-  const rpcUrl = rpcUrls[rpcIndex]
+export const changeRpcNew = (rpcUrls) => {
+  const minBlock = rpcUrls[0].block - 3
+  const rpcs = rpcUrls.filter((x) => x.block >= minBlock)
+  return rpcs
+}
+
+/**
+ * Trigger random selection of a relevant RPC URL
+ * @param {string} net - 'mainnet' or 'testnet'
+ * @returns {Object} RPC URL
+ */
+export const changeRpc = (_network, rpcUrls) => {
+  let rpcs = _network === 97 ? bscRpcsTN : bscRpcsMN
+  if (rpcUrls) {
+    rpcs = changeRpcNew(rpcUrls)
+  }
+  const rpcIndex = Math.floor(Math.random() * rpcs.length)
+  const rpcUrl = rpcs[rpcIndex]
   return rpcUrl
 }
 
@@ -361,8 +377,8 @@ export const changeRpc = (_network) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetworkLsOnly = (_network) => {
-  const rpcUrl = changeRpc(_network)
+export const changeNetworkLsOnly = (_network, rpcUrls) => {
+  const rpcUrl = changeRpc(_network, rpcUrls)
   const network =
     _network === 97
       ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
@@ -376,8 +392,8 @@ export const changeNetworkLsOnly = (_network) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetwork = async (_network) => {
-  const rpcUrl = changeRpc(_network)
+export const changeNetwork = async (_network, rpcUrls) => {
+  const rpcUrl = changeRpc(_network, rpcUrls)
   await changeAbis(_network)
   await changeAddresses(_network)
   const network =
@@ -392,18 +408,18 @@ export const changeNetwork = async (_network) => {
  * Check localStorage for net and set default if missing
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const getNetwork = () => {
+export const getNetwork = (rpcUrls) => {
   const network = tryParse(window.localStorage.getItem('network'))
     ? tryParse(window.localStorage.getItem('network'))
-    : changeNetwork(56) // Change this to 56 (mainnet) after mainnet is deployed
+    : changeNetwork(56, rpcUrls) // Change this to 56 (mainnet) after mainnet is deployed
   return network
 }
 
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
-export const getWalletProvider = (_provider) => {
+export const getWalletProvider = (_provider, rpcUrls) => {
   const network = getNetwork()
   let provider = new ethers.providers.StaticJsonRpcProvider(
-    changeRpc(network.chainId),
+    changeRpc(network.chainId, rpcUrls),
   ) // simple provider unsigned & cached chainId
   if (_provider) {
     provider = _provider.getSigner()
@@ -412,8 +428,8 @@ export const getWalletProvider = (_provider) => {
 }
 
 // GET GAS PRICE FROM PROVIDER
-export const getProviderGasPrice = () => {
-  const provider = getWalletProvider()
+export const getProviderGasPrice = (rpcUrls) => {
+  const provider = getWalletProvider(null, rpcUrls)
   const gasPrice = provider.getGasPrice()
   return gasPrice
 }
@@ -1115,9 +1131,12 @@ const parseTxnLogs = (txn, txnType) => {
 }
 
 /** Parse raw txn before localStorage */
-export const parseTxn = async (txn, txnType) => {
+export const parseTxn = async (txn, txnType, rpcUrls) => {
   const { chainId } = txn // get chainId from the raw txn data
-  let _txn = await getWalletProvider().waitForTransaction(txn.hash, 1) // wait for the txn object
+  let _txn = await getWalletProvider(null, rpcUrls).waitForTransaction(
+    txn.hash,
+    1,
+  ) // wait for the txn object
   // console.log(_txn)
   _txn = parseTxnLogs(_txn, txnType)
   _txn.chainId = chainId // add the chainId into the txn object

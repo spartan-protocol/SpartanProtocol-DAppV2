@@ -68,6 +68,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'newPoolFee',
     },
     {
+      id: 'newProposalFee',
+      title: 'newProposalFee',
+      body: 'newProposalFeeInfo',
+    },
+    {
       id: 'poolCap',
       title: 'poolCap',
       body: 'poolCapInfo',
@@ -126,6 +131,22 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'synthCap',
       title: 'synthCap',
       body: 'synthCapInfo',
+    },
+    {
+      id: 'yourForge',
+      title: 'yourForge',
+      body: 'yourForgeInfo',
+    },
+    {
+      id: 'mintSynthConfirm',
+      title: 'warning',
+      body: 'mintSynthConfirm',
+    },
+    {
+      id: 'mintHarvestConfirm',
+      title: 'warning',
+      body: 'mintHarvestConfirm',
+      variable: { symbol: variable },
     },
   ]
 
