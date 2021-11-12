@@ -16,6 +16,7 @@ import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY, getTimeSince } from '../../../utils/math/nonContract'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import SynthHarvestModal from './Components/SynthHarvestModal'
+import { synthHarvestLive } from '../../../utils/web3'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -108,21 +109,25 @@ const SynthVaultItem = ({ synthItem }) => {
                 </Link>
               </Col>
               <Col className="text-center m-auto">
-                <OverlayTrigger
-                  placement="auto"
-                  overlay={Tooltip(t, 'apySynth')}
-                >
-                  <span role="button">
-                    <Icon
-                      icon="info"
-                      className="me-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
-                  </span>
-                </OverlayTrigger>
-                <p className="text-sm-label d-inline-block">APY</p>
-                <p className="output-card">{APY()}%</p>
+                {synthHarvestLive && (
+                  <>
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'apySynth')}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="me-1"
+                          size="17"
+                          fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                    <p className="text-sm-label d-inline-block">APY</p>
+                    <p className="output-card">{APY()}%</p>
+                  </>
+                )}
               </Col>
             </Row>
 

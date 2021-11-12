@@ -161,7 +161,7 @@ export const getSynthVaultWeights = (synthDetails, poolDetails) => {
     memberWeight = memberWeight.plus(
       calcSpotValueInBase(
         BN(_vaultSynths[i].staked),
-        getPool(synthDetails[i].tokenAddress, poolDetails),
+        getPool(_vaultSynths[i].tokenAddress, poolDetails),
       ),
     )
   }

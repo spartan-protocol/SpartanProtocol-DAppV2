@@ -944,7 +944,7 @@ const Swap = () => {
                                     >
                                       <ProgressBar
                                         variant={
-                                          getSynthCapPC() > 95
+                                          getMintedSynthCapPC() > 100
                                             ? 'primary'
                                             : 'success'
                                         }
@@ -952,12 +952,19 @@ const Swap = () => {
                                         now={getSynthCapPC()}
                                       />
                                       <ProgressBar
+                                        variant="black"
+                                        key={2}
+                                        now={0.5}
+                                      />
+                                      <ProgressBar
                                         variant={
-                                          getMintedSynthCapPC() > 95
-                                            ? 'info'
+                                          BN(getMintedSynthCapPC()).plus(
+                                            getSynthCapPC(),
+                                          ) > 100
+                                            ? 'primary'
                                             : 'info'
                                         }
-                                        key={2}
+                                        key={3}
                                         now={getMintedSynthCapPC()}
                                         label={
                                           <OverlayTrigger
