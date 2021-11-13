@@ -25,17 +25,19 @@ const walletConnect = (chainId, rpcUrl) =>
   })
 
 export const connectorsByName = (connectorName, rpcUrls) => {
+  // console.log(rpcUrls)
   const network = getNetwork()
   const { chainId } = network
-  const rpcUrl = changeRpc(chainId, rpcUrls)
+  const rpcItem = changeRpc(chainId, rpcUrls)
+  // console.log(rpcItem.url)
   if (connectorName === 'bsc') {
     return bscConnect(chainId)
   }
   if (connectorName === 'ledger') {
-    return ledgerConnect(chainId, rpcUrl)
+    return ledgerConnect(chainId, rpcItem.url)
   }
   if (connectorName === 'walletconnect') {
-    return walletConnect(chainId, rpcUrl)
+    return walletConnect(chainId, rpcItem.url)
   }
   return injectConnect(chainId)
 }

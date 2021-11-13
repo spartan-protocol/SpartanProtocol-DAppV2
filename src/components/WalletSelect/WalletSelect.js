@@ -118,6 +118,7 @@ const WalletSelect = (props) => {
 
   const [network, setNetwork] = useState(getNetwork)
   const [activeTab, setactiveTab] = useState('tokens')
+  const [wcConnector, setWcConnector] = useState(false)
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
@@ -148,10 +149,21 @@ const WalletSelect = (props) => {
     window.localStorage.removeItem('disableWallet')
     window.localStorage.setItem('lastWallet', x.id)
     wallet.deactivate()
+    const connector = connectorsByName(x.connector, web3.rpcs)
+    if (x.id === 'WC') {
+      setWcConnector(connector)
+    }
     setTimeout(() => {
-      wallet.activate(connectorsByName(x.connector, web3.rpcs))
-    }, 35)
+      wallet.activate(connector)
+    }, 50)
   }
+
+  useEffect(() => {
+    if (wcConnector?.walletConnectProvider?.connected && !wallet.account) {
+      wallet.activate(wcConnector)
+      setWcConnector(false)
+    }
+  }, [wallet, wcConnector])
 
   const checkWallet = async () => {
     if (
@@ -178,9 +190,11 @@ const WalletSelect = (props) => {
     }
   }
   useEffect(() => {
-    checkWallet()
+    if (!wallet.account && web3.rpcs.length > 0) {
+      checkWallet()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [web3.rpcs])
 
   const tryParse = (data) => {
     try {
