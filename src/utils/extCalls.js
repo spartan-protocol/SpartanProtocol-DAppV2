@@ -112,13 +112,50 @@ export const getMemberPositions = async (memberAddr) => {
     }
   }
 `
-
   try {
     const result = await subgraphClient
       .query({
         query: gql(tokensQuery),
       })
       .then((data) => data.data.members[0])
+    if (!result) {
+      console.log('no result')
+      return false
+    }
+    const info = await result
+    return info
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const getPoolIncentives = async (curatedArray) => {
+  const _curatedArray = []
+  for (let i = 0; i < curatedArray.length; i++) {
+    _curatedArray.push(curatedArray[i].toString().toLowerCase())
+  }
+  const count = _curatedArray.length * 10
+  const tokensQuery = `
+  query {
+    metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_curatedArray.map(
+    (x) => `"${x}"`,
+  )}]}) {
+      id
+      timestamp
+      incentives30Day
+      pool {
+        id
+      }
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.metricsPoolDays)
     if (!result) {
       console.log('no result')
       return false

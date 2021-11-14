@@ -1,4 +1,4 @@
-import { BN, formatFromUnits } from '../bigNumber'
+import { BN, convertToWei, formatFromUnits } from '../bigNumber'
 import {
   calcPart,
   getPoolShareWeight,
@@ -303,26 +303,27 @@ export const formatDate = (unixTime) => {
  * @param {object} pool
  * @returns {number} apy
  */
-export const calcAPY = (pool) => {
-  let apy = '0'
-  const actualDepth = BN(pool.baseAmount).times(2)
-  const _divis = BN(pool.recentDivis)
-  const _prevDivis = BN(pool.lastMonthDivis)
+export const calcAPY = (pool, recentDivis) => {
+  let apr = '0'
+  const fallback = BN(convertToWei(10000))
+  const baseAmount = BN(pool.baseAmount)
+  const fallbackDepth = baseAmount.isLessThan(fallback) ? fallback : baseAmount
+  const actualDepth = fallbackDepth.times(2)
+  const _divis = BN(recentDivis)
   const monthFraction = BN(getBlockTimestamp()).minus(pool.genesis).div(2592000)
   if (monthFraction > 1) {
-    apy = BN(_prevDivis.isGreaterThan(_divis) ? _prevDivis : _divis)
-      .plus(pool.fees)
-      .times(12)
-      .div(actualDepth)
-      .times(100)
+    apr = BN(_divis).plus(pool.fees).times(12).div(actualDepth).times(100)
   } else {
-    apy = BN(_divis)
+    apr = BN(_divis)
       .plus(pool.fees)
       .times(12 / monthFraction)
       .div(actualDepth)
       .times(100)
   }
-  if (apy > 0) {
+  if (apr > 0) {
+    // console.log(apr.toString())
+    const apy1 = BN(apr).div(100).div(12).plus(1)
+    const apy = apy1.pow(12).minus(1).times(100)
     return apy
   }
   return '0.00'
