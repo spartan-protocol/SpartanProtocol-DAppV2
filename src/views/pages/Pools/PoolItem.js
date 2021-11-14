@@ -34,8 +34,6 @@ const PoolItem = ({ asset }) => {
     tokenAddress,
     baseAmount,
     tokenAmount,
-    recentDivis,
-    lastMonthDivis,
     fees,
     genesis,
     newPool,
@@ -48,10 +46,13 @@ const PoolItem = ({ asset }) => {
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
-  const APY = formatFromUnits(calcAPY(asset), 2)
 
   const getDivis = () =>
-    BN(recentDivis).isGreaterThan(lastMonthDivis) ? recentDivis : lastMonthDivis
+    curated
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
+      : 0
+
+  const APY = formatFromUnits(calcAPY(asset, getDivis()), 2)
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 

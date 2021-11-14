@@ -25,12 +25,14 @@ const SwapPair = ({ assetSwap }) => {
     .times(web3.spartaPrice)
   const spotPrice = BN(assetSwap.baseAmount).div(assetSwap.tokenAmount)
   const recentFees = asset ? asset.fees : 0
-  const APY = recentFees && asset ? formatFromUnits(calcAPY(assetSwap), 2) : 0
 
   const getDivis = () =>
-    BN(asset.recentDivis).isGreaterThan(asset.lastMonthDivis)
-      ? asset.recentDivis
-      : asset.lastMonthDivis
+    asset.curated
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
+      : 0
+
+  const APY =
+    recentFees && asset ? formatFromUnits(calcAPY(assetSwap, getDivis()), 2) : 0
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]

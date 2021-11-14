@@ -6,6 +6,7 @@ import {
   getCuratedPools,
   getListedPools,
   getListedTokens,
+  getMonthIncentives,
   getPoolDetails,
   getTokenDetails,
   usePool,
@@ -148,6 +149,13 @@ const DataManager = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem('network'), trigger1])
+
+  /** Get the 30d rolling incentives for curated pools */
+  useEffect(() => {
+    if (pool.curatedPools) {
+      dispatch(getMonthIncentives(pool.curatedPools))
+    }
+  }, [dispatch, pool.curatedPools])
 
   /** Check SPARTA token price */
   useEffect(() => {
