@@ -83,7 +83,37 @@ export const getPastPriceByID = async (ID, date) => {
 }
 
 //
+export const getSubGraphBlock = async () => {
+  const tokensQuery = `
+  query {
+    _meta{
+      block {
+        number
+      }
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data._meta.block.number)
+    if (!result) {
+      console.log('no result')
+      return false
+    }
+    const info = await result
+    return info
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+//
 export const getMemberPositions = async (memberAddr) => {
+  const block = await getSubGraphBlock()
   const member = memberAddr.toString().toLowerCase()
   const tokensQuery = `
   query {
@@ -120,13 +150,13 @@ export const getMemberPositions = async (memberAddr) => {
       .then((data) => data.data.members[0])
     if (!result) {
       console.log('no result')
-      return false
+      return [false, 0]
     }
     const info = await result
-    return info
+    return [info, block]
   } catch (err) {
     console.log(err)
-    return false
+    return [false, 0]
   }
 }
 
