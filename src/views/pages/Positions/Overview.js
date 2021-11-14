@@ -26,7 +26,6 @@ import {
   calcLiqValueAll,
   getBlockTimestamp,
   getSecsSince,
-  getTimeSince,
 } from '../../../utils/math/nonContract'
 import { useWeb3 } from '../../../store/web3'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -144,7 +143,7 @@ const Positions = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  const updateLS = (queryData) => {
+  const updateLS = (queryData, block) => {
     const walletAddr = getWallet()
     if (walletAddr) {
       let posArray = tryParse(window.localStorage.getItem('sp_positions'))
@@ -157,6 +156,7 @@ const Positions = () => {
         posArray.push({ id: walletAddr })
         indexWal = posArray.findIndex((pos) => pos.id === walletAddr)
       }
+      posArray[indexWal].block = block
       posArray[indexWal].lastUpdated = getBlockTimestamp()
       posArray[indexWal].fees = queryData.fees
       posArray[indexWal].id = queryData.id
@@ -173,8 +173,8 @@ const Positions = () => {
   }
 
   const getOverall = async () => {
-    const memberPos = await getMemberPositions(wallet.account)
-    updateLS(memberPos)
+    const [memberPos, block] = await getMemberPositions(wallet.account)
+    updateLS(memberPos, block)
   }
 
   const getRedemptionValue = () => {
@@ -243,15 +243,32 @@ const Positions = () => {
     return inSparta
   }
 
-  const getOverallTime = () => {
+  // const getOverallTime = () => {
+  //   if (!isOverall) {
+  //     return 'Generate First'
+  //   }
+  //   const time = position?.lastUpdated
+  //   if (time > 0) {
+  //     return getTimeSince(time, t)
+  //   }
+  //   return 'Generate First'
+  // }
+
+  const getBlock = () => {
     if (!isOverall) {
       return 'Generate First'
     }
-    const time = position?.lastUpdated
-    if (time > 0) {
-      return getTimeSince(time, t)
+    if (position?.block > 0) {
+      return position?.block
     }
     return 'Generate First'
+  }
+
+  const getBlockRPC = () => {
+    if (web3.rpcs[0].good) {
+      return web3.rpcs[0].block
+    }
+    return 'Network Issues'
   }
 
   const _getPoolPos = () => {
@@ -640,20 +657,17 @@ const Positions = () => {
                         <hr />
                         <Row className="my-1">
                           <Col xs="auto" className="text-card">
-                            {t('lastUpdated')}
+                            {t('currentBlock')}
                             <OverlayTrigger
                               placement="auto"
                               overlay={
                                 <Popover>
                                   <Popover.Header as="h3">
-                                    {t('lastUpdated')}
+                                    {t('currentBlock')}
                                   </Popover.Header>
                                   <Popover.Body className="text-center">
-                                    The last time you clicked &apos;Reload&apos;
-                                    to update all &apos;realised&apos; position
-                                    events. Note that the &apos;Redemption
-                                    Value&apos; is dynamic and does not need to
-                                    be updated via the button.
+                                    The most recent block from your connected
+                                    RPC network.
                                   </Popover.Body>
                                 </Popover>
                               }
@@ -669,7 +683,42 @@ const Positions = () => {
                             </OverlayTrigger>
                           </Col>
                           <Col className="text-end output-card">
-                            {getOverallTime()}
+                            {getBlockRPC()}
+                          </Col>
+                        </Row>
+                        <Row className="my-1">
+                          <Col xs="auto" className="text-card">
+                            {t('lastUpdated')}
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={
+                                <Popover>
+                                  <Popover.Header as="h3">
+                                    {t('lastUpdated')}
+                                  </Popover.Header>
+                                  <Popover.Body className="text-center">
+                                    The most recent block from the last time you
+                                    clicked &apos;Reload&apos; to update all
+                                    &apos;realised&apos; position events. Note
+                                    that the &apos;Redemption Value&apos; is
+                                    dynamic and does not need to be updated via
+                                    the button.
+                                  </Popover.Body>
+                                </Popover>
+                              }
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="15"
+                                  fill={isLightMode ? 'black' : 'white'}
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </Col>
+                          <Col className="text-end output-card">
+                            {getBlock()}
                           </Col>
                         </Row>
                       </Card.Body>
@@ -683,7 +732,9 @@ const Positions = () => {
                           }
                         >
                           {getSecsSince(position.lastUpdated) < 60
-                            ? 'Wait 60s'
+                            ? `${`Wait ${
+                                60 - getSecsSince(position.lastUpdated)
+                              }`}s`
                             : 'Reload'}
                         </Button>
                       </Card.Footer>
