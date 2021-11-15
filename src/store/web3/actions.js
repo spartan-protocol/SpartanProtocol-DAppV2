@@ -13,6 +13,7 @@ import {
 import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
 import { convertToWei } from '../../utils/bigNumber'
+import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
 
 export const web3Loading = () => ({
   type: Types.WEB3_LOADING,
@@ -228,7 +229,6 @@ export const getEventArray = (array) => async (dispatch) => {
 
 /**
  * Get the current blocks from all RPCs
- * @returns {array} eventArray
  */
 export const getRPCBlocks = () => async (dispatch) => {
   dispatch(web3Loading())
@@ -252,6 +252,18 @@ export const getRPCBlocks = () => async (dispatch) => {
     rpcs = rpcs.sort((a, b) => b.block - a.block)
     // console.log(rpcs)
     dispatch(payloadToDispatch(Types.RPC_BLOCKS, rpcs))
+  } catch (error) {
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+  }
+}
+
+export const getGlobalMetrics = () => async (dispatch) => {
+  dispatch(web3Loading())
+  try {
+    const block = await getSubGraphBlock()
+    const global = await callGlobalMetrics()
+    // console.log(global, block)
+    dispatch(payloadToDispatch(Types.WEB3_METRICS, { global, block }))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
   }

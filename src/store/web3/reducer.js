@@ -10,6 +10,7 @@ const initialState = {
   spartaPrice: 0,
   eventArray: {},
   rpcs: false,
+  metrics: false,
   loading: false,
   error: null,
 }
@@ -92,6 +93,15 @@ export const web3Reducer = (state = initialState, action) => {
       return {
         ...state,
         rpcs: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.WEB3_METRICS: {
+      return {
+        ...state,
+        metrics: action.payload,
         loading: false,
         error: null,
       }
