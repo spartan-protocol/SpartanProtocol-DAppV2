@@ -25,7 +25,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import {
   removeLiquidityExact,
@@ -42,6 +41,7 @@ import NewPool from '../Pools/NewPool'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
+import Metrics from './Components/Metrics'
 
 const LiqRemove = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -729,7 +729,7 @@ const LiqRemove = () => {
       </Col>
       {pool.poolDetails && (
         <Col xs="auto">
-          <SwapPair assetSwap={poolRemove1} />
+          <Metrics assetSwap={poolRemove1} />
         </Col>
       )}
     </Row>
