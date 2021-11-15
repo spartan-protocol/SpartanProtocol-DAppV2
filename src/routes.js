@@ -54,10 +54,9 @@ export const routes = [
   {
     path: '/positions',
     name: 'Positions',
-    icon: '',
+    icon: 'analysis',
     component: Positions,
     layout: '',
-    hide: true,
   },
 
   {
