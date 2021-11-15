@@ -1299,6 +1299,43 @@ const Positions = () => {
                   )}
                 </Card>
               </Col>
+              <Col xs="auto">
+                <Card className="card-320" style={{ minHeight: '445px' }}>
+                  <Card.Header className="">
+                    Assessing Positions
+                    <Card.Subtitle className="">
+                      <div className="my-2 d-inline-block me-2">More Info</div>
+                    </Card.Subtitle>
+                  </Card.Header>
+                  <Card.Body className="output-card">
+                    Assessing your position is subjective & depends on what you
+                    are trying to achieve: <br />
+                    <br />
+                    <li>Accrue more USD?</li>
+                    <li>Accrue more SPARTA?</li>
+                    <li>Accrue more underlying tokens?</li>
+                    <br />
+                    This is why many scopes are provided. It is complex
+                    assessing your position.
+                    <br />
+                    <br />
+                    Click &apos;View In Docs&apos; below to read the
+                    &apos;Positions Guide&apos; and learn more about it.
+                  </Card.Body>
+                  <Card.Footer>
+                    <a
+                      href="https://docs.spartanprotocol.org/guides/positions"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Button className="w-100">
+                        {t('viewInDocs')}
+                        <Icon icon="scan" size="15" className="ms-2 mb-1" />
+                      </Button>
+                    </a>
+                  </Card.Footer>
+                </Card>
+              </Col>
             </Row>
           </>
         )}
