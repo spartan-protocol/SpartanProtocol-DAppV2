@@ -27,7 +27,7 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import SwapPair from '../Swap/SwapPair'
+import Metrics from './Components/Metrics'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity, addLiquiditySingle } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -947,7 +947,7 @@ const LiqAdd = () => {
       </Col>
       {pool.poolDetails && (
         <Col xs="auto">
-          <SwapPair assetSwap={poolAdd1} />
+          <Metrics assetSwap={poolAdd1} />
         </Col>
       )}
     </Row>

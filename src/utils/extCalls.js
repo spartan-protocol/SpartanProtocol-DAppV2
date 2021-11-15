@@ -234,9 +234,10 @@ export const callGlobalMetrics = async () => {
 }
 
 export const callPoolMetrics = async (poolAddress) => {
+  const address = poolAddress.toString().toLowerCase()
   const tokensQuery = `
   query {
-    metricsPoolDays(orderBy: timestamp, orderDirection: desc, where: {pool: ${poolAddress}}) {
+    metricsPoolDays(orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
       id
       timestamp
       pool {
@@ -266,6 +267,7 @@ export const callPoolMetrics = async (poolAddress) => {
       return [false, 0]
     }
     const metrics = await result
+    console.log(metrics)
     return metrics
   } catch (err) {
     console.log(err)
