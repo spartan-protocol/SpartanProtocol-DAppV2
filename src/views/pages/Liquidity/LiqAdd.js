@@ -441,7 +441,7 @@ const LiqAdd = () => {
   return (
     <Row>
       <Col xs="auto">
-        <Card xs="auto" className="card-480">
+        <Card xs="auto" className="card-480" style={{ minHeight: '560px' }}>
           <Card.Header className="p-0 border-0 mb-3">
             <Row className="px-4 pt-3 pb-1">
               <Col xs="auto">

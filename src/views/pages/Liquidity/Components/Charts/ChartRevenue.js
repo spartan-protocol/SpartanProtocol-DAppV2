@@ -1,5 +1,5 @@
 import React from 'react'
-import { Bar } from 'react-chartjs-2'
+import { Line } from 'react-chartjs-2'
 import { BN, convertFromWei } from '../../../../../utils/bigNumber'
 import { formatDateDay } from '../../../../../utils/math/nonContract'
 
@@ -10,14 +10,15 @@ const ChartRevenue = (props) => {
     const dataPoints = 30
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
+    let accumulative = BN(0)
+    const metrics = props.metrics.slice(0, length).reverse()
     for (let i = 0; i < length; i++) {
-      const revenue = BN(props.metrics[i].incentivesUSD).plus(
-        props.metrics[i].feesUSD,
-      )
-      data1.push(convertFromWei(revenue))
-      labels.push(formatDateDay(props.metrics[i].timestamp))
+      const revenue = BN(metrics[i].incentivesUSD).plus(metrics[i].feesUSD)
+      accumulative = accumulative.plus(revenue)
+      data1.push(convertFromWei(accumulative))
+      labels.push(formatDateDay(metrics[i].timestamp))
     }
-    return [labels.reverse(), data1.reverse()]
+    return [labels, data1]
   }
 
   const data = {
@@ -42,7 +43,7 @@ const ChartRevenue = (props) => {
 
   return (
     <>
-      <Bar data={data} />
+      <Line data={data} />
     </>
   )
 }

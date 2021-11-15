@@ -17,7 +17,7 @@ const Metrics = ({ assetSwap }) => {
   const pool = usePool()
   const { t } = useTranslation()
 
-  const [poolMetrics, setPoolMetrics] = useState(false)
+  const [poolMetrics, setPoolMetrics] = useState([])
 
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
@@ -76,42 +76,44 @@ const Metrics = ({ assetSwap }) => {
                 <img
                   src={getToken(assetSwap.tokenAddress).symbolUrl}
                   alt="Token logo"
-                  height="50"
+                  height="40"
                   className="rounded-circle"
                 />
                 {/* <Icon icon="spartav2" size="25" className="token-badge-pair" /> */}
               </Col>
               <Col xs="auto">
-                <h5 className="mb-1">
+                <h6 className="mb-1">
                   {getToken(assetSwap.tokenAddress).symbol}
                   <span className="output-card ms-2">
                     ${formatFromUnits(tokenPrice, 4)}
                   </span>
-                </h5>
-                <h5 className="mb-0">
+                </h6>
+                <h6 className="mb-0">
                   SPARTA
                   <span className="output-card ms-2">
                     ${formatFromUnits(web3.spartaPrice, 4)}
                   </span>
-                </h5>
+                </h6>
               </Col>
-              <Col xs="auto" className="text-card">
-                APY{' '}
-                <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
-                  <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
-                  </span>
-                </OverlayTrigger>
-                {APY}%
+              <Col className="text-end">
+                <h6 className="mb-1">
+                  APY
+                  <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
+                    <span role="button">
+                      <Icon
+                        icon="info"
+                        className="ms-1 mb-1"
+                        size="17"
+                        fill={isLightMode ? 'black' : 'white'}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                </h6>
+                <h6 className="mb-0">{APY}%</h6>
               </Col>
             </Row>
           </Card.Header>
-          <Card.Body>
+          <Card.Body className="pt-1">
             <ChartRevenue metrics={poolMetrics} />
           </Card.Body>
         </Card>
