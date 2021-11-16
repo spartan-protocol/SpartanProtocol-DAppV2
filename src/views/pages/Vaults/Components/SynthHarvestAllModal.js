@@ -10,7 +10,6 @@ import { getSynthDetails, synthHarvest } from '../../../../store/synth/actions'
 import { useSynth } from '../../../../store/synth/selector'
 import { Icon } from '../../../../components/Icons/icons'
 import { getSynth, getToken } from '../../../../utils/math/utils'
-import { getSecsSince } from '../../../../utils/math/nonContract'
 import { useReserve } from '../../../../store/reserve/selector'
 import { calcCurrentRewardSynth } from '../../../../utils/math/synthVault'
 import { useSparta } from '../../../../store/sparta'
@@ -60,13 +59,7 @@ const SynthHarvestAllModal = () => {
     if (synth.synthDetails.length > 1) {
       const tempArray = []
       synth.synthDetails
-        .filter(
-          (x) =>
-            x.staked > 0 &&
-            getSecsSince(x.lastHarvest).isGreaterThan(
-              synth.globalDetails.minTime,
-            ),
-        )
+        .filter((x) => x.staked > 0)
         .map((x) => tempArray.push(x.address))
       setClaimArray(tempArray)
     }
