@@ -223,13 +223,13 @@ export const callGlobalMetrics = async () => {
       .then((data) => data.data.metricsGlobalDays)
     if (!result) {
       console.log('no result')
-      return [false, 0]
+      return false
     }
     const metrics = await result
     return metrics
   } catch (err) {
     console.log(err)
-    return [false, 0]
+    return false
   }
 }
 
@@ -253,6 +253,7 @@ export const callPoolMetrics = async (poolAddress) => {
       txCount
       tvlSPARTA
       tvlUSD
+      tokenPrice
     }
   }
 `
@@ -264,13 +265,13 @@ export const callPoolMetrics = async (poolAddress) => {
       .then((data) => data.data.metricsPoolDays)
     if (!result) {
       console.log('no result')
-      return [false, 0]
+      return false
     }
     const metrics = await result
     console.log(metrics)
     return metrics
   } catch (err) {
     console.log(err)
-    return [false, 0]
+    return false
   }
 }
