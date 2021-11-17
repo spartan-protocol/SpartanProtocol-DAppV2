@@ -9,6 +9,7 @@ import {
   synthVaultWeight,
   getSynthDetails,
   getSynthMemberDetails,
+  getSynthMinting,
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
@@ -32,6 +33,7 @@ const SynthVault = () => {
   const getGlobals = () => {
     dispatch(getSynthGlobalDetails(web3.rpcs))
     dispatch(getSynthMemberDetails(wallet, web3.rpcs))
+    dispatch(getSynthMinting(web3.rpcs))
   }
   useEffect(() => {
     if (trigger0 === 0) {

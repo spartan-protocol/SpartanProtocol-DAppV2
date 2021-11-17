@@ -209,7 +209,7 @@ export const bscRpcsMN = [
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
-export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
+export const synthHarvestLive = true // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
   const _tokenAddr = ethers.utils.getAddress(tokenAddr)

@@ -40,7 +40,7 @@ const SynthVaultItem = ({ synthItem }) => {
       genesis: synth.globalDetails.genesis,
       baseAmount: BN(synth.totalWeight).div(2).toString(),
     }
-    return formatFromUnits(calcAPY(_object), 2)
+    return formatFromUnits(calcAPY(_object, fees), 2)
   }
 
   // Calculations

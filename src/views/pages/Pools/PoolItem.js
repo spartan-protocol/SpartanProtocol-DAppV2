@@ -48,7 +48,7 @@ const PoolItem = ({ asset }) => {
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
 
   const getDivis = () =>
-    curated
+    curated && pool.incentives
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
