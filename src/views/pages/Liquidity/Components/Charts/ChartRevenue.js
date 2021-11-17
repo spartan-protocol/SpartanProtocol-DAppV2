@@ -11,7 +11,9 @@ const ChartRevenue = (props) => {
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     let accumulative = BN(0)
-    const metrics = props.metrics.slice(0, length).reverse()
+    const metrics = props.metrics
+      ? props.metrics.slice(0, length).reverse()
+      : []
     for (let i = 0; i < length; i++) {
       const revenue = BN(metrics[i].incentivesUSD).plus(metrics[i].feesUSD)
       accumulative = accumulative.plus(revenue)
