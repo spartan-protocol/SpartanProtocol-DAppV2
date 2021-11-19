@@ -14,6 +14,7 @@ import {
   Form,
   Popover,
   OverlayTrigger,
+  ProgressBar,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -21,6 +22,7 @@ import {
   getAddresses,
   getItemFromArray,
   getNetwork,
+  synthHarvestLive,
   tempChains,
 } from '../../../utils/web3'
 import { usePool } from '../../../store/pool'
@@ -46,14 +48,22 @@ import NewSynth from './NewSynth'
 import { Icon } from '../../../components/Icons/icons'
 import { useSparta } from '../../../store/sparta'
 import { balanceWidths } from '../Liquidity/Components/Utils'
-import { burnSynth, mintSynth } from '../../../utils/math/router'
+import { burnSynth, mintSynth, stirCauldron } from '../../../utils/math/router'
 import { calcSpotValueInBase } from '../../../utils/math/utils'
 import {
   getSynthDetails,
   getSynthGlobalDetails,
+  getSynthMemberDetails,
   getSynthMinting,
+  synthHarvestSingle,
+  synthVaultWeight,
 } from '../../../store/synth'
-import { convertTimeUnits } from '../../../utils/math/nonContract'
+import { convertTimeUnits, getSecsSince } from '../../../utils/math/nonContract'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { useDao } from '../../../store/dao/selector'
+import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
+import { useReserve } from '../../../store/reserve'
+import { daoMemberDetails } from '../../../store/dao/actions'
 
 const Swap = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -63,10 +73,14 @@ const Swap = () => {
   const web3 = useWeb3()
   const dispatch = useDispatch()
   const addr = getAddresses()
+  const dao = useDao()
   const pool = usePool()
+  const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
 
+  const [harvestLoading, setHarvestLoading] = useState(false)
+  const [harvestConfirm, setHarvestConfirm] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('mint')
@@ -85,6 +99,8 @@ const Swap = () => {
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
+  const [trigger1, settrigger1] = useState(0)
+
   const getData = () => {
     setnetwork(getNetwork())
   }
@@ -99,6 +115,45 @@ const Swap = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
+
+  const getGlobals = () => {
+    dispatch(getSynthGlobalDetails(web3.rpcs))
+    dispatch(getSynthMemberDetails(wallet, web3.rpcs))
+    dispatch(daoMemberDetails(wallet, web3.rpcs))
+  }
+  useEffect(() => {
+    if (trigger1 === 0) {
+      getGlobals()
+    }
+    const timer = setTimeout(() => {
+      getGlobals()
+      settrigger1(trigger1 + 1)
+    }, 7500)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger1])
+
+  useEffect(() => {
+    const checkDetails = () => {
+      if (synth.synthArray?.length > 1) {
+        dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
+      }
+    }
+    checkDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.synthArray])
+
+  useEffect(() => {
+    const checkWeight = () => {
+      if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
+        dispatch(
+          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
+        )
+      }
+    }
+    checkWeight()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [synth.synthDetails])
 
   const tryParse = (data) => {
     try {
@@ -118,9 +173,9 @@ const Swap = () => {
         )
       ) {
         if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthGlobalDetails())
-          dispatch(getSynthDetails(synthArray, wallet))
-          dispatch(getSynthMinting())
+          dispatch(getSynthGlobalDetails(web3.rpcs))
+          dispatch(getSynthDetails(synthArray, wallet, web3.rpcs))
+          dispatch(getSynthMinting(web3.rpcs))
         }
       }
     }
@@ -321,6 +376,17 @@ const Swap = () => {
     return ['0.00', '0.00', '0.00', '0.00']
   }
 
+  const getRevenue = () => {
+    let result = '0.00'
+    if (activeTab === 'mint') {
+      result = BN(getMint()[1]).plus(getMint()[2])
+    } else {
+      result = BN(getBurn()[1]).plus(getBurn()[2])
+    }
+    result = result > 0 ? result : '0.00'
+    return result
+  }
+
   //= =================================================================================//
   // Functions for input handling
 
@@ -382,6 +448,38 @@ const Swap = () => {
     return true
   }
 
+  const secsSinceHarvest = () => {
+    if (dao.member.lastHarvest) {
+      return getSecsSince(dao.member.lastHarvest)
+    }
+    return '0'
+  }
+
+  const getClaimable = () => {
+    const [reward, baseCapped, synthCapped] = calcCurrentRewardSynth(
+      pool.poolDetails,
+      synth,
+      getSynth(assetSwap2.tokenAddress),
+      sparta.globalDetails,
+      reserve.globalDetails.spartaBalance,
+    )
+    return [reward, baseCapped, synthCapped]
+  }
+
+  const checkValidHarvest = () => {
+    const reward = formatFromWei(getClaimable()[0], 4)
+    if (!reserve.globalDetails.emissions) {
+      return [false, t('incentivesDisabled'), '']
+    }
+    if (getClaimable()[1]) {
+      return [false, t('baseCap'), '']
+    }
+    if (getClaimable()[2]) {
+      return [true, reward, ' SPARTA']
+    }
+    return [true, reward, ` ${getToken(assetSwap2.tokenAddress)?.symbol}s`]
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
@@ -409,6 +507,14 @@ const Swap = () => {
       }
       if (!confirmSynth) {
         return [false, t('confirmLockup')]
+      }
+      if (
+        getSynth(assetSwap2.tokenAddress)?.staked > 0 &&
+        secsSinceHarvest() > 300
+      ) {
+        if (!harvestConfirm) {
+          return [false, t('confirmHarvest')]
+        }
       }
     }
     if (activeTab === 'burn') {
@@ -444,6 +550,7 @@ const Swap = () => {
         assetSwap1.tokenAddress,
         getSynth(assetSwap2.tokenAddress)?.address,
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -458,14 +565,41 @@ const Swap = () => {
         getSynth(assetSwap1.tokenAddress)?.address,
         assetSwap2.tokenAddress,
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
     clearInputs()
   }
 
+  const handleHarvest = async () => {
+    setHarvestLoading(true)
+    await dispatch(
+      synthHarvestSingle(
+        getSynth(assetSwap2.tokenAddress)?.address,
+        wallet,
+        web3.rpcs,
+      ),
+    )
+    setHarvestLoading(false)
+    if (synth.synthArray?.length > 1) {
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
+    }
+  }
+
   const isLoading = () => {
-    if (!pool.poolDetails || !synth.synthDetails) {
+    if (
+      !pool.poolDetails ||
+      !synth.synthDetails ||
+      !synth.globalDetails ||
+      synth.synthDetails.length <= 0 ||
+      pool.tokenDetails.length <= 0 ||
+      !assetSwap1 ||
+      !assetSwap2
+    ) {
+      return true
+    }
+    if (wallet.account && !synth.member) {
       return true
     }
     return false
@@ -476,6 +610,20 @@ const Swap = () => {
       setShowWalletWarning1(!showWalletWarning1)
     }
   }
+
+  const getSynthSupply = () => getSynth(assetSwap2.tokenAddress)?.totalSupply
+  const getSynthStir = () =>
+    stirCauldron(
+      assetSwap2,
+      assetSwap2.tokenAmount,
+      getSynth(assetSwap2.tokenAddress),
+    )
+  const getSynthCapPC = () =>
+    BN(getSynthSupply())
+      .div(BN(getSynthSupply()).plus(getSynthStir()))
+      .times(100)
+  const getMintedSynthCapPC = () =>
+    BN(getMint()[0]).div(BN(getSynthSupply()).plus(getSynthStir())).times(100)
 
   return (
     <>
@@ -555,7 +703,17 @@ const Swap = () => {
                                       </Badge>
                                       {t('balance')}
                                       {': '}
-                                      {formatFromWei(getBalance(1), 4)}
+                                      <OverlayTrigger
+                                        placement="auto"
+                                        overlay={Tooltip(
+                                          t,
+                                          formatFromWei(getBalance(1), 18),
+                                        )}
+                                      >
+                                        <span role="button">
+                                          {formatFromWei(getBalance(1))}
+                                        </span>
+                                      </OverlayTrigger>
                                     </Col>
                                   </Row>
 
@@ -762,17 +920,74 @@ const Swap = () => {
 
                               {/* Bottom 'synth' txnDetails row */}
                               <Row className="mb-2 mt-3">
-                                <Col xs="auto">
-                                  <div className="text-card">{t('input')}</div>
+                                <Col xs="auto" className="text-card">
+                                  {t('synthCap')}
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'synthCap')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1"
+                                        size="17"
+                                        fill={isLightMode ? 'black' : 'white'}
+                                      />
+                                    </span>
+                                  </OverlayTrigger>
                                 </Col>
                                 <Col className="text-end">
-                                  <div className="text-card">
-                                    {swapInput1?.value
-                                      ? formatFromUnits(swapInput1?.value, 6)
-                                      : '0.00'}{' '}
-                                    {getToken(assetSwap1.tokenAddress)?.symbol}
-                                    {activeTab === 'burn' && 's'}
-                                  </div>
+                                  {getSynthSupply() > 0 && (
+                                    <ProgressBar
+                                      style={{ height: '15px' }}
+                                      className="mt-1"
+                                    >
+                                      <ProgressBar
+                                        variant={
+                                          getMintedSynthCapPC() > 100
+                                            ? 'primary'
+                                            : 'success'
+                                        }
+                                        key={1}
+                                        now={getSynthCapPC()}
+                                      />
+                                      <ProgressBar
+                                        variant="black"
+                                        key={2}
+                                        now={0.5}
+                                      />
+                                      <ProgressBar
+                                        variant={
+                                          BN(getMintedSynthCapPC()).plus(
+                                            getSynthCapPC(),
+                                          ) > 100
+                                            ? 'primary'
+                                            : 'info'
+                                        }
+                                        key={3}
+                                        now={getMintedSynthCapPC()}
+                                        label={
+                                          <OverlayTrigger
+                                            placement="auto"
+                                            overlay={Tooltip(t, 'yourForge')}
+                                          >
+                                            <span role="button">
+                                              <Icon
+                                                icon="info"
+                                                className="ms-1"
+                                                size="17"
+                                                fill={
+                                                  isLightMode
+                                                    ? 'black'
+                                                    : 'white'
+                                                }
+                                              />
+                                            </span>
+                                          </OverlayTrigger>
+                                        }
+                                      />
+                                    </ProgressBar>
+                                  )}
                                 </Col>
                               </Row>
 
@@ -797,6 +1012,32 @@ const Swap = () => {
                                       SPARTA
                                     </div>
                                   )}
+                                </Col>
+                              </Row>
+
+                              <Row className="mb-2">
+                                <Col xs="auto">
+                                  <div className="text-card">
+                                    {t('revenue')}
+                                  </div>
+                                </Col>
+                                <Col className="text-end">
+                                  <div className="text-card">
+                                    {formatFromWei(getRevenue(), 6)} SPARTA
+                                    <OverlayTrigger
+                                      placement="auto"
+                                      overlay={Tooltip(t, 'swapRevInfo')}
+                                    >
+                                      <span role="button">
+                                        <Icon
+                                          icon="info"
+                                          className="ms-1 mb-1"
+                                          size="17"
+                                          fill={isLightMode ? 'black' : 'white'}
+                                        />
+                                      </span>
+                                    </OverlayTrigger>
+                                  </div>
                                 </Col>
                               </Row>
 
@@ -833,37 +1074,109 @@ const Swap = () => {
                                   )}
                                 </Col>
                               </Row>
+                              {activeTab === 'mint' && (
+                                <>
+                                  {getSynth(assetSwap2.tokenAddress)?.staked >
+                                    0 &&
+                                    secsSinceHarvest() > 300 && (
+                                      <>
+                                        <br />
+                                        <Row xs="12" className="my-2">
+                                          <Col xs="auto" className="text-card">
+                                            Harvest Available:
+                                          </Col>
+                                          <Col className="text-end output-card">
+                                            {checkValidHarvest()[1]}{' '}
+                                            {checkValidHarvest()[2]}
+                                          </Col>
+                                        </Row>
+                                        <Form className="my-2 text-center">
+                                          <span className="output-card">
+                                            <OverlayTrigger
+                                              placement="auto"
+                                              overlay={Tooltip(
+                                                t,
+                                                'mintHarvestConfirm',
+                                                getToken(
+                                                  assetSwap2.tokenAddress,
+                                                )?.symbol,
+                                              )}
+                                            >
+                                              <span role="button">
+                                                <Icon
+                                                  icon="info"
+                                                  className="me-1 mb-1"
+                                                  size="17"
+                                                  fill={
+                                                    isLightMode
+                                                      ? 'black'
+                                                      : 'white'
+                                                  }
+                                                />
+                                              </span>
+                                            </OverlayTrigger>
+                                            {t('mintHarvestConfirmShort')}
+                                            <Form.Check
+                                              type="switch"
+                                              id="confirmHarvest"
+                                              className="ms-2 d-inline-flex"
+                                              checked={harvestConfirm}
+                                              onChange={() =>
+                                                setHarvestConfirm(
+                                                  !harvestConfirm,
+                                                )
+                                              }
+                                            />
+                                          </span>
+                                        </Form>
+                                      </>
+                                    )}
+                                  <Row>
+                                    <Col>
+                                      <Form className="my-1 text-center">
+                                        <span className="output-card">
+                                          <OverlayTrigger
+                                            placement="auto"
+                                            overlay={Tooltip(
+                                              t,
+                                              'mintSynthConfirm',
+                                            )}
+                                          >
+                                            <span role="button">
+                                              <Icon
+                                                icon="info"
+                                                className="me-1 mb-1"
+                                                size="17"
+                                                fill={
+                                                  isLightMode
+                                                    ? 'black'
+                                                    : 'white'
+                                                }
+                                              />
+                                            </span>
+                                          </OverlayTrigger>
+                                          {t('mintSynthConfirmShort')} (
+                                          {_convertTimeUnits()[0]}{' '}
+                                          {_convertTimeUnits()[1]})
+                                          <Form.Check
+                                            type="switch"
+                                            id="confirmLockout"
+                                            className="ms-2 d-inline-flex"
+                                            checked={confirmSynth}
+                                            onChange={() =>
+                                              setConfirmSynth(!confirmSynth)
+                                            }
+                                          />
+                                        </span>
+                                      </Form>
+                                    </Col>
+                                  </Row>
+                                </>
+                              )}
                             </Col>
                           </Row>
                         </Card.Body>
                         <Card.Footer>
-                          {activeTab === 'mint' && (
-                            <Row>
-                              <Col>
-                                <div className="output-card text-center">
-                                  {t('mintSynthConfirm')}{' '}
-                                  {_convertTimeUnits()[0]}{' '}
-                                  {_convertTimeUnits()[1]}.
-                                </div>
-                                <Form className="my-2 text-center">
-                                  <span className="output-card">
-                                    {t('mintSynthConfirmShort')}{' '}
-                                    {_convertTimeUnits()[0]}{' '}
-                                    {_convertTimeUnits()[1]}
-                                    <Form.Check
-                                      type="switch"
-                                      id="confirmLockout"
-                                      className="ms-2 d-inline-flex"
-                                      checked={confirmSynth}
-                                      onChange={() =>
-                                        setConfirmSynth(!confirmSynth)
-                                      }
-                                    />
-                                  </span>
-                                </Form>
-                              </Col>
-                            </Row>
-                          )}
                           {/* 'Approval/Allowance' row */}
                           <Row className="text-center">
                             {activeTab === 'mint' && (
@@ -886,20 +1199,58 @@ const Swap = () => {
                                     />
                                   )}
                                 <Col className="hide-if-siblings">
-                                  <Button
-                                    onClick={() => handleSwapToSynth()}
-                                    className="w-100"
-                                    disabled={!checkValid()[0]}
-                                  >
-                                    {checkValid()[1]}
-                                    {txnLoading && (
-                                      <Icon
-                                        icon="cycle"
-                                        size="20"
-                                        className="anim-spin ms-1"
-                                      />
-                                    )}
-                                  </Button>
+                                  <Row>
+                                    {getSynth(assetSwap2.tokenAddress)?.staked >
+                                      0 &&
+                                      secsSinceHarvest() > 300 && (
+                                        <Col>
+                                          <Button
+                                            className="w-100"
+                                            onClick={() => handleHarvest()}
+                                            disabled={
+                                              getSynth(assetSwap2.tokenAddress)
+                                                .staked <= 0 ||
+                                              !enoughGas() ||
+                                              reserve.globalDetails
+                                                .globalFreeze ||
+                                              !synthHarvestLive
+                                            }
+                                          >
+                                            {synthHarvestLive
+                                              ? enoughGas()
+                                                ? reserve.globalDetails
+                                                    .globalFreeze
+                                                  ? t('globalFreeze')
+                                                  : t('harvest')
+                                                : t('checkBnbGas')
+                                              : t('harvestDisabled')}
+                                            {harvestLoading && (
+                                              <Icon
+                                                icon="cycle"
+                                                size="20"
+                                                className="anim-spin ms-1"
+                                              />
+                                            )}
+                                          </Button>
+                                        </Col>
+                                      )}
+                                    <Col>
+                                      <Button
+                                        onClick={() => handleSwapToSynth()}
+                                        className="w-100"
+                                        disabled={!checkValid()[0]}
+                                      >
+                                        {checkValid()[1]}
+                                        {txnLoading && (
+                                          <Icon
+                                            icon="cycle"
+                                            size="20"
+                                            className="anim-spin ms-1"
+                                          />
+                                        )}
+                                      </Button>
+                                    </Col>
+                                  </Row>
                                 </Col>
                               </>
                             )}
@@ -939,54 +1290,6 @@ const Swap = () => {
                               </>
                             )}
                           </Row>
-                          {activeTab === 'mint' && getMint()[2] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(
-                                  assetSwap1.tokenAddress === addr.spartav2
-                                    ? assetSwap2.tokenAddress
-                                    : assetSwap1.tokenAddress,
-                                )?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getMint()[2],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
-                          {activeTab === 'mint' && getMint()[3] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(assetSwap2.tokenAddress)?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getMint()[3],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
-                          {activeTab === 'burn' && getBurn()[2] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(
-                                  assetSwap1.tokenAddress === addr.spartav2
-                                    ? assetSwap2.tokenAddress
-                                    : assetSwap1.tokenAddress,
-                                )?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getBurn()[2],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
-                          {activeTab === 'burn' && getBurn()[3] > 0 && (
-                            <div className="text-card text-center mt-2">
-                              {`${
-                                getToken(assetSwap2.tokenAddress)?.symbol
-                              }:SPARTA pool will receive a ${formatFromWei(
-                                getBurn()[3],
-                                4,
-                              )} SPARTA dividend`}
-                            </div>
-                          )}
                         </Card.Footer>
                       </Card>
                     ) : (

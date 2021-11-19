@@ -1,4 +1,4 @@
-import { BN, formatFromUnits } from '../bigNumber'
+import { BN, convertToWei, formatFromUnits } from '../bigNumber'
 import {
   calcPart,
   getPoolShareWeight,
@@ -96,7 +96,7 @@ export const getLPWeights = (poolDetails, daoDetails, bondDetails) => {
   for (let i = 0; i < poolDetails.length; i++) {
     if (poolDetails[i].baseAmount > 0) {
       const dao = getDao(poolDetails[i].tokenAddress, daoDetails)
-      const bond = getDao(poolDetails[i].tokenAddress, bondDetails)
+      const bond = getBond(poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
           BN(poolDetails[i].balance).plus(dao?.staked).plus(bond?.staked),
@@ -161,7 +161,7 @@ export const getSynthVaultWeights = (synthDetails, poolDetails) => {
     memberWeight = memberWeight.plus(
       calcSpotValueInBase(
         BN(_vaultSynths[i].staked),
-        getPool(synthDetails[i].tokenAddress, poolDetails),
+        getPool(_vaultSynths[i].tokenAddress, poolDetails),
       ),
     )
   }
@@ -252,6 +252,18 @@ export const getTimeUntil = (timestamp, t) => {
 }
 
 /**
+ * Return if a user has bonded
+ * @param {uint} timestamp to compare if the time given is 0 (not bonded)
+ * @returns boolean, true if bonded
+ */
+export const isBonded = (timestamp) => {
+  if (parseInt(timestamp, 10) === 0) {
+    return false
+  }
+  return true
+}
+
+/**
  * Return time passed since a timestamp
  * @param {uint} timestamp to compare current time to
  * @param {uint} t hand in the {t} translation obj
@@ -287,30 +299,41 @@ export const formatDate = (unixTime) => {
 }
 
 /**
+ * Return day of the month
+ * @param {number} timestamp
+ * @returns formattedDate
+ */
+export const formatDateDay = (unixTime) => {
+  const date = new Date(unixTime * 1000)
+  return date.getDate()
+}
+
+/**
  * Calculate APY using full month divis + fees and pool's depth *** UPDATE WITH GENESIS/LASTMONTH ***
  * @param {object} pool
  * @returns {number} apy
  */
-export const calcAPY = (pool) => {
-  let apy = '0'
-  const actualDepth = BN(pool.baseAmount).times(2)
-  const _divis = BN(pool.recentDivis)
-  const _prevDivis = BN(pool.lastMonthDivis)
+export const calcAPY = (pool, recentDivis) => {
+  let apr = '0'
+  const fallback = BN(convertToWei(10000))
+  const baseAmount = BN(pool.baseAmount)
+  const fallbackDepth = baseAmount.isLessThan(fallback) ? fallback : baseAmount
+  const actualDepth = fallbackDepth.times(2)
+  const _divis = BN(recentDivis)
   const monthFraction = BN(getBlockTimestamp()).minus(pool.genesis).div(2592000)
   if (monthFraction > 1) {
-    apy = BN(_prevDivis.isGreaterThan(_divis) ? _prevDivis : _divis)
-      .plus(pool.fees)
-      .times(12)
-      .div(actualDepth)
-      .times(100)
+    apr = BN(_divis).plus(pool.fees).times(12).div(actualDepth).times(100)
   } else {
-    apy = BN(_divis)
+    apr = BN(_divis)
       .plus(pool.fees)
       .times(12 / monthFraction)
       .div(actualDepth)
       .times(100)
   }
-  if (apy > 0) {
+  if (apr > 0) {
+    // console.log(apr.toString())
+    const apy1 = BN(apr).div(100).div(12).plus(1)
+    const apy = apy1.pow(12).minus(1).times(100)
     return apy
   }
   return '0.00'

@@ -17,10 +17,10 @@ export const bondLoading = () => ({
  * Get the global bond details *VIEW*
  * @returns globalDetails
  */
-export const bondGlobalDetails = () => async (dispatch) => {
+export const bondGlobalDetails = (rpcUrls) => async (dispatch) => {
   dispatch(bondLoading())
   const addr = getAddresses()
-  const contract = getSpartaV2Contract()
+  const contract = getSpartaV2Contract(null, rpcUrls)
   try {
     let awaitArray = []
     awaitArray.push(contract ? contract.callStatic.balanceOf(addr?.dao) : '0')
@@ -39,54 +39,55 @@ export const bondGlobalDetails = () => async (dispatch) => {
  * @param listedPools @param wallet
  * @returns bondDetails
  */
-export const getBondDetails = (listedPools, wallet) => async (dispatch) => {
-  dispatch(bondLoading())
-  const contract = getBondVaultContract()
-  try {
-    let awaitArray = []
-    for (let i = 0; i < listedPools.length; i++) {
-      if (!wallet.account || listedPools[i].baseAmount <= 0) {
-        awaitArray.push({
-          isMember: false,
-          bondedLP: '0',
-          claimRate: '0',
-          lastBlockTime: '0',
-        })
-      } else {
-        awaitArray.push(
-          contract.callStatic.getMemberDetails(
-            wallet.account,
-            listedPools[i].address,
-          ),
-        )
+export const getBondDetails =
+  (listedPools, wallet, rpcUrls) => async (dispatch) => {
+    dispatch(bondLoading())
+    const contract = getBondVaultContract(null, rpcUrls)
+    try {
+      let awaitArray = []
+      for (let i = 0; i < listedPools.length; i++) {
+        if (!wallet.account || listedPools[i].baseAmount <= 0) {
+          awaitArray.push({
+            isMember: false,
+            bondedLP: '0',
+            claimRate: '0',
+            lastBlockTime: '0',
+          })
+        } else {
+          awaitArray.push(
+            contract.callStatic.getMemberDetails(
+              wallet.account,
+              listedPools[i].address,
+            ),
+          )
+        }
       }
+      awaitArray = await Promise.all(awaitArray)
+      const bondDetails = []
+      for (let i = 0; i < awaitArray.length; i++) {
+        bondDetails.push({
+          tokenAddress: listedPools[i].tokenAddress,
+          address: listedPools[i].address,
+          isMember: awaitArray[i].isMember,
+          staked: awaitArray[i].bondedLP.toString(),
+          claimRate: awaitArray[i].claimRate.toString(),
+          lastBlockTime: awaitArray[i].lastBlockTime.toString(),
+        })
+      }
+      dispatch(payloadToDispatch(Types.BOND_DETAILS, bondDetails))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.BOND_ERROR, error))
     }
-    awaitArray = await Promise.all(awaitArray)
-    const bondDetails = []
-    for (let i = 0; i < awaitArray.length; i++) {
-      bondDetails.push({
-        tokenAddress: listedPools[i].tokenAddress,
-        address: listedPools[i].address,
-        isMember: awaitArray[i].isMember,
-        staked: awaitArray[i].bondedLP.toString(),
-        claimRate: awaitArray[i].claimRate.toString(),
-        lastBlockTime: awaitArray[i].lastBlockTime.toString(),
-      })
-    }
-    dispatch(payloadToDispatch(Types.BOND_DETAILS, bondDetails))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
   }
-}
 
 /**
  * Get the current bondVault's total weight *VIEW*
  * @param poolDetails
  * @returns spartaWeight
  */
-export const bondVaultWeight = (poolDetails) => async (dispatch) => {
+export const bondVaultWeight = (poolDetails, rpcUrls) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondVaultContract()
+  const contract = getBondVaultContract(null, rpcUrls)
   try {
     let totalWeight = BN(0)
     const vaultPools = poolDetails.filter((x) => x.curated && !x.hide)
@@ -118,9 +119,9 @@ export const bondVaultWeight = (poolDetails) => async (dispatch) => {
  * Get all current bond listed assets *VIEW*
  * @returns count
  */
-export const allListedAssets = () => async (dispatch) => {
+export const allListedAssets = (rpcUrls) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getBondVaultContract()
+  const contract = getBondVaultContract(null, rpcUrls)
   try {
     const listedAssets = await contract.callStatic.getBondedAssets()
     dispatch(payloadToDispatch(Types.BOND_LISTED_ASSETS, listedAssets))
@@ -133,32 +134,33 @@ export const allListedAssets = () => async (dispatch) => {
  * Perform a Bond txn; mints LP tokens and stakes them in the BondVault (Called via DAO contract) *STATE*
  * @param tokenAddr @param amount @param wallet
  */
-export const bondDeposit = (tokenAddr, amount, wallet) => async (dispatch) => {
-  dispatch(bondLoading())
-  const contract = getDaoContract(wallet)
-  try {
-    const gPrice = await getProviderGasPrice()
-    const _value = tokenAddr === getAddresses().bnb ? amount : null
-    const ORs = { value: _value, gasPrice: gPrice }
-    let txn = await contract.bond(tokenAddr, amount, ORs)
-    txn = await parseTxn(txn, 'bondDeposit')
-    dispatch(payloadToDispatch(Types.BOND_TXN, txn))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.BOND_ERROR, error))
+export const bondDeposit =
+  (tokenAddr, amount, wallet, rpcUrls) => async (dispatch) => {
+    dispatch(bondLoading())
+    const contract = getDaoContract(wallet, rpcUrls)
+    try {
+      const gPrice = await getProviderGasPrice(rpcUrls)
+      const _value = tokenAddr === getAddresses().bnb ? amount : null
+      const ORs = { value: _value, gasPrice: gPrice }
+      let txn = await contract.bond(tokenAddr, amount, ORs)
+      txn = await parseTxn(txn, 'bondDeposit', rpcUrls)
+      dispatch(payloadToDispatch(Types.BOND_TXN, txn))
+    } catch (error) {
+      dispatch(errorToDispatch(Types.BOND_ERROR, error))
+    }
   }
-}
 
 /**
  * Claim a Bond assets by poolAddress *STATE*
  * @param tokenAddr @param wallet
  */
-export const claimBond = (tokenAddr, wallet) => async (dispatch) => {
+export const claimBond = (tokenAddr, wallet, rpcUrls) => async (dispatch) => {
   dispatch(bondLoading())
-  const contract = getDaoContract(wallet)
+  const contract = getDaoContract(wallet, rpcUrls)
   try {
-    const gPrice = await getProviderGasPrice()
+    const gPrice = await getProviderGasPrice(rpcUrls)
     let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'bondClaim')
+    txn = await parseTxn(txn, 'bondClaim', rpcUrls)
     dispatch(payloadToDispatch(Types.BOND_TXN, txn))
   } catch (error) {
     dispatch(errorToDispatch(Types.BOND_ERROR, error))

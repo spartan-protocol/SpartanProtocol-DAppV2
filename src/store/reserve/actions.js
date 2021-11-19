@@ -16,11 +16,11 @@ export const reserveLoading = () => ({
  * Get the Reserve contract details
  * @returns {object} emissions, spartaBalance
  */
-export const getReserveGlobalDetails = () => async (dispatch) => {
+export const getReserveGlobalDetails = (rpcUrls) => async (dispatch) => {
   dispatch(reserveLoading())
   const addr = getAddresses()
-  const contract = getReserveContract()
-  const spartaContract = getSpartaV2Contract()
+  const contract = getReserveContract(null, rpcUrls)
+  const spartaContract = getSpartaV2Contract(null, rpcUrls)
   // const busdpContract = getTokenContract(addr.busdp)
   try {
     let awaitArray = [
@@ -49,12 +49,12 @@ export const getReserveGlobalDetails = () => async (dispatch) => {
  * @returns {object}
  */
 export const getReservePOLDetails =
-  (curatedPools, poolDetails) => async (dispatch) => {
+  (curatedPools, poolDetails, rpcUrls) => async (dispatch) => {
     dispatch(reserveLoading())
     const addr = getAddresses()
     let awaitArray = []
     for (let i = 0; i < curatedPools.length; i++) {
-      const poolContract = getTokenContract(curatedPools[i])
+      const poolContract = getTokenContract(curatedPools[i], null, rpcUrls)
       awaitArray.push(poolContract.callStatic.balanceOf(addr.reserve))
     }
     try {

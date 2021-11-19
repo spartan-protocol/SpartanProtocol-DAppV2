@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../../store/pool'
 import { BN, formatFromWei } from '../../../../utils/bigNumber'
-import { getAddresses } from '../../../../utils/web3'
+import { getAddresses, synthHarvestLive } from '../../../../utils/web3'
 import {
   getSynthDetails,
   synthHarvestSingle,
@@ -17,12 +17,14 @@ import { useReserve } from '../../../../store/reserve/selector'
 import { calcCurrentRewardSynth } from '../../../../utils/math/synthVault'
 import { useSparta } from '../../../../store/sparta'
 import spartaIcon from '../../../../assets/tokens/sparta-synth.svg'
+import { useWeb3 } from '../../../../store/web3'
 
 const SynthHarvestModal = ({ synthItem }) => {
   const dispatch = useDispatch()
   const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
+  const web3 = useWeb3()
   const synth = useSynth()
   const { t } = useTranslation()
   const wallet = useWeb3React()
@@ -39,10 +41,10 @@ const SynthHarvestModal = ({ synthItem }) => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvestSingle(synthItem.address, wallet))
+    await dispatch(synthHarvestSingle(synthItem.address, wallet, web3.rpcs))
     setTxnLoading(false)
     if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet))
+      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
     handleCloseModal()
   }
@@ -85,6 +87,9 @@ const SynthHarvestModal = ({ synthItem }) => {
   }
 
   const checkValid = () => {
+    if (!synthHarvestLive) {
+      return [false, t('harvestDisabled')]
+    }
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
@@ -114,9 +119,9 @@ const SynthHarvestModal = ({ synthItem }) => {
       <Button
         className="w-100"
         onClick={() => setshowModal(true)}
-        disabled={synthItem.staked <= 0}
+        disabled={!synthHarvestLive || synthItem.staked <= 0}
       >
-        {t('harvest')}
+        {synthHarvestLive ? t('harvest') : t('harvestDisabled')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
         <Modal.Header closeButton closeVariant="white">
@@ -140,8 +145,27 @@ const SynthHarvestModal = ({ synthItem }) => {
           <Card.Body>
             <Row xs="12" className="my-2">
               <Col xs="12" className="output-card">
-                This harvest will disable withdraw on these staked SynthYield
-                tokens for {synth.globalDetails.minTime} seconds:
+                This harvest will temporarily lock your whole SynthVault &
+                disable withdraw on all staked SynthYield tokens for{' '}
+                {synth.globalDetails.minTime} seconds:
+              </Col>
+            </Row>
+            {synth.synthDetails
+              .filter((x) => x.staked > 0)
+              .map((x) => (
+                <Row xs="12" key={x.address}>
+                  <Col xs="auto" className="text-card">
+                    Existing stake locked
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatFromWei(x.staked)}{' '}
+                    {getToken(x.tokenAddress, pool.tokenDetails).symbol}s
+                  </Col>
+                </Row>
+              ))}
+            <Row xs="12" className="my-2">
+              <Col xs="12" className="output-card">
+                It is estimated that you will receive these Harvest rewards:
               </Col>
             </Row>
 

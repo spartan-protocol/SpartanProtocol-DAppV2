@@ -20,11 +20,13 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
+import { useWeb3 } from '../../../store/web3'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
+  const web3 = useWeb3()
 
   const [activeTab, setActiveTab] = useState('1')
   const [showBabies, setShowBabies] = useState(false)
@@ -49,11 +51,11 @@ const Overview = () => {
   const [trigger1, settrigger1] = useState(0)
   useEffect(() => {
     if (trigger1 === 0 && tempChains.includes(network.chainId)) {
-      dispatch(allListedAssets())
+      dispatch(allListedAssets(web3.rpcs))
     }
     const timer = setTimeout(() => {
       if (tempChains.includes(network.chainId)) {
-        dispatch(allListedAssets())
+        dispatch(allListedAssets(web3.rpcs))
         settrigger1(trigger1 + 1)
       }
     }, 10000)
@@ -72,9 +74,11 @@ const Overview = () => {
   const getPools = () =>
     pool.poolDetails
       .filter((asset) =>
-        asset.baseAmount > 0 && asset.newPool === false && showBabies
-          ? BN(asset.baseAmount).isGreaterThanOrEqualTo(1)
-          : BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')),
+        asset.baseAmount > 0 && showBabies
+          ? BN(asset.baseAmount).isGreaterThanOrEqualTo(1) && !asset.newPool
+          : BN(asset.baseAmount).isGreaterThanOrEqualTo(
+              convertToWei('10000'),
+            ) && !asset.newPool,
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 

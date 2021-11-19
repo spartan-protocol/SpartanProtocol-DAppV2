@@ -85,9 +85,9 @@ const NewPool = () => {
       }
       setTokenIcon(await getTwTokenLogo(addrInput?.value, network.chainId))
     }
-    const provider = getWalletProvider()
+    const provider = getWalletProvider(null, web3.rpcs)
     const deployed = await provider.getCode(addrInput?.value)
-    const contract = getTokenContract(addrInput?.value)
+    const contract = getTokenContract(addrInput?.value, null, web3.rpcs)
     let symbol = 'TOKEN'
     try {
       symbol = deployed !== '0x' ? await contract.symbol() : 'TOKEN'
@@ -153,7 +153,7 @@ const NewPool = () => {
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
-    if (spartaInput?.value >= 10000) {
+    if (spartaInput?.value >= 20000) {
       setSpartaValid(true)
     } else {
       setSpartaValid(false)
@@ -186,6 +186,7 @@ const NewPool = () => {
         convertToWei(tokenInput?.value),
         addrInput?.value,
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -365,7 +366,7 @@ const NewPool = () => {
                         disabled={!addrValid}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Minimum of 10,000 SPARTA required
+                        Minimum of 20,000 SPARTA required
                       </Form.Control.Feedback>
                     </InputGroup>
                     <InputGroup className="my-2">

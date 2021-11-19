@@ -27,7 +27,7 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import SwapPair from '../Swap/SwapPair'
+import Metrics from './Components/Metrics'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity, addLiquiditySingle } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -44,8 +44,10 @@ import {
 } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { addLiq, addLiqAsym } from '../../../utils/math/router'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const LiqAdd = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
@@ -285,6 +287,15 @@ const LiqAdd = () => {
     return '0.00'
   }
 
+  const getRevenue = () => {
+    let result = '0.00'
+    if (activeTab === 'addTab2') {
+      result = BN(getAddLiqAsym()[1])
+    }
+    result = result > 0 ? result : '0.00'
+    return result
+  }
+
   // ~0.00288 BNB gas (addLiqSingle) on TN || ~0.0015 BNB on MN
   const estMaxGas = '1500000000000000'
   const enoughGas = () => {
@@ -395,6 +406,7 @@ const LiqAdd = () => {
           convertToWei(addInput2.value),
           assetAdd1.tokenAddress,
           wallet,
+          web3.rpcs,
         ),
       )
     } else {
@@ -404,6 +416,7 @@ const LiqAdd = () => {
           assetAdd1.tokenAddress === addr.spartav2,
           poolAdd1.tokenAddress,
           wallet,
+          web3.rpcs,
         ),
       )
     }
@@ -428,7 +441,7 @@ const LiqAdd = () => {
   return (
     <Row>
       <Col xs="auto">
-        <Card xs="auto" className="card-480">
+        <Card xs="auto" className="card-480" style={{ minHeight: '560px' }}>
           <Card.Header className="p-0 border-0 mb-3">
             <Row className="px-4 pt-3 pb-1">
               <Col xs="auto">
@@ -486,7 +499,19 @@ const LiqAdd = () => {
                               MAX
                             </Badge>
                             {t('balance')}:{' '}
-                            {pool.poolDetails && formatFromWei(getBalance(1))}{' '}
+                            {pool.poolDetails && (
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={Tooltip(
+                                  t,
+                                  formatFromWei(getBalance(1), 18),
+                                )}
+                              >
+                                <span role="button">
+                                  {formatFromWei(getBalance(1))}
+                                </span>
+                              </OverlayTrigger>
+                            )}{' '}
                           </Col>
                         </Row>
 
@@ -601,7 +626,19 @@ const LiqAdd = () => {
                                 MAX
                               </Badge>
                               {t('balance')}:{' '}
-                              {pool.poolDetails && formatFromWei(getBalance(2))}
+                              {pool.poolDetails && (
+                                <OverlayTrigger
+                                  placement="auto"
+                                  overlay={Tooltip(
+                                    t,
+                                    formatFromWei(getBalance(2), 18),
+                                  )}
+                                >
+                                  <span role="button">
+                                    {formatFromWei(getBalance(2))}
+                                  </span>
+                                </OverlayTrigger>
+                              )}
                             </Col>
                           </Row>
 
@@ -748,19 +785,44 @@ const LiqAdd = () => {
                           </Row>
                         )}
                         {activeTab === 'addTab2' && (
-                          <Row className="mb-2">
-                            <Col xs="auto" className="title-card">
-                              <span className="text-card">{t('fee')}</span>
-                            </Col>
-                            <Col className="text-end">
-                              <span className="text-card">
-                                {getAddLiqAsym()[1] > 0
-                                  ? formatFromWei(getAddLiqAsym()[1], 4)
-                                  : '0.00'}{' '}
-                                <span className="">SPARTA</span>
-                              </span>
-                            </Col>
-                          </Row>
+                          <>
+                            <Row className="mb-2">
+                              <Col xs="auto" className="title-card">
+                                <span className="text-card">{t('fee')}</span>
+                              </Col>
+                              <Col className="text-end">
+                                <span className="text-card">
+                                  {getAddLiqAsym()[1] > 0
+                                    ? formatFromWei(getAddLiqAsym()[1], 4)
+                                    : '0.00'}{' '}
+                                  <span className="">SPARTA</span>
+                                </span>
+                              </Col>
+                            </Row>
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('revenue')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  {formatFromWei(getRevenue(), 6)} SPARTA
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'swapRevInfo')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1 mb-1"
+                                        size="17"
+                                        fill={isLightMode ? 'black' : 'white'}
+                                      />
+                                    </span>
+                                  </OverlayTrigger>
+                                </div>
+                              </Col>
+                            </Row>
+                          </>
                         )}
                         <Row className="">
                           <Col xs="auto" className="title-card">
@@ -885,7 +947,7 @@ const LiqAdd = () => {
       </Col>
       {pool.poolDetails && (
         <Col xs="auto">
-          <SwapPair assetSwap={poolAdd1} />
+          <Metrics assetSwap={poolAdd1} />
         </Col>
       )}
     </Row>

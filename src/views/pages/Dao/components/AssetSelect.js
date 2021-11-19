@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux'
 import { allListedAssets, useBond } from '../../../../store/bond'
 import { usePool } from '../../../../store/pool/selector'
 import { useSynth } from '../../../../store/synth/selector'
+import { useWeb3 } from '../../../../store/web3'
+import { BN, convertToWei } from '../../../../utils/bigNumber'
 import { getPool } from '../../../../utils/math/utils'
 import { formatShortString, getAddresses } from '../../../../utils/web3'
 
@@ -11,12 +13,13 @@ const AssetSelect = (props) => {
   const pool = usePool()
   const bond = useBond()
   const synth = useSynth()
+  const web3 = useWeb3()
   const addr = getAddresses()
   const dispatch = useDispatch()
   const filter = [addr.spartav1, addr.spartav2]
 
   useEffect(() => {
-    dispatch(allListedAssets())
+    dispatch(allListedAssets(web3.rpcs))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.poolDetails])
 
@@ -44,7 +47,10 @@ const AssetSelect = (props) => {
     }
     if (props.selectedType === 'ADD_CURATED_POOL') {
       const assets = pool.poolDetails?.filter(
-        (asset) => !asset.curated && !filter.includes(asset.tokenAddress),
+        (asset) =>
+          !asset.curated &&
+          !filter.includes(asset.tokenAddress) &&
+          BN(asset.baseAmount).isGreaterThan(convertToWei(250000)),
       )
       for (let i = 0; i < assets.length; i++) {
         finArray.push({

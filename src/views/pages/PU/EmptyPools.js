@@ -170,6 +170,7 @@ const EmptyPools = (props) => {
         convertToWei(addInput1.value),
         assetAdd1.tokenAddress,
         wallet,
+        web3.rpcs,
       ),
     )
   }

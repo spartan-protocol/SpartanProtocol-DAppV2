@@ -208,15 +208,15 @@ export const swapTo = (
 
 /**
  *
- * @param synthPoolSynthCap @param synthPoolTokenAmnt @param synth
+ * @param synthPoolItem @param synthPoolTokenDepth @param synthItem
  * @returns steamedSynths
  */
-export const stirCauldron = (synthPool, synthPoolTokenAmnt, synth) => {
+export const stirCauldron = (synthPool, synthPoolTokenDepth, synth) => {
   const _oneWeek = BN(oneWeek)
   const totalSup = BN(synth.totalSupply)
   const _lastStirred = BN(synthPool.lastStirred)
   let _stirRate = BN(synthPool.stirRate)
-  const _tokenAmount = BN(synthPoolTokenAmnt)
+  const _tokenAmount = BN(synthPoolTokenDepth)
   const _cap = BN(synthPool.synthCapBPs)
   const synthsCap = _tokenAmount.times(_cap).div(10000)
   let liquidSynths = BN(0)
@@ -249,12 +249,11 @@ export const mintSynth = (
   fromBase = false,
 ) => {
   let diviSynth = BN(0)
-  let diviSwap = BN(0)
   let baseCapped = false
   let synthCapped = false
   let baseAmount = BN(synthPool.baseAmount)
   let tokenAmount = BN(synthPool.tokenAmount)
-  const _totalSupply = BN(synth.totalSupply)
+  // const _totalSupply = BN(synth.totalSupply)
   // Simple mint SPARTA -> SYNTH ------------------------------------------------------------
   if (fromBase) {
     const _spartaRec = minusFeeBurn(input, feeOnTsf) // Pool receives SPARTA (feeBurn)
@@ -265,10 +264,10 @@ export const mintSynth = (
       stirCauldron(synthPool, tokenAmount, synth),
     ) // Check if this will exceed the dynamic synth cap
     // diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
-    return [_synthRec, synthFee, diviSynth, diviSwap, baseCapped, synthCapped]
+    return [_synthRec, synthFee, diviSynth, '0', baseCapped, synthCapped]
   }
   // Swap & mint TOKEN -> SPARTA -> SYNTH ---------------------------------------------------
-  const [_spartaSwap, swapFee, _diviSwap, , spartaOut] = swapTo(
+  const [_spartaSwap, swapFee, , , spartaOut] = swapTo(
     input,
     swapPool,
     swapPool,
@@ -284,13 +283,12 @@ export const mintSynth = (
   baseCapped = baseAmount.plus(_spartaRec1).isGreaterThan(synthPool.baseCap) // Check if this will exceed the base cap
   const [synthOut, synthFee] = calcSwapOutput(_spartaRec1, synthPool, false) // Swap SPARTA for SYNTH (Pool -> User)
   const _synthRec = BN(synthOut.times(0.99).toFixed(0)) // Synths after 1% slip
-  synthCapped = _totalSupply
-    .plus(_synthRec)
-    .isGreaterThan(stirCauldron(synthPool, tokenAmount, synth)) // Check if this will exceed the dynamic synth cap
+  synthCapped = _synthRec.isGreaterThan(
+    stirCauldron(synthPool, tokenAmount, synth),
+  ) // Check if this will exceed the dynamic synth cap
   const slipFee = swapFee.plus(synthFee)
-  diviSwap = _diviSwap
   diviSynth = synthFee.isGreaterThan(minDivi) ? synthFee : BN(minDivi)
-  return [_synthRec, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
+  return [_synthRec, slipFee, diviSynth, '0', baseCapped, synthCapped]
 }
 
 /**

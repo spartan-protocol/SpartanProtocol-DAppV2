@@ -50,9 +50,13 @@ const Approval = ({
   const getAllowance = () => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+        dispatch(
+          getAllowance1(tokenAddress, wallet, contractAddress, web3.rpcs),
+        )
       } else if (assetNumber === '2') {
-        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+        dispatch(
+          getAllowance2(tokenAddress, wallet, contractAddress, web3.rpcs),
+        )
       }
     }
   }
@@ -60,7 +64,9 @@ const Approval = ({
   const handleApproval = async () => {
     setPending(true)
     setNotify(true)
-    await dispatch(getApproval(tokenAddress, contractAddress, wallet))
+    await dispatch(
+      getApproval(tokenAddress, contractAddress, wallet, web3.rpcs),
+    )
     setNotify(false)
     getAllowance()
   }
@@ -112,7 +118,7 @@ const Approval = ({
   // ~0.00047 BNB gas (approval) on TN || ~0.00025 BNB on MN
   const estMaxGas = '250000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addr.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -126,6 +132,7 @@ const Approval = ({
           <Notifications show={notify} txnType="approve" />
           <Button
             variant="info"
+            disabled={!enoughGas()}
             onClick={async () => {
               handleApproval()
             }}
@@ -136,7 +143,7 @@ const Approval = ({
               size="20"
               className="me-1"
             />
-            {enoughGas ? <>Approve {symbol}</> : t('checkBnbGas')}
+            {enoughGas() ? <>Approve {symbol}</> : t('checkBnbGas')}
             {pending && (
               <Icon icon="cycle" size="20" className="anim-spin ms-1" />
             )}

@@ -35,7 +35,6 @@ import {
   getBondDetails,
   bondVaultWeight,
 } from '../../../store/bond/actions'
-import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
@@ -56,6 +55,7 @@ import {
   getDaoDetails,
 } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
+import Metrics from './Components/Metrics'
 
 const LiqBond = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -98,7 +98,7 @@ const LiqBond = () => {
   }
 
   const spartaRemainingLoop = async () => {
-    dispatch(allListedAssets())
+    dispatch(allListedAssets(web3.rpcs))
     await pause(10000)
     spartaRemainingLoop()
   }
@@ -116,8 +116,8 @@ const LiqBond = () => {
   }
 
   const getData = () => {
-    dispatch(daoGlobalDetails(wallet))
-    dispatch(daoMemberDetails(wallet))
+    dispatch(daoGlobalDetails(web3.rpcs))
+    dispatch(daoMemberDetails(wallet, web3.rpcs))
   }
 
   useEffect(() => {
@@ -135,8 +135,8 @@ const LiqBond = () => {
   useEffect(() => {
     const checkDetails = () => {
       if (pool.listedPools?.length > 1) {
-        dispatch(getDaoDetails(pool.listedPools, wallet))
-        dispatch(getBondDetails(pool.listedPools, wallet))
+        dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
+        dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
       }
     }
     checkDetails()
@@ -146,8 +146,8 @@ const LiqBond = () => {
   useEffect(() => {
     const checkWeight = () => {
       if (pool.poolDetails?.length > 1) {
-        dispatch(daoVaultWeight(pool.poolDetails, wallet))
-        dispatch(bondVaultWeight(pool.poolDetails, wallet))
+        dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
+        dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
       }
     }
     checkWeight()
@@ -157,7 +157,7 @@ const LiqBond = () => {
   useEffect(() => {
     const checkWeight = () => {
       if (dao.daoDetails?.length > 1) {
-        dispatch(daoDepositTimes(dao.daoDetails, wallet))
+        dispatch(daoDepositTimes(dao.daoDetails, wallet, web3.rpcs))
       }
     }
     checkWeight()
@@ -242,6 +242,7 @@ const LiqBond = () => {
         assetBond1?.tokenAddress,
         convertToWei(bondInput1?.value),
         wallet,
+        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -267,9 +268,9 @@ const LiqBond = () => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(wallet))
+    await dispatch(daoHarvest(wallet, web3.rpcs))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet))
+    dispatch(daoMemberDetails(wallet, web3.rpcs))
   }
 
   const getClaimable = () => {
@@ -377,9 +378,22 @@ const LiqBond = () => {
                                 MAX
                               </Badge>
                               {t('balance')}:{' '}
-                              {formatFromWei(
-                                getToken(assetBond1.tokenAddress)?.balance,
-                              )}
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={Tooltip(
+                                  t,
+                                  formatFromWei(
+                                    getToken(assetBond1.tokenAddress)?.balance,
+                                    18,
+                                  ),
+                                )}
+                              >
+                                <span role="button">
+                                  {formatFromWei(
+                                    getToken(assetBond1.tokenAddress)?.balance,
+                                  )}
+                                </span>
+                              </OverlayTrigger>
                             </Col>
                           </Row>
 
@@ -488,7 +502,7 @@ const LiqBond = () => {
                   />
                   <ProgressBar
                     variant="black"
-                    key={1}
+                    key={2}
                     now={BN(100).minus(getRemainPC())}
                     label={
                       getRemainPC() <= 50 &&
@@ -657,7 +671,7 @@ const LiqBond = () => {
       </Col>
       {!isLoading() && (
         <Col xs="auto">
-          <SwapPair assetSwap={assetBond1} />
+          <Metrics assetSwap={assetBond1} />
         </Col>
       )}
     </Row>

@@ -7,6 +7,7 @@ const initialState = {
   listedPools: false,
   poolDetails: false,
   txn: [],
+  incentives: false,
   loading: false,
   error: null,
   loadingFinal: false,
@@ -64,7 +65,15 @@ export const poolReducer = (state = initialState, action) => {
         ...state,
         txn: action.payload,
         error: null,
-        loadingFinal: false,
+        loading: false,
+      }
+    }
+    case Types.POOL_INCENTIVES: {
+      return {
+        ...state,
+        incentives: action.payload,
+        error: null,
+        loading: false,
       }
     }
 

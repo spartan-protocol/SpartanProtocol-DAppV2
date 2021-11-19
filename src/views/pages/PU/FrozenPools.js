@@ -5,12 +5,14 @@ import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { usePool } from '../../../store/pool/selector'
 import { useReserve } from '../../../store/reserve'
+import { useWeb3 } from '../../../store/web3'
 import { updatePoolStatus } from '../../../store/router/actions'
 
 const PoolStatus = () => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
+  const web3 = useWeb3()
   const reserve = useReserve()
   const history = useHistory()
   const [selectedAsset, setselectedAsset] = useState('')
@@ -68,7 +70,7 @@ const PoolStatus = () => {
             ) : (
               <Button
                 className="w-100"
-                onClick={() => dispatch(updatePoolStatus(wallet))}
+                onClick={() => dispatch(updatePoolStatus(wallet, web3.rpcs))}
                 disabled={!reserve.globalDetails.globalFreeze}
               >
                 Un-freeze Protocol

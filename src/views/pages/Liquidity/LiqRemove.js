@@ -25,7 +25,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import {
   removeLiquidityExact,
@@ -42,6 +41,7 @@ import NewPool from '../Pools/NewPool'
 import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
+import Metrics from './Components/Metrics'
 
 const LiqRemove = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -264,6 +264,15 @@ const LiqRemove = () => {
     return '0.00'
   }
 
+  const getRevenue = () => {
+    let result = '0.00'
+    if (activeTab === '2') {
+      result = BN(getRemLiqAsym()[1]).plus(getRemLiqAsym()[2])
+    }
+    result = result > 0 ? result : '0.00'
+    return result
+  }
+
   // ~0.0032 BNB gas (remSingle+swap) on TN || ~0.0016 BNB on MN
   const estMaxGas = '1600000000000000'
   const enoughGas = () => {
@@ -331,6 +340,7 @@ const LiqRemove = () => {
           convertToWei(removeInput1.value),
           poolRemove1.tokenAddress,
           wallet,
+          web3.rpcs,
         ),
       )
     } else {
@@ -340,6 +350,7 @@ const LiqRemove = () => {
           assetRemove1.tokenAddress === addr.spartav2,
           poolRemove1.tokenAddress,
           wallet,
+          web3.rpcs,
         ),
       )
     }
@@ -415,7 +426,19 @@ const LiqRemove = () => {
                               MAX
                             </Badge>
                             {t('balance')}:{' '}
-                            {pool.poolDetails && formatFromWei(getBalance(1))}
+                            {pool.poolDetails && (
+                              <OverlayTrigger
+                                placement="auto"
+                                overlay={Tooltip(
+                                  t,
+                                  formatFromWei(getBalance(1), 18),
+                                )}
+                              >
+                                <span role="button">
+                                  {formatFromWei(getBalance(1))}
+                                </span>
+                              </OverlayTrigger>
+                            )}
                           </Col>
                         </Row>
 
@@ -559,19 +582,44 @@ const LiqRemove = () => {
                         </Row>
 
                         {activeTab === '2' && (
-                          <Row className="mb-2">
-                            <Col xs="auto">
-                              <div className="text-card">{t('fee')}</div>
-                            </Col>
-                            <Col className="text-end">
-                              <div className="text-card">
-                                {getRemLiqAsym()[1] > 0
-                                  ? formatFromWei(getRemLiqAsym()[1], 6)
-                                  : '0.00'}{' '}
-                                <span className="">SPARTA</span>
-                              </div>
-                            </Col>
-                          </Row>
+                          <>
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('fee')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  {getRemLiqAsym()[1] > 0
+                                    ? formatFromWei(getRemLiqAsym()[1], 6)
+                                    : '0.00'}{' '}
+                                  <span className="">SPARTA</span>
+                                </div>
+                              </Col>
+                            </Row>
+                            <Row className="mb-2">
+                              <Col xs="auto">
+                                <div className="text-card">{t('revenue')}</div>
+                              </Col>
+                              <Col className="text-end">
+                                <div className="text-card">
+                                  {formatFromWei(getRevenue(), 6)} SPARTA
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'swapRevInfo')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1 mb-1"
+                                        size="17"
+                                        fill={isLightMode ? 'black' : 'white'}
+                                      />
+                                    </span>
+                                  </OverlayTrigger>
+                                </div>
+                              </Col>
+                            </Row>
+                          </>
                         )}
 
                         <Row className="">
@@ -681,7 +729,7 @@ const LiqRemove = () => {
       </Col>
       {pool.poolDetails && (
         <Col xs="auto">
-          <SwapPair assetSwap={poolRemove1} />
+          <Metrics assetSwap={poolRemove1} />
         </Col>
       )}
     </Row>

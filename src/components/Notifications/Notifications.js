@@ -9,9 +9,7 @@ const Notifications = ({ show, txnType }) => (
       <Toast.Header closeButton={false}>
         <strong className="me-auto">{txnType} started!</strong>
       </Toast.Header>
-      <Toast.Body>
-        See Latest Transactions at the bottom of the screen for more info
-      </Toast.Body>
+      <Toast.Body>See Latest Transactions in the wallet tab</Toast.Body>
     </Toast>
   </ToastContainer>
 )

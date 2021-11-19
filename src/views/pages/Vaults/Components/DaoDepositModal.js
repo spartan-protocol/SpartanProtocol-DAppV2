@@ -18,12 +18,14 @@ import { Icon } from '../../../../components/Icons/icons'
 import spartaIcon from '../../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../../utils/math/nonContract'
 import { useReserve } from '../../../../store/reserve'
+import { useWeb3 } from '../../../../store/web3'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
+  const web3 = useWeb3()
   const reserve = useReserve()
   const dao = useDao()
   const wallet = useWeb3React()
@@ -61,14 +63,14 @@ const DaoDepositModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(wallet))
+    await dispatch(daoHarvest(wallet, web3.rpcs))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet))
+    dispatch(daoMemberDetails(wallet, web3.rpcs))
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
+    await dispatch(daoDeposit(pool1.address, deposit(), wallet, web3.rpcs))
     setTxnLoading(false)
     handleCloseModal()
   }

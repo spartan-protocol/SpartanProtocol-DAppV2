@@ -49,8 +49,8 @@ const DaoVault = () => {
   }
 
   const getData = () => {
-    dispatch(daoGlobalDetails(wallet))
-    dispatch(daoMemberDetails(wallet))
+    dispatch(daoGlobalDetails(web3.rpcs))
+    dispatch(daoMemberDetails(wallet, web3.rpcs))
   }
 
   useEffect(() => {
@@ -68,8 +68,8 @@ const DaoVault = () => {
   useEffect(() => {
     const checkDetails = () => {
       if (pool.listedPools?.length > 1) {
-        dispatch(getDaoDetails(pool.listedPools, wallet))
-        dispatch(getBondDetails(pool.listedPools, wallet))
+        dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
+        dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
       }
     }
     checkDetails()
@@ -79,8 +79,8 @@ const DaoVault = () => {
   useEffect(() => {
     const checkWeight = () => {
       if (pool.poolDetails?.length > 1) {
-        dispatch(daoVaultWeight(pool.poolDetails, wallet))
-        dispatch(bondVaultWeight(pool.poolDetails, wallet))
+        dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
+        dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
       }
     }
     checkWeight()
@@ -90,7 +90,7 @@ const DaoVault = () => {
   useEffect(() => {
     const checkWeight = () => {
       if (dao.daoDetails?.length > 1) {
-        dispatch(daoDepositTimes(dao.daoDetails, wallet))
+        dispatch(daoDepositTimes(dao.daoDetails, wallet, web3.rpcs))
       }
     }
     checkWeight()
@@ -149,7 +149,7 @@ const DaoVault = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(daoHarvest(wallet))
+    await dispatch(daoHarvest(wallet, web3.rpcs))
     setTxnLoading(false)
   }
 
@@ -294,6 +294,19 @@ const DaoVault = () => {
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
                     {t('harvestable')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'daoHarvestable')}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1 mb-1"
+                          size="15"
+                          // fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card">
                     {reserve.globalDetails.emissions

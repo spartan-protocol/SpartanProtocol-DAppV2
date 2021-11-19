@@ -4,9 +4,13 @@ import { Card, Col, Row } from 'react-bootstrap'
 // import { Icon } from '../../../components/Icons/icons'
 import NewPool from './NewPool'
 import PoolSelect from '../../../components/PoolSelect/PoolSelect'
+import { useWeb3 } from '../../../store/web3'
+import ChartTVL from './Charts/ChartTVL'
+import ChartVol from './Charts/ChartVol'
 
 const SummaryItem = () => {
   const { t } = useTranslation()
+  const web3 = useWeb3()
 
   return (
     <>
@@ -23,12 +27,18 @@ const SummaryItem = () => {
             </Row>
           </Card.Header>
           <Card.Body>
-            <Row className="">
-              {/* <Col xs="auto" className="pr-0">
-                <Icon height="30" />
-              </Col> */}
-              <Col xs="auto">{t('listedPoolsInfo')}</Col>
-            </Row>
+            {web3.metrics ? (
+              <Row>
+                <Col>
+                  <ChartTVL />
+                </Col>
+                <Col>
+                  <ChartVol />
+                </Col>
+              </Row>
+            ) : (
+              'loading'
+            )}
           </Card.Body>
         </Card>
       </Col>

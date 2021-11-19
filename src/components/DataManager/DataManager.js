@@ -1,11 +1,12 @@
 import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { bondGlobalDetails } from '../../store/bond'
 import {
   getCuratedPools,
   getListedPools,
   getListedTokens,
+  getMonthIncentives,
   getPoolDetails,
   getTokenDetails,
   usePool,
@@ -22,7 +23,7 @@ import {
   useSparta,
 } from '../../store/sparta'
 import { getSynthArray } from '../../store/synth'
-import { getSpartaPrice, useWeb3 } from '../../store/web3'
+import { getRPCBlocks, getSpartaPrice, useWeb3 } from '../../store/web3'
 import { BN } from '../../utils/bigNumber'
 import {
   addTxn,
@@ -33,6 +34,7 @@ import {
   tempChains,
 } from '../../utils/web3'
 import { getSpartaV2Contract } from '../../utils/web3Contracts'
+import { getGlobalMetrics } from '../../store/web3/actions'
 
 const DataManager = () => {
   const dispatch = useDispatch()
@@ -59,7 +61,7 @@ const DataManager = () => {
     try {
       return JSON.parse(data)
     } catch (e) {
-      return getNetwork()
+      return getNetwork(null, web3.rpcs)
     }
   }
 
@@ -70,8 +72,22 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /** Get the current block from a main RPC */
+  const getBlockTimer = useRef(null)
   useEffect(() => {
-    const contract = getSpartaV2Contract()
+    const getSubGraphData = () => {
+      dispatch(getRPCBlocks())
+      dispatch(getGlobalMetrics())
+    }
+    getSubGraphData() // Run on load
+    getBlockTimer.current = setInterval(async () => {
+      getSubGraphData()
+    }, 20000)
+    return () => clearInterval(getBlockTimer.current)
+  }, [dispatch, getBlockTimer])
+
+  useEffect(() => {
+    const contract = getSpartaV2Contract(null, web3.rpcs)
     const filter = contract.filters.Transfer(null, addr.bnb)
     const listen = async () => {
       await contract.on(filter, (from, to, amount) => {
@@ -99,7 +115,7 @@ const DataManager = () => {
     if (netLoading === false) {
       setnetLoading(true)
       if (network?.chainId !== prevNetwork?.chainId) {
-        changeNetwork(network?.chainId)
+        changeNetwork(network?.chainId, web3.rpcs)
         settrigger1(0)
         setPrevNetwork(tryParse(network))
       } else {
@@ -117,11 +133,11 @@ const DataManager = () => {
   const checkArrays = async () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (liveChains.includes(chainId)) {
-      dispatch(getListedTokens()) // TOKEN ARRAY
-      dispatch(getCuratedPools()) // CURATED ARRAY
-      dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
-      dispatch(bondGlobalDetails()) // BOND GLOBAL DETAILS
-      dispatch(getReserveGlobalDetails()) // RESERVE GLOBAL DETAILS
+      dispatch(getListedTokens(web3.rpcs)) // TOKEN ARRAY
+      dispatch(getCuratedPools(web3.rpcs)) // CURATED ARRAY
+      dispatch(getSpartaGlobalDetails(web3.rpcs)) // SPARTA GLOBAL DETAILS
+      dispatch(bondGlobalDetails(web3.rpcs)) // BOND GLOBAL DETAILS
+      dispatch(getReserveGlobalDetails(web3.rpcs)) // RESERVE GLOBAL DETAILS
     }
   }
   useEffect(() => {
@@ -138,6 +154,13 @@ const DataManager = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem('network'), trigger1])
+
+  /** Get the 30d rolling incentives for curated pools */
+  useEffect(() => {
+    if (pool.curatedPools) {
+      dispatch(getMonthIncentives(pool.curatedPools))
+    }
+  }, [dispatch, pool.curatedPools])
 
   /** Check SPARTA token price */
   useEffect(() => {
@@ -158,8 +181,8 @@ const DataManager = () => {
     const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     if (listedTokens.length > 0) {
       if (liveChains.includes(chainId)) {
-        dispatch(getSynthArray(listedTokens))
-        dispatch(getTokenDetails(listedTokens, wallet, chainId))
+        dispatch(getSynthArray(listedTokens, web3.rpcs))
+        dispatch(getTokenDetails(listedTokens, wallet, chainId, web3.rpcs))
       }
     }
   }
@@ -182,7 +205,7 @@ const DataManager = () => {
     const { tokenDetails } = pool
     const checkListedPools = () => {
       if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails))
+        dispatch(getListedPools(tokenDetails, web3.rpcs))
       }
     }
     checkListedPools()
@@ -199,7 +222,7 @@ const DataManager = () => {
         )
       ) {
         if (listedPools?.length > 0) {
-          dispatch(getPoolDetails(listedPools, curatedPools, wallet))
+          dispatch(getPoolDetails(listedPools, curatedPools, wallet, web3.rpcs))
         }
       }
     }

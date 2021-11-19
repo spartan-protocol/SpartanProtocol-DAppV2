@@ -9,6 +9,8 @@ const initialState = {
   watchingAsset: false,
   spartaPrice: 0,
   eventArray: {},
+  rpcs: false,
+  metrics: false,
   loading: false,
   error: null,
 }
@@ -82,6 +84,24 @@ export const web3Reducer = (state = initialState, action) => {
       return {
         ...state,
         eventArray: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.RPC_BLOCKS: {
+      return {
+        ...state,
+        rpcs: action.payload,
+        loading: false,
+        error: null,
+      }
+    }
+
+    case Types.WEB3_METRICS: {
+      return {
+        ...state,
+        metrics: action.payload,
         loading: false,
         error: null,
       }

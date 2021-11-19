@@ -30,6 +30,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'daoVaultWeightInfo',
     },
     {
+      id: 'daoHarvestable',
+      title: 'daoHarvestable',
+      body: 'daoHarvestableInfo',
+    },
+    {
       id: 'dividendRevenue',
       title: 'dividendRevenueTitle',
       body: 'dividendRevenue',
@@ -61,6 +66,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'newPoolFee',
       title: 'newPoolFeeTitle',
       body: 'newPoolFee',
+    },
+    {
+      id: 'newProposalFee',
+      title: 'newProposalFee',
+      body: 'newProposalFeeInfo',
     },
     {
       id: 'poolCap',
@@ -117,15 +127,36 @@ export const Tooltip = (t, tooltipId, variable) => {
       title: 'revenue',
       body: 'swapRevInfo',
     },
+    {
+      id: 'synthCap',
+      title: 'synthCap',
+      body: 'synthCapInfo',
+    },
+    {
+      id: 'yourForge',
+      title: 'yourForge',
+      body: 'yourForgeInfo',
+    },
+    {
+      id: 'mintSynthConfirm',
+      title: 'warning',
+      body: 'mintSynthConfirm',
+    },
+    {
+      id: 'mintHarvestConfirm',
+      title: 'warning',
+      body: 'mintHarvestConfirm',
+      variable: { symbol: variable },
+    },
   ]
 
   const tooltip = allTooltips.filter((i) => i.id === tooltipId)[0]
-  const { title } = tooltip
-  const body = t(tooltip.body, tooltip.variable)
+  const title = tooltip ? tooltip.title : false
+  const body = tooltip ? t(tooltip.body, tooltip.variable) : tooltipId
 
   return (
     <Popover>
-      <Popover.Header as="h3">{t(title)}</Popover.Header>
+      {title && <Popover.Header as="h3">{t(title)}</Popover.Header>}
       <Popover.Body>{body}</Popover.Body>
     </Popover>
   )

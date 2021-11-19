@@ -11,16 +11,20 @@ import {
   ProgressBar,
 } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
+import { useSynth } from '../../../store/synth'
 import { useWeb3 } from '../../../store/web3/selector'
 import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { getAddresses } from '../../../utils/web3'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY } from '../../../utils/math/nonContract'
+import { getSynth } from '../../../utils/math/utils'
+import { stirCauldron } from '../../../utils/math/router'
 
 const PoolItem = ({ asset }) => {
   const { t } = useTranslation()
   const pool = usePool()
+  const synth = useSynth()
   const history = useHistory()
   const web3 = useWeb3()
   const addr = getAddresses()
@@ -30,8 +34,6 @@ const PoolItem = ({ asset }) => {
     tokenAddress,
     baseAmount,
     tokenAmount,
-    recentDivis,
-    lastMonthDivis,
     fees,
     genesis,
     newPool,
@@ -44,10 +46,13 @@ const PoolItem = ({ asset }) => {
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
-  const APY = formatFromUnits(calcAPY(asset), 2)
 
   const getDivis = () =>
-    BN(recentDivis).isGreaterThan(lastMonthDivis) ? recentDivis : lastMonthDivis
+    curated && pool.incentives
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
+      : 0
+
+  const APY = formatFromUnits(calcAPY(asset, getDivis()), 2)
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 
@@ -72,6 +77,7 @@ const PoolItem = ({ asset }) => {
   )
   const poolCapTooltip = Tooltip(t, 'poolCap')
   const poolRatioTooltip = Tooltip(t, 'poolRatio')
+  const synthCapTooltip = Tooltip(t, 'synthCap')
 
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
   const getRatioPC = () => BN(safety).times(100)
@@ -90,6 +96,15 @@ const PoolItem = ({ asset }) => {
     }
     return 50
   }
+
+  const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
+  // const getSynthCap = () => BN(tokenAmount).times(asset.synthCapBPs).div(10000)
+  const getSynthSupply = () => _getSynth().totalSupply
+  const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
+  const getSynthCapPC = () =>
+    BN(getSynthSupply())
+      .div(BN(getSynthSupply()).plus(getSynthStir()))
+      .times(100)
 
   return (
     <>
@@ -197,12 +212,22 @@ const PoolItem = ({ asset }) => {
                   className="rounded-circle"
                   alt={token.symbol}
                   height="45"
-                />{' '}
+                />
               </Col>
               <Col xs="auto" className="pe-0">
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
-                  ${formatFromUnits(tokenValueUSD, 2)}
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(
+                      t,
+                      `$${formatFromUnits(tokenValueUSD, 18)}`,
+                    )}
+                  >
+                    <span role="button">
+                      ${formatFromUnits(tokenValueUSD, 2)}
+                    </span>
+                  </OverlayTrigger>
                 </p>
               </Col>
               <Col className="text-end mt-1 p-0 pr-2">
@@ -258,6 +283,36 @@ const PoolItem = ({ asset }) => {
                 </ProgressBar>
               </Col>
             </Row>
+
+            {showDetails === true &&
+              synth.synthDetails &&
+              asset.lastStirred > 0 && (
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card pe-0">
+                    {t('synthCap')}
+                    <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="17"
+                          fill={isLightMode ? 'black' : 'white'}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col className="text-end output-card my-auto">
+                    <ProgressBar style={{ height: '5px' }} className="">
+                      <ProgressBar
+                        variant={getSynthCapPC() > 95 ? 'primary' : 'success'}
+                        key={1}
+                        now={getSynthCapPC()}
+                      />
+                    </ProgressBar>
+                  </Col>
+                </Row>
+              )}
+
             <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('poolDepth')}

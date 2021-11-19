@@ -15,11 +15,13 @@ import { Icon } from '../../../components/Icons/icons'
 import { calcFeeBurn } from '../../../utils/math/nonContract'
 import { usePool } from '../../../store/pool'
 import { getToken } from '../../../utils/math/utils'
+import { useWeb3 } from '../../../store/web3'
 
 const Upgrade = () => {
   const addr = getAddresses()
   const pool = usePool()
   const dispatch = useDispatch()
+  const web3 = useWeb3()
   const sparta = useSparta()
   const wallet = useWeb3React()
   const { t } = useTranslation()
@@ -92,13 +94,13 @@ const Upgrade = () => {
 
   const handleUpgrade = async () => {
     setUpgradeLoading(true)
-    await dispatch(spartaUpgrade(wallet))
+    await dispatch(spartaUpgrade(wallet, web3.rpcs))
     setUpgradeLoading(false)
   }
 
   const handleClaim = async () => {
     setClaimLoading(true)
-    await dispatch(fallenSpartansClaim(wallet))
+    await dispatch(fallenSpartansClaim(wallet, web3.rpcs))
     setClaimLoading(false)
   }
 

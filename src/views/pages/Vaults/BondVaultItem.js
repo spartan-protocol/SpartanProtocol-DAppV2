@@ -10,15 +10,21 @@ import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { Icon } from '../../../components/Icons/icons'
 import { claimBond, useBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
-import { formatDate, getTimeSince } from '../../../utils/math/nonContract'
+import {
+  formatDate,
+  getTimeSince,
+  isBonded,
+} from '../../../utils/math/nonContract'
 import { getToken } from '../../../utils/math/utils'
 import { getAddresses } from '../../../utils/web3'
+import { useWeb3 } from '../../../store/web3'
 
 const BondItem = (props) => {
   const pool = usePool()
   const bond = useBond()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
+  const web3 = useWeb3()
   const addr = getAddresses()
   const { asset } = props
   const { t } = useTranslation()
@@ -44,7 +50,7 @@ const BondItem = (props) => {
 
   const handleTxn = async () => {
     setTxnLoading(true)
-    await dispatch(claimBond(asset.tokenAddress, wallet))
+    await dispatch(claimBond(asset.tokenAddress, wallet, web3.rpcs))
     setTxnLoading(false)
   }
 
@@ -90,9 +96,9 @@ const BondItem = (props) => {
               </Col>
               <Col xs="auto" className="pl-1">
                 <h3 className="mb-0">{token().symbol}p</h3>
-                <Link to={`/liquidity?asset1=${token().address}`}>
+                <Link to={`/liquidity?tab=4&asset1=${token().address}`}>
                   <p className="text-sm-label-alt">
-                    {t('obtain')} {token().symbol}p
+                    {t('bond')} {token().symbol}
                     <Icon
                       icon="scan"
                       size="13"
@@ -155,8 +161,14 @@ const BondItem = (props) => {
                 {t('lastClaim')}
               </Col>
               <Col className="text-end output-card">
-                {getTimeSince(asset.lastBlockTime, t)[0]}
-                {getTimeSince(asset.lastBlockTime, t)[1]} ago
+                {isBonded(asset.lastBlockTime) ? (
+                  <>
+                    {getTimeSince(asset.lastBlockTime, t)[0]}
+                    {getTimeSince(asset.lastBlockTime, t)[1]} ago
+                  </>
+                ) : (
+                  t('never')
+                )}
               </Col>
             </Row>
 
@@ -179,7 +191,9 @@ const BondItem = (props) => {
             <Row className="text-center">
               {bond.listedAssets.includes(asset.address) && (
                 <Col className="px-2">
-                  <Button className="w-100">{t('bond')}</Button>
+                  <Link to={`/liquidity?tab=4&asset1=${token().address}`}>
+                    <Button className="w-100">{t('bond')}</Button>
+                  </Link>
                 </Col>
               )}
               <Col className="px-2">

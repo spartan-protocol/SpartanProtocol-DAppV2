@@ -9,6 +9,7 @@ import {
   Form,
   Modal,
   FloatingLabel,
+  OverlayTrigger,
 } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -29,6 +30,7 @@ import { ReactComponent as ValidIcon } from '../../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
 import { useSparta } from '../../../store/sparta/selector'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
+import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { Icon } from '../../../components/Icons/icons'
 import { useDao } from '../../../store/dao/selector'
 import { useSynth } from '../../../store/synth/selector'
@@ -36,15 +38,16 @@ import { usePool } from '../../../store/pool'
 import { useBond } from '../../../store/bond'
 import { getToken } from '../../../utils/math/utils'
 import { useReserve } from '../../../store/reserve'
+import { useWeb3 } from '../../../store/web3'
 
 const NewProposal = () => {
-  // const isLightMode = window.localStorage.getItem('theme')
-
+  const isLightMode = window.localStorage.getItem('theme')
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
   const bond = useBond()
   const pool = usePool()
+  const web3 = useWeb3()
   const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -86,6 +89,8 @@ const NewProposal = () => {
     }
     return false
   }
+
+  const tempHide = ['DAO', 'ROUTER', 'UTILS', 'RESERVE']
 
   const showAddrInput = ['Address', 'Grant']
   const noAddrInput = [
@@ -192,16 +197,23 @@ const NewProposal = () => {
   const handleSubmit = async () => {
     setTxnLoading(true)
     if (selectedType?.type === 'Action') {
-      await dispatch(newActionProposal(selectedType.value, wallet))
+      await dispatch(newActionProposal(selectedType.value, wallet, web3.rpcs))
     } else if (selectedType?.type === 'Param') {
-      await dispatch(newParamProposal(inputParam, selectedType.value, wallet))
+      await dispatch(
+        newParamProposal(inputParam, selectedType.value, wallet, web3.rpcs),
+      )
     } else if (selectedType?.type === 'Address') {
       await dispatch(
-        newAddressProposal(inputAddress, selectedType.value, wallet),
+        newAddressProposal(inputAddress, selectedType.value, wallet, web3.rpcs),
       )
     } else if (selectedType?.type === 'Grant') {
       await dispatch(
-        newGrantProposal(inputAddress, convertToWei(inputParam), wallet),
+        newGrantProposal(
+          inputAddress,
+          convertToWei(inputParam),
+          wallet,
+          web3.rpcs,
+        ),
       )
     }
     setTxnLoading(false)
@@ -256,11 +268,13 @@ const NewProposal = () => {
                     onChange={(e) => handleTypeSelect(e.target.value)}
                     aria-label="Choose proposal type"
                   >
-                    {proposalTypes.map((pid) => (
-                      <option key={pid.value} value={pid.value}>
-                        {pid.label}
-                      </option>
-                    ))}
+                    {proposalTypes
+                      .filter((x) => !tempHide.includes(x.value))
+                      .map((pid) => (
+                        <option key={pid.value} value={pid.value}>
+                          {pid.label}
+                        </option>
+                      ))}
                   </Form.Select>
                 </FloatingLabel>
 
@@ -277,6 +291,11 @@ const NewProposal = () => {
                               </>
                             )}
                           </h4>
+                          <h5>
+                            {' '}
+                            {selectedType?.value === 'ADD_CURATED_POOL' &&
+                              'SPARTA depth > 250k'}
+                          </h5>
                           <Row>
                             <Col xs="12">
                               {showAddrInput.includes(selectedType.type) && (
@@ -363,16 +382,29 @@ const NewProposal = () => {
                           </Row>
                         </Card.Body>
                       </Card>
-                      <Form>
-                        <div className="text-center">
+                      <Form className="text-center">
+                        <div className="d-inline-block">
                           <Form.Switch
                             type="switch"
                             id="inputConfirmFee"
-                            label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee (Add tooltip)`}
+                            label={`Confirm ${dao.global.daoFee} SPARTA Proposal-Fee`}
                             checked={feeConfirm}
                             onChange={() => setfeeConfirm(!feeConfirm)}
                           />
                         </div>
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'newProposalFee')}
+                        >
+                          <span role="button">
+                            <Icon
+                              icon="info"
+                              className="ms-1 mb-1"
+                              size="17"
+                              fill={isLightMode ? 'black' : 'white'}
+                            />
+                          </span>
+                        </OverlayTrigger>
                       </Form>
                     </Col>
                   </Row>

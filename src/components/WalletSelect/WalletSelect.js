@@ -39,7 +39,7 @@ import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { getDaoDetails, useDao } from '../../store/dao'
 import { getBondDetails, useBond } from '../../store/bond'
-import { addNetworkBC, addNetworkMM } from '../../store/web3'
+import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 
 export const spartanRanks = [
   {
@@ -111,21 +111,23 @@ const WalletSelect = (props) => {
   const dao = useDao()
   const bond = useBond()
   const addr = getAddresses()
+  const web3 = useWeb3()
   const wallet = useWeb3React()
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
   const [network, setNetwork] = useState(getNetwork)
   const [activeTab, setactiveTab] = useState('tokens')
+  const [wcConnector, setWcConnector] = useState(false)
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setNetwork(changeNetworkLsOnly(56))
+      setNetwork(changeNetworkLsOnly(56, web3.rpcs))
     }
     if (net.target.checked === false) {
-      setNetwork(changeNetworkLsOnly(97))
+      setNetwork(changeNetworkLsOnly(97, web3.rpcs))
     } else {
-      setNetwork(changeNetworkLsOnly(net))
+      setNetwork(changeNetworkLsOnly(net, web3.rpcs))
     }
     window.location.reload()
   }
@@ -147,10 +149,21 @@ const WalletSelect = (props) => {
     window.localStorage.removeItem('disableWallet')
     window.localStorage.setItem('lastWallet', x.id)
     wallet.deactivate()
+    const connector = connectorsByName(x.connector, web3.rpcs)
+    if (x.id === 'WC') {
+      setWcConnector(connector)
+    }
     setTimeout(() => {
-      wallet.activate(connectorsByName(x.connector))
-    }, 35)
+      wallet.activate(connector)
+    }, 50)
   }
+
+  useEffect(() => {
+    if (wcConnector?.walletConnectProvider?.connected && !wallet.account) {
+      wallet.activate(wcConnector)
+      setWcConnector(false)
+    }
+  }, [wallet, wcConnector])
 
   const checkWallet = async () => {
     if (
@@ -177,9 +190,11 @@ const WalletSelect = (props) => {
     }
   }
   useEffect(() => {
-    checkWallet()
+    if (!wallet.account && web3.rpcs.length > 0) {
+      checkWallet()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [web3.rpcs])
 
   const tryParse = (data) => {
     try {
@@ -197,11 +212,11 @@ const WalletSelect = (props) => {
         )
       ) {
         if (pool.listedPools?.length > 0) {
-          dispatch(getBondDetails(pool.listedPools, wallet))
-          dispatch(getDaoDetails(pool.listedPools, wallet))
+          dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
+          dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
         }
         if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
-          dispatch(getSynthDetails(synth.synthArray, wallet))
+          dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
         }
       }
     }

@@ -12,11 +12,13 @@ import { Icon } from '../../../components/Icons/icons'
 import { getToken } from '../../../utils/math/utils'
 import { usePool } from '../../../store/pool'
 import { BN } from '../../../utils/bigNumber'
+import { useWeb3 } from '../../../store/web3'
 
 const NewSynth = () => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const pool = usePool()
+  const web3 = useWeb3()
   const addr = getAddresses()
   const { t } = useTranslation()
 
@@ -63,7 +65,7 @@ const NewSynth = () => {
 
   const handleSubmit = async () => {
     setTxnLoading(true)
-    await dispatch(createSynth(inputAddress, wallet))
+    await dispatch(createSynth(inputAddress, wallet, web3.rpcs))
     setTxnLoading(false)
     setShowModal(false)
   }
