@@ -35,7 +35,6 @@ import {
   getBondDetails,
   bondVaultWeight,
 } from '../../../store/bond/actions'
-import SwapPair from '../Swap/SwapPair'
 import { useWeb3 } from '../../../store/web3'
 import { useSparta } from '../../../store/sparta'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
@@ -56,6 +55,7 @@ import {
   getDaoDetails,
 } from '../../../store/dao/actions'
 import { useDao } from '../../../store/dao/selector'
+import Metrics from './Components/Metrics'
 
 const LiqBond = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -671,7 +671,7 @@ const LiqBond = () => {
       </Col>
       {!isLoading() && (
         <Col xs="auto">
-          <SwapPair assetSwap={assetBond1} />
+          <Metrics assetSwap={assetBond1} />
         </Col>
       )}
     </Row>

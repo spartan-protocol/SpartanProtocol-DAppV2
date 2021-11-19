@@ -156,14 +156,13 @@ const Overview = () => {
                       <Card className="card-480">
                         <Card.Header>Status of RPCs</Card.Header>
                         <Card.Body>
-                          {web3.rpcs &&
-                            web3.rpcs.map((x) => (
-                              <Row key={x.url}>
-                                <Col>
-                                  {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
-                                </Col>
-                              </Row>
-                            ))}
+                          {web3?.rpcs?.map((x) => (
+                            <Row key={x.url}>
+                              <Col>
+                                {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
+                              </Col>
+                            </Row>
+                          ))}
                         </Card.Body>
                       </Card>
                     </Col>

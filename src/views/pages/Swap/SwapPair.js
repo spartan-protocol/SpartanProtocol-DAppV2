@@ -27,7 +27,7 @@ const SwapPair = ({ assetSwap }) => {
   const recentFees = asset ? asset.fees : 0
 
   const getDivis = () =>
-    asset.curated
+    asset.curated && pool.incentives
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 

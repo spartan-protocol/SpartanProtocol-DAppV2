@@ -197,3 +197,81 @@ export const getPoolIncentives = async (curatedArray) => {
     return false
   }
 }
+
+//
+export const callGlobalMetrics = async () => {
+  const tokensQuery = `
+  query {
+    metricsGlobalDays(orderBy: id, orderDirection: desc) {
+      id
+      timestamp
+      volSPARTA
+      volUSD
+      fees
+      feesUSD
+      txCount
+      tvlSPARTA
+      tvlUSD
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.metricsGlobalDays)
+    if (!result) {
+      console.log('no result')
+      return false
+    }
+    const metrics = await result
+    return metrics
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const callPoolMetrics = async (poolAddress) => {
+  const address = poolAddress.toString().toLowerCase()
+  const tokensQuery = `
+  query {
+    metricsPoolDays(orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
+      id
+      timestamp
+      pool {
+        id
+      }
+      volSPARTA
+      volUSD
+      fees
+      feesUSD
+      incentives
+      incentivesUSD
+      incentives30Day
+      txCount
+      tvlSPARTA
+      tvlUSD
+      tokenPrice
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.metricsPoolDays)
+    if (!result) {
+      console.log('no result')
+      return false
+    }
+    const metrics = await result
+    // console.log(metrics)
+    return metrics
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}

@@ -27,7 +27,7 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
-import SwapPair from '../Swap/SwapPair'
+import Metrics from './Components/Metrics'
 import { useWeb3 } from '../../../store/web3'
 import { addLiquidity, addLiquiditySingle } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
@@ -441,7 +441,7 @@ const LiqAdd = () => {
   return (
     <Row>
       <Col xs="auto">
-        <Card xs="auto" className="card-480">
+        <Card xs="auto" className="card-480" style={{ minHeight: '560px' }}>
           <Card.Header className="p-0 border-0 mb-3">
             <Row className="px-4 pt-3 pb-1">
               <Col xs="auto">
@@ -947,7 +947,7 @@ const LiqAdd = () => {
       </Col>
       {pool.poolDetails && (
         <Col xs="auto">
-          <SwapPair assetSwap={poolAdd1} />
+          <Metrics assetSwap={poolAdd1} />
         </Col>
       )}
     </Row>

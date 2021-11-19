@@ -299,6 +299,16 @@ export const formatDate = (unixTime) => {
 }
 
 /**
+ * Return day of the month
+ * @param {number} timestamp
+ * @returns formattedDate
+ */
+export const formatDateDay = (unixTime) => {
+  const date = new Date(unixTime * 1000)
+  return date.getDate()
+}
+
+/**
  * Calculate APY using full month divis + fees and pool's depth *** UPDATE WITH GENESIS/LASTMONTH ***
  * @param {object} pool
  * @returns {number} apy

@@ -34,6 +34,7 @@ import {
   tempChains,
 } from '../../utils/web3'
 import { getSpartaV2Contract } from '../../utils/web3Contracts'
+import { getGlobalMetrics } from '../../store/web3/actions'
 
 const DataManager = () => {
   const dispatch = useDispatch()
@@ -74,9 +75,13 @@ const DataManager = () => {
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
   useEffect(() => {
-    dispatch(getRPCBlocks())
-    getBlockTimer.current = setInterval(async () => {
+    const getSubGraphData = () => {
       dispatch(getRPCBlocks())
+      dispatch(getGlobalMetrics())
+    }
+    getSubGraphData() // Run on load
+    getBlockTimer.current = setInterval(async () => {
+      getSubGraphData()
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
   }, [dispatch, getBlockTimer])
