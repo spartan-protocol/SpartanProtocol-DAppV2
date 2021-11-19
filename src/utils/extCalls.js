@@ -268,7 +268,7 @@ export const callPoolMetrics = async (poolAddress) => {
       return false
     }
     const metrics = await result
-    console.log(metrics)
+    // console.log(metrics)
     return metrics
   } catch (err) {
     console.log(err)

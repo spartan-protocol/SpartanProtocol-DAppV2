@@ -13,7 +13,7 @@ const ChartRevenue = (props) => {
       ? props.metrics.slice(0, length).reverse()
       : []
     for (let i = 0; i < length; i++) {
-      console.log(metrics[i].tokenPrice)
+      // console.log(metrics[0].pool.id)
       data1.push(metrics[i].tokenPrice)
       labels.push(formatDateDay(metrics[i].timestamp))
     }
