@@ -31,11 +31,11 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../../utils/bigNumber'
+import Metrics from './Components/Metrics'
 import { swap, zapLiquidity } from '../../../store/router/actions'
 import Approval from '../../../components/Approval/Approval'
 import { useWeb3 } from '../../../store/web3'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import SwapPair from './SwapPair'
 import SharePool from '../../../components/Share/SharePool'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { useSparta } from '../../../store/sparta'
@@ -1058,13 +1058,12 @@ const Swap = () => {
                   <Col xs="auto">
                     {pool.poolDetails &&
                       assetSwap1.tokenAddress !== addr.spartav2 && (
-                        <SwapPair assetSwap={assetSwap1} />
+                        <Metrics assetSwap={assetSwap1} />
                       )}
-
                     {pool.poolDetails &&
                       assetSwap2.tokenAddress !== addr.spartav2 &&
                       assetSwap1.tokenAddress !== assetSwap2.tokenAddress && (
-                        <SwapPair assetSwap={assetSwap2} />
+                        <Metrics assetSwap={assetSwap2} />
                       )}
                   </Col>
                 </Row>
