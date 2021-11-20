@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Col, Row, ButtonGroup, Button } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
+import { install } from 'resize-observer'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import LiqBond from './LiqBond'
@@ -12,6 +13,12 @@ import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { balanceWidths } from './Components/Utils'
 
 const Overview = () => {
+  if (typeof window !== 'undefined') {
+    if (window.innerWidth < 720) {
+      install()
+    }
+  }
+
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('1')
   const pool = usePool()
