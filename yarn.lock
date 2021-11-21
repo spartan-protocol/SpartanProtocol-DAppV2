@@ -14372,6 +14372,11 @@ requires-port@^1.0.0:
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
 
+resize-observer@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/resize-observer/-/resize-observer-1.0.3.tgz#127bc775a58832f4f8a9c38c08ba29fb4b8b6237"
+  integrity sha512-OlomP4hOcJTeKoiB90QvGWRelpresRrP+YrpmmE74V8WuiNkuc/X/r/qYMw35wCw1pJWb9hoRYUSHzau5znzAQ==
+
 resolve-cwd@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/resolve-cwd/-/resolve-cwd-2.0.0.tgz#00a9f7387556e27038eae232caa372a6a59b665a"

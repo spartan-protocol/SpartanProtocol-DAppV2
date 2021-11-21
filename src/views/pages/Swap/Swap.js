@@ -15,7 +15,6 @@ import {
   Popover,
 } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
-import { install } from 'resize-observer'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import {
   getAddresses,
@@ -54,11 +53,6 @@ import { swapTo, zapLiq } from '../../../utils/math/router'
 import Notifications from '../../../components/Notifications/Notifications'
 
 const Swap = () => {
-  if (typeof window !== 'undefined') {
-    if (window.innerWidth < 720) {
-      install()
-    }
-  }
   const isLightMode = window.localStorage.getItem('theme')
 
   const { t } = useTranslation()
