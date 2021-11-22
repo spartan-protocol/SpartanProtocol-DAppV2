@@ -18,10 +18,12 @@ const getRoutes = (tempRoutes) =>
   ))
 
 const Common = () => {
-  if (typeof window !== 'undefined') {
-    if ('ResizeObserver' in window === false && window.innerWidth < 720) {
-      install()
-    }
+  if (!window.ResizeObserver) {
+    install()
+    const ro = new window.ResizeObserver(() =>
+      console.log('Observe all the things!'),
+    )
+    console.log(ro)
   }
 
   return (
