@@ -6,7 +6,7 @@ const ChartRevenue = (props) => {
   const getChartData = () => {
     const data1 = []
     const labels = []
-    const dataPoints = 30
+    const dataPoints = 29
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     const metrics = props.metrics
@@ -17,6 +17,8 @@ const ChartRevenue = (props) => {
       data1.push(metrics[i].tokenPrice)
       labels.push(formatDate(metrics[i].timestamp))
     }
+    data1.push(props.tokenPrice)
+    labels.push('Current')
     return [labels, data1]
   }
 
