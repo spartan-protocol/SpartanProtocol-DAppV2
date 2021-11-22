@@ -110,6 +110,7 @@ const DaoVault = () => {
       return formatFromWei(BN(getTotalWeight()).times(web3.spartaPrice))
     return '0.00'
   }
+
   const getUSDFromSpartaOwnWeight = () => {
     const _weight = getVaultWeights(
       pool.poolDetails,
