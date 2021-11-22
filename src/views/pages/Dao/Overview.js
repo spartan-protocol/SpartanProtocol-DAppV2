@@ -233,7 +233,7 @@ const Overview = () => {
                             />
                             <Col>
                               <Card
-                                className="card-320 card-underlay"
+                                className="card-320"
                                 style={{ minHeight: '320px' }}
                               >
                                 <Card.Header>
@@ -305,7 +305,7 @@ const Overview = () => {
                           </>
                         ) : (
                           <Col xs="auto">
-                            <Card className="card-320 card-underlay">
+                            <Card className="card-320">
                               <Card.Body>{t('noOpenProposalsInfo')}</Card.Body>
                             </Card>
                           </Col>
@@ -321,7 +321,7 @@ const Overview = () => {
                             ))
                         ) : (
                           <Col xs="auto">
-                            <Card className="card-320 card-underlay">
+                            <Card className="card-320">
                               <Card.Body>{t('noValidProposals')}</Card.Body>
                             </Card>
                           </Col>
@@ -338,7 +338,7 @@ const Overview = () => {
                             ))
                         ) : (
                           <Col xs="auto">
-                            <Card className="card-320 card-underlay">
+                            <Card className="card-320">
                               <Card.Body>{t('noValidProposals')}</Card.Body>
                             </Card>
                           </Col>
@@ -346,7 +346,7 @@ const Overview = () => {
                     </>
                   ) : (
                     <Col xs="auto">
-                      <Card className="card-320 card-underlay">
+                      <Card className="card-320">
                         <Card.Body>{t('noValidProposals')}</Card.Body>
                       </Card>
                     </Col>

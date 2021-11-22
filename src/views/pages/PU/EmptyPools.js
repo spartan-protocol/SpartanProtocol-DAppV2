@@ -453,7 +453,7 @@ const EmptyPools = (props) => {
         </Card>
       </Col>
       <Col xs="auto">
-        <Card className="card-body card-480 card-underlay">
+        <Card className="card-body card-480">
           <Row>
             <Col xs="auto">
               <div className="text-title-small">Proposed Ratios</div>

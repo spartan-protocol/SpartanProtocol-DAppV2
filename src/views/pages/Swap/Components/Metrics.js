@@ -1,9 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Card, Row, Col, OverlayTrigger } from 'react-bootstrap'
-import { Tooltip } from '../../../../components/Tooltip/tooltip'
-import { Icon } from '../../../../components/Icons/icons'
-import { calcAPY } from '../../../../utils/math/nonContract'
+import { Card, Row, Col } from 'react-bootstrap'
 import { callPoolMetrics } from '../../../../utils/extCalls'
 import { usePool } from '../../../../store/pool'
 import { useWeb3 } from '../../../../store/web3'
@@ -11,10 +7,8 @@ import { BN, formatFromUnits } from '../../../../utils/bigNumber'
 import ChartRevenue from './Charts/ChartPrice'
 
 const Metrics = ({ assetSwap }) => {
-  const isLightMode = window.localStorage.getItem('theme')
   const web3 = useWeb3()
   const pool = usePool()
-  const { t } = useTranslation()
 
   const [poolMetrics, setPoolMetrics] = useState([])
 
@@ -36,24 +30,9 @@ const Metrics = ({ assetSwap }) => {
     return () => clearInterval(getBlockTimer.current)
   }, [getBlockTimer, assetSwap.address])
 
-  const asset =
-    pool.poolDetails && pool.poolDetails.length
-      ? pool.poolDetails.find(
-          (lp) => lp.tokenAddress === assetSwap.tokenAddress,
-        )
-      : 0
   const tokenPrice = BN(assetSwap.baseAmount)
     .div(assetSwap.tokenAmount)
     .times(web3.spartaPrice)
-  const recentFees = asset ? asset.fees : 0
-
-  const getDivis = () =>
-    asset.curated && pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
-      : 0
-
-  const APY =
-    recentFees && asset ? formatFromUnits(calcAPY(assetSwap, getDivis()), 2) : 0
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -68,7 +47,7 @@ const Metrics = ({ assetSwap }) => {
   return (
     <>
       {!isLoading() && (
-        <Card className="card-480 card-underlay mb-2">
+        <Card className="card-480 mb-2">
           <Card.Header className="border-0">
             <Row className="mt-2">
               <Col xs="auto" className="mt-1 pe-2 position-relative">
@@ -94,26 +73,10 @@ const Metrics = ({ assetSwap }) => {
                   </span>
                 </h6>
               </Col>
-              <Col className="text-end">
-                <h6 className="mb-1">
-                  APY
-                  <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="17"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </h6>
-                <h6 className="mb-0">{APY}%</h6>
-              </Col>
             </Row>
           </Card.Header>
           <Card.Body className="pt-1">
-            <ChartRevenue metrics={poolMetrics} />
+            <ChartRevenue metrics={poolMetrics} tokenPrice={tokenPrice} />
           </Card.Body>
         </Card>
       )}

@@ -20,10 +20,6 @@ const getRoutes = (tempRoutes) =>
 const Common = () => {
   if (!window.ResizeObserver) {
     install()
-    const ro = new window.ResizeObserver(() =>
-      console.log('Observe all the things!'),
-    )
-    console.log(ro)
   }
 
   return (

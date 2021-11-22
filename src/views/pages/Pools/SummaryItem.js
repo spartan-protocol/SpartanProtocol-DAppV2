@@ -16,7 +16,7 @@ const SummaryItem = () => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-underlay">
+        <Card className="">
           <Card.Header>
             <Row className="px-1">
               <Col xs="auto">{t('pools')}</Col>

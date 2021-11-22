@@ -2,7 +2,7 @@ import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useWeb3 } from '../../../../store/web3'
 import { convertFromWei } from '../../../../utils/bigNumber'
-import { formatDateDay } from '../../../../utils/math/nonContract'
+import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartVol = () => {
   const web3 = useWeb3()
@@ -17,9 +17,26 @@ const ChartVol = () => {
         : web3.metrics.global.length
     for (let i = 0; i < length; i++) {
       data.push(convertFromWei(web3.metrics.global[i].volUSD))
-      labels.push(formatDateDay(web3.metrics.global[i].timestamp))
+      labels.push(formatDate(web3.metrics.global[i].timestamp))
     }
     return [labels.reverse(), data.reverse()]
+  }
+
+  const options = {
+    scales: {
+      x: {
+        display: false,
+      },
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'Swap Volume ($USD)',
+      },
+      legend: {
+        display: false,
+      },
+    },
   }
 
   const data = {
@@ -37,7 +54,7 @@ const ChartVol = () => {
 
   return (
     <>
-      <Bar data={data} />
+      <Bar data={data} options={options} />
     </>
   )
 }

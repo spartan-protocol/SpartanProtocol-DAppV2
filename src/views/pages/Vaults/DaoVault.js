@@ -110,6 +110,7 @@ const DaoVault = () => {
       return formatFromWei(BN(getTotalWeight()).times(web3.spartaPrice))
     return '0.00'
   }
+
   const getUSDFromSpartaOwnWeight = () => {
     const _weight = getVaultWeights(
       pool.poolDetails,
@@ -241,7 +242,7 @@ const DaoVault = () => {
       </Col>
 
       <Col xs="auto">
-        <Card className="card-320 card-underlay" style={{ minHeight: '202' }}>
+        <Card className="card-320" style={{ minHeight: '202' }}>
           <Card.Header>{t('memberDetails')}</Card.Header>
           {!isLoading() ? (
             <>

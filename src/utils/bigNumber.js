@@ -76,3 +76,25 @@ export const formatFromUnits = (unitString, formatDecimals = 0) => {
   const units = BN(unitString).toFormat(decimals)
   return units
 }
+
+/**
+ * Format to short number + letter (ie. 1,000,000 = 1M)
+ * @param {string} unitString
+ * @returns {string} units
+ */
+export const formatShortNumber = (unitString) => {
+  let letterLabel = ''
+  let shortNumb = unitString
+  if (unitString >= 1000000000) {
+    letterLabel = 'B'
+    shortNumb = unitString / 1000000000
+  } else if (unitString >= 1000000) {
+    letterLabel = 'M'
+    shortNumb = unitString / 1000000
+  } else if (unitString >= 1000) {
+    letterLabel = 'K'
+    shortNumb = unitString / 1000
+  }
+  shortNumb = BN(shortNumb).toFormat(2)
+  return [shortNumb, letterLabel]
+}

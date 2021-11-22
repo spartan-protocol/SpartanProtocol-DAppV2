@@ -228,7 +228,7 @@ const Upgrade = () => {
           </Col>
 
           <Col xs="auto">
-            <Card className="card-320 card-underlay">
+            <Card className="card-320">
               <Card.Body>
                 <Col>
                   <h3 className="mb-0">
