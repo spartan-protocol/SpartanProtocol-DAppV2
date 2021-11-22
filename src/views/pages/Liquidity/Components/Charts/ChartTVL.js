@@ -3,7 +3,7 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 import { convertFromWei } from '../../../../../utils/bigNumber'
-import { formatDateDay } from '../../../../../utils/math/nonContract'
+import { formatDate } from '../../../../../utils/math/nonContract'
 
 const ChartTVL = (props) => {
   const getChartData = () => {
@@ -14,9 +14,26 @@ const ChartTVL = (props) => {
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     for (let i = 0; i < length; i++) {
       data1.push(convertFromWei(props.metrics[i].tvlUSD))
-      labels.push(formatDateDay(props.metrics[i].timestamp))
+      labels.push(formatDate(props.metrics[i].timestamp))
     }
     return [labels.reverse(), data1.reverse()]
+  }
+
+  const options = {
+    scales: {
+      x: {
+        display: false,
+      },
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'TVL ($USD)',
+      },
+      legend: {
+        display: false,
+      },
+    },
   }
 
   const data = {
@@ -41,7 +58,7 @@ const ChartTVL = (props) => {
 
   return (
     <>
-      <Line data={data} />
+      <Line data={data} options={options} />
     </>
   )
 }
