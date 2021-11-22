@@ -135,7 +135,7 @@ const SynthVault = () => {
   return (
     <Row>
       <Col xs="auto" className="">
-        <Card className="card-320 card-underlay" style={{ minHeight: '290' }}>
+        <Card className="card-320" style={{ minHeight: '290' }}>
           <Card.Header>
             <Row>
               <Col>{t('synthVault')}</Col>

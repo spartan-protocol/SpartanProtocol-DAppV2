@@ -69,7 +69,7 @@ const Metrics = ({ assetSwap }) => {
   return (
     <>
       {!isLoading() && (
-        <Card className="card-480 card-underlay mb-2">
+        <Card className="card-480 mb-2">
           <Card.Header className="border-0">
             <Row className="mt-2">
               <Col xs="auto" className="mt-1 pe-2 position-relative">
@@ -96,7 +96,7 @@ const Metrics = ({ assetSwap }) => {
                 </h6>
               </Col>
               <Col className="text-end">
-                <h6 className="mb-1">
+                <span className="mb-1 text-sm-label">
                   APY
                   <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                     <span role="button">
@@ -108,7 +108,7 @@ const Metrics = ({ assetSwap }) => {
                       />
                     </span>
                   </OverlayTrigger>
-                </h6>
+                </span>
                 <h6 className="mb-0">{APY}%</h6>
               </Col>
             </Row>

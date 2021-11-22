@@ -305,7 +305,7 @@ const ProposalItem = ({ proposal }) => {
   return (
     <>
       <Col xs="auto" className="">
-        <Card className="card-320 card-underlay" style={{ minHeight: '320px' }}>
+        <Card className="card-320" style={{ minHeight: '320px' }}>
           <Card.Header>
             <Row className="h-100">
               <Col className="">

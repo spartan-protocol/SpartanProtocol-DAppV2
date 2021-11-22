@@ -47,7 +47,7 @@ const Metrics = ({ assetSwap }) => {
   return (
     <>
       {!isLoading() && (
-        <Card className="card-480 card-underlay mb-2">
+        <Card className="card-480 mb-2">
           <Card.Header className="border-0">
             <Row className="mt-2">
               <Col xs="auto" className="mt-1 pe-2 position-relative">

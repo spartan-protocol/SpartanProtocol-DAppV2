@@ -115,7 +115,7 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320 pb-2 card-underlay card-alt">
+        <Card className="card-320 pb-2 card-alt">
           <Card.Header>
             <h6 className="mb-0 text-center">
               {newPool && (
