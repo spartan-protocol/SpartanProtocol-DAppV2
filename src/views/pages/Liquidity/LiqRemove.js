@@ -713,17 +713,6 @@ const LiqRemove = () => {
                 </Button>
               </Col>
             </Row>
-
-            {activeTab === '2' && getRemLiqAsym()[2] > 0 && (
-              <div className="text-card text-center mt-2">
-                {`${
-                  getToken(poolRemove1.tokenAddress)?.symbol
-                }:SPARTA pool will receive a ${formatFromWei(
-                  getRemLiqAsym()[2],
-                  4,
-                )} SPARTA dividend`}
-              </div>
-            )}
           </Card.Footer>
         </Card>
       </Col>
