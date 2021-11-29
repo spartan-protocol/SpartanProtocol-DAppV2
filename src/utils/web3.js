@@ -429,9 +429,11 @@ export const getWalletProvider = (_provider, rpcUrls) => {
 }
 
 // GET GAS PRICE FROM PROVIDER
+// eslint-disable-next-line no-unused-vars
 export const getProviderGasPrice = (rpcUrls) => {
-  const provider = getWalletProvider(null, rpcUrls)
-  const gasPrice = provider.getGasPrice()
+  // const provider = getWalletProvider(null, rpcUrls) // TEMP DISABLE
+  // const gasPrice = provider.getGasPrice() // TEMP DISABLE
+  const gasPrice = '6000000000' // TEMP OVERRIDE
   return gasPrice
 }
 
