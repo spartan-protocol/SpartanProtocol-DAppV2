@@ -135,6 +135,12 @@ const NewProposal = () => {
       } else {
         setparamValid(false)
       }
+    } else if (selectedType.value === 'GRANT') {
+      if (inputParam <= 150000) {
+        setparamValid(true)
+      } else {
+        setparamValid(false)
+      }
     } else if (inputParam <= 1500) {
       setparamValid(true)
     } else {
