@@ -28,7 +28,7 @@ export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
     let awaitArray = [
       contract2.callStatic.emitting(),
       // contract.callStatic.minting(),
-      contract2.callStatic.feeOnTransfer(),
+      '0', // contract2.callStatic.feeOnTransfer()
       // contract.callStatic.emissionCurve(),
       contract2.callStatic.totalSupply(),
       contract2.callStatic.secondsPerEra(),

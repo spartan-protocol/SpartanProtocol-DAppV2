@@ -4,7 +4,7 @@ import { callPoolMetrics } from '../../../../utils/extCalls'
 import { usePool } from '../../../../store/pool'
 import { useWeb3 } from '../../../../store/web3'
 import { BN, formatFromUnits } from '../../../../utils/bigNumber'
-import ChartRevenue from './Charts/ChartPrice'
+import ChartPrice from './Charts/ChartPrice'
 
 const Metrics = ({ assetSwap }) => {
   const web3 = useWeb3()
@@ -46,7 +46,7 @@ const Metrics = ({ assetSwap }) => {
 
   return (
     <>
-      {!isLoading() && (
+      {!isLoading() && getToken(assetSwap.tokenAddress).symbol !== 'BUSD' && (
         <Card className="card-480 mb-2">
           <Card.Header className="border-0">
             <Row className="mt-2">
@@ -76,7 +76,7 @@ const Metrics = ({ assetSwap }) => {
             </Row>
           </Card.Header>
           <Card.Body className="pt-1">
-            <ChartRevenue metrics={poolMetrics} tokenPrice={tokenPrice} />
+            <ChartPrice metrics={poolMetrics} tokenPrice={tokenPrice} />
           </Card.Body>
         </Card>
       )}

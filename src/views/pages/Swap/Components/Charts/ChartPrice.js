@@ -2,7 +2,7 @@ import React from 'react'
 import { Line } from 'react-chartjs-2'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
-const ChartRevenue = (props) => {
+const ChartPrice = (props) => {
   const getChartData = () => {
     const data1 = []
     const labels = []
@@ -59,4 +59,4 @@ const ChartRevenue = (props) => {
   )
 }
 
-export default ChartRevenue
+export default ChartPrice
