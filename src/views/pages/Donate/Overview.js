@@ -121,8 +121,8 @@ ethereum(network: $network){
           },
         },
       }
-      const feeBurnTally = await axios.request(options)
-      setrecentTxns(feeBurnTally.data.data.ethereum.transfers)
+      const recentDonations = await axios.request(options)
+      setrecentTxns(recentDonations.data.data.ethereum.transfers)
     }
   }
   useEffect(() => {

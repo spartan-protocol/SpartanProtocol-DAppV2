@@ -4,8 +4,6 @@ const initialState = {
   globalDetails: false,
   claimCheck: '0',
   txn: [],
-  feeBurnTally: '0',
-  feeBurnRecent: '0',
   error: null,
   loading: false,
 }
@@ -34,24 +32,6 @@ export const spartaReducer = (state = initialState, action) => {
       return {
         ...state,
         txn: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.SPARTA_FEEBURN_TALLY: {
-      return {
-        ...state,
-        feeBurnTally: action.payload,
-        error: null,
-        loading: false,
-      }
-    }
-
-    case Types.SPARTA_FEEBURN_RECENT: {
-      return {
-        ...state,
-        feeBurnRecent: action.payload,
         error: null,
         loading: false,
       }
