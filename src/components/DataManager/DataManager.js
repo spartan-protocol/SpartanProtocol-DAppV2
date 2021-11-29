@@ -16,24 +16,16 @@ import { useRouter } from '../../store/router/selector'
 import { useBond } from '../../store/bond/selector'
 import { useDao } from '../../store/dao/selector'
 import { useSynth } from '../../store/synth/selector'
-import {
-  getSpartaGlobalDetails,
-  spartaFeeBurnRecent,
-  spartaFeeBurnTally,
-  useSparta,
-} from '../../store/sparta'
+import { getSpartaGlobalDetails, useSparta } from '../../store/sparta'
 import { getSynthArray } from '../../store/synth'
 import { getRPCBlocks, getSpartaPrice, useWeb3 } from '../../store/web3'
-import { BN } from '../../utils/bigNumber'
 import {
   addTxn,
   changeNetwork,
-  getAddresses,
   getNetwork,
   liveChains,
   tempChains,
 } from '../../utils/web3'
-import { getSpartaV2Contract } from '../../utils/web3Contracts'
 import { getGlobalMetrics } from '../../store/web3/actions'
 
 const DataManager = () => {
@@ -47,8 +39,6 @@ const DataManager = () => {
   const sparta = useSparta()
   const synth = useSynth()
   const web3 = useWeb3()
-
-  const addr = getAddresses()
 
   const [prevNetwork, setPrevNetwork] = useState(false)
   const [netLoading, setnetLoading] = useState(false)
@@ -65,13 +55,6 @@ const DataManager = () => {
     }
   }
 
-  /** Get feeBurn tally *JUST ONCE* on load */
-  const [addFeeBurn, setaddFeeBurn] = useState('0')
-  useEffect(() => {
-    dispatch(spartaFeeBurnTally())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
   useEffect(() => {
@@ -85,29 +68,6 @@ const DataManager = () => {
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
   }, [dispatch, getBlockTimer])
-
-  useEffect(() => {
-    const contract = getSpartaV2Contract(null, web3.rpcs)
-    const filter = contract.filters.Transfer(null, addr.bnb)
-    const listen = async () => {
-      await contract.on(filter, (from, to, amount) => {
-        setaddFeeBurn(BN(addFeeBurn).plus(amount.toString()))
-      })
-    }
-    listen()
-    return () => {
-      try {
-        contract.removeAllListeners(filter)
-      } catch (e) {
-        console.log(e)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addFeeBurn])
-  useEffect(() => {
-    dispatch(spartaFeeBurnRecent(addFeeBurn))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addFeeBurn])
 
   /** On DApp load check network and get the party started */
   const checkNetwork = async () => {

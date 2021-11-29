@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { ethers } from 'ethers'
 import * as Types from './types'
 import {
@@ -10,13 +9,11 @@ import { payloadToDispatch, errorToDispatch } from '../helpers'
 import {
   addressesMN,
   bscRpcsMN,
+  deadAddress,
   getAbis,
-  getAddresses,
   getProviderGasPrice,
   parseTxn,
 } from '../../utils/web3'
-import { apiUrlBQ, headerBQ } from '../../utils/extCalls'
-import { convertToWei } from '../../utils/bigNumber'
 
 export const spartaLoading = () => ({
   type: Types.SPARTA_LOADING,
@@ -31,13 +28,14 @@ export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
     let awaitArray = [
       contract2.callStatic.emitting(),
       // contract.callStatic.minting(),
-      contract2.callStatic.feeOnTransfer(),
+      '0', // contract2.callStatic.feeOnTransfer()
       // contract.callStatic.emissionCurve(),
       contract2.callStatic.totalSupply(),
       contract2.callStatic.secondsPerEra(),
       // contract.callStatic.nextEraTime(),
       // contract1.callStatic.secondsPerEra(),
       contract1.callStatic.totalSupply(),
+      contract2.callStatic.balanceOf(deadAddress),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
@@ -50,6 +48,7 @@ export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
       // nextEraTime: awaitArray[],
       // oldSecondsPerEra: awaitArray[].toString(),
       oldTotalSupply: awaitArray[4].toString(),
+      deadSupply: awaitArray[5].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
@@ -100,79 +99,6 @@ export const fallenSpartansClaim = (wallet, rpcUrls) => async (dispatch) => {
     let txn = await contract.claim({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'fsClaim', rpcUrls)
     dispatch(payloadToDispatch(Types.SPARTA_TXN, txn))
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
-  }
-}
-
-/**
- * Get the total feeBurn tally on dapp-load
- */
-export const spartaFeeBurnTally = () => async (dispatch) => {
-  dispatch(spartaLoading())
-  const addr = getAddresses()
-  const apiUrl = apiUrlBQ
-  const header = headerBQ
-  try {
-    const options = {
-      method: 'POST',
-      url: apiUrl,
-      headers: header,
-      data: {
-        query: `query ($network: EthereumNetwork!,
-          $address: String!,
-          $token: String!,
-          $limit:Int,
-          $offset:Int,
-          $from: ISO8601DateTime,
-          $till: ISO8601DateTime){
-      ethereum(network: $network){
-        transfers(currency: {is: $token}
-        date: {since: $from till: $till}
-        height:{gt: 1}
-        amount: {gt: 0}
-        options: {desc: "amount", limit:$limit, offset: $offset}
-        receiver: {is: $address}
-        ){
-          amount
-          max_amount: maximum(of: amount, get: amount)
-        }
-      }
-    }`,
-        variables: {
-          limit: 1,
-          offset: 0,
-          network: 'bsc',
-          token: '0x3910db0600ea925f63c36ddb1351ab6e2c6eb102',
-          from: null,
-          till: null,
-          dateFormat: '%Y-%m-%d',
-          address: addr.bnb,
-        },
-      },
-    }
-
-    const feeBurnTally = await axios.request(options)
-
-    dispatch(
-      payloadToDispatch(
-        Types.SPARTA_FEEBURN_TALLY,
-        convertToWei(feeBurnTally.data.data.ethereum.transfers[0].amount),
-      ),
-    )
-  } catch (error) {
-    dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
-  }
-}
-
-/**
- * Update the feeBurn tally
- */
-export const spartaFeeBurnRecent = (amount) => async (dispatch) => {
-  dispatch(spartaLoading())
-  try {
-    const feeBurnRecent = amount
-    dispatch(payloadToDispatch(Types.SPARTA_FEEBURN_RECENT, feeBurnRecent))
   } catch (error) {
     dispatch(errorToDispatch(Types.SPARTA_ERROR, error))
   }
