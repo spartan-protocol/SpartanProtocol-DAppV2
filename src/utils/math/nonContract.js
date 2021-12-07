@@ -331,9 +331,39 @@ export const calcAPY = (pool, recentDivis) => {
       .times(100)
   }
   if (apr > 0) {
-    // console.log(apr.toString())
     const apy1 = BN(apr).div(100).div(12).plus(1)
     const apy = apy1.pow(12).minus(1).times(100)
+    return apy
+  }
+  return '0.00'
+}
+
+/**
+ * Calculate synthVault APY
+ * @param revenue @param baseAmount
+ * @returns {number} apy
+ */
+export const calcSynthAPY = (revenue, baseAmount) => {
+  let apr = '0'
+  const fallback = BN(convertToWei(10000))
+  const _baseAmount = BN(baseAmount)
+  const fallbackDepth = _baseAmount.isLessThan(fallback)
+    ? fallback
+    : _baseAmount
+  const currentTime = BN(getBlockTimestamp())
+  const firstEra = BN(1636672290).plus(2592000)
+  const monthFraction = currentTime.minus(1636672290).div(2592000)
+  if (currentTime.isGreaterThan(firstEra)) {
+    apr = BN(revenue).times(12).div(fallbackDepth).times(100)
+  } else {
+    apr = BN(revenue)
+      .times(12 / monthFraction)
+      .div(fallbackDepth)
+      .times(100)
+  }
+  if (apr > 0) {
+    const apy1 = BN(apr).div(100).div(365).plus(1)
+    const apy = apy1.pow(365).minus(1).times(100)
     return apy
   }
   return '0.00'
