@@ -44,7 +44,7 @@ const Supply = () => {
   const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
   const distroMnBondV1 = '17500000' // SPARTA minted via Bond (V1 TOKEN)
   // V2 (Protocol) Token Distribution
-  const distroMnBondV2 = '4000000' // SPARTA minted via Bond (V2 TOKEN)
+  const distroMnBondV2 = '6000000' // SPARTA minted via Bond (V2 TOKEN)
   // V2 (Protocol) Token Burns
   const feeBurn = '848530' // SPARTA burned during feeBurn phase
 

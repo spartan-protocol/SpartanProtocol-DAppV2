@@ -13,7 +13,10 @@ import {
 } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import SynthVaultItem from './SynthVaultItem'
-import { calcAPY, getSynthVaultWeights } from '../../../utils/math/nonContract'
+import {
+  calcSynthAPY,
+  getSynthVaultWeights,
+} from '../../../utils/math/nonContract'
 import { usePool } from '../../../store/pool'
 import { Icon } from '../../../components/Icons/icons'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -76,15 +79,10 @@ const SynthVault = () => {
   const APY = () => {
     const _recentRev = BN(synth.globalDetails.recentRevenue)
     const _prevRev = BN(synth.globalDetails.lastMonthRevenue)
-    const fees = _recentRev.isGreaterThan(_prevRev) ? _recentRev : _prevRev
-    const _object = {
-      recentDivis: 0,
-      lastMonthDivis: 0,
-      fees: fees.toString(),
-      genesis: synth.globalDetails.genesis,
-      baseAmount: BN(synth.totalWeight).div(2).toString(),
-    }
-    return formatFromUnits(calcAPY(_object, fees), 2)
+    let revenue = _recentRev.isGreaterThan(_prevRev) ? _recentRev : _prevRev
+    revenue = revenue.toString()
+    const baseAmount = synth.totalWeight.toString()
+    return formatFromUnits(calcSynthAPY(revenue, baseAmount), 2)
   }
 
   const handleChangeShow = () => {
