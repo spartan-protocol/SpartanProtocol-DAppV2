@@ -15,12 +15,14 @@ import { changeNetworkLsOnly, getAddresses, getNetwork } from '../../utils/web3'
 import { ReactComponent as ContractIconG } from '../../assets/icons/contract-green.svg'
 import { ReactComponent as ContractIconR } from '../../assets/icons/contract-red.svg'
 import { Icon } from '../Icons/icons'
+import { useWeb3 } from '../../store/web3'
 
 const btnClass = 'btn-round btn-icon btn-transparent align-self-center me-1'
 
 const Contracts = () => {
   const { t } = useTranslation()
   const reserve = useReserve()
+  const web3 = useWeb3()
   const target = useRef(null)
   const addr = getAddresses()
 
@@ -60,12 +62,12 @@ const Contracts = () => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setnetwork(changeNetworkLsOnly(56))
+      setnetwork(changeNetworkLsOnly(56, web3.rpcs))
     }
     if (net.target.checked === false) {
-      setnetwork(changeNetworkLsOnly(97))
+      setnetwork(changeNetworkLsOnly(97, web3.rpcs))
     } else {
-      setnetwork(changeNetworkLsOnly(net))
+      setnetwork(changeNetworkLsOnly(net, web3.rpcs))
     }
     window.location.reload()
   }

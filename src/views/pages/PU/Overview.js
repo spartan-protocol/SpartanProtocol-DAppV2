@@ -8,7 +8,6 @@ import PoolStatus from './FrozenPools'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useWeb3 } from '../../../store/web3'
 import ReserveDetails from './ReserveDetails'
-import Others from './Others'
 
 const Overview = () => {
   const pool = usePool()
@@ -92,16 +91,6 @@ const Overview = () => {
                         }}
                       >
                         Reserve
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item key="others">
-                      <Nav.Link
-                        eventKey="others"
-                        onClick={() => {
-                          setActiveTab('others')
-                        }}
-                      >
-                        Others
                       </Nav.Link>
                     </Nav.Item>
                   </Nav>
@@ -196,7 +185,6 @@ const Overview = () => {
                 {activeTab === 'emptyPools' && (
                   <EmptyPools selectedAsset={selectedAsset} />
                 )}
-                {activeTab === 'others' && <Others />}
               </Row>
             </>
           )

@@ -14,7 +14,6 @@ import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
 import { convertToWei } from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
-import { checkResolved } from '../../utils/helpers'
 
 export const web3Loading = () => ({
   type: Types.WEB3_LOADING,
@@ -257,7 +256,7 @@ export const getRPCBlocks = () => async (dispatch) => {
     for (let i = 0; i < rpcUrls.length; i++) {
       rpcs.push({
         url: rpcUrls[i],
-        block: checkResolved(awaitArray[i], 0),
+        block: awaitArray[i].status === 'fulfilled' ? awaitArray[i].value : 0,
         good: awaitArray[i].status === 'fulfilled',
       })
     }

@@ -51,7 +51,7 @@ const DataManager = () => {
     try {
       return JSON.parse(data)
     } catch (e) {
-      return getNetwork()
+      return getNetwork(null, web3.rpcs)
     }
   }
 
@@ -75,7 +75,7 @@ const DataManager = () => {
     if (netLoading === false) {
       setnetLoading(true)
       if (network?.chainId !== prevNetwork?.chainId) {
-        changeNetwork(network?.chainId)
+        changeNetwork(network?.chainId, web3.rpcs)
         settrigger1(0)
         setPrevNetwork(tryParse(network))
       } else {

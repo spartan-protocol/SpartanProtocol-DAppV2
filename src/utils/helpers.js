@@ -35,14 +35,3 @@ export const formatDate = (unixTime) => {
   const date = new Date(unixTime * 1000)
   return date.toLocaleDateString()
 }
-
-/**
- * Check the status of a Promise.allSettled() item and return value or error message
- * @returns {uint} contract
- */
-export const checkResolved = (settledItem, errorMsg) => {
-  if (settledItem.status === 'fulfilled') {
-    return settledItem.value
-  }
-  return errorMsg
-}
