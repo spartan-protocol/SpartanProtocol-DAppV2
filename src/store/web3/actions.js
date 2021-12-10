@@ -240,7 +240,15 @@ export const getRPCBlocks = () => async (dispatch) => {
       const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
       awaitArray.push(provider.getBlockNumber())
     }
+    // let provider = new ethers.providers.StaticJsonRpcProvider(
+    //   'https://binance.ankr.com/',
+    // )
+    // provider = await provider.getBlockNumber()
+    // console.log(provider)
+    // console.log(rpcUrls)
+    // console.log(awaitArray)
     awaitArray = await Promise.allSettled(awaitArray)
+    // console.log(awaitArray)
     let rpcs = []
     for (let i = 0; i < rpcUrls.length; i++) {
       rpcs.push({

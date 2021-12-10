@@ -203,7 +203,7 @@ export const bscRpcsMN = [
   'https://bsc-dataseed2.binance.org/',
   'https://bsc-dataseed3.binance.org/',
   'https://bsc-dataseed4.binance.org/',
-  'https://binance.ankr.com/',
+  // 'https://binance.ankr.com/', // Causing holdup in Promise.allSettled()
 ]
 
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'
