@@ -378,12 +378,8 @@ export const changeRpc = (_network, rpcUrls) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetworkLsOnly = (_network, rpcUrls) => {
-  const rpcUrl = changeRpc(_network, rpcUrls)
-  const network =
-    _network === 97
-      ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
-      : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
+export const changeNetworkLsOnly = (_network) => {
+  const network = _network === 97 ? { chainId: 97 } : { chainId: 56 }
   window.localStorage.setItem('network', JSON.stringify(network))
   return network
 }
@@ -393,14 +389,10 @@ export const changeNetworkLsOnly = (_network, rpcUrls) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetwork = async (_network, rpcUrls) => {
-  const rpcUrl = changeRpc(_network, rpcUrls)
+export const changeNetwork = async (_network) => {
   await changeAbis(_network)
   await changeAddresses(_network)
-  const network =
-    _network === 97
-      ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
-      : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
+  const network = _network === 97 ? { chainId: 97 } : { chainId: 56 }
   window.localStorage.setItem('network', JSON.stringify(network))
   return network
 }
@@ -409,10 +401,10 @@ export const changeNetwork = async (_network, rpcUrls) => {
  * Check localStorage for net and set default if missing
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const getNetwork = (rpcUrls) => {
+export const getNetwork = () => {
   const network = tryParse(window.localStorage.getItem('network'))
     ? tryParse(window.localStorage.getItem('network'))
-    : changeNetwork(56, rpcUrls) // Change this to 56 (mainnet) after mainnet is deployed
+    : changeNetwork(56) // Change this to 56 (mainnet) after mainnet is deployed
   return network
 }
 
