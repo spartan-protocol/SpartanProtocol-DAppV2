@@ -151,12 +151,12 @@ const Supply = () => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setnetwork(changeNetworkLsOnly(56, web3.rpcs))
+      setnetwork(changeNetworkLsOnly(56))
     }
     if (net.target.checked === false) {
-      setnetwork(changeNetworkLsOnly(97, web3.rpcs))
+      setnetwork(changeNetworkLsOnly(97))
     } else {
-      setnetwork(changeNetworkLsOnly(net, web3.rpcs))
+      setnetwork(changeNetworkLsOnly(net))
     }
     window.location.reload()
   }
