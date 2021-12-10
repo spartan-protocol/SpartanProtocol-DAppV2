@@ -232,23 +232,26 @@ export const getEventArray = (array) => async (dispatch) => {
  */
 export const getRPCBlocks = () => async (dispatch) => {
   dispatch(web3Loading())
+
+  const withTimeout = (millis, promise) => {
+    const timeout = new Promise((resolve, reject) =>
+      setTimeout(
+        () => reject(new Error(`Timed out after ${millis} ms.`)),
+        millis,
+      ),
+    )
+    return Promise.race([promise, timeout])
+  }
+
   try {
     let awaitArray = []
     const network = getNetwork()
     const rpcUrls = network.chainId === 97 ? bscRpcsTN : bscRpcsMN
     for (let i = 0; i < rpcUrls.length; i++) {
       const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
-      awaitArray.push(provider.getBlockNumber())
+      awaitArray.push(withTimeout(3000, provider.getBlockNumber()))
     }
-    // let provider = new ethers.providers.StaticJsonRpcProvider(
-    //   'https://binance.ankr.com/',
-    // )
-    // provider = await provider.getBlockNumber()
-    // console.log(provider)
-    // console.log(rpcUrls)
-    // console.log(awaitArray)
     awaitArray = await Promise.allSettled(awaitArray)
-    // console.log(awaitArray)
     let rpcs = []
     for (let i = 0; i < rpcUrls.length; i++) {
       rpcs.push({
