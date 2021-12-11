@@ -122,12 +122,12 @@ const WalletSelect = (props) => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setNetwork(changeNetworkLsOnly(56, web3.rpcs))
+      setNetwork(changeNetworkLsOnly(56))
     }
     if (net.target.checked === false) {
-      setNetwork(changeNetworkLsOnly(97, web3.rpcs))
+      setNetwork(changeNetworkLsOnly(97))
     } else {
-      setNetwork(changeNetworkLsOnly(net, web3.rpcs))
+      setNetwork(changeNetworkLsOnly(net))
     }
     window.location.reload()
   }

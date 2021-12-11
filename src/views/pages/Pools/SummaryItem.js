@@ -7,6 +7,7 @@ import PoolSelect from '../../../components/PoolSelect/PoolSelect'
 import { useWeb3 } from '../../../store/web3'
 import ChartTVL from './Charts/ChartTVL'
 import ChartVol from './Charts/ChartVol'
+import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const SummaryItem = () => {
   const { t } = useTranslation()
@@ -15,7 +16,7 @@ const SummaryItem = () => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-underlay">
+        <Card className="">
           <Card.Header>
             <Row className="px-1">
               <Col xs="auto">{t('pools')}</Col>
@@ -29,15 +30,15 @@ const SummaryItem = () => {
           <Card.Body>
             {web3.metrics ? (
               <Row>
-                <Col>
+                <Col sm="6">
                   <ChartTVL />
                 </Col>
-                <Col>
+                <Col sm="6">
                   <ChartVol />
                 </Col>
               </Row>
             ) : (
-              'loading'
+              <HelmetLoading height={200} width={200} />
             )}
           </Card.Body>
         </Card>

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.18.0"
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",
@@ -43,12 +43,13 @@
     "react-share": "^4.4.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.4.0",
+    "resize-observer": "^1.0.3",
     "web-vitals": "^2.1.2",
     "yarn": "^1.22.10"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts --max_old_space_size=4096 build",
     "test": "./node_modules/.bin/jest",
     "eject": "react-scripts eject",
     "lint": "eslint ."

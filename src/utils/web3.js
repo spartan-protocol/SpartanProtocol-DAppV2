@@ -122,7 +122,7 @@ export const addressesTN = {
   router: '0x740dB23a6e9FEa55DdcaDD63942fe3FF0210d130', //
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
-  utils: '0x914647126cfE1004bCF9d0a5EeBdE931CA78e0c4', // 61b80a66675c16e40741374353371595c1213c34 ???
+  utils: '0x7Ed2B0611308C75C10d5FC34cDA75749e6a6Df7D', // 5c079a33ed87ff5f7286d2a034a78db62660c9ab
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -206,6 +206,7 @@ export const bscRpcsMN = [
   'https://binance.ankr.com/',
 ]
 
+export const deadAddress = '0x000000000000000000000000000000000000dEaD'
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
@@ -377,12 +378,8 @@ export const changeRpc = (_network, rpcUrls) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetworkLsOnly = (_network, rpcUrls) => {
-  const rpcUrl = changeRpc(_network, rpcUrls)
-  const network =
-    _network === 97
-      ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
-      : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
+export const changeNetworkLsOnly = (_network) => {
+  const network = _network === 97 ? { chainId: 97 } : { chainId: 56 }
   window.localStorage.setItem('network', JSON.stringify(network))
   return network
 }
@@ -392,14 +389,10 @@ export const changeNetworkLsOnly = (_network, rpcUrls) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetwork = async (_network, rpcUrls) => {
-  const rpcUrl = changeRpc(_network, rpcUrls)
+export const changeNetwork = async (_network) => {
   await changeAbis(_network)
   await changeAddresses(_network)
-  const network =
-    _network === 97
-      ? { chainId: 97, net: 'testnet', chain: 'BSC', rpc: rpcUrl }
-      : { chainId: 56, net: 'mainnet', chain: 'BSC', rpc: rpcUrl }
+  const network = _network === 97 ? { chainId: 97 } : { chainId: 56 }
   window.localStorage.setItem('network', JSON.stringify(network))
   return network
 }
@@ -408,10 +401,10 @@ export const changeNetwork = async (_network, rpcUrls) => {
  * Check localStorage for net and set default if missing
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const getNetwork = (rpcUrls) => {
+export const getNetwork = () => {
   const network = tryParse(window.localStorage.getItem('network'))
     ? tryParse(window.localStorage.getItem('network'))
-    : changeNetwork(56, rpcUrls) // Change this to 56 (mainnet) after mainnet is deployed
+    : changeNetwork(56) // Change this to 56 (mainnet) after mainnet is deployed
   return network
 }
 
@@ -428,9 +421,11 @@ export const getWalletProvider = (_provider, rpcUrls) => {
 }
 
 // GET GAS PRICE FROM PROVIDER
+// eslint-disable-next-line no-unused-vars
 export const getProviderGasPrice = (rpcUrls) => {
-  const provider = getWalletProvider(null, rpcUrls)
-  const gasPrice = provider.getGasPrice()
+  // const provider = getWalletProvider(null, rpcUrls) // TEMP DISABLE
+  // const gasPrice = provider.getGasPrice() // TEMP DISABLE
+  const gasPrice = '6000000000' // TEMP OVERRIDE
   return gasPrice
 }
 

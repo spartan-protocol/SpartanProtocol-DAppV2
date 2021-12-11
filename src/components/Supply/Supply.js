@@ -20,6 +20,7 @@ import { useWeb3 } from '../../store/web3'
 import {
   BN,
   convertFromWei,
+  convertToWei,
   formatFromUnits,
   formatFromWei,
 } from '../../utils/bigNumber'
@@ -43,7 +44,9 @@ const Supply = () => {
   const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
   const distroMnBondV1 = '17500000' // SPARTA minted via Bond (V1 TOKEN)
   // V2 (Protocol) Token Distribution
-  const distroMnBondV2 = '0' // SPARTA minted via Bond (V2 TOKEN)
+  const distroMnBondV2 = '6000000' // SPARTA minted via Bond (V2 TOKEN)
+  // V2 (Protocol) Token Burns
+  const feeBurn = '848530' // SPARTA burned during feeBurn phase
 
   const [showDropdown, setshowDropdown] = useState(false)
   const [network, setnetwork] = useState(getNetwork())
@@ -92,10 +95,27 @@ const Supply = () => {
     return '0.00'
   }
 
+  const getDeadSupply = () => {
+    const { deadSupply } = sparta.globalDetails
+    if (deadSupply > 0) {
+      return deadSupply
+    }
+    return '0.00'
+  }
+
+  const getBurnedTotal = () => {
+    const totalBurned = BN(getDeadSupply()).plus(convertToWei(feeBurn))
+    if (totalBurned > 0) {
+      return totalBurned
+    }
+    return '0.00'
+  }
+
   const getTotalSupply = () => {
     const _totalSupply = sparta.globalDetails.totalSupply
     const { oldTotalSupply } = sparta.globalDetails
-    const totalSupply = BN(_totalSupply).plus(oldTotalSupply)
+    const deadSupply = getDeadSupply()
+    const totalSupply = BN(_totalSupply).plus(oldTotalSupply).minus(deadSupply)
     if (totalSupply > 0) {
       return totalSupply
     }
@@ -129,34 +149,14 @@ const Supply = () => {
     return '0.00'
   }
 
-  const [feeBurn, setfeeBurn] = useState('0')
-  useEffect(() => {
-    setfeeBurn(BN(sparta.feeBurnTally).plus(sparta.feeBurnRecent))
-  }, [sparta.feeBurnTally, sparta.feeBurnRecent])
-
-  const [feeIconActive, setfeeIconActive] = useState(false)
-  useEffect(() => {
-    const action = () => {
-      setfeeIconActive(true)
-    }
-    action()
-    const timer = setTimeout(() => {
-      setfeeIconActive(false)
-    }, 1000)
-    return () => {
-      clearTimeout(timer)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sparta.feeBurnRecent])
-
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setnetwork(changeNetworkLsOnly(56, web3.rpcs))
+      setnetwork(changeNetworkLsOnly(56))
     }
     if (net.target.checked === false) {
-      setnetwork(changeNetworkLsOnly(97, web3.rpcs))
+      setnetwork(changeNetworkLsOnly(97))
     } else {
-      setnetwork(changeNetworkLsOnly(net, web3.rpcs))
+      setnetwork(changeNetworkLsOnly(net))
     }
     window.location.reload()
   }
@@ -177,12 +177,7 @@ const Supply = () => {
           size="15"
         />
         ${formatFromUnits(web3.spartaPrice, 2)}
-        <Icon
-          icon="fire"
-          size={feeIconActive ? '16' : '15'}
-          fill={feeIconActive ? 'red' : isLightMode ? 'black' : 'white'}
-          className="ms-1 mb-1"
-        />
+        <Icon icon="fire" size="16" fill="white" className="ms-1 mb-1" />
       </Button>
 
       {showDropdown && (
@@ -306,7 +301,7 @@ const Supply = () => {
                           </div>
                           <Row>
                             <Col xs="4" className="text-center">
-                              <Badge bg="primary">{t('burn')}</Badge>
+                              <Badge bg="primary">{t('burnForSparta')}</Badge>
                             </Col>
                             <Col xs="4" className="text-center">
                               <Badge bg="info">{t('bond')}</Badge>
@@ -404,10 +399,9 @@ const Supply = () => {
                         <Popover.Body className="text-center">
                           Circulating supply includes only SPARTA tokens that
                           have entered circulation. SPARTA tokens that have not
-                          entered circulation include RESERVE contract holdings
-                          (released via programmed incentives like dividends,
-                          harvest & DAO grants) & DAO contract holdings
-                          (released via the Bond program)
+                          entered circulation include Reserve & Dao contract
+                          holdings and also any SPARTA held at the dead address
+                          (Burned)
                         </Popover.Body>
                       </Popover>
                     }
@@ -445,19 +439,16 @@ const Supply = () => {
                 </Col>
 
                 <Col xs="6" className="popover-text">
-                  {t('burnedSupply')}
+                  {t('burned')}
                   <OverlayTrigger
                     placement="auto"
                     overlay={
                       <Popover>
-                        <Popover.Header as="h3">
-                          {t('burnedSupply')}
-                        </Popover.Header>
+                        <Popover.Header as="h3">{t('burned')}</Popover.Header>
                         <Popover.Body className="text-center">
-                          The SPARTAv2 token has a deflationary aspect built
-                          into it. Every time SPARTA tokens are transferred; a
-                          small percentage is burned out of the supply
-                          permanently. This is referred to as the feeBurn.
+                          The SPARTAv2 token has had phases of burns. The tally
+                          here includes the total SPARTA burned via feeBurn
+                          along with any burned via the dead address since then.
                         </Popover.Body>
                       </Popover>
                     }
@@ -473,7 +464,9 @@ const Supply = () => {
                   </OverlayTrigger>
                 </Col>
                 <Col xs="6" className="popover-text text-end">
-                  {feeBurn > 0 ? `${formatFromWei(feeBurn, 0)}` : 'Loading...'}
+                  {getBurnedTotal() > 0
+                    ? `${formatFromWei(getBurnedTotal(), 0)}`
+                    : 'Loading...'}
                   <Icon
                     icon="fire"
                     className="ms-1"

@@ -7,6 +7,8 @@ import EmptyPools from './EmptyPools'
 import PoolStatus from './FrozenPools'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { useWeb3 } from '../../../store/web3'
+import ReserveDetails from './ReserveDetails'
+import Others from './Others'
 
 const Overview = () => {
   const pool = usePool()
@@ -80,6 +82,26 @@ const Overview = () => {
                         }}
                       >
                         Pools
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item key="reserve">
+                      <Nav.Link
+                        eventKey="reserve"
+                        onClick={() => {
+                          setActiveTab('reserve')
+                        }}
+                      >
+                        Reserve
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item key="others">
+                      <Nav.Link
+                        eventKey="others"
+                        onClick={() => {
+                          setActiveTab('others')
+                        }}
+                      >
+                        Others
                       </Nav.Link>
                     </Nav.Item>
                   </Nav>
@@ -156,22 +178,25 @@ const Overview = () => {
                       <Card className="card-480">
                         <Card.Header>Status of RPCs</Card.Header>
                         <Card.Body>
-                          {web3?.rpcs?.map((x) => (
-                            <Row key={x.url}>
-                              <Col>
-                                {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
-                              </Col>
-                            </Row>
-                          ))}
+                          {web3?.rpcs &&
+                            web3.rpcs.map((x) => (
+                              <Row key={x.url}>
+                                <Col>
+                                  {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
+                                </Col>
+                              </Row>
+                            ))}
                         </Card.Body>
                       </Card>
                     </Col>
                   </>
                 )}
                 {activeTab === 'pools' && <PoolStatus />}
+                {activeTab === 'reserve' && <ReserveDetails />}
                 {activeTab === 'emptyPools' && (
                   <EmptyPools selectedAsset={selectedAsset} />
                 )}
+                {activeTab === 'others' && <Others />}
               </Row>
             </>
           )

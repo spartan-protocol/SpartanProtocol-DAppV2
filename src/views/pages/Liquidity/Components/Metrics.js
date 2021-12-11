@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Row, Col, OverlayTrigger } from 'react-bootstrap'
+import { Card, Row, Col, OverlayTrigger, Dropdown } from 'react-bootstrap'
 import { Tooltip } from '../../../../components/Tooltip/tooltip'
 import { Icon } from '../../../../components/Icons/icons'
 import { calcAPY } from '../../../../utils/math/nonContract'
@@ -10,6 +10,8 @@ import { usePool } from '../../../../store/pool'
 import { useWeb3 } from '../../../../store/web3'
 import { BN, formatFromUnits } from '../../../../utils/bigNumber'
 import ChartRevenue from './Charts/ChartRevenue'
+import ChartVolume from './Charts/ChartVolume'
+import ChartSwapDemand from './Charts/ChartSwapDemand'
 
 const Metrics = ({ assetSwap }) => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -17,6 +19,9 @@ const Metrics = ({ assetSwap }) => {
   const pool = usePool()
   const { t } = useTranslation()
 
+  const metricTypes = ['Swap Volume', 'TVL (Depth)', 'Revenue', 'Swap Demand']
+
+  const [metric, setMetric] = useState(metricTypes[0])
   const [poolMetrics, setPoolMetrics] = useState([])
 
   /** Get the current block from a main RPC */
@@ -69,7 +74,7 @@ const Metrics = ({ assetSwap }) => {
   return (
     <>
       {!isLoading() && (
-        <Card className="card-480 card-underlay mb-2">
+        <Card className="card-480 mb-2">
           <Card.Header className="border-0">
             <Row className="mt-2">
               <Col xs="auto" className="mt-1 pe-2 position-relative">
@@ -96,7 +101,7 @@ const Metrics = ({ assetSwap }) => {
                 </h6>
               </Col>
               <Col className="text-end">
-                <h6 className="mb-1">
+                <span className="mb-1 text-sm-label">
                   APY
                   <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                     <span role="button">
@@ -108,19 +113,37 @@ const Metrics = ({ assetSwap }) => {
                       />
                     </span>
                   </OverlayTrigger>
-                </h6>
+                </span>
                 <h6 className="mb-0">{APY}%</h6>
               </Col>
             </Row>
           </Card.Header>
-          <Card.Body className="pt-1">
-            <ChartRevenue metrics={poolMetrics} />
+          <Card.Body className="">
+            <Dropdown className="text-center">
+              <Dropdown.Toggle variant="info" size="sm">
+                {metric}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                {metricTypes.map((type) => (
+                  <Dropdown.Item key={type} onClick={() => setMetric(type)}>
+                    {type}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
+            {metric === metricTypes[0] && <ChartVolume metrics={poolMetrics} />}
+            {metric === metricTypes[1] && (
+              <ChartTVL metrics={poolMetrics} poolItem={assetSwap} />
+            )}
+            {metric === metricTypes[2] && (
+              <ChartRevenue metrics={poolMetrics} />
+            )}
+            {metric === metricTypes[3] && (
+              <ChartSwapDemand metrics={poolMetrics} />
+            )}
           </Card.Body>
         </Card>
       )}
-      <Card className="card-480 p-2">
-        <ChartTVL metrics={poolMetrics} />
-      </Card>
     </>
   )
 }

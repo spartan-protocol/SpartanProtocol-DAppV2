@@ -153,7 +153,7 @@ const NewPool = () => {
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
-    if (spartaInput?.value >= 20000) {
+    if (spartaInput?.value >= 20000 && spartaInput?.value <= 100000) {
       setSpartaValid(true)
     } else {
       setSpartaValid(false)
@@ -366,7 +366,7 @@ const NewPool = () => {
                         disabled={!addrValid}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Minimum of 20,000 SPARTA required
+                        Must be between 20K - 100K SPARTA
                       </Form.Control.Feedback>
                     </InputGroup>
                     <InputGroup className="my-2">

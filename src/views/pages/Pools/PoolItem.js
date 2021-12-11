@@ -13,7 +13,13 @@ import {
 import { usePool } from '../../../store/pool'
 import { useSynth } from '../../../store/synth'
 import { useWeb3 } from '../../../store/web3/selector'
-import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import {
+  BN,
+  convertFromWei,
+  formatFromUnits,
+  formatFromWei,
+  formatShortNumber,
+} from '../../../utils/bigNumber'
 import { getAddresses } from '../../../utils/web3'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
@@ -109,7 +115,7 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320 pb-2 card-underlay card-alt">
+        <Card className="card-320 pb-2 card-alt">
           <Card.Header>
             <h6 className="mb-0 text-center">
               {newPool && (
@@ -274,13 +280,23 @@ const PoolItem = ({ asset }) => {
                 </OverlayTrigger>
               </Col>
               <Col className="text-end output-card my-auto">
-                <ProgressBar style={{ height: '5px' }} className="">
-                  <ProgressBar
-                    variant={getDepthPC() > 95 ? 'primary' : 'success'}
-                    key={1}
-                    now={getDepthPC()}
-                  />
-                </ProgressBar>
+                <Row>
+                  <Col xs="auto">
+                    {formatShortNumber(convertFromWei(baseAmount))}
+                  </Col>
+                  <Col className="my-auto px-0">
+                    <ProgressBar style={{ height: '5px' }} className="">
+                      <ProgressBar
+                        variant={getDepthPC() > 95 ? 'primary' : 'success'}
+                        key={1}
+                        now={getDepthPC()}
+                      />
+                    </ProgressBar>
+                  </Col>
+                  <Col xs="auto">
+                    {formatShortNumber(convertFromWei(asset.baseCap))}
+                  </Col>
+                </Row>
               </Col>
             </Row>
 
@@ -302,13 +318,29 @@ const PoolItem = ({ asset }) => {
                     </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card my-auto">
-                    <ProgressBar style={{ height: '5px' }} className="">
-                      <ProgressBar
-                        variant={getSynthCapPC() > 95 ? 'primary' : 'success'}
-                        key={1}
-                        now={getSynthCapPC()}
-                      />
-                    </ProgressBar>
+                    <Row>
+                      <Col xs="auto">
+                        {formatShortNumber(convertFromWei(getSynthSupply()))}
+                      </Col>
+                      <Col className="my-auto px-0">
+                        <ProgressBar style={{ height: '5px' }} className="">
+                          <ProgressBar
+                            variant={
+                              getSynthCapPC() > 95 ? 'primary' : 'success'
+                            }
+                            key={1}
+                            now={getSynthCapPC()}
+                          />
+                        </ProgressBar>
+                      </Col>
+                      <Col xs="auto">
+                        {formatShortNumber(
+                          convertFromWei(
+                            BN(getSynthSupply()).plus(getSynthStir()),
+                          ),
+                        )}
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
               )}
@@ -348,7 +380,30 @@ const PoolItem = ({ asset }) => {
                     />
                   </Col>
                 </Row>
+                <hr className="my-0" />
+              </>
+            )}
 
+            <Row className="my-1">
+              <Col xs="auto" className="text-card">
+                {t('spotPrice')}
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromUnits(tokenValueBase, 2)}
+                <Icon icon="spartav2" className="ms-1" size="15" />
+              </Col>
+            </Row>
+            {showDetails === true && (
+              <>
+                <Row className="my-1">
+                  <Col xs="auto" className="text-card">
+                    {t('TWAP')}
+                  </Col>
+                  <Col className="text-end output-card">
+                    {formatFromWei(oldRate, 2)}
+                    <Icon icon="spartav2" className="ms-1" size="15" />
+                  </Col>
+                </Row>
                 <Row className="my-1">
                   <Col xs="auto" className="text-card pe-0">
                     {t('poolRatio')}
@@ -439,17 +494,6 @@ const PoolItem = ({ asset }) => {
                 <hr className="my-0" />
               </>
             )}
-
-            <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('spotPrice')}
-              </Col>
-              <Col className="text-end output-card">
-                {formatFromUnits(tokenValueBase, 2)}
-                <Icon icon="spartav2" className="ms-1" size="15" />
-              </Col>
-            </Row>
-            {showDetails === true && <hr className="my-0" />}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">

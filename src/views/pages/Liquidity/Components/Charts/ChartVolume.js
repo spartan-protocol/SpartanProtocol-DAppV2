@@ -1,25 +1,23 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
+import { convertFromWei } from '../../../../../utils/bigNumber'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
-const ChartPrice = (props) => {
+const ChartVolume = (props) => {
   const getChartData = () => {
-    const data1 = []
+    const data = []
     const labels = []
-    const dataPoints = 30
+    const dataPoints = 60
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     const metrics = props.metrics
       ? props.metrics.slice(0, length).reverse()
       : []
     for (let i = 0; i < length; i++) {
-      // console.log(metrics[0].pool.id)
-      data1.push(metrics[i].tokenPrice)
+      data.push(convertFromWei(metrics[i].volUSD))
       labels.push(formatDate(metrics[i].timestamp))
     }
-    data1.push(props.tokenPrice)
-    labels.push('Current')
-    return [labels, data1]
+    return [labels, data]
   }
 
   const options = {
@@ -31,7 +29,7 @@ const ChartPrice = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'Token Price ($USD)',
+        text: 'Swap Volume in $USD',
       },
       legend: {
         display: false,
@@ -43,7 +41,7 @@ const ChartPrice = (props) => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Token Price ($USD)',
+        label: 'Volume ($USD)',
         data: getChartData()[1],
         fill: false,
         backgroundColor: '#228b22',
@@ -54,9 +52,9 @@ const ChartPrice = (props) => {
 
   return (
     <>
-      <Line data={data} options={options} />
+      <Bar data={data} options={options} />
     </>
   )
 }
 
-export default ChartPrice
+export default ChartVolume

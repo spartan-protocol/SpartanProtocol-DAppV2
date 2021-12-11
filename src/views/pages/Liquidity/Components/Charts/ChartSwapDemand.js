@@ -1,10 +1,11 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
+import { BN } from '../../../../../utils/bigNumber'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
-const ChartPrice = (props) => {
+const ChartSwapDemand = (props) => {
   const getChartData = () => {
-    const data1 = []
+    const data = []
     const labels = []
     const dataPoints = 30
     const length =
@@ -13,13 +14,13 @@ const ChartPrice = (props) => {
       ? props.metrics.slice(0, length).reverse()
       : []
     for (let i = 0; i < length; i++) {
-      // console.log(metrics[0].pool.id)
-      data1.push(metrics[i].tokenPrice)
+      const revenue = BN(metrics[i].volUSD)
+      const tvl = metrics[i].tvlUSD
+      const swapDemand = revenue.div(tvl).times(100)
+      data.push(swapDemand.toString())
       labels.push(formatDate(metrics[i].timestamp))
     }
-    data1.push(props.tokenPrice)
-    labels.push('Current')
-    return [labels, data1]
+    return [labels, data]
   }
 
   const options = {
@@ -31,7 +32,7 @@ const ChartPrice = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'Token Price ($USD)',
+        text: 'TVL Weighted Swap Demand in %',
       },
       legend: {
         display: false,
@@ -43,7 +44,7 @@ const ChartPrice = (props) => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Token Price ($USD)',
+        label: 'Swap Demand (%)',
         data: getChartData()[1],
         fill: false,
         backgroundColor: '#228b22',
@@ -59,4 +60,4 @@ const ChartPrice = (props) => {
   )
 }
 
-export default ChartPrice
+export default ChartSwapDemand

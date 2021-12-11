@@ -14,6 +14,7 @@ import { errorToDispatch, payloadToDispatch } from '../helpers'
 import { getTokenContract } from '../../utils/web3Contracts'
 import { convertToWei } from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
+import { checkResolved } from '../../utils/helpers'
 
 export const web3Loading = () => ({
   type: Types.WEB3_LOADING,
@@ -232,20 +233,31 @@ export const getEventArray = (array) => async (dispatch) => {
  */
 export const getRPCBlocks = () => async (dispatch) => {
   dispatch(web3Loading())
+
+  const withTimeout = (millis, promise) => {
+    const timeout = new Promise((resolve, reject) =>
+      setTimeout(
+        () => reject(new Error(`Timed out after ${millis} ms.`)),
+        millis,
+      ),
+    )
+    return Promise.race([promise, timeout])
+  }
+
   try {
     let awaitArray = []
     const network = getNetwork()
     const rpcUrls = network.chainId === 97 ? bscRpcsTN : bscRpcsMN
     for (let i = 0; i < rpcUrls.length; i++) {
       const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
-      awaitArray.push(provider.getBlockNumber())
+      awaitArray.push(withTimeout(3000, provider.getBlockNumber()))
     }
     awaitArray = await Promise.allSettled(awaitArray)
     let rpcs = []
     for (let i = 0; i < rpcUrls.length; i++) {
       rpcs.push({
         url: rpcUrls[i],
-        block: awaitArray[i].status === 'fulfilled' ? awaitArray[i].value : 0,
+        block: checkResolved(awaitArray[i], 0),
         good: awaitArray[i].status === 'fulfilled',
       })
     }

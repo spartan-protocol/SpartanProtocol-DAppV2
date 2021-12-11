@@ -5,7 +5,7 @@ import {
   Card,
   Col,
   InputGroup,
-  ProgressBar,
+  // ProgressBar,
   Row,
   FormControl,
 } from 'react-bootstrap'
@@ -21,9 +21,9 @@ import {
 import { communityWalletHoldings } from '../../../store/sparta/actions'
 import { useSparta } from '../../../store/sparta/selector'
 import {
-  BN,
+  // BN,
   convertToWei,
-  formatFromUnits,
+  // formatFromUnits,
   formatFromWei,
 } from '../../../utils/bigNumber'
 import { useWeb3 } from '../../../store/web3/selector'
@@ -62,13 +62,13 @@ const Overview = () => {
   const communityWallet = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
 
   const [recentTxns, setrecentTxns] = useState([])
-  const [bnbPrice, setbnbPrice] = useState(0)
+  // const [bnbPrice, setbnbPrice] = useState(0)
   const getHoldings = async () => {
     dispatch(communityWalletHoldings(wallet.account ? wallet : ''))
-    const _bnbPrice = await axios.get(
-      'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
-    )
-    setbnbPrice(_bnbPrice.data.binancecoin.usd)
+    // const _bnbPrice = await axios.get(
+    //   'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
+    // )
+    // setbnbPrice(_bnbPrice.data.binancecoin.usd)
     if (network.chainId === 56) {
       const options = {
         method: 'POST',
@@ -121,8 +121,8 @@ ethereum(network: $network){
           },
         },
       }
-      const feeBurnTally = await axios.request(options)
-      setrecentTxns(feeBurnTally.data.data.ethereum.transfers)
+      const recentDonations = await axios.request(options)
+      setrecentTxns(recentDonations.data.data.ethereum.transfers)
     }
   }
   useEffect(() => {
@@ -130,45 +130,45 @@ ethereum(network: $network){
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [totalUSD, settotalUSD] = useState(0)
-  useEffect(() => {
-    const _spartaUSD = BN(sparta.communityWallet?.sparta).times(
-      web3.spartaPrice,
-    )
-    const _bnbUSD = BN(sparta.communityWallet?.bnb).times(bnbPrice)
-    settotalUSD(
-      BN(_spartaUSD)
-        .plus(_bnbUSD)
-        .plus(sparta.communityWallet?.busd)
-        .plus(sparta.communityWallet?.usdt)
-        .toString(),
-    )
-  }, [
-    sparta.communityWallet?.sparta,
-    sparta.communityWallet?.bnb,
-    sparta.communityWallet?.busd,
-    sparta.communityWallet?.usdt,
-    bnbPrice,
-    web3.spartaPrice,
-  ])
+  // const [totalUSD, settotalUSD] = useState(0)
+  // useEffect(() => {
+  //   const _spartaUSD = BN(sparta.communityWallet?.sparta).times(
+  //     web3.spartaPrice,
+  //   )
+  //   const _bnbUSD = BN(sparta.communityWallet?.bnb).times(bnbPrice)
+  //   settotalUSD(
+  //     BN(_spartaUSD)
+  //       .plus(_bnbUSD)
+  //       .plus(sparta.communityWallet?.busd)
+  //       .plus(sparta.communityWallet?.usdt)
+  //       .toString(),
+  //   )
+  // }, [
+  //   sparta.communityWallet?.sparta,
+  //   sparta.communityWallet?.bnb,
+  //   sparta.communityWallet?.busd,
+  //   sparta.communityWallet?.usdt,
+  //   bnbPrice,
+  //   web3.spartaPrice,
+  // ])
 
-  const [totalWidth, settotalWidth] = useState(0)
-  useEffect(() => {
-    settotalWidth(
-      BN(totalUSD).div(9000000000000000000000).times(100).toString(),
-    )
-  }, [totalUSD])
+  // const [totalWidth, settotalWidth] = useState(0)
+  // useEffect(() => {
+  //   settotalWidth(
+  //     BN(totalUSD).div(9000000000000000000000).times(100).toString(),
+  //   )
+  // }, [totalUSD])
 
-  const [progColor, setprogColor] = useState('primary')
-  useEffect(() => {
-    let _progColor = 'primary'
-    if (totalWidth >= 56) {
-      _progColor = 'green'
-    } else if (totalWidth >= 44) {
-      _progColor = 'info'
-    }
-    setprogColor(_progColor)
-  }, [totalWidth])
+  // const [progColor, setprogColor] = useState('primary')
+  // useEffect(() => {
+  //   let _progColor = 'primary'
+  //   if (totalWidth >= 56) {
+  //     _progColor = 'green'
+  //   } else if (totalWidth >= 44) {
+  //     _progColor = 'info'
+  //   }
+  //   setprogColor(_progColor)
+  // }, [totalWidth])
 
   const [selectedAsset, setselectedAsset] = useState(false)
   const inputDonation = document.getElementById('inputDonation')
@@ -298,7 +298,24 @@ ethereum(network: $network){
                       </a>
                     </div>
                   </Col>
-                  <Col xs="12" className="my-2">
+                  <Col xs="12" className="my-1">
+                    Community Wallet Holdings:
+                    <br />
+                    <br />
+                    <li>
+                      BNB: {formatFromWei(sparta.communityWallet?.bnb, 2)}
+                    </li>
+                    <li>
+                      BUSD: {formatFromWei(sparta.communityWallet?.busd, 2)}
+                    </li>
+                    <li>
+                      USDT: {formatFromWei(sparta.communityWallet?.usdt, 2)}
+                    </li>
+                    <li>
+                      SPARTA: {formatFromWei(sparta.communityWallet?.sparta, 2)}
+                    </li>
+                  </Col>
+                  {/* <Col xs="12" className="my-2">
                     <ProgressBar style={{ height: '26px' }}>
                       <ProgressBar
                         variant={progColor}
@@ -317,9 +334,9 @@ ethereum(network: $network){
                         }
                       />
                     </ProgressBar>
-                  </Col>
+                  </Col> */}
 
-                  <Col xs="12" className="my-2">
+                  {/* <Col xs="12" className="my-2">
                     <ProgressBar style={{ height: '20px' }}>
                       <ProgressBar now="55.25" label="$5K (Global AMA)" />
                       <ProgressBar variant="black" now="0.25" />
@@ -329,7 +346,7 @@ ethereum(network: $network){
                         label="$4K (Turkey AMA)"
                       />
                     </ProgressBar>
-                  </Col>
+                  </Col> */}
                 </Row>
               </Card.Body>
             </Card>
@@ -494,6 +511,90 @@ ethereum(network: $network){
               <Card.Body>
                 <Row className="my-2">
                   <Col xs="auto" className="pe-0">
+                    <Icon icon="spartav2" size="35" />
+                  </Col>
+                  <Col>
+                    <Row>
+                      <Col xs="12" className="float-left output-card">
+                        Marketing/Educational Fund
+                        <div className="description">
+                          {t('budget')}: 100K SPARTA (Via DAO Grant)
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Row>
+                    <Col xs="12" className="output-card mt-1">
+                      A DAO proposal was created and successfully reached
+                      consensus to mint a 100K SPARTA marketing fund. Some
+                      community contributors are working on plans to utilize
+                      SPARTA from this fund ranging from educational videos to
+                      Youtube/Twitter marketing.
+                    </Col>
+                  </Row>
+                </Row>
+                <hr />
+                <Row className="my-2">
+                  <Col xs="auto" className="pe-0">
+                    <Icon icon="spartav2" size="35" />
+                  </Col>
+                  <Col>
+                    <Row>
+                      <Col xs="12" className="float-left output-card">
+                        #FridayFor300 Quiz
+                        <div className="description">
+                          {t('budget')}: 300 SPARTA per week (Via community
+                          donations)
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Row>
+                    <Col xs="12" className="output-card mt-1">
+                      Each week there is a #LearnToEarn quiz launched on Twitter
+                      for general positive community action and to help drive
+                      community members to actively engage with learning about
+                      the protocol. If you would like to sponsor a quiz prize,
+                      please donate exactly 300 SPARTA and let an admin know
+                      (Telegram or Twitter) if you would like to be tagged in
+                      the tweet as a sponsor.
+                    </Col>
+                  </Row>
+                </Row>
+                <hr />
+                <Row className="my-2">
+                  <Col xs="auto" className="pe-0">
+                    <Icon icon="bnb" size="35" />
+                  </Col>
+                  <Col>
+                    <Row>
+                      <Col xs="12" className="float-left output-card">
+                        Binance AMAs
+                        <div className="description">{t('budget')}: TBA</div>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Row>
+                    <Col xs="12" className="output-card mt-1">
+                      The Binance AMAs are still being organised by the
+                      community, donations for this campaign have been refunded
+                      pending finalisation. Once a 100% finalised plan has been
+                      completed we can open up donations for the AMAs again.
+                    </Col>
+                  </Row>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+
+          {/* <Col className="">
+            <Card className="card-480">
+              <Card.Header>
+                <Card.Title> {t('currentCampaigns')}</Card.Title>
+              </Card.Header>
+              <Card.Body>
+                <Row className="my-2">
+                  <Col xs="auto" className="pe-0">
                     <Icon icon="bnb" size="35" />
                   </Col>
                   <Col>
@@ -557,14 +658,14 @@ ethereum(network: $network){
                 </Row>
               </Card.Body>
             </Card>
-          </Col>
+          </Col> */}
           <Col className="">
             <Card className="card-480">
               <Card.Header>
                 <Card.Title> {t('recentDonations')}</Card.Title>
               </Card.Header>
               <Card.Body>
-                {recentTxns.length > 0 &&
+                {recentTxns?.length > 0 &&
                   recentTxns.map((i) => (
                     <Row key={i.transaction.hash} className="my-2">
                       <Col xs="auto" className="pe-0">
