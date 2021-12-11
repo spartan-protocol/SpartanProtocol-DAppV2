@@ -32,7 +32,7 @@ const ChartRevenue = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'Pool Revenue ($USD)',
+        text: 'Pool Revenue in $USD',
       },
       legend: {
         display: false,

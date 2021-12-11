@@ -1,17 +1,33 @@
-/* eslint-disable jsx-a11y/interactive-supports-focus */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react'
 import { Line } from 'react-chartjs-2'
-import { convertFromWei } from '../../../../../utils/bigNumber'
+import { useWeb3 } from '../../../../../store/web3'
+import { BN, convertFromWei } from '../../../../../utils/bigNumber'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
 const ChartTVL = (props) => {
+  const web3 = useWeb3()
+
+  const getTVL = () => {
+    let tvl = BN(0)
+    if (props.poolItem) {
+      tvl = tvl.plus(props.poolItem.baseAmount).times(2)
+    }
+    if (tvl > 0) {
+      return tvl.times(web3.spartaPrice)
+    }
+    return '0.00'
+  }
+
   const getChartData = () => {
     const data1 = []
     const labels = []
     const dataPoints = 30
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
+    if (props.poolItem) {
+      data1.push(convertFromWei(getTVL(), 0))
+      labels.push('Current')
+    }
     for (let i = 0; i < length; i++) {
       data1.push(convertFromWei(props.metrics[i].tvlUSD))
       labels.push(formatDate(props.metrics[i].timestamp))
@@ -28,7 +44,7 @@ const ChartTVL = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'TVL ($USD)',
+        text: 'Total Value Locked in $USD',
       },
       legend: {
         display: false,
