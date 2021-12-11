@@ -44,7 +44,7 @@ const ChartTVL = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'TVL ($USD)',
+        text: 'Total Value Locked in $USD',
       },
       legend: {
         display: false,
