@@ -6,7 +6,7 @@ const ChartPrice = (props) => {
   const getChartData = () => {
     const data1 = []
     const labels = []
-    const dataPoints = 29
+    const dataPoints = 30
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     const metrics = props.metrics

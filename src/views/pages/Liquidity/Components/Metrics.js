@@ -119,7 +119,7 @@ const Metrics = ({ assetSwap }) => {
         </Card>
       )}
       <Card className="card-480 p-2">
-        <ChartTVL metrics={poolMetrics} />
+        <ChartTVL metrics={poolMetrics} poolItem={assetSwap} />
       </Card>
     </>
   )

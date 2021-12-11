@@ -37,7 +37,7 @@ const ChartTVL = () => {
     if (pool.poolDetails) {
       data1.push(convertFromWei(getTVL(1), 0))
       data2.push(convertFromWei(getTVL(0), 0))
-      labels.push(formatDate(web3.metrics.global[length - 1].timestamp + 86400))
+      labels.push('Current')
     }
     for (let i = 0; i < length; i++) {
       data1.push(convertFromWei(web3.metrics.global[i].tvlUSD))
