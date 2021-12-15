@@ -113,9 +113,10 @@ const Supply = () => {
 
   const getTotalSupply = () => {
     const _totalSupply = sparta.globalDetails.totalSupply
-    const { oldTotalSupply } = sparta.globalDetails
+    // const { oldTotalSupply } = sparta.globalDetails
     const deadSupply = getDeadSupply()
-    const totalSupply = BN(_totalSupply).plus(oldTotalSupply).minus(deadSupply)
+    // const totalSupply = BN(_totalSupply).plus(oldTotalSupply).minus(deadSupply)
+    const totalSupply = BN(_totalSupply).minus(deadSupply)
     if (totalSupply > 0) {
       return totalSupply
     }
