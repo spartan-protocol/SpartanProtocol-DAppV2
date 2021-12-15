@@ -261,6 +261,11 @@ export const getRPCBlocks = () => async (dispatch) => {
         good: awaitArray[i].status === 'fulfilled',
       })
     }
+    const isEmpty = rpcs.filter((x) => x.good === true).length <= 0
+    if (isEmpty) {
+      rpcs[0].block = 100
+      rpcs[0].good = true
+    }
     rpcs = rpcs.sort((a, b) => b.block - a.block)
     // console.log(rpcs)
     dispatch(payloadToDispatch(Types.RPC_BLOCKS, rpcs))

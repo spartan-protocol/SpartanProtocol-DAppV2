@@ -353,7 +353,7 @@ export const getAbis = () => {
  * @returns {Object} RPC URL
  */
 export const changeRpcNew = (rpcUrls) => {
-  const minBlock = rpcUrls[0].block - 3
+  const minBlock = rpcUrls[0].block - 9
   const rpcs = rpcUrls.filter((x) => x.block >= minBlock)
   return rpcs
 }
