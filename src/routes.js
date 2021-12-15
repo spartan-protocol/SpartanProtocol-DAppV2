@@ -8,7 +8,7 @@ import Dao from './views/pages/Dao/Overview'
 import Upgrade from './views/pages/Upgrade/Overview'
 import Donate from './views/pages/Donate/Overview'
 import PU from './views/pages/PU/Overview'
-import Security from './views/pages/Security/Overview'
+import Partners from './views/pages/Partners/Overview'
 
 export const routes = [
   {
@@ -84,10 +84,10 @@ export const routes = [
   },
 
   {
-    path: '/security',
-    name: 'Security',
-    icon: 'lock',
-    component: Security,
+    path: '/partners',
+    name: 'Partners',
+    icon: 'handshake',
+    component: Partners,
     layout: '',
   },
 

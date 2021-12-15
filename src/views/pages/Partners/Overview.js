@@ -4,8 +4,9 @@ import Immunefi from '../../../assets/brands/immunefi-wht.svg'
 import C4 from '../../../assets/brands/C4.png'
 import Certik from '../../../assets/brands/certik.svg'
 import GitHub from '../../../assets/brands/github-wht.svg'
+import Moonlight from '../../../assets/brands/moonlight.svg'
 
-const Security = () => (
+const Partners = () => (
   <>
     <div className="content">
       <Row className="row-480 text-center">
@@ -82,9 +83,32 @@ const Security = () => (
             </Card.Footer>
           </Card>
         </Col>
+        <Col xs="auto">
+          <Card xs="auto" className="card-480">
+            <Card.Header className="">Moonlight</Card.Header>
+            <Card.Body>Top Holders Audit</Card.Body>
+            <Card.Footer>
+              <a
+                href="https://bubbles.moonlighttoken.com/token/0x3910db0600ea925f63c36ddb1351ab6e2c6eb102"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Button variant="info" className="w-100">
+                  <img
+                    src={Moonlight}
+                    alt="moonlight"
+                    height="26px"
+                    className="me-1"
+                  />{' '}
+                  Bubble Maps
+                </Button>
+              </a>
+            </Card.Footer>
+          </Card>
+        </Col>
       </Row>
     </div>
   </>
 )
 
-export default Security
+export default Partners

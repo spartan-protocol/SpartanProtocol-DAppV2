@@ -19,6 +19,7 @@ import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
+import { ReactComponent as Handshake } from '../../assets/icons/handshake.svg'
 import { ReactComponent as Helmet } from '../../assets/icons/helmet.svg'
 import { ReactComponent as Home } from '../../assets/icons/home.svg'
 import { ReactComponent as IconMissing } from '../../assets/icons/icon-missing.svg'
@@ -91,6 +92,7 @@ const icons = {
   copy: Copy,
   cycle: Cycle,
   fire: Fire,
+  handshake: Handshake,
   helmet: Helmet,
   home: Home,
   iconMissing: IconMissing,
