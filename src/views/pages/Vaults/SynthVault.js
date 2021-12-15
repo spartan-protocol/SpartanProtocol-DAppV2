@@ -77,20 +77,14 @@ const SynthVault = () => {
   }, [synth.synthDetails])
 
   const isLoadingApy = () => {
-    if (
-      !synth.totalWeight ||
-      !synth.globalDetails.recentRevenue ||
-      !synth.globalDetails.lastMonthRevenue
-    ) {
+    if (!synth.totalWeight || !web3.metrics) {
       return true
     }
     return false
   }
 
   const APY = () => {
-    const _recentRev = BN(synth.globalDetails.recentRevenue)
-    const _prevRev = BN(synth.globalDetails.lastMonthRevenue)
-    let revenue = _recentRev.isGreaterThan(_prevRev) ? _recentRev : _prevRev
+    let revenue = BN(web3.metrics.global[0].synthVault30Day)
     revenue = revenue.toString()
     const baseAmount = synth.totalWeight.toString()
     return formatFromUnits(calcSynthAPY(revenue, baseAmount), 2)

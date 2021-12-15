@@ -11,7 +11,6 @@ import {
   ProgressBar,
 } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
-import { useSynth } from '../../../store/synth'
 import { useWeb3 } from '../../../store/web3/selector'
 import {
   BN,
@@ -24,13 +23,10 @@ import { getAddresses } from '../../../utils/web3'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY } from '../../../utils/math/nonContract'
-import { getSynth } from '../../../utils/math/utils'
-import { stirCauldron } from '../../../utils/math/router'
 
 const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const synth = useSynth()
   const history = useHistory()
   const web3 = useWeb3()
   const addr = getAddresses()
@@ -83,7 +79,6 @@ const PoolItem = ({ asset, daoApy }) => {
   )
   const poolCapTooltip = Tooltip(t, 'poolCap')
   const poolRatioTooltip = Tooltip(t, 'poolRatio')
-  const synthCapTooltip = Tooltip(t, 'synthCap')
 
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
   const getRatioPC = () => BN(safety).times(100)
@@ -102,15 +97,6 @@ const PoolItem = ({ asset, daoApy }) => {
     }
     return 50
   }
-
-  const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
-  // const getSynthCap = () => BN(tokenAmount).times(asset.synthCapBPs).div(10000)
-  const getSynthSupply = () => _getSynth().totalSupply
-  const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
-  const getSynthCapPC = () =>
-    BN(getSynthSupply())
-      .div(BN(getSynthSupply()).plus(getSynthStir()))
-      .times(100)
 
   return (
     <>
@@ -326,51 +312,6 @@ const PoolItem = ({ asset, daoApy }) => {
                 </Row>
               </Col>
             </Row>
-
-            {showDetails === true &&
-              synth.synthDetails &&
-              asset.lastStirred > 0 && (
-                <Row className="my-1">
-                  <Col xs="auto" className="text-card pe-0">
-                    {t('synthCap')}
-                    <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
-                      <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
-                      </span>
-                    </OverlayTrigger>
-                  </Col>
-                  <Col className="text-end output-card my-auto">
-                    <Row>
-                      <Col xs="auto">
-                        {formatShortNumber(convertFromWei(getSynthSupply()))}
-                      </Col>
-                      <Col className="my-auto px-0">
-                        <ProgressBar style={{ height: '5px' }} className="">
-                          <ProgressBar
-                            variant={
-                              getSynthCapPC() > 95 ? 'primary' : 'success'
-                            }
-                            key={1}
-                            now={getSynthCapPC()}
-                          />
-                        </ProgressBar>
-                      </Col>
-                      <Col xs="auto">
-                        {formatShortNumber(
-                          convertFromWei(
-                            BN(getSynthSupply()).plus(getSynthStir()),
-                          ),
-                        )}
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              )}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">

@@ -8,7 +8,7 @@ const initialState = {
   synthDetails: false,
   txn: [],
   newSynth: {},
-  totalWeight: '0',
+  totalWeight: false,
 }
 
 export const synthReducer = (state = initialState, action) => {
