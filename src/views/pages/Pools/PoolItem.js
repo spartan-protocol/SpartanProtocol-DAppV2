@@ -27,7 +27,7 @@ import { calcAPY } from '../../../utils/math/nonContract'
 import { getSynth } from '../../../utils/math/utils'
 import { stirCauldron } from '../../../utils/math/router'
 
-const PoolItem = ({ asset }) => {
+const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
@@ -115,7 +115,7 @@ const PoolItem = ({ asset }) => {
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320 pb-2 card-alt">
+        <Card className="card-320 pb-2 card-alt" style={{ minHeight: '310px' }}>
           <Card.Header>
             <h6 className="mb-0 text-center">
               {newPool && (
@@ -212,7 +212,7 @@ const PoolItem = ({ asset }) => {
           </Card.Header>
           <Card.Body>
             <Row className="mb-2">
-              <Col xs="auto" className="pe-0">
+              <Col xs="auto" className="pe-0 my-auto">
                 <img
                   src={token.symbolUrl}
                   className="rounded-circle"
@@ -220,7 +220,7 @@ const PoolItem = ({ asset }) => {
                   height="45"
                 />
               </Col>
-              <Col xs="auto" className="pe-0">
+              <Col xs="auto" className="pe-0 my-auto">
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
                   <OverlayTrigger
@@ -236,7 +236,7 @@ const PoolItem = ({ asset }) => {
                   </OverlayTrigger>
                 </p>
               </Col>
-              <Col className="text-end mt-1 p-0 pr-2">
+              <Col className="text-end my-auto pe-0">
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
                     <Icon
@@ -247,8 +247,35 @@ const PoolItem = ({ asset }) => {
                     />
                   </span>
                 </OverlayTrigger>
-                <p className="text-sm-label d-inline-block">APY</p>
-                <p className="output-card">{APY}%</p>
+                <p className="text-sm-label mb-0 d-inline-block">APY</p>
+                <p className="output-card">
+                  <Icon
+                    icon="pool"
+                    size="17"
+                    fill={isLightMode ? 'black' : 'white'}
+                    className="me-1 mb-1"
+                  />
+                  {APY}%
+                  {curated && daoApy > 0 && (
+                    <>
+                      <br />
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(t, 'apySynth')}
+                      >
+                        <span role="button">
+                          <Icon
+                            icon="lock"
+                            size="17"
+                            fill={isLightMode ? 'black' : 'white'}
+                            className="me-1 mb-1"
+                          />
+                        </span>
+                      </OverlayTrigger>
+                      {daoApy}%
+                    </>
+                  )}
+                </p>
               </Col>
               <Col
                 xs="auto"

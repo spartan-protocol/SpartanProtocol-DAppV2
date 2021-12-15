@@ -16,7 +16,7 @@ export const Tooltip = (t, tooltipId, variable) => {
     },
     {
       id: 'apySynth',
-      title: 'synthVaultApy',
+      title: 'vaultApy',
       body: 'vaultApyInfo',
     },
     {
