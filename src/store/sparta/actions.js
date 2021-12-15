@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import * as Types from './types'
 import {
   getFallenSpartansContract,
-  getSpartaV1Contract,
+  // getSpartaV1Contract,
   getSpartaV2Contract,
 } from '../../utils/web3Contracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
@@ -21,7 +21,7 @@ export const spartaLoading = () => ({
 
 export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
   dispatch(spartaLoading())
-  const contract1 = getSpartaV1Contract(null, rpcUrls)
+  // const contract1 = getSpartaV1Contract(null, rpcUrls)
   const contract2 = getSpartaV2Contract(null, rpcUrls)
 
   try {
@@ -34,7 +34,7 @@ export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
       contract2.callStatic.secondsPerEra(),
       // contract.callStatic.nextEraTime(),
       // contract1.callStatic.secondsPerEra(),
-      contract1.callStatic.totalSupply(),
+      // contract1.callStatic.totalSupply(),
       contract2.callStatic.balanceOf(deadAddress),
     ]
     awaitArray = await Promise.all(awaitArray)
@@ -47,8 +47,8 @@ export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
       secondsPerEra: awaitArray[3].toString(),
       // nextEraTime: awaitArray[],
       // oldSecondsPerEra: awaitArray[].toString(),
-      oldTotalSupply: awaitArray[4].toString(),
-      deadSupply: awaitArray[5].toString(),
+      // oldTotalSupply: awaitArray[].toString(),
+      deadSupply: awaitArray[4].toString(),
     }
     dispatch(payloadToDispatch(Types.SPARTA_GLOBAL_DETAILS, globalDetails))
   } catch (error) {

@@ -16,7 +16,7 @@ export const Tooltip = (t, tooltipId, variable) => {
     },
     {
       id: 'apySynth',
-      title: 'synthVaultApy',
+      title: 'vaultApy',
       body: 'vaultApyInfo',
     },
     {
@@ -131,6 +131,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'synthCap',
       title: 'synthCap',
       body: 'synthCapInfo',
+    },
+    {
+      id: 'synthView',
+      title: 'synthViewTitle',
+      body: 'synthViewInfo',
     },
     {
       id: 'yourForge',

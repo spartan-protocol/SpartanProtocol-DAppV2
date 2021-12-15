@@ -212,6 +212,8 @@ export const callGlobalMetrics = async () => {
       txCount
       tvlSPARTA
       tvlUSD
+      daoVault30Day
+      synthVault30Day
     }
   }
 `

@@ -29,8 +29,8 @@ export const getSynthGlobalDetails = (rpcUrls) => async (dispatch) => {
       contract.callStatic.erasToEarn(),
       contract.callStatic.vaultClaim(),
       contract.callStatic.genesis(),
-      contract.callStatic.map30DVaultRevenue(),
-      contract.callStatic.mapPast30DVaultRevenue(),
+      // contract.callStatic.map30DVaultRevenue(),
+      // contract.callStatic.mapPast30DVaultRevenue(),
       getSynthFactoryContract(null, rpcUrls).callStatic.synthCount(),
     ]
     awaitArray = await Promise.all(awaitArray)
@@ -39,9 +39,9 @@ export const getSynthGlobalDetails = (rpcUrls) => async (dispatch) => {
       erasToEarn: awaitArray[1].toString(),
       vaultClaim: awaitArray[2].toString(),
       genesis: awaitArray[3].toString(),
-      recentRevenue: awaitArray[4].toString(),
-      lastMonthRevenue: awaitArray[5].toString(),
-      synthCount: awaitArray[6].toString(),
+      // recentRevenue: awaitArray[].toString(),
+      // lastMonthRevenue: awaitArray[].toString(),
+      synthCount: awaitArray[4].toString(),
     }
     dispatch(payloadToDispatch(Types.SYNTH_GLOBAL_DETAILS, globalDetails))
   } catch (error) {
