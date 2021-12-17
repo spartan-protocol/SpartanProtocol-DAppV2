@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Tabs, Tab } from 'react-bootstrap'
+import { useLocation } from 'react-router-dom'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
 import BondVault from './BondVault'
@@ -11,13 +12,21 @@ import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 
 const Vaults = () => {
   const { t } = useTranslation()
+  const location = useLocation()
+
   const [mode, setMode] = useState('Dao')
   const pool = usePool()
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
+
   const getNet = () => {
     setnetwork(getNetwork())
   }
+
+  const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
+  useEffect(() => {
+    if (tabParam1) setMode(tabParam1)
+  }, [])
   useEffect(() => {
     if (trigger0 === 0) {
       getNet()
