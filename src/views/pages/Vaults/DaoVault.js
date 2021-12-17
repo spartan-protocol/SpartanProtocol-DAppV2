@@ -166,7 +166,7 @@ const DaoVault = () => {
   }
 
   const isLoadingApy = () => {
-    if (!bond.totalWeight || !dao.totalWeight) {
+    if (!bond.totalWeight || !dao.totalWeight || !web3.metrics.global) {
       return true
     }
     return false
