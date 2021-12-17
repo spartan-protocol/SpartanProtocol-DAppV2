@@ -21,7 +21,6 @@ import {
   formatFromWei,
   formatShortNumber,
 } from '../../../utils/bigNumber'
-import { getAddresses } from '../../../utils/web3'
 import { Icon } from '../../../components/Icons/icons'
 import spartaIconAlt from '../../../assets/tokens/sparta-synth.svg'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
@@ -35,7 +34,6 @@ const SynthItem = ({ asset, synthApy }) => {
   const synth = useSynth()
   const history = useHistory()
   const web3 = useWeb3()
-  const addr = getAddresses()
   const isLightMode = window.localStorage.getItem('theme')
   const { tokenAddress, baseAmount, tokenAmount, newPool, curated } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -324,13 +322,10 @@ const SynthItem = ({ asset, synthApy }) => {
                   size="sm"
                   variant="info"
                   className="w-100 rounded-pill"
-                  onClick={() =>
-                    history.push(
-                      `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
-                    )
-                  }
+                  disabled={!asset.curated}
+                  onClick={() => history.push('/vaults?tab=Synth')}
                 >
-                  {t('swap')}
+                  {t('stake')}
                 </Button>
               </Col>
               <Col>
@@ -338,26 +333,11 @@ const SynthItem = ({ asset, synthApy }) => {
                   size="sm"
                   variant="info"
                   className="w-100 rounded-pill"
-                  onClick={() =>
-                    history.push(`/liquidity?asset1=${tokenAddress}`)
-                  }
+                  onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
                 >
-                  {t('join')}
+                  {t('forge')}
                 </Button>
               </Col>
-              {asset.curated && (
-                <Col>
-                  <Button
-                    size="sm"
-                    variant="info"
-                    className="w-100 rounded-pill"
-                    disabled={!asset.curated}
-                    onClick={() => history.push('/vaults')}
-                  >
-                    {t('stake')}
-                  </Button>
-                </Col>
-              )}
             </Row>
           </Card.Footer>
         </Card>

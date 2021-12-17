@@ -156,7 +156,7 @@ const Overview = () => {
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
   const isSynthVaultLoading = () => {
-    if (!synth.totalWeight || !web3.metrics) {
+    if (!synth.totalWeight || !web3.metrics.global) {
       return true
     }
     return false

@@ -77,7 +77,7 @@ const SynthVault = () => {
   }, [synth.synthDetails])
 
   const isLoadingApy = () => {
-    if (!synth.totalWeight || !web3.metrics) {
+    if (!synth.totalWeight || !web3.metrics.global) {
       return true
     }
     return false
