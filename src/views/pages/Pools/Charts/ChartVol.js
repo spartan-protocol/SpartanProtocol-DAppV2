@@ -2,6 +2,7 @@ import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useWeb3 } from '../../../../store/web3'
 import { convertFromWei } from '../../../../utils/bigNumber'
+import { getUnixStartOfDay } from '../../../../utils/helpers'
 import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartVol = () => {
@@ -10,6 +11,7 @@ const ChartVol = () => {
   const getChartData = () => {
     const data = []
     const labels = []
+    const colors = []
     const dataPoints = 30
     const length =
       web3.metrics.global.length >= dataPoints
@@ -17,9 +19,15 @@ const ChartVol = () => {
         : web3.metrics.global.length
     for (let i = 0; i < length; i++) {
       data.push(convertFromWei(web3.metrics.global[i].volUSD))
-      labels.push(formatDate(web3.metrics.global[i].timestamp))
+      if (web3.metrics.global[i].timestamp < getUnixStartOfDay()) {
+        labels.push(formatDate(web3.metrics.global[i].timestamp))
+        colors.push('#228b22')
+      } else {
+        labels.push('Today (Incomplete)')
+        colors.push('#228b2273')
+      }
     }
-    return [labels.reverse(), data.reverse()]
+    return [labels.reverse(), data.reverse(), colors.reverse()]
   }
 
   const options = {
@@ -39,19 +47,6 @@ const ChartVol = () => {
     },
   }
 
-  const dataColorArray = () => {
-    const array = []
-    const { length } = getChartData()[1]
-    for (let i = 0; i < length; i++) {
-      if (i < length - 1) {
-        array.push('#228b22')
-      } else {
-        array.push('#228b2273')
-      }
-    }
-    return array
-  }
-
   const data = {
     labels: getChartData()[0],
     datasets: [
@@ -59,7 +54,7 @@ const ChartVol = () => {
         label: 'Swap Volume ($USD)',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: dataColorArray(),
+        backgroundColor: getChartData()[2],
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
     ],
