@@ -1,5 +1,5 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import { BN } from '../../../../../utils/bigNumber'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
@@ -40,6 +40,32 @@ const ChartSwapDemand = (props) => {
     },
   }
 
+  const dataColorArray = () => {
+    const array = []
+    const { length } = getChartData()[1]
+    for (let i = 0; i < length; i++) {
+      if (i < length - 1) {
+        array.push('#228b22')
+      } else {
+        array.push('#228b2273')
+      }
+    }
+    return array
+  }
+
+  const dataShowLine = () => {
+    const array = []
+    const { length } = getChartData()[1]
+    for (let i = 0; i < length; i++) {
+      if (i < length - 1) {
+        array.push(true)
+      } else {
+        array.push(false)
+      }
+    }
+    return array
+  }
+
   const data = {
     labels: getChartData()[0],
     datasets: [
@@ -47,15 +73,16 @@ const ChartSwapDemand = (props) => {
         label: 'Swap Demand (%)',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: '#228b22',
+        backgroundColor: dataColorArray(),
         borderColor: 'rgba(34, 139, 34, 0.2)',
+        showLine: dataShowLine(),
       },
     ],
   }
 
   return (
     <>
-      <Line data={data} options={options} />
+      <Bar data={data} options={options} />
     </>
   )
 }

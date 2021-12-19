@@ -10,7 +10,7 @@ const ChartVol = () => {
   const getChartData = () => {
     const data = []
     const labels = []
-    const dataPoints = 60
+    const dataPoints = 30
     const length =
       web3.metrics.global.length >= dataPoints
         ? dataPoints
@@ -39,6 +39,19 @@ const ChartVol = () => {
     },
   }
 
+  const dataColorArray = () => {
+    const array = []
+    const { length } = getChartData()[1]
+    for (let i = 0; i < length; i++) {
+      if (i < length - 1) {
+        array.push('#228b22')
+      } else {
+        array.push('#228b2273')
+      }
+    }
+    return array
+  }
+
   const data = {
     labels: getChartData()[0],
     datasets: [
@@ -46,7 +59,7 @@ const ChartVol = () => {
         label: 'Swap Volume ($USD)',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: '#228b22',
+        backgroundColor: dataColorArray(),
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
     ],
