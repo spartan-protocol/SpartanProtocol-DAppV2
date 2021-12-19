@@ -9,7 +9,7 @@ const ChartSwapDemand = (props) => {
     const data = []
     const labels = []
     const colors = []
-    const dataPoints = 30
+    const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     const metrics = props.metrics

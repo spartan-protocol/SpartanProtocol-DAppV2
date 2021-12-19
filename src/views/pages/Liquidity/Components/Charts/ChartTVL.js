@@ -21,7 +21,7 @@ const ChartTVL = (props) => {
   const getChartData = () => {
     const data1 = []
     const labels = []
-    const dataPoints = 30
+    const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     if (props.poolItem) {
