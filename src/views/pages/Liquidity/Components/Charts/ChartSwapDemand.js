@@ -1,13 +1,15 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import { BN } from '../../../../../utils/bigNumber'
+import { getUnixStartOfDay } from '../../../../../utils/helpers'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
 const ChartSwapDemand = (props) => {
   const getChartData = () => {
     const data = []
     const labels = []
-    const dataPoints = 30
+    const colors = []
+    const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     const metrics = props.metrics
@@ -18,9 +20,15 @@ const ChartSwapDemand = (props) => {
       const tvl = metrics[i].tvlUSD
       const swapDemand = revenue.div(tvl).times(100)
       data.push(swapDemand.toString())
-      labels.push(formatDate(metrics[i].timestamp))
+      if (metrics[i].timestamp < getUnixStartOfDay()) {
+        labels.push(formatDate(metrics[i].timestamp))
+        colors.push('#228b22')
+      } else {
+        labels.push('Today (Incomplete)')
+        colors.push('#228b2273')
+      }
     }
-    return [labels, data]
+    return [labels, data, colors]
   }
 
   const options = {
@@ -47,7 +55,7 @@ const ChartSwapDemand = (props) => {
         label: 'Swap Demand (%)',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: '#228b22',
+        backgroundColor: getChartData()[2],
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
     ],
@@ -55,7 +63,7 @@ const ChartSwapDemand = (props) => {
 
   return (
     <>
-      <Line data={data} options={options} />
+      <Bar data={data} options={options} />
     </>
   )
 }

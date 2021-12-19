@@ -1,13 +1,15 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { convertFromWei } from '../../../../../utils/bigNumber'
+import { getUnixStartOfDay } from '../../../../../utils/helpers'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
 const ChartVolume = (props) => {
   const getChartData = () => {
     const data = []
     const labels = []
-    const dataPoints = 60
+    const colors = []
+    const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
     const metrics = props.metrics
@@ -15,9 +17,15 @@ const ChartVolume = (props) => {
       : []
     for (let i = 0; i < length; i++) {
       data.push(convertFromWei(metrics[i].volUSD))
-      labels.push(formatDate(metrics[i].timestamp))
+      if (metrics[i].timestamp < getUnixStartOfDay()) {
+        labels.push(formatDate(metrics[i].timestamp))
+        colors.push('#228b22')
+      } else {
+        labels.push('Today (Incomplete)')
+        colors.push('#228b2273')
+      }
     }
-    return [labels, data]
+    return [labels, data, colors]
   }
 
   const options = {
@@ -44,7 +52,7 @@ const ChartVolume = (props) => {
         label: 'Volume ($USD)',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: '#228b22',
+        backgroundColor: getChartData()[2],
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
     ],

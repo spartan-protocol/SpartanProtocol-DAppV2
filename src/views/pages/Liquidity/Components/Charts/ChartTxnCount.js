@@ -1,26 +1,30 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
-import { BN, convertFromWei } from '../../../../../utils/bigNumber'
+import { Bar } from 'react-chartjs-2'
+import { getUnixStartOfDay } from '../../../../../utils/helpers'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
-const ChartRevenue = (props) => {
+const ChartTxnCount = (props) => {
   const getChartData = () => {
-    const data1 = []
+    const data = []
     const labels = []
+    const colors = []
     const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
-    let accumulative = BN(0)
     const metrics = props.metrics
       ? props.metrics.slice(0, length).reverse()
       : []
     for (let i = 0; i < length; i++) {
-      const revenue = BN(metrics[i].incentivesUSD).plus(metrics[i].feesUSD)
-      accumulative = accumulative.plus(revenue)
-      data1.push(convertFromWei(accumulative))
-      labels.push(formatDate(metrics[i].timestamp))
+      data.push(metrics[i].txCount)
+      if (metrics[i].timestamp < getUnixStartOfDay()) {
+        labels.push(formatDate(metrics[i].timestamp))
+        colors.push('#228b22')
+      } else {
+        labels.push('Today (Incomplete)')
+        colors.push('#228b2273')
+      }
     }
-    return [labels, data1]
+    return [labels, data, colors]
   }
 
   const options = {
@@ -32,7 +36,7 @@ const ChartRevenue = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'Pool Revenue in $USD',
+        text: 'Transaction Count',
       },
       legend: {
         display: false,
@@ -44,27 +48,20 @@ const ChartRevenue = (props) => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Revenue ($USD)',
+        label: 'Transactions',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: '#228b22',
+        backgroundColor: getChartData()[2],
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
-      // {
-      //   label: 'TVL (SPARTA)',
-      //   data: getChartData()[2],
-      //   fill: false,
-      //   backgroundColor: 'rgb(255, 99, 132)',
-      //   borderColor: 'rgba(255, 99, 132, 0.2)',
-      // },
     ],
   }
 
   return (
     <>
-      <Line data={data} options={options} />
+      <Bar data={data} options={options} />
     </>
   )
 }
 
-export default ChartRevenue
+export default ChartTxnCount

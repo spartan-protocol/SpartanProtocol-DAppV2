@@ -36,6 +36,13 @@ export const formatDate = (unixTime) => {
   return date.toLocaleDateString()
 }
 
+export const getUnixStartOfDay = () => {
+  const now = new Date()
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const timestamp = startOfDay / 1000
+  return timestamp
+}
+
 /**
  * Check the status of a Promise.allSettled() item and return value or error message
  * @returns {uint} contract
