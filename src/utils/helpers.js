@@ -37,9 +37,17 @@ export const formatDate = (unixTime) => {
 }
 
 export const getUnixStartOfDay = () => {
-  const now = new Date()
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const now = new Date().getTime()
+  const startOfDay = now - (now % 86400000)
   const timestamp = startOfDay / 1000
+  return timestamp
+}
+
+export const getUnixEndOfDay = () => {
+  const now = new Date().getTime()
+  const startOfDay = now - (now % 86400000)
+  const endOfDay = startOfDay + 86400000
+  const timestamp = endOfDay / 1000
   return timestamp
 }
 
