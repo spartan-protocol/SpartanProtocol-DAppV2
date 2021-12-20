@@ -178,10 +178,7 @@ const Upgrade = () => {
                     {t('claim')}
                   </Col>
                   <Col className="text-end output-card">
-                    {sparta.globalDetails.feeOnTransfer > 0
-                      ? formatFromWei(getClaimAmount())
-                      : 'Loading'}{' '}
-                    SPARTAv2
+                    {formatFromWei(getClaimAmount())} SPARTAv2
                   </Col>
                 </Row>
                 <Row className="my-2">
