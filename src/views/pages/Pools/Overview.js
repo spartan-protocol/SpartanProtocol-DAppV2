@@ -15,7 +15,7 @@ import { usePool } from '../../../store/pool'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import { convertToWei, BN, formatFromUnits } from '../../../utils/bigNumber'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
-import { allListedAssets, bondVaultWeight } from '../../../store/bond/actions'
+import { bondVaultWeight } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../../components/Icons/icons'
@@ -47,7 +47,6 @@ const Overview = () => {
   const [synthApy, setSynthApy] = useState('0')
 
   const [trigger0, settrigger0] = useState(0)
-  const [trigger1, settrigger1] = useState(0)
 
   const getData = () => {
     setnetwork(getNetwork())
@@ -63,21 +62,6 @@ const Overview = () => {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
-
-  useEffect(() => {
-    if (trigger1 === 0 && tempChains.includes(network.chainId)) {
-      dispatch(allListedAssets(web3.rpcs))
-    }
-    const timer = setTimeout(() => {
-      if (tempChains.includes(network.chainId)) {
-        dispatch(allListedAssets(web3.rpcs))
-        settrigger1(trigger1 + 1)
-      }
-    }, 10000)
-
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1])
 
   useEffect(() => {
     const checkWeight = () => {

@@ -1,27 +1,15 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Row, Col, Card } from 'react-bootstrap'
-import { useDispatch } from 'react-redux'
-import { allListedAssets, useBond } from '../../../../store/bond'
 import { usePool } from '../../../../store/pool/selector'
 import { useSynth } from '../../../../store/synth/selector'
-import { useWeb3 } from '../../../../store/web3'
 import { BN, convertToWei } from '../../../../utils/bigNumber'
-import { getPool } from '../../../../utils/math/utils'
 import { formatShortString, getAddresses } from '../../../../utils/web3'
 
 const AssetSelect = (props) => {
   const pool = usePool()
-  const bond = useBond()
   const synth = useSynth()
-  const web3 = useWeb3()
   const addr = getAddresses()
-  const dispatch = useDispatch()
   const filter = [addr.spartav1, addr.spartav2]
-
-  useEffect(() => {
-    dispatch(allListedAssets(web3.rpcs))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -67,41 +55,6 @@ const AssetSelect = (props) => {
         finArray.push({
           symbolUrl: getToken(assets[i].tokenAddress).symbolUrl,
           symbol: `${getToken(assets[i].tokenAddress).symbol}p`,
-          addr: assets[i].address,
-        })
-      }
-      return finArray
-    }
-    if (props.selectedType === 'LIST_BOND') {
-      const assets = pool.tokenDetails?.filter(
-        (asset) =>
-          !filter.includes(asset.address) &&
-          getPool(asset.address, pool.poolDetails).curated &&
-          !bond.listedAssets.includes(
-            getPool(asset.address, pool.poolDetails).address,
-          ),
-      )
-      for (let i = 0; i < assets.length; i++) {
-        finArray.push({
-          symbolUrl: assets[i].symbolUrl,
-          symbol: assets[i].symbol,
-          addr: assets[i].address,
-        })
-      }
-      return finArray
-    }
-    if (props.selectedType === 'DELIST_BOND') {
-      const assets = pool.tokenDetails?.filter(
-        (asset) =>
-          !filter.includes(asset.address) &&
-          bond.listedAssets.includes(
-            getPool(asset.address, pool.poolDetails).address,
-          ),
-      )
-      for (let i = 0; i < assets.length; i++) {
-        finArray.push({
-          symbolUrl: assets[i].symbolUrl,
-          symbol: assets[i].symbol,
           addr: assets[i].address,
         })
       }
