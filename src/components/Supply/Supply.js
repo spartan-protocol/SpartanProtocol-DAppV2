@@ -127,17 +127,13 @@ const Supply = () => {
     const totalSupply = BN(getTotalSupply())
     const reserveSparta = BN(reserve.globalDetails.spartaBalance)
     const reservePOLSparta = getPOLWeights(reserve.polDetails)
-    const bondSparta = BN(bond.global.spartaRemaining)
     const valid =
       totalSupply > 0 &&
       reserve.globalDetails &&
       reserve.polDetails &&
       bond.global
     if (valid) {
-      return totalSupply
-        .minus(reserveSparta)
-        .minus(reservePOLSparta)
-        .minus(bondSparta)
+      return totalSupply.minus(reserveSparta).minus(reservePOLSparta)
     }
     return '0.00'
   }

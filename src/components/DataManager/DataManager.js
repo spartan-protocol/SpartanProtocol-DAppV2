@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { bondGlobalDetails } from '../../store/bond'
 import {
   getCuratedPools,
   getListedPools,
@@ -13,7 +12,6 @@ import {
 } from '../../store/pool'
 import { getReserveGlobalDetails } from '../../store/reserve'
 import { useRouter } from '../../store/router/selector'
-import { useBond } from '../../store/bond/selector'
 import { useDao } from '../../store/dao/selector'
 import { useSynth } from '../../store/synth/selector'
 import { getSpartaGlobalDetails, useSparta } from '../../store/sparta'
@@ -32,7 +30,6 @@ const DataManager = () => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
 
-  const bond = useBond()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
@@ -96,7 +93,6 @@ const DataManager = () => {
       dispatch(getListedTokens(web3.rpcs)) // TOKEN ARRAY
       dispatch(getCuratedPools(web3.rpcs)) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails(web3.rpcs)) // SPARTA GLOBAL DETAILS
-      dispatch(bondGlobalDetails(web3.rpcs)) // BOND GLOBAL DETAILS
       dispatch(getReserveGlobalDetails(web3.rpcs)) // RESERVE GLOBAL DETAILS
     }
   }
@@ -189,15 +185,6 @@ const DataManager = () => {
     checkDetails()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.listedPools])
-
-  /** Update txnArray whenever a new bond txn is picked up */
-  useEffect(() => {
-    if (bond.txn.txnType) {
-      addTxn(wallet.account, bond.txn)
-      bond.txn = []
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bond.txn])
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {

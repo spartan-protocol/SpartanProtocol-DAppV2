@@ -4,7 +4,6 @@ import { Col, Row, ButtonGroup, Button } from 'react-bootstrap'
 import { useLocation } from 'react-router-dom'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
-import LiqBond from './LiqBond'
 import { usePool } from '../../../store/pool'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { getNetwork, tempChains } from '../../../utils/web3'
@@ -74,19 +73,11 @@ const Overview = () => {
                 >
                   {t('remove')}
                 </Button>
-                <Button
-                  active={activeTab === '4'}
-                  onClick={() => setActiveTab('4')}
-                  variant="dark"
-                >
-                  {t('bond')}
-                </Button>
               </ButtonGroup>
               {!isLoading() ? (
                 <>
                   {activeTab === '1' && <LiqAdd />}
                   {activeTab === '2' && <LiqRemove />}
-                  {activeTab === '4' && <LiqBond />}
                 </>
               ) : (
                 <Col className="card-480">

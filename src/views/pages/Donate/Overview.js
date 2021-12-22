@@ -303,16 +303,28 @@ ethereum(network: $network){
                     <br />
                     <br />
                     <li>
-                      BNB: {formatFromWei(sparta.communityWallet?.bnb, 2)}
+                      BNB:{' '}
+                      {!sparta.communityWallet
+                        ? 'Loading...'
+                        : formatFromWei(sparta.communityWallet.bnb, 2)}
                     </li>
                     <li>
-                      BUSD: {formatFromWei(sparta.communityWallet?.busd, 2)}
+                      BUSD:{' '}
+                      {!sparta.communityWallet
+                        ? 'Loading...'
+                        : formatFromWei(sparta.communityWallet.busd, 2)}
                     </li>
                     <li>
-                      USDT: {formatFromWei(sparta.communityWallet?.usdt, 2)}
+                      USDT:{' '}
+                      {!sparta.communityWallet
+                        ? 'Loading...'
+                        : formatFromWei(sparta.communityWallet.usdt, 2)}
                     </li>
                     <li>
-                      SPARTA: {formatFromWei(sparta.communityWallet?.sparta, 2)}
+                      SPARTA:{' '}
+                      {!sparta.communityWallet
+                        ? 'Loading...'
+                        : formatFromWei(sparta.communityWallet.sparta, 2)}
                     </li>
                   </Col>
                   {/* <Col xs="12" className="my-2">
@@ -375,9 +387,11 @@ ethereum(network: $network){
                                 BNB - Binance Coin BEP20 Token
                                 <div className="description">
                                   {t('yourWallet')}:{' '}
-                                  {formatFromWei(
-                                    sparta.communityWallet?.userBnb,
-                                  )}
+                                  {!sparta.communityWallet
+                                    ? 'Loading...'
+                                    : formatFromWei(
+                                        sparta.communityWallet?.userBnb,
+                                      )}
                                 </div>
                               </Col>
                             </Row>
@@ -398,9 +412,11 @@ ethereum(network: $network){
                                 BUSD - Binance-Peg BUSD Token
                                 <div className="description">
                                   {t('yourWallet')}:{' '}
-                                  {formatFromWei(
-                                    sparta.communityWallet?.userBusd,
-                                  )}
+                                  {!sparta.communityWallet
+                                    ? 'Loading...'
+                                    : formatFromWei(
+                                        sparta.communityWallet?.userBusd,
+                                      )}
                                 </div>
                               </Col>
                             </Row>
@@ -421,9 +437,11 @@ ethereum(network: $network){
                                 USDT - Binance-Peg USD-T Token
                                 <div className="description">
                                   {t('yourWallet')}:{' '}
-                                  {formatFromWei(
-                                    sparta.communityWallet?.userUsdt,
-                                  )}
+                                  {!sparta.communityWallet
+                                    ? 'Loading...'
+                                    : formatFromWei(
+                                        sparta.communityWallet?.userUsdt,
+                                      )}
                                 </div>
                               </Col>
                             </Row>
@@ -443,9 +461,11 @@ ethereum(network: $network){
                                 SPARTA - SpartanProtocol v2 Token
                                 <div className="description">
                                   {t('yourWallet')}:{' '}
-                                  {formatFromWei(
-                                    sparta.communityWallet?.userSparta,
-                                  )}
+                                  {!sparta.communityWallet
+                                    ? 'Loading...'
+                                    : formatFromWei(
+                                        sparta.communityWallet?.userSparta,
+                                      )}
                                 </div>
                               </Col>
                             </Row>

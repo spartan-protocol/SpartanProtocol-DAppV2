@@ -35,7 +35,6 @@ import { Icon } from '../../../components/Icons/icons'
 import { useDao } from '../../../store/dao/selector'
 import { useSynth } from '../../../store/synth/selector'
 import { usePool } from '../../../store/pool'
-import { useBond } from '../../../store/bond'
 import { getToken } from '../../../utils/math/utils'
 import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
@@ -45,7 +44,6 @@ const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
-  const bond = useBond()
   const pool = usePool()
   const web3 = useWeb3()
   const reserve = useReserve()
@@ -82,24 +80,25 @@ const NewProposal = () => {
       !pool.tokenDetails ||
       !pool.poolDetails ||
       !synth.synthDetails ||
-      !dao.proposal ||
-      !bond.listedAssets
+      !dao.proposal
     ) {
       return true
     }
     return false
   }
 
-  const tempHide = ['DAO', 'ROUTER', 'UTILS', 'RESERVE']
-
-  const showAddrInput = ['Address', 'Grant']
-  const noAddrInput = [
+  const tempHide = [
+    'DAO',
+    'ROUTER',
+    'UTILS',
+    'RESERVE',
     'LIST_BOND',
     'DELIST_BOND',
-    'REALISE',
-    'REMOVE_CURATED_POOL',
-    'ADD_CURATED_POOL',
+    'GET_SPARTA',
   ]
+
+  const showAddrInput = ['Address', 'Grant']
+  const noAddrInput = ['REALISE', 'REMOVE_CURATED_POOL', 'ADD_CURATED_POOL']
   const addrInput = document.getElementById('addrInput')
   const handleAddrChange = (newValue) => {
     if (addrInput) {
@@ -248,12 +247,6 @@ const NewProposal = () => {
         onClick={() => setShowModal(true)}
         disabled={isLoading()}
       >
-        {/* <Icon
-          icon="plus"
-          fill={isLightMode ? 'black' : 'white'}
-          size="20"
-          className="me-1 mb-1"
-        /> */}
         {t('newProposal')}
       </Button>
       {showModal && (

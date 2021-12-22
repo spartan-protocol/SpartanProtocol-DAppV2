@@ -19,12 +19,7 @@ import { getNetwork, tempChains } from '../../../utils/web3'
 import { convertTimeUnits } from '../../../utils/math/nonContract'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
 import { usePool } from '../../../store/pool/selector'
-import {
-  allListedAssets,
-  bondVaultWeight,
-  getBondDetails,
-  useBond,
-} from '../../../store/bond'
+import { bondVaultWeight, getBondDetails, useBond } from '../../../store/bond'
 import { getSynthDetails } from '../../../store/synth/actions'
 import { useSynth } from '../../../store/synth/selector'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -98,7 +93,6 @@ const Overview = () => {
       dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
       dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
       dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-      dispatch(allListedAssets(web3.rpcs))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.global, dao.newProp])
