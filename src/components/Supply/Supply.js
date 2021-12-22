@@ -12,7 +12,6 @@ import {
   OverlayTrigger,
 } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { useBond } from '../../store/bond'
 import { useReserve } from '../../store/reserve/selector'
 import { useSparta } from '../../store/sparta/selector'
 import { usePool } from '../../store/pool/selector'
@@ -36,7 +35,6 @@ const Supply = () => {
   const pool = usePool()
   const sparta = useSparta()
   const reserve = useReserve()
-  const bond = useBond()
   const target = useRef(null)
   const dispatch = useDispatch()
 
@@ -127,11 +125,7 @@ const Supply = () => {
     const totalSupply = BN(getTotalSupply())
     const reserveSparta = BN(reserve.globalDetails.spartaBalance)
     const reservePOLSparta = getPOLWeights(reserve.polDetails)
-    const valid =
-      totalSupply > 0 &&
-      reserve.globalDetails &&
-      reserve.polDetails &&
-      bond.global
+    const valid = totalSupply > 0 && reserve.globalDetails && reserve.polDetails
     if (valid) {
       return totalSupply.minus(reserveSparta).minus(reservePOLSparta)
     }
