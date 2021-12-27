@@ -36,6 +36,21 @@ export const formatDate = (unixTime) => {
   return date.toLocaleDateString()
 }
 
+export const getUnixStartOfDay = () => {
+  const now = new Date().getTime()
+  const startOfDay = now - (now % 86400000)
+  const timestamp = startOfDay / 1000
+  return timestamp
+}
+
+export const getUnixEndOfDay = () => {
+  const now = new Date().getTime()
+  const startOfDay = now - (now % 86400000)
+  const endOfDay = startOfDay + 86400000
+  const timestamp = endOfDay / 1000
+  return timestamp
+}
+
 /**
  * Check the status of a Promise.allSettled() item and return value or error message
  * @returns {uint} contract

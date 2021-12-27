@@ -76,10 +76,15 @@ const SynthVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [synth.synthDetails])
 
+  const isLoadingApy = () => {
+    if (!synth.totalWeight || !web3.metrics.global) {
+      return true
+    }
+    return false
+  }
+
   const APY = () => {
-    const _recentRev = BN(synth.globalDetails.recentRevenue)
-    const _prevRev = BN(synth.globalDetails.lastMonthRevenue)
-    let revenue = _recentRev.isGreaterThan(_prevRev) ? _recentRev : _prevRev
+    let revenue = BN(web3.metrics.global[0].synthVault30Day)
     revenue = revenue.toString()
     const baseAmount = synth.totalWeight.toString()
     return formatFromUnits(calcSynthAPY(revenue, baseAmount), 2)
@@ -154,7 +159,9 @@ const SynthVault = () => {
                         />
                       </span>
                     </OverlayTrigger>
-                    <p className="output-card d-inline-block ms-2">{APY()}%</p>
+                    <p className="output-card d-inline-block ms-2">
+                      {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
+                    </p>
                   </>
                 )}
               </Col>
@@ -198,8 +205,8 @@ const SynthVault = () => {
                     role="button"
                   >
                     {!showUsd
-                      ? formatFromWei(getTotalWeight())
-                      : formatFromWei(getUSDFromSparta())}
+                      ? formatFromWei(getTotalWeight(), 0)
+                      : formatFromWei(getUSDFromSparta(), 0)}
                     <Icon
                       icon={showUsd ? 'usd' : 'spartav2'}
                       size="20"

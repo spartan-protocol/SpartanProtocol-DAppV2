@@ -353,7 +353,7 @@ export const getAbis = () => {
  * @returns {Object} RPC URL
  */
 export const changeRpcNew = (rpcUrls) => {
-  const minBlock = rpcUrls[0].block - 3
+  const minBlock = rpcUrls[0].block - 9
   const rpcs = rpcUrls.filter((x) => x.block >= minBlock)
   return rpcs
 }
@@ -464,24 +464,24 @@ const parseTxnLogs = (txn, txnType) => {
     abiArray = abisTN
   }
   // BOND.TXN TYPES
-  if (txnType === 'bondDeposit') {
-    const iface = new ethers.utils.Interface(abiArray.dao)
-    const log = txn.logs[txn.logs.length - 1]
-    // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** NEEDS CHECKING ***
-    const bondLog = iface.parseLog(log).args
-    return {
-      txnHash: txn.transactionHash,
-      txnIndex: txn.transactionIndex,
-      txnType,
-      txnTypeIcon: txnType,
-      sendAmnt1: bondLog.depositAmount.toString(),
-      sendToken1: bondLog.tokenAddress,
-      send1: member,
-      recAmnt1: bondLog.bondedLP.toString(),
-      recToken1: bondLog.poolAddress,
-      rec1: 'BondVault',
-    }
-  }
+  // if (txnType === 'bondDeposit') {
+  //   const iface = new ethers.utils.Interface(abiArray.dao)
+  //   const log = txn.logs[txn.logs.length - 1]
+  //   // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** NEEDS CHECKING ***
+  //   const bondLog = iface.parseLog(log).args
+  //   return {
+  //     txnHash: txn.transactionHash,
+  //     txnIndex: txn.transactionIndex,
+  //     txnType,
+  //     txnTypeIcon: txnType,
+  //     sendAmnt1: bondLog.depositAmount.toString(),
+  //     sendToken1: bondLog.tokenAddress,
+  //     send1: member,
+  //     recAmnt1: bondLog.bondedLP.toString(),
+  //     recToken1: bondLog.poolAddress,
+  //     rec1: 'BondVault',
+  //   }
+  // }
   if (txnType === 'bondClaim') {
     const iface = new ethers.utils.Interface(abiArray.bondVault)
     const log = txn.logs[txn.logs.length - 1]

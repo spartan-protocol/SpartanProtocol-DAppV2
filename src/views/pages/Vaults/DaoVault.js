@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
-import { BN, formatFromWei } from '../../../utils/bigNumber'
+import { BN, formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { useDao } from '../../../store/dao/selector'
 import {
   daoHarvest,
@@ -20,7 +20,7 @@ import { useReserve } from '../../../store/reserve/selector'
 import { useSparta } from '../../../store/sparta'
 import { bondVaultWeight, getBondDetails, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
-import { getVaultWeights } from '../../../utils/math/nonContract'
+import { calcDaoAPY, getVaultWeights } from '../../../utils/math/nonContract'
 import { getPool, getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardDao } from '../../../utils/math/dao'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -29,6 +29,7 @@ import { getAddresses } from '../../../utils/web3'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 
 const DaoVault = () => {
+  const isLightMode = window.localStorage.getItem('theme')
   const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -164,6 +165,20 @@ const DaoVault = () => {
     return true
   }
 
+  const isLoadingApy = () => {
+    if (!bond.totalWeight || !dao.totalWeight || !web3.metrics.global) {
+      return true
+    }
+    return false
+  }
+
+  const APY = () => {
+    let revenue = BN(web3.metrics.global[0].daoVault30Day)
+    revenue = revenue.toString()
+    const baseAmount = getTotalWeight().toString()
+    return formatFromUnits(calcDaoAPY(revenue, baseAmount), 2)
+  }
+
   const checkValid = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
@@ -187,7 +202,30 @@ const DaoVault = () => {
     <Row>
       <Col xs="auto" className="">
         <Card xs="auto" className="card-320" style={{ minHeight: '202' }}>
-          <Card.Header className="">{t('daoVaultDetails')}</Card.Header>
+          <Card.Header className="">
+            <Row>
+              <Col>{t('daoVault')}</Col>
+              <Col xs="auto" className="text-center m-auto">
+                <p className="text-sm-label d-inline-block">APY</p>
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={Tooltip(t, 'apySynth')}
+                >
+                  <span role="button">
+                    <Icon
+                      icon="info"
+                      className="ms-1 mt-1"
+                      size="17"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
+                  </span>
+                </OverlayTrigger>
+                <p className="output-card d-inline-block ms-2">
+                  {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
+                </p>
+              </Col>
+            </Row>
+          </Card.Header>
           {!isLoading() ? (
             <Card.Body>
               <Row className="my-1">
@@ -213,7 +251,7 @@ const DaoVault = () => {
                   role="button"
                 >
                   {!showUsd
-                    ? formatFromWei(getTotalWeight())
+                    ? formatFromWei(getTotalWeight(), 0)
                     : getUSDFromSparta()}
                   <Icon
                     icon={showUsd ? 'usd' : 'spartav2'}
@@ -281,6 +319,7 @@ const DaoVault = () => {
                                 dao.daoDetails,
                                 bond.bondDetails,
                               ),
+                              0,
                             )
                           : getUSDFromSpartaOwnWeight()}
                         <Icon

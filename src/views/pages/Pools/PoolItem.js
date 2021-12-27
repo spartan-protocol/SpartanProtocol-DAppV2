@@ -11,7 +11,6 @@ import {
   ProgressBar,
 } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
-import { useSynth } from '../../../store/synth'
 import { useWeb3 } from '../../../store/web3/selector'
 import {
   BN,
@@ -24,13 +23,10 @@ import { getAddresses } from '../../../utils/web3'
 import { Icon } from '../../../components/Icons/icons'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
 import { calcAPY } from '../../../utils/math/nonContract'
-import { getSynth } from '../../../utils/math/utils'
-import { stirCauldron } from '../../../utils/math/router'
 
-const PoolItem = ({ asset }) => {
+const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const synth = useSynth()
   const history = useHistory()
   const web3 = useWeb3()
   const addr = getAddresses()
@@ -83,7 +79,6 @@ const PoolItem = ({ asset }) => {
   )
   const poolCapTooltip = Tooltip(t, 'poolCap')
   const poolRatioTooltip = Tooltip(t, 'poolRatio')
-  const synthCapTooltip = Tooltip(t, 'synthCap')
 
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
   const getRatioPC = () => BN(safety).times(100)
@@ -103,19 +98,10 @@ const PoolItem = ({ asset }) => {
     return 50
   }
 
-  const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
-  // const getSynthCap = () => BN(tokenAmount).times(asset.synthCapBPs).div(10000)
-  const getSynthSupply = () => _getSynth().totalSupply
-  const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
-  const getSynthCapPC = () =>
-    BN(getSynthSupply())
-      .div(BN(getSynthSupply()).plus(getSynthStir()))
-      .times(100)
-
   return (
     <>
       <Col xs="auto">
-        <Card className="card-320 pb-2 card-alt">
+        <Card className="card-320 pb-2 card-alt" style={{ minHeight: '310px' }}>
           <Card.Header>
             <h6 className="mb-0 text-center">
               {newPool && (
@@ -212,7 +198,7 @@ const PoolItem = ({ asset }) => {
           </Card.Header>
           <Card.Body>
             <Row className="mb-2">
-              <Col xs="auto" className="pe-0">
+              <Col xs="auto" className="pe-0 my-auto">
                 <img
                   src={token.symbolUrl}
                   className="rounded-circle"
@@ -220,7 +206,7 @@ const PoolItem = ({ asset }) => {
                   height="45"
                 />
               </Col>
-              <Col xs="auto" className="pe-0">
+              <Col xs="auto" className="pe-0 my-auto">
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
                   <OverlayTrigger
@@ -236,7 +222,7 @@ const PoolItem = ({ asset }) => {
                   </OverlayTrigger>
                 </p>
               </Col>
-              <Col className="text-end mt-1 p-0 pr-2">
+              <Col className="text-end my-auto pe-0">
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
                     <Icon
@@ -247,8 +233,35 @@ const PoolItem = ({ asset }) => {
                     />
                   </span>
                 </OverlayTrigger>
-                <p className="text-sm-label d-inline-block">APY</p>
-                <p className="output-card">{APY}%</p>
+                <p className="text-sm-label mb-0 d-inline-block">APY</p>
+                <p className="output-card">
+                  <Icon
+                    icon="pool"
+                    size="17"
+                    fill={isLightMode ? 'black' : 'white'}
+                    className="me-1 mb-1"
+                  />
+                  {APY}%
+                  {curated && daoApy > 0 && (
+                    <>
+                      <br />
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(t, 'apySynth')}
+                      >
+                        <span role="button">
+                          <Icon
+                            icon="lock"
+                            size="17"
+                            fill={isLightMode ? 'black' : 'white'}
+                            className="me-1 mb-1"
+                          />
+                        </span>
+                      </OverlayTrigger>
+                      {daoApy}%
+                    </>
+                  )}
+                </p>
               </Col>
               <Col
                 xs="auto"
@@ -299,51 +312,6 @@ const PoolItem = ({ asset }) => {
                 </Row>
               </Col>
             </Row>
-
-            {showDetails === true &&
-              synth.synthDetails &&
-              asset.lastStirred > 0 && (
-                <Row className="my-1">
-                  <Col xs="auto" className="text-card pe-0">
-                    {t('synthCap')}
-                    <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
-                      <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
-                      </span>
-                    </OverlayTrigger>
-                  </Col>
-                  <Col className="text-end output-card my-auto">
-                    <Row>
-                      <Col xs="auto">
-                        {formatShortNumber(convertFromWei(getSynthSupply()))}
-                      </Col>
-                      <Col className="my-auto px-0">
-                        <ProgressBar style={{ height: '5px' }} className="">
-                          <ProgressBar
-                            variant={
-                              getSynthCapPC() > 95 ? 'primary' : 'success'
-                            }
-                            key={1}
-                            now={getSynthCapPC()}
-                          />
-                        </ProgressBar>
-                      </Col>
-                      <Col xs="auto">
-                        {formatShortNumber(
-                          convertFromWei(
-                            BN(getSynthSupply()).plus(getSynthStir()),
-                          ),
-                        )}
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              )}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">

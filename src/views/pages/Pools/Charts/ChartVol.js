@@ -2,6 +2,7 @@ import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { useWeb3 } from '../../../../store/web3'
 import { convertFromWei } from '../../../../utils/bigNumber'
+import { getUnixStartOfDay } from '../../../../utils/helpers'
 import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartVol = () => {
@@ -10,16 +11,23 @@ const ChartVol = () => {
   const getChartData = () => {
     const data = []
     const labels = []
-    const dataPoints = 60
+    const colors = []
+    const dataPoints = 30
     const length =
       web3.metrics.global.length >= dataPoints
         ? dataPoints
         : web3.metrics.global.length
     for (let i = 0; i < length; i++) {
       data.push(convertFromWei(web3.metrics.global[i].volUSD))
-      labels.push(formatDate(web3.metrics.global[i].timestamp))
+      if (web3.metrics.global[i].timestamp < getUnixStartOfDay()) {
+        labels.push(formatDate(web3.metrics.global[i].timestamp))
+        colors.push('#228b22')
+      } else {
+        labels.push('Today (Incomplete)')
+        colors.push('#228b2273')
+      }
     }
-    return [labels.reverse(), data.reverse()]
+    return [labels.reverse(), data.reverse(), colors.reverse()]
   }
 
   const options = {
@@ -46,7 +54,7 @@ const ChartVol = () => {
         label: 'Swap Volume ($USD)',
         data: getChartData()[1],
         fill: false,
-        backgroundColor: '#228b22',
+        backgroundColor: getChartData()[2],
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
     ],

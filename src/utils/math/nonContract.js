@@ -339,6 +339,27 @@ export const calcAPY = (pool, recentDivis) => {
 }
 
 /**
+ * Calculate daoVault APY
+ * @param revenue @param baseAmount
+ * @returns {number} apy
+ */
+export const calcDaoAPY = (revenue, baseAmount) => {
+  let apr = '0'
+  const fallback = BN(convertToWei(10000))
+  const _baseAmount = BN(baseAmount)
+  const fallbackDepth = _baseAmount.isLessThan(fallback)
+    ? fallback
+    : _baseAmount
+  apr = BN(revenue).times(12).div(fallbackDepth).times(100)
+  if (apr > 0) {
+    const apy1 = BN(apr).div(100).div(54).plus(1)
+    const apy = apy1.pow(54).minus(1).times(100)
+    return apy
+  }
+  return '0.00'
+}
+
+/**
  * Calculate synthVault APY
  * @param revenue @param baseAmount
  * @returns {number} apy
@@ -362,8 +383,8 @@ export const calcSynthAPY = (revenue, baseAmount) => {
       .times(100)
   }
   if (apr > 0) {
-    const apy1 = BN(apr).div(100).div(365).plus(1)
-    const apy = apy1.pow(365).minus(1).times(100)
+    const apy1 = BN(apr).div(100).div(54).plus(1)
+    const apy = apy1.pow(54).minus(1).times(100)
     return apy
   }
   return '0.00'

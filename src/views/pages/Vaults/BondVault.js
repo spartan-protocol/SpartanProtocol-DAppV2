@@ -8,7 +8,7 @@ import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { getNetwork, tempChains } from '../../../utils/web3'
 import BondItem from './BondVaultItem'
-import { allListedAssets, getBondDetails, useBond } from '../../../store/bond'
+import { getBondDetails, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
 
 const BondVault = () => {
@@ -37,9 +37,6 @@ const BondVault = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trigger0])
 
-  // const getToken = (tokenAddress) =>
-  //   pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
   const tryParse = (data) => {
     try {
       return JSON.parse(data)
@@ -58,7 +55,6 @@ const BondVault = () => {
       ) {
         if (listedPools?.length > 0) {
           dispatch(getBondDetails(listedPools, wallet, web3.rpcs))
-          dispatch(allListedAssets(web3.rpcs))
         }
       }
     }
@@ -67,7 +63,7 @@ const BondVault = () => {
   }, [pool.listedPools])
 
   const isLoading = () => {
-    if (!bond.bondDetails || !bond.listedAssets) {
+    if (!bond.bondDetails) {
       return true
     }
     return false
@@ -102,16 +98,22 @@ const BondVault = () => {
           </Col>
 
           {!isLoading() &&
+          bond.bondDetails.filter((asset) => asset.lastBlockTime > 0).length >
+            0 ? (
             bond.bondDetails
-              .filter(
-                (asset) =>
-                  asset.lastBlockTime > 0 ||
-                  bond.listedAssets.includes(asset.address),
-              )
+              .filter((asset) => asset.lastBlockTime > 0)
               .sort((a, b) => b.staked - a.staked)
               .map((asset) => (
                 <BondItem asset={asset} key={asset.tokenAddress} />
-              ))}
+              ))
+          ) : (
+            <Col xs="auto">
+              <Card className="card-320" style={{ minHeight: '245' }}>
+                <Card.Header>Bond Positions</Card.Header>
+                <Card.Body>You have no active Bond positions</Card.Body>
+              </Card>
+            </Col>
+          )}
         </>
       )}
       {!tempChains.includes(network.chainId) && <WrongNetwork />}

@@ -12,6 +12,7 @@ import { BN, formatFromUnits } from '../../../../utils/bigNumber'
 import ChartRevenue from './Charts/ChartRevenue'
 import ChartVolume from './Charts/ChartVolume'
 import ChartSwapDemand from './Charts/ChartSwapDemand'
+import ChartTxnCount from './Charts/ChartTxnCount'
 
 const Metrics = ({ assetSwap }) => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -19,9 +20,18 @@ const Metrics = ({ assetSwap }) => {
   const pool = usePool()
   const { t } = useTranslation()
 
-  const metricTypes = ['Swap Volume', 'TVL (Depth)', 'Revenue', 'Swap Demand']
+  const metricTypes = [
+    'Swap Volume',
+    'TVL (Depth)',
+    'Revenue',
+    'Swap Demand',
+    'Txn Count',
+  ]
+
+  const periodTypes = [7, 14, 30, 60, 365]
 
   const [metric, setMetric] = useState(metricTypes[0])
+  const [period, setPeriod] = useState(periodTypes[2])
   const [poolMetrics, setPoolMetrics] = useState([])
 
   /** Get the current block from a main RPC */
@@ -119,27 +129,51 @@ const Metrics = ({ assetSwap }) => {
             </Row>
           </Card.Header>
           <Card.Body className="">
-            <Dropdown className="text-center">
-              <Dropdown.Toggle variant="info" size="sm">
-                {metric}
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {metricTypes.map((type) => (
-                  <Dropdown.Item key={type} onClick={() => setMetric(type)}>
-                    {type}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-            {metric === metricTypes[0] && <ChartVolume metrics={poolMetrics} />}
+            <div className="text-center">
+              <Dropdown className="d-inline">
+                <Dropdown.Toggle variant="info" size="sm" className="mx-1">
+                  {metric}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {metricTypes.map((type) => (
+                    <Dropdown.Item key={type} onClick={() => setMetric(type)}>
+                      {type}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+              <Dropdown className="d-inline">
+                <Dropdown.Toggle variant="info" size="sm" className="mx-1">
+                  {`${period} Days`}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  {periodTypes.map((type) => (
+                    <Dropdown.Item key={type} onClick={() => setPeriod(type)}>
+                      {`${type} Days`}
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+
+            {metric === metricTypes[0] && (
+              <ChartVolume metrics={poolMetrics} period={period} />
+            )}
             {metric === metricTypes[1] && (
-              <ChartTVL metrics={poolMetrics} poolItem={assetSwap} />
+              <ChartTVL
+                metrics={poolMetrics}
+                poolItem={assetSwap}
+                period={period}
+              />
             )}
             {metric === metricTypes[2] && (
-              <ChartRevenue metrics={poolMetrics} />
+              <ChartRevenue metrics={poolMetrics} period={period} />
             )}
             {metric === metricTypes[3] && (
-              <ChartSwapDemand metrics={poolMetrics} />
+              <ChartSwapDemand metrics={poolMetrics} period={period} />
+            )}
+            {metric === metricTypes[4] && (
+              <ChartTxnCount metrics={poolMetrics} period={period} />
             )}
           </Card.Body>
         </Card>

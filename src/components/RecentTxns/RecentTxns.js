@@ -5,7 +5,6 @@ import Pagination from 'react-bootstrap/Pagination'
 import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../utils/web3'
-import { useBond } from '../../store/bond'
 import { useDao } from '../../store/dao/selector'
 import { usePool } from '../../store/pool/selector'
 import { useSparta } from '../../store/sparta/selector'
@@ -26,7 +25,6 @@ const RecentTxns = () => {
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const bond = useBond()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
@@ -105,7 +103,6 @@ const RecentTxns = () => {
   }, [
     active,
     wallet.account,
-    bond.txn,
     dao.txn,
     dao.propTxn,
     pool.txn,
@@ -238,7 +235,6 @@ const RecentTxns = () => {
       !pool.tokenDetails ||
       !pool.poolDetails ||
       !dao.daoDetails ||
-      !bond.bondDetails ||
       !synth.synthDetails
     ) {
       return true

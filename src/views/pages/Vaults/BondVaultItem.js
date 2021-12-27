@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
 import { Row, Col, Card, Button } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { Icon } from '../../../components/Icons/icons'
-import { claimBond, useBond } from '../../../store/bond'
+import { claimBond } from '../../../store/bond'
 import { calcBondedLP } from '../../../utils/math/bondVault'
 import {
   formatDate,
@@ -21,17 +20,16 @@ import { useWeb3 } from '../../../store/web3'
 
 const BondItem = (props) => {
   const pool = usePool()
-  const bond = useBond()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const web3 = useWeb3()
   const addr = getAddresses()
   const { asset } = props
   const { t } = useTranslation()
+
   const [txnLoading, setTxnLoading] = useState(false)
-  // const [showDetails, setShowDetails] = useState(false)
+
   const token = () => getToken(asset.tokenAddress, pool.tokenDetails)
-  const isLightMode = window.localStorage.getItem('theme')
 
   const getEndDate = (_bondedLP, _lastClaim, _claimRate) => {
     const timeStamp = BN(Date.now()).div(1000)
@@ -43,10 +41,6 @@ const BondItem = (props) => {
     const endDate = timeStamp.plus(secondsUntil.minus(secondsSince))
     return endDate.toFixed(0)
   }
-
-  // const toggleCollapse = () => {
-  //   setShowDetails(!showDetails)
-  // }
 
   const handleTxn = async () => {
     setTxnLoading(true)
@@ -69,6 +63,9 @@ const BondItem = (props) => {
     }
     if (!enoughGas()) {
       return [false, t('checkBnbGas')]
+    }
+    if (calcBondedLP(asset) <= 0) {
+      return [false, t('noClaim')]
     }
     return [true, t('claim')]
   }
@@ -94,48 +91,8 @@ const BondItem = (props) => {
                   style={{ right: '10px', bottom: '7px' }}
                 />
               </Col>
-              <Col xs="auto" className="pl-1">
+              <Col xs="auto" className="py-auto">
                 <h3 className="mb-0">{token().symbol}p</h3>
-                <Link to={`/liquidity?tab=4&asset1=${token().address}`}>
-                  <p className="text-sm-label-alt">
-                    {t('bond')} {token().symbol}
-                    <Icon
-                      icon="scan"
-                      size="13"
-                      fill={isLightMode ? 'black' : 'white'}
-                      className="ms-1"
-                    />
-                  </p>
-                </Link>
-              </Col>
-
-              <Col className="text-end my-auto">
-                {/* {showDetails && (
-                  <span
-                    aria-hidden="true"
-                    role="button"
-                    onClick={() => toggleCollapse()}
-                  >
-                    <Icon
-                      icon="arrowUp"
-                      size="20"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
-                  </span>
-                )}
-                {!showDetails && (
-                  <span
-                    aria-hidden="true"
-                    role="button"
-                    onClick={() => toggleCollapse()}
-                  >
-                    <Icon
-                      icon="arrowDown"
-                      size="20"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
-                  </span>
-                )} */}
               </Col>
             </Row>
             <Row className="my-1 mt-2">
@@ -189,13 +146,6 @@ const BondItem = (props) => {
           </Card.Body>
           <Card.Footer>
             <Row className="text-center">
-              {bond.listedAssets.includes(asset.address) && (
-                <Col className="px-2">
-                  <Link to={`/liquidity?tab=4&asset1=${token().address}`}>
-                    <Button className="w-100">{t('bond')}</Button>
-                  </Link>
-                </Col>
-              )}
               <Col className="px-2">
                 <Button
                   className="w-100"

@@ -19,6 +19,7 @@ import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
+import { ReactComponent as Handshake } from '../../assets/icons/handshake.svg'
 import { ReactComponent as Helmet } from '../../assets/icons/helmet.svg'
 import { ReactComponent as Home } from '../../assets/icons/home.svg'
 import { ReactComponent as IconMissing } from '../../assets/icons/icon-missing.svg'
@@ -29,6 +30,7 @@ import { ReactComponent as MenuOpen } from '../../assets/icons/menu-open.svg'
 import { ReactComponent as MenuClose } from '../../assets/icons/menu-close.svg'
 import { ReactComponent as Mint } from '../../assets/icons/mint.svg'
 import { ReactComponent as Moon } from '../../assets/icons/moon.svg'
+import { ReactComponent as Pool } from '../../assets/icons/pool.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
@@ -90,6 +92,7 @@ const icons = {
   copy: Copy,
   cycle: Cycle,
   fire: Fire,
+  handshake: Handshake,
   helmet: Helmet,
   home: Home,
   iconMissing: IconMissing,
@@ -100,6 +103,7 @@ const icons = {
   menuClose: MenuClose,
   mint: Mint,
   moon: Moon,
+  pool: Pool,
   plus: Plus,
   scan: Scan,
   search: Search,

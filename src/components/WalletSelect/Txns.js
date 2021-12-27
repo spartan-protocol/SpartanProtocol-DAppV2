@@ -2,10 +2,8 @@ import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import { Row, Table, Button, Col, Alert } from 'react-bootstrap'
 import Pagination from 'react-bootstrap/Pagination'
-// import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../utils/web3'
-import { useBond } from '../../store/bond'
 import { useDao } from '../../store/dao/selector'
 import { usePool } from '../../store/pool/selector'
 import { useSparta } from '../../store/sparta/selector'
@@ -21,10 +19,8 @@ import txnTypes from './txnTypes'
 import { Icon } from '../Icons/icons'
 
 const Txns = () => {
-  // const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const bond = useBond()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
@@ -109,7 +105,6 @@ const Txns = () => {
   }, [
     activePage,
     wallet.account,
-    bond.txn,
     dao.txn,
     dao.propTxn,
     pool.txn,
@@ -271,7 +266,6 @@ const Txns = () => {
       !pool.tokenDetails ||
       !pool.poolDetails ||
       !dao.daoDetails ||
-      !bond.bondDetails ||
       !synth.synthDetails
     ) {
       return true
