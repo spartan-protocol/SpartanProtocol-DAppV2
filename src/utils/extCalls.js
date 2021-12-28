@@ -160,6 +160,50 @@ export const getMemberPositions = async (memberAddr) => {
   }
 }
 
+//
+export const getMemberSynthPositions = async (memberAddr) => {
+  const block = await getSubGraphBlock()
+  const member = memberAddr.toString().toLowerCase()
+  const tokensQuery = `
+  query {
+    members(where: {id: "${member}"}) {
+      id
+      netForgeSparta
+      netForgeUsd
+      netMeltSparta
+      netMeltUsd
+      netSynthHarvestSparta
+      netSynthHarvestUsd
+      synthPositions {
+        id
+        netForgeSparta
+        netForgeUsd
+        netMeltSparta
+        netMeltUsd
+        netSynthHarvestSparta
+        netSynthHarvestUsd
+      }
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.members[0])
+    if (!result) {
+      console.log('no result')
+      return [false, 0]
+    }
+    const info = await result
+    return [info, block]
+  } catch (err) {
+    console.log(err)
+    return [false, 0]
+  }
+}
+
 export const getPoolIncentives = async (listedPools) => {
   const _poolArray = []
   for (let i = 0; i < listedPools.length; i++) {

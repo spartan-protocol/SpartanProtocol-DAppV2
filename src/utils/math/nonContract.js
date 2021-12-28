@@ -87,6 +87,27 @@ export const calcLiqValueAll = (poolDets, daoDets, bondDets, spartaPrice) => {
 }
 
 /**
+ * Calculate spot value of array of Synths in [SPARTA, USD]
+ * @param poolDetails @param synthDetails array @param spartaPrice
+ * @returns [spartaValue, usdValue]
+ */
+export const calcSpotValueAll = (poolDets, synthDets, spartaPrice) => {
+  let spartaValue = BN(0)
+  let usdValue = BN(0)
+  const synthsFiltered = synthDets?.filter(
+    (asset) => asset.balance > 0 || asset.staked > 0,
+  )
+  for (let i = 0; i < synthsFiltered.length; i++) {
+    const amount = BN(synthsFiltered[i].balance).plus(synthsFiltered[i].staked)
+    const poolItem = getPool(synthsFiltered[i].tokenAddress, poolDets)
+    const value = calcSpotValueInBase(amount, poolItem)
+    spartaValue = spartaValue.plus(value)
+    usdValue = usdValue.plus(BN(value).times(spartaPrice))
+  }
+  return [spartaValue, usdValue]
+}
+
+/**
  * Get member's total SPARTA value of all LP tokens attributable to them
  * @param poolDetails @param daoDetails @param bondDetails
  * @returns memberWeight

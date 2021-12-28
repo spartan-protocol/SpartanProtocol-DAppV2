@@ -13,6 +13,8 @@
   "APY": "APY",
   "apyInfo": "Estimated APY from pool revenue. Calculated using 30 day revenue vs pool depth. Excludes asset value movements. Not a guarantee of future performance!",
   "assets": "Assets",
+  "assetsForged": "Assets Forged",
+  "assetsMelted": "Assets Melted",
   "available": "Available",
   "availableLPs": "Available LPs",
   "balance": "Balance",
