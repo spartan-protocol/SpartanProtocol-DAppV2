@@ -111,13 +111,6 @@ const DataManager = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [window.localStorage.getItem('network'), trigger1])
 
-  /** Get the 30d rolling incentives for curated pools */
-  useEffect(() => {
-    if (pool.curatedPools) {
-      dispatch(getMonthIncentives(pool.curatedPools))
-    }
-  }, [dispatch, pool.curatedPools])
-
   /** Check SPARTA token price */
   useEffect(() => {
     if (trigger2 === 0) {
@@ -167,6 +160,13 @@ const DataManager = () => {
     checkListedPools()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.tokenDetails])
+
+  /** Get the 30d rolling incentives for all pools */
+  useEffect(() => {
+    if (pool.listedPools) {
+      dispatch(getMonthIncentives(pool.listedPools))
+    }
+  }, [dispatch, pool.listedPools])
 
   /** Get final pool details */
   useEffect(() => {

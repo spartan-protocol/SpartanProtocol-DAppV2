@@ -50,13 +50,6 @@ const ChartRevenue = (props) => {
         backgroundColor: '#228b22',
         borderColor: 'rgba(34, 139, 34, 0.2)',
       },
-      // {
-      //   label: 'TVL (SPARTA)',
-      //   data: getChartData()[2],
-      //   fill: false,
-      //   backgroundColor: 'rgb(255, 99, 132)',
-      //   borderColor: 'rgba(255, 99, 132, 0.2)',
-      // },
     ],
   }
 

@@ -313,20 +313,25 @@ export const formatDateDay = (unixTime) => {
  * @param {object} pool
  * @returns {number} apy
  */
-export const calcAPY = (pool, recentDivis) => {
+export const calcAPY = (pool, recentFees, recentDivis, days = 30) => {
+  const oneDay = 86400
+  const period = 365 / days
   let apr = '0'
   const fallback = BN(convertToWei(10000))
   const baseAmount = BN(pool.baseAmount)
   const fallbackDepth = baseAmount.isLessThan(fallback) ? fallback : baseAmount
   const actualDepth = fallbackDepth.times(2)
   const _divis = BN(recentDivis)
-  const monthFraction = BN(getBlockTimestamp()).minus(pool.genesis).div(2592000)
+  const _fees = BN(recentFees)
+  const monthFraction = BN(getBlockTimestamp())
+    .minus(pool.genesis)
+    .div(days * oneDay)
   if (monthFraction > 1) {
-    apr = BN(_divis).plus(pool.fees).times(12).div(actualDepth).times(100)
+    apr = BN(_divis).plus(_fees).times(period).div(actualDepth).times(100)
   } else {
     apr = BN(_divis)
-      .plus(pool.fees)
-      .times(12 / monthFraction)
+      .plus(_fees)
+      .times(period / monthFraction)
       .div(actualDepth)
       .times(100)
   }

@@ -33,10 +33,16 @@ const Metrics = ({ assetSwap }) => {
   const [metric, setMetric] = useState(metricTypes[0])
   const [period, setPeriod] = useState(periodTypes[2])
   const [poolMetrics, setPoolMetrics] = useState([])
+  const [prevAsset, setPrevAsset] = useState('')
 
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
+
   useEffect(() => {
+    if (prevAsset !== assetSwap.address) {
+      setPoolMetrics([])
+      setPrevAsset(assetSwap.address)
+    }
     const getMetrics = async () => {
       if (assetSwap.address) {
         const metrics = await callPoolMetrics(assetSwap.address)
@@ -50,7 +56,7 @@ const Metrics = ({ assetSwap }) => {
       }
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
-  }, [getBlockTimer, assetSwap.address])
+  }, [getBlockTimer, assetSwap.address, prevAsset])
 
   const asset =
     pool.poolDetails && pool.poolDetails.length
@@ -58,18 +64,38 @@ const Metrics = ({ assetSwap }) => {
           (lp) => lp.tokenAddress === assetSwap.tokenAddress,
         )
       : 0
+
   const tokenPrice = BN(assetSwap.baseAmount)
     .div(assetSwap.tokenAmount)
     .times(web3.spartaPrice)
-  const recentFees = asset ? asset.fees : 0
 
-  const getDivis = () =>
-    asset.curated && pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
-      : 0
+  const getFees = () => {
+    let accumulative = BN(0)
+    if (poolMetrics) {
+      const length = poolMetrics.length >= period ? period : poolMetrics.length
+      const metrics = poolMetrics ? poolMetrics.slice(0, length).reverse() : []
+      for (let i = 0; i < length; i++) {
+        accumulative = accumulative.plus(metrics[i].fees)
+      }
+    }
+    return accumulative
+  }
 
-  const APY =
-    recentFees && asset ? formatFromUnits(calcAPY(assetSwap, getDivis()), 2) : 0
+  const getDivis = () => {
+    let accumulative = BN(0)
+    if (asset.curated && poolMetrics) {
+      const length = poolMetrics.length >= period ? period : poolMetrics.length
+      const metrics = poolMetrics ? poolMetrics.slice(0, length).reverse() : []
+      for (let i = 0; i < length; i++) {
+        accumulative = accumulative.plus(metrics[i].incentives)
+      }
+    }
+    return accumulative
+  }
+
+  const APY = asset
+    ? formatFromUnits(calcAPY(assetSwap, getFees(), getDivis(), period), 2)
+    : 0
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]

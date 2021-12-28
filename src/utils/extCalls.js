@@ -160,15 +160,16 @@ export const getMemberPositions = async (memberAddr) => {
   }
 }
 
-export const getPoolIncentives = async (curatedArray) => {
-  const _curatedArray = []
-  for (let i = 0; i < curatedArray.length; i++) {
-    _curatedArray.push(curatedArray[i].toString().toLowerCase())
+export const getPoolIncentives = async (listedPools) => {
+  const _poolArray = []
+  for (let i = 0; i < listedPools.length; i++) {
+    _poolArray.push(listedPools[i].address.toString().toLowerCase())
   }
-  const count = _curatedArray.length * 10
+  const count = _poolArray.length * 30 <= 1000 ? _poolArray.length * 30 : 1000
+  // ADD fees30Day BELOW ONCE SUBGRAPH IS SYNCED
   const tokensQuery = `
   query {
-    metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_curatedArray.map(
+    metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_poolArray.map(
     (x) => `"${x}"`,
   )}]}) {
       id
@@ -237,6 +238,7 @@ export const callGlobalMetrics = async () => {
 
 export const callPoolMetrics = async (poolAddress) => {
   const address = poolAddress.toString().toLowerCase()
+  // ADD fees30Day BELOW ONCE SUBGRAPH IS SYNCED
   const tokensQuery = `
   query {
     metricsPoolDays(orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
