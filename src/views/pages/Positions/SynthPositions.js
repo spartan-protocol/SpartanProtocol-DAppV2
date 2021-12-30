@@ -253,45 +253,46 @@ const SynthPositions = () => {
       const { positions } = position
       const _pos = positions.filter(
         (x) =>
-          parseIdToAddr(x.pool.id) ===
-          getSynth(poolPos.tokenAddress).toString().toLowerCase(),
+          parseIdToAddr(x.id) ===
+          getSynth(poolPos.tokenAddress, synth.synthDetails)
+            .address.toString()
+            .toLowerCase(),
       )[0]
       if (_pos) {
         return _pos
       }
     }
     return {
-      netAddSparta: '0',
-      netAddUsd: '0',
-      netRemSparta: '0',
-      netRemUsd: '0',
-      netHarvestSparta: '0',
-      netHarvestUsd: '0',
-      pool: {
-        id: '',
-        symbol: 'Invalid',
-      },
+      id: '',
+      netForgeSparta: '0',
+      netForgeUsd: '0',
+      netMeltSparta: '0',
+      netMeltUsd: '0',
+      netSynthHarvestSparta: '0',
+      netSynthHarvestUsd: '0',
     }
   }
 
   const getPoolNetAdd = () => {
     const pewl = _getPoolPos()
-    const netAddSparta = pewl.netAddSparta > 0 ? pewl.netAddSparta : '0.00'
-    const netAddUsd = pewl.netAddUsd > 0 ? pewl.netAddUsd : '0.00'
+    const netAddSparta = pewl.netForgeSparta > 0 ? pewl.netForgeSparta : '0.00'
+    const netAddUsd = pewl.netForgeUsd > 0 ? pewl.netForgeUsd : '0.00'
     return [netAddSparta, netAddUsd]
   }
 
   const getPoolNetRem = () => {
     const pewl = _getPoolPos()
-    const netRemSparta = pewl.netRemSparta > 0 ? pewl.netRemSparta : '0.00'
-    const netRemUsd = pewl.netRemUsd > 0 ? pewl.netRemUsd : '0.00'
+    const netRemSparta = pewl.netMeltSparta > 0 ? pewl.netMeltSparta : '0.00'
+    const netRemUsd = pewl.netMeltUsd > 0 ? pewl.netMeltUsd : '0.00'
     return [netRemSparta, netRemUsd]
   }
 
   const getPoolNetHarvest = () => {
     const pewl = _getPoolPos()
-    const netSparta = pewl.netHarvestSparta > 0 ? pewl.netHarvestSparta : '0.00'
-    const netUsd = pewl.netHarvestUsd > 0 ? pewl.netHarvestUsd : '0.00'
+    const netSparta =
+      pewl.netSynthHarvestSparta > 0 ? pewl.netSynthHarvestSparta : '0.00'
+    const netUsd =
+      pewl.netSynthHarvestUsd > 0 ? pewl.netSynthHarvestUsd : '0.00'
     return [netSparta, netUsd]
   }
 
@@ -481,9 +482,7 @@ const SynthPositions = () => {
                   <Col className="text-end output-card">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd
-                            ? getPoolNetHarvest()[1]
-                            : getPoolNetHarvest()[0],
+                          showUsd ? getNetHarvest()[1] : getNetHarvest()[0],
                           2,
                         )
                       : 'Generate First'}
