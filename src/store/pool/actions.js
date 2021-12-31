@@ -280,8 +280,7 @@ export const getMonthIncentives = (listedPools) => async (dispatch) => {
       incentives.push({
         address: _poolArray[i].address,
         incentives: index > -1 ? _incentives[index].incentives30Day : '0',
-        fees: '0', // DELETE THIS LINE ONCE SUBGRAPH IS SYNCED
-        // fees: _incentives[index].fees30Day, // UNCOMMENT ONCE SUBGRAPH IS SYNCED
+        fees: _incentives[index].fees30Day,
       })
     }
     // console.log(incentives)

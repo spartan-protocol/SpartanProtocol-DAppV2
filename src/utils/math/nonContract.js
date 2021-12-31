@@ -330,7 +330,7 @@ export const formatDateDay = (unixTime) => {
 }
 
 /**
- * Calculate APY using full month divis + fees and pool's depth *** UPDATE WITH GENESIS/LASTMONTH ***
+ * Calculate APY using full month divis + fees and pool's depth
  * @param {object} pool
  * @returns {number} apy
  */
@@ -344,15 +344,15 @@ export const calcAPY = (pool, recentFees, recentDivis, days = 30) => {
   const actualDepth = fallbackDepth.times(2)
   const _divis = BN(recentDivis)
   const _fees = BN(recentFees)
-  const monthFraction = BN(getBlockTimestamp())
+  const periodFraction = BN(getBlockTimestamp())
     .minus(pool.genesis)
     .div(days * oneDay)
-  if (monthFraction > 1) {
+  if (periodFraction > 1) {
     apr = BN(_divis).plus(_fees).times(period).div(actualDepth).times(100)
   } else {
     apr = BN(_divis)
       .plus(_fees)
-      .times(period / monthFraction)
+      .times(period / periodFraction)
       .div(actualDepth)
       .times(100)
   }
