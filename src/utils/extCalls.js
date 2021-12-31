@@ -160,19 +160,64 @@ export const getMemberPositions = async (memberAddr) => {
   }
 }
 
-export const getPoolIncentives = async (curatedArray) => {
-  const _curatedArray = []
-  for (let i = 0; i < curatedArray.length; i++) {
-    _curatedArray.push(curatedArray[i].toString().toLowerCase())
-  }
-  const count = _curatedArray.length * 10
+//
+export const getMemberSynthPositions = async (memberAddr) => {
+  const block = await getSubGraphBlock()
+  const member = memberAddr.toString().toLowerCase()
   const tokensQuery = `
   query {
-    metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_curatedArray.map(
+    members(where: {id: "${member}"}) {
+      id
+      netForgeSparta
+      netForgeUsd
+      netMeltSparta
+      netMeltUsd
+      netSynthHarvestSparta
+      netSynthHarvestUsd
+      synthPositions {
+        id
+        netForgeSparta
+        netForgeUsd
+        netMeltSparta
+        netMeltUsd
+        netSynthHarvestSparta
+        netSynthHarvestUsd
+      }
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.members[0])
+    if (!result) {
+      console.log('no result')
+      return [false, 0]
+    }
+    const info = await result
+    return [info, block]
+  } catch (err) {
+    console.log(err)
+    return [false, 0]
+  }
+}
+
+export const getPoolIncentives = async (listedPools) => {
+  const _poolArray = []
+  for (let i = 0; i < listedPools.length; i++) {
+    _poolArray.push(listedPools[i].address.toString().toLowerCase())
+  }
+  const count = _poolArray.length * 30 <= 1000 ? _poolArray.length * 30 : 1000
+  const tokensQuery = `
+  query {
+    metricsPoolDays(orderBy: timestamp, orderDirection: desc, first: ${count}, where: {pool_in: [${_poolArray.map(
     (x) => `"${x}"`,
   )}]}) {
       id
       timestamp
+      fees30Day
       incentives30Day
       pool {
         id
@@ -249,6 +294,7 @@ export const callPoolMetrics = async (poolAddress) => {
       volUSD
       fees
       feesUSD
+      fees30Day
       incentives
       incentivesUSD
       incentives30Day

@@ -184,9 +184,6 @@ export const getPoolDetails =
     try {
       let tempArray = []
       for (let i = 0; i < listedPools.length; i++) {
-        const ready = getSecsSince(
-          listedPools[i].genesis.toString(),
-        ).isGreaterThan(2592000)
         const validPool = listedPools[i].baseAmount.toString() > 0
         const curated = validPool
           ? curatedPools.includes(listedPools[i].address)
@@ -199,13 +196,6 @@ export const getPoolDetails =
             ? '0'
             : poolContract.callStatic.balanceOf(wallet.account),
         ) // balance
-        tempArray.push(
-          !validPool
-            ? '0'
-            : !ready
-            ? poolContract.callStatic.map30DPoolRevenue()
-            : poolContract.callStatic.mapPast30DPoolRevenue(),
-        ) // recentFees
         tempArray.push(curated) // check if pool is curated
         tempArray.push(validPool ? poolContract.callStatic.freeze() : false) // check if pool is frozen
         tempArray.push(validPool ? poolContract.callStatic.oldRate() : '0') // get pool safety zone
@@ -214,7 +204,7 @@ export const getPoolDetails =
       }
       tempArray = await Promise.all(tempArray)
       const poolDetails = listedPools
-      const varCount = 7
+      const varCount = 6
       for (let i = 0; i < tempArray.length - (varCount - 1); i += varCount) {
         const ii = i / varCount
         const _base = poolDetails[ii].baseAmount
@@ -227,10 +217,9 @@ export const getPoolDetails =
                 .toFixed(0)
             : '0'
         poolDetails[ii].balance = tempArray[i].toString()
-        poolDetails[ii].fees = tempArray[i + 1].toString()
-        poolDetails[ii].curated = tempArray[i + 2]
-        poolDetails[ii].frozen = tempArray[i + 3]
-        const oldRate = tempArray[i + 4]
+        poolDetails[ii].curated = tempArray[i + 1]
+        poolDetails[ii].frozen = tempArray[i + 2]
+        const oldRate = tempArray[i + 3]
         poolDetails[ii].oldRate = oldRate.toString()
         poolDetails[ii].newRate = newRate.toString()
         const safety =
@@ -244,8 +233,8 @@ export const getPoolDetails =
                   .toString()
             : '0'
         poolDetails[ii].safety = safety.toString()
-        poolDetails[ii].stirRate = tempArray[i + 5].toString()
-        poolDetails[ii].lastStirred = tempArray[i + 6].toString()
+        poolDetails[ii].stirRate = tempArray[i + 4].toString()
+        poolDetails[ii].lastStirred = tempArray[i + 5].toString()
       }
       dispatch(payloadToDispatch(Types.POOL_DETAILS, poolDetails))
     } catch (error) {
@@ -278,18 +267,20 @@ export const createPoolADD =
  * Add rolling 30d incentives to store
  * @returns {array} eventArray
  */
-export const getMonthIncentives = (curatedArray) => async (dispatch) => {
+export const getMonthIncentives = (listedPools) => async (dispatch) => {
   dispatch(poolLoading())
   try {
+    const _poolArray = listedPools.filter((x) => x.baseAmount > 0)
     const incentives = []
-    const _incentives = await getPoolIncentives(curatedArray)
-    for (let i = 0; i < curatedArray.length; i++) {
+    const _incentives = await getPoolIncentives(_poolArray)
+    for (let i = 0; i < _poolArray.length; i++) {
       const index = _incentives.findIndex(
-        (x) => x.pool.id === curatedArray[i].toString().toLowerCase(),
+        (x) => x.pool.id === _poolArray[i].address.toString().toLowerCase(),
       )
       incentives.push({
-        address: curatedArray[i],
-        incentives: _incentives[index].incentives30Day,
+        address: _poolArray[i].address,
+        incentives: index > -1 ? _incentives[index].incentives30Day : '0',
+        fees: _incentives[index].fees30Day,
       })
     }
     // console.log(incentives)
