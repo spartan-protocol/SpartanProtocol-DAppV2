@@ -11,10 +11,16 @@ const Metrics = ({ assetSwap }) => {
   const pool = usePool()
 
   const [poolMetrics, setPoolMetrics] = useState([])
+  const [prevAsset, setPrevAsset] = useState('')
 
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
+
   useEffect(() => {
+    if (prevAsset !== assetSwap.address) {
+      setPoolMetrics([])
+      setPrevAsset(assetSwap.address)
+    }
     const getMetrics = async () => {
       if (assetSwap.address) {
         const metrics = await callPoolMetrics(assetSwap.address)
@@ -28,7 +34,7 @@ const Metrics = ({ assetSwap }) => {
       }
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
-  }, [getBlockTimer, assetSwap.address])
+  }, [getBlockTimer, assetSwap.address, prevAsset])
 
   const tokenPrice = BN(assetSwap.baseAmount)
     .div(assetSwap.tokenAmount)
