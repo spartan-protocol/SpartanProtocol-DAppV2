@@ -6,7 +6,6 @@ import AddressConn from '../Common/AddressConn'
 import ThemeSwitcher from '../Common/ThemeSwitcher'
 import Supply from '../Supply/Supply'
 import Contracts from '../Contracts/Contracts'
-import './Header.scss'
 import Sidebar from '../Sidebar/Sidebar'
 import { Icon } from '../Icons/icons'
 
