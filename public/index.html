@@ -4,6 +4,8 @@
       <meta
         http-equiv="Content-Security-Policy"
         content="
+          require-trusted-types-for 'script';
+          object-src 'none';
           default-src 'self';
           script-src 'self'
             'sha256-sEt0rNl3duchgivLQYJc+SzrKxMp8EWvJok7N2znUls='
@@ -15,6 +17,7 @@
             https://binance.ankr.com
             https://api.thegraph.com
             https://api.coingecko.com
+            https://graphql.bitquery.io
           ;
           img-src 'self'
             https://raw.githubusercontent.com
@@ -33,6 +36,7 @@
             'sha256-5Oq50N1ugC2bPI9OlV1SoRVmgpkRnliQz2l1y2+b3Rk='
             'sha256-KJxnsNT0gtdqJuu4ax26lLQPfNPovAIoDwH4Ql0esmA='
             'sha256-1wh6oSApDxKG6CJfQJl/NMIw3xq99E0tD7s7CWIdaII='
+            'sha256-GF4JIwopGtkXsdOuuUjek/eZVEbWjiqGrZgRiWsoG6w='
           ;
           form-action 'self'
         "
