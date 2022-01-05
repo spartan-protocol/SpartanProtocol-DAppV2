@@ -13,6 +13,7 @@ import ChartRevenue from './Charts/ChartRevenue'
 import ChartVolume from './Charts/ChartVolume'
 import ChartSwapDemand from './Charts/ChartSwapDemand'
 import ChartTxnCount from './Charts/ChartTxnCount'
+import { getUnixStartOfDay } from '../../../../utils/helpers'
 
 const Metrics = ({ assetSwap }) => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -34,6 +35,7 @@ const Metrics = ({ assetSwap }) => {
   const [period, setPeriod] = useState(periodTypes[2])
   const [poolMetrics, setPoolMetrics] = useState([])
   const [prevAsset, setPrevAsset] = useState('')
+  const [stale, setStale] = useState(false)
 
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
@@ -57,6 +59,13 @@ const Metrics = ({ assetSwap }) => {
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
   }, [getBlockTimer, assetSwap.address, prevAsset])
+
+  useEffect(() => {
+    const dayStart = getUnixStartOfDay()
+    const weekStart = BN(dayStart).minus(86400 * 7)
+    const lastBar = BN(poolMetrics[0]?.timestamp)
+    setStale(!lastBar.isGreaterThan(weekStart))
+  }, [poolMetrics])
 
   const asset =
     pool.poolDetails && pool.poolDetails.length
@@ -201,6 +210,9 @@ const Metrics = ({ assetSwap }) => {
             {metric === metricTypes[4] && (
               <ChartTxnCount metrics={poolMetrics} period={period} />
             )}
+            <div className="text-center">
+              {stale && poolMetrics[0] && 'No swap activity for 7+ days'}
+            </div>
           </Card.Body>
         </Card>
       )}
