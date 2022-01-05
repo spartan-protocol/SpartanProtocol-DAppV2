@@ -63,10 +63,13 @@ const Sidebar = () => {
             </span>
           )}
           <Offcanvas.Title className="ms-2">
-            {' '}
             <Link to="/" className="navbar-brand ms-2" onClick={closeNav}>
-              <Icon icon="spartav2" className="my-auto" />
-              <Navbar.Brand className="ms-2">Spartan Protocol</Navbar.Brand>
+              <Navbar.Brand className="ms-2">
+                <h4>
+                  <Icon icon="spartav2" className="my-auto me-2" />
+                  Spartan Protocol
+                </h4>
+              </Navbar.Brand>
             </Link>
           </Offcanvas.Title>
         </Offcanvas.Header>
