@@ -213,7 +213,7 @@ const SynthItem = ({ asset, synthApy }) => {
                       />
                     </span>
                   </OverlayTrigger>
-                  {synthApy}%
+                  {formatFromUnits(synthApy, 2)}%
                 </p>
               </Col>
             </Row>
