@@ -245,7 +245,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     fill={isLightMode ? 'black' : 'white'}
                     className="me-1 mb-1"
                   />
-                  {APY}%
+                  {formatFromUnits(APY, 2)}%
                   {curated && daoApy > 0 && (
                     <>
                       <br />
@@ -262,7 +262,7 @@ const PoolItem = ({ asset, daoApy }) => {
                           />
                         </span>
                       </OverlayTrigger>
-                      {daoApy}%
+                      {formatFromUnits(daoApy, 2)}%
                     </>
                   )}
                 </p>
