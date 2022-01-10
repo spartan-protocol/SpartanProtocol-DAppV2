@@ -10,13 +10,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Install Dependencies
-        run: yarn install
+        run: npm install
       - name: Lint
-        run: yarn lint
+        run: npm run lint
       - name: Test
-        run: yarn test
+        run: npm run test
       - name: Build
-        run: yarn build
+        run: npm run build
         env:
           REACT_APP_BITQUERY: ${{ secrets.REACT_APP_BITQUERY }}
           REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}
