@@ -280,10 +280,10 @@ export const getMonthIncentives = (listedPools) => async (dispatch) => {
       incentives.push({
         address: _poolArray[i].address,
         incentives: index > -1 ? _incentives[index].incentives30Day : '0',
-        fees: _incentives[index].fees30Day,
+        fees: index > -1 ? _incentives[index].fees30Day : '0',
       })
     }
-    // console.log(incentives)
+    // console.log('success', incentives)
     dispatch(payloadToDispatch(Types.POOL_INCENTIVES, incentives))
   } catch (error) {
     dispatch(errorToDispatch(Types.POOL_ERROR, error))
