@@ -10,22 +10,21 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: 🧰 Install Dependencies
-        run: npm install
+        run: yarn install
       - name: 📦 Build Project
-        run: npm run build --if-present
+        run: yarn build
       - name: 🧹 Run Lint
-        run: npm run lint
+        run: yarn lint
       - name: 🐛 Run Tests
-        run: npm run test
+        run: yarn test
         env:
           REACT_APP_BITQUERY: ${{ secrets.REACT_APP_BITQUERY }}
           REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}
       - name: 🚀 Deploy to Netlify
-        uses: netlify/actions/cli@master
+        uses: SamusElderg/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         with:
-          package-manager: npm
           args: deploy --dir=build --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
