@@ -689,6 +689,13 @@ const Swap = () => {
                                     <InputGroup className="m-0">
                                       <InputGroup.Text id="assetSelect1">
                                         <AssetSelect
+                                          defaultTab={
+                                            window.localStorage.getItem(
+                                              'assetType1',
+                                            ) !== 'pool'
+                                              ? 'token'
+                                              : 'pool'
+                                          }
                                           priority="1"
                                           filter={getFilter()}
                                           onClick={handleConfClear}
