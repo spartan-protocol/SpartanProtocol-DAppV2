@@ -67,6 +67,7 @@ import { ReactComponent as BinanceChain } from '../../assets/brands/binance-chai
 import { ReactComponent as Ledger } from '../../assets/brands/ledger.svg'
 import { ReactComponent as MathWallet } from '../../assets/brands/math.svg'
 import { ReactComponent as MetaMask } from '../../assets/brands/metamask.svg'
+import { ReactComponent as Onto } from '../../assets/brands/onto.svg'
 import { ReactComponent as TrustWallet } from '../../assets/brands/trust-wallet.svg'
 import { ReactComponent as WalletConnect } from '../../assets/brands/walletconnect.svg'
 
@@ -140,6 +141,7 @@ const icons = {
   ledger: Ledger,
   mathwallet: MathWallet,
   metamask: MetaMask,
+  onto: Onto,
   trustwallet: TrustWallet,
   walletconnect: WalletConnect,
 }

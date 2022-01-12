@@ -30,7 +30,9 @@ const AssetSelect = (props) => {
   const dispatch = useDispatch()
   const [showModal, setShowModal] = useState(false)
 
-  const [activeTab, setActiveTab] = useState('all')
+  const [activeTab, setActiveTab] = useState(
+    props.defaultTab ? props.defaultTab : 'all',
+  )
   const pool = usePool()
 
   const wallet = useWeb3React()

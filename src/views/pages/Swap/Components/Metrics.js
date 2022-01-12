@@ -5,6 +5,7 @@ import { usePool } from '../../../../store/pool'
 import { useWeb3 } from '../../../../store/web3'
 import { BN, formatFromUnits } from '../../../../utils/bigNumber'
 import ChartPrice from './Charts/ChartPrice'
+import { getUnixStartOfDay } from '../../../../utils/helpers'
 
 const Metrics = ({ assetSwap }) => {
   const web3 = useWeb3()
@@ -12,6 +13,7 @@ const Metrics = ({ assetSwap }) => {
 
   const [poolMetrics, setPoolMetrics] = useState([])
   const [prevAsset, setPrevAsset] = useState('')
+  const [stale, setStale] = useState(false)
 
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
@@ -35,6 +37,13 @@ const Metrics = ({ assetSwap }) => {
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
   }, [getBlockTimer, assetSwap.address, prevAsset])
+
+  useEffect(() => {
+    const dayStart = getUnixStartOfDay()
+    const weekStart = BN(dayStart).minus(86400 * 7)
+    const lastBar = BN(poolMetrics[0]?.timestamp)
+    setStale(!lastBar.isGreaterThan(weekStart))
+  }, [poolMetrics])
 
   const tokenPrice = BN(assetSwap.baseAmount)
     .div(assetSwap.tokenAmount)
@@ -83,6 +92,9 @@ const Metrics = ({ assetSwap }) => {
           </Card.Header>
           <Card.Body className="pt-1">
             <ChartPrice metrics={poolMetrics} tokenPrice={tokenPrice} />
+            <div className="text-center">
+              {stale && poolMetrics[0] && 'No swap activity for 7+ days'}
+            </div>
           </Card.Body>
         </Card>
       )}
