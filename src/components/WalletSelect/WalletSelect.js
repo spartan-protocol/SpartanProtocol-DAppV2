@@ -179,6 +179,8 @@ const WalletSelect = (props) => {
         onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'TW')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'ON') {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'ON')[0])
       } else if (
         window.localStorage.getItem('lastWallet') === 'WC' &&
         network?.chainId === 56 // WalletConnect does not support testnet
@@ -413,7 +415,8 @@ const WalletSelect = (props) => {
                     disabled={
                       (x.id === 'WC' && network.chainId !== 56) ||
                       (x.id === 'BC' && !window.BinanceChain) ||
-                      (!['WC', 'BC'].includes(x.id) && !window.ethereum)
+                      (!['WC', 'BC'].includes(x.id) && !window.ethereum) ||
+                      (x.id === 'ON' && !window.ethereum?.isONTO)
                     }
                     variant="info"
                     className="w-100 my-1"
