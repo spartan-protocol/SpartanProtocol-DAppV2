@@ -18,6 +18,7 @@ import {
   calcSpotValueAll,
   getBlockTimestamp,
   getSecsSince,
+  getSwapSpot,
 } from '../../../utils/math/nonContract'
 import { useWeb3 } from '../../../store/web3'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
@@ -324,11 +325,20 @@ const SynthPositions = () => {
     return gain
   }
 
-  const getPoolNetGainWorthUsd = () => {
-    const netGainSparta = getPoolNetGain('sparta')
-    const inUsd = netGainSparta.times(web3.spartaPrice)
-    return inUsd
+  const getPoolNetGainWorthUnit = () => {
+    const poolDets = getPool(poolPos.tokenAddress, pool.poolDetails)
+    const netGainUsd = getPoolNetHarvest()[1]
+    const inSparta = BN(netGainUsd).div(web3.spartaPrice)
+    const spotRate = getSwapSpot(poolDets, poolDets, false, true)
+    const inUnit = inSparta.times(spotRate)
+    return inUnit
   }
+
+  // const getPoolNetGainWorthUsd = () => {
+  //   const netGainSparta = getPoolNetGain('sparta')
+  //   const inUsd = netGainSparta.times(web3.spartaPrice)
+  //   return inUsd
+  // }
 
   const getPoolNetGainWorthSparta = () => {
     const netGainUsd = getPoolNetGain('usd')
@@ -713,7 +723,7 @@ const SynthPositions = () => {
             {!isLoading() ? `${_getToken().symbol}s` : 'Synth'} Position
             <Card.Subtitle className="">
               <div className="mt-2 d-inline-block me-2">
-                vs Hodl {showUsdPool ? 'USD' : 'SPARTA'}
+                vs Hodl {showUsdPool ? 'USD' : _getToken().symbol}
               </div>
               <Button
                 variant="info"
@@ -721,11 +731,15 @@ const SynthPositions = () => {
                 onClick={() => setShowUsdPool(!showUsdPool)}
               >
                 Change to:
-                <Icon
-                  icon={!showUsdPool ? 'usd' : 'spartav2'}
-                  size="17"
-                  className="ms-1"
-                />
+                {!showUsdPool && <Icon icon="usd" size="17" className="ms-1" />}
+                {!isLoading() && showUsdPool && (
+                  <img
+                    src={_getToken().symbolUrl}
+                    height="17"
+                    alt="token"
+                    className="ms-1"
+                  />
+                )}
               </Button>
             </Card.Subtitle>
           </Card.Header>
@@ -912,19 +926,20 @@ const SynthPositions = () => {
               <hr />
               <Row className="my-1">
                 <Col xs="auto" className="output-card">
-                  {t('gainVs')} {showUsdPool ? 'USD' : 'SPARTA'}
+                  {t('gainVs')} {showUsdPool ? 'USD' : _getToken().symbol}
                   <OverlayTrigger
                     placement="auto"
                     overlay={
                       <Popover>
                         <Popover.Header as="h3">
-                          {t('gainVs')} {showUsdPool ? 'USD' : 'SPARTA'}
+                          {t('gainVs')}{' '}
+                          {showUsdPool ? 'USD' : _getToken().symbol}
                         </Popover.Header>
                         <Popover.Body className="text-center">
                           Your NET position based on the sum of the above rows.
-                          This is a comparison to if you were to hold
-                          {showUsdPool ? ' USD ' : ' SPARTA '}
-                          instead of minting Synths.
+                          This is a comparison to if you were to hold{' '}
+                          {showUsdPool ? 'USD' : _getToken().symbol} instead of
+                          minting Synths.
                         </Popover.Body>
                       </Popover>
                     }
@@ -944,15 +959,11 @@ const SynthPositions = () => {
                     ? formatFromWei(
                         showUsdPool
                           ? getPoolNetGain('usd')
-                          : getPoolNetGain('sparta'),
+                          : getPoolNetHarvest()[1],
                         2,
                       )
                     : 'Generate First'}
-                  <Icon
-                    icon={showUsdPool ? 'usd' : 'spartav2'}
-                    className="ms-1"
-                    size="15"
-                  />
+                  <Icon icon="usd" className="ms-1" size="15" />
                 </Col>
               </Row>
               <Row className="my-1">
@@ -986,16 +997,22 @@ const SynthPositions = () => {
                   {isOverall()
                     ? formatFromWei(
                         !showUsdPool
-                          ? getPoolNetGainWorthUsd()
+                          ? getPoolNetGainWorthUnit()
                           : getPoolNetGainWorthSparta(),
                         2,
                       )
                     : 'Generate First'}
-                  <Icon
-                    icon={!showUsdPool ? 'usd' : 'spartav2'}
-                    className="ms-1"
-                    size="15"
-                  />
+                  {showUsdPool && (
+                    <Icon icon="spartav2" className="ms-1" size="15" />
+                  )}
+                  {!isLoading() && !showUsdPool && (
+                    <img
+                      src={_getToken().symbolUrl}
+                      height="17"
+                      alt="token"
+                      className="ms-1"
+                    />
+                  )}
                 </Col>
               </Row>
             </Card.Body>
