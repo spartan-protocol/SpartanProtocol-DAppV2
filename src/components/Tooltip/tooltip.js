@@ -133,6 +133,16 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'synthCapInfo',
     },
     {
+      id: 'synthPC',
+      title: 'synthPC',
+      body: 'synthPCInfo',
+    },
+    {
+      id: 'synthUR',
+      title: 'unrealised',
+      body: 'synthURInfo',
+    },
+    {
       id: 'synthView',
       title: 'synthViewTitle',
       body: 'synthViewInfo',

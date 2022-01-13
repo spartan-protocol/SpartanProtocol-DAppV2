@@ -41,13 +41,16 @@ const SynthItem = ({ asset, synthApy }) => {
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
 
   const synthCapTooltip = Tooltip(t, 'synthCap')
+  const synthPCTooltip = Tooltip(t, 'synthPC')
+  const synthURTooltip = Tooltip(t, 'synthUR')
 
   const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
   // const getSynthCap = () => BN(tokenAmount).times(asset.synthCapBPs).div(10000)
   const getSynthSupply = () => _getSynth().totalSupply
   const getSynthDepthPC = () => BN(getSynthSupply()).div(tokenAmount).times(100)
   const getSynthCollat = () => calcLiqValue(_getSynth().lpBalance, asset)
-  const getSynthCollatToken = () => BN(getSynthCollat()[1]).times(2)
+  const getSynthCollatToken = () =>
+    BN(getSynthCollat()[1]).times(2).minus(getSynthSupply())
   const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
   const getSynthCapPC = () =>
     BN(getSynthSupply())
@@ -220,7 +223,7 @@ const SynthItem = ({ asset, synthApy }) => {
 
             <Row className="my-1">
               <Col xs="auto" className="text-card pe-0">
-                {t('synthCap')}
+                {t('softCap')}
                 <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
                   <span role="button">
                     <Icon
@@ -288,6 +291,16 @@ const SynthItem = ({ asset, synthApy }) => {
             <Row className="my-1">
               <Col xs="auto" className="text-card">
                 {t('synthPC')}
+                <OverlayTrigger placement="auto" overlay={synthPCTooltip}>
+                  <span role="button">
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="17"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
+                  </span>
+                </OverlayTrigger>
               </Col>
               <Col className="text-end output-card">
                 {formatFromUnits(getSynthDepthPC(), 2)}%
@@ -302,7 +315,17 @@ const SynthItem = ({ asset, synthApy }) => {
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">
-                {t('collateral')}
+                {t('unrealised')}
+                <OverlayTrigger placement="auto" overlay={synthURTooltip}>
+                  <span role="button">
+                    <Icon
+                      icon="info"
+                      className="ms-1"
+                      size="17"
+                      fill={isLightMode ? 'black' : 'white'}
+                    />
+                  </span>
+                </OverlayTrigger>
               </Col>
               <Col className="text-end output-card">
                 {formatFromWei(getSynthCollatToken())}
