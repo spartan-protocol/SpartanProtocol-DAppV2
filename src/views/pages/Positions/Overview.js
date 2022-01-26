@@ -80,7 +80,7 @@ const Positions = () => {
                   </Card.Body>
                   <Card.Footer>
                     <a
-                      href="https://docs.spartanprotocol.org/guides/positions"
+                      href="https://docs.spartanprotocol.org/#/positions"
                       target="_blank"
                       rel="noreferrer"
                     >
