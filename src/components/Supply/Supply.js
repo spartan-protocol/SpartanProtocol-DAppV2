@@ -183,7 +183,7 @@ const Supply = () => {
             <Popover.Header className="mt-2">
               {t('tokenomics')}
               <a
-                href="https://docs.spartanprotocol.org/tokenomics-1/sparta"
+                href="https://docs.spartanprotocol.org/#/introduction?id=the-sparta-token"
                 target="_blank"
                 rel="noreferrer"
               >
