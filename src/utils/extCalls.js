@@ -302,6 +302,7 @@ export const callPoolMetrics = async (poolAddress) => {
       tvlSPARTA
       tvlUSD
       tokenPrice
+      lpUnits
     }
   }
 `

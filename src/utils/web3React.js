@@ -2,6 +2,7 @@ import { BscConnector } from '@binance-chain/bsc-connector'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { LedgerConnector } from '@web3-react/ledger-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { ethers } from 'ethers'
 import { getNetwork, changeRpc } from './web3'
 
@@ -23,6 +24,12 @@ const walletConnect = (chainId, rpcUrl) =>
     qrcode: true,
     pollingInterval: pollingInt,
   })
+const walletlink = (chainId, rpcUrl) =>
+  new WalletLinkConnector({
+    url: rpcUrl,
+    appName: 'Spartan Protocol DApp',
+    supportedChainIds: [chainId],
+  })
 
 export const connectorsByName = (connectorName, rpcUrls) => {
   // console.log(rpcUrls)
@@ -38,6 +45,10 @@ export const connectorsByName = (connectorName, rpcUrls) => {
   }
   if (connectorName === 'walletconnect') {
     return walletConnect(chainId, rpcItem.url)
+  }
+  if (connectorName === 'walletlink') {
+    const connector = walletlink(chainId, rpcItem.url)
+    return connector
   }
   return injectConnect(chainId)
 }

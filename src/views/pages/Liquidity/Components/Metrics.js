@@ -14,6 +14,7 @@ import ChartVolume from './Charts/ChartVolume'
 import ChartSwapDemand from './Charts/ChartSwapDemand'
 import ChartTxnCount from './Charts/ChartTxnCount'
 import { getUnixStartOfDay } from '../../../../utils/helpers'
+import ChartLPs from './Charts/ChartLPs'
 
 const Metrics = ({ assetSwap }) => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -27,6 +28,7 @@ const Metrics = ({ assetSwap }) => {
     'Revenue',
     'Swap Demand',
     'Txn Count',
+    'LP Units',
   ]
 
   const periodTypes = [7, 14, 30, 60, 365]
@@ -209,6 +211,13 @@ const Metrics = ({ assetSwap }) => {
             )}
             {metric === metricTypes[4] && (
               <ChartTxnCount metrics={poolMetrics} period={period} />
+            )}
+            {metric === metricTypes[5] && (
+              <ChartLPs
+                metrics={poolMetrics}
+                poolItem={assetSwap}
+                period={period}
+              />
             )}
             <div className="text-center">
               {stale && poolMetrics[0] && 'No swap activity for 7+ days'}

@@ -1,25 +1,35 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
+import { BN, convertFromWei } from '../../../../../utils/bigNumber'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
-const ChartPrice = (props) => {
+const ChartLPs = (props) => {
+  const getLPs = () => {
+    let liqUnits = BN(0)
+    if (props.poolItem) {
+      liqUnits = liqUnits.plus(props.poolItem.poolUnits)
+    }
+    if (liqUnits > 0) {
+      return liqUnits
+    }
+    return '0.00'
+  }
+
   const getChartData = () => {
     const data1 = []
     const labels = []
-    const dataPoints = 30
+    const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
-    const metrics = props.metrics
-      ? props.metrics.slice(0, length).reverse()
-      : []
-    for (let i = 0; i < length; i++) {
-      // console.log(metrics[0].pool.id)
-      data1.push(metrics[i].tokenPrice)
-      labels.push(formatDate(metrics[i].timestamp))
+    if (props.poolItem) {
+      data1.push(convertFromWei(getLPs(), 0))
+      labels.push('Current')
     }
-    data1.push(props.tokenPrice)
-    labels.push('Current')
-    return [labels, data1]
+    for (let i = 0; i < length; i++) {
+      data1.push(convertFromWei(props.metrics[i].lpUnits))
+      labels.push(formatDate(props.metrics[i].timestamp))
+    }
+    return [labels.reverse(), data1.reverse()]
   }
 
   const options = {
@@ -27,15 +37,11 @@ const ChartPrice = (props) => {
       x: {
         display: false,
       },
-      y: {
-        suggestedMin: getChartData()[1][30] * 0.94, // Prevent stable-coin zoom
-        suggestedMax: getChartData()[1][30] * 1.06, // Prevent stable-coin zoom
-      },
     },
     plugins: {
       title: {
         display: true,
-        text: 'Token Price ($USD)',
+        text: 'Total supply of LP units',
       },
       legend: {
         display: false,
@@ -47,7 +53,7 @@ const ChartPrice = (props) => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Token Price ($USD)',
+        label: 'LP Units',
         data: getChartData()[1],
         fill: false,
         backgroundColor: '#228b22',
@@ -63,4 +69,4 @@ const ChartPrice = (props) => {
   )
 }
 
-export default ChartPrice
+export default ChartLPs

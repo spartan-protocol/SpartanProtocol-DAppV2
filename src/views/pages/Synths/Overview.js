@@ -100,6 +100,15 @@ const Swap = () => {
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
   const [trigger1, settrigger1] = useState(0)
+  const [hasFocus, setHasFocus] = useState(true)
+
+  window.addEventListener('focus', () => {
+    setHasFocus(true)
+  })
+
+  window.addEventListener('blur', () => {
+    setHasFocus(false)
+  })
 
   const getData = () => {
     setnetwork(getNetwork())
@@ -187,64 +196,70 @@ const Swap = () => {
     const { poolDetails } = pool
 
     const getAssetDetails = () => {
-      if (poolDetails?.length > 0) {
-        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+      if (hasFocus) {
+        if (poolDetails?.length > 0) {
+          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
-        if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
-          ;[asset1] = poolDetails.filter(
-            (asset) => asset.tokenAddress === assetParam1,
-          )
-          setAssetParam1('')
-        }
-        if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
-          ;[asset2] = poolDetails.filter(
-            (asset) => asset.tokenAddress === assetParam2,
-          )
-          setAssetParam2('')
-        }
+          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+            ;[asset1] = poolDetails.filter(
+              (asset) => asset.tokenAddress === assetParam1,
+            )
+            setAssetParam1('')
+          }
+          if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
+            ;[asset2] = poolDetails.filter(
+              (asset) => asset.tokenAddress === assetParam2,
+            )
+            setAssetParam2('')
+          }
 
-        if (typeParam1 === 'synth') {
-          setActiveTab('burn')
-          setTypeParam1('')
-        }
+          if (typeParam1 === 'synth') {
+            setActiveTab('burn')
+            setTypeParam1('')
+          }
 
-        if (activeTab === 'mint') {
-          window.localStorage.setItem('assetType1', 'token')
-          window.localStorage.setItem('assetType2', 'synth')
-          if (asset2?.curated !== true) {
+          if (activeTab === 'mint') {
+            window.localStorage.setItem('assetType1', 'token')
+            window.localStorage.setItem('assetType2', 'synth')
+            if (asset2?.curated !== true) {
+              asset2 = { tokenAddress: addr.bnb }
+            }
+          } else {
+            window.localStorage.setItem('assetType1', 'synth')
+            window.localStorage.setItem('assetType2', 'token')
+            if (asset1.address === '') {
+              asset1 = { tokenAddress: addr.bnb }
+            }
+          }
+
+          if (
+            !asset1 ||
+            !pool.poolDetails.find(
+              (x) => x.tokenAddress === asset1.tokenAddress,
+            )
+          ) {
+            asset1 = { tokenAddress: addr.spartav2 }
+          }
+
+          if (
+            !asset2 ||
+            !pool.poolDetails.find(
+              (x) => x.tokenAddress === asset2.tokenAddress,
+            )
+          ) {
             asset2 = { tokenAddress: addr.bnb }
           }
-        } else {
-          window.localStorage.setItem('assetType1', 'synth')
-          window.localStorage.setItem('assetType2', 'token')
-          if (asset1.address === '') {
-            asset1 = { tokenAddress: addr.bnb }
-          }
+
+          asset1 = getItemFromArray(asset1, poolDetails)
+          asset2 = getItemFromArray(asset2, poolDetails)
+
+          setAssetSwap1(asset1)
+          setAssetSwap2(asset2)
+
+          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         }
-
-        if (
-          !asset1 ||
-          !pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-        ) {
-          asset1 = { tokenAddress: addr.spartav2 }
-        }
-
-        if (
-          !asset2 ||
-          !pool.poolDetails.find((x) => x.tokenAddress === asset2.tokenAddress)
-        ) {
-          asset2 = { tokenAddress: addr.bnb }
-        }
-
-        asset1 = getItemFromArray(asset1, poolDetails)
-        asset2 = getItemFromArray(asset2, poolDetails)
-
-        setAssetSwap1(asset1)
-        setAssetSwap2(asset2)
-
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-        window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
       }
     }
 
@@ -262,6 +277,7 @@ const Swap = () => {
     window.localStorage.getItem('assetType1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetType2'),
+    hasFocus,
   ])
 
   const getToken = (tokenAddress) =>
@@ -919,77 +935,79 @@ const Swap = () => {
                               )}
 
                               {/* Bottom 'synth' txnDetails row */}
-                              <Row className="mb-2 mt-3">
-                                <Col xs="auto" className="text-card">
-                                  {t('synthCap')}
-                                  <OverlayTrigger
-                                    placement="auto"
-                                    overlay={Tooltip(t, 'synthCap')}
-                                  >
-                                    <span role="button">
-                                      <Icon
-                                        icon="info"
-                                        className="ms-1"
-                                        size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
-                                      />
-                                    </span>
-                                  </OverlayTrigger>
-                                </Col>
-                                <Col className="text-end">
-                                  {getSynthSupply() > 0 && (
-                                    <ProgressBar
-                                      style={{ height: '15px' }}
-                                      className="mt-1"
+                              {activeTab === 'mint' && (
+                                <Row className="mb-2 mt-3">
+                                  <Col xs="auto" className="text-card">
+                                    {t('synthCap')}
+                                    <OverlayTrigger
+                                      placement="auto"
+                                      overlay={Tooltip(t, 'synthCap')}
                                     >
+                                      <span role="button">
+                                        <Icon
+                                          icon="info"
+                                          className="ms-1"
+                                          size="17"
+                                          fill={isLightMode ? 'black' : 'white'}
+                                        />
+                                      </span>
+                                    </OverlayTrigger>
+                                  </Col>
+                                  <Col className="text-end">
+                                    {getSynthSupply() > 0 && (
                                       <ProgressBar
-                                        variant={
-                                          getMintedSynthCapPC() > 100
-                                            ? 'primary'
-                                            : 'success'
-                                        }
-                                        key={1}
-                                        now={getSynthCapPC()}
-                                      />
-                                      <ProgressBar
-                                        variant="black"
-                                        key={2}
-                                        now={0.5}
-                                      />
-                                      <ProgressBar
-                                        variant={
-                                          BN(getMintedSynthCapPC()).plus(
-                                            getSynthCapPC(),
-                                          ) > 100
-                                            ? 'primary'
-                                            : 'info'
-                                        }
-                                        key={3}
-                                        now={getMintedSynthCapPC()}
-                                        label={
-                                          <OverlayTrigger
-                                            placement="auto"
-                                            overlay={Tooltip(t, 'yourForge')}
-                                          >
-                                            <span role="button">
-                                              <Icon
-                                                icon="info"
-                                                className="ms-1"
-                                                size="17"
-                                                fill={
-                                                  isLightMode
-                                                    ? 'black'
-                                                    : 'white'
-                                                }
-                                              />
-                                            </span>
-                                          </OverlayTrigger>
-                                        }
-                                      />
-                                    </ProgressBar>
-                                  )}
-                                </Col>
-                              </Row>
+                                        style={{ height: '15px' }}
+                                        className="mt-1"
+                                      >
+                                        <ProgressBar
+                                          variant={
+                                            getMintedSynthCapPC() > 100
+                                              ? 'primary'
+                                              : 'success'
+                                          }
+                                          key={1}
+                                          now={getSynthCapPC()}
+                                        />
+                                        <ProgressBar
+                                          variant="black"
+                                          key={2}
+                                          now={0.5}
+                                        />
+                                        <ProgressBar
+                                          variant={
+                                            BN(getMintedSynthCapPC()).plus(
+                                              getSynthCapPC(),
+                                            ) > 100
+                                              ? 'primary'
+                                              : 'info'
+                                          }
+                                          key={3}
+                                          now={getMintedSynthCapPC()}
+                                          label={
+                                            <OverlayTrigger
+                                              placement="auto"
+                                              overlay={Tooltip(t, 'yourForge')}
+                                            >
+                                              <span role="button">
+                                                <Icon
+                                                  icon="info"
+                                                  className="ms-1"
+                                                  size="17"
+                                                  fill={
+                                                    isLightMode
+                                                      ? 'black'
+                                                      : 'white'
+                                                  }
+                                                />
+                                              </span>
+                                            </OverlayTrigger>
+                                          }
+                                        />
+                                      </ProgressBar>
+                                    )}
+                                  </Col>
+                                </Row>
+                              )}
 
                               <Row className="mb-2">
                                 <Col xs="auto">

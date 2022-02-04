@@ -20,6 +20,9 @@
   <url>
     <loc>https://dapp.spartanprotocol.org/vaults</loc>
   </url>
+    <url>
+    <loc>https://dapp.spartanprotocol.org/positions</loc>
+  </url>
   <url>
     <loc>https://dapp.spartanprotocol.org/dao</loc>
   </url>
@@ -28,5 +31,8 @@
   </url>
   <url>
     <loc>https://dapp.spartanprotocol.org/donate</loc>
+  </url>
+    <url>
+    <loc>https://dapp.spartanprotocol.org/partners</loc>
   </url>
 </urlset>

@@ -61,7 +61,7 @@ const Metrics = ({ assetSwap }) => {
 
   return (
     <>
-      {!isLoading() && getToken(assetSwap.tokenAddress).symbol !== 'BUSD' && (
+      {!isLoading() && (
         <Card className="card-480 mb-2">
           <Card.Header className="border-0">
             <Row className="mt-2">

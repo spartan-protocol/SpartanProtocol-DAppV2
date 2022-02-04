@@ -32,7 +32,7 @@ const Positions = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(network.chainId) && network?.chainId === 56 ? (
           <>
             <Row className="row-480">
               <Col>
@@ -94,6 +94,8 @@ const Positions = () => {
               </Col>
             </Row>
           </>
+        ) : (
+          <div>Please change network to BSC Mainnet to continue...</div>
         )}
         {!tempChains.includes(network.chainId) && <WrongNetwork />}
       </div>

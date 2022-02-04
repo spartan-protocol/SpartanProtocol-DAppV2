@@ -19,7 +19,7 @@ import { useSparta } from '../../../../store/sparta'
 import spartaIcon from '../../../../assets/tokens/sparta-synth.svg'
 import { useWeb3 } from '../../../../store/web3'
 
-const SynthHarvestModal = ({ synthItem }) => {
+const SynthHarvestModal = ({ synthItem, buttonValid }) => {
   const dispatch = useDispatch()
   const pool = usePool()
   const reserve = useReserve()
@@ -74,12 +74,6 @@ const SynthHarvestModal = ({ synthItem }) => {
 
   const checkValidHarvest = () => {
     const reward = formatFromWei(getClaimable()[0], 4)
-    if (!reserve.globalDetails.emissions) {
-      return [false, t('incentivesDisabled'), '']
-    }
-    if (getClaimable()[1]) {
-      return [false, t('baseCap'), '']
-    }
     if (getClaimable()[2]) {
       return [true, reward, ' SPARTA']
     }
@@ -111,6 +105,9 @@ const SynthHarvestModal = ({ synthItem }) => {
     if (!enoughGas()) {
       return [false, t('checkBnbGas')]
     }
+    if (getClaimable()[1]) {
+      return [false, t('poolAtCapacity'), '']
+    }
     return [true, t('harvest')]
   }
 
@@ -119,9 +116,9 @@ const SynthHarvestModal = ({ synthItem }) => {
       <Button
         className="w-100"
         onClick={() => setshowModal(true)}
-        disabled={!synthHarvestLive || synthItem.staked <= 0}
+        disabled={!synthHarvestLive || synthItem.staked <= 0 || !buttonValid[0]}
       >
-        {synthHarvestLive ? t('harvest') : t('harvestDisabled')}
+        {synthHarvestLive ? buttonValid[1] : t('harvestDisabled')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
         <Modal.Header closeButton closeVariant="white">
