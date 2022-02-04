@@ -935,77 +935,79 @@ const Swap = () => {
                               )}
 
                               {/* Bottom 'synth' txnDetails row */}
-                              <Row className="mb-2 mt-3">
-                                <Col xs="auto" className="text-card">
-                                  {t('synthCap')}
-                                  <OverlayTrigger
-                                    placement="auto"
-                                    overlay={Tooltip(t, 'synthCap')}
-                                  >
-                                    <span role="button">
-                                      <Icon
-                                        icon="info"
-                                        className="ms-1"
-                                        size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
-                                      />
-                                    </span>
-                                  </OverlayTrigger>
-                                </Col>
-                                <Col className="text-end">
-                                  {getSynthSupply() > 0 && (
-                                    <ProgressBar
-                                      style={{ height: '15px' }}
-                                      className="mt-1"
+                              {activeTab === 'mint' && (
+                                <Row className="mb-2 mt-3">
+                                  <Col xs="auto" className="text-card">
+                                    {t('synthCap')}
+                                    <OverlayTrigger
+                                      placement="auto"
+                                      overlay={Tooltip(t, 'synthCap')}
                                     >
+                                      <span role="button">
+                                        <Icon
+                                          icon="info"
+                                          className="ms-1"
+                                          size="17"
+                                          fill={isLightMode ? 'black' : 'white'}
+                                        />
+                                      </span>
+                                    </OverlayTrigger>
+                                  </Col>
+                                  <Col className="text-end">
+                                    {getSynthSupply() > 0 && (
                                       <ProgressBar
-                                        variant={
-                                          getMintedSynthCapPC() > 100
-                                            ? 'primary'
-                                            : 'success'
-                                        }
-                                        key={1}
-                                        now={getSynthCapPC()}
-                                      />
-                                      <ProgressBar
-                                        variant="black"
-                                        key={2}
-                                        now={0.5}
-                                      />
-                                      <ProgressBar
-                                        variant={
-                                          BN(getMintedSynthCapPC()).plus(
-                                            getSynthCapPC(),
-                                          ) > 100
-                                            ? 'primary'
-                                            : 'info'
-                                        }
-                                        key={3}
-                                        now={getMintedSynthCapPC()}
-                                        label={
-                                          <OverlayTrigger
-                                            placement="auto"
-                                            overlay={Tooltip(t, 'yourForge')}
-                                          >
-                                            <span role="button">
-                                              <Icon
-                                                icon="info"
-                                                className="ms-1"
-                                                size="17"
-                                                fill={
-                                                  isLightMode
-                                                    ? 'black'
-                                                    : 'white'
-                                                }
-                                              />
-                                            </span>
-                                          </OverlayTrigger>
-                                        }
-                                      />
-                                    </ProgressBar>
-                                  )}
-                                </Col>
-                              </Row>
+                                        style={{ height: '15px' }}
+                                        className="mt-1"
+                                      >
+                                        <ProgressBar
+                                          variant={
+                                            getMintedSynthCapPC() > 100
+                                              ? 'primary'
+                                              : 'success'
+                                          }
+                                          key={1}
+                                          now={getSynthCapPC()}
+                                        />
+                                        <ProgressBar
+                                          variant="black"
+                                          key={2}
+                                          now={0.5}
+                                        />
+                                        <ProgressBar
+                                          variant={
+                                            BN(getMintedSynthCapPC()).plus(
+                                              getSynthCapPC(),
+                                            ) > 100
+                                              ? 'primary'
+                                              : 'info'
+                                          }
+                                          key={3}
+                                          now={getMintedSynthCapPC()}
+                                          label={
+                                            <OverlayTrigger
+                                              placement="auto"
+                                              overlay={Tooltip(t, 'yourForge')}
+                                            >
+                                              <span role="button">
+                                                <Icon
+                                                  icon="info"
+                                                  className="ms-1"
+                                                  size="17"
+                                                  fill={
+                                                    isLightMode
+                                                      ? 'black'
+                                                      : 'white'
+                                                  }
+                                                />
+                                              </span>
+                                            </OverlayTrigger>
+                                          }
+                                        />
+                                      </ProgressBar>
+                                    )}
+                                  </Col>
+                                </Row>
+                              )}
 
                               <Row className="mb-2">
                                 <Col xs="auto">
