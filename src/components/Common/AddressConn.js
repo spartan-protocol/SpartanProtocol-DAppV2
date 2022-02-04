@@ -26,18 +26,18 @@ const AddressConn = () => {
   useEffect(() => {
     async function listenAccountsChanged() {
       window.ethereum?.on('accountsChanged', async () => {
-        document.location.reload()
+        document.location.reload(true)
       })
       window.BinanceChain?.on('accountsChanged', async () => {
-        document.location.reload()
+        document.location.reload(true)
       })
     }
     async function listenNetworkChanged() {
       window.ethereum?.on('chainChanged', async () => {
-        document.location.reload()
+        document.location.reload(true)
       })
       window.BinanceChain?.on('chainChanged', async () => {
-        document.location.reload()
+        document.location.reload(true)
       })
     }
     listenAccountsChanged()

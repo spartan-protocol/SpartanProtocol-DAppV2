@@ -41,6 +41,12 @@ const walletTypes = [
     connector: 'injected',
   },
   {
+    id: 'CB',
+    title: 'Coinbase Wallet',
+    icon: <Icon size={size} icon="coinbase" />,
+    connector: 'walletlink',
+  },
+  {
     id: 'OOT',
     title: 'Others',
     icon: <Icon size={size} icon="mathwallet" />,

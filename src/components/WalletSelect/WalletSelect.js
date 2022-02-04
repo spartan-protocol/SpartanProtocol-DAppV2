@@ -119,6 +119,7 @@ const WalletSelect = (props) => {
   const [network, setNetwork] = useState(getNetwork)
   const [activeTab, setactiveTab] = useState('tokens')
   const [wcConnector, setWcConnector] = useState(false)
+  // const [wlConnector, setWlConnector] = useState(false)
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
@@ -129,7 +130,7 @@ const WalletSelect = (props) => {
     } else {
       setNetwork(changeNetworkLsOnly(net))
     }
-    window.location.reload()
+    window.location.reload(true)
   }
 
   const onWalletDisconnect = async () => {
@@ -137,7 +138,7 @@ const WalletSelect = (props) => {
     wallet.deactivate()
     window.localStorage.removeItem('walletconnect')
     window.localStorage.setItem('disableWallet', '1')
-    window.location.reload()
+    window.location.reload(true)
   }
 
   const onWalletConnect = async (x) => {
@@ -153,6 +154,9 @@ const WalletSelect = (props) => {
     if (x.id === 'WC') {
       setWcConnector(connector)
     }
+    // if (x.id === 'CB') {
+    //   setWlConnector(connector)
+    // }
     setTimeout(() => {
       wallet.activate(connector)
     }, 50)
@@ -164,6 +168,15 @@ const WalletSelect = (props) => {
       setWcConnector(false)
     }
   }, [wallet, wcConnector])
+
+  // useEffect(() => {
+  //   console.log(wlConnector)
+  //   console.log(wallet)
+  //   if (wlConnector?.provider?.connected && !wallet.account) {
+  //     wallet.activate(wlConnector)
+  //     setWlConnector(false)
+  //   }
+  // }, [wallet, wlConnector])
 
   const checkWallet = async () => {
     if (
@@ -181,6 +194,8 @@ const WalletSelect = (props) => {
         onWalletConnect(walletTypes.filter((x) => x.id === 'TW')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'ON') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'ON')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'CB') {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'CB')[0])
       } else if (
         window.localStorage.getItem('lastWallet') === 'WC' &&
         network?.chainId === 56 // WalletConnect does not support testnet

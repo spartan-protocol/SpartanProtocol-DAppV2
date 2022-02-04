@@ -279,7 +279,6 @@ export const getGlobalMetrics = () => async (dispatch) => {
   try {
     const block = await getSubGraphBlock()
     const global = await callGlobalMetrics()
-    // console.log(global, block)
     dispatch(payloadToDispatch(Types.WEB3_METRICS, { global, block }))
   } catch (error) {
     dispatch(errorToDispatch(Types.WEB3_ERROR, error))
