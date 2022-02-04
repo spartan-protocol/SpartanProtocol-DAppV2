@@ -27,6 +27,10 @@ const ChartPrice = (props) => {
       x: {
         display: false,
       },
+      y: {
+        suggestedMin: getChartData()[1][30] * 0.94, // Prevent stable-coin zoom
+        suggestedMax: getChartData()[1][30] * 1.06, // Prevent stable-coin zoom
+      },
     },
     plugins: {
       title: {
