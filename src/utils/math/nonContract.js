@@ -316,7 +316,10 @@ export const getSecsSince = (timestamp) => {
  */
 export const formatDate = (unixTime) => {
   const date = new Date(unixTime * 1000)
-  return date.toLocaleDateString()
+  const day = date.toLocaleDateString('en-US', { day: 'numeric' })
+  const month = date.toLocaleDateString('en-US', { month: 'short' })
+  const year = date.toLocaleDateString('en-US', { year: 'numeric' })
+  return `${day}-${month}-${year}`
 }
 
 /**
