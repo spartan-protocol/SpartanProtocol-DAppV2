@@ -164,7 +164,9 @@ const Overview = () => {
                           {t('daoRunning')}
                         </Col>
                         <Col className="text-end output-card">
-                          {dao.global.running ? 'Yes' : 'No'}
+                          {dao.global.running
+                            ? t('daoRunningYes')
+                            : t('daoRunningNo')}
                         </Col>
                       </Row>
                       <Row className="my-1">

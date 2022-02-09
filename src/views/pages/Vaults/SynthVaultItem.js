@@ -152,7 +152,7 @@ const SynthVaultItem = ({ synthItem }) => {
                       ? `${
                           getTimeSince(synthItem.lastHarvest, t)[0] +
                           getTimeSince(synthItem.lastHarvest, t)[1]
-                        } ago`
+                        } ${t('ago')}`
                       : t('never')}
                   </>
                 )}

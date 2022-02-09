@@ -1,5 +1,6 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
+import { useTranslation } from 'react-i18next'
 import { useWeb3 } from '../../../../store/web3'
 import { BN, convertFromWei } from '../../../../utils/bigNumber'
 import { usePool } from '../../../../store/pool'
@@ -8,6 +9,7 @@ import { formatDate } from '../../../../utils/math/nonContract'
 const ChartTVL = () => {
   const web3 = useWeb3()
   const pool = usePool()
+  const { t } = useTranslation()
 
   const getTVL = (USD) => {
     let tvl = BN(0)
@@ -56,7 +58,7 @@ const ChartTVL = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Protocol TVL ($USD)',
+        text: `${t('protocolTvl')} ($USD)`,
       },
       legend: {
         display: false,

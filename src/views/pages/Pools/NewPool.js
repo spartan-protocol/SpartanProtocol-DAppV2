@@ -337,8 +337,7 @@ const NewPool = () => {
                         isInvalid={!addrValid}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Input a valid token address (18 decimal BEP20 asset
-                        listed in the{' '}
+                        {t('invalidTokenAddress')}{' '}
                         <a
                           href="https://github.com/trustwallet/assets/tree/master/blockchains/smartchain"
                           target="_blank"
@@ -349,7 +348,7 @@ const NewPool = () => {
                         )
                       </Form.Control.Feedback>
                     </InputGroup>
-                    Initial liquidity-add:
+                    {t('initialLiquidityAdd')}:
                     <InputGroup className="my-2">
                       <InputGroup.Text style={{ width: '73.6719px' }}>
                         SPARTA
@@ -400,7 +399,7 @@ const NewPool = () => {
                           id="inputConfirmRatio"
                           type="switch"
                           className="d-inline-block"
-                          label="Confirm ratio!"
+                          label={`${t('confirmRatio')}!`}
                           checked={ratioConfirm}
                           isValid={ratioConfirm}
                           isInvalid={!ratioConfirm}
@@ -425,7 +424,7 @@ const NewPool = () => {
                           id="feeConfirm"
                           type="switch"
                           className="d-inline-block"
-                          label="Confirm 1% fee!"
+                          label={`${t('confirmNewPoolFee')}!`}
                           checked={feeConfirm}
                           isValid={feeConfirm}
                           isInvalid={!feeConfirm}

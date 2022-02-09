@@ -1,5 +1,6 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
+import { useTranslation } from 'react-i18next'
 import { useWeb3 } from '../../../../store/web3'
 import { convertFromWei } from '../../../../utils/bigNumber'
 import { getUnixStartOfDay } from '../../../../utils/helpers'
@@ -7,6 +8,7 @@ import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartVol = () => {
   const web3 = useWeb3()
+  const { t } = useTranslation()
 
   const getChartData = () => {
     const data = []
@@ -39,7 +41,7 @@ const ChartVol = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Swap Volume ($USD)',
+        text: `${t('swapVolume')} ($USD)`,
       },
       legend: {
         display: false,
@@ -51,7 +53,7 @@ const ChartVol = () => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Swap Volume ($USD)',
+        label: `${t('swapVolume')} ($USD)`,
         data: getChartData()[1],
         fill: false,
         backgroundColor: getChartData()[2],
