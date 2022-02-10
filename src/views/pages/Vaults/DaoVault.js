@@ -394,7 +394,7 @@ const DaoVault = () => {
                           ? `${
                               getTimeSince(dao.member.lastHarvest, t)[0] +
                               getTimeSince(dao.member.lastHarvest, t)[1]
-                            } ago`
+                            } ${t('ago')}`
                           : t('never')}
                       </>
                     )}

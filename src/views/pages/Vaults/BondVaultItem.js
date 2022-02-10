@@ -121,7 +121,7 @@ const BondItem = (props) => {
                 {isBonded(asset.lastBlockTime) ? (
                   <>
                     {getTimeSince(asset.lastBlockTime, t)[0]}
-                    {getTimeSince(asset.lastBlockTime, t)[1]} ago
+                    {getTimeSince(asset.lastBlockTime, t)[1]} {t('ago')}
                   </>
                 ) : (
                   t('never')
