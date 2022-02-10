@@ -214,7 +214,7 @@ const Metrics = ({ assetSwap }) => {
                 </span>
                 <h6 className="mb-0">{APY}%</h6>
                 {curated && daoApy > 0 && (
-                  <div className="d-flex flex-col justify-content-end">
+                  <div className="d-flex justify-content-end">
                     <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'apySynth')}
