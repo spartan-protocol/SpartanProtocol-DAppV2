@@ -425,7 +425,7 @@ export const getWalletProvider = (_provider, rpcUrls) => {
 export const getProviderGasPrice = (rpcUrls) => {
   // const provider = getWalletProvider(null, rpcUrls) // TEMP DISABLE
   // const gasPrice = provider.getGasPrice() // TEMP DISABLE
-  const gasPrice = '6000000000' // TEMP OVERRIDE
+  const gasPrice = getNetwork().chainId === 97 ? '10010000000' : '5010000000' // TEMP OVERRIDE
   return gasPrice
 }
 
