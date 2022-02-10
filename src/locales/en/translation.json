@@ -325,7 +325,7 @@
   "totalFeeBurn": "Total FeeBurn",
   "totalHarvested": "Total Harvested",
   "totalSupply": "Total Supply",
-  "totalSupplyInfo": "The max supply of SPARTA is 300M. This has however been programmed to be impossible to reach. Getting close to 300M would take many years even without the deflationary feeBurn.",
+  "totalSupplyInfo": "The max supply of SPARTA is 300M. However, the large token burn phase reduced this below 250M which will take 10+ years to come within reach of.",
   "totalValueLocked": "Total Value Locked",
   "totalVotes": "Total Votes",
   "totalWeight": "Total Weight",
