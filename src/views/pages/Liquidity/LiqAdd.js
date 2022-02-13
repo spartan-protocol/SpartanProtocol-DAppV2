@@ -562,8 +562,8 @@ const LiqAdd = () => {
                               >
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="text"
-                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  type="number"
+                                  min="0"
                                   placeholder={`${t('add')}...`}
                                   id="addInput1"
                                   autoComplete="off"
