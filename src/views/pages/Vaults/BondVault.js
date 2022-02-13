@@ -84,7 +84,7 @@ const BondVault = () => {
                   Read more about the Bond program:
                 </div>
                 <a
-                  href="https://docs.spartanprotocol.org/education/bond"
+                  href="https://docs.spartanprotocol.org/#/staking?id=what-is-the-bondvault"
                   target="_blank"
                   rel="noreferrer"
                 >

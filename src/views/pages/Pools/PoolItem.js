@@ -36,7 +36,6 @@ const PoolItem = ({ asset, daoApy }) => {
     tokenAddress,
     baseAmount,
     tokenAmount,
-    fees,
     genesis,
     newPool,
     curated,
@@ -49,12 +48,17 @@ const PoolItem = ({ asset, daoApy }) => {
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
 
+  const getFees = () =>
+    pool.incentives
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].fees
+      : 0
+
   const getDivis = () =>
     curated && pool.incentives
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
-  const APY = formatFromUnits(calcAPY(asset, getDivis()), 2)
+  const APY = formatFromUnits(calcAPY(asset, getFees(), getDivis()), 2)
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 
@@ -241,7 +245,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     fill={isLightMode ? 'black' : 'white'}
                     className="me-1 mb-1"
                   />
-                  {APY}%
+                  {formatFromUnits(APY, 2)}%
                   {curated && daoApy > 0 && (
                     <>
                       <br />
@@ -258,7 +262,7 @@ const PoolItem = ({ asset, daoApy }) => {
                           />
                         </span>
                       </OverlayTrigger>
-                      {daoApy}%
+                      {formatFromUnits(daoApy, 2)}%
                     </>
                   )}
                 </p>
@@ -480,7 +484,7 @@ const PoolItem = ({ asset, daoApy }) => {
               <Col className="text-end output-card">
                 $
                 {formatFromWei(
-                  BN(fees).plus(getDivis()).times(web3?.spartaPrice),
+                  BN(getFees()).plus(getDivis()).times(web3?.spartaPrice),
                   0,
                 )}
                 <Icon icon="usd" className="ms-1" size="15" />
@@ -503,7 +507,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     </OverlayTrigger>
                   </Col>
                   <Col className="text-end output-card fw-light">
-                    {formatFromWei(fees, 0)}
+                    {formatFromWei(getFees(), 0)}
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>

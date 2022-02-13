@@ -1,8 +1,10 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
+import { useTranslation } from 'react-i18next'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
 const ChartPrice = (props) => {
+  const { t } = useTranslation()
   const getChartData = () => {
     const data1 = []
     const labels = []
@@ -27,11 +29,15 @@ const ChartPrice = (props) => {
       x: {
         display: false,
       },
+      y: {
+        suggestedMin: getChartData()[1][30] * 0.94, // Prevent stable-coin zoom
+        suggestedMax: getChartData()[1][30] * 1.06, // Prevent stable-coin zoom
+      },
     },
     plugins: {
       title: {
         display: true,
-        text: 'Token Price ($USD)',
+        text: `${t('tokenPrice')} ($USD)`,
       },
       legend: {
         display: false,
@@ -43,7 +49,7 @@ const ChartPrice = (props) => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Token Price ($USD)',
+        label: `${t('tokenPrice')} ($USD)`,
         data: getChartData()[1],
         fill: false,
         backgroundColor: '#228b22',

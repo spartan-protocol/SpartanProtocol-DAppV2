@@ -20,7 +20,11 @@ import { useReserve } from '../../../store/reserve/selector'
 import { useSparta } from '../../../store/sparta'
 import { bondVaultWeight, getBondDetails, useBond } from '../../../store/bond'
 import { Icon } from '../../../components/Icons/icons'
-import { calcDaoAPY, getVaultWeights } from '../../../utils/math/nonContract'
+import {
+  calcDaoAPY,
+  getTimeSince,
+  getVaultWeights,
+} from '../../../utils/math/nonContract'
 import { getPool, getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardDao } from '../../../utils/math/dao'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
@@ -112,14 +116,31 @@ const DaoVault = () => {
     return '0.00'
   }
 
-  const getUSDFromSpartaOwnWeight = () => {
+  const getOwnWeight = () => {
     const _weight = getVaultWeights(
       pool.poolDetails,
       dao.daoDetails,
       bond.bondDetails,
     )
     if (_weight > 0) {
+      return _weight
+    }
+    return '0.00'
+  }
+
+  const getUSDFromSpartaOwnWeight = () => {
+    const _weight = getOwnWeight()
+    if (_weight > 0) {
       return formatFromWei(BN(_weight).times(web3.spartaPrice))
+    }
+    return '0.00'
+  }
+
+  const getWeightPercent = () => {
+    const _weight = getOwnWeight()
+    const _totalWeight = getTotalWeight()
+    if (_weight > 0) {
+      return BN(_weight).div(_totalWeight).times(100).toFixed(2)
     }
     return '0.00'
   }
@@ -284,7 +305,7 @@ const DaoVault = () => {
           <Card.Header>{t('memberDetails')}</Card.Header>
           {!isLoading() ? (
             <>
-              <Card.Body>
+              <Card.Body className="pb-1">
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
                     {t('yourWeight')}
@@ -321,7 +342,8 @@ const DaoVault = () => {
                               ),
                               0,
                             )
-                          : getUSDFromSpartaOwnWeight()}
+                          : getUSDFromSpartaOwnWeight()}{' '}
+                        ({getWeightPercent()}%)
                         <Icon
                           icon={showUsd ? 'usd' : 'spartav2'}
                           size="20"
@@ -331,6 +353,7 @@ const DaoVault = () => {
                     )}
                   </Col>
                 </Row>
+
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
                     {t('harvestable')}
@@ -354,6 +377,27 @@ const DaoVault = () => {
                         ? t('connectWallet')
                         : `${formatFromWei(getClaimable())} SPARTA`
                       : t('incentivesDisabled')}
+                  </Col>
+                </Row>
+
+                <Row className="mt-2">
+                  <Col xs="auto" className="text-card">
+                    {t('lastHarvest')}
+                  </Col>
+
+                  <Col className="text-end output-card">
+                    {!wallet.account ? (
+                      t('connectWallet')
+                    ) : (
+                      <>
+                        {dao.member.lastHarvest > 0
+                          ? `${
+                              getTimeSince(dao.member.lastHarvest, t)[0] +
+                              getTimeSince(dao.member.lastHarvest, t)[1]
+                            } ${t('ago')}`
+                          : t('never')}
+                      </>
+                    )}
                   </Col>
                 </Row>
               </Card.Body>

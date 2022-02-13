@@ -13,7 +13,7 @@ import {
 import PoolItem from './PoolItem'
 import { usePool } from '../../../store/pool'
 import { getNetwork, tempChains } from '../../../utils/web3'
-import { convertToWei, BN, formatFromUnits } from '../../../utils/bigNumber'
+import { convertToWei, BN } from '../../../utils/bigNumber'
 import HelmetLoading from '../../../components/Loaders/HelmetLoading'
 import { bondVaultWeight } from '../../../store/bond/actions'
 import WrongNetwork from '../../../components/Common/WrongNetwork'
@@ -122,7 +122,8 @@ const Overview = () => {
     let revenue = BN(web3.metrics.global[0].daoVault30Day)
     revenue = revenue.toString()
     const baseAmount = getTotalDaoWeight().toString()
-    return formatFromUnits(calcDaoAPY(revenue, baseAmount), 2)
+    const apy = calcDaoAPY(revenue, baseAmount)
+    return apy.toFixed(2).toString()
   }
 
   const isDaoVaultLoading = () => {
@@ -150,7 +151,8 @@ const Overview = () => {
     let revenue = BN(web3.metrics.global[0].synthVault30Day)
     revenue = revenue.toString()
     const baseAmount = synth.totalWeight.toString()
-    return formatFromUnits(calcSynthAPY(revenue, baseAmount), 2)
+    const apy = calcSynthAPY(revenue, baseAmount)
+    return apy.toFixed(2).toString()
   }
 
   useEffect(() => {

@@ -6,7 +6,8 @@ export const proposalTypes = [
     longDesc:
       'This function will release a 2M SPARTA allocation to the Bond program. This will instantly allow anyone to perform Bonds, whereby they provide *only* the TOKEN half of the TOKEN:SPARTA liquidity-add and have their resulting LP tokens locked up in the BondVault and vested back to the user linearly over 6 months.',
     type: 'Action',
-    docsLink: 'https://docs.spartanprotocol.org/education/bond',
+    docsLink:
+      'https://docs.spartanprotocol.org/#/dao?id=bond-related-proposals-deprecated',
   },
   {
     value: 'LIST_BOND',
@@ -15,7 +16,8 @@ export const proposalTypes = [
     longDesc:
       'Listing an asset for Bond enables it for use in the Bond program. This will allow users to Bond the listed token with protocol-supplied SPARTA to mint LP tokens into the BondVault claimable linearly over 6 months.',
     type: 'Address',
-    docsLink: 'https://docs.spartanprotocol.org/education/bond',
+    docsLink:
+      'https://docs.spartanprotocol.org/#/dao?id=bond-related-proposals-deprecated',
   },
   {
     value: 'DELIST_BOND',
@@ -24,7 +26,8 @@ export const proposalTypes = [
     longDesc:
       'De-listing an asset from Bond disables it for use in the Bond program. Users will no longer be able to Bond the listed token with protocol-supplied SPARTA. Existing Bond positions will still be claimable for the remainder of their bond-period.',
     type: 'Address',
-    docsLink: 'https://docs.spartanprotocol.org/education/bond',
+    docsLink:
+      'https://docs.spartanprotocol.org/#/dao?id=bond-related-proposals-deprecated',
   },
   {
     value: 'FLIP_EMISSIONS',
@@ -33,8 +36,7 @@ export const proposalTypes = [
     longDesc:
       'Having a switch to regulate the emissions offers several advantages within the ecosystem. Turning off base emissions would cause Spartan Protocol to have its incentives fade away. This means that there would be less incentive for liquidity providers, potentially leading to reduced total value locked (TVL). One would expect them to be turned off when the protocol is mature & self sufficient in terms of incentives or in a situation where maybe its safer to have them off temporarily (like during a contract upgrade)',
     type: 'Action',
-    docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#flip_emissions',
+    docsLink: 'https://docs.spartanprotocol.org/#/dao?id=turn-on-off-emissions',
   },
   {
     value: 'REALISE',
@@ -43,8 +45,7 @@ export const proposalTypes = [
     longDesc:
       'Realising the premium of a pool involves working out how much the existing synths are worth and how much the LP tokens held on the Synth contract are worth. If there is a premium; it can be burned and therefore attributed to the existing liquidity providers.',
     type: 'Address',
-    docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#realise',
+    docsLink: 'https://docs.spartanprotocol.org/#/dao?id=burn-synth-premium',
   },
   {
     value: 'ADD_CURATED_POOL',
@@ -53,8 +54,7 @@ export const proposalTypes = [
     longDesc:
       'A curated pool is a special type of pool that enables Synthetic assets to be minted on top of it & its LP tokens to be used as weight in the DAOVault for harvest rewards & DAO proposals',
     type: 'Address',
-    docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#add-remove_curated_pool',
+    docsLink: 'https://docs.spartanprotocol.org/#/dao?id=add-pool-to-curated',
   },
   {
     value: 'REMOVE_CURATED_POOL',
@@ -64,7 +64,7 @@ export const proposalTypes = [
       'A curated pool is a special type of pool that enables Synthetic assets to be minted on top of it & its LP tokens to be used as weight in the DAOVault for harvest rewards & DAO proposals',
     type: 'Address',
     docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#add-remove_curated_pool',
+      'https://docs.spartanprotocol.org/#/dao?id=remove-pool-from-curated',
   },
   {
     value: 'SYNTH_CLAIM',
@@ -75,7 +75,7 @@ export const proposalTypes = [
     units: 'basis points',
     type: 'Param',
     docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#synth_claim-and-dao_claim',
+      'https://docs.spartanprotocol.org/#/dao?id=adjust-synthvault-claim-',
   },
   {
     value: 'DAO_CLAIM',
@@ -86,7 +86,7 @@ export const proposalTypes = [
     units: 'basis points',
     type: 'Param',
     docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#synth_claim-and-dao_claim',
+      'https://docs.spartanprotocol.org/#/dao?id=adjust-daovault-claim-',
   },
   {
     value: 'COOL_OFF',
@@ -97,7 +97,7 @@ export const proposalTypes = [
     units: 'seconds',
     type: 'Param',
     docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#cool_off',
+      'https://docs.spartanprotocol.org/#/dao?id=change-dao-proposal-cooloff',
   },
   {
     value: 'GRANT',
@@ -107,7 +107,8 @@ export const proposalTypes = [
       'The DAO can propose to grant SPARTA from the RESERVE to any wallet address. This could be for any reason, pay contributors, fund a project / activity or anything that benefits the protocol as a whole. Be very careful to enusre you trust the receiving wallet before supporting a grant proposal.',
     units: 'SPARTA',
     type: 'Grant',
-    docsLink: 'https://docs.spartanprotocol.org/education/dao/proposals#grant',
+    docsLink:
+      'https://docs.spartanprotocol.org/#/dao?id=send-a-sparta-grant-to-a-wallet',
   },
   {
     value: 'DAO',
@@ -116,7 +117,7 @@ export const proposalTypes = [
     longDesc:
       'Changing the DAO contract is a concept that may be of not much use at the moment. However, in order to future proof the Spartan Protocol, there may come a day where a modification or upgrade will need to take place within the DAO itself.',
     type: 'Address',
-    docsLink: 'https://docs.spartanprotocol.org/education/dao/proposals#dao',
+    docsLink: 'https://docs.spartanprotocol.org/#/dao?id=upgrade-dao-contract',
   },
   {
     value: 'ROUTER',
@@ -125,7 +126,8 @@ export const proposalTypes = [
     longDesc:
       'This contract is permissioned to interact with the pools and perform swaps & liquidity management. If features are added or logic is changed, alot of the time it will take place here in this contract.',
     type: 'Address',
-    docsLink: 'https://docs.spartanprotocol.org/education/dao/proposals#router',
+    docsLink:
+      'https://docs.spartanprotocol.org/#/dao?id=upgrade-router-contract',
   },
   {
     value: 'UTILS',
@@ -134,7 +136,8 @@ export const proposalTypes = [
     longDesc:
       'This contract is where the community can choose to modify or completely remove the fee burn. As mentioned in the tokenomics section, the fee burn sits between 0% and 1% depending on the circulating supply.',
     type: 'Address',
-    docsLink: 'https://docs.spartanprotocol.org/education/dao/proposals#utils',
+    docsLink:
+      'https://docs.spartanprotocol.org/#/dao?id=upgrade-utils-contract',
   },
   {
     value: 'RESERVE',
@@ -144,6 +147,6 @@ export const proposalTypes = [
       'The reserve contract is where the emissions are sent before being distributed to the end users.',
     type: 'Address',
     docsLink:
-      'https://docs.spartanprotocol.org/education/dao/proposals#reserve',
+      'https://docs.spartanprotocol.org/#/dao?id=upgrade-reserve-contract',
   },
 ]

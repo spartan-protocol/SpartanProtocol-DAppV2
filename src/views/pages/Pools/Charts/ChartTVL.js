@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
+import { useTranslation } from 'react-i18next'
 import { useWeb3 } from '../../../../store/web3'
 import { BN, convertFromWei } from '../../../../utils/bigNumber'
 import { usePool } from '../../../../store/pool'
 import { formatDate } from '../../../../utils/math/nonContract'
+import { getNetwork } from '../../../../utils/web3'
 
 const ChartTVL = () => {
   const web3 = useWeb3()
   const pool = usePool()
+  const { t } = useTranslation()
+
+  const [network, setnetwork] = useState(getNetwork())
+  const [trigger0, settrigger0] = useState(0)
 
   const getTVL = (USD) => {
     let tvl = BN(0)
@@ -25,6 +31,21 @@ const ChartTVL = () => {
     return '0.00'
   }
 
+  const getNet = () => {
+    setnetwork(getNetwork())
+  }
+  useEffect(() => {
+    if (trigger0 === 0) {
+      getNet()
+    }
+    const timer = setTimeout(() => {
+      getNet()
+      settrigger0(trigger0 + 1)
+    }, 2000)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger0])
+
   const getChartData = () => {
     const data1 = []
     const data2 = []
@@ -34,7 +55,8 @@ const ChartTVL = () => {
       web3.metrics.global.length >= dataPoints
         ? dataPoints
         : web3.metrics.global.length
-    if (pool.poolDetails) {
+    // Hide 'current' on testnet
+    if (pool.poolDetails && network?.chainId === 56) {
       data1.push(convertFromWei(getTVL(1), 0))
       data2.push(convertFromWei(getTVL(0), 0))
       labels.push('Current')
@@ -56,7 +78,7 @@ const ChartTVL = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Protocol TVL ($USD)',
+        text: `${t('protocolTvl')} ($USD)`,
       },
       legend: {
         display: false,

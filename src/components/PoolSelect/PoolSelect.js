@@ -153,7 +153,7 @@ const PoolSelect = () => {
           size="17"
           className="me-1 mb-1"
         />
-        {t('Search')}
+        {t('search')}
       </Button>
       {showModal && (
         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
@@ -161,7 +161,7 @@ const PoolSelect = () => {
           {tempChains.includes(network.chainId) && (
             <>
               <Modal.Header closeButton>
-                <Modal.Title>{t('Search Pools')}</Modal.Title>
+                <Modal.Title>{t('searchPools')}</Modal.Title>
               </Modal.Header>
               {!isLoading() ? (
                 <Modal.Body>

@@ -40,17 +40,22 @@ const SynthVaultItem = ({ synthItem }) => {
   }
 
   const checkValid = () => {
-    const reward = formatFromWei(getClaimable()[0], 4)
     if (!reserve.globalDetails.emissions) {
-      return [false, t('incentivesDisabled'), '']
+      return [false, t('incentivesDisabled')]
     }
     if (getClaimable()[1]) {
-      return [false, t('baseCap'), '']
+      return [false, t('poolAtCapacity')]
     }
+    return [true, t('harvest')]
+  }
+
+  const getHarvestable = () => {
+    const valid = checkValid()[0]
+    const reward = formatFromWei(getClaimable()[0], 4)
     if (getClaimable()[2]) {
-      return [true, reward, ' SPARTA']
+      return [valid, reward, ' SPARTA']
     }
-    return [true, reward, ` ${getToken(synthItem.tokenAddress)?.symbol}s`]
+    return [valid, reward, ` ${getToken(synthItem.tokenAddress)?.symbol}s`]
   }
 
   const isLightMode = window.localStorage.getItem('theme')
@@ -134,7 +139,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
-                  <>{checkValid()[1] + checkValid()[2]}</>
+                  <>{getHarvestable()[1] + getHarvestable()[2]}</>
                 )}
               </Col>
             </Row>
@@ -152,7 +157,7 @@ const SynthVaultItem = ({ synthItem }) => {
                       ? `${
                           getTimeSince(synthItem.lastHarvest, t)[0] +
                           getTimeSince(synthItem.lastHarvest, t)[1]
-                        } ago`
+                        } ${t('ago')}`
                       : t('never')}
                   </>
                 )}
@@ -171,13 +176,16 @@ const SynthVaultItem = ({ synthItem }) => {
                 <SynthWithdrawModal
                   synthItem={synthItem}
                   disabled={synthItem.staked <= 0}
-                  claimable={checkValid()}
+                  claimable={getHarvestable()}
                 />
               </Col>
             </Row>
             <Row className="mt-2">
               <Col xs="12" className="">
-                <SynthHarvestModal synthItem={synthItem} />
+                <SynthHarvestModal
+                  synthItem={synthItem}
+                  buttonValid={checkValid()}
+                />
               </Col>
             </Row>
           </Card.Footer>

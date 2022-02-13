@@ -87,6 +87,27 @@ export const calcLiqValueAll = (poolDets, daoDets, bondDets, spartaPrice) => {
 }
 
 /**
+ * Calculate spot value of array of Synths in [SPARTA, USD]
+ * @param poolDetails @param synthDetails array @param spartaPrice
+ * @returns [spartaValue, usdValue]
+ */
+export const calcSpotValueAll = (poolDets, synthDets, spartaPrice) => {
+  let spartaValue = BN(0)
+  let usdValue = BN(0)
+  const synthsFiltered = synthDets?.filter(
+    (asset) => asset.balance > 0 || asset.staked > 0,
+  )
+  for (let i = 0; i < synthsFiltered.length; i++) {
+    const amount = BN(synthsFiltered[i].balance).plus(synthsFiltered[i].staked)
+    const poolItem = getPool(synthsFiltered[i].tokenAddress, poolDets)
+    const value = calcSpotValueInBase(amount, poolItem)
+    spartaValue = spartaValue.plus(value)
+    usdValue = usdValue.plus(BN(value).times(spartaPrice))
+  }
+  return [spartaValue, usdValue]
+}
+
+/**
  * Get member's total SPARTA value of all LP tokens attributable to them
  * @param poolDetails @param daoDetails @param bondDetails
  * @returns memberWeight
@@ -295,7 +316,10 @@ export const getSecsSince = (timestamp) => {
  */
 export const formatDate = (unixTime) => {
   const date = new Date(unixTime * 1000)
-  return date.toLocaleDateString()
+  const day = date.toLocaleDateString('en-US', { day: 'numeric' })
+  const month = date.toLocaleDateString('en-US', { month: 'short' })
+  const year = date.toLocaleDateString('en-US', { year: 'numeric' })
+  return `${day}-${month}-${year}`
 }
 
 /**
@@ -309,24 +333,29 @@ export const formatDateDay = (unixTime) => {
 }
 
 /**
- * Calculate APY using full month divis + fees and pool's depth *** UPDATE WITH GENESIS/LASTMONTH ***
+ * Calculate APY using full month divis + fees and pool's depth
  * @param {object} pool
  * @returns {number} apy
  */
-export const calcAPY = (pool, recentDivis) => {
+export const calcAPY = (pool, recentFees, recentDivis, days = 30) => {
+  const oneDay = 86400
+  const period = 365 / days
   let apr = '0'
   const fallback = BN(convertToWei(10000))
   const baseAmount = BN(pool.baseAmount)
   const fallbackDepth = baseAmount.isLessThan(fallback) ? fallback : baseAmount
   const actualDepth = fallbackDepth.times(2)
   const _divis = BN(recentDivis)
-  const monthFraction = BN(getBlockTimestamp()).minus(pool.genesis).div(2592000)
-  if (monthFraction > 1) {
-    apr = BN(_divis).plus(pool.fees).times(12).div(actualDepth).times(100)
+  const _fees = BN(recentFees)
+  const periodFraction = BN(getBlockTimestamp())
+    .minus(pool.genesis)
+    .div(days * oneDay)
+  if (periodFraction > 1) {
+    apr = BN(_divis).plus(_fees).times(period).div(actualDepth).times(100)
   } else {
     apr = BN(_divis)
-      .plus(pool.fees)
-      .times(12 / monthFraction)
+      .plus(_fees)
+      .times(period / periodFraction)
       .div(actualDepth)
       .times(100)
   }

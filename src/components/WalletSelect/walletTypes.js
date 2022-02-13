@@ -35,6 +35,18 @@ const walletTypes = [
   //   connector: 'ledger',
   // },
   {
+    id: 'ON',
+    title: 'ONTO Wallet',
+    icon: <Icon size={size} icon="onto" />,
+    connector: 'injected',
+  },
+  {
+    id: 'CB',
+    title: 'Coinbase Wallet',
+    icon: <Icon size={size} icon="coinbase" />,
+    connector: 'walletlink',
+  },
+  {
     id: 'OOT',
     title: 'Others',
     icon: <Icon size={size} icon="mathwallet" />,

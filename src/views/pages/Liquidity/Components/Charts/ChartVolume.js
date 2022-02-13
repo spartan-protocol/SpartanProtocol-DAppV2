@@ -1,10 +1,13 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
+import { useTranslation } from 'react-i18next'
 import { convertFromWei } from '../../../../../utils/bigNumber'
 import { getUnixStartOfDay } from '../../../../../utils/helpers'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
 const ChartVolume = (props) => {
+  const { t } = useTranslation()
+
   const getChartData = () => {
     const data = []
     const labels = []
@@ -37,7 +40,7 @@ const ChartVolume = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'Swap Volume in $USD',
+        text: t('swapVolumeInUsd'),
       },
       legend: {
         display: false,

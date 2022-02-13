@@ -67,7 +67,7 @@ const Contracts = () => {
     } else {
       setnetwork(changeNetworkLsOnly(net))
     }
-    window.location.reload()
+    window.location.reload(true)
   }
 
   return (

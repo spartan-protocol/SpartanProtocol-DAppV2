@@ -88,7 +88,7 @@ const BondItem = (props) => {
                   src={spartaIcon}
                   alt="Sparta LP token icon"
                   className="position-absolute"
-                  style={{ right: '10px', bottom: '7px' }}
+                  style={{ right: '5px', bottom: '0px' }}
                 />
               </Col>
               <Col xs="auto" className="py-auto">
@@ -121,7 +121,7 @@ const BondItem = (props) => {
                 {isBonded(asset.lastBlockTime) ? (
                   <>
                     {getTimeSince(asset.lastBlockTime, t)[0]}
-                    {getTimeSince(asset.lastBlockTime, t)[1]} ago
+                    {getTimeSince(asset.lastBlockTime, t)[1]} {t('ago')}
                   </>
                 ) : (
                   t('never')

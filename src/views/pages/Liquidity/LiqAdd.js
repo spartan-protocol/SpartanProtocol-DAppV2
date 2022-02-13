@@ -60,6 +60,7 @@ const LiqAdd = () => {
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [showWalletWarning2, setShowWalletWarning2] = useState(false)
   const [showWalletWarning3, setShowWalletWarning3] = useState(false)
+  const [hasFocus, setHasFocus] = useState(true)
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('addTab1')
   const [confirm, setConfirm] = useState(false)
@@ -72,6 +73,14 @@ const LiqAdd = () => {
     new URLSearchParams(location.search).get(`asset1`),
   )
 
+  window.addEventListener('focus', () => {
+    setHasFocus(true)
+  })
+
+  window.addEventListener('blur', () => {
+    setHasFocus(false)
+  })
+
   const tryParse = (data) => {
     try {
       return JSON.parse(data)
@@ -83,65 +92,71 @@ const LiqAdd = () => {
   useEffect(() => {
     const { poolDetails } = pool
     const getAssetDetails = () => {
-      if (poolDetails.length > 0 && activeTab === 'addTab1') {
-        window.localStorage.setItem('assetType1', 'token')
-        window.localStorage.setItem('assetType2', 'token')
-        window.localStorage.setItem('assetType3', 'pool')
+      if (hasFocus) {
+        if (poolDetails.length > 0 && activeTab === 'addTab1') {
+          window.localStorage.setItem('assetType1', 'token')
+          window.localStorage.setItem('assetType2', 'token')
+          window.localStorage.setItem('assetType3', 'pool')
 
-        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-        let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
+          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+          let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
 
-        if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
-          ;[asset1] = poolDetails.filter(
-            (asset) => asset.tokenAddress === assetParam1,
-          )
-          setAssetParam1('')
+          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+            ;[asset1] = poolDetails.filter(
+              (asset) => asset.tokenAddress === assetParam1,
+            )
+            setAssetParam1('')
+          }
+          asset1 =
+            asset1 &&
+            asset1.address !== '' &&
+            pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
+              ? asset1
+              : { tokenAddress: addr.bnb }
+          asset2 = { tokenAddress: addr.spartav2 }
+          asset3 = asset1.address !== '' ? asset1 : { tokenAddress: addr.bnb }
+
+          asset1 = getItemFromArray(asset1, pool.poolDetails)
+          asset2 = getItemFromArray(asset2, pool.poolDetails)
+          asset3 = getItemFromArray(asset3, pool.poolDetails)
+
+          setAssetAdd1(asset1)
+          setAssetAdd2(asset2)
+          setPoolAdd1(asset3)
+
+          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
+          window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
+        } else if (poolDetails && activeTab === 'addTab2') {
+          window.localStorage.setItem('assetType1', 'token')
+          window.localStorage.setItem('assetType3', 'pool')
+
+          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+          let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
+
+          asset1 =
+            asset1 &&
+            pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
+              ? asset1
+              : { tokenAddress: addr.bnb }
+          asset3 = asset1.address !== '' ? asset1 : asset3
+
+          asset1 = getItemFromArray(asset1, pool.poolDetails)
+          asset3 = getItemFromArray(asset3, pool.poolDetails)
+          asset1 = asset1.hide
+            ? getItemFromArray(addr.bnb, poolDetails)
+            : asset1
+          asset3 = asset3.hide
+            ? getItemFromArray(addr.bnb, poolDetails)
+            : asset3
+
+          setAssetAdd1(asset1)
+          setPoolAdd1(asset3)
+
+          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+          window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
         }
-        asset1 =
-          asset1 &&
-          asset1.address !== '' &&
-          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-            ? asset1
-            : { tokenAddress: addr.bnb }
-        asset2 = { tokenAddress: addr.spartav2 }
-        asset3 = asset1.address !== '' ? asset1 : { tokenAddress: addr.bnb }
-
-        asset1 = getItemFromArray(asset1, pool.poolDetails)
-        asset2 = getItemFromArray(asset2, pool.poolDetails)
-        asset3 = getItemFromArray(asset3, pool.poolDetails)
-
-        setAssetAdd1(asset1)
-        setAssetAdd2(asset2)
-        setPoolAdd1(asset3)
-
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-        window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
-        window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-      } else if (poolDetails && activeTab === 'addTab2') {
-        window.localStorage.setItem('assetType1', 'token')
-        window.localStorage.setItem('assetType3', 'pool')
-
-        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-        let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
-
-        asset1 =
-          asset1 &&
-          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-            ? asset1
-            : { tokenAddress: addr.bnb }
-        asset3 = asset1.address !== '' ? asset1 : asset3
-
-        asset1 = getItemFromArray(asset1, pool.poolDetails)
-        asset3 = getItemFromArray(asset3, pool.poolDetails)
-        asset1 = asset1.hide ? getItemFromArray(addr.bnb, poolDetails) : asset1
-        asset3 = asset3.hide ? getItemFromArray(addr.bnb, poolDetails) : asset3
-
-        setAssetAdd1(asset1)
-        setPoolAdd1(asset3)
-
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-        window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
       }
     }
 
@@ -153,6 +168,7 @@ const LiqAdd = () => {
     window.localStorage.getItem('assetSelected2'),
     window.localStorage.getItem('assetSelected3'),
     activeTab,
+    hasFocus,
   ])
 
   const getToken = (tokenAddress) =>
@@ -546,8 +562,8 @@ const LiqAdd = () => {
                               >
                                 <FormControl
                                   className="text-end ms-0"
-                                  type="text"
-                                  pattern="[0-9]+([\.][0-9]{1,2})?"
+                                  type="number"
+                                  min="0"
                                   placeholder={`${t('add')}...`}
                                   id="addInput1"
                                   autoComplete="off"

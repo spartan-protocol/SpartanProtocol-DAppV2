@@ -13,8 +13,9 @@ const Partners = () => (
       <Row className="row-480 text-center">
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header className="">
-              <img src={Immunefi} alt="immunefi" />
+            <Card.Header style={{ height: '49px' }}>
+              {' '}
+              <img src={Immunefi} alt="immunefi" className="rounded-0" />
             </Card.Header>
             <Card.Body>
               Web3&apos;s leading bug bounty platform, protecting $100 billion
@@ -35,7 +36,8 @@ const Partners = () => (
         </Col>
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header className="">
+            <Card.Header style={{ height: '49px' }}>
+              {' '}
               <img
                 src={C4}
                 alt="codearena"
@@ -61,8 +63,14 @@ const Partners = () => (
         </Col>
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header className="">
-              <img src={Certik} alt="certik" height="26px" />
+            <Card.Header style={{ height: '49px' }}>
+              {' '}
+              <img
+                src={Certik}
+                alt="certik"
+                height="26px"
+                className="rounded-0"
+              />
             </Card.Header>
             <Card.Body>
               Utilizing best-in-class AI technology to secure & monitor
@@ -83,8 +91,14 @@ const Partners = () => (
         </Col>
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header className="">
-              <img src={GitHub} alt="github" height="26px" />
+            <Card.Header style={{ height: '49px' }}>
+              {' '}
+              <img
+                src={GitHub}
+                alt="github"
+                height="26px"
+                className="rounded-0"
+              />
             </Card.Header>
             <Card.Body>
               Everything built by the community is open source! GitHub is
@@ -105,12 +119,13 @@ const Partners = () => (
         </Col>
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header className="">
+            <Card.Header style={{ height: '49px' }}>
+              {' '}
               <img
                 src={Moonlight}
                 alt="moonlight"
                 height="26px"
-                className="me-1"
+                className="rounded-0 me-1"
               />{' '}
               Moonlight
             </Card.Header>
@@ -133,7 +148,7 @@ const Partners = () => (
         </Col>
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header className="">
+            <Card.Header style={{ height: '49px' }}>
               <img
                 src={OntoWallet}
                 alt="onto wallet"

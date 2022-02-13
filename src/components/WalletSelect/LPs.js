@@ -102,7 +102,7 @@ const LPs = () => {
       return (
         <div className="hide-i5">
           <hr />
-          <Row key="total-assets" className="modal-body">
+          <Row key="total-assets" className="output-card">
             <Col xs="auto" className="pe-1">
               {' '}
               <img width="35px" alt="empty" className="invisible" />
@@ -113,8 +113,8 @@ const LPs = () => {
                 <Col xs="auto" className="float-left output-card">
                   {t('total')}
                 </Col>
-                <Col className="text-sm-label">
-                  <div className="text-end">
+                <Col>
+                  <div className="text-sm-label text-end">
                     ~${formatFromWei(total, 0)}
                     <Icon icon="usd" size="15" className="ms-1" />
                   </div>

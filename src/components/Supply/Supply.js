@@ -149,7 +149,7 @@ const Supply = () => {
     } else {
       setnetwork(changeNetworkLsOnly(net))
     }
-    window.location.reload()
+    window.location.reload(true)
   }
 
   return (
@@ -183,7 +183,7 @@ const Supply = () => {
             <Popover.Header className="mt-2">
               {t('tokenomics')}
               <a
-                href="https://docs.spartanprotocol.org/tokenomics-1/sparta"
+                href="https://docs.spartanprotocol.org/#/introduction?id=the-sparta-token"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -217,9 +217,7 @@ const Supply = () => {
                           {t('totalValueLocked')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Total Value Locked (TVL) is derived by multiplying the
-                          total SPARTA value of all locked tokens in the pools
-                          by the current USD market value of each SPARTA token.
+                          {t('tvlInfo')}
                         </Popover.Body>
                       </Popover>
                     }
@@ -250,9 +248,7 @@ const Supply = () => {
                           {t('marketcap')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Marketcap is derived by multiplying the circulating
-                          supply of SPARTA by the current USD market value of
-                          each SPARTA token.
+                          {t('marketcapInfo')}
                         </Popover.Body>
                       </Popover>
                     }
@@ -284,12 +280,7 @@ const Supply = () => {
                           {t('totalSupply')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          <div className="mb-3">
-                            The max supply of SPARTA is 300M. This has however
-                            been programmed to be impossible to reach. Getting
-                            close to 300M would take many years even without the
-                            deflationary feeBurn.
-                          </div>
+                          <div className="mb-3">{t('totalSupplyInfo')}</div>
                           <Row>
                             <Col xs="4" className="text-center">
                               <Badge bg="primary">{t('burnForSparta')}</Badge>
@@ -388,11 +379,7 @@ const Supply = () => {
                           {t('circulatingSupply')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Circulating supply includes only SPARTA tokens that
-                          have entered circulation. SPARTA tokens that have not
-                          entered circulation include Reserve & Dao contract
-                          holdings and also any SPARTA held at the dead address
-                          (Burned)
+                          {t('circulatingSupplyInfo')}
                         </Popover.Body>
                       </Popover>
                     }
@@ -437,9 +424,7 @@ const Supply = () => {
                       <Popover>
                         <Popover.Header as="h3">{t('burned')}</Popover.Header>
                         <Popover.Body className="text-center">
-                          The SPARTAv2 token has had phases of burns. The tally
-                          here includes the total SPARTA burned via feeBurn
-                          along with any burned via the dead address since then.
+                          {t('burnedInfo')}
                         </Popover.Body>
                       </Popover>
                     }

@@ -86,8 +86,17 @@ const Swap = () => {
     new URLSearchParams(location.search).get(`type2`),
   )
   const [network, setnetwork] = useState(getNetwork())
-
   const [trigger0, settrigger0] = useState(0)
+  const [hasFocus, setHasFocus] = useState(true)
+
+  window.addEventListener('focus', () => {
+    setHasFocus(true)
+  })
+
+  window.addEventListener('blur', () => {
+    setHasFocus(false)
+  })
+
   const getData = () => {
     setnetwork(getNetwork())
   }
@@ -123,100 +132,106 @@ const Swap = () => {
     const { poolDetails } = pool
 
     const getAssetDetails = () => {
-      if (poolDetails?.length > 0) {
-        let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-        let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-        let type1 = window.localStorage.getItem('assetType1')
-        let type2 = window.localStorage.getItem('assetType2')
+      if (hasFocus) {
+        if (poolDetails?.length > 0) {
+          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+          let type1 = window.localStorage.getItem('assetType1')
+          let type2 = window.localStorage.getItem('assetType2')
 
-        if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
-          ;[asset1] = poolDetails.filter(
-            (asset) => asset.tokenAddress === assetParam1,
-          )
-          setAssetParam1('')
-        }
-        if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
-          ;[asset2] = poolDetails.filter(
-            (asset) => asset.tokenAddress === assetParam2,
-          )
-          setAssetParam2('')
-        }
-        if (typeParam1 === 'token' || typeParam1 === 'pool') {
-          type1 = typeParam1
-          setTypeParam1('')
-        }
-        if (typeParam2 === 'token' || typeParam2 === 'pool') {
-          type2 = typeParam2
-          setTypeParam2('')
-        }
-
-        if (!getFilter().includes(type1)) {
-          type1 = 'token'
-        }
-        if (!getFilter().includes(type2)) {
-          type2 = 'token'
-        }
-        window.localStorage.setItem('assetType1', type1)
-        window.localStorage.setItem('assetType2', type2)
-
-        const tempFilter = []
-        if (type1 === 'token') {
-          tempFilter.push('token')
-          if (type2 === 'token') {
-            setMode('token')
-          } else {
-            window.localStorage.setItem('assetType2', 'token')
+          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+            ;[asset1] = poolDetails.filter(
+              (asset) => asset.tokenAddress === assetParam1,
+            )
+            setAssetParam1('')
           }
-        } else if (type1 === 'pool') {
-          if (getFilter().includes('pool')) tempFilter.push('pool')
-          setMode('pool')
-          window.localStorage.setItem('assetType2', 'pool')
-        }
-        setFilter(tempFilter)
-
-        if (type1 !== 'synth' && type2 !== 'synth') {
-          if (asset2?.tokenAddress === asset1?.tokenAddress) {
-            asset2 =
-              asset1?.tokenAddress !== poolDetails[0].tokenAddress
-                ? { tokenAddress: poolDetails[0].tokenAddress }
-                : { tokenAddress: poolDetails[1].tokenAddress }
+          if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
+            ;[asset2] = poolDetails.filter(
+              (asset) => asset.tokenAddress === assetParam2,
+            )
+            setAssetParam2('')
           }
-        }
+          if (typeParam1 === 'token' || typeParam1 === 'pool') {
+            type1 = typeParam1
+            setTypeParam1('')
+          }
+          if (typeParam2 === 'token' || typeParam2 === 'pool') {
+            type2 = typeParam2
+            setTypeParam2('')
+          }
 
-        if (type1 === 'pool') {
-          if (asset2?.address === '') {
+          if (!getFilter().includes(type1)) {
+            type1 = 'token'
+          }
+          if (!getFilter().includes(type2)) {
+            type2 = 'token'
+          }
+          window.localStorage.setItem('assetType1', type1)
+          window.localStorage.setItem('assetType2', type2)
+
+          const tempFilter = []
+          if (type1 === 'token') {
+            tempFilter.push('token')
+            if (type2 === 'token') {
+              setMode('token')
+            } else {
+              window.localStorage.setItem('assetType2', 'token')
+            }
+          } else if (type1 === 'pool') {
+            if (getFilter().includes('pool')) tempFilter.push('pool')
+            setMode('pool')
+            window.localStorage.setItem('assetType2', 'pool')
+          }
+          setFilter(tempFilter)
+
+          if (type1 !== 'synth' && type2 !== 'synth') {
+            if (asset2?.tokenAddress === asset1?.tokenAddress) {
+              asset2 =
+                asset1?.tokenAddress !== poolDetails[0].tokenAddress
+                  ? { tokenAddress: poolDetails[0].tokenAddress }
+                  : { tokenAddress: poolDetails[1].tokenAddress }
+            }
+          }
+
+          if (type1 === 'pool') {
+            if (asset2?.address === '') {
+              asset2 = { tokenAddress: addr.bnb }
+            }
+          }
+
+          if (
+            !asset1 ||
+            !pool.poolDetails.find(
+              (x) => x.tokenAddress === asset1.tokenAddress,
+            )
+          ) {
+            asset1 = { tokenAddress: addr.spartav2 }
+          }
+
+          if (
+            !asset2 ||
+            !pool.poolDetails.find(
+              (x) => x.tokenAddress === asset2.tokenAddress,
+            )
+          ) {
             asset2 = { tokenAddress: addr.bnb }
           }
+
+          asset1 = getItemFromArray(asset1, poolDetails)
+          asset2 = getItemFromArray(asset2, poolDetails)
+          asset1 = asset1.hide
+            ? getItemFromArray(addr.spartav2, poolDetails)
+            : asset1
+          asset2 = asset2.hide
+            ? getItemFromArray(addr.spartav2, poolDetails)
+            : asset2
+
+          setAssetSwap1(asset1)
+          setAssetSwap2(asset2)
+
+          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         }
-
-        if (
-          !asset1 ||
-          !pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-        ) {
-          asset1 = { tokenAddress: addr.spartav2 }
-        }
-
-        if (
-          !asset2 ||
-          !pool.poolDetails.find((x) => x.tokenAddress === asset2.tokenAddress)
-        ) {
-          asset2 = { tokenAddress: addr.bnb }
-        }
-
-        asset1 = getItemFromArray(asset1, poolDetails)
-        asset2 = getItemFromArray(asset2, poolDetails)
-        asset1 = asset1.hide
-          ? getItemFromArray(addr.spartav2, poolDetails)
-          : asset1
-        asset2 = asset2.hide
-          ? getItemFromArray(addr.spartav2, poolDetails)
-          : asset2
-
-        setAssetSwap1(asset1)
-        setAssetSwap2(asset2)
-
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-        window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
       }
     }
 
@@ -234,6 +249,7 @@ const Swap = () => {
     window.localStorage.getItem('assetType1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetType2'),
+    hasFocus,
   ])
 
   const getToken = (tokenAddress) =>
@@ -689,6 +705,13 @@ const Swap = () => {
                                     <InputGroup className="m-0">
                                       <InputGroup.Text id="assetSelect1">
                                         <AssetSelect
+                                          defaultTab={
+                                            window.localStorage.getItem(
+                                              'assetType1',
+                                            ) !== 'pool'
+                                              ? 'token'
+                                              : 'pool'
+                                          }
                                           priority="1"
                                           filter={getFilter()}
                                           onClick={handleConfClear}

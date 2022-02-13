@@ -157,7 +157,7 @@ const Upgrade = () => {
                   <Row className="">
                     <Col xs="12" className="">
                       <Button variant="info" className="w-100" disabled>
-                        Not Enough BNB
+                        {t('notEnoughBnb')}
                       </Button>
                     </Col>
                   </Row>
@@ -215,7 +215,7 @@ const Upgrade = () => {
                   <Row className="">
                     <Col xs="12" className="">
                       <Button variant="info" className="w-100" disabled>
-                        Not Enough BNB
+                        {t('notEnoughBnb')}
                       </Button>
                     </Col>
                   </Row>

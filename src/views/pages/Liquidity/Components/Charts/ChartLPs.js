@@ -3,24 +3,33 @@ import { Line } from 'react-chartjs-2'
 import { BN, convertFromWei } from '../../../../../utils/bigNumber'
 import { formatDate } from '../../../../../utils/math/nonContract'
 
-const ChartRevenue = (props) => {
+const ChartLPs = (props) => {
+  const getLPs = () => {
+    let liqUnits = BN(0)
+    if (props.poolItem) {
+      liqUnits = liqUnits.plus(props.poolItem.poolUnits)
+    }
+    if (liqUnits > 0) {
+      return liqUnits
+    }
+    return '0.00'
+  }
+
   const getChartData = () => {
     const data1 = []
     const labels = []
     const dataPoints = props.period
     const length =
       props.metrics.length >= dataPoints ? dataPoints : props.metrics.length
-    let accumulative = BN(0)
-    const metrics = props.metrics
-      ? props.metrics.slice(0, length).reverse()
-      : []
-    for (let i = 0; i < length; i++) {
-      const revenue = BN(metrics[i].incentivesUSD).plus(metrics[i].feesUSD)
-      accumulative = accumulative.plus(revenue)
-      data1.push(convertFromWei(accumulative))
-      labels.push(formatDate(metrics[i].timestamp))
+    if (props.poolItem) {
+      data1.push(convertFromWei(getLPs(), 0))
+      labels.push('Current')
     }
-    return [labels, data1]
+    for (let i = 0; i < length; i++) {
+      data1.push(convertFromWei(props.metrics[i].lpUnits))
+      labels.push(formatDate(props.metrics[i].timestamp))
+    }
+    return [labels.reverse(), data1.reverse()]
   }
 
   const options = {
@@ -32,7 +41,7 @@ const ChartRevenue = (props) => {
     plugins: {
       title: {
         display: true,
-        text: 'Pool Revenue in $USD',
+        text: 'Total supply of LP units',
       },
       legend: {
         display: false,
@@ -44,7 +53,7 @@ const ChartRevenue = (props) => {
     labels: getChartData()[0],
     datasets: [
       {
-        label: 'Revenue ($USD)',
+        label: 'LP Units',
         data: getChartData()[1],
         fill: false,
         backgroundColor: '#228b22',
@@ -60,4 +69,4 @@ const ChartRevenue = (props) => {
   )
 }
 
-export default ChartRevenue
+export default ChartLPs
