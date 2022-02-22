@@ -17,6 +17,7 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import {
+  formatShortString,
   getAddresses,
   getItemFromArray,
   getNetwork,
@@ -51,6 +52,8 @@ import {
 } from '../../../utils/math/nonContract'
 import { swapTo, zapLiq } from '../../../utils/math/router'
 import Notifications from '../../../components/Notifications/Notifications'
+import ShareLink from '../../../components/Share/ShareLink'
+import { getExplorerContract } from '../../../utils/extCalls'
 
 const Swap = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -755,12 +758,51 @@ const Swap = () => {
                                         />
                                       </InputGroup.Text>
                                     </InputGroup>
-                                    <div className="text-end text-sm-label pt-1">
-                                      ~$
-                                      {swapInput1?.value
-                                        ? formatFromWei(getInput1USD(), 2)
-                                        : '0.00'}
-                                    </div>
+
+                                    <Row className="text-sm-label pt-1">
+                                      <Col>
+                                        {formatShortString(
+                                          mode === 'pool'
+                                            ? assetSwap1?.address
+                                            : assetSwap1?.tokenAddress,
+                                        )}
+                                        <ShareLink
+                                          url={
+                                            mode === 'pool'
+                                              ? assetSwap1?.address
+                                              : assetSwap1?.tokenAddress
+                                          }
+                                        >
+                                          <Icon
+                                            icon="copy"
+                                            size="16"
+                                            className="ms-1 mb-1"
+                                          />
+                                        </ShareLink>
+                                        <a
+                                          href={getExplorerContract(
+                                            mode === 'pool'
+                                              ? assetSwap1?.address
+                                              : assetSwap1?.tokenAddress,
+                                          )}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          <Icon
+                                            icon="scan"
+                                            size="12"
+                                            className="ms-1 mb-1"
+                                            fill="rgb(170, 205, 255)"
+                                          />
+                                        </a>
+                                      </Col>
+                                      <Col className="text-end">
+                                        ~$
+                                        {swapInput1?.value
+                                          ? formatFromWei(getInput1USD(), 2)
+                                          : '0.00'}
+                                      </Col>
+                                    </Row>
                                   </Col>
                                 </Row>
                               </Card.Body>
@@ -837,17 +879,56 @@ const Swap = () => {
                                         />
                                       </InputGroup.Text>
                                     </InputGroup>
-                                    <div className="text-end text-sm-label pt-1">
-                                      ~$
-                                      {swapInput2?.value
-                                        ? formatFromWei(getInput2USD(), 2)
-                                        : '0.00'}
-                                      {' ('}
-                                      {swapInput1?.value
-                                        ? formatFromUnits(getRateSlip(), 2)
-                                        : '0.00'}
-                                      {'%)'}
-                                    </div>
+
+                                    <Row className="text-sm-label pt-1">
+                                      <Col>
+                                        {formatShortString(
+                                          mode === 'pool'
+                                            ? assetSwap2?.address
+                                            : assetSwap2?.tokenAddress,
+                                        )}
+                                        <ShareLink
+                                          url={
+                                            mode === 'pool'
+                                              ? assetSwap2?.address
+                                              : assetSwap2?.tokenAddress
+                                          }
+                                        >
+                                          <Icon
+                                            icon="copy"
+                                            size="16"
+                                            className="ms-1 mb-1"
+                                          />
+                                        </ShareLink>
+                                        <a
+                                          href={getExplorerContract(
+                                            mode === 'pool'
+                                              ? assetSwap2?.address
+                                              : assetSwap2?.tokenAddress,
+                                          )}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                        >
+                                          <Icon
+                                            icon="scan"
+                                            size="12"
+                                            className="ms-1 mb-1"
+                                            fill="rgb(170, 205, 255)"
+                                          />
+                                        </a>
+                                      </Col>
+                                      <Col className="text-end">
+                                        ~$
+                                        {swapInput2?.value
+                                          ? formatFromWei(getInput2USD(), 2)
+                                          : '0.00'}
+                                        {' ('}
+                                        {swapInput1?.value
+                                          ? formatFromUnits(getRateSlip(), 2)
+                                          : '0.00'}
+                                        {'%)'}
+                                      </Col>
+                                    </Row>
                                   </Col>
                                 </Row>
                               </Card.Body>

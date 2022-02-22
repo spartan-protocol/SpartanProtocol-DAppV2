@@ -19,7 +19,12 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
-import { getAddresses, getItemFromArray, oneWeek } from '../../../utils/web3'
+import {
+  formatShortString,
+  getAddresses,
+  getItemFromArray,
+  oneWeek,
+} from '../../../utils/web3'
 import {
   BN,
   convertFromWei,
@@ -45,6 +50,8 @@ import {
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { addLiq, addLiqAsym } from '../../../utils/math/router'
 import { Tooltip } from '../../../components/Tooltip/tooltip'
+import ShareLink from '../../../components/Share/ShareLink'
+import { getExplorerContract } from '../../../utils/extCalls'
 
 const LiqAdd = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -580,13 +587,38 @@ const LiqAdd = () => {
                                 <Icon icon="close" size="10" fill="grey" />
                               </InputGroup.Text>
                             </InputGroup>
-
-                            <div className="text-end text-sm-label pt-1">
-                              ~$
-                              {addInput1?.value
-                                ? formatFromWei(getInput1ValueUSD(), 2)
-                                : '0.00'}
-                            </div>
+                            <Row className="text-sm-label pt-1">
+                              <Col>
+                                {formatShortString(assetAdd1?.tokenAddress)}
+                                <ShareLink url={assetAdd1?.tokenAddress}>
+                                  <Icon
+                                    icon="copy"
+                                    size="16"
+                                    className="ms-1 mb-1"
+                                  />
+                                </ShareLink>
+                                <a
+                                  href={getExplorerContract(
+                                    assetAdd1?.tokenAddress,
+                                  )}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  <Icon
+                                    icon="scan"
+                                    size="12"
+                                    className="ms-1 mb-1"
+                                    fill="rgb(170, 205, 255)"
+                                  />
+                                </a>
+                              </Col>
+                              <Col className="text-end">
+                                ~$
+                                {addInput1?.value
+                                  ? formatFromWei(getInput1ValueUSD(), 2)
+                                  : '0.00'}
+                              </Col>
+                            </Row>
                           </Col>
                         </Row>
                       </Card.Body>
@@ -704,12 +736,39 @@ const LiqAdd = () => {
                                   <Icon icon="close" size="10" fill="grey" />
                                 </InputGroup.Text>
                               </InputGroup>
-                              <div className="text-end text-sm-label pt-1">
-                                ~$
-                                {addInput2?.value
-                                  ? formatFromWei(getInput2ValueUSD(), 2)
-                                  : '0.00'}
-                              </div>
+
+                              <Row className="text-sm-label pt-1">
+                                <Col>
+                                  {formatShortString(assetAdd2?.tokenAddress)}
+                                  <ShareLink url={assetAdd2?.tokenAddress}>
+                                    <Icon
+                                      icon="copy"
+                                      size="16"
+                                      className="ms-1 mb-1"
+                                    />
+                                  </ShareLink>
+                                  <a
+                                    href={getExplorerContract(
+                                      assetAdd2?.tokenAddress,
+                                    )}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    <Icon
+                                      icon="scan"
+                                      size="12"
+                                      className="ms-1 mb-1"
+                                      fill="rgb(170, 205, 255)"
+                                    />
+                                  </a>
+                                </Col>
+                                <Col className="text-end">
+                                  ~$
+                                  {addInput2?.value
+                                    ? formatFromWei(getInput2ValueUSD(), 2)
+                                    : '0.00'}
+                                </Col>
+                              </Row>
                             </Col>
                           </Row>
                         </Card.Body>
@@ -752,17 +811,44 @@ const LiqAdd = () => {
                                   disabled
                                 />
                               </InputGroup>
-                              <div className="text-end text-sm-label pt-1">
-                                ~$
-                                {addInput1?.value
-                                  ? formatFromWei(getLpValueUSD(), 2)
-                                  : '0.00'}
-                                {' ('}
-                                {addInput1?.value
-                                  ? formatFromUnits(getRateSlip(), 2)
-                                  : '0.00'}
-                                {'%)'}
-                              </div>
+
+                              <Row className="text-sm-label pt-1">
+                                <Col>
+                                  {formatShortString(poolAdd1?.address)}
+                                  <ShareLink url={poolAdd1?.address}>
+                                    <Icon
+                                      icon="copy"
+                                      size="16"
+                                      className="ms-1 mb-1"
+                                    />
+                                  </ShareLink>
+                                  <a
+                                    href={getExplorerContract(
+                                      poolAdd1?.address,
+                                    )}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    <Icon
+                                      icon="scan"
+                                      size="12"
+                                      className="ms-1 mb-1"
+                                      fill="rgb(170, 205, 255)"
+                                    />
+                                  </a>
+                                </Col>
+                                <Col className="text-end">
+                                  ~$
+                                  {addInput1?.value
+                                    ? formatFromWei(getLpValueUSD(), 2)
+                                    : '0.00'}
+                                  {' ('}
+                                  {addInput1?.value
+                                    ? formatFromUnits(getRateSlip(), 2)
+                                    : '0.00'}
+                                  {'%)'}
+                                </Col>
+                              </Row>
                             </Col>
                           </Row>
                         </Card.Body>
