@@ -17,7 +17,7 @@ const ShareLink = (props) => {
       onClick={() => writeToClipboard(url)}
       role="button"
       aria-hidden="true"
-      className="zoomactive"
+      className="zoomactive d-inline-block"
     >
       {children}
     </div>

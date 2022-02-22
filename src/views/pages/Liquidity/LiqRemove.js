@@ -17,7 +17,12 @@ import {
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../../components/AssetSelect/AssetSelect'
 import { usePool } from '../../../store/pool'
-import { getAddresses, getItemFromArray, oneWeek } from '../../../utils/web3'
+import {
+  formatShortString,
+  getAddresses,
+  getItemFromArray,
+  oneWeek,
+} from '../../../utils/web3'
 import {
   BN,
   convertFromWei,
@@ -42,6 +47,8 @@ import { calcLiqValue, calcSpotValueInBase } from '../../../utils/math/utils'
 import { getTimeUntil } from '../../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../../utils/math/router'
 import Metrics from './Components/Metrics'
+import ShareLink from '../../../components/Share/ShareLink'
+import { getExplorerContract } from '../../../utils/extCalls'
 
 const LiqRemove = () => {
   const isLightMode = window.localStorage.getItem('theme')
@@ -494,12 +501,39 @@ const LiqRemove = () => {
                                 <Icon icon="close" size="10" fill="grey" />
                               </InputGroup.Text>
                             </InputGroup>
-                            <div className="text-end text-sm-label pt-1">
-                              ~$
-                              {removeInput1?.value
-                                ? formatFromWei(getLpValueUSD(), 2)
-                                : '0.00'}
-                            </div>
+
+                            <Row className="text-sm-label pt-1">
+                              <Col>
+                                {formatShortString(poolRemove1?.address)}
+                                <ShareLink url={poolRemove1?.address}>
+                                  <Icon
+                                    icon="copy"
+                                    size="16"
+                                    className="ms-1 mb-1"
+                                  />
+                                </ShareLink>
+                                <a
+                                  href={getExplorerContract(
+                                    poolRemove1?.address,
+                                  )}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  <Icon
+                                    icon="scan"
+                                    size="12"
+                                    className="ms-1 mb-1"
+                                    fill="rgb(170, 205, 255)"
+                                  />
+                                </a>
+                              </Col>
+                              <Col className="text-end">
+                                ~$
+                                {removeInput1?.value
+                                  ? formatFromWei(getLpValueUSD(), 2)
+                                  : '0.00'}
+                              </Col>
+                            </Row>
                           </Col>
                         </Row>
                       </Card.Body>
@@ -565,12 +599,41 @@ const LiqRemove = () => {
                                   disabled
                                 />
                               </InputGroup>
-                              <div className="text-end text-sm-label pt-1">
-                                ~$
-                                {removeInput2?.value
-                                  ? formatFromWei(getOutput1ValueUSD(), 2)
-                                  : '0.00'}
-                              </div>
+
+                              <Row className="text-sm-label pt-1">
+                                <Col>
+                                  {formatShortString(
+                                    assetRemove1?.tokenAddress,
+                                  )}
+                                  <ShareLink url={assetRemove1?.tokenAddress}>
+                                    <Icon
+                                      icon="copy"
+                                      size="16"
+                                      className="ms-1 mb-1"
+                                    />
+                                  </ShareLink>
+                                  <a
+                                    href={getExplorerContract(
+                                      assetRemove1?.tokenAddress,
+                                    )}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    <Icon
+                                      icon="scan"
+                                      size="12"
+                                      className="ms-1 mb-1"
+                                      fill="rgb(170, 205, 255)"
+                                    />
+                                  </a>
+                                </Col>
+                                <Col className="text-end">
+                                  ~$
+                                  {removeInput2?.value
+                                    ? formatFromWei(getOutput1ValueUSD(), 2)
+                                    : '0.00'}
+                                </Col>
+                              </Row>
                             </Col>
                           </Row>
                         </Card.Body>
