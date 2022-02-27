@@ -121,8 +121,12 @@ ethereum(network: $network){
           },
         },
       }
-      const recentDonations = await axios.request(options)
-      setrecentTxns(recentDonations.data.data.ethereum.transfers)
+      const recentDonations = await axios
+        .request(options)
+        .catch((error) => ({ error }))
+      if (!recentDonations.error) {
+        setrecentTxns(recentDonations.data.data.ethereum.transfers)
+      }
     }
   }
   useEffect(() => {
@@ -280,9 +284,7 @@ ethereum(network: $network){
                 </Row> */}
                 <Row>
                   <Col xs="12" className="my-2">
-                    This wallet holds donations from the community to fund
-                    activites and expenses that the community puts forward as
-                    important for SPARTA to continue building its shieldwall
+                    {t('donationsInfo')}
                     <br />
                     <br />
                     {t('donationsHeldCurrencyInfo')}
@@ -299,7 +301,7 @@ ethereum(network: $network){
                     </div>
                   </Col>
                   <Col xs="12" className="my-1">
-                    Community Wallet Holdings:
+                    {t('communityWalletHoldings')}:
                     <br />
                     <br />
                     <li>
@@ -481,8 +483,8 @@ ethereum(network: $network){
                             id="inputDonation"
                             placeholder={
                               !selectedAsset
-                                ? 'Select asset above...'
-                                : `${selectedAsset} donation amount...`
+                                ? `${t('selectAssetAbove')}...`
+                                : `${selectedAsset} ${t('donationAmount')}...`
                             }
                             disabled={!selectedAsset}
                           />

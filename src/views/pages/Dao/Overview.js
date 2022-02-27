@@ -233,25 +233,25 @@ const Overview = () => {
                                 style={{ minHeight: '320px' }}
                               >
                                 <Card.Header>
-                                  {
+                                  {t(
                                     proposalTypes.filter(
                                       (i) =>
                                         i.value ===
                                         dao.proposal[
                                           dao.global.currentProposal - 1
                                         ].proposalType,
-                                    )[0].label
-                                  }
+                                    )[0].label,
+                                  )}
                                   <Card.Subtitle className="">
-                                    {
+                                    {t(
                                       proposalTypes.filter(
                                         (i) =>
                                           i.value ===
                                           dao.proposal[
                                             dao.global.currentProposal - 1
                                           ].proposalType,
-                                      )[0].desc
-                                    }
+                                      )[0].desc,
+                                    )}
                                   </Card.Subtitle>
                                 </Card.Header>
                                 <Card.Body className="pb-0 output-card">

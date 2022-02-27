@@ -309,7 +309,7 @@ const ProposalItem = ({ proposal }) => {
           <Card.Header>
             <Row className="h-100">
               <Col className="">
-                <div className="mb-0">{type?.label}</div>
+                <div className="mb-0">{t(type?.label)}</div>
                 <Card.Subtitle>
                   (#{proposal.id}) {status()}
                 </Card.Subtitle>
@@ -330,7 +330,7 @@ const ProposalItem = ({ proposal }) => {
           )} */}
             <Row>
               <Col>
-                <div className="output-card mb-2">{type?.desc}:</div>
+                <div className="output-card mb-2">{t(type?.desc)}:</div>
               </Col>
             </Row>
             <Row>
@@ -395,7 +395,7 @@ const ProposalItem = ({ proposal }) => {
             ) : (
               <Row>
                 <Col>
-                  <div className="output-card mb-2">{type?.longDesc}</div>
+                  <div className="output-card mb-2">{t(type?.longDesc)}</div>
                 </Col>
               </Row>
             )}
@@ -540,7 +540,7 @@ const ProposalItem = ({ proposal }) => {
             ) : (
               <Row>
                 <Col className="output-card">
-                  Proposed on {formatDate(proposal.startTime)}
+                  {t('proposedOn')} {formatDate(proposal.startTime)}
                 </Col>
               </Row>
             )}
