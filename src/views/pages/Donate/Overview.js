@@ -92,21 +92,17 @@ ethereum(network: $network){
       timestamp {
         time (format: "%Y-%m-%d %H:%M:%S")
       }
-      height
     }
     address: sender {
       address
-      annotation
     }
     currency {
-      address
       symbol
     }
     amount
     transaction {
       hash
     }
-    external
   }
 }
 }`,
@@ -689,7 +685,7 @@ ethereum(network: $network){
               <Card.Body>
                 {recentTxns?.length > 0 &&
                   recentTxns.map((i) => (
-                    <Row key={i.transaction.hash} className="my-2">
+                    <Row key={i.transaction.hash + i.amount} className="my-2">
                       <Col xs="auto" className="pe-0">
                         {i.currency.symbol === 'BNB' && (
                           <Icon icon="bnb" size="35" />
