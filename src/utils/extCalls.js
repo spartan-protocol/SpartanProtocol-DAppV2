@@ -17,30 +17,30 @@ export const headerBQ = {
 
 // GET BSCSCAN URL BY CONTRACT ADDRESS
 export const getExplorerContract = (contractAddr) => {
-  const { net } = getNetwork()
+  const { chainId } = getNetwork()
   let link = `https://bscscan.com/address/${contractAddr}#code`
-  if (net === 'testnet') {
-    link = `https://${net}.bscscan.com/address/${contractAddr}#code`
+  if (chainId === 97) {
+    link = `https://testnet.bscscan.com/address/${contractAddr}#code`
   }
   return link
 }
 
 // GET BSCSCAN URL BY WALLET ADDRESS
 export const getExplorerWallet = (wallet) => {
-  const { net } = getNetwork()
+  const { chainId } = getNetwork()
   let link = `https://bscscan.com/address/${wallet}`
-  if (net === 'testnet') {
-    link = `https://${net}.bscscan.com/address/${wallet}`
+  if (chainId === 97) {
+    link = `https://testnet.bscscan.com/address/${wallet}`
   }
   return link
 }
 
 // GET BSCSCAN URL BY TXN HASH
 export const getExplorerTxn = (txnHash) => {
-  const { net } = getNetwork()
+  const { chainId } = getNetwork()
   let link = `https://bscscan.com/tx/${txnHash}`
-  if (net === 'testnet') {
-    link = `https://${net}.bscscan.com/tx/${txnHash}`
+  if (chainId === 97) {
+    link = `https://testnet.bscscan.com/tx/${txnHash}`
   }
   return link
 }

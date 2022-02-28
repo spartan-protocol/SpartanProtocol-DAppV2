@@ -29,6 +29,11 @@ export const addNetworkMM = () => async (dispatch) => {
   dispatch(web3Loading())
   const providerETH = window.ethereum ? window.ethereum : null
   const network = getNetwork()
+  if (network.chainId === 56) {
+    network.net = 'Mainnet'
+  } else {
+    network.net = 'Testnet'
+  }
   const chainId = parseInt(network.chainId, 10)
   if (providerETH) {
     try {
