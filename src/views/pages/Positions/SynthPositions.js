@@ -384,10 +384,7 @@ const SynthPositions = () => {
                             {t('assetsForged')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total sum of all assets used to mint Synths by your
-                            wallet. The value is based on the price of the
-                            assets at the time they were added, derived via the
-                            pools internal pricing.
+                            {t('assetsForgedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -428,10 +425,7 @@ const SynthPositions = () => {
                             {t('assetsMelted')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total sum of all assets received via melting Synths
-                            by your wallet. The value is based on the price of
-                            the assets at the time they were received, derived
-                            via the pools internal pricing.
+                            {t('assetsMeltedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -471,10 +465,7 @@ const SynthPositions = () => {
                             {t('totalHarvested')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total sum of all harvests by your wallet. The value
-                            is based on the price of the SPARTA at the time they
-                            were harvested, derived via the pools internal
-                            pricing.
+                            {t('totalHarvestedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -514,9 +505,7 @@ const SynthPositions = () => {
                             {t('redemptionValue')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total value of all Synth assets attributed to this
-                            wallet. The value is internally derived based on the
-                            current spot prices of the assets in the pools.
+                            {t('redemptionValueInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -557,10 +546,9 @@ const SynthPositions = () => {
                             {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Your NET position based on the sum of the above
-                            rows. This is a comparison to if you were to hold{' '}
-                            {showUsd ? 'USD' : 'SPARTA'} instead of providing
-                            liquidity to the pools.
+                            {t('gainVsInfo', {
+                              coin: showUsd ? 'USD' : 'SPARTA',
+                            })}
                           </Popover.Body>
                         </Popover>
                       }
@@ -600,8 +588,7 @@ const SynthPositions = () => {
                             {t('currentlyWorth')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            This is the current spot value of the Gain vs Hodl
-                            figure above
+                            {t('currentlyWorthInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -644,8 +631,7 @@ const SynthPositions = () => {
                             {t('currentBlock')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            The most recent block from your connected RPC
-                            network.
+                            {t('currentBlockInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -673,11 +659,7 @@ const SynthPositions = () => {
                             {t('lastUpdated')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            The most recent block from the last time you clicked
-                            &apos;Reload&apos; to update all
-                            &apos;realised&apos; position events. Note that the
-                            &apos;Redemption Value&apos; is dynamic and does not
-                            need to be updated via the button.
+                            {t('lastUpdatedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -720,7 +702,9 @@ const SynthPositions = () => {
       <Col xs="auto">
         <Card className="card-320" style={{ minHeight: '445px' }}>
           <Card.Header className="">
-            {!isLoading() ? `${_getToken().symbol}s` : 'Synth'} Position
+            {t('assetPosition', {
+              asset: !isLoading() ? `${_getToken().symbol}s` : 'Synth',
+            })}
             <Card.Subtitle className="">
               <div className="mt-2 d-inline-block me-2">
                 vs Hodl {showUsdPool ? 'USD' : _getToken().symbol}
@@ -763,10 +747,9 @@ const SynthPositions = () => {
                           {t('assetsForged')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Total sum of all assets used to mint these Synths by
-                          your wallet. The value is based on the price of the
-                          assets at the time they were added, derived via the
-                          pools internal pricing.
+                          {t('assetsForgedInfo', {
+                            these: ` ${t('these')}`,
+                          })}
                         </Popover.Body>
                       </Popover>
                     }
@@ -807,10 +790,7 @@ const SynthPositions = () => {
                           {t('assetsMelted')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Total sum of all assets received from melting these
-                          Synths by your wallet. The value is based on the price
-                          of the assets at the time they were removed, derived
-                          via the pools internal pricing.
+                          {t('assetsMeltedInfo', { these: ` ${t('these')}` })}
                         </Popover.Body>
                       </Popover>
                     }
@@ -850,9 +830,7 @@ const SynthPositions = () => {
                           {t('totalHarvested')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Total sum of all harvests by your wallet. The value is
-                          based on the price of the SPARTA at the time they were
-                          harvested, derived via the pools internal pricing.
+                          {t('totalHarvestedInfo')}
                         </Popover.Body>
                       </Popover>
                     }
@@ -894,9 +872,7 @@ const SynthPositions = () => {
                           {t('redemptionValue')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Total value of all Synth assets attributed to this
-                          wallet. The value is internally derived based on the
-                          current spot prices of the assets in the pools.
+                          {t('redemptionValueSynthInfo')}
                         </Popover.Body>
                       </Popover>
                     }
@@ -936,10 +912,9 @@ const SynthPositions = () => {
                           {showUsdPool ? 'USD' : _getToken().symbol}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          Your NET position based on the sum of the above rows.
-                          This is a comparison to if you were to hold{' '}
-                          {showUsdPool ? 'USD' : _getToken().symbol} instead of
-                          minting Synths.
+                          {t('gainVsInfoSynth', {
+                            coin: showUsdPool ? 'USD' : _getToken().symbol,
+                          })}
                         </Popover.Body>
                       </Popover>
                     }
@@ -977,8 +952,7 @@ const SynthPositions = () => {
                           {t('currentlyWorth')}
                         </Popover.Header>
                         <Popover.Body className="text-center">
-                          This is the current spot value of the Gain vs Hodl
-                          figure above
+                          {t('currentlyWorthInfo')}
                         </Popover.Body>
                       </Popover>
                     }

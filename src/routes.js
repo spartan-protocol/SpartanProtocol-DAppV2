@@ -53,7 +53,7 @@ export const routes = [
 
   {
     path: '/positions',
-    name: 'Positions',
+    name: 'positions',
     icon: 'analysis',
     component: Positions,
     layout: '',
@@ -85,7 +85,7 @@ export const routes = [
 
   {
     path: '/partners',
-    name: 'Partners',
+    name: 'partners',
     icon: 'handshake',
     component: Partners,
     layout: '',

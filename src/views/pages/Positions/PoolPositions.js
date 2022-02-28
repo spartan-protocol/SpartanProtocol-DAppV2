@@ -213,7 +213,7 @@ const PoolPositions = () => {
 
   const getNetGain = (inUsd) => {
     if (!isOverall) {
-      return 'Generate First'
+      return t('generateFirst')
     }
     const add = BN(getNetAdd()[inUsd ? 1 : 0])
     const remove = BN(getNetRemove()[inUsd ? 1 : 0])
@@ -237,19 +237,19 @@ const PoolPositions = () => {
 
   const getBlock = () => {
     if (!isOverall) {
-      return 'Generate First'
+      return t('generateFirst')
     }
     if (position?.block > 0) {
       return position?.block
     }
-    return 'Generate First'
+    return t('generateFirst')
   }
 
   const getBlockRPC = () => {
     if (web3.rpcs[0].good) {
       return web3.rpcs[0].block
     }
-    return 'Network Issues'
+    return t('networkIssues')
   }
 
   const _getPoolPos = () => {
@@ -317,7 +317,7 @@ const PoolPositions = () => {
   const getPoolNetGain = (type) => {
     const typeIndex = type === 'sparta' ? 0 : type === 'token' ? 1 : 2
     if (!isOverall) {
-      return 'Generate First'
+      return t('generateFirst')
     }
     const add = BN(getPoolNetAdd()[typeIndex])
     const remove = BN(getPoolNetRem()[typeIndex])
@@ -340,7 +340,7 @@ const PoolPositions = () => {
       <Col xs="auto">
         <Card className="card-320" style={{ minHeight: '445px' }}>
           <Card.Header className="">
-            Overall Position
+            {t('overallPosition')}
             <Card.Subtitle className="">
               <div className="mt-2 d-inline-block me-2">
                 vs Hodl {showUsd ? 'USD' : 'SPARTA'}
@@ -350,7 +350,7 @@ const PoolPositions = () => {
                 className="p-1 text-sm-label"
                 onClick={() => setShowUsd(!showUsd)}
               >
-                Change to:
+                {t('changeTo')}:
                 <Icon
                   icon={!showUsd ? 'usd' : 'spartav2'}
                   size="17"
@@ -373,10 +373,7 @@ const PoolPositions = () => {
                             {t('liquidityAdded')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total sum of all liquidity added to the pools by
-                            your wallet (including Bond). The value is based on
-                            the price of the assets at the time they were added,
-                            derived via the pools internal pricing.
+                            {t('liquidityAddedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -397,7 +394,7 @@ const PoolPositions = () => {
                           showUsd ? getNetAdd()[1] : getNetAdd()[0],
                           2,
                         )
-                      : 'Generate First'}
+                      : t('generateFirst')}
                     <Icon
                       icon={showUsd ? 'usd' : 'spartav2'}
                       className="ms-1"
@@ -417,10 +414,7 @@ const PoolPositions = () => {
                             {t('liquidityRemoved')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total sum of all liquidity removed from the pools by
-                            your wallet. The value is based on the price of the
-                            assets at the time they were removed, derived via
-                            the pools internal pricing.
+                            {t('liquidityRemovedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -441,7 +435,7 @@ const PoolPositions = () => {
                           showUsd ? getNetRemove()[1] : getNetRemove()[0],
                           2,
                         )
-                      : 'Generate First'}
+                      : t('generateFirst')}
                     <Icon
                       icon={showUsd ? 'usd' : 'spartav2'}
                       className="ms-1"
@@ -460,10 +454,7 @@ const PoolPositions = () => {
                             {t('totalHarvested')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total sum of all harvests by your wallet. The value
-                            is based on the price of the SPARTA at the time they
-                            were harvested, derived via the pools internal
-                            pricing.
+                            {t('totalHarvestedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -484,7 +475,7 @@ const PoolPositions = () => {
                           showUsd ? getNetHarvest()[1] : getNetHarvest()[0],
                           2,
                         )
-                      : 'Generate First'}
+                      : t('generateFirst')}
                     <Icon
                       icon={showUsd ? 'usd' : 'spartav2'}
                       className="ms-1"
@@ -503,11 +494,7 @@ const PoolPositions = () => {
                             {t('redemptionValue')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Total value of all assets you would receive if you
-                            were to redeem all LP tokens held or attributed to
-                            this wallet. The value is internally derived based
-                            on the current spot prices of the assets in the
-                            pools.
+                            {t('redemptionValueInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -548,10 +535,9 @@ const PoolPositions = () => {
                             {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            Your NET position based on the sum of the above
-                            rows. This is a comparison to if you were to hold{' '}
-                            {showUsd ? 'USD' : 'SPARTA'} instead of providing
-                            liquidity to the pools.
+                            {t('gainVsInfo', {
+                              coin: showUsd ? 'USD' : 'SPARTA',
+                            })}
                           </Popover.Body>
                         </Popover>
                       }
@@ -572,7 +558,7 @@ const PoolPositions = () => {
                           showUsd ? getNetGain(true) : getNetGain(false),
                           2,
                         )
-                      : 'Generate First'}
+                      : t('generateFirst')}
                     <Icon
                       icon={showUsd ? 'usd' : 'spartav2'}
                       className="ms-1"
@@ -591,8 +577,7 @@ const PoolPositions = () => {
                             {t('currentlyWorth')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            This is the current spot value of the Gain vs Hodl
-                            figure above
+                            {t('currentlyWorthInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -615,7 +600,7 @@ const PoolPositions = () => {
                             : getNetGainUsdToSparta(),
                           2,
                         )
-                      : 'Generate First'}
+                      : t('generateFirst')}
                     <Icon
                       icon={!showUsd ? 'usd' : 'spartav2'}
                       className="ms-1"
@@ -635,8 +620,7 @@ const PoolPositions = () => {
                             {t('currentBlock')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            The most recent block from your connected RPC
-                            network.
+                            {t('currentBlockInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -664,11 +648,7 @@ const PoolPositions = () => {
                             {t('lastUpdated')}
                           </Popover.Header>
                           <Popover.Body className="text-center">
-                            The most recent block from the last time you clicked
-                            &apos;Reload&apos; to update all
-                            &apos;realised&apos; position events. Note that the
-                            &apos;Redemption Value&apos; is dynamic and does not
-                            need to be updated via the button.
+                            {t('lastUpdatedInfo')}
                           </Popover.Body>
                         </Popover>
                       }
@@ -696,7 +676,7 @@ const PoolPositions = () => {
                 >
                   {getSecsSince(position.lastUpdated) < 60
                     ? `${`Wait ${60 - getSecsSince(position.lastUpdated)}`}s`
-                    : 'Reload'}
+                    : t('reload')}
                 </Button>
               </Card.Footer>
             </>
@@ -711,7 +691,9 @@ const PoolPositions = () => {
       <Col xs="auto">
         <Card className="card-320" style={{ minHeight: '445px' }}>
           <Card.Header className="">
-            {!isLoading() ? `${_getToken().symbol}p` : 'Pool'} Position
+            {t('assetPosition', {
+              asset: !isLoading() ? `${_getToken().symbol}p` : 'Pool',
+            })}
             <Card.Subtitle className="">
               <div className="mt-2 d-inline-block me-2">
                 vs Hodl {showUsdPool ? 'USD' : 'Units'}
@@ -721,7 +703,7 @@ const PoolPositions = () => {
                 className="p-1 text-sm-label"
                 onClick={() => setShowUsdPool(!showUsdPool)}
               >
-                Change to:
+                {t('changeTo')}:
                 <Icon
                   icon={!showUsdPool ? 'usd' : 'spartav2'}
                   size="17"
@@ -754,10 +736,7 @@ const PoolPositions = () => {
                               {t('liquidityAdded')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total sum of all liquidity added to the pools by
-                              your wallet (including Bond). The value is based
-                              on the price of the assets at the time they were
-                              added, derived via the pools internal pricing.
+                              {t('liquidityAddedInfo')}
                             </Popover.Body>
                           </Popover>
                         }
@@ -775,7 +754,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetAdd()[2], 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -791,10 +770,7 @@ const PoolPositions = () => {
                               {t('liquidityRemoved')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total sum of all liquidity removed from the pools
-                              by your wallet. The value is based on the price of
-                              the assets at the time they were removed, derived
-                              via the pools internal pricing.
+                              {t('liquidityRemovedInfo')}
                             </Popover.Body>
                           </Popover>
                         }
@@ -812,7 +788,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetRem()[2], 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -827,11 +803,7 @@ const PoolPositions = () => {
                               {t('redemptionValue')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total value of all assets you would receive if you
-                              were to redeem all LP tokens held or attributed to
-                              this wallet. The value is internally derived based
-                              on the current spot prices of the assets in the
-                              pools.
+                              {t('redemptionValueInfo')}
                             </Popover.Body>
                           </Popover>
                         }
@@ -863,10 +835,7 @@ const PoolPositions = () => {
                               {t('gainVs')} USD
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Your NET position based on the sum of the above
-                              rows. This is a comparison to if you were to hold
-                              USD instead of providing liquidity to the pools
-                              (Excluding Harvest Rewards)
+                              {t('gainInfoSingle')}
                             </Popover.Body>
                           </Popover>
                         }
@@ -884,7 +853,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetGain('usd'), 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -902,8 +871,9 @@ const PoolPositions = () => {
                               {t('liquidityAdded')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total sum of all SPARTA units added to the pools
-                              by your wallet (including Bond)
+                              {t('liquidityAddedSingleInfo', {
+                                coin: 'SPARTA',
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -921,7 +891,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetAdd()[0], 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="spartav2" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -936,8 +906,9 @@ const PoolPositions = () => {
                               {t('liquidityRemoved')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total sum of all SPARTA units removed from the
-                              pools by your wallet
+                              {t('liquidityRemovedSingleInfo', {
+                                coin: 'SPARTA',
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -955,7 +926,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetRem()[0], 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="spartav2" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -970,9 +941,9 @@ const PoolPositions = () => {
                               {t('redemptionValue')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total SPARTA you would receive if you were to
-                              redeem all LP tokens held or attributed to this
-                              wallet (SPARTA-side / half)
+                              {t('redemptionValueSingleInfo', {
+                                coin: 'SPARTA',
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1001,8 +972,9 @@ const PoolPositions = () => {
                           <Popover>
                             <Popover.Header as="h3">{t('gain')}</Popover.Header>
                             <Popover.Body className="text-center">
-                              Your NET SPARTA position based on the sum of the
-                              above rows (Excluding Harvest Rewards)
+                              {t('gainInfoSingleCoin', {
+                                coin: 'SPARTA',
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1020,7 +992,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetGain('sparta'), 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="spartav2" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -1036,8 +1008,9 @@ const PoolPositions = () => {
                               {t('liquidityAdded')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total sum of all {_getToken().symbol} units added
-                              to the pools by your wallet (including Bond)
+                              {t('liquidityAddedSingleInfo', {
+                                coin: _getToken().symbol,
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1055,7 +1028,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetAdd()[1], 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <img
                         src={_getToken().symbolUrl}
                         height="15"
@@ -1075,8 +1048,9 @@ const PoolPositions = () => {
                               {t('liquidityRemoved')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total sum of all {_getToken().symbol} units
-                              removed from the pools by your wallet
+                              {t('liquidityRemovedSingleInfo', {
+                                coin: _getToken().symbol,
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1094,7 +1068,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetRem()[1], 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <img
                         src={_getToken().symbolUrl}
                         height="15"
@@ -1114,10 +1088,9 @@ const PoolPositions = () => {
                               {t('redemptionValue')}
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Total {_getToken().symbol} you would receive if
-                              you were to redeem all LP tokens held or
-                              attributed to this wallet ({_getToken().symbol}
-                              -side / half)
+                              {t('redemptionValueSingleInfo', {
+                                coin: _getToken().symbol,
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1151,9 +1124,9 @@ const PoolPositions = () => {
                           <Popover>
                             <Popover.Header as="h3">{t('gain')}</Popover.Header>
                             <Popover.Body className="text-center">
-                              Your NET {_getToken().symbol} position based on
-                              the sum of the above rows (Excluding Harvest
-                              Rewards)
+                              {t('gainInfoSingleCoin', {
+                                coin: _getToken().symbol,
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1171,7 +1144,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetGain('token'), 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <img
                         src={_getToken().symbolUrl}
                         height="15"
@@ -1192,11 +1165,9 @@ const PoolPositions = () => {
                               {t('gainVs')} Units
                             </Popover.Header>
                             <Popover.Body className="text-center">
-                              Your NET position based on the sum of the above
-                              rows. This is a comparison to if you were to hold
-                              the underlying assets (SPARTA +{' '}
-                              {_getToken().symbol}) instead of providing them as
-                              liquidity to the pools (Excluding Harvest Rewards)
+                              {t('gainVsInfoSingle', {
+                                coin: _getToken().symbol,
+                              })}
                             </Popover.Body>
                           </Popover>
                         }
@@ -1214,7 +1185,7 @@ const PoolPositions = () => {
                     <Col className="text-end output-card">
                       {isOverall()
                         ? formatFromWei(getPoolNetGainWorthUsd(), 2)
-                        : 'Generate First'}
+                        : t('generateFirst')}
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>

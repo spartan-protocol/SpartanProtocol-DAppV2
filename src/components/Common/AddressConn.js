@@ -91,7 +91,7 @@ const AddressConn = () => {
             <Popover>
               <Popover.Header />
               <Popover.Body>
-                <b>Click here to connect your Wallet</b>
+                <b>{t('checkConnectWallet')}</b>
               </Popover.Body>
             </Popover>
           </Overlay>{' '}

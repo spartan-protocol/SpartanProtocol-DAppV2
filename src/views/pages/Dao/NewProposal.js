@@ -271,7 +271,7 @@ const NewProposal = () => {
                       .filter((x) => !tempHide.includes(x.value))
                       .map((pid) => (
                         <option key={pid.value} value={pid.value}>
-                          {pid.label}
+                          {t(pid.label)}
                         </option>
                       ))}
                   </Form.Select>
@@ -283,7 +283,7 @@ const NewProposal = () => {
                       <Card className="card-share">
                         <Card.Body className="py-3">
                           <h4 className="card-title">
-                            {selectedType?.desc}
+                            {t(selectedType?.desc)}
                             {selectedType?.value === 'FLIP_EMISSIONS' && (
                               <>
                                 {sparta.globalDetails.emitting ? ' off' : ' on'}

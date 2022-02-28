@@ -92,21 +92,17 @@ ethereum(network: $network){
       timestamp {
         time (format: "%Y-%m-%d %H:%M:%S")
       }
-      height
     }
     address: sender {
       address
-      annotation
     }
     currency {
-      address
       symbol
     }
     amount
     transaction {
       hash
     }
-    external
   }
 }
 }`,
@@ -121,8 +117,12 @@ ethereum(network: $network){
           },
         },
       }
-      const recentDonations = await axios.request(options)
-      setrecentTxns(recentDonations.data.data.ethereum.transfers)
+      const recentDonations = await axios
+        .request(options)
+        .catch((error) => ({ error }))
+      if (!recentDonations.error) {
+        setrecentTxns(recentDonations.data.data.ethereum.transfers)
+      }
     }
   }
   useEffect(() => {
@@ -280,9 +280,7 @@ ethereum(network: $network){
                 </Row> */}
                 <Row>
                   <Col xs="12" className="my-2">
-                    This wallet holds donations from the community to fund
-                    activites and expenses that the community puts forward as
-                    important for SPARTA to continue building its shieldwall
+                    {t('donationsInfo')}
                     <br />
                     <br />
                     {t('donationsHeldCurrencyInfo')}
@@ -299,7 +297,7 @@ ethereum(network: $network){
                     </div>
                   </Col>
                   <Col xs="12" className="my-1">
-                    Community Wallet Holdings:
+                    {t('communityWalletHoldings')}:
                     <br />
                     <br />
                     <li>
@@ -481,8 +479,8 @@ ethereum(network: $network){
                             id="inputDonation"
                             placeholder={
                               !selectedAsset
-                                ? 'Select asset above...'
-                                : `${selectedAsset} donation amount...`
+                                ? `${t('selectAssetAbove')}...`
+                                : `${selectedAsset} ${t('donationAmount')}...`
                             }
                             disabled={!selectedAsset}
                           />
@@ -687,7 +685,7 @@ ethereum(network: $network){
               <Card.Body>
                 {recentTxns?.length > 0 &&
                   recentTxns.map((i) => (
-                    <Row key={i.transaction.hash} className="my-2">
+                    <Row key={i.transaction.hash + i.amount} className="my-2">
                       <Col xs="auto" className="pe-0">
                         {i.currency.symbol === 'BNB' && (
                           <Icon icon="bnb" size="35" />

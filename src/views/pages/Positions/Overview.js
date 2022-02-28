@@ -36,7 +36,7 @@ const Positions = () => {
           <>
             <Row className="row-480">
               <Col>
-                {!showSynths ? 'Liquidity Positions' : 'Synth Positions'}
+                {!showSynths ? t('liquidityPositions') : t('synthPositions')}
                 <Form className="">
                   <span className="output-card">
                     {t('synthView')}
@@ -95,7 +95,7 @@ const Positions = () => {
             </Row>
           </>
         ) : (
-          <div>Please change network to BSC Mainnet to continue...</div>
+          <div>{t('changeToMainnet')}</div>
         )}
         {!tempChains.includes(network.chainId) && <WrongNetwork />}
       </div>
