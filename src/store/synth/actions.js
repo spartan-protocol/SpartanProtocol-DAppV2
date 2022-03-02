@@ -5,7 +5,7 @@ import {
   getSynthContract,
   getSynthFactoryContract,
   getSynthVaultContract,
-} from '../../utils/web3Contracts'
+} from '../../utils/getContracts'
 import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
 import { BN } from '../../utils/bigNumber'

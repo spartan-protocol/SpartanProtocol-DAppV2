@@ -244,19 +244,12 @@ const blacklist = [] // add array of addresses here to cause fallback token icon
 export const getTwTokenLogo = async (tokenAddr, chainId) => {
   const tokenInfo = false
   if (chainId === 56) {
-    // tokenInfo = await getTwTokenInfo(tokenAddr)
-    // if (tokenInfo) {
-    // if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
     if ([addressesMN.bnb, addressesMN.wbnb].includes(tokenInfo.symbol)) {
       return `${window.location.origin}/images/icons/BNB.svg`
     }
     if (!blacklist.includes(tokenAddr)) {
       return `https://raw.githubusercontent.com/spartan-protocol/assets/master/blockchains/smartchain/assets/${tokenAddr}/logo.png`
     }
-    // }
-    // if (process.env.NODE_ENV === 'development') {
-    //   return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
-    // }
   }
   return `${window.location.origin}/images/icons/Fallback.svg`
 }

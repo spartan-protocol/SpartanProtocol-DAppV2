@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
-import Common from './components/layout/Common'
+import Common from './containers/Common/layout'
 
 import { bondReducer } from './store/bond'
 import { daoReducer } from './store/dao'

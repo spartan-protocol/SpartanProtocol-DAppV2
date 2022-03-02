@@ -5,7 +5,7 @@ import {
   getPoolFactoryContract,
   getUtilsContract,
   getTokenContract,
-} from '../../utils/web3Contracts'
+} from '../../utils/getContracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import {
   getAddresses,

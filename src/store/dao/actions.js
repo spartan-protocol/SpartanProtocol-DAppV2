@@ -1,7 +1,7 @@
 import * as Types from './types'
 import { getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
-import { getDaoContract, getDaoVaultContract } from '../../utils/web3Contracts'
+import { getDaoContract, getDaoVaultContract } from '../../utils/getContracts'
 import { BN } from '../../utils/bigNumber'
 import { getPoolShareWeight } from '../../utils/math/utils'
 

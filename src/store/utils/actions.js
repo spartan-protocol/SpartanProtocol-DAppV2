@@ -1,5 +1,5 @@
 import * as Types from './types'
-import { getUtilsContract } from '../../utils/web3Contracts'
+import { getUtilsContract } from '../../utils/getContracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
 export const utilsLoading = () => ({
@@ -40,26 +40,6 @@ export const getPool = (token, wallet, rpcUrls) => async (dispatch) => {
     dispatch(errorToDispatch(Types.UTILS_ERROR, error))
   }
 }
-
-/**
- * Get weight of pool by LP units
- * @param {address} token
- * @param {uint} units
- * @param {object} wallet
- * @returns {uint} weight
- */
-export const getPoolShareWeight =
-  (tokens, units, wallet, rpcUrls) => async (dispatch) => {
-    dispatch(utilsLoading())
-    const contract = getUtilsContract(wallet, rpcUrls)
-
-    try {
-      const weight = await contract.callStatic.getPoolShareWeight(tokens, units)
-      dispatch(payloadToDispatch(Types.GET_POOL_SHARE_WEIGHT, weight))
-    } catch (error) {
-      dispatch(errorToDispatch(Types.UTILS_ERROR, error))
-    }
-  }
 
 /**
  * Get synthetic asset address via the base token's address

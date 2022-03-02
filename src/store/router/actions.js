@@ -1,6 +1,6 @@
 import * as Types from './types'
 import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
-import { getRouterContract } from '../../utils/web3Contracts'
+import { getRouterContract } from '../../utils/getContracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 
 export const routerLoading = () => ({

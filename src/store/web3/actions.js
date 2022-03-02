@@ -11,7 +11,7 @@ import {
   parseTxn,
 } from '../../utils/web3'
 import { errorToDispatch, payloadToDispatch } from '../helpers'
-import { getTokenContract } from '../../utils/web3Contracts'
+import { getTokenContract } from '../../utils/getContracts'
 import { convertToWei } from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
 import { checkResolved } from '../../utils/helpers'

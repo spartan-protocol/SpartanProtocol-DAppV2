@@ -4,7 +4,7 @@ import {
   getReserveContract,
   getSpartaV2Contract,
   getTokenContract,
-} from '../../utils/web3Contracts'
+} from '../../utils/getContracts'
 import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
 import { calcLiqValue } from '../../utils/math/utils'
 

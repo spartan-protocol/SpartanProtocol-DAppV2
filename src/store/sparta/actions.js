@@ -4,7 +4,7 @@ import {
   getFallenSpartansContract,
   // getSpartaV1Contract,
   getSpartaV2Contract,
-} from '../../utils/web3Contracts'
+} from '../../utils/getContracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import {
   addressesMN,

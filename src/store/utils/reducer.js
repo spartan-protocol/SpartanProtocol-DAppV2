@@ -3,7 +3,6 @@ import * as Types from './types'
 const initialState = {
   poolDetails: [],
   pool: {},
-  weight: {},
   synth: {},
   error: null,
   loading: false,
@@ -24,15 +23,6 @@ export const utilsReducer = (state = initialState, action) => {
       return {
         ...state,
         pool: action.payload,
-        loading: false,
-        error: null,
-      }
-    }
-
-    case Types.GET_POOL_SHARE_WEIGHT: {
-      return {
-        ...state,
-        weight: action.payload,
         loading: false,
         error: null,
       }

@@ -3,7 +3,7 @@ import {
   getBondVaultContract,
   getDaoContract,
   getSpartaV2Contract,
-} from '../../utils/web3Contracts'
+} from '../../utils/getContracts'
 import { payloadToDispatch, errorToDispatch } from '../helpers'
 import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
