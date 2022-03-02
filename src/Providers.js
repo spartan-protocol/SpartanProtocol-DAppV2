@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
@@ -17,7 +17,6 @@ import { spartaReducer } from './store/sparta'
 import { synthReducer } from './store/synth'
 import { utilsReducer } from './store/utils'
 import { web3Reducer } from './store/web3'
-import { getNetwork } from './utils/web3'
 import { getLibrary } from './utils/web3React'
 
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR) // turn off warnings
@@ -56,38 +55,17 @@ const store = createStore(
     : applyMiddleware(thunk),
 )
 
-const Providers = () => {
-  const [network, setNetwork] = useState(getNetwork())
-
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return ''
-    }
-  }
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (network !== tryParse(window.localStorage.getItem('network'))) {
-        setNetwork(getNetwork())
-      }
-    }, 500)
-    return () => clearInterval(interval)
-  })
-
-  return (
-    <Provider store={store}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" component={Common} />
-            <Redirect from="/" to="/home" />
-          </Switch>
-        </BrowserRouter>
-      </Web3ReactProvider>
-    </Provider>
-  )
-}
+const Providers = () => (
+  <Provider store={store}>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" component={Common} />
+          <Redirect from="/" to="/home" />
+        </Switch>
+      </BrowserRouter>
+    </Web3ReactProvider>
+  </Provider>
+)
 
 export default Providers
