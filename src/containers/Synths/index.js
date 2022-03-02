@@ -1460,7 +1460,7 @@ const Swap = () => {
                 </Row>
               </>
             ) : (
-              <HelmetLoading height={300} width={300} />
+              <HelmetLoading height={150} width={150} />
             )}
           </>
         )}

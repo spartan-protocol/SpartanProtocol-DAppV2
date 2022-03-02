@@ -682,7 +682,7 @@ const PoolPositions = () => {
             </>
           ) : (
             <Col className="">
-              <HelmetLoading height={300} width={300} />
+              <HelmetLoading height={150} width={150} />
             </Col>
           )}
         </Card>
@@ -1194,7 +1194,7 @@ const PoolPositions = () => {
             </Card.Body>
           ) : (
             <Col className="">
-              <HelmetLoading height={300} width={300} />
+              <HelmetLoading height={150} width={150} />
             </Col>
           )}
         </Card>

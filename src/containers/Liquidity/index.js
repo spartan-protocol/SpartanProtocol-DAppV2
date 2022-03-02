@@ -81,7 +81,7 @@ const Overview = () => {
                 </>
               ) : (
                 <Col className="card-480">
-                  <HelmetLoading />
+                  <HelmetLoading height={150} width={150} />
                 </Col>
               )}
             </Row>

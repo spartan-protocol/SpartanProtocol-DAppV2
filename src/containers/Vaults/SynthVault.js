@@ -260,7 +260,7 @@ const SynthVault = () => {
               </Card.Footer>
             </>
           ) : (
-            <HelmetLoading />
+            <HelmetLoading height={150} width={150} />
           )}
         </Card>
       </Col>

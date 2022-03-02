@@ -31,10 +31,7 @@ import {
   formatFromWei,
 } from '../../utils/bigNumber'
 import { useWeb3 } from '../../store/web3'
-import {
-  removeLiquidityExact,
-  removeLiquiditySingle,
-} from '../../store/router'
+import { removeLiquidityExact, removeLiquiditySingle } from '../../store/router'
 import HelmetLoading from '../../components/Spinner/index'
 import Approval from '../../components/Approval/index'
 import { useSparta } from '../../store/sparta'
@@ -731,7 +728,7 @@ const LiqRemove = () => {
                     )}
 
                     {!pool.poolDetails && (
-                      <HelmetLoading height="150px" width="150px" />
+                      <HelmetLoading height={150} width={150} />
                     )}
                   </Col>
                 </Row>

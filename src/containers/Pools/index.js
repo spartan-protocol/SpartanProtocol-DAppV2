@@ -322,7 +322,7 @@ const Overview = () => {
                     </Card.Body>
                   ) : (
                     <Col className="card-480">
-                      <HelmetLoading height={300} width={300} />
+                      <HelmetLoading height={150} width={150} />
                     </Col>
                   )}
                 </Card>

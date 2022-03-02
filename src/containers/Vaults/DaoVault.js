@@ -289,7 +289,7 @@ const DaoVault = () => {
               </Row>
             </Card.Body>
           ) : (
-            <HelmetLoading />
+            <HelmetLoading height={150} width={150} />
           )}
 
           <Card.Footer>
@@ -415,7 +415,7 @@ const DaoVault = () => {
               </Card.Footer>
             </>
           ) : (
-            <HelmetLoading />
+            <HelmetLoading height={150} width={150} />
           )}
         </Card>
       </Col>

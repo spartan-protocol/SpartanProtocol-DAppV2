@@ -1,18 +1,9 @@
 import React from 'react'
-import Lottie from 'react-lottie'
-import SpartanSpinner from '../../assets/img/SpartanSpinner.json'
+import { Icon } from '../Icons'
+import './styles.css'
 
-const HelmetLoading = ({ height, width }) => {
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: SpartanSpinner,
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  }
-
-  return <Lottie options={defaultOptions} height={height} width={width} />
-}
+const HelmetLoading = ({ height = 100, width = 100 }) => (
+  <Icon icon="spartav2" height={height} width={width} className="flip" />
+)
 
 export default HelmetLoading

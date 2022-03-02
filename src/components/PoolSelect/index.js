@@ -260,7 +260,7 @@ const PoolSelect = () => {
                   </>
                 </Modal.Body>
               ) : (
-                <HelmetLoading height={200} width={200} />
+                <HelmetLoading height={100} width={100} />
               )}
             </>
           )}

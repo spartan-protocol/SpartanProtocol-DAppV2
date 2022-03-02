@@ -521,7 +521,7 @@ const LPs = () => {
       {!isLoading() && getTotalValue()}
       {isLoading() && (
         <Col className="card-480">
-          <HelmetLoading height={300} width={300} />
+          <HelmetLoading height={100} width={100} />
         </Col>
       )}
     </>

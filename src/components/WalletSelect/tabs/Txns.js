@@ -363,7 +363,7 @@ const Txns = () => {
                     </tbody>
                   </Table>
                 ) : (
-                  <HelmetLoading height={200} width={200} />
+                  <HelmetLoading height={100} width={100} />
                 )}
               </Col>
               <Col xs="12" className="">

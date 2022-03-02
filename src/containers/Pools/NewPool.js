@@ -493,7 +493,7 @@ const NewPool = () => {
                   </Modal.Footer>
                 </>
               ) : (
-                <HelmetLoading height={200} width={200} />
+                <HelmetLoading height={150} width={150} />
               )}
             </>
           )}

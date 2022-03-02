@@ -199,7 +199,7 @@ const Overview = () => {
                       </Row>
                     </Card.Body>
                   ) : (
-                    <HelmetLoading />
+                    <HelmetLoading height={100} width={100} />
                   )}
 
                   <Card.Footer>
@@ -348,7 +348,7 @@ const Overview = () => {
                   )}
                 </>
               ) : (
-                <HelmetLoading height={200} width={200} />
+                <HelmetLoading height={100} width={100} />
               )}
             </Row>
           </>

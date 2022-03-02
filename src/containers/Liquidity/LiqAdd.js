@@ -947,7 +947,7 @@ const LiqAdd = () => {
                       </>
                     )}
                     {!pool.poolDetails && (
-                      <HelmetLoading height="150px" width="150px" />
+                      <HelmetLoading height={150} width={150} />
                     )}
                   </Col>
                 </Row>

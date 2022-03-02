@@ -38,7 +38,7 @@ const SummaryItem = () => {
                 </Col>
               </Row>
             ) : (
-              <HelmetLoading height={200} width={200} />
+              <HelmetLoading height={150} width={150} />
             )}
           </Card.Body>
         </Card>

@@ -107,7 +107,7 @@ const Overview = () => {
                           ))
                         ) : (
                           <Col className="card-480">
-                            <HelmetLoading height={300} width={300} />
+                            <HelmetLoading height={150} width={150} />
                           </Col>
                         )}
                       </Card.Body>
@@ -119,7 +119,7 @@ const Overview = () => {
               {['pools', 'reserve', 'others'].includes(activeTab) &&
                 isLoading() && (
                   <Col className="card-480">
-                    <HelmetLoading height={300} width={300} />
+                    <HelmetLoading height={150} width={150} />
                   </Col>
                 )}
               {activeTab === 'reserve' && !isLoading() && <ReserveDetails />}

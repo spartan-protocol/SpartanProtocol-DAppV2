@@ -72,7 +72,9 @@ const Vaults = () => {
             </Row>
             <Row className="row-480">
               <Col className="card-480">
-                {pool.poolDetails.length <= 0 && <HelmetLoading />}
+                {pool.poolDetails.length <= 0 && (
+                  <HelmetLoading height={150} width={150} />
+                )}
               </Col>
             </Row>
           </>
