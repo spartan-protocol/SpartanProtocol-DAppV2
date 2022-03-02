@@ -15,7 +15,12 @@ import { useRouter } from '../../../store/router'
 import { useDao } from '../../../store/dao'
 import { getSpartaGlobalDetails, useSparta } from '../../../store/sparta'
 import { useSynth, getSynthArray } from '../../../store/synth'
-import { getRPCBlocks, getSpartaPrice, useWeb3 } from '../../../store/web3'
+import {
+  getRPCBlocks,
+  getSpartaPrice,
+  useWeb3,
+  getGlobalMetrics,
+} from '../../../store/web3'
 import {
   addTxn,
   changeNetwork,
@@ -23,7 +28,6 @@ import {
   liveChains,
   tempChains,
 } from '../../../utils/web3'
-import { getGlobalMetrics } from '../../../store/web3/actions'
 
 const DataManager = () => {
   const dispatch = useDispatch()

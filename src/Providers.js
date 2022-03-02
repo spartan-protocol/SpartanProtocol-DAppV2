@@ -14,8 +14,8 @@ import reserveReducer from './store/reserve'
 import routerReducer from './store/router'
 import spartaReducer from './store/sparta'
 import synthReducer from './store/synth'
-import { utilsReducer } from './store/utils'
-import { web3Reducer } from './store/web3'
+import utilsReducer from './store/utils'
+import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
 
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR) // turn off warnings

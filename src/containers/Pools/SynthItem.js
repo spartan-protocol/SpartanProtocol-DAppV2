@@ -13,7 +13,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import { synthVaultWeight, useSynth } from '../../store/synth'
-import { useWeb3 } from '../../store/web3/selector'
+import { useWeb3 } from '../../store/web3'
 import {
   BN,
   convertFromWei,

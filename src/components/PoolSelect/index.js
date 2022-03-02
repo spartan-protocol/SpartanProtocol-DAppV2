@@ -14,7 +14,7 @@ import { useHistory } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 
-import { useWeb3 } from '../../store/web3/selector'
+import { useWeb3 } from '../../store/web3'
 
 import { Icon } from '../Icons/index'
 import HelmetLoading from '../Spinner/index'

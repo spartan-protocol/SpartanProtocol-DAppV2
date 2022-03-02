@@ -25,7 +25,7 @@ import {
   // formatFromUnits,
   formatFromWei,
 } from '../../utils/bigNumber'
-import { useWeb3 } from '../../store/web3/selector'
+import { useWeb3 } from '../../store/web3'
 import { getTokenContract } from '../../utils/getContracts'
 import { apiUrlBQ, getExplorerWallet, headerBQ } from '../../utils/extCalls'
 import { Icon } from '../../components/Icons/index'

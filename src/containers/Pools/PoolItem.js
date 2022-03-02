@@ -11,7 +11,7 @@ import {
   ProgressBar,
 } from 'react-bootstrap'
 import { usePool } from '../../store/pool'
-import { useWeb3 } from '../../store/web3/selector'
+import { useWeb3 } from '../../store/web3'
 import {
   BN,
   convertFromWei,
