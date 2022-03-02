@@ -34,10 +34,9 @@ import {
   formatFromWei,
   formatFromUnits,
 } from '../../utils/bigNumber'
-import { swapAssetToSynth, swapSynthToAsset } from '../../store/router/actions'
+import { swapAssetToSynth, swapSynthToAsset } from '../../store/router'
 import { useWeb3 } from '../../store/web3'
 import HelmetLoading from '../../components/Spinner/index'
-import { useSynth } from '../../store/synth/selector'
 import Approval from '../../components/Approval/index'
 import SwapPair from '../Swap/SwapPair'
 import Share from '../../components/Share/index'
@@ -49,6 +48,7 @@ import { balanceWidths } from '../Liquidity/Components/Utils'
 import { burnSynth, mintSynth, stirCauldron } from '../../utils/math/router'
 import { calcSpotValueInBase } from '../../utils/math/utils'
 import {
+  useSynth,
   getSynthDetails,
   getSynthGlobalDetails,
   getSynthMemberDetails,
@@ -58,10 +58,9 @@ import {
 } from '../../store/synth'
 import { convertTimeUnits, getSecsSince } from '../../utils/math/nonContract'
 import { Tooltip } from '../../components/Tooltip/index'
-import { useDao } from '../../store/dao/selector'
 import { calcCurrentRewardSynth } from '../../utils/math/synthVault'
 import { useReserve } from '../../store/reserve'
-import { daoMemberDetails } from '../../store/dao/actions'
+import { useDao, daoMemberDetails } from '../../store/dao'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 

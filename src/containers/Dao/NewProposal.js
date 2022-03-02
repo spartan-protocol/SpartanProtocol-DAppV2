@@ -17,23 +17,23 @@ import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import { proposalTypes } from './types'
 import {
+  useDao,
   newActionProposal,
   newParamProposal,
   newAddressProposal,
   newGrantProposal,
-} from '../../store/dao/actions'
+} from '../../store/dao'
 import Approval from '../../components/Approval/index'
 import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
 import { BN, convertToWei } from '../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../assets/icons/checked.svg'
 import AssetSelect from './components/AssetSelect'
-import { useSparta } from '../../store/sparta/selector'
+import { useSparta } from '../../store/sparta'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { Icon } from '../../components/Icons/index'
-import { useDao } from '../../store/dao/selector'
-import { useSynth } from '../../store/synth/selector'
+import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
 import { useReserve } from '../../store/reserve'

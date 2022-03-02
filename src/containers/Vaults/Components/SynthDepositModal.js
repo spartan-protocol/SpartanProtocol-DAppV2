@@ -8,17 +8,17 @@ import { BN, formatFromWei } from '../../../utils/bigNumber'
 import Approval from '../../../components/Approval/index'
 import { getAddresses, synthHarvestLive } from '../../../utils/web3'
 import {
+  useSynth,
   getSynthDetails,
   synthDeposit,
   synthHarvestSingle,
-} from '../../../store/synth/actions'
-import { useSynth } from '../../../store/synth/selector'
+} from '../../../store/synth'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-synth.svg'
 import { getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
-import { useReserve } from '../../../store/reserve/selector'
+import { useReserve } from '../../../store/reserve'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useWeb3 } from '../../../store/web3'
 

@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { Button, Card, Col, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { usePool } from '../../store/pool/selector'
+import { usePool } from '../../store/pool'
 import { useReserve } from '../../store/reserve'
 import { useWeb3 } from '../../store/web3'
-import { updatePoolStatus } from '../../store/router/actions'
+import { updatePoolStatus } from '../../store/router'
 
 const PoolStatus = () => {
   const pool = usePool()

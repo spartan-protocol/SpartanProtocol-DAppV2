@@ -19,7 +19,7 @@ export const getPoolDetails = (pool, wallet, rpcUrls) => async (dispatch) => {
     const poolDetails = await contract.callStatic.getPoolData(pool)
     dispatch(payloadToDispatch(Types.GET_POOL_DETAILS, poolDetails))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error.toString()))
   }
 }
 
@@ -37,7 +37,7 @@ export const getPool = (token, wallet, rpcUrls) => async (dispatch) => {
     const pool = await contract.callStatic.getPool(token)
     dispatch(payloadToDispatch(Types.GET_POOL, pool))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error.toString()))
   }
 }
 
@@ -55,6 +55,6 @@ export const getSynth = (token, wallet, rpcUrls) => async (dispatch) => {
     const synth = await contract.callStatic.getSynth(token)
     dispatch(payloadToDispatch(Types.GET_SYNTH, synth))
   } catch (error) {
-    dispatch(errorToDispatch(Types.UTILS_ERROR, error))
+    dispatch(errorToDispatch(Types.UTILS_ERROR, error.toString()))
   }
 }

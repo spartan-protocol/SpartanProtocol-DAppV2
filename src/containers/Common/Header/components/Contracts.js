@@ -9,7 +9,7 @@ import {
   Button,
   Form,
 } from 'react-bootstrap'
-import { useReserve } from '../../../../store/reserve/selector'
+import { useReserve } from '../../../../store/reserve'
 import { getExplorerContract } from '../../../../utils/extCalls'
 import {
   changeNetworkLsOnly,

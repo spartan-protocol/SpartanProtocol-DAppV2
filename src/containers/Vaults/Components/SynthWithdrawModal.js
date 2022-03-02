@@ -11,11 +11,11 @@ import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../utils/math/nonContract'
 import { getAddresses, synthHarvestLive } from '../../../utils/web3'
 import {
+  useSynth,
   getSynthDetails,
   synthHarvest,
   synthWithdraw,
-} from '../../../store/synth/actions'
-import { useSynth } from '../../../store/synth/selector'
+} from '../../../store/synth'
 import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
 

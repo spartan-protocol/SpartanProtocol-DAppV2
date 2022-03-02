@@ -1,7 +1,7 @@
 import React from 'react'
 import { Row, Col, Card } from 'react-bootstrap'
-import { usePool } from '../../../store/pool/selector'
-import { useSynth } from '../../../store/synth/selector'
+import { usePool } from '../../../store/pool'
+import { useSynth } from '../../../store/synth'
 import { formatShortString } from '../../../utils/web3'
 
 const AssetSelect = (props) => {

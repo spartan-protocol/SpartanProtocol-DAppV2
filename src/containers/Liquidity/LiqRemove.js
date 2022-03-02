@@ -34,7 +34,7 @@ import { useWeb3 } from '../../store/web3'
 import {
   removeLiquidityExact,
   removeLiquiditySingle,
-} from '../../store/router/actions'
+} from '../../store/router'
 import HelmetLoading from '../../components/Spinner/index'
 import Approval from '../../components/Approval/index'
 import { useSparta } from '../../store/sparta'

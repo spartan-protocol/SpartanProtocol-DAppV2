@@ -5,15 +5,15 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { useBond } from '../../store/bond'
 import {
+  useDao,
   cancelProposal,
   finaliseProposal,
   pollVotes,
   removeVote,
   voteProposal,
-} from '../../store/dao/actions'
-import { useDao } from '../../store/dao/selector'
-import { usePool } from '../../store/pool/selector'
-import { useSparta } from '../../store/sparta/selector'
+} from '../../store/dao'
+import { usePool } from '../../store/pool'
+import { useSparta } from '../../store/sparta'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract, getExplorerWallet } from '../../utils/extCalls'
 import { formatShortString, getAddresses } from '../../utils/web3'
@@ -24,7 +24,7 @@ import {
   getVaultWeights,
 } from '../../utils/math/nonContract'
 import { Icon } from '../../components/Icons/index'
-import { useSynth } from '../../store/synth/selector'
+import { useSynth } from '../../store/synth'
 import { realise } from '../../utils/math/synth'
 import { useReserve } from '../../store/reserve'
 import { useWeb3 } from '../../store/web3'

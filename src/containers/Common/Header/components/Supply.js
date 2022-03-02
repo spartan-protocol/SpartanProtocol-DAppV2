@@ -12,9 +12,8 @@ import {
   OverlayTrigger,
 } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { useReserve } from '../../../../store/reserve/selector'
-import { useSparta } from '../../../../store/sparta/selector'
-import { usePool } from '../../../../store/pool/selector'
+import { useSparta } from '../../../../store/sparta'
+import { usePool } from '../../../../store/pool'
 import { useWeb3 } from '../../../../store/web3'
 import {
   BN,
@@ -29,7 +28,7 @@ import {
   tempChains,
 } from '../../../../utils/web3'
 import { Icon } from '../../../../components/Icons/index'
-import { getReservePOLDetails } from '../../../../store/reserve'
+import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
 const Supply = () => {

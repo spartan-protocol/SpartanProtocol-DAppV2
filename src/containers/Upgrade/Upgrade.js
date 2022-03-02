@@ -5,9 +5,12 @@ import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromWei } from '../../utils/bigNumber'
-import { useSparta } from '../../store/sparta/selector'
 import { getAddresses } from '../../utils/web3'
-import { fallenSpartansClaim, spartaUpgrade } from '../../store/sparta/actions'
+import {
+  useSparta,
+  fallenSpartansClaim,
+  spartaUpgrade,
+} from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { calcFeeBurn } from '../../utils/math/nonContract'
 import { usePool } from '../../store/pool'

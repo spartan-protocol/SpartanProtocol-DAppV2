@@ -7,13 +7,13 @@ import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { getAddresses, synthHarvestLive } from '../../../utils/web3'
 import {
+  useSynth,
   getSynthDetails,
   synthHarvestSingle,
-} from '../../../store/synth/actions'
-import { useSynth } from '../../../store/synth/selector'
+} from '../../../store/synth'
 import { Icon } from '../../../components/Icons/index'
 import { getToken } from '../../../utils/math/utils'
-import { useReserve } from '../../../store/reserve/selector'
+import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import spartaIcon from '../../../assets/tokens/sparta-synth.svg'

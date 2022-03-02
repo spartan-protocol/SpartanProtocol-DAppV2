@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Col, Form } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { usePool } from '../../store/pool/selector'
+import { usePool } from '../../store/pool'
 import { getReservePOLDetails, useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
 import { useWeb3 } from '../../store/web3'

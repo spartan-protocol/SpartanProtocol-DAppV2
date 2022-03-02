@@ -34,7 +34,7 @@ import {
 } from '../../utils/bigNumber'
 import Metrics from './Components/Metrics'
 import { useWeb3 } from '../../store/web3'
-import { addLiquidity, addLiquiditySingle } from '../../store/router/actions'
+import { addLiquidity, addLiquiditySingle } from '../../store/router'
 import Approval from '../../components/Approval/index'
 import HelmetLoading from '../../components/Spinner/index'
 import { useSparta } from '../../store/sparta'

@@ -11,11 +11,10 @@ import {
   usePool,
 } from '../../../store/pool'
 import { getReserveGlobalDetails } from '../../../store/reserve'
-import { useRouter } from '../../../store/router/selector'
-import { useDao } from '../../../store/dao/selector'
-import { useSynth } from '../../../store/synth/selector'
+import { useRouter } from '../../../store/router'
+import { useDao } from '../../../store/dao'
 import { getSpartaGlobalDetails, useSparta } from '../../../store/sparta'
-import { getSynthArray } from '../../../store/synth'
+import { useSynth, getSynthArray } from '../../../store/synth'
 import { getRPCBlocks, getSpartaPrice, useWeb3 } from '../../../store/web3'
 import {
   addTxn,

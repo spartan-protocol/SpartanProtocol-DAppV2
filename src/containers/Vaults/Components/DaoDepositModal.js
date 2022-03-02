@@ -4,11 +4,11 @@ import { Button, Col, Row, Modal, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import {
+  useDao,
   daoDeposit,
   daoHarvest,
   daoMemberDetails,
-} from '../../../store/dao/actions'
-import { useDao } from '../../../store/dao/selector'
+} from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import Approval from '../../../components/Approval/index'

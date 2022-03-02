@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import {
+  useSynth,
   getSynthGlobalDetails,
   synthVaultWeight,
   getSynthDetails,
   getSynthMemberDetails,
   getSynthMinting,
-} from '../../store/synth/actions'
-import { useSynth } from '../../store/synth/selector'
+} from '../../store/synth'
 import SynthVaultItem from './SynthVaultItem'
 import {
   calcSynthAPY,

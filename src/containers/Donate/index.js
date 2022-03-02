@@ -18,8 +18,7 @@ import {
   getNetwork,
   getWalletProvider,
 } from '../../utils/web3'
-import { communityWalletHoldings } from '../../store/sparta/actions'
-import { useSparta } from '../../store/sparta/selector'
+import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
   // BN,
   convertToWei,

@@ -33,7 +33,7 @@ import {
   formatFromUnits,
 } from '../../utils/bigNumber'
 import Metrics from './Components/Metrics'
-import { swap, zapLiquidity } from '../../store/router/actions'
+import { swap, zapLiquidity } from '../../store/router'
 import Approval from '../../components/Approval/index'
 import { useWeb3 } from '../../store/web3'
 import HelmetLoading from '../../components/Spinner/index'

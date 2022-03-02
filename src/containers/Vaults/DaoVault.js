@@ -6,17 +6,17 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
-import { useDao } from '../../store/dao/selector'
 import {
+  useDao,
   daoHarvest,
   daoGlobalDetails,
   daoMemberDetails,
   daoVaultWeight,
   daoDepositTimes,
   getDaoDetails,
-} from '../../store/dao/actions'
+} from '../../store/dao'
 import { useWeb3 } from '../../store/web3'
-import { useReserve } from '../../store/reserve/selector'
+import { useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
 import { bondVaultWeight, getBondDetails, useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'

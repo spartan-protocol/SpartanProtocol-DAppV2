@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Row } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
-import { fallenSpartansCheck } from '../../store/sparta/actions'
+import { fallenSpartansCheck } from '../../store/sparta'
 import Upgrade from './Upgrade'
 import { useWeb3 } from '../../store/web3'
 

@@ -5,23 +5,22 @@ import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
 import { Link } from 'react-router-dom'
 import ProposalItem from './ProposalItem'
-import { useDao } from '../../store/dao/selector'
 import {
+  useDao,
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
   daoVaultWeight,
   getDaoDetails,
   proposalWeight,
-} from '../../store/dao/actions'
+} from '../../store/dao'
 import NewProposal from './NewProposal'
 import { getNetwork, tempChains } from '../../utils/web3'
 import { convertTimeUnits } from '../../utils/math/nonContract'
 import WrongNetwork from '../../components/WrongNetwork/index'
-import { usePool } from '../../store/pool/selector'
+import { usePool } from '../../store/pool'
 import { bondVaultWeight, getBondDetails, useBond } from '../../store/bond'
-import { getSynthDetails } from '../../store/synth/actions'
-import { useSynth } from '../../store/synth/selector'
+import { useSynth, getSynthDetails } from '../../store/synth'
 import HelmetLoading from '../../components/Spinner/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'

@@ -55,7 +55,7 @@ export const addNetworkMM = () => async (dispatch) => {
       })
       dispatch(payloadToDispatch(Types.ADD_NETWORK_MM, addedNetworkMM))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
     }
   } else {
     dispatch(
@@ -83,7 +83,7 @@ export const addNetworkBC = () => async (dispatch) => {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(payloadToDispatch(Types.ADD_NETWORK_BC, addedNetworkBC))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
     }
   } else {
     dispatch(
@@ -114,7 +114,7 @@ export const getApproval =
       txn = await parseTxn(txn, 'approval', rpcUrls)
       dispatch(payloadToDispatch(Types.WEB3_TXN, txn))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
     }
   }
 
@@ -134,7 +134,7 @@ export const getAllowance1 =
       )
       dispatch(payloadToDispatch(Types.GET_ALLOWANCE1, allowance1.toString()))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
     }
   }
 
@@ -154,7 +154,7 @@ export const getAllowance2 =
       )
       dispatch(payloadToDispatch(Types.GET_ALLOWANCE2, allowance2.toString()))
     } catch (error) {
-      dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+      dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
     }
   }
 
@@ -189,7 +189,7 @@ export const watchAsset =
         }
         dispatch(payloadToDispatch(Types.WATCH_ASSET, watchingAsset))
       } catch (error) {
-        dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+        dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
       }
     } else {
       dispatch(
@@ -215,7 +215,7 @@ export const getSpartaPrice = () => async (dispatch) => {
       ),
     )
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
   }
 }
 
@@ -229,7 +229,7 @@ export const getEventArray = (array) => async (dispatch) => {
     const eventArray = array
     dispatch(payloadToDispatch(Types.EVENT_ARRAY, eventArray))
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
   }
 }
 
@@ -275,7 +275,7 @@ export const getRPCBlocks = () => async (dispatch) => {
     // console.log(rpcs)
     dispatch(payloadToDispatch(Types.RPC_BLOCKS, rpcs))
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
   }
 }
 
@@ -286,6 +286,6 @@ export const getGlobalMetrics = () => async (dispatch) => {
     const global = await callGlobalMetrics()
     dispatch(payloadToDispatch(Types.WEB3_METRICS, { global, block }))
   } catch (error) {
-    dispatch(errorToDispatch(Types.WEB3_ERROR, error))
+    dispatch(errorToDispatch(Types.WEB3_ERROR, error.toString()))
   }
 }

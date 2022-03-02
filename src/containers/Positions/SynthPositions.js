@@ -29,7 +29,7 @@ import {
   getToken,
 } from '../../utils/math/utils'
 import { getMemberSynthPositions } from '../../utils/extCalls'
-import { useSynth } from '../../store/synth/selector'
+import { useSynth } from '../../store/synth'
 
 const SynthPositions = () => {
   const isLightMode = window.localStorage.getItem('theme')
