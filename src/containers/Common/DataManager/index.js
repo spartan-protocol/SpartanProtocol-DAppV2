@@ -8,18 +8,32 @@ import {
   getMonthIncentives,
   getPoolDetails,
   getTokenDetails,
+  updateTxn as updateTxnPool,
   usePool,
 } from '../../../store/pool'
 import { getReserveGlobalDetails } from '../../../store/reserve'
-import { useRouter } from '../../../store/router'
-import { useDao } from '../../../store/dao'
-import { getSpartaGlobalDetails, useSparta } from '../../../store/sparta'
-import { useSynth, getSynthArray } from '../../../store/synth'
+import { updateTxn as updateTxnRouter, useRouter } from '../../../store/router'
+import {
+  updatePropTxn as updateTxnProposal,
+  updateTxn as updateTxnDao,
+  useDao,
+} from '../../../store/dao'
+import {
+  getSpartaGlobalDetails,
+  updateTxn as updateTxnSparta,
+  useSparta,
+} from '../../../store/sparta'
+import {
+  useSynth,
+  getSynthArray,
+  updateTxn as updateTxnSynth,
+} from '../../../store/synth'
 import {
   getRPCBlocks,
   getSpartaPrice,
   useWeb3,
   getGlobalMetrics,
+  updateTxn as updateTxnWeb3,
 } from '../../../store/web3'
 import {
   addTxn,
@@ -193,7 +207,7 @@ const DataManager = () => {
   useEffect(() => {
     if (dao.txn.txnType) {
       addTxn(wallet.account, dao.txn)
-      dao.txn = []
+      dispatch(updateTxnDao([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.txn])
@@ -202,7 +216,7 @@ const DataManager = () => {
   useEffect(() => {
     if (dao.propTxn.txnType) {
       addTxn(wallet.account, dao.propTxn)
-      dao.propTxn = []
+      dispatch(updateTxnProposal([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dao.propTxn])
@@ -211,7 +225,7 @@ const DataManager = () => {
   useEffect(() => {
     if (pool.txn.txnType) {
       addTxn(wallet.account, pool.txn)
-      pool.txn = []
+      dispatch(updateTxnPool([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.txn])
@@ -220,7 +234,7 @@ const DataManager = () => {
   useEffect(() => {
     if (router.txn.txnType) {
       addTxn(wallet.account, router.txn)
-      router.txn = []
+      dispatch(updateTxnRouter([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.txn])
@@ -229,7 +243,7 @@ const DataManager = () => {
   useEffect(() => {
     if (sparta.txn.txnType) {
       addTxn(wallet.account, sparta.txn)
-      sparta.txn = []
+      dispatch(updateTxnSparta([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sparta.txn])
@@ -238,7 +252,7 @@ const DataManager = () => {
   useEffect(() => {
     if (synth.txn.txnType) {
       addTxn(wallet.account, synth.txn)
-      synth.txn = []
+      dispatch(updateTxnSynth([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [synth.txn])
@@ -247,7 +261,7 @@ const DataManager = () => {
   useEffect(() => {
     if (web3.txn.txnType) {
       addTxn(wallet.account, web3.txn)
-      web3.txn = []
+      dispatch(updateTxnWeb3([]))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.txn])

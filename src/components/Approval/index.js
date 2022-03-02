@@ -8,6 +8,8 @@ import {
   getAllowance1,
   getAllowance2,
   getApproval,
+  updateAllowance1,
+  updateAllowance2,
   useWeb3,
 } from '../../store/web3'
 
@@ -109,8 +111,8 @@ const Approval = ({
   }, [web3.allowance1, web3.allowance2, txnAmount, pool.poolDetails])
 
   useEffect(() => {
-    web3.allowance1 = '0'
-    web3.allowance2 = '0'
+    dispatch(updateAllowance1('0'))
+    dispatch(updateAllowance2('0'))
     getAllowance()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
