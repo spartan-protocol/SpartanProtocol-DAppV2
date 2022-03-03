@@ -1,4 +1,4 @@
-import { TEST_WALLET } from './web3'
+import { bscRpcsTN, TEST_WALLET } from './web3'
 
 /* eslint-disable no-unused-vars */
 export const binanceChainMock = {
@@ -36,14 +36,14 @@ export const binanceChainMock = {
       }
     }
 
-    return process.env.REACT_APP_CHAIN_ID
+    return 97
   },
-  path: process.env.REACT_APP_RPC,
+  path: bscRpcsTN[0],
 }
 
 export const ethereumChainMock = {
   request: async ({ method, param }) => [
     '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
   ],
-  path: process.env.REACT_APP_RPC_ETH,
+  path: bscRpcsTN[0],
 }

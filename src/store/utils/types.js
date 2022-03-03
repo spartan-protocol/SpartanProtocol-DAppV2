@@ -1,6 +1,0 @@
-export const GET_POOL_DETAILS = 'GET_POOL_DETAILS'
-export const GET_POOL = 'GET_POOL'
-export const GET_POOL_SHARE_WEIGHT = 'GET_POOL_SHARE_WEIGHT'
-export const GET_SYNTH = 'GET_SYNTH'
-export const UTILS_LOADING = 'UTILS_LOADING'
-export const UTILS_ERROR = 'UTILS_ERROR'
