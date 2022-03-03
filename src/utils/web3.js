@@ -204,6 +204,8 @@ export const bscRpcsMN = [
   'https://bsc-dataseed3.binance.org/',
   'https://bsc-dataseed4.binance.org/',
   'https://binance.ankr.com/',
+  'https://bscrpc.com',
+  'https://binance.nodereal.io',
 ]
 
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'

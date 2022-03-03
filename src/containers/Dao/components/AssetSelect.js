@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Row, Col, Card } from 'react-bootstrap'
 import { usePool } from '../../../store/pool'
 import { useSynth } from '../../../store/synth'
@@ -11,6 +11,12 @@ const AssetSelect = (props) => {
   const addr = getAddresses()
   const filter = [addr.spartav1, addr.spartav2]
 
+  const genericMsg = 'No valid assets'
+  const maxCurateMsg =
+    'The protocol is currently at its max amount of Curated pools. If you would like to propse a new Curated pool, there must first be a proposal to remove one. This max-Curated limit could however be increased in the future.'
+
+  const [message, setMessage] = useState(genericMsg)
+
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
@@ -21,6 +27,9 @@ const AssetSelect = (props) => {
   const getDetails = () => {
     const finArray = []
     if (props.selectedType === 'REMOVE_CURATED_POOL') {
+      if (message !== genericMsg) {
+        setMessage(genericMsg)
+      }
       const assets = pool.poolDetails?.filter(
         (asset) => asset.curated && !filter.includes(asset.tokenAddress),
       )
@@ -34,12 +43,18 @@ const AssetSelect = (props) => {
       return finArray
     }
     if (props.selectedType === 'ADD_CURATED_POOL') {
-      const assets = pool.poolDetails?.filter(
-        (asset) =>
-          !asset.curated &&
-          !filter.includes(asset.tokenAddress) &&
-          BN(asset.baseAmount).isGreaterThan(convertToWei(250000)),
-      )
+      const curatedCount = pool.curatedPools?.length
+      let assets = []
+      if (curatedCount < 5) {
+        assets = pool.poolDetails?.filter(
+          (asset) =>
+            !asset.curated &&
+            !filter.includes(asset.tokenAddress) &&
+            BN(asset.baseAmount).isGreaterThan(convertToWei(250000)),
+        )
+      } else if (message !== maxCurateMsg) {
+        setMessage(maxCurateMsg)
+      }
       for (let i = 0; i < assets.length; i++) {
         finArray.push({
           symbolUrl: getToken(assets[i].tokenAddress).symbolUrl,
@@ -50,6 +65,9 @@ const AssetSelect = (props) => {
       return finArray
     }
     if (props.selectedType === 'REALISE') {
+      if (message !== genericMsg) {
+        setMessage(genericMsg)
+      }
       const assets = synth.synthDetails?.filter((asset) => asset.address)
       for (let i = 0; i < assets.length; i++) {
         finArray.push({
@@ -96,7 +114,7 @@ const AssetSelect = (props) => {
           </>
         ) : (
           <Row className="output-card px-3 py-2">
-            <Col>No valid assets</Col>
+            <Col>{message}</Col>
           </Row>
         )}
       </Card>

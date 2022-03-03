@@ -52,15 +52,35 @@ const Share = () => {
       setassetType1(type1)
       setassetType2(type2)
 
-      setUrl(
-        `${window.location.href}?asset1=${
-          assetSelected1 ? encodeURIComponent(assetSelected1.tokenAddress) : ''
-        }${
-          assetSelected2
-            ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
-            : ''
-        }&type1=${type1}&type2=${type2}`,
-      )
+      if (window.location.href.includes('liquidity')) {
+        setUrl(
+          `${window.location.href.split('?')[0]}?asset1=${
+            assetSelected1
+              ? encodeURIComponent(assetSelected1.tokenAddress)
+              : ''
+          }`,
+        )
+      } else if (window.location.href.includes('synths')) {
+        setUrl(
+          `${window.location.href.split('?')[0]}?asset2=${
+            assetSelected2
+              ? `${encodeURIComponent(assetSelected2.tokenAddress)}`
+              : ''
+          }&type1=token&type2=synth`,
+        )
+      } else {
+        setUrl(
+          `${window.location.href.split('?')[0]}?asset1=${
+            assetSelected1
+              ? encodeURIComponent(assetSelected1.tokenAddress)
+              : ''
+          }${
+            assetSelected2
+              ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
+              : ''
+          }&type1=${type1}&type2=${type2}`,
+        )
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
