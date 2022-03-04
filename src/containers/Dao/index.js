@@ -254,15 +254,15 @@ const Overview = () => {
                                   </Card.Subtitle>
                                 </Card.Header>
                                 <Card.Body className="pb-0 output-card">
-                                  {
+                                  {t(
                                     proposalTypes.filter(
                                       (i) =>
                                         i.value ===
                                         dao.proposal[
                                           dao.global.currentProposal - 1
                                         ].proposalType,
-                                    )[0].longDesc
-                                  }
+                                    )[0].longDesc,
+                                  )}
                                 </Card.Body>
                                 {proposalTypes.filter(
                                   (i) =>
