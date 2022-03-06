@@ -6,6 +6,7 @@ import Header from './Header'
 import Footer from './Footer'
 import SidebarLg from './SidebarLg'
 import DataManager from './DataManager/index'
+import TranslationNotice from './TranslationNotice/index'
 import { routes } from '../../routes'
 
 const getRoutes = (tempRoutes) =>
@@ -24,6 +25,7 @@ const Common = () => {
 
   return (
     <div className="wrapper">
+      <TranslationNotice />
       <div className="rna-container" />
       <div className="main-panel">
         <DataManager />

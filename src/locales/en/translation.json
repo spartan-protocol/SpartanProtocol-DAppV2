@@ -408,6 +408,7 @@
   "totalWeight": "Total Weight",
   "trade": "Trade",
   "true": "True",
+  "translationNoticeText": "Spartan Protocol is a community open source project that is built by the community. The currently selected language is still using the default Google Translation fallbacks and requires help from native-language community members. If you want to help contribute translations to the DApp, please visit the guide below",
   "tvl": "TVL",
   "tvlInfo": "Total Value Locked (TVL) is derived by multiplying the total SPARTA value of all locked tokens in the pools by the current USD market value of each SPARTA token.",
   "txHash": "Tx Hash",
