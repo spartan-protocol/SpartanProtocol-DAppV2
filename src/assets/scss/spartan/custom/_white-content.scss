@@ -63,4 +63,12 @@
   span {
     color: $black-states;
   }
+
+  // handle dark/white mode logos on /friends page
+  .friend-logo-dark {
+    display: none;
+  }
+  .friend-logo-white {
+    display: initial;
+  }
 }

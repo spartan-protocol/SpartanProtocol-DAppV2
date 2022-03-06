@@ -1,13 +1,20 @@
 import React from 'react'
 import { Card, Col, Row, Button } from 'react-bootstrap'
 import Immunefi from '../../assets/brands/immunefi-wht.svg'
+import ImmunefiDark from '../../assets/brands/immunefi.svg'
 import C4 from '../../assets/brands/C4.png'
+import C4Dark from '../../assets/brands/C4Dark.png'
 import Certik from '../../assets/brands/certik.svg'
+import CertikDark from '../../assets/brands/certik-dark.svg'
 import GitHub from '../../assets/brands/github-wht.svg'
+import GitHubDark from '../../assets/brands/github-dark.svg'
 import Moonlight from '../../assets/brands/moonlight.svg'
 import OntoWallet from '../../assets/brands/ontoWhite.png'
+import OntoWalletDark from '../../assets/brands/ontoDark.png'
+import Coingecko from '../../assets/brands/coingecko.svg'
+import CoingeckoDark from '../../assets/brands/coingecko-dark.svg'
 
-const Partners = () => (
+const Friends = () => (
   <>
     <div className="content">
       <Row className="row-480 text-center">
@@ -15,7 +22,16 @@ const Partners = () => (
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
             <Card.Header style={{ height: '49px' }}>
               {' '}
-              <img src={Immunefi} alt="immunefi" className="rounded-0" />
+              <img
+                src={Immunefi}
+                alt="immunefi"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={ImmunefiDark}
+                alt="immunefi"
+                className="rounded-0 friend-logo-white"
+              />
             </Card.Header>
             <Card.Body>
               Web3&apos;s leading bug bounty platform, protecting $100 billion
@@ -42,7 +58,13 @@ const Partners = () => (
                 src={C4}
                 alt="codearena"
                 height="26px"
-                className="rounded-0"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={C4Dark}
+                alt="codearena"
+                height="26px"
+                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
             <Card.Body>
@@ -69,7 +91,13 @@ const Partners = () => (
                 src={Certik}
                 alt="certik"
                 height="26px"
-                className="rounded-0"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={CertikDark}
+                alt="certik"
+                height="26px"
+                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
             <Card.Body>
@@ -97,7 +125,13 @@ const Partners = () => (
                 src={GitHub}
                 alt="github"
                 height="26px"
-                className="rounded-0"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={GitHubDark}
+                alt="github"
+                height="26px"
+                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
             <Card.Body>
@@ -153,7 +187,13 @@ const Partners = () => (
                 src={OntoWallet}
                 alt="onto wallet"
                 height="26px"
-                className="rounded-0"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={OntoWalletDark}
+                alt="onto wallet"
+                height="26px"
+                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
             <Card.Body>
@@ -169,9 +209,35 @@ const Partners = () => (
             </Card.Footer>
           </Card>
         </Col>
+        <Col xs="auto">
+          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
+            <Card.Header style={{ height: '49px' }}>
+              <img
+                src={Coingecko}
+                alt="Coingecko"
+                height="26px"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={CoingeckoDark}
+                alt="Coingecko"
+                height="26px"
+                className="rounded-0 friend-logo-white"
+              />
+            </Card.Header>
+            <Card.Body>SPARTA market price provided by CoinGecko.</Card.Body>
+            <Card.Footer>
+              <a href="https://coingecko.com" target="_blank" rel="noreferrer">
+                <Button variant="info" className="w-100">
+                  Coingecko
+                </Button>
+              </a>
+            </Card.Footer>
+          </Card>
+        </Col>
       </Row>
     </div>
   </>
 )
 
-export default Partners
+export default Friends
