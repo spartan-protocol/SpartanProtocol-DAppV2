@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { Toast, ToastContainer } from 'react-bootstrap'
 import completedLanguages from '../../../locales/completed.json'
 
 const Message = () => {
@@ -22,31 +21,32 @@ const Message = () => {
 const TranslationNotice = () => {
   // check what language user is using and return translation notice
   // if the dApp hasn't been fully translated to this language
-  const { i18n } = useTranslation()
-  const currentLanguage = i18n.language
+  const { i18n, t } = useTranslation()
 
-  // prevent toast from showing up, when it was closed
-  const [toastClosed, setToastClosed] = useState(false)
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    if (completedLanguages.includes(i18n.language)) {
+      setShow(false)
+    } else {
+      setShow(true)
+    }
+  }, [i18n.language])
 
-  if (completedLanguages.includes(currentLanguage) || toastClosed) return null
-
-  // use 100% width on mobile screens
-  const width = window.screen.width > 600 ? '80vw' : '100vw'
-
-  toast.info(<Message />, {
-    toastId: 'translation-notice',
-    position: toast.POSITION.BOTTOM_LEFT,
-    style: {
-      width,
-    },
-    autoClose: false,
-    progress: false,
-    theme: 'dark',
-    icon: false,
-    onClose: () => setToastClosed(true),
-  })
-
-  return <ToastContainer autoClose={false} />
+  return (
+    <ToastContainer
+      position="top-end"
+      style={{ marginTop: '70px', marginRight: '3px' }}
+    >
+      <Toast onClose={() => setShow(false)} show={show}>
+        <Toast.Header>
+          <strong className="me-auto">{t('translationNoticeTitle')}</strong>
+        </Toast.Header>
+        <Toast.Body>
+          <Message />
+        </Toast.Body>
+      </Toast>
+    </ToastContainer>
+  )
 }
 
 export default TranslationNotice

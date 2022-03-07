@@ -1,3 +1,32 @@
 .toast-container {
-  z-index: 1050;
+  z-index: 1030;
+}
+
+.toast-header {
+  background-color: #25212d;
+  border-bottom: 1px solid #fb2715;
+  font-size: 20px;
+  line-height: 24px;
+  color: #ffffff;
+  border-radius: 0;
+}
+
+.toast-body {
+  background-color: #1d171f;
+  font-size: 14px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+// WHITE MODE
+.white-content {
+  .toast-header {
+    background-color: #f5f8fc;
+    color: #000000;
+  }
+  
+  .toast-body {
+    background-color: #ffffff;
+    color: #000000;
+  }
 }
