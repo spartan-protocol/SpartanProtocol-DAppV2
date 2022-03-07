@@ -42,6 +42,7 @@ const PoolItem = ({ asset, daoApy }) => {
     safety,
     oldRate,
     newRate,
+    baseCap,
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
@@ -84,6 +85,8 @@ const PoolItem = ({ asset, daoApy }) => {
   const poolCapTooltip = Tooltip(t, 'poolCap')
   const poolRatioTooltip = Tooltip(t, 'poolRatio')
 
+  const isAtCaps = () =>
+    BN(baseAmount).gt(BN(baseCap).minus(5000000000000000000000))
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
   const getRatioPC = () => BN(safety).times(100)
   const getScaled = () => {
@@ -304,7 +307,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   <Col className="my-auto px-0">
                     <ProgressBar style={{ height: '5px' }} className="">
                       <ProgressBar
-                        variant={getDepthPC() > 95 ? 'primary' : 'success'}
+                        variant={isAtCaps() ? 'primary' : 'success'}
                         key={1}
                         now={getDepthPC()}
                       />
