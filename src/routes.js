@@ -8,7 +8,7 @@ import Dao from './containers/Dao'
 import Upgrade from './containers/Upgrade'
 import Donate from './containers/Donate'
 import PU from './containers/PU'
-import Partners from './containers/Partners'
+import Friends from './containers/Friends'
 
 export const routes = [
   {
@@ -84,10 +84,10 @@ export const routes = [
   },
 
   {
-    path: '/partners',
-    name: 'partners',
+    path: '/friends',
+    name: 'friends',
     icon: 'handshake',
-    component: Partners,
+    component: Friends,
     layout: '',
   },
 
