@@ -154,6 +154,39 @@ const Friends = () => (
         <Col xs="auto">
           <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
             <Card.Header style={{ height: '49px' }}>
+              <img
+                src={Coingecko}
+                alt="Coingecko"
+                height="26px"
+                className="rounded-0 friend-logo-dark"
+              />
+              <img
+                src={CoingeckoDark}
+                alt="Coingecko"
+                height="26px"
+                className="rounded-0 friend-logo-white"
+              />
+            </Card.Header>
+            <Card.Body>
+              CoinGecko provides a fundamental analysis of the crypto market
+              including prices, volume, market caps & more.
+            </Card.Body>
+            <Card.Footer>
+              <a
+                href="https://www.coingecko.com/en/coins/spartan-protocol-token"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Button variant="info" className="w-100">
+                  CoinGecko
+                </Button>
+              </a>
+            </Card.Footer>
+          </Card>
+        </Col>
+        <Col xs="auto">
+          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
+            <Card.Header style={{ height: '49px' }}>
               {' '}
               <img
                 src={Moonlight}
@@ -204,32 +237,6 @@ const Friends = () => (
               <a href="https://onto.app" target="_blank" rel="noreferrer">
                 <Button variant="info" className="w-100">
                   ONTO Wallet
-                </Button>
-              </a>
-            </Card.Footer>
-          </Card>
-        </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
-              <img
-                src={Coingecko}
-                alt="Coingecko"
-                height="26px"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={CoingeckoDark}
-                alt="Coingecko"
-                height="26px"
-                className="rounded-0 friend-logo-white"
-              />
-            </Card.Header>
-            <Card.Body>SPARTA market price provided by CoinGecko.</Card.Body>
-            <Card.Footer>
-              <a href="https://coingecko.com" target="_blank" rel="noreferrer">
-                <Button variant="info" className="w-100">
-                  Coingecko
                 </Button>
               </a>
             </Card.Footer>
