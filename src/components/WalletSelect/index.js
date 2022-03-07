@@ -265,7 +265,9 @@ const WalletSelect = (props) => {
       )
       const synthWeight = getSynthWeights(synth.synthDetails, pool.poolDetails)
       const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
-      return convertFromWei(lpWeight.plus(synthWeight).plus(spartaWeight))
+      return convertFromWei(
+        lpWeight.times(2).plus(synthWeight).plus(spartaWeight),
+      )
     }
     return '0'
   }
