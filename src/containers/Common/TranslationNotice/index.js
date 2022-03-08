@@ -25,7 +25,8 @@ const TranslationNotice = () => {
 
   const [show, setShow] = useState(false)
   useEffect(() => {
-    if (completedLanguages.includes(i18n.language)) {
+    const lang = i18n.language.split('-')[0]
+    if (completedLanguages.includes(lang)) {
       setShow(false)
     } else {
       setShow(true)
