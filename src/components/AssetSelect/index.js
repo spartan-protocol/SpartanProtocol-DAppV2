@@ -2,15 +2,23 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, InputGroup, FormControl, Nav, Modal } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Nav from 'react-bootstrap/Nav'
+import Modal from 'react-bootstrap/Modal'
+
+import ShareLink from '../Share/ShareLink'
+import { Icon } from '../Icons/index'
+
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
-import ShareLink from '../Share/ShareLink'
 import { useSynth } from '../../store/synth'
 import { getAddresses } from '../../utils/web3'
-import { Icon } from '../Icons/index'
+
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 

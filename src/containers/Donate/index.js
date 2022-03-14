@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Card,
-  Col,
-  InputGroup,
-  // ProgressBar,
-  Row,
-  FormControl,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Row from 'react-bootstrap/Row'
+import FormControl from 'react-bootstrap/FormControl'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { ethers } from 'ethers'

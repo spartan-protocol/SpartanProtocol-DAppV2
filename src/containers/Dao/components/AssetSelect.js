@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Row, Col, Card } from 'react-bootstrap'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import { usePool } from '../../../store/pool'
 import { useSynth } from '../../../store/synth'
 import { BN, convertToWei } from '../../../utils/bigNumber'

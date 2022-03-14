@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Row,
-  Col,
-  Popover,
-  ProgressBar,
-  Badge,
-  Overlay,
-  Form,
-  OverlayTrigger,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Popover from 'react-bootstrap/Popover'
+import ProgressBar from 'react-bootstrap/ProgressBar'
+import Badge from 'react-bootstrap/Badge'
+import Overlay from 'react-bootstrap/Overlay'
+import Form from 'react-bootstrap/Form'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useDispatch } from 'react-redux'
 import { useSparta } from '../../../../store/sparta'
 import { usePool } from '../../../../store/pool'

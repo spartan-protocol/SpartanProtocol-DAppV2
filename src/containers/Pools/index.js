@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import {
-  Badge,
-  Card,
-  Col,
-  Form,
-  Nav,
-  OverlayTrigger,
-  Row,
-} from 'react-bootstrap'
+import Badge from 'react-bootstrap/Badge'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Form from 'react-bootstrap/Form'
+import Nav from 'react-bootstrap/Nav'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Row from 'react-bootstrap/Row'
 import PoolItem from './PoolItem'
 import { usePool } from '../../store/pool'
 import { getNetwork, tempChains } from '../../utils/web3'

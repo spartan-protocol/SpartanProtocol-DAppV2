@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Card,
-  Row,
-  Col,
-  Button,
-  InputGroup,
-  FormControl,
-  Form,
-  Modal,
-  FloatingLabel,
-  OverlayTrigger,
-} from 'react-bootstrap'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'

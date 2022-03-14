@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'

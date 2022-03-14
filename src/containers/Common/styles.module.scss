@@ -1,0 +1,25 @@
+.wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: 50px auto;
+  grid-template-areas:
+    'navbar'
+    'body';
+}
+
+@media (min-width: 1024px) {
+  .wrapper {
+    grid-template-columns: min-content auto;
+    grid-template-areas:
+    'sidebarLg navbar'
+    'sidebarLg body';
+  }
+}
+
+.body {
+  grid-area: body;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 20px;
+}

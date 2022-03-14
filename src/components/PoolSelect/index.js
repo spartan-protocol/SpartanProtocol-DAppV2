@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
-import {
-  Button,
-  Modal,
-  Col,
-  Row,
-  InputGroup,
-  FormControl,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
 import { useHistory } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'

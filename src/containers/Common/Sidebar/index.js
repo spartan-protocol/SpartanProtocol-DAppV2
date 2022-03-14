@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Nav, Navbar, Offcanvas } from 'react-bootstrap'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import Offcanvas from 'react-bootstrap/Offcanvas'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LinkContainer } from 'react-router-bootstrap'

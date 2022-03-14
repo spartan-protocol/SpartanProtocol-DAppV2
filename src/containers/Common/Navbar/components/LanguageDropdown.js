@@ -1,7 +1,11 @@
 import React, { useRef, useState } from 'react'
 
 // i18n
-import { Button, Col, Overlay, Popover, Row } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import Popover from 'react-bootstrap/Popover'
+import Overlay from 'react-bootstrap/Overlay'
+import Row from 'react-bootstrap/Row'
 import i18n from '../../../../i18n'
 
 // flags

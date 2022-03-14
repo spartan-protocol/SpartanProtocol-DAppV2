@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Row,
-  Col,
-  Popover,
-  Badge,
-  Overlay,
-  Button,
-  Form,
-} from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Popover from 'react-bootstrap/Popover'
+import Badge from 'react-bootstrap/Badge'
+import Overlay from 'react-bootstrap/Overlay'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 import { useReserve } from '../../../../store/reserve'
 import { getExplorerContract } from '../../../../utils/extCalls'
 import {

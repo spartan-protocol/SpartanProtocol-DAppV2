@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
 import { Icon } from '../../../../components/Icons/index'
 
 const ThemeSwitcher = () => {

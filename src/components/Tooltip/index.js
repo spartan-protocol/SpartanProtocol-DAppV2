@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover } from 'react-bootstrap'
+import Popover from 'react-bootstrap/Popover'
 
 /**
  * Get the custom tooltip from imported list.

@@ -1,0 +1,26 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+
+.navbar {
+  grid-area: navbar;
+  z-index: $zindex-sticky;
+  display: flex;
+  justify-content: space-between;
+  backdrop-filter: blur(5px);
+  // box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.205);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.brand {
+  height: 100%;
+  margin-top: 7px;
+  margin-left: 10px;
+  display: inline-block;
+}
+
+.buttons {
+  height: 100%;
+  margin-top: 5px;
+  margin-left: auto;
+}

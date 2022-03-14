@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import {
-  Alert,
-  Form,
-  Row,
-  Modal,
-  Button,
-  Col,
-  Tabs,
-  Tab,
-  OverlayTrigger,
-  Badge,
-} from 'react-bootstrap'
+import Alert from 'react-bootstrap/Alert'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Badge from 'react-bootstrap/Badge'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Toast, ToastContainer } from 'react-bootstrap'
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 import completedLanguages from '../../../locales/completed.json'
 
 const Message = () => {

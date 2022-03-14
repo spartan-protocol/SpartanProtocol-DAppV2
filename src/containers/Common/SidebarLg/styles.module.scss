@@ -1,0 +1,43 @@
+.sidebarLg {
+  // Theme
+  // background-color: $navbar-color;
+  // Structure
+  min-width: 50px;
+  border-right: 1px solid #00000020;
+  align-content: space-between;
+  // Visibility
+  overflow-y: auto;
+  overflow-x: hidden;
+  // Animations
+  -webkit-transition: width 0.5s ease-in-out;
+  -moz-transition: width 0.5s ease-in-out;
+  -o-transition: width 0.5s ease-in-out;
+  transition: width 0.5s ease-in-out;
+  // CSS Grid
+  grid-area: sidebarLg;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-areas:
+    'links'
+    'socials';
+}
+
+.links {
+  grid-area: links;
+  white-space: nowrap;
+  text-overflow: clip;
+  -webkit-transition: width 0.5s ease-in-out;
+  -moz-transition: width 0.5s ease-in-out;
+  -o-transition: width 0.5s ease-in-out;
+  transition: width 0.5s ease-in-out;
+
+  a {
+    padding-left: 12px;
+  }
+}
+
+.socials {
+  grid-area: socials;
+  text-align: center;
+  margin-bottom: 20px;
+}

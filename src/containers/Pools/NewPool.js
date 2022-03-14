@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import {
-  Button,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Modal,
-  OverlayTrigger,
-  Row,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import FormControl from 'react-bootstrap/FormControl'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Row from 'react-bootstrap/Row'
+import Modal from 'react-bootstrap/Modal'
 import { useWeb3React } from '@web3-react/core'
 import Approval from '../../components/Approval/index'
 import {
