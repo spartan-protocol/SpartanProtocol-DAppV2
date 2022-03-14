@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Card,
-  Col,
-  Row,
-  Button,
-  OverlayTrigger,
-  Popover,
-} from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'

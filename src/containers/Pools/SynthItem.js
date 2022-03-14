@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Badge,
-  Button,
-  Card,
-  Col,
-  OverlayTrigger,
-  Row,
-  ProgressBar,
-} from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Badge from 'react-bootstrap/Badge'
+import Button from 'react-bootstrap/Button'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import { synthVaultWeight, useSynth } from '../../store/synth'

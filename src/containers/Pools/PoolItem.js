@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Badge,
-  Button,
-  Card,
-  Col,
-  OverlayTrigger,
-  Row,
-  ProgressBar,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import Badge from 'react-bootstrap/Badge'
+import Card from 'react-bootstrap/Card'
+import ProgressBar from 'react-bootstrap/ProgressBar'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Row from 'react-bootstrap/Row'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 import {
