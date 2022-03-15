@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { routes } from '../../../routes'
 import { Icon } from '../../../components/Icons/index'
 
-import * as styles from './styles.module.scss'
+import styles from './styles.module.scss'
 
 const SidebarLg = () => {
   const iconCompact = '35px'

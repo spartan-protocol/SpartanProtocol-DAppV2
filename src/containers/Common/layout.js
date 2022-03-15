@@ -2,7 +2,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import React from 'react'
 import { install } from 'resize-observer'
 
-import * as styles from './styles.module.scss'
+import styles from './styles.module.scss'
 
 import Navbar from './Navbar'
 // import Footer from './Footer'

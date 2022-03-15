@@ -9,9 +9,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   // Animations
-  -webkit-transition: width 0.5s ease-in-out;
-  -moz-transition: width 0.5s ease-in-out;
-  -o-transition: width 0.5s ease-in-out;
   transition: width 0.5s ease-in-out;
   // CSS Grid
   grid-area: sidebarLg;
@@ -26,9 +23,6 @@
   grid-area: links;
   white-space: nowrap;
   text-overflow: clip;
-  -webkit-transition: width 0.5s ease-in-out;
-  -moz-transition: width 0.5s ease-in-out;
-  -o-transition: width 0.5s ease-in-out;
   transition: width 0.5s ease-in-out;
 
   a {

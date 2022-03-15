@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../components/Icons/index'
 
-import * as styles from './styles.module.scss'
+import styles from './styles.module.scss'
 
 const Footer = () => {
   const isLightMode = window.localStorage.getItem('theme')

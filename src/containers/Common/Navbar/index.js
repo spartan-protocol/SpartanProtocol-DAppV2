@@ -8,7 +8,7 @@ import Contracts from './components/Contracts'
 import Sidebar from '../Sidebar'
 import { Icon } from '../../../components/Icons/index'
 
-import * as styles from './styles.module.scss'
+import styles from './styles.module.scss'
 import { useBreakpoint } from '../../../components/Breakpoint'
 
 const Navbar = () => {
