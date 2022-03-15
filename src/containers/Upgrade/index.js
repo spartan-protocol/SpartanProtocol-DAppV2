@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Row } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
 import { useWeb3React } from '@web3-react/core'
 import { fallenSpartansCheck } from '../../store/sparta'
 import Upgrade from './Upgrade'

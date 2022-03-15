@@ -1,5 +1,5 @@
 import React from 'react'
-// import { Tooltip } from 'react-bootstrap'
+// import Tooltip from 'react-bootstrap/Tooltip'
 import { Link } from 'react-router-dom'
 import { Icon } from '../../../components/Icons/index'
 

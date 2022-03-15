@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col } from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 import { checkResolved } from '../../utils/helpers'

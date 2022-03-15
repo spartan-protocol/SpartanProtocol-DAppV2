@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Row,
-  Col,
-  Card,
-  Nav,
-  InputGroup,
-  FormControl,
-  Button,
-  Badge,
-  Form,
-  Popover,
-  OverlayTrigger,
-  ProgressBar,
-} from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
+import Badge from 'react-bootstrap/Badge'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Form from 'react-bootstrap/Form'
+import Popover from 'react-bootstrap/Popover'
+import Nav from 'react-bootstrap/Nav'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
 import {
