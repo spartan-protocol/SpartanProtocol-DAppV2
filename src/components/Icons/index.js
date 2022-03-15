@@ -71,6 +71,7 @@ import { ReactComponent as MetaMask } from '../../assets/brands/metamask.svg'
 import { ReactComponent as Onto } from '../../assets/brands/onto.svg'
 import { ReactComponent as TrustWallet } from '../../assets/brands/trust-wallet.svg'
 import { ReactComponent as WalletConnect } from '../../assets/brands/walletconnect.svg'
+import { useTheme } from '../../providers/Theme'
 
 const icons = {
   // BRANDS
@@ -161,6 +162,8 @@ const icons = {
  * @returns {Component} Custom Icon imported as ReactComponent
  */
 export const Icon = (props) => {
+  const { isDark } = useTheme()
+  const fallbackFill = isDark ? 'white' : 'black'
   let CustomIcon = icons[props.icon]
   if (CustomIcon === undefined) {
     CustomIcon = icons.iconMissing
@@ -171,7 +174,7 @@ export const Icon = (props) => {
         className={props.className || ''}
         height={props.size || props.height || '40'}
         width={props.size || props.width || '40'}
-        fill={props.fill || 'white'}
+        fill={props.fill || fallbackFill}
         stroke={props.stroke || null}
         style={props.style || null}
         role={props.role || null}

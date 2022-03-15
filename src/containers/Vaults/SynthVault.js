@@ -29,7 +29,6 @@ import { synthHarvestLive } from '../../utils/web3'
 import { Tooltip } from '../../components/Tooltip/index'
 
 const SynthVault = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const synth = useSynth()
   const pool = usePool()
@@ -154,12 +153,7 @@ const SynthVault = () => {
                       overlay={Tooltip(t, 'apySynth')}
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mt-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mt-1" size="17" />
                       </span>
                     </OverlayTrigger>
                     <p className="output-card d-inline-block ms-2">

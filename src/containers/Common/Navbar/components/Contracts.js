@@ -18,7 +18,7 @@ import { ReactComponent as ContractIconG } from '../../../../assets/icons/contra
 import { ReactComponent as ContractIconR } from '../../../../assets/icons/contract-red.svg'
 import { Icon } from '../../../../components/Icons/index'
 
-const btnClass = 'btn-round btn-icon btn-transparent align-self-center me-1'
+const btnClass = 'header-btn'
 
 const Contracts = () => {
   const { t } = useTranslation()

@@ -12,8 +12,6 @@ import { Icon } from '../../components/Icons/index'
 import { calcAPY } from '../../utils/math/nonContract'
 
 const SwapPair = ({ assetSwap }) => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const web3 = useWeb3()
   const pool = usePool()
   const { t } = useTranslation()
@@ -128,12 +126,7 @@ const SwapPair = ({ assetSwap }) => {
                 APY{' '}
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>

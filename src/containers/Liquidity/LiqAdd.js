@@ -52,7 +52,6 @@ import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 
 const LiqAdd = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const wallet = useWeb3React()
   const dispatch = useDispatch()
@@ -915,7 +914,6 @@ const LiqAdd = () => {
                                         icon="info"
                                         className="ms-1 mb-1"
                                         size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>

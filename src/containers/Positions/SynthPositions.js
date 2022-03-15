@@ -30,7 +30,6 @@ import { getMemberSynthPositions } from '../../utils/extCalls'
 import { useSynth } from '../../store/synth'
 
 const SynthPositions = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
@@ -388,12 +387,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -429,12 +423,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -469,12 +458,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -509,12 +493,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -552,12 +531,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -592,12 +566,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -635,12 +604,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -663,12 +627,7 @@ const SynthPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -753,12 +712,7 @@ const SynthPositions = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -794,12 +748,7 @@ const SynthPositions = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -834,12 +783,7 @@ const SynthPositions = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -876,12 +820,7 @@ const SynthPositions = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="15" />
                     </span>
                   </OverlayTrigger>{' '}
                 </Col>
@@ -918,12 +857,7 @@ const SynthPositions = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -956,12 +890,7 @@ const SynthPositions = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>

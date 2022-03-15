@@ -1,0 +1,89 @@
+@import './variables.scss';
+
+body
+  > iframe[style*='2147483647']:not([id='webpack-dev-server-client-overlay']) {
+  display: none;
+}
+
+body {
+  overflow: hidden;
+  font-family: "Saira";
+  background-color: $bg-depth-0;
+}
+
+.bg-0 {
+  background-color: $bg-depth-0;
+}
+
+.bg-1 {
+  background-color: $bg-depth-1;
+}
+
+.bg-2 {
+  background-color: $bg-depth-2;
+}
+
+.bg-3 {
+  background-color: $bg-depth-3;
+}
+
+.bg-4 {
+  background-color: $bg-depth-4;
+}
+
+.card {
+  background-color: $bg-depth-2;
+}
+
+.header-btn {
+  margin-left: 10px;
+  height: 36px;
+  margin-top: 6px;
+  vertical-align: top;
+}
+
+.card-header {
+  background-color: $bg-depth-1;
+}
+
+.card-footer {
+  background-color: $bg-depth-3;
+}
+
+// ------------- DARK THEME ------------- //
+
+body.dark-theme {
+  background-color: $bg-depth-0-dark;
+
+  .bg-0 {
+    background-color: $bg-depth-0-dark;
+  }
+
+  .bg-1 {
+    background-color: $bg-depth-1-dark;
+  }
+  
+  .bg-2 {
+    background-color: $bg-depth-2-dark;
+  }
+  
+  .bg-3 {
+    background-color: $bg-depth-3-dark;
+  }
+  
+  .bg-4 {
+    background-color: $bg-depth-4-dark;
+  }
+
+  .card {
+    background-color: $bg-depth-2-dark;
+  }
+
+  .card-header {
+    background-color: $bg-depth-1-dark;
+  }
+
+  .card-footer {
+    background-color: $bg-depth-3-dark;
+  }
+}

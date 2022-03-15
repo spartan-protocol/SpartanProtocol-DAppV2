@@ -37,8 +37,6 @@ const Approval = ({
   txnAmount,
   assetNumber,
 }) => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -140,12 +138,7 @@ const Approval = ({
               handleApproval()
             }}
           >
-            <Icon
-              icon="lock"
-              fill={isLightMode ? 'black' : 'white'}
-              size="20"
-              className="me-1"
-            />
+            <Icon icon="lock" size="20" className="me-1" />
             {enoughGas() ? <>Approve {symbol}</> : t('checkBnbGas')}
             {pending && (
               <Icon icon="cycle" size="20" className="anim-spin ms-1" />

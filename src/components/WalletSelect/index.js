@@ -103,7 +103,6 @@ export const spartanRanks = [
 ]
 
 const WalletSelect = (props) => {
-  const isLightMode = window.localStorage.getItem('theme')
   const synth = useSynth()
   const pool = usePool()
   const dao = useDao()
@@ -396,12 +395,7 @@ const WalletSelect = (props) => {
                       overlay={Tooltip(t, 'rank')}
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1" size="17" />
                       </span>
                     </OverlayTrigger>
                   </span>
@@ -515,11 +509,7 @@ const WalletSelect = (props) => {
                         eventKey="txns"
                         title={
                           <>
-                            <Icon
-                              icon="txnsHistory"
-                              size="18"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="txnsHistory" size="18" />
                           </>
                         }
                       >
@@ -544,13 +534,7 @@ const WalletSelect = (props) => {
               size="sm"
               variant="primary"
             >
-              {t('viewBscScan')}{' '}
-              <Icon
-                icon="scan"
-                size="16"
-                fill={isLightMode ? 'black' : 'white'}
-                className="mb-1"
-              />
+              {t('viewBscScan')} <Icon icon="scan" size="16" className="mb-1" />
             </Button>
             <Button
               size="sm"
@@ -560,12 +544,7 @@ const WalletSelect = (props) => {
               }}
             >
               {t('disconnect')}
-              <Icon
-                icon="walletRed"
-                size="17"
-                fill={isLightMode ? 'black' : 'white'}
-                className="mb-1"
-              />
+              <Icon icon="walletRed" size="17" className="mb-1" />
             </Button>
           </Modal.Footer>
         ) : (
@@ -578,12 +557,7 @@ const WalletSelect = (props) => {
               }}
             >
               {t('clearWallet')}
-              <Icon
-                icon="walletRed"
-                size="17"
-                fill={isLightMode ? 'black' : 'white'}
-                className="mb-1 ms-1"
-              />
+              <Icon icon="walletRed" size="17" className="mb-1 ms-1" />
             </Button>
           </Modal.Footer>
         )}

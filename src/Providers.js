@@ -27,7 +27,8 @@ import synthReducer from './store/synth'
 import utilsReducer from './store/utils'
 import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
-import { BreakpointProvider } from './components/Breakpoint'
+import { BreakpointProvider } from './providers/Breakpoint'
+import { ThemeProvider } from './providers/Theme'
 
 ChartJS.register(
   LineElement,
@@ -74,8 +75,10 @@ const Providers = () => (
       <BrowserRouter>
         <BreakpointProvider>
           <Switch>
-            <Route path="/" component={Layout} />
-            <Redirect from="/" to="/home" />
+            <ThemeProvider>
+              <Route path="/" component={Layout} />
+              <Redirect from="/" to="/home" />
+            </ThemeProvider>
           </Switch>
         </BreakpointProvider>
       </BrowserRouter>

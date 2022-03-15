@@ -29,7 +29,6 @@ const PoolItem = ({ asset, daoApy }) => {
   const web3 = useWeb3()
   const addr = getAddresses()
   const [showDetails, setShowDetails] = useState(false)
-  const isLightMode = window.localStorage.getItem('theme')
   const {
     tokenAddress,
     baseAmount,
@@ -121,7 +120,7 @@ const PoolItem = ({ asset, daoApy }) => {
                         icon="info"
                         className="ms-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -139,7 +138,7 @@ const PoolItem = ({ asset, daoApy }) => {
                         icon="info"
                         className="ms-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -157,7 +156,7 @@ const PoolItem = ({ asset, daoApy }) => {
                         icon="info"
                         className="ms-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -171,12 +170,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     overlay={Tooltip(t, 'poolActive', token.symbol)}
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Badge>
@@ -189,12 +183,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     overlay={Tooltip(t, 'poolInactive', token.symbol)}
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Badge>
@@ -230,22 +219,12 @@ const PoolItem = ({ asset, daoApy }) => {
               <Col className="text-end my-auto pe-0">
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="me-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="me-1" size="17" />
                   </span>
                 </OverlayTrigger>
                 <p className="text-sm-label mb-0 d-inline-block">APY</p>
                 <p className="output-card">
-                  <Icon
-                    icon="pool"
-                    size="17"
-                    fill={isLightMode ? 'black' : 'white'}
-                    className="me-1 mb-1"
-                  />
+                  <Icon icon="pool" size="17" className="me-1 mb-1" />
                   {formatFromUnits(APY, 2)}%
                   {curated && daoApy > 0 && (
                     <>
@@ -255,12 +234,7 @@ const PoolItem = ({ asset, daoApy }) => {
                         overlay={Tooltip(t, 'apySynth')}
                       >
                         <span role="button">
-                          <Icon
-                            icon="lock"
-                            size="17"
-                            fill={isLightMode ? 'black' : 'white'}
-                            className="me-1 mb-1"
-                          />
+                          <Icon icon="lock" size="17" className="me-1 mb-1" />
                         </span>
                       </OverlayTrigger>
                       {formatFromUnits(daoApy, 2)}%
@@ -277,7 +251,6 @@ const PoolItem = ({ asset, daoApy }) => {
                 <Icon
                   className=""
                   icon={showDetails ? 'arrowUp' : 'arrowDown'}
-                  fill={isLightMode ? 'black' : 'white'}
                   size="30"
                 />
               </Col>
@@ -288,12 +261,7 @@ const PoolItem = ({ asset, daoApy }) => {
                 {t('poolCap')}
                 <OverlayTrigger placement="auto" overlay={poolCapTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -382,12 +350,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     {t('poolRatio')}
                     <OverlayTrigger placement="auto" overlay={poolRatioTooltip}>
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1" size="17" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -473,12 +436,7 @@ const PoolItem = ({ asset, daoApy }) => {
                 {t('revenue')}
                 <OverlayTrigger placement="auto" overlay={revenueTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -498,12 +456,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     {t('fees')}
                     <OverlayTrigger placement="auto" overlay={swapRevTooltip}>
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1" size="17" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -518,12 +471,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     {t('dividends')}
                     <OverlayTrigger placement="auto" overlay={diviRevTooltip}>
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1" size="17" />
                       </span>
                     </OverlayTrigger>
                   </Col>

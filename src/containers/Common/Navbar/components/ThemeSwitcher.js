@@ -1,54 +1,24 @@
-import React, { useEffect } from 'react'
-import Button from 'react-bootstrap/Button'
-import { Icon } from '../../../../components/Icons/index'
+import React from 'react'
+import { useTheme } from '../../../../providers/Theme'
+import './themeSwitcher.scss'
 
 const ThemeSwitcher = () => {
-  const [lightMode, setlightMode] = React.useState(false)
-
-  useEffect(() => {
-    const lsMode = window.localStorage.getItem('theme')
-    if (lsMode) {
-      setlightMode(true)
-      document.body.classList.toggle('white-content')
-    }
-  }, [])
-
-  const handleActiveMode = () => {
-    const _lightMode = document.body.classList.contains('white-content')
-    if (_lightMode) {
-      setlightMode(false)
-      window.localStorage.removeItem('theme')
-    } else {
-      setlightMode(true)
-      window.localStorage.setItem('theme', true)
-    }
-    document.body.classList.toggle('white-content')
-  }
-
-  const btnClass = 'btn-transparent align-self-center me-1'
-
+  const theme = useTheme()
   return (
     <>
-      {!lightMode && (
-        <Button
-          value={lightMode}
-          type="Button"
-          className={btnClass}
-          onClick={handleActiveMode}
-        >
-          <Icon icon="moon" size="24" />
-        </Button>
-      )}
-      {lightMode && (
-        <Button
-          value={lightMode}
-          type="Button"
-          className={btnClass}
-          onClick={handleActiveMode}
-        >
-          <Icon icon="sun" size="24" />
-        </Button>
-      )}
+      <div className="switch">
+        <label className="switch__label" htmlFor="Switch">
+          <input
+            type="checkbox"
+            className="switch__input"
+            id="Switch"
+            defaultChecked={!theme.isDark}
+            onChange={() => theme.toggleDark()}
+          />
+          <span className="switch__indicator" />
+          <span className="switch__decoration" />
+        </label>
+      </div>
     </>
   )
 }

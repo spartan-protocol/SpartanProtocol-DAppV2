@@ -30,7 +30,6 @@ import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
 const Supply = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const web3 = useWeb3()
   const pool = usePool()
@@ -157,18 +156,12 @@ const Supply = () => {
     <>
       <Button
         id="PopoverClick"
-        variant={isLightMode ? 'secondary' : 'info'}
-        className="px-2 px-sm-4 ms-1 output-card pt-2 rounded-pill"
+        className="header-btn"
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
       >
-        <Icon
-          icon="arrowDown"
-          fill={isLightMode ? 'black' : 'white'}
-          className="me-1 hide-i5"
-          size="15"
-        />
-        ${formatFromUnits(web3.spartaPrice, 2)}
+        <Icon icon="arrowDown" className="me-1 hide-i5" size="15" />$
+        {formatFromUnits(web3.spartaPrice, 2)}
         <Icon icon="fire" size="16" fill="white" className="ms-1 mb-1" />
       </Button>
 
@@ -224,12 +217,7 @@ const Supply = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -255,12 +243,7 @@ const Supply = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -298,12 +281,7 @@ const Supply = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -386,12 +364,7 @@ const Supply = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -431,12 +404,7 @@ const Supply = () => {
                     }
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Col>
@@ -444,12 +412,7 @@ const Supply = () => {
                   {getBurnedTotal() > 0
                     ? `${formatFromWei(getBurnedTotal(), 0)}`
                     : 'Loading...'}
-                  <Icon
-                    icon="fire"
-                    className="ms-1"
-                    size="15"
-                    fill={isLightMode ? 'black' : 'white'}
-                  />
+                  <Icon icon="fire" className="ms-1" size="15" />
                 </Col>
               </Row>
             </Popover.Body>

@@ -38,7 +38,6 @@ import { useReserve } from '../../store/reserve'
 import { useWeb3 } from '../../store/web3'
 
 const NewProposal = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
@@ -394,12 +393,7 @@ const NewProposal = () => {
                           overlay={Tooltip(t, 'newProposalFee')}
                         >
                           <span role="button">
-                            <Icon
-                              icon="info"
-                              className="ms-1 mb-1"
-                              size="17"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="info" className="ms-1 mb-1" size="17" />
                           </span>
                         </OverlayTrigger>
                       </Form>

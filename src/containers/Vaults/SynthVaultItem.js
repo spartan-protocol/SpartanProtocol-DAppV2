@@ -60,8 +60,6 @@ const SynthVaultItem = ({ synthItem }) => {
     return [valid, reward, ` ${getToken(synthItem.tokenAddress)?.symbol}s`]
   }
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   return (
     <>
       <Col xs="auto">
@@ -90,12 +88,7 @@ const SynthVaultItem = ({ synthItem }) => {
                 <Link to={`/synths?asset2=${synthItem.tokenAddress}`}>
                   <p className="text-sm-label-alt">
                     {t('obtain')} {getToken(synthItem.tokenAddress)?.symbol}s
-                    <Icon
-                      icon="scan"
-                      size="13"
-                      fill={isLightMode ? 'black' : 'white'}
-                      className="ms-1"
-                    />
+                    <Icon icon="scan" size="13" className="ms-1" />
                   </p>
                 </Link>
               </Col>

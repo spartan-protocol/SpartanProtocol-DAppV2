@@ -38,8 +38,6 @@ const NewPool = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
@@ -288,16 +286,11 @@ const NewPool = () => {
   return (
     <>
       <Button
-        variant={isLightMode ? 'secondary' : 'info'}
+        variant="primary"
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon
-          icon="plus"
-          fill={isLightMode ? 'black' : 'white'}
-          size="17"
-          className="me-1 mb-1"
-        />
+        <Icon icon="plus" size="17" className="me-1 mb-1" />
         {t('pool')}
       </Button>
       {showModal && (
@@ -408,12 +401,7 @@ const NewPool = () => {
                           overlay={Tooltip(t, 'newPoolRatio')}
                         >
                           <span role="button">
-                            <Icon
-                              icon="info"
-                              className="ms-1"
-                              size="17"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="info" className="ms-1" size="17" />
                           </span>
                         </OverlayTrigger>
                       </div>
@@ -435,12 +423,7 @@ const NewPool = () => {
                           overlay={Tooltip(t, 'newPoolFee')}
                         >
                           <span role="button">
-                            <Icon
-                              icon="info"
-                              className="ms-1"
-                              size="17"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="info" className="ms-1" size="17" />
                           </span>
                         </OverlayTrigger>
                       </div>

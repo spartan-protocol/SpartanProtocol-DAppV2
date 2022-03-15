@@ -32,7 +32,6 @@ const SynthItem = ({ asset, synthApy }) => {
   const synth = useSynth()
   const history = useHistory()
   const web3 = useWeb3()
-  const isLightMode = window.localStorage.getItem('theme')
   const { tokenAddress, baseAmount, tokenAmount, newPool, curated } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
@@ -85,7 +84,7 @@ const SynthItem = ({ asset, synthApy }) => {
                         icon="info"
                         className="ms-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -103,7 +102,7 @@ const SynthItem = ({ asset, synthApy }) => {
                         icon="info"
                         className="ms-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -121,7 +120,7 @@ const SynthItem = ({ asset, synthApy }) => {
                         icon="info"
                         className="ms-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -135,12 +134,7 @@ const SynthItem = ({ asset, synthApy }) => {
                     overlay={Tooltip(t, 'poolActive', token.symbol)}
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Badge>
@@ -153,12 +147,7 @@ const SynthItem = ({ asset, synthApy }) => {
                     overlay={Tooltip(t, 'poolInactive', token.symbol)}
                   >
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1" size="15" />
                     </span>
                   </OverlayTrigger>
                 </Badge>
@@ -206,12 +195,7 @@ const SynthItem = ({ asset, synthApy }) => {
                     overlay={Tooltip(t, 'apySynth')}
                   >
                     <span role="button">
-                      <Icon
-                        icon="lock"
-                        size="17"
-                        fill={isLightMode ? 'black' : 'white'}
-                        className="me-1 mb-1"
-                      />
+                      <Icon icon="lock" size="17" className="me-1 mb-1" />
                     </span>
                   </OverlayTrigger>
                   {formatFromUnits(synthApy, 2)}%
@@ -224,12 +208,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 {t('softCap')}
                 <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -291,12 +270,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 {t('synthPC')}
                 <OverlayTrigger placement="auto" overlay={synthPCTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -316,12 +290,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 {t('unrealised')}
                 <OverlayTrigger placement="auto" overlay={synthURTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>

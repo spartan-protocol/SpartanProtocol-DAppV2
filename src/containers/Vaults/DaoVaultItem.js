@@ -18,8 +18,6 @@ const DaoVaultItem = ({ i, claimable }) => {
   const wallet = useWeb3React()
   const pool = usePool()
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((x) => x.address === _tokenAddr)[0]
 
@@ -48,12 +46,7 @@ const DaoVaultItem = ({ i, claimable }) => {
                 <Link to={`/liquidity?asset1=${i.tokenAddress}`}>
                   <p className="text-sm-label-alt">
                     {t('obtain')} {getToken(i.tokenAddress)?.symbol}p
-                    <Icon
-                      icon="scan"
-                      size="13"
-                      fill={isLightMode ? 'black' : 'white'}
-                      className="ms-1"
-                    />
+                    <Icon icon="scan" size="13" className="ms-1" />
                   </p>
                 </Link>
               </Col>

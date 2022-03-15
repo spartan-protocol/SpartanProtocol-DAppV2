@@ -26,8 +26,6 @@ const NewSynth = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
   const getNet = () => {
@@ -103,16 +101,11 @@ const NewSynth = () => {
   return (
     <>
       <Button
-        variant={isLightMode ? 'secondary' : 'info'}
+        variant="primary"
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon
-          icon="plus"
-          fill={isLightMode ? 'black' : 'white'}
-          size="17"
-          className="me-1 mb-1"
-        />
+        <Icon icon="plus" size="17" className="me-1 mb-1" />
         {t('synth')}
       </Button>
 

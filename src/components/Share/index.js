@@ -17,7 +17,6 @@ const Share = () => {
   const { t } = useTranslation()
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-  const isLightMode = window.localStorage.getItem('theme')
   const [asset1, setasset1] = useState('')
   const [asset2, setasset2] = useState('')
   const [assetType1, setassetType1] = useState('')
@@ -107,7 +106,7 @@ const Share = () => {
         className="ms-2 mb-1"
         onClick={() => setShowShare(true)}
       >
-        <Icon icon="connect" size="20" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="connect" size="20" />
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)} centered>
         <Modal.Header closeButton closeVariant="white">

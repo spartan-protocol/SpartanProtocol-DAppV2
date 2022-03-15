@@ -10,7 +10,7 @@ import SidebarLg from './SidebarLg'
 import DataManager from './DataManager/index'
 import TranslationNotice from './TranslationNotice/index'
 import { routes } from '../../routes'
-import { useBreakpoint } from '../../components/Breakpoint'
+import { useBreakpoint } from '../../providers/Breakpoint'
 
 const getRoutes = (tempRoutes) =>
   tempRoutes.map((prop) => (
@@ -34,15 +34,12 @@ const Layout = () => {
         <Navbar />
         {breakpoint.lg && <SidebarLg />}
         <div className={styles.body}>
-          {/* <div className={styles.content}> */}
           <TranslationNotice />
           <Switch>
             {getRoutes(routes)}
             <Redirect from="*" to="/home" />
           </Switch>
-          {/* </div> */}
         </div>
-        {/* <Footer /> */}
       </div>
     </>
   )

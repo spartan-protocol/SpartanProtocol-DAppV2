@@ -12,8 +12,6 @@ const Sidebar = () => {
   const [navOpen, setnavOpen] = useState(false)
   const { t } = useTranslation()
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   const openNav = () => {
     setnavOpen(true)
   }
@@ -27,20 +25,12 @@ const Sidebar = () => {
       {navOpen ? (
         <>
           <span role="button" onClick={closeNav} aria-hidden="true">
-            <Icon
-              icon="menuOpen"
-              fill={isLightMode ? 'black' : 'white'}
-              size="24"
-            />
+            <Icon icon="menuOpen" size="24" />
           </span>
         </>
       ) : (
         <span role="button" onClick={openNav} aria-hidden="true">
-          <Icon
-            icon="menuClose"
-            fill={isLightMode ? 'black' : 'white'}
-            size="24"
-          />
+          <Icon icon="menuClose" size="24" />
         </span>
       )}
       <Offcanvas show={navOpen} placement="start" onHide={closeNav}>
@@ -48,20 +38,12 @@ const Sidebar = () => {
           {navOpen ? (
             <>
               <span role="button" onClick={closeNav} aria-hidden="true">
-                <Icon
-                  icon="menuOpen"
-                  fill={isLightMode ? 'black' : 'white'}
-                  size="24"
-                />
+                <Icon icon="menuOpen" size="24" />
               </span>
             </>
           ) : (
             <span role="button" onClick={openNav} aria-hidden="true">
-              <Icon
-                icon="menuClose"
-                fill={isLightMode ? 'black' : 'white'}
-                size="24"
-              />
+              <Icon icon="menuClose" size="24" />
             </span>
           )}
           <Offcanvas.Title className="ms-2">
@@ -84,11 +66,7 @@ const Sidebar = () => {
                   <LinkContainer to={route.path}>
                     <Nav.Link eventKey={route.path} onClick={closeNav}>
                       <div>
-                        <Icon
-                          icon={route.icon}
-                          fill={isLightMode ? 'black' : 'white'}
-                          size="24"
-                        />
+                        <Icon icon={route.icon} size="24" />
                         <span className="ms-2">{t(route.name)}</span>
                       </div>
                     </Nav.Link>

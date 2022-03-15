@@ -37,7 +37,6 @@ import { getAddresses } from '../../utils/web3'
 import { Tooltip } from '../../components/Tooltip/index'
 
 const DaoVault = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -237,12 +236,7 @@ const DaoVault = () => {
                   overlay={Tooltip(t, 'apySynth')}
                 >
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1 mt-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1 mt-1" size="17" />
                   </span>
                 </OverlayTrigger>
                 <p className="output-card d-inline-block ms-2">
@@ -265,7 +259,7 @@ const DaoVault = () => {
                         icon="info"
                         className="ms-1 mb-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
@@ -322,7 +316,7 @@ const DaoVault = () => {
                           icon="info"
                           className="ms-1 mb-1"
                           size="15"
-                          // fill={isLightMode ? 'black' : 'white'}
+                          //
                         />
                       </span>
                     </OverlayTrigger>
@@ -370,7 +364,7 @@ const DaoVault = () => {
                           icon="info"
                           className="ms-1 mb-1"
                           size="15"
-                          // fill={isLightMode ? 'black' : 'white'}
+                          //
                         />
                       </span>
                     </OverlayTrigger>

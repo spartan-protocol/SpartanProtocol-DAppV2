@@ -9,12 +9,12 @@ import Sidebar from '../Sidebar'
 import { Icon } from '../../../components/Icons/index'
 
 import styles from './styles.module.scss'
-import { useBreakpoint } from '../../../components/Breakpoint'
+import { useBreakpoint } from '../../../providers/Breakpoint'
 
 const Navbar = () => {
   const breakpoint = useBreakpoint()
   return (
-    <div className={styles.navbar}>
+    <div className={`${styles.navbar} bg-1`}>
       {!breakpoint.lg && (
         <div>
           <Sidebar />

@@ -22,7 +22,7 @@ const AddressConn = () => {
   const target = useRef(null)
   const targetB = useRef(null)
 
-  const btnClass = 'btn-round btn-icon btn-transparent align-self-center mx-2'
+  const btnClass = 'header-btn'
 
   useEffect(() => {
     async function listenAccountsChanged() {

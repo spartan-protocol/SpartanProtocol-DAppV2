@@ -24,7 +24,6 @@ import ChartLPs from './Charts/ChartLPs'
 import { useDao, daoVaultWeight } from '../../../store/dao'
 
 const Metrics = ({ assetSwap }) => {
-  const isLightMode = window.localStorage.getItem('theme')
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -205,12 +204,7 @@ const Metrics = ({ assetSwap }) => {
                   APY
                   <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="17"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="17" />
                     </span>
                   </OverlayTrigger>
                 </span>
@@ -222,12 +216,7 @@ const Metrics = ({ assetSwap }) => {
                       overlay={Tooltip(t, 'apySynth')}
                     >
                       <span role="button">
-                        <Icon
-                          icon="lock"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                          className="me-1 mb-1"
-                        />
+                        <Icon icon="lock" size="17" className="me-1 mb-1" />
                       </span>
                     </OverlayTrigger>
                     <h6 className="mb-0">{formatFromUnits(daoApy, 2)}%</h6>

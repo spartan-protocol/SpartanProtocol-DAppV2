@@ -13,7 +13,6 @@ const SidebarLg = () => {
   const iconCompact = '35px'
   const iconLg = '50px'
   const { t } = useTranslation()
-  const isLightMode = window.localStorage.getItem('theme')
 
   const [compact, setCompact] = useState(true)
 
@@ -24,7 +23,7 @@ const SidebarLg = () => {
   return (
     <>
       <Col
-        className={styles.sidebarLg}
+        className={`${styles.sidebarLg} bg-1`}
         style={compact ? { width: '50px' } : { width: '200px' }}
         onMouseEnter={() => handleCompact(false)}
         onMouseLeave={() => handleCompact(true)}
@@ -79,11 +78,7 @@ const SidebarLg = () => {
                 <li className="" key={route.path}>
                   <LinkContainer to={route.path}>
                     <Nav.Link eventKey={route.path}>
-                      <Icon
-                        icon={route.icon}
-                        fill={isLightMode ? 'black' : 'white'}
-                        size="24"
-                      />
+                      <Icon icon={route.icon} size="24" />
                       <span className="ms-3">{t(route.name)}</span>
                     </Nav.Link>
                   </LinkContainer>
@@ -100,11 +95,7 @@ const SidebarLg = () => {
           }
         >
           {compact ? (
-            <Icon
-              icon="github"
-              fill={isLightMode ? 'black' : 'white'}
-              size="24"
-            />
+            <Icon icon="github" size="24" />
           ) : (
             <>
               <a
@@ -114,11 +105,7 @@ const SidebarLg = () => {
                 id="footer-github"
                 className="mx-1"
               >
-                <Icon
-                  icon="github"
-                  size="24"
-                  fill={isLightMode ? 'black' : 'white'}
-                />
+                <Icon icon="github" size="24" />
               </a>
               <a
                 href="https://docs.spartanprotocol.org/"
@@ -127,11 +114,7 @@ const SidebarLg = () => {
                 id="footer-gitbook"
                 className="mx-1"
               >
-                <Icon
-                  icon="gitbook"
-                  fill={isLightMode ? 'black' : 'white'}
-                  size="24"
-                />
+                <Icon icon="gitbook" size="24" />
               </a>
               <a
                 href="https://twitter.com/SpartanProtocol"
@@ -140,11 +123,7 @@ const SidebarLg = () => {
                 id="footer-twitter"
                 className="mx-1"
               >
-                <Icon
-                  icon="twitter"
-                  size="24"
-                  fill={isLightMode ? 'black' : 'white'}
-                />
+                <Icon icon="twitter" size="24" />
               </a>
               <a
                 href="https://t.me/SpartanProtocolOrg"
@@ -153,11 +132,7 @@ const SidebarLg = () => {
                 id="footer-telegram"
                 className="mx-1"
               >
-                <Icon
-                  icon="telegram"
-                  size="24"
-                  fill={isLightMode ? 'black' : 'white'}
-                />
+                <Icon icon="telegram" size="24" />
               </a>
               <a
                 href="https://discord.gg/wQggvntnGk"
@@ -166,11 +141,7 @@ const SidebarLg = () => {
                 id="footer-discord"
                 className="mx-1"
               >
-                <Icon
-                  icon="discord"
-                  size="24"
-                  fill={isLightMode ? 'black' : 'white'}
-                />
+                <Icon icon="discord" size="24" />
               </a>
             </>
           )}

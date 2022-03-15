@@ -35,7 +35,6 @@ const PoolSelect = () => {
   const history = useHistory()
 
   const [showModal, setShowModal] = useState(false)
-  const isLightMode = window.localStorage.getItem('theme')
   const pool = usePool()
   const web3 = useWeb3()
 
@@ -141,16 +140,11 @@ const PoolSelect = () => {
   return (
     <>
       <Button
-        variant={isLightMode ? 'secondary' : 'info'}
+        variant="primary"
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon
-          icon="search"
-          fill={isLightMode ? 'black' : 'white'}
-          size="17"
-          className="me-1 mb-1"
-        />
+        <Icon icon="search" size="17" className="me-1 mb-1" />
         {t('search')}
       </Button>
       {showModal && (

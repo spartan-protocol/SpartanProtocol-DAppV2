@@ -54,8 +54,6 @@ import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 
 const Swap = () => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const { t } = useTranslation()
   const web3 = useWeb3()
   const wallet = useWeb3React()
@@ -954,7 +952,6 @@ const Swap = () => {
                                       icon="arrowLeftRight"
                                       className="ms-1 mb-1"
                                       size="17"
-                                      fill={isLightMode ? 'black' : 'white'}
                                     />
                                   </span>
                                 </div>
@@ -977,7 +974,6 @@ const Swap = () => {
                                         icon="info"
                                         className="ms-1 mb-1"
                                         size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>
@@ -1001,7 +997,6 @@ const Swap = () => {
                                         icon="info"
                                         className="ms-1 mb-1"
                                         size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>
@@ -1145,7 +1140,6 @@ const Swap = () => {
                                         icon="info"
                                         className="ms-1"
                                         size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>

@@ -46,8 +46,6 @@ import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 
 const LiqRemove = () => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -682,7 +680,6 @@ const LiqRemove = () => {
                                         icon="info"
                                         className="ms-1 mb-1"
                                         size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
                                       />
                                     </span>
                                   </OverlayTrigger>
@@ -771,12 +768,7 @@ const LiqRemove = () => {
                       )}
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="17" />
                       </span>
                     </OverlayTrigger>
                   )}

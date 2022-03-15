@@ -63,7 +63,6 @@ import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 
 const Swap = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const wallet = useWeb3React()
   const synth = useSynth()
   const { t } = useTranslation()
@@ -844,7 +843,6 @@ const Swap = () => {
                                     <Icon
                                       icon="mint"
                                       size="35"
-                                      fill={isLightMode ? 'black' : 'white'}
                                       className="position-relative bg-primary rounded-circle px-2"
                                       style={{
                                         top: '-20px',
@@ -856,7 +854,6 @@ const Swap = () => {
                                     <Icon
                                       icon="fire"
                                       size="35"
-                                      fill={isLightMode ? 'black' : 'white'}
                                       className="position-relative bg-primary rounded-circle px-2"
                                       style={{
                                         top: '-20px',
@@ -1064,7 +1061,6 @@ const Swap = () => {
                                           icon="info"
                                           className="ms-1"
                                           size="17"
-                                          fill={isLightMode ? 'black' : 'white'}
                                         />
                                       </span>
                                     </OverlayTrigger>
@@ -1109,11 +1105,6 @@ const Swap = () => {
                                                   icon="info"
                                                   className="ms-1"
                                                   size="17"
-                                                  fill={
-                                                    isLightMode
-                                                      ? 'black'
-                                                      : 'white'
-                                                  }
                                                 />
                                               </span>
                                             </OverlayTrigger>
@@ -1167,7 +1158,6 @@ const Swap = () => {
                                           icon="info"
                                           className="ms-1 mb-1"
                                           size="17"
-                                          fill={isLightMode ? 'black' : 'white'}
                                         />
                                       </span>
                                     </OverlayTrigger>
@@ -1241,11 +1231,6 @@ const Swap = () => {
                                                   icon="info"
                                                   className="me-1 mb-1"
                                                   size="17"
-                                                  fill={
-                                                    isLightMode
-                                                      ? 'black'
-                                                      : 'white'
-                                                  }
                                                 />
                                               </span>
                                             </OverlayTrigger>
@@ -1281,11 +1266,6 @@ const Swap = () => {
                                                 icon="info"
                                                 className="me-1 mb-1"
                                                 size="17"
-                                                fill={
-                                                  isLightMode
-                                                    ? 'black'
-                                                    : 'white'
-                                                }
                                               />
                                             </span>
                                           </OverlayTrigger>

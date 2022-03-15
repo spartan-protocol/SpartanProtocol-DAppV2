@@ -32,7 +32,6 @@ import {
 import { getMemberPositions } from '../../utils/extCalls'
 
 const PoolPositions = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const pool = usePool()
   const bond = useBond()
@@ -377,12 +376,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -418,12 +412,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -458,12 +447,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -498,12 +482,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -541,12 +520,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -581,12 +555,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -624,12 +593,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -652,12 +616,7 @@ const PoolPositions = () => {
                       }
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
@@ -740,12 +699,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -774,12 +728,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -807,12 +756,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>{' '}
                     </Col>
@@ -839,12 +783,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -877,12 +816,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -912,12 +846,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -947,12 +876,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -978,12 +902,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -1014,12 +933,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -1054,12 +968,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -1094,12 +1003,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -1130,12 +1034,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>
@@ -1171,12 +1070,7 @@ const PoolPositions = () => {
                         }
                       >
                         <span role="button">
-                          <Icon
-                            icon="info"
-                            className="ms-1 mb-1"
-                            size="15"
-                            fill={isLightMode ? 'black' : 'white'}
-                          />
+                          <Icon icon="info" className="ms-1 mb-1" size="15" />
                         </span>
                       </OverlayTrigger>
                     </Col>

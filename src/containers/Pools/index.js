@@ -25,8 +25,6 @@ import SynthItem from './SynthItem'
 import { useSynth } from '../../store/synth'
 
 const Overview = () => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const synth = useSynth()
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -233,7 +231,6 @@ const Overview = () => {
                                       icon="info"
                                       className="ms-1 mb-1"
                                       size="15"
-                                      fill={isLightMode ? 'black' : 'white'}
                                     />
                                   </span>
                                 </OverlayTrigger>
@@ -258,7 +255,6 @@ const Overview = () => {
                                       icon="info"
                                       className="ms-1 mb-1"
                                       size="15"
-                                      fill={isLightMode ? 'black' : 'white'}
                                     />
                                   </span>
                                 </OverlayTrigger>

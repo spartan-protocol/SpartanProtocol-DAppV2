@@ -5,30 +5,23 @@ import { Icon } from '../../../components/Icons/index'
 
 import styles from './styles.module.scss'
 
-const Footer = () => {
-  const isLightMode = window.localStorage.getItem('theme')
+const Footer = () => (
+  <div className={styles.footer}>
+    <div>
+      <Link to="/">
+        <Icon icon="spartav2" size="32" />
+      </Link>
+      <div className="">A Spartan Community Project</div>
+    </div>
 
-  return (
-    <div className={styles.footer}>
-      <div>
-        <Link to="/">
-          <Icon
-            icon="spartav2"
-            fill={isLightMode ? 'white' : 'black'}
-            size="32"
-          />
-        </Link>
-        <div className="">A Spartan Community Project</div>
-      </div>
-
-      {/* <a
+    {/* <a
         href="https://docs.spartanprotocol.org/"
         target="_blank"
         rel="noreferrer"
         id="footer-gitbook"
         className="mx-1"
       >
-        <Icon icon="gitbook" fill={isLightMode ? 'black' : 'white'} size="24" />
+        <Icon icon="gitbook" size="24" />
         <Tooltip target="footer-gitbook" placement="top">
           Gitbook
         </Tooltip>
@@ -40,7 +33,7 @@ const Footer = () => {
         id="footer-twitter"
         className="mx-1"
       >
-        <Icon icon="twitter" size="24" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="twitter" size="24" />
         <Tooltip target="footer-twitter" placement="top">
           Twitter
         </Tooltip>
@@ -52,7 +45,7 @@ const Footer = () => {
         id="footer-github"
         className="mx-1"
       >
-        <Icon icon="github" size="24" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="github" size="24" />
         <Tooltip target="footer-github" placement="top">
           Github
         </Tooltip>
@@ -67,7 +60,7 @@ const Footer = () => {
         <Icon
           icon="telegram"
           size="24"
-          fill={isLightMode ? 'black' : 'white'}
+         
         />
         <Tooltip target="footer-telegram" placement="top">
           Telegram
@@ -80,7 +73,7 @@ const Footer = () => {
         id="footer-medium"
         className="mx-1"
       >
-        <Icon icon="medium" size="24" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="medium" size="24" />
         <Tooltip target="footer-medium" placement="top">
           Medium
         </Tooltip>
@@ -92,7 +85,7 @@ const Footer = () => {
         id="footer-reddit"
         className="mx-1"
       >
-        <Icon icon="reddit" size="24" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="reddit" size="24" />
         <Tooltip target="footer-reddit" placement="top">
           Reddit
         </Tooltip>
@@ -105,13 +98,12 @@ const Footer = () => {
         id="footer-discord"
         className="mx-1"
       >
-        <Icon icon="discord" size="24" fill={isLightMode ? 'black' : 'white'} />
+        <Icon icon="discord" size="24" />
         <Tooltip target="footer-discord" placement="top">
           Discord
         </Tooltip>
       </a> */}
-    </div>
-  )
-}
+  </div>
+)
 
 export default Footer
