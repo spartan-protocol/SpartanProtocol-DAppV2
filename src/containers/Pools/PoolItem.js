@@ -267,7 +267,9 @@ const PoolItem = ({ asset, daoApy }) => {
                     DaoVault APY
                   </Col>
                   <Col className="text-end fw-light">
-                    + {formatFromUnits(curated && daoApy ? daoApy : 0, 2)}%
+                    {curated && daoApy
+                      ? `+ ${formatFromUnits(daoApy, 2)}%`
+                      : t('notCurated')}
                   </Col>
                 </Row>
                 <hr className="my-0" />
