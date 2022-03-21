@@ -4,8 +4,10 @@ import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
 import Alert from 'react-bootstrap/Alert'
+import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Pagination from 'react-bootstrap/Pagination'
+import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../../utils/web3'
 import { useDao } from '../../../store/dao'
@@ -24,7 +26,7 @@ import { Icon } from '../../Icons/index'
 
 const Txns = () => {
   const wallet = useWeb3React()
-
+  const { t } = useTranslation()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
@@ -281,6 +283,7 @@ const Txns = () => {
     <>
       {showTxns ? (
         <Row className="output-card text-center">
+          <Badge className="mb-3">{t('recentTxns')}</Badge>
           {pool.poolDetails.length > 1 && (
             <>
               <Col xs="12">

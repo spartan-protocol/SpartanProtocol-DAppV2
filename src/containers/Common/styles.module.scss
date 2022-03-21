@@ -19,7 +19,7 @@
 
 .body {
   grid-area: body;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   padding: 20px;
 }

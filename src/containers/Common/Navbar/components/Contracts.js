@@ -5,8 +5,8 @@ import Col from 'react-bootstrap/Col'
 import Popover from 'react-bootstrap/Popover'
 import Badge from 'react-bootstrap/Badge'
 import Overlay from 'react-bootstrap/Overlay'
-import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 import { useReserve } from '../../../../store/reserve'
 import { getExplorerContract } from '../../../../utils/extCalls'
 import {
@@ -14,11 +14,9 @@ import {
   getAddresses,
   getNetwork,
 } from '../../../../utils/web3'
-import { ReactComponent as ContractIconG } from '../../../../assets/icons/contract-green.svg'
-import { ReactComponent as ContractIconR } from '../../../../assets/icons/contract-red.svg'
 import { Icon } from '../../../../components/Icons/index'
 
-const btnClass = 'header-btn'
+const btnClass = 'hide-i5 header-btn ms-1 me-3'
 
 const Contracts = () => {
   const { t } = useTranslation()
@@ -74,18 +72,20 @@ const Contracts = () => {
 
   return (
     <>
-      <Button
-        type="button"
+      <div
+        role="button"
         className={btnClass}
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
+        aria-hidden="true"
       >
-        {reserve.globalDetails.globalFreeze ? (
-          <ContractIconR fill="#aacdff" />
-        ) : (
-          <ContractIconG fill="#aacdff" />
-        )}
-      </Button>
+        <Icon
+          size="27"
+          icon={
+            reserve.globalDetails.globalFreeze ? 'contractRed' : 'contractGreen'
+          }
+        />
+      </div>
 
       <Overlay
         target={target.current}
@@ -95,9 +95,8 @@ const Contracts = () => {
         rootClose
       >
         <Popover>
-          <Popover.Header className="mt-2">
-            {t('Contracts')}
-            <br />
+          <Popover.Header>
+            <h3>{t('Contracts')}</h3>
             <Form className="mb-0">
               <span className="output-card">
                 {t('network')}:{' '}
@@ -127,7 +126,7 @@ const Contracts = () => {
           <Popover.Body className="pb-0">
             <Row>
               <Col xs="12">
-                <Row className="card-body text-center p-2">
+                <Row className="text-center p-2">
                   {addrNames
                     .filter((x) => addr[x] !== '')
                     .map((c) => (
@@ -138,11 +137,11 @@ const Contracts = () => {
                           rel="noreferrer"
                         >
                           <h6>
-                            <Badge bg="info" className="w-100">
+                            <Button className="w-100">
                               {t(c)}
                               <br />
                               <Icon icon="scan" size="12" className="mt-1" />
-                            </Badge>
+                            </Button>
                           </h6>
                         </a>
                       </Col>

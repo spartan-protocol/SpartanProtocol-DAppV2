@@ -1,4 +1,9 @@
 @import './variables.scss';
+@import './bootstrap/index.scss';
+
+html {
+  font-size: 13px;
+}
 
 body
   > iframe[style*='2147483647']:not([id='webpack-dev-server-client-overlay']) {
@@ -7,8 +12,14 @@ body
 
 body {
   overflow: hidden;
-  font-family: "Saira";
+  font-family: 'Saira';
   background-color: $bg-depth-0;
+  color: $text;
+}
+
+a {
+  color: $text;
+  text-decoration: none;
 }
 
 .bg-0 {
@@ -31,29 +42,39 @@ body {
   background-color: $bg-depth-4;
 }
 
-.card {
-  background-color: $bg-depth-2;
-}
-
 .header-btn {
-  margin-left: 10px;
-  height: 36px;
-  margin-top: 6px;
-  vertical-align: top;
+  align-self: center;
+  border-radius: 5px;
 }
 
-.card-header {
-  background-color: $bg-depth-1;
+#PopoverClick {
+  border: solid 1px #2d3848;
+  border-radius: 10px;
+  padding: 3px 7px;
+  font-weight: 500;
 }
 
-.card-footer {
-  background-color: $bg-depth-3;
+.token-badge {
+  position: absolute;
+  left: 31;
+  bottom: 2;
+}
+
+@media only screen and (max-width: 321px) {
+  .hide-i5 {
+    display: none;
+  }
 }
 
 // ------------- DARK THEME ------------- //
 
 body.dark-theme {
   background-color: $bg-depth-0-dark;
+  color: $text-dark;
+
+  a {
+    color: $text-dark;
+  }
 
   .bg-0 {
     background-color: $bg-depth-0-dark;
@@ -62,28 +83,16 @@ body.dark-theme {
   .bg-1 {
     background-color: $bg-depth-1-dark;
   }
-  
+
   .bg-2 {
     background-color: $bg-depth-2-dark;
   }
-  
+
   .bg-3 {
     background-color: $bg-depth-3-dark;
   }
-  
+
   .bg-4 {
     background-color: $bg-depth-4-dark;
-  }
-
-  .card {
-    background-color: $bg-depth-2-dark;
-  }
-
-  .card-header {
-    background-color: $bg-depth-1-dark;
-  }
-
-  .card-footer {
-    background-color: $bg-depth-3-dark;
   }
 }

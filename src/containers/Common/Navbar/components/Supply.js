@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import Button from 'react-bootstrap/Button'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Popover from 'react-bootstrap/Popover'
@@ -154,16 +153,18 @@ const Supply = () => {
 
   return (
     <>
-      <Button
+      <div
+        role="button"
         id="PopoverClick"
         className="header-btn"
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
+        aria-hidden="true"
       >
-        <Icon icon="arrowDown" className="me-1 hide-i5" size="15" />$
+        <Icon icon="spartav2" size="20" className="me-1" />
+        {/* <Icon icon="arrowDown" className="me-1 hide-i5" size="15" /> */}$
         {formatFromUnits(web3.spartaPrice, 2)}
-        <Icon icon="fire" size="16" fill="white" className="ms-1 mb-1" />
-      </Button>
+      </div>
 
       {showDropdown && (
         <Overlay
@@ -174,7 +175,7 @@ const Supply = () => {
           rootClose
         >
           <Popover>
-            <Popover.Header className="mt-2">
+            <Popover.Header>
               {t('tokenomics')}
               <a
                 href="https://docs.spartanprotocol.org/#/introduction?id=the-sparta-token"

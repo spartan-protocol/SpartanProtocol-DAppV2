@@ -13,14 +13,23 @@
   overflow: hidden;
 }
 
+.hammy {
+  align-self: center;
+}
+
 .brand {
-  height: 100%;
-  margin-top: 7px;
   margin-left: 10px;
   display: inline-block;
 }
 
+@media only screen and (max-width: 358px) {
+  .brand {
+    display: none;
+  }
+}
+
 .buttons {
   height: 100%;
-  margin-left: auto;
+  margin: auto 10px auto auto;
+  display: flex;
 }

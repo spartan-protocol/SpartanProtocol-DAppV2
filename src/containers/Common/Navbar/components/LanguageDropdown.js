@@ -161,19 +161,21 @@ const LanguageDropdown = () => {
   const changeLanguageAction = (lang) => {
     i18n.changeLanguage(lang)
     setFlag(getLocale().flag)
+    setshowDropdown(!showDropdown)
   }
 
   return (
     <>
-      <Button
+      <div
         id="PopoverClick1"
-        type="Button"
-        className="header-btn"
+        role="button"
+        className="header-btn ms-3 me-2"
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
+        aria-hidden="true"
       >
-        <img src={flag} alt="flag" height="20" />
-      </Button>
+        <img src={flag} alt="flag" height="23" className="rounded" />
+      </div>
       <Overlay
         target={target.current}
         show={showDropdown}
@@ -186,12 +188,12 @@ const LanguageDropdown = () => {
           <Popover.Body>
             <Row>
               {locales.map((x) => (
-                <Col xs={6} key={x.id} className="pl-3 pr-1">
+                <Col xs={12} key={x.id} className="">
                   <Button
                     onClick={() => changeLanguageAction(x.id)}
-                    className="btn-transparent"
+                    className="w-100 mb-1 p-0"
                   >
-                    <span className="output-card">
+                    <span className="">
                       <img src={x.flag} alt="Spartan" height="12" />
                       {` ${x.name}`}
                     </span>

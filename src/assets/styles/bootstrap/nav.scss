@@ -1,0 +1,11 @@
+@import '../variables.scss';
+
+.nav-link {
+  color: $text;
+}
+
+body.dark-theme {
+  .nav-link {
+    color: $text-dark;
+  }
+}

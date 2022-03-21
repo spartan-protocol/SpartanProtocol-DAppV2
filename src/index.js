@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import 'bootstrap/dist/css/bootstrap.css'
-import './global.scss'
+import './assets/styles/global.scss'
 
 import '@fontsource/saira/100.css' //
 import '@fontsource/saira/200.css' //

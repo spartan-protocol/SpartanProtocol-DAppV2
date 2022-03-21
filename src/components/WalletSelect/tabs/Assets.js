@@ -100,7 +100,7 @@ const Assets = () => {
             <Col className="align-items-center">
               <Row>
                 <Col xs="auto" className="float-left">
-                  {t('total')}
+                  <strong>{t('total')}</strong>
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
@@ -113,7 +113,7 @@ const Assets = () => {
 
             <Col
               className="text-center me-1 mt-1"
-              style={{ maxWidth: '80px' }}
+              style={{ maxWidth: '75px' }}
             />
           </Row>
         </div>
@@ -133,6 +133,7 @@ const Assets = () => {
     <>
       {!isLoading() ? (
         <>
+          <Badge className="mb-3">{t('heldInWallet')}</Badge>
           {pool.tokenDetails
             ?.filter((asset) => asset.balance > 0)
             .sort(
@@ -154,8 +155,7 @@ const Assets = () => {
                 <Col className="align-items-center">
                   <Row>
                     <Col xs="auto" className="float-left">
-                      <Badge className="me-1">{t('wallet')}</Badge>
-                      {asset.symbol}
+                      <strong>{asset.symbol}</strong>
                       <div className="text-sm-label">
                         {formatFromWei(asset.balance)}
                       </div>
@@ -177,12 +177,12 @@ const Assets = () => {
 
                 <Col
                   className="text-center me-1 mt-1"
-                  style={{ maxWidth: '80px' }}
+                  style={{ maxWidth: '75px' }}
                 >
                   <Row>
                     <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" size="24" />
+                        <Icon icon="copy" size="22" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
@@ -204,10 +204,10 @@ const Assets = () => {
                             {!isBNB(asset) && (
                               <>
                                 {getWalletType() === 'MM' ? (
-                                  <Icon icon="metamask" size="24" />
+                                  <Icon icon="metamask" size="22" />
                                 ) : (
                                   getWalletType() === 'TW' && (
-                                    <Icon icon="trustwallet" size="24" />
+                                    <Icon icon="trustwallet" size="22" />
                                   )
                                 )}
                               </>
@@ -223,7 +223,7 @@ const Assets = () => {
           {!isLoading() && getTotalValue()}
         </>
       ) : (
-        <Col className="card-480">
+        <Col className="">
           <HelmetLoading height={100} width={100} />
         </Col>
       )}

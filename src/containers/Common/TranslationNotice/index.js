@@ -37,7 +37,7 @@ const TranslationNotice = () => {
   return (
     <ToastContainer
       position="top-end"
-      style={{ marginTop: '70px', marginRight: '3px' }}
+      style={{ marginTop: '50px', marginRight: '20px' }}
     >
       <Toast onClose={() => setShow(false)} show={show}>
         <Toast.Header>

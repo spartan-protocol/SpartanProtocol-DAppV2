@@ -14,9 +14,9 @@ import { useBreakpoint } from '../../../providers/Breakpoint'
 const Navbar = () => {
   const breakpoint = useBreakpoint()
   return (
-    <div className={`${styles.navbar} bg-1`}>
+    <div className={`${styles.navbar} bg-0`}>
       {!breakpoint.lg && (
-        <div>
+        <div className={styles.hammy}>
           <Sidebar />
           <div className={styles.brand}>
             <Link to="/">

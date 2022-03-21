@@ -6,8 +6,6 @@ import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
-import Tabs from 'react-bootstrap/Tabs'
-import Tab from 'react-bootstrap/Tab'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Badge from 'react-bootstrap/Badge'
 import { useTranslation } from 'react-i18next'
@@ -38,6 +36,7 @@ import { getToken } from '../../utils/math/utils'
 import { getDaoDetails, useDao } from '../../store/dao'
 import { getBondDetails, useBond } from '../../store/bond'
 import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
+import { useTheme } from '../../providers/Theme'
 
 export const spartanRanks = [
   {
@@ -112,6 +111,7 @@ const WalletSelect = (props) => {
   const wallet = useWeb3React()
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const { isDark } = useTheme()
 
   const [network, setNetwork] = useState(getNetwork)
   const [activeTab, setactiveTab] = useState('tokens')
@@ -344,65 +344,88 @@ const WalletSelect = (props) => {
   return (
     <>
       <Modal show={props.show} onHide={props.onHide} centered>
-        <Modal.Header closeButton closeVariant="white">
-          <Modal.Title>
-            <Row>
-              <Col xs="12">
-                {wallet.account ? (
-                  <>
-                    {t('wallet')}:{' '}
-                    <span className="output-card">
-                      {formatShortString(wallet.account)}
-                      <div className="d-inline-block">
-                        <ShareLink url={wallet.account}>
-                          <Icon
-                            icon="copy"
-                            className="ms-2 mb-1"
-                            size="18"
-                            role="button"
-                          />
-                        </ShareLink>
-                      </div>
+        <Modal.Header
+          closeButton
+          closeVariant={isDark && 'white'}
+          className="pb-1"
+        >
+          <Row className="ms-auto">
+            <Col xs="12">
+              {wallet.account ? (
+                <Col>
+                  <h4>{t('wallet')}</h4>
+                  <span className="output-card">
+                    {formatShortString(wallet.account)}
+                    <div className="d-inline-block">
+                      <ShareLink url={wallet.account}>
+                        <Icon
+                          icon="copy"
+                          className="ms-2 mb-1"
+                          size="18"
+                          role="button"
+                        />
+                      </ShareLink>
+                    </div>
+                  </span>
+                </Col>
+              ) : (
+                t('connectWallet')
+              )}
+            </Col>
+            <Col xs="12">
+              <Form className="mb-1">
+                <span className="output-card">
+                  <strong>{t('network')}:</strong>{' '}
+                  {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                  <Form.Check
+                    type="switch"
+                    id="custom-switch"
+                    className="ms-2 d-inline-flex"
+                    checked={network?.chainId === 56}
+                    onChange={(value) => {
+                      onChangeNetwork(value)
+                    }}
+                  />
+                </span>
+              </Form>
+            </Col>
+            <Col xs="12">
+              <Form className="mb-0">
+                <span className="output-card">
+                  <strong>{t('rank')}:</strong> {rank}
+                  <OverlayTrigger placement="auto" overlay={Tooltip(t, 'rank')}>
+                    <span role="button">
+                      <Icon icon="info" className="ms-1" size="17" />
                     </span>
-                  </>
-                ) : (
-                  t('connectWallet')
-                )}
-              </Col>
-              <Col xs="12">
-                <Form className="mb-1">
-                  <span className="output-card">
-                    {t('network')}:{' '}
-                    {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
-                    <Form.Check
-                      type="switch"
-                      id="custom-switch"
-                      className="ms-2 d-inline-flex"
-                      checked={network?.chainId === 56}
-                      onChange={(value) => {
-                        onChangeNetwork(value)
-                      }}
-                    />
-                  </span>
-                </Form>
-              </Col>
-              <Col xs="12">
-                <Form className="mb-0">
-                  <span className="output-card">
-                    {t('rank')}: {rank}
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'rank')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="ms-1" size="17" />
-                      </span>
-                    </OverlayTrigger>
-                  </span>
-                </Form>
-              </Col>
-            </Row>
-          </Modal.Title>
+                  </OverlayTrigger>
+                </span>
+              </Form>
+            </Col>
+            <hr className="mt-3" />
+            <Col className="text-center mb-2">
+              <Button onClick={() => setactiveTab('tokens')} className="me-1">
+                {t('tokens')}{' '}
+                <Badge>
+                  {tempChains.includes(wallet.chainId) && getTokenCount()}
+                </Badge>
+              </Button>
+              <Button onClick={() => setactiveTab('lps')} className="me-1">
+                {t('lps')}{' '}
+                <Badge>
+                  {tempChains.includes(wallet.chainId) && getLpsCount()}
+                </Badge>
+              </Button>
+              <Button onClick={() => setactiveTab('synths')} className="me-1">
+                {t('synths')}{' '}
+                <Badge>
+                  {tempChains.includes(wallet.chainId) && getSynthsCount()}
+                </Badge>
+              </Button>
+              <Button onClick={() => setactiveTab('txns')} className="hide-i5">
+                <Icon icon="txnsHistory" size="20" />
+              </Button>
+            </Col>
+          </Row>
         </Modal.Header>
 
         <Modal.Body>
@@ -427,7 +450,6 @@ const WalletSelect = (props) => {
                       (!['WC', 'BC'].includes(x.id) && !window.ethereum) ||
                       (x.id === 'ON' && !window.ethereum?.isONTO)
                     }
-                    variant="info"
                     className="w-100 my-1"
                     onClick={() => {
                       onWalletConnect(x)
@@ -454,69 +476,19 @@ const WalletSelect = (props) => {
             </Row>
           ) : (
             <>
-              {/* wallet navigation tabs */}
+              {/* wallet content */}
               {liveChains.includes(network.chainId) ? (
                 <>
                   <Row>
-                    <Tabs
-                      activeKey={activeTab}
-                      onSelect={(tab) => setactiveTab(tab)}
-                      id="wallet-tabs"
-                      className="flex-row px-2 mb-3"
-                      fill
-                    >
-                      <Tab
-                        eventKey="tokens"
-                        title={
-                          <>
-                            {t('tokens')} <Badge>{getTokenCount()}</Badge>
-                          </>
-                        }
-                      >
-                        {activeTab === 'tokens' && props.show && <Assets />}
-                      </Tab>
-                      <Tab
-                        eventKey="lps"
-                        title={
-                          <>
-                            {t('lps')}{' '}
-                            <Badge>
-                              {tempChains.includes(wallet.chainId) &&
-                                getLpsCount()}
-                            </Badge>
-                          </>
-                        }
-                      >
-                        {tempChains.includes(wallet.chainId) &&
-                          activeTab === 'lps' && <LPs />}
-                      </Tab>
-                      <Tab
-                        eventKey="synths"
-                        title={
-                          <>
-                            {t('synths')}{' '}
-                            <Badge>
-                              {tempChains.includes(wallet.chainId) &&
-                                getSynthsCount()}
-                            </Badge>
-                          </>
-                        }
-                      >
-                        {tempChains.includes(wallet.chainId) &&
-                          activeTab === 'synths' && <Synths />}
-                      </Tab>
-                      <Tab
-                        eventKey="txns"
-                        title={
-                          <>
-                            <Icon icon="txnsHistory" size="18" />
-                          </>
-                        }
-                      >
-                        {tempChains.includes(wallet.chainId) &&
-                          activeTab === 'txns' && <Txns />}
-                      </Tab>
-                    </Tabs>
+                    <Col>
+                      {activeTab === 'tokens' && props.show && <Assets />}
+                      {tempChains.includes(wallet.chainId) &&
+                        activeTab === 'lps' && <LPs />}
+                      {tempChains.includes(wallet.chainId) &&
+                        activeTab === 'synths' && <Synths />}
+                      {tempChains.includes(wallet.chainId) &&
+                        activeTab === 'txns' && <Txns />}
+                    </Col>
                   </Row>
                 </>
               ) : (

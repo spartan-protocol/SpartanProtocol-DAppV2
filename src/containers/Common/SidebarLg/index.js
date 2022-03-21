@@ -24,7 +24,7 @@ const SidebarLg = () => {
     <>
       <Col
         className={`${styles.sidebarLg} bg-1`}
-        style={compact ? { width: '50px' } : { width: '200px' }}
+        style={compact ? { width: '48px' } : { width: '200px' }}
         onMouseEnter={() => handleCompact(false)}
         onMouseLeave={() => handleCompact(true)}
         role="button"
@@ -57,7 +57,7 @@ const SidebarLg = () => {
                 />
               </div>
             </div>
-            <div
+            <h3
               style={
                 compact
                   ? { paddingLeft: '200px', paddingBottom: '5px' }
@@ -68,8 +68,9 @@ const SidebarLg = () => {
                     }
               }
             >
-              Spartan Protocol
-            </div>
+              Spartan
+              <br /> Protocol
+            </h3>
           </Link>
           <ul className="nav flex-column">
             {routes
@@ -90,7 +91,7 @@ const SidebarLg = () => {
           className={styles.socials}
           style={
             compact
-              ? { width: '50px' }
+              ? { width: '48px' }
               : { width: '200px', marginLeft: 'auto', marginRight: 'auto' }
           }
         >

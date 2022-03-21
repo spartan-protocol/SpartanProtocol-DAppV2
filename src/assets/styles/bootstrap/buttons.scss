@@ -1,0 +1,50 @@
+@import '../variables.scss';
+
+.btn {
+  padding: 0.325rem 0.7rem;
+  font-weight: 500;
+}
+
+.btn-primary {
+  color: #000;
+  background-color: $bg-depth-0;
+  border-color: $bg-depth-0;
+}
+
+.btn-primary:hover {
+  color: #000;
+  background-color: $bg-depth-1;
+  border-color: $bg-depth-0;
+}
+
+.btn-primary:focus {
+  color: #000;
+  background-color: $bg-depth-1;
+  border-color: $bg-depth-0;
+  box-shadow: none;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+  color: #000;
+  background-color: $bg-depth-0;
+  border-color: $bg-depth-0;
+}
+
+body.dark-theme {
+  .btn-primary {
+    color: #fff;
+    background-color: $bg-depth-0-dark;
+    border-color: $bg-depth-0-dark;
+  }
+
+  .btn-primary:hover {
+    background-color: $bg-depth-1-dark;
+    border-color: $bg-depth-0-dark;
+  }
+
+  .btn-primary:focus {
+    background-color: $bg-depth-1-dark;
+    border-color: $bg-depth-0-dark;
+  }
+}

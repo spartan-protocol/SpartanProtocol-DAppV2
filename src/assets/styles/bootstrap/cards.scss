@@ -1,0 +1,27 @@
+@import '../variables.scss';
+
+.card {
+  background-color: $bg-depth-2;
+}
+
+.card-header {
+  background-color: $bg-depth-1;
+}
+
+.card-footer {
+  background-color: $bg-depth-3;
+}
+
+body.dark-theme {
+  .card {
+    background-color: $bg-depth-2-dark;
+  }
+
+  .card-header {
+    background-color: $bg-depth-1-dark;
+  }
+
+  .card-footer {
+    background-color: $bg-depth-3-dark;
+  }
+}

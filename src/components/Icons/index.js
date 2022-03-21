@@ -16,6 +16,8 @@ import { ReactComponent as Close } from '../../assets/icons/close.svg'
 import { ReactComponent as Colosseum } from '../../assets/icons/colosseum.svg'
 import { ReactComponent as Connect } from '../../assets/icons/connect.svg'
 import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
+import { ReactComponent as ContractGreen } from '../../assets/icons/contract-green.svg'
+import { ReactComponent as ContractRed } from '../../assets/icons/contract-red.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
@@ -43,6 +45,7 @@ import { ReactComponent as Synth } from '../../assets/icons/synth.svg'
 import { ReactComponent as Trash } from '../../assets/icons/trash.svg'
 import { ReactComponent as Upgrade } from '../../assets/icons/upgrade.svg'
 import { ReactComponent as Vault } from '../../assets/icons/vault.svg'
+import { ReactComponent as WalletGreen } from '../../assets/icons/wallet-green.svg'
 import { ReactComponent as WalletRed } from '../../assets/icons/wallet-red.svg'
 // SOCIALS
 import { ReactComponent as Discord } from '../../assets/brands/discord.svg'
@@ -92,6 +95,8 @@ const icons = {
   colosseum: Colosseum,
   connect: Connect,
   contract: Contract,
+  contractGreen: ContractGreen,
+  contractRed: ContractRed,
   copy: Copy,
   cycle: Cycle,
   fire: Fire,
@@ -119,6 +124,7 @@ const icons = {
   trash: Trash,
   upgrade: Upgrade,
   vault: Vault,
+  walletGreen: WalletGreen,
   walletRed: WalletRed,
   // SOCIALS
   discord: Discord,

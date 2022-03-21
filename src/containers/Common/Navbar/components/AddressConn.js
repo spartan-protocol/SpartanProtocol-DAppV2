@@ -1,13 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useTranslation } from 'react-i18next'
-import Button from 'react-bootstrap/Button'
 import Overlay from 'react-bootstrap/Overlay'
 import Popover from 'react-bootstrap/Popover'
 import WalletSelect from '../../../../components/WalletSelect/index'
-import { ReactComponent as WalletIconA } from '../../../../assets/icons/wallet-green.svg'
-// import { ReactComponent as WalletIconB } from '../../assets/icons/wallet-yellow.svg'
-import { ReactComponent as WalletIconC } from '../../../../assets/icons/wallet-red.svg'
+import { Icon } from '../../../../components/Icons'
 
 const AddressConn = () => {
   const wallet = useWeb3React()
@@ -22,7 +19,7 @@ const AddressConn = () => {
   const target = useRef(null)
   const targetB = useRef(null)
 
-  const btnClass = 'header-btn'
+  const btnClass = 'header-btn mx-2'
 
   useEffect(() => {
     async function listenAccountsChanged() {
@@ -73,15 +70,16 @@ const AddressConn = () => {
     <>
       {(!wallet || !wallet?.active || wallet?.error) && (
         <>
-          <Button
-            type="button"
+          <div
+            role="button"
             className={btnClass}
             onClick={() => setWalletModalShow(true)}
             onKeyPress={() => setWalletModalShow(true)}
             ref={target}
+            aria-hidden="true"
           >
-            <WalletIconC fill="#aacdff" />
-          </Button>
+            <Icon icon="walletRed" size="27" />
+          </div>
           <Overlay
             target={target.current}
             show={showPopConnect}
@@ -100,15 +98,16 @@ const AddressConn = () => {
       )}
       {wallet?.active && (
         <>
-          <Button
-            type="button"
+          <div
+            role="button"
             className={btnClass}
             onClick={() => setWalletModalShow(true)}
             onKeyPress={() => setWalletModalShow(true)}
             ref={targetB}
+            aria-hidden="true"
           >
-            <WalletIconA fill="#aacdff" />
-          </Button>
+            <Icon icon="walletGreen" size="27" />
+          </div>
           <Overlay
             target={targetB.current}
             show={showPopConnectHover}
@@ -125,6 +124,7 @@ const AddressConn = () => {
           </Overlay>{' '}
         </>
       )}
+
       <WalletSelect
         show={walletModalShow}
         onHide={() => setWalletModalShow(false)}

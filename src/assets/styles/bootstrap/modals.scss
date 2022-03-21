@@ -1,0 +1,46 @@
+// Toasts, popovers, tooltips etc
+
+// @import '../variables.scss';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+
+.modal-content {
+  height: 95vh;
+  overflow: hidden;
+  background-color: $bg-depth-2;
+  justify-content: space-between;
+}
+
+.modal-body {
+  overflow: auto;
+  margin-bottom: auto;
+}
+
+.modal-header {
+  background-color: $bg-depth-1;
+
+  .btn-close {
+    align-self: start;
+  }
+}
+
+.modal-footer {
+  background-color: $bg-depth-3;
+}
+
+body.dark-theme {
+  .modal-content {
+    background-color: $bg-depth-2-dark;
+    color: $text-dark;
+  }
+
+  .modal-header {
+    background-color: $bg-depth-1-dark;
+    border-color: $bg-depth-2-dark;
+  }
+
+  .modal-footer {
+    background-color: $bg-depth-3-dark;
+    border-color: $bg-depth-2-dark;
+  }
+}
