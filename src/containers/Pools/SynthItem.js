@@ -69,7 +69,7 @@ const SynthItem = ({ asset, synthApy }) => {
 
   return (
     <>
-      <Col xs="12" sm="6" lg="4" xl="3">
+      <Col xs="12" sm="6" lg="4">
         <Card className={styles.poolItem}>
           <Card.Body>
             <Row className="mb-2">
@@ -105,7 +105,9 @@ const SynthItem = ({ asset, synthApy }) => {
                 </p>
               </Col>
               <Col className="text-end my-auto">
-                <p className="text-sm-label mb-0 d-inline-block">Synth APY</p>
+                <strong className="text-sm-label mb-0 d-inline-block">
+                  Synth APY
+                </strong>
                 <p className="output-card">
                   <OverlayTrigger
                     placement="auto"
