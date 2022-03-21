@@ -21,6 +21,7 @@ import { ReactComponent as ContractRed } from '../../assets/icons/contract-red.s
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
+import { ReactComponent as Grid } from '../../assets/icons/grid.svg'
 import { ReactComponent as Handshake } from '../../assets/icons/handshake.svg'
 import { ReactComponent as Helmet } from '../../assets/icons/helmet.svg'
 import { ReactComponent as Home } from '../../assets/icons/home.svg'
@@ -42,6 +43,7 @@ import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
 import { ReactComponent as Sword } from '../../assets/icons/sword.svg'
 import { ReactComponent as Swords } from '../../assets/icons/swords.svg'
 import { ReactComponent as Synth } from '../../assets/icons/synth.svg'
+import { ReactComponent as Table } from '../../assets/icons/table.svg'
 import { ReactComponent as Trash } from '../../assets/icons/trash.svg'
 import { ReactComponent as Upgrade } from '../../assets/icons/upgrade.svg'
 import { ReactComponent as Vault } from '../../assets/icons/vault.svg'
@@ -100,6 +102,7 @@ const icons = {
   copy: Copy,
   cycle: Cycle,
   fire: Fire,
+  grid: Grid,
   handshake: Handshake,
   helmet: Helmet,
   home: Home,
@@ -121,6 +124,7 @@ const icons = {
   sword: Sword,
   swords: Swords,
   synth: Synth,
+  table: Table,
   trash: Trash,
   upgrade: Upgrade,
   vault: Vault,

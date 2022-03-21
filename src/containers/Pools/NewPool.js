@@ -30,7 +30,7 @@ import { Tooltip } from '../../components/Tooltip/index'
 import { getToken } from '../../utils/math/utils'
 import HelmetLoading from '../../components/Spinner/index'
 
-const NewPool = () => {
+const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const wallet = useWeb3React()
@@ -39,7 +39,6 @@ const NewPool = () => {
   const { t } = useTranslation()
 
   const [txnLoading, setTxnLoading] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
   const [feeConfirm, setFeeConfirm] = useState(false)
 
@@ -285,14 +284,6 @@ const NewPool = () => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        onClick={() => setShowModal(true)}
-        className="rounded-pill pe-3 subtitle-label"
-      >
-        <Icon icon="plus" size="17" className="me-1 mb-1" />
-        {t('pool')}
-      </Button>
       {showModal && (
         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
           {tempChains.includes(network.chainId) && (

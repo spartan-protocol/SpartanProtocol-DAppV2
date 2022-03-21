@@ -21,6 +21,9 @@ import { getAddresses } from '../../utils/web3'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { calcAPY } from '../../utils/math/nonContract'
+import spartaIcon from '../../assets/tokens/spartav2.svg'
+
+import styles from './styles.module.scss'
 
 const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
@@ -104,103 +107,26 @@ const PoolItem = ({ asset, daoApy }) => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320 pb-2 card-alt" style={{ minHeight: '310px' }}>
-          <Card.Header>
-            <h6 className="mb-0 text-center">
-              {newPool && (
-                <Badge bg="dark" className="p-1 me-1">
-                  {t('new')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'newPool', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        //
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {curated && (
-                <Badge bg="dark" className="p-1 me-1">
-                  {t('curated')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolCurated', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        //
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {!curated && (
-                <Badge bg="dark" className="p-1 me-1">
-                  {t('normal')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolNormal', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        //
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {!asset.frozen && (
-                <Badge bg="success" className="p-1">
-                  {t('active')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolActive', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon icon="info" className="ms-1" size="15" />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {asset.frozen && (
-                <Badge bg="danger" className="p-1">
-                  {t('inactive')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolInactive', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon icon="info" className="ms-1" size="15" />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-            </h6>
-          </Card.Header>
+      <Col xs="12" sm="6" lg="4">
+        <Card className={styles.poolItem}>
           <Card.Body>
             <Row className="mb-2">
-              <Col xs="auto" className="pe-0 my-auto">
+              <Col xs="auto" className="position-relative">
                 <img
                   src={token.symbolUrl}
                   className="rounded-circle"
                   alt={token.symbol}
                   height="45"
                 />
+                <img
+                  height="25px"
+                  src={spartaIcon}
+                  alt="Sparta synth token icon"
+                  className="position-absolute"
+                  style={{ right: '5px', bottom: '10px' }}
+                />
               </Col>
-              <Col xs="auto" className="pe-0 my-auto">
+              <Col className="pe-0 my-auto">
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
                   <OverlayTrigger
@@ -216,45 +142,137 @@ const PoolItem = ({ asset, daoApy }) => {
                   </OverlayTrigger>
                 </p>
               </Col>
-              <Col className="text-end my-auto pe-0">
-                <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
-                  <span role="button">
-                    <Icon icon="info" className="me-1" size="17" />
-                  </span>
-                </OverlayTrigger>
-                <p className="text-sm-label mb-0 d-inline-block">APY</p>
-                <p className="output-card">
-                  <Icon icon="pool" size="17" className="me-1 mb-1" />
-                  {formatFromUnits(APY, 2)}%
-                  {curated && daoApy > 0 && (
-                    <>
-                      <br />
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(t, 'apySynth')}
-                      >
-                        <span role="button">
-                          <Icon icon="lock" size="17" className="me-1 mb-1" />
-                        </span>
-                      </OverlayTrigger>
-                      {formatFromUnits(daoApy, 2)}%
-                    </>
-                  )}
-                </p>
-              </Col>
-              <Col
-                xs="auto"
-                className="text-end my-auto p-0 px-1"
-                onClick={() => toggleCollapse()}
-                role="button"
-              >
-                <Icon
-                  className=""
-                  icon={showDetails ? 'arrowUp' : 'arrowDown'}
-                  size="30"
-                />
+              <Col xs="auto">
+                {asset.frozen ? (
+                  <Badge bg="danger" className="w-100 py-1 px-3 mb-1 text-end">
+                    {t('inactive')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'poolInactive', token.symbol)}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="15"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Badge>
+                ) : (
+                  <Badge bg="success" className="w-100 py-1 px-3 mb-1 text-end">
+                    {t('active')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'poolActive', token.symbol)}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="15"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Badge>
+                )}
+                <br />
+                {newPool ? (
+                  <Badge className="w-100 py-1 px-3 text-end">
+                    {t('new')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'newPool', token.symbol)}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="15"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Badge>
+                ) : curated ? (
+                  <Badge bg="success" className="w-100 py-1 px-3 text-end">
+                    {t('curated')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'poolCurated', token.symbol)}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="15"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Badge>
+                ) : (
+                  <Badge className="w-100 py-1 px-3 text-end">
+                    {t('normal')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'poolNormal', token.symbol)}
+                    >
+                      <span role="button">
+                        <Icon
+                          icon="info"
+                          className="ms-1"
+                          size="15"
+                          fill="white"
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Badge>
+                )}
               </Col>
             </Row>
+
+            <Row className="my-1">
+              <Col xs="auto" className="text-card pe-0">
+                Estimated APY
+                <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="17" />
+                  </span>
+                </OverlayTrigger>
+              </Col>
+              <Col className="text-end output-card">
+                {formatFromUnits(
+                  curated && daoApy ? BN(APY).plus(daoApy) : APY,
+                  2,
+                )}
+                %
+              </Col>
+            </Row>
+            {showDetails === true && (
+              <>
+                <Row className="my-1">
+                  <Col xs="auto" className="">
+                    Pool APY
+                  </Col>
+                  <Col className="text-end fw-light">
+                    {formatFromUnits(APY, 2)}%
+                  </Col>
+                </Row>
+
+                <Row className="my-1">
+                  <Col xs="auto" className="">
+                    DaoVault APY
+                  </Col>
+                  <Col className="text-end fw-light">
+                    + {formatFromUnits(curated && daoApy ? daoApy : 0, 2)}%
+                  </Col>
+                </Row>
+                <hr className="my-0" />
+              </>
+            )}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card pe-0">
@@ -273,7 +291,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   <Col className="my-auto px-0">
                     <ProgressBar style={{ height: '5px' }} className="">
                       <ProgressBar
-                        variant={isAtCaps() ? 'primary' : 'success'}
+                        variant={isAtCaps() ? 'danger' : 'success'}
                         key={1}
                         now={getDepthPC()}
                       />
@@ -485,17 +503,29 @@ const PoolItem = ({ asset, daoApy }) => {
                     {asset.curated === false && t('notCurated')}
                   </Col>
                 </Row>
-                <hr className="my-0" />
               </>
             )}
+            <Row>
+              <div
+                className="text-center"
+                onClick={() => toggleCollapse()}
+                role="button"
+                aria-hidden
+              >
+                {showDetails ? t('lessDetails') : t('moreDetails')}
+                <Icon
+                  className="ms-1"
+                  icon={showDetails ? 'arrowUp' : 'arrowDown'}
+                  size="18"
+                />
+              </div>
+            </Row>
           </Card.Body>
           <Card.Footer>
             <Row className="text-center mt-2">
               <Col>
                 <Button
-                  size="sm"
-                  variant="info"
-                  className="w-100 rounded-pill"
+                  className="w-100"
                   onClick={() =>
                     history.push(
                       `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
@@ -507,9 +537,7 @@ const PoolItem = ({ asset, daoApy }) => {
               </Col>
               <Col>
                 <Button
-                  size="sm"
-                  variant="info"
-                  className="w-100 rounded-pill"
+                  className="w-100"
                   onClick={() =>
                     history.push(`/liquidity?asset1=${tokenAddress}`)
                   }
@@ -520,9 +548,7 @@ const PoolItem = ({ asset, daoApy }) => {
               {asset.curated && (
                 <Col>
                   <Button
-                    size="sm"
-                    variant="info"
-                    className="w-100 rounded-pill"
+                    className="w-100"
                     disabled={!asset.curated}
                     onClick={() => history.push('/vaults')}
                   >

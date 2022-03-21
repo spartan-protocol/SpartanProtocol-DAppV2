@@ -1,11 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
-import Card from 'react-bootstrap/Card'
-import Nav from 'react-bootstrap/Nav'
+import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
@@ -24,6 +22,7 @@ import { calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
 import { useDao, daoVaultWeight } from '../../store/dao'
 import SynthItem from './SynthItem'
 import { useSynth } from '../../store/synth'
+import NewPool from './NewPool'
 
 const Overview = () => {
   const synth = useSynth()
@@ -35,11 +34,11 @@ const Overview = () => {
   const dao = useDao()
 
   const [activeTab, setActiveTab] = useState('pools')
-  const [showBabies, setShowBabies] = useState(false)
-  const [showSynths, setShowSynths] = useState(false)
   const [network, setnetwork] = useState(getNetwork())
   const [daoApy, setDaoApy] = useState('0')
   const [synthApy, setSynthApy] = useState('0')
+  const [showModal, setShowModal] = useState(false)
+  const [tableView, setTableView] = useState(false)
 
   const [trigger0, settrigger0] = useState(0)
 
@@ -77,6 +76,7 @@ const Overview = () => {
   }
 
   const getPools = () =>
+    !isLoading() &&
     pool.poolDetails
       .filter(
         (asset) =>
@@ -86,11 +86,13 @@ const Overview = () => {
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getNewPools = () =>
-    pool?.poolDetails
+    !isLoading() &&
+    pool.poolDetails
       .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getBabies = () =>
+    !isLoading() &&
     pool.poolDetails
       .filter(
         (asset) =>
@@ -101,6 +103,7 @@ const Overview = () => {
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getSynths = () =>
+    !isLoading() &&
     pool.poolDetails
       .filter(
         (asset) =>
@@ -164,158 +167,193 @@ const Overview = () => {
 
   return (
     <>
-      <div className="content">
-        {tempChains.includes(network.chainId) && (
-          <>
-            <Row className="row-480">
-              <Col xs="12">
-                <Row>
-                  <SummaryItem />
-                  {/* NEW FILTER SECTION */}
-                  <Col xs="12">
-                    <Button>{t('createPool')}</Button>
-                  </Col>
-                  <Col xs="12">
-                    <Button
-                      variant={activeTab === 'pools' ? 'primary' : 'secondary'}
-                      onClick={() => setActiveTab('pools')}
-                    >
-                      {t('pools')}
-                      <Badge className="ms-2">
-                        {!isLoading() ? (
-                          getPools().length
-                        ) : (
-                          <Icon icon="cycle" size="15" className="anim-spin" />
-                        )}
-                      </Badge>
-                    </Button>
-                    <Button
-                      variant={activeTab === 'new' ? 'primary' : 'secondary'}
-                      onClick={() => setActiveTab('new')}
-                    >
-                      {t('new')}
-                      <Badge className="ms-2">
-                        {!isLoading() ? (
-                          getNewPools().length
-                        ) : (
-                          <Icon icon="cycle" size="15" className="anim-spin" />
-                        )}
-                      </Badge>
-                    </Button>
-                    <Button
-                      variant={activeTab === 'babies' ? 'primary' : 'secondary'}
-                      onClick={() => setActiveTab('babies')}
-                    >
-                      {t('< 10K')}
-                      <Badge className="ms-2">
-                        {!isLoading() ? (
-                          getBabies().length
-                        ) : (
-                          <Icon icon="cycle" size="15" className="anim-spin" />
-                        )}
-                      </Badge>
-                    </Button>
+      {tempChains.includes(network.chainId) && (
+        <>
+          <Row className="row-480">
+            <Col xs="12">
+              <Row>
+                <SummaryItem />
+                {/* MOBILE FILTER DROPDOWN */}
+                <Col className="d-block d-sm-none mt-3 mb-1">
+                  <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
+                    <option value="pools">
+                      {t('pools')} ({getPools().length})
+                    </option>
+                    <option value="new">
+                      {t('new')} ({getNewPools().length})
+                    </option>
+                    <option value="babies">
+                      {t('< 10K')} ({getBabies().length})
+                    </option>
+                    <option value="synths">
+                      {t('synths')} ({getSynths().length})
+                    </option>
+                  </Form.Select>
+                </Col>
+                {/* DESKTOP FILTER BUTTONS */}
+                <Col className="d-none d-sm-block mt-3 mb-1">
+                  <Button
+                    variant={activeTab === 'pools' ? 'primary' : 'secondary'}
+                    onClick={() => setActiveTab('pools')}
+                  >
+                    {t('pools')}
+                    <Badge className="ms-2">
+                      {!isLoading() ? (
+                        getPools().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'new' ? 'primary' : 'secondary'}
+                    onClick={() => setActiveTab('new')}
+                    disabled={pool.poolDetails && getNewPools().length <= 0}
+                  >
+                    {t('new')}
+                    <Badge className="ms-2">
+                      {!isLoading() ? (
+                        getNewPools().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'babies' ? 'primary' : 'secondary'}
+                    onClick={() => setActiveTab('babies')}
+                  >
                     <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'hiddenPools')}
                     >
                       <span role="button">
-                        <Icon icon="info" className="" size="15" />
+                        <Icon icon="info" className="me-1" size="15" />
                       </span>
                     </OverlayTrigger>
-                    <Button
-                      variant={activeTab === 'synths' ? 'primary' : 'secondary'}
-                      onClick={() => setActiveTab('synths')}
-                    >
-                      {t('synths')}
-                      <Badge className="ms-2">
-                        {!isLoading() ? (
-                          getSynths().length
-                        ) : (
-                          <Icon icon="cycle" size="15" className="anim-spin" />
-                        )}
-                      </Badge>
-                    </Button>
-                    <OverlayTrigger
+                    {t('< 10K')}
+                    <Badge className="ms-2">
+                      {!isLoading() ? (
+                        getBabies().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Button>
+                  <Button
+                    variant={activeTab === 'synths' ? 'primary' : 'secondary'}
+                    onClick={() => setActiveTab('synths')}
+                  >
+                    {/* <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'synthView')}
                     >
                       <span role="button">
-                        <Icon icon="info" className="" size="15" />
+                        <Icon icon="info" className="me-1" size="15" />
                       </span>
-                    </OverlayTrigger>
-                  </Col>
-                </Row>
-                <Card>
-                  {!isLoading() ? (
-                    <Card.Body>
-                      <Row>
-                        {activeTab === 'pools' &&
-                          getPools().map((asset) => (
-                            <PoolItem
-                              key={asset.address}
-                              asset={asset}
-                              daoApy={daoApy}
-                            />
-                          ))}
+                    </OverlayTrigger> */}
+                    {t('synths')}
+                    <Badge className="ms-2">
+                      {!isLoading() ? (
+                        getSynths().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Button>
+                </Col>
 
-                        {activeTab === 'new' && (
-                          <>
-                            {getNewPools().length > 0 ? (
-                              getNewPools().map((asset) => (
-                                <PoolItem
-                                  key={asset.address}
-                                  asset={asset}
-                                  daoApy={daoApy}
-                                />
-                              ))
-                            ) : (
-                              <Col>There are no new/initializing pools</Col>
-                            )}
-                          </>
-                        )}
+                <Col xs="auto" className="mt-3 mb-1 text-end">
+                  <Button
+                    onClick={() => setTableView(!tableView)}
+                    className="me-1"
+                    disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
+                  >
+                    <Icon
+                      icon={tableView ? 'grid' : 'table'}
+                      size="17"
+                      className="me-1 mb-1"
+                    />
+                    {t('view')}
+                  </Button>
+                  <Button onClick={() => setShowModal(!showModal)}>
+                    <Icon icon="plus" size="17" className="me-1 mb-1" />
+                    {t('createPool')}
+                  </Button>
+                </Col>
+              </Row>
 
-                        {activeTab === 'babies' && (
-                          <>
-                            {getBabies().length > 0 ? (
-                              getBabies().map((asset) => (
-                                <PoolItem
-                                  key={asset.address}
-                                  asset={asset}
-                                  daoApy={daoApy}
-                                />
-                              ))
-                            ) : (
-                              <Col>
-                                There are no pools below the minimum liquidity
-                                threshold
-                              </Col>
-                            )}
-                          </>
-                        )}
+              {/* CREATE-POOL MODAL */}
+              {showModal && (
+                <NewPool setShowModal={setShowModal} showModal={showModal} />
+              )}
 
-                        {activeTab === 'synths' &&
-                          getSynths().map((asset) => (
-                            <SynthItem
-                              key={asset.address}
-                              asset={asset}
-                              synthApy={synthApy}
-                            />
-                          ))}
-                      </Row>
-                    </Card.Body>
-                  ) : (
-                    <Col className="card-480">
-                      <HelmetLoading height={150} width={150} />
-                    </Col>
+              {/* POOL ITEMS */}
+              {!isLoading() ? (
+                <Row>
+                  {activeTab === 'pools' &&
+                    getPools().map((asset) => (
+                      <PoolItem
+                        key={asset.address}
+                        asset={asset}
+                        daoApy={daoApy}
+                      />
+                    ))}
+
+                  {activeTab === 'new' && (
+                    <>
+                      {getNewPools().length > 0 ? (
+                        getNewPools().map((asset) => (
+                          <PoolItem
+                            key={asset.address}
+                            asset={asset}
+                            daoApy={daoApy}
+                          />
+                        ))
+                      ) : (
+                        <Col>There are no new/initializing pools</Col>
+                      )}
+                    </>
                   )}
-                </Card>
-              </Col>
-            </Row>
-          </>
-        )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
-      </div>
+
+                  {activeTab === 'babies' && (
+                    <>
+                      {getBabies().length > 0 ? (
+                        getBabies().map((asset) => (
+                          <PoolItem
+                            key={asset.address}
+                            asset={asset}
+                            daoApy={daoApy}
+                          />
+                        ))
+                      ) : (
+                        <Col>
+                          There are no pools below the minimum liquidity
+                          threshold
+                        </Col>
+                      )}
+                    </>
+                  )}
+
+                  {activeTab === 'synths' &&
+                    getSynths().map((asset) => (
+                      <SynthItem
+                        key={asset.address}
+                        asset={asset}
+                        synthApy={synthApy}
+                      />
+                    ))}
+                </Row>
+              ) : (
+                <Col className="card-480">
+                  <HelmetLoading height={150} width={150} />
+                </Col>
+              )}
+            </Col>
+          </Row>
+        </>
+      )}
+      {!tempChains.includes(network.chainId) && <WrongNetwork />}
     </>
   )
 }

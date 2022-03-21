@@ -2,6 +2,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import React from 'react'
 import { install } from 'resize-observer'
 
+import { Chart } from 'chart.js'
 import styles from './styles.module.scss'
 
 import Navbar from './Navbar'
@@ -11,6 +12,7 @@ import DataManager from './DataManager/index'
 import TranslationNotice from './TranslationNotice/index'
 import { routes } from '../../routes'
 import { useBreakpoint } from '../../providers/Breakpoint'
+import { useTheme } from '../../providers/Theme'
 
 const getRoutes = (tempRoutes) =>
   tempRoutes.map((prop) => (
@@ -26,6 +28,9 @@ const Layout = () => {
     install()
   }
   const breakpoint = useBreakpoint()
+  const { isDark } = useTheme()
+
+  Chart.defaults.color = isDark ? 'white' : 'black'
 
   return (
     <>
@@ -34,11 +39,13 @@ const Layout = () => {
         <Navbar />
         {breakpoint.lg && <SidebarLg />}
         <div className={styles.body}>
-          <TranslationNotice />
-          <Switch>
-            {getRoutes(routes)}
-            <Redirect from="*" to="/home" />
-          </Switch>
+          <div className={styles.content}>
+            <TranslationNotice />
+            <Switch>
+              {getRoutes(routes)}
+              <Redirect from="*" to="/home" />
+            </Switch>
+          </div>
         </div>
       </div>
     </>

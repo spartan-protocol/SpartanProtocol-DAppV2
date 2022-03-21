@@ -12,8 +12,8 @@
   .wrapper {
     grid-template-columns: min-content auto;
     grid-template-areas:
-    'sidebarLg navbar'
-    'sidebarLg body';
+      'sidebarLg navbar'
+      'sidebarLg body';
   }
 }
 
@@ -22,4 +22,9 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 20px;
+}
+
+.content {
+  max-width: 1060px;
+  margin: 0 auto;
 }

@@ -39,10 +39,10 @@ const ChartVol = () => {
       },
     },
     plugins: {
-      title: {
-        display: true,
-        text: `${t('swapVolume')} ($USD)`,
-      },
+      // title: {
+      //   display: true,
+      //   text: `${t('swapVolume')} ($USD)`,
+      // },
       legend: {
         display: false,
       },
