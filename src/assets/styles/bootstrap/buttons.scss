@@ -7,25 +7,51 @@
 
 .btn-primary {
   color: #000;
-  background-color: $bg-depth-0;
-  border-color: $bg-depth-0;
+  background-color: $bg-depth-1;
+  border-color: $bg-depth-1;
 }
 
 .btn-primary:hover {
   color: #000;
-  background-color: $bg-depth-1;
-  border-color: $bg-depth-0;
+  background-color: $bg-depth-2;
+  border-color: $bg-depth-1;
 }
 
 .btn-primary:focus {
   color: #000;
-  background-color: $bg-depth-1;
-  border-color: $bg-depth-0;
+  background-color: $bg-depth-2;
+  border-color: $bg-depth-1;
   box-shadow: none;
 }
 
 .btn-primary:disabled,
 .btn-primary.disabled {
+  color: #000;
+  background-color: $bg-depth-1;
+  border-color: $bg-depth-1;
+}
+
+.btn-secondary {
+  color: #000;
+  background: none;
+  border: none;
+}
+
+.btn-secondary:hover {
+  color: #000;
+  background-color: $bg-depth-2;
+  border-color: $bg-depth-1;
+}
+
+.btn-secondary:focus {
+  color: #000;
+  background-color: $bg-depth-2;
+  border-color: $bg-depth-1;
+  box-shadow: none;
+}
+
+.btn-secondary:disabled,
+.btn-secondary.disabled {
   color: #000;
   background-color: $bg-depth-0;
   border-color: $bg-depth-0;
@@ -34,17 +60,50 @@
 body.dark-theme {
   .btn-primary {
     color: #fff;
-    background-color: $bg-depth-0-dark;
-    border-color: $bg-depth-0-dark;
+    background-color: $bg-depth-1-dark;
+    border-color: $bg-depth-1-dark;
   }
 
   .btn-primary:hover {
-    background-color: $bg-depth-1-dark;
-    border-color: $bg-depth-0-dark;
+    background-color: $bg-depth-2-dark;
+    border-color: $bg-depth-1-dark;
   }
 
   .btn-primary:focus {
+    background-color: $bg-depth-2-dark;
+    border-color: $bg-depth-1-dark;
+  }
+
+  .btn-primary:disabled,
+  .btn-primary.disabled {
+    color: #fff;
     background-color: $bg-depth-1-dark;
+    border-color: $bg-depth-1-dark;
+  }
+
+  .btn-secondary {
+    color: #fff;
+    background: none;
+    border: none;
+  }
+
+  .btn-secondary:hover {
+    color: #fff;
+    background-color: $bg-depth-2-dark;
+    border-color: $bg-depth-1-dark;
+  }
+
+  .btn-secondary:focus {
+    color: #fff;
+    background-color: $bg-depth-2-dark;
+    border-color: $bg-depth-1-dark;
+    box-shadow: none;
+  }
+
+  .btn-secondary:disabled,
+  .btn-secondary.disabled {
+    color: #fff;
+    background-color: $bg-depth-0-dark;
     border-color: $bg-depth-0-dark;
   }
 }
