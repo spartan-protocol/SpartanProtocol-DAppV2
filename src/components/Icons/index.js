@@ -12,6 +12,8 @@ import { ReactComponent as ArrowLeftRight } from '../../assets/icons/arrow-left-
 import { ReactComponent as ArrowLeft } from '../../assets/icons/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../../assets/icons/arrow-right.svg'
 import { ReactComponent as ArrowUp } from '../../assets/icons/arrow-up.svg'
+import { ReactComponent as ArrowExtLeft } from '../../assets/icons/arrow-extend-left.svg'
+import { ReactComponent as ArrowExtRight } from '../../assets/icons/arrow-extend-right.svg'
 import { ReactComponent as Close } from '../../assets/icons/close.svg'
 import { ReactComponent as Colosseum } from '../../assets/icons/colosseum.svg'
 import { ReactComponent as Connect } from '../../assets/icons/connect.svg'
@@ -62,6 +64,7 @@ import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
+import { ReactComponent as SpartaTextShort } from '../../assets/tokens/sparta-text-short.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
 import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
 import { ReactComponent as Usd } from '../../assets/tokens/usd.svg'
@@ -92,6 +95,8 @@ const icons = {
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowUp: ArrowUp,
+  arrowExtLeft: ArrowExtLeft,
+  arrowExtRight: ArrowExtRight,
   bin: Trash,
   close: Close,
   colosseum: Colosseum,
@@ -143,6 +148,7 @@ const icons = {
   spartav2: SpartaV2,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
+  spartaTextShort: SpartaTextShort,
   bnb: Bnb,
   busd: Busd,
   usd: Usd,
@@ -173,7 +179,7 @@ const icons = {
  */
 export const Icon = (props) => {
   const { isDark } = useTheme()
-  const fallbackFill = isDark ? 'white' : 'black'
+  const fallbackFill = isDark ? '#ffffffcf' : '#000000bf'
   let CustomIcon = icons[props.icon]
   if (CustomIcon === undefined) {
     CustomIcon = icons.iconMissing

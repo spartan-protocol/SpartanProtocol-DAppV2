@@ -6,15 +6,16 @@ import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
 import { routes } from '../../../routes'
 import { Icon } from '../../../components/Icons/index'
+import { useBreakpoint } from '../../../providers/Breakpoint'
 
 import styles from './styles.module.scss'
 
 const SidebarLg = () => {
-  const iconCompact = '35px'
-  const iconLg = '50px'
   const { t } = useTranslation()
+  const breakpoint = useBreakpoint()
 
   const [compact, setCompact] = useState(true)
+  const [fixed, setFixed] = useState(breakpoint.xl) // Add useTheme check to fix-open if above certain screen size
 
   const handleCompact = (boolieeee) => {
     setCompact(boolieeee)
@@ -22,57 +23,55 @@ const SidebarLg = () => {
 
   return (
     <>
+      {fixed ? (
+        <>
+          <div
+            role="button"
+            onClick={() => setFixed(false)}
+            aria-hidden="true"
+            className={styles.fixedTrue}
+          >
+            <Icon icon="arrowExtLeft" size="20" />
+          </div>
+        </>
+      ) : (
+        <div
+          role="button"
+          onClick={() => setFixed(true)}
+          aria-hidden="true"
+          className={styles.fixedFalse}
+        >
+          <Icon icon="arrowExtRight" size="20" />
+        </div>
+      )}
       <Col
-        className={`${styles.sidebarLg} bg-1`}
-        style={compact ? { width: '48px' } : { width: '200px' }}
-        onMouseEnter={() => handleCompact(false)}
-        onMouseLeave={() => handleCompact(true)}
+        className={`${styles.sidebarLg} bg-2`}
+        style={compact && !fixed ? { width: '60px' } : { width: '200px' }}
+        onMouseEnter={() => !fixed && handleCompact(false)}
+        onMouseLeave={() => !fixed && handleCompact(true)}
         role="button"
         aria-hidden="true"
       >
         <div className={styles.links}>
           <Link to="/">
-            <div
-              style={
-                compact
-                  ? { width: iconCompact, paddingTop: '35px' }
-                  : {
-                      width: iconLg,
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      paddingTop: '15px',
-                    }
-              }
-            >
-              <div
-                to="/"
-                style={
-                  compact ? { paddingLeft: '7px' } : { paddingLeft: '0px' }
-                }
-              >
-                <Icon
-                  icon="spartav2"
-                  className=""
-                  size={compact ? iconCompact : iconLg}
-                />
+            <div>
+              <div to="/" className={styles.icon}>
+                <Icon icon="spartav2" size="40" />
+                <h4
+                  className={
+                    compact && !fixed
+                      ? `d-none ${styles.spTitle}`
+                      : `d-inline-block ${styles.spTitle}`
+                  }
+                >
+                  SPARTAN
+                  <br />
+                  PROTOCOL
+                </h4>
               </div>
             </div>
-            <h3
-              style={
-                compact
-                  ? { paddingLeft: '200px', paddingBottom: '5px' }
-                  : {
-                      textAlign: 'center',
-                      paddingLeft: '0px',
-                      paddingBottom: '10px',
-                    }
-              }
-            >
-              Spartan
-              <br /> Protocol
-            </h3>
           </Link>
-          <ul className="nav flex-column">
+          <ul className={`${styles.lis} nav`}>
             {routes
               .filter((route) => !route.hide)
               .map((route) => (
@@ -80,7 +79,11 @@ const SidebarLg = () => {
                   <LinkContainer to={route.path}>
                     <Nav.Link eventKey={route.path}>
                       <Icon icon={route.icon} size="24" />
-                      <span className="ms-3">{t(route.name)}</span>
+                      <span
+                        className={compact && !fixed ? 'd-none ms-3' : 'ms-3'}
+                      >
+                        {t(route.name)}
+                      </span>
                     </Nav.Link>
                   </LinkContainer>
                 </li>
@@ -89,14 +92,10 @@ const SidebarLg = () => {
         </div>
         <div
           className={styles.socials}
-          style={
-            compact
-              ? { width: '48px' }
-              : { width: '200px', marginLeft: 'auto', marginRight: 'auto' }
-          }
+          style={compact && !fixed ? { width: '60px' } : { width: '200px' }}
         >
-          {compact ? (
-            <Icon icon="github" size="24" />
+          {compact && !fixed ? (
+            <Icon icon="github" size="25" />
           ) : (
             <>
               <a
@@ -106,16 +105,16 @@ const SidebarLg = () => {
                 id="footer-github"
                 className="mx-1"
               >
-                <Icon icon="github" size="24" />
+                <Icon icon="github" size="25" />
               </a>
               <a
                 href="https://docs.spartanprotocol.org/"
                 target="_blank"
                 rel="noreferrer"
                 id="footer-gitbook"
-                className="mx-1"
+                className="mx-2"
               >
-                <Icon icon="gitbook" size="24" />
+                <Icon icon="gitbook" size="25" />
               </a>
               <a
                 href="https://twitter.com/SpartanProtocol"
@@ -124,7 +123,7 @@ const SidebarLg = () => {
                 id="footer-twitter"
                 className="mx-1"
               >
-                <Icon icon="twitter" size="24" />
+                <Icon icon="twitter" size="25" />
               </a>
               <a
                 href="https://t.me/SpartanProtocolOrg"
@@ -133,16 +132,16 @@ const SidebarLg = () => {
                 id="footer-telegram"
                 className="mx-1"
               >
-                <Icon icon="telegram" size="24" />
+                <Icon icon="telegram" size="25" />
               </a>
               <a
                 href="https://discord.gg/wQggvntnGk"
                 target="_blank"
                 rel="noreferrer"
                 id="footer-discord"
-                className="mx-1"
+                className="mx-2"
               >
-                <Icon icon="discord" size="24" />
+                <Icon icon="discord" size="25" />
               </a>
             </>
           )}

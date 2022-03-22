@@ -3,11 +3,8 @@
 
 .navbar {
   grid-area: navbar;
-  z-index: $zindex-sticky;
   display: flex;
   justify-content: space-between;
-  // backdrop-filter: blur(5px);
-  // box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.205);
   padding-left: 10px;
   padding-right: 10px;
   overflow: hidden;

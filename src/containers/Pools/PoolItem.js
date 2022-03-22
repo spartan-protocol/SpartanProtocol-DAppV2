@@ -109,7 +109,7 @@ const PoolItem = ({ asset, daoApy }) => {
     <>
       <Col xs="12" sm="6" lg="4">
         <Card className={styles.poolItem}>
-          <Card.Body>
+          <Card.Body className="pb-0">
             <Row className="mb-2">
               <Col xs="auto" className="position-relative">
                 <img
@@ -509,7 +509,7 @@ const PoolItem = ({ asset, daoApy }) => {
             )}
             <Row>
               <div
-                className="text-center"
+                className="text-center mt-2"
                 onClick={() => toggleCollapse()}
                 role="button"
                 aria-hidden
@@ -527,6 +527,8 @@ const PoolItem = ({ asset, daoApy }) => {
             <Row className="text-center mt-2">
               <Col>
                 <Button
+                  size="sm"
+                  variant="outline-primary"
                   className="w-100"
                   onClick={() =>
                     history.push(
@@ -539,6 +541,8 @@ const PoolItem = ({ asset, daoApy }) => {
               </Col>
               <Col>
                 <Button
+                  size="sm"
+                  variant="outline-primary"
                   className="w-100"
                   onClick={() =>
                     history.push(`/liquidity?asset1=${tokenAddress}`)
@@ -550,6 +554,8 @@ const PoolItem = ({ asset, daoApy }) => {
               {asset.curated && (
                 <Col>
                   <Button
+                    size="sm"
+                    variant="outline-primary"
                     className="w-100"
                     disabled={!asset.curated}
                     onClick={() => history.push('/vaults')}

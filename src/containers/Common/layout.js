@@ -38,7 +38,7 @@ const Layout = () => {
         <DataManager />
         <Navbar />
         {breakpoint.lg && <SidebarLg />}
-        <div className={styles.body}>
+        <div className={`${styles.body} bg-0`}>
           <div className={styles.content}>
             <TranslationNotice />
             <Switch>

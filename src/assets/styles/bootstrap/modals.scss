@@ -25,7 +25,7 @@
 }
 
 .modal-footer {
-  background-color: $bg-depth-3;
+  background-color: $bg-depth-1;
 }
 
 body.dark-theme {
@@ -36,11 +36,11 @@ body.dark-theme {
 
   .modal-header {
     background-color: $bg-depth-1-dark;
-    border-color: $bg-depth-2-dark;
+    border: none;
   }
 
   .modal-footer {
-    background-color: $bg-depth-3-dark;
-    border-color: $bg-depth-2-dark;
+    background-color: $bg-depth-1-dark;
+    border: none;
   }
 }

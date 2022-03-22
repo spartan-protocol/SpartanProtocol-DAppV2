@@ -85,7 +85,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   src={spartaIconAlt}
                   alt="Sparta synth token icon"
                   className="position-absolute"
-                  style={{ right: '8px', bottom: '10px' }}
+                  style={{ right: '5px', bottom: '10px' }}
                 />
               </Col>
               <Col xs="auto" className="pe-0 my-auto">

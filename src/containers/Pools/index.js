@@ -5,6 +5,7 @@ import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import Nav from 'react-bootstrap/Nav'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import PoolItem from './PoolItem'
@@ -173,15 +174,18 @@ const Overview = () => {
             <Col xs="12">
               <Row>
                 <SummaryItem />
-                {/* MOBILE FILTER DROPDOWN */}
+                {/* MOBILE FILTER DROPDOWN -> CHANGE THIS TO NAV-DROPDOWN? */}
                 <Col className="d-block d-sm-none mt-3 mb-1">
                   <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
                     <option value="pools">
                       {t('pools')} ({getPools().length})
                     </option>
-                    <option value="new">
-                      {t('new')} ({getNewPools().length})
-                    </option>
+                    {getNewPools().length > 0 ||
+                      (isLoading() && (
+                        <option value="new">
+                          {t('new')} ({getNewPools().length})
+                        </option>
+                      ))}
                     <option value="babies">
                       {t('< 10K')} ({getBabies().length})
                     </option>
@@ -190,77 +194,96 @@ const Overview = () => {
                     </option>
                   </Form.Select>
                 </Col>
-                {/* DESKTOP FILTER BUTTONS */}
+                {/* DESKTOP FILTER NAV ITEMS */}
                 <Col className="d-none d-sm-block mt-3 mb-1">
-                  <Button
-                    variant={activeTab === 'pools' ? 'primary' : 'secondary'}
-                    onClick={() => setActiveTab('pools')}
+                  <Nav
+                    variant="pills"
+                    defaultActiveKey="pools"
+                    onSelect={(e) => setActiveTab(e)}
                   >
-                    {t('pools')}
-                    <Badge className="ms-2">
-                      {!isLoading() ? (
-                        getPools().length
-                      ) : (
-                        <Icon icon="cycle" size="15" className="anim-spin" />
-                      )}
-                    </Badge>
-                  </Button>
-                  <Button
-                    variant={activeTab === 'new' ? 'primary' : 'secondary'}
-                    onClick={() => setActiveTab('new')}
-                    disabled={pool.poolDetails && getNewPools().length <= 0}
-                  >
-                    {t('new')}
-                    <Badge className="ms-2">
-                      {!isLoading() ? (
-                        getNewPools().length
-                      ) : (
-                        <Icon icon="cycle" size="15" className="anim-spin" />
-                      )}
-                    </Badge>
-                  </Button>
-                  <Button
-                    variant={activeTab === 'babies' ? 'primary' : 'secondary'}
-                    onClick={() => setActiveTab('babies')}
-                  >
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'hiddenPools')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="me-1" size="15" />
-                      </span>
-                    </OverlayTrigger>
-                    {t('< 10K')}
-                    <Badge className="ms-2">
-                      {!isLoading() ? (
-                        getBabies().length
-                      ) : (
-                        <Icon icon="cycle" size="15" className="anim-spin" />
-                      )}
-                    </Badge>
-                  </Button>
-                  <Button
-                    variant={activeTab === 'synths' ? 'primary' : 'secondary'}
-                    onClick={() => setActiveTab('synths')}
-                  >
-                    {/* <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'synthView')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="me-1" size="15" />
-                      </span>
-                    </OverlayTrigger> */}
-                    {t('synths')}
-                    <Badge className="ms-2">
-                      {!isLoading() ? (
-                        getSynths().length
-                      ) : (
-                        <Icon icon="cycle" size="15" className="anim-spin" />
-                      )}
-                    </Badge>
-                  </Button>
+                    <Nav.Item>
+                      <Nav.Link
+                        eventKey="pools"
+                        className="btn-sm btn-outline-primary"
+                      >
+                        {t('pools')}
+                        <Badge bg="secondary" className="ms-2">
+                          {!isLoading() ? (
+                            getPools().length
+                          ) : (
+                            <Icon
+                              icon="cycle"
+                              size="15"
+                              className="anim-spin"
+                            />
+                          )}
+                        </Badge>
+                      </Nav.Link>
+                    </Nav.Item>
+                    {getNewPools().length > 0 ||
+                      (isLoading() && (
+                        <Nav.Item>
+                          <Nav.Link
+                            bg="secondary"
+                            eventKey="new"
+                            className="btn-sm"
+                          >
+                            {t('new')}
+                            <Badge bg="secondary" className="ms-2">
+                              {!isLoading() ? (
+                                getNewPools().length
+                              ) : (
+                                <Icon
+                                  icon="cycle"
+                                  size="15"
+                                  className="anim-spin"
+                                />
+                              )}
+                            </Badge>
+                          </Nav.Link>
+                        </Nav.Item>
+                      ))}
+                    <Nav.Item>
+                      <Nav.Link eventKey="babies" className="btn-sm">
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'hiddenPools')}
+                        >
+                          <span role="button">
+                            <Icon icon="info" className="me-1" size="15" />
+                          </span>
+                        </OverlayTrigger>
+                        {t('< 10K')}
+                        <Badge bg="secondary" className="ms-2">
+                          {!isLoading() ? (
+                            getBabies().length
+                          ) : (
+                            <Icon
+                              icon="cycle"
+                              size="15"
+                              className="anim-spin"
+                            />
+                          )}
+                        </Badge>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link eventKey="synths" className="btn-sm">
+                        {t('synths')}
+                        <Badge bg="secondary" className="ms-2">
+                          {!isLoading() ? (
+                            getSynths().length
+                          ) : (
+                            <Icon
+                              icon="cycle"
+                              size="15"
+                              className="anim-spin"
+                            />
+                          )}
+                        </Badge>
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
                 </Col>
 
                 <Col xs="auto" className="mt-3 mb-1 text-end">
@@ -268,6 +291,7 @@ const Overview = () => {
                     onClick={() => setTableView(!tableView)}
                     className="me-1"
                     disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
+                    size="sm"
                   >
                     <Icon
                       icon={tableView ? 'grid' : 'table'}
@@ -276,7 +300,7 @@ const Overview = () => {
                     />
                     {t('view')}
                   </Button>
-                  <Button onClick={() => setShowModal(!showModal)}>
+                  <Button onClick={() => setShowModal(!showModal)} size="sm">
                     <Icon icon="plus" size="17" className="me-1 mb-1" />
                     {t('createPool')}
                   </Button>

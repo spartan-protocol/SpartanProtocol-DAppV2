@@ -1,109 +1,119 @@
 @import '../variables.scss';
 
-.btn {
-  padding: 0.325rem 0.7rem;
-  font-weight: 500;
-}
+// .btn {
+//   padding: 0.325rem 0.7rem;
+//   font-weight: 500;
+// }
 
-.btn-primary {
-  color: #000;
-  background-color: $bg-depth-1;
-  border-color: $bg-depth-1;
-}
+// .btn-primary {
+//   color: #4d5969;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+//   // box-shadow: $shadow;
+// }
 
-.btn-primary:hover {
-  color: #000;
-  background-color: $bg-depth-2;
-  border-color: $bg-depth-1;
-}
+// .btn-primary:hover {
+//   color: #404a57;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+//   // box-shadow: $hover-shadow;
+// }
 
-.btn-primary:focus {
-  color: #000;
-  background-color: $bg-depth-2;
-  border-color: $bg-depth-1;
-  box-shadow: none;
-}
+// .btn-primary:focus {
+//   color: #404a57;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+//   // box-shadow: $hover-shadow;
+// }
 
-.btn-primary:disabled,
-.btn-primary.disabled {
-  color: #000;
-  background-color: $bg-depth-1;
-  border-color: $bg-depth-1;
-}
+// .btn-primary:disabled,
+// .btn-primary.disabled {
+//   color: #404a57;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+// }
 
-.btn-secondary {
-  color: #000;
-  background: none;
-  border: none;
-}
+// .btn-secondary {
+//   color: #4d5969;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+//   font-weight: 300;
+// }
 
-.btn-secondary:hover {
-  color: #000;
-  background-color: $bg-depth-2;
-  border-color: $bg-depth-1;
-}
+// .btn-secondary:hover {
+//   color: #404a57;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+//   // box-shadow: $hover-shadow;
+// }
 
-.btn-secondary:focus {
-  color: #000;
-  background-color: $bg-depth-2;
-  border-color: $bg-depth-1;
-  box-shadow: none;
-}
+// .btn-secondary:focus {
+//   color: #404a57;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+//   // box-shadow: $hover-shadow;
+// }
 
-.btn-secondary:disabled,
-.btn-secondary.disabled {
-  color: #000;
-  background-color: $bg-depth-0;
-  border-color: $bg-depth-0;
-}
+// .btn-secondary:disabled,
+// .btn-secondary.disabled {
+//   color: #404a57;
+//   background-color: $bg-depth-2;
+//   border-color: $bg-depth-2;
+// }
 
-body.dark-theme {
-  .btn-primary {
-    color: #fff;
-    background-color: $bg-depth-1-dark;
-    border-color: $bg-depth-1-dark;
-  }
+// body.dark-theme {
+//   .btn-primary {
+//     color: #b6c1d2;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-2-dark;
+//     // box-shadow: $shadow;
+//   }
 
-  .btn-primary:hover {
-    background-color: $bg-depth-2-dark;
-    border-color: $bg-depth-1-dark;
-  }
+//   .btn-primary:hover {
+//     color: #404a57;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-2-dark;
+//     // box-shadow: $hover-shadow;
+//   }
 
-  .btn-primary:focus {
-    background-color: $bg-depth-2-dark;
-    border-color: $bg-depth-1-dark;
-  }
+//   .btn-primary:focus {
+//     color: #b6c1d2;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-2-dark;
+//     // box-shadow: $hover-shadow;
+//   }
 
-  .btn-primary:disabled,
-  .btn-primary.disabled {
-    color: #fff;
-    background-color: $bg-depth-1-dark;
-    border-color: $bg-depth-1-dark;
-  }
+//   .btn-primary:disabled,
+//   .btn-primary.disabled {
+//     color: #404a57;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-2-dark;
+//   }
 
-  .btn-secondary {
-    color: #fff;
-    background: none;
-    border: none;
-  }
+//   .btn-secondary {
+//     color: #b6c1d2;
+//     background: none;
+//     border: none;
+//   }
 
-  .btn-secondary:hover {
-    color: #fff;
-    background-color: $bg-depth-2-dark;
-    border-color: $bg-depth-1-dark;
-  }
+//   .btn-secondary:hover {
+//     color: #404a57;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-0-dark;
+//     // box-shadow: $hover-shadow;
+//   }
 
-  .btn-secondary:focus {
-    color: #fff;
-    background-color: $bg-depth-2-dark;
-    border-color: $bg-depth-1-dark;
-    box-shadow: none;
-  }
+//   .btn-secondary:focus {
+//     color: #b6c1d2;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-0-dark;
+//     // box-shadow: $hover-shadow;
+//   }
 
-  .btn-secondary:disabled,
-  .btn-secondary.disabled {
-    color: #fff;
-    background-color: $bg-depth-0-dark;
-    border-color: $bg-depth-0-dark;
-  }
-}
+//   .btn-secondary:disabled,
+//   .btn-secondary.disabled {
+//     color: #404a57;
+//     background-color: $bg-depth-0-dark;
+//     border-color: $bg-depth-0-dark;
+//   }
+// }

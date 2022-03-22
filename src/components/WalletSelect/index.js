@@ -4,6 +4,7 @@ import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
+import Nav from 'react-bootstrap/Nav'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
@@ -403,27 +404,55 @@ const WalletSelect = (props) => {
             </Col>
             <hr className="mt-3" />
             <Col className="text-center mb-2">
-              <Button onClick={() => setactiveTab('tokens')} className="me-1">
-                {t('tokens')}{' '}
-                <Badge>
-                  {tempChains.includes(wallet.chainId) && getTokenCount()}
-                </Badge>
-              </Button>
-              <Button onClick={() => setactiveTab('lps')} className="me-1">
-                {t('lps')}{' '}
-                <Badge>
-                  {tempChains.includes(wallet.chainId) && getLpsCount()}
-                </Badge>
-              </Button>
-              <Button onClick={() => setactiveTab('synths')} className="me-1">
-                {t('synths')}{' '}
-                <Badge>
-                  {tempChains.includes(wallet.chainId) && getSynthsCount()}
-                </Badge>
-              </Button>
-              <Button onClick={() => setactiveTab('txns')} className="hide-i5">
-                <Icon icon="txnsHistory" size="20" />
-              </Button>
+              <Nav
+                variant="pills"
+                defaultActiveKey="tokens"
+                onSelect={(e) => setactiveTab(e)}
+                className="justify-content-center"
+              >
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="tokens"
+                    className="btn-sm btn-outline-primary"
+                  >
+                    {t('tokens')}{' '}
+                    <Badge>
+                      {tempChains.includes(wallet.chainId) && getTokenCount()}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link bg="secondary" eventKey="lps" className="btn-sm">
+                    {t('lps')}{' '}
+                    <Badge>
+                      {tempChains.includes(wallet.chainId) && getLpsCount()}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+
+                <Nav.Item>
+                  <Nav.Link eventKey="synths" className="btn-sm">
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'hiddenPools')}
+                    >
+                      <span role="button">
+                        <Icon icon="info" className="me-1" size="15" />
+                      </span>
+                    </OverlayTrigger>
+                    {t('synths')}{' '}
+                    <Badge>
+                      {tempChains.includes(wallet.chainId) && getSynthsCount()}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item className="hide-i5">
+                  <Nav.Link eventKey="txns" className="btn-sm">
+                    <Icon icon="txnsHistory" size="20" />
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
             </Col>
           </Row>
         </Modal.Header>

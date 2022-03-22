@@ -14,7 +14,7 @@ body
 body {
   overflow: hidden;
   font-family: 'Saira';
-  background-color: $bg-depth-0;
+  background-color: $bg-depth-2;
   color: $text;
 }
 
@@ -33,14 +33,6 @@ a {
 
 .bg-2 {
   background-color: $bg-depth-2;
-}
-
-.bg-3 {
-  background-color: $bg-depth-3;
-}
-
-.bg-4 {
-  background-color: $bg-depth-4;
 }
 
 .header-btn {
@@ -87,13 +79,5 @@ body.dark-theme {
 
   .bg-2 {
     background-color: $bg-depth-2-dark;
-  }
-
-  .bg-3 {
-    background-color: $bg-depth-3-dark;
-  }
-
-  .bg-4 {
-    background-color: $bg-depth-4-dark;
   }
 }

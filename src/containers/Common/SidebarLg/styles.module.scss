@@ -2,15 +2,14 @@
 
 .sidebarLg {
   // Structure
-  min-width: 48px;
-  // border-right: 1px solid #00000020;
+  min-width: 60px;
   align-content: space-between;
   // Visibility
   overflow-y: auto;
   overflow-x: hidden;
   backdrop-filter: blur(5px);
   // Animations
-  transition: width 0.5s ease-in-out;
+  transition: 0.5s;
   // CSS Grid
   grid-area: sidebarLg;
   display: grid;
@@ -24,15 +23,41 @@
   grid-area: links;
   white-space: nowrap;
   text-overflow: clip;
-  transition: width 0.5s ease-in-out;
-
-  a {
-    padding-left: 12px;
-  }
+  transition: 0.5s;
 }
 
 .socials {
   grid-area: socials;
   text-align: center;
   margin-bottom: 20px;
+}
+
+.icon {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.lis {
+  flex-direction: column;
+  margin-top: 40px;
+  margin-left: 5px;
+}
+
+.spTitle {
+  margin-left: 15px;
+  vertical-align: middle;
+  line-height: 20px;
+  margin-bottom: 0;
+}
+
+.fixedTrue {
+  position: absolute;
+  left: 205;
+  top: 19;
+}
+
+.fixedFalse {
+  position: absolute;
+  left: 65;
+  top: 19;
 }
