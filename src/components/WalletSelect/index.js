@@ -406,7 +406,7 @@ const WalletSelect = (props) => {
             <Col className="text-center mb-2">
               <Nav
                 variant="pills"
-                defaultActiveKey="tokens"
+                activeKey={activeTab}
                 onSelect={(e) => setactiveTab(e)}
                 className="justify-content-center"
               >

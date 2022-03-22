@@ -198,7 +198,7 @@ const Overview = () => {
                 <Col className="d-none d-sm-block mt-3 mb-1">
                   <Nav
                     variant="pills"
-                    defaultActiveKey="pools"
+                    activeKey={activeTab}
                     onSelect={(e) => setActiveTab(e)}
                   >
                     <Nav.Item>
@@ -360,6 +360,7 @@ const Overview = () => {
                   )}
 
                   {activeTab === 'synths' &&
+                    synth.synthDetails &&
                     getSynths().map((asset) => (
                       <SynthItem
                         key={asset.address}
