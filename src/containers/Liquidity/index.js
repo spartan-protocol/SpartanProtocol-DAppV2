@@ -117,6 +117,14 @@ const Overview = () => {
                       >
                         <Nav.Item className="me-1">
                           <Nav.Link
+                            className="btn-sm btn-outline-primary"
+                            onClick={() => history.push(`/swap`)}
+                          >
+                            {t('swap')}
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="me-1">
+                          <Nav.Link
                             eventKey="add"
                             className="btn-sm btn-outline-primary"
                           >
@@ -129,14 +137,6 @@ const Overview = () => {
                             className="btn-sm btn-outline-primary"
                           >
                             {t('remove')}
-                          </Nav.Link>
-                        </Nav.Item>
-                        <Nav.Item className="me-1">
-                          <Nav.Link
-                            className="btn-sm btn-outline-primary"
-                            onClick={() => history.push(`/swap`)}
-                          >
-                            {t('swap')}
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="me-1 hide-i5">
