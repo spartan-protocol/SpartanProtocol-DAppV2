@@ -41,7 +41,6 @@ import NewPool from '../Pools/NewPool'
 import { calcLiqValue, calcSpotValueInBase } from '../../utils/math/utils'
 import { getTimeUntil } from '../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../utils/math/router'
-import Metrics from './Components/Metrics'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 
@@ -778,11 +777,6 @@ const LiqRemove = () => {
           </Card.Footer>
         </Card>
       </Col>
-      {pool.poolDetails && (
-        <Col xs="auto">
-          <Metrics assetSwap={poolRemove1} />
-        </Col>
-      )}
     </Row>
   )
 }

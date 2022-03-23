@@ -5,7 +5,6 @@ import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
-import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
@@ -30,7 +29,6 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../utils/bigNumber'
-import Metrics from './Components/Metrics'
 import { useWeb3 } from '../../store/web3'
 import { addLiquidity, addLiquiditySingle } from '../../store/router'
 import Approval from '../../components/Approval/index'
@@ -38,8 +36,6 @@ import HelmetLoading from '../../components/Spinner/index'
 import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { balanceWidths } from './Components/Utils'
-import NewPool from '../Pools/NewPool'
-import Share from '../../components/Share/index'
 import {
   calcLiqValue,
   calcSpotValueInBase,
@@ -459,596 +455,504 @@ const LiqAdd = () => {
   }
 
   return (
-    <Row>
-      <Col xs="auto">
-        <Card xs="auto" className="card-480" style={{ minHeight: '560px' }}>
-          <Card.Header className="p-0 border-0 mb-3">
-            <Row className="px-4 pt-3 pb-1">
-              <Col xs="auto">
-                {t('liquidity')}
-                {pool.poolDetails.length > 0 && <Share />}
-              </Col>
-              <Col className="text-end">
-                <NewPool />
-              </Col>
-            </Row>
-            <Nav activeKey={activeTab} fill>
-              <Nav.Item key="addTab1">
-                <Nav.Link
-                  eventKey="addTab1"
+    <>
+      <Row className="mb-3">
+        <Col>
+          <Nav
+            variant="pills"
+            activeKey={activeTab}
+            onSelect={(e) => toggle(e)}
+            fill
+          >
+            <Nav.Item>
+              <Nav.Link
+                eventKey="addTab1"
+                onClick={() => {
+                  toggle('addTab1')
+                }}
+              >
+                {t('addBoth')}
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link
+                eventKey="addTab2"
+                onClick={() => {
+                  toggle('addTab2')
+                }}
+              >
+                {t('addSingle')}
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Col>
+      </Row>
+      {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
+        <>
+          <Row className="my-2">
+            <Col xs="12" className="">
+              <Row className="">
+                <Col className="">
+                  <strong>{t('add')}</strong>
+                </Col>
+                <Col
+                  xs="auto"
+                  className="float-end text-end"
+                  role="button"
+                  aria-hidden="true"
                   onClick={() => {
-                    toggle('addTab1')
+                    addInput1.value = convertFromWei(getBalance(1))
                   }}
                 >
-                  {t('addBoth')}
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item key="addTab2">
-                <Nav.Link
-                  eventKey="addTab2"
-                  onClick={() => {
-                    toggle('addTab2')
-                  }}
-                >
-                  {t('addSingle')}
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Card.Header>
+                  {t('balance')}:{' '}
+                  {pool.poolDetails && (
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, formatFromWei(getBalance(1), 18))}
+                    >
+                      <span role="button">{formatFromWei(getBalance(1))}</span>
+                    </OverlayTrigger>
+                  )}
+                  <Badge bg="primary" className="ms-1 mb-1">
+                    MAX
+                  </Badge>
+                </Col>
+              </Row>
 
-          {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
-            <>
-              <Card.Body>
-                <Row>
-                  <Col xs="12" className="px-1 px-sm-3">
-                    <Card className="card-alt">
-                      <Card.Body>
-                        <Row className="">
-                          <Col xs="auto" className="text-sm-label">
-                            {t('add')}
-                          </Col>
-                          <Col
-                            className="text-sm-label float-end text-end"
-                            role="button"
-                            aria-hidden="true"
-                            onClick={() => {
-                              addInput1.value = convertFromWei(getBalance(1))
-                            }}
+              <Row className="my-1">
+                <Col>
+                  <InputGroup className="">
+                    <InputGroup.Text id="assetSelect1">
+                      <AssetSelect
+                        priority="1"
+                        filter={['token']}
+                        blackList={
+                          activeTab === 'addTab1'
+                            ? [addr.spartav1, addr.spartav2]
+                            : []
+                        }
+                        onClick={handleConfClear}
+                      />
+                    </InputGroup.Text>
+                    <OverlayTrigger
+                      placement="auto"
+                      onToggle={() => checkWallet(1)}
+                      show={showWalletWarning1}
+                      trigger={['focus']}
+                      overlay={
+                        <Popover>
+                          <Popover.Header />
+                          <Popover.Body>{t('connectWalletFirst')}</Popover.Body>
+                        </Popover>
+                      }
+                    >
+                      <FormControl
+                        className="text-end ms-0"
+                        type="number"
+                        min="0"
+                        placeholder={`${t('add')}...`}
+                        id="addInput1"
+                        autoComplete="off"
+                        autoCorrect="off"
+                      />
+                    </OverlayTrigger>
+
+                    <InputGroup.Text
+                      role="button"
+                      tabIndex={-1}
+                      onKeyPress={() => clearInputs(1)}
+                      onClick={() => clearInputs(1)}
+                    >
+                      <Icon icon="close" size="10" fill="grey" />
+                    </InputGroup.Text>
+                  </InputGroup>
+                  <Row className="pt-1 pb-3">
+                    <Col>
+                      {formatShortString(assetAdd1?.tokenAddress)}
+                      <ShareLink url={assetAdd1?.tokenAddress}>
+                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                      </ShareLink>
+                      <a
+                        href={getExplorerContract(assetAdd1?.tokenAddress)}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <Icon
+                          icon="scan"
+                          size="12"
+                          className="ms-1 mb-1"
+                          fill="rgb(170, 205, 255)"
+                        />
+                      </a>
+                    </Col>
+                    <Col className="text-end">
+                      ~$
+                      {addInput1?.value
+                        ? formatFromWei(getInput1ValueUSD(), 2)
+                        : '0.00'}
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+
+              {activeTab === 'addTab1' && (
+                <>
+                  <Row className="">
+                    <Col xs="auto" className="">
+                      <strong>{t('add')}</strong>
+                    </Col>
+                    <Col
+                      className="float-end text-end"
+                      role="button"
+                      aria-hidden="true"
+                      onClick={() => {
+                        addInput2.focus()
+                        addInput2.value = convertFromWei(getBalance(2))
+                      }}
+                    >
+                      {t('balance')}:{' '}
+                      {pool.poolDetails && (
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, formatFromWei(getBalance(2), 18))}
+                        >
+                          <span role="button">
+                            {formatFromWei(getBalance(2))}
+                          </span>
+                        </OverlayTrigger>
+                      )}
+                      <Badge bg="primary" className="ms-1 mb-1">
+                        MAX
+                      </Badge>
+                    </Col>
+                  </Row>
+
+                  <Row className="my-1">
+                    <Col>
+                      <InputGroup className="">
+                        <InputGroup.Text id="assetSelect2">
+                          <AssetSelect
+                            priority="2"
+                            filter={['token']}
+                            whiteList={[addr.spartav2]}
+                            disabled={activeTab === 'addTab1'}
+                            onClick={handleConfClear}
+                          />
+                        </InputGroup.Text>
+                        <OverlayTrigger
+                          placement="auto"
+                          onToggle={() => checkWallet(2)}
+                          show={showWalletWarning2}
+                          trigger={['focus']}
+                          overlay={
+                            <Popover>
+                              <Popover.Header />
+                              <Popover.Body>
+                                {t('connectWalletFirst')}
+                              </Popover.Body>
+                            </Popover>
+                          }
+                        >
+                          <FormControl
+                            className="text-end ms-0"
+                            type="number"
+                            min="0"
+                            placeholder={`${t('add')}...`}
+                            id="addInput2"
+                            autoComplete="off"
+                            autoCorrect="off"
+                          />
+                        </OverlayTrigger>
+
+                        <InputGroup.Text
+                          role="button"
+                          tabIndex={-1}
+                          onKeyPress={() => clearInputs(2)}
+                          onClick={() => clearInputs(2)}
+                        >
+                          <Icon icon="close" size="10" fill="grey" />
+                        </InputGroup.Text>
+                      </InputGroup>
+
+                      <Row className="pt-1">
+                        <Col>
+                          {formatShortString(assetAdd2?.tokenAddress)}
+                          <ShareLink url={assetAdd2?.tokenAddress}>
+                            <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                          </ShareLink>
+                          <a
+                            href={getExplorerContract(assetAdd2?.tokenAddress)}
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            <Badge bg="primary" className="me-1">
-                              MAX
-                            </Badge>
-                            {t('balance')}:{' '}
-                            {pool.poolDetails && (
-                              <OverlayTrigger
-                                placement="auto"
-                                overlay={Tooltip(
-                                  t,
-                                  formatFromWei(getBalance(1), 18),
-                                )}
-                              >
-                                <span role="button">
-                                  {formatFromWei(getBalance(1))}
-                                </span>
-                              </OverlayTrigger>
-                            )}{' '}
-                          </Col>
-                        </Row>
+                            <Icon
+                              icon="scan"
+                              size="12"
+                              className="ms-1 mb-1"
+                              fill="rgb(170, 205, 255)"
+                            />
+                          </a>
+                        </Col>
+                        <Col className="text-end">
+                          ~$
+                          {addInput2?.value
+                            ? formatFromWei(getInput2ValueUSD(), 2)
+                            : '0.00'}
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </>
+              )}
 
-                        <Row className="my-1">
-                          <Col>
-                            <InputGroup className="">
-                              <InputGroup.Text id="assetSelect1">
-                                <AssetSelect
-                                  priority="1"
-                                  filter={['token']}
-                                  blackList={
-                                    activeTab === 'addTab1'
-                                      ? [addr.spartav1, addr.spartav2]
-                                      : []
-                                  }
-                                  onClick={handleConfClear}
-                                />
-                              </InputGroup.Text>
-                              <OverlayTrigger
-                                placement="auto"
-                                onToggle={() => checkWallet(1)}
-                                show={showWalletWarning1}
-                                trigger={['focus']}
-                                overlay={
-                                  <Popover>
-                                    <Popover.Header />
-                                    <Popover.Body>
-                                      {t('connectWalletFirst')}
-                                    </Popover.Body>
-                                  </Popover>
-                                }
-                              >
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  min="0"
-                                  placeholder={`${t('add')}...`}
-                                  id="addInput1"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                />
-                              </OverlayTrigger>
+              {activeTab === 'addTab2' && (
+                <>
+                  <Row className="">
+                    <Col xs="auto" className="">
+                      <strong>{t('receive')}</strong>
+                    </Col>
+                    <Col className="float-end text-end">
+                      {t('balance')}:{' '}
+                      {pool.poolDetails && formatFromWei(getBalance(3))}
+                    </Col>
+                  </Row>
 
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs(1)}
-                                onClick={() => clearInputs(1)}
-                              >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
-                            <Row className="text-sm-label pt-1">
-                              <Col>
-                                {formatShortString(assetAdd1?.tokenAddress)}
-                                <ShareLink url={assetAdd1?.tokenAddress}>
-                                  <Icon
-                                    icon="copy"
-                                    size="16"
-                                    className="ms-1 mb-1"
-                                  />
-                                </ShareLink>
-                                <a
-                                  href={getExplorerContract(
-                                    assetAdd1?.tokenAddress,
-                                  )}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <Icon
-                                    icon="scan"
-                                    size="12"
-                                    className="ms-1 mb-1"
-                                    fill="rgb(170, 205, 255)"
-                                  />
-                                </a>
-                              </Col>
-                              <Col className="text-end">
-                                ~$
-                                {addInput1?.value
-                                  ? formatFromWei(getInput1ValueUSD(), 2)
-                                  : '0.00'}
-                              </Col>
-                            </Row>
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                    </Card>
-
-                    <Row style={{ height: '2px' }}>
-                      <Col xs="auto" className="mx-auto">
-                        {activeTab === 'addTab1' && (
-                          <Icon
-                            icon="plus"
-                            size="35"
-                            stroke="white"
-                            className="position-relative bg-primary rounded-circle px-1"
-                            style={{
-                              top: '-20px',
-                              zIndex: '1000',
-                            }}
+                  <Row className="my-1">
+                    <Col>
+                      <InputGroup className="">
+                        <InputGroup.Text id="assetSelect3">
+                          <AssetSelect
+                            priority="3"
+                            filter={['pool']}
+                            disabled={
+                              activeTab === 'addTab1' ||
+                              assetAdd1.tokenAddress !== addr.spartav2
+                            }
+                            onClick={handleConfClear}
                           />
-                        )}
-                        {activeTab === 'addTab2' && (
-                          <Icon
-                            icon="swapAdd"
-                            size="35"
-                            fill="#fb2715"
-                            className="mx-auto position-relative"
-                            style={{
-                              height: '35px',
-                              top: '-20px',
-                              zIndex: '1000',
-                            }}
-                          />
-                        )}
+                        </InputGroup.Text>
+                        <FormControl
+                          className="text-end ms-0"
+                          type="number"
+                          min="0"
+                          placeholder="0.00"
+                          id="addInput3"
+                          disabled
+                        />
+                      </InputGroup>
+
+                      <Row className="pt-1">
+                        <Col>
+                          {formatShortString(poolAdd1?.address)}
+                          <ShareLink url={poolAdd1?.address}>
+                            <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                          </ShareLink>
+                          <a
+                            href={getExplorerContract(poolAdd1?.address)}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Icon
+                              icon="scan"
+                              size="12"
+                              className="ms-1 mb-1"
+                              fill="rgb(170, 205, 255)"
+                            />
+                          </a>
+                        </Col>
+                        <Col className="text-end">
+                          ~$
+                          {addInput1?.value
+                            ? formatFromWei(getLpValueUSD(), 2)
+                            : '0.00'}
+                          {' ('}
+                          {addInput1?.value
+                            ? formatFromUnits(getRateSlip(), 2)
+                            : '0.00'}
+                          {'%)'}
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </>
+              )}
+              <hr />
+              {pool.poolDetails && (
+                <>
+                  <Row className="mb-2 mt-3">
+                    <Col xs="auto">
+                      <span className="">{t('add')}</span>
+                    </Col>
+                    <Col className="text-end">
+                      <span className="">
+                        {addInput1?.value > 0
+                          ? formatFromUnits(addInput1?.value, 6)
+                          : '0.00'}{' '}
+                        {getToken(assetAdd1.tokenAddress)?.symbol}
+                      </span>
+                    </Col>
+                  </Row>
+                  {activeTab === 'addTab1' && (
+                    <Row className="mb-2">
+                      <Col xs="auto">
+                        <span className="">{t('add')}</span>
+                      </Col>
+                      <Col className="text-end">
+                        <span className="">
+                          ~
+                          {addInput2?.value > 0
+                            ? formatFromUnits(addInput2?.value, 6)
+                            : '0.00'}{' '}
+                          <span className="">SPARTA</span>
+                        </span>
                       </Col>
                     </Row>
-
-                    {activeTab === 'addTab1' && (
-                      <Card className="card-alt">
-                        <Card.Body>
-                          <Row className="">
-                            <Col xs="auto" className="text-sm-label">
-                              {t('add')} (~)
-                            </Col>
-                            <Col
-                              className="text-sm-label float-end text-end"
-                              role="button"
-                              aria-hidden="true"
-                              onClick={() => {
-                                addInput2.focus()
-                                addInput2.value = convertFromWei(getBalance(2))
-                              }}
-                            >
-                              <Badge bg="primary" className="me-1">
-                                MAX
-                              </Badge>
-                              {t('balance')}:{' '}
-                              {pool.poolDetails && (
-                                <OverlayTrigger
-                                  placement="auto"
-                                  overlay={Tooltip(
-                                    t,
-                                    formatFromWei(getBalance(2), 18),
-                                  )}
-                                >
-                                  <span role="button">
-                                    {formatFromWei(getBalance(2))}
-                                  </span>
-                                </OverlayTrigger>
-                              )}
-                            </Col>
-                          </Row>
-
-                          <Row className="my-1">
-                            <Col>
-                              <InputGroup className="">
-                                <InputGroup.Text id="assetSelect2">
-                                  <AssetSelect
-                                    priority="2"
-                                    filter={['token']}
-                                    whiteList={[addr.spartav2]}
-                                    disabled={activeTab === 'addTab1'}
-                                    onClick={handleConfClear}
-                                  />
-                                </InputGroup.Text>
-                                <OverlayTrigger
-                                  placement="auto"
-                                  onToggle={() => checkWallet(2)}
-                                  show={showWalletWarning2}
-                                  trigger={['focus']}
-                                  overlay={
-                                    <Popover>
-                                      <Popover.Header />
-                                      <Popover.Body>
-                                        {t('connectWalletFirst')}
-                                      </Popover.Body>
-                                    </Popover>
-                                  }
-                                >
-                                  <FormControl
-                                    className="text-end ms-0"
-                                    type="number"
-                                    min="0"
-                                    placeholder={`${t('add')}...`}
-                                    id="addInput2"
-                                    autoComplete="off"
-                                    autoCorrect="off"
-                                  />
-                                </OverlayTrigger>
-
-                                <InputGroup.Text
-                                  role="button"
-                                  tabIndex={-1}
-                                  onKeyPress={() => clearInputs(2)}
-                                  onClick={() => clearInputs(2)}
-                                >
-                                  <Icon icon="close" size="10" fill="grey" />
-                                </InputGroup.Text>
-                              </InputGroup>
-
-                              <Row className="text-sm-label pt-1">
-                                <Col>
-                                  {formatShortString(assetAdd2?.tokenAddress)}
-                                  <ShareLink url={assetAdd2?.tokenAddress}>
-                                    <Icon
-                                      icon="copy"
-                                      size="16"
-                                      className="ms-1 mb-1"
-                                    />
-                                  </ShareLink>
-                                  <a
-                                    href={getExplorerContract(
-                                      assetAdd2?.tokenAddress,
-                                    )}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    <Icon
-                                      icon="scan"
-                                      size="12"
-                                      className="ms-1 mb-1"
-                                      fill="rgb(170, 205, 255)"
-                                    />
-                                  </a>
-                                </Col>
-                                <Col className="text-end">
-                                  ~$
-                                  {addInput2?.value
-                                    ? formatFromWei(getInput2ValueUSD(), 2)
-                                    : '0.00'}
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      </Card>
-                    )}
-
-                    {activeTab === 'addTab2' && (
-                      <Card className="card-alt">
-                        <Card.Body>
-                          <Row className="">
-                            <Col xs="auto" className="text-sm-label">
-                              {t('receive')}
-                            </Col>
-                            <Col className="text-sm-label float-end text-end">
-                              {t('balance')}:{' '}
-                              {pool.poolDetails && formatFromWei(getBalance(3))}
-                            </Col>
-                          </Row>
-
-                          <Row className="my-1">
-                            <Col>
-                              <InputGroup className="">
-                                <InputGroup.Text id="assetSelect3">
-                                  <AssetSelect
-                                    priority="3"
-                                    filter={['pool']}
-                                    disabled={
-                                      activeTab === 'addTab1' ||
-                                      assetAdd1.tokenAddress !== addr.spartav2
-                                    }
-                                    onClick={handleConfClear}
-                                  />
-                                </InputGroup.Text>
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  min="0"
-                                  placeholder="0.00"
-                                  id="addInput3"
-                                  disabled
-                                />
-                              </InputGroup>
-
-                              <Row className="text-sm-label pt-1">
-                                <Col>
-                                  {formatShortString(poolAdd1?.address)}
-                                  <ShareLink url={poolAdd1?.address}>
-                                    <Icon
-                                      icon="copy"
-                                      size="16"
-                                      className="ms-1 mb-1"
-                                    />
-                                  </ShareLink>
-                                  <a
-                                    href={getExplorerContract(
-                                      poolAdd1?.address,
-                                    )}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    <Icon
-                                      icon="scan"
-                                      size="12"
-                                      className="ms-1 mb-1"
-                                      fill="rgb(170, 205, 255)"
-                                    />
-                                  </a>
-                                </Col>
-                                <Col className="text-end">
-                                  ~$
-                                  {addInput1?.value
-                                    ? formatFromWei(getLpValueUSD(), 2)
-                                    : '0.00'}
-                                  {' ('}
-                                  {addInput1?.value
-                                    ? formatFromUnits(getRateSlip(), 2)
-                                    : '0.00'}
-                                  {'%)'}
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      </Card>
-                    )}
-
-                    {pool.poolDetails && (
-                      <>
-                        <Row className="mb-2 mt-3">
-                          <Col xs="auto">
-                            <span className="text-card">{t('add')}</span>
-                          </Col>
-                          <Col className="text-end">
-                            <span className="text-card">
-                              {addInput1?.value > 0
-                                ? formatFromUnits(addInput1?.value, 6)
-                                : '0.00'}{' '}
-                              {getToken(assetAdd1.tokenAddress)?.symbol}
-                            </span>
-                          </Col>
-                        </Row>
-                        {activeTab === 'addTab1' && (
-                          <Row className="mb-2">
-                            <Col xs="auto">
-                              <span className="text-card">{t('add')}</span>
-                            </Col>
-                            <Col className="text-end">
-                              <span className="text-card">
-                                ~
-                                {addInput2?.value > 0
-                                  ? formatFromUnits(addInput2?.value, 6)
-                                  : '0.00'}{' '}
-                                <span className="">SPARTA</span>
-                              </span>
-                            </Col>
-                          </Row>
-                        )}
-                        {activeTab === 'addTab2' && (
-                          <>
-                            <Row className="mb-2">
-                              <Col xs="auto" className="title-card">
-                                <span className="text-card">{t('fee')}</span>
-                              </Col>
-                              <Col className="text-end">
-                                <span className="text-card">
-                                  {getAddLiqAsym()[1] > 0
-                                    ? formatFromWei(getAddLiqAsym()[1], 4)
-                                    : '0.00'}{' '}
-                                  <span className="">SPARTA</span>
-                                </span>
-                              </Col>
-                            </Row>
-                            <Row className="mb-2">
-                              <Col xs="auto">
-                                <div className="text-card">{t('revenue')}</div>
-                              </Col>
-                              <Col className="text-end">
-                                <div className="text-card">
-                                  {formatFromWei(getRevenue(), 6)} SPARTA
-                                  <OverlayTrigger
-                                    placement="auto"
-                                    overlay={Tooltip(t, 'swapRevInfo')}
-                                  >
-                                    <span role="button">
-                                      <Icon
-                                        icon="info"
-                                        className="ms-1 mb-1"
-                                        size="17"
-                                      />
-                                    </span>
-                                  </OverlayTrigger>
-                                </div>
-                              </Col>
-                            </Row>
-                          </>
-                        )}
-                        <Row className="">
-                          <Col xs="auto" className="title-card">
-                            <span className="subtitle-card">
-                              {t('receive')}
-                            </span>
-                          </Col>
-                          <Col className="text-end">
-                            <span className="subtitle-card">
-                              ~
-                              {outputLp > 0
-                                ? formatFromWei(outputLp, 6)
-                                : '0.00'}{' '}
-                              <span className="output-card">
-                                {getToken(poolAdd1.tokenAddress)?.symbol}p
-                              </span>
-                            </span>
-                          </Col>
-                        </Row>
-                      </>
-                    )}
-                    {!pool.poolDetails && (
-                      <HelmetLoading height={150} width={150} />
-                    )}
-                  </Col>
-                </Row>
-              </Card.Body>
-            </>
-          ) : (
-            <Card.Body className="output-card">
-              No pools are currently listed
-            </Card.Body>
-          )}
-
-          <Card.Footer>
-            {poolAdd1.newPool && (
-              <Row>
-                <Col>
-                  <div className="output-card text-center">
-                    {t('newPoolConfirmInfo')}
-                  </div>
-                  <Form className="my-2 text-center">
-                    <span className="output-card">
-                      {`Confirm; your liquidity will be locked for ${
-                        getTimeNew()[0]
-                      }${getTimeNew()[1]}`}
-                      <Form.Check
-                        type="switch"
-                        id="confirmLockout"
-                        className="ms-2 d-inline-flex"
-                        checked={confirm}
-                        onChange={() => setConfirm(!confirm)}
-                      />
-                    </span>
-                  </Form>
-                </Col>
-              </Row>
-            )}
-            {poolAdd1.frozen && (
-              <Row>
-                <Col>
-                  <div className="output-card text-center">
-                    {t('poolFrozenConfirm')}
-                  </div>
-                  <Form className="my-2 text-center">
-                    <span className="output-card">
-                      {t('poolFrozenConfirmShort')}
-                      <Form.Check
-                        type="switch"
-                        id="confirmFrozen"
-                        className="ms-2 d-inline-flex"
-                        checked={confirmFreeze}
-                        onChange={() => setConfirmFreeze(!confirmFreeze)}
-                      />
-                    </span>
-                  </Form>
-                </Col>
-              </Row>
-            )}
-            <Row className="text-center">
-              {assetAdd1?.tokenAddress &&
-                assetAdd1?.tokenAddress !== addr.bnb &&
-                wallet?.account &&
-                addInput1?.value && (
-                  <Approval
-                    tokenAddress={assetAdd1?.tokenAddress}
-                    symbol={getToken(assetAdd1.tokenAddress)?.symbol}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.router}
-                    txnAmount={convertToWei(addInput1?.value)}
-                    assetNumber="1"
-                  />
-                )}
-              <Col xs="12" className="hide-if-siblings">
-                <Button
-                  className="w-100"
-                  onClick={() => handleAddLiq()}
-                  disabled={!checkValid()[0]}
-                >
-                  {checkValid()[1]}
-                  {txnLoading && (
-                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
                   )}
-                </Button>
-              </Col>
-              {assetAdd2?.tokenAddress &&
-                assetAdd2?.tokenAddress !== addr.bnb &&
-                wallet?.account &&
-                addInput2?.value && (
-                  <Approval
-                    tokenAddress={assetAdd2?.tokenAddress}
-                    symbol={getToken(assetAdd2.tokenAddress)?.symbol}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.router}
-                    txnAmount={convertToWei(addInput2?.value)}
-                    assetNumber="2"
-                  />
-                )}
-            </Row>
-          </Card.Footer>
-        </Card>
-      </Col>
-      {pool.poolDetails && (
-        <Col xs="auto">
-          <Metrics assetSwap={poolAdd1} />
-        </Col>
+                  {activeTab === 'addTab2' && (
+                    <>
+                      <Row className="mb-2">
+                        <Col xs="auto" className="">
+                          <span className="">{t('fee')}</span>
+                        </Col>
+                        <Col className="text-end">
+                          <span className="">
+                            {getAddLiqAsym()[1] > 0
+                              ? formatFromWei(getAddLiqAsym()[1], 4)
+                              : '0.00'}{' '}
+                            <span className="">SPARTA</span>
+                          </span>
+                        </Col>
+                      </Row>
+                      <Row className="mb-2">
+                        <Col xs="auto">
+                          <div className="">{t('revenue')}</div>
+                        </Col>
+                        <Col className="text-end">
+                          <div className="">
+                            {formatFromWei(getRevenue(), 6)} SPARTA
+                            <OverlayTrigger
+                              placement="auto"
+                              overlay={Tooltip(t, 'swapRevInfo')}
+                            >
+                              <span role="button">
+                                <Icon
+                                  icon="info"
+                                  className="ms-1 mb-1"
+                                  size="17"
+                                />
+                              </span>
+                            </OverlayTrigger>
+                          </div>
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  <Row className="">
+                    <Col xs="auto" className="">
+                      <span className="">{t('receive')}</span>
+                    </Col>
+                    <Col className="text-end">
+                      <span className="">
+                        ~{outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
+                        <span className="">
+                          {getToken(poolAdd1.tokenAddress)?.symbol}p
+                        </span>
+                      </span>
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {!pool.poolDetails && <HelmetLoading height={150} width={150} />}
+            </Col>
+          </Row>
+        </>
+      ) : (
+        <Row>
+          <Col>No pools are currently listed</Col>
+        </Row>
       )}
-    </Row>
+
+      {poolAdd1.newPool && (
+        <Row>
+          <Col>
+            <div className="text-center">{t('newPoolConfirmInfo')}</div>
+            <Form className="my-2 text-center">
+              <span className="">
+                {`Confirm; your liquidity will be locked for ${
+                  getTimeNew()[0]
+                }${getTimeNew()[1]}`}
+                <Form.Check
+                  type="switch"
+                  id="confirmLockout"
+                  className="ms-2 d-inline-flex"
+                  checked={confirm}
+                  onChange={() => setConfirm(!confirm)}
+                />
+              </span>
+            </Form>
+          </Col>
+        </Row>
+      )}
+      {poolAdd1.frozen && (
+        <Row>
+          <Col>
+            <div className="text-center">{t('poolFrozenConfirm')}</div>
+            <Form className="my-2 text-center">
+              <span className="">
+                {t('poolFrozenConfirmShort')}
+                <Form.Check
+                  type="switch"
+                  id="confirmFrozen"
+                  className="ms-2 d-inline-flex"
+                  checked={confirmFreeze}
+                  onChange={() => setConfirmFreeze(!confirmFreeze)}
+                />
+              </span>
+            </Form>
+          </Col>
+        </Row>
+      )}
+      <Row className="text-center">
+        {assetAdd1?.tokenAddress &&
+          assetAdd1?.tokenAddress !== addr.bnb &&
+          wallet?.account &&
+          addInput1?.value && (
+            <Approval
+              tokenAddress={assetAdd1?.tokenAddress}
+              symbol={getToken(assetAdd1.tokenAddress)?.symbol}
+              walletAddress={wallet?.account}
+              contractAddress={addr.router}
+              txnAmount={convertToWei(addInput1?.value)}
+              assetNumber="1"
+            />
+          )}
+        <Col xs="12" className="hide-if-siblings">
+          <Button
+            className="w-100"
+            onClick={() => handleAddLiq()}
+            disabled={!checkValid()[0]}
+          >
+            {checkValid()[1]}
+            {txnLoading && (
+              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+            )}
+          </Button>
+        </Col>
+        {assetAdd2?.tokenAddress &&
+          assetAdd2?.tokenAddress !== addr.bnb &&
+          wallet?.account &&
+          addInput2?.value && (
+            <Approval
+              tokenAddress={assetAdd2?.tokenAddress}
+              symbol={getToken(assetAdd2.tokenAddress)?.symbol}
+              walletAddress={wallet?.account}
+              contractAddress={addr.router}
+              txnAmount={convertToWei(addInput2?.value)}
+              assetNumber="2"
+            />
+          )}
+      </Row>
+    </>
   )
 }
 

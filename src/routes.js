@@ -22,7 +22,7 @@ export const routes = [
   {
     path: '/liquidity',
     name: 'liquidity',
-    icon: 'sword',
+    icon: 'pool',
     component: Liquidity,
     layout: '',
   },
@@ -30,7 +30,7 @@ export const routes = [
   {
     path: '/swap',
     name: 'swap',
-    icon: 'swords',
+    icon: 'swap',
     component: Swap,
     layout: '',
   },
@@ -62,7 +62,7 @@ export const routes = [
   {
     path: '/dao',
     name: 'dao',
-    icon: 'colosseum',
+    icon: 'dao',
     component: Dao,
     layout: '',
   },
@@ -78,7 +78,7 @@ export const routes = [
   {
     path: '/donate',
     name: 'donate',
-    icon: 'list',
+    icon: 'donate',
     component: Donate,
     layout: '',
   },
@@ -92,7 +92,7 @@ export const routes = [
   },
 
   {
-    path: '/PU',
+    path: '/pu',
     name: 'PowerUser',
     icon: '',
     component: PU,

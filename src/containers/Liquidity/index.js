@@ -1,26 +1,55 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Button from 'react-bootstrap/Button'
-import { useLocation } from 'react-router-dom'
+import Nav from 'react-bootstrap/Nav'
+import { useLocation, useHistory } from 'react-router-dom'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import { usePool } from '../../store/pool'
 import HelmetLoading from '../../components/Spinner/index'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { addressesMN, getNetwork, tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { balanceWidths } from './Components/Utils'
+import NewPool from '../Pools/NewPool'
+import { Icon } from '../../components/Icons'
+import Metrics from './Components/Metrics'
+import { getPool } from '../../utils/math/utils'
+import Share from '../../components/Share'
 
 const Overview = () => {
   const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState('1')
   const pool = usePool()
-  const [network, setnetwork] = useState(getNetwork())
   const location = useLocation()
+  const history = useHistory()
 
+  const [activeTab, setActiveTab] = useState('add')
+  const [network, setnetwork] = useState(getNetwork())
   const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
+  const [selectedPool, setSelectedPool] = useState(false)
+
+  const tryParse = (data) => {
+    try {
+      return JSON.parse(data)
+    } catch (e) {
+      return pool.poolDetails[0]
+    }
+  }
+
+  useEffect(() => {
+    if (pool.poolDetails) {
+      let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
+      if (asset1.tokenAddress === addressesMN.spartav2) {
+        asset1 = tryParse(window.localStorage.getItem('assetSelected3'))
+      }
+      asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
+      setSelectedPool(asset1)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
 
   useEffect(() => {
     if (tabParam1) {
@@ -59,36 +88,101 @@ const Overview = () => {
     <>
       <div className="content">
         {tempChains.includes(network.chainId) && (
-          <>
-            <Row className="row-480">
-              <ButtonGroup size="sm" className="mb-3">
-                <Button
-                  active={activeTab === '1'}
-                  onClick={() => setActiveTab('1')}
-                  variant="dark"
-                >
-                  {t('add')}
-                </Button>
-                <Button
-                  active={activeTab === '2'}
-                  onClick={() => setActiveTab('2')}
-                  variant="dark"
-                >
-                  {t('remove')}
-                </Button>
-              </ButtonGroup>
-              {!isLoading() ? (
-                <>
-                  {activeTab === '1' && <LiqAdd />}
-                  {activeTab === '2' && <LiqRemove />}
-                </>
-              ) : (
-                <Col className="card-480">
-                  <HelmetLoading height={150} width={150} />
+          <Row>
+            {/* MODALS */}
+            {showCreateModal && (
+              <NewPool
+                setShowModal={setShowCreateModal}
+                showModal={showCreateModal}
+              />
+            )}
+
+            {showShareModal && (
+              <Share
+                setShowShare={setShowShareModal}
+                showShare={showShareModal}
+              />
+            )}
+
+            {!isLoading() ? (
+              <>
+                <Col>
+                  <Card>
+                    <Card.Header>
+                      <Nav
+                        variant="pills"
+                        activeKey={activeTab}
+                        onSelect={(e) => setActiveTab(e)}
+                        fill
+                      >
+                        <Nav.Item className="me-1">
+                          <Nav.Link
+                            eventKey="add"
+                            className="btn-sm btn-outline-primary"
+                          >
+                            {t('add')}
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="me-1">
+                          <Nav.Link
+                            eventKey="remove"
+                            className="btn-sm btn-outline-primary"
+                          >
+                            {t('remove')}
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="me-1">
+                          <Nav.Link
+                            className="btn-sm btn-outline-primary"
+                            onClick={() => history.push(`/swap`)}
+                          >
+                            {t('swap')}
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item className="me-1 hide-i5">
+                          <Nav.Link
+                            className="btn-sm btn-outline-primary"
+                            onClick={() => setShowCreateModal(!showCreateModal)}
+                          >
+                            {t('create')}
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item>
+                          <Nav.Link
+                            className="btn-sm btn-outline-primary"
+                            onClick={() => setShowShareModal(!showShareModal)}
+                          >
+                            <Icon icon="connect" size="15" />
+                          </Nav.Link>
+                        </Nav.Item>
+                        <Nav.Item disabled>
+                          <Nav.Link
+                            className="btn-sm btn-outline-primary"
+                            disabled
+                          >
+                            {/* ADD SLIP TOLERANCE LOGIC */}
+                            {/* ADD GAS PRICE LOGIC */}
+                            <Icon icon="settings" size="15" />
+                          </Nav.Link>
+                        </Nav.Item>
+                      </Nav>
+                    </Card.Header>
+                    <Card.Body>
+                      {activeTab === 'add' && <LiqAdd />}
+                      {activeTab === 'remove' && <LiqRemove />}
+                    </Card.Body>
+                  </Card>
                 </Col>
-              )}
-            </Row>
-          </>
+                <Col>
+                  <Metrics assetSwap={selectedPool} />
+                </Col>
+              </>
+            ) : (
+              <Col>
+                <HelmetLoading height={150} width={150} />
+              </Col>
+            )}
+          </Row>
         )}
         {!tempChains.includes(network.chainId) && <WrongNetwork />}
       </div>

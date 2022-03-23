@@ -2,7 +2,7 @@
 
 .card {
   background-color: $bg-depth-2;
-  box-shadow: none;
+  box-shadow: $shadow;
   border: none;
   border-radius: 0.475rem;
 }
@@ -30,7 +30,7 @@
 body.dark-theme {
   .card {
     background-color: $bg-depth-2-dark;
-    box-shadow: none;
+    box-shadow: $shadow-dark;
   }
 
   .card-header {

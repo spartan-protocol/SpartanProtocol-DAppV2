@@ -23,6 +23,30 @@ a {
   text-decoration: none;
 }
 
+.body {
+  grid-area: body;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+  border-top-left-radius: 1.5rem;
+  box-shadow: inset $shadow;
+  background-color: $bg-depth-0;
+}
+
+@media only screen and (max-width: 1023px) {
+  .body {
+    border-top-left-radius: 0;
+    padding: 20px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .body {
+    border-top-left-radius: 0;
+    padding: 10px;
+  }
+}
+
 .bg-0 {
   background-color: $bg-depth-0;
 }
@@ -38,6 +62,14 @@ a {
 .header-btn {
   align-self: center;
   border-radius: 5px;
+}
+
+.shadow {
+  box-shadow: $shadow;
+}
+
+.shadow-inner {
+  box-shadow: inset $shadow;
 }
 
 #PopoverClick {
@@ -62,11 +94,16 @@ a {
 // ------------- DARK THEME ------------- //
 
 body.dark-theme {
-  background-color: $bg-depth-0-dark;
+  background-color: $bg-depth-2-dark;
   color: $text-dark;
 
   a {
     color: $text-dark;
+  }
+
+  .body {
+    box-shadow: inset $shadow-dark;
+    background-color: $bg-depth-0-dark;
   }
 
   .bg-0 {
@@ -79,5 +116,13 @@ body.dark-theme {
 
   .bg-2 {
     background-color: $bg-depth-2-dark;
+  }
+
+  .shadow {
+    box-shadow: $shadow-dark;
+  }
+
+  .shadow-inner {
+    box-shadow: inset $shadow-dark;
   }
 }

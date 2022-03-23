@@ -433,14 +433,6 @@ const WalletSelect = (props) => {
 
                 <Nav.Item>
                   <Nav.Link eventKey="synths" className="btn-sm">
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'hiddenPools')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="me-1" size="15" />
-                      </span>
-                    </OverlayTrigger>
                     {t('synths')}{' '}
                     <Badge>
                       {tempChains.includes(wallet.chainId) && getSynthsCount()}

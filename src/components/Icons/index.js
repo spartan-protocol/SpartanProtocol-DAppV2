@@ -22,6 +22,8 @@ import { ReactComponent as ContractGreen } from '../../assets/icons/contract-gre
 import { ReactComponent as ContractRed } from '../../assets/icons/contract-red.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
+import { ReactComponent as Dao } from '../../assets/icons/dao.svg'
+import { ReactComponent as Donate } from '../../assets/icons/donate.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
 import { ReactComponent as Grid } from '../../assets/icons/grid.svg'
 import { ReactComponent as Handshake } from '../../assets/icons/handshake.svg'
@@ -39,6 +41,7 @@ import { ReactComponent as Pool } from '../../assets/icons/pool.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
+import { ReactComponent as Settings } from '../../assets/icons/settings.svg'
 import { ReactComponent as Sun } from '../../assets/icons/sun.svg'
 import { ReactComponent as Swap } from '../../assets/icons/swap.svg'
 import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
@@ -106,6 +109,8 @@ const icons = {
   contractRed: ContractRed,
   copy: Copy,
   cycle: Cycle,
+  dao: Dao,
+  donate: Donate,
   fire: Fire,
   grid: Grid,
   handshake: Handshake,
@@ -123,6 +128,7 @@ const icons = {
   plus: Plus,
   scan: Scan,
   search: Search,
+  settings: Settings,
   sun: Sun,
   swap: Swap,
   swapAdd: SwapAdd,
@@ -179,7 +185,7 @@ const icons = {
  */
 export const Icon = (props) => {
   const { isDark } = useTheme()
-  const fallbackFill = isDark ? '#ffffffcf' : '#000000bf'
+  const fallbackFill = isDark ? '#ffffffcf' : '#000000'
   let CustomIcon = icons[props.icon]
   if (CustomIcon === undefined) {
     CustomIcon = icons.iconMissing

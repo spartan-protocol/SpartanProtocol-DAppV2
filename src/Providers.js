@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -77,7 +77,6 @@ const Providers = () => (
           <Switch>
             <ThemeProvider>
               <Route path="/" component={Layout} />
-              <Redirect from="/" to="/home" />
             </ThemeProvider>
           </Switch>
         </BreakpointProvider>

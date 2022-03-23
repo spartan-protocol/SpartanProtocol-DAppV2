@@ -10,9 +10,8 @@ import ShareLink from './ShareLink'
 import { usePool } from '../../store/pool'
 import { Icon } from '../Icons/index'
 
-const Share = () => {
+const Share = ({ showShare, setShowShare }) => {
   const pool = usePool()
-  const [showShare, setShowShare] = useState(false)
   const [url, setUrl] = useState('')
   const { t } = useTranslation()
   const getToken = (tokenAddress) =>

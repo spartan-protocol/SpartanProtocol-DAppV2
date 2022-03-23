@@ -70,7 +70,7 @@ const SynthItem = ({ asset, synthApy }) => {
   return (
     <>
       <Col xs="12" sm="6" lg="4">
-        <Card className={styles.poolItem}>
+        <Card className={styles.synthItem}>
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="position-relative">
@@ -228,6 +228,8 @@ const SynthItem = ({ asset, synthApy }) => {
             <Row className="text-center mt-2">
               <Col>
                 <Button
+                  size="sm"
+                  variant="outline-primary"
                   className="w-100"
                   disabled={!asset.curated}
                   onClick={() => history.push('/vaults?tab=Synth')}
@@ -237,6 +239,8 @@ const SynthItem = ({ asset, synthApy }) => {
               </Col>
               <Col>
                 <Button
+                  size="sm"
+                  variant="outline-primary"
                   className="w-100"
                   onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
                 >
