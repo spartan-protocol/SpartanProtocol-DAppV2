@@ -912,7 +912,7 @@ const LiqAdd = () => {
           </Col>
         </Row>
       )}
-      <Row className="text-center">
+      <Row className="text-center mt-3">
         {assetAdd1?.tokenAddress &&
           assetAdd1?.tokenAddress !== addr.bnb &&
           wallet?.account &&

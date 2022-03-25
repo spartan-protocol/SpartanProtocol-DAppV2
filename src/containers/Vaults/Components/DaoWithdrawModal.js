@@ -22,6 +22,7 @@ import { getSecsSince, getTimeUntil } from '../../../utils/math/nonContract'
 import { getAddresses } from '../../../utils/web3'
 import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
@@ -31,6 +32,7 @@ const DaoWithdrawModal = (props) => {
   const web3 = useWeb3()
   const dao = useDao()
   const wallet = useWeb3React()
+  const { isDark } = useTheme()
   const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -127,7 +129,7 @@ const DaoWithdrawModal = (props) => {
       </Button>
       {!props.disabled && (
         <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-          <Modal.Header closeButton closeVariant="white">
+          <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
             <div xs="auto" className="position-relative me-3">
               <img
                 src={token.symbolUrl}

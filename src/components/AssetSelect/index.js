@@ -118,7 +118,9 @@ const AssetSelect = (props) => {
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
-            props.whiteList.find((item) => item === asset.tokenAddress),
+            props.whiteList.find(
+              (item) => item === asset.tokenAddress || item === asset.address,
+            ),
           )
         }
 
@@ -347,10 +349,7 @@ const AssetSelect = (props) => {
             </>
           )}
         </Col>
-        <Col
-          style={{ overflow: 'hidden' }}
-          className="output-card px-1 my-auto"
-        >
+        <Col className="px-1 my-auto overflow-hidden">
           {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
@@ -443,7 +442,7 @@ const AssetSelect = (props) => {
 
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <Row key={`${asset.actualAddr}-all`} className="mb-3 output-card">
+              <Row key={`${asset.actualAddr}-all`} className="mb-3">
                 <Col xs="auto" className="position-relative">
                   <div
                     role="button"
@@ -459,7 +458,7 @@ const AssetSelect = (props) => {
 
                 <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
                   <Row>
-                    <Col xs="12" className="float-left ms-n4">
+                    <Col xs="12" className="float-left">
                       <div
                         role="button"
                         aria-hidden="true"
@@ -470,9 +469,7 @@ const AssetSelect = (props) => {
                       >
                         {asset.symbol}
                       </div>
-                      <div className="description">
-                        {formatFromWei(asset.balance)}
-                      </div>
+                      <div className="">{formatFromWei(asset.balance)}</div>
                     </Col>
                   </Row>
                 </Col>
@@ -551,7 +548,7 @@ const AssetSelect = (props) => {
 
                   <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
                     <Row>
-                      <Col xs="12" className="float-left ms-n4">
+                      <Col xs="12" className="float-left">
                         <div
                           role="button"
                           aria-hidden="true"
@@ -562,9 +559,7 @@ const AssetSelect = (props) => {
                         >
                           {asset.symbol}
                         </div>
-                        <div className="description">
-                          {formatFromWei(asset.balance)}
-                        </div>
+                        <div className="">{formatFromWei(asset.balance)}</div>
                       </Col>
                     </Row>
                   </Col>

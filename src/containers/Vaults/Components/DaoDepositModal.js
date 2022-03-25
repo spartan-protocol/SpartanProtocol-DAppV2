@@ -23,6 +23,7 @@ import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
@@ -33,6 +34,7 @@ const DaoDepositModal = (props) => {
   const reserve = useReserve()
   const dao = useDao()
   const wallet = useWeb3React()
+  const { isDark } = useTheme()
   const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -121,7 +123,7 @@ const DaoDepositModal = (props) => {
       </Button>
 
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           <div xs="auto" className="position-relative me-3">
             <img
               src={token.symbolUrl}

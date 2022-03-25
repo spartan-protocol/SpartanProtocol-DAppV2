@@ -85,6 +85,12 @@ a {
   bottom: 2;
 }
 
+.token-badge-tight {
+  position: absolute;
+  left: 22;
+  top: 12;
+}
+
 @media only screen and (max-width: 321px) {
   .hide-i5 {
     display: none;

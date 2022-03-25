@@ -22,6 +22,7 @@ import {
 } from '../../../store/synth'
 import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
@@ -32,6 +33,7 @@ const SynthWithdrawModal = (props) => {
   const wallet = useWeb3React()
   const addr = getAddresses()
   const reserve = useReserve()
+  const { isDark } = useTheme()
 
   const [percentage, setpercentage] = useState(0)
   const [txnLoading, setTxnLoading] = useState(false)
@@ -145,7 +147,10 @@ const SynthWithdrawModal = (props) => {
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
         {!props.disabled && (
           <>
-            <Modal.Header closeButton closeVariant="white">
+            <Modal.Header
+              closeButton
+              closeVariant={isDark ? 'white' : undefined}
+            >
               <div xs="auto" className="position-relative me-3">
                 <img
                   src={token.symbolUrl}

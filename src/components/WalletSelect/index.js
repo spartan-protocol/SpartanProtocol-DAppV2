@@ -347,7 +347,7 @@ const WalletSelect = (props) => {
       <Modal show={props.show} onHide={props.onHide} centered>
         <Modal.Header
           closeButton
-          closeVariant={isDark && 'white'}
+          closeVariant={isDark ? 'white' : undefined}
           className="pb-1"
         >
           <Row className="ms-auto">

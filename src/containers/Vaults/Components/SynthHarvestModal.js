@@ -23,6 +23,7 @@ import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import spartaIcon from '../../../assets/tokens/sparta-synth.svg'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const SynthHarvestModal = ({ synthItem, buttonValid }) => {
   const dispatch = useDispatch()
@@ -32,6 +33,7 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
   const web3 = useWeb3()
   const synth = useSynth()
   const { t } = useTranslation()
+  const { isDark } = useTheme()
   const wallet = useWeb3React()
   const addr = getAddresses()
 
@@ -126,7 +128,7 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
         {synthHarvestLive ? buttonValid[1] : t('harvestDisabled')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           <div xs="auto" className="position-relative me-3">
             <img
               src={_getToken().symbolUrl}

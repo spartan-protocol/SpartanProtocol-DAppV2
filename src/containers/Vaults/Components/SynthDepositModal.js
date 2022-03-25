@@ -26,6 +26,7 @@ import { useSparta } from '../../../store/sparta'
 import { useReserve } from '../../../store/reserve'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const dispatch = useDispatch()
@@ -36,6 +37,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const sparta = useSparta()
   const reserve = useReserve()
   const wallet = useWeb3React()
+  const { isDark } = useTheme()
   const addr = getAddresses()
 
   const [percentage, setpercentage] = useState('0')
@@ -162,7 +164,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
         {t('deposit')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           <div xs="auto" className="position-relative me-3">
             <img
               src={token.symbolUrl}

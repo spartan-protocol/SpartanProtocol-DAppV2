@@ -9,11 +9,13 @@ import { useTranslation } from 'react-i18next'
 import ShareLink from './ShareLink'
 import { usePool } from '../../store/pool'
 import { Icon } from '../Icons/index'
+import { useTheme } from '../../providers/Theme'
 
 const Share = ({ showShare, setShowShare }) => {
   const pool = usePool()
   const [url, setUrl] = useState('')
   const { t } = useTranslation()
+  const { isDark } = useTheme()
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const [asset1, setasset1] = useState('')
@@ -108,7 +110,7 @@ const Share = ({ showShare, setShowShare }) => {
         <Icon icon="connect" size="20" />
       </Button>
       <Modal show={showShare} onHide={() => setShowShare(false)} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           <Modal.Title>{t('shareLink')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>

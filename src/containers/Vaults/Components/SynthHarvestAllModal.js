@@ -18,6 +18,7 @@ import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const SynthHarvestAllModal = () => {
   const dispatch = useDispatch()
@@ -27,6 +28,7 @@ const SynthHarvestAllModal = () => {
   const synth = useSynth()
   const web3 = useWeb3()
   const { t } = useTranslation()
+  const { isDark } = useTheme()
   const wallet = useWeb3React()
   const addr = getAddresses()
 
@@ -172,7 +174,7 @@ const SynthHarvestAllModal = () => {
         {synthHarvestLive ? t('harvestAll') : t('harvestDisabled')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           {t('harvestAll')}
         </Modal.Header>
         <Card className="">
