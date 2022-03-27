@@ -16,6 +16,7 @@ body {
   font-family: 'Saira';
   background-color: $bg-depth-2;
   color: $text;
+  font-weight: 500;
 }
 
 a {
@@ -90,6 +91,28 @@ a {
   left: 22;
   top: 12;
 }
+
+.token-badge-share {
+  position: absolute;
+  left: 40;
+  top: 29;
+}
+
+.iconSeparator {
+  height: 2px;
+}
+
+.iconOnTop {
+  bottom: 13px;
+  z-index: 1000;
+}
+
+// .assetSection {
+//   .card-body {
+//     padding-top: 10px;
+//     padding-bottom: 10px;
+//   }
+// }
 
 @media only screen and (max-width: 321px) {
   .hide-i5 {

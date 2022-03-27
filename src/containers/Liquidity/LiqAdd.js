@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
@@ -465,32 +466,19 @@ const LiqAdd = () => {
             fill
           >
             <Nav.Item>
-              <Nav.Link
-                eventKey="addTab1"
-                onClick={() => {
-                  toggle('addTab1')
-                }}
-              >
-                {t('addBoth')}
-              </Nav.Link>
+              <Nav.Link eventKey="addTab1">{t('addBoth')}</Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link
-                eventKey="addTab2"
-                onClick={() => {
-                  toggle('addTab2')
-                }}
-              >
-                {t('addSingle')}
-              </Nav.Link>
+              <Nav.Link eventKey="addTab2">{t('addSingle')}</Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>
       </Row>
-      {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
-        <>
-          <Row className="my-2">
-            <Col xs="12" className="">
+
+      <Row className="">
+        <Col xs="12" className="">
+          <Card className="assetSection">
+            <Card.Body>
               <Row className="">
                 <Col className="">
                   <strong>{t('add')}</strong>
@@ -566,7 +554,7 @@ const LiqAdd = () => {
                       <Icon icon="close" size="10" fill="grey" />
                     </InputGroup.Text>
                   </InputGroup>
-                  <Row className="pt-1 pb-3">
+                  <Row className="pt-1">
                     <Col>
                       {formatShortString(assetAdd1?.tokenAddress)}
                       <ShareLink url={assetAdd1?.tokenAddress}>
@@ -594,7 +582,23 @@ const LiqAdd = () => {
                   </Row>
                 </Col>
               </Row>
+            </Card.Body>
+          </Card>
 
+          <Row className="iconSeparator">
+            <Col xs="auto" className="mx-auto">
+              <Icon
+                icon={activeTab === 'addTab1' ? 'plus' : 'arrowDown'}
+                size="25"
+                stroke="white"
+                fill="white"
+                className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+              />
+            </Col>
+          </Row>
+
+          <Card className="assetSection">
+            <Card.Body>
               {activeTab === 'addTab1' && (
                 <>
                   <Row className="">
@@ -776,101 +780,77 @@ const LiqAdd = () => {
                   </Row>
                 </>
               )}
-              <hr />
-              {pool.poolDetails && (
+            </Card.Body>
+          </Card>
+
+          {pool.poolDetails && (
+            <>
+              <Row className="mb-2 mt-3">
+                <Col xs="auto">{t('add')}</Col>
+                <Col className="text-end">
+                  {addInput1?.value > 0
+                    ? formatFromUnits(addInput1?.value, 6)
+                    : '0.00'}{' '}
+                  {getToken(assetAdd1.tokenAddress)?.symbol}
+                </Col>
+              </Row>
+              {activeTab === 'addTab1' && (
+                <Row className="mb-2">
+                  <Col xs="auto">{t('add')}</Col>
+                  <Col className="text-end">
+                    ~
+                    {addInput2?.value > 0
+                      ? formatFromUnits(addInput2?.value, 6)
+                      : '0.00'}{' '}
+                    SPARTA
+                  </Col>
+                </Row>
+              )}
+              {activeTab === 'addTab2' && (
                 <>
-                  <Row className="mb-2 mt-3">
-                    <Col xs="auto">
-                      <span className="">{t('add')}</span>
+                  <Row className="mb-2">
+                    <Col xs="auto" className="">
+                      {t('fee')}
                     </Col>
                     <Col className="text-end">
-                      <span className="">
-                        {addInput1?.value > 0
-                          ? formatFromUnits(addInput1?.value, 6)
-                          : '0.00'}{' '}
-                        {getToken(assetAdd1.tokenAddress)?.symbol}
-                      </span>
+                      {getAddLiqAsym()[1] > 0
+                        ? formatFromWei(getAddLiqAsym()[1], 4)
+                        : '0.00'}{' '}
+                      SPARTA
                     </Col>
                   </Row>
-                  {activeTab === 'addTab1' && (
-                    <Row className="mb-2">
-                      <Col xs="auto">
-                        <span className="">{t('add')}</span>
-                      </Col>
-                      <Col className="text-end">
-                        <span className="">
-                          ~
-                          {addInput2?.value > 0
-                            ? formatFromUnits(addInput2?.value, 6)
-                            : '0.00'}{' '}
-                          <span className="">SPARTA</span>
-                        </span>
-                      </Col>
-                    </Row>
-                  )}
-                  {activeTab === 'addTab2' && (
-                    <>
-                      <Row className="mb-2">
-                        <Col xs="auto" className="">
-                          <span className="">{t('fee')}</span>
-                        </Col>
-                        <Col className="text-end">
-                          <span className="">
-                            {getAddLiqAsym()[1] > 0
-                              ? formatFromWei(getAddLiqAsym()[1], 4)
-                              : '0.00'}{' '}
-                            <span className="">SPARTA</span>
-                          </span>
-                        </Col>
-                      </Row>
-                      <Row className="mb-2">
-                        <Col xs="auto">
-                          <div className="">{t('revenue')}</div>
-                        </Col>
-                        <Col className="text-end">
-                          <div className="">
-                            {formatFromWei(getRevenue(), 6)} SPARTA
-                            <OverlayTrigger
-                              placement="auto"
-                              overlay={Tooltip(t, 'swapRevInfo')}
-                            >
-                              <span role="button">
-                                <Icon
-                                  icon="info"
-                                  className="ms-1 mb-1"
-                                  size="17"
-                                />
-                              </span>
-                            </OverlayTrigger>
-                          </div>
-                        </Col>
-                      </Row>
-                    </>
-                  )}
-                  <Row className="">
-                    <Col xs="auto" className="">
-                      <span className="">{t('receive')}</span>
-                    </Col>
+                  <Row className="mb-2">
+                    <Col xs="auto">{t('revenue')}</Col>
                     <Col className="text-end">
-                      <span className="">
-                        ~{outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
-                        <span className="">
-                          {getToken(poolAdd1.tokenAddress)?.symbol}p
+                      {formatFromWei(getRevenue(), 6)} SPARTA
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(t, 'swapRevInfo')}
+                      >
+                        <span role="button">
+                          <Icon icon="info" className="ms-1 mb-1" size="17" />
                         </span>
-                      </span>
+                      </OverlayTrigger>
                     </Col>
                   </Row>
                 </>
               )}
-              {!pool.poolDetails && <HelmetLoading height={150} width={150} />}
-            </Col>
-          </Row>
-        </>
-      ) : (
-        <Row>
-          <Col>No pools are currently listed</Col>
-        </Row>
-      )}
+              <Row>
+                <Col xs="auto">
+                  <strong>{t('receive')}</strong>
+                </Col>
+                <Col className="text-end">
+                  <strong>
+                    ~{outputLp > 0 ? formatFromWei(outputLp, 6) : '0.00'}{' '}
+                    {getToken(poolAdd1.tokenAddress)?.symbol}p
+                  </strong>
+                </Col>
+              </Row>
+            </>
+          )}
+          {!pool.poolDetails && <HelmetLoading height={150} width={150} />}
+        </Col>
+      </Row>
 
       {poolAdd1.newPool && (
         <Row>

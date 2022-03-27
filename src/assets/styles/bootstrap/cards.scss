@@ -9,14 +9,12 @@
 
 .card-header {
   background-color: $bg-depth-1;
-  // border: none;
   border-bottom: 1px solid #ebedf3;
-  border-radius: 0.475rem 0.475rem 0 0; // MIGHT NEED THE BELOW INSTEAD
 }
 
-// .card-header:first-child {
-//   border-radius: 0.475rem 0.475rem 0 0;
-// } // MIGHT NEED THIS INSTEAD
+.card-header:first-child {
+  border-radius: 0.475rem 0.475rem 0 0;
+}
 
 .card-footer {
   background-color: $bg-depth-1;

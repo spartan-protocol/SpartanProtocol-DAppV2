@@ -225,8 +225,8 @@ const SynthVault = () => {
                     ) : (
                       <>
                         {!showUsd
-                          ? formatFromWei(getOwnWeight())
-                          : formatFromWei(getUSDFromSpartaOwnWeight())}
+                          ? formatFromWei(getOwnWeight(), 0)
+                          : formatFromWei(getUSDFromSpartaOwnWeight(), 0)}
                         <Icon
                           icon={showUsd ? 'usd' : 'spartav2'}
                           size="20"
