@@ -65,7 +65,7 @@ a {
   border-radius: 5px;
 }
 
-.active {
+li > .active {
   border-left: 4px solid #0d6efd;
   background-color: $bg-depth-0;
 }

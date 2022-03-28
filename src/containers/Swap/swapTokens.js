@@ -420,11 +420,11 @@ const SwapTokens = () => {
       {/* Top 'Input' Row */}
       <Row>
         {/* 'From' input box */}
-        <Col xs="12" className="">
+        <Col xs="12">
           <Card className="assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col xs="auto">
                   <strong>{t('sell')}</strong>
                 </Col>
                 <Col
