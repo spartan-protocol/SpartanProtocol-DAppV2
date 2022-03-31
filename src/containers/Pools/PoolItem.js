@@ -516,9 +516,9 @@ const PoolItem = ({ asset, daoApy }) => {
               >
                 {showDetails ? t('lessDetails') : t('moreDetails')}
                 <Icon
-                  className="ms-1"
+                  className="ms-2 mb-1"
                   icon={showDetails ? 'arrowUp' : 'arrowDown'}
-                  size="18"
+                  size="13"
                 />
               </div>
             </Row>

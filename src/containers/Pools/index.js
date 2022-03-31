@@ -291,17 +291,22 @@ const Overview = () => {
                     onClick={() => setTableView(!tableView)}
                     className="me-1"
                     disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
-                    size="sm"
                   >
                     <Icon
                       icon={tableView ? 'grid' : 'table'}
-                      size="17"
+                      size="13"
+                      fill="white"
                       className="me-1 mb-1"
                     />
                     {t('view')}
                   </Button>
-                  <Button onClick={() => setShowModal(!showModal)} size="sm">
-                    <Icon icon="plus" size="17" className="me-1 mb-1" />
+                  <Button onClick={() => setShowModal(!showModal)}>
+                    <Icon
+                      icon="plus"
+                      size="12"
+                      fill="white"
+                      className="me-1 mb-1"
+                    />
                     {t('createPool')}
                   </Button>
                 </Col>

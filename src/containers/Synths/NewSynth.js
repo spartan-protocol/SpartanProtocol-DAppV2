@@ -18,7 +18,7 @@ import { usePool } from '../../store/pool'
 import { BN } from '../../utils/bigNumber'
 import { useWeb3 } from '../../store/web3'
 
-const NewSynth = () => {
+const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const pool = usePool()
@@ -44,7 +44,6 @@ const NewSynth = () => {
   }, [trigger0])
 
   const [txnLoading, setTxnLoading] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
 
   const [inputAddress, setinputAddress] = useState('')

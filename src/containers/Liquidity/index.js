@@ -9,7 +9,7 @@ import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import { usePool } from '../../store/pool'
 import HelmetLoading from '../../components/Spinner/index'
-import { addressesMN, getNetwork, tempChains } from '../../utils/web3'
+import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { balanceWidths } from './Components/Utils'
 import NewPool from '../Pools/NewPool'
@@ -23,6 +23,7 @@ const Overview = () => {
   const pool = usePool()
   const location = useLocation()
   const history = useHistory()
+  const addr = getAddresses()
 
   const [activeTab, setActiveTab] = useState('add')
   const [network, setnetwork] = useState(getNetwork())
@@ -42,7 +43,7 @@ const Overview = () => {
   useEffect(() => {
     if (pool.poolDetails) {
       let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-      if (asset1.tokenAddress === addressesMN.spartav2) {
+      if (asset1.tokenAddress === addr.spartav2) {
         asset1 = tryParse(window.localStorage.getItem('assetSelected3'))
       }
       asset1 = getPool(asset1.tokenAddress, pool.poolDetails)

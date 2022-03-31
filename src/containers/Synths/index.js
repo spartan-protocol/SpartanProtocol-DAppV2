@@ -75,6 +75,8 @@ const Swap = () => {
   const sparta = useSparta()
   const location = useLocation()
 
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showShareModal, setShowShareModal] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
   const [harvestConfirm, setHarvestConfirm] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -642,41 +644,68 @@ const Swap = () => {
       <div className="content">
         {tempChains.includes(network.chainId) && (
           <>
+            {/* MODALS */}
+            {showCreateModal && (
+              <NewSynth
+                setShowModal={setShowCreateModal}
+                showModal={showCreateModal}
+              />
+            )}
+
+            {showShareModal && (
+              <Share
+                setShowShare={setShowShareModal}
+                showShare={showShareModal}
+              />
+            )}
             {!isLoading() ? (
               <>
-                <Row className="row-480">
-                  <Col xs="auto">
+                <Row>
+                  <Col>
                     {synthCount() > 0 ? (
-                      <Card xs="auto" className="card-480">
-                        <Card.Header className="p-0 border-0 mb-3">
-                          <Row className="px-4 pt-3 pb-1">
-                            <Col xs="auto">
-                              {t('synths')}
-                              {pool.poolDetails.length > 0 && <Share />}
-                            </Col>
-                            <Col className="text-end">
-                              <NewSynth />
-                            </Col>
-                          </Row>
-                          <Nav activeKey={activeTab} fill>
-                            <Nav.Item key="mint">
+                      <Card>
+                        <Card.Header>
+                          <Nav variant="pills" activeKey={activeTab} fill>
+                            <Nav.Item className="me-1">
                               <Nav.Link
                                 eventKey="mint"
+                                className="btn-sm btn-outline-primary"
                                 onClick={() => {
                                   toggle('mint')
                                 }}
                               >
-                                {t('forgeSynths')}
+                                {t('mint')}
                               </Nav.Link>
                             </Nav.Item>
-                            <Nav.Item key="burn">
+                            <Nav.Item className="me-1">
                               <Nav.Link
                                 eventKey="burn"
+                                className="btn-sm btn-outline-primary"
                                 onClick={() => {
                                   toggle('burn')
                                 }}
                               >
-                                {t('meltSynths')}
+                                {t('burn')}
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item className="me-1">
+                              <Nav.Link
+                                className="btn-sm btn-outline-primary"
+                                onClick={() =>
+                                  setShowCreateModal(!showCreateModal)
+                                }
+                              >
+                                {t('create')}
+                              </Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                              <Nav.Link
+                                className="btn-sm btn-outline-primary"
+                                onClick={() =>
+                                  setShowShareModal(!showShareModal)
+                                }
+                              >
+                                <Icon icon="connect" size="15" />
                               </Nav.Link>
                             </Nav.Item>
                           </Nav>
@@ -684,20 +713,22 @@ const Swap = () => {
 
                         <Card.Body>
                           <Row>
-                            <Col xs="12" className="px-1 px-sm-3">
-                              <Card className="card-alt">
+                            <Col xs="12">
+                              <Card className="assetSection">
                                 <Card.Body>
                                   <Row>
                                     {/* 'From' input box */}
-                                    <Col xs="auto" className="text-sm-label">
-                                      {' '}
-                                      {activeTab === 'mint'
-                                        ? t('add')
-                                        : t('melt')}
+                                    <Col xs="auto">
+                                      <strong>
+                                        {' '}
+                                        {activeTab === 'mint'
+                                          ? t('add')
+                                          : t('melt')}
+                                      </strong>
                                     </Col>
 
                                     <Col
-                                      className="text-sm-label float-end text-end"
+                                      className="float-end text-end"
                                       role="button"
                                       aria-hidden="true"
                                       onClick={() => {
@@ -710,9 +741,6 @@ const Swap = () => {
                                         )
                                       }}
                                     >
-                                      <Badge bg="primary" className="me-1">
-                                        MAX
-                                      </Badge>
                                       {t('balance')}
                                       {': '}
                                       <OverlayTrigger
@@ -726,12 +754,15 @@ const Swap = () => {
                                           {formatFromWei(getBalance(1))}
                                         </span>
                                       </OverlayTrigger>
+                                      <Badge bg="primary" className="ms-1 mb-1">
+                                        MAX
+                                      </Badge>
                                     </Col>
                                   </Row>
 
                                   <Row className="my-1">
                                     <Col>
-                                      <InputGroup className="">
+                                      <InputGroup>
                                         <InputGroup.Text id="assetSelect1">
                                           <AssetSelect
                                             priority="1"
@@ -782,7 +813,7 @@ const Swap = () => {
                                         </InputGroup.Text>
                                       </InputGroup>
 
-                                      <Row className="text-sm-label pt-1">
+                                      <Row className="pt-1">
                                         <Col>
                                           {formatShortString(
                                             activeTab === 'mint'
@@ -837,43 +868,32 @@ const Swap = () => {
                                 </Card.Body>
                               </Card>
 
-                              <Row style={{ height: '2px' }}>
+                              <Row className="iconSeparator">
                                 <Col xs="auto" className="mx-auto">
-                                  {activeTab === 'mint' && (
-                                    <Icon
-                                      icon="mint"
-                                      size="35"
-                                      className="position-relative bg-primary rounded-circle px-2"
-                                      style={{
-                                        top: '-20px',
-                                        zIndex: '1000',
-                                      }}
-                                    />
-                                  )}
-                                  {activeTab === 'burn' && (
-                                    <Icon
-                                      icon="fire"
-                                      size="35"
-                                      className="position-relative bg-primary rounded-circle px-2"
-                                      style={{
-                                        top: '-20px',
-                                        zIndex: '1000',
-                                      }}
-                                    />
-                                  )}
+                                  <Icon
+                                    icon={
+                                      activeTab === 'mint' ? 'mint' : 'fire'
+                                    }
+                                    size="30"
+                                    stroke="white"
+                                    fill="white"
+                                    className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                                  />
                                 </Col>
                               </Row>
 
                               {activeTab === 'mint' && (
-                                <Card className="card-alt">
+                                <Card className="assetSection">
                                   <Card.Body>
                                     <Row>
-                                      <Col xs="auto" className="text-sm-label">
-                                        {activeTab === 'mint'
-                                          ? t('forge')
-                                          : t('receive')}
+                                      <Col xs="auto">
+                                        <strong>
+                                          {activeTab === 'mint'
+                                            ? t('forge')
+                                            : t('receive')}
+                                        </strong>
                                       </Col>
-                                      <Col className="text-sm-label float-end text-end">
+                                      <Col className="float-end text-end">
                                         {t('balance')}
                                         {': '}
                                         {pool.poolDetails &&
@@ -903,7 +923,7 @@ const Swap = () => {
                                           />
                                         </InputGroup>
 
-                                        <Row className="text-sm-label pt-1">
+                                        <Row className="pt-1">
                                           <Col>
                                             {formatShortString(
                                               getSynth(assetSwap2?.tokenAddress)
@@ -961,15 +981,17 @@ const Swap = () => {
                               )}
 
                               {activeTab === 'burn' && (
-                                <Card className="card-alt">
+                                <Card className="assetSection mb-3">
                                   <Card.Body>
                                     <Row>
-                                      <Col xs="auto" className="text-sm-label">
-                                        {activeTab === 'burn'
-                                          ? t('receive')
-                                          : t('melt')}
+                                      <Col xs="auto">
+                                        <strong>
+                                          {activeTab === 'burn'
+                                            ? t('receive')
+                                            : t('melt')}
+                                        </strong>
                                       </Col>
-                                      <Col className="text-sm-label float-end text-end">
+                                      <Col className="float-end text-end">
                                         {t('balance')}
                                         {': '}
                                         {pool.poolDetails &&
@@ -997,7 +1019,7 @@ const Swap = () => {
                                           />
                                         </InputGroup>
 
-                                        <Row className="text-sm-label pt-1">
+                                        <Row className="pt-1">
                                           <Col>
                                             {formatShortString(
                                               assetSwap2?.tokenAddress,
@@ -1050,7 +1072,7 @@ const Swap = () => {
                               {/* Bottom 'synth' txnDetails row */}
                               {activeTab === 'mint' && (
                                 <Row className="mb-2 mt-3">
-                                  <Col xs="auto" className="text-card">
+                                  <Col xs="auto">
                                     {t('synthCap')}
                                     <OverlayTrigger
                                       placement="auto"
@@ -1074,7 +1096,7 @@ const Swap = () => {
                                         <ProgressBar
                                           variant={
                                             getMintedSynthCapPC() > 100
-                                              ? 'primary'
+                                              ? 'danger'
                                               : 'success'
                                           }
                                           key={1}
@@ -1117,63 +1139,53 @@ const Swap = () => {
                               )}
 
                               <Row className="mb-2">
-                                <Col xs="auto">
-                                  <div className="text-card">{t('fee')} </div>
-                                </Col>
+                                <Col xs="auto">{t('fee')}</Col>
                                 <Col className="text-end">
                                   {activeTab === 'mint' && (
-                                    <div className="text-card">
+                                    <>
                                       {swapInput1?.value
                                         ? formatFromWei(getMint()[1], 6)
                                         : '0.00'}{' '}
                                       SPARTA
-                                    </div>
+                                    </>
                                   )}
                                   {activeTab === 'burn' && (
-                                    <div className="text-card">
+                                    <>
                                       {swapInput1?.value
                                         ? formatFromWei(getBurn()[1], 6)
                                         : '0.00'}{' '}
                                       SPARTA
-                                    </div>
+                                    </>
                                   )}
                                 </Col>
                               </Row>
 
                               <Row className="mb-2">
-                                <Col xs="auto">
-                                  <div className="text-card">
-                                    {t('revenue')}
-                                  </div>
-                                </Col>
+                                <Col xs="auto">{t('revenue')}</Col>
                                 <Col className="text-end">
-                                  <div className="text-card">
-                                    {formatFromWei(getRevenue(), 6)} SPARTA
-                                    <OverlayTrigger
-                                      placement="auto"
-                                      overlay={Tooltip(t, 'swapRevInfo')}
-                                    >
-                                      <span role="button">
-                                        <Icon
-                                          icon="info"
-                                          className="ms-1 mb-1"
-                                          size="17"
-                                        />
-                                      </span>
-                                    </OverlayTrigger>
-                                  </div>
+                                  {formatFromWei(getRevenue(), 6)} SPARTA
+                                  <OverlayTrigger
+                                    placement="auto"
+                                    overlay={Tooltip(t, 'swapRevInfo')}
+                                  >
+                                    <span role="button">
+                                      <Icon
+                                        icon="info"
+                                        className="ms-1 mb-1"
+                                        size="17"
+                                      />
+                                    </span>
+                                  </OverlayTrigger>
                                 </Col>
                               </Row>
 
-                              <Row className="">
-                                <Col xs="auto" className="title-card">
-                                  <span className="subtitle-card">
-                                    {t('output')}
-                                  </span>
+                              <Row>
+                                <Col xs="auto">
+                                  <strong>{t('output')}</strong>
                                 </Col>
                                 <Col className="text-end">
                                   {activeTab === 'mint' && (
-                                    <span className="subtitle-card">
+                                    <strong>
                                       {swapInput1?.value
                                         ? formatFromWei(getMint()[0], 6)
                                         : '0.00'}{' '}
@@ -1182,11 +1194,11 @@ const Swap = () => {
                                           ?.symbol
                                       }
                                       s
-                                    </span>
+                                    </strong>
                                   )}
 
                                   {activeTab === 'burn' && (
-                                    <span className="subtitle-card">
+                                    <strong>
                                       {swapInput1?.value
                                         ? formatFromWei(getBurn()[0], 6)
                                         : '0.00'}{' '}
@@ -1194,7 +1206,7 @@ const Swap = () => {
                                         getToken(assetSwap2.tokenAddress)
                                           ?.symbol
                                       }
-                                    </span>
+                                    </strong>
                                   )}
                                 </Col>
                               </Row>
@@ -1206,59 +1218,22 @@ const Swap = () => {
                                       <>
                                         <br />
                                         <Row xs="12" className="my-2">
-                                          <Col xs="auto" className="text-card">
+                                          <Col xs="auto">
                                             Harvest Available:
                                           </Col>
-                                          <Col className="text-end output-card">
+                                          <Col className="text-end">
                                             {checkValidHarvest()[1]}{' '}
                                             {checkValidHarvest()[2]}
                                           </Col>
                                         </Row>
                                         <Form className="my-2 text-center">
-                                          <span className="output-card">
-                                            <OverlayTrigger
-                                              placement="auto"
-                                              overlay={Tooltip(
-                                                t,
-                                                'mintHarvestConfirm',
-                                                getToken(
-                                                  assetSwap2.tokenAddress,
-                                                )?.symbol,
-                                              )}
-                                            >
-                                              <span role="button">
-                                                <Icon
-                                                  icon="info"
-                                                  className="me-1 mb-1"
-                                                  size="17"
-                                                />
-                                              </span>
-                                            </OverlayTrigger>
-                                            {t('mintHarvestConfirmShort')}
-                                            <Form.Check
-                                              type="switch"
-                                              id="confirmHarvest"
-                                              className="ms-2 d-inline-flex"
-                                              checked={harvestConfirm}
-                                              onChange={() =>
-                                                setHarvestConfirm(
-                                                  !harvestConfirm,
-                                                )
-                                              }
-                                            />
-                                          </span>
-                                        </Form>
-                                      </>
-                                    )}
-                                  <Row>
-                                    <Col>
-                                      <Form className="my-1 text-center">
-                                        <span className="output-card">
                                           <OverlayTrigger
                                             placement="auto"
                                             overlay={Tooltip(
                                               t,
-                                              'mintSynthConfirm',
+                                              'mintHarvestConfirm',
+                                              getToken(assetSwap2.tokenAddress)
+                                                ?.symbol,
                                             )}
                                           >
                                             <span role="button">
@@ -1269,19 +1244,49 @@ const Swap = () => {
                                               />
                                             </span>
                                           </OverlayTrigger>
-                                          {t('mintSynthConfirmShort')} (
-                                          {_convertTimeUnits()[0]}{' '}
-                                          {_convertTimeUnits()[1]})
+                                          {t('mintHarvestConfirmShort')}
                                           <Form.Check
                                             type="switch"
-                                            id="confirmLockout"
+                                            id="confirmHarvest"
                                             className="ms-2 d-inline-flex"
-                                            checked={confirmSynth}
+                                            checked={harvestConfirm}
                                             onChange={() =>
-                                              setConfirmSynth(!confirmSynth)
+                                              setHarvestConfirm(!harvestConfirm)
                                             }
                                           />
-                                        </span>
+                                        </Form>
+                                      </>
+                                    )}
+                                  <Row>
+                                    <Col>
+                                      <Form className="my-1 text-center">
+                                        <OverlayTrigger
+                                          placement="auto"
+                                          overlay={Tooltip(
+                                            t,
+                                            'mintSynthConfirm',
+                                          )}
+                                        >
+                                          <span role="button">
+                                            <Icon
+                                              icon="info"
+                                              className="me-1 mb-1"
+                                              size="17"
+                                            />
+                                          </span>
+                                        </OverlayTrigger>
+                                        {t('mintSynthConfirmShort')} (
+                                        {_convertTimeUnits()[0]}{' '}
+                                        {_convertTimeUnits()[1]})
+                                        <Form.Check
+                                          type="switch"
+                                          id="confirmLockout"
+                                          className="ms-2 d-inline-flex"
+                                          checked={confirmSynth}
+                                          onChange={() =>
+                                            setConfirmSynth(!confirmSynth)
+                                          }
+                                        />
                                       </Form>
                                     </Col>
                                   </Row>
@@ -1407,22 +1412,14 @@ const Swap = () => {
                         </Card.Footer>
                       </Card>
                     ) : (
-                      <Card xs="auto" className="card-480">
-                        <Card.Header className="p-0 border-0 mb-3">
-                          <Row className="px-4 pt-3 pb-1">
-                            <Col xs="auto">{t('synths')}</Col>
-                            <Col className="text-end">
-                              <NewSynth />
-                            </Col>
-                          </Row>
-                        </Card.Header>
-                        <Card.Body className="output-card">
+                      <Card xs="auto">
+                        <Card.Body>
                           No synth assets have been deployed yet
                         </Card.Body>
                       </Card>
                     )}
                   </Col>
-                  <Col xs="auto">
+                  <Col>
                     {!isLoading() &&
                       synthCount() > 0 &&
                       assetSwap1.tokenAddress !== addr.spartav2 &&

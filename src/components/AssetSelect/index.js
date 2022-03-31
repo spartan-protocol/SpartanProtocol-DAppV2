@@ -354,7 +354,7 @@ const AssetSelect = (props) => {
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
           {!props.disabled && (
-            <Icon icon="arrowDown" size="20" fill="grey" className="ps-1" />
+            <Icon icon="arrowDown" size="12" fill="grey" className="ps-1" />
           )}
         </Col>
       </Row>
@@ -459,7 +459,7 @@ const AssetSelect = (props) => {
                 <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
                   <Row>
                     <Col xs="12" className="float-left">
-                      <div
+                      <strong
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
@@ -468,7 +468,7 @@ const AssetSelect = (props) => {
                         }}
                       >
                         {asset.symbol}
-                      </div>
+                      </strong>
                       <div className="">{formatFromWei(asset.balance)}</div>
                     </Col>
                   </Row>
@@ -549,7 +549,7 @@ const AssetSelect = (props) => {
                   <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
                     <Row>
                       <Col xs="12" className="float-left">
-                        <div
+                        <strong
                           role="button"
                           aria-hidden="true"
                           onClick={() => {
@@ -558,7 +558,7 @@ const AssetSelect = (props) => {
                           }}
                         >
                           {asset.symbol}
-                        </div>
+                        </strong>
                         <div className="">{formatFromWei(asset.balance)}</div>
                       </Col>
                     </Row>
