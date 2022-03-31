@@ -384,10 +384,14 @@ const LiqRemove = () => {
             fill
           >
             <Nav.Item>
-              <Nav.Link eventKey="removeTab1">{t('removeBoth')}</Nav.Link>
+              <Nav.Link className="btn-sm" eventKey="removeTab1">
+                {t('removeBoth')}
+              </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="removeTab2">{t('removeSingle')}</Nav.Link>
+              <Nav.Link className="btn-sm" eventKey="removeTab2">
+                {t('removeSingle')}
+              </Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>

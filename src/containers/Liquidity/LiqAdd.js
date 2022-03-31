@@ -466,10 +466,14 @@ const LiqAdd = () => {
             fill
           >
             <Nav.Item>
-              <Nav.Link eventKey="addTab1">{t('addBoth')}</Nav.Link>
+              <Nav.Link className="btn-sm" eventKey="addTab1">
+                {t('addBoth')}
+              </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link eventKey="addTab2">{t('addSingle')}</Nav.Link>
+              <Nav.Link className="btn-sm" eventKey="addTab2">
+                {t('addSingle')}
+              </Nav.Link>
             </Nav.Item>
           </Nav>
         </Col>

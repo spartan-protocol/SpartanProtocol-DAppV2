@@ -99,21 +99,18 @@ const Swap = () => {
             {!isLoading() ? (
               <>
                 <Col>
-                  <Card>
+                  <Card className="mb-2" style={{ minWidth: '300px' }}>
                     <Card.Header>
                       <Nav variant="pills" activeKey="swap" fill>
                         <Nav.Item className="me-1">
-                          <Nav.Link
-                            className="btn-sm btn-outline-primary"
-                            eventKey="swap"
-                          >
+                          <Nav.Link className="btn-sm" eventKey="swap">
                             {t('swap')}
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item className="me-1">
                           <Nav.Link
                             eventKey="add"
-                            className="btn-sm btn-outline-primary"
+                            className="btn-sm"
                             onClick={() => history.push(`/liquidity`)}
                           >
                             {t('add')}
@@ -122,7 +119,7 @@ const Swap = () => {
                         <Nav.Item className="me-1">
                           <Nav.Link
                             eventKey="remove"
-                            className="btn-sm btn-outline-primary"
+                            className="btn-sm"
                             onClick={() =>
                               history.push(`/liquidity?tab=remove`)
                             }
@@ -132,7 +129,7 @@ const Swap = () => {
                         </Nav.Item>
                         <Nav.Item className="me-1 hide-i5">
                           <Nav.Link
-                            className="btn-sm btn-outline-primary"
+                            className="btn-sm"
                             onClick={() => setShowCreateModal(!showCreateModal)}
                           >
                             {t('create')}
@@ -140,17 +137,14 @@ const Swap = () => {
                         </Nav.Item>
                         <Nav.Item>
                           <Nav.Link
-                            className="btn-sm btn-outline-primary"
+                            className="btn-sm"
                             onClick={() => setShowShareModal(!showShareModal)}
                           >
                             <Icon icon="connect" size="15" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item disabled>
-                          <Nav.Link
-                            className="btn-sm btn-outline-primary"
-                            disabled
-                          >
+                          <Nav.Link className="btn-sm" disabled>
                             {/* ADD SLIP TOLERANCE LOGIC */}
                             {/* ADD GAS PRICE LOGIC */}
                             <Icon icon="settings" size="15" />
@@ -168,12 +162,12 @@ const Swap = () => {
                             fill
                           >
                             <Nav.Item>
-                              <Nav.Link eventKey="token">
+                              <Nav.Link className="btn-sm" eventKey="token">
                                 {t('tokens')}
                               </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                              <Nav.Link eventKey="pool">
+                              <Nav.Link className="btn-sm" eventKey="pool">
                                 {t('lpTokens')}
                               </Nav.Link>
                             </Nav.Item>

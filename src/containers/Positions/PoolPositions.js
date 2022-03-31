@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import Col from 'react-bootstrap/Col'
-import Card from 'react-bootstrap/Card'
-import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
-import Popover from 'react-bootstrap/Popover'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
+import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
@@ -40,8 +41,8 @@ const PoolPositions = () => {
   const wallet = useWeb3React()
   const addr = getAddresses()
 
-  const [showUsd, setShowUsd] = useState(true)
-  const [showUsdPool, setShowUsdPool] = useState(true)
+  const [viewOverall, setViewOverall] = useState('units')
+  const [viewPool, setViewPool] = useState('units')
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
   const [trigger0, settrigger0] = useState(0)
@@ -334,33 +335,41 @@ const PoolPositions = () => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '445px' }}>
-          <Card.Header className="">
-            {t('overallPosition')}
-            <Card.Subtitle className="">
-              <div className="mt-2 d-inline-block me-2">
-                vs Hodl {showUsd ? 'USD' : 'SPARTA'}
-              </div>
-              <Button
-                variant="info"
-                className="p-1 text-sm-label"
-                onClick={() => setShowUsd(!showUsd)}
-              >
-                {t('changeTo')}:
-                <Icon
-                  icon={!showUsd ? 'usd' : 'spartav2'}
-                  size="17"
-                  className="ms-1"
-                />
-              </Button>
-            </Card.Subtitle>
+      <Col>
+        <Card
+          className="mb-2"
+          style={{ minHeight: '445px', minWidth: '300px' }}
+        >
+          <Card.Header>
+            <Card.Title className="pt-1">{t('overallPosition')}</Card.Title>
           </Card.Header>
           {!isLoading() ? (
             <>
-              <Card.Body className="pb-1">
+              <Card.Body>
+                <Row className="mb-3">
+                  <Col>
+                    <Nav
+                      variant="pills"
+                      activeKey={viewOverall}
+                      onSelect={(e) => setViewOverall(e)}
+                      fill
+                    >
+                      <Nav.Item>
+                        <Nav.Link className="btn-sm" eventKey="usd">
+                          Vs Hodl {t('USD')}
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link className="btn-sm" eventKey="units">
+                          Vs Hodl {t('SPARTA')}
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Col>
+                </Row>
+                <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('liquidityAdded')}
                     <OverlayTrigger
                       placement="auto"
@@ -380,15 +389,17 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd ? getNetAdd()[1] : getNetAdd()[0],
+                          viewOverall === 'usd'
+                            ? getNetAdd()[1]
+                            : getNetAdd()[0],
                           2,
                         )
                       : t('generateFirst')}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -396,7 +407,7 @@ const PoolPositions = () => {
                 </Row>
                 <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('liquidityRemoved')}
                     <OverlayTrigger
                       placement="auto"
@@ -416,22 +427,24 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd ? getNetRemove()[1] : getNetRemove()[0],
+                          viewOverall === 'usd'
+                            ? getNetRemove()[1]
+                            : getNetRemove()[0],
                           2,
                         )
                       : t('generateFirst')}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('totalHarvested')}
                     <OverlayTrigger
                       placement="auto"
@@ -451,22 +464,24 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd ? getNetHarvest()[1] : getNetHarvest()[0],
+                          viewOverall === 'usd'
+                            ? getNetHarvest()[1]
+                            : getNetHarvest()[0],
                           2,
                         )
                       : t('generateFirst')}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('redemptionValue')}
                     <OverlayTrigger
                       placement="auto"
@@ -486,15 +501,15 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {formatFromWei(
-                      showUsd
+                      viewOverall === 'usd'
                         ? getRedemptionValue()[1]
                         : getRedemptionValue()[0],
                       2,
                     )}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -502,18 +517,21 @@ const PoolPositions = () => {
                 </Row>
                 <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="output-card">
-                    {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
+                  <Col xs="auto">
+                    <strong>
+                      {t('gainVs')} {viewOverall === 'usd' ? 'USD' : 'SPARTA'}
+                    </strong>
                     <OverlayTrigger
                       placement="auto"
                       overlay={
                         <Popover>
                           <Popover.Header as="h3">
-                            {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
+                            {t('gainVs')}{' '}
+                            {viewOverall === 'usd' ? 'USD' : 'SPARTA'}
                           </Popover.Header>
                           <Popover.Body className="text-center">
                             {t('gainVsInfo', {
-                              coin: showUsd ? 'USD' : 'SPARTA',
+                              coin: viewOverall === 'usd' ? 'USD' : 'SPARTA',
                             })}
                           </Popover.Body>
                         </Popover>
@@ -524,22 +542,26 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
-                    {isOverall()
-                      ? formatFromWei(
-                          showUsd ? getNetGain(true) : getNetGain(false),
-                          2,
-                        )
-                      : t('generateFirst')}
+                  <Col className="text-end">
+                    <strong>
+                      {isOverall()
+                        ? formatFromWei(
+                            viewOverall === 'usd'
+                              ? getNetGain(true)
+                              : getNetGain(false),
+                            2,
+                          )
+                        : t('generateFirst')}
+                    </strong>
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('currentlyWorth')}
                     <OverlayTrigger
                       placement="auto"
@@ -559,17 +581,17 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          !showUsd
+                          viewOverall === 'sparta'
                             ? getNetGainSpartaToUsd()
                             : getNetGainUsdToSparta(),
                           2,
                         )
                       : t('generateFirst')}
                     <Icon
-                      icon={!showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'sparta' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -577,7 +599,7 @@ const PoolPositions = () => {
                 </Row>
                 <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('currentBlock')}
                     <OverlayTrigger
                       placement="auto"
@@ -597,10 +619,10 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">{getBlockRPC()}</Col>
+                  <Col className="text-end ">{getBlockRPC()}</Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('lastUpdated')}
                     <OverlayTrigger
                       placement="auto"
@@ -620,7 +642,7 @@ const PoolPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">{getBlock()}</Col>
+                  <Col className="text-end ">{getBlock()}</Col>
                 </Row>
               </Card.Body>
               <Card.Footer>
@@ -638,52 +660,60 @@ const PoolPositions = () => {
               </Card.Footer>
             </>
           ) : (
-            <Col className="">
+            <Col>
               <HelmetLoading height={150} width={150} />
             </Col>
           )}
         </Card>
       </Col>
 
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '445px' }}>
-          <Card.Header className="">
-            {t('assetPosition', {
-              asset: !isLoading() ? `${_getToken().symbol}p` : 'Pool',
-            })}
-            <Card.Subtitle className="">
-              <div className="mt-2 d-inline-block me-2">
-                vs Hodl {showUsdPool ? 'USD' : 'Units'}
-              </div>
-              <Button
-                variant="info"
-                className="p-1 text-sm-label"
-                onClick={() => setShowUsdPool(!showUsdPool)}
-              >
-                {t('changeTo')}:
-                <Icon
-                  icon={!showUsdPool ? 'usd' : 'spartav2'}
-                  size="17"
-                  className="ms-1"
-                />
-                {!isLoading() && showUsdPool && (
-                  <img src={_getToken().symbolUrl} height="17" alt="token" />
-                )}
-              </Button>
-            </Card.Subtitle>
+      <Col>
+        <Card
+          className="mb-2"
+          style={{ minHeight: '445px', minWidth: '300px' }}
+        >
+          <Card.Header>
+            <Row>
+              <Col>
+                <Card.Title className="pt-1">
+                  {t('assetPosition', {
+                    asset: !isLoading() ? `${_getToken().symbol}p` : 'Pool',
+                  })}
+                </Card.Title>
+              </Col>
+              <Col xs="auto">
+                <AssetSelect priority="1" filter={['pool']} />
+              </Col>
+            </Row>
           </Card.Header>
           {!isLoading() ? (
             <Card.Body>
-              <Row className="mb-2">
-                <div className="ms-1">
-                  <AssetSelect priority="1" filter={['pool']} />
-                </div>
+              <Row className="mb-3">
+                <Col>
+                  <Nav
+                    variant="pills"
+                    activeKey={viewPool}
+                    onSelect={(e) => setViewPool(e)}
+                    fill
+                  >
+                    <Nav.Item>
+                      <Nav.Link className="btn-sm" eventKey="usd">
+                        Vs Hodl {t('USD')}
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link className="btn-sm" eventKey="units">
+                        Vs Hodl {t('Units')}
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Col>
               </Row>
               <hr />
-              {showUsdPool ? (
+              {viewPool === 'usd' ? (
                 <>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('liquidityAdded')}
                       <OverlayTrigger
                         placement="auto"
@@ -703,7 +733,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {isOverall()
                         ? formatFromWei(getPoolNetAdd()[2], 2)
                         : t('generateFirst')}
@@ -712,7 +742,7 @@ const PoolPositions = () => {
                   </Row>
                   <hr />
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('liquidityRemoved')}
                       <OverlayTrigger
                         placement="auto"
@@ -732,7 +762,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {isOverall()
                         ? formatFromWei(getPoolNetRem()[2], 2)
                         : t('generateFirst')}
@@ -740,7 +770,7 @@ const PoolPositions = () => {
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('redemptionValue')}
                       <OverlayTrigger
                         placement="auto"
@@ -760,15 +790,17 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>{' '}
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {formatFromWei(getPoolRedValue()[2], 2)}
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>
                   <hr />
                   <Row className="my-1">
-                    <Col xs="auto" className="output-card">
-                      {t('gainVs')} {showUsdPool ? 'USD' : 'SPARTA'}
+                    <Col xs="auto">
+                      <strong>
+                        {t('gainVs')} {viewPool === 'usd' ? 'USD' : 'SPARTA'}
+                      </strong>
                       <OverlayTrigger
                         placement="auto"
                         overlay={
@@ -787,10 +819,12 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
-                      {isOverall()
-                        ? formatFromWei(getPoolNetGain('usd'), 2)
-                        : t('generateFirst')}
+                    <Col className="text-end">
+                      <strong>
+                        {isOverall()
+                          ? formatFromWei(getPoolNetGain('usd'), 2)
+                          : t('generateFirst')}
+                      </strong>
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -798,7 +832,7 @@ const PoolPositions = () => {
               ) : (
                 <>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('liquidityAdded')}
                       <OverlayTrigger
                         placement="auto"
@@ -820,7 +854,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {isOverall()
                         ? formatFromWei(getPoolNetAdd()[0], 2)
                         : t('generateFirst')}
@@ -828,7 +862,7 @@ const PoolPositions = () => {
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('liquidityRemoved')}
                       <OverlayTrigger
                         placement="auto"
@@ -850,7 +884,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {isOverall()
                         ? formatFromWei(getPoolNetRem()[0], 2)
                         : t('generateFirst')}
@@ -858,7 +892,7 @@ const PoolPositions = () => {
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('redemptionValue')}
                       <OverlayTrigger
                         placement="auto"
@@ -880,14 +914,14 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {formatFromWei(getPoolRedValue()[0], 2)}
                       <Icon icon="spartav2" className="ms-1" size="15" />
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="output-card">
-                      {t('gain')} (SPARTA)
+                    <Col xs="auto">
+                      <strong>{t('gain')} (SPARTA)</strong>
                       <OverlayTrigger
                         placement="auto"
                         overlay={
@@ -906,16 +940,18 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
-                      {isOverall()
-                        ? formatFromWei(getPoolNetGain('sparta'), 2)
-                        : t('generateFirst')}
+                    <Col className="text-end">
+                      <strong>
+                        {isOverall()
+                          ? formatFromWei(getPoolNetGain('sparta'), 2)
+                          : t('generateFirst')}
+                      </strong>
                       <Icon icon="spartav2" className="ms-1" size="15" />
                     </Col>
                   </Row>
                   <hr />
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('liquidityAdded')}
                       <OverlayTrigger
                         placement="auto"
@@ -937,7 +973,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {isOverall()
                         ? formatFromWei(getPoolNetAdd()[1], 2)
                         : t('generateFirst')}
@@ -950,7 +986,7 @@ const PoolPositions = () => {
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('liquidityRemoved')}
                       <OverlayTrigger
                         placement="auto"
@@ -972,7 +1008,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {isOverall()
                         ? formatFromWei(getPoolNetRem()[1], 2)
                         : t('generateFirst')}
@@ -985,7 +1021,7 @@ const PoolPositions = () => {
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="text-card">
+                    <Col xs="auto">
                       {t('redemptionValue')}
                       <OverlayTrigger
                         placement="auto"
@@ -1007,7 +1043,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
+                    <Col className="text-end ">
                       {formatFromWei(getPoolRedValue()[1], 2)}
                       <img
                         src={_getToken().symbolUrl}
@@ -1018,8 +1054,10 @@ const PoolPositions = () => {
                     </Col>
                   </Row>
                   <Row className="my-1">
-                    <Col xs="auto" className="output-card">
-                      {t('gain')} ({_getToken().symbol})
+                    <Col xs="auto">
+                      <strong>
+                        {t('gain')} ({_getToken().symbol})
+                      </strong>
                       <OverlayTrigger
                         placement="auto"
                         overlay={
@@ -1038,10 +1076,12 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
-                      {isOverall()
-                        ? formatFromWei(getPoolNetGain('token'), 2)
-                        : t('generateFirst')}
+                    <Col className="text-end ">
+                      <strong>
+                        {isOverall()
+                          ? formatFromWei(getPoolNetGain('token'), 2)
+                          : t('generateFirst')}
+                      </strong>
                       <img
                         src={_getToken().symbolUrl}
                         height="15"
@@ -1052,8 +1092,8 @@ const PoolPositions = () => {
                   </Row>
                   <hr />
                   <Row className="my-1">
-                    <Col xs="auto" className="output-card">
-                      {t('gainVs')} Units
+                    <Col xs="auto">
+                      <strong>{t('gainVs')} Units</strong>
                       <OverlayTrigger
                         placement="auto"
                         overlay={
@@ -1074,10 +1114,12 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end output-card">
-                      {isOverall()
-                        ? formatFromWei(getPoolNetGainWorthUsd(), 2)
-                        : t('generateFirst')}
+                    <Col className="text-end">
+                      <strong>
+                        {isOverall()
+                          ? formatFromWei(getPoolNetGainWorthUsd(), 2)
+                          : t('generateFirst')}
+                      </strong>
                       <Icon icon="usd" className="ms-1" size="15" />
                     </Col>
                   </Row>
@@ -1085,7 +1127,7 @@ const PoolPositions = () => {
               )}
             </Card.Body>
           ) : (
-            <Col className="">
+            <Col>
               <HelmetLoading height={150} width={150} />
             </Col>
           )}

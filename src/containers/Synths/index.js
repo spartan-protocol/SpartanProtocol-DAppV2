@@ -663,7 +663,7 @@ const Swap = () => {
                 <Row>
                   <Col>
                     {synthCount() > 0 ? (
-                      <Card>
+                      <Card className="mb-2" style={{ minWidth: '300px' }}>
                         <Card.Header>
                           <Nav variant="pills" activeKey={activeTab} fill>
                             <Nav.Item className="me-1">

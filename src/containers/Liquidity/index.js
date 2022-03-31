@@ -108,7 +108,7 @@ const Overview = () => {
             {!isLoading() ? (
               <>
                 <Col>
-                  <Card>
+                  <Card className="mb-2" style={{ minWidth: '300px' }}>
                     <Card.Header>
                       <Nav
                         variant="pills"

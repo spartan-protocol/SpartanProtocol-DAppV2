@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
-import Row from 'react-bootstrap/Row'
-import Button from 'react-bootstrap/Button'
-import Popover from 'react-bootstrap/Popover'
+import Nav from 'react-bootstrap/Nav'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
+import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
@@ -37,8 +38,8 @@ const SynthPositions = () => {
   const wallet = useWeb3React()
   const addr = getAddresses()
 
-  const [showUsd, setShowUsd] = useState(true)
-  const [showUsdPool, setShowUsdPool] = useState(true)
+  const [viewOverall, setViewOverall] = useState('usd')
+  const [viewPool, setViewPool] = useState('usd')
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
   const [trigger0, settrigger0] = useState(0)
@@ -345,33 +346,41 @@ const SynthPositions = () => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '445px' }}>
-          <Card.Header className="">
-            Overall Position
-            <Card.Subtitle className="">
-              <div className="mt-2 d-inline-block me-2">
-                vs Hodl {showUsd ? 'USD' : 'SPARTA'}
-              </div>
-              <Button
-                variant="info"
-                className="p-1 text-sm-label"
-                onClick={() => setShowUsd(!showUsd)}
-              >
-                Change to:
-                <Icon
-                  icon={!showUsd ? 'usd' : 'spartav2'}
-                  size="17"
-                  className="ms-1"
-                />
-              </Button>
-            </Card.Subtitle>
+      <Col>
+        <Card
+          className="mb-2"
+          style={{ minHeight: '445px', minWidth: '300px' }}
+        >
+          <Card.Header>
+            <Card.Title className="pt-1">Overall Position</Card.Title>
           </Card.Header>
           {!isLoading() ? (
             <>
               <Card.Body className="pb-1">
+                <Row className="mb-3">
+                  <Col>
+                    <Nav
+                      variant="pills"
+                      activeKey={viewOverall}
+                      onSelect={(e) => setViewOverall(e)}
+                      fill
+                    >
+                      <Nav.Item>
+                        <Nav.Link className="btn-sm" eventKey="usd">
+                          Vs Hodl {t('USD')}
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link className="btn-sm" eventKey="units">
+                          Vs Hodl {t('SPARTA')}
+                        </Nav.Link>
+                      </Nav.Item>
+                    </Nav>
+                  </Col>
+                </Row>
+                <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('assetsForged')}
                     <OverlayTrigger
                       placement="auto"
@@ -391,15 +400,17 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd ? getNetAdd()[1] : getNetAdd()[0],
+                          viewOverall === 'usd'
+                            ? getNetAdd()[1]
+                            : getNetAdd()[0],
                           2,
                         )
                       : 'Generate First'}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -407,7 +418,7 @@ const SynthPositions = () => {
                 </Row>
                 <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('assetsMelted')}
                     <OverlayTrigger
                       placement="auto"
@@ -427,22 +438,24 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd ? getNetRemove()[1] : getNetRemove()[0],
+                          viewOverall === 'usd'
+                            ? getNetRemove()[1]
+                            : getNetRemove()[0],
                           2,
                         )
                       : 'Generate First'}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('totalHarvested')}
                     <OverlayTrigger
                       placement="auto"
@@ -462,22 +475,24 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          showUsd ? getNetHarvest()[1] : getNetHarvest()[0],
+                          viewOverall === 'usd'
+                            ? getNetHarvest()[1]
+                            : getNetHarvest()[0],
                           2,
                         )
                       : 'Generate First'}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('redemptionValue')}
                     <OverlayTrigger
                       placement="auto"
@@ -497,15 +512,15 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {formatFromWei(
-                      showUsd
+                      viewOverall === 'usd'
                         ? getRedemptionValue()[1]
                         : getRedemptionValue()[0],
                       2,
                     )}
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -513,18 +528,21 @@ const SynthPositions = () => {
                 </Row>
                 <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="output-card">
-                    {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
+                  <Col xs="auto">
+                    <strong>
+                      {t('gainVs')} {viewOverall === 'usd' ? 'USD' : 'SPARTA'}
+                    </strong>
                     <OverlayTrigger
                       placement="auto"
                       overlay={
                         <Popover>
                           <Popover.Header as="h3">
-                            {t('gainVs')} {showUsd ? 'USD' : 'SPARTA'}
+                            {t('gainVs')}{' '}
+                            {viewOverall === 'usd' ? 'USD' : 'SPARTA'}
                           </Popover.Header>
                           <Popover.Body className="text-center">
                             {t('gainVsInfo', {
-                              coin: showUsd ? 'USD' : 'SPARTA',
+                              coin: viewOverall === 'usd' ? 'USD' : 'SPARTA',
                             })}
                           </Popover.Body>
                         </Popover>
@@ -535,22 +553,26 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
-                    {isOverall()
-                      ? formatFromWei(
-                          showUsd ? getNetGain(true) : getNetGain(false),
-                          2,
-                        )
-                      : 'Generate First'}
+                  <Col className="text-end">
+                    <strong>
+                      {isOverall()
+                        ? formatFromWei(
+                            viewOverall === 'usd'
+                              ? getNetGain(true)
+                              : getNetGain(false),
+                            2,
+                          )
+                        : 'Generate First'}
+                    </strong>
                     <Icon
-                      icon={showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('currentlyWorth')}
                     <OverlayTrigger
                       placement="auto"
@@ -570,17 +592,17 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          !showUsd
+                          viewOverall === 'sparta'
                             ? getNetGainSpartaToUsd()
                             : getNetGainUsdToSparta(),
                           2,
                         )
                       : 'Generate First'}
                     <Icon
-                      icon={!showUsd ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'sparta' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -588,7 +610,7 @@ const SynthPositions = () => {
                 </Row>
                 <hr />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('currentBlock')}
                     <OverlayTrigger
                       placement="auto"
@@ -608,10 +630,10 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">{getBlockRPC()}</Col>
+                  <Col className="text-end ">{getBlockRPC()}</Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto">
                     {t('lastUpdated')}
                     <OverlayTrigger
                       placement="auto"
@@ -631,7 +653,7 @@ const SynthPositions = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">{getBlock()}</Col>
+                  <Col className="text-end ">{getBlock()}</Col>
                 </Row>
               </Card.Body>
               <Card.Footer>
@@ -649,52 +671,59 @@ const SynthPositions = () => {
               </Card.Footer>
             </>
           ) : (
-            <Col className="">
+            <Col>
               <HelmetLoading height={150} width={150} />
             </Col>
           )}
         </Card>
       </Col>
 
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '445px' }}>
-          <Card.Header className="">
-            {t('assetPosition', {
-              asset: !isLoading() ? `${_getToken().symbol}s` : 'Synth',
-            })}
-            <Card.Subtitle className="">
-              <div className="mt-2 d-inline-block me-2">
-                vs Hodl {showUsdPool ? 'USD' : _getToken().symbol}
-              </div>
-              <Button
-                variant="info"
-                className="p-1 text-sm-label"
-                onClick={() => setShowUsdPool(!showUsdPool)}
-              >
-                Change to:
-                {!showUsdPool && <Icon icon="usd" size="17" className="ms-1" />}
-                {!isLoading() && showUsdPool && (
-                  <img
-                    src={_getToken().symbolUrl}
-                    height="17"
-                    alt="token"
-                    className="ms-1"
-                  />
-                )}
-              </Button>
-            </Card.Subtitle>
+      <Col>
+        <Card
+          className="mb-2"
+          style={{ minHeight: '445px', minWidth: '300px' }}
+        >
+          <Card.Header>
+            <Row>
+              <Col>
+                <Card.Title className="pt-1">
+                  {t('assetPosition', {
+                    asset: !isLoading() ? `${_getToken().symbol}s` : 'Synth',
+                  })}
+                </Card.Title>
+              </Col>
+              <Col xs="auto">
+                <AssetSelect priority="1" filter={['synth']} />
+              </Col>
+            </Row>
           </Card.Header>
           {!isLoading() ? (
             <Card.Body>
-              <Row className="mb-2">
-                <div className="ms-1">
-                  <AssetSelect priority="1" filter={['synth']} />
-                </div>
+              <Row className="mb-3">
+                <Col>
+                  <Nav
+                    variant="pills"
+                    activeKey={viewPool}
+                    onSelect={(e) => setViewPool(e)}
+                    fill
+                  >
+                    <Nav.Item>
+                      <Nav.Link className="btn-sm" eventKey="usd">
+                        Vs Hodl {t('USD')}
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link className="btn-sm" eventKey="units">
+                        Vs Hodl {t('Units')}
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Col>
               </Row>
               <hr />
 
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col xs="auto">
                   {t('assetsForged')}
                   <OverlayTrigger
                     placement="auto"
@@ -716,15 +745,17 @@ const SynthPositions = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col className="text-end output-card">
+                <Col className="text-end ">
                   {isOverall()
                     ? formatFromWei(
-                        showUsdPool ? getPoolNetAdd()[1] : getPoolNetAdd()[0],
+                        viewPool === 'usd'
+                          ? getPoolNetAdd()[1]
+                          : getPoolNetAdd()[0],
                         2,
                       )
                     : 'Generate First'}
                   <Icon
-                    icon={showUsdPool ? 'usd' : 'spartav2'}
+                    icon={viewPool === 'usd' ? 'usd' : 'spartav2'}
                     className="ms-1"
                     size="15"
                   />
@@ -732,7 +763,7 @@ const SynthPositions = () => {
               </Row>
               <hr />
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col xs="auto">
                   {t('assetsMelted')}
                   <OverlayTrigger
                     placement="auto"
@@ -752,22 +783,24 @@ const SynthPositions = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col className="text-end output-card">
+                <Col className="text-end ">
                   {isOverall()
                     ? formatFromWei(
-                        showUsdPool ? getPoolNetRem()[1] : getPoolNetRem()[0],
+                        viewPool === 'usd'
+                          ? getPoolNetRem()[1]
+                          : getPoolNetRem()[0],
                         2,
                       )
                     : 'Generate First'}
                   <Icon
-                    icon={showUsdPool ? 'usd' : 'spartav2'}
+                    icon={viewPool === 'usd' ? 'usd' : 'spartav2'}
                     className="ms-1"
                     size="15"
                   />
                 </Col>
               </Row>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col xs="auto">
                   {t('totalHarvested')}
                   <OverlayTrigger
                     placement="auto"
@@ -787,24 +820,24 @@ const SynthPositions = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col className="text-end output-card">
+                <Col className="text-end ">
                   {isOverall()
                     ? formatFromWei(
-                        showUsdPool
+                        viewPool === 'usd'
                           ? getPoolNetHarvest()[1]
                           : getPoolNetHarvest()[0],
                         2,
                       )
                     : 'Generate First'}
                   <Icon
-                    icon={showUsdPool ? 'usd' : 'spartav2'}
+                    icon={viewPool === 'usd' ? 'usd' : 'spartav2'}
                     className="ms-1"
                     size="15"
                   />
                 </Col>
               </Row>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col xs="auto">
                   {t('redemptionValue')}
                   <OverlayTrigger
                     placement="auto"
@@ -824,13 +857,15 @@ const SynthPositions = () => {
                     </span>
                   </OverlayTrigger>{' '}
                 </Col>
-                <Col className="text-end output-card">
+                <Col className="text-end ">
                   {formatFromWei(
-                    showUsdPool ? getSynthRedValue()[1] : getSynthRedValue()[0],
+                    viewPool === 'usd'
+                      ? getSynthRedValue()[1]
+                      : getSynthRedValue()[0],
                     2,
                   )}
                   <Icon
-                    icon={showUsdPool ? 'usd' : 'spartav2'}
+                    icon={viewPool === 'usd' ? 'usd' : 'spartav2'}
                     className="ms-1"
                     size="15"
                   />
@@ -838,19 +873,23 @@ const SynthPositions = () => {
               </Row>
               <hr />
               <Row className="my-1">
-                <Col xs="auto" className="output-card">
-                  {t('gainVs')} {showUsdPool ? 'USD' : _getToken().symbol}
+                <Col xs="auto">
+                  <strong>
+                    {t('gainVs')}{' '}
+                    {viewPool === 'usd' ? 'USD' : _getToken().symbol}
+                  </strong>
                   <OverlayTrigger
                     placement="auto"
                     overlay={
                       <Popover>
                         <Popover.Header as="h3">
                           {t('gainVs')}{' '}
-                          {showUsdPool ? 'USD' : _getToken().symbol}
+                          {viewPool === 'usd' ? 'USD' : _getToken().symbol}
                         </Popover.Header>
                         <Popover.Body className="text-center">
                           {t('gainVsInfoSynth', {
-                            coin: showUsdPool ? 'USD' : _getToken().symbol,
+                            coin:
+                              viewPool === 'usd' ? 'USD' : _getToken().symbol,
                           })}
                         </Popover.Body>
                       </Popover>
@@ -861,20 +900,22 @@ const SynthPositions = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col className="text-end output-card">
-                  {isOverall()
-                    ? formatFromWei(
-                        showUsdPool
-                          ? getPoolNetGain('usd')
-                          : getPoolNetHarvest()[1],
-                        2,
-                      )
-                    : 'Generate First'}
+                <Col className="text-end">
+                  <strong>
+                    {isOverall()
+                      ? formatFromWei(
+                          viewPool === 'usd'
+                            ? getPoolNetGain('usd')
+                            : getPoolNetHarvest()[1],
+                          2,
+                        )
+                      : 'Generate First'}
+                  </strong>
                   <Icon icon="usd" className="ms-1" size="15" />
                 </Col>
               </Row>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col xs="auto">
                   {t('currentlyWorth')}
                   <OverlayTrigger
                     placement="auto"
@@ -894,19 +935,19 @@ const SynthPositions = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col className="text-end output-card">
+                <Col className="text-end ">
                   {isOverall()
                     ? formatFromWei(
-                        !showUsdPool
+                        viewPool === 'sparta'
                           ? getPoolNetGainWorthUnit()
                           : getPoolNetGainWorthSparta(),
                         2,
                       )
                     : 'Generate First'}
-                  {showUsdPool && (
+                  {viewPool === 'usd' && (
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   )}
-                  {!isLoading() && !showUsdPool && (
+                  {!isLoading() && viewPool === 'sparta' && (
                     <img
                       src={_getToken().symbolUrl}
                       height="17"
@@ -918,7 +959,7 @@ const SynthPositions = () => {
               </Row>
             </Card.Body>
           ) : (
-            <Col className="">
+            <Col>
               <HelmetLoading height={150} width={150} />
             </Col>
           )}

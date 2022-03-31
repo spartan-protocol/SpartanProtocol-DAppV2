@@ -54,7 +54,7 @@ const SwapPair = ({ assetSwap }) => {
   return (
     <>
       {!isLoading() && (
-        <Card className="card-320 mb-2">
+        <Card className="mb-2" style={{ minWidth: '275px' }}>
           <Card.Header className="border-0">
             <Row className="mt-2">
               <Col xs="auto" className="mt-1 pe-2 position-relative">

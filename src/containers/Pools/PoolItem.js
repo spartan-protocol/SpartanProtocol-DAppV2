@@ -126,7 +126,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   style={{ right: '5px', bottom: '10px' }}
                 />
               </Col>
-              <Col className="pe-0 my-auto">
+              <Col className={styles.poolHeader}>
                 <h3 className="mb-0">{token.symbol}</h3>
                 <p className="text-sm-label-alt">
                   <OverlayTrigger
