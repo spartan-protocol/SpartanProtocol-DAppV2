@@ -75,8 +75,8 @@ const BondItem = (props) => {
 
   return (
     <>
-      <Col xs="auto" key={asset.address}>
-        <Card className="card-320" style={{ minHeight: '245' }}>
+      <Col lg={4} key={asset.address}>
+        <Card style={{ minHeight: '245' }}>
           <Card.Body>
             <Row className="">
               <Col xs="auto" className="position-relative pt-1">

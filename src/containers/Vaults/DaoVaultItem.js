@@ -23,11 +23,11 @@ const DaoVaultItem = ({ i, claimable }) => {
 
   return (
     <>
-      <Col xs="auto" key={i.address}>
-        <Card className="card-320" style={{ minHeight: '202' }}>
+      <Col className="mb-4" lg="4" key={i.address}>
+        <Card style={{ minHeight: '202px' }}>
           <Card.Body>
-            <Row className="mb-2">
-              <Col xs="auto" className="position-relative">
+            <Row className="mb-2 d-flex">
+              <Col className="position-relative" xs="auto">
                 <img
                   src={getToken(i.tokenAddress)?.symbolUrl}
                   alt={getToken(i.tokenAddress)?.symbol}
@@ -41,7 +41,7 @@ const DaoVaultItem = ({ i, claimable }) => {
                   className="token-badge-pair"
                 />
               </Col>
-              <Col xs="auto" className="pl-1">
+              <Col className="pl-1">
                 <h3 className="mb-0">{getToken(i.tokenAddress)?.symbol}p</h3>
                 <Link to={`/liquidity?asset1=${i.tokenAddress}`}>
                   <p className="text-sm-label-alt">
@@ -53,9 +53,7 @@ const DaoVaultItem = ({ i, claimable }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('balance')}
-              </Col>
+              <Col className="text-card">{t('balance')}</Col>
               <Col className="text-end output-card">
                 {!wallet.account ? (
                   t('connectWallet')
@@ -71,9 +69,7 @@ const DaoVaultItem = ({ i, claimable }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('staked')}
-              </Col>
+              <Col className="text-card">{t('staked')}</Col>
               <Col className="text-end output-card">
                 {!wallet.account ? (
                   t('connectWallet')
@@ -88,14 +84,14 @@ const DaoVaultItem = ({ i, claimable }) => {
           </Card.Body>
           <Card.Footer>
             <Row>
-              <Col xs="6" className="pe-1">
+              <Col className="pe-1">
                 <DaoDepositModal
                   tokenAddress={i.tokenAddress}
                   disabled={i.balance <= 0}
                   claimable={claimable}
                 />
               </Col>
-              <Col xs="6" className="ps-1">
+              <Col className="ps-1">
                 <DaoWithdrawModal
                   tokenAddress={i.tokenAddress}
                   address={i.address}

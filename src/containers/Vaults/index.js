@@ -45,45 +45,39 @@ const Vaults = () => {
 
   return (
     <>
-      <div className="content">
-        {tempChains.includes(network.chainId) && (
-          <>
-            <Row className="row-480">
-              <Col>
-                <Tabs
-                  activeKey={mode}
-                  onSelect={(k) => setMode(k)}
-                  className="mb-3 card-480"
-                >
-                  <Tab eventKey="Dao" title={t('daoVault')}>
-                    {pool.poolDetails.length > 0 && mode === 'Dao' && (
-                      <DaoVault />
-                    )}
-                  </Tab>
-                  <Tab eventKey="Synth" title={t('synthVault')}>
-                    {pool.poolDetails.length > 0 && mode === 'Synth' && (
-                      <SynthVault />
-                    )}
-                  </Tab>
-                  <Tab eventKey="Bond" title={t('bondVault')}>
-                    {pool.poolDetails.length > 0 && mode === 'Bond' && (
-                      <BondVault />
-                    )}
-                  </Tab>
-                </Tabs>
-              </Col>
-            </Row>
-            <Row className="row-480">
-              <Col className="card-480">
-                {pool.poolDetails.length <= 0 && (
-                  <HelmetLoading height={150} width={150} />
-                )}
-              </Col>
-            </Row>
-          </>
-        )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
-      </div>
+      {tempChains.includes(network.chainId) && (
+        <>
+          <Row>
+            <Col>
+              <Tabs activeKey={mode} onSelect={(k) => setMode(k)}>
+                <Tab eventKey="Dao" title={t('daoVault')}>
+                  {pool.poolDetails.length > 0 && mode === 'Dao' && (
+                    <DaoVault />
+                  )}
+                </Tab>
+                <Tab eventKey="Synth" title={t('synthVault')}>
+                  {pool.poolDetails.length > 0 && mode === 'Synth' && (
+                    <SynthVault />
+                  )}
+                </Tab>
+                <Tab eventKey="Bond" title={t('bondVault')}>
+                  {pool.poolDetails.length > 0 && mode === 'Bond' && (
+                    <BondVault />
+                  )}
+                </Tab>
+              </Tabs>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {pool.poolDetails.length <= 0 && (
+                <HelmetLoading height={150} width={150} />
+              )}
+            </Col>
+          </Row>
+        </>
+      )}
+      {!tempChains.includes(network.chainId) && <WrongNetwork />}
     </>
   )
 }

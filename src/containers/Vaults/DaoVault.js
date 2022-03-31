@@ -224,31 +224,31 @@ const DaoVault = () => {
 
   return (
     <Row>
-      <Col xs="auto" className="">
-        <Card xs="auto" className="card-320" style={{ minHeight: '202' }}>
-          <Card.Header className="">
+      <Col className="mb-4" lg="4">
+        <Card style={{ minHeight: '202px' }}>
+          <Card.Header style={{ minHeight: '50px' }}>
             <Row>
-              <Col>{t('daoVault')}</Col>
-              <Col xs="auto" className="text-center m-auto">
-                <p className="text-sm-label d-inline-block">APY</p>
+              <Col className="mt-2 h4">{t('daoVault')}</Col>
+              <Col className="text-center m-auto d-flex justify-content-end">
+                <span className="text-sm-label">APY</span>
                 <OverlayTrigger
                   placement="auto"
                   overlay={Tooltip(t, 'apySynth')}
                 >
                   <span role="button">
-                    <Icon icon="info" className="ms-1 mt-1" size="17" />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
-                <p className="output-card d-inline-block ms-2">
+                <span className="output-card ms-2">
                   {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                </p>
+                </span>
               </Col>
             </Row>
           </Card.Header>
           {!isLoading() ? (
             <Card.Body>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col className="text-card">
                   {t('totalWeight')}
                   <OverlayTrigger
                     placement="auto"
@@ -280,9 +280,7 @@ const DaoVault = () => {
                 </Col>
               </Row>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  {t('lockupPeriod')}
-                </Col>
+                <Col className="text-card">{t('lockupPeriod')}</Col>
                 <Col className="text-end output-card">24 {t('hours')}</Col>
               </Row>
             </Card.Body>
@@ -298,14 +296,16 @@ const DaoVault = () => {
         </Card>
       </Col>
 
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '202' }}>
-          <Card.Header>{t('memberDetails')}</Card.Header>
+      <Col className="mb-2" lg="4">
+        <Card style={{ minHeight: '202px' }}>
+          <Card.Header style={{ minHeight: '50px' }}>
+            <Col className="mt-2 h4">{t('memberDetails')}</Col>
+          </Card.Header>
           {!isLoading() ? (
             <>
               <Card.Body className="pb-1">
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col className="text-card">
                     {t('yourWeight')}
                     <OverlayTrigger
                       placement="auto"
@@ -353,7 +353,7 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col className="text-card">
                     {t('harvestable')}
                     <OverlayTrigger
                       placement="auto"
@@ -379,9 +379,7 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="mt-2">
-                  <Col xs="auto" className="text-card">
-                    {t('lastHarvest')}
-                  </Col>
+                  <Col className="text-card">{t('lastHarvest')}</Col>
 
                   <Col className="text-end output-card">
                     {!wallet.account ? (

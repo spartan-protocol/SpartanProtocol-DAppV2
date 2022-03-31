@@ -139,26 +139,26 @@ const SynthVault = () => {
 
   return (
     <Row>
-      <Col xs="auto" className="">
-        <Card className="card-320" style={{ minHeight: '290' }}>
+      <Col className="mb-4" lg="4">
+        <Card style={{ minHeight: '290px' }}>
           <Card.Header>
             <Row>
-              <Col>{t('synthVault')}</Col>
-              <Col xs="auto" className="text-center m-auto">
+              <Col className="mt-2 h4">{t('synthVault')}</Col>
+              <Col className="text-center m-auto d-flex justify-content-end">
                 {synthHarvestLive && (
                   <>
-                    <p className="text-sm-label d-inline-block">APY</p>
+                    <span>APY</span>
                     <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'apySynth')}
                     >
                       <span role="button">
-                        <Icon icon="info" className="ms-1 mt-1" size="17" />
+                        <Icon icon="info" className="ms-1" size="17" />
                       </span>
                     </OverlayTrigger>
-                    <p className="output-card d-inline-block ms-2">
+                    <span className="output-card ms-2">
                       {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                    </p>
+                    </span>
                   </>
                 )}
               </Col>
@@ -168,34 +168,26 @@ const SynthVault = () => {
             <>
               <Card.Body className="pb-0">
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('minTime')}
-                  </Col>
+                  <Col className="text-card">{t('minTime')}</Col>
                   <Col className="text-end output-card">
                     {synth.globalDetails?.minTime} seconds
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('erasToEarn')}
-                  </Col>
+                  <Col className="text-card">{t('erasToEarn')}</Col>
                   <Col className="text-end output-card">
                     {synth.globalDetails?.erasToEarn}
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('vaultClaim')}
-                  </Col>
+                  <Col className="text-card">{t('vaultClaim')}</Col>
                   <Col className="text-end output-card">
                     {synth.globalDetails?.vaultClaim / 100}%
                   </Col>
                 </Row>
                 <hr className="my-2" />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('totalWeight')}
-                  </Col>
+                  <Col className="text-card">{t('totalWeight')}</Col>
                   <Col
                     className="text-end output-card"
                     onClick={() => handleChangeShow()}
@@ -212,9 +204,7 @@ const SynthVault = () => {
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('yourWeight')}
-                  </Col>
+                  <Col className="text-card">{t('yourWeight')}</Col>
                   <Col
                     className="text-end output-card"
                     onClick={() => handleChangeShow()}
@@ -237,9 +227,7 @@ const SynthVault = () => {
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('percentWeight')}
-                  </Col>
+                  <Col className="text-card">{t('percentWeight')}</Col>
                   <Col className="text-end output-card">
                     {!wallet.account
                       ? t('connectWallet')

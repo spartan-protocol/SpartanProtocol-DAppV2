@@ -62,10 +62,10 @@ const SynthVaultItem = ({ synthItem }) => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '255' }}>
+      <Col className="mb-4" lg="4">
+        <Card style={{ minHeight: '290px' }}>
           <Card.Body>
-            <Row className="mb-2">
+            <Row className="mb-2 d-flex">
               <Col xs="auto" className="position-relative">
                 <img
                   className="mr-3 rounded-circle"
@@ -77,11 +77,10 @@ const SynthVaultItem = ({ synthItem }) => {
                   height="25px"
                   src={spartaIconAlt}
                   alt="Sparta synth token icon"
-                  className="position-absolute"
-                  style={{ right: '8px', bottom: '7px' }}
+                  className="token-badge-pair"
                 />
               </Col>
-              <Col xs="auto" className="pl-1">
+              <Col className="pl-1">
                 <h3 className="mb-0">
                   {getToken(synthItem.tokenAddress)?.symbol}s
                 </h3>
@@ -95,9 +94,7 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('balance')}
-              </Col>
+              <Col className="text-card">{t('balance')}</Col>
               <Col className="text-end output-card">
                 {!wallet.account ? (
                   t('connectWallet')
@@ -111,9 +108,7 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('staked')}
-              </Col>
+              <Col className="text-card">{t('staked')}</Col>
               <Col className="text-end output-card">
                 {!wallet.account ? (
                   t('connectWallet')
@@ -127,9 +122,7 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('harvestable')}
-              </Col>
+              <Col className="text-card">{t('harvestable')}</Col>
               <Col className="text-end output-card">
                 {!wallet.account ? (
                   t('connectWallet')
@@ -140,9 +133,7 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('lastHarvest')}
-              </Col>
+              <Col className="text-card">{t('lastHarvest')}</Col>
               <Col className="text-end output-card">
                 {!wallet.account ? (
                   t('connectWallet')

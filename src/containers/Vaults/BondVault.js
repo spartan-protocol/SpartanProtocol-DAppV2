@@ -76,9 +76,11 @@ const BondVault = () => {
     <Row>
       {tempChains.includes(network.chainId) && (
         <>
-          <Col xs="auto" className="">
-            <Card xs="auto" className="card-320" style={{ minHeight: '245' }}>
-              <Card.Header>{t('bondVaultDetails')}</Card.Header>
+          <Col lg={4}>
+            <Card style={{ minHeight: '245px' }}>
+              <Card.Header style={{ minHeight: '50px' }}>
+                <Col className="mt-2 h4">{t('bondVaultDetails')}</Col>
+              </Card.Header>
               <Card.Body className="text-card">
                 View & claim your Bond positions.
               </Card.Body>
@@ -110,9 +112,11 @@ const BondVault = () => {
                 <BondItem asset={asset} key={asset.tokenAddress} />
               ))
           ) : (
-            <Col xs="auto">
-              <Card className="card-320" style={{ minHeight: '245' }}>
-                <Card.Header>Bond Positions</Card.Header>
+            <Col lg={4}>
+              <Card style={{ minHeight: '245' }}>
+                <Card.Header style={{ minHeight: '50px' }}>
+                  <Col className="mt-2 h4">Bond Positions</Col>
+                </Card.Header>
                 <Card.Body>You have no active Bond positions</Card.Body>
               </Card>
             </Col>

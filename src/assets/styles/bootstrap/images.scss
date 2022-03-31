@@ -1,0 +1,24 @@
+// this is for overlapping sparta logo, used in vaults ie. BNBp
+.token-badge-pair {
+    position: absolute;
+    left: 40px; 
+    bottom: 2px;
+}
+
+
+// show different logos on 'friends' tab, depends on light/dark mode
+img.lightModeLogo {
+    display: unset;
+}
+img.darkModeLogo {
+display: none;
+}
+
+body.dark-theme {
+    img.lightModeLogo {
+        display: none;
+      }
+      img.darkModeLogo {
+        display: unset;
+      }    
+}
