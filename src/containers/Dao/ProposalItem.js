@@ -308,12 +308,12 @@ const ProposalItem = ({ proposal }) => {
 
   return (
     <>
-      <Col xs="auto" className="">
-        <Card className="card-320" style={{ minHeight: '320px' }}>
+      <Col xs="12" sm="6" lg="4" className="mb-3">
+        <Card style={{ minHeight: '285px' }}>
           <Card.Header>
             <Row className="h-100">
-              <Col className="">
-                <div className="mb-0">{t(type?.label)}</div>
+              <Col>
+                <h4 className="mb-0">{t(type?.label)}</h4>
                 <Card.Subtitle>
                   (#{proposal.id}) {status()}
                 </Card.Subtitle>
@@ -321,25 +321,14 @@ const ProposalItem = ({ proposal }) => {
             </Row>
           </Card.Header>
           <Card.Body className="pb-0">
-            {/* {!proposal.open && (
-            <Row className="mb-2">
-              <Col xs="auto" className="pr-0 my-auto">
-                <h4 className="my-auto">
-                  {proposal.finalised
-                    ? 'Ended Proposal - Success'
-                    : 'Ended Proposal - Failed'}
-                </h4>
-              </Col>
-            </Row>
-          )} */}
             <Row>
               <Col>
-                <div className="output-card mb-2">{t(type?.desc)}:</div>
+                <div className="mb-2">{t(type?.desc)}:</div>
               </Col>
             </Row>
             <Row>
               <Col>
-                <div className="output-card mb-2">
+                <div className="mb-2">
                   {synth.synthDetails.length > 1 && getDetails()}
                 </div>
               </Col>
@@ -347,10 +336,8 @@ const ProposalItem = ({ proposal }) => {
             {proposal.open ? (
               <>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('canCancel')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col xs="auto">{t('canCancel')}</Col>
+                  <Col className="text-end">
                     {getTimeCancel()[0] > 0
                       ? getTimeCancel()[0] + getTimeCancel()[1]
                       : t('rightNow')}
@@ -358,10 +345,8 @@ const ProposalItem = ({ proposal }) => {
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('yourVotes')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col xs="auto">{t('yourVotes')}</Col>
+                  <Col className="text-end">
                     {!wallet.account ? (
                       t('connectWallet')
                     ) : proposal.memberVoted ? (
@@ -383,10 +368,8 @@ const ProposalItem = ({ proposal }) => {
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('totalVotes')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col xs="auto">{t('totalVotes')}</Col>
+                  <Col className="text-end">
                     {weightClass()[0]} ({formatFromUnits(totalPercent(), 2)}%)
                   </Col>
                 </Row>
@@ -399,7 +382,7 @@ const ProposalItem = ({ proposal }) => {
             ) : (
               <Row>
                 <Col>
-                  <div className="output-card mb-2">{t(type?.longDesc)}</div>
+                  <small className="mb-2">{t(type?.longDesc)}</small>
                 </Col>
               </Row>
             )}
@@ -409,7 +392,7 @@ const ProposalItem = ({ proposal }) => {
               <>
                 <Row>
                   {!proposal.memberVoted && (
-                    <Col className="mb-2">
+                    <Col className="mb-3">
                       <Button
                         className="w-100"
                         size="sm"
@@ -430,6 +413,7 @@ const ProposalItem = ({ proposal }) => {
                             icon="cycle"
                             size="20"
                             className="anim-spin ms-1"
+                            fill="white"
                           />
                         )}
                       </Button>
@@ -455,6 +439,7 @@ const ProposalItem = ({ proposal }) => {
                             icon="cycle"
                             size="20"
                             className="anim-spin ms-1"
+                            fill="white"
                           />
                         )}
                       </Button>
@@ -463,10 +448,9 @@ const ProposalItem = ({ proposal }) => {
                 </Row>
 
                 <Row>
-                  <Col className="">
+                  <Col className="pe-1">
                     {proposal.finalising ? (
                       <Button
-                        variant="secondary"
                         className="w-100"
                         size="sm"
                         onClick={() => handleFinal()}
@@ -487,12 +471,12 @@ const ProposalItem = ({ proposal }) => {
                             icon="cycle"
                             size="20"
                             className="anim-spin ms-1"
+                            fill="white"
                           />
                         )}
                       </Button>
                     ) : (
                       <Button
-                        variant="secondary"
                         className="w-100"
                         size="sm"
                         onClick={() => handlePoll()}
@@ -510,14 +494,14 @@ const ProposalItem = ({ proposal }) => {
                             icon="cycle"
                             size="20"
                             className="anim-spin ms-1"
+                            fill="white"
                           />
                         )}
                       </Button>
                     )}
                   </Col>
-                  <Col className="">
+                  <Col className="ps-1">
                     <Button
-                      variant="secondary"
                       className="w-100"
                       size="sm"
                       onClick={() => handleCancel()}
@@ -535,6 +519,7 @@ const ProposalItem = ({ proposal }) => {
                           icon="cycle"
                           size="20"
                           className="anim-spin ms-1"
+                          fill="white"
                         />
                       )}
                     </Button>
@@ -543,7 +528,7 @@ const ProposalItem = ({ proposal }) => {
               </>
             ) : (
               <Row>
-                <Col className="output-card">
+                <Col>
                   {t('proposedOn')} {formatDate(proposal.startTime)}
                 </Col>
               </Row>

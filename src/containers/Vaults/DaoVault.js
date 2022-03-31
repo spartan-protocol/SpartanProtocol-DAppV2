@@ -224,31 +224,39 @@ const DaoVault = () => {
 
   return (
     <Row>
-      <Col className="mb-4" lg="4">
-        <Card style={{ minHeight: '202px' }}>
-          <Card.Header style={{ minHeight: '50px' }}>
+      <Col className="mb-4" xs="12" sm="6" lg="4">
+        <Card style={{ minHeight: '185px' }}>
+          <Card.Header>
             <Row>
-              <Col className="mt-2 h4">{t('daoVault')}</Col>
-              <Col className="text-center m-auto d-flex justify-content-end">
-                <span className="text-sm-label">APY</span>
-                <OverlayTrigger
-                  placement="auto"
-                  overlay={Tooltip(t, 'apySynth')}
-                >
-                  <span role="button">
-                    <Icon icon="info" className="ms-1" size="17" />
-                  </span>
-                </OverlayTrigger>
-                <span className="output-card ms-2">
-                  {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                </span>
+              <Col xs="auto" className="mt-2 h4">
+                {t('daoVault')}
+              </Col>
+              <Col className="text-end m-auto d-flex justify-content-end">
+                <Row>
+                  <Col xs="12">
+                    <span>APY</span>
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'apySynth')}
+                    >
+                      <span role="button">
+                        <Icon icon="info" className="ms-1" size="17" />
+                      </span>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col xs="12">
+                    <div className="ms-2">
+                      {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
+                    </div>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Card.Header>
           {!isLoading() ? (
             <Card.Body>
               <Row className="my-1">
-                <Col className="text-card">
+                <Col>
                   {t('totalWeight')}
                   <OverlayTrigger
                     placement="auto"
@@ -265,7 +273,8 @@ const DaoVault = () => {
                   </OverlayTrigger>
                 </Col>
                 <Col
-                  className="text-end output-card"
+                  xs="auto"
+                  className="text-end"
                   onClick={() => handleChangeShow()}
                   role="button"
                 >
@@ -280,8 +289,10 @@ const DaoVault = () => {
                 </Col>
               </Row>
               <Row className="my-1">
-                <Col className="text-card">{t('lockupPeriod')}</Col>
-                <Col className="text-end output-card">24 {t('hours')}</Col>
+                <Col>{t('lockupPeriod')}</Col>
+                <Col xs="auto" className="text-end">
+                  24 {t('hours')}
+                </Col>
               </Row>
             </Card.Body>
           ) : (
@@ -290,40 +301,36 @@ const DaoVault = () => {
 
           <Card.Footer>
             <Link to="/pools/liquidity">
-              <Button className="w-100">{t('joinPools')}</Button>
+              <Button className="w-100 btn-sm">{t('joinPools')}</Button>
             </Link>
           </Card.Footer>
         </Card>
       </Col>
 
-      <Col className="mb-2" lg="4">
-        <Card style={{ minHeight: '202px' }}>
-          <Card.Header style={{ minHeight: '50px' }}>
+      <Col className="mb-2" xs="12" sm="6" lg="4">
+        <Card style={{ minHeight: '185px' }}>
+          <Card.Header>
             <Col className="mt-2 h4">{t('memberDetails')}</Col>
           </Card.Header>
           {!isLoading() ? (
             <>
               <Card.Body className="pb-1">
                 <Row className="my-1">
-                  <Col className="text-card">
+                  <Col>
                     {t('yourWeight')}
                     <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'daoVaultWeight')}
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          //
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
 
                   <Col
-                    className="text-end output-card"
+                    xs="auto"
+                    className="text-end"
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
@@ -353,7 +360,7 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="my-1">
-                  <Col className="text-card">
+                  <Col>
                     {t('harvestable')}
                     <OverlayTrigger
                       placement="auto"
@@ -369,7 +376,7 @@ const DaoVault = () => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col xs="auto">
                     {reserve.globalDetails.emissions
                       ? !wallet.account
                         ? t('connectWallet')
@@ -379,9 +386,9 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="mt-2">
-                  <Col className="text-card">{t('lastHarvest')}</Col>
+                  <Col>{t('lastHarvest')}</Col>
 
-                  <Col className="text-end output-card">
+                  <Col xs="auto" className="text-end">
                     {!wallet.account ? (
                       t('connectWallet')
                     ) : (
@@ -399,7 +406,7 @@ const DaoVault = () => {
               </Card.Body>
               <Card.Footer>
                 <Button
-                  className="w-100"
+                  className="w-100 btn-sm"
                   onClick={() => handleHarvest()}
                   disabled={!checkValid()[0]}
                 >

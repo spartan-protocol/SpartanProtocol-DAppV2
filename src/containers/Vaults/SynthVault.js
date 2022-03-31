@@ -140,25 +140,33 @@ const SynthVault = () => {
   return (
     <Row>
       <Col className="mb-4" lg="4">
-        <Card style={{ minHeight: '290px' }}>
+        <Card style={{ minHeight: '265px' }}>
           <Card.Header>
             <Row>
-              <Col className="mt-2 h4">{t('synthVault')}</Col>
-              <Col className="text-center m-auto d-flex justify-content-end">
+              <Col xs="auto" className="mt-2 h4">
+                {t('synthVault')}
+              </Col>
+              <Col className="text-end m-auto d-flex justify-content-end">
                 {synthHarvestLive && (
                   <>
-                    <span>APY</span>
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'apySynth')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="ms-1" size="17" />
-                      </span>
-                    </OverlayTrigger>
-                    <span className="output-card ms-2">
-                      {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                    </span>
+                    <Row>
+                      <Col xs="12">
+                        <span>APY</span>
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'apySynth')}
+                        >
+                          <span role="button">
+                            <Icon icon="info" className="ms-1" size="17" />
+                          </span>
+                        </OverlayTrigger>
+                      </Col>
+                      <Col xs="12">
+                        <span className="ms-2">
+                          {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
+                        </span>
+                      </Col>
+                    </Row>
                   </>
                 )}
               </Col>
@@ -168,28 +176,29 @@ const SynthVault = () => {
             <>
               <Card.Body className="pb-0">
                 <Row className="my-1">
-                  <Col className="text-card">{t('minTime')}</Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('minTime')}</Col>
+                  <Col xs="auto" className="text-end">
                     {synth.globalDetails?.minTime} seconds
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col className="text-card">{t('erasToEarn')}</Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('erasToEarn')}</Col>
+                  <Col xs="auto" className="text-end">
                     {synth.globalDetails?.erasToEarn}
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col className="text-card">{t('vaultClaim')}</Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('vaultClaim')}</Col>
+                  <Col xs="auto" className="text-end">
                     {synth.globalDetails?.vaultClaim / 100}%
                   </Col>
                 </Row>
                 <hr className="my-2" />
                 <Row className="my-1">
-                  <Col className="text-card">{t('totalWeight')}</Col>
+                  <Col>{t('totalWeight')}</Col>
                   <Col
-                    className="text-end output-card"
+                    xs="auto"
+                    className="text-end"
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
@@ -204,9 +213,10 @@ const SynthVault = () => {
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col className="text-card">{t('yourWeight')}</Col>
+                  <Col>{t('yourWeight')}</Col>
                   <Col
-                    className="text-end output-card"
+                    xs="auto"
+                    className="text-end"
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
@@ -227,8 +237,8 @@ const SynthVault = () => {
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col className="text-card">{t('percentWeight')}</Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('percentWeight')}</Col>
+                  <Col xs="auto" className="text-end">
                     {!wallet.account
                       ? t('connectWallet')
                       : getTotalWeight() > 0 && getOwnWeight() > 0

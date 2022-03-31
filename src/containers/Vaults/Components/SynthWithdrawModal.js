@@ -138,7 +138,7 @@ const SynthWithdrawModal = (props) => {
   return (
     <>
       <Button
-        className="w-100"
+        className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
         disabled={props.disabled || !wallet.account}
       >

@@ -170,46 +170,62 @@ const Overview = () => {
     <>
       {tempChains.includes(network.chainId) && (
         <>
-          <Row className="row-480">
-            <Col xs="12">
-              <Row>
-                <SummaryItem />
-                {/* MOBILE FILTER DROPDOWN -> CHANGE THIS TO NAV-DROPDOWN? */}
-                <Col className="d-block d-sm-none mt-3 mb-1">
-                  <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
-                    <option value="pools">
-                      {t('pools')} ({getPools().length})
+          <Row>
+            <SummaryItem />
+            {/* MOBILE FILTER DROPDOWN -> CHANGE THIS TO NAV-DROPDOWN? */}
+            <Col className="d-block d-sm-none mt-3 mb-1">
+              <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
+                <option value="pools">
+                  {t('pools')} ({getPools().length})
+                </option>
+                {getNewPools().length > 0 ||
+                  (isLoading() && (
+                    <option value="new">
+                      {t('new')} ({getNewPools().length})
                     </option>
-                    {getNewPools().length > 0 ||
-                      (isLoading() && (
-                        <option value="new">
-                          {t('new')} ({getNewPools().length})
-                        </option>
-                      ))}
-                    <option value="babies">
-                      {t('< 10K')} ({getBabies().length})
-                    </option>
-                    <option value="synths">
-                      {t('synths')} ({getSynths().length})
-                    </option>
-                  </Form.Select>
-                </Col>
-                {/* DESKTOP FILTER NAV ITEMS */}
-                <Col className="d-none d-sm-block mt-3 mb-1">
-                  <Nav
-                    variant="pills"
-                    activeKey={activeTab}
-                    onSelect={(e) => setActiveTab(e)}
+                  ))}
+                <option value="babies">
+                  {t('< 10K')} ({getBabies().length})
+                </option>
+                <option value="synths">
+                  {t('synths')} ({getSynths().length})
+                </option>
+              </Form.Select>
+            </Col>
+            {/* DESKTOP FILTER NAV ITEMS */}
+            <Col className="d-none d-sm-block mt-3 mb-1">
+              <Nav
+                variant="pills"
+                activeKey={activeTab}
+                onSelect={(e) => setActiveTab(e)}
+              >
+                <Nav.Item>
+                  <Nav.Link
+                    eventKey="pools"
+                    className="btn-sm btn-outline-primary"
                   >
+                    {t('pools')}
+                    <Badge bg="secondary" className="ms-2">
+                      {!isLoading() ? (
+                        getPools().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+                {getNewPools().length > 0 ||
+                  (isLoading() && (
                     <Nav.Item>
                       <Nav.Link
-                        eventKey="pools"
-                        className="btn-sm btn-outline-primary"
+                        bg="secondary"
+                        eventKey="new"
+                        className="btn-sm"
                       >
-                        {t('pools')}
+                        {t('new')}
                         <Badge bg="secondary" className="ms-2">
                           {!isLoading() ? (
-                            getPools().length
+                            getNewPools().length
                           ) : (
                             <Icon
                               icon="cycle"
@@ -220,167 +236,128 @@ const Overview = () => {
                         </Badge>
                       </Nav.Link>
                     </Nav.Item>
-                    {getNewPools().length > 0 ||
-                      (isLoading() && (
-                        <Nav.Item>
-                          <Nav.Link
-                            bg="secondary"
-                            eventKey="new"
-                            className="btn-sm"
-                          >
-                            {t('new')}
-                            <Badge bg="secondary" className="ms-2">
-                              {!isLoading() ? (
-                                getNewPools().length
-                              ) : (
-                                <Icon
-                                  icon="cycle"
-                                  size="15"
-                                  className="anim-spin"
-                                />
-                              )}
-                            </Badge>
-                          </Nav.Link>
-                        </Nav.Item>
-                      ))}
-                    <Nav.Item>
-                      <Nav.Link eventKey="babies" className="btn-sm">
-                        <OverlayTrigger
-                          placement="auto"
-                          overlay={Tooltip(t, 'hiddenPools')}
-                        >
-                          <span role="button">
-                            <Icon icon="info" className="me-1" size="15" />
-                          </span>
-                        </OverlayTrigger>
-                        {t('< 10K')}
-                        <Badge bg="secondary" className="ms-2">
-                          {!isLoading() ? (
-                            getBabies().length
-                          ) : (
-                            <Icon
-                              icon="cycle"
-                              size="15"
-                              className="anim-spin"
-                            />
-                          )}
-                        </Badge>
-                      </Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link eventKey="synths" className="btn-sm">
-                        {t('synths')}
-                        <Badge bg="secondary" className="ms-2">
-                          {!isLoading() ? (
-                            getSynths().length
-                          ) : (
-                            <Icon
-                              icon="cycle"
-                              size="15"
-                              className="anim-spin"
-                            />
-                          )}
-                        </Badge>
-                      </Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Col>
+                  ))}
+                <Nav.Item>
+                  <Nav.Link eventKey="babies" className="btn-sm">
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'hiddenPools')}
+                    >
+                      <span role="button">
+                        <Icon icon="info" className="me-1" size="15" />
+                      </span>
+                    </OverlayTrigger>
+                    {t('< 10K')}
+                    <Badge bg="secondary" className="ms-2">
+                      {!isLoading() ? (
+                        getBabies().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="synths" className="btn-sm">
+                    {t('synths')}
+                    <Badge bg="secondary" className="ms-2">
+                      {!isLoading() ? (
+                        getSynths().length
+                      ) : (
+                        <Icon icon="cycle" size="15" className="anim-spin" />
+                      )}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Col>
 
-                <Col xs="auto" className="mt-3 mb-1 text-end">
-                  <Button
-                    onClick={() => setTableView(!tableView)}
-                    className="me-1"
-                    disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
-                  >
-                    <Icon
-                      icon={tableView ? 'grid' : 'table'}
-                      size="13"
-                      fill="white"
-                      className="me-1 mb-1"
-                    />
-                    {t('view')}
-                  </Button>
-                  <Button onClick={() => setShowModal(!showModal)}>
-                    <Icon
-                      icon="plus"
-                      size="12"
-                      fill="white"
-                      className="me-1 mb-1"
-                    />
-                    {t('createPool')}
-                  </Button>
-                </Col>
-              </Row>
+            <Col xs="auto" className="mt-3 mb-1 text-end">
+              <Button
+                onClick={() => setTableView(!tableView)}
+                className="me-1"
+                disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
+              >
+                <Icon
+                  icon={tableView ? 'grid' : 'table'}
+                  size="13"
+                  fill="white"
+                  className="me-1 mb-1"
+                />
+                {t('view')}
+              </Button>
+              <Button onClick={() => setShowModal(!showModal)}>
+                <Icon
+                  icon="plus"
+                  size="12"
+                  fill="white"
+                  className="me-1 mb-1"
+                />
+                {t('createPool')}
+              </Button>
+            </Col>
+          </Row>
 
-              {/* CREATE-POOL MODAL */}
-              {showModal && (
-                <NewPool setShowModal={setShowModal} showModal={showModal} />
-              )}
+          {/* CREATE-POOL MODAL */}
+          {showModal && (
+            <NewPool setShowModal={setShowModal} showModal={showModal} />
+          )}
 
-              {/* POOL ITEMS */}
-              {!isLoading() ? (
-                <Row>
-                  {activeTab === 'pools' &&
-                    getPools().map((asset) => (
+          {/* POOL ITEMS */}
+          {!isLoading() ? (
+            <Row>
+              {activeTab === 'pools' &&
+                getPools().map((asset) => (
+                  <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+                ))}
+
+              {activeTab === 'new' && (
+                <>
+                  {getNewPools().length > 0 ? (
+                    getNewPools().map((asset) => (
                       <PoolItem
                         key={asset.address}
                         asset={asset}
                         daoApy={daoApy}
                       />
-                    ))}
-
-                  {activeTab === 'new' && (
-                    <>
-                      {getNewPools().length > 0 ? (
-                        getNewPools().map((asset) => (
-                          <PoolItem
-                            key={asset.address}
-                            asset={asset}
-                            daoApy={daoApy}
-                          />
-                        ))
-                      ) : (
-                        <Col>There are no new/initializing pools</Col>
-                      )}
-                    </>
+                    ))
+                  ) : (
+                    <Col>There are no new/initializing pools</Col>
                   )}
+                </>
+              )}
 
-                  {activeTab === 'babies' && (
-                    <>
-                      {getBabies().length > 0 ? (
-                        getBabies().map((asset) => (
-                          <PoolItem
-                            key={asset.address}
-                            asset={asset}
-                            daoApy={daoApy}
-                          />
-                        ))
-                      ) : (
-                        <Col>
-                          There are no pools below the minimum liquidity
-                          threshold
-                        </Col>
-                      )}
-                    </>
-                  )}
-
-                  {activeTab === 'synths' &&
-                    synth.synthDetails &&
-                    getSynths().map((asset) => (
-                      <SynthItem
+              {activeTab === 'babies' && (
+                <>
+                  {getBabies().length > 0 ? (
+                    getBabies().map((asset) => (
+                      <PoolItem
                         key={asset.address}
                         asset={asset}
-                        synthApy={synthApy}
+                        daoApy={daoApy}
                       />
-                    ))}
-                </Row>
-              ) : (
-                <Col className="card-480">
-                  <HelmetLoading height={150} width={150} />
-                </Col>
+                    ))
+                  ) : (
+                    <Col>
+                      There are no pools below the minimum liquidity threshold
+                    </Col>
+                  )}
+                </>
               )}
-            </Col>
-          </Row>
+
+              {activeTab === 'synths' &&
+                synth.synthDetails &&
+                getSynths().map((asset) => (
+                  <SynthItem
+                    key={asset.address}
+                    asset={asset}
+                    synthApy={synthApy}
+                  />
+                ))}
+            </Row>
+          ) : (
+            <HelmetLoading height={150} width={150} />
+          )}
         </>
       )}
       {!tempChains.includes(network.chainId) && <WrongNetwork />}

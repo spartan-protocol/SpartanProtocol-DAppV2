@@ -167,7 +167,7 @@ const SynthHarvestAllModal = () => {
   return (
     <>
       <Button
-        className="w-100"
+        className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
         disabled={!synthHarvestLive || synth.totalWeight <= 0}
       >

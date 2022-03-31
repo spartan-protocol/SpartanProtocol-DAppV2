@@ -240,6 +240,7 @@ const NewProposal = () => {
     <>
       <Button
         variant="primary"
+        size="sm"
         className="w-100 mt-2"
         onClick={() => setShowModal(true)}
         disabled={isLoading()}
@@ -275,11 +276,11 @@ const NewProposal = () => {
                 </FloatingLabel>
 
                 {selectedType !== null && (
-                  <Row className="card-body py-1">
+                  <Row className="py-1">
                     <Col xs="12">
-                      <Card className="card-share">
+                      <Card className="my-3">
                         <Card.Body className="py-3">
-                          <h4 className="card-title">
+                          <h4>
                             {t(selectedType?.desc)}
                             {selectedType?.value === 'FLIP_EMISSIONS' && (
                               <>
@@ -300,9 +301,10 @@ const NewProposal = () => {
                                     <AssetSelect
                                       handleAddrChange={handleAddrChange}
                                       selectedType={selectedType.value}
+                                      className="my-2"
                                     />
                                   )}
-                                  <InputGroup>
+                                  <InputGroup className="my-2">
                                     <InputGroup.Text>
                                       {t('address')}
                                     </InputGroup.Text>
@@ -339,7 +341,7 @@ const NewProposal = () => {
                               )}
 
                               {showParamInput.includes(selectedType.type) && (
-                                <InputGroup>
+                                <InputGroup className="my-2">
                                   <InputGroup.Text>
                                     {selectedType.type}
                                   </InputGroup.Text>
@@ -354,10 +356,10 @@ const NewProposal = () => {
                                       setinputParam(e.target.value)
                                     }
                                   />
-                                  <InputGroup.Text className="">
+                                  <InputGroup.Text>
                                     {selectedType.units}
                                   </InputGroup.Text>
-                                  <InputGroup.Text className="">
+                                  <InputGroup.Text>
                                     {paramValid ? (
                                       <ValidIcon
                                         fill="green"
@@ -438,7 +440,12 @@ const NewProposal = () => {
                       ? t('globalFreeze')
                       : t('confirm')}
                     {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                      <Icon
+                        icon="cycle"
+                        size="20"
+                        fill="white"
+                        className="anim-spin ms-1"
+                      />
                     )}
                   </Button>
                 )}

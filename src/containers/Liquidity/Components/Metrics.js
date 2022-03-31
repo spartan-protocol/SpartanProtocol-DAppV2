@@ -228,7 +228,7 @@ const Metrics = ({ assetSwap }) => {
           <Card.Body className="">
             <div className="text-center">
               <Dropdown className="d-inline">
-                <Dropdown.Toggle variant="info" size="sm" className="mx-1">
+                <Dropdown.Toggle size="sm" className="mx-1">
                   {metric}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -240,7 +240,7 @@ const Metrics = ({ assetSwap }) => {
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown className="d-inline">
-                <Dropdown.Toggle variant="info" size="sm" className="mx-1">
+                <Dropdown.Toggle size="sm" className="mx-1">
                   {`${period} Days`}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
