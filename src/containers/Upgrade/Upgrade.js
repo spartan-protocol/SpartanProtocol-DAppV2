@@ -111,14 +111,18 @@ const Upgrade = () => {
     <>
       {pool.tokenDetails.length > 0 && (
         <>
-          <Col xs="auto">
-            <Card className="card-320">
+          <Col sm={6} lg={4}>
+            <Card className="mb-3">
               <Card.Header>
-                <Card.Title>{t('upgrade')}</Card.Title>
+                <Card.Title>
+                  <Col xs="auto" className="mt-2 h4">
+                    {t('upgrade')}
+                  </Col>
+                </Card.Title>
                 <Card.Subtitle>{t('upgradeSubtitle')}</Card.Subtitle>
               </Card.Header>
               <Card.Body>
-                <Row className="">
+                <Row>
                   <Col xs="auto" className="text-card">
                     {t('input')}
                   </Col>
@@ -137,8 +141,8 @@ const Upgrade = () => {
               </Card.Body>
               <Card.Footer>
                 {bnbBalance > 2000000000000000 && (
-                  <Row className="">
-                    <Col xs="12" className="">
+                  <Row>
+                    <Col xs="12">
                       <Button
                         className="w-100"
                         onClick={() => handleUpgrade()}
@@ -157,8 +161,8 @@ const Upgrade = () => {
                   </Row>
                 )}
                 {bnbBalance <= 2000000000000000 && (
-                  <Row className="">
-                    <Col xs="12" className="">
+                  <Row>
+                    <Col xs="12">
                       <Button variant="info" className="w-100" disabled>
                         {t('notEnoughBnb')}
                       </Button>
@@ -169,14 +173,18 @@ const Upgrade = () => {
             </Card>
           </Col>
 
-          <Col xs="auto">
-            <Card className="card-320">
+          <Col sm={6} lg={4}>
+            <Card className="mb-3">
               <Card.Header>
-                <Card.Title className="">{t('claim')}</Card.Title>
-                <Card.Subtitle className="">{t('claimSubtitle')}</Card.Subtitle>
+                <Card.Title>
+                  <Col xs="auto" className="mt-2 h4">
+                    {t('claim')}
+                  </Col>
+                </Card.Title>
+                <Card.Subtitle>{t('claimSubtitle')}</Card.Subtitle>
               </Card.Header>
               <Card.Body>
-                <Row className="">
+                <Row>
                   <Col xs="auto" className="text-card">
                     {t('claim')}
                   </Col>
@@ -195,8 +203,8 @@ const Upgrade = () => {
               </Card.Body>
               <Card.Footer>
                 {bnbBalance > 2000000000000000 && (
-                  <Row className="">
-                    <Col xs="12" className="">
+                  <Row>
+                    <Col xs="12">
                       <Button
                         className="w-100"
                         onClick={() => handleClaim()}
@@ -215,8 +223,8 @@ const Upgrade = () => {
                   </Row>
                 )}
                 {bnbBalance <= 2000000000000000 && (
-                  <Row className="">
-                    <Col xs="12" className="">
+                  <Row>
+                    <Col xs="12">
                       <Button variant="info" className="w-100" disabled>
                         {t('notEnoughBnb')}
                       </Button>
@@ -227,8 +235,8 @@ const Upgrade = () => {
             </Card>
           </Col>
 
-          <Col xs="auto">
-            <Card className="card-320">
+          <Col sm={6} lg={4}>
+            <Card className="mb-3">
               <Card.Body>
                 <Col>
                   <h3 className="mb-0">

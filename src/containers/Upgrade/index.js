@@ -36,7 +36,7 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        <Row className="row-480">
+        <Row>
           <Upgrade />
         </Row>
       </div>
