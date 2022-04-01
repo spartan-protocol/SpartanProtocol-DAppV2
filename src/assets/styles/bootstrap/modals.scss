@@ -44,4 +44,7 @@ body.dark-theme {
     background-color: $bg-depth-1-dark;
     border: none;
   }
+  .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+  }
 }
