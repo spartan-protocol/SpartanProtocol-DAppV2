@@ -48,3 +48,16 @@ body.dark-theme {
     filter: invert(1) grayscale(100%) brightness(200%);
   }
 }
+
+// adjust modal height on smaller screens
+@media only screen and (max-width: $breakpoint-tablet) {
+  .modal-content {
+    height: 95vh;
+  }
+}
+// apply it to max-height as well, to adjust modal on vertical screen resizing
+@media only screen and (max-height: $breakpoint-tablet) {
+  .modal-content {
+    height: 95vh;
+  }
+}
