@@ -11,7 +11,10 @@ const Message = () => {
     <div>
       <div>{t('translationNoticeText')}</div>
       <div>
-        <a href="https://github.com/spartan-protocol/SpartanProtocol-DAppV2/issues/513">
+        <a
+          href="https://github.com/spartan-protocol/SpartanProtocol-DAppV2/issues/513"
+          className="toast-link"
+        >
           https://github.com/spartan-protocol/SpartanProtocol-DAppV2/issues/513
         </a>
       </div>
@@ -39,8 +42,8 @@ const TranslationNotice = () => {
       position="top-end"
       style={{ marginTop: '50px', marginRight: '20px' }}
     >
-      <Toast onClose={() => setShow(false)} show={show}>
-        <Toast.Header>
+      <Toast onClose={() => setShow(false)} show={show} className="bg-2">
+        <Toast.Header className="bg-2">
           <strong className="me-auto">{t('translationNoticeTitle')}</strong>
         </Toast.Header>
         <Toast.Body>

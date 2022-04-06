@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { routes } from '../../../routes'
 import { Icon } from '../../../components/Icons/index'
 import { useBreakpoint } from '../../../providers/Breakpoint'
+import SocialIcons from '../SocialIcons'
 
 import styles from './styles.module.scss'
 
@@ -20,6 +21,27 @@ const SidebarLg = () => {
   const handleCompact = (boolieeee) => {
     setCompact(boolieeee)
   }
+
+  // return only dapp routes or only informational routes (friends, contracts etc.)
+  const navItems = (items, informationalRoutes) =>
+    items
+      .filter((route) =>
+        informationalRoutes
+          ? route.informational
+          : !route.hide && !route.informational,
+      )
+      .map((route) => (
+        <Nav.Item key={route.path}>
+          <LinkContainer to={route.path}>
+            <Nav.Link eventKey={route.path}>
+              <Icon icon={route.icon} size="24" />
+              <span className={compact && !fixed ? 'd-none ms-3' : 'ms-3'}>
+                {t(route.name)}
+              </span>
+            </Nav.Link>
+          </LinkContainer>
+        </Nav.Item>
+      ))
 
   return (
     <>
@@ -71,24 +93,13 @@ const SidebarLg = () => {
               </div>
             </div>
           </Link>
-          <ul className={`${styles.lis} nav`}>
-            {routes
-              .filter((route) => !route.hide)
-              .map((route) => (
-                <li className="" key={route.path}>
-                  <LinkContainer to={route.path}>
-                    <Nav.Link eventKey={route.path}>
-                      <Icon icon={route.icon} size="24" />
-                      <span
-                        className={compact && !fixed ? 'd-none ms-3' : 'ms-3'}
-                      >
-                        {t(route.name)}
-                      </span>
-                    </Nav.Link>
-                  </LinkContainer>
-                </li>
-              ))}
-          </ul>
+          <Nav className={`${styles.lis} nav`}>
+            {/* dapp routes */}
+            {navItems(routes)}
+            <hr className="mx-3 my-2" />
+            {/* informational routes (friends, contracts etc.) */}
+            {navItems(routes, true)}
+          </Nav>
         </div>
         <div
           className={styles.socials}
@@ -97,53 +108,7 @@ const SidebarLg = () => {
           {compact && !fixed ? (
             <Icon icon="github" size="25" />
           ) : (
-            <>
-              <a
-                href="https://github.com/spartan-protocol"
-                target="_blank"
-                rel="noreferrer"
-                id="footer-github"
-                className="mx-1"
-              >
-                <Icon icon="github" size="25" />
-              </a>
-              <a
-                href="https://docs.spartanprotocol.org/"
-                target="_blank"
-                rel="noreferrer"
-                id="footer-gitbook"
-                className="mx-2"
-              >
-                <Icon icon="gitbook" size="25" />
-              </a>
-              <a
-                href="https://twitter.com/SpartanProtocol"
-                target="_blank"
-                rel="noreferrer"
-                id="footer-twitter"
-                className="mx-1"
-              >
-                <Icon icon="twitter" size="25" />
-              </a>
-              <a
-                href="https://t.me/SpartanProtocolOrg"
-                target="_blank"
-                rel="noreferrer"
-                id="footer-telegram"
-                className="mx-1"
-              >
-                <Icon icon="telegram" size="25" />
-              </a>
-              <a
-                href="https://discord.gg/wQggvntnGk"
-                target="_blank"
-                rel="noreferrer"
-                id="footer-discord"
-                className="mx-2"
-              >
-                <Icon icon="discord" size="25" />
-              </a>
-            </>
+            <SocialIcons />
           )}
         </div>
       </Col>

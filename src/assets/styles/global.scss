@@ -127,6 +127,13 @@ body.dark-theme {
   a {
     color: $text-dark;
   }
+  .toast-link:hover {
+    color: $link-hover-dark;
+  }
+  
+  .toast-header {
+    color: $text-dark;
+  }
 
   .body {
     box-shadow: inset $shadow-dark;

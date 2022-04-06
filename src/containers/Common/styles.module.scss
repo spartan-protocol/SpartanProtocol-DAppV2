@@ -1,7 +1,9 @@
 .wrapper {
   height: 100vh;
   width: 100vw;
+  display: -ms-grid;
   display: grid;
+  -ms-grid-rows: 60px auto;
   grid-template-rows: 60px auto;
   grid-template-areas:
     'navbar'
@@ -10,6 +12,7 @@
 
 @media (min-width: 1024px) {
   .wrapper {
+    -ms-grid-columns: min-content auto;
     grid-template-columns: min-content auto;
     grid-template-areas:
       'sidebarLg navbar'

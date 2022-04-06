@@ -9,6 +9,7 @@ import Upgrade from './containers/Upgrade'
 import Donate from './containers/Donate'
 import PU from './containers/PU'
 import Friends from './containers/Friends'
+import Contracts from './containers/Contracts'
 
 export const routes = [
   {
@@ -89,6 +90,16 @@ export const routes = [
     icon: 'handshake',
     component: Friends,
     layout: '',
+    informational: true,
+  },
+
+  {
+    path: '/contracts',
+    name: 'contracts',
+    icon: 'contract',
+    component: Contracts,
+    layout: '',
+    informational: true,
   },
 
   {
