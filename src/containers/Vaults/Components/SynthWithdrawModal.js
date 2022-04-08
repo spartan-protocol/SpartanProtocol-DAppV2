@@ -162,7 +162,7 @@ const SynthWithdrawModal = (props) => {
                   height="25px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="token-badge-modal-header"
+                  className="token-badge"
                 />
               </div>
               {t('withdraw')} {token.symbol}s

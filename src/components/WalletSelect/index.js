@@ -527,7 +527,8 @@ const WalletSelect = (props) => {
               size="sm"
               variant="primary"
             >
-              {t('viewBscScan')} <Icon icon="scan" size="16" className="mb-1" />
+              {t('viewBscScan')}{' '}
+              <Icon icon="scan" size="14" fill="white" className="mb-1 ms-1" />
             </Button>
             <Button
               size="sm"
@@ -537,7 +538,12 @@ const WalletSelect = (props) => {
               }}
             >
               {t('disconnect')}
-              <Icon icon="walletRed" size="17" className="mb-1" />
+              <Icon
+                icon="walletRed"
+                size="17"
+                fill="white"
+                className="mb-1 ms-1"
+              />
             </Button>
           </Modal.Footer>
         ) : (
@@ -550,7 +556,12 @@ const WalletSelect = (props) => {
               }}
             >
               {t('clearWallet')}
-              <Icon icon="walletRed" size="17" className="mb-1 ms-1" />
+              <Icon
+                icon="walletRed"
+                size="17"
+                fill="white"
+                className="mb-1 ms-1"
+              />
             </Button>
           </Modal.Footer>
         )}

@@ -54,7 +54,6 @@ const SwapTokens = () => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
-  const [filter, setFilter] = useState(['token'])
   const [triggerReload, setTriggerReload] = useState(0)
   const [assetParam1, setAssetParam1] = useState(
     new URLSearchParams(location.search).get(`asset1`),
@@ -81,14 +80,6 @@ const SwapTokens = () => {
     }
   }
 
-  const getFilter = () => {
-    const validModes = ['token']
-    if (pool.poolDetails.filter((x) => !x.hide).length > 2) {
-      validModes.push('pool')
-    }
-    return validModes
-  }
-
   useEffect(() => {
     const { poolDetails } = pool
 
@@ -113,10 +104,6 @@ const SwapTokens = () => {
 
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
-
-          const tempFilter = []
-          tempFilter.push('token')
-          setFilter(tempFilter)
 
           if (asset2?.tokenAddress === asset1?.tokenAddress) {
             asset2 =
@@ -455,7 +442,7 @@ const SwapTokens = () => {
                       <AssetSelect
                         defaultTab="token"
                         priority="1"
-                        filter={getFilter()}
+                        filter={['token']}
                       />
                     </InputGroup.Text>
                     <OverlayTrigger
@@ -560,7 +547,7 @@ const SwapTokens = () => {
                     <InputGroup.Text id="assetSelect2">
                       <AssetSelect
                         priority="2"
-                        filter={filter}
+                        filter={['token']}
                         blackList={[assetSwap1.tokenAddress]}
                       />
                     </InputGroup.Text>

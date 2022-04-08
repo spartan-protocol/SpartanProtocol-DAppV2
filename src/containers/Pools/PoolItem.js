@@ -382,14 +382,7 @@ const PoolItem = ({ asset, daoApy }) => {
                         now={getScaled() <= 35 ? getScaled() : 16.5}
                         className="rounded-start"
                       />
-                      {getScaled() <= 35 && (
-                        <ProgressBar
-                          variant="info"
-                          key={2}
-                          now={6}
-                          className="rounded"
-                        />
-                      )}
+                      {getScaled() <= 35 && <ProgressBar key={2} now={6} />}
                       <ProgressBar
                         variant="black"
                         key={3}
@@ -397,7 +390,6 @@ const PoolItem = ({ asset, daoApy }) => {
                       />
 
                       <ProgressBar
-                        variant="info"
                         key={5}
                         now={
                           getScaled() > 35 && getScaled() < 65
@@ -407,15 +399,9 @@ const PoolItem = ({ asset, daoApy }) => {
                         className="rounded-start"
                       />
                       {getScaled() > 35 && getScaled() < 65 && (
-                        <ProgressBar
-                          variant="success"
-                          key={6}
-                          now={6}
-                          className="rounded"
-                        />
+                        <ProgressBar variant="danger" key={6} now={6} />
                       )}
                       <ProgressBar
-                        variant="info"
                         key={7}
                         now={
                           getScaled() > 35 && getScaled() < 65
@@ -430,14 +416,7 @@ const PoolItem = ({ asset, daoApy }) => {
                         key={9}
                         now={getScaled() >= 65 ? getScaled() - 65 : 16.5}
                       />
-                      {getScaled() >= 65 && (
-                        <ProgressBar
-                          variant="info"
-                          key={10}
-                          now={6}
-                          className="rounded"
-                        />
-                      )}
+                      {getScaled() >= 65 && <ProgressBar key={10} now={6} />}
                       <ProgressBar
                         variant="black"
                         key={11}

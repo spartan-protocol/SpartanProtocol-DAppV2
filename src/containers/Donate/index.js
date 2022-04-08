@@ -542,31 +542,6 @@ ethereum(network: $network){
                   <Col>
                     <Row>
                       <Col xs="12" className="float-left output-card">
-                        Marketing/Educational Fund
-                        <div className="description fw-light">
-                          {t('budget')}: 100K SPARTA (Via DAO Grant)
-                        </div>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Row>
-                    <Col xs="12" className="output-card mt-1">
-                      A DAO proposal was created and successfully reached
-                      consensus to mint a 100K SPARTA marketing fund. Some
-                      community contributors are working on plans to utilize
-                      SPARTA from this fund ranging from educational videos to
-                      Youtube/Twitter marketing.
-                    </Col>
-                  </Row>
-                </Row>
-                <hr />
-                <Row className="my-2">
-                  <Col xs="auto" className="pe-0">
-                    <Icon icon="spartav2" size="35" />
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col xs="12" className="float-left output-card">
                         #FridayFor300 Quiz
                         <div className="description fw-light">
                           {t('budget')}: 300 SPARTA per week (Via community
@@ -584,30 +559,6 @@ ethereum(network: $network){
                       please donate exactly 300 SPARTA and let an admin know
                       (Telegram or Twitter) if you would like to be tagged in
                       the tweet as a sponsor.
-                    </Col>
-                  </Row>
-                </Row>
-                <hr />
-                <Row className="my-2">
-                  <Col xs="auto" className="pe-0">
-                    <Icon icon="bnb" size="35" />
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col xs="12" className="float-left output-card">
-                        Binance AMAs
-                        <div className="description fw-light">
-                          {t('budget')}: TBA
-                        </div>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Row>
-                    <Col xs="12" className="output-card mt-1">
-                      The Binance AMAs are still being organised by the
-                      community, donations for this campaign have been refunded
-                      pending finalisation. Once a 100% finalised plan has been
-                      completed we can open up donations for the AMAs again.
                     </Col>
                   </Row>
                 </Row>

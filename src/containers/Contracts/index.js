@@ -1,43 +1,64 @@
 import React from 'react'
-import Card from 'react-bootstrap/Card'
-import Col from 'react-bootstrap/Col'
-import Row from 'react-bootstrap/Row'
-import Button from 'react-bootstrap/Button'
+import Table from 'react-bootstrap/Table'
 import { useTranslation } from 'react-i18next'
 import { getExplorerContract } from '../../utils/extCalls'
 import { ContractsInfo } from './ContractsInfo'
-import { getAddresses } from '../../utils/web3'
+import { formatShortString, getAddresses } from '../../utils/web3'
+import { Icon } from '../../components/Icons'
+import { useTheme } from '../../providers/Theme'
+
+import styles from './styles.module.scss'
+import { writeToClipboard } from '../../components/Share/ShareLink'
 
 const Contracts = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
+  const { isDark } = useTheme()
+
   return (
     <>
-      <Row>
-        {ContractsInfo.filter((contract) => addr[contract] !== '').map(
-          (contract) => (
-            <Col className="my-2" lg="4" md="6" sm="12">
-              <Card>
-                <Card.Header className="text-center h4">
-                  {contract.name}
-                </Card.Header>
-                <Card.Body style={{ minHeight: '84px' }}>
-                  {t(`${contract.addrName}ContractDescription`)}
-                </Card.Body>
-                <Card.Footer>
+      <Table
+        variant={isDark ? 'dark' : null}
+        className={styles.table}
+        responsive
+      >
+        <thead>
+          <tr>
+            <th>Contract Name</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ContractsInfo.filter((contract) => addr[contract] !== '').map(
+            (contract) => (
+              <tr>
+                <td className={styles.firstCol}>
+                  <strong>{contract.name}</strong>
+                  <br />
+                  <span
+                    onClick={() => writeToClipboard(addr[contract.addrName])}
+                    role="button"
+                    aria-hidden="true"
+                  >
+                    {formatShortString(addr[contract.addrName])}
+                    <Icon icon="copy" size="20" className="float-end" />
+                  </span>
+                  <br />
+                  BSCScan
                   <a
                     href={getExplorerContract(addr[contract.addrName])}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Button className="w-100">View</Button>
+                    <Icon icon="scan" size="21" className="float-end p-1" />
                   </a>
-                </Card.Footer>
-              </Card>
-            </Col>
-          ),
-        )}
-      </Row>
+                </td>
+                <td>{t(`${contract.addrName}ContractDescription`)}</td>
+              </tr>
+            ),
+          )}
+        </tbody>
+      </Table>
     </>
   )
 }

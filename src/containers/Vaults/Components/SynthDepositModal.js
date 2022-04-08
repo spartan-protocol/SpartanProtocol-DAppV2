@@ -176,7 +176,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
               height="25px"
               src={spartaIcon}
               alt="Sparta LP token icon"
-              className="token-badge-modal-header"
+              className="token-badge"
             />
           </div>
           {t('deposit')} {token.symbol}s

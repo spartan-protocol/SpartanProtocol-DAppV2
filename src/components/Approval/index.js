@@ -132,7 +132,6 @@ const Approval = ({
         <Col>
           <Notifications show={notify} txnType="approve" />
           <Button
-            variant="info"
             disabled={!enoughGas()}
             onClick={async () => {
               handleApproval()

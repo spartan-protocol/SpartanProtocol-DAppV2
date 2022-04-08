@@ -7,15 +7,10 @@ import Button from 'react-bootstrap/Button'
 import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
-import { BN, formatFromWei } from '../../utils/bigNumber'
+import { formatFromWei } from '../../utils/bigNumber'
 import { getAddresses } from '../../utils/web3'
-import {
-  useSparta,
-  fallenSpartansClaim,
-  spartaUpgrade,
-} from '../../store/sparta'
+import { spartaUpgrade } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
-import { calcFeeBurn } from '../../utils/math/nonContract'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
 import { useWeb3 } from '../../store/web3'
@@ -25,13 +20,10 @@ const Upgrade = () => {
   const pool = usePool()
   const dispatch = useDispatch()
   const web3 = useWeb3()
-  const sparta = useSparta()
   const wallet = useWeb3React()
   const { t } = useTranslation()
-  const fsGenesis = '1620795586'
 
   const [upgradeLoading, setUpgradeLoading] = useState(false)
-  const [claimLoading, setClaimLoading] = useState(false)
   const [bnbBalance, setbnbBalance] = useState('0')
   const [loadingBalance, setloadingBalance] = useState(false)
 
@@ -72,39 +64,10 @@ const Upgrade = () => {
     }
   }, [wallet.status])
 
-  const formatDate = (unixTime) => {
-    const date = new Date(unixTime * 1000)
-    return date.toLocaleDateString()
-  }
-
-  const getExpiry = () => {
-    const expiry = BN(fsGenesis).plus(15552000)
-    return expiry
-  }
-
-  const getFeeBurn = () => {
-    const burnFee = calcFeeBurn(
-      sparta.globalDetails.feeOnTransfer,
-      sparta.claimCheck,
-    )
-    return burnFee
-  }
-
-  const getClaimAmount = () => {
-    const claimAmount = BN(sparta.claimCheck).minus(getFeeBurn())
-    return claimAmount
-  }
-
   const handleUpgrade = async () => {
     setUpgradeLoading(true)
     await dispatch(spartaUpgrade(wallet, web3.rpcs))
     setUpgradeLoading(false)
-  }
-
-  const handleClaim = async () => {
-    setClaimLoading(true)
-    await dispatch(fallenSpartansClaim(wallet, web3.rpcs))
-    setClaimLoading(false)
   }
 
   return (
@@ -112,7 +75,7 @@ const Upgrade = () => {
       {pool.tokenDetails.length > 0 && (
         <>
           <Col sm={6} lg={4}>
-            <Card className="mb-3">
+            <Card className="mb-3" style={{ minHeight: '190px' }}>
               <Card.Header>
                 <Card.Title>
                   <Col xs="auto" className="mt-2 h4">
@@ -174,69 +137,7 @@ const Upgrade = () => {
           </Col>
 
           <Col sm={6} lg={4}>
-            <Card className="mb-3">
-              <Card.Header>
-                <Card.Title>
-                  <Col xs="auto" className="mt-2 h4">
-                    {t('claim')}
-                  </Col>
-                </Card.Title>
-                <Card.Subtitle>{t('claimSubtitle')}</Card.Subtitle>
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                  <Col xs="auto" className="text-card">
-                    {t('claim')}
-                  </Col>
-                  <Col className="text-end output-card">
-                    {formatFromWei(getClaimAmount())} SPARTAv2
-                  </Col>
-                </Row>
-                <Row className="my-2">
-                  <Col xs="auto" className="text-card">
-                    {t('expiry')}
-                  </Col>
-                  <Col className="text-end output-card">
-                    {formatDate(getExpiry())}
-                  </Col>
-                </Row>
-              </Card.Body>
-              <Card.Footer>
-                {bnbBalance > 2000000000000000 && (
-                  <Row>
-                    <Col xs="12">
-                      <Button
-                        className="w-100"
-                        onClick={() => handleClaim()}
-                        disabled={sparta?.claimCheck <= 0}
-                      >
-                        {t('claim')} SPARTA
-                        {claimLoading && (
-                          <Icon
-                            icon="cycle"
-                            size="20"
-                            className="anim-spin ms-1"
-                          />
-                        )}
-                      </Button>
-                    </Col>
-                  </Row>
-                )}
-                {bnbBalance <= 2000000000000000 && (
-                  <Row>
-                    <Col xs="12">
-                      <Button variant="info" className="w-100" disabled>
-                        {t('notEnoughBnb')}
-                      </Button>
-                    </Col>
-                  </Row>
-                )}
-              </Card.Footer>
-            </Card>
-          </Col>
-
-          <Col sm={6} lg={4}>
-            <Card className="mb-3">
+            <Card className="mb-3" style={{ minHeight: '190px' }}>
               <Card.Body>
                 <Col>
                   <h3 className="mb-0">
@@ -266,7 +167,6 @@ const Upgrade = () => {
               <Card.Footer>
                 <Button
                   className="w-100"
-                  variant="info"
                   onClick={() => settrigger0(trigger0 + 1)}
                   disabled={loadingBalance === true}
                 >
