@@ -139,7 +139,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     if (!lockoutConfirm) {
       return [false, t('confirmLockup')]
     }
-    if (secsSinceHarvest() > 300) {
+    if (synth1.staked > 0 && secsSinceHarvest() > 300) {
       if (!harvestConfirm) {
         return [false, t('confirmHarvest')]
       }
