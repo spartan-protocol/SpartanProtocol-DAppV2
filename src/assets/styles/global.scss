@@ -65,11 +65,6 @@ a {
   border-radius: 5px;
 }
 
-li > .active {
-  border-left: 4px solid #0d6efd;
-  background-color: $bg-depth-0;
-}
-
 .shadow {
   box-shadow: $shadow;
 }
@@ -130,7 +125,7 @@ body.dark-theme {
   .toast-link:hover {
     color: $link-hover-dark;
   }
-  
+
   .toast-header {
     color: $text-dark;
   }
@@ -158,9 +153,5 @@ body.dark-theme {
 
   .shadow-inner {
     box-shadow: inset $shadow-dark;
-  }
-
-  .active {
-    background-color: $bg-depth-0-dark;
   }
 }

@@ -33,7 +33,7 @@ const SidebarLg = () => {
       .map((route) => (
         <Nav.Item key={route.path}>
           <LinkContainer to={route.path}>
-            <Nav.Link eventKey={route.path}>
+            <Nav.Link active={false}>
               <Icon icon={route.icon} size="24" />
               <span className={compact && !fixed ? 'd-none ms-3' : 'ms-3'}>
                 {t(route.name)}
@@ -93,7 +93,7 @@ const SidebarLg = () => {
               </div>
             </div>
           </Link>
-          <Nav className={`${styles.lis} nav`}>
+          <Nav className={styles.lis} id="sideNav">
             {/* dapp routes */}
             {navItems(routes)}
             <hr className="mx-3 my-2" />

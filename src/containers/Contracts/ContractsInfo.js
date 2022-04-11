@@ -1,13 +1,5 @@
 export const ContractsInfo = [
   {
-    addrName: 'spartav1',
-    name: 'Sparta V1',
-  },
-  {
-    addrName: 'spartav2',
-    name: 'Sparta V2',
-  },
-  {
     addrName: 'bondVault',
     name: 'Bond Vault',
   },
@@ -34,6 +26,14 @@ export const ContractsInfo = [
   {
     addrName: 'router',
     name: 'Router',
+  },
+  {
+    addrName: 'spartav1',
+    name: 'Sparta V1',
+  },
+  {
+    addrName: 'spartav2',
+    name: 'Sparta V2',
   },
   {
     addrName: 'synthFactory',

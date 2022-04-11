@@ -34,11 +34,9 @@ const Sidebar = () => {
       .map((route) => (
         <Nav.Item key={route.path}>
           <LinkContainer to={route.path}>
-            <Nav.Link eventKey={route.path} onClick={closeNav}>
-              <div>
-                <Icon icon={route.icon} size="24" />
-                <span className="ms-2">{t(route.name)}</span>
-              </div>
+            <Nav.Link active={false} onClick={closeNav}>
+              <Icon icon={route.icon} size="24" />
+              <span className="ms-2">{t(route.name)}</span>
             </Nav.Link>
           </LinkContainer>
         </Nav.Item>
@@ -87,7 +85,7 @@ const Sidebar = () => {
           </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body className="px-0">
-          <Nav className={styles.links}>
+          <Nav className={styles.links} id="sideNav">
             {/* dapp routes */}
             {navItems(routes)}
             <hr className="mx-3 my-2" />

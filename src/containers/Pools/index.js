@@ -178,12 +178,11 @@ const Overview = () => {
                 <option value="pools">
                   {t('pools')} ({getPools().length})
                 </option>
-                {getNewPools().length > 0 ||
-                  (isLoading() && (
-                    <option value="new">
-                      {t('new')} ({getNewPools().length})
-                    </option>
-                  ))}
+                {getNewPools().length > 0 && (
+                  <option value="new">
+                    {t('new')} ({getNewPools().length})
+                  </option>
+                )}
                 <option value="babies">
                   {t('< 10K')} ({getBabies().length})
                 </option>
@@ -214,29 +213,20 @@ const Overview = () => {
                     </Badge>
                   </Nav.Link>
                 </Nav.Item>
-                {getNewPools().length > 0 ||
-                  (isLoading() && (
-                    <Nav.Item>
-                      <Nav.Link
-                        bg="secondary"
-                        eventKey="new"
-                        className="btn-sm"
-                      >
-                        {t('new')}
-                        <Badge bg="secondary" className="ms-2">
-                          {!isLoading() ? (
-                            getNewPools().length
-                          ) : (
-                            <Icon
-                              icon="cycle"
-                              size="15"
-                              className="anim-spin"
-                            />
-                          )}
-                        </Badge>
-                      </Nav.Link>
-                    </Nav.Item>
-                  ))}
+                {getNewPools().length > 0 && (
+                  <Nav.Item>
+                    <Nav.Link bg="secondary" eventKey="new" className="btn-sm">
+                      {t('new')}
+                      <Badge bg="secondary" className="ms-2">
+                        {!isLoading() ? (
+                          getNewPools().length
+                        ) : (
+                          <Icon icon="cycle" size="15" className="anim-spin" />
+                        )}
+                      </Badge>
+                    </Nav.Link>
+                  </Nav.Item>
+                )}
                 <Nav.Item>
                   <Nav.Link eventKey="babies" className="btn-sm">
                     <OverlayTrigger

@@ -682,7 +682,7 @@ const PoolPositions = () => {
                 </Card.Title>
               </Col>
               <Col xs="auto">
-                <AssetSelect priority="1" filter={['pool']} />
+                {!isLoading() && <AssetSelect priority="1" filter={['pool']} />}
               </Col>
             </Row>
           </Card.Header>

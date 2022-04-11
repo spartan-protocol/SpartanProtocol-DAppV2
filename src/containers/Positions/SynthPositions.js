@@ -693,7 +693,9 @@ const SynthPositions = () => {
                 </Card.Title>
               </Col>
               <Col xs="auto">
-                <AssetSelect priority="1" filter={['synth']} />
+                {!isLoading() && (
+                  <AssetSelect priority="1" filter={['synth']} />
+                )}
               </Col>
             </Row>
           </Card.Header>

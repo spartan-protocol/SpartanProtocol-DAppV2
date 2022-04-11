@@ -4,8 +4,17 @@
   color: $text;
 }
 
+#sideNav .nav-link.active {
+  border-left: 4px solid #0d6efd;
+  background-color: $bg-depth-0;
+}
+
 body.dark-theme {
   .nav-link {
     color: $text-dark;
+  }
+
+  #sideNav .nav-link.active {
+    background-color: $bg-depth-0-dark;
   }
 }
