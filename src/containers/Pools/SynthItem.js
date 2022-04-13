@@ -111,7 +111,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 <p className="output-card">
                   <OverlayTrigger
                     placement="auto"
-                    overlay={Tooltip(t, 'apySynth')}
+                    overlay={Tooltip(t, 'apyVault')}
                   >
                     <span role="button">
                       <Icon icon="info" size="17" className="me-1 mb-1" />

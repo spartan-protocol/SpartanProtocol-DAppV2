@@ -17,6 +17,7 @@ import { Icon } from '../../components/Icons'
 import Metrics from './Components/Metrics'
 import { getPool } from '../../utils/math/utils'
 import Share from '../../components/Share'
+import Settings from '../../components/Settings'
 
 const Overview = () => {
   const { t } = useTranslation()
@@ -30,6 +31,7 @@ const Overview = () => {
   const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [selectedPool, setSelectedPool] = useState(false)
 
   const tryParse = (data) => {
@@ -105,6 +107,13 @@ const Overview = () => {
               />
             )}
 
+            {showSettingsModal && (
+              <Settings
+                setShowModal={setShowSettingsModal}
+                showModal={showSettingsModal}
+              />
+            )}
+
             {!isLoading() ? (
               <>
                 <Col>
@@ -156,13 +165,13 @@ const Overview = () => {
                             <Icon icon="connect" size="15" />
                           </Nav.Link>
                         </Nav.Item>
-                        <Nav.Item disabled>
+                        <Nav.Item>
                           <Nav.Link
                             className="btn-sm btn-outline-primary"
-                            disabled
+                            onClick={() =>
+                              setShowSettingsModal(!showSettingsModal)
+                            }
                           >
-                            {/* ADD SLIP TOLERANCE LOGIC */}
-                            {/* ADD GAS PRICE LOGIC */}
                             <Icon icon="settings" size="15" />
                           </Nav.Link>
                         </Nav.Item>

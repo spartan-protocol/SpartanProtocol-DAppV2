@@ -17,6 +17,7 @@ import {
   formatShortString,
   getAddresses,
   getItemFromArray,
+  getSettings,
 } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
@@ -382,12 +383,13 @@ const SwapTokens = () => {
       }
     }
     setTxnLoading(true)
+    const minAmountFraction = BN(100).minus(getSettings().slipTol).div(100)
     await dispatch(
       swap(
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
         assetSwap2.tokenAddress,
-        BN(getSwap()[0]).times(0.95).toFixed(0, 1),
+        BN(getSwap()[0]).times(minAmountFraction).toFixed(0, 1),
         wallet,
         web3.rpcs,
       ),

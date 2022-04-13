@@ -16,6 +16,7 @@ import Share from '../../components/Share'
 import SwapTokens from './swapTokens'
 import { getPool } from '../../utils/math/utils'
 import SwapLps from './swapLps'
+import Settings from '../../components/Settings'
 
 const Swap = () => {
   const { t } = useTranslation()
@@ -25,6 +26,7 @@ const Swap = () => {
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
   const [mode, setMode] = useState('token')
@@ -96,6 +98,14 @@ const Swap = () => {
                 showShare={showShareModal}
               />
             )}
+
+            {showSettingsModal && (
+              <Settings
+                setShowModal={setShowSettingsModal}
+                showModal={showSettingsModal}
+              />
+            )}
+
             {!isLoading() ? (
               <>
                 <Col>
@@ -143,10 +153,13 @@ const Swap = () => {
                             <Icon icon="connect" size="15" />
                           </Nav.Link>
                         </Nav.Item>
-                        <Nav.Item disabled>
-                          <Nav.Link className="btn-sm" disabled>
-                            {/* ADD SLIP TOLERANCE LOGIC */}
-                            {/* ADD GAS PRICE LOGIC */}
+                        <Nav.Item>
+                          <Nav.Link
+                            className="btn-sm btn-outline-primary"
+                            onClick={() =>
+                              setShowSettingsModal(!showSettingsModal)
+                            }
+                          >
                             <Icon icon="settings" size="15" />
                           </Nav.Link>
                         </Nav.Item>
