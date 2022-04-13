@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import Button from 'react-bootstrap/Button'
-import Col from 'react-bootstrap/Col'
 import Badge from 'react-bootstrap/Badge'
+import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
-import ProgressBar from 'react-bootstrap/ProgressBar'
+import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import Row from 'react-bootstrap/Row'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
@@ -59,7 +60,7 @@ const PoolItem = ({ asset, daoApy }) => {
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
-  const APY = formatFromUnits(calcAPY(asset, getFees(), getDivis()), 2)
+  const APY = calcAPY(asset, getFees(), getDivis())
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
 
@@ -79,7 +80,7 @@ const PoolItem = ({ asset, daoApy }) => {
   )
   const diviRevTooltip = Tooltip(
     t,
-    'dividendRevenue',
+    'incentivesRevenue',
     poolAgeDays > 30 ? '30' : poolAgeDays.toFixed(2),
   )
   const poolCapTooltip = Tooltip(t, 'poolCap')
@@ -236,7 +237,7 @@ const PoolItem = ({ asset, daoApy }) => {
 
             <Row className="my-1">
               <Col xs="auto" className="text-card pe-0">
-                Estimated APY
+                {t('estimatedApy')}
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
                     <Icon icon="info" className="ms-1" size="17" />
@@ -249,13 +250,67 @@ const PoolItem = ({ asset, daoApy }) => {
                   2,
                 )}
                 %
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={
+                    <Popover>
+                      <Popover.Body>
+                        <Row>
+                          <Col xs="6">{t('poolApy')}</Col>
+                          <Col xs="6" className="text-end">
+                            {formatFromUnits(APY, 2)}%
+                          </Col>
+                          <Col xs="6">{t('vaultApy')}</Col>
+                          <Col xs="6" className="text-end">
+                            {curated
+                              ? `${formatFromUnits(daoApy, 2)}%`
+                              : t('notCurated')}
+                          </Col>
+                          <Col xs="12">
+                            <hr className="my-2" />
+                          </Col>
+                          <Col xs="6">
+                            <strong>{t('totalApy')}</strong>
+                          </Col>
+                          <Col xs="6" className="text-end">
+                            <strong>
+                              {formatFromUnits(
+                                curated && daoApy ? BN(APY).plus(daoApy) : APY,
+                                2,
+                              )}
+                              %
+                            </strong>
+                          </Col>
+                          <Col xs="12">
+                            <hr className="my-2" />
+                          </Col>
+                          <Col xs="12" className="text-center">
+                            All APYs are estimates
+                          </Col>
+                        </Row>
+                      </Popover.Body>
+                    </Popover>
+                  }
+                >
+                  <span role="button">
+                    <Icon icon="info" className="ms-1" size="17" />
+                  </span>
+                </OverlayTrigger>
               </Col>
             </Row>
             {showDetails === true && (
               <>
                 <Row className="my-1">
                   <Col xs="auto" className="">
-                    Pool APY
+                    {t('poolApy')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'apyPool')}
+                    >
+                      <span role="button">
+                        <Icon icon="info" className="ms-1" size="17" />
+                      </span>
+                    </OverlayTrigger>
                   </Col>
                   <Col className="text-end fw-light">
                     {formatFromUnits(APY, 2)}%
@@ -264,7 +319,15 @@ const PoolItem = ({ asset, daoApy }) => {
 
                 <Row className="my-1">
                   <Col xs="auto" className="">
-                    DaoVault APY
+                    {t('vaultApy')}
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'apyVault')}
+                    >
+                      <span role="button">
+                        <Icon icon="info" className="ms-1" size="17" />
+                      </span>
+                    </OverlayTrigger>
                   </Col>
                   <Col className="text-end fw-light">
                     {curated && daoApy
@@ -467,7 +530,7 @@ const PoolItem = ({ asset, daoApy }) => {
 
                 <Row className="my-1">
                   <Col xs="auto" className="text-card">
-                    {t('dividends')}
+                    {t('incentives')}
                     <OverlayTrigger placement="auto" overlay={diviRevTooltip}>
                       <span role="button">
                         <Icon icon="info" className="ms-1" size="17" />

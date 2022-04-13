@@ -15,6 +15,16 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'apyInfo',
     },
     {
+      id: 'apyPool',
+      title: 'poolApy',
+      body: 'apyPoolInfo',
+    },
+    {
+      id: 'apyVault',
+      title: 'vaultApy',
+      body: 'apyVaultInfo',
+    },
+    {
       id: 'apySynth',
       title: 'vaultApy',
       body: 'vaultApyInfo',
@@ -44,6 +54,12 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'hiddenPools',
       title: 'hiddenPools',
       body: 'hiddenPoolsInfo',
+    },
+    {
+      id: 'incentivesRevenue',
+      title: 'incentiveRevenue',
+      body: 'incentiveRevenueDesc',
+      variable: { days: variable },
     },
     {
       id: 'newPool',

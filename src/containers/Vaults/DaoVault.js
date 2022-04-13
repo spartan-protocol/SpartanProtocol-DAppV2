@@ -237,7 +237,7 @@ const DaoVault = () => {
                     <span>APY</span>
                     <OverlayTrigger
                       placement="auto"
-                      overlay={Tooltip(t, 'apySynth')}
+                      overlay={Tooltip(t, 'apyVault')}
                     >
                       <span role="button">
                         <Icon icon="info" className="ms-1" size="17" />

@@ -31,7 +31,7 @@ const Contracts = () => {
         <tbody>
           {ContractsInfo.filter((contract) => addr[contract] !== '').map(
             (contract) => (
-              <tr>
+              <tr key={addr[contract.addrName]}>
                 <td className={styles.firstCol}>
                   <strong>{contract.name}</strong>
                   <br />

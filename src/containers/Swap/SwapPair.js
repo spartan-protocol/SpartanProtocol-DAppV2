@@ -3,13 +3,9 @@ import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 import { formatFromWei, formatFromUnits, BN } from '../../utils/bigNumber'
-import { Tooltip } from '../../components/Tooltip/index'
-import { Icon } from '../../components/Icons/index'
-import { calcAPY } from '../../utils/math/nonContract'
 
 const SwapPair = ({ assetSwap }) => {
   const web3 = useWeb3()
@@ -36,10 +32,6 @@ const SwapPair = ({ assetSwap }) => {
     asset.curated && pool.incentives
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
-
-  const APY = asset
-    ? formatFromUnits(calcAPY(assetSwap, getFees(), getDivis()), 2)
-    : 0
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -120,17 +112,6 @@ const SwapPair = ({ assetSwap }) => {
                 {getToken(assetSwap.tokenAddress).symbol} <br />
                 {formatFromWei(assetSwap.baseAmount, 4)} SPARTA
               </Col>
-            </Row>
-            <Row className="my-2">
-              <Col xs="auto" className="text-card">
-                APY{' '}
-                <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
-                  <span role="button">
-                    <Icon icon="info" className="ms-1" size="17" />
-                  </span>
-                </OverlayTrigger>
-              </Col>
-              <Col className="output-card text-end">{APY}%</Col>
             </Row>
           </Card.Body>
         </Card>
