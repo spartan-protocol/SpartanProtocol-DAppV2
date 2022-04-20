@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import LanguageDropdown from './components/LanguageDropdown'
 import AddressConn from './components/AddressConn'
-import ThemeSwitcher from './components/ThemeSwitcher'
 import Supply from './components/Supply'
 import Contracts from './components/Contracts'
 import Sidebar from '../Sidebar'
@@ -26,8 +24,6 @@ const Navbar = () => {
         </div>
       )}
       <div className={styles.buttons}>
-        <ThemeSwitcher />
-        <LanguageDropdown />
         <AddressConn />
         <Contracts />
         <Supply />

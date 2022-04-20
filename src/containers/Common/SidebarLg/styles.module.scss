@@ -13,27 +13,21 @@
   transition: 0.5s;
   // CSS Grid
   grid-area: sidebarLg;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: auto;
-  grid-template-rows: auto;
-  grid-template-areas:
-    'links'
-    'socials';
+  display: flex;
+  flex-direction: column;
 }
 
 .links {
-  grid-area: links;
   white-space: nowrap;
   text-overflow: clip;
   transition: 0.5s;
 }
 
-.socials {
-  grid-area: socials;
+.bottom {
+  justify-self: flex-end;
+  margin-top: auto;
   text-align: center;
   margin-bottom: 20px;
-  margin-top: 20px;
 }
 
 .icon {

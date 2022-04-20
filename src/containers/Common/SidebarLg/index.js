@@ -8,6 +8,8 @@ import { routes } from '../../../routes'
 import { Icon } from '../../../components/Icons/index'
 import { useBreakpoint } from '../../../providers/Breakpoint'
 import SocialIcons from '../SocialIcons'
+import ThemeSwitcher from './components/ThemeSwitcher'
+import LanguageDropdown from './components/LanguageDropdown'
 
 import styles from './styles.module.scss'
 
@@ -102,14 +104,24 @@ const SidebarLg = () => {
           </Nav>
         </div>
         <div
-          className={styles.socials}
+          className={styles.bottom}
           style={compact && !fixed ? { width: '60px' } : { width: '200px' }}
         >
-          {compact && !fixed ? (
-            <Icon icon="github" size="25" />
-          ) : (
-            <SocialIcons />
-          )}
+          <div>
+            {compact && !fixed ? (
+              <>
+                <LanguageDropdown />
+                <ThemeSwitcher />
+                <Icon icon="github" size="25" />
+              </>
+            ) : (
+              <>
+                <LanguageDropdown extended />
+                <ThemeSwitcher extended />
+                <SocialIcons />
+              </>
+            )}
+          </div>
         </div>
       </Col>
     </>
