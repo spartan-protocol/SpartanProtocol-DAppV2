@@ -30,7 +30,7 @@ import {
   convertToWei,
   convertFromWei,
   formatFromWei,
-  formatFromUnits,
+  // formatFromUnits,
 } from '../../utils/bigNumber'
 import { swapAssetToSynth, swapSynthToAsset } from '../../store/router'
 import { useWeb3 } from '../../store/web3'
@@ -44,7 +44,7 @@ import { Icon } from '../../components/Icons/index'
 import { useSparta } from '../../store/sparta'
 import { balanceWidths } from '../Liquidity/Components/Utils'
 import { burnSynth, mintSynth, stirCauldron } from '../../utils/math/router'
-import { calcSpotValueInBase } from '../../utils/math/utils'
+// import { calcSpotValueInBase } from '../../utils/math/utils'
 import {
   useSynth,
   getSynthDetails,
@@ -415,37 +415,37 @@ const Swap = () => {
   }
 
   // GET USD VALUES
-  const getInput1USD = () => {
-    if (assetSwap1.tokenAddress === addr.spartav2) {
-      return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
-    }
-    if (swapInput1?.value) {
-      return BN(
-        calcSpotValueInBase(convertToWei(swapInput1?.value), assetSwap1),
-      ).times(web3.spartaPrice)
-    }
-    return '0'
-  }
+  // const getInput1USD = () => {
+  //   if (assetSwap1.tokenAddress === addr.spartav2) {
+  //     return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
+  //   }
+  //   if (swapInput1?.value) {
+  //     return BN(
+  //       calcSpotValueInBase(convertToWei(swapInput1?.value), assetSwap1),
+  //     ).times(web3.spartaPrice)
+  //   }
+  //   return '0'
+  // }
 
   // GET USD VALUES
-  const getInput2USD = () => {
-    if (assetSwap2.tokenAddress === addr.spartav2) {
-      return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
-    }
-    if (swapInput2?.value) {
-      return BN(
-        calcSpotValueInBase(convertToWei(swapInput2?.value), assetSwap2),
-      ).times(web3.spartaPrice)
-    }
-    return '0'
-  }
+  // const getInput2USD = () => {
+  //   if (assetSwap2.tokenAddress === addr.spartav2) {
+  //     return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
+  //   }
+  //   if (swapInput2?.value) {
+  //     return BN(
+  //       calcSpotValueInBase(convertToWei(swapInput2?.value), assetSwap2),
+  //     ).times(web3.spartaPrice)
+  //   }
+  //   return '0'
+  // }
 
-  const getRateSlip = () => {
-    if (assetSwap1 && swapInput1?.value > 0 && swapInput2?.value > 0) {
-      return BN(getInput2USD()).div(getInput1USD()).minus('1').times('100')
-    }
-    return '0'
-  }
+  // const getRateSlip = () => {
+  //   if (assetSwap1 && swapInput1?.value > 0 && swapInput2?.value > 0) {
+  //     return BN(getInput2USD()).div(getInput1USD()).minus('1').times('100')
+  //   }
+  //   return '0'
+  // }
 
   const estMaxGasSynthOut = '5000000000000000'
   const estMaxGasSynthIn = '5000000000000000'
@@ -674,7 +674,7 @@ const Swap = () => {
                                   toggle('mint')
                                 }}
                               >
-                                {t('mint')}
+                                {t('forge')}
                               </Nav.Link>
                             </Nav.Item>
                             <Nav.Item className="me-1">
@@ -685,7 +685,7 @@ const Swap = () => {
                                   toggle('burn')
                                 }}
                               >
-                                {t('burn')}
+                                {t('melt')}
                               </Nav.Link>
                             </Nav.Item>
                             <Nav.Item className="me-1">
@@ -856,12 +856,12 @@ const Swap = () => {
                                             />
                                           </a>
                                         </Col>
-                                        <Col className="text-end">
+                                        {/* <Col className="text-end">
                                           ~$
                                           {swapInput1?.value
                                             ? formatFromWei(getInput1USD(), 2)
                                             : '0.00'}
-                                        </Col>
+                                        </Col> */}
                                       </Row>
                                     </Col>
                                   </Row>
@@ -959,7 +959,7 @@ const Swap = () => {
                                               />
                                             </a>
                                           </Col>
-                                          <Col className="text-end">
+                                          {/* <Col className="text-end">
                                             ~$
                                             {swapInput2?.value
                                               ? formatFromWei(getInput2USD(), 2)
@@ -972,7 +972,7 @@ const Swap = () => {
                                                 )
                                               : '0.00'}
                                             {'%)'}
-                                          </Col>
+                                          </Col> */}
                                         </Row>
                                       </Col>
                                     </Row>
@@ -1048,7 +1048,7 @@ const Swap = () => {
                                               />
                                             </a>
                                           </Col>
-                                          <Col className="text-end">
+                                          {/* <Col className="text-end">
                                             ~$
                                             {swapInput2?.value
                                               ? formatFromWei(getInput2USD(), 2)
@@ -1061,7 +1061,7 @@ const Swap = () => {
                                                 )
                                               : '0.00'}
                                             {'%)'}
-                                          </Col>
+                                          </Col> */}
                                         </Row>
                                       </Col>
                                     </Row>
