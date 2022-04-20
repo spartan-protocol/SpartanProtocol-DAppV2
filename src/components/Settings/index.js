@@ -11,7 +11,7 @@ import Row from 'react-bootstrap/Row'
 import { Icon } from '../Icons'
 import { Tooltip } from '../Tooltip'
 import { getNetwork, getSettings } from '../../utils/web3'
-import { gasRatesMN, gasRatesTN, slipTols } from './options'
+import { gasRatesMN, gasRatesTN, slipTols, defaultSettings } from './options'
 
 /**
  * Settings panel to change gas rate & slip tolerance etc
@@ -47,6 +47,16 @@ const Settings = ({ setShowModal, showModal }) => {
     lsSettings.slipTol = slipTolerance
     window.localStorage.setItem('sp_settings', JSON.stringify(lsSettings))
     setShowModal(false)
+  }
+
+  const resetDefaults = () => {
+    const isMN = network.chainId === 56
+    if (isMN) {
+      setGasRate(defaultSettings.gasRateMN)
+    } else {
+      setGasRate(defaultSettings.gasRateTN)
+    }
+    setSlipTolerance(defaultSettings.slipTol)
   }
 
   return (
@@ -116,6 +126,9 @@ const Settings = ({ setShowModal, showModal }) => {
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => setShowModal(false)}>Cancel</Button>
+            <Button variant="secondary" onClick={() => resetDefaults()}>
+              Recommended
+            </Button>
             <Button onClick={() => saveSettings()}>Save</Button>
           </Modal.Footer>
         </Modal>
