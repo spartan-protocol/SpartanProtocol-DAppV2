@@ -877,8 +877,8 @@ const LiqAdd = () => {
           </Col>
         </Row>
       )}
-      {poolAdd1.frozen && (
-        <Row>
+      {poolAdd1.curated && poolAdd1.frozen && (
+        <Row className="mt-2">
           <Col>
             <div className="text-center">{t('poolFrozenConfirm')}</div>
             <Form className="my-2 text-center">
