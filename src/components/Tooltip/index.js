@@ -122,6 +122,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'poolRatioInfo',
     },
     {
+      id: 'pricingData',
+      body: 'pricingDataProvided',
+      variable: { provider: variable },
+    },
+    {
       id: 'rank',
       title: 'rank',
       body: 'rankInfo',

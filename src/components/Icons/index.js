@@ -1,6 +1,7 @@
 import React from 'react'
 // BRANDS
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
+import { ReactComponent as CoinGeckoIcon } from '../../assets/brands/coingecko-icon.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
@@ -87,6 +88,7 @@ import { useTheme } from '../../providers/Theme'
 const icons = {
   // BRANDS
   apple: Apple,
+  coinGeckoIcon: CoinGeckoIcon,
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS

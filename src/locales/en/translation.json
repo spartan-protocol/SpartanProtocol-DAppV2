@@ -312,6 +312,7 @@
   "poolsRemoveCuratedDesc": "Remove from the curated list",
   "poolsRemoveCuratedLongDesc": "A curated pool is a special type of pool that enables Synthetic assets to be minted on top of it & its LP tokens to be used as weight in the DAOVault for harvest rewards & DAO proposals",
   "positions": "Positions",
+  "pricingDataProvided": "This price is derived from {{provider}}",
   "proposal": "Proposal",
   "proposalCount": "Proposal Count",
   "protocolTvl": "Protocol TVL",

@@ -38,7 +38,7 @@ import { calcSpotValueInBase } from '../../utils/math/utils'
 import { getSwapSpot } from '../../utils/math/nonContract'
 import { swapTo } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
-import { getExplorerContract } from '../../utils/extCalls'
+import { getExplorerContract, getPriceByContract } from '../../utils/extCalls'
 
 const SwapTokens = () => {
   const { t } = useTranslation()
@@ -55,6 +55,8 @@ const SwapTokens = () => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [assetSwap1, setAssetSwap1] = useState('...')
   const [assetSwap2, setAssetSwap2] = useState('...')
+  const [asset1USD, setAsset1USD] = useState(false)
+  const [asset2USD, setAsset2USD] = useState(false)
   const [triggerReload, setTriggerReload] = useState(0)
   const [assetParam1, setAssetParam1] = useState(
     new URLSearchParams(location.search).get(`asset1`),
@@ -161,6 +163,58 @@ const SwapTokens = () => {
     window.localStorage.getItem('assetSelected2'),
     hasFocus,
   ])
+
+  const getAsset1ExtPrice = async () => {
+    if (assetSwap1 !== '...') {
+      if (assetSwap1.tokenAddress === addr.spartav2) {
+        setAsset1USD(false)
+      } else {
+        setAsset1USD(false)
+        const asset1usd = await getPriceByContract(assetSwap1.tokenAddress)
+        const isCurrent =
+          asset1usd[
+            assetSwap1.tokenAddress === addr.bnb
+              ? addr.wbnb.toLowerCase()
+              : assetSwap1.tokenAddress.toLowerCase()
+          ]
+        if (isCurrent) {
+          setAsset1USD(isCurrent.usd)
+        }
+      }
+    }
+  }
+
+  const getAsset2ExtPrice = async () => {
+    if (assetSwap2 !== '...') {
+      if (assetSwap2.tokenAddress === addr.spartav2) {
+        setAsset2USD(false)
+      } else {
+        setAsset2USD(false)
+        const asset2usd = await getPriceByContract(assetSwap2.tokenAddress)
+        const isCurrent =
+          asset2usd[
+            assetSwap2.tokenAddress === addr.bnb
+              ? addr.wbnb.toLowerCase()
+              : assetSwap2.tokenAddress.toLowerCase()
+          ]
+        if (isCurrent) {
+          setAsset2USD(isCurrent.usd)
+        }
+      }
+    }
+  }
+
+  /** Check token1 external price (on asset1 change) */
+  useEffect(() => {
+    getAsset1ExtPrice()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assetSwap1.tokenAddress])
+
+  /** Check token2 external price (on asset2 change) */
+  useEffect(() => {
+    getAsset2ExtPrice()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assetSwap2.tokenAddress])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -294,6 +348,10 @@ const SwapTokens = () => {
       return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
     }
     if (swapInput1?.value) {
+      if (asset1USD) {
+        return BN(convertToWei(swapInput1?.value)).times(asset1USD)
+      }
+      // If we have no external pricing data, fallback to internal pricing
       return BN(
         calcSpotValueInBase(convertToWei(swapInput1?.value), assetSwap1),
       ).times(web3.spartaPrice)
@@ -307,6 +365,10 @@ const SwapTokens = () => {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (swapInput2?.value) {
+      if (asset2USD) {
+        return BN(convertToWei(swapInput2?.value)).times(asset2USD)
+      }
+      // If we have no external pricing data, fallback to internal pricing
       return BN(
         calcSpotValueInBase(convertToWei(swapInput2?.value), assetSwap2),
       ).times(web3.spartaPrice)
@@ -500,10 +562,34 @@ const SwapTokens = () => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      ~$
-                      {swapInput1?.value
-                        ? formatFromWei(getInput1USD(), 2)
-                        : '0.00'}
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(
+                          t,
+                          'pricingData',
+                          asset1USD ||
+                            assetSwap1?.tokenAddress === addr.spartav2
+                            ? 'CoinGecko'
+                            : 'internal pool prices',
+                        )}
+                      >
+                        <span role="button">
+                          ~$
+                          {swapInput1?.value
+                            ? formatFromWei(getInput1USD(), 2)
+                            : '0.00'}
+                          <Icon
+                            icon={
+                              asset1USD ||
+                              assetSwap1?.tokenAddress === addr.spartav2
+                                ? 'coinGeckoIcon'
+                                : 'usd'
+                            }
+                            size="14"
+                            className="ms-1"
+                          />
+                        </span>
+                      </OverlayTrigger>
                     </Col>
                   </Row>
                 </Col>
@@ -591,15 +677,39 @@ const SwapTokens = () => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      ~$
-                      {swapInput2?.value
-                        ? formatFromWei(getInput2USD(), 2)
-                        : '0.00'}
-                      {' ('}
-                      {swapInput1?.value
-                        ? formatFromUnits(getRateSlip(), 2)
-                        : '0.00'}
-                      {'%)'}
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(
+                          t,
+                          'pricingData',
+                          asset2USD ||
+                            assetSwap2?.tokenAddress === addr.spartav2
+                            ? 'CoinGecko'
+                            : 'internal pool prices',
+                        )}
+                      >
+                        <span role="button">
+                          ~$
+                          {swapInput2?.value
+                            ? formatFromWei(getInput2USD(), 2)
+                            : '0.00'}
+                          {' ('}
+                          {swapInput1?.value
+                            ? formatFromUnits(getRateSlip(), 2)
+                            : '0.00'}
+                          {'%)'}
+                          <Icon
+                            icon={
+                              asset2USD ||
+                              assetSwap2?.tokenAddress === addr.spartav2
+                                ? 'coinGeckoIcon'
+                                : 'usd'
+                            }
+                            size="14"
+                            className="ms-1 mb-1"
+                          />
+                        </span>
+                      </OverlayTrigger>
                     </Col>
                   </Row>
                 </Col>
