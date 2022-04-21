@@ -153,7 +153,7 @@ const locales = [
 
 const getLocale = () => locales?.filter((x) => x.id === i18n.languages[0])[0]
 
-const LanguageDropdown = ({ extended }) => {
+const LanguageDropdown = ({ centered }) => {
   const [showDropdown, setshowDropdown] = useState(false)
   const target = useRef(null)
   const [flag, setFlag] = useState(getLocale()?.flag || locales[0]?.flag)
@@ -165,23 +165,20 @@ const LanguageDropdown = ({ extended }) => {
   }
 
   return (
-    <div
-      className={extended ? 'd-flex ms-4 ps-1 py-2' : 'ms-4 py-2'}
-      style={extended && { marginBottom: '-1px' }}
-    >
+    <>
       <div
-        id="PopoverClick1"
+        ref={target}
         role="button"
-        className="header-btn d-flex justify-center"
+        className="d-inline-block ms-2"
         onClick={() => setshowDropdown(!showDropdown)}
         aria-hidden="true"
       >
-        <img src={flag} alt="flag" height="18" className="rounded" />
+        <img src={flag} alt="flag" height="21" className="rounded" />
       </div>
       <Overlay
         target={target.current}
         show={showDropdown}
-        placement="right"
+        placement={centered ? 'top' : 'right'}
         onHide={() => setshowDropdown(false)}
         rootClose
       >
@@ -190,10 +187,11 @@ const LanguageDropdown = ({ extended }) => {
           <Popover.Body>
             <Row>
               {locales.map((x) => (
-                <Col xs={12} key={x.id} className="">
+                <Col xs={6} key={x.id} className="">
                   <Button
+                    variant="outline-secondary"
                     onClick={() => changeLanguageAction(x.id)}
-                    className="w-100 mb-1 p-0"
+                    className="w-100 mb-1 p-1"
                   >
                     <span className="">
                       <img src={x.flag} alt="Spartan" height="12" />
@@ -206,18 +204,7 @@ const LanguageDropdown = ({ extended }) => {
           </Popover.Body>
         </Popover>
       </Overlay>
-      {extended && (
-        <div
-          ref={target}
-          role="button"
-          onClick={() => setshowDropdown(!showDropdown)}
-          className="ms-2 px-1"
-          aria-hidden="true"
-        >
-          Language
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 

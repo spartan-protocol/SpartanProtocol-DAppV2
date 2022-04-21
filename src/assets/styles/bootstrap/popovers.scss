@@ -8,14 +8,20 @@
   z-index: $zindex-popover;
 }
 
+.popover {
+  border-color: #00000020;
+  background-color: #fffffff5;
+}
+
 .popover-header {
-  background-color: $bg-depth-1;
+  background-color: #00000012;
+  border-color: #00000020;
 }
 
 .popover-body {
   max-height: 66vh;
   overflow: auto;
-  background-color: $bg-depth-2;
+  // background-color: $bg-depth-2;
 }
 
 .bs-popover-bottom > .popover-arrow::after,
@@ -31,16 +37,16 @@
 body.dark-theme {
   .popover {
     color: $text-dark;
-    background-color: $bg-depth-1-dark;
+    background-color: #12121bf5;
   }
 
-  .popover-header {
-    background-color: $bg-depth-1-dark;
-  }
+  // .popover-header {
+  //   background-color: $bg-depth-1-dark;
+  // }
 
   .popover-body {
     color: $text-dark;
-    background-color: $bg-depth-2-dark;
+    // background-color: $bg-depth-2-dark;
   }
 
   .bs-popover-bottom > .popover-arrow::after,

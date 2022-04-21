@@ -60,24 +60,12 @@ a {
   background-color: $bg-depth-2;
 }
 
-.header-btn {
-  align-self: center;
-  border-radius: 5px;
-}
-
 .shadow {
   box-shadow: $shadow;
 }
 
 .shadow-inner {
   box-shadow: inset $shadow;
-}
-
-#PopoverClick {
-  border: solid 1px #2d3848;
-  border-radius: 10px;
-  padding: 3px 7px;
-  font-weight: 500;
 }
 
 .token-badge {

@@ -570,7 +570,7 @@ const PoolItem = ({ asset, daoApy }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="outline-primary"
+                  variant="outline-secondary"
                   className="w-100"
                   onClick={() =>
                     history.push(
@@ -584,7 +584,7 @@ const PoolItem = ({ asset, daoApy }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="outline-primary"
+                  variant="outline-secondary"
                   className="w-100"
                   onClick={() =>
                     history.push(`/liquidity?asset1=${tokenAddress}`)
@@ -597,7 +597,7 @@ const PoolItem = ({ asset, daoApy }) => {
                 <Col>
                   <Button
                     size="sm"
-                    variant="outline-primary"
+                    variant="outline-secondary"
                     className="w-100"
                     disabled={!asset.curated}
                     onClick={() => history.push('/vaults')}

@@ -28,6 +28,8 @@ import { Icon } from '../../../../components/Icons/index'
 import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
+import styles from './styles.module.scss'
+
 const Supply = () => {
   const { t } = useTranslation()
   const web3 = useWeb3()
@@ -155,15 +157,15 @@ const Supply = () => {
     <>
       <div
         role="button"
-        id="PopoverClick"
-        className="header-btn"
+        className={styles.headerBtn}
         onClick={() => setshowDropdown(!showDropdown)}
         ref={target}
         aria-hidden="true"
       >
-        <Icon icon="spartav2" size="20" className="me-1" />
-        {/* <Icon icon="arrowDown" className="me-1 hide-i5" size="15" /> */}$
-        {formatFromUnits(web3.spartaPrice, 2)}
+        <Icon icon="spartav2" size="27" className="me-1" />
+        <span className={styles.btnText}>
+          {`$${formatFromUnits(web3.spartaPrice, 2)}`}
+        </span>
       </div>
 
       {showDropdown && (

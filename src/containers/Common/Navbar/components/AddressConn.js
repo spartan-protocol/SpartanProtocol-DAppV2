@@ -6,20 +6,16 @@ import Popover from 'react-bootstrap/Popover'
 import WalletSelect from '../../../../components/WalletSelect/index'
 import { Icon } from '../../../../components/Icons'
 
+import styles from './styles.module.scss'
+import { formatShortString } from '../../../../utils/web3'
+
 const AddressConn = () => {
   const wallet = useWeb3React()
-  // const pool = usePool()
   const [walletModalShow, setWalletModalShow] = useState(false)
   const [showPopConnect, setShowPopConnect] = useState(false)
-  // only trigger this once when hover or click on input
-  const [triesAndNotConnected, setTriesAndNotConnected] = useState(false)
-  const [showPopConnectHover, setShowPopConnectHover] = useState(false)
   const { t } = useTranslation()
 
   const target = useRef(null)
-  const targetB = useRef(null)
-
-  const btnClass = 'header-btn mx-2'
 
   useEffect(() => {
     async function listenAccountsChanged() {
@@ -42,93 +38,51 @@ const AddressConn = () => {
     listenNetworkChanged()
   }, [])
 
-  // load only after initial render
   useEffect(() => {
-    setTriesAndNotConnected(false)
+    setShowPopConnect(true)
     setTimeout(() => {
-      setShowPopConnect(true)
-      setTimeout(() => {
-        setShowPopConnect(false)
-      }, 5000)
-    }, 2500)
+      setShowPopConnect(false)
+    }, 3500)
   }, [])
 
-  // if a user tries to do something and is not connected
-  useEffect(() => {
-    if (triesAndNotConnected) {
-      setShowPopConnectHover(true)
-      setTimeout(() => {
-        setShowPopConnectHover(false)
-      }, 3000)
-    }
-  }, [triesAndNotConnected])
-  //
-  //  tooltipConnected = () => {
-  //    return ''
-  //  }
   return (
     <>
-      {(!wallet || !wallet?.active || wallet?.error) && (
-        <>
-          <div
-            role="button"
-            className={btnClass}
-            onClick={() => setWalletModalShow(true)}
-            onKeyPress={() => setWalletModalShow(true)}
-            ref={target}
-            aria-hidden="true"
-          >
-            <Icon icon="walletRed" size="27" />
-          </div>
-          <Overlay
-            target={target.current}
-            show={showPopConnect}
-            placement="bottom"
-            onHide={() => setShowPopConnect(false)}
-            rootClose
-          >
-            <Popover>
-              <Popover.Header />
-              <Popover.Body>
-                <b>{t('checkConnectWallet')}</b>
-              </Popover.Body>
-            </Popover>
-          </Overlay>{' '}
-        </>
-      )}
-      {wallet?.active && (
-        <>
-          <div
-            role="button"
-            className={btnClass}
-            onClick={() => setWalletModalShow(true)}
-            onKeyPress={() => setWalletModalShow(true)}
-            ref={targetB}
-            aria-hidden="true"
-          >
-            <Icon icon="walletGreen" size="27" />
-          </div>
-          <Overlay
-            target={targetB.current}
-            show={showPopConnectHover}
-            placement="bottom"
-            onHide={() => setShowPopConnectHover(false)}
-            rootClose
-          >
-            <Popover>
-              <Popover.Header />
-              <Popover.Body>
-                <b>{t('checkConnectWallet')}</b>
-              </Popover.Body>
-            </Popover>
-          </Overlay>{' '}
-        </>
-      )}
-
       <WalletSelect
         show={walletModalShow}
         onHide={() => setWalletModalShow(false)}
       />
+      <div
+        role="button"
+        className={`${styles.headerBtn} mx-2`}
+        onClick={() => setWalletModalShow(true)}
+        onKeyPress={() => setWalletModalShow(true)}
+        ref={target}
+        aria-hidden="true"
+      >
+        <Icon
+          icon="bnbChainConnected"
+          fill={wallet?.account ? 'green' : '#d80000'}
+          size="27"
+        />
+        <span className={`${styles.btnText} ms-1`}>
+          {wallet?.account
+            ? formatShortString(wallet.account)
+            : t('connectWallet')}
+        </span>
+      </div>
+      <Overlay
+        target={target.current}
+        show={showPopConnect}
+        placement="bottom"
+        onHide={() => setShowPopConnect(false)}
+      >
+        <Popover>
+          <Popover.Header />
+          <Popover.Body>
+            <b>{t('checkConnectWallet')}</b>
+          </Popover.Body>
+        </Popover>
+      </Overlay>
     </>
   )
 }

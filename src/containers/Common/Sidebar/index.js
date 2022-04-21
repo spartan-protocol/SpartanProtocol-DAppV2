@@ -10,6 +10,9 @@ import { Icon } from '../../../components/Icons/index'
 import SocialIcons from '../SocialIcons'
 
 import styles from './styles.module.scss'
+import Utilities from '../SidebarLg/components/Utilities'
+
+const iconSize = '22'
 
 const Sidebar = () => {
   const [navOpen, setnavOpen] = useState(false)
@@ -35,7 +38,7 @@ const Sidebar = () => {
         <Nav.Item key={route.path}>
           <LinkContainer to={route.path}>
             <Nav.Link active={false} onClick={closeNav}>
-              <Icon icon={route.icon} size="24" />
+              <Icon icon={route.icon} size={iconSize} />
               <span className="ms-2">{t(route.name)}</span>
             </Nav.Link>
           </LinkContainer>
@@ -47,12 +50,12 @@ const Sidebar = () => {
       {navOpen ? (
         <>
           <span role="button" onClick={closeNav} aria-hidden="true">
-            <Icon icon="menuOpen" size="24" />
+            <Icon icon="menuOpen" size={iconSize} />
           </span>
         </>
       ) : (
         <span role="button" onClick={openNav} aria-hidden="true">
-          <Icon icon="menuClose" size="24" />
+          <Icon icon="menuClose" size={iconSize} />
         </span>
       )}
       <Offcanvas
@@ -65,12 +68,12 @@ const Sidebar = () => {
           {navOpen ? (
             <>
               <span role="button" onClick={closeNav} aria-hidden="true">
-                <Icon icon="menuOpen" size="24" />
+                <Icon icon="menuOpen" size={iconSize} />
               </span>
             </>
           ) : (
             <span role="button" onClick={openNav} aria-hidden="true">
-              <Icon icon="menuClose" size="24" />
+              <Icon icon="menuClose" size={iconSize} />
             </span>
           )}
           <Offcanvas.Title className="ms-2">
@@ -92,6 +95,8 @@ const Sidebar = () => {
             {/* informational routes (friends, contracts etc.) */}
             {navItems(routes, true)}
           </Nav>
+          <hr />
+          <Utilities centered />
           <SocialIcons centered />
         </Offcanvas.Body>
       </Offcanvas>

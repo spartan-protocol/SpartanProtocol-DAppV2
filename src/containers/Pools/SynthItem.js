@@ -229,7 +229,7 @@ const SynthItem = ({ asset, synthApy }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="outline-primary"
+                  variant="outline-secondary"
                   className="w-100"
                   disabled={!asset.curated}
                   onClick={() => history.push('/vaults?tab=Synth')}
@@ -240,7 +240,7 @@ const SynthItem = ({ asset, synthApy }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="outline-primary"
+                  variant="outline-secondary"
                   className="w-100"
                   onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
                 >

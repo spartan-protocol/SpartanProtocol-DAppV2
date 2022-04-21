@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import AddressConn from './components/AddressConn'
 import Supply from './components/Supply'
-import Contracts from './components/Contracts'
 import Sidebar from '../Sidebar'
 import { Icon } from '../../../components/Icons/index'
 
@@ -25,7 +24,6 @@ const Navbar = () => {
       )}
       <div className={styles.buttons}>
         <AddressConn />
-        <Contracts />
         <Supply />
       </div>
     </div>

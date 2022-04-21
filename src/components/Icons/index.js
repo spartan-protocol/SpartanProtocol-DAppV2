@@ -1,6 +1,8 @@
 import React from 'react'
 // BRANDS
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
+import { ReactComponent as BNBChain } from '../../assets/brands/bnbchain.svg'
+import { ReactComponent as BNBChainConnected } from '../../assets/brands/bnbchain-connected.svg'
 import { ReactComponent as CoinGeckoIcon } from '../../assets/brands/coingecko-icon.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
@@ -88,6 +90,8 @@ import { useTheme } from '../../providers/Theme'
 const icons = {
   // BRANDS
   apple: Apple,
+  bnbChain: BNBChain,
+  bnbChainConnected: BNBChainConnected,
   coinGeckoIcon: CoinGeckoIcon,
   // FLAGS
   turkeyFlag: TurkeyFlag,

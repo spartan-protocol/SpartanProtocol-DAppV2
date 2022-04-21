@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import Nav from 'react-bootstrap/Nav'
 import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav'
 import { useTranslation } from 'react-i18next'
 import { LinkContainer } from 'react-router-bootstrap'
 import { Link } from 'react-router-dom'
@@ -8,10 +8,9 @@ import { routes } from '../../../routes'
 import { Icon } from '../../../components/Icons/index'
 import { useBreakpoint } from '../../../providers/Breakpoint'
 import SocialIcons from '../SocialIcons'
-import ThemeSwitcher from './components/ThemeSwitcher'
-import LanguageDropdown from './components/LanguageDropdown'
 
 import styles from './styles.module.scss'
+import Utilities from './components/Utilities'
 
 const SidebarLg = () => {
   const { t } = useTranslation()
@@ -107,21 +106,22 @@ const SidebarLg = () => {
           className={styles.bottom}
           style={compact && !fixed ? { width: '60px' } : { width: '200px' }}
         >
-          <div>
-            {compact && !fixed ? (
-              <>
-                <LanguageDropdown />
-                <ThemeSwitcher />
+          <hr />
+          {compact && !fixed ? (
+            <>
+              <div className="mb-4">
+                <Icon icon="settings" size="22" />
+              </div>
+              <div>
                 <Icon icon="github" size="25" />
-              </>
-            ) : (
-              <>
-                <LanguageDropdown extended />
-                <ThemeSwitcher extended />
-                <SocialIcons />
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <Utilities />
+              <SocialIcons />
+            </>
+          )}
         </div>
       </Col>
     </>
