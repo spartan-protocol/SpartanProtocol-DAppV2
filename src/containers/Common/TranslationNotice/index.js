@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Toast, ToastContainer } from 'react-bootstrap'
+import Toast from 'react-bootstrap/Toast'
+import ToastContainer from 'react-bootstrap/ToastContainer'
 import completedLanguages from '../../../locales/completed.json'
 
 const Message = () => {
@@ -10,7 +11,10 @@ const Message = () => {
     <div>
       <div>{t('translationNoticeText')}</div>
       <div>
-        <a href="https://github.com/spartan-protocol/SpartanProtocol-DAppV2/issues/513">
+        <a
+          href="https://github.com/spartan-protocol/SpartanProtocol-DAppV2/issues/513"
+          className="toast-link"
+        >
           https://github.com/spartan-protocol/SpartanProtocol-DAppV2/issues/513
         </a>
       </div>
@@ -36,10 +40,10 @@ const TranslationNotice = () => {
   return (
     <ToastContainer
       position="top-end"
-      style={{ marginTop: '70px', marginRight: '3px' }}
+      style={{ marginTop: '50px', marginRight: '20px' }}
     >
-      <Toast onClose={() => setShow(false)} show={show}>
-        <Toast.Header>
+      <Toast onClose={() => setShow(false)} show={show} className="bg-2">
+        <Toast.Header className="bg-2">
           <strong className="me-auto">{t('translationNoticeTitle')}</strong>
         </Toast.Header>
         <Toast.Body>

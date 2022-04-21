@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Tabs, Tab } from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Nav from 'react-bootstrap/Nav'
+import Row from 'react-bootstrap/Row'
 import { useLocation } from 'react-router-dom'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
@@ -42,45 +44,49 @@ const Vaults = () => {
 
   return (
     <>
-      <div className="content">
-        {tempChains.includes(network.chainId) && (
-          <>
-            <Row className="row-480">
-              <Col>
-                <Tabs
-                  activeKey={mode}
-                  onSelect={(k) => setMode(k)}
-                  className="mb-3 card-480"
-                >
-                  <Tab eventKey="Dao" title={t('daoVault')}>
-                    {pool.poolDetails.length > 0 && mode === 'Dao' && (
-                      <DaoVault />
-                    )}
-                  </Tab>
-                  <Tab eventKey="Synth" title={t('synthVault')}>
-                    {pool.poolDetails.length > 0 && mode === 'Synth' && (
-                      <SynthVault />
-                    )}
-                  </Tab>
-                  <Tab eventKey="Bond" title={t('bondVault')}>
-                    {pool.poolDetails.length > 0 && mode === 'Bond' && (
-                      <BondVault />
-                    )}
-                  </Tab>
-                </Tabs>
-              </Col>
-            </Row>
-            <Row className="row-480">
-              <Col className="card-480">
-                {pool.poolDetails.length <= 0 && (
-                  <HelmetLoading height={150} width={150} />
-                )}
-              </Col>
-            </Row>
-          </>
-        )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
-      </div>
+      {tempChains.includes(network.chainId) && (
+        <>
+          <Row className="mb-3">
+            <Col>
+              <Nav
+                variant="pills"
+                activeKey={mode}
+                onSelect={(e) => setMode(e)}
+              >
+                <Nav.Item>
+                  <Nav.Link eventKey="Dao" className="btn-sm">
+                    {t('daoVault')}
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="Synth" className="btn-sm">
+                    {t('synthVault')}
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="Bond" className="btn-sm">
+                    {t('bondVault')}
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              {pool.poolDetails.length > 0 ? (
+                <>
+                  {mode === 'Dao' && <DaoVault />}
+                  {mode === 'Synth' && <SynthVault />}
+                  {mode === 'Bond' && <BondVault />}
+                </>
+              ) : (
+                <HelmetLoading height={150} width={150} />
+              )}
+            </Col>
+          </Row>
+        </>
+      )}
+      {!tempChains.includes(network.chainId) && <WrongNetwork />}
     </>
   )
 }

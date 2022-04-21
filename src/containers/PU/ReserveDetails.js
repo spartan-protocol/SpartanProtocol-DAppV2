@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Col, Form } from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import { getReservePOLDetails, useReserve } from '../../store/reserve'

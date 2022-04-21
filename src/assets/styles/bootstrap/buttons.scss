@@ -1,0 +1,11 @@
+@import '../variables.scss';
+
+.btn-outline-secondary {
+  color: $text;
+}
+
+body.dark-theme {
+  .btn-outline-secondary {
+    color: $text-dark;
+  }
+}

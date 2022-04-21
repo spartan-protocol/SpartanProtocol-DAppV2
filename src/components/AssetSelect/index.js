@@ -2,15 +2,23 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, InputGroup, FormControl, Nav, Modal } from 'react-bootstrap'
 import { useWeb3React } from '@web3-react/core'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Nav from 'react-bootstrap/Nav'
+import Modal from 'react-bootstrap/Modal'
+
+import ShareLink from '../Share/ShareLink'
+import { Icon } from '../Icons/index'
+
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
-import ShareLink from '../Share/ShareLink'
 import { useSynth } from '../../store/synth'
 import { getAddresses } from '../../utils/web3'
-import { Icon } from '../Icons/index'
+
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 
@@ -110,7 +118,9 @@ const AssetSelect = (props) => {
 
         if (props.whiteList) {
           tempArray = tempArray.filter((asset) =>
-            props.whiteList.find((item) => item === asset.tokenAddress),
+            props.whiteList.find(
+              (item) => item === asset.tokenAddress || item === asset.address,
+            ),
           )
         }
 
@@ -339,15 +349,12 @@ const AssetSelect = (props) => {
             </>
           )}
         </Col>
-        <Col
-          style={{ overflow: 'hidden' }}
-          className="output-card px-1 my-auto"
-        >
+        <Col className="px-1 my-auto overflow-hidden">
           {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
           {!props.disabled && (
-            <Icon icon="arrowDown" size="20" fill="grey" className="ps-1" />
+            <Icon icon="arrowDown" size="12" fill="grey" className="ps-1" />
           )}
         </Col>
       </Row>
@@ -435,7 +442,7 @@ const AssetSelect = (props) => {
 
           {activeTab === 'all' &&
             assetArray.map((asset) => (
-              <Row key={`${asset.actualAddr}-all`} className="mb-3 output-card">
+              <Row key={`${asset.actualAddr}-all`} className="mb-3">
                 <Col xs="auto" className="position-relative">
                   <div
                     role="button"
@@ -451,8 +458,8 @@ const AssetSelect = (props) => {
 
                 <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
                   <Row>
-                    <Col xs="12" className="float-left ms-n4">
-                      <div
+                    <Col xs="12" className="float-left">
+                      <strong
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
@@ -461,10 +468,8 @@ const AssetSelect = (props) => {
                         }}
                       >
                         {asset.symbol}
-                      </div>
-                      <div className="description">
-                        {formatFromWei(asset.balance)}
-                      </div>
+                      </strong>
+                      <div className="">{formatFromWei(asset.balance)}</div>
                     </Col>
                   </Row>
                 </Col>
@@ -543,8 +548,8 @@ const AssetSelect = (props) => {
 
                   <Col xs="5" sm="7" className="align-items-center p-0 ps-sm-1">
                     <Row>
-                      <Col xs="12" className="float-left ms-n4">
-                        <div
+                      <Col xs="12" className="float-left">
+                        <strong
                           role="button"
                           aria-hidden="true"
                           onClick={() => {
@@ -553,10 +558,8 @@ const AssetSelect = (props) => {
                           }}
                         >
                           {asset.symbol}
-                        </div>
-                        <div className="description">
-                          {formatFromWei(asset.balance)}
-                        </div>
+                        </strong>
+                        <div className="">{formatFromWei(asset.balance)}</div>
                       </Col>
                     </Row>
                   </Col>

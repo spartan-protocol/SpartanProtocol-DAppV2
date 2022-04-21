@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-import { getNetwork } from './web3'
+import { getAddresses, getNetwork } from './web3'
 
 export const subgraphAPI =
   'https://api.thegraph.com/subgraphs/name/spartan-protocol/pool-factory'
@@ -59,6 +59,18 @@ export const getPriceByID = async (ID) => {
     `https://api.coingecko.com/api/v3/simple/price?ids=${ID}&vs_currencies=usd`,
   )
   return resp.data[ID].usd
+}
+
+// GET CURRENT USD PRICE OF A TOKEN (BY CONTRACT ADDRESS)
+export const getPriceByContract = async (contractAddr) => {
+  const lcAddr =
+    contractAddr === getAddresses().bnb
+      ? getAddresses().wbnb.toLowerCase()
+      : contractAddr.toLowerCase()
+  const resp = await axios.get(
+    `https://api.coingecko.com/api/v3/simple/token_price/binance-smart-chain?contract_addresses=${lcAddr}&vs_currencies=usd`,
+  )
+  return resp.data // Hand back object instead of raw price so we can ensure address matches (overlapping useeffects)
 }
 
 // GET HISTORICAL USD PRICE OF A TOKEN (BY COINGECKO ID)

@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Col, Modal, Row, Card, Form } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
@@ -21,6 +26,7 @@ import { useSparta } from '../../../store/sparta'
 import { useReserve } from '../../../store/reserve'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const dispatch = useDispatch()
@@ -31,6 +37,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const sparta = useSparta()
   const reserve = useReserve()
   const wallet = useWeb3React()
+  const { isDark } = useTheme()
   const addr = getAddresses()
 
   const [percentage, setpercentage] = useState('0')
@@ -139,7 +146,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     if (!lockoutConfirm) {
       return [false, t('confirmLockup')]
     }
-    if (secsSinceHarvest() > 300) {
+    if (synth1.staked > 0 && secsSinceHarvest() > 300) {
       if (!harvestConfirm) {
         return [false, t('confirmHarvest')]
       }
@@ -150,14 +157,14 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   return (
     <>
       <Button
-        className="w-100"
+        className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
         disabled={disabled}
       >
         {t('deposit')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           <div xs="auto" className="position-relative me-3">
             <img
               src={token.symbolUrl}
@@ -169,7 +176,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
               height="25px"
               src={spartaIcon}
               alt="Sparta LP token icon"
-              className="token-badge-modal-header"
+              className="token-badge"
             />
           </div>
           {t('deposit')} {token.symbol}s

@@ -1,0 +1,20 @@
+@import '../variables.scss';
+
+body.dark-theme {
+  .form-control {
+    color: $text-dark;
+    background-color: $bg-depth-3-dark;
+    border-color: $bg-depth-0-dark;
+  }
+
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: $bg-depth-2-dark;
+  }
+
+  .input-group-text {
+    color: $text-dark;
+    background-color: $bg-depth-2-dark;
+    border-color: $bg-depth-0-dark;
+  }
+}

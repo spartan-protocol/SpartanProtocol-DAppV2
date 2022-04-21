@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Card, Col, OverlayTrigger, Row } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -33,7 +37,6 @@ import { getAddresses } from '../../utils/web3'
 import { Tooltip } from '../../components/Tooltip/index'
 
 const DaoVault = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -221,36 +224,39 @@ const DaoVault = () => {
 
   return (
     <Row>
-      <Col xs="auto" className="">
-        <Card xs="auto" className="card-320" style={{ minHeight: '202' }}>
-          <Card.Header className="">
+      <Col className="mb-4" xs="12" sm="6" lg="4">
+        <Card style={{ minHeight: '185px' }}>
+          <Card.Header>
             <Row>
-              <Col>{t('daoVault')}</Col>
-              <Col xs="auto" className="text-center m-auto">
-                <p className="text-sm-label d-inline-block">APY</p>
-                <OverlayTrigger
-                  placement="auto"
-                  overlay={Tooltip(t, 'apySynth')}
-                >
-                  <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1 mt-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
-                  </span>
-                </OverlayTrigger>
-                <p className="output-card d-inline-block ms-2">
-                  {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                </p>
+              <Col xs="auto" className="mt-2 h4">
+                {t('daoVault')}
+              </Col>
+              <Col className="text-end m-auto d-flex justify-content-end">
+                <Row>
+                  <Col xs="12">
+                    <span>APY</span>
+                    <OverlayTrigger
+                      placement="auto"
+                      overlay={Tooltip(t, 'apyVault')}
+                    >
+                      <span role="button">
+                        <Icon icon="info" className="ms-1" size="17" />
+                      </span>
+                    </OverlayTrigger>
+                  </Col>
+                  <Col xs="12">
+                    <div className="ms-2">
+                      {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
+                    </div>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Card.Header>
           {!isLoading() ? (
             <Card.Body>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
+                <Col>
                   {t('totalWeight')}
                   <OverlayTrigger
                     placement="auto"
@@ -261,13 +267,14 @@ const DaoVault = () => {
                         icon="info"
                         className="ms-1 mb-1"
                         size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
+                        //
                       />
                     </span>
                   </OverlayTrigger>
                 </Col>
                 <Col
-                  className="text-end output-card"
+                  xs="auto"
+                  className="text-end"
                   onClick={() => handleChangeShow()}
                   role="button"
                 >
@@ -282,10 +289,10 @@ const DaoVault = () => {
                 </Col>
               </Row>
               <Row className="my-1">
-                <Col xs="auto" className="text-card">
-                  {t('lockupPeriod')}
+                <Col>{t('lockupPeriod')}</Col>
+                <Col xs="auto" className="text-end">
+                  24 {t('hours')}
                 </Col>
-                <Col className="text-end output-card">24 {t('hours')}</Col>
               </Row>
             </Card.Body>
           ) : (
@@ -294,38 +301,36 @@ const DaoVault = () => {
 
           <Card.Footer>
             <Link to="/pools/liquidity">
-              <Button className="w-100">{t('joinPools')}</Button>
+              <Button className="w-100 btn-sm">{t('joinPools')}</Button>
             </Link>
           </Card.Footer>
         </Card>
       </Col>
 
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '202' }}>
-          <Card.Header>{t('memberDetails')}</Card.Header>
+      <Col className="mb-2" xs="12" sm="6" lg="4">
+        <Card style={{ minHeight: '185px' }}>
+          <Card.Header>
+            <Col className="mt-2 h4">{t('memberDetails')}</Col>
+          </Card.Header>
           {!isLoading() ? (
             <>
               <Card.Body className="pb-1">
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col>
                     {t('yourWeight')}
                     <OverlayTrigger
                       placement="auto"
                       overlay={Tooltip(t, 'daoVaultWeight')}
                     >
                       <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="15"
-                          // fill={isLightMode ? 'black' : 'white'}
-                        />
+                        <Icon icon="info" className="ms-1 mb-1" size="15" />
                       </span>
                     </OverlayTrigger>
                   </Col>
 
                   <Col
-                    className="text-end output-card"
+                    xs="auto"
+                    className="text-end"
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
@@ -355,7 +360,7 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col>
                     {t('harvestable')}
                     <OverlayTrigger
                       placement="auto"
@@ -366,12 +371,12 @@ const DaoVault = () => {
                           icon="info"
                           className="ms-1 mb-1"
                           size="15"
-                          // fill={isLightMode ? 'black' : 'white'}
+                          //
                         />
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col xs="auto">
                     {reserve.globalDetails.emissions
                       ? !wallet.account
                         ? t('connectWallet')
@@ -381,11 +386,9 @@ const DaoVault = () => {
                 </Row>
 
                 <Row className="mt-2">
-                  <Col xs="auto" className="text-card">
-                    {t('lastHarvest')}
-                  </Col>
+                  <Col>{t('lastHarvest')}</Col>
 
-                  <Col className="text-end output-card">
+                  <Col xs="auto" className="text-end">
                     {!wallet.account ? (
                       t('connectWallet')
                     ) : (
@@ -403,7 +406,7 @@ const DaoVault = () => {
               </Card.Body>
               <Card.Footer>
                 <Button
-                  className="w-100"
+                  className="w-100 btn-sm"
                   onClick={() => handleHarvest()}
                   disabled={!checkValid()[0]}
                 >

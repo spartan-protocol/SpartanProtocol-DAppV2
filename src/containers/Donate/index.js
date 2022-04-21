@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Button,
-  Card,
-  Col,
-  InputGroup,
-  // ProgressBar,
-  Row,
-  FormControl,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Row from 'react-bootstrap/Row'
+import FormControl from 'react-bootstrap/FormControl'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { ethers } from 'ethers'
@@ -263,11 +260,15 @@ ethereum(network: $network){
   return (
     <>
       <div className="content">
-        <Row className="row-480">
-          <Col className="">
-            <Card className="card-480">
+        <Row>
+          <Col md={6} className="mb-4">
+            <Card>
               <Card.Header>
-                <Card.Title>{t('communityCrowdfunding')}</Card.Title>
+                <Card.Title>
+                  <Col xs="auto" className="mt-2 h4">
+                    {t('communityCrowdfunding')}
+                  </Col>
+                </Card.Title>
               </Card.Header>
               <Card.Body>
                 {/* <Row>
@@ -361,10 +362,14 @@ ethereum(network: $network){
             </Card>
           </Col>
 
-          <Col className="">
-            <Card className="card-480">
+          <Col md={6} className="mb-4">
+            <Card>
               <Card.Header>
-                <Card.Title>{t('donateToCampaign')}</Card.Title>
+                <Card.Title>
+                  <Col xs="auto" className="mt-2 h4">
+                    {t('donateToCampaign')}
+                  </Col>
+                </Card.Title>
               </Card.Header>
               <Card.Body>
                 <Row>
@@ -520,10 +525,14 @@ ethereum(network: $network){
             </Card>
           </Col>
 
-          <Col className="">
-            <Card className="card-480">
+          <Col md={6} className="mb-4">
+            <Card>
               <Card.Header>
-                <Card.Title> {t('currentCampaigns')}</Card.Title>
+                <Card.Title>
+                  <Col xs="auto" className="mt-2 h4">
+                    {t('currentCampaigns')}
+                  </Col>
+                </Card.Title>
               </Card.Header>
               <Card.Body>
                 <Row className="my-2">
@@ -533,33 +542,8 @@ ethereum(network: $network){
                   <Col>
                     <Row>
                       <Col xs="12" className="float-left output-card">
-                        Marketing/Educational Fund
-                        <div className="description">
-                          {t('budget')}: 100K SPARTA (Via DAO Grant)
-                        </div>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Row>
-                    <Col xs="12" className="output-card mt-1">
-                      A DAO proposal was created and successfully reached
-                      consensus to mint a 100K SPARTA marketing fund. Some
-                      community contributors are working on plans to utilize
-                      SPARTA from this fund ranging from educational videos to
-                      Youtube/Twitter marketing.
-                    </Col>
-                  </Row>
-                </Row>
-                <hr />
-                <Row className="my-2">
-                  <Col xs="auto" className="pe-0">
-                    <Icon icon="spartav2" size="35" />
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col xs="12" className="float-left output-card">
                         #FridayFor300 Quiz
-                        <div className="description">
+                        <div className="description fw-light">
                           {t('budget')}: 300 SPARTA per week (Via community
                           donations)
                         </div>
@@ -578,108 +562,18 @@ ethereum(network: $network){
                     </Col>
                   </Row>
                 </Row>
-                <hr />
-                <Row className="my-2">
-                  <Col xs="auto" className="pe-0">
-                    <Icon icon="bnb" size="35" />
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col xs="12" className="float-left output-card">
-                        Binance AMAs
-                        <div className="description">{t('budget')}: TBA</div>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Row>
-                    <Col xs="12" className="output-card mt-1">
-                      The Binance AMAs are still being organised by the
-                      community, donations for this campaign have been refunded
-                      pending finalisation. Once a 100% finalised plan has been
-                      completed we can open up donations for the AMAs again.
-                    </Col>
-                  </Row>
-                </Row>
               </Card.Body>
             </Card>
           </Col>
 
-          {/* <Col className="">
-            <Card className="card-480">
+          <Col md={6} className="mb-4">
+            <Card>
               <Card.Header>
-                <Card.Title> {t('currentCampaigns')}</Card.Title>
-              </Card.Header>
-              <Card.Body>
-                <Row className="my-2">
-                  <Col xs="auto" className="pe-0">
-                    <Icon icon="bnb" size="35" />
+                <Card.Title>
+                  <Col xs="auto" className="mt-2 h4">
+                    {t('recentDonations')}
                   </Col>
-                  <Col>
-                    <Row>
-                      <Col xs="12" className="float-left output-card">
-                        Binance Global AMA
-                        <div className="description">
-                          {t('budget')}: ${formatFromUnits(5000)} USD
-                        </div>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Row>
-                    <Col xs="12" className="output-card mt-1">
-                      There is no fee for AMAs however a promotional budget will
-                      be provided to give away to the community during the
-                      event.
-                      <div className="description">Global Focus:</div>
-                      An English / global AMA makes perfect sense with the
-                      launch of V2; support will be required from the community
-                      to organise, run and provide answers for the AMA, please
-                      reach out if you feel you have some way of helping.
-                    </Col>
-                  </Row>
-                </Row>
-                <hr />
-                <Row className="my-2">
-                  <Col xs="auto" className="pe-0">
-                    <Icon icon="turkeyFlag" size="35" />
-                  </Col>
-                  <Col>
-                    <Row>
-                      <Col xs="12" className="float-left output-card">
-                        Binance Turkey AMA
-                        <div className="description">
-                          {t('budget')}: ${formatFromUnits(4000)} USD
-                        </div>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Row>
-                    <Col xs="12" className="output-card mt-1">
-                      There is no fee for AMAs however a promotional budget will
-                      be provided to give away to the community during the
-                      event.
-                      <div className="description">Turkey Focus:</div>
-                      Whilst a Turkish AMA might seem like a strange focus for a
-                      globally distributed project, Turkish users currently make
-                      up the largest portion of Spartan Protocol searches on
-                      Google, signalling a need for more support and education
-                      in their native language.
-                      <div className="description">Turkish Community:</div>
-                      The Turkish community has already signalled their
-                      commitment to donate towards covering their costs of the
-                      AMA and are also actively involved in the grunt work on
-                      organising both AMAs. This is ultimately good for the
-                      project as a whole and support from the global community
-                      would be appreciated
-                    </Col>
-                  </Row>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col> */}
-          <Col className="">
-            <Card className="card-480">
-              <Card.Header>
-                <Card.Title> {t('recentDonations')}</Card.Title>
+                </Card.Title>
               </Card.Header>
               <Card.Body>
                 {recentTxns?.length > 0 &&

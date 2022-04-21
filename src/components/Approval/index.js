@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
-import { Button, Col } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
@@ -36,8 +37,6 @@ const Approval = ({
   txnAmount,
   assetNumber,
 }) => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -133,18 +132,12 @@ const Approval = ({
         <Col>
           <Notifications show={notify} txnType="approve" />
           <Button
-            variant="info"
             disabled={!enoughGas()}
             onClick={async () => {
               handleApproval()
             }}
           >
-            <Icon
-              icon="lock"
-              fill={isLightMode ? 'black' : 'white'}
-              size="20"
-              className="me-1"
-            />
+            <Icon icon="lock" size="20" className="me-1" />
             {enoughGas() ? <>Approve {symbol}</> : t('checkBnbGas')}
             {pending && (
               <Icon icon="cycle" size="20" className="anim-spin ms-1" />

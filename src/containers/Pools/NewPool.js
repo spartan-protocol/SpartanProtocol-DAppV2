@@ -2,16 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import {
-  Button,
-  Col,
-  Form,
-  FormControl,
-  InputGroup,
-  Modal,
-  OverlayTrigger,
-  Row,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import FormControl from 'react-bootstrap/FormControl'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Row from 'react-bootstrap/Row'
+import Modal from 'react-bootstrap/Modal'
 import { useWeb3React } from '@web3-react/core'
 import Approval from '../../components/Approval/index'
 import {
@@ -32,7 +30,7 @@ import { Tooltip } from '../../components/Tooltip/index'
 import { getToken } from '../../utils/math/utils'
 import HelmetLoading from '../../components/Spinner/index'
 
-const NewPool = () => {
+const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const wallet = useWeb3React()
@@ -40,10 +38,7 @@ const NewPool = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   const [txnLoading, setTxnLoading] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
   const [feeConfirm, setFeeConfirm] = useState(false)
 
@@ -289,19 +284,6 @@ const NewPool = () => {
 
   return (
     <>
-      <Button
-        variant={isLightMode ? 'secondary' : 'info'}
-        onClick={() => setShowModal(true)}
-        className="rounded-pill pe-3 subtitle-label"
-      >
-        <Icon
-          icon="plus"
-          fill={isLightMode ? 'black' : 'white'}
-          size="17"
-          className="me-1 mb-1"
-        />
-        {t('pool')}
-      </Button>
       {showModal && (
         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
           {tempChains.includes(network.chainId) && (
@@ -410,12 +392,7 @@ const NewPool = () => {
                           overlay={Tooltip(t, 'newPoolRatio')}
                         >
                           <span role="button">
-                            <Icon
-                              icon="info"
-                              className="ms-1"
-                              size="17"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="info" className="ms-1" size="17" />
                           </span>
                         </OverlayTrigger>
                       </div>
@@ -437,12 +414,7 @@ const NewPool = () => {
                           overlay={Tooltip(t, 'newPoolFee')}
                         >
                           <span role="button">
-                            <Icon
-                              icon="info"
-                              className="ms-1"
-                              size="17"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="info" className="ms-1" size="17" />
                           </span>
                         </OverlayTrigger>
                       </div>

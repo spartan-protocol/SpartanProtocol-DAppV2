@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Card, Row, Col, OverlayTrigger, Dropdown } from 'react-bootstrap'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import Dropdown from 'react-bootstrap/Dropdown'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Popover from 'react-bootstrap/Popover'
+import Row from 'react-bootstrap/Row'
 import { Tooltip } from '../../../components/Tooltip/index'
 import { Icon } from '../../../components/Icons/index'
 import { calcAPY, calcDaoAPY } from '../../../utils/math/nonContract'
@@ -20,7 +25,6 @@ import ChartLPs from './Charts/ChartLPs'
 import { useDao, daoVaultWeight } from '../../../store/dao'
 
 const Metrics = ({ assetSwap }) => {
-  const isLightMode = window.localStorage.getItem('theme')
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -153,9 +157,7 @@ const Metrics = ({ assetSwap }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
-  const APY = asset
-    ? formatFromUnits(calcAPY(assetSwap, getFees(), getDivis(), period), 2)
-    : 0
+  const APY = asset ? calcAPY(assetSwap, getFees(), getDivis(), period) : 0
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -201,41 +203,66 @@ const Metrics = ({ assetSwap }) => {
                   APY
                   <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                     <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1 mb-1"
-                        size="17"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
+                      <Icon icon="info" className="ms-1 mb-1" size="17" />
                     </span>
                   </OverlayTrigger>
                 </span>
-                <h6 className="mb-0">{APY}%</h6>
-                {curated && daoApy > 0 && (
-                  <div className="d-flex justify-content-end">
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'apySynth')}
-                    >
-                      <span role="button">
-                        <Icon
-                          icon="lock"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                          className="me-1 mb-1"
-                        />
-                      </span>
-                    </OverlayTrigger>
-                    <h6 className="mb-0">{formatFromUnits(daoApy, 2)}%</h6>
-                  </div>
-                )}
+                <h6 className="mb-0">
+                  {formatFromUnits(curated ? BN(daoApy).plus(APY) : APY, 2)}%
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={
+                      <Popover>
+                        <Popover.Body>
+                          <Row>
+                            <Col xs="6">{t('poolApy')}</Col>
+                            <Col xs="6" className="text-end">
+                              {formatFromUnits(APY, 2)}%
+                            </Col>
+                            <Col xs="6">{t('vaultApy')}</Col>
+                            <Col xs="6" className="text-end">
+                              {curated
+                                ? `${formatFromUnits(daoApy, 2)}%`
+                                : t('notCurated')}
+                            </Col>
+                            <Col xs="12">
+                              <hr className="my-2" />
+                            </Col>
+                            <Col xs="6">
+                              <strong>{t('totalApy')}</strong>
+                            </Col>
+                            <Col xs="6" className="text-end">
+                              <strong>
+                                {formatFromUnits(
+                                  curated ? BN(APY).plus(daoApy) : APY,
+                                  2,
+                                )}
+                                %
+                              </strong>
+                            </Col>
+                            <Col xs="12">
+                              <hr className="my-2" />
+                            </Col>
+                            <Col xs="12" className="text-center">
+                              All APYs are estimates
+                            </Col>
+                          </Row>
+                        </Popover.Body>
+                      </Popover>
+                    }
+                  >
+                    <span role="button">
+                      <Icon icon="info" className="ms-1" size="17" />
+                    </span>
+                  </OverlayTrigger>
+                </h6>
               </Col>
             </Row>
           </Card.Header>
           <Card.Body className="">
             <div className="text-center">
               <Dropdown className="d-inline">
-                <Dropdown.Toggle variant="info" size="sm" className="mx-1">
+                <Dropdown.Toggle size="sm" className="mx-1">
                   {metric}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -247,7 +274,7 @@ const Metrics = ({ assetSwap }) => {
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown className="d-inline">
-                <Dropdown.Toggle variant="info" size="sm" className="mx-1">
+                <Dropdown.Toggle size="sm" className="mx-1">
                   {`${period} Days`}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>

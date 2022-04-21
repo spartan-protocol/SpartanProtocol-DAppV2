@@ -1,0 +1,61 @@
+// Toasts, popovers, tooltips etc
+
+@import '../variables.scss';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+
+.toast-container {
+  z-index: $zindex-popover;
+}
+
+.popover {
+  border-color: #00000020;
+  background-color: #fffffff5;
+}
+
+.popover-header {
+  background-color: #00000012;
+  border-color: #00000020;
+}
+
+.popover-body {
+  max-height: 66vh;
+  overflow: auto;
+  // background-color: $bg-depth-2;
+}
+
+.bs-popover-bottom > .popover-arrow::after,
+.bs-popover-auto[data-popper-placement^='bottom'] > .popover-arrow::after {
+  border-bottom-color: $bg-depth-1;
+}
+
+.bs-popover-bottom .popover-header::before,
+.bs-popover-auto[data-popper-placement^='bottom'] .popover-header::before {
+  border-color: $bg-depth-1;
+}
+
+body.dark-theme {
+  .popover {
+    color: $text-dark;
+    background-color: #12121bf5;
+  }
+
+  // .popover-header {
+  //   background-color: $bg-depth-1-dark;
+  // }
+
+  .popover-body {
+    color: $text-dark;
+    // background-color: $bg-depth-2-dark;
+  }
+
+  .bs-popover-bottom > .popover-arrow::after,
+  .bs-popover-auto[data-popper-placement^='bottom'] > .popover-arrow::after {
+    border-bottom-color: $bg-depth-1-dark;
+  }
+
+  .bs-popover-bottom .popover-header::before,
+  .bs-popover-auto[data-popper-placement^='bottom'] .popover-header::before {
+    border-color: $bg-depth-1-dark;
+  }
+}

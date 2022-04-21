@@ -2,12 +2,17 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import React from 'react'
 import { install } from 'resize-observer'
 
-import Header from './Header'
-import Footer from './Footer'
+import { Chart } from 'chart.js'
+import styles from './styles.module.scss'
+
+import Navbar from './Navbar'
+// import Footer from './Footer'
 import SidebarLg from './SidebarLg'
 import DataManager from './DataManager/index'
 import TranslationNotice from './TranslationNotice/index'
 import { routes } from '../../routes'
+import { useBreakpoint } from '../../providers/Breakpoint'
+import { useTheme } from '../../providers/Theme'
 
 const getRoutes = (tempRoutes) =>
   tempRoutes.map((prop) => (
@@ -18,27 +23,33 @@ const getRoutes = (tempRoutes) =>
     />
   ))
 
-const Common = () => {
+const Layout = () => {
   if (!window.ResizeObserver) {
     install()
   }
+  const breakpoint = useBreakpoint()
+  const { isDark } = useTheme()
+
+  Chart.defaults.color = isDark ? 'white' : 'black'
 
   return (
-    <div className="wrapper">
-      <TranslationNotice />
-      <div className="rna-container" />
-      <div className="main-panel">
+    <>
+      <div className={styles.wrapper}>
         <DataManager />
-        <Header />
-        <SidebarLg />
-        <Switch>
-          {getRoutes(routes)}
-          <Redirect from="*" to="/home" />
-        </Switch>
-        <Footer />
+        <Navbar />
+        {breakpoint.lg && <SidebarLg />}
+        <div className="body">
+          <div className={styles.content}>
+            <TranslationNotice />
+            <Switch>
+              {getRoutes(routes)}
+              <Redirect from="*" to="/home" />
+            </Switch>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
-export default Common
+export default Layout

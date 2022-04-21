@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Col, Modal, Row, Card, Form } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
@@ -13,6 +18,7 @@ import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const SynthHarvestAllModal = () => {
   const dispatch = useDispatch()
@@ -22,6 +28,7 @@ const SynthHarvestAllModal = () => {
   const synth = useSynth()
   const web3 = useWeb3()
   const { t } = useTranslation()
+  const { isDark } = useTheme()
   const wallet = useWeb3React()
   const addr = getAddresses()
 
@@ -160,14 +167,14 @@ const SynthHarvestAllModal = () => {
   return (
     <>
       <Button
-        className="w-100"
+        className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
         disabled={!synthHarvestLive || synth.totalWeight <= 0}
       >
         {synthHarvestLive ? t('harvestAll') : t('harvestDisabled')}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           {t('harvestAll')}
         </Modal.Header>
         <Card className="">

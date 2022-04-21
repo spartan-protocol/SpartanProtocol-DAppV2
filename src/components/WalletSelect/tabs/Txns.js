@@ -1,7 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
-import { Row, Table, Button, Col, Alert } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Table from 'react-bootstrap/Table'
+import Button from 'react-bootstrap/Button'
+import Alert from 'react-bootstrap/Alert'
+import Badge from 'react-bootstrap/Badge'
+import Col from 'react-bootstrap/Col'
 import Pagination from 'react-bootstrap/Pagination'
+import { useTranslation } from 'react-i18next'
 import { getExplorerTxn } from '../../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../../utils/web3'
 import { useDao } from '../../../store/dao'
@@ -20,7 +26,7 @@ import { Icon } from '../../Icons/index'
 
 const Txns = () => {
   const wallet = useWeb3React()
-
+  const { t } = useTranslation()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
@@ -276,151 +282,148 @@ const Txns = () => {
   return (
     <>
       {showTxns ? (
-        <Row className="output-card text-center">
-          {pool.poolDetails.length > 1 && (
-            <>
-              <Col xs="12">
-                {!isLoading() ? (
-                  <Table borderless striped>
-                    <tbody className="align-middle">
-                      {shownArray?.length > 0 &&
-                        wallet.account &&
-                        shownArray?.map((txn) => (
-                          <tr
-                            key={txn.txnHash + txn.txnIndex}
-                            className="text-center output-card"
-                          >
-                            <td>{getType(txn).title}</td>
-                            <td className="d-none d-sm-table-cell">
-                              {txn.sendToken1 && (
-                                <div className="d-inline position-relative">
-                                  <img
-                                    height="20px"
-                                    src={
-                                      _getToken(txn.sendToken1)[0]?.symbolUrl
-                                    }
-                                    alt="token icon"
-                                    className="mb-1 me-2"
-                                  />
-                                  {getBadge(txn.sendToken1)}
-                                </div>
-                              )}
-                              {getFrom(txn)[0]}
-                              <br />
-                              {txn.sendToken2 && (
-                                <div className="d-inline position-relative">
-                                  <img
-                                    height="20px"
-                                    src={
-                                      _getToken(txn.sendToken2)[0]?.symbolUrl
-                                    }
-                                    alt="token icon"
-                                    className="mb-1 me-2"
-                                  />
-                                  {getBadge(txn.sendToken2)}
-                                </div>
-                              )}
-                              {getFrom(txn)[1]}
-                            </td>
-                            <td className="d-none d-sm-table-cell">
-                              {txn.recToken1 && (
-                                <div className="d-inline position-relative">
-                                  <img
-                                    height="20px"
-                                    src={_getToken(txn.recToken1)[0]?.symbolUrl}
-                                    alt="token icon"
-                                    className="mb-1 me-2"
-                                  />
-                                  {getBadge(txn.recToken1)}
-                                </div>
-                              )}
-                              {getTo(txn)[0]}
-                              <br />
-                              {txn.recToken2 && (
-                                <div className="d-inline position-relative">
-                                  <img
-                                    height="20px"
-                                    src={_getToken(txn.recToken2)[0]?.symbolUrl}
-                                    alt="token icon"
-                                    className="mb-1 me-2"
-                                  />
-                                  {getBadge(txn.recToken2)}
-                                </div>
-                              )}
-                              {getTo(txn)[1]}
-                            </td>
-                            <td>
-                              <a
-                                href={getExplorerTxn(txn.txnHash)}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                {formatShortString(txn.txnHash)}
-                              </a>
-                            </td>
-                          </tr>
-                        ))}
-                    </tbody>
-                  </Table>
-                ) : (
-                  <HelmetLoading height={100} width={100} />
-                )}
-              </Col>
-              <Col xs="12" className="">
-                <Pagination className="d-inline-flex mb-0">
-                  <Pagination.First
-                    disabled={activePage === 1}
-                    onClick={() => handleOnClick(1)}
-                  />
-                  <Pagination.Prev
-                    disabled={activePage === 1}
-                    onClick={() =>
-                      activePage > 1 && handleOnClick(activePage - 1)
-                    }
-                  />
-                  {items[activePage - 1]}
-                  {items[activePage]}
-                  <Pagination.Next
-                    disabled={activePage === items.length}
-                    onClick={() => handleOnClick(activePage + 1)}
-                  />
-                  <Pagination.Last
-                    disabled={activePage === items.length}
-                    onClick={() => handleOnClick(items.length)}
-                  />
-                </Pagination>
-                <Button
-                  className="ms-1"
-                  variant="dark"
-                  onClick={() => setshow(!show)}
-                >
-                  <Icon icon="trash" size="20" />
-                </Button>
-                <Alert show={show} variant="" className="mt-2">
-                  <Alert.Heading>Clear History?</Alert.Heading>
-                  <p>
-                    Your wallet transaction history is stored in your browser
-                    localStorage on your device. Would you like to clear the
-                    transaction history for this wallet now?
-                  </p>
-                  <hr />
-                  <div className="text-center">
-                    <Button
-                      onClick={() => setshow(false)}
-                      variant="info"
-                      className="me-2"
-                    >
-                      No, Cancel!
-                    </Button>
-                    <Button onClick={() => onClear()} variant="primary">
-                      Yes, Clear!
-                    </Button>
-                  </div>
-                </Alert>
-              </Col>
-            </>
-          )}
-        </Row>
+        <>
+          <Badge className="mb-3">{t('recentTxns')}</Badge>
+          <Row className="output-card text-center">
+            {pool.poolDetails.length > 1 && (
+              <>
+                <Col xs="12">
+                  {!isLoading() ? (
+                    <Table borderless striped>
+                      <tbody className="align-middle">
+                        {shownArray?.length > 0 &&
+                          wallet.account &&
+                          shownArray?.map((txn) => (
+                            <tr
+                              key={txn.txnHash + txn.txnIndex}
+                              className="text-center output-card"
+                            >
+                              <td>{getType(txn).title}</td>
+                              <td className="d-none d-sm-table-cell">
+                                {txn.sendToken1 && (
+                                  <div className="d-inline position-relative">
+                                    <img
+                                      height="20px"
+                                      src={
+                                        _getToken(txn.sendToken1)[0]?.symbolUrl
+                                      }
+                                      alt="token icon"
+                                      className="mb-1 me-2"
+                                    />
+                                    {getBadge(txn.sendToken1)}
+                                  </div>
+                                )}
+                                {getFrom(txn)[0]}
+                                <br />
+                                {txn.sendToken2 && (
+                                  <div className="d-inline position-relative">
+                                    <img
+                                      height="20px"
+                                      src={
+                                        _getToken(txn.sendToken2)[0]?.symbolUrl
+                                      }
+                                      alt="token icon"
+                                      className="mb-1 me-2"
+                                    />
+                                    {getBadge(txn.sendToken2)}
+                                  </div>
+                                )}
+                                {getFrom(txn)[1]}
+                              </td>
+                              <td className="d-none d-sm-table-cell">
+                                {txn.recToken1 && (
+                                  <div className="d-inline position-relative">
+                                    <img
+                                      height="20px"
+                                      src={
+                                        _getToken(txn.recToken1)[0]?.symbolUrl
+                                      }
+                                      alt="token icon"
+                                      className="mb-1 me-2"
+                                    />
+                                    {getBadge(txn.recToken1)}
+                                  </div>
+                                )}
+                                {getTo(txn)[0]}
+                                <br />
+                                {txn.recToken2 && (
+                                  <div className="d-inline position-relative">
+                                    <img
+                                      height="20px"
+                                      src={
+                                        _getToken(txn.recToken2)[0]?.symbolUrl
+                                      }
+                                      alt="token icon"
+                                      className="mb-1 me-2"
+                                    />
+                                    {getBadge(txn.recToken2)}
+                                  </div>
+                                )}
+                                {getTo(txn)[1]}
+                              </td>
+                              <td>
+                                <a
+                                  href={getExplorerTxn(txn.txnHash)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {formatShortString(txn.txnHash)}
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </Table>
+                  ) : (
+                    <HelmetLoading height={100} width={100} />
+                  )}
+                </Col>
+                <Col xs="12" className="">
+                  <Pagination className="d-inline-flex mb-0">
+                    <Pagination.First
+                      disabled={activePage === 1}
+                      onClick={() => handleOnClick(1)}
+                    />
+                    <Pagination.Prev
+                      disabled={activePage === 1}
+                      onClick={() =>
+                        activePage > 1 && handleOnClick(activePage - 1)
+                      }
+                    />
+                    {items[activePage - 1]}
+                    {items[activePage]}
+                    <Pagination.Next
+                      disabled={activePage === items.length}
+                      onClick={() => handleOnClick(activePage + 1)}
+                    />
+                    <Pagination.Last
+                      disabled={activePage === items.length}
+                      onClick={() => handleOnClick(items.length)}
+                    />
+                  </Pagination>
+                  <Button className="ms-1" onClick={() => setshow(!show)}>
+                    <Icon icon="trash" size="20" />
+                  </Button>
+                  <Alert show={show} variant="" className="mt-2">
+                    <Alert.Heading>Clear History?</Alert.Heading>
+                    <p>
+                      Your wallet transaction history is stored in your browser
+                      localStorage on your device. Would you like to clear the
+                      transaction history for this wallet now?
+                    </p>
+                    <hr />
+                    <div className="text-center">
+                      <Button onClick={() => setshow(false)} className="me-2">
+                        No, Cancel!
+                      </Button>
+                      <Button onClick={() => onClear()}>Yes, Clear!</Button>
+                    </div>
+                  </Alert>
+                </Col>
+              </>
+            )}
+          </Row>
+        </>
       ) : (
         `Only transactions from this device & browser are shown`
       )}

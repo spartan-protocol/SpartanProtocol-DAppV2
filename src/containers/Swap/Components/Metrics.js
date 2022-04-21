@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Card, Row, Col } from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
 import { callPoolMetrics } from '../../../utils/extCalls'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'

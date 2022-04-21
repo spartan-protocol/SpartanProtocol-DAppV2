@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Button, Col, Row, Modal, Form } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import {
@@ -19,6 +23,7 @@ import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useReserve } from '../../../store/reserve'
 import { useWeb3 } from '../../../store/web3'
+import { useTheme } from '../../../providers/Theme'
 
 const DaoDepositModal = (props) => {
   const [percentage, setpercentage] = useState('0')
@@ -29,6 +34,7 @@ const DaoDepositModal = (props) => {
   const reserve = useReserve()
   const dao = useDao()
   const wallet = useWeb3React()
+  const { isDark } = useTheme()
   const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -109,7 +115,7 @@ const DaoDepositModal = (props) => {
   return (
     <>
       <Button
-        className="w-100"
+        className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
         disabled={props.disabled || !wallet.account}
       >
@@ -117,7 +123,7 @@ const DaoDepositModal = (props) => {
       </Button>
 
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           <div xs="auto" className="position-relative me-3">
             <img
               src={token.symbolUrl}
@@ -129,7 +135,7 @@ const DaoDepositModal = (props) => {
               height="25px"
               src={spartaIcon}
               alt="Sparta LP token icon"
-              className="token-badge-modal-header"
+              className="token-badge"
             />
           </div>
           {t('deposit')} {token.symbol}p

@@ -2,18 +2,16 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import {
-  Card,
-  Col,
-  Nav,
-  Row,
-  InputGroup,
-  FormControl,
-  Button,
-  Badge,
-  OverlayTrigger,
-  Popover,
-} from 'react-bootstrap'
+import Badge from 'react-bootstrap/Badge'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import FormControl from 'react-bootstrap/FormControl'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Nav from 'react-bootstrap/Nav'
+import Row from 'react-bootstrap/Row'
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
@@ -38,18 +36,13 @@ import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { balanceWidths } from './Components/Utils'
-import Share from '../../components/Share/index'
-import NewPool from '../Pools/NewPool'
 import { calcLiqValue, calcSpotValueInBase } from '../../utils/math/utils'
 import { getTimeUntil } from '../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../utils/math/router'
-import Metrics from './Components/Metrics'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 
 const LiqRemove = () => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
@@ -60,7 +53,7 @@ const LiqRemove = () => {
 
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
-  const [activeTab, setActiveTab] = useState('1')
+  const [activeTab, setActiveTab] = useState('removeTab1')
   const [assetRemove1, setAssetRemove1] = useState('...')
   const [assetRemove2, setAssetRemove2] = useState('...')
   const [poolRemove1, setPoolRemove1] = useState('...')
@@ -88,7 +81,7 @@ const LiqRemove = () => {
     const { poolDetails } = pool
     const getAssetDetails = () => {
       if (hasFocus) {
-        if (poolDetails.length > 0 && activeTab === '1') {
+        if (poolDetails.length > 0 && activeTab === 'removeTab1') {
           window.localStorage.setItem('assetType1', 'pool')
           window.localStorage.setItem('assetType2', 'token')
           window.localStorage.setItem('assetType3', 'token')
@@ -117,7 +110,7 @@ const LiqRemove = () => {
           window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
           window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
           window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-        } else if (poolDetails && activeTab === '2') {
+        } else if (poolDetails && activeTab === 'removeTab2') {
           window.localStorage.setItem('assetType1', 'pool')
           window.localStorage.setItem('assetType2', 'token')
 
@@ -216,7 +209,7 @@ const LiqRemove = () => {
    * @returns spartaOutput @returns tokenOutput
    */
   const getRemLiq = () => {
-    if (removeInput1 && poolRemove1 && activeTab === '1') {
+    if (removeInput1 && poolRemove1 && activeTab === 'removeTab1') {
       const [spartaOutput, tokenOutput] = removeLiq(
         convertToWei(removeInput1.value),
         poolRemove1,
@@ -232,7 +225,7 @@ const LiqRemove = () => {
    * @returns tokensOut @returns swapFee
    */
   const getRemLiqAsym = () => {
-    if (removeInput1 && assetRemove1 && activeTab === '2') {
+    if (removeInput1 && assetRemove1 && activeTab === 'removeTab2') {
       const [tokensOut, swapFee, divi] = removeLiqAsym(
         convertToWei(removeInput1.value),
         poolRemove1,
@@ -282,7 +275,7 @@ const LiqRemove = () => {
 
   const getRevenue = () => {
     let result = '0.00'
-    if (activeTab === '2') {
+    if (activeTab === 'removeTab2') {
       result = BN(getRemLiqAsym()[1]).plus(getRemLiqAsym()[2])
     }
     result = result > 0 ? result : '0.00'
@@ -318,7 +311,7 @@ const LiqRemove = () => {
     if (poolRemove1.newPool) {
       return [false, `${t('unlocksIn')} ${getTimeNew()[0]}${getTimeNew()[1]}`]
     }
-    if (activeTab === '1') {
+    if (activeTab === 'removeTab1') {
       return [true, t('removeBoth')]
     }
     return [true, t('removeSingle')]
@@ -328,13 +321,13 @@ const LiqRemove = () => {
   // Handlers
 
   const handleInputChange = () => {
-    if (activeTab === '1') {
+    if (activeTab === 'removeTab1') {
       if (removeInput1?.value) {
         setoutput1(getRemLiq()[1])
         setoutput2(getRemLiq()[0])
       }
     }
-    if (activeTab === '2') {
+    if (activeTab === 'removeTab2') {
       if (removeInput1?.value && document.getElementById('removeInput2')) {
         document.getElementById('removeInput2').value = convertFromWei(
           getRemLiqAsym()[0],
@@ -350,7 +343,7 @@ const LiqRemove = () => {
 
   const handleRemLiq = async () => {
     setTxnLoading(true)
-    if (activeTab === '1') {
+    if (activeTab === 'removeTab1') {
       await dispatch(
         removeLiquidityExact(
           convertToWei(removeInput1.value),
@@ -381,419 +374,330 @@ const LiqRemove = () => {
   }
 
   return (
-    <Row>
-      <Col xs="auto">
-        <Card xs="auto" className="card-480">
-          <Card.Header className="p-0 border-0 mb-3">
-            <Row className="px-4 pt-3 pb-1">
-              <Col xs="auto">
-                {t('liquidity')}
-                {pool.poolDetails.length > 0 && <Share />}
-              </Col>
-              <Col className="text-end">
-                <NewPool />
-              </Col>
-            </Row>
-            <Nav activeKey={activeTab} fill>
-              <Nav.Item key="addTab1">
-                <Nav.Link
-                  eventKey="1"
+    <>
+      <Row className="mb-3">
+        <Col>
+          <Nav
+            variant="pills"
+            activeKey={activeTab}
+            onSelect={(e) => toggle(e)}
+            fill
+          >
+            <Nav.Item>
+              <Nav.Link className="btn-sm" eventKey="removeTab1">
+                {t('removeBoth')}
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item>
+              <Nav.Link className="btn-sm" eventKey="removeTab2">
+                {t('removeSingle')}
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Col>
+      </Row>
+
+      <Row className="">
+        <Col xs="12">
+          <Card className="assetSection">
+            <Card.Body>
+              <Row>
+                <Col className="">
+                  <strong>{t('redeem')}</strong>
+                </Col>
+                <Col
+                  xs="auto"
+                  className="float-end text-end"
+                  role="button"
+                  aria-hidden="true"
                   onClick={() => {
-                    toggle('1')
+                    clearInputs(1)
+                    removeInput1.value = convertFromWei(getBalance(1))
                   }}
                 >
-                  {t('removeBoth')}
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  eventKey="2"
-                  onClick={() => {
-                    toggle('2')
-                  }}
-                >
-                  {t('removeSingle')}
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Card.Header>
-
-          {pool.poolDetails.filter((x) => !x.hide).length > 1 ? (
-            <>
-              <Card.Body>
-                <Row>
-                  <Col xs="12" className="px-1 px-sm-3">
-                    <Card className="card-alt">
-                      <Card.Body>
-                        <Row>
-                          <Col xs="auto" className="text-sm-label">
-                            {t('redeem')}
-                          </Col>
-                          <Col
-                            className="text-sm-label float-end text-end"
-                            role="button"
-                            aria-hidden="true"
-                            onClick={() => {
-                              clearInputs(1)
-                              removeInput1.value = convertFromWei(getBalance(1))
-                            }}
-                          >
-                            <Badge bg="primary" className="me-1">
-                              MAX
-                            </Badge>
-                            {t('balance')}:{' '}
-                            {pool.poolDetails && (
-                              <OverlayTrigger
-                                placement="auto"
-                                overlay={Tooltip(
-                                  t,
-                                  formatFromWei(getBalance(1), 18),
-                                )}
-                              >
-                                <span role="button">
-                                  {formatFromWei(getBalance(1))}
-                                </span>
-                              </OverlayTrigger>
-                            )}
-                          </Col>
-                        </Row>
-
-                        <Row className="my-1">
-                          <Col>
-                            <InputGroup className="m-0">
-                              <InputGroup.Text id="assetSelect1">
-                                <AssetSelect priority="1" filter={['pool']} />
-                              </InputGroup.Text>
-                              <OverlayTrigger
-                                placement="auto"
-                                onToggle={() => checkWallet()}
-                                show={showWalletWarning1}
-                                trigger={['focus']}
-                                overlay={
-                                  <Popover>
-                                    <Popover.Header />
-                                    <Popover.Body>
-                                      {t('connectWalletFirst')}
-                                    </Popover.Body>
-                                  </Popover>
-                                }
-                              >
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  min="0"
-                                  placeholder={`${t('redeem')}...`}
-                                  id="removeInput1"
-                                  autoComplete="off"
-                                  autoCorrect="off"
-                                />
-                              </OverlayTrigger>
-
-                              <InputGroup.Text
-                                role="button"
-                                tabIndex={-1}
-                                onKeyPress={() => clearInputs(1)}
-                                onClick={() => clearInputs(1)}
-                              >
-                                <Icon icon="close" size="10" fill="grey" />
-                              </InputGroup.Text>
-                            </InputGroup>
-
-                            <Row className="text-sm-label pt-1">
-                              <Col>
-                                {formatShortString(poolRemove1?.address)}
-                                <ShareLink url={poolRemove1?.address}>
-                                  <Icon
-                                    icon="copy"
-                                    size="16"
-                                    className="ms-1 mb-1"
-                                  />
-                                </ShareLink>
-                                <a
-                                  href={getExplorerContract(
-                                    poolRemove1?.address,
-                                  )}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <Icon
-                                    icon="scan"
-                                    size="12"
-                                    className="ms-1 mb-1"
-                                    fill="rgb(170, 205, 255)"
-                                  />
-                                </a>
-                              </Col>
-                              <Col className="text-end">
-                                ~$
-                                {removeInput1?.value
-                                  ? formatFromWei(getLpValueUSD(), 2)
-                                  : '0.00'}
-                              </Col>
-                            </Row>
-                          </Col>
-                        </Row>
-                      </Card.Body>
-                    </Card>
-
-                    <Row style={{ height: '2px' }}>
-                      {activeTab === '2' && (
-                        <Icon
-                          icon="swapAdd"
-                          size="25"
-                          fill="#fb2715"
-                          className="mx-auto position-relative"
-                          style={{
-                            height: '35px',
-                            top: '-20px',
-                            zIndex: '1000',
-                          }}
-                        />
-                      )}
-                    </Row>
-
-                    {activeTab === '2' && (
-                      <Card className="card-alt">
-                        <Card.Body>
-                          <Row>
-                            <Col xs="auto" className="text-sm-label">
-                              {t('receive')}
-                            </Col>
-                            <Col className="text-sm-label float-end text-end">
-                              {t('balance')}:{' '}
-                              {pool.tokenDetails &&
-                                formatFromWei(getBalance(2))}
-                            </Col>
-                          </Row>
-
-                          <Row className="my-1">
-                            <Col>
-                              <InputGroup className="">
-                                <InputGroup.Text id="assetSelect2">
-                                  <AssetSelect
-                                    priority="2"
-                                    filter={['token']}
-                                    blackList={[
-                                      activeTab === '1' ? addr.spartav2 : '',
-                                    ]}
-                                    whiteList={
-                                      activeTab === '2'
-                                        ? [
-                                            addr.spartav2,
-                                            poolRemove1.tokenAddress,
-                                          ]
-                                        : ['']
-                                    }
-                                    disabled={activeTab === '1'}
-                                  />
-                                </InputGroup.Text>
-                                <FormControl
-                                  className="text-end ms-0"
-                                  type="number"
-                                  min="0"
-                                  placeholder={`${t('receive')}...`}
-                                  id="removeInput2"
-                                  disabled
-                                />
-                              </InputGroup>
-
-                              <Row className="text-sm-label pt-1">
-                                <Col>
-                                  {formatShortString(
-                                    assetRemove1?.tokenAddress,
-                                  )}
-                                  <ShareLink url={assetRemove1?.tokenAddress}>
-                                    <Icon
-                                      icon="copy"
-                                      size="16"
-                                      className="ms-1 mb-1"
-                                    />
-                                  </ShareLink>
-                                  <a
-                                    href={getExplorerContract(
-                                      assetRemove1?.tokenAddress,
-                                    )}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    <Icon
-                                      icon="scan"
-                                      size="12"
-                                      className="ms-1 mb-1"
-                                      fill="rgb(170, 205, 255)"
-                                    />
-                                  </a>
-                                </Col>
-                                <Col className="text-end">
-                                  ~$
-                                  {removeInput2?.value
-                                    ? formatFromWei(getOutput1ValueUSD(), 2)
-                                    : '0.00'}
-                                </Col>
-                              </Row>
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      </Card>
-                    )}
-
-                    {pool.poolDetails && (
-                      <>
-                        <Row className="mb-2 mt-3">
-                          <Col xs="auto">
-                            <div className="text-card">{t('redeem')}</div>
-                          </Col>
-                          <Col className="text-end">
-                            <div className="text-card">
-                              {removeInput1?.value > 0
-                                ? formatFromUnits(removeInput1?.value, 6)
-                                : '0.00'}{' '}
-                              {getToken(poolRemove1?.tokenAddress)?.symbol}p
-                            </div>
-                          </Col>
-                        </Row>
-
-                        {activeTab === '2' && (
-                          <>
-                            <Row className="mb-2">
-                              <Col xs="auto">
-                                <div className="text-card">{t('fee')}</div>
-                              </Col>
-                              <Col className="text-end">
-                                <div className="text-card">
-                                  {getRemLiqAsym()[1] > 0
-                                    ? formatFromWei(getRemLiqAsym()[1], 6)
-                                    : '0.00'}{' '}
-                                  <span className="">SPARTA</span>
-                                </div>
-                              </Col>
-                            </Row>
-                            <Row className="mb-2">
-                              <Col xs="auto">
-                                <div className="text-card">{t('revenue')}</div>
-                              </Col>
-                              <Col className="text-end">
-                                <div className="text-card">
-                                  {formatFromWei(getRevenue(), 6)} SPARTA
-                                  <OverlayTrigger
-                                    placement="auto"
-                                    overlay={Tooltip(t, 'swapRevInfo')}
-                                  >
-                                    <span role="button">
-                                      <Icon
-                                        icon="info"
-                                        className="ms-1 mb-1"
-                                        size="17"
-                                        fill={isLightMode ? 'black' : 'white'}
-                                      />
-                                    </span>
-                                  </OverlayTrigger>
-                                </div>
-                              </Col>
-                            </Row>
-                          </>
-                        )}
-
-                        <Row className="">
-                          <Col xs="auto" className="title-card">
-                            <span className="subtitle-card">
-                              {t('receive')}
-                            </span>
-                            {activeTab === '1' && (
-                              <div className="subtitle-card">
-                                {t('receive')}
-                              </div>
-                            )}
-                          </Col>
-                          <Col className="text-end">
-                            <span className="subtitle-card">
-                              ~
-                              {output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
-                              <span className="output-card">
-                                {getToken(assetRemove1?.tokenAddress)?.symbol}
-                              </span>
-                            </span>
-                            {activeTab === '1' && (
-                              <span className="subtitle-card">
-                                <br />~
-                                {output2 > 0
-                                  ? formatFromWei(output2, 6)
-                                  : '0.00'}{' '}
-                                <span className="output-card">SPARTA</span>
-                              </span>
-                            )}
-                          </Col>
-                        </Row>
-                      </>
-                    )}
-
-                    {!pool.poolDetails && (
-                      <HelmetLoading height={150} width={150} />
-                    )}
-                  </Col>
-                </Row>
-              </Card.Body>
-            </>
-          ) : (
-            <Card.Body className="output-card">
-              No pools are currently listed
-            </Card.Body>
-          )}
-          <Card.Footer>
-            <Row className="text-center">
-              {poolRemove1?.tokenAddress &&
-                wallet?.account &&
-                removeInput1?.value && (
-                  <Approval
-                    tokenAddress={poolRemove1?.address}
-                    symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
-                    walletAddress={wallet?.account}
-                    contractAddress={addr.router}
-                    txnAmount={convertToWei(removeInput1?.value)}
-                    assetNumber="1"
-                  />
-                )}
-              <Col xs="12" sm="4" md="12" className="hide-if-siblings">
-                <Button
-                  className="w-100"
-                  disabled={!checkValid()[0]}
-                  onClick={() => handleRemLiq()}
-                >
-                  {checkValid()[1]}
-                  {txnLoading && (
-                    <Icon icon="cycle" size="20" className="anim-spin ms-1" />
-                  )}
-                  {poolRemove1.newPool && (
+                  {t('balance')}:{' '}
+                  {pool.poolDetails && (
                     <OverlayTrigger
                       placement="auto"
-                      overlay={Tooltip(
-                        t,
-                        'newPool',
-                        `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
-                      )}
+                      overlay={Tooltip(t, formatFromWei(getBalance(1), 18))}
                     >
-                      <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mb-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
-                      </span>
+                      <span role="button">{formatFromWei(getBalance(1))}</span>
                     </OverlayTrigger>
                   )}
-                </Button>
-              </Col>
-            </Row>
-          </Card.Footer>
-        </Card>
-      </Col>
-      {pool.poolDetails && (
-        <Col xs="auto">
-          <Metrics assetSwap={poolRemove1} />
+                  <Badge bg="primary" className="ms-1 mb-1">
+                    MAX
+                  </Badge>
+                </Col>
+              </Row>
+
+              <Row className="my-1">
+                <Col>
+                  <InputGroup className="m-0">
+                    <InputGroup.Text id="assetSelect1">
+                      <AssetSelect priority="1" filter={['pool']} />
+                    </InputGroup.Text>
+                    <OverlayTrigger
+                      placement="auto"
+                      onToggle={() => checkWallet()}
+                      show={showWalletWarning1}
+                      trigger={['focus']}
+                      overlay={
+                        <Popover>
+                          <Popover.Header />
+                          <Popover.Body>{t('connectWalletFirst')}</Popover.Body>
+                        </Popover>
+                      }
+                    >
+                      <FormControl
+                        className="text-end ms-0"
+                        type="number"
+                        min="0"
+                        placeholder={`${t('redeem')}...`}
+                        id="removeInput1"
+                        autoComplete="off"
+                        autoCorrect="off"
+                      />
+                    </OverlayTrigger>
+
+                    <InputGroup.Text
+                      role="button"
+                      tabIndex={-1}
+                      onKeyPress={() => clearInputs(1)}
+                      onClick={() => clearInputs(1)}
+                    >
+                      <Icon icon="close" size="10" fill="grey" />
+                    </InputGroup.Text>
+                  </InputGroup>
+
+                  <Row className="pt-1">
+                    <Col>
+                      {formatShortString(poolRemove1?.address)}
+                      <ShareLink url={poolRemove1?.address}>
+                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                      </ShareLink>
+                      <a
+                        href={getExplorerContract(poolRemove1?.address)}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <Icon
+                          icon="scan"
+                          size="12"
+                          className="ms-1 mb-1"
+                          fill="rgb(170, 205, 255)"
+                        />
+                      </a>
+                    </Col>
+                    <Col className="text-end">
+                      ~$
+                      {removeInput1?.value
+                        ? formatFromWei(getLpValueUSD(), 2)
+                        : '0.00'}
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          {activeTab === 'removeTab2' && (
+            <>
+              <Row className="iconSeparator">
+                <Col xs="auto" className="mx-auto">
+                  <Icon
+                    icon={activeTab === 'addTab1' ? 'plus' : 'arrowDown'}
+                    size="25"
+                    stroke="white"
+                    fill="white"
+                    className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                  />
+                </Col>
+              </Row>
+              <Card>
+                <Card.Body>
+                  <Row>
+                    <Col xs="auto" className="">
+                      <strong>{t('receive')}</strong>
+                    </Col>
+                    <Col className="float-end text-end">
+                      {t('balance')}:{' '}
+                      {pool.tokenDetails && formatFromWei(getBalance(2))}
+                    </Col>
+                  </Row>
+
+                  <Row className="my-1">
+                    <Col>
+                      <InputGroup className="">
+                        <InputGroup.Text id="assetSelect2">
+                          <AssetSelect
+                            priority="2"
+                            filter={['token']}
+                            blackList={[
+                              activeTab === 'removeTab1' ? addr.spartav2 : '',
+                            ]}
+                            whiteList={
+                              activeTab === 'removeTab2'
+                                ? [addr.spartav2, poolRemove1.tokenAddress]
+                                : ['']
+                            }
+                            disabled={activeTab === 'removeTab1'}
+                          />
+                        </InputGroup.Text>
+                        <FormControl
+                          className="text-end ms-0"
+                          type="number"
+                          min="0"
+                          placeholder={`${t('receive')}...`}
+                          id="removeInput2"
+                          disabled
+                        />
+                      </InputGroup>
+
+                      <Row className="pt-1">
+                        <Col>
+                          {formatShortString(assetRemove1?.tokenAddress)}
+                          <ShareLink url={assetRemove1?.tokenAddress}>
+                            <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                          </ShareLink>
+                          <a
+                            href={getExplorerContract(
+                              assetRemove1?.tokenAddress,
+                            )}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Icon
+                              icon="scan"
+                              size="12"
+                              className="ms-1 mb-1"
+                              fill="rgb(170, 205, 255)"
+                            />
+                          </a>
+                        </Col>
+                        <Col className="text-end">
+                          ~$
+                          {removeInput2?.value
+                            ? formatFromWei(getOutput1ValueUSD(), 2)
+                            : '0.00'}
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </>
+          )}
+          {pool.poolDetails && (
+            <>
+              <Row className="mb-2 mt-3">
+                <Col xs="auto">{t('redeem')}</Col>
+                <Col className="text-end">
+                  {removeInput1?.value > 0
+                    ? formatFromUnits(removeInput1?.value, 6)
+                    : '0.00'}{' '}
+                  {getToken(poolRemove1?.tokenAddress)?.symbol}p
+                </Col>
+              </Row>
+
+              {activeTab === 'removeTab2' && (
+                <>
+                  <Row className="mb-2">
+                    <Col xs="auto">{t('fee')}</Col>
+                    <Col className="text-end">
+                      {getRemLiqAsym()[1] > 0
+                        ? formatFromWei(getRemLiqAsym()[1], 6)
+                        : '0.00'}{' '}
+                      SPARTA
+                    </Col>
+                  </Row>
+                  <Row className="mb-2">
+                    <Col xs="auto">{t('revenue')}</Col>
+                    <Col className="text-end">
+                      {formatFromWei(getRevenue(), 6)} SPARTA
+                      <OverlayTrigger
+                        placement="auto"
+                        overlay={Tooltip(t, 'swapRevInfo')}
+                      >
+                        <span role="button">
+                          <Icon icon="info" className="ms-1 mb-1" size="17" />
+                        </span>
+                      </OverlayTrigger>
+                    </Col>
+                  </Row>
+                </>
+              )}
+              <Row className="mb-2">
+                <Col xs="auto">
+                  <strong>{t('receive')}</strong>
+                </Col>
+                <Col className="text-end">
+                  <strong>
+                    ~{output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
+                    {getToken(assetRemove1?.tokenAddress)?.symbol}
+                  </strong>
+                </Col>
+              </Row>
+
+              {activeTab === 'removeTab1' && (
+                <Row className="mb-2">
+                  <Col xs="auto">
+                    <strong>{t('receive')}</strong>
+                  </Col>
+                  <Col className="text-end">
+                    <strong className="">
+                      ~{output2 > 0 ? formatFromWei(output2, 6) : '0.00'} SPARTA
+                    </strong>
+                  </Col>
+                </Row>
+              )}
+            </>
+          )}
+
+          {!pool.poolDetails && <HelmetLoading height={150} width={150} />}
+
+          <Row className="text-center mt-3">
+            {poolRemove1?.tokenAddress &&
+              wallet?.account &&
+              removeInput1?.value && (
+                <Approval
+                  tokenAddress={poolRemove1?.address}
+                  symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
+                  walletAddress={wallet?.account}
+                  contractAddress={addr.router}
+                  txnAmount={convertToWei(removeInput1?.value)}
+                  assetNumber="1"
+                />
+              )}
+            <Col xs="12" sm="4" md="12" className="hide-if-siblings">
+              <Button
+                className="w-100"
+                disabled={!checkValid()[0]}
+                onClick={() => handleRemLiq()}
+              >
+                {checkValid()[1]}
+                {txnLoading && (
+                  <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                )}
+                {poolRemove1.newPool && (
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={Tooltip(
+                      t,
+                      'newPool',
+                      `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
+                    )}
+                  >
+                    <span role="button">
+                      <Icon icon="info" className="ms-1 mb-1" size="17" />
+                    </span>
+                  </OverlayTrigger>
+                )}
+              </Button>
+            </Col>
+          </Row>
         </Col>
-      )}
-    </Row>
+      </Row>
+    </>
   )
 }
 

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Badge, Col, Row } from 'react-bootstrap'
+import Badge from 'react-bootstrap/Badge'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { useSparta } from '../../../store/sparta'
@@ -114,7 +116,7 @@ const LPs = () => {
             <Col className="align-items-center">
               <Row>
                 <Col xs="auto" className="float-left output-card">
-                  {t('total')}
+                  <strong>{t('total')}</strong>
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
@@ -127,7 +129,7 @@ const LPs = () => {
 
             <Col
               className="text-center me-1 mt-1"
-              style={{ maxWidth: '80px' }}
+              style={{ maxWidth: '75px' }}
             />
           </Row>
         </div>
@@ -138,6 +140,7 @@ const LPs = () => {
 
   return (
     <>
+      <Badge className="mb-3">{t('heldInWallet')}</Badge>
       {/* HELD LP TOKENS */}
       {!isLoading() &&
         pool.poolDetails
@@ -167,8 +170,9 @@ const LPs = () => {
               <Col className="align-items-center">
                 <Row>
                   <Col className="float-left">
-                    <Badge className="me-1">{t('wallet')}</Badge>
-                    {`${_getToken(asset.tokenAddress)?.symbol}p`}
+                    <strong>{`${
+                      _getToken(asset.tokenAddress)?.symbol
+                    }p`}</strong>
                     <div className="text-sm-label">
                       {formatFromWei(asset.balance)}
                     </div>
@@ -220,12 +224,12 @@ const LPs = () => {
 
               <Col
                 className="text-center me-1 mt-1"
-                style={{ maxWidth: '80px' }}
+                style={{ maxWidth: '75px' }}
               >
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" size="24" />
+                      <Icon icon="copy" size="22" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
@@ -245,13 +249,13 @@ const LPs = () => {
                           }}
                         >
                           {getWalletType() === 'MM' ? (
-                            <Icon icon="metamask" role="button" size="24" />
+                            <Icon icon="metamask" role="button" size="22" />
                           ) : (
                             getWalletType() === 'TW' && (
                               <Icon
                                 icon="trustwallet"
                                 role="button"
-                                size="24"
+                                size="22"
                               />
                             )
                           )}
@@ -266,7 +270,10 @@ const LPs = () => {
       {/* STAKED LP TOKENS */}
       {!isLoading() &&
         dao.daoDetails?.filter((asset) => asset.staked > 0).length > 0 && (
-          <hr />
+          <>
+            <hr />
+            <Badge className="mb-3">{t('stakedInDaoVault')}</Badge>
+          </>
         )}
       {!isLoading() &&
         dao.daoDetails
@@ -296,8 +303,9 @@ const LPs = () => {
               <Col className="align-items-center">
                 <Row>
                   <Col xs="auto" className="float-left">
-                    <Badge className="me-1">{t('staked')}</Badge>
-                    {`${_getToken(asset.tokenAddress)?.symbol}p`}
+                    <strong>{`${
+                      _getToken(asset.tokenAddress)?.symbol
+                    }p`}</strong>
                     <div className="text-sm-label">
                       {formatFromWei(asset.staked, 2)}
                     </div>
@@ -348,7 +356,7 @@ const LPs = () => {
 
               <Col
                 className="text-center me-1 mt-1"
-                style={{ maxWidth: '80px' }}
+                style={{ maxWidth: '75px' }}
               >
                 {' '}
                 <Row>
@@ -395,7 +403,10 @@ const LPs = () => {
       {/* BONDED LP TOKENS */}
       {!isLoading() &&
         bond.bondDetails?.filter((asset) => asset.staked > 0).length > 0 && (
-          <hr />
+          <>
+            <hr />
+            <Badge className="mb-3">{t('stakedInBondVault')}</Badge>
+          </>
         )}
       {!isLoading() &&
         bond.bondDetails
@@ -424,8 +435,9 @@ const LPs = () => {
               <Col className="align-items-center">
                 <Row>
                   <Col xs="auto" className="float-left">
-                    <Badge className="me-1">{t('bonded')}</Badge>
-                    {`${_getToken(asset.tokenAddress)?.symbol}p`}
+                    <strong>{`${
+                      _getToken(asset.tokenAddress)?.symbol
+                    }p`}</strong>
                     <div className="text-sm-label">
                       {formatFromWei(asset.staked)}
                     </div>
@@ -475,7 +487,7 @@ const LPs = () => {
 
               <Col
                 className="text-center me-1 mt-1"
-                style={{ maxWidth: '80px' }}
+                style={{ maxWidth: '75px' }}
               >
                 <Row>
                   <Col xs="6" className="p-0">

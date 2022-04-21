@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Col, Row, Button, Form } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Nav from 'react-bootstrap/Nav'
+import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { getNetwork, tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
@@ -12,7 +16,7 @@ const Positions = () => {
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
-  const [showSynths, setShowSynths] = useState(false)
+  const [activeTab, setActiveTab] = useState('pools')
 
   const getData = () => {
     setnetwork(getNetwork())
@@ -34,36 +38,36 @@ const Positions = () => {
       <div className="content">
         {tempChains.includes(network.chainId) && network?.chainId === 56 ? (
           <>
-            <Row className="row-480">
+            <Row className="mb-3">
               <Col>
-                {!showSynths ? t('liquidityPositions') : t('synthPositions')}
-                <Form className="">
-                  <span className="output-card">
-                    {t('synthView')}
-                    <Form.Check
-                      type="switch"
-                      id="custom-switch"
-                      className="ms-2 d-inline-flex"
-                      checked={showSynths}
-                      onChange={() => {
-                        setShowSynths(!showSynths)
-                      }}
-                    />
-                  </span>
-                </Form>
+                <Nav
+                  variant="pills"
+                  activeKey={activeTab}
+                  onSelect={(e) => setActiveTab(e)}
+                >
+                  <Nav.Item>
+                    <Nav.Link eventKey="pools" className="btn-sm">
+                      {t('liquidityPositions')}
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="synths" className="btn-sm">
+                      {t('synthPositions')}
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
               </Col>
             </Row>
-            <Row className="row-480">
-              {!showSynths ? <PoolPositions /> : <SynthPositions />}
-              <Col xs="auto">
-                <Card className="card-320" style={{ minHeight: '445px' }}>
-                  <Card.Header className="">
-                    Assessing Positions
-                    <Card.Subtitle className="">
-                      <div className="my-2 d-inline-block me-2">More Info</div>
-                    </Card.Subtitle>
+            <Row>
+              {activeTab === 'pools' ? <PoolPositions /> : <SynthPositions />}
+              <Col>
+                <Card style={{ minHeight: '445px', minWidth: '275px' }}>
+                  <Card.Header>
+                    <Card.Title className="pt-1">
+                      Assessing Positions
+                    </Card.Title>
                   </Card.Header>
-                  <Card.Body className="output-card">
+                  <Card.Body>
                     Assessing your position is subjective & depends on what you
                     are trying to achieve: <br />
                     <br />
@@ -86,7 +90,12 @@ const Positions = () => {
                     >
                       <Button className="w-100">
                         {t('viewInDocs')}
-                        <Icon icon="scan" size="15" className="ms-2 mb-1" />
+                        <Icon
+                          icon="scan"
+                          size="15"
+                          fill="white"
+                          className="ms-2 mb-1"
+                        />
                       </Button>
                     </a>
                   </Card.Footer>

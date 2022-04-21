@@ -1,5 +1,7 @@
 import React from 'react'
-import { Card, Col, Row } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -58,15 +60,13 @@ const SynthVaultItem = ({ synthItem }) => {
     return [valid, reward, ` ${getToken(synthItem.tokenAddress)?.symbol}s`]
   }
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320" style={{ minHeight: '255' }}>
-          <Card.Body>
-            <Row className="mb-2">
-              <Col xs="auto" className="position-relative">
+      <Col className="mb-4" xs="12" sm="6" lg="4">
+        <Card style={{ minHeight: '265px' }}>
+          <Card.Header>
+            <Row className="mb-1">
+              <Col xs="auto" className="position-relative pt-1">
                 <img
                   className="mr-3 rounded-circle"
                   src={getToken(synthItem.tokenAddress)?.symbolUrl}
@@ -77,33 +77,26 @@ const SynthVaultItem = ({ synthItem }) => {
                   height="25px"
                   src={spartaIconAlt}
                   alt="Sparta synth token icon"
-                  className="position-absolute"
-                  style={{ right: '8px', bottom: '7px' }}
+                  className="token-badge-pair"
                 />
               </Col>
-              <Col xs="auto" className="pl-1">
+              <Col className="pl-1">
                 <h3 className="mb-0">
                   {getToken(synthItem.tokenAddress)?.symbol}s
                 </h3>
                 <Link to={`/synths?asset2=${synthItem.tokenAddress}`}>
-                  <p className="text-sm-label-alt">
+                  <small>
                     {t('obtain')} {getToken(synthItem.tokenAddress)?.symbol}s
-                    <Icon
-                      icon="scan"
-                      size="13"
-                      fill={isLightMode ? 'black' : 'white'}
-                      className="ms-1"
-                    />
-                  </p>
+                    <Icon icon="scan" size="11" className="ms-1" />
+                  </small>
                 </Link>
               </Col>
             </Row>
-
+          </Card.Header>
+          <Card.Body>
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('balance')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('balance')}</Col>
+              <Col xs="auto" className="text-end">
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
@@ -116,10 +109,8 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('staked')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('staked')}</Col>
+              <Col xs="auto" className="text-end">
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
@@ -132,10 +123,8 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('harvestable')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('harvestable')}</Col>
+              <Col xs="auto" className="text-end">
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
@@ -145,10 +134,8 @@ const SynthVaultItem = ({ synthItem }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('lastHarvest')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('lastHarvest')}</Col>
+              <Col xs="auto" className="text-end">
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
@@ -181,7 +168,7 @@ const SynthVaultItem = ({ synthItem }) => {
               </Col>
             </Row>
             <Row className="mt-2">
-              <Col xs="12" className="">
+              <Col xs="12">
                 <SynthHarvestModal
                   synthItem={synthItem}
                   buttonValid={checkValid()}

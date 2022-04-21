@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  Badge,
-  Button,
-  Card,
-  Col,
-  OverlayTrigger,
-  Row,
-  ProgressBar,
-} from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import { synthVaultWeight, useSynth } from '../../store/synth'
@@ -27,6 +24,8 @@ import { Tooltip } from '../../components/Tooltip/index'
 import { calcLiqValue, getSynth } from '../../utils/math/utils'
 import { stirCauldron } from '../../utils/math/router'
 
+import styles from './styles.module.scss'
+
 const SynthItem = ({ asset, synthApy }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -34,8 +33,7 @@ const SynthItem = ({ asset, synthApy }) => {
   const synth = useSynth()
   const history = useHistory()
   const web3 = useWeb3()
-  const isLightMode = window.localStorage.getItem('theme')
-  const { tokenAddress, baseAmount, tokenAmount, newPool, curated } = asset
+  const { tokenAddress, baseAmount, tokenAmount } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
@@ -71,102 +69,8 @@ const SynthItem = ({ asset, synthApy }) => {
 
   return (
     <>
-      <Col xs="auto">
-        <Card className="card-320 pb-2 card-alt" style={{ minHeight: '310px' }}>
-          <Card.Header>
-            <h6 className="mb-0 text-center">
-              {newPool && (
-                <Badge bg="dark" className="p-1 me-1">
-                  {t('new')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'newPool', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {curated && (
-                <Badge bg="dark" className="p-1 me-1">
-                  {t('curated')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolCurated', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {!curated && (
-                <Badge bg="dark" className="p-1 me-1">
-                  {t('normal')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolNormal', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        // fill={isLightMode ? 'black' : 'white'}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {!asset.frozen && (
-                <Badge bg="success" className="p-1">
-                  {t('active')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolActive', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-              {asset.frozen && (
-                <Badge bg="danger" className="p-1">
-                  {t('inactive')}
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(t, 'poolInactive', token.symbol)}
-                  >
-                    <span role="button">
-                      <Icon
-                        icon="info"
-                        className="ms-1"
-                        size="15"
-                        fill={isLightMode ? 'black' : 'white'}
-                      />
-                    </span>
-                  </OverlayTrigger>
-                </Badge>
-              )}
-            </h6>
-          </Card.Header>
+      <Col xs="12" sm="6" lg="4">
+        <Card className={styles.synthItem}>
           <Card.Body>
             <Row className="mb-2">
               <Col xs="auto" className="position-relative">
@@ -181,7 +85,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   src={spartaIconAlt}
                   alt="Sparta synth token icon"
                   className="position-absolute"
-                  style={{ right: '8px', bottom: '10px' }}
+                  style={{ right: '5px', bottom: '10px' }}
                 />
               </Col>
               <Col xs="auto" className="pe-0 my-auto">
@@ -201,19 +105,16 @@ const SynthItem = ({ asset, synthApy }) => {
                 </p>
               </Col>
               <Col className="text-end my-auto">
-                <p className="text-sm-label mb-0 d-inline-block">Synth APY</p>
+                <strong className="text-sm-label mb-0 d-inline-block">
+                  Synth APY
+                </strong>
                 <p className="output-card">
                   <OverlayTrigger
                     placement="auto"
-                    overlay={Tooltip(t, 'apySynth')}
+                    overlay={Tooltip(t, 'apyVault')}
                   >
                     <span role="button">
-                      <Icon
-                        icon="lock"
-                        size="17"
-                        fill={isLightMode ? 'black' : 'white'}
-                        className="me-1 mb-1"
-                      />
+                      <Icon icon="info" size="17" className="me-1 mb-1" />
                     </span>
                   </OverlayTrigger>
                   {formatFromUnits(synthApy, 2)}%
@@ -226,12 +127,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 {t('softCap')}
                 <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -243,7 +139,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   <Col className="my-auto px-0">
                     <ProgressBar style={{ height: '5px' }} className="">
                       <ProgressBar
-                        variant={getSynthCapPC() > 95 ? 'primary' : 'success'}
+                        variant={getSynthCapPC() > 95 ? 'danger' : 'success'}
                         key={1}
                         now={getSynthCapPC()}
                       />
@@ -293,12 +189,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 {t('synthPC')}
                 <OverlayTrigger placement="auto" overlay={synthPCTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -318,12 +209,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 {t('unrealised')}
                 <OverlayTrigger placement="auto" overlay={synthURTooltip}>
                   <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
+                    <Icon icon="info" className="ms-1" size="17" />
                   </span>
                 </OverlayTrigger>
               </Col>
@@ -343,8 +229,8 @@ const SynthItem = ({ asset, synthApy }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="info"
-                  className="w-100 rounded-pill"
+                  variant="outline-secondary"
+                  className="w-100"
                   disabled={!asset.curated}
                   onClick={() => history.push('/vaults?tab=Synth')}
                 >
@@ -354,8 +240,8 @@ const SynthItem = ({ asset, synthApy }) => {
               <Col>
                 <Button
                   size="sm"
-                  variant="info"
-                  className="w-100 rounded-pill"
+                  variant="outline-secondary"
+                  className="w-100"
                   onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
                 >
                   {t('forge')}

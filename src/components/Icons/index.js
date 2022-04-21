@@ -1,6 +1,9 @@
 import React from 'react'
 // BRANDS
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
+import { ReactComponent as BNBChain } from '../../assets/brands/bnbchain.svg'
+import { ReactComponent as BNBChainConnected } from '../../assets/brands/bnbchain-connected.svg'
+import { ReactComponent as CoinGeckoIcon } from '../../assets/brands/coingecko-icon.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
@@ -12,13 +15,20 @@ import { ReactComponent as ArrowLeftRight } from '../../assets/icons/arrow-left-
 import { ReactComponent as ArrowLeft } from '../../assets/icons/arrow-left.svg'
 import { ReactComponent as ArrowRight } from '../../assets/icons/arrow-right.svg'
 import { ReactComponent as ArrowUp } from '../../assets/icons/arrow-up.svg'
+import { ReactComponent as ArrowExtLeft } from '../../assets/icons/arrow-extend-left.svg'
+import { ReactComponent as ArrowExtRight } from '../../assets/icons/arrow-extend-right.svg'
 import { ReactComponent as Close } from '../../assets/icons/close.svg'
 import { ReactComponent as Colosseum } from '../../assets/icons/colosseum.svg'
 import { ReactComponent as Connect } from '../../assets/icons/connect.svg'
 import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
+import { ReactComponent as ContractGreen } from '../../assets/icons/contract-green.svg'
+import { ReactComponent as ContractRed } from '../../assets/icons/contract-red.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
+import { ReactComponent as Dao } from '../../assets/icons/dao.svg'
+import { ReactComponent as Donate } from '../../assets/icons/donate.svg'
 import { ReactComponent as Fire } from '../../assets/icons/fire.svg'
+import { ReactComponent as Grid } from '../../assets/icons/grid.svg'
 import { ReactComponent as Handshake } from '../../assets/icons/handshake.svg'
 import { ReactComponent as Helmet } from '../../assets/icons/helmet.svg'
 import { ReactComponent as Home } from '../../assets/icons/home.svg'
@@ -34,15 +44,18 @@ import { ReactComponent as Pool } from '../../assets/icons/pool.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
+import { ReactComponent as Settings } from '../../assets/icons/settings.svg'
 import { ReactComponent as Sun } from '../../assets/icons/sun.svg'
 import { ReactComponent as Swap } from '../../assets/icons/swap.svg'
 import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
 import { ReactComponent as Sword } from '../../assets/icons/sword.svg'
 import { ReactComponent as Swords } from '../../assets/icons/swords.svg'
 import { ReactComponent as Synth } from '../../assets/icons/synth.svg'
+import { ReactComponent as Table } from '../../assets/icons/table.svg'
 import { ReactComponent as Trash } from '../../assets/icons/trash.svg'
 import { ReactComponent as Upgrade } from '../../assets/icons/upgrade.svg'
 import { ReactComponent as Vault } from '../../assets/icons/vault.svg'
+import { ReactComponent as WalletGreen } from '../../assets/icons/wallet-green.svg'
 import { ReactComponent as WalletRed } from '../../assets/icons/wallet-red.svg'
 // SOCIALS
 import { ReactComponent as Discord } from '../../assets/brands/discord.svg'
@@ -57,6 +70,7 @@ import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
+import { ReactComponent as SpartaTextShort } from '../../assets/tokens/sparta-text-short.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
 import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
 import { ReactComponent as Usd } from '../../assets/tokens/usd.svg'
@@ -71,10 +85,14 @@ import { ReactComponent as MetaMask } from '../../assets/brands/metamask.svg'
 import { ReactComponent as Onto } from '../../assets/brands/onto.svg'
 import { ReactComponent as TrustWallet } from '../../assets/brands/trust-wallet.svg'
 import { ReactComponent as WalletConnect } from '../../assets/brands/walletconnect.svg'
+import { useTheme } from '../../providers/Theme'
 
 const icons = {
   // BRANDS
   apple: Apple,
+  bnbChain: BNBChain,
+  bnbChainConnected: BNBChainConnected,
+  coinGeckoIcon: CoinGeckoIcon,
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS
@@ -86,14 +104,21 @@ const icons = {
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowUp: ArrowUp,
+  arrowExtLeft: ArrowExtLeft,
+  arrowExtRight: ArrowExtRight,
   bin: Trash,
   close: Close,
   colosseum: Colosseum,
   connect: Connect,
   contract: Contract,
+  contractGreen: ContractGreen,
+  contractRed: ContractRed,
   copy: Copy,
   cycle: Cycle,
+  dao: Dao,
+  donate: Donate,
   fire: Fire,
+  grid: Grid,
   handshake: Handshake,
   helmet: Helmet,
   home: Home,
@@ -109,15 +134,18 @@ const icons = {
   plus: Plus,
   scan: Scan,
   search: Search,
+  settings: Settings,
   sun: Sun,
   swap: Swap,
   swapAdd: SwapAdd,
   sword: Sword,
   swords: Swords,
   synth: Synth,
+  table: Table,
   trash: Trash,
   upgrade: Upgrade,
   vault: Vault,
+  walletGreen: WalletGreen,
   walletRed: WalletRed,
   // SOCIALS
   discord: Discord,
@@ -132,6 +160,7 @@ const icons = {
   spartav2: SpartaV2,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
+  spartaTextShort: SpartaTextShort,
   bnb: Bnb,
   busd: Busd,
   usd: Usd,
@@ -161,6 +190,8 @@ const icons = {
  * @returns {Component} Custom Icon imported as ReactComponent
  */
 export const Icon = (props) => {
+  const { isDark } = useTheme()
+  const fallbackFill = isDark ? '#ffffffcf' : '#000000'
   let CustomIcon = icons[props.icon]
   if (CustomIcon === undefined) {
     CustomIcon = icons.iconMissing
@@ -171,7 +202,7 @@ export const Icon = (props) => {
         className={props.className || ''}
         height={props.size || props.height || '40'}
         width={props.size || props.width || '40'}
-        fill={props.fill || 'white'}
+        fill={props.fill || fallbackFill}
         stroke={props.stroke || null}
         style={props.style || null}
         role={props.role || null}

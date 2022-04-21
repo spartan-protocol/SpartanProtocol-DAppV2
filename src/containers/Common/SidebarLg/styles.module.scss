@@ -1,0 +1,61 @@
+@import '../../../assets/styles/variables.scss';
+
+.sidebarLg {
+  // Structure
+  min-width: 60px;
+  align-content: space-between;
+  // Visibility
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  // Animations
+  transition: 0.5s;
+  // CSS Grid
+  grid-area: sidebarLg;
+  display: flex;
+  flex-direction: column;
+}
+
+.links {
+  white-space: nowrap;
+  text-overflow: clip;
+  transition: 0.5s;
+}
+
+.bottom {
+  justify-self: flex-end;
+  margin-top: auto;
+  text-align: center;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.icon {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.lis {
+  flex-direction: column;
+  margin-top: 40px;
+}
+
+.spTitle {
+  margin-left: 15px;
+  vertical-align: middle;
+  line-height: 20px;
+  margin-bottom: 0;
+}
+
+.fixedTrue {
+  position: absolute;
+  left: 205;
+  top: 19;
+}
+
+.fixedFalse {
+  position: absolute;
+  left: 75;
+  top: 19;
+}

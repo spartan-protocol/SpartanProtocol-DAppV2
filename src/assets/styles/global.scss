@@ -1,0 +1,145 @@
+@import './variables.scss';
+@import './bootstrap/index.scss';
+@import './utils.scss';
+
+html {
+  font-size: 13px;
+}
+
+body
+  > iframe[style*='2147483647']:not([id='webpack-dev-server-client-overlay']) {
+  display: none;
+}
+
+body {
+  overflow: hidden;
+  font-family: 'Saira';
+  background-color: $bg-depth-2;
+  color: $text;
+  font-weight: 500;
+}
+
+a {
+  color: $text;
+  text-decoration: none;
+}
+
+.body {
+  grid-area: body;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 30px;
+  border-top-left-radius: 1.5rem;
+  box-shadow: inset $shadow;
+  background-color: $bg-depth-0;
+}
+
+@media only screen and (max-width: 1023px) {
+  .body {
+    border-top-left-radius: 0;
+    padding: 20px;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .body {
+    border-top-left-radius: 0;
+    padding: 10px;
+  }
+}
+
+.bg-0 {
+  background-color: $bg-depth-0;
+}
+
+.bg-1 {
+  background-color: $bg-depth-1;
+}
+
+.bg-2 {
+  background-color: $bg-depth-2;
+}
+
+.shadow {
+  box-shadow: $shadow;
+}
+
+.shadow-inner {
+  box-shadow: inset $shadow;
+}
+
+.token-badge {
+  position: absolute;
+  left: 31;
+  bottom: 2;
+}
+
+.token-badge-tight {
+  position: absolute;
+  left: 22;
+  top: 12;
+}
+
+.token-badge-share {
+  position: absolute;
+  left: 40;
+  top: 29;
+}
+
+.iconSeparator {
+  height: 2px;
+}
+
+.iconOnTop {
+  bottom: 13px;
+  z-index: 1000;
+}
+
+@media only screen and (max-width: 321px) {
+  .hide-i5 {
+    display: none;
+  }
+}
+
+// ------------- DARK THEME ------------- //
+
+body.dark-theme {
+  background-color: $bg-depth-2-dark;
+  color: $text-dark;
+
+  a {
+    color: $text-dark;
+  }
+  .toast-link:hover {
+    color: $link-hover-dark;
+  }
+
+  .toast-header {
+    color: $text-dark;
+  }
+
+  .body {
+    box-shadow: inset $shadow-dark;
+    background-color: $bg-depth-0-dark;
+  }
+
+  .bg-0 {
+    background-color: $bg-depth-0-dark;
+  }
+
+  .bg-1 {
+    background-color: $bg-depth-1-dark;
+  }
+
+  .bg-2 {
+    background-color: $bg-depth-2-dark;
+  }
+
+  .shadow {
+    box-shadow: $shadow-dark;
+  }
+
+  .shadow-inner {
+    box-shadow: inset $shadow-dark;
+  }
+}

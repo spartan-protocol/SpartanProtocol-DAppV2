@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
-import { useTranslation } from 'react-i18next'
 import { useWeb3 } from '../../../store/web3'
 import { BN, convertFromWei } from '../../../utils/bigNumber'
 import { usePool } from '../../../store/pool'
@@ -10,7 +9,6 @@ import { getNetwork } from '../../../utils/web3'
 const ChartTVL = () => {
   const web3 = useWeb3()
   const pool = usePool()
-  const { t } = useTranslation()
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -76,10 +74,11 @@ const ChartTVL = () => {
       },
     },
     plugins: {
-      title: {
-        display: true,
-        text: `${t('protocolTvl')} ($USD)`,
-      },
+      // title: {
+      //   display: true,
+      //   text: `${t('protocolTvl')} ($USD)`,
+      //   color: 'white',
+      // },
       legend: {
         display: false,
       },

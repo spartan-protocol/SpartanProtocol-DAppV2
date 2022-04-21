@@ -1,0 +1,32 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+
+.navbar {
+  grid-area: navbar;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+}
+
+.hammy {
+  align-self: center;
+}
+
+.brand {
+  margin-left: 10px;
+  display: inline-block;
+}
+
+@media only screen and (max-width: 358px) {
+  .brand {
+    display: none;
+  }
+}
+
+.buttons {
+  height: 100%;
+  margin: auto 10px auto auto;
+  display: flex;
+}

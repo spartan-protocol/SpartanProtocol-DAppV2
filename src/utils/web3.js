@@ -35,6 +35,7 @@ import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 import { BN } from './bigNumber'
+import { defaultSettings } from '../components/Settings/options'
 
 export const abisTN = {
   bondVault: abiTnBondVault.abi,
@@ -203,7 +204,7 @@ export const bscRpcsMN = [
   'https://bsc-dataseed2.binance.org/',
   'https://bsc-dataseed3.binance.org/',
   'https://bsc-dataseed4.binance.org/',
-  'https://binance.ankr.com/',
+  // 'https://binance.ankr.com/',
   'https://bscrpc.com',
   'https://binance.nodereal.io',
 ]
@@ -403,6 +404,19 @@ export const getNetwork = () => {
   return network
 }
 
+/**
+ * Check localStorage for settings and set default if missing
+ * returns {gasRateMN: '5.01', gasRateTN: '10.01', slipTol: '1.0'}
+ */
+export const getSettings = () => {
+  let settings = tryParse(window.localStorage.getItem('sp_settings'))
+  if (!settings) {
+    window.localStorage.setItem('sp_settings', JSON.stringify(defaultSettings))
+    settings = defaultSettings
+  }
+  return settings
+}
+
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider, rpcUrls) => {
   const network = getNetwork()
@@ -420,8 +434,10 @@ export const getWalletProvider = (_provider, rpcUrls) => {
 export const getProviderGasPrice = (rpcUrls) => {
   // const provider = getWalletProvider(null, rpcUrls) // TEMP DISABLE
   // const gasPrice = provider.getGasPrice() // TEMP DISABLE
-  const gasPrice = getNetwork().chainId === 97 ? '10010000000' : '5010000000' // TEMP OVERRIDE
-  return gasPrice
+  const lsSettings = getSettings()
+  const isMN = getNetwork().chainId === 56
+  const gasPrice = isMN ? lsSettings.gasRateMN : lsSettings.gasRateTN
+  return BN(gasPrice).times(1000000000).toString()
 }
 
 /**

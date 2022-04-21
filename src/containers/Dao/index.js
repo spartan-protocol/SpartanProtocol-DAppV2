@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Row, Col, Card, Button, Tabs, Tab } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import Nav from 'react-bootstrap/Nav'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
@@ -122,73 +126,71 @@ const Overview = () => {
       <div className="content">
         {tempChains.includes(network.chainId) && (
           <>
-            <Row className="row-480">
+            <Row className="mb-3">
               <Col>
-                <Tabs
+                <Nav
+                  variant="pills"
                   activeKey={selectedView}
-                  onSelect={(k) => setSelectedView(k)}
-                  className="mb-3 card-480"
+                  onSelect={(e) => setSelectedView(e)}
                 >
-                  <Tab eventKey="current" title={t('open')} />
-                  <Tab eventKey="complete" title={t('completed')} />
-                  <Tab eventKey="failed" title={t('failed')} />
-                </Tabs>
+                  <Nav.Item>
+                    <Nav.Link eventKey="current" className="btn-sm">
+                      {t('open')}
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="complete" className="btn-sm">
+                      {t('completed')}
+                    </Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="failed" className="btn-sm">
+                      {t('failed')}
+                    </Nav.Link>
+                  </Nav.Item>
+                </Nav>
               </Col>
             </Row>
-            <Row className="row-480">
-              <Col xs="auto" className="">
-                <Card
-                  xs="auto"
-                  className="card-320"
-                  style={{ minHeight: '320px' }}
-                >
+            <Row>
+              <Col xs="12" sm="6" lg="4" className="mb-3">
+                <Card style={{ minHeight: '285px' }}>
                   <Card.Header>
-                    {t('daoProposals')}
-                    <Card.Subtitle className="">
-                      {t('helpGovern')}
+                    <h4>{t('daoProposals')}</h4>
+                    <Card.Subtitle>
+                      <small>{t('helpGovern')}</small>
                     </Card.Subtitle>
                   </Card.Header>
                   {!isLoading() ? (
                     <Card.Body>
                       <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('proposalCount')}
-                        </Col>
-                        <Col className="text-end output-card">
+                        <Col>{t('proposalCount')}</Col>
+                        <Col xs="auto" className="text-end">
                           {dao.global.currentProposal}
                         </Col>
                       </Row>
                       <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('daoRunning')}
-                        </Col>
-                        <Col className="text-end output-card">
+                        <Col>{t('daoRunning')}</Col>
+                        <Col xs="auto" className="text-end">
                           {dao.global.running
                             ? t('daoRunningYes')
                             : t('daoRunningNo')}
                         </Col>
                       </Row>
                       <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('coolOffPeriod')}
-                        </Col>
-                        <Col className="text-end output-card">
+                        <Col>{t('coolOffPeriod')}</Col>
+                        <Col xs="auto" className="text-end">
                           {convertTimeUnits(dao.global.coolOffPeriod, t)}
                         </Col>
                       </Row>
                       <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('cancelPeriod')}
-                        </Col>
-                        <Col className="text-end output-card">
+                        <Col>{t('cancelPeriod')}</Col>
+                        <Col xs="auto" className="text-end">
                           {convertTimeUnits(dao.global.cancelPeriod, t)}
                         </Col>
                       </Row>
                       <Row className="my-1">
-                        <Col xs="auto" className="text-card">
-                          {t('totalWeight')}
-                        </Col>
-                        <Col className="text-end output-card">
+                        <Col>{t('totalWeight')}</Col>
+                        <Col xs="auto" className="text-end">
                           {totalWeight()}
                           <Icon
                             icon="spartav2"
@@ -204,7 +206,7 @@ const Overview = () => {
 
                   <Card.Footer>
                     <Link to="/vaults">
-                      <Button className="w-100">{t('addWeight')}</Button>
+                      <Button className="w-100 btn-sm">{t('addWeight')}</Button>
                     </Link>
                     <NewProposal />
                   </Card.Footer>
@@ -226,11 +228,8 @@ const Overview = () => {
                                 dao.proposal[dao.global.currentProposal - 1]
                               }
                             />
-                            <Col>
-                              <Card
-                                className="card-320"
-                                style={{ minHeight: '320px' }}
-                              >
+                            <Col xs="12" sm="6" lg="4" className="mb-2">
+                              <Card style={{ minHeight: '285px' }}>
                                 <Card.Header>
                                   {t(
                                     proposalTypes.filter(
@@ -284,11 +283,12 @@ const Overview = () => {
                                       target="_blank"
                                       rel="noreferrer"
                                     >
-                                      <Button className="w-100">
+                                      <Button className="w-100 btn-sm">
                                         {t('viewInDocs')}
                                         <Icon
                                           icon="scan"
                                           size="15"
+                                          fill="white"
                                           className="ms-2 mb-1"
                                         />
                                       </Button>
@@ -300,7 +300,7 @@ const Overview = () => {
                           </>
                         ) : (
                           <Col xs="auto">
-                            <Card className="card-320">
+                            <Card>
                               <Card.Body>{t('noOpenProposalsInfo')}</Card.Body>
                             </Card>
                           </Col>
@@ -316,7 +316,7 @@ const Overview = () => {
                             ))
                         ) : (
                           <Col xs="auto">
-                            <Card className="card-320">
+                            <Card>
                               <Card.Body>{t('noValidProposals')}</Card.Body>
                             </Card>
                           </Col>
@@ -333,7 +333,7 @@ const Overview = () => {
                             ))
                         ) : (
                           <Col xs="auto">
-                            <Card className="card-320">
+                            <Card>
                               <Card.Body>{t('noValidProposals')}</Card.Body>
                             </Card>
                           </Col>
@@ -341,7 +341,7 @@ const Overview = () => {
                     </>
                   ) : (
                     <Col xs="auto">
-                      <Card className="card-320">
+                      <Card>
                         <Card.Body>{t('noValidProposals')}</Card.Body>
                       </Card>
                     </Col>

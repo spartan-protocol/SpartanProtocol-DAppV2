@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Card, Button } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Button from 'react-bootstrap/Button'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
@@ -72,10 +75,10 @@ const BondItem = (props) => {
 
   return (
     <>
-      <Col xs="auto" key={asset.address}>
-        <Card className="card-320" style={{ minHeight: '245' }}>
-          <Card.Body>
-            <Row className="">
+      <Col xs="12" sm="6" lg="4" key={asset.address}>
+        <Card style={{ minHeight: '230px' }}>
+          <Card.Header>
+            <Row className="mb-1">
               <Col xs="auto" className="position-relative pt-1">
                 <img
                   className="mr-3 rounded-circle"
@@ -87,37 +90,33 @@ const BondItem = (props) => {
                   height="25px"
                   src={spartaIcon}
                   alt="Sparta LP token icon"
-                  className="position-absolute"
-                  style={{ right: '5px', bottom: '0px' }}
+                  className="token-badge-pair"
                 />
               </Col>
               <Col xs="auto" className="py-auto">
                 <h3 className="mb-0">{token().symbol}p</h3>
+                <small>Bonded Position</small>
               </Col>
             </Row>
+          </Card.Header>
+          <Card.Body>
             <Row className="my-1 mt-2">
-              <Col xs="auto" className="text-card">
-                {t('remaining')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('remaining')}</Col>
+              <Col xs="auto" className="text-end">
                 {formatFromWei(asset.staked, 4)} {token().symbol}p
               </Col>
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('claimable')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('claimable')}</Col>
+              <Col xs="auto" className="text-end">
                 {formatFromWei(calcBondedLP(asset), 4)} {token().symbol}p
               </Col>
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('lastClaim')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('lastClaim')}</Col>
+              <Col xs="auto" className="text-end">
                 {isBonded(asset.lastBlockTime) ? (
                   <>
                     {getTimeSince(asset.lastBlockTime, t)[0]}
@@ -130,10 +129,8 @@ const BondItem = (props) => {
             </Row>
 
             <Row className="mt-1">
-              <Col xs="auto" className="text-card">
-                {t('finalDate')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('finalDate')}</Col>
+              <Col xs="auto" className="text-end">
                 {formatDate(
                   getEndDate(
                     asset.staked,
@@ -148,7 +145,7 @@ const BondItem = (props) => {
             <Row className="text-center">
               <Col className="px-2">
                 <Button
-                  className="w-100"
+                  className="w-100 btn-sm"
                   disabled={!checkValid()[0]}
                   onClick={() => handleTxn()}
                 >

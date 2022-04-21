@@ -9,6 +9,7 @@ import Upgrade from './containers/Upgrade'
 import Donate from './containers/Donate'
 import PU from './containers/PU'
 import Friends from './containers/Friends'
+import Contracts from './containers/Contracts'
 
 export const routes = [
   {
@@ -22,7 +23,7 @@ export const routes = [
   {
     path: '/liquidity',
     name: 'liquidity',
-    icon: 'sword',
+    icon: 'pool',
     component: Liquidity,
     layout: '',
   },
@@ -30,7 +31,7 @@ export const routes = [
   {
     path: '/swap',
     name: 'swap',
-    icon: 'swords',
+    icon: 'swap',
     component: Swap,
     layout: '',
   },
@@ -62,7 +63,7 @@ export const routes = [
   {
     path: '/dao',
     name: 'dao',
-    icon: 'colosseum',
+    icon: 'dao',
     component: Dao,
     layout: '',
   },
@@ -78,7 +79,7 @@ export const routes = [
   {
     path: '/donate',
     name: 'donate',
-    icon: 'list',
+    icon: 'donate',
     component: Donate,
     layout: '',
   },
@@ -89,10 +90,20 @@ export const routes = [
     icon: 'handshake',
     component: Friends,
     layout: '',
+    informational: true,
   },
 
   {
-    path: '/PU',
+    path: '/contracts',
+    name: 'contracts',
+    icon: 'contract',
+    component: Contracts,
+    layout: '',
+    informational: true,
+  },
+
+  {
+    path: '/pu',
     name: 'PowerUser',
     icon: '',
     component: PU,

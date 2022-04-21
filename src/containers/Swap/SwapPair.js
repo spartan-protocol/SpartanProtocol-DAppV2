@@ -1,16 +1,13 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Row, Col, OverlayTrigger } from 'react-bootstrap'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 import { formatFromWei, formatFromUnits, BN } from '../../utils/bigNumber'
-import { Tooltip } from '../../components/Tooltip/index'
-import { Icon } from '../../components/Icons/index'
-import { calcAPY } from '../../utils/math/nonContract'
 
 const SwapPair = ({ assetSwap }) => {
-  const isLightMode = window.localStorage.getItem('theme')
-
   const web3 = useWeb3()
   const pool = usePool()
   const { t } = useTranslation()
@@ -36,10 +33,6 @@ const SwapPair = ({ assetSwap }) => {
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
-  const APY = asset
-    ? formatFromUnits(calcAPY(assetSwap, getFees(), getDivis()), 2)
-    : 0
-
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
@@ -53,7 +46,7 @@ const SwapPair = ({ assetSwap }) => {
   return (
     <>
       {!isLoading() && (
-        <Card className="card-320 mb-2">
+        <Card className="mb-2" style={{ minWidth: '275px' }}>
           <Card.Header className="border-0">
             <Row className="mt-2">
               <Col xs="auto" className="mt-1 pe-2 position-relative">
@@ -119,22 +112,6 @@ const SwapPair = ({ assetSwap }) => {
                 {getToken(assetSwap.tokenAddress).symbol} <br />
                 {formatFromWei(assetSwap.baseAmount, 4)} SPARTA
               </Col>
-            </Row>
-            <Row className="my-2">
-              <Col xs="auto" className="text-card">
-                APY{' '}
-                <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
-                  <span role="button">
-                    <Icon
-                      icon="info"
-                      className="ms-1"
-                      size="17"
-                      fill={isLightMode ? 'black' : 'white'}
-                    />
-                  </span>
-                </OverlayTrigger>
-              </Col>
-              <Col className="output-card text-end">{APY}%</Col>
             </Row>
           </Card.Body>
         </Card>

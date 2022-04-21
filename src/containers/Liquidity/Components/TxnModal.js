@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
-import { Col, Row, Modal, Button, Form } from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Col from 'react-bootstrap/Col'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
+import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '../../../components/Icons/index'
 import spartaLpIcon from '../../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../../assets/tokens/sparta-synth.svg'
 import { formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
+import { useTheme } from '../../../providers/Theme'
 
 const TxnModal = (props) => {
   const { t } = useTranslation()
+  const { isDark } = useTheme()
   const [showModal, setshowModal] = useState(false)
   const [confirm, setConfirm] = useState(false)
 
@@ -25,7 +31,7 @@ const TxnModal = (props) => {
         {t(props.btnText)}
       </Button>
       <Modal show={showModal} onHide={() => handleCloseModal()} centered>
-        <Modal.Header closeButton closeVariant="white">
+        <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           {t(props.header)}
         </Modal.Header>
         <Modal.Body>

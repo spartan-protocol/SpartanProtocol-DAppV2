@@ -1,5 +1,8 @@
 import React from 'react'
-import { Card, Col, Row, Button } from 'react-bootstrap'
+import Card from 'react-bootstrap/Card'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
 import Immunefi from '../../assets/brands/immunefi-wht.svg'
 import ImmunefiDark from '../../assets/brands/immunefi.svg'
 import C4 from '../../assets/brands/C4.png'
@@ -13,27 +16,20 @@ import OntoWallet from '../../assets/brands/ontoWhite.png'
 import OntoWalletDark from '../../assets/brands/ontoDark.png'
 import Coingecko from '../../assets/brands/coingecko.svg'
 import CoingeckoDark from '../../assets/brands/coingecko-dark.svg'
+import { useTheme } from '../../providers/Theme'
 
-const Friends = () => (
-  <>
-    <div className="content">
-      <Row className="row-480 text-center">
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
-              {' '}
-              <img
-                src={Immunefi}
-                alt="immunefi"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={ImmunefiDark}
-                alt="immunefi"
-                className="rounded-0 friend-logo-white"
-              />
+const Friends = () => {
+  const { isDark } = useTheme()
+
+  return (
+    <>
+      <Row>
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
+              <img src={isDark ? Immunefi : ImmunefiDark} alt="immunefi" />
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               Web3&apos;s leading bug bounty platform, protecting $100 billion
               in user funds.
             </Card.Body>
@@ -43,31 +39,17 @@ const Friends = () => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button variant="info" className="w-100">
-                  View $100k Bounty
-                </Button>
+                <Button className="w-100">View $100k Bounty</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
-              {' '}
-              <img
-                src={C4}
-                alt="codearena"
-                height="26px"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={C4Dark}
-                alt="codearena"
-                height="26px"
-                className="rounded-0 friend-logo-white"
-              />
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
+              <img src={isDark ? C4 : C4Dark} alt="codearena" height="26px" />
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               C4 audit contests find more bugs faster than any other method.
             </Card.Body>
             <Card.Footer>
@@ -76,31 +58,21 @@ const Friends = () => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button variant="info" className="w-100">
-                  View $96k Contest
-                </Button>
+                <Button className="w-100">View $96k Contest</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
-              {' '}
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
               <img
-                src={Certik}
+                src={isDark ? Certik : CertikDark}
                 alt="certik"
                 height="26px"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={CertikDark}
-                alt="certik"
-                height="26px"
-                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               Utilizing best-in-class AI technology to secure & monitor
               blockchain protocols & smart contracts.
             </Card.Body>
@@ -110,31 +82,21 @@ const Friends = () => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button variant="info" className="w-100">
-                  View Audit
-                </Button>
+                <Button className="w-100">View Audit</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
-              {' '}
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
               <img
-                src={GitHub}
+                src={isDark ? GitHub : GitHubDark}
                 alt="github"
                 height="26px"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={GitHubDark}
-                alt="github"
-                height="26px"
-                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               Everything built by the community is open source! GitHub is
               critical to enabling such transparency.
             </Card.Body>
@@ -144,30 +106,21 @@ const Friends = () => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button variant="info" className="w-100">
-                  Dont trust, verify!
-                </Button>
+                <Button className="w-100">Dont trust, verify!</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
               <img
-                src={Coingecko}
+                src={isDark ? Coingecko : CoingeckoDark}
                 alt="Coingecko"
                 height="26px"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={CoingeckoDark}
-                alt="Coingecko"
-                height="26px"
-                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               CoinGecko provides a fundamental analysis of the crypto market
               including prices, volume, market caps & more.
             </Card.Body>
@@ -177,17 +130,14 @@ const Friends = () => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button variant="info" className="w-100">
-                  CoinGecko
-                </Button>
+                <Button className="w-100">CoinGecko</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
-              {' '}
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
               <img
                 src={Moonlight}
                 alt="moonlight"
@@ -196,7 +146,7 @@ const Friends = () => (
               />{' '}
               Moonlight
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               Ground-breaking way of exploring tokens on BSC, visually revealing
               connections between wallets.
             </Card.Body>
@@ -206,45 +156,34 @@ const Friends = () => (
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button variant="info" className="w-100">
-                  View Bubblemap
-                </Button>
+                <Button className="w-100">View Bubblemap</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
-        <Col xs="auto">
-          <Card xs="auto" className="card-320" style={{ minHeight: '210px' }}>
-            <Card.Header style={{ height: '49px' }}>
+        <Col className="my-2" lg="4" md="6" sm="12">
+          <Card>
+            <Card.Header className="text-center">
               <img
-                src={OntoWallet}
+                src={isDark ? OntoWallet : OntoWalletDark}
                 alt="onto wallet"
                 height="26px"
-                className="rounded-0 friend-logo-dark"
-              />
-              <img
-                src={OntoWalletDark}
-                alt="onto wallet"
-                height="26px"
-                className="rounded-0 friend-logo-white"
               />
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{ minHeight: '84px' }}>
               Decentralized, cross-chain wallet, allowing users to securely
               manage their identities, data, & digital assets.
             </Card.Body>
             <Card.Footer>
               <a href="https://onto.app" target="_blank" rel="noreferrer">
-                <Button variant="info" className="w-100">
-                  ONTO Wallet
-                </Button>
+                <Button className="w-100">ONTO Wallet</Button>
               </a>
             </Card.Footer>
           </Card>
         </Col>
       </Row>
-    </div>
-  </>
-)
+    </>
+  )
+}
 
 export default Friends

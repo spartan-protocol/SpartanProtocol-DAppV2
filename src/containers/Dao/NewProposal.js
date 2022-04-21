@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Card,
-  Row,
-  Col,
-  Button,
-  InputGroup,
-  FormControl,
-  Form,
-  Modal,
-  FloatingLabel,
-  OverlayTrigger,
-} from 'react-bootstrap'
+import Card from 'react-bootstrap/Card'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal'
+import FloatingLabel from 'react-bootstrap/FloatingLabel'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
@@ -40,7 +38,6 @@ import { useReserve } from '../../store/reserve'
 import { useWeb3 } from '../../store/web3'
 
 const NewProposal = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
@@ -243,6 +240,7 @@ const NewProposal = () => {
     <>
       <Button
         variant="primary"
+        size="sm"
         className="w-100 mt-2"
         onClick={() => setShowModal(true)}
         disabled={isLoading()}
@@ -278,11 +276,11 @@ const NewProposal = () => {
                 </FloatingLabel>
 
                 {selectedType !== null && (
-                  <Row className="card-body py-1">
+                  <Row className="py-1">
                     <Col xs="12">
-                      <Card className="card-share">
+                      <Card className="my-3">
                         <Card.Body className="py-3">
-                          <h4 className="card-title">
+                          <h4>
                             {t(selectedType?.desc)}
                             {selectedType?.value === 'FLIP_EMISSIONS' && (
                               <>
@@ -303,9 +301,10 @@ const NewProposal = () => {
                                     <AssetSelect
                                       handleAddrChange={handleAddrChange}
                                       selectedType={selectedType.value}
+                                      className="my-2"
                                     />
                                   )}
-                                  <InputGroup>
+                                  <InputGroup className="my-2">
                                     <InputGroup.Text>
                                       {t('address')}
                                     </InputGroup.Text>
@@ -342,7 +341,7 @@ const NewProposal = () => {
                               )}
 
                               {showParamInput.includes(selectedType.type) && (
-                                <InputGroup>
+                                <InputGroup className="my-2">
                                   <InputGroup.Text>
                                     {selectedType.type}
                                   </InputGroup.Text>
@@ -357,10 +356,10 @@ const NewProposal = () => {
                                       setinputParam(e.target.value)
                                     }
                                   />
-                                  <InputGroup.Text className="">
+                                  <InputGroup.Text>
                                     {selectedType.units}
                                   </InputGroup.Text>
-                                  <InputGroup.Text className="">
+                                  <InputGroup.Text>
                                     {paramValid ? (
                                       <ValidIcon
                                         fill="green"
@@ -396,12 +395,7 @@ const NewProposal = () => {
                           overlay={Tooltip(t, 'newProposalFee')}
                         >
                           <span role="button">
-                            <Icon
-                              icon="info"
-                              className="ms-1 mb-1"
-                              size="17"
-                              fill={isLightMode ? 'black' : 'white'}
-                            />
+                            <Icon icon="info" className="ms-1 mb-1" size="17" />
                           </span>
                         </OverlayTrigger>
                       </Form>
@@ -446,7 +440,12 @@ const NewProposal = () => {
                       ? t('globalFreeze')
                       : t('confirm')}
                     {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                      <Icon
+                        icon="cycle"
+                        size="20"
+                        fill="white"
+                        className="anim-spin ms-1"
+                      />
                     )}
                   </Button>
                 )}

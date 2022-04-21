@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popover } from 'react-bootstrap'
+import Popover from 'react-bootstrap/Popover'
 
 /**
  * Get the custom tooltip from imported list.
@@ -13,6 +13,16 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'apy',
       title: 'APY',
       body: 'apyInfo',
+    },
+    {
+      id: 'apyPool',
+      title: 'poolApy',
+      body: 'apyPoolInfo',
+    },
+    {
+      id: 'apyVault',
+      title: 'vaultApy',
+      body: 'apyVaultInfo',
     },
     {
       id: 'apySynth',
@@ -41,9 +51,20 @@ export const Tooltip = (t, tooltipId, variable) => {
       variable: { days: variable },
     },
     {
+      id: 'gasRate',
+      title: 'gasRate',
+      body: 'gasRateDesc',
+    },
+    {
       id: 'hiddenPools',
       title: 'hiddenPools',
       body: 'hiddenPoolsInfo',
+    },
+    {
+      id: 'incentivesRevenue',
+      title: 'incentiveRevenue',
+      body: 'incentiveRevenueDesc',
+      variable: { days: variable },
     },
     {
       id: 'newPool',
@@ -101,6 +122,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       body: 'poolRatioInfo',
     },
     {
+      id: 'pricingData',
+      body: 'pricingDataProvided',
+      variable: { provider: variable },
+    },
+    {
       id: 'rank',
       title: 'rank',
       body: 'rankInfo',
@@ -115,6 +141,11 @@ export const Tooltip = (t, tooltipId, variable) => {
       id: 'slipInfo',
       title: 'slip',
       body: 'slipInfo',
+    },
+    {
+      id: 'slipTolerance',
+      title: 'slipTolerance',
+      body: 'slipToleranceDesc',
     },
     {
       id: 'swapRevenue',

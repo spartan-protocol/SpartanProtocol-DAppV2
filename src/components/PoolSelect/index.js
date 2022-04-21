@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react'
 
 import { useTranslation } from 'react-i18next'
 
-import {
-  Button,
-  Modal,
-  Col,
-  Row,
-  InputGroup,
-  FormControl,
-} from 'react-bootstrap'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import Col from 'react-bootstrap/Col'
+import Row from 'react-bootstrap/Row'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
 import { useHistory } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
@@ -37,7 +35,6 @@ const PoolSelect = () => {
   const history = useHistory()
 
   const [showModal, setShowModal] = useState(false)
-  const isLightMode = window.localStorage.getItem('theme')
   const pool = usePool()
   const web3 = useWeb3()
 
@@ -143,16 +140,11 @@ const PoolSelect = () => {
   return (
     <>
       <Button
-        variant={isLightMode ? 'secondary' : 'info'}
+        variant="primary"
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon
-          icon="search"
-          fill={isLightMode ? 'black' : 'white'}
-          size="17"
-          className="me-1 mb-1"
-        />
+        <Icon icon="search" size="17" className="me-1 mb-1" />
         {t('search')}
       </Button>
       {showModal && (

@@ -154,7 +154,7 @@ export const getTokenDetails =
         tokenDetails.push({
           address: tempArray[i],
           balance: tempArray[i + 1].toString(),
-          symbol: tempArray[i + 2],
+          symbol: tempArray[i + 2].toUpperCase(),
           symbolUrl: tempArray[i + 3],
         })
       }

@@ -1,5 +1,7 @@
 import React from 'react'
-import { Card, Col, Row } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
@@ -16,18 +18,16 @@ const DaoVaultItem = ({ i, claimable }) => {
   const wallet = useWeb3React()
   const pool = usePool()
 
-  const isLightMode = window.localStorage.getItem('theme')
-
   const getToken = (_tokenAddr) =>
     pool.tokenDetails.filter((x) => x.address === _tokenAddr)[0]
 
   return (
     <>
-      <Col xs="auto" key={i.address}>
-        <Card className="card-320" style={{ minHeight: '202' }}>
-          <Card.Body>
-            <Row className="mb-2">
-              <Col xs="auto" className="position-relative">
+      <Col className="mb-4" xs="12" sm="6" lg="4" key={i.address}>
+        <Card style={{ minHeight: '185px' }}>
+          <Card.Header>
+            <Row className="mb-1">
+              <Col className="position-relative pt-1" xs="auto">
                 <img
                   src={getToken(i.tokenAddress)?.symbolUrl}
                   alt={getToken(i.tokenAddress)?.symbol}
@@ -41,27 +41,21 @@ const DaoVaultItem = ({ i, claimable }) => {
                   className="token-badge-pair"
                 />
               </Col>
-              <Col xs="auto" className="pl-1">
+              <Col>
                 <h3 className="mb-0">{getToken(i.tokenAddress)?.symbol}p</h3>
                 <Link to={`/liquidity?asset1=${i.tokenAddress}`}>
-                  <p className="text-sm-label-alt">
+                  <small>
                     {t('obtain')} {getToken(i.tokenAddress)?.symbol}p
-                    <Icon
-                      icon="scan"
-                      size="13"
-                      fill={isLightMode ? 'black' : 'white'}
-                      className="ms-1"
-                    />
-                  </p>
+                    <Icon icon="scan" size="11" className="ms-1" />
+                  </small>
                 </Link>
               </Col>
             </Row>
-
+          </Card.Header>
+          <Card.Body>
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('balance')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('balance')}</Col>
+              <Col xs="auto">
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
@@ -76,10 +70,8 @@ const DaoVaultItem = ({ i, claimable }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
-                {t('staked')}
-              </Col>
-              <Col className="text-end output-card">
+              <Col>{t('staked')}</Col>
+              <Col xs="auto" className="text-end">
                 {!wallet.account ? (
                   t('connectWallet')
                 ) : (
@@ -93,14 +85,14 @@ const DaoVaultItem = ({ i, claimable }) => {
           </Card.Body>
           <Card.Footer>
             <Row>
-              <Col xs="6" className="pe-1">
+              <Col className="pe-1">
                 <DaoDepositModal
                   tokenAddress={i.tokenAddress}
                   disabled={i.balance <= 0}
                   claimable={claimable}
                 />
               </Col>
-              <Col xs="6" className="ps-1">
+              <Col className="ps-1">
                 <DaoWithdrawModal
                   tokenAddress={i.tokenAddress}
                   address={i.address}

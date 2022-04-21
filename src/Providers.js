@@ -1,11 +1,21 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
-import Common from './containers/Common/layout'
+import {
+  Chart as ChartJS,
+  LineElement,
+  BarElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+} from 'chart.js' // chart.js - Tree-shake to only bundle the used modules
+import Layout from './containers/Common/layout'
 
 import bondReducer from './store/bond'
 import daoReducer from './store/dao'
@@ -17,6 +27,18 @@ import synthReducer from './store/synth'
 import utilsReducer from './store/utils'
 import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
+import { BreakpointProvider } from './providers/Breakpoint'
+import { ThemeProvider } from './providers/Theme'
+
+ChartJS.register(
+  LineElement,
+  BarElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Title,
+  Tooltip,
+) // chart.js - Tree-shake to only bundle the used modules
 
 ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR) // turn off warnings
 
@@ -51,10 +73,13 @@ const Providers = () => (
   <Provider store={store}>
     <Web3ReactProvider getLibrary={getLibrary}>
       <BrowserRouter>
-        <Switch>
-          <Route path="/" component={Common} />
-          <Redirect from="/" to="/home" />
-        </Switch>
+        <BreakpointProvider>
+          <Switch>
+            <ThemeProvider>
+              <Route path="/" component={Layout} />
+            </ThemeProvider>
+          </Switch>
+        </BreakpointProvider>
       </BrowserRouter>
     </Web3ReactProvider>
   </Provider>

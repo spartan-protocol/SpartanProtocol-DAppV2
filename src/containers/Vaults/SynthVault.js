@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Card, Row, Col, OverlayTrigger } from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
@@ -26,7 +29,6 @@ import { synthHarvestLive } from '../../utils/web3'
 import { Tooltip } from '../../components/Tooltip/index'
 
 const SynthVault = () => {
-  const isLightMode = window.localStorage.getItem('theme')
   const { t } = useTranslation()
   const synth = useSynth()
   const pool = usePool()
@@ -137,31 +139,34 @@ const SynthVault = () => {
 
   return (
     <Row>
-      <Col xs="auto" className="">
-        <Card className="card-320" style={{ minHeight: '290' }}>
+      <Col className="mb-4" lg="4">
+        <Card style={{ minHeight: '265px' }}>
           <Card.Header>
             <Row>
-              <Col>{t('synthVault')}</Col>
-              <Col xs="auto" className="text-center m-auto">
+              <Col xs="auto" className="mt-2 h4">
+                {t('synthVault')}
+              </Col>
+              <Col className="text-end m-auto d-flex justify-content-end">
                 {synthHarvestLive && (
                   <>
-                    <p className="text-sm-label d-inline-block">APY</p>
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'apySynth')}
-                    >
-                      <span role="button">
-                        <Icon
-                          icon="info"
-                          className="ms-1 mt-1"
-                          size="17"
-                          fill={isLightMode ? 'black' : 'white'}
-                        />
-                      </span>
-                    </OverlayTrigger>
-                    <p className="output-card d-inline-block ms-2">
-                      {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
-                    </p>
+                    <Row>
+                      <Col xs="12">
+                        <span>APY</span>
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(t, 'apyVault')}
+                        >
+                          <span role="button">
+                            <Icon icon="info" className="ms-1" size="17" />
+                          </span>
+                        </OverlayTrigger>
+                      </Col>
+                      <Col xs="12">
+                        <span className="ms-2">
+                          {!isLoadingApy() ? `${APY()}%` : 'Loading...'}
+                        </span>
+                      </Col>
+                    </Row>
                   </>
                 )}
               </Col>
@@ -171,36 +176,29 @@ const SynthVault = () => {
             <>
               <Card.Body className="pb-0">
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('minTime')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('minTime')}</Col>
+                  <Col xs="auto" className="text-end">
                     {synth.globalDetails?.minTime} seconds
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('erasToEarn')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('erasToEarn')}</Col>
+                  <Col xs="auto" className="text-end">
                     {synth.globalDetails?.erasToEarn}
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('vaultClaim')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('vaultClaim')}</Col>
+                  <Col xs="auto" className="text-end">
                     {synth.globalDetails?.vaultClaim / 100}%
                   </Col>
                 </Row>
                 <hr className="my-2" />
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('totalWeight')}
-                  </Col>
+                  <Col>{t('totalWeight')}</Col>
                   <Col
-                    className="text-end output-card"
+                    xs="auto"
+                    className="text-end"
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
@@ -215,11 +213,10 @@ const SynthVault = () => {
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('yourWeight')}
-                  </Col>
+                  <Col>{t('yourWeight')}</Col>
                   <Col
-                    className="text-end output-card"
+                    xs="auto"
+                    className="text-end"
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
@@ -228,8 +225,8 @@ const SynthVault = () => {
                     ) : (
                       <>
                         {!showUsd
-                          ? formatFromWei(getOwnWeight())
-                          : formatFromWei(getUSDFromSpartaOwnWeight())}
+                          ? formatFromWei(getOwnWeight(), 0)
+                          : formatFromWei(getUSDFromSpartaOwnWeight(), 0)}
                         <Icon
                           icon={showUsd ? 'usd' : 'spartav2'}
                           size="20"
@@ -240,10 +237,8 @@ const SynthVault = () => {
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
-                    {t('percentWeight')}
-                  </Col>
-                  <Col className="text-end output-card">
+                  <Col>{t('percentWeight')}</Col>
+                  <Col xs="auto" className="text-end">
                     {!wallet.account
                       ? t('connectWallet')
                       : getTotalWeight() > 0 && getOwnWeight() > 0

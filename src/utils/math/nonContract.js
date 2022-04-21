@@ -381,9 +381,12 @@ export const calcDaoAPY = (revenue, baseAmount) => {
     : _baseAmount
   apr = BN(revenue).times(12).div(fallbackDepth).times(100)
   if (apr > 0) {
-    const apy1 = BN(apr).div(100).div(54).plus(1)
-    const apy = apy1.pow(54).minus(1).times(100)
-    return apy
+    // const apy1 = BN(apr).div(100).div(54).plus(1)
+    // const apy = apy1.pow(54).minus(1).times(100)
+    return apr
+    // return apr.div(4).times(3)
+    // return apy.div(4).times(2)
+    // return apy
   }
   return '0.00'
 }
@@ -414,7 +417,9 @@ export const calcSynthAPY = (revenue, baseAmount) => {
   if (apr > 0) {
     const apy1 = BN(apr).div(100).div(54).plus(1)
     const apy = apy1.pow(54).minus(1).times(100)
+    // return apr
     return apy
+    // return apy.div(10).times(20)
   }
   return '0.00'
 }

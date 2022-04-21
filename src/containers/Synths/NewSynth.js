@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Modal, InputGroup, FormControl, Form } from 'react-bootstrap'
+import Modal from 'react-bootstrap/Modal'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
@@ -14,15 +18,13 @@ import { usePool } from '../../store/pool'
 import { BN } from '../../utils/bigNumber'
 import { useWeb3 } from '../../store/web3'
 
-const NewSynth = () => {
+const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const pool = usePool()
   const web3 = useWeb3()
   const addr = getAddresses()
   const { t } = useTranslation()
-
-  const isLightMode = window.localStorage.getItem('theme')
 
   const [network, setnetwork] = useState(getNetwork())
   const [trigger0, settrigger0] = useState(0)
@@ -42,7 +44,6 @@ const NewSynth = () => {
   }, [trigger0])
 
   const [txnLoading, setTxnLoading] = useState(false)
-  const [showModal, setShowModal] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
 
   const [inputAddress, setinputAddress] = useState('')
@@ -99,16 +100,11 @@ const NewSynth = () => {
   return (
     <>
       <Button
-        variant={isLightMode ? 'secondary' : 'info'}
+        variant="primary"
         onClick={() => setShowModal(true)}
         className="rounded-pill pe-3 subtitle-label"
       >
-        <Icon
-          icon="plus"
-          fill={isLightMode ? 'black' : 'white'}
-          size="17"
-          className="me-1 mb-1"
-        />
+        <Icon icon="plus" size="17" className="me-1 mb-1" />
         {t('synth')}
       </Button>
 
