@@ -5,7 +5,6 @@ import { getExplorerContract } from '../../utils/extCalls'
 import { ContractsInfo } from './ContractsInfo'
 import { formatShortString, getAddresses } from '../../utils/web3'
 import { Icon } from '../../components/Icons'
-import { useTheme } from '../../providers/Theme'
 
 import styles from './styles.module.scss'
 import { writeToClipboard } from '../../components/Share/ShareLink'
@@ -13,15 +12,10 @@ import { writeToClipboard } from '../../components/Share/ShareLink'
 const Contracts = () => {
   const addr = getAddresses()
   const { t } = useTranslation()
-  const { isDark } = useTheme()
 
   return (
     <>
-      <Table
-        variant={isDark ? 'dark' : null}
-        className={styles.table}
-        responsive
-      >
+      <Table striped borderless className={styles.table} responsive>
         <thead>
           <tr>
             <th>Contract Name</th>

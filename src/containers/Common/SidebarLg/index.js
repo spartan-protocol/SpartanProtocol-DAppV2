@@ -1,27 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Col from 'react-bootstrap/Col'
 import Nav from 'react-bootstrap/Nav'
 import { useTranslation } from 'react-i18next'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Link } from 'react-router-dom'
 import { routes } from '../../../routes'
 import { Icon } from '../../../components/Icons/index'
-import { useBreakpoint } from '../../../providers/Breakpoint'
 import SocialIcons from '../SocialIcons'
 
 import styles from './styles.module.scss'
 import Utilities from './components/Utilities'
 
-const SidebarLg = () => {
+const SidebarLg = ({ compact, fixed, handleCompact }) => {
   const { t } = useTranslation()
-  const breakpoint = useBreakpoint()
-
-  const [compact, setCompact] = useState(true)
-  const [fixed, setFixed] = useState(breakpoint.xl) // Add useTheme check to fix-open if above certain screen size
-
-  const handleCompact = (boolieeee) => {
-    setCompact(boolieeee)
-  }
 
   // return only dapp routes or only informational routes (friends, contracts etc.)
   const navItems = (items, informationalRoutes) =>
@@ -46,27 +36,6 @@ const SidebarLg = () => {
 
   return (
     <>
-      {fixed ? (
-        <>
-          <div
-            role="button"
-            onClick={() => setFixed(false)}
-            aria-hidden="true"
-            className={styles.fixedTrue}
-          >
-            <Icon icon="arrowExtLeft" size="20" />
-          </div>
-        </>
-      ) : (
-        <div
-          role="button"
-          onClick={() => setFixed(true)}
-          aria-hidden="true"
-          className={styles.fixedFalse}
-        >
-          <Icon icon="arrowExtRight" size="20" />
-        </div>
-      )}
       <Col
         className={`${styles.sidebarLg} bg-2`}
         style={compact && !fixed ? { width: '60px' } : { width: '200px' }}
@@ -76,24 +45,6 @@ const SidebarLg = () => {
         aria-hidden="true"
       >
         <div className={styles.links}>
-          <Link to="/">
-            <div>
-              <div to="/" className={styles.icon}>
-                <Icon icon="spartav2" size="40" />
-                <h4
-                  className={
-                    compact && !fixed
-                      ? `d-none ${styles.spTitle}`
-                      : `d-inline-block ${styles.spTitle}`
-                  }
-                >
-                  SPARTAN
-                  <br />
-                  PROTOCOL
-                </h4>
-              </div>
-            </div>
-          </Link>
           <Nav className={styles.lis} id="sideNav">
             {/* dapp routes */}
             {navItems(routes)}

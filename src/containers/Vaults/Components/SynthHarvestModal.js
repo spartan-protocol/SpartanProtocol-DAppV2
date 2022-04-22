@@ -97,9 +97,9 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
     if (!reserve.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
-    if (!synth.synthMinting) {
-      return [false, t('synthsDisabled')]
-    }
+    // if (!synth.synthMinting) {
+    //   return [false, t('synthsDisabled')]
+    // }
     if (reserve.globalDetails.globalFreeze) {
       return [false, t('globalFreeze')]
     }
