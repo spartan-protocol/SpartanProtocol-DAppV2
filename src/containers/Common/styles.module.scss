@@ -12,10 +12,10 @@
 
 @media (min-width: 1024px) {
   .wrapper {
-    -ms-grid-columns: min-content auto;
-    grid-template-columns: min-content auto;
+    -ms-grid-columns: fit-content(0%) auto;
+    grid-template-columns: fit-content(0%) auto;
     grid-template-areas:
-      'sidebarLg navbar'
+      'navbar navbar'
       'sidebarLg body';
   }
 }

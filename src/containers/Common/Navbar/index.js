@@ -8,11 +8,12 @@ import { Icon } from '../../../components/Icons/index'
 import styles from './styles.module.scss'
 import { useBreakpoint } from '../../../providers/Breakpoint'
 
-const Navbar = () => {
+const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
   const breakpoint = useBreakpoint()
+
   return (
     <div className={`${styles.navbar} bg-2`}>
-      {!breakpoint.lg && (
+      {!breakpoint.lg ? (
         <div className={styles.hammy}>
           <Sidebar />
           <div className={styles.brand}>
@@ -21,6 +22,29 @@ const Navbar = () => {
             </Link>
           </div>
         </div>
+      ) : (
+        <>
+          <span
+            className="pt-4 px-4 h-100"
+            role="button"
+            onClick={() => handleSideNavState()}
+            aria-hidden="true"
+            onMouseEnter={() => !fixed && handleCompact(false)}
+            onMouseLeave={() => !fixed && handleCompact(true)}
+          >
+            <Icon icon={sideNavIcon} size="24" />
+          </span>
+          <Link to="/">
+            <div>
+              <div to="/" className={styles.icon}>
+                <Icon icon="spartav2" size="40" />
+                <h4 className={`${styles.spTitle} d-inline-block`}>
+                  SPARTAN PROTOCOL
+                </h4>
+              </div>
+            </div>
+          </Link>
+        </>
       )}
       <div className={styles.buttons}>
         <AddressConn />

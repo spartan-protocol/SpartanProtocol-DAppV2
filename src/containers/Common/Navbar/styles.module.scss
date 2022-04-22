@@ -5,9 +5,15 @@
   grid-area: navbar;
   display: flex;
   justify-content: space-between;
-  padding-left: 10px;
+  padding-left: 0px;
   padding-right: 10px;
   overflow: hidden;
+}
+
+@media only screen and (max-width: 1023px) {
+  .navbar {
+    padding-left: 20px;
+  }
 }
 
 .hammy {
@@ -29,4 +35,16 @@
   height: 100%;
   margin: auto 10px auto auto;
   display: flex;
+}
+
+.icon {
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.spTitle {
+  margin-left: 10px;
+  vertical-align: middle;
+  line-height: 20px;
+  margin-bottom: 0;
 }

@@ -510,9 +510,9 @@ const Swap = () => {
     const _symbolIn = getToken(assetSwap1.tokenAddress)?.symbol
     const _symbolOut = getToken(assetSwap2.tokenAddress)?.symbol
     if (activeTab === 'mint') {
-      if (!synth.synthMinting) {
-        return [false, t('synthsDisabled')]
-      }
+      // if (!synth.synthMinting) {
+      //   return [false, t('synthsDisabled')]
+      // }
       if (getMint()[5]) {
         return [false, t('synthAtCapacity')]
       }

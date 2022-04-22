@@ -76,9 +76,9 @@ const Sidebar = () => {
               <Icon icon="menuClose" size={iconSize} />
             </span>
           )}
-          <Offcanvas.Title className="ms-2">
-            <Link to="/" className="navbar-brand ms-2" onClick={closeNav}>
-              <Navbar.Brand className="ms-2">
+          <Offcanvas.Title>
+            <Link to="/" onClick={closeNav}>
+              <Navbar.Brand>
                 <h4>
                   <Icon icon="spartav2" className="my-auto me-2" />
                   Spartan Protocol
