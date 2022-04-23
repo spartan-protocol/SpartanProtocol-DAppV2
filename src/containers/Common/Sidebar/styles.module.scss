@@ -1,4 +1,15 @@
+.header {
+  border-bottom: #4d4d5873 solid 1px;
+}
+
 .links {
   flex-direction: column;
-  height: calc(95vh - 160px);
+  // height: calc(95vh - 160px);
+}
+
+.bottom {
+  overflow: visible;
+  flex-grow: 0;
+  // padding-top: 15px;
+  border-top: #4d4d5873 solid 1px;
 }

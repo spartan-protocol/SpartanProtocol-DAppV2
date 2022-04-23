@@ -64,7 +64,7 @@ const Sidebar = () => {
         placement="start"
         onHide={closeNav}
       >
-        <Offcanvas.Header closeButton>
+        <Offcanvas.Header className={styles.header} closeButton>
           {navOpen ? (
             <>
               <span role="button" onClick={closeNav} aria-hidden="true">
@@ -80,14 +80,14 @@ const Sidebar = () => {
             <Link to="/" onClick={closeNav}>
               <Navbar.Brand>
                 <h4>
-                  <Icon icon="spartav2" className="my-auto me-2" />
+                  <Icon icon="spartav2" className="my-auto me-2" size="30" />
                   Spartan Protocol
                 </h4>
               </Navbar.Brand>
             </Link>
           </Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body className="px-0">
+        <Offcanvas.Body className="px-0 scroll-shadows">
           <Nav className={styles.links} id="sideNav">
             {/* dapp routes */}
             {navItems(routes)}
@@ -95,7 +95,8 @@ const Sidebar = () => {
             {/* informational routes (friends, contracts etc.) */}
             {navItems(routes, true)}
           </Nav>
-          <hr />
+        </Offcanvas.Body>
+        <Offcanvas.Body className={styles.bottom}>
           <Utilities centered />
           <SocialIcons centered />
         </Offcanvas.Body>

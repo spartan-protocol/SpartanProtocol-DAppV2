@@ -44,7 +44,7 @@ const SidebarLg = ({ compact, fixed, handleCompact }) => {
         role="button"
         aria-hidden="true"
       >
-        <div className={styles.links}>
+        <div className={`${styles.links} scroll-shadows`}>
           <Nav className={styles.lis} id="sideNav">
             {/* dapp routes */}
             {navItems(routes)}
@@ -57,7 +57,7 @@ const SidebarLg = ({ compact, fixed, handleCompact }) => {
           className={styles.bottom}
           style={compact && !fixed ? { width: '60px' } : { width: '200px' }}
         >
-          <hr />
+          <hr className="mt-0" />
           {compact && !fixed ? (
             <>
               <div className="mb-4">
