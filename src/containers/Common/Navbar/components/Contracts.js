@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -23,25 +23,9 @@ const Contracts = () => {
   const reserve = useReserve()
   const target = useRef(null)
   const addr = getAddresses()
+  const network = getNetwork()
 
   const [showDropdown, setshowDropdown] = useState(false)
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-
-  const getNet = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   const addrNames = [
     'spartav1',
@@ -60,12 +44,12 @@ const Contracts = () => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setnetwork(changeNetworkLsOnly(56))
+      changeNetworkLsOnly(56)
     }
     if (net.target.checked === false) {
-      setnetwork(changeNetworkLsOnly(97))
+      changeNetworkLsOnly(97)
     } else {
-      setnetwork(changeNetworkLsOnly(net))
+      changeNetworkLsOnly(net)
     }
     window.location.reload(true)
   }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -13,25 +13,9 @@ import SynthPositions from './SynthPositions'
 
 const Positions = () => {
   const { t } = useTranslation()
+  const network = getNetwork()
 
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
   const [activeTab, setActiveTab] = useState('pools')
-
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   return (
     <>
@@ -106,7 +90,9 @@ const Positions = () => {
         ) : (
           <div>{t('changeToMainnet')}</div>
         )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
+        {network.chainId && !tempChains.includes(network.chainId) && (
+          <WrongNetwork />
+        )}
       </div>
     </>
   )

@@ -29,6 +29,7 @@ import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
 import styles from './styles.module.scss'
+import { Spacer } from '../../../../components/Spacer'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -38,6 +39,7 @@ const Supply = () => {
   const reserve = useReserve()
   const target = useRef(null)
   const dispatch = useDispatch()
+  const network = getNetwork()
 
   // V1 (Protocol) Token Distribution
   const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
@@ -48,23 +50,6 @@ const Supply = () => {
   const feeBurn = '848530' // SPARTA burned during feeBurn phase
 
   const [showDropdown, setshowDropdown] = useState(false)
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-
-  const getNet = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   useEffect(() => {
     if (
@@ -143,12 +128,12 @@ const Supply = () => {
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setnetwork(changeNetworkLsOnly(56))
+      changeNetworkLsOnly(56)
     }
     if (net.target.checked === false) {
-      setnetwork(changeNetworkLsOnly(97))
+      changeNetworkLsOnly(97)
     } else {
-      setnetwork(changeNetworkLsOnly(net))
+      changeNetworkLsOnly(net)
     }
     window.location.reload(true)
   }
@@ -224,11 +209,11 @@ const Supply = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col xs="6 mb-2" className="popover-text text-end mb-2">
+                <Col xs="6" className="popover-text text-end mb-2">
                   {getTVL() > 0
                     ? `$${formatFromWei(getTVL(), 0)}`
                     : 'Loading...'}
-                  <Icon icon="usd" className="ms-1" size="15" />
+                  <Spacer className="ms-1" size="15" />
                 </Col>
                 <Col xs="6" className="popover-text mb-2">
                   {t('marketcap')}
@@ -254,7 +239,7 @@ const Supply = () => {
                   {getMarketCap() > 0
                     ? `$${formatFromWei(getMarketCap(), 0)}`
                     : 'Loading...'}
-                  <Icon icon="usd" className="ms-1" size="15" />
+                  <Spacer className="ms-1" size="15" />
                 </Col>
 
                 <Col xs="6" className="popover-text mb-2">

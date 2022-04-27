@@ -80,22 +80,17 @@ const Synths = () => {
     return false
   }
 
-  /* eslint no-return-assign: "error" */
-
   const getTotalValue = () => {
     let total = BN(0)
+    const addToTotal = (address, input) => {
+      total = total.plus(getUSD(address, input))
+    }
     synth.synthDetails
       ?.filter((asset) => asset.balance > 0)
-      .forEach(
-        (asset) =>
-          (total = total.plus(getUSD(asset.tokenAddress, asset.balance))),
-      )
+      .forEach((asset) => addToTotal(asset.tokenAddress, asset.balance))
     synth.synthDetails
       ?.filter((asset) => asset.staked > 0)
-      .forEach(
-        (asset) =>
-          (total = total.plus(getUSD(asset.tokenAddress, asset.staked))),
-      )
+      .forEach((asset) => addToTotal(asset.tokenAddress, asset.staked))
 
     if (!total.isZero()) {
       return (
@@ -103,7 +98,6 @@ const Synths = () => {
           <hr />
           <Row key="total-assets" className="output-card">
             <Col xs="auto" className="pe-1">
-              {' '}
               <img width="35px" alt="empty" className="invisible" />
             </Col>
 
@@ -114,8 +108,7 @@ const Synths = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    ~${formatFromWei(total, 0)}
-                    <Icon icon="usd" size="15" fill="black" className="ms-1" />
+                    ~{`$${formatFromWei(total, 0)}`}
                   </div>
                 </Col>
               </Row>
@@ -184,12 +177,6 @@ const Synths = () => {
                           getUSD(asset.tokenAddress, asset.balance),
                           0,
                         )}
-                        <Icon
-                          icon="usd"
-                          size="15"
-                          fill="black"
-                          className="ms-1"
-                        />
                       </div>
                     </Col>
                   </Row>
@@ -292,12 +279,6 @@ const Synths = () => {
                             getUSD(asset.tokenAddress, asset.staked),
                             0,
                           )}
-                          <Icon
-                            icon="usd"
-                            size="15"
-                            fill="black"
-                            className="ms-1"
-                          />
                         </div>
                       </Col>
                     </Row>

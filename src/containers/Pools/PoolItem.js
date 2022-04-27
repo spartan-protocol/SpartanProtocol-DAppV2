@@ -124,24 +124,19 @@ const PoolItem = ({ asset, daoApy }) => {
                   src={spartaIcon}
                   alt="Sparta synth token icon"
                   className="position-absolute"
-                  style={{ right: '5px', bottom: '10px' }}
+                  style={{ right: '5px', bottom: '0px' }}
                 />
               </Col>
               <Col className={styles.poolHeader}>
                 <h3 className="mb-0">{token.symbol}</h3>
-                <p className="text-sm-label-alt">
-                  <OverlayTrigger
-                    placement="auto"
-                    overlay={Tooltip(
-                      t,
-                      `$${formatFromUnits(tokenValueUSD, 18)}`,
-                    )}
-                  >
-                    <span role="button">
-                      ${formatFromUnits(tokenValueUSD, 2)}
-                    </span>
-                  </OverlayTrigger>
-                </p>
+                <OverlayTrigger
+                  placement="auto"
+                  overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
+                >
+                  <span role="button" className="fw-light">
+                    {`$${formatFromUnits(tokenValueUSD, 2)}`}
+                  </span>
+                </OverlayTrigger>
               </Col>
               <Col xs="auto">
                 {asset.frozen ? (
@@ -236,7 +231,7 @@ const PoolItem = ({ asset, daoApy }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card pe-0">
+              <Col xs="auto" className="pe-0">
                 {t('estimatedApy')}
                 <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apy')}>
                   <span role="button">
@@ -244,7 +239,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   </span>
                 </OverlayTrigger>
               </Col>
-              <Col className="text-end output-card">
+              <Col className="text-end">
                 {formatFromUnits(
                   curated && daoApy ? BN(APY).plus(daoApy) : APY,
                   2,
@@ -301,7 +296,7 @@ const PoolItem = ({ asset, daoApy }) => {
             {showDetails === true && (
               <>
                 <Row className="my-1">
-                  <Col xs="auto" className="">
+                  <Col xs="auto" className="fw-light">
                     {t('poolApy')}
                     <OverlayTrigger
                       placement="auto"
@@ -318,7 +313,7 @@ const PoolItem = ({ asset, daoApy }) => {
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="">
+                  <Col xs="auto" className="fw-light">
                     {t('vaultApy')}
                     <OverlayTrigger
                       placement="auto"
@@ -340,7 +335,7 @@ const PoolItem = ({ asset, daoApy }) => {
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card pe-0">
+              <Col xs="auto" className="pe-0">
                 {t('poolCap')}
                 <OverlayTrigger placement="auto" overlay={poolCapTooltip}>
                   <span role="button">
@@ -348,7 +343,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   </span>
                 </OverlayTrigger>
               </Col>
-              <Col className="text-end output-card my-auto">
+              <Col className="text-end my-auto">
                 <Row>
                   <Col xs="auto">
                     {formatShortNumber(convertFromWei(baseAmount))}
@@ -370,31 +365,30 @@ const PoolItem = ({ asset, daoApy }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
+              <Col xs="auto" className="">
                 {t('poolDepth')}
               </Col>
-              <Col className="text-end output-card">
-                ${formatFromWei(poolDepthUsd, 0)}
-                <Icon icon="usd" className="ms-1" size="15" />
+              <Col className="text-end">
+                {`$${formatFromWei(poolDepthUsd, 0)}`}
               </Col>
             </Row>
             {showDetails === true && (
               <>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto" className="fw-light">
                     SPARTA
                   </Col>
-                  <Col className="text-end output-card fw-light">
+                  <Col className="text-end fw-light">
                     {formatFromWei(baseAmount, 2)}
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto" className="fw-light">
                     {token.symbol}
                   </Col>
-                  <Col className="text-end output-card fw-light">
+                  <Col className="text-end fw-light">
                     {formatFromWei(tokenAmount, 2)}
                     <img
                       height="15px"
@@ -409,10 +403,10 @@ const PoolItem = ({ asset, daoApy }) => {
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
+              <Col xs="auto" className="">
                 {t('spotPrice')}
               </Col>
-              <Col className="text-end output-card">
+              <Col className="text-end">
                 {formatFromUnits(tokenValueBase, 2)}
                 <Icon icon="spartav2" className="ms-1" size="15" />
               </Col>
@@ -420,16 +414,16 @@ const PoolItem = ({ asset, daoApy }) => {
             {showDetails === true && (
               <>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto" className="fw-light">
                     {t('TWAP')}
                   </Col>
-                  <Col className="text-end output-card">
+                  <Col className="text-end fw-light">
                     {formatFromWei(oldRate, 2)}
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card pe-0">
+                  <Col xs="auto" className="pe-0 fw-light">
                     {t('poolRatio')}
                     <OverlayTrigger placement="auto" overlay={poolRatioTooltip}>
                       <span role="button">
@@ -437,7 +431,7 @@ const PoolItem = ({ asset, daoApy }) => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card my-auto">
+                  <Col className="text-end my-auto">
                     <ProgressBar style={{ height: '5px' }} className="rounded">
                       <ProgressBar
                         variant="black"
@@ -494,7 +488,7 @@ const PoolItem = ({ asset, daoApy }) => {
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="text-card">
+              <Col xs="auto" className="">
                 {t('revenue')}
                 <OverlayTrigger placement="auto" overlay={revenueTooltip}>
                   <span role="button">
@@ -502,19 +496,18 @@ const PoolItem = ({ asset, daoApy }) => {
                   </span>
                 </OverlayTrigger>
               </Col>
-              <Col className="text-end output-card">
+              <Col className="text-end">
                 $
                 {formatFromWei(
                   BN(getFees()).plus(getDivis()).times(web3?.spartaPrice),
                   0,
                 )}
-                <Icon icon="usd" className="ms-1" size="15" />
               </Col>
             </Row>
             {showDetails === true && (
               <>
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto" className="fw-light">
                     {t('fees')}
                     <OverlayTrigger placement="auto" overlay={swapRevTooltip}>
                       <span role="button">
@@ -522,14 +515,14 @@ const PoolItem = ({ asset, daoApy }) => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card fw-light">
+                  <Col className="text-end fw-light">
                     {formatFromWei(getFees(), 0)}
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   </Col>
                 </Row>
 
                 <Row className="my-1">
-                  <Col xs="auto" className="text-card">
+                  <Col xs="auto" className="fw-light">
                     {t('incentives')}
                     <OverlayTrigger placement="auto" overlay={diviRevTooltip}>
                       <span role="button">
@@ -537,7 +530,7 @@ const PoolItem = ({ asset, daoApy }) => {
                       </span>
                     </OverlayTrigger>
                   </Col>
-                  <Col className="text-end output-card fw-light">
+                  <Col className="text-end fw-light">
                     {asset.curated === true && (
                       <>
                         {formatFromWei(getDivis(), 0)}

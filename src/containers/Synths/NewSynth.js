@@ -25,23 +25,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
   const web3 = useWeb3()
   const addr = getAddresses()
   const { t } = useTranslation()
-
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-  const getNet = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+  const network = getNetwork()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
@@ -151,7 +135,9 @@ const NewSynth = ({ setShowModal, showModal }) => {
               </Form>
             </>
           )}
-          {!tempChains.includes(network.chainId) && <WrongNetwork />}
+          {network.chainId && !tempChains.includes(network.chainId) && (
+            <WrongNetwork />
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button

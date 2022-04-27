@@ -260,6 +260,7 @@ const DaoDepositModal = (props) => {
                         : t('checkBnbGas')}
                       {harvestLoading && (
                         <Icon
+                          fill="white"
                           icon="cycle"
                           size="20"
                           className="anim-spin ms-1"
@@ -276,7 +277,12 @@ const DaoDepositModal = (props) => {
                   >
                     {checkValid()[1]}
                     {txnLoading && (
-                      <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+                      <Icon
+                        fill="white"
+                        icon="cycle"
+                        size="20"
+                        className="anim-spin ms-1"
+                      />
                     )}
                   </Button>
                 </Col>

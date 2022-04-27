@@ -798,7 +798,12 @@ const SwapTokens = () => {
           >
             {checkValid()[1]}
             {txnLoading && (
-              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+              <Icon
+                fill="white"
+                icon="cycle"
+                size="20"
+                className="anim-spin ms-1"
+              />
             )}
           </Button>
         </Col>

@@ -74,6 +74,7 @@ const Swap = () => {
   const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
+  const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -95,8 +96,6 @@ const Swap = () => {
     new URLSearchParams(location.search).get(`type1`),
   )
 
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
   const [trigger1, settrigger1] = useState(0)
   const [hasFocus, setHasFocus] = useState(true)
 
@@ -107,21 +106,6 @@ const Swap = () => {
   window.addEventListener('blur', () => {
     setHasFocus(false)
   })
-
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   const getGlobals = () => {
     dispatch(getSynthGlobalDetails(web3.rpcs))
@@ -1345,6 +1329,7 @@ const Swap = () => {
                                               : t('harvestDisabled')}
                                             {harvestLoading && (
                                               <Icon
+                                                fill="white"
                                                 icon="cycle"
                                                 size="20"
                                                 className="anim-spin ms-1"
@@ -1362,6 +1347,7 @@ const Swap = () => {
                                         {checkValid()[1]}
                                         {txnLoading && (
                                           <Icon
+                                            fill="white"
                                             icon="cycle"
                                             size="20"
                                             className="anim-spin ms-1"
@@ -1399,6 +1385,7 @@ const Swap = () => {
                                     {checkValid()[1]}
                                     {txnLoading && (
                                       <Icon
+                                        fill="white"
                                         icon="cycle"
                                         size="20"
                                         className="anim-spin ms-1"
@@ -1439,7 +1426,9 @@ const Swap = () => {
             )}
           </>
         )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
+        {network.chainId && !tempChains.includes(network.chainId) && (
+          <WrongNetwork />
+        )}
       </div>
     </>
   )

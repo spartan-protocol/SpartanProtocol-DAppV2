@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
@@ -15,6 +15,7 @@ import Others from './Others'
 const Overview = () => {
   const pool = usePool()
   const web3 = useWeb3()
+  const network = getNetwork()
 
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -24,23 +25,6 @@ const Overview = () => {
     }
     return false
   }
-
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   return (
     <>
@@ -130,7 +114,9 @@ const Overview = () => {
             </Row>
           </>
         )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
+        {network.chainId && !tempChains.includes(network.chainId) && (
+          <WrongNetwork />
+        )}
       </div>
     </>
   )

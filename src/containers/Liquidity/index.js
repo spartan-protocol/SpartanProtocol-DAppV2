@@ -25,9 +25,9 @@ const Overview = () => {
   const location = useLocation()
   const history = useHistory()
   const addr = getAddresses()
+  const network = getNetwork()
 
   const [activeTab, setActiveTab] = useState('add')
-  const [network, setnetwork] = useState(getNetwork())
   const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -59,22 +59,6 @@ const Overview = () => {
       setActiveTab(tabParam1)
     }
   }, [tabParam1])
-
-  const [trigger0, settrigger0] = useState(0)
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   useEffect(() => {
     balanceWidths()
@@ -194,7 +178,9 @@ const Overview = () => {
             )}
           </Row>
         )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
+        {network.chainId && !tempChains.includes(network.chainId) && (
+          <WrongNetwork />
+        )}
       </div>
     </>
   )

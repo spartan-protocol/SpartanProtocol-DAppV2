@@ -15,32 +15,15 @@ import HelmetLoading from '../../components/Spinner/index'
 const Vaults = () => {
   const { t } = useTranslation()
   const location = useLocation()
+  const pool = usePool()
+  const network = getNetwork()
 
   const [mode, setMode] = useState('Dao')
-  const pool = usePool()
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
   const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
-
-  const getNet = () => {
-    setnetwork(getNetwork())
-  }
 
   useEffect(() => {
     if (tabParam1) setMode(tabParam1)
   }, [tabParam1])
-
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   return (
     <>
@@ -86,7 +69,9 @@ const Vaults = () => {
           </Row>
         </>
       )}
-      {!tempChains.includes(network.chainId) && <WrongNetwork />}
+      {network.chainId && !tempChains.includes(network.chainId) && (
+        <WrongNetwork />
+      )}
     </>
   )
 }

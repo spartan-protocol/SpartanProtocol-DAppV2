@@ -120,8 +120,8 @@ const LPs = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    ~${formatFromWei(total, 0)}
-                    <Icon icon="usd" size="15" className="ms-1" />
+                    ~$
+                    {formatFromWei(total, 0)}
                   </div>
                 </Col>
               </Row>
@@ -215,7 +215,6 @@ const LPs = () => {
                           getUSD(asset.tokenAddress, asset.balance),
                           0,
                         )}
-                        <Icon icon="usd" size="15" className="ms-1" />
                       </div>
                     </Col>
                   )}
@@ -347,7 +346,6 @@ const LPs = () => {
                           getUSD(asset.tokenAddress, asset.staked),
                           0,
                         )}
-                        <Icon icon="usd" size="15" className="ms-1" />
                       </div>
                     </Col>
                   )}
@@ -478,7 +476,6 @@ const LPs = () => {
                           getUSD(asset.tokenAddress, asset.staked),
                           0,
                         )}
-                        <Icon icon="usd" size="15" className="ms-1" />
                       </div>
                     </Col>
                   )}

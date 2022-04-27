@@ -250,7 +250,7 @@ const Txns = () => {
           height="12px"
           src={spartaLpIcon}
           alt="token badge"
-          className="token-badge-recent-txns"
+          className="token-badge-tighter"
         />
       )
     }
@@ -260,7 +260,7 @@ const Txns = () => {
           height="12px"
           src={spartaSynthIcon}
           alt="token badge"
-          className="token-badge-recent-txns"
+          className="token-badge-tighter"
         />
       )
     }
@@ -296,7 +296,7 @@ const Txns = () => {
                           shownArray?.map((txn) => (
                             <tr
                               key={txn.txnHash + txn.txnIndex}
-                              className="text-center output-card"
+                              className="text-center"
                             >
                               <td>{getType(txn).title}</td>
                               <td className="d-none d-sm-table-cell">

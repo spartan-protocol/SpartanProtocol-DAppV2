@@ -116,7 +116,8 @@ const WalletSelect = (props) => {
 
   const [network, setNetwork] = useState(getNetwork)
   const [activeTab, setactiveTab] = useState('tokens')
-  const [wcConnector, setWcConnector] = useState(false)
+  // const [wcConnector, setWcConnector] = useState(false)
+  const [pending, setPending] = useState(false)
   // const [wlConnector, setWlConnector] = useState(false)
 
   const onChangeNetwork = async (net) => {
@@ -140,6 +141,7 @@ const WalletSelect = (props) => {
   }
 
   const onWalletConnect = async (x) => {
+    setPending(true)
     if (x.id === 'BC') {
       await dispatch(addNetworkBC())
     } else if (x.id === 'MM') {
@@ -148,33 +150,10 @@ const WalletSelect = (props) => {
     window.localStorage.removeItem('disableWallet')
     window.localStorage.setItem('lastWallet', x.id)
     wallet.deactivate()
-    const connector = connectorsByName(x.connector, web3.rpcs)
-    if (x.id === 'WC') {
-      setWcConnector(connector)
-    }
-    // if (x.id === 'CB') {
-    //   setWlConnector(connector)
-    // }
-    setTimeout(() => {
-      wallet.activate(connector)
-    }, 50)
+    const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
+    await wallet.activate(connector)
+    setPending(false)
   }
-
-  useEffect(() => {
-    if (wcConnector?.walletConnectProvider?.connected && !wallet.account) {
-      wallet.activate(wcConnector)
-      setWcConnector(false)
-    }
-  }, [wallet, wcConnector])
-
-  // useEffect(() => {
-  //   console.log(wlConnector)
-  //   console.log(wallet)
-  //   if (wlConnector?.provider?.connected && !wallet.account) {
-  //     wallet.activate(wlConnector)
-  //     setWlConnector(false)
-  //   }
-  // }, [wallet, wlConnector])
 
   const checkWallet = async () => {
     if (
@@ -204,8 +183,9 @@ const WalletSelect = (props) => {
       }
     }
   }
+
   useEffect(() => {
-    if (!wallet.account && web3.rpcs.length > 0) {
+    if (!wallet.account && web3.rpcs.length > 0 && !pending) {
       checkWallet()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -35,25 +35,9 @@ const Overview = () => {
   const web3 = useWeb3()
   const apiUrl = apiUrlBQ
   const header = headerBQ
+  const network = getNetwork()
 
   const [txnLoading, setTxnLoading] = useState(false)
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   const communityWallet = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
 
@@ -513,6 +497,7 @@ ethereum(network: $network){
                       {t('donate')}
                       {txnLoading && (
                         <Icon
+                          fill="white"
                           icon="cycle"
                           size="20"
                           className="anim-spin ms-1"

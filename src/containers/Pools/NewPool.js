@@ -37,27 +37,11 @@ const NewPool = ({ setShowModal, showModal }) => {
   const pool = usePool()
   const addr = getAddresses()
   const { t } = useTranslation()
+  const network = getNetwork()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
   const [feeConfirm, setFeeConfirm] = useState(false)
-
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-  const getNet = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   const addrInput = document.getElementById('addrInput')
   const handleAddrChange = (newValue) => {
@@ -373,7 +357,8 @@ const NewPool = ({ setShowModal, showModal }) => {
                     <div className="output-card text-center my-2">
                       1 SPARTA = {priceInSparta()} {tokenSymbol}
                       <br />1 {tokenSymbol} = {priceInToken()} SPARTA
-                      <br />1 {tokenSymbol} = ~${priceinUSD()} USD
+                      <br />1 {tokenSymbol} = ~$
+                      {priceinUSD()} USD
                     </div>
                     <Form>
                       <div className="text-center">
@@ -469,7 +454,7 @@ const NewPool = ({ setShowModal, showModal }) => {
               )}
             </>
           )}
-          {!tempChains.includes(network.chainId) && (
+          {network.chainId && !tempChains.includes(network.chainId) && (
             <Modal.Body>
               <WrongNetwork />
             </Modal.Body>

@@ -36,12 +36,7 @@ const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
           </span>
           <Link to="/">
             <div>
-              <div to="/" className={styles.icon}>
-                <Icon icon="spartav2" size="40" />
-                <h4 className={`${styles.spTitle} d-inline-block`}>
-                  SPARTAN PROTOCOL
-                </h4>
-              </div>
+              <Icon icon="spartaText" height="100%" width="260" />
             </div>
           </Link>
         </>

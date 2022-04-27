@@ -23,12 +23,11 @@ const Swap = () => {
   const addr = getAddresses()
   const pool = usePool()
   const history = useHistory()
+  const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
   const [mode, setMode] = useState('token')
   const [selectedAsset1, setSelectedAsset1] = useState(false)
   const [selectedAsset2, setSelectedAsset2] = useState(false)
@@ -56,21 +55,6 @@ const Swap = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
   ])
-
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -210,7 +194,9 @@ const Swap = () => {
             )}
           </Row>
         )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
+        {network.chainId && !tempChains.includes(network.chainId) && (
+          <WrongNetwork />
+        )}
       </div>
     </>
   )

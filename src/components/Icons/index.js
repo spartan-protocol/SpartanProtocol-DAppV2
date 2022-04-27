@@ -3,7 +3,17 @@ import React from 'react'
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
 import { ReactComponent as BNBChain } from '../../assets/brands/bnbchain.svg'
 import { ReactComponent as BNBChainConnected } from '../../assets/brands/bnbchain-connected.svg'
+import { ReactComponent as C4Text } from '../../assets/brands/code4rena-text.svg'
+import { ReactComponent as CertikText } from '../../assets/brands/certik-text.svg'
 import { ReactComponent as CoinGeckoIcon } from '../../assets/brands/coingecko-icon.svg'
+import { ReactComponent as CoingeckoText } from '../../assets/brands/coingecko-text.svg'
+import { ReactComponent as CMCText } from '../../assets/brands/cmc-text.svg'
+import { ReactComponent as FourText } from '../../assets/brands/four-text.svg'
+import { ReactComponent as GithubText } from '../../assets/brands/github-text.svg'
+import { ReactComponent as ImmunefiText } from '../../assets/brands/immunefi-text.svg'
+import { ReactComponent as MoonlightText } from '../../assets/brands/moonlight-text.svg'
+import { ReactComponent as OntoText } from '../../assets/brands/onto-text.svg'
+import { ReactComponent as SpartaText } from '../../assets/brands/sparta-text.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
@@ -70,7 +80,6 @@ import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
-import { ReactComponent as SpartaTextShort } from '../../assets/tokens/sparta-text-short.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
 import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
 import { ReactComponent as Usd } from '../../assets/tokens/usd.svg'
@@ -92,7 +101,17 @@ const icons = {
   apple: Apple,
   bnbChain: BNBChain,
   bnbChainConnected: BNBChainConnected,
+  c4Text: C4Text,
+  certikText: CertikText,
   coinGeckoIcon: CoinGeckoIcon,
+  coinGeckoText: CoingeckoText,
+  cmcText: CMCText,
+  fourText: FourText,
+  githubText: GithubText,
+  immunefiText: ImmunefiText,
+  moonlightText: MoonlightText,
+  ontoText: OntoText,
+  spartaText: SpartaText,
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS
@@ -160,7 +179,6 @@ const icons = {
   spartav2: SpartaV2,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
-  spartaTextShort: SpartaTextShort,
   bnb: Bnb,
   busd: Busd,
   usd: Usd,
