@@ -584,14 +584,14 @@ const PoolPositions = () => {
                   <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          viewOverall === 'sparta'
-                            ? getNetGainSpartaToUsd()
-                            : getNetGainUsdToSparta(),
+                          viewOverall === 'usd'
+                            ? getNetGainUsdToSparta()
+                            : getNetGainSpartaToUsd(),
                           2,
                         )
                       : t('generateFirst')}
                     <Icon
-                      icon={viewOverall === 'sparta' ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'usd' ? 'spartav2' : 'usd'}
                       className="ms-1"
                       size="15"
                     />
