@@ -13,6 +13,7 @@ import { ReactComponent as GithubText } from '../../assets/brands/github-text.sv
 import { ReactComponent as ImmunefiText } from '../../assets/brands/immunefi-text.svg'
 import { ReactComponent as MoonlightText } from '../../assets/brands/moonlight-text.svg'
 import { ReactComponent as OntoText } from '../../assets/brands/onto-text.svg'
+import { ReactComponent as SpartaText } from '../../assets/brands/sparta-text.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
@@ -79,7 +80,6 @@ import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
-import { ReactComponent as SpartaTextShort } from '../../assets/tokens/sparta-text-short.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
 import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
 import { ReactComponent as Usd } from '../../assets/tokens/usd.svg'
@@ -111,6 +111,7 @@ const icons = {
   immunefiText: ImmunefiText,
   moonlightText: MoonlightText,
   ontoText: OntoText,
+  spartaText: SpartaText,
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS
@@ -178,7 +179,6 @@ const icons = {
   spartav2: SpartaV2,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
-  spartaTextShort: SpartaTextShort,
   bnb: Bnb,
   busd: Busd,
   usd: Usd,

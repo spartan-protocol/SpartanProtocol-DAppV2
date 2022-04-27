@@ -104,8 +104,8 @@ const Assets = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    ~${formatFromWei(total, 0)}
-                    <Icon icon="usd" size="15" fill="black" className="ms-1" />
+                    ~$
+                    {formatFromWei(total, 0)}
                   </div>
                 </Col>
               </Row>
@@ -164,12 +164,6 @@ const Assets = () => {
                       <div className="text-sm-label text-end mt-2">
                         ~$
                         {formatFromWei(getUSD(asset.address, asset.balance), 0)}
-                        <Icon
-                          icon="usd"
-                          size="15"
-                          fill="black"
-                          className="ms-1"
-                        />
                       </div>
                     </Col>
                   </Row>

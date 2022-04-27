@@ -29,6 +29,7 @@ import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
 import styles from './styles.module.scss'
+import { Spacer } from '../../../../components/Spacer'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -224,11 +225,11 @@ const Supply = () => {
                     </span>
                   </OverlayTrigger>
                 </Col>
-                <Col xs="6 mb-2" className="popover-text text-end mb-2">
+                <Col xs="6" className="popover-text text-end mb-2">
                   {getTVL() > 0
                     ? `$${formatFromWei(getTVL(), 0)}`
                     : 'Loading...'}
-                  <Icon icon="usd" className="ms-1" size="15" />
+                  <Spacer className="ms-1" size="15" />
                 </Col>
                 <Col xs="6" className="popover-text mb-2">
                   {t('marketcap')}
@@ -254,7 +255,7 @@ const Supply = () => {
                   {getMarketCap() > 0
                     ? `$${formatFromWei(getMarketCap(), 0)}`
                     : 'Loading...'}
-                  <Icon icon="usd" className="ms-1" size="15" />
+                  <Spacer className="ms-1" size="15" />
                 </Col>
 
                 <Col xs="6" className="popover-text mb-2">
