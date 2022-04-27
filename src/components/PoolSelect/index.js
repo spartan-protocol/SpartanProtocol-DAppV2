@@ -30,6 +30,7 @@ import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
  */
 const PoolSelect = () => {
   const { t } = useTranslation()
+  const network = getNetwork()
 
   const addr = getAddresses()
   const history = useHistory()
@@ -38,18 +39,10 @@ const PoolSelect = () => {
   const pool = usePool()
   const web3 = useWeb3()
 
-  const [trigger0, settrigger0] = useState(0)
-
-  const [network, setnetwork] = useState(getNetwork())
-
   const [lpsArray, setLpsArray] = useState([])
 
   const toggleModal = () => {
     setShowModal(!showModal)
-  }
-
-  const getNet = () => {
-    setnetwork(getNetwork())
   }
 
   const isLoading = () => {
@@ -72,18 +65,6 @@ const PoolSelect = () => {
     pool.poolDetails
       .filter((asset) => asset.baseAmount > 0)
       .sort((a, b) => b.baseAmount - a.baseAmount)
-
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   useEffect(() => {
     let finalArray = []
@@ -212,7 +193,8 @@ const PoolSelect = () => {
                                   {asset.symbol}
                                 </div>
                                 <div className="description">
-                                  {t('depth')}: &nbsp;${asset.baseAmount}
+                                  {t('depth')}: &nbsp;$
+                                  {asset.baseAmount}
                                 </div>
                               </Col>
                             </Row>

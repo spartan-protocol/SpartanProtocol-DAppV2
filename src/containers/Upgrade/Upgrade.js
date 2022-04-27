@@ -114,6 +114,7 @@ const Upgrade = () => {
                         {t('upgrade')} SPARTA
                         {upgradeLoading && (
                           <Icon
+                            fill="white"
                             icon="cycle"
                             size="20"
                             className="anim-spin ms-1"

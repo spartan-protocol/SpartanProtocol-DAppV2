@@ -137,10 +137,15 @@ const Approval = ({
               handleApproval()
             }}
           >
-            <Icon icon="lock" size="20" className="me-1" />
+            <Icon fill="white" icon="lock" size="20" className="me-1" />
             {enoughGas() ? <>Approve {symbol}</> : t('checkBnbGas')}
             {pending && (
-              <Icon icon="cycle" size="20" className="anim-spin ms-1" />
+              <Icon
+                fill="white"
+                icon="cycle"
+                size="20"
+                className="anim-spin ms-1"
+              />
             )}
           </Button>
         </Col>

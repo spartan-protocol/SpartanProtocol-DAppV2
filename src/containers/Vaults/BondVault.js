@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -21,24 +21,7 @@ const BondVault = () => {
   const wallet = useWeb3React()
   const { t } = useTranslation()
   const dispatch = useDispatch()
-
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+  const network = getNetwork()
 
   const tryParse = (data) => {
     try {
@@ -124,7 +107,9 @@ const BondVault = () => {
           )}
         </>
       )}
-      {!tempChains.includes(network.chainId) && <WrongNetwork />}
+      {network.chainId && !tempChains.includes(network.chainId) && (
+        <WrongNetwork />
+      )}
     </Row>
   )
 }

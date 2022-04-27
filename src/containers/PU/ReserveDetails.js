@@ -17,25 +17,9 @@ const ReserveDetails = () => {
   const reserve = useReserve()
   const web3 = useWeb3()
   const sparta = useSparta()
+  const network = getNetwork()
 
   const [selection, setSelection] = useState('')
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger0, settrigger0] = useState(0)
-
-  const getNet = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getNet()
-    }
-    const timer = setTimeout(() => {
-      getNet()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   useEffect(() => {
     if (

@@ -33,30 +33,13 @@ const Overview = () => {
   const web3 = useWeb3()
   const bond = useBond()
   const dao = useDao()
+  const network = getNetwork()
 
   const [activeTab, setActiveTab] = useState('pools')
-  const [network, setnetwork] = useState(getNetwork())
   const [daoApy, setDaoApy] = useState('0')
   const [synthApy, setSynthApy] = useState('0')
   const [showModal, setShowModal] = useState(false)
   const [tableView, setTableView] = useState(false)
-
-  const [trigger0, settrigger0] = useState(0)
-
-  const getData = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
-    }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
 
   useEffect(() => {
     const checkWeight = () => {
@@ -350,7 +333,9 @@ const Overview = () => {
           )}
         </>
       )}
-      {!tempChains.includes(network.chainId) && <WrongNetwork />}
+      {network.chainId && !tempChains.includes(network.chainId) && (
+        <WrongNetwork />
+      )}
     </>
   )
 }

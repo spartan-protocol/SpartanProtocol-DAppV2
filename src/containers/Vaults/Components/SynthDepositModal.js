@@ -316,6 +316,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                             : t('checkBnbGas')}
                           {harvestLoading && (
                             <Icon
+                              fill="white"
                               icon="cycle"
                               size="20"
                               className="anim-spin ms-1"
@@ -333,6 +334,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                       {checkValid()[1]}
                       {txnLoading && (
                         <Icon
+                          fill="white"
                           icon="cycle"
                           size="20"
                           className="anim-spin ms-1"

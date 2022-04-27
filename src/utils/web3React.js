@@ -21,8 +21,9 @@ const ledgerConnect = (chainId, rpcUrl) =>
 const walletConnect = (chainId, rpcUrl) =>
   new WalletConnectConnector({
     rpc: { [chainId]: rpcUrl },
+    chainId,
+    bridge: 'https://bridge.walletconnect.org',
     qrcode: true,
-    pollingInterval: pollingInt,
   })
 const walletlink = (chainId, rpcUrl) =>
   new WalletLinkConnector({

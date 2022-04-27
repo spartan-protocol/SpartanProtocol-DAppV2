@@ -215,6 +215,7 @@ const DaoWithdrawModal = (props) => {
                           : t('checkBnbGas')}
                         {harvestLoading && (
                           <Icon
+                            fill="white"
                             icon="cycle"
                             size="20"
                             className="anim-spin ms-1"
@@ -239,6 +240,7 @@ const DaoWithdrawModal = (props) => {
                       {checkValid()[1]}
                       {txnLoading && (
                         <Icon
+                          fill="white"
                           icon="cycle"
                           size="20"
                           className="anim-spin ms-1"

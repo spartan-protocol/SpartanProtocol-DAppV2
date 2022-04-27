@@ -40,25 +40,9 @@ const Overview = () => {
   const synth = useSynth()
   const wallet = useWeb3React()
   const { t } = useTranslation()
+  const network = getNetwork()
 
   const [selectedView, setSelectedView] = useState('current')
-
-  const [network, setnetwork] = useState(getNetwork())
-  const [trigger1, settrigger1] = useState(0)
-  const getData1 = () => {
-    setnetwork(getNetwork())
-  }
-  useEffect(() => {
-    if (trigger1 === 0) {
-      getData1()
-    }
-    const timer = setTimeout(() => {
-      getData1()
-      settrigger1(trigger1 + 1)
-    }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1])
 
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
@@ -353,7 +337,9 @@ const Overview = () => {
             </Row>
           </>
         )}
-        {!tempChains.includes(network.chainId) && <WrongNetwork />}
+        {network.chainId && !tempChains.includes(network.chainId) && (
+          <WrongNetwork />
+        )}
       </div>
     </>
   )
