@@ -324,6 +324,9 @@ const LiqAdd = () => {
   }
 
   const checkValid = () => {
+    if (poolAdd1.address === '0xcE16E8C1224b51Fd455749F48a7D0e5f880231CB') {
+      return [false, t('poolRetired')]
+    }
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
