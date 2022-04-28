@@ -30,6 +30,8 @@ import { Tooltip } from '../../components/Tooltip/index'
 import { getToken } from '../../utils/math/utils'
 import HelmetLoading from '../../components/Spinner/index'
 
+const minBase = 50000
+
 const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
@@ -132,7 +134,7 @@ const NewPool = ({ setShowModal, showModal }) => {
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
-    if (spartaInput?.value >= 20000 && spartaInput?.value <= 100000) {
+    if (spartaInput?.value >= minBase && spartaInput?.value <= 100000) {
       setSpartaValid(true)
     } else {
       setSpartaValid(false)
@@ -331,7 +333,7 @@ const NewPool = ({ setShowModal, showModal }) => {
                         disabled={!addrValid}
                       />
                       <Form.Control.Feedback type="invalid">
-                        Must be between 20K - 100K SPARTA
+                        Must be between {minBase / 1000}K - 100K SPARTA
                       </Form.Control.Feedback>
                     </InputGroup>
                     <InputGroup className="my-2">
