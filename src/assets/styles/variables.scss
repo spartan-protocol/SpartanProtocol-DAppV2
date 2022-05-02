@@ -1,0 +1,19 @@
+$bg-depth-0: #f5f8fa; // body   | bg
+$bg-depth-1: #fff; // card header | footers
+$bg-depth-2: #fff; // cards  | etc
+$shadow: 0 0.3rem 0.75rem rgb(0 0 0 / 15%);
+
+$bg-depth-0-dark: #151521; // body   | bg
+$bg-depth-1-dark: #1c1c2a; // header | footers
+$bg-depth-2-dark: #1c1c2a; // cards  | etc
+$bg-depth-3-dark: #29293a; // cards  | etc
+$shadow-dark: 0 0.3rem 0.75rem rgb(0 0 0 / 50%);
+
+$theme-switcher-height: 25px;
+
+$text: rgb(15, 15, 15);
+$text-dark: rgb(226, 226, 226);
+$link-hover-dark: rgb(73, 145, 251);
+
+// breakpoints
+$breakpoint-tablet: 768px;

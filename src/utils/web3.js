@@ -35,6 +35,7 @@ import abiMnSynthVault from '../ABI/MN/SynthVault.json'
 import abiMnUtils from '../ABI/MN/Utils.json'
 import abiMnWbnb from '../ABI/MN/WBNB.json'
 import { BN } from './bigNumber'
+import { defaultSettings } from '../components/Settings/options'
 
 export const abisTN = {
   bondVault: abiTnBondVault.abi,
@@ -119,7 +120,7 @@ export const addressesTN = {
   fallenSpartans: '0x0Facf7AD25Ce97F174Cd1E7664fD1b8867C3909b', // N/A
   poolFactory: '0xd2637bc90B2362Bb1A45A9660E7aFdC9bB1a92DF', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   reserve: '0x29f8e4CA0bF807F99DCEeBDbbC8e0d2332517565', //
-  router: '0x740dB23a6e9FEa55DdcaDD63942fe3FF0210d130', //
+  router: '0x77b063DBC2F3449964ff26b59EA8F87C64E575d6', // 18030c29e010d283c4e86c28087bea4509f3f6c8
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   utils: '0x7Ed2B0611308C75C10d5FC34cDA75749e6a6Df7D', // 5c079a33ed87ff5f7286d2a034a78db62660c9ab
@@ -203,7 +204,9 @@ export const bscRpcsMN = [
   'https://bsc-dataseed2.binance.org/',
   'https://bsc-dataseed3.binance.org/',
   'https://bsc-dataseed4.binance.org/',
-  'https://binance.ankr.com/',
+  // 'https://binance.ankr.com/',
+  'https://bscrpc.com',
+  'https://binance.nodereal.io',
 ]
 
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'
@@ -244,19 +247,12 @@ const blacklist = [] // add array of addresses here to cause fallback token icon
 export const getTwTokenLogo = async (tokenAddr, chainId) => {
   const tokenInfo = false
   if (chainId === 56) {
-    // tokenInfo = await getTwTokenInfo(tokenAddr)
-    // if (tokenInfo) {
-    // if (['WBNB', 'BNB'].includes(tokenInfo.symbol)) {
     if ([addressesMN.bnb, addressesMN.wbnb].includes(tokenInfo.symbol)) {
       return `${window.location.origin}/images/icons/BNB.svg`
     }
     if (!blacklist.includes(tokenAddr)) {
       return `https://raw.githubusercontent.com/spartan-protocol/assets/master/blockchains/smartchain/assets/${tokenAddr}/logo.png`
     }
-    // }
-    // if (process.env.NODE_ENV === 'development') {
-    //   return `https://assets.trustwalletapp.com/blockchains/smartchain/assets/${tokenAddr}/logo.png`
-    // }
   }
   return `${window.location.origin}/images/icons/Fallback.svg`
 }
@@ -408,6 +404,19 @@ export const getNetwork = () => {
   return network
 }
 
+/**
+ * Check localStorage for settings and set default if missing
+ * returns {gasRateMN: '5.01', gasRateTN: '10.01', slipTol: '1.0'}
+ */
+export const getSettings = () => {
+  let settings = tryParse(window.localStorage.getItem('sp_settings'))
+  if (!settings) {
+    window.localStorage.setItem('sp_settings', JSON.stringify(defaultSettings))
+    settings = defaultSettings
+  }
+  return settings
+}
+
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider, rpcUrls) => {
   const network = getNetwork()
@@ -425,8 +434,10 @@ export const getWalletProvider = (_provider, rpcUrls) => {
 export const getProviderGasPrice = (rpcUrls) => {
   // const provider = getWalletProvider(null, rpcUrls) // TEMP DISABLE
   // const gasPrice = provider.getGasPrice() // TEMP DISABLE
-  const gasPrice = getNetwork().chainId === 97 ? '10010000000' : '5010000000' // TEMP OVERRIDE
-  return gasPrice
+  const lsSettings = getSettings()
+  const isMN = getNetwork().chainId === 56
+  const gasPrice = isMN ? lsSettings.gasRateMN : lsSettings.gasRateTN
+  return BN(gasPrice).times(1000000000).toString()
 }
 
 /**

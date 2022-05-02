@@ -14,7 +14,7 @@ import {
 export const one = BN(1).times(10).pow(18)
 
 /**
- * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%)
+ * Calculate feeBurn basis points (0 - 100 ie. 0% to 1%) // retired/paused
  * Uses the feeOnTransfer if already called
  * @param feeOnTransfer @param amount
  * @returns fee
@@ -25,7 +25,7 @@ export const calcFeeBurn = (feeOnTransfer, amount) => {
 }
 
 /**
- * Return SPARTA after feeBurn
+ * Return SPARTA after feeBurn // retired/paused
  * @param amount @param feeOnTsf
  * @returns fee
  */
@@ -214,7 +214,7 @@ export const getSynthWeights = (synthDetails, poolDetails) => {
 }
 
 /**
- * Get the SPARTA value of all reserve LPs
+ * Get the total SPARTA locked up in reserve-held LPs
  * @param polDetails
  * @returns polWeight
  */
@@ -286,6 +286,7 @@ export const isBonded = (timestamp) => {
 
 /**
  * Return time passed since a timestamp
+ * Dynamically returns seconds / minutes / hours etc based on the result
  * @param {uint} timestamp to compare current time to
  * @param {uint} t hand in the {t} translation obj
  * @returns [string, string] [0 = time uints] [1 = string label ie. 'seconds' 'minutes']
@@ -298,7 +299,7 @@ export const getTimeSince = (timestamp, t) => {
 }
 
 /**
- * Return time passed since a timestamp
+ * Return time passed since a timestamp in seconds
  * @param {uint} timestamp to compare current time to
  * @returns secsSince
  */
@@ -324,6 +325,7 @@ export const formatDate = (unixTime) => {
 
 /**
  * Return day of the month
+ * ie. 27 December 2022 returns just '27'
  * @param {number} timestamp
  * @returns formattedDate
  */
@@ -362,6 +364,7 @@ export const calcAPY = (pool, recentFees, recentDivis, days = 30) => {
   if (apr > 0) {
     const apy1 = BN(apr).div(100).div(12).plus(1)
     const apy = apy1.pow(12).minus(1).times(100)
+    // return apr
     return apy
   }
   return '0.00'
@@ -383,7 +386,9 @@ export const calcDaoAPY = (revenue, baseAmount) => {
   if (apr > 0) {
     const apy1 = BN(apr).div(100).div(54).plus(1)
     const apy = apy1.pow(54).minus(1).times(100)
-    return apy
+    // return apr
+    return apy.div(4).times(2)
+    // return apy
   }
   return '0.00'
 }
@@ -414,6 +419,8 @@ export const calcSynthAPY = (revenue, baseAmount) => {
   if (apr > 0) {
     const apy1 = BN(apr).div(100).div(54).plus(1)
     const apy = apy1.pow(54).minus(1).times(100)
+    // return apr
+    // return apy.times(4).div(2)
     return apy
   }
   return '0.00'

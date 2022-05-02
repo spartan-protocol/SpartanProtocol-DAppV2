@@ -1,0 +1,188 @@
+@import '../../../../assets/styles/variables.scss';
+
+.switch {
+  position: relative;
+  align-self: center;
+  transition: all;
+  vertical-align: middle;
+}
+
+.switch__input {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+.switch__label {
+  position: relative;
+  display: inline-block;
+  width: calc($theme-switcher-height * 2);
+  height: $theme-switcher-height;
+  background-color: #2b2b2b;
+  // border: 3px solid #5b5b5b;
+  border: 1px solid $bg-depth-1-dark;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+}
+
+.switch__indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) translateX(-72%);
+  display: block;
+  width: calc($theme-switcher-height * 0.666);
+  height: calc($theme-switcher-height * 0.666);
+  background-color: #7b7b7b;
+  border-radius: 9999px;
+  box-shadow: 10px 0px 0 0 rgba(#000000, 0.2) inset;
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    display: block;
+    background-color: #ffffff;
+    border-radius: 9999px;
+  }
+
+  &::before {
+    top: calc($theme-switcher-height * 0.111);
+    left: calc($theme-switcher-height * 0.111);
+    width: calc($theme-switcher-height * 0.166);
+    height: calc($theme-switcher-height * 0.166);
+    background-color: #ffffff;
+    opacity: 0.6;
+  }
+
+  &::after {
+    bottom: calc($theme-switcher-height * 0.139);
+    right: calc($theme-switcher-height * 0.111);
+    width: calc($theme-switcher-height * 0.222);
+    height: calc($theme-switcher-height * 0.222);
+    background-color: #ffffff;
+    opacity: 0.8;
+  }
+}
+
+.switch__decoration {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  display: block;
+  width: calc($theme-switcher-height * 0.0833);
+  height: calc($theme-switcher-height * 0.0833);
+  background-color: #ffffff;
+  border-radius: 9999px;
+  animation: twinkle 0.8s infinite -0.6s;
+
+  &::before,
+  &::after {
+    position: absolute;
+    display: block;
+    content: '';
+    width: calc($theme-switcher-height * 0.0833);
+    height: calc($theme-switcher-height * 0.0833);
+    background-color: #ffffff;
+    border-radius: 9999px;
+  }
+
+  &::before {
+    top: calc($theme-switcher-height * 0.333 * -1);
+    left: calc($theme-switcher-height * 0.166);
+    opacity: 1;
+    animation: twinkle 0.6s infinite;
+  }
+
+  &::after {
+    top: calc($theme-switcher-height * 0.111 * -1);
+    left: calc($theme-switcher-height * 0.5);
+    animation: twinkle 0.6s infinite -0.2s;
+  }
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.switch__indicator {
+  &,
+  &::before,
+  &::after {
+    transition: all 0.4s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  }
+}
+
+body:not(.dark-theme) .switch__label {
+  background-color: #8fb5f5;
+  // border-color: #347cf8;
+  border-color: $bg-depth-1;
+
+  .switch__indicator {
+    background-color: #ecd21f;
+    box-shadow: none;
+    transform: translate(-50%, -50%) translateX(72%);
+
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+
+  .switch__decoration {
+    top: 50%;
+    transform: translate(0%, -50%);
+    animation: cloud 8s linear infinite;
+
+    width: calc($theme-switcher-height * 0.333);
+    height: calc($theme-switcher-height * 0.333);
+
+    &::before {
+      width: calc($theme-switcher-height * 0.1666);
+      height: calc($theme-switcher-height * 0.1666);
+      top: auto;
+      bottom: 0;
+      left: calc($theme-switcher-height * 0.1388 * -1);
+      animation: none;
+    }
+
+    &::after {
+      width: calc($theme-switcher-height * 0.25);
+      height: calc($theme-switcher-height * 0.25);
+      top: auto;
+      bottom: 0;
+      left: calc($theme-switcher-height * 0.278);
+      animation: none;
+    }
+
+    &,
+    &::before,
+    &::after {
+      border-radius: 9999px 9999px 0 0;
+    }
+
+    &::after {
+      border-bottom-right-radius: 9999px;
+    }
+  }
+}
+
+@keyframes cloud {
+  0% {
+    transform: translate(0%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    transform: translate(0%, -50%);
+  }
+}

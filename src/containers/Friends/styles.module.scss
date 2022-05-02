@@ -1,0 +1,7 @@
+.buttons:first-child:nth-last-child(2) {
+  padding-right: 0px;
+}
+
+.buttons:last-child:nth-last-child(2) {
+  padding-left: 0px;
+}

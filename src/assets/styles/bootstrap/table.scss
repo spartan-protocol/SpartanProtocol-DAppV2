@@ -1,0 +1,13 @@
+@import '../variables.scss';
+
+.table {
+  font-size: var(--bs-body-font-size);
+}
+
+body.dark-theme {
+  .table {
+    color: $text-dark;
+    --bs-table-striped-color: $text-dark;
+    --bs-table-striped-bg: rgba(241, 241, 241, 0.048);
+  }
+}

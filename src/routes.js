@@ -1,14 +1,15 @@
-import Home from './views/pages/Pools/Overview'
-import Liquidity from './views/pages/Liquidity/Overview'
-import Swap from './views/pages/Swap/Swap'
-import Synths from './views/pages/Synths/Overview'
-import Vaults from './views/pages/Vaults/Overview'
-import Positions from './views/pages/Positions/Overview'
-import Dao from './views/pages/Dao/Overview'
-import Upgrade from './views/pages/Upgrade/Overview'
-import Donate from './views/pages/Donate/Overview'
-import PU from './views/pages/PU/Overview'
-import Partners from './views/pages/Partners/Overview'
+import Home from './containers/Pools'
+import Liquidity from './containers/Liquidity'
+import Swap from './containers/Swap'
+import Synths from './containers/Synths'
+import Vaults from './containers/Vaults'
+import Positions from './containers/Positions'
+import Dao from './containers/Dao'
+import Upgrade from './containers/Upgrade'
+import Donate from './containers/Donate'
+import PU from './containers/PU'
+import Friends from './containers/Friends'
+import Contracts from './containers/Contracts'
 
 export const routes = [
   {
@@ -22,7 +23,7 @@ export const routes = [
   {
     path: '/liquidity',
     name: 'liquidity',
-    icon: 'sword',
+    icon: 'pool',
     component: Liquidity,
     layout: '',
   },
@@ -30,7 +31,7 @@ export const routes = [
   {
     path: '/swap',
     name: 'swap',
-    icon: 'swords',
+    icon: 'swap',
     component: Swap,
     layout: '',
   },
@@ -53,7 +54,7 @@ export const routes = [
 
   {
     path: '/positions',
-    name: 'Positions',
+    name: 'positions',
     icon: 'analysis',
     component: Positions,
     layout: '',
@@ -62,7 +63,7 @@ export const routes = [
   {
     path: '/dao',
     name: 'dao',
-    icon: 'colosseum',
+    icon: 'dao',
     component: Dao,
     layout: '',
   },
@@ -78,21 +79,31 @@ export const routes = [
   {
     path: '/donate',
     name: 'donate',
-    icon: 'list',
+    icon: 'donate',
     component: Donate,
     layout: '',
   },
 
   {
-    path: '/partners',
-    name: 'Partners',
+    path: '/friends',
+    name: 'friends',
     icon: 'handshake',
-    component: Partners,
+    component: Friends,
     layout: '',
+    informational: true,
   },
 
   {
-    path: '/PU',
+    path: '/contracts',
+    name: 'contracts',
+    icon: 'contract',
+    component: Contracts,
+    layout: '',
+    informational: true,
+  },
+
+  {
+    path: '/pu',
     name: 'PowerUser',
     icon: '',
     component: PU,

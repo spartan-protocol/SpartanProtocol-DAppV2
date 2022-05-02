@@ -1,0 +1,14 @@
+.flip {
+  animation: flip-icon 1s ease-in-out infinite;
+  padding: 20px;
+  margin: auto;
+}
+
+@keyframes flip-icon {
+  0% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
