@@ -6,6 +6,7 @@ import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
+import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Nav from 'react-bootstrap/Nav'
@@ -53,6 +54,7 @@ const LiqRemove = () => {
 
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
+  const [confirmAsym, setConfirmAsym] = useState(false)
   const [activeTab, setActiveTab] = useState('removeTab1')
   const [assetRemove1, setAssetRemove1] = useState('...')
   const [assetRemove2, setAssetRemove2] = useState('...')
@@ -310,6 +312,9 @@ const LiqRemove = () => {
     }
     if (poolRemove1.newPool) {
       return [false, `${t('unlocksIn')} ${getTimeNew()[0]}${getTimeNew()[1]}`]
+    }
+    if (activeTab === 'removeTab2' && !confirmAsym) {
+      return [false, t('confirmAsym')]
     }
     if (activeTab === 'removeTab1') {
       return [true, t('removeBoth')]
@@ -654,6 +659,43 @@ const LiqRemove = () => {
           )}
 
           {!pool.poolDetails && <HelmetLoading height={150} width={150} />}
+
+          {activeTab === 'removeTab2' && (
+            <Row>
+              <Col className="mb-2 mt-4">
+                <div className="text-center">
+                  {t('poolAsymRemoveConfirm', {
+                    token1:
+                      getToken(assetRemove1.tokenAddress)?.symbol === 'SPARTA'
+                        ? getToken(poolRemove1.tokenAddress)?.symbol
+                        : 'SPARTA',
+                    token2: getToken(assetRemove1.tokenAddress)?.symbol,
+                  })}
+                  <a
+                    href="https://docs.spartanprotocol.org/#/liquidity-pools?id=asymmetric-liquidity-removal-remove-single"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Icon icon="scan" size="14" className="ms-1" />
+                  </a>
+                </div>
+                <Form className="my-2 text-center">
+                  <span className="">
+                    {t('poolAsymRemoveConfirmShort', {
+                      token1: getToken(assetRemove1.tokenAddress)?.symbol,
+                    })}
+                    <Form.Check
+                      type="switch"
+                      id="confirmSym"
+                      className="ms-2 d-inline-flex"
+                      checked={confirmAsym}
+                      onChange={() => setConfirmAsym(!confirmAsym)}
+                    />
+                  </span>
+                </Form>
+              </Col>
+            </Row>
+          )}
 
           <Row className="text-center mt-3">
             {poolRemove1?.tokenAddress &&
