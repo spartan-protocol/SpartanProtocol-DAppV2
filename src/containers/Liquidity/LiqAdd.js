@@ -103,9 +103,13 @@ const LiqAdd = () => {
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
           let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
 
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+          const _assetParam1 =
+            assetParam1 === addr.wbnb ? addr.bnb : assetParam1
+          if (
+            poolDetails.find((asset) => asset.tokenAddress === _assetParam1)
+          ) {
             ;[asset1] = poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam1,
+              (asset) => asset.tokenAddress === _assetParam1,
             )
             setAssetParam1('')
           }

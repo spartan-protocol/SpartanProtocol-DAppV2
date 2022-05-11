@@ -92,15 +92,23 @@ const SwapTokens = () => {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
+          const _assetParam1 =
+            assetParam1 === addr.wbnb ? addr.bnb : assetParam1
+          const _assetParam2 =
+            assetParam2 === addr.wbnb ? addr.bnb : assetParam2
+          if (
+            poolDetails.find((asset) => asset.tokenAddress === _assetParam1)
+          ) {
             ;[asset1] = poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam1,
+              (asset) => asset.tokenAddress === _assetParam1,
             )
             setAssetParam1('')
           }
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
+          if (
+            poolDetails.find((asset) => asset.tokenAddress === _assetParam2)
+          ) {
             ;[asset2] = poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam2,
+              (asset) => asset.tokenAddress === _assetParam2,
             )
             setAssetParam2('')
           }
