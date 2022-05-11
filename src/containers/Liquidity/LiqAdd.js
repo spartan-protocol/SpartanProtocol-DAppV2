@@ -65,6 +65,7 @@ const LiqAdd = () => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('addTab1')
   const [confirm, setConfirm] = useState(false)
+  const [confirmAsym, setConfirmAsym] = useState(false)
   const [confirmFreeze, setConfirmFreeze] = useState(false)
   const [assetAdd1, setAssetAdd1] = useState('...')
   const [assetAdd2, setAssetAdd2] = useState('...')
@@ -357,6 +358,9 @@ const LiqAdd = () => {
     }
     if (poolAdd1.curated && poolAdd1.frozen && !confirmFreeze) {
       return [false, t('confirmFreeze')]
+    }
+    if (activeTab === 'addTab2' && !confirmAsym) {
+      return [false, t('confirmAsym')]
     }
     if (activeTab === 'addTab1') {
       return [true, t('addBoth')]
@@ -863,13 +867,50 @@ const LiqAdd = () => {
         </Col>
       </Row>
 
+      {activeTab === 'addTab2' && (
+        <Row>
+          <Col className="mb-2 mt-4">
+            <div className="text-center">
+              {t('poolAsymAddConfirm', {
+                token1: getToken(assetAdd1.tokenAddress)?.symbol,
+                token2:
+                  getToken(assetAdd1.tokenAddress)?.symbol === 'SPARTA'
+                    ? getToken(poolAdd1.tokenAddress)?.symbol
+                    : 'SPARTA',
+              })}
+              <a
+                href="https://docs.spartanprotocol.org/#/liquidity-pools?id=asymmetric-liquidity-add-add-single"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Icon icon="scan" size="14" className="ms-1" />
+              </a>
+            </div>
+            <Form className="my-2 text-center">
+              <span className="">
+                {t('poolAsymAddConfirmShort', {
+                  token1: getToken(poolAdd1.tokenAddress)?.symbol,
+                })}
+                <Form.Check
+                  type="switch"
+                  id="confirmSym"
+                  className="ms-2 d-inline-flex"
+                  checked={confirmAsym}
+                  onChange={() => setConfirmAsym(!confirmAsym)}
+                />
+              </span>
+            </Form>
+          </Col>
+        </Row>
+      )}
+
       {poolAdd1.newPool && (
         <Row>
           <Col>
             <div className="text-center">{t('newPoolConfirmInfo')}</div>
             <Form className="my-2 text-center">
               <span className="">
-                {`Confirm; your liquidity will be locked for ${
+                {`Confirm: your liquidity will be locked for ${
                   getTimeNew()[0]
                 }${getTimeNew()[1]}`}
                 <Form.Check
