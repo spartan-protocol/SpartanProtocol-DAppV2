@@ -131,13 +131,15 @@ const BondItem = (props) => {
             <Row className="mt-1">
               <Col>{t('finalDate')}</Col>
               <Col xs="auto" className="text-end">
-                {formatDate(
-                  getEndDate(
-                    asset.staked,
-                    asset.lastBlockTime,
-                    asset.claimRate,
-                  ),
-                )}
+                {asset.staked > 0
+                  ? formatDate(
+                      getEndDate(
+                        asset.staked,
+                        asset.lastBlockTime,
+                        asset.claimRate,
+                      ),
+                    )
+                  : '100% Claimed'}
               </Col>
             </Row>
           </Card.Body>
