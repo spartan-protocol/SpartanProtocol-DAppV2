@@ -292,11 +292,12 @@ export const callGlobalMetrics = async () => {
   }
 }
 
-export const callPoolMetrics = async (poolAddress) => {
+export const callPoolMetrics = async (poolAddress, limit = 0) => {
   const address = poolAddress.toString().toLowerCase()
+  const limitQuery = limit ? `first:${limit},` : ''
   const tokensQuery = `
   query {
-    metricsPoolDays(orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
+    metricsPoolDays(${limitQuery} orderBy: timestamp, orderDirection: desc, where: {pool: "${address}"}) {
       id
       timestamp
       pool {
@@ -329,7 +330,50 @@ export const callPoolMetrics = async (poolAddress) => {
       return false
     }
     const metrics = await result
-    // console.log(metrics)
+    return metrics
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
+export const Token = async (poolAddress) => {
+  const address = poolAddress.toString().toLowerCase()
+  const tokensQuery = `
+  query {
+    Pool(where: {pool: "${address}"}) {
+      id
+      timestamp
+      pool {
+        id
+      }
+      volSPARTA
+      volUSD
+      fees
+      feesUSD
+      fees30Day
+      incentives
+      incentivesUSD
+      incentives30Day
+      txCount
+      tvlSPARTA
+      tvlUSD
+      tokenPrice
+      lpUnits
+    }
+  }
+`
+  try {
+    const result = await subgraphClient
+      .query({
+        query: gql(tokensQuery),
+      })
+      .then((data) => data.data.metricsPoolDays)
+    if (!result) {
+      console.log('no result')
+      return false
+    }
+    const metrics = await result
     return metrics
   } catch (err) {
     console.log(err)

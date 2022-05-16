@@ -280,7 +280,7 @@ const PoolItem = ({ asset, daoApy }) => {
                             <hr className="my-2" />
                           </Col>
                           <Col xs="12" className="text-center">
-                            All APYs are estimates
+                            {t('apyEstimatedInfo')}
                           </Col>
                         </Row>
                       </Popover.Body>

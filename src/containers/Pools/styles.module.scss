@@ -14,3 +14,50 @@
   max-width: 400px;
   margin: 10px auto;
 }
+
+.poolTableItem {
+  filter: drop-shadow(-2px 4px 4px #00000020);
+  border: none;
+
+  & th {
+    height: 40px;
+    vertical-align: middle;
+  }
+
+  & td,
+  th {
+    background-color: #fff;
+  }
+
+  & th:first-child {
+    padding-left: 20px;
+    border-radius: 10px 0 0 10px;
+  }
+
+  & th:last-child {
+    border-radius: 0 10px 10px 0;
+    padding-right: 20px;
+    width: 150px;
+  }
+
+  &> td:first-child {
+    padding-left: 10px;
+    border-radius: 10px 0 0 10px;
+    width: 200px;
+    @media only screen and (max-width: 800px) {
+      width: 140px;
+    }
+  }
+
+  & td:last-child {
+    border-radius: 0 10px 10px 0;
+    padding-right: 20px;
+  }
+
+}
+
+.poolTable {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  vertical-align: middle;
+}
