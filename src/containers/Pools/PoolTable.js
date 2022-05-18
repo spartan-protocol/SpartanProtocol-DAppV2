@@ -51,16 +51,17 @@ const PoolTable = ({ poolItems, daoApy }) => {
   return (
     <Table className={`${styles.poolTable} table-borderless`}>
       <thead>
-        <tr className={styles.poolTableItem}>
+        <tr className={`${styles.poolTableItem} bg-2`}>
+          <th className="user-select-none" />
           <th
-            className="bg-2 user-select-none"
+            className="user-select-none"
             role="button"
             onClick={() => sortTable('poolName')}
           >
             {t('pool')}
           </th>
           <th
-            className="bg-2 user-select-none"
+            className="d-none d-sm-table-cell user-select-none"
             role="button"
             onClick={() => sortTable('poolCap')}
           >
@@ -72,21 +73,21 @@ const PoolTable = ({ poolItems, daoApy }) => {
             </OverlayTrigger>
           </th>
           <th
-            className="d-none d-sm-table-cell bg-2 user-select-none"
+            className="d-none d-sm-table-cell user-select-none"
             role="button"
             onClick={() => sortTable('liquidity')}
           >
             {t('liquidity')}
           </th>
           <th
-            className="d-none d-sm-table-cell bg-2 user-select-none"
+            className="d-none d-sm-table-cell user-select-none"
             role="button"
             onClick={() => sortTable('volume')}
           >
             {t('volume')}
           </th>
           <th
-            className="bg-2 user-select-none"
+            className="user-select-none"
             role="button"
             onClick={() => sortTable('apy')}
           >
@@ -97,7 +98,7 @@ const PoolTable = ({ poolItems, daoApy }) => {
               </span>
             </OverlayTrigger>
           </th>
-          <th className="bg-2">{t('actions')}</th>
+          <th className="">{t('actions')}</th>
         </tr>
       </thead>
       <tbody>

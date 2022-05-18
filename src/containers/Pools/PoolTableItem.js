@@ -69,41 +69,41 @@ const PoolTableItem = ({ asset, daoApy }) => {
 
   return (
     <>
-      <tr className={`${styles.poolTableItem}`}>
+      <tr className={`${styles.poolTableItem} bg-2`}>
         {/* pool */}
-        <td className="bg-2">
-          <tr>
-            <td className="bg-2 position-relative p-2 d-none d-sm-table-cell">
-              <img
-                src={token.symbolUrl}
-                className="rounded-circle"
-                alt={token.symbol}
-                height="45"
-              />
-              <img
-                height="25px"
-                src={spartaIcon}
-                alt="Sparta synth token icon"
-                className="position-absolute"
-                style={{ right: '5px', bottom: '0px' }}
-              />
-            </td>
-            <td className="bg-2 ps-2">
-              <h4 className="mb-0">{token.symbol}</h4>
-              <OverlayTrigger
-                placement="auto"
-                overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
-              >
-                <span role="button">{`$${formatFromUnits(
-                  tokenValueUSD,
-                  2,
-                )}`}</span>
-              </OverlayTrigger>
-            </td>
-          </tr>
+        <td style={{ width: '80px' }}>
+          <div className="position-relative p-2 d-inline-block">
+            <img
+              src={token.symbolUrl}
+              className="rounded-circle"
+              alt={token.symbol}
+              height="45"
+            />
+            <img
+              height="25px"
+              src={spartaIcon}
+              alt="Sparta synth token icon"
+              className="position-absolute"
+              style={{ left: '30px', bottom: '5px' }}
+            />
+          </div>
+        </td>
+        <td className="">
+          <div className="ps-2 d-inline-block align-middle">
+            <h4 className="mb-0">{token.symbol}</h4>
+            <OverlayTrigger
+              placement="auto"
+              overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
+            >
+              <span role="button">{`$${formatFromUnits(
+                tokenValueUSD,
+                2,
+              )}`}</span>
+            </OverlayTrigger>
+          </div>
         </td>
         {/* pool cap */}
-        <td className="bg-2">
+        <td className="d-none d-sm-table-cell">
           <div>
             {formatShortNumber(convertFromWei(baseAmount))}
             <span className="d-none d-md-inline">
@@ -112,7 +112,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
             </span>
           </div>
           <div className="mt-1 d-none d-md-block">
-            <ProgressBar style={{ height: '5px', width: '120px' }}>
+            <ProgressBar style={{ height: '5px' }}>
               <ProgressBar
                 variant={isAtCaps() ? 'danger' : 'success'}
                 key={1}
@@ -122,17 +122,17 @@ const PoolTableItem = ({ asset, daoApy }) => {
           </div>
         </td>
         {/* liquidity */}
-        <td className="bg-2 d-none d-sm-table-cell">
+        <td className="d-none d-sm-table-cell">
           {getTVL() > 0 ? `$${formatFromWei(getTVL(), 0)}` : 'Loading...'}
         </td>
         {/* volume */}
-        <td className="bg-2 d-none d-sm-table-cell">
+        <td className="d-none d-sm-table-cell">
           {poolMetrics
             ? `$${formatFromWei(poolMetrics.volUSD, 0)}`
             : 'Loading...'}
         </td>
         {/* apy */}
-        <td className="bg-2">
+        <td className="">
           {formatFromUnits(curated && daoApy ? BN(APY).plus(daoApy) : APY, 2)}%
           <OverlayTrigger
             placement="auto"
@@ -182,40 +182,48 @@ const PoolTableItem = ({ asset, daoApy }) => {
           </OverlayTrigger>
         </td>
         {/* actions (buttons) */}
-        <td className="bg-2">
+        <td className="">
           <Row className="text-center mt-2">
-            <Button
-              size="sm"
-              variant="outline-secondary"
-              className="w-100 mb-2"
-              onClick={() =>
-                history.push(
-                  `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
-                )
-              }
-            >
-              {t('swap')}
-            </Button>
-
-            <Button
-              size="sm"
-              variant="outline-secondary"
-              className="w-100 mb-2"
-              onClick={() => history.push(`/liquidity?asset1=${tokenAddress}`)}
-            >
-              {t('join')}
-            </Button>
-
-            {asset.curated && (
+            <Col xs="12">
               <Button
                 size="sm"
                 variant="outline-secondary"
                 className="w-100 mb-2"
-                disabled={!asset.curated}
-                onClick={() => history.push('/vaults')}
+                onClick={() =>
+                  history.push(
+                    `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
+                  )
+                }
               >
-                {t('stake')}
+                {t('swap')}
               </Button>
+            </Col>
+
+            <Col xs="12">
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                className="w-100 mb-2"
+                onClick={() =>
+                  history.push(`/liquidity?asset1=${tokenAddress}`)
+                }
+              >
+                {t('join')}
+              </Button>
+            </Col>
+
+            {asset.curated && (
+              <Col xs="12">
+                <Button
+                  size="sm"
+                  variant="outline-secondary"
+                  className="w-100 mb-2"
+                  disabled={!asset.curated}
+                  onClick={() => history.push('/vaults')}
+                >
+                  {t('stake')}
+                </Button>
+              </Col>
             )}
           </Row>
         </td>
