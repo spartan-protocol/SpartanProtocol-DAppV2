@@ -38,11 +38,13 @@ const PoolTable = ({ poolItems, daoApy }) => {
   }
 
   const getSearch = () =>
-    poolItems.filter((asset) =>
-      getToken(asset.tokenAddress, pool.tokenDetails)
-        .symbol.toLowerCase()
-        .includes(searchInput.value.toLowerCase()),
-    )
+    searchInput?.value
+      ? poolItems.filter((asset) =>
+          getToken(asset.tokenAddress, pool.tokenDetails)
+            .symbol.toLowerCase()
+            .includes(searchInput.value.toLowerCase()),
+        )
+      : poolItems
 
   const sortPool = () => {
     // logic to sort by pool name

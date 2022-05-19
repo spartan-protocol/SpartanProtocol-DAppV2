@@ -41,7 +41,7 @@ const Overview = () => {
   const [daoApy, setDaoApy] = useState('0')
   const [synthApy, setSynthApy] = useState('0')
   const [showModal, setShowModal] = useState(false)
-  const [tableView, setTableView] = useState(false)
+  const [tableView, setTableView] = useState(true)
 
   useEffect(() => {
     const checkWeight = () => {
