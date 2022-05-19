@@ -1,8 +1,9 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import Table from 'react-bootstrap/Table'
+import FormControl from 'react-bootstrap/FormControl'
+import InputGroup from 'react-bootstrap/InputGroup'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Table from 'react-bootstrap/Table'
 import { Tooltip } from '../../components/Tooltip/index'
 import { Icon } from '../../components/Icons/index'
 import PoolTableItem from './PoolTableItem'
@@ -10,16 +11,21 @@ import styles from './styles.module.scss'
 import { getToken } from '../../utils/math/utils'
 import { usePool } from '../../store/pool'
 import { calcAPY } from '../../utils/math/nonContract'
-import { BN, convertFromWei } from '../../utils/bigNumber'
+import { BN } from '../../utils/bigNumber'
 
 const PoolTable = ({ poolItems, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
 
-  const [tableItems, setTableItems] = useState(poolItems)
   const [sortBy, setSortBy] = useState({ value: 'liquidity', order: 'desc' })
 
   const poolCapTooltip = Tooltip(t, 'poolCap')
+
+  const searchInput = document.getElementById('searchInput')
+
+  const clearSearch = () => {
+    searchInput.value = ''
+  }
 
   const sortTable = (column) => {
     let order = sortBy.order === 'desc' ? 'asc' : 'desc'
@@ -31,9 +37,16 @@ const PoolTable = ({ poolItems, daoApy }) => {
     }
   }
 
+  const getSearch = () =>
+    poolItems.filter((asset) =>
+      getToken(asset.tokenAddress, pool.tokenDetails)
+        .symbol.toLowerCase()
+        .includes(searchInput.value.toLowerCase()),
+    )
+
   const sortPool = () => {
     // logic to sort by pool name
-    const finalArray = tableItems.sort((a, b) => {
+    const finalArray = getSearch().sort((a, b) => {
       const _a = getToken(a.tokenAddress, pool.tokenDetails).symbol
       const _b = getToken(b.tokenAddress, pool.tokenDetails).symbol
       const [first, second] = sortBy.order === 'desc' ? [_b, _a] : [_a, _b]
@@ -45,23 +58,23 @@ const PoolTable = ({ poolItems, daoApy }) => {
       }
       return 0
     })
-    setTableItems(finalArray)
+    return finalArray
   }
 
   const sortTvl = () => {
     // logic to sort by pool liquidity && caps
-    const finalArray = tableItems.sort((a, b) => {
+    const finalArray = getSearch().sort((a, b) => {
       const _a = a.baseAmount
       const _b = b.baseAmount
       const [first, second] = sortBy.order === 'desc' ? [_b, _a] : [_a, _b]
       return first - second
     })
-    setTableItems(finalArray)
+    return finalArray
   }
 
   const sortVol = () => {
     // logic to sort by pool volume
-    const finalArray = tableItems.sort((a, b) => {
+    const finalArray = getSearch().sort((a, b) => {
       const _a = pool.incentives.filter((x) => x.address === a.address)[0]
         .volume
       const _b = pool.incentives.filter((x) => x.address === b.address)[0]
@@ -69,13 +82,12 @@ const PoolTable = ({ poolItems, daoApy }) => {
       const [first, second] = sortBy.order === 'desc' ? [_b, _a] : [_a, _b]
       return first - second
     })
-    setTableItems(finalArray)
+    return finalArray
   }
 
   const sortApy = () => {
     // logic to sort by pool APY
-
-    const finalArray = tableItems.sort((a, b) => {
+    const finalArray = getSearch().sort((a, b) => {
       const _a = pool.incentives.filter((x) => x.address === a.address)[0]
       const _b = pool.incentives.filter((x) => x.address === b.address)[0]
       let apyA = calcAPY(a, _a.fees, _a.incentives)
@@ -86,24 +98,21 @@ const PoolTable = ({ poolItems, daoApy }) => {
         sortBy.order === 'desc' ? [apyB, apyA] : [apyA, apyB]
       return first - second
     })
-    setTableItems(finalArray)
+    return finalArray
   }
 
-  useEffect(() => {
-    // Whenever 'sortBy' changes, re-order the table
+  const getItemsSorted = () => {
     if (sortBy.value === 'poolName') {
-      sortPool()
-    } else if (sortBy.value === 'liquidity') {
-      sortTvl()
-    } else if (sortBy.value === 'volume') {
-      sortVol()
-    } else if (sortBy.value === 'apy') {
-      sortApy()
+      return sortPool()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy])
-
-  useEffect(() => {}, [tableItems])
+    if (sortBy.value === 'liquidity') {
+      return sortTvl()
+    }
+    if (sortBy.value === 'volume') {
+      return sortVol()
+    }
+    return sortApy()
+  }
 
   return (
     <Table className={`${styles.poolTable} table-borderless`}>
@@ -129,11 +138,27 @@ const PoolTable = ({ poolItems, daoApy }) => {
             />
             {t('pool')}
           </th>
-          <th
-            className="user-select-none"
-            role="button"
-            onClick={() => sortTable('poolName')}
-          />
+          <th className="text-start user-select-none">
+            <InputGroup style={{ maxWidth: '80px' }}>
+              <FormControl
+                autoComplete="off"
+                autoCorrect="off"
+                placeholder={`${t('search')}...`}
+                type="text"
+                id="searchInput"
+                style={{ height: '25px', fontSize: '0.8rem' }}
+              />
+              <InputGroup.Text
+                role="button"
+                tabIndex={-1}
+                onKeyPress={() => clearSearch()}
+                onClick={() => clearSearch()}
+                className="p-1"
+              >
+                <Icon size="8" icon="close" fill="grey" />
+              </InputGroup.Text>
+            </InputGroup>
+          </th>
           <th
             className="d-none d-md-table-cell user-select-none"
             role="button"
@@ -215,7 +240,7 @@ const PoolTable = ({ poolItems, daoApy }) => {
         </tr>
       </thead>
       <tbody>
-        {tableItems.map((asset) => (
+        {getItemsSorted().map((asset) => (
           <PoolTableItem key={asset.address} asset={asset} daoApy={daoApy} />
         ))}
       </tbody>

@@ -252,14 +252,6 @@ const Overview = () => {
                   {t('synths')} ({getSynths().length})
                 </option>
               </Form.Select>
-              <Nav>
-                <Nav.Item>
-                  <Nav.Link eventKey="search" className="d-flex">
-                    <Icon icon="search" size="20" />
-                    <span className="ms-2">Search</span>
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
             </Col>
             {/* DESKTOP FILTER NAV ITEMS */}
             <Col className="d-none d-sm-flex mt-3 mb-1">
@@ -327,13 +319,6 @@ const Overview = () => {
                         <Icon icon="cycle" size="15" className="anim-spin" />
                       )}
                     </Badge>
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-              <Nav>
-                <Nav.Item>
-                  <Nav.Link eventKey="search" className="btn-sm">
-                    <Icon icon="search" size="20" />
                   </Nav.Link>
                 </Nav.Item>
               </Nav>
