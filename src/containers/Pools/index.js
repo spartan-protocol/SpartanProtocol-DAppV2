@@ -9,6 +9,8 @@ import Nav from 'react-bootstrap/Nav'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import PoolItem from './PoolItem'
+import PoolTable from './PoolTable'
+import SynthTable from './SynthTable'
 import { usePool } from '../../store/pool'
 import { getNetwork, tempChains } from '../../utils/web3'
 import { convertToWei, BN } from '../../utils/bigNumber'
@@ -39,7 +41,7 @@ const Overview = () => {
   const [daoApy, setDaoApy] = useState('0')
   const [synthApy, setSynthApy] = useState('0')
   const [showModal, setShowModal] = useState(false)
-  const [tableView, setTableView] = useState(false)
+  const [tableView, setTableView] = useState(true)
 
   useEffect(() => {
     const checkWeight = () => {
@@ -149,6 +151,83 @@ const Overview = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, synth.totalWeight])
 
+  const renderPools = () => {
+    if (tableView) {
+      return <PoolTable poolItems={getPools()} daoApy={daoApy} />
+    }
+    return getPools().map((asset) => (
+      <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+    ))
+  }
+
+  const renderNewPools = () => {
+    if (getNewPools().length > 0) {
+      if (tableView) {
+        return (
+          <>
+            <PoolTable poolItems={getNewPools()} daoApy={daoApy} />
+          </>
+        )
+      }
+      return (
+        <>
+          {getNewPools().map((asset) => (
+            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+          ))}
+        </>
+      )
+    }
+    return (
+      <>
+        <Col>There are no new/initializing pools</Col>
+      </>
+    )
+  }
+
+  const renderBabies = () => {
+    if (getBabies().length > 0) {
+      if (tableView) {
+        return (
+          <>
+            <PoolTable poolItems={getBabies()} daoApy={daoApy} />
+          </>
+        )
+      }
+      return (
+        <>
+          {getBabies().map((asset) => (
+            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+          ))}
+        </>
+      )
+    }
+    return (
+      <>
+        <Col>There are no pools below the minimum liquidity threshold</Col>
+      </>
+    )
+  }
+
+  const renderSynths = () => {
+    if (synth.synthDetails) {
+      if (tableView) {
+        return (
+          <>
+            <SynthTable synthItems={getSynths()} synthApy={synthApy} />
+          </>
+        )
+      }
+      return (
+        <>
+          {getSynths().map((asset) => (
+            <SynthItem key={asset.address} asset={asset} synthApy={synthApy} />
+          ))}
+        </>
+      )
+    }
+    return null
+  }
+
   return (
     <>
       {tempChains.includes(network.chainId) && (
@@ -156,7 +235,7 @@ const Overview = () => {
           <Row>
             <SummaryItem />
             {/* MOBILE FILTER DROPDOWN -> CHANGE THIS TO NAV-DROPDOWN? */}
-            <Col className="d-block d-sm-none mt-3 mb-1">
+            <Col className="d-flex d-sm-none mt-3 mb-1">
               <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
                 <option value="pools">
                   {t('pools')} ({getPools().length})
@@ -175,7 +254,7 @@ const Overview = () => {
               </Form.Select>
             </Col>
             {/* DESKTOP FILTER NAV ITEMS */}
-            <Col className="d-none d-sm-block mt-3 mb-1">
+            <Col className="d-none d-sm-flex mt-3 mb-1">
               <Nav
                 variant="pills"
                 activeKey={activeTab}
@@ -249,7 +328,7 @@ const Overview = () => {
               <Button
                 onClick={() => setTableView(!tableView)}
                 className="me-1"
-                disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
+                // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
               >
                 <Icon
                   icon={tableView ? 'grid' : 'table'}
@@ -278,55 +357,11 @@ const Overview = () => {
 
           {/* POOL ITEMS */}
           {!isLoading() ? (
-            <Row>
-              {activeTab === 'pools' &&
-                getPools().map((asset) => (
-                  <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
-                ))}
-
-              {activeTab === 'new' && (
-                <>
-                  {getNewPools().length > 0 ? (
-                    getNewPools().map((asset) => (
-                      <PoolItem
-                        key={asset.address}
-                        asset={asset}
-                        daoApy={daoApy}
-                      />
-                    ))
-                  ) : (
-                    <Col>There are no new/initializing pools</Col>
-                  )}
-                </>
-              )}
-
-              {activeTab === 'babies' && (
-                <>
-                  {getBabies().length > 0 ? (
-                    getBabies().map((asset) => (
-                      <PoolItem
-                        key={asset.address}
-                        asset={asset}
-                        daoApy={daoApy}
-                      />
-                    ))
-                  ) : (
-                    <Col>
-                      There are no pools below the minimum liquidity threshold
-                    </Col>
-                  )}
-                </>
-              )}
-
-              {activeTab === 'synths' &&
-                synth.synthDetails &&
-                getSynths().map((asset) => (
-                  <SynthItem
-                    key={asset.address}
-                    asset={asset}
-                    synthApy={synthApy}
-                  />
-                ))}
+            <Row className={`${tableView && ''}`}>
+              {activeTab === 'pools' && renderPools()}
+              {activeTab === 'new' && renderNewPools()}
+              {activeTab === 'babies' && renderBabies()}
+              {activeTab === 'synths' && renderSynths()}
             </Row>
           ) : (
             <HelmetLoading height={150} width={150} />

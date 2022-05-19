@@ -14,3 +14,37 @@
   max-width: 400px;
   margin: 10px auto;
 }
+
+.poolTableItem {
+  filter: drop-shadow(-2px 4px 4px #00000020);
+  border: none;
+  text-align: center;
+
+  & th {
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  & th:first-child {
+    border-radius: 10px 0 0 10px;
+  }
+
+  & th:last-child {
+    border-radius: 0 10px 10px 0;
+  }
+
+  & > td:first-child {
+    border-radius: 10px 0 0 10px;
+  }
+
+  & td:last-child {
+    border-radius: 0 10px 10px 0;
+  }
+}
+
+.poolTable {
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  vertical-align: middle;
+}

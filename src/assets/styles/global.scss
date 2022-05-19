@@ -140,6 +140,14 @@ a {
   z-index: 1000;
 }
 
+.orderDesc .down {
+  fill: white;
+}
+
+.orderAsc .up {
+  fill: white;
+}
+
 @media only screen and (max-width: 321px) {
   .hide-i5 {
     display: none;

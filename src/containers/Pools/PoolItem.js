@@ -60,6 +60,11 @@ const PoolItem = ({ asset, daoApy }) => {
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
+  const getVolume = () =>
+    pool.incentives
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].volume
+      : 0
+
   const APY = calcAPY(asset, getFees(), getDivis())
 
   const poolAgeDays = (Date.now() - genesis * 1000) / 1000 / 60 / 60 / 24
@@ -280,7 +285,7 @@ const PoolItem = ({ asset, daoApy }) => {
                             <hr className="my-2" />
                           </Col>
                           <Col xs="12" className="text-center">
-                            All APYs are estimates
+                            {t('apyEstimatedInfo')}
                           </Col>
                         </Row>
                       </Popover.Body>
@@ -330,9 +335,17 @@ const PoolItem = ({ asset, daoApy }) => {
                       : t('notCurated')}
                   </Col>
                 </Row>
-                <hr className="my-0" />
+                <hr className="my-2" />
               </>
             )}
+
+            <Row className="my-1">
+              <Col xs="auto" className="pe-0">
+                Vol 24Hr
+              </Col>
+              <Col className="text-end">${formatFromWei(getVolume(), 0)}</Col>
+            </Row>
+            <hr className="my-2" />
 
             <Row className="my-1">
               <Col xs="auto" className="pe-0">
@@ -398,7 +411,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     />
                   </Col>
                 </Row>
-                <hr className="my-0" />
+                <hr className="my-2" />
               </>
             )}
 
@@ -483,7 +496,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     </ProgressBar>
                   </Col>
                 </Row>
-                <hr className="my-0" />
+                <hr className="my-2" />
               </>
             )}
 

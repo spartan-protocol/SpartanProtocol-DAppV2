@@ -353,6 +353,7 @@ export const getMonthIncentives = (listedPools) => async (dispatch) => {
         address: _poolArray[i].address,
         incentives: index > -1 ? _incentives[index].incentives30Day : '0',
         fees: index > -1 ? _incentives[index].fees30Day : '0',
+        volume: index > -1 ? _incentives[index].volRollingUSD : '0',
       })
     }
     // console.log('success', incentives)
