@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Row from 'react-bootstrap/Row'
-import ProgressBar from 'react-bootstrap/ProgressBar'
-import { useDispatch } from 'react-redux'
 import Button from 'react-bootstrap/Button'
-import { Icon } from '../../components/Icons/index'
+import Col from 'react-bootstrap/Col'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import ProgressBar from 'react-bootstrap/ProgressBar'
+import Row from 'react-bootstrap/Row'
+import { useDispatch } from 'react-redux'
 import spartaIconAlt from '../../assets/tokens/sparta-synth.svg'
 import { usePool } from '../../store/pool'
 import { synthVaultWeight, useSynth } from '../../store/synth'
@@ -16,7 +16,6 @@ import {
   convertFromWei,
   formatFromUnits,
   formatShortNumber,
-  formatFromWei,
 } from '../../utils/bigNumber'
 import { Tooltip } from '../../components/Tooltip/index'
 import styles from './styles.module.scss'
@@ -58,52 +57,53 @@ const SynthTableItem = ({ asset, synthApy }) => {
 
   return (
     <>
-      <tr className={`${styles.poolTableItem}`}>
+      <tr className={`${styles.poolTableItem} bg-2`}>
         {/* synth */}
-        <td className="bg-2">
-          <tr>
-            <td className="bg-2 position-relative p-2 d-none d-sm-table-cell">
-              <img
-                src={token.symbolUrl}
-                className="rounded-circle"
-                alt={token.symbol}
-                height="45"
-              />
-              <img
-                height="25px"
-                src={spartaIconAlt}
-                alt="Sparta synth token icon"
-                className="position-absolute"
-                style={{ right: '5px', bottom: '10px' }}
-              />
-            </td>
-            <td className="bg-2 ps-2">
-              <h4 className="mb-0">{token.symbol}</h4>
-              <OverlayTrigger
-                placement="auto"
-                overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
-              >
-                <span role="button">{`$${formatFromUnits(
-                  tokenValueUSD,
-                  2,
-                )}`}</span>
-              </OverlayTrigger>
-            </td>
-          </tr>
+        <td style={{ width: '80px' }}>
+          <div className="position-relative py-2 d-inline-block">
+            <img
+              src={token.symbolUrl}
+              className="rounded-circle"
+              alt={token.symbol}
+              height="45"
+            />
+            <img
+              height="25px"
+              src={spartaIconAlt}
+              alt="Sparta synth token icon"
+              className="position-absolute"
+              style={{ left: '25px', bottom: '5px' }}
+            />
+          </div>
         </td>
+        <td className="text-start">
+          <div className="d-inline-block align-middle">
+            <h4 className="mb-0">{token.symbol}</h4>
+            <OverlayTrigger
+              placement="auto"
+              overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
+            >
+              <span role="button">{`$${formatFromUnits(
+                tokenValueUSD,
+                2,
+              )}`}</span>
+            </OverlayTrigger>
+          </div>
+        </td>
+
         {/* synth cap */}
-        <td className="bg-2">
+        <td className="d-none d-sm-table-cell">
           <div>
             {formatShortNumber(convertFromWei(getSynthSupply()))}
-            <span className="d-none d-md-inline">
+            <span className="">
               {' / '}
               {formatShortNumber(
                 convertFromWei(BN(getSynthSupply()).plus(getSynthStir())),
               )}
             </span>
           </div>
-          <div className="mt-1 d-none d-md-block">
-            <ProgressBar style={{ height: '5px', width: '120px' }}>
+          <div className="mt-1">
+            <ProgressBar style={{ height: '5px' }}>
               <ProgressBar
                 variant={getSynthCapPC() > 95 ? 'danger' : 'success'}
                 key={1}
@@ -112,43 +112,37 @@ const SynthTableItem = ({ asset, synthApy }) => {
             </ProgressBar>
           </div>
         </td>
-        {/* token depth */}
-        <td className="bg-2 d-none d-sm-table-cell">
-          {formatFromWei(tokenAmount)}
-        </td>
-        {/* synth supply */}
-        <td className="bg-2 d-none d-sm-table-cell">
-          {formatFromWei(getSynthSupply())}
+        {/* depth */}
+        <td className="d-none d-sm-table-cell">
+          {formatFromUnits(BN(getSynthSupply()).div(tokenAmount).times(100), 2)}
+          %
         </td>
         {/* apy */}
-        <td className="bg-2">
-          {formatFromUnits(synthApy, 2)}%
-          <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apyVault')}>
-            <span role="button">
-              <Icon icon="info" size="17" className="me-1 mb-1" />
-            </span>
-          </OverlayTrigger>
-        </td>
+        <td className="">{formatFromUnits(synthApy, 2)}%</td>
         {/* actions (buttons) */}
-        <td className="bg-2">
-          <Row className="text-center mt-2">
-            <Button
-              size="sm"
-              variant="outline-secondary"
-              className="w-100 mb-2"
-              disabled={!asset.curated}
-              onClick={() => history.push('/vaults?tab=Synth')}
-            >
-              {t('stake')}
-            </Button>
-            <Button
-              size="sm"
-              variant="outline-secondary"
-              className="w-100 mb-2"
-              onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
-            >
-              {t('forge')}
-            </Button>
+        <td className="">
+          <Row className="text-center mt-2 me-1">
+            <Col xs="12" md="6">
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                className="w-100 mb-2"
+                disabled={!asset.curated}
+                onClick={() => history.push('/vaults?tab=Synth')}
+              >
+                {t('stake')}
+              </Button>
+            </Col>
+            <Col xs="12" md="6">
+              <Button
+                size="sm"
+                variant="outline-secondary"
+                className="w-100 mb-2"
+                onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
+              >
+                {t('forge')}
+              </Button>
+            </Col>
           </Row>
         </td>
       </tr>

@@ -55,6 +55,7 @@ import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg'
+import { ReactComponent as Sort } from '../../assets/icons/sort.svg'
 import { ReactComponent as Sun } from '../../assets/icons/sun.svg'
 import { ReactComponent as Swap } from '../../assets/icons/swap.svg'
 import { ReactComponent as SwapAdd } from '../../assets/icons/swap-add.svg'
@@ -154,6 +155,7 @@ const icons = {
   scan: Scan,
   search: Search,
   settings: Settings,
+  sort: Sort,
   sun: Sun,
   swap: Swap,
   swapAdd: SwapAdd,

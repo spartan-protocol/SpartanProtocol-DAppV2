@@ -231,6 +231,7 @@ export const getPoolIncentives = async (listedPools) => {
       timestamp
       fees30Day
       incentives30Day
+      volRollingUSD
       pool {
         id
       }

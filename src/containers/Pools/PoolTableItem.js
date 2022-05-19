@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import ProgressBar from 'react-bootstrap/ProgressBar'
-import Button from 'react-bootstrap/Button'
+import Row from 'react-bootstrap/Row'
 import { Icon } from '../../components/Icons/index'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
@@ -19,14 +19,11 @@ import {
 } from '../../utils/bigNumber'
 import { getAddresses } from '../../utils/web3'
 import { calcAPY } from '../../utils/math/nonContract'
-import { callPoolMetrics } from '../../utils/extCalls'
 import { Tooltip } from '../../components/Tooltip/index'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 import styles from './styles.module.scss'
 
 const PoolTableItem = ({ asset, daoApy }) => {
-  const [poolMetrics, setPoolMetrics] = useState()
-
   const { t } = useTranslation()
   const pool = usePool()
   const history = useHistory()
@@ -47,6 +44,11 @@ const PoolTableItem = ({ asset, daoApy }) => {
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
+  const getVol = () =>
+    pool.incentives
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].volume
+      : 0
+
   const APY = calcAPY(asset, getFees(), getDivis())
 
   const isAtCaps = () =>
@@ -61,18 +63,12 @@ const PoolTableItem = ({ asset, daoApy }) => {
     return tvl > 0 ? tvl : '0.00'
   }
 
-  if (!poolMetrics) {
-    callPoolMetrics(asset.address, 1)
-      .then((res) => setPoolMetrics(res[0]))
-      .catch((err) => ({ err }))
-  }
-
   return (
     <>
       <tr className={`${styles.poolTableItem} bg-2`}>
         {/* pool */}
         <td style={{ width: '80px' }}>
-          <div className="position-relative p-2 d-inline-block">
+          <div className="position-relative py-2 d-inline-block">
             <img
               src={token.symbolUrl}
               className="rounded-circle"
@@ -84,12 +80,12 @@ const PoolTableItem = ({ asset, daoApy }) => {
               src={spartaIcon}
               alt="Sparta synth token icon"
               className="position-absolute"
-              style={{ left: '30px', bottom: '5px' }}
+              style={{ left: '25px', bottom: '5px' }}
             />
           </div>
         </td>
-        <td className="">
-          <div className="ps-2 d-inline-block align-middle">
+        <td className="text-start">
+          <div className="d-inline-block align-middle">
             <h4 className="mb-0">{token.symbol}</h4>
             <OverlayTrigger
               placement="auto"
@@ -103,15 +99,15 @@ const PoolTableItem = ({ asset, daoApy }) => {
           </div>
         </td>
         {/* pool cap */}
-        <td className="d-none d-sm-table-cell">
+        <td className="d-none d-md-table-cell">
           <div>
             {formatShortNumber(convertFromWei(baseAmount))}
-            <span className="d-none d-md-inline">
+            <span className="">
               {' / '}
               {formatShortNumber(convertFromWei(asset.baseCap))}
             </span>
           </div>
-          <div className="mt-1 d-none d-md-block">
+          <div className="mt-1">
             <ProgressBar style={{ height: '5px' }}>
               <ProgressBar
                 variant={isAtCaps() ? 'danger' : 'success'}
@@ -127,13 +123,13 @@ const PoolTableItem = ({ asset, daoApy }) => {
         </td>
         {/* volume */}
         <td className="d-none d-sm-table-cell">
-          {poolMetrics
-            ? `$${formatFromWei(poolMetrics.volUSD, 0)}`
-            : 'Loading...'}
+          {getVol() > 0 ? `$${formatFromWei(getVol(), 0)}` : 'Loading...'}
         </td>
         {/* apy */}
         <td className="">
           {formatFromUnits(curated && daoApy ? BN(APY).plus(daoApy) : APY, 2)}%
+          <br />
+          <small>Info</small>
           <OverlayTrigger
             placement="auto"
             overlay={
@@ -177,14 +173,14 @@ const PoolTableItem = ({ asset, daoApy }) => {
             }
           >
             <span role="button">
-              <Icon icon="info" className="ms-1" size="17" />
+              <Icon icon="info" className="ms-1 mb-1" size="17" />
             </span>
           </OverlayTrigger>
         </td>
         {/* actions (buttons) */}
         <td className="">
-          <Row className="text-center mt-2">
-            <Col xs="12">
+          <Row className="text-center mt-2 me-1">
+            <Col xs="12" md="6">
               <Button
                 size="sm"
                 variant="outline-secondary"
@@ -199,7 +195,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
               </Button>
             </Col>
 
-            <Col xs="12">
+            <Col xs="12" md="6">
               <Button
                 size="sm"
                 variant="outline-secondary"
@@ -212,7 +208,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
               </Button>
             </Col>
 
-            {asset.curated && (
+            {/* {asset.curated && (
               <Col xs="12">
                 <Button
                   size="sm"
@@ -224,7 +220,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                   {t('stake')}
                 </Button>
               </Col>
-            )}
+            )} */}
           </Row>
         </td>
       </tr>
