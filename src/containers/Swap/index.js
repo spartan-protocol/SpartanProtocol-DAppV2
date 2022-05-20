@@ -114,9 +114,7 @@ const Swap = () => {
                           <Nav.Link
                             eventKey="remove"
                             className="btn-sm"
-                            onClick={() =>
-                              navigate(`/liquidity?tab=remove`)
-                            }
+                            onClick={() => navigate(`/liquidity?tab=remove`)}
                           >
                             {t('remove')}
                           </Nav.Link>

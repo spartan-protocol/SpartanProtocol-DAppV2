@@ -190,7 +190,11 @@ const SynthVault = () => {
                 <Row className="my-1">
                   <Col>{t('vaultClaim')}</Col>
                   <Col xs="auto" className="text-end">
-                    {synth.globalDetails?.vaultClaim / 100}%
+                    {formatFromUnits(
+                      BN(synth.globalDetails?.vaultClaim).div(100),
+                      1,
+                    )}
+                    %
                   </Col>
                 </Row>
                 <hr className="my-2" />

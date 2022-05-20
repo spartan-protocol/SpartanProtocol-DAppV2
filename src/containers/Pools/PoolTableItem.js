@@ -201,9 +201,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                 size="sm"
                 variant="outline-secondary"
                 className="w-100 mb-2"
-                onClick={() =>
-                  navigate(`/liquidity?asset1=${tokenAddress}`)
-                }
+                onClick={() => navigate(`/liquidity?asset1=${tokenAddress}`)}
               >
                 {t('join')}
               </Button>

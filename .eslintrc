@@ -3,8 +3,8 @@
     "react-app",
     "airbnb",
     "plugin:jsx-a11y/recommended",
-    "prettier"
-    // "plugin:import/typescript"
+    "prettier",
+    "plugin:import/typescript"
   ],
   "plugins": ["jsx-a11y", "prettier"],
   "rules": {
@@ -17,7 +17,9 @@
     "no-console": "off",
     "no-nested-ternary": "off",
     "no-underscore-dangle": 0,
-    // "import/prefer-default-export": "off",
+    "import/prefer-default-export": "off",
+    "react/function-component-definition": "off",
+    "react/jsx-no-useless-fragment": "off",
     "prettier/prettier": [
       "error",
       {

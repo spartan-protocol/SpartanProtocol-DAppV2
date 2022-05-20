@@ -1,3 +1,5 @@
+import React from 'react'
+
 import Home from './containers/Pools'
 import Liquidity from './containers/Liquidity'
 import Swap from './containers/Swap'

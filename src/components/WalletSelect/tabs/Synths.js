@@ -108,7 +108,7 @@ const Synths = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    {web3.spartaPrice > 0 ? '~$' + formatFromWei(total, 0) : ''}
+                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -173,11 +173,10 @@ const Synths = () => {
                     <Col className="hide-i5">
                       <div className="text-sm-label text-end mt-2">
                         {web3.spartaPrice > 0
-                          ? '~$' +
-                            formatFromWei(
+                          ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.balance),
                               0,
-                            )
+                            )}`
                           : ''}
                       </div>
                     </Col>
@@ -277,11 +276,10 @@ const Synths = () => {
                       <Col className="hide-i5">
                         <div className="text-sm-label text-end mt-2">
                           {web3.spartaPrice > 0
-                            ? '~$' +
-                              formatFromWei(
+                            ? `~$${formatFromWei(
                                 getUSD(asset.tokenAddress, asset.staked),
                                 0,
-                              )
+                              )}`
                             : ''}
                         </div>
                       </Col>

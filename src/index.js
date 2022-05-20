@@ -1,5 +1,5 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import React, { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import './assets/styles/global.scss'
@@ -16,11 +16,11 @@ import '@fontsource/saira/900.css'
 
 import Providers from './Providers'
 
-const rootElement = document.getElementById("root");
-const root = createRoot(rootElement);
+const rootElement = document.getElementById('root')
+const root = createRoot(rootElement)
 
 root.render(
   <StrictMode>
     <Providers />
-  </StrictMode>
-);
+  </StrictMode>,
+)

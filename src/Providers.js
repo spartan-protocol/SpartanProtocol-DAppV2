@@ -75,7 +75,7 @@ if (isAppleDevice()) {
 
   if (el !== null) {
     let content = el.getAttribute('content')
-    let re = /maximum-scale=[0-9.]+/g
+    const re = /maximum-scale=[0-9.]+/g
 
     if (re.test(content)) {
       content = content.replace(re, 'maximum-scale=1.0')

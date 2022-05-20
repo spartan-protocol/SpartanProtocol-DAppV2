@@ -14,14 +14,14 @@ module.exports = {
       resolve: {
         fallback: {
           util: require.resolve('util/'),
-          buffer: require.resolve("buffer"),
+          buffer: require.resolve('buffer'),
         },
       },
       plugins: [
         new webpack.ProvidePlugin({
-          Buffer: ["buffer", "Buffer"],
+          Buffer: ['buffer', 'Buffer'],
           // process: "process/browser",
-        })
+        }),
       ],
     },
   },

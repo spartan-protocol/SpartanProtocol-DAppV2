@@ -710,7 +710,7 @@ const SwapTokens = () => {
                             {swapInput1?.value
                               ? formatFromUnits(getRateSlip(), 2)
                               : '0.00'}
-                            {'%)'}
+                            %)
                             <Icon
                               icon={
                                 asset2USD ||

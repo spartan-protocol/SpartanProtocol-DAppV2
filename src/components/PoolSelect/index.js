@@ -221,9 +221,7 @@ const PoolSelect = () => {
                               variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
-                                navigate(
-                                  `/liquidity?asset1=${asset.address}`,
-                                )
+                                navigate(`/liquidity?asset1=${asset.address}`)
                               }
                             >
                               {t('join')}

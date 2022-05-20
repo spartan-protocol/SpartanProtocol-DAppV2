@@ -120,7 +120,7 @@ const LPs = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    {web3.spartaPrice > 0 ? '~$' + formatFromWei(total, 0) : ''}
+                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -210,11 +210,10 @@ const LPs = () => {
                     >
                       <div className="text-end mt-2 text-sm-label">
                         {web3.spartaPrice > 0
-                          ? '~$' +
-                            formatFromWei(
+                          ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.balance),
                               0,
-                            )
+                            )}`
                           : ''}
                       </div>
                     </Col>
@@ -343,11 +342,10 @@ const LPs = () => {
                     >
                       <div className="text-end mt-2">
                         {web3.spartaPrice > 0
-                          ? '~$' +
-                            formatFromWei(
+                          ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.staked),
                               0,
-                            )
+                            )}`
                           : ''}
                       </div>
                     </Col>
@@ -475,11 +473,10 @@ const LPs = () => {
                     >
                       <div className="text-end mt-2 text-sm-label">
                         {web3.spartaPrice > 0
-                          ? '~$' +
-                            formatFromWei(
+                          ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.staked),
                               0,
-                            )
+                            )}`
                           : ''}
                       </div>
                     </Col>
