@@ -22,7 +22,7 @@ const Swap = () => {
   const { t } = useTranslation()
   const addr = getAddresses()
   const pool = usePool()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -105,7 +105,7 @@ const Swap = () => {
                           <Nav.Link
                             eventKey="add"
                             className="btn-sm"
-                            onClick={() => history.push(`/liquidity`)}
+                            onClick={() => navigate(`/liquidity`)}
                           >
                             {t('add')}
                           </Nav.Link>
@@ -115,7 +115,7 @@ const Swap = () => {
                             eventKey="remove"
                             className="btn-sm"
                             onClick={() =>
-                              history.push(`/liquidity?tab=remove`)
+                              navigate(`/liquidity?tab=remove`)
                             }
                           >
                             {t('remove')}

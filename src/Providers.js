@@ -29,6 +29,7 @@ import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
 import { BreakpointProvider } from './providers/Breakpoint'
 import { ThemeProvider } from './providers/Theme'
+import { isAppleDevice } from './utils/helpers'
 
 ChartJS.register(
   LineElement,
@@ -68,6 +69,23 @@ const store = configureStore({
     web3: web3Reducer,
   },
 })
+
+if (isAppleDevice()) {
+  const el = document.querySelector('meta[name=viewport]')
+
+  if (el !== null) {
+    let content = el.getAttribute('content')
+    let re = /maximum-scale=[0-9.]+/g
+
+    if (re.test(content)) {
+      content = content.replace(re, 'maximum-scale=1.0')
+    } else {
+      content = [content, 'maximum-scale=1.0'].join(', ')
+    }
+
+    el.setAttribute('content', content)
+  }
+}
 
 const Providers = () => (
   <Provider store={store}>

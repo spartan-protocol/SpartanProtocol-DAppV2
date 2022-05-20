@@ -29,7 +29,7 @@ import styles from './styles.module.scss'
 const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const web3 = useWeb3()
   const addr = getAddresses()
   const [showDetails, setShowDetails] = useState(false)
@@ -579,7 +579,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   variant="outline-secondary"
                   className="w-100"
                   onClick={() =>
-                    history.push(
+                    navigate(
                       `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
                     )
                   }
@@ -593,7 +593,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   variant="outline-secondary"
                   className="w-100"
                   onClick={() =>
-                    history.push(`/liquidity?asset1=${tokenAddress}`)
+                    navigate(`/liquidity?asset1=${tokenAddress}`)
                   }
                 >
                   {t('join')}
@@ -606,7 +606,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     variant="outline-secondary"
                     className="w-100"
                     disabled={!asset.curated}
-                    onClick={() => history.push('/vaults')}
+                    onClick={() => navigate('/vaults')}
                   >
                     {t('stake')}
                   </Button>

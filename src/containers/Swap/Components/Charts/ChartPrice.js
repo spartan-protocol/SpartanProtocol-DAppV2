@@ -1,6 +1,7 @@
 import React from 'react'
 import { Line } from 'react-chartjs-2'
 import { useTranslation } from 'react-i18next'
+import web3 from '../../../../store/web3'
 import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartPrice = (props) => {
@@ -19,8 +20,10 @@ const ChartPrice = (props) => {
       data1.push(metrics[i].tokenPrice)
       labels.push(formatDate(metrics[i].timestamp))
     }
-    data1.push(props.tokenPrice)
-    labels.push('Current')
+    if (web3.spartaPrice > 0) {
+      data1.push(props.tokenPrice)
+      labels.push('Current')
+    }
     return [labels, data1]
   }
 

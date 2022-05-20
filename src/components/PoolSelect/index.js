@@ -33,7 +33,7 @@ const PoolSelect = () => {
   const network = getNetwork()
 
   const addr = getAddresses()
-  const history = useNavigate()
+  const navigate = useNavigate()
 
   const [showModal, setShowModal] = useState(false)
   const pool = usePool()
@@ -206,7 +206,7 @@ const PoolSelect = () => {
                               variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
-                                history.push(
+                                navigate(
                                   `/swap?asset1=${asset.address}&asset2=${addr.spartav2}&type1=token&type2=token`,
                                 )
                               }
@@ -221,7 +221,7 @@ const PoolSelect = () => {
                               variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
-                                history.push(
+                                navigate(
                                   `/liquidity?asset1=${asset.address}`,
                                 )
                               }

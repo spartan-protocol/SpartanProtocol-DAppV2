@@ -532,10 +532,11 @@ const SwapLps = () => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      ~$
-                      {swapInput1?.value
-                        ? formatFromWei(getInput1USD(), 2)
-                        : '0.00'}
+                      {web3.spartaPrice > 0
+                        ? '~$' + swapInput1?.value
+                          ? formatFromWei(getInput1USD(), 2)
+                          : '0.00'
+                        : ''}
                     </Col>
                   </Row>
                 </Col>
@@ -624,15 +625,13 @@ const SwapLps = () => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      ~$
-                      {swapInput2?.value
-                        ? formatFromWei(getInput2USD(), 2)
-                        : '0.00'}
-                      {' ('}
-                      {swapInput1?.value
-                        ? formatFromUnits(getRateSlip(), 2)
-                        : '0.00'}
-                      {'%)'}
+                      {web3.spartaPrice > 0
+                        ? '~$' + swapInput2?.value
+                          ? formatFromWei(getInput2USD(), 2)
+                          : '0.00' + ' (' + swapInput1?.value
+                          ? formatFromUnits(getRateSlip(), 2)
+                          : '0.00' + '%)'
+                        : ''}
                     </Col>
                   </Row>
                 </Col>

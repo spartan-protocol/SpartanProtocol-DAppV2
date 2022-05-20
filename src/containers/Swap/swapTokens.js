@@ -570,34 +570,38 @@ const SwapTokens = () => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(
-                          t,
-                          'pricingData',
-                          asset1USD ||
-                            assetSwap1?.tokenAddress === addr.spartav2
-                            ? 'CoinGecko'
-                            : 'internal pool prices',
-                        )}
-                      >
-                        <span role="button">
-                          ~$
-                          {swapInput1?.value
-                            ? formatFromWei(getInput1USD(), 2)
-                            : '0.00'}
-                          <Icon
-                            icon={
-                              asset1USD ||
+                      {web3.spartaPrice > 0 ? (
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(
+                            t,
+                            'pricingData',
+                            asset1USD ||
                               assetSwap1?.tokenAddress === addr.spartav2
-                                ? 'coinGeckoIcon'
-                                : 'usd'
-                            }
-                            size="14"
-                            className="ms-1"
-                          />
-                        </span>
-                      </OverlayTrigger>
+                              ? 'CoinGecko'
+                              : 'internal pool prices',
+                          )}
+                        >
+                          <span role="button">
+                            ~$
+                            {swapInput1?.value
+                              ? formatFromWei(getInput1USD(), 2)
+                              : '0.00'}
+                            <Icon
+                              icon={
+                                asset1USD ||
+                                assetSwap1?.tokenAddress === addr.spartav2
+                                  ? 'coinGeckoIcon'
+                                  : 'usd'
+                              }
+                              size="14"
+                              className="ms-1"
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      ) : (
+                        ''
+                      )}
                     </Col>
                   </Row>
                 </Col>
@@ -685,39 +689,43 @@ const SwapTokens = () => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(
-                          t,
-                          'pricingData',
-                          asset2USD ||
-                            assetSwap2?.tokenAddress === addr.spartav2
-                            ? 'CoinGecko'
-                            : 'internal pool prices',
-                        )}
-                      >
-                        <span role="button">
-                          ~$
-                          {swapInput2?.value
-                            ? formatFromWei(getInput2USD(), 2)
-                            : '0.00'}
-                          {' ('}
-                          {swapInput1?.value
-                            ? formatFromUnits(getRateSlip(), 2)
-                            : '0.00'}
-                          {'%)'}
-                          <Icon
-                            icon={
-                              asset2USD ||
+                      {web3.spartaPrice > 0 ? (
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(
+                            t,
+                            'pricingData',
+                            asset2USD ||
                               assetSwap2?.tokenAddress === addr.spartav2
-                                ? 'coinGeckoIcon'
-                                : 'usd'
-                            }
-                            size="14"
-                            className="ms-1 mb-1"
-                          />
-                        </span>
-                      </OverlayTrigger>
+                              ? 'CoinGecko'
+                              : 'internal pool prices',
+                          )}
+                        >
+                          <span role="button">
+                            ~$
+                            {swapInput2?.value
+                              ? formatFromWei(getInput2USD(), 2)
+                              : '0.00'}
+                            {' ('}
+                            {swapInput1?.value
+                              ? formatFromUnits(getRateSlip(), 2)
+                              : '0.00'}
+                            {'%)'}
+                            <Icon
+                              icon={
+                                asset2USD ||
+                                assetSwap2?.tokenAddress === addr.spartav2
+                                  ? 'coinGeckoIcon'
+                                  : 'usd'
+                              }
+                              size="14"
+                              className="ms-1 mb-1"
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      ) : (
+                        ''
+                      )}
                     </Col>
                   </Row>
                 </Col>

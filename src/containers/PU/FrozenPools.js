@@ -17,7 +17,7 @@ const PoolStatus = () => {
   const wallet = useWeb3React()
   const web3 = useWeb3()
   const reserve = useReserve()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const [selectedAsset, setselectedAsset] = useState('')
   const frozenPools = pool.poolDetails?.filter(
     (asset) => asset.frozen && asset.curated,
@@ -65,7 +65,7 @@ const PoolStatus = () => {
             {frozenPools.length > 0 ? (
               <Button
                 className="w-100"
-                onClick={() => history.push(`/swap?asset1=${selectedAsset}`)}
+                onClick={() => navigate(`/swap?asset1=${selectedAsset}`)}
                 disabled={!selectedAsset}
               >
                 Arbitrage

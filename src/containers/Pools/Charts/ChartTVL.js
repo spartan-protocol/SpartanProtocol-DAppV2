@@ -37,7 +37,7 @@ const ChartTVL = () => {
         ? dataPoints
         : web3.metrics.global.length
     // Hide 'current' on testnet
-    if (pool.poolDetails && network?.chainId === 56) {
+    if (pool.poolDetails && network?.chainId === 56 && web3.spartaPrice > 0) {
       data1.push(convertFromWei(getTVL(1), 0))
       data2.push(convertFromWei(getTVL(0), 0))
       labels.push('Current')

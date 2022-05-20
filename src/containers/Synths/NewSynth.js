@@ -83,15 +83,6 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        onClick={() => setShowModal(true)}
-        className="rounded-pill pe-3 subtitle-label"
-      >
-        <Icon icon="plus" size="17" className="me-1 mb-1" />
-        {t('synth')}
-      </Button>
-
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{t('newSynth')}</Modal.Title>

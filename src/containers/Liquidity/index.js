@@ -23,7 +23,7 @@ const Overview = () => {
   const { t } = useTranslation()
   const pool = usePool()
   const location = useLocation()
-  const history = useNavigate()
+  const navigate = useNavigate()
   const addr = getAddresses()
   const network = getNetwork()
 
@@ -112,7 +112,7 @@ const Overview = () => {
                         <Nav.Item className="me-1">
                           <Nav.Link
                             className="btn-sm btn-outline-primary"
-                            onClick={() => history.push(`/swap`)}
+                            onClick={() => navigate(`/swap`)}
                           >
                             {t('swap')}
                           </Nav.Link>
