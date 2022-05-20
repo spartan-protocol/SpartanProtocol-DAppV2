@@ -1,4 +1,4 @@
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 import { install } from 'resize-observer'
 
@@ -12,15 +12,6 @@ import TranslationNotice from './TranslationNotice/index'
 import { routes } from '../../routes'
 import { useBreakpoint } from '../../providers/Breakpoint'
 import { useTheme } from '../../providers/Theme'
-
-const getRoutes = (tempRoutes) =>
-  tempRoutes.map((prop) => (
-    <Route
-      path={prop.path}
-      component={prop.component}
-      key={prop.path + prop.name}
-    />
-  ))
 
 const Layout = () => {
   const breakpoint = useBreakpoint()
@@ -79,10 +70,22 @@ const Layout = () => {
         <div className="body">
           <div className={styles.content}>
             <TranslationNotice />
-            <Switch>
-              {getRoutes(routes)}
-              <Redirect from="*" to="/home" />
-            </Switch>
+            <Routes>
+              <Route path="/">
+                {routes.map((prop) => (
+                  <Route
+                    index={prop.name === 'Pools'}
+                    path={prop.name === 'Pools' ? null : prop.path}
+                    element={prop.component}
+                    key={prop.path + prop.name}
+                  />
+                ))}
+              </Route>
+              {/* <Navigate from="*" to="/home" /> */}
+              <Route path="*" element={routes[0].component} />
+              {/* <Redirect from="*" to="/home" /> */}
+              {/* <Route path="*" render={() => <Redirect to="/home" />} /> */}
+            </Routes>
           </div>
         </div>
       </div>

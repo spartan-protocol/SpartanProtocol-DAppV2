@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -29,6 +29,7 @@ import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
 import { BreakpointProvider } from './providers/Breakpoint'
 import { ThemeProvider } from './providers/Theme'
+import { isAppleDevice } from './utils/helpers'
 
 ChartJS.register(
   LineElement,
@@ -69,16 +70,31 @@ const store = configureStore({
   },
 })
 
+if (isAppleDevice()) {
+  const el = document.querySelector('meta[name=viewport]')
+
+  if (el !== null) {
+    let content = el.getAttribute('content')
+    const re = /maximum-scale=[0-9.]+/g
+
+    if (re.test(content)) {
+      content = content.replace(re, 'maximum-scale=1.0')
+    } else {
+      content = [content, 'maximum-scale=1.0'].join(', ')
+    }
+
+    el.setAttribute('content', content)
+  }
+}
+
 const Providers = () => (
   <Provider store={store}>
     <Web3ReactProvider getLibrary={getLibrary}>
       <BrowserRouter>
         <BreakpointProvider>
-          <Switch>
-            <ThemeProvider>
-              <Route path="/" component={Layout} />
-            </ThemeProvider>
-          </Switch>
+          <ThemeProvider>
+            <Layout />
+          </ThemeProvider>
         </BreakpointProvider>
       </BrowserRouter>
     </Web3ReactProvider>

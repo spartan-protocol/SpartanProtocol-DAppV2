@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -31,7 +31,7 @@ const SynthItem = ({ asset, synthApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
-  const history = useHistory()
+  const navigate = useNavigate()
   const web3 = useWeb3()
   const { tokenAddress, baseAmount, tokenAmount } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -232,7 +232,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   variant="outline-secondary"
                   className="w-100"
                   disabled={!asset.curated}
-                  onClick={() => history.push('/vaults?tab=Synth')}
+                  onClick={() => navigate('/vaults?tab=Synth')}
                 >
                   {t('stake')}
                 </Button>
@@ -242,7 +242,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   size="sm"
                   variant="outline-secondary"
                   className="w-100"
-                  onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
+                  onClick={() => navigate(`/synths?asset2=${tokenAddress}`)}
                 >
                   {t('forge')}
                 </Button>

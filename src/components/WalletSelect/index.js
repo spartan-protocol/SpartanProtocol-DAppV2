@@ -152,6 +152,9 @@ const WalletSelect = (props) => {
     wallet.deactivate()
     const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
     await wallet.activate(connector)
+    if (!wallet.account) {
+      await wallet.activate(connector)
+    }
     setPending(false)
   }
 

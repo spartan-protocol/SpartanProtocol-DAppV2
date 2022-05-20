@@ -18,7 +18,7 @@ const SynthTable = ({ synthItems, synthApy }) => {
         <tr className={`${styles.poolTableItem} bg-2`}>
           <th>{t('synth')}</th>
           <th />
-          <th>
+          <th className="d-none d-sm-table-cell">
             {t('softCap')}
             <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
               <span role="button">
@@ -26,7 +26,7 @@ const SynthTable = ({ synthItems, synthApy }) => {
               </span>
             </OverlayTrigger>
           </th>
-          <th>{t('depth')}</th>
+          <th className="d-none d-sm-table-cell">{t('depth')}</th>
           <th>
             APY
             <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apyVault')}>

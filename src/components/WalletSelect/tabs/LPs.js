@@ -120,8 +120,7 @@ const LPs = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    ~$
-                    {formatFromWei(total, 0)}
+                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -210,11 +209,12 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2 text-sm-label">
-                        ~$
-                        {formatFromWei(
-                          getUSD(asset.tokenAddress, asset.balance),
-                          0,
-                        )}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.tokenAddress, asset.balance),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   )}
@@ -341,11 +341,12 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2">
-                        ~$
-                        {formatFromWei(
-                          getUSD(asset.tokenAddress, asset.staked),
-                          0,
-                        )}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.tokenAddress, asset.staked),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   )}
@@ -471,11 +472,12 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2 text-sm-label">
-                        ~$
-                        {formatFromWei(
-                          getUSD(asset.tokenAddress, asset.staked),
-                          0,
-                        )}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.tokenAddress, asset.staked),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   )}

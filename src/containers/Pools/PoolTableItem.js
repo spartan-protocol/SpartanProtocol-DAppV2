@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
@@ -26,7 +26,7 @@ import styles from './styles.module.scss'
 const PoolTableItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const history = useHistory()
+  const navigate = useNavigate()
   const web3 = useWeb3()
   const addr = getAddresses()
   const { tokenAddress, baseAmount, tokenAmount, curated, baseCap } = asset
@@ -91,10 +91,11 @@ const PoolTableItem = ({ asset, daoApy }) => {
               placement="auto"
               overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
             >
-              <span role="button">{`$${formatFromUnits(
-                tokenValueUSD,
-                2,
-              )}`}</span>
+              <span role="button">
+                {web3.spartaPrice > 0
+                  ? `$${formatFromUnits(tokenValueUSD, 2)}`
+                  : ''}
+              </span>
             </OverlayTrigger>
           </div>
         </td>
@@ -186,7 +187,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                 variant="outline-secondary"
                 className="w-100 mb-2"
                 onClick={() =>
-                  history.push(
+                  navigate(
                     `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
                   )
                 }
@@ -200,9 +201,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                 size="sm"
                 variant="outline-secondary"
                 className="w-100 mb-2"
-                onClick={() =>
-                  history.push(`/liquidity?asset1=${tokenAddress}`)
-                }
+                onClick={() => navigate(`/liquidity?asset1=${tokenAddress}`)}
               >
                 {t('join')}
               </Button>
@@ -215,7 +214,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                   variant="outline-secondary"
                   className="w-100 mb-2"
                   disabled={!asset.curated}
-                  onClick={() => history.push('/vaults')}
+                  onClick={() => navigate('/vaults')}
                 >
                   {t('stake')}
                 </Button>

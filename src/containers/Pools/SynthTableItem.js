@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
@@ -27,7 +27,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
-  const history = useHistory()
+  const navigate = useNavigate()
   const web3 = useWeb3()
   const { tokenAddress, baseAmount, tokenAmount } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -83,10 +83,11 @@ const SynthTableItem = ({ asset, synthApy }) => {
               placement="auto"
               overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
             >
-              <span role="button">{`$${formatFromUnits(
-                tokenValueUSD,
-                2,
-              )}`}</span>
+              <span role="button">
+                {web3.spartaPrice > 0
+                  ? `$${formatFromUnits(tokenValueUSD, 2)}`
+                  : ''}
+              </span>
             </OverlayTrigger>
           </div>
         </td>
@@ -128,7 +129,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
                 variant="outline-secondary"
                 className="w-100 mb-2"
                 disabled={!asset.curated}
-                onClick={() => history.push('/vaults?tab=Synth')}
+                onClick={() => navigate('/vaults?tab=Synth')}
               >
                 {t('stake')}
               </Button>
@@ -138,7 +139,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
                 size="sm"
                 variant="outline-secondary"
                 className="w-100 mb-2"
-                onClick={() => history.push(`/synths?asset2=${tokenAddress}`)}
+                onClick={() => navigate(`/synths?asset2=${tokenAddress}`)}
               >
                 {t('forge')}
               </Button>

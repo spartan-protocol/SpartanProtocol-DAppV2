@@ -149,7 +149,9 @@ const Supply = () => {
       >
         <Icon icon="spartav2" size="27" className="me-1" />
         <span className={styles.btnText}>
-          {`$${formatFromUnits(web3.spartaPrice, 2)}`}
+          {web3.spartaPrice > 0
+            ? `$${formatFromUnits(web3.spartaPrice, 2)}`
+            : ''}
         </span>
       </div>
 

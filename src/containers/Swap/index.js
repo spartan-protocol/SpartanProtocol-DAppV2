@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -22,7 +22,7 @@ const Swap = () => {
   const { t } = useTranslation()
   const addr = getAddresses()
   const pool = usePool()
-  const history = useHistory()
+  const navigate = useNavigate()
   const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -105,7 +105,7 @@ const Swap = () => {
                           <Nav.Link
                             eventKey="add"
                             className="btn-sm"
-                            onClick={() => history.push(`/liquidity`)}
+                            onClick={() => navigate(`/liquidity`)}
                           >
                             {t('add')}
                           </Nav.Link>
@@ -114,9 +114,7 @@ const Swap = () => {
                           <Nav.Link
                             eventKey="remove"
                             className="btn-sm"
-                            onClick={() =>
-                              history.push(`/liquidity?tab=remove`)
-                            }
+                            onClick={() => navigate(`/liquidity?tab=remove`)}
                           >
                             {t('remove')}
                           </Nav.Link>

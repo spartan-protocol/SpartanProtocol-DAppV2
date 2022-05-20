@@ -1,6 +1,6 @@
 import { BscConnector } from '@binance-chain/bsc-connector'
 import { InjectedConnector } from '@web3-react/injected-connector'
-import { LedgerConnector } from '@web3-react/ledger-connector'
+// import { LedgerConnector } from '@web3-react/ledger-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { ethers } from 'ethers'
@@ -12,12 +12,12 @@ const bscConnect = (chainId) =>
   new BscConnector({ supportedChainIds: [chainId] })
 const injectConnect = (chainId) =>
   new InjectedConnector({ supportedChainIds: [chainId] })
-const ledgerConnect = (chainId, rpcUrl) =>
-  new LedgerConnector({
-    chainId,
-    url: rpcUrl,
-    pollingInterval: pollingInt,
-  })
+// const ledgerConnect = (chainId, rpcUrl) =>
+//   new LedgerConnector({
+//     chainId,
+//     url: rpcUrl,
+//     pollingInterval: pollingInt,
+//   })
 const walletConnect = (chainId, rpcUrl) =>
   new WalletConnectConnector({
     rpc: { [chainId]: rpcUrl },
@@ -41,9 +41,9 @@ export const connectorsByName = (connectorName, rpcUrls) => {
   if (connectorName === 'bsc') {
     return bscConnect(chainId)
   }
-  if (connectorName === 'ledger') {
-    return ledgerConnect(chainId, rpcItem.url)
-  }
+  // if (connectorName === 'ledger') {
+  //   return ledgerConnect(chainId, rpcItem.url)
+  // }
   if (connectorName === 'walletconnect') {
     return walletConnect(chainId, rpcItem.url)
   }

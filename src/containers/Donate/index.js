@@ -17,9 +17,8 @@ import {
 } from '../../utils/web3'
 import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
-  // BN,
   convertToWei,
-  // formatFromUnits,
+  formatFromUnits,
   formatFromWei,
 } from '../../utils/bigNumber'
 import { useWeb3 } from '../../store/web3'
@@ -581,7 +580,7 @@ ethereum(network: $network){
                       <Col>
                         <Row>
                           <Col xs="12" className="float-left output-card">
-                            {i.amount} {i.currency.symbol}
+                            {formatFromUnits(i.amount, 2)} {i.currency.symbol}
                             <div className="description">
                               {t('donatedBy')}:{' '}
                               <a

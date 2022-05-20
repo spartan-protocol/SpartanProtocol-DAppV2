@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Nav from 'react-bootstrap/Nav'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import { usePool } from '../../store/pool'
@@ -23,7 +23,7 @@ const Overview = () => {
   const { t } = useTranslation()
   const pool = usePool()
   const location = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
   const addr = getAddresses()
   const network = getNetwork()
 
@@ -112,7 +112,7 @@ const Overview = () => {
                         <Nav.Item className="me-1">
                           <Nav.Link
                             className="btn-sm btn-outline-primary"
-                            onClick={() => history.push(`/swap`)}
+                            onClick={() => navigate(`/swap`)}
                           >
                             {t('swap')}
                           </Nav.Link>

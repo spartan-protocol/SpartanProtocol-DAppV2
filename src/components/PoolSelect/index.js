@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 
@@ -33,7 +33,7 @@ const PoolSelect = () => {
   const network = getNetwork()
 
   const addr = getAddresses()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [showModal, setShowModal] = useState(false)
   const pool = usePool()
@@ -206,7 +206,7 @@ const PoolSelect = () => {
                               variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
-                                history.push(
+                                navigate(
                                   `/swap?asset1=${asset.address}&asset2=${addr.spartav2}&type1=token&type2=token`,
                                 )
                               }
@@ -221,9 +221,7 @@ const PoolSelect = () => {
                               variant="info"
                               className="w-100 rounded-pill"
                               onClick={() =>
-                                history.push(
-                                  `/liquidity?asset1=${asset.address}`,
-                                )
+                                navigate(`/liquidity?asset1=${asset.address}`)
                               }
                             >
                               {t('join')}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
@@ -29,7 +29,7 @@ import styles from './styles.module.scss'
 const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const history = useHistory()
+  const navigate = useNavigate()
   const web3 = useWeb3()
   const addr = getAddresses()
   const [showDetails, setShowDetails] = useState(false)
@@ -579,7 +579,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   variant="outline-secondary"
                   className="w-100"
                   onClick={() =>
-                    history.push(
+                    navigate(
                       `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
                     )
                   }
@@ -592,9 +592,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   size="sm"
                   variant="outline-secondary"
                   className="w-100"
-                  onClick={() =>
-                    history.push(`/liquidity?asset1=${tokenAddress}`)
-                  }
+                  onClick={() => navigate(`/liquidity?asset1=${tokenAddress}`)}
                 >
                   {t('join')}
                 </Button>
@@ -606,7 +604,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     variant="outline-secondary"
                     className="w-100"
                     disabled={!asset.curated}
-                    onClick={() => history.push('/vaults')}
+                    onClick={() => navigate('/vaults')}
                   >
                     {t('stake')}
                   </Button>
