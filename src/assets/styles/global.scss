@@ -141,11 +141,11 @@ a {
 }
 
 .orderDesc .down {
-  fill: white;
+  fill: black;
 }
 
 .orderAsc .up {
-  fill: white;
+  fill: black;
 }
 
 @media only screen and (max-width: 321px) {
@@ -223,5 +223,13 @@ body.dark-theme {
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
+  }
+
+  .orderDesc .down {
+    fill: white;
+  }
+  
+  .orderAsc .up {
+    fill: white;
   }
 }
