@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 
@@ -33,7 +33,7 @@ const PoolSelect = () => {
   const network = getNetwork()
 
   const addr = getAddresses()
-  const history = useHistory()
+  const history = useNavigate()
 
   const [showModal, setShowModal] = useState(false)
   const pool = usePool()

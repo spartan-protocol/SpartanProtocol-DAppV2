@@ -1,5 +1,5 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
@@ -26,7 +26,7 @@ import styles from './styles.module.scss'
 const PoolTableItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const history = useHistory()
+  const history = useNavigate()
   const web3 = useWeb3()
   const addr = getAddresses()
   const { tokenAddress, baseAmount, tokenAmount, curated, baseCap } = asset

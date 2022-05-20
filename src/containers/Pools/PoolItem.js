@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
@@ -29,7 +29,7 @@ import styles from './styles.module.scss'
 const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const history = useHistory()
+  const history = useNavigate()
   const web3 = useWeb3()
   const addr = getAddresses()
   const [showDetails, setShowDetails] = useState(false)

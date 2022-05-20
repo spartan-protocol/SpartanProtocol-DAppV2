@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -22,7 +22,7 @@ const Swap = () => {
   const { t } = useTranslation()
   const addr = getAddresses()
   const pool = usePool()
-  const history = useHistory()
+  const history = useNavigate()
   const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)

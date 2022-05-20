@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -31,7 +31,7 @@ const SynthItem = ({ asset, synthApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
-  const history = useHistory()
+  const history = useNavigate()
   const web3 = useWeb3()
   const { tokenAddress, baseAmount, tokenAmount } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]

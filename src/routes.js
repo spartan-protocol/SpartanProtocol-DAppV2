@@ -13,100 +13,100 @@ import Contracts from './containers/Contracts'
 
 export const routes = [
   {
-    path: '/home',
+    path: '',
     name: 'Pools',
     icon: 'home',
-    component: Home,
+    component: <Home />,
     layout: '',
   },
 
   {
-    path: '/liquidity',
+    path: 'liquidity',
     name: 'liquidity',
     icon: 'pool',
-    component: Liquidity,
+    component: <Liquidity />,
     layout: '',
   },
 
   {
-    path: '/swap',
+    path: 'swap',
     name: 'swap',
     icon: 'swap',
-    component: Swap,
+    component: <Swap />,
     layout: '',
   },
 
   {
-    path: '/synths',
+    path: 'synths',
     name: 'synths',
     icon: 'synth',
-    component: Synths,
+    component: <Synths />,
     layout: '',
   },
 
   {
-    path: '/vaults',
+    path: 'vaults',
     name: 'vaults',
     icon: 'vault',
-    component: Vaults,
+    component: <Vaults />,
     layout: '',
   },
 
   {
-    path: '/positions',
+    path: 'positions',
     name: 'positions',
     icon: 'analysis',
-    component: Positions,
+    component: <Positions />,
     layout: '',
   },
 
   {
-    path: '/dao',
+    path: 'dao',
     name: 'dao',
     icon: 'dao',
-    component: Dao,
+    component: <Dao />,
     layout: '',
   },
 
   {
-    path: '/upgrade',
+    path: 'upgrade',
     name: 'upgrade',
     icon: 'upgrade',
-    component: Upgrade,
+    component: <Upgrade />,
     layout: '',
   },
 
   {
-    path: '/donate',
+    path: 'donate',
     name: 'donate',
     icon: 'donate',
-    component: Donate,
+    component: <Donate />,
     layout: '',
   },
 
   {
-    path: '/friends',
+    path: 'friends',
     name: 'friends',
     icon: 'handshake',
-    component: Friends,
+    component: <Friends />,
     layout: '',
     informational: true,
   },
 
   {
-    path: '/contracts',
+    path: 'contracts',
     name: 'contracts',
     icon: 'contract',
-    component: Contracts,
+    component: <Contracts />,
     layout: '',
     informational: true,
   },
 
   {
-    path: '/pu',
+    path: 'pu',
     name: 'PowerUser',
     icon: '',
-    component: PU,
+    component: <PU />,
     layout: '',
     hide: true,
   },

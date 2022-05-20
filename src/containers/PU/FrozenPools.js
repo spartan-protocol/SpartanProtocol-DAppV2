@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { useReserve } from '../../store/reserve'
 import { useWeb3 } from '../../store/web3'
@@ -17,7 +17,7 @@ const PoolStatus = () => {
   const wallet = useWeb3React()
   const web3 = useWeb3()
   const reserve = useReserve()
-  const history = useHistory()
+  const history = useNavigate()
   const [selectedAsset, setselectedAsset] = useState('')
   const frozenPools = pool.poolDetails?.filter(
     (asset) => asset.frozen && asset.curated,
