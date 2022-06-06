@@ -1,5 +1,10 @@
 @import '../variables.scss';
 
+.nav-pills .nav-link.active {
+  background-color: $primary;
+  color: $text;
+}
+
 .nav-link {
   color: $text;
 }
@@ -10,6 +15,11 @@
 }
 
 body.dark-theme {
+  .nav-pills .nav-link.active {
+    background-color: $primary-dark;
+    color: $text-dark;
+  }
+
   .nav-link {
     color: $text-dark;
   }

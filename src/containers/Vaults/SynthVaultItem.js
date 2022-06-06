@@ -151,7 +151,7 @@ const SynthVaultItem = ({ synthItem }) => {
               </Col>
             </Row>
           </Card.Body>
-          <Card.Footer className="">
+          <Card.Footer>
             <Row>
               <Col xs="6" className="pe-1">
                 <SynthDepositModal

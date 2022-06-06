@@ -177,7 +177,7 @@ const SynthHarvestAllModal = () => {
         <Modal.Header closeButton closeVariant={isDark ? 'white' : undefined}>
           {t('harvestAll')}
         </Modal.Header>
-        <Card className="">
+        <Card>
           <Card.Body>
             <Row xs="12" className="my-2">
               <Col xs="12" className="output-card">

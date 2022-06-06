@@ -62,7 +62,7 @@ const AddressConn = () => {
         <Icon
           icon="bnbChainConnected"
           fill={wallet?.account ? 'green' : '#d80000'}
-          size="27"
+          size="24"
         />
         <span className={`${styles.btnText} ms-1`}>
           {wallet?.account

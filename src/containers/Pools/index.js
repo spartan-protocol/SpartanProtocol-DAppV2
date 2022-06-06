@@ -325,26 +325,16 @@ const Overview = () => {
             </Col>
 
             <Col xs="auto" className="mt-3 mb-1 text-end">
-              <Button
-                onClick={() => setTableView(!tableView)}
-                className="me-1"
-                // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
-              >
+              <Button onClick={() => setTableView(!tableView)} className="me-1">
                 <Icon
                   icon={tableView ? 'grid' : 'table'}
                   size="13"
-                  fill="white"
                   className="me-1 mb-1"
                 />
                 {t('view')}
               </Button>
               <Button onClick={() => setShowModal(!showModal)}>
-                <Icon
-                  icon="plus"
-                  size="12"
-                  fill="white"
-                  className="me-1 mb-1"
-                />
+                <Icon icon="plus" size="12" className="me-1 mb-1" />
                 {t('createPool')}
               </Button>
             </Col>

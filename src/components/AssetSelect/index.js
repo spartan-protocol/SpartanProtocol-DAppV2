@@ -301,11 +301,11 @@ const AssetSelect = (props) => {
         }
         role="button"
       >
-        <Col xs="auto" className="position-relative pe-1 ps-2">
+        <Col xs="auto" className="position-relative pe-1 ps-0">
           {selectedType === 'token' && (
             <img
               className="rounded-circle"
-              height="30px"
+              height="40px"
               src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
               alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
             />
@@ -315,13 +315,13 @@ const AssetSelect = (props) => {
             <>
               <img
                 className="rounded-circle"
-                height="30px"
+                height="40px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
               <img
                 src={spartaLpIcon}
-                height="20px"
+                height="22px"
                 className="token-badge-tight"
                 alt={`${
                   getToken(selectedItem?.tokenAddress)?.symbol
@@ -334,13 +334,13 @@ const AssetSelect = (props) => {
             <>
               <img
                 className="rounded-circle"
-                height="30px"
+                height="40px"
                 src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
                 alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
               <img
                 src={spartaSynthIcon}
-                height="20px"
+                height="22px"
                 className="token-badge-tight"
                 alt={`${
                   getToken(selectedItem?.tokenAddress)?.symbol
@@ -350,12 +350,14 @@ const AssetSelect = (props) => {
           )}
         </Col>
         <Col className="px-1 my-auto overflow-hidden">
-          {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
-          {selectedType === 'pool' && 'p'}
-          {selectedType === 'synth' && 's'}
-          {!props.disabled && (
-            <Icon icon="arrowDown" size="12" fill="grey" className="ps-1" />
-          )}
+          <h4 className="mb-0">
+            {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
+            {selectedType === 'pool' && 'p'}
+            {selectedType === 'synth' && 's'}
+            {!props.disabled && (
+              <Icon icon="arrowDown" size="13" className="ms-2" />
+            )}
+          </h4>
         </Col>
       </Row>
 
@@ -469,7 +471,7 @@ const AssetSelect = (props) => {
                       >
                         {asset.symbol}
                       </strong>
-                      <div className="">{formatFromWei(asset.balance)}</div>
+                      <div>{formatFromWei(asset.balance)}</div>
                     </Col>
                   </Row>
                 </Col>
@@ -559,7 +561,7 @@ const AssetSelect = (props) => {
                         >
                           {asset.symbol}
                         </strong>
-                        <div className="">{formatFromWei(asset.balance)}</div>
+                        <div>{formatFromWei(asset.balance)}</div>
                       </Col>
                     </Row>
                   </Col>

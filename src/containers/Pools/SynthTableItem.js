@@ -96,7 +96,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
         <td className="d-none d-sm-table-cell">
           <div>
             {formatShortNumber(convertFromWei(getSynthSupply()))}
-            <span className="">
+            <span>
               {' / '}
               {formatShortNumber(
                 convertFromWei(BN(getSynthSupply()).plus(getSynthStir())),
@@ -119,9 +119,9 @@ const SynthTableItem = ({ asset, synthApy }) => {
           %
         </td>
         {/* apy */}
-        <td className="">{formatFromUnits(synthApy, 2)}%</td>
+        <td>{formatFromUnits(synthApy, 2)}%</td>
         {/* actions (buttons) */}
-        <td className="">
+        <td>
           <Row className="text-center mt-2 me-1">
             <Col xs="12" md="6">
               <Button

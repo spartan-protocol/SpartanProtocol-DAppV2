@@ -490,17 +490,17 @@ const LiqAdd = () => {
         </Col>
       </Row>
 
-      <Row className="">
-        <Col xs="12" className="">
+      <Row>
+        <Col xs="12">
           <Card className="assetSection">
             <Card.Body>
-              <Row className="">
-                <Col className="">
+              <Row>
+                <Col>
                   <strong>{t('add')}</strong>
                 </Col>
                 <Col
                   xs="auto"
-                  className="float-end text-end"
+                  className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
@@ -524,8 +524,11 @@ const LiqAdd = () => {
 
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="">
-                    <InputGroup.Text id="assetSelect1">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect1"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         priority="1"
                         filter={['token']}
@@ -550,10 +553,11 @@ const LiqAdd = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0"
+                        className="text-end ms-0 bg-transparent border-0 text-lg"
                         type="number"
                         min="0"
-                        placeholder={`${t('add')}...`}
+                        step="any"
+                        placeholder="0"
                         id="addInput1"
                         autoComplete="off"
                         autoCorrect="off"
@@ -562,30 +566,26 @@ const LiqAdd = () => {
 
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs(1)}
                       onClick={() => clearInputs(1)}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetAdd1?.tokenAddress)}
                       <ShareLink url={assetAdd1?.tokenAddress}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetAdd1?.tokenAddress)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -604,10 +604,10 @@ const LiqAdd = () => {
             <Col xs="auto" className="mx-auto">
               <Icon
                 icon={activeTab === 'addTab1' ? 'plus' : 'arrowDown'}
-                size="25"
-                stroke="white"
-                fill="white"
-                className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                size="30"
+                stroke="black"
+                fill="black"
+                className="position-relative bg-white rounded-circle px-2 iconOnTop"
               />
             </Col>
           </Row>
@@ -616,12 +616,13 @@ const LiqAdd = () => {
             <Card.Body>
               {activeTab === 'addTab1' && (
                 <>
-                  <Row className="">
-                    <Col xs="auto" className="">
+                  <Row>
+                    <Col>
                       <strong>{t('add')}</strong>
                     </Col>
                     <Col
-                      className="float-end text-end"
+                      xs="auto"
+                      className="float-end text-end fw-light"
                       role="button"
                       aria-hidden="true"
                       onClick={() => {
@@ -648,8 +649,11 @@ const LiqAdd = () => {
 
                   <Row className="my-1">
                     <Col>
-                      <InputGroup className="">
-                        <InputGroup.Text id="assetSelect2">
+                      <InputGroup className="m-0 py-3">
+                        <InputGroup.Text
+                          id="assetSelect2"
+                          className="bg-transparent border-0"
+                        >
                           <AssetSelect
                             priority="2"
                             filter={['token']}
@@ -673,10 +677,11 @@ const LiqAdd = () => {
                           }
                         >
                           <FormControl
-                            className="text-end ms-0"
+                            className="text-end ms-0 bg-transparent border-0 text-lg"
                             type="number"
                             min="0"
-                            placeholder={`${t('add')}...`}
+                            step="any"
+                            placeholder="0"
                             id="addInput2"
                             autoComplete="off"
                             autoCorrect="off"
@@ -685,31 +690,27 @@ const LiqAdd = () => {
 
                         <InputGroup.Text
                           role="button"
+                          className="bg-transparent border-0 p-1"
                           tabIndex={-1}
                           onKeyPress={() => clearInputs(2)}
                           onClick={() => clearInputs(2)}
                         >
-                          <Icon icon="close" size="10" fill="grey" />
+                          <Icon icon="close" size="16" />
                         </InputGroup.Text>
                       </InputGroup>
 
-                      <Row className="pt-1">
+                      <Row className="pt-1 fw-light">
                         <Col>
                           {formatShortString(assetAdd2?.tokenAddress)}
                           <ShareLink url={assetAdd2?.tokenAddress}>
-                            <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                            <Icon icon="copy" size="14" className="ms-1 mb-1" />
                           </ShareLink>
                           <a
                             href={getExplorerContract(assetAdd2?.tokenAddress)}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Icon
-                              icon="scan"
-                              size="12"
-                              className="ms-1 mb-1"
-                              fill="rgb(170, 205, 255)"
-                            />
+                            <Icon icon="scan" size="14" className="ms-1 mb-1" />
                           </a>
                         </Col>
                         <Col className="text-end">
@@ -726,11 +727,11 @@ const LiqAdd = () => {
 
               {activeTab === 'addTab2' && (
                 <>
-                  <Row className="">
-                    <Col xs="auto" className="">
+                  <Row>
+                    <Col>
                       <strong>{t('receive')}</strong>
                     </Col>
-                    <Col className="float-end text-end">
+                    <Col className="float-end text-end fw-light" xs="auto">
                       {t('balance')}:{' '}
                       {pool.poolDetails && formatFromWei(getBalance(3))}
                     </Col>
@@ -738,8 +739,11 @@ const LiqAdd = () => {
 
                   <Row className="my-1">
                     <Col>
-                      <InputGroup className="">
-                        <InputGroup.Text id="assetSelect3">
+                      <InputGroup className="m-0 py-3">
+                        <InputGroup.Text
+                          id="assetSelect3"
+                          className="bg-transparent border-0"
+                        >
                           <AssetSelect
                             priority="3"
                             filter={['pool']}
@@ -751,32 +755,28 @@ const LiqAdd = () => {
                           />
                         </InputGroup.Text>
                         <FormControl
-                          className="text-end ms-0"
+                          className="text-end ms-0 bg-transparent border-0 text-lg"
                           type="number"
                           min="0"
-                          placeholder="0.00"
+                          step="any"
+                          placeholder="0"
                           id="addInput3"
                           disabled
                         />
                       </InputGroup>
 
-                      <Row className="pt-1">
+                      <Row className="pt-1 fw-light">
                         <Col>
                           {formatShortString(poolAdd1?.address)}
                           <ShareLink url={poolAdd1?.address}>
-                            <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                            <Icon icon="copy" size="14" className="ms-1 mb-1" />
                           </ShareLink>
                           <a
                             href={getExplorerContract(poolAdd1?.address)}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Icon
-                              icon="scan"
-                              size="12"
-                              className="ms-1 mb-1"
-                              fill="rgb(170, 205, 255)"
-                            />
+                            <Icon icon="scan" size="14" className="ms-1 mb-1" />
                           </a>
                         </Col>
                         <Col className="text-end">
@@ -824,9 +824,7 @@ const LiqAdd = () => {
               {activeTab === 'addTab2' && (
                 <>
                   <Row className="mb-2">
-                    <Col xs="auto" className="">
-                      {t('fee')}
-                    </Col>
+                    <Col xs="auto">{t('fee')}</Col>
                     <Col className="text-end">
                       {getAddLiqAsym()[1] > 0
                         ? formatFromWei(getAddLiqAsym()[1], 4)
@@ -887,7 +885,7 @@ const LiqAdd = () => {
               </a>
             </div>
             <Form className="my-2 text-center">
-              <span className="">
+              <span>
                 {t('poolAsymAddConfirmShort', {
                   token1: getToken(poolAdd1.tokenAddress)?.symbol,
                 })}
@@ -909,7 +907,7 @@ const LiqAdd = () => {
           <Col>
             <div className="text-center">{t('newPoolConfirmInfo')}</div>
             <Form className="my-2 text-center">
-              <span className="">
+              <span>
                 {`Confirm: your liquidity will be locked for ${
                   getTimeNew()[0]
                 }${getTimeNew()[1]}`}
@@ -930,7 +928,7 @@ const LiqAdd = () => {
           <Col>
             <div className="text-center">{t('poolFrozenConfirm')}</div>
             <Form className="my-2 text-center">
-              <span className="">
+              <span>
                 {t('poolFrozenConfirmShort')}
                 <Form.Check
                   type="switch"

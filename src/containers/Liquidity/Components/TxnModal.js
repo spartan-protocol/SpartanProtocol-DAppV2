@@ -80,7 +80,7 @@ const TxnModal = (props) => {
                   </Col>
                   <Col className="text-end">
                     <span className={`subtitle-card ${txn.class}`}>
-                      <span className="">{txn.symbol}</span>
+                      <span>{txn.symbol}</span>
                     </span>
                   </Col>
                 </Row>
@@ -129,7 +129,7 @@ const TxnModal = (props) => {
                   </Col>
                   <Col className="text-end">
                     <span className={`subtitle-card ${txn.class}`}>
-                      <span className="">{txn.symbol}</span>
+                      <span>{txn.symbol}</span>
                     </span>
                   </Col>
                 </Row>

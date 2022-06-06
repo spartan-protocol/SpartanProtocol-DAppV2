@@ -224,7 +224,7 @@ const Overview = () => {
                                         ].proposalType,
                                     )[0].label,
                                   )}
-                                  <Card.Subtitle className="">
+                                  <Card.Subtitle>
                                     {t(
                                       proposalTypes.filter(
                                         (i) =>

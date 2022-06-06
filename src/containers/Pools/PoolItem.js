@@ -362,7 +362,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     {formatShortNumber(convertFromWei(baseAmount))}
                   </Col>
                   <Col className="my-auto px-0">
-                    <ProgressBar style={{ height: '5px' }} className="">
+                    <ProgressBar style={{ height: '5px' }}>
                       <ProgressBar
                         variant={isAtCaps() ? 'danger' : 'success'}
                         key={1}
@@ -378,9 +378,7 @@ const PoolItem = ({ asset, daoApy }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="">
-                {t('poolDepth')}
-              </Col>
+              <Col xs="auto">{t('poolDepth')}</Col>
               <Col className="text-end">
                 {`$${formatFromWei(poolDepthUsd, 0)}`}
               </Col>
@@ -416,9 +414,7 @@ const PoolItem = ({ asset, daoApy }) => {
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="">
-                {t('spotPrice')}
-              </Col>
+              <Col xs="auto">{t('spotPrice')}</Col>
               <Col className="text-end">
                 {formatFromUnits(tokenValueBase, 2)}
                 <Icon icon="spartav2" className="ms-1" size="15" />
@@ -501,7 +497,7 @@ const PoolItem = ({ asset, daoApy }) => {
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="">
+              <Col xs="auto">
                 {t('revenue')}
                 <OverlayTrigger placement="auto" overlay={revenueTooltip}>
                   <span role="button">

@@ -146,7 +146,7 @@ const Overview = () => {
                             className="btn-sm btn-outline-primary"
                             onClick={() => setShowShareModal(!showShareModal)}
                           >
-                            <Icon icon="connect" size="15" />
+                            <Icon icon="share" size="15" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>

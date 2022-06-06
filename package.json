@@ -9,6 +9,7 @@
     "@apollo/client": "^3.4.16",
     "@binance-chain/bsc-connector": "^1.0.0",
     "@craco/craco": "^6.4.3",
+    "@fontsource/blinker": "^4.5.7",
     "@fontsource/saira": "^4.5.3",
     "@reduxjs/toolkit": "1.8.1",
     "@testing-library/jest-dom": "^5.11.4",

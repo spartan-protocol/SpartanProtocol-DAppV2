@@ -176,7 +176,7 @@ const SynthWithdrawModal = (props) => {
                   {formatFromWei(withdrawal())} {token.symbol}s
                 </Col>
               </Row>
-              <Row className="">
+              <Row>
                 <Col xs="12">
                   <Form.Range
                     id="synthVaultSlider"
@@ -239,7 +239,7 @@ const SynthWithdrawModal = (props) => {
                       {props.claimable[1] + props.claimable[2]} Harvest
                     </Col>
                   </Row>
-                  <Row xs="12" className="">
+                  <Row xs="12">
                     <Col xs="auto" className="text-card">
                       Harvest forfeiting
                     </Col>

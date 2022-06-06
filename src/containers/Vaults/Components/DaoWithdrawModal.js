@@ -170,7 +170,7 @@ const DaoWithdrawModal = (props) => {
                     this withdrawal to avoid forfeiting any accumulated rewards:
                   </Col>
                 </Row>
-                <Row xs="12" className="">
+                <Row xs="12">
                   <Col xs="auto" className="text-card">
                     Harvest forfeiting
                   </Col>

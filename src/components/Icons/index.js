@@ -55,6 +55,7 @@ import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
 import { ReactComponent as Search } from '../../assets/icons/search.svg'
 import { ReactComponent as Settings } from '../../assets/icons/settings.svg'
+import { ReactComponent as Share } from '../../assets/icons/share.svg'
 import { ReactComponent as Sort } from '../../assets/icons/sort.svg'
 import { ReactComponent as Sun } from '../../assets/icons/sun.svg'
 import { ReactComponent as Swap } from '../../assets/icons/swap.svg'
@@ -79,6 +80,7 @@ import { ReactComponent as Twitter } from '../../assets/brands/twitter.svg'
 // TOKENS
 import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
+import { ReactComponent as SpartaNavbar } from '../../assets/tokens/spartanavbar.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
@@ -155,6 +157,7 @@ const icons = {
   scan: Scan,
   search: Search,
   settings: Settings,
+  share: Share,
   sort: Sort,
   sun: Sun,
   swap: Swap,
@@ -179,6 +182,7 @@ const icons = {
   // TOKENS
   spartav1: SpartaV1,
   spartav2: SpartaV2,
+  spartaNavbar: SpartaNavbar,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
   bnb: Bnb,

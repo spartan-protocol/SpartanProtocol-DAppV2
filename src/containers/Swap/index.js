@@ -132,7 +132,7 @@ const Swap = () => {
                             className="btn-sm"
                             onClick={() => setShowShareModal(!showShareModal)}
                           >
-                            <Icon icon="connect" size="15" />
+                            <Icon icon="share" size="17" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
@@ -142,7 +142,7 @@ const Swap = () => {
                               setShowSettingsModal(!showSettingsModal)
                             }
                           >
-                            <Icon icon="settings" size="15" />
+                            <Icon icon="settings" size="18" />
                           </Nav.Link>
                         </Nav.Item>
                       </Nav>
@@ -186,7 +186,7 @@ const Swap = () => {
                 </Col>
               </>
             ) : (
-              <Col className="">
+              <Col>
                 <HelmetLoading height={150} width={150} />
               </Col>
             )}

@@ -181,7 +181,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
           </div>
           {t('deposit')} {token.symbol}s
         </Modal.Header>
-        <Card className="">
+        <Card>
           <Card.Body>
             <Row className="my-1">
               <Col xs="auto" className="text-card">
@@ -191,7 +191,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                 {formatFromWei(deposit())} {token.symbol}s
               </Col>
             </Row>
-            <Row className="">
+            <Row>
               <Col xs="12">
                 <Form.Range
                   id="daoVaultSlider"
@@ -209,7 +209,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                 tokens for {synth.globalDetails.minTime} seconds:
               </Col>
             </Row>
-            <Row xs="12" className="">
+            <Row xs="12">
               <Col xs="auto" className="text-card">
                 This stake locked
               </Col>
@@ -252,7 +252,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                     accumulated rewards:
                   </Col>
                 </Row>
-                <Row xs="12" className="">
+                <Row xs="12">
                   <Col xs="auto" className="text-card">
                     Harvest forfeiting
                   </Col>

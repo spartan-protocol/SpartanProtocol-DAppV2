@@ -259,7 +259,7 @@ const Metrics = ({ assetSwap }) => {
               </Col>
             </Row>
           </Card.Header>
-          <Card.Body className="">
+          <Card.Body>
             <div className="text-center">
               <Dropdown className="d-inline">
                 <Dropdown.Toggle size="sm" className="mx-1">

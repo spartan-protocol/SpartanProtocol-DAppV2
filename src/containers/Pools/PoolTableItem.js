@@ -103,7 +103,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
         <td className="d-none d-md-table-cell">
           <div>
             {formatShortNumber(convertFromWei(baseAmount))}
-            <span className="">
+            <span>
               {' / '}
               {formatShortNumber(convertFromWei(asset.baseCap))}
             </span>
@@ -127,7 +127,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
           {getVol() > 0 ? `$${formatFromWei(getVol(), 0)}` : 'Loading...'}
         </td>
         {/* apy */}
-        <td className="">
+        <td>
           {formatFromUnits(curated && daoApy ? BN(APY).plus(daoApy) : APY, 2)}%
           <br />
           <small>Info</small>
@@ -179,7 +179,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
           </OverlayTrigger>
         </td>
         {/* actions (buttons) */}
-        <td className="">
+        <td>
           <Row className="text-center mt-2 me-1">
             <Col xs="12" md="6">
               <Button

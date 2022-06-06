@@ -137,7 +137,7 @@ const SynthItem = ({ asset, synthApy }) => {
                     {formatShortNumber(convertFromWei(getSynthSupply()))}
                   </Col>
                   <Col className="my-auto px-0">
-                    <ProgressBar style={{ height: '5px' }} className="">
+                    <ProgressBar style={{ height: '5px' }}>
                       <ProgressBar
                         variant={getSynthCapPC() > 95 ? 'danger' : 'success'}
                         key={1}

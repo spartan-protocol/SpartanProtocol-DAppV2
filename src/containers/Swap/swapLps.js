@@ -439,15 +439,16 @@ const SwapLps = () => {
       {/* Top 'Input' Row */}
       <Row>
         {/* 'From' input box */}
-        <Col xs="12" className="">
+        <Col xs="12">
           <Card className="assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col>
                   <strong>{t('sell')}</strong>
                 </Col>
                 <Col
-                  className="float-end text-end"
+                  xs="auto"
+                  className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
@@ -470,8 +471,11 @@ const SwapLps = () => {
               </Row>
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect1">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect1"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         defaultTab="pool"
                         priority="1"
@@ -492,10 +496,11 @@ const SwapLps = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0"
+                        className="text-end ms-0 bg-transparent border-0 text-lg"
                         type="number"
                         min="0"
-                        placeholder={`${t('sell')}...`}
+                        step="any"
+                        placeholder="0"
                         id="swapInput1"
                         autoComplete="off"
                         autoCorrect="off"
@@ -504,31 +509,27 @@ const SwapLps = () => {
 
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap1?.address)}
                       <ShareLink url={assetSwap1?.address}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap1?.address)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -554,9 +555,9 @@ const SwapLps = () => {
               <Icon
                 icon="swap"
                 size="30"
-                stroke="white"
-                fill="white"
-                className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                stroke="black"
+                fill="black"
+                className="position-relative bg-white rounded-circle px-2 iconOnTop"
               />
             </Col>
           </Row>
@@ -566,10 +567,10 @@ const SwapLps = () => {
           <Card className="mb-3 assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col xs="auto">
                   <strong>{t('buy')}</strong>
                 </Col>
-                <Col className="float-end text-end">
+                <Col className="float-end text-end fw-light">
                   {t('balance')}
                   {': '}
                   {pool.poolDetails && formatFromWei(getBalance(2), 4)}
@@ -578,8 +579,11 @@ const SwapLps = () => {
 
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect2">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect2"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         priority="2"
                         filter={['pool']}
@@ -588,40 +592,37 @@ const SwapLps = () => {
                       />
                     </InputGroup.Text>
                     <FormControl
-                      className="text-end ms-0"
+                      className="text-end ms-0 bg-transparent border-0 text-lg"
                       type="number"
                       min="0"
-                      placeholder={`${t('buy')}...`}
+                      step="any"
+                      placeholder="0"
                       id="swapInput2"
                       disabled
                     />
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap2?.address)}
                       <ShareLink url={assetSwap2?.address}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap2?.address)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -684,12 +685,12 @@ const SwapLps = () => {
             </Col>
           </Row>
 
-          <Row className="">
-            <Col xs="auto" className="">
-              <strong className="">{getOutput()[2]}</strong>
+          <Row>
+            <Col xs="auto">
+              <strong>{getOutput()[2]}</strong>
             </Col>
             <Col className="text-end">
-              <strong className="">
+              <strong>
                 {swapInput1?.value ? formatFromWei(getOutput()[0], 6) : '0.00'}{' '}
                 {getOutput()[1]}
               </strong>
@@ -705,7 +706,7 @@ const SwapLps = () => {
           <Col>
             <div className="text-center">{t('newPoolZapConfirm')}</div>
             <Form className="my-2 text-center">
-              <span className="">
+              <span>
                 {`Confirm; your liquidity will be locked for ${
                   getTimeNew()[0]
                 }${getTimeNew()[1]}`}

@@ -238,7 +238,7 @@ const PoolTable = ({ poolItems, daoApy }) => {
               </span>
             </OverlayTrigger>
           </th>
-          <th className="" />
+          <th />
         </tr>
       </thead>
       <tbody>

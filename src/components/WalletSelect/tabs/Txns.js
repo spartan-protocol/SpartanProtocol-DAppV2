@@ -378,7 +378,7 @@ const Txns = () => {
                     <HelmetLoading height={100} width={100} />
                   )}
                 </Col>
-                <Col xs="12" className="">
+                <Col xs="12">
                   <Pagination className="d-inline-flex mb-0">
                     <Pagination.First
                       disabled={activePage === 1}

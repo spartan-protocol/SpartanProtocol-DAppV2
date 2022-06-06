@@ -128,7 +128,9 @@ const Synths = () => {
   return (
     <>
       {/* HELD SYNTHS */}
-      <Badge className="mb-3">{t('heldInWallet')}</Badge>
+      <Badge bg="secondary" className="mb-3">
+        {t('heldInWallet')}
+      </Badge>
       <br />
       {!isLoading() &&
       synth.synthDetails?.filter((asset) => asset.balance > 0).length > 0 ? (
@@ -162,7 +164,9 @@ const Synths = () => {
                 <Col className="align-items-center">
                   <Row>
                     <Col xs="auto" className="float-left">
-                      <Badge className="me-1">{t('wallet')}</Badge>
+                      <Badge bg="secondary" className="me-1">
+                        {t('wallet')}
+                      </Badge>
                       <strong>{`${
                         getToken(asset.tokenAddress)?.symbol
                       }s`}</strong>
@@ -191,7 +195,7 @@ const Synths = () => {
                   <Row>
                     <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" size="22" />
+                        <Icon icon="copy" size="16" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
@@ -234,7 +238,9 @@ const Synths = () => {
         synth.synthDetails?.filter((asset) => asset.staked > 0).length > 0 && (
           <>
             <hr />
-            <Badge className="mb-3">{t('stakedInSynthVault')}</Badge>
+            <Badge bg="secondary" className="mb-3">
+              {t('stakedInSynthVault')}
+            </Badge>
             {synth.synthDetails
               ?.filter((asset) => asset.staked > 0)
               .sort(
@@ -293,7 +299,7 @@ const Synths = () => {
                     <Row>
                       <Col xs="6" className="p-0">
                         <ShareLink url={asset.address}>
-                          <Icon icon="copy" size="22" />
+                          <Icon icon="copy" size="16" />
                         </ShareLink>
                       </Col>
                       {getWalletType() && (
