@@ -37,7 +37,7 @@ const AssetSelect = (props) => {
                 onClick={() => setinputAddress(asset.address)}
                 role="button"
               >
-                <Col xs="auto" className="">
+                <Col xs="auto">
                   <img
                     height="35px"
                     src={asset.symbolUrl}

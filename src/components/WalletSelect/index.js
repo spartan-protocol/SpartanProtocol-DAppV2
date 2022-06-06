@@ -345,7 +345,7 @@ const WalletSelect = (props) => {
                         <Icon
                           icon="copy"
                           className="ms-2 mb-1"
-                          size="18"
+                          size="15"
                           role="button"
                         />
                       </ShareLink>
@@ -399,7 +399,7 @@ const WalletSelect = (props) => {
                     className="btn-sm btn-outline-primary"
                   >
                     {t('tokens')}{' '}
-                    <Badge>
+                    <Badge bg="secondary">
                       {tempChains.includes(wallet.chainId) && getTokenCount()}
                     </Badge>
                   </Nav.Link>
@@ -408,7 +408,7 @@ const WalletSelect = (props) => {
                 <Nav.Item>
                   <Nav.Link bg="secondary" eventKey="lps" className="btn-sm">
                     {t('lps')}{' '}
-                    <Badge>
+                    <Badge bg="secondary">
                       {tempChains.includes(wallet.chainId) && getLpsCount()}
                     </Badge>
                   </Nav.Link>
@@ -417,7 +417,7 @@ const WalletSelect = (props) => {
                 <Nav.Item>
                   <Nav.Link eventKey="synths" className="btn-sm">
                     {t('synths')}{' '}
-                    <Badge>
+                    <Badge bg="secondary">
                       {tempChains.includes(wallet.chainId) && getSynthsCount()}
                     </Badge>
                   </Nav.Link>
@@ -511,7 +511,7 @@ const WalletSelect = (props) => {
               variant="primary"
             >
               {t('viewBscScan')}{' '}
-              <Icon icon="scan" size="14" fill="white" className="mb-1 ms-1" />
+              <Icon icon="scan" size="14" className="mb-1 ms-1" />
             </Button>
             <Button
               size="sm"
@@ -521,12 +521,7 @@ const WalletSelect = (props) => {
               }}
             >
               {t('disconnect')}
-              <Icon
-                icon="walletRed"
-                size="17"
-                fill="white"
-                className="mb-1 ms-1"
-              />
+              <Icon icon="walletRed" size="17" className="mb-1 ms-1" />
             </Button>
           </Modal.Footer>
         ) : (

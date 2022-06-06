@@ -161,9 +161,7 @@ const Share = ({ showShare, setShowShare }) => {
           <Row>
             <Col xs="auto">{t('copyLink')}</Col>
             <Col>
-              <span className="">
-                {url.length > 50 ? `${url.substr(0, 50)}...` : url}
-              </span>
+              <span>{url.length > 50 ? `${url.substr(0, 50)}...` : url}</span>
             </Col>
             <Col xs="auto" className="text-center">
               <ShareLink url={url}>
@@ -175,7 +173,7 @@ const Share = ({ showShare, setShowShare }) => {
           {/* TWITTER SHARE SECTION */}
           <Row>
             <Col xs="auto">
-              <span className="">{t('shareViaTwiter')}</span>
+              <span>{t('shareViaTwiter')}</span>
             </Col>
             <Col />
             <Col xs="auto">

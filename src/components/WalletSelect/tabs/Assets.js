@@ -132,7 +132,9 @@ const Assets = () => {
     <>
       {!isLoading() ? (
         <>
-          <Badge className="mb-3">{t('heldInWallet')}</Badge>
+          <Badge bg="secondary" className="mb-3">
+            {t('heldInWallet')}
+          </Badge>
           {pool.tokenDetails
             ?.filter((asset) => asset.balance > 0)
             .sort(
@@ -179,7 +181,7 @@ const Assets = () => {
                   <Row>
                     <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" size="22" />
+                        <Icon icon="copy" size="16" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
@@ -220,7 +222,7 @@ const Assets = () => {
           {!isLoading() && getTotalValue()}
         </>
       ) : (
-        <Col className="">
+        <Col>
           <HelmetLoading height={100} width={100} />
         </Col>
       )}

@@ -139,7 +139,9 @@ const LPs = () => {
 
   return (
     <>
-      <Badge className="mb-3">{t('heldInWallet')}</Badge>
+      <Badge className="mb-3" bg="secondary">
+        {t('heldInWallet')}
+      </Badge>
       {/* HELD LP TOKENS */}
       {!isLoading() &&
         pool.poolDetails
@@ -228,7 +230,7 @@ const LPs = () => {
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" size="22" />
+                      <Icon icon="copy" size="16" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
@@ -271,7 +273,9 @@ const LPs = () => {
         dao.daoDetails?.filter((asset) => asset.staked > 0).length > 0 && (
           <>
             <hr />
-            <Badge className="mb-3">{t('stakedInDaoVault')}</Badge>
+            <Badge bg="secondary" className="mb-3">
+              {t('stakedInDaoVault')}
+            </Badge>
           </>
         )}
       {!isLoading() &&
@@ -361,7 +365,7 @@ const LPs = () => {
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
+                      <Icon icon="copy" role="button" size="16" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
@@ -404,7 +408,9 @@ const LPs = () => {
         bond.bondDetails?.filter((asset) => asset.staked > 0).length > 0 && (
           <>
             <hr />
-            <Badge className="mb-3">{t('stakedInBondVault')}</Badge>
+            <Badge className="mb-3" bg="secondary">
+              {t('stakedInBondVault')}
+            </Badge>
           </>
         )}
       {!isLoading() &&
@@ -491,7 +497,7 @@ const LPs = () => {
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
+                      <Icon icon="copy" role="button" size="16" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (

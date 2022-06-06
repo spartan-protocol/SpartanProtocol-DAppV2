@@ -483,10 +483,11 @@ const SwapTokens = () => {
           <Card className="assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto">
+                <Col>
                   <strong>{t('sell')}</strong>
                 </Col>
                 <Col
+                  xs="auto"
                   className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
@@ -533,11 +534,11 @@ const SwapTokens = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0 bg-transparent border-0"
+                        className="text-end ms-0 bg-transparent border-0 text-lg"
                         type="number"
                         min="0"
                         step="any"
-                        placeholder={`${t('sell')}...`}
+                        placeholder="0"
                         id="swapInput1"
                         autoComplete="off"
                         autoCorrect="off"
@@ -546,12 +547,12 @@ const SwapTokens = () => {
 
                     <InputGroup.Text
                       role="button"
-                      className="bg-transparent border-0"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
@@ -559,14 +560,14 @@ const SwapTokens = () => {
                     <Col>
                       {formatShortString(assetSwap1?.tokenAddress)}
                       <ShareLink url={assetSwap1?.tokenAddress}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap1?.tokenAddress)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon icon="scan" size="12" className="ms-1 mb-1" />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -631,10 +632,10 @@ const SwapTokens = () => {
           <Card className="mb-3 assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col>
                   <strong>{t('buy')}</strong>
                 </Col>
-                <Col className="float-end text-end fw-light">
+                <Col xs="auto" className="float-end text-end fw-light">
                   {t('balance')}
                   {': '}
                   {pool.poolDetails && formatFromWei(getBalance(2), 4)}
@@ -655,22 +656,22 @@ const SwapTokens = () => {
                       />
                     </InputGroup.Text>
                     <FormControl
-                      className="text-end ms-0 bg-transparent border-0"
+                      className="text-end ms-0 bg-transparent border-0 text-lg"
                       type="number"
                       min="0"
                       step="any"
-                      placeholder={`${t('buy')}...`}
+                      placeholder="0"
                       id="swapInput2"
                       disabled
                     />
                     <InputGroup.Text
                       role="button"
-                      className="bg-transparent border-0"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
@@ -678,14 +679,14 @@ const SwapTokens = () => {
                     <Col>
                       {formatShortString(assetSwap2?.tokenAddress)}
                       <ShareLink url={assetSwap2?.tokenAddress}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap2?.tokenAddress)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon icon="scan" size="12" className="ms-1 mb-1" />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -777,12 +778,12 @@ const SwapTokens = () => {
             </Col>
           </Row>
 
-          <Row className="">
-            <Col xs="auto" className="">
-              <strong className="">{getOutput()[2]}</strong>
+          <Row>
+            <Col xs="auto">
+              <strong>{getOutput()[2]}</strong>
             </Col>
             <Col className="text-end">
-              <strong className="">
+              <strong>
                 {swapInput1?.value ? formatFromWei(getOutput()[0], 6) : '0.00'}{' '}
                 {getOutput()[1]}
               </strong>

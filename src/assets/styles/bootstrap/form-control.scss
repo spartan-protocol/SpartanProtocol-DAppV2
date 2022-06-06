@@ -1,5 +1,9 @@
 @import '../variables.scss';
 
+.form-control:focus {
+  box-shadow: none;
+}
+
 body.dark-theme {
   .form-control {
     color: $text-dark;

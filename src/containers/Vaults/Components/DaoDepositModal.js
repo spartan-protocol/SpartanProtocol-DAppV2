@@ -149,7 +149,7 @@ const DaoDepositModal = (props) => {
               {formatFromWei(deposit())} {token.symbol}p
             </Col>
           </Row>
-          <Row className="">
+          <Row>
             <Col xs="12">
               <Form.Range
                 id="daoVaultSlider"
@@ -166,7 +166,7 @@ const DaoDepositModal = (props) => {
               {t('daoVaultDepConf', { symbol: token.symbol })}:
             </Col>
           </Row>
-          <Row xs="12" className="">
+          <Row xs="12">
             <Col xs="auto" className="text-card">
               {t('thisStakeLocked')}:
             </Col>
@@ -205,7 +205,7 @@ const DaoDepositModal = (props) => {
                   deposit to avoid forfeiting any accumulated rewards:
                 </Col>
               </Row>
-              <Row xs="12" className="">
+              <Row xs="12">
                 <Col xs="auto" className="text-card">
                   Harvest forfeiting
                 </Col>

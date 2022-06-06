@@ -35,7 +35,7 @@ const SynthTable = ({ synthItems, synthApy }) => {
               </span>
             </OverlayTrigger>
           </th>
-          <th className="" />
+          <th />
         </tr>
       </thead>
       <tbody>

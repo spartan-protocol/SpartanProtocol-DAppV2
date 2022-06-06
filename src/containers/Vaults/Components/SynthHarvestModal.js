@@ -145,7 +145,7 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
           </div>
           {t('harvest')} {_getToken().symbol}s
         </Modal.Header>
-        <Card className="">
+        <Card>
           <Card.Body>
             <Row xs="12" className="my-2">
               <Col xs="12" className="output-card">

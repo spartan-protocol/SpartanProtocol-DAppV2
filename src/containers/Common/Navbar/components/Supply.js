@@ -147,7 +147,7 @@ const Supply = () => {
         ref={target}
         aria-hidden="true"
       >
-        <Icon icon="spartaNavbar" size="27" className="me-1" />
+        <Icon icon="spartaNavbar" size="23" className="me-1" />
         <span className={styles.btnText}>
           {web3.spartaPrice > 0
             ? `$${formatFromUnits(web3.spartaPrice, 2)}`

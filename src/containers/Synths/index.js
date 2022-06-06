@@ -689,7 +689,7 @@ const Swap = () => {
                                   setShowShareModal(!showShareModal)
                                 }
                               >
-                                <Icon icon="connect" size="15" />
+                                <Icon icon="share" size="15" />
                               </Nav.Link>
                             </Nav.Item>
                           </Nav>
@@ -702,7 +702,7 @@ const Swap = () => {
                                 <Card.Body>
                                   <Row>
                                     {/* 'From' input box */}
-                                    <Col xs="auto">
+                                    <Col>
                                       <strong>
                                         {' '}
                                         {activeTab === 'mint'
@@ -712,7 +712,8 @@ const Swap = () => {
                                     </Col>
 
                                     <Col
-                                      className="float-end text-end"
+                                      xs="auto"
+                                      className="float-end text-end fw-light"
                                       role="button"
                                       aria-hidden="true"
                                       onClick={() => {
@@ -746,8 +747,11 @@ const Swap = () => {
 
                                   <Row className="my-1">
                                     <Col>
-                                      <InputGroup>
-                                        <InputGroup.Text id="assetSelect1">
+                                      <InputGroup className="m-0 py-3">
+                                        <InputGroup.Text
+                                          id="assetSelect1"
+                                          className="bg-transparent border-0"
+                                        >
                                           <AssetSelect
                                             priority="1"
                                             filter={
@@ -773,11 +777,11 @@ const Swap = () => {
                                           }
                                         >
                                           <FormControl
-                                            className="text-end ms-0"
+                                            className="text-end ms-0 bg-transparent border-0 text-lg"
                                             type="number"
                                             min="0"
                                             step="any"
-                                            placeholder={`${t('add')}...`}
+                                            placeholder="0"
                                             id="swapInput1"
                                             autoComplete="off"
                                             autoCorrect="off"
@@ -786,19 +790,16 @@ const Swap = () => {
 
                                         <InputGroup.Text
                                           role="button"
+                                          className="bg-transparent border-0 p-1"
                                           tabIndex={-1}
                                           onKeyPress={() => clearInputs(1)}
                                           onClick={() => clearInputs(1)}
                                         >
-                                          <Icon
-                                            icon="close"
-                                            size="10"
-                                            fill="grey"
-                                          />
+                                          <Icon icon="close" size="16" />
                                         </InputGroup.Text>
                                       </InputGroup>
 
-                                      <Row className="pt-1">
+                                      <Row className="pt-1 fw-light">
                                         <Col>
                                           {formatShortString(
                                             activeTab === 'mint'
@@ -818,7 +819,7 @@ const Swap = () => {
                                           >
                                             <Icon
                                               icon="copy"
-                                              size="16"
+                                              size="14"
                                               className="ms-1 mb-1"
                                             />
                                           </ShareLink>
@@ -835,9 +836,8 @@ const Swap = () => {
                                           >
                                             <Icon
                                               icon="scan"
-                                              size="12"
+                                              size="14"
                                               className="ms-1 mb-1"
-                                              fill="rgb(170, 205, 255)"
                                             />
                                           </a>
                                         </Col>
@@ -860,9 +860,9 @@ const Swap = () => {
                                       activeTab === 'mint' ? 'mint' : 'fire'
                                     }
                                     size="30"
-                                    stroke="white"
-                                    fill="white"
-                                    className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                                    stroke="black"
+                                    fill="black"
+                                    className="position-relative bg-white rounded-circle px-2 iconOnTop"
                                   />
                                 </Col>
                               </Row>
@@ -871,14 +871,17 @@ const Swap = () => {
                                 <Card className="assetSection">
                                   <Card.Body>
                                     <Row>
-                                      <Col xs="auto">
+                                      <Col>
                                         <strong>
                                           {activeTab === 'mint'
                                             ? t('forge')
                                             : t('receive')}
                                         </strong>
                                       </Col>
-                                      <Col className="float-end text-end">
+                                      <Col
+                                        xs="auto"
+                                        className="float-end text-end fw-light"
+                                      >
                                         {t('balance')}
                                         {': '}
                                         {pool.poolDetails &&
@@ -888,8 +891,11 @@ const Swap = () => {
 
                                     <Row className="my-1">
                                       <Col>
-                                        <InputGroup className="m-0">
-                                          <InputGroup.Text id="assetSelect2">
+                                        <InputGroup className="m-0 py-3">
+                                          <InputGroup.Text
+                                            id="assetSelect2"
+                                            className="bg-transparent border-0"
+                                          >
                                             <AssetSelect
                                               priority="2"
                                               filter={['synth']}
@@ -897,11 +903,11 @@ const Swap = () => {
                                             />
                                           </InputGroup.Text>
                                           <FormControl
-                                            className="text-end ms-0"
+                                            className="text-end ms-0 bg-transparent border-0 text-lg"
                                             type="number"
                                             min="0"
                                             step="any"
-                                            placeholder="0.00"
+                                            placeholder="0"
                                             id="swapInput2"
                                             autoComplete="off"
                                             autoCorrect="off"
@@ -909,7 +915,7 @@ const Swap = () => {
                                           />
                                         </InputGroup>
 
-                                        <Row className="pt-1">
+                                        <Row className="pt-1 fw-light">
                                           <Col>
                                             {formatShortString(
                                               getSynth(assetSwap2?.tokenAddress)
@@ -924,7 +930,7 @@ const Swap = () => {
                                             >
                                               <Icon
                                                 icon="copy"
-                                                size="16"
+                                                size="14"
                                                 className="ms-1 mb-1"
                                               />
                                             </ShareLink>
@@ -939,9 +945,8 @@ const Swap = () => {
                                             >
                                               <Icon
                                                 icon="scan"
-                                                size="12"
+                                                size="14"
                                                 className="ms-1 mb-1"
-                                                fill="rgb(170, 205, 255)"
                                               />
                                             </a>
                                           </Col>
@@ -970,14 +975,17 @@ const Swap = () => {
                                 <Card className="assetSection mb-3">
                                   <Card.Body>
                                     <Row>
-                                      <Col xs="auto">
+                                      <Col>
                                         <strong>
                                           {activeTab === 'burn'
                                             ? t('receive')
                                             : t('melt')}
                                         </strong>
                                       </Col>
-                                      <Col className="float-end text-end">
+                                      <Col
+                                        xs="auto"
+                                        className="float-end text-end fw-light"
+                                      >
                                         {t('balance')}
                                         {': '}
                                         {pool.poolDetails &&
@@ -987,8 +995,11 @@ const Swap = () => {
 
                                     <Row className="my-1">
                                       <Col>
-                                        <InputGroup className="m-0">
-                                          <InputGroup.Text id="assetSelect2">
+                                        <InputGroup className="m-0 py-3">
+                                          <InputGroup.Text
+                                            id="assetSelect2"
+                                            className="bg-transparent border-0"
+                                          >
                                             <AssetSelect
                                               priority="2"
                                               filter={['token']}
@@ -996,17 +1007,17 @@ const Swap = () => {
                                             />
                                           </InputGroup.Text>
                                           <FormControl
-                                            className="text-end ms-0"
+                                            className="text-end ms-0 bg-transparent border-0 text-lg"
                                             type="number"
                                             min="0"
                                             step="any"
-                                            placeholder="0.00"
+                                            placeholder="0"
                                             id="swapInput2"
                                             disabled
                                           />
                                         </InputGroup>
 
-                                        <Row className="pt-1">
+                                        <Row className="pt-1 fw-light">
                                           <Col>
                                             {formatShortString(
                                               assetSwap2?.tokenAddress,
@@ -1016,7 +1027,7 @@ const Swap = () => {
                                             >
                                               <Icon
                                                 icon="copy"
-                                                size="16"
+                                                size="14"
                                                 className="ms-1 mb-1"
                                               />
                                             </ShareLink>
@@ -1029,9 +1040,8 @@ const Swap = () => {
                                             >
                                               <Icon
                                                 icon="scan"
-                                                size="12"
+                                                size="14"
                                                 className="ms-1 mb-1"
-                                                fill="rgb(170, 205, 255)"
                                               />
                                             </a>
                                           </Col>

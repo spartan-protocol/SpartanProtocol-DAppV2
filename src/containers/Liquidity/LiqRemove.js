@@ -402,17 +402,17 @@ const LiqRemove = () => {
         </Col>
       </Row>
 
-      <Row className="">
+      <Row>
         <Col xs="12">
           <Card className="assetSection">
             <Card.Body>
               <Row>
-                <Col className="">
+                <Col>
                   <strong>{t('redeem')}</strong>
                 </Col>
                 <Col
                   xs="auto"
-                  className="float-end text-end"
+                  className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
@@ -437,8 +437,11 @@ const LiqRemove = () => {
 
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect1">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect1"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect priority="1" filter={['pool']} />
                     </InputGroup.Text>
                     <OverlayTrigger
@@ -454,11 +457,11 @@ const LiqRemove = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0"
+                        className="text-end ms-0 bg-transparent border-0 text-lg"
                         type="number"
                         min="0"
                         step="any"
-                        placeholder={`${t('redeem')}...`}
+                        placeholder="0"
                         id="removeInput1"
                         autoComplete="off"
                         autoCorrect="off"
@@ -467,31 +470,27 @@ const LiqRemove = () => {
 
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs(1)}
                       onClick={() => clearInputs(1)}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(poolRemove1?.address)}
                       <ShareLink url={poolRemove1?.address}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(poolRemove1?.address)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -512,20 +511,20 @@ const LiqRemove = () => {
                 <Col xs="auto" className="mx-auto">
                   <Icon
                     icon={activeTab === 'addTab1' ? 'plus' : 'arrowDown'}
-                    size="25"
-                    stroke="white"
-                    fill="white"
-                    className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                    size="30"
+                    stroke="black"
+                    fill="black"
+                    className="position-relative bg-white rounded-circle px-2 iconOnTop"
                   />
                 </Col>
               </Row>
-              <Card>
+              <Card className="mb-3 assetSection">
                 <Card.Body>
                   <Row>
-                    <Col xs="auto" className="">
+                    <Col>
                       <strong>{t('receive')}</strong>
                     </Col>
-                    <Col className="float-end text-end">
+                    <Col xs="auto" className="float-end text-end fw-light">
                       {t('balance')}:{' '}
                       {pool.tokenDetails && formatFromWei(getBalance(2))}
                     </Col>
@@ -533,8 +532,11 @@ const LiqRemove = () => {
 
                   <Row className="my-1">
                     <Col>
-                      <InputGroup className="">
-                        <InputGroup.Text id="assetSelect2">
+                      <InputGroup className="m-0 py-3">
+                        <InputGroup.Text
+                          id="assetSelect2"
+                          className="bg-transparent border-0"
+                        >
                           <AssetSelect
                             priority="2"
                             filter={['token']}
@@ -550,21 +552,21 @@ const LiqRemove = () => {
                           />
                         </InputGroup.Text>
                         <FormControl
-                          className="text-end ms-0"
+                          className="text-end ms-0 bg-transparent border-0 text-lg"
                           type="number"
                           min="0"
                           step="any"
-                          placeholder={`${t('receive')}...`}
+                          placeholder="0"
                           id="removeInput2"
                           disabled
                         />
                       </InputGroup>
 
-                      <Row className="pt-1">
+                      <Row className="pt-1 fw-light">
                         <Col>
                           {formatShortString(assetRemove1?.tokenAddress)}
                           <ShareLink url={assetRemove1?.tokenAddress}>
-                            <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                            <Icon icon="copy" size="14" className="ms-1 mb-1" />
                           </ShareLink>
                           <a
                             href={getExplorerContract(
@@ -573,12 +575,7 @@ const LiqRemove = () => {
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Icon
-                              icon="scan"
-                              size="12"
-                              className="ms-1 mb-1"
-                              fill="rgb(170, 205, 255)"
-                            />
+                            <Icon icon="scan" size="14" className="ms-1 mb-1" />
                           </a>
                         </Col>
                         <Col className="text-end">
@@ -651,7 +648,7 @@ const LiqRemove = () => {
                     <strong>{t('receive')}</strong>
                   </Col>
                   <Col className="text-end">
-                    <strong className="">
+                    <strong>
                       ~{output2 > 0 ? formatFromWei(output2, 6) : '0.00'} SPARTA
                     </strong>
                   </Col>
@@ -682,7 +679,7 @@ const LiqRemove = () => {
                   </a>
                 </div>
                 <Form className="my-2 text-center">
-                  <span className="">
+                  <span>
                     {t('poolAsymRemoveConfirmShort', {
                       token1: getToken(assetRemove1.tokenAddress)?.symbol,
                     })}

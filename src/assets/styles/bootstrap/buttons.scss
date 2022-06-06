@@ -3,6 +3,7 @@
 .btn {
   font-family: 'Blinker', sans-serif;
   font-size: 14px;
+  color: $text;
 }
 
 .btn-sm {
@@ -18,6 +19,7 @@
 .btn:disabled {
   background-color: $primary;
   border: none;
+  color: $text;
 }
 
 .btn-outline-secondary {
@@ -25,14 +27,19 @@
 }
 
 body.dark-theme {
+  .btn {
+    color: $text-dark;
+  }
+
   .btn-primary {
     background-color: $primary-dark;
     border: none;
   }
-  
+
   .btn:disabled {
     background-color: $primary-dark;
     border: none;
+    color: $text-dark;
   }
 
   .btn-outline-secondary {
