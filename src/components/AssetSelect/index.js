@@ -301,7 +301,7 @@ const AssetSelect = (props) => {
         }
         role="button"
       >
-        <Col xs="auto" className="position-relative pe-1 ps-2">
+        <Col xs="auto" className="position-relative pe-1 ps-0">
           {selectedType === 'token' && (
             <img
               className="rounded-circle"
@@ -354,7 +354,7 @@ const AssetSelect = (props) => {
           {selectedType === 'pool' && 'p'}
           {selectedType === 'synth' && 's'}
           {!props.disabled && (
-            <Icon icon="arrowDown" size="12" fill="grey" className="ps-1" />
+            <Icon icon="arrowDown" size="13" className="ms-2" />
           )}
         </Col>
       </Row>

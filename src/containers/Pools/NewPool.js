@@ -326,6 +326,7 @@ const NewPool = ({ setShowModal, showModal }) => {
                         placeholder="$SPARTA"
                         type="number"
                         min="0"
+                        step="any"
                         autoComplete="off"
                         autoCorrect="off"
                         isValid={spartaValid}
@@ -345,6 +346,7 @@ const NewPool = ({ setShowModal, showModal }) => {
                         placeholder={`$${tokenSymbol}`}
                         type="number"
                         min="0"
+                        step="any"
                         autoComplete="off"
                         autoCorrect="off"
                         isValid={tokenValid}

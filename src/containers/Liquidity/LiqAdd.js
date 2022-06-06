@@ -553,6 +553,7 @@ const LiqAdd = () => {
                         className="text-end ms-0"
                         type="number"
                         min="0"
+                        step="any"
                         placeholder={`${t('add')}...`}
                         id="addInput1"
                         autoComplete="off"
@@ -676,6 +677,7 @@ const LiqAdd = () => {
                             className="text-end ms-0"
                             type="number"
                             min="0"
+                            step="any"
                             placeholder={`${t('add')}...`}
                             id="addInput2"
                             autoComplete="off"
@@ -754,6 +756,7 @@ const LiqAdd = () => {
                           className="text-end ms-0"
                           type="number"
                           min="0"
+                          step="any"
                           placeholder="0.00"
                           id="addInput3"
                           disabled

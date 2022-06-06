@@ -463,6 +463,7 @@ ethereum(network: $network){
                           <FormControl
                             type="number"
                             min="0"
+                            step="any"
                             id="inputDonation"
                             placeholder={
                               !selectedAsset

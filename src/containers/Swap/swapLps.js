@@ -495,6 +495,7 @@ const SwapLps = () => {
                         className="text-end ms-0"
                         type="number"
                         min="0"
+                        step="any"
                         placeholder={`${t('sell')}...`}
                         id="swapInput1"
                         autoComplete="off"
@@ -591,6 +592,7 @@ const SwapLps = () => {
                       className="text-end ms-0"
                       type="number"
                       min="0"
+                      step="any"
                       placeholder={`${t('buy')}...`}
                       id="swapInput2"
                       disabled

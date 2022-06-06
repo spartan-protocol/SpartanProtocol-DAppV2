@@ -776,6 +776,7 @@ const Swap = () => {
                                             className="text-end ms-0"
                                             type="number"
                                             min="0"
+                                            step="any"
                                             placeholder={`${t('add')}...`}
                                             id="swapInput1"
                                             autoComplete="off"
@@ -899,6 +900,7 @@ const Swap = () => {
                                             className="text-end ms-0"
                                             type="number"
                                             min="0"
+                                            step="any"
                                             placeholder="0.00"
                                             id="swapInput2"
                                             autoComplete="off"
@@ -997,6 +999,7 @@ const Swap = () => {
                                             className="text-end ms-0"
                                             type="number"
                                             min="0"
+                                            step="any"
                                             placeholder="0.00"
                                             id="swapInput2"
                                             disabled

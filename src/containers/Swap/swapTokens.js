@@ -487,7 +487,7 @@ const SwapTokens = () => {
                   <strong>{t('sell')}</strong>
                 </Col>
                 <Col
-                  className="float-end text-end"
+                  className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
@@ -509,8 +509,11 @@ const SwapTokens = () => {
               </Row>
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect1">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect1"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         defaultTab="token"
                         priority="1"
@@ -530,9 +533,10 @@ const SwapTokens = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0"
+                        className="text-end ms-0 bg-transparent border-0"
                         type="number"
                         min="0"
+                        step="any"
                         placeholder={`${t('sell')}...`}
                         id="swapInput1"
                         autoComplete="off"
@@ -542,15 +546,16 @@ const SwapTokens = () => {
 
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="10" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap1?.tokenAddress)}
                       <ShareLink url={assetSwap1?.tokenAddress}>
@@ -561,12 +566,7 @@ const SwapTokens = () => {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="12" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
@@ -619,9 +619,9 @@ const SwapTokens = () => {
               <Icon
                 icon="swap"
                 size="30"
-                stroke="white"
-                fill="white"
-                className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                stroke="black"
+                fill="black"
+                className="position-relative bg-white rounded-circle px-2 iconOnTop"
               />
             </Col>
           </Row>
@@ -634,7 +634,7 @@ const SwapTokens = () => {
                 <Col xs="auto" className="">
                   <strong>{t('buy')}</strong>
                 </Col>
-                <Col className="float-end text-end">
+                <Col className="float-end text-end fw-light">
                   {t('balance')}
                   {': '}
                   {pool.poolDetails && formatFromWei(getBalance(2), 4)}
@@ -643,8 +643,11 @@ const SwapTokens = () => {
 
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect2">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect2"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         priority="2"
                         filter={['token']}
@@ -652,15 +655,17 @@ const SwapTokens = () => {
                       />
                     </InputGroup.Text>
                     <FormControl
-                      className="text-end ms-0"
+                      className="text-end ms-0 bg-transparent border-0"
                       type="number"
                       min="0"
+                      step="any"
                       placeholder={`${t('buy')}...`}
                       id="swapInput2"
                       disabled
                     />
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
@@ -669,7 +674,7 @@ const SwapTokens = () => {
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap2?.tokenAddress)}
                       <ShareLink url={assetSwap2?.tokenAddress}>
@@ -680,12 +685,7 @@ const SwapTokens = () => {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="12" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">

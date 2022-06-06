@@ -79,6 +79,7 @@ import { ReactComponent as Twitter } from '../../assets/brands/twitter.svg'
 // TOKENS
 import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
+import { ReactComponent as SpartaNavbar } from '../../assets/tokens/spartanavbar.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
 import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
@@ -179,6 +180,7 @@ const icons = {
   // TOKENS
   spartav1: SpartaV1,
   spartav2: SpartaV2,
+  spartaNavbar: SpartaNavbar,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
   bnb: Bnb,

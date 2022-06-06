@@ -333,6 +333,7 @@ const NewProposal = () => {
                                     id="paramInput"
                                     placeholder=""
                                     type="number"
+                                    step="any"
                                     min="0"
                                     autoComplete="off"
                                     autoCorrect="off"

@@ -1,10 +1,40 @@
 @import '../variables.scss';
 
+.btn {
+  font-family: 'Blinker', sans-serif;
+  font-size: 14px;
+}
+
+.btn-sm {
+  font-family: 'Blinker', sans-serif;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background-color: $primary;
+  border: none;
+}
+
+.btn:disabled {
+  background-color: $primary;
+  border: none;
+}
+
 .btn-outline-secondary {
   color: $text;
 }
 
 body.dark-theme {
+  .btn-primary {
+    background-color: $primary-dark;
+    border: none;
+  }
+  
+  .btn:disabled {
+    background-color: $primary-dark;
+    border: none;
+  }
+
   .btn-outline-secondary {
     color: $text-dark;
   }

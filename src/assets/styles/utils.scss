@@ -28,3 +28,14 @@
     transform: rotate(360deg);
   }
 }
+
+// theme
+.bg-primary {
+  background-color: $primary !important;
+}
+
+body.dark-theme {
+  .bg-primary {
+    background-color: $primary-dark !important;
+  }
+}

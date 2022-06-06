@@ -457,6 +457,7 @@ const LiqRemove = () => {
                         className="text-end ms-0"
                         type="number"
                         min="0"
+                        step="any"
                         placeholder={`${t('redeem')}...`}
                         id="removeInput1"
                         autoComplete="off"
@@ -552,6 +553,7 @@ const LiqRemove = () => {
                           className="text-end ms-0"
                           type="number"
                           min="0"
+                          step="any"
                           placeholder={`${t('receive')}...`}
                           id="removeInput2"
                           disabled

@@ -1589,6 +1589,11 @@
     "@ethersproject/properties" "^5.6.0"
     "@ethersproject/strings" "^5.6.0"
 
+"@fontsource/blinker@^4.5.7":
+  version "4.5.7"
+  resolved "https://registry.yarnpkg.com/@fontsource/blinker/-/blinker-4.5.7.tgz#62f930d3664ae80ce01c9e894685a4cd498925a9"
+  integrity sha512-J2u5e8EML5z8H1EcMYOp2GwkYJao9dVljqseGON395TK4U5bLGcraEpEJLMimwgEEml1MD69SycCuuSjyEgaOQ==
+
 "@fontsource/saira@^4.5.3":
   version "4.5.8"
   resolved "https://registry.yarnpkg.com/@fontsource/saira/-/saira-4.5.8.tgz#c792fc9711631be7ca55c1e474c21d909aad920b"

@@ -147,12 +147,25 @@ a {
   z-index: 1000;
 }
 
+.bnbchainicon {
+  fill: black;
+}
+
+.spartaicon {
+  fill: black;
+}
+
 .orderDesc .down {
   fill: black;
 }
 
 .orderAsc .up {
   fill: black;
+}
+
+.assetSelect {
+  background: none;
+  border: none;
 }
 
 @media only screen and (max-width: 321px) {
@@ -232,10 +245,18 @@ body.dark-theme {
     background-attachment: local, local, scroll, scroll;
   }
 
+  .bnbchainicon {
+    fill: white;
+  }
+
+  .spartaicon {
+    fill: white;
+  }
+
   .orderDesc .down {
     fill: white;
   }
-  
+
   .orderAsc .up {
     fill: white;
   }
