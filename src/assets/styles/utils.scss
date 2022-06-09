@@ -38,8 +38,12 @@
   color: #FFF;
 }
 
+.bg-progress {
+  background-color: #c2c2c2 !important;
+}
+
 body.dark-theme {
-  .bg-primary {
+  .bg-primary, .bg-progress {
     background-color: $primary-dark !important;
   }
 }
