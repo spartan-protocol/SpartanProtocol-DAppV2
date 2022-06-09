@@ -257,7 +257,7 @@ const Supply = () => {
                           <div className="mb-3">{t('totalSupplyInfo')}</div>
                           <Row>
                             <Col xs="4" className="text-center">
-                              <Badge bg="primary">{t('burnForSparta')}</Badge>
+                              <Badge bg="progress">{t('burnForSparta')}</Badge>
                             </Col>
                             <Col xs="4" className="text-center">
                               <Badge bg="info">{t('bond')}</Badge>
@@ -285,7 +285,7 @@ const Supply = () => {
                 <Col xs="12 mb-2">
                   <ProgressBar height="10">
                     <ProgressBar
-                      variant="primary"
+                      variant="progress"
                       key={1}
                       now={
                         network.chainId === 56
@@ -369,7 +369,7 @@ const Supply = () => {
                   <ProgressBar>
                     <ProgressBar
                       id="sparta2supply"
-                      variant="primary"
+                      variant="progress"
                       key={2}
                       now={formatFromWei(
                         BN(getCirculatingSupply())
