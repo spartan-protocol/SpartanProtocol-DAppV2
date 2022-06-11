@@ -36,17 +36,18 @@ const PoolTableItem = ({ asset, daoApy }) => {
 
   const getFees = () =>
     pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].fees
+      ? pool.incentives.filter((x) => x.address === asset.address)[0]?.fees
       : 0
 
   const getDivis = () =>
     curated && pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
+      ? pool.incentives.filter((x) => x.address === asset.address)[0]
+          ?.incentives
       : 0
 
   const getVol = () =>
     pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].volume
+      ? pool.incentives.filter((x) => x.address === asset.address)[0]?.volume
       : 0
 
   const APY = calcAPY(asset, getFees(), getDivis())

@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import {
   getCuratedPools,
@@ -40,7 +40,6 @@ import {
   changeNetwork,
   getNetwork,
   liveChains,
-  tempChains,
 } from '../../../utils/web3'
 
 const DataManager = () => {
@@ -54,13 +53,6 @@ const DataManager = () => {
   const synth = useSynth()
   const web3 = useWeb3()
 
-  const [prevNetwork, setPrevNetwork] = useState(false)
-  const [netLoading, setnetLoading] = useState(false)
-
-  const [trigger1, settrigger1] = useState(0)
-  const [trigger2, settrigger2] = useState(0)
-  const [trigger3, settrigger3] = useState(0)
-
   const tryParse = (data) => {
     try {
       return JSON.parse(data)
@@ -69,139 +61,75 @@ const DataManager = () => {
     }
   }
 
-  /** Get the current block from a main RPC */
-  const getBlockTimer = useRef(null)
+  /** On DApp load check network and get the party started */
   useEffect(() => {
-    const getSubGraphData = () => {
+    const network = tryParse(window.localStorage.getItem('network'))
+    changeNetwork(network?.chainId)
+  }, [])
+
+  /** Get the current block from a main RPC */
+  useEffect(() => {
+    const checkRpcs = () => {
       dispatch(getRPCBlocks())
       dispatch(getGlobalMetrics())
     }
-    getSubGraphData() // Run on load
-    getBlockTimer.current = setInterval(async () => {
-      getSubGraphData()
-    }, 20000)
-    return () => clearInterval(getBlockTimer.current)
-  }, [dispatch, getBlockTimer])
-
-  /** On DApp load check network and get the party started */
-  const checkNetwork = async () => {
-    const network = tryParse(window.localStorage.getItem('network'))
-    if (netLoading === false) {
-      setnetLoading(true)
-      if (network?.chainId !== prevNetwork?.chainId) {
-        changeNetwork(network?.chainId)
-        settrigger1(0)
-        setPrevNetwork(tryParse(network))
-      } else {
-        setPrevNetwork(tryParse(network))
-      }
-      setnetLoading(false)
-    }
-  }
-  useEffect(() => {
-    checkNetwork()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.localStorage.getItem('network')])
-
-  /** Get the initial arrays (tokens, curated & global details) */
-  const checkArrays = async () => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (liveChains.includes(chainId)) {
-      dispatch(getListedTokens(web3.rpcs)) // TOKEN ARRAY
-      dispatch(getCuratedPools(web3.rpcs)) // CURATED ARRAY
-      dispatch(getSpartaGlobalDetails(web3.rpcs)) // SPARTA GLOBAL DETAILS
-      dispatch(getReserveGlobalDetails(web3.rpcs)) // RESERVE GLOBAL DETAILS
-    }
-  }
-  useEffect(() => {
-    if (trigger1 === 0) {
-      checkArrays()
-      settrigger1(trigger1 + 1)
-    }
-    const timer = setTimeout(() => {
-      checkArrays()
-      settrigger1(trigger1 + 1)
+    checkRpcs() // Run on load
+    const interval = setInterval(() => {
+      checkRpcs() // Run on interval
     }, 10000)
     return () => {
-      clearTimeout(timer)
+      clearInterval(interval)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [window.localStorage.getItem('network'), trigger1])
+  }, [dispatch])
+
+  /** Get the initial arrays (tokens, curated & global details) */
+  useEffect(() => {
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (liveChains.includes(chainId)) {
+      dispatch(getListedTokens()) // TOKEN ARRAY
+      dispatch(getCuratedPools()) // CURATED ARRAY
+      dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
+      dispatch(getReserveGlobalDetails()) // RESERVE GLOBAL DETAILS
+    }
+  }, [dispatch, web3.rpcs])
 
   /** Check SPARTA token price */
   useEffect(() => {
-    if (trigger2 === 0) {
-      dispatch(getSpartaPrice())
-    }
-    const timer = setTimeout(() => {
-      dispatch(getSpartaPrice())
-      settrigger2(trigger2 + 1)
+    dispatch(getSpartaPrice()) // Run on load
+    const interval = setInterval(() => {
+      dispatch(getSpartaPrice()) // Run on interval
     }, 10000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger2])
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch])
 
   /** Update synthArray & tokenDetails */
-  const checkArraysNext = async () => {
-    const { listedTokens } = pool
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (listedTokens.length > 0) {
-      if (liveChains.includes(chainId)) {
-        dispatch(getSynthArray(listedTokens, web3.rpcs))
-        dispatch(getTokenDetails(listedTokens, wallet, chainId, web3.rpcs))
-      }
-    }
-  }
   useEffect(() => {
-    if (trigger3 === 0) {
-      checkArraysNext()
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (liveChains.includes(chainId)) {
+      dispatch(getSynthArray())
+      dispatch(getTokenDetails(wallet, chainId))
     }
-    const timer = setTimeout(() => {
-      checkArraysNext()
-      settrigger3(trigger3 + 1)
-    }, 7500)
-    return () => {
-      clearTimeout(timer)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedTokens, trigger3, wallet.account])
+  }, [dispatch, wallet, pool.listedTokens])
 
   /** Get listed pools details */
   useEffect(() => {
-    const { tokenDetails } = pool
-    const checkListedPools = () => {
-      if (tokenDetails && tokenDetails.length > 0) {
-        dispatch(getListedPools(tokenDetails, web3.rpcs))
-      }
-    }
-    checkListedPools()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.tokenDetails])
+    dispatch(getListedPools())
+  }, [dispatch, pool.tokenDetails])
 
   /** Get the 30d rolling incentives for all pools */
   useEffect(() => {
-    if (pool.listedPools) {
-      dispatch(getMonthIncentives(pool.listedPools))
-    }
+    dispatch(getMonthIncentives())
   }, [dispatch, pool.listedPools])
 
   /** Get final pool details */
   useEffect(() => {
-    const { listedPools, curatedPools } = pool
-    const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (listedPools?.length > 0) {
-          dispatch(getPoolDetails(listedPools, curatedPools, wallet, web3.rpcs))
-        }
-      }
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (liveChains.includes(chainId)) {
+      dispatch(getPoolDetails(wallet))
     }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [dispatch, wallet, pool.listedPools])
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {

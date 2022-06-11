@@ -146,24 +146,29 @@ export const getSynthMinting = (rpcUrls) => async (dispatch) => {
  * @param tokenArray
  * @returns synthArray
  */
-export const getSynthArray = (tokenArray, rpcUrls) => async (dispatch) => {
+export const getSynthArray = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const addr = getAddresses()
-  const contract = getSynthFactoryContract(null, rpcUrls)
+  const { listedTokens } = getState().pool
+  const { rpcs } = getState().web3
+  const contract = getSynthFactoryContract(null, rpcs)
   try {
     let tempArray = []
-    for (let i = 0; i < tokenArray.length; i++) {
-      if (tokenArray[i] === addr.spartav1 || tokenArray[i] === addr.spartav2) {
+    for (let i = 0; i < listedTokens.length; i++) {
+      if (
+        listedTokens[i] === addr.spartav1 ||
+        listedTokens[i] === addr.spartav2
+      ) {
         tempArray.push(addr.bnb)
       } else {
-        tempArray.push(contract.callStatic.getSynth(tokenArray[i]))
+        tempArray.push(contract.callStatic.getSynth(listedTokens[i]))
       }
     }
     const synthArray = []
     tempArray = await Promise.all(tempArray)
     for (let i = 0; i < tempArray.length; i++) {
       synthArray.push({
-        tokenAddress: tokenArray[i],
+        tokenAddress: listedTokens[i],
         address: tempArray[i] === addr.bnb ? false : tempArray[i],
       })
     }

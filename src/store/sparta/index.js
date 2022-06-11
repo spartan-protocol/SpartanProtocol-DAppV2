@@ -57,10 +57,11 @@ export const {
   updateCommunityWallet,
 } = spartaSlice.actions
 
-export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
+export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
+  const { web3 } = getState()
   // const contract1 = getSpartaV1Contract(null, rpcUrls)
-  const contract2 = getSpartaV2Contract(null, rpcUrls)
+  const contract2 = getSpartaV2Contract(null, web3.rpcs)
 
   try {
     let awaitArray = [

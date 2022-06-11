@@ -46,11 +46,12 @@ export const {
  * Get the Reserve contract details
  * @returns {object} emissions, spartaBalance
  */
-export const getReserveGlobalDetails = (rpcUrls) => async (dispatch) => {
+export const getReserveGlobalDetails = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
+  const { web3 } = getState()
   const addr = getAddresses()
-  const contract = getReserveContract(null, rpcUrls)
-  const spartaContract = getSpartaV2Contract(null, rpcUrls)
+  const contract = getReserveContract(null, web3.rpcs)
+  const spartaContract = getSpartaV2Contract(null, web3.rpcs)
   // const busdpContract = getTokenContract(addr.busdp)
   try {
     let awaitArray = [
