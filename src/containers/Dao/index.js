@@ -76,9 +76,9 @@ const Overview = () => {
         ),
       )
       dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-      dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
+      dispatch(bondVaultWeight())
       dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-      dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
+      dispatch(getBondDetails(wallet))
       dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

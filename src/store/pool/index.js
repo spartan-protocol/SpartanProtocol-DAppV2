@@ -339,15 +339,15 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
 export const createPoolADD =
   (inputBase, inputToken, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const { web3 } = getState()
+    const { rpcs } = getState().web3
     const addr = getAddresses()
-    const contract = getPoolFactoryContract(wallet, web3.rpcs)
+    const contract = getPoolFactoryContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(web3.rpcs)
+      const gPrice = await getProviderGasPrice(rpcs)
       const _value = token === addr.bnb ? inputToken : null
       const ORs = { value: _value, gasPrice: gPrice }
       let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
-      txn = await parseTxn(txn, 'createPool', web3.rpcs)
+      txn = await parseTxn(txn, 'createPool', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
       dispatch(updateError(error))

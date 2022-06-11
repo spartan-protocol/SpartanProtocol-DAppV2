@@ -76,7 +76,7 @@ const DataManager = () => {
     checkRpcs() // Run on load
     const interval = setInterval(() => {
       checkRpcs() // Run on interval
-    }, 10000)
+    }, 20000)
     return () => {
       clearInterval(interval)
     }

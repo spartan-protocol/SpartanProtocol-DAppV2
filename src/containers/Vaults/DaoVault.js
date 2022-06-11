@@ -77,7 +77,7 @@ const DaoVault = () => {
     const checkDetails = () => {
       if (pool.listedPools?.length > 1) {
         dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-        dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
+        dispatch(getBondDetails(wallet))
       }
     }
     checkDetails()
@@ -88,7 +88,7 @@ const DaoVault = () => {
     const checkWeight = () => {
       if (pool.poolDetails?.length > 1) {
         dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-        dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
+        dispatch(bondVaultWeight())
       }
     }
     checkWeight()

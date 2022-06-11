@@ -210,7 +210,7 @@ const WalletSelect = (props) => {
         )
       ) {
         if (pool.listedPools?.length > 0) {
-          dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
+          dispatch(getBondDetails(wallet))
           dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
         }
         if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {

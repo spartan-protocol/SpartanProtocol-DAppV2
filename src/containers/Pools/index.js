@@ -47,7 +47,7 @@ const Overview = () => {
     const checkWeight = () => {
       if (pool.poolDetails?.length > 1) {
         dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-        dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
+        dispatch(bondVaultWeight())
       }
     }
     checkWeight()
