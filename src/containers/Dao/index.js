@@ -40,23 +40,20 @@ const Overview = () => {
 
   const [selectedView, setSelectedView] = useState('current')
 
-  const [trigger0, settrigger0] = useState(0)
-  const getData = () => {
-    if (tempChains.includes(getNetwork().chainId)) {
-      dispatch(daoGlobalDetails())
-    }
-  }
   useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
+    const getData = () => {
+      if (tempChains.includes(getNetwork().chainId)) {
+        dispatch(daoGlobalDetails())
+      }
     }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
+    getData() // Run on load
+    const interval = setInterval(() => {
+      getData() // Run on interval
     }, 10000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch])
 
   useEffect(() => {
     if (tempChains.includes(getNetwork().chainId)) {

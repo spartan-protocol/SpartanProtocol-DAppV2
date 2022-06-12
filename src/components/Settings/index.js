@@ -13,32 +13,23 @@ import { Tooltip } from '../Tooltip'
 import { getNetwork, getSettings } from '../../utils/web3'
 import { gasRatesMN, gasRatesTN, slipTols, defaultSettings } from './options'
 
-/**
- * Settings panel to change gas rate & slip tolerance etc
- */
+/** Settings panel to change gas rate & slip tolerance etc */
 const Settings = ({ setShowModal, showModal }) => {
   const { t } = useTranslation()
-
-  const network = getNetwork()
 
   const [gasRate, setGasRate] = useState(null)
   const [slipTolerance, setSlipTolerance] = useState(null)
 
-  const setInitials = () => {
+  useEffect(() => {
     const lsSettings = getSettings()
-    const isMN = network.chainId === 56
+    const isMN = getNetwork().chainId === 56
     setGasRate(isMN ? lsSettings.gasRateMN : lsSettings.gasRateTN)
     setSlipTolerance(lsSettings.slipTol)
-  }
-
-  useEffect(() => {
-    setInitials()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const saveSettings = () => {
     const lsSettings = getSettings()
-    const isMN = network.chainId === 56
+    const isMN = getNetwork().chainId === 56
     if (isMN) {
       lsSettings.gasRateMN = gasRate
     } else {
@@ -50,7 +41,7 @@ const Settings = ({ setShowModal, showModal }) => {
   }
 
   const resetDefaults = () => {
-    const isMN = network.chainId === 56
+    const isMN = getNetwork().chainId === 56
     if (isMN) {
       setGasRate(defaultSettings.gasRateMN)
     } else {
@@ -78,7 +69,7 @@ const Settings = ({ setShowModal, showModal }) => {
                 </OverlayTrigger>
                 <br />
                 <ButtonGroup className="mt-2">
-                  {network.chainId === 56
+                  {getNetwork().chainId === 56
                     ? gasRatesMN.map((i) => (
                         <Button
                           key={i}

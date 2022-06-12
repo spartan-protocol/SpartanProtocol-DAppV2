@@ -58,6 +58,7 @@ import { useReserve } from '../../store/reserve'
 import { useDao, daoMemberDetails } from '../../store/dao'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
+import { useFocus } from '../../providers/Focus'
 
 const Swap = () => {
   const wallet = useWeb3React()
@@ -70,6 +71,7 @@ const Swap = () => {
   const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
+  const focus = useFocus()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -90,16 +92,6 @@ const Swap = () => {
   const [typeParam1, setTypeParam1] = useState(
     new URLSearchParams(location.search).get(`type1`),
   )
-
-  const [hasFocus, setHasFocus] = useState(true)
-
-  window.addEventListener('focus', () => {
-    setHasFocus(true)
-  })
-
-  window.addEventListener('blur', () => {
-    setHasFocus(false)
-  })
 
   useEffect(() => {
     const getGlobals = () => {
@@ -147,7 +139,7 @@ const Swap = () => {
     const { poolDetails } = pool
 
     const getAssetDetails = () => {
-      if (hasFocus) {
+      if (focus) {
         if (poolDetails?.length > 0) {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
@@ -228,7 +220,7 @@ const Swap = () => {
     window.localStorage.getItem('assetType1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetType2'),
-    hasFocus,
+    focus,
   ])
 
   const getToken = (tokenAddress) =>

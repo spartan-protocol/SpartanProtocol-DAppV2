@@ -137,8 +137,7 @@ const DataManager = () => {
       addTxn(wallet.account, dao.txn)
       dispatch(updateTxnDao([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dao.txn])
+  }, [dao.txn, dispatch, wallet.account])
 
   /** Update txnArray whenever a new dao-proposal txn is picked up */
   useEffect(() => {
@@ -146,8 +145,7 @@ const DataManager = () => {
       addTxn(wallet.account, dao.propTxn)
       dispatch(updateTxnProposal([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dao.propTxn])
+  }, [dao.propTxn, dispatch, wallet.account])
 
   /** Update txnArray whenever a new pool txn is picked up */
   useEffect(() => {
@@ -155,8 +153,7 @@ const DataManager = () => {
       addTxn(wallet.account, pool.txn)
       dispatch(updateTxnPool([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.txn])
+  }, [dispatch, pool.txn, wallet.account])
 
   /** Update txnArray whenever a new router txn is picked up */
   useEffect(() => {
@@ -164,8 +161,7 @@ const DataManager = () => {
       addTxn(wallet.account, router.txn)
       dispatch(updateTxnRouter([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.txn])
+  }, [dispatch, router.txn, wallet.account])
 
   /** Update txnArray whenever a new sparta txn is picked up */
   useEffect(() => {
@@ -173,8 +169,7 @@ const DataManager = () => {
       addTxn(wallet.account, sparta.txn)
       dispatch(updateTxnSparta([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sparta.txn])
+  }, [dispatch, sparta.txn, wallet.account])
 
   /** Update txnArray whenever a new synth txn is picked up */
   useEffect(() => {
@@ -182,8 +177,7 @@ const DataManager = () => {
       addTxn(wallet.account, synth.txn)
       dispatch(updateTxnSynth([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.txn])
+  }, [dispatch, synth.txn, wallet.account])
 
   /** Update txnArray whenever a new web3/misc txn is picked up */
   useEffect(() => {
@@ -191,8 +185,7 @@ const DataManager = () => {
       addTxn(wallet.account, web3.txn)
       dispatch(updateTxnWeb3([]))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [web3.txn])
+  }, [dispatch, wallet.account, web3.txn])
 
   return <></>
 }

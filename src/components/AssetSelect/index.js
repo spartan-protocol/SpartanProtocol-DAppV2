@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +20,7 @@ import { getAddresses } from '../../utils/web3'
 
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
+import { getSynth, getToken } from '../../utils/math/utils'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -33,17 +33,16 @@ import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
  */
 const AssetSelect = (props) => {
   const addr = getAddresses()
-  const synth = useSynth()
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [showModal, setShowModal] = useState(false)
+  const synth = useSynth()
+  const pool = usePool()
+  const wallet = useWeb3React()
 
+  const [showModal, setShowModal] = useState(false)
   const [activeTab, setActiveTab] = useState(
     props.defaultTab ? props.defaultTab : 'all',
   )
-  const pool = usePool()
-
-  const wallet = useWeb3React()
 
   const isBNB = (asset) => {
     if (asset.address === addr.bnb && asset.actualAddr === addr.bnb) return true
@@ -91,24 +90,33 @@ const AssetSelect = (props) => {
   )
 
   useEffect(() => {
+    const _tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     setSelectedItem(
-      tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
+      _tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
     )
     setSelectedType(window.localStorage.getItem(`assetType${props.priority}`))
   }, [
+    pool.poolDetails,
+    props.priority,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem(`assetType${props.priority}`),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem(`assetSelected${props.priority}`),
   ])
 
   const [assetArray, setAssetArray] = useState([])
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
-  const getSynth = (tokenAddress) =>
-    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+  const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
   useEffect(() => {
+    const __getToken = (tokenAddress) =>
+      getToken(tokenAddress, pool.tokenDetails)
     let finalArray = []
     const getArray = () => {
       if (pool.poolDetails) {
@@ -142,15 +150,15 @@ const AssetSelect = (props) => {
                   <img
                     className="rounded-circle"
                     height="35px"
-                    src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                    src={__getToken(tempArray[i].tokenAddress)?.symbolUrl}
                     alt={`${
-                      getToken(tempArray[i].tokenAddress)?.symbol
+                      __getToken(tempArray[i].tokenAddress)?.symbol
                     } asset icon`}
                   />
                 ),
-                iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
-                symbol: getToken(tempArray[i].tokenAddress)?.symbol,
-                balance: getToken(tempArray[i].tokenAddress)?.balance,
+                iconUrl: __getToken(tempArray[i].tokenAddress)?.symbolUrl,
+                symbol: __getToken(tempArray[i].tokenAddress)?.symbol,
+                balance: __getToken(tempArray[i].tokenAddress)?.balance,
                 address: tempArray[i].tokenAddress,
                 actualAddr: tempArray[i].tokenAddress,
               })
@@ -165,15 +173,15 @@ const AssetSelect = (props) => {
                 <img
                   className="rounded-circle"
                   height="35px"
-                  src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                  src={__getToken(tempArray[i].tokenAddress)?.symbolUrl}
                   alt={`${
-                    getToken(tempArray[i].tokenAddress)?.symbol
+                    __getToken(tempArray[i].tokenAddress)?.symbol
                   } asset icon`}
                 />
               ),
-              iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
-              symbol: getToken(tempArray[i].tokenAddress)?.symbol,
-              balance: getToken(tempArray[i].tokenAddress)?.balance,
+              iconUrl: __getToken(tempArray[i].tokenAddress)?.symbolUrl,
+              symbol: __getToken(tempArray[i].tokenAddress)?.symbol,
+              balance: __getToken(tempArray[i].tokenAddress)?.balance,
               address: tempArray[i].tokenAddress,
               actualAddr: tempArray[i].tokenAddress,
             })
@@ -189,9 +197,9 @@ const AssetSelect = (props) => {
                     <img
                       className="rounded-circle"
                       height="35px"
-                      src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                      src={__getToken(tempArray[i].tokenAddress)?.symbolUrl}
                       alt={`${
-                        getToken(tempArray[i].tokenAddress)?.symbol
+                        __getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
                     />
                     <img
@@ -199,13 +207,13 @@ const AssetSelect = (props) => {
                       height="20px"
                       className="token-badge"
                       alt={`${
-                        getToken(tempArray[i].tokenAddress)?.symbol
+                        __getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
                     />
                   </>
                 ),
-                iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
-                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}p`,
+                iconUrl: __getToken(tempArray[i].tokenAddress)?.symbolUrl,
+                symbol: `${__getToken(tempArray[i].tokenAddress)?.symbol}p`,
                 balance: tempArray[i].balance,
                 address: tempArray[i].tokenAddress,
                 actualAddr: tempArray[i].address,
@@ -215,18 +223,21 @@ const AssetSelect = (props) => {
 
           // Add synth to array
           if (props.filter?.includes('synth')) {
-            if (getSynth(tempArray[i].tokenAddress)?.address !== false) {
+            if (
+              getSynth(tempArray[i].tokenAddress, synth.synthDetails)
+                ?.address !== false
+            ) {
               finalArray.push({
                 type: 'synth',
-                iconUrl: getToken(tempArray[i].tokenAddress)?.symbolUrl,
+                iconUrl: __getToken(tempArray[i].tokenAddress)?.symbolUrl,
                 icon: (
                   <>
                     <img
                       className="rounded-circle"
                       height="35px"
-                      src={getToken(tempArray[i].tokenAddress)?.symbolUrl}
+                      src={__getToken(tempArray[i].tokenAddress)?.symbolUrl}
                       alt={`${
-                        getToken(tempArray[i].tokenAddress)?.symbol
+                        __getToken(tempArray[i].tokenAddress)?.symbol
                       } synth icon`}
                     />
                     <img
@@ -234,15 +245,19 @@ const AssetSelect = (props) => {
                       height="20px"
                       className="token-badge"
                       alt={`${
-                        getToken(tempArray[i].tokenAddress)?.symbol
+                        __getToken(tempArray[i].tokenAddress)?.symbol
                       } LP token icon`}
                     />
                   </>
                 ),
-                symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}s`,
-                balance: getSynth(tempArray[i].tokenAddress)?.balance,
+                symbol: `${__getToken(tempArray[i].tokenAddress)?.symbol}s`,
+                balance: getSynth(tempArray[i].tokenAddress, synth.synthDetails)
+                  ?.balance,
                 address: tempArray[i].tokenAddress,
-                actualAddr: getSynth(tempArray[i].tokenAddress)?.address,
+                actualAddr: getSynth(
+                  tempArray[i].tokenAddress,
+                  synth.synthDetails,
+                )?.address,
               })
             }
           }
@@ -260,11 +275,15 @@ const AssetSelect = (props) => {
     }
     getArray()
   }, [
+    addr.spartav2,
     pool.poolDetails,
+    pool.tokenDetails,
     props.blackList,
+    props.empty,
     props.filter,
     props.whiteList,
     searchInput?.value,
+    synth.synthDetails,
   ])
 
   const getWalletType = () => {
@@ -312,8 +331,8 @@ const AssetSelect = (props) => {
             <img
               className="rounded-circle"
               height="40px"
-              src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
-              alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+              src={_getToken(selectedItem?.tokenAddress)?.symbolUrl}
+              alt={`${_getToken(selectedItem?.tokenAddress)?.symbol}icon`}
             />
           )}
 
@@ -322,15 +341,15 @@ const AssetSelect = (props) => {
               <img
                 className="rounded-circle"
                 height="40px"
-                src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
-                alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+                src={_getToken(selectedItem?.tokenAddress)?.symbolUrl}
+                alt={`${_getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
               <img
                 src={spartaLpIcon}
                 height="22px"
                 className="token-badge-tight"
                 alt={`${
-                  getToken(selectedItem?.tokenAddress)?.symbol
+                  _getToken(selectedItem?.tokenAddress)?.symbol
                 } LP token icon`}
               />
             </>
@@ -341,15 +360,15 @@ const AssetSelect = (props) => {
               <img
                 className="rounded-circle"
                 height="40px"
-                src={getToken(selectedItem?.tokenAddress)?.symbolUrl}
-                alt={`${getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+                src={_getToken(selectedItem?.tokenAddress)?.symbolUrl}
+                alt={`${_getToken(selectedItem?.tokenAddress)?.symbol}icon`}
               />
               <img
                 src={spartaSynthIcon}
                 height="22px"
                 className="token-badge-tight"
                 alt={`${
-                  getToken(selectedItem?.tokenAddress)?.symbol
+                  _getToken(selectedItem?.tokenAddress)?.symbol
                 } LP token icon`}
               />
             </>
@@ -357,7 +376,7 @@ const AssetSelect = (props) => {
         </Col>
         <Col className="px-1 my-auto overflow-hidden">
           <h4 className="mb-0">
-            {selectedItem && getToken(selectedItem?.tokenAddress)?.symbol}
+            {selectedItem && _getToken(selectedItem?.tokenAddress)?.symbol}
             {selectedType === 'pool' && 'p'}
             {selectedType === 'synth' && 's'}
             {!props.disabled && (

@@ -16,13 +16,11 @@ import { Icon } from '../../components/Icons/index'
 import { getToken } from '../../utils/math/utils'
 import { usePool } from '../../store/pool'
 import { BN } from '../../utils/bigNumber'
-import { useWeb3 } from '../../store/web3'
 
 const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const pool = usePool()
-  const web3 = useWeb3()
   const addr = getAddresses()
   const { t } = useTranslation()
   const network = getNetwork()

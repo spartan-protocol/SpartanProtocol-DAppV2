@@ -48,7 +48,11 @@ const Approval = ({
   const [pending, setPending] = useState(false)
   const [valid, setValid] = useState(false)
 
-  const getAllowance = () => {
+  const handleApproval = async () => {
+    setPending(true)
+    setNotify(true)
+    await dispatch(getApproval(tokenAddress, contractAddress, wallet))
+    setNotify(false)
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
         dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
@@ -58,17 +62,14 @@ const Approval = ({
     }
   }
 
-  const handleApproval = async () => {
-    setPending(true)
-    setNotify(true)
-    await dispatch(getApproval(tokenAddress, contractAddress, wallet))
-    setNotify(false)
-    getAllowance()
-  }
-
   useEffect(() => {
-    getAllowance()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (tokenAddress && walletAddress && contractAddress) {
+      if (assetNumber === '1') {
+        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+      } else if (assetNumber === '2') {
+        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+      }
+    }
   }, [
     pool.poolDetails,
     tokenAddress,
@@ -77,38 +78,35 @@ const Approval = ({
     contractAddress,
     txnAmount,
     assetNumber,
+    dispatch,
+    wallet,
   ])
 
-  const getAllowanceObj = () => {
+  useEffect(() => {
+    let allowanceObj = 0
     if (assetNumber === '1') {
-      return web3.allowance1
+      allowanceObj = web3.allowance1
+    } else if (assetNumber === '2') {
+      allowanceObj = web3.allowance2
     }
-    if (assetNumber === '2') {
-      return web3.allowance2
-    }
-    return 0
-  }
-
-  const checkValid = () => {
-    if (BN(getAllowanceObj()).isGreaterThanOrEqualTo(txnAmount)) {
+    if (BN(allowanceObj).isGreaterThanOrEqualTo(txnAmount)) {
       setValid(true)
       setPending(false)
     } else {
       setValid(false)
     }
-  }
-
-  useEffect(() => {
-    checkValid()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [web3.allowance1, web3.allowance2, txnAmount, pool.poolDetails])
+  }, [
+    web3.allowance1,
+    web3.allowance2,
+    txnAmount,
+    pool.poolDetails,
+    assetNumber,
+  ])
 
   useEffect(() => {
     dispatch(updateAllowance1('0'))
     dispatch(updateAllowance2('0'))
-    getAllowance()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dispatch])
 
   // ~0.00047 BNB gas (approval) on TN || ~0.00025 BNB on MN
   const estMaxGas = '250000000000000'

@@ -195,13 +195,15 @@ export const getAllowance1 =
   (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
-      const allowance1 = await contract.allowance(
-        wallet.account,
-        contractAddress,
-      )
-      dispatch(updateAllowance1(allowance1.toString()))
+      if (rpcs.length > 0) {
+        const contract = getTokenContract(tokenAddress, wallet, rpcs)
+        const allowance1 = await contract.allowance(
+          wallet.account,
+          contractAddress,
+        )
+        dispatch(updateAllowance1(allowance1.toString()))
+      }
     } catch (error) {
       dispatch(updateError(error))
     }
@@ -217,13 +219,15 @@ export const getAllowance2 =
   (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
-      const allowance2 = await contract.allowance(
-        wallet.account,
-        contractAddress,
-      )
-      dispatch(updateAllowance2(allowance2.toString()))
+      if (rpcs.length > 0) {
+        const contract = getTokenContract(tokenAddress, wallet, rpcs)
+        const allowance2 = await contract.allowance(
+          wallet.account,
+          contractAddress,
+        )
+        dispatch(updateAllowance2(allowance2.toString()))
+      }
     } catch (error) {
       dispatch(updateError(error))
     }

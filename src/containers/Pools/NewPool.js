@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
@@ -46,11 +46,6 @@ const NewPool = ({ setShowModal, showModal }) => {
   const [feeConfirm, setFeeConfirm] = useState(false)
 
   const addrInput = document.getElementById('addrInput')
-  const handleAddrChange = (newValue) => {
-    if (addrInput) {
-      addrInput.value = newValue
-    }
-  }
 
   const [tokenInfo, setTokenInfo] = useState(null)
   const [tokenSymbol, setTokenSymbol] = useState('TOKEN')
@@ -58,64 +53,71 @@ const NewPool = ({ setShowModal, showModal }) => {
     `${window.location.origin}/images/icons/Fallback.svg`,
   )
 
-  const getTokenInfo = async () => {
-    if (network.chainId === 56) {
-      const info = await getTwTokenInfo(addrInput?.value)
-      if (info) {
-        setTokenInfo(info)
-      }
-      setTokenIcon(await getTwTokenLogo(addrInput?.value, network.chainId))
-    }
-    const provider = getWalletProvider(null, web3.rpcs)
-    const deployed = await provider.getCode(addrInput?.value)
-    const contract = getTokenContract(addrInput?.value, null, web3.rpcs)
-    let symbol = 'TOKEN'
-    try {
-      symbol = deployed !== '0x' ? await contract.symbol() : 'TOKEN'
-    } catch (e) {
-      console.error(e)
-      symbol = 'TOKEN'
-    }
-    setTokenSymbol(symbol)
-  }
-
   const spartaInput = document.getElementById('spartaInput')
-  const handleSpartaChange = (newValue) => {
-    if (spartaInput) {
-      spartaInput.value = newValue
-    }
-  }
+  const handleSpartaChange = useCallback(
+    (newValue) => {
+      if (spartaInput) {
+        spartaInput.value = newValue
+      }
+    },
+    [spartaInput],
+  )
 
   const tokenInput = document.getElementById('tokenInput')
-  const handleTokenChange = (newValue) => {
-    if (tokenInput) {
-      tokenInput.value = newValue
-    }
-  }
+  const handleTokenChange = useCallback(
+    (newValue) => {
+      if (tokenInput) {
+        tokenInput.value = newValue
+      }
+    },
+    [tokenInput],
+  )
 
   const [prevToken, setPrevToken] = useState(null)
   const [addrValid, setaddrValid] = useState(false)
-  const handleInvalid = () => {
-    setaddrValid(false)
-    handleSpartaChange('')
-    handleTokenChange('')
-  }
   const clearTokenInfo = () => {
     setTokenInfo(false)
     setTokenIcon(`${window.location.origin}/images/icons/Fallback.svg`)
     setTokenSymbol('TOKEN')
   }
+
   useEffect(() => {
+    const getTokenInfo = async () => {
+      if (getNetwork().chainId === 56) {
+        const info = await getTwTokenInfo(addrInput?.value)
+        if (info) {
+          setTokenInfo(info)
+        }
+        setTokenIcon(
+          await getTwTokenLogo(addrInput?.value, getNetwork().chainId),
+        )
+      }
+      const provider = getWalletProvider(null, web3.rpcs)
+      const deployed = await provider.getCode(addrInput?.value)
+      const contract = getTokenContract(addrInput?.value, null, web3.rpcs)
+      let symbol = 'TOKEN'
+      try {
+        symbol = deployed !== '0x' ? await contract.symbol() : 'TOKEN'
+      } catch (e) {
+        console.error(e)
+        symbol = 'TOKEN'
+      }
+      setTokenSymbol(symbol)
+    }
+    const handleInvalid = () => {
+      setaddrValid(false)
+      handleSpartaChange('')
+      handleTokenChange('')
+    }
     if (
       addrInput?.value?.length === 42 &&
       ethers.utils.isAddress(addrInput?.value)
     ) {
-      setPrevToken(null)
-      if (tempChains.includes(network.chainId)) {
+      if (tempChains.includes(getNetwork().chainId)) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
         }
-        if (tempChains.includes(network.chainId) || tokenInfo.decimals === 18) {
+        if (tokenInfo.decimals === 18) {
           setaddrValid(true)
         } else {
           handleInvalid()
@@ -129,8 +131,15 @@ const NewPool = ({ setShowModal, showModal }) => {
       handleInvalid()
       clearTokenInfo()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addrInput?.value, showModal, tokenInfo])
+  }, [
+    addrInput?.value,
+    showModal,
+    tokenInfo,
+    prevToken,
+    handleSpartaChange,
+    handleTokenChange,
+    web3.rpcs,
+  ])
 
   const [spartaValid, setSpartaValid] = useState(false)
   useEffect(() => {
@@ -174,20 +183,24 @@ const NewPool = ({ setShowModal, showModal }) => {
     setShowModal(false)
   }
 
-  const handleModalClear = () => {
-    handleAddrChange('')
-    handleSpartaChange('')
-    handleTokenChange('')
-    setRatioConfirm(false)
-    setFeeConfirm(false)
-    setTokenSymbol('TOKEN')
-  }
   useEffect(() => {
+    const handleAddrChange = (newValue) => {
+      if (addrInput) {
+        addrInput.value = newValue
+      }
+    }
+    const handleModalClear = () => {
+      handleAddrChange('')
+      handleSpartaChange('')
+      handleTokenChange('')
+      setRatioConfirm(false)
+      setFeeConfirm(false)
+      setTokenSymbol('TOKEN')
+    }
     if (showModal !== true) {
       handleModalClear()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showModal])
+  }, [addrInput, handleSpartaChange, handleTokenChange, showModal])
 
   const priceInSparta = () => {
     const price = BN(tokenInput?.value).div(spartaInput?.value)

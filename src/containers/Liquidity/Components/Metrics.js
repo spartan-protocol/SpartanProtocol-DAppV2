@@ -73,7 +73,7 @@ const Metrics = ({ assetSwap }) => {
     getMetrics() // Run on load
     getBlockTimer.current = setInterval(async () => {
       if (assetSwap.address) {
-        getMetrics()
+        getMetrics() // Run on interval
       }
     }, 20000)
     return () => clearInterval(getBlockTimer.current)
@@ -121,34 +121,24 @@ const Metrics = ({ assetSwap }) => {
     return accumulative
   }
 
-  const getTotalDaoWeight = () => {
-    const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
-    if (_amount > 0) {
-      return _amount
-    }
-    return '0.00'
-  }
-
-  const getDaoApy = () => {
-    let revenue = BN(web3.metrics.global[0].daoVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = getTotalDaoWeight().toString()
-    const apy = calcDaoAPY(revenue, baseAmount)
-    return apy.toFixed(2).toString()
-  }
-
-  const isDaoVaultLoading = () => {
-    if (!web3.metrics.global || !bond.totalWeight || !dao.totalWeight) {
-      return true
-    }
-    return false
-  }
-
   useEffect(() => {
-    if (!isDaoVaultLoading()) {
+    const getTotalDaoWeight = () => {
+      const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
+      if (_amount > 0) {
+        return _amount
+      }
+      return '0.00'
+    }
+    const getDaoApy = () => {
+      let revenue = BN(web3.metrics.global[0].daoVault30Day)
+      revenue = revenue.toString()
+      const baseAmount = getTotalDaoWeight().toString()
+      const apy = calcDaoAPY(revenue, baseAmount)
+      return apy.toFixed(2).toString()
+    }
+    if (web3.metrics.global && bond.totalWeight && dao.totalWeight) {
       setDaoApy(getDaoApy())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
   const APY = asset ? calcAPY(assetSwap, getFees(), getDivis(), period) : 0

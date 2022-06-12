@@ -40,6 +40,7 @@ import { getTimeUntil, getZapSpot } from '../../utils/math/nonContract'
 import { zapLiq } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
+import { useFocus } from '../../providers/Focus'
 
 const SwapLps = () => {
   const { t } = useTranslation()
@@ -50,6 +51,7 @@ const SwapLps = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+  const focus = useFocus()
 
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -65,16 +67,6 @@ const SwapLps = () => {
     new URLSearchParams(location.search).get(`asset2`),
   )
 
-  const [hasFocus, setHasFocus] = useState(true)
-
-  window.addEventListener('focus', () => {
-    setHasFocus(true)
-  })
-
-  window.addEventListener('blur', () => {
-    setHasFocus(false)
-  })
-
   const tryParse = (data) => {
     try {
       return JSON.parse(data)
@@ -87,7 +79,7 @@ const SwapLps = () => {
     const { poolDetails } = pool
 
     const getAssetDetails = () => {
-      if (hasFocus) {
+      if (focus) {
         if (poolDetails?.length > 0) {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
@@ -175,7 +167,7 @@ const SwapLps = () => {
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected2'),
-    hasFocus,
+    focus,
   ])
 
   const getToken = (tokenAddress) =>

@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -47,6 +46,7 @@ import { addLiq, addLiqAsym } from '../../utils/math/router'
 import { Tooltip } from '../../components/Tooltip/index'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
+import { useFocus } from '../../providers/Focus'
 
 const LiqAdd = () => {
   const { t } = useTranslation()
@@ -57,11 +57,11 @@ const LiqAdd = () => {
   const addr = getAddresses()
   const sparta = useSparta()
   const location = useLocation()
+  const focus = useFocus()
 
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [showWalletWarning2, setShowWalletWarning2] = useState(false)
   const [showWalletWarning3, setShowWalletWarning3] = useState(false)
-  const [hasFocus, setHasFocus] = useState(true)
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('addTab1')
   const [confirm, setConfirm] = useState(false)
@@ -75,27 +75,17 @@ const LiqAdd = () => {
     new URLSearchParams(location.search).get(`asset1`),
   )
 
-  window.addEventListener('focus', () => {
-    setHasFocus(true)
-  })
-
-  window.addEventListener('blur', () => {
-    setHasFocus(false)
-  })
-
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
-    const { poolDetails } = pool
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const getAssetDetails = () => {
-      if (hasFocus) {
-        if (poolDetails.length > 0 && activeTab === 'addTab1') {
+      if (focus && pool.poolDetails.length > 0) {
+        if (activeTab === 'addTab1') {
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType2', 'token')
           window.localStorage.setItem('assetType3', 'pool')
@@ -107,9 +97,11 @@ const LiqAdd = () => {
           const _assetParam1 =
             assetParam1 === addr.wbnb ? addr.bnb : assetParam1
           if (
-            poolDetails.find((asset) => asset.tokenAddress === _assetParam1)
+            pool.poolDetails.find(
+              (asset) => asset.tokenAddress === _assetParam1,
+            )
           ) {
-            ;[asset1] = poolDetails.filter(
+            ;[asset1] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === _assetParam1,
             )
             setAssetParam1('')
@@ -134,7 +126,7 @@ const LiqAdd = () => {
           window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
           window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
           window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-        } else if (poolDetails && activeTab === 'addTab2') {
+        } else if (activeTab === 'addTab2') {
           window.localStorage.setItem('assetType1', 'token')
           window.localStorage.setItem('assetType3', 'pool')
 
@@ -151,10 +143,10 @@ const LiqAdd = () => {
           asset1 = getItemFromArray(asset1, pool.poolDetails)
           asset3 = getItemFromArray(asset3, pool.poolDetails)
           asset1 = asset1.hide
-            ? getItemFromArray(addr.bnb, poolDetails)
+            ? getItemFromArray(addr.bnb, pool.poolDetails)
             : asset1
           asset3 = asset3.hide
-            ? getItemFromArray(addr.bnb, poolDetails)
+            ? getItemFromArray(addr.bnb, pool.poolDetails)
             : asset3
 
           setAssetAdd1(asset1)
@@ -165,16 +157,22 @@ const LiqAdd = () => {
         }
       }
     }
-
     getAssetDetails()
     balanceWidths()
   }, [
-    pool.poolDetails,
-    window.localStorage.getItem('assetSelected1'),
-    window.localStorage.getItem('assetSelected2'),
-    window.localStorage.getItem('assetSelected3'),
     activeTab,
-    hasFocus,
+    assetParam1,
+    addr.wbnb,
+    addr.bnb,
+    addr.spartav2,
+    focus,
+    pool.poolDetails,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetSelected1'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetSelected2'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    window.localStorage.getItem('assetSelected3'),
   ])
 
   const getToken = (tokenAddress) =>
@@ -189,6 +187,75 @@ const LiqAdd = () => {
     setConfirmFreeze(false)
   }
 
+  const [addLiqState, setAddLiqState] = useState(['0.00', false, false])
+  /**
+   * Get liqAdd txn details
+   * @returns [outputLP, slipRevert, capRevert]
+   */
+  const getAddLiq = useCallback(() => {
+    if (activeTab === 'addTab1' && addInput1 && addInput2) {
+      const [outputLP, slipRevert, capRevert] = addLiq(
+        convertToWei(addInput1.value),
+        assetAdd1,
+        sparta.globalDetails.feeOnTransfer,
+        convertToWei(addInput2.value),
+      )
+      setAddLiqState([outputLP, slipRevert, capRevert])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    activeTab,
+    addInput1,
+    addInput2,
+    addInput1?.value,
+    addInput2?.value,
+    assetAdd1,
+    sparta.globalDetails.feeOnTransfer,
+  ])
+
+  const [addLiqAsymState, setAddLiqAsymState] = useState([
+    '0.00',
+    '0.00',
+    false,
+    false,
+  ])
+  /**
+   * Get liqAddAsym txn details
+   * @returns [unitsLP, swapFee, slipRevert, capRevert]
+   */
+  const getAddLiqAsym = useCallback(() => {
+    if (activeTab === 'addTab2' && addInput1 && assetAdd1) {
+      const fromBase = assetAdd1.tokenAddress === addr.spartav2
+      const [unitsLP, swapFee, slipRevert, capRevert] = addLiqAsym(
+        convertToWei(addInput1.value),
+        poolAdd1,
+        fromBase,
+        sparta.globalDetails.feeOnTransfer,
+      )
+      setAddLiqAsymState([unitsLP, swapFee, slipRevert, capRevert])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    activeTab,
+    addInput1,
+    addInput1?.value,
+    addInput2?.value,
+    outputLp,
+    addr.spartav2,
+    assetAdd1,
+    poolAdd1,
+    sparta.globalDetails.feeOnTransfer,
+  ])
+
+  const updateAddLiq = useCallback(() => {
+    getAddLiq()
+    getAddLiqAsym()
+  }, [getAddLiq, getAddLiqAsym])
+
+  useEffect(() => {
+    updateAddLiq()
+  }, [activeTab, assetAdd1.tokenAddress, assetAdd2.tokenAddress, updateAddLiq])
+
   const clearInputs = (focusAfter) => {
     handleConfClear()
     setOutputLp('0.00')
@@ -201,6 +268,7 @@ const LiqAdd = () => {
     if (addInput3) {
       addInput3.value = ''
     }
+    updateAddLiq()
     if (focusAfter === 1) {
       addInput1.focus()
     }
@@ -231,41 +299,6 @@ const LiqAdd = () => {
 
   //= =================================================================================//
   // Get txn info
-
-  /**
-   * Get liqAdd txn details
-   * @returns [outputLP, slipRevert, capRevert]
-   */
-  const getAddLiq = () => {
-    if (addInput1 && activeTab === 'addTab1') {
-      const [outputLP, slipRevert, capRevert] = addLiq(
-        convertToWei(addInput1.value),
-        assetAdd1,
-        sparta.globalDetails.feeOnTransfer,
-        convertToWei(addInput2.value),
-      )
-      return [outputLP, slipRevert, capRevert]
-    }
-    return ['0.00', '0.00', false, false]
-  }
-
-  /**
-   * Get liqAddAsym txn details
-   * @returns [unitsLP, swapFee, slipRevert, capRevert]
-   */
-  const getAddLiqAsym = () => {
-    if (addInput1 && assetAdd1 && activeTab === 'addTab2') {
-      const fromBase = assetAdd1.tokenAddress === addr.spartav2
-      const [unitsLP, swapFee, slipRevert, capRevert] = addLiqAsym(
-        convertToWei(addInput1.value),
-        poolAdd1,
-        fromBase,
-        sparta.globalDetails.feeOnTransfer,
-      )
-      return [unitsLP, swapFee, slipRevert, capRevert]
-    }
-    return ['0.00', '0.00', false, false]
-  }
 
   const getInput1ValueUSD = () => {
     if (assetAdd1?.tokenAddress !== addr.spartav2 && addInput1?.value) {
@@ -312,7 +345,7 @@ const LiqAdd = () => {
   const getRevenue = () => {
     let result = '0.00'
     if (activeTab === 'addTab2') {
-      result = BN(getAddLiqAsym()[1])
+      result = BN(addLiqAsymState[1])
     }
     result = result > 0 ? result : '0.00'
     return result
@@ -347,10 +380,10 @@ const LiqAdd = () => {
     ) {
       return [false, t('checkBalance')]
     }
-    if (getAddLiqAsym()[2]) {
+    if (addLiqAsymState[2]) {
       return [false, t('slipTooHigh')]
     }
-    if (getAddLiqAsym()[3] || getAddLiq()[2]) {
+    if (addLiqAsymState[3] || addLiqState[2]) {
       return [false, t('poolAtCapacity')]
     }
     if (poolAdd1.newPool && !confirm) {
@@ -371,26 +404,6 @@ const LiqAdd = () => {
   //= =================================================================================//
   // General Functions
 
-  const handleInputChange = () => {
-    if (activeTab === 'addTab1' && addInput1 && addInput2) {
-      if (addInput2 !== document.activeElement && addInput1.value) {
-        addInput2.value = calcSpotValueInBase(addInput1.value, poolAdd1)
-        setOutputLp(getAddLiq()[0])
-      } else if (addInput1 !== document.activeElement && addInput2.value) {
-        addInput1.value = calcSpotValueInToken(
-          addInput2.value > 0 ? addInput2.value : '0.00',
-          poolAdd1,
-        )
-        setOutputLp(getAddLiq()[0])
-      }
-    } else if (activeTab === 'addTab2' && addInput1 && addInput3) {
-      if (addInput1.value) {
-        setOutputLp(getAddLiqAsym()[0])
-        addInput3.value = convertFromWei(getAddLiqAsym()[0])
-      }
-    }
-  }
-
   const getRateSlip = () => {
     if (assetAdd1 && addInput1?.value > 0) {
       return BN(getLpValueUSD())
@@ -402,14 +415,32 @@ const LiqAdd = () => {
   }
 
   useEffect(() => {
-    handleInputChange()
+    if (activeTab === 'addTab1' && addInput1 && addInput2) {
+      if (addInput2 !== document.activeElement && addInput1.value) {
+        addInput2.value = calcSpotValueInBase(addInput1.value, poolAdd1)
+        setOutputLp(addLiqState[0])
+      } else if (addInput1 !== document.activeElement && addInput2.value) {
+        addInput1.value = calcSpotValueInToken(
+          addInput2.value > 0 ? addInput2.value : '0.00',
+          poolAdd1,
+        )
+        setOutputLp(addLiqState[0])
+      }
+    } else if (activeTab === 'addTab2' && addInput1 && addInput3) {
+      if (addInput1.value) {
+        setOutputLp(addLiqAsymState[0])
+        addInput3.value = convertFromWei(addLiqAsymState[0])
+      }
+    }
   }, [
-    addInput1?.value,
-    addInput2?.value,
-    assetAdd1,
-    assetAdd2,
     poolAdd1,
     activeTab,
+    addInput1,
+    addInput1?.value,
+    addInput2,
+    addInput3,
+    addLiqState,
+    addLiqAsymState,
   ])
 
   const handleAddLiq = async () => {
@@ -502,6 +533,7 @@ const LiqAdd = () => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
+                    clearInputs()
                     addInput1.value = convertFromWei(getBalance(1))
                   }}
                 >
@@ -535,7 +567,7 @@ const LiqAdd = () => {
                             ? [addr.spartav1, addr.spartav2]
                             : []
                         }
-                        onClick={handleConfClear}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <OverlayTrigger
@@ -559,6 +591,7 @@ const LiqAdd = () => {
                         id="addInput1"
                         autoComplete="off"
                         autoCorrect="off"
+                        onChange={() => updateAddLiq()}
                       />
                     </OverlayTrigger>
 
@@ -624,7 +657,7 @@ const LiqAdd = () => {
                       role="button"
                       aria-hidden="true"
                       onClick={() => {
-                        addInput2.focus()
+                        clearInputs()
                         addInput2.value = convertFromWei(getBalance(2))
                       }}
                     >
@@ -657,7 +690,7 @@ const LiqAdd = () => {
                             filter={['token']}
                             whiteList={[addr.spartav2]}
                             disabled={activeTab === 'addTab1'}
-                            onClick={handleConfClear}
+                            onClick={() => clearInputs()}
                           />
                         </InputGroup.Text>
                         <OverlayTrigger
@@ -683,6 +716,7 @@ const LiqAdd = () => {
                             id="addInput2"
                             autoComplete="off"
                             autoCorrect="off"
+                            onChange={() => updateAddLiq()}
                           />
                         </OverlayTrigger>
 
@@ -749,7 +783,7 @@ const LiqAdd = () => {
                               activeTab === 'addTab1' ||
                               assetAdd1.tokenAddress !== addr.spartav2
                             }
-                            onClick={handleConfClear}
+                            onClick={() => clearInputs()}
                           />
                         </InputGroup.Text>
                         <FormControl
@@ -824,8 +858,8 @@ const LiqAdd = () => {
                   <Row className="mb-2">
                     <Col xs="auto">{t('fee')}</Col>
                     <Col className="text-end">
-                      {getAddLiqAsym()[1] > 0
-                        ? formatFromWei(getAddLiqAsym()[1], 4)
+                      {addLiqAsymState[1] > 0
+                        ? formatFromWei(addLiqAsymState[1], 4)
                         : '0.00'}{' '}
                       SPARTA
                     </Col>
