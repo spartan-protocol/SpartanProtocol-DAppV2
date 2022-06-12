@@ -85,10 +85,9 @@ export const bondGlobalDetails = () => async (dispatch, getState) => {
 
 /**
  * Get the member bond details *VIEW*
- * @param listedPools @param wallet
  * @returns bondDetails
  */
-export const getBondDetails = (wallet) => async (dispatch, getState) => {
+export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { listedPools } = getState().pool
   try {
@@ -97,7 +96,7 @@ export const getBondDetails = (wallet) => async (dispatch, getState) => {
       const contract = getBondVaultContract(null, rpcs)
       let awaitArray = []
       for (let i = 0; i < listedPools.length; i++) {
-        if (!wallet.account || listedPools[i].baseAmount <= 0) {
+        if (!walletAddr || listedPools[i].baseAmount <= 0) {
           awaitArray.push({
             isMember: false,
             bondedLP: '0',
@@ -107,7 +106,7 @@ export const getBondDetails = (wallet) => async (dispatch, getState) => {
         } else {
           awaitArray.push(
             contract.callStatic.getMemberDetails(
-              wallet.account,
+              walletAddr,
               listedPools[i].address,
             ),
           )
@@ -135,7 +134,6 @@ export const getBondDetails = (wallet) => async (dispatch, getState) => {
 
 /**
  * Get the current bondVault's total weight *VIEW*
- * @param poolDetails
  * @returns spartaWeight
  */
 export const bondVaultWeight = () => async (dispatch, getState) => {
@@ -194,7 +192,6 @@ export const allListedAssets = () => async (dispatch, getState) => {
 
 /**
  * Claim a Bond assets by poolAddress *STATE*
- * @param tokenAddr @param wallet
  */
 export const claimBond = (tokenAddr, wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))

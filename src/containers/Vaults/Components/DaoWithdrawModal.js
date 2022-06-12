@@ -21,7 +21,6 @@ import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../utils/math/nonContract'
 import { getAddresses } from '../../../utils/web3'
 import { useReserve } from '../../../store/reserve'
-import { useWeb3 } from '../../../store/web3'
 import { useTheme } from '../../../providers/Theme'
 
 const DaoWithdrawModal = (props) => {
@@ -29,7 +28,6 @@ const DaoWithdrawModal = (props) => {
   const { t } = useTranslation()
   const pool = usePool()
   const reserve = useReserve()
-  const web3 = useWeb3()
   const dao = useDao()
   const wallet = useWeb3React()
   const { isDark } = useTheme()
@@ -106,14 +104,14 @@ const DaoWithdrawModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(wallet, web3.rpcs))
+    await dispatch(daoHarvest(wallet))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet, web3.rpcs))
+    dispatch(daoMemberDetails(wallet.account))
   }
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(daoWithdraw(pool1.address, wallet, web3.rpcs))
+    await dispatch(daoWithdraw(pool1.address, wallet))
     setTxnLoading(false)
     handleCloseModal()
   }

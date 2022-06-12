@@ -110,7 +110,7 @@ const Swap = () => {
   const getGlobals = () => {
     dispatch(getSynthGlobalDetails(web3.rpcs))
     dispatch(getSynthMemberDetails(wallet, web3.rpcs))
-    dispatch(daoMemberDetails(wallet, web3.rpcs))
+    dispatch(daoMemberDetails(wallet.account))
   }
   useEffect(() => {
     if (trigger1 === 0) {

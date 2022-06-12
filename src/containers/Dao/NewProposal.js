@@ -35,14 +35,12 @@ import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
 import { useReserve } from '../../store/reserve'
-import { useWeb3 } from '../../store/web3'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
   const pool = usePool()
-  const web3 = useWeb3()
   const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -183,23 +181,16 @@ const NewProposal = () => {
   const handleSubmit = async () => {
     setTxnLoading(true)
     if (selectedType?.type === 'Action') {
-      await dispatch(newActionProposal(selectedType.value, wallet, web3.rpcs))
+      await dispatch(newActionProposal(selectedType.value, wallet))
     } else if (selectedType?.type === 'Param') {
-      await dispatch(
-        newParamProposal(inputParam, selectedType.value, wallet, web3.rpcs),
-      )
+      await dispatch(newParamProposal(inputParam, selectedType.value, wallet))
     } else if (selectedType?.type === 'Address') {
       await dispatch(
-        newAddressProposal(inputAddress, selectedType.value, wallet, web3.rpcs),
+        newAddressProposal(inputAddress, selectedType.value, wallet),
       )
     } else if (selectedType?.type === 'Grant') {
       await dispatch(
-        newGrantProposal(
-          inputAddress,
-          convertToWei(inputParam),
-          wallet,
-          web3.rpcs,
-        ),
+        newGrantProposal(inputAddress, convertToWei(inputParam), wallet),
       )
     }
     setTxnLoading(false)

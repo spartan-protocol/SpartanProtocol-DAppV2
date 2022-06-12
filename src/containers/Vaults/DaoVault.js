@@ -57,10 +57,9 @@ const DaoVault = () => {
   }
 
   const getData = () => {
-    dispatch(daoGlobalDetails(web3.rpcs))
-    dispatch(daoMemberDetails(wallet, web3.rpcs))
+    dispatch(daoGlobalDetails())
+    dispatch(daoMemberDetails(wallet.account))
   }
-
   useEffect(() => {
     if (trigger0 === 0) {
       getData()
@@ -74,36 +73,18 @@ const DaoVault = () => {
   }, [trigger0])
 
   useEffect(() => {
-    const checkDetails = () => {
-      if (pool.listedPools?.length > 1) {
-        dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-        dispatch(getBondDetails(wallet))
-      }
-    }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+    dispatch(getDaoDetails(wallet.account))
+    dispatch(getBondDetails(wallet.account))
+  }, [dispatch, pool.listedPools, wallet.account])
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (pool.poolDetails?.length > 1) {
-        dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-        dispatch(bondVaultWeight())
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
+    dispatch(daoVaultWeight())
+    dispatch(bondVaultWeight())
+  }, [dispatch, pool.poolDetails])
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (dao.daoDetails?.length > 1) {
-        dispatch(daoDepositTimes(dao.daoDetails, wallet, web3.rpcs))
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dao.daoDetails])
+    dispatch(daoDepositTimes(wallet.account))
+  }, [dao.daoDetails, dispatch, wallet.account])
 
   const getTotalWeight = () => {
     const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
@@ -175,7 +156,7 @@ const DaoVault = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(daoHarvest(wallet, web3.rpcs))
+    await dispatch(daoHarvest(wallet))
     setTxnLoading(false)
   }
 

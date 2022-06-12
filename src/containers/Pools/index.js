@@ -44,15 +44,9 @@ const Overview = () => {
   const [tableView, setTableView] = useState(true)
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (pool.poolDetails?.length > 1) {
-        dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-        dispatch(bondVaultWeight())
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
+    dispatch(daoVaultWeight())
+    dispatch(bondVaultWeight())
+  }, [dispatch, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.poolDetails) {

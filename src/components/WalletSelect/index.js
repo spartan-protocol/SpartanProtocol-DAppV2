@@ -209,10 +209,8 @@ const WalletSelect = (props) => {
           tryParse(window.localStorage.getItem('network'))?.chainId,
         )
       ) {
-        if (pool.listedPools?.length > 0) {
-          dispatch(getBondDetails(wallet))
-          dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-        }
+        dispatch(getBondDetails(wallet.account))
+        dispatch(getDaoDetails(wallet.account))
         if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
           dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
         }

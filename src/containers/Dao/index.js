@@ -47,7 +47,7 @@ const Overview = () => {
   const [trigger0, settrigger0] = useState(0)
   const getData = () => {
     if (tempChains.includes(network.chainId)) {
-      dispatch(daoGlobalDetails(web3.rpcs))
+      dispatch(daoGlobalDetails())
     }
   }
   useEffect(() => {
@@ -64,21 +64,13 @@ const Overview = () => {
 
   useEffect(() => {
     if (tempChains.includes(network.chainId)) {
-      dispatch(daoMemberDetails(wallet, web3.rpcs))
-      dispatch(
-        daoProposalDetails(dao.global?.currentProposal, wallet, web3.rpcs),
-      )
-      dispatch(
-        proposalWeight(
-          dao.global?.currentProposal,
-          pool.poolDetails,
-          web3.rpcs,
-        ),
-      )
-      dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
+      dispatch(daoMemberDetails(wallet.account))
+      dispatch(daoProposalDetails(wallet.account))
+      dispatch(proposalWeight())
+      dispatch(daoVaultWeight())
       dispatch(bondVaultWeight())
-      dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-      dispatch(getBondDetails(wallet))
+      dispatch(getDaoDetails(wallet.account))
+      dispatch(getBondDetails(wallet.account))
       dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

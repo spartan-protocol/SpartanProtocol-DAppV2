@@ -30,21 +30,11 @@ const BondVault = () => {
   }
 
   useEffect(() => {
-    const { listedPools } = pool
-    const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (listedPools?.length > 0) {
-          dispatch(getBondDetails(wallet))
-        }
-      }
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (tempChains.includes(chainId)) {
+      dispatch(getBondDetails(wallet.account))
     }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [dispatch, pool.listedPools, wallet.account])
 
   const isLoading = () => {
     if (!bond.bondDetails) {
