@@ -17,7 +17,6 @@ import { getSynth, getToken } from '../../../utils/math/utils'
 import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
-import { useWeb3 } from '../../../store/web3'
 import { useTheme } from '../../../providers/Theme'
 
 const SynthHarvestAllModal = () => {
@@ -26,7 +25,6 @@ const SynthHarvestAllModal = () => {
   const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
-  const web3 = useWeb3()
   const { t } = useTranslation()
   const { isDark } = useTheme()
   const wallet = useWeb3React()
@@ -53,11 +51,9 @@ const SynthHarvestAllModal = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvest(getArray(), wallet, web3.rpcs))
+    await dispatch(synthHarvest(getArray(), wallet))
     setTxnLoading(false)
-    if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-    }
+    dispatch(getSynthDetails(wallet))
     handleCloseModal()
   }
 

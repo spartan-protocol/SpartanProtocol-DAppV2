@@ -421,7 +421,6 @@ const SwapLps = () => {
         assetSwap1.address,
         assetSwap2.address,
         wallet,
-        web3.rpcs,
       ),
     )
     setTxnLoading(false)

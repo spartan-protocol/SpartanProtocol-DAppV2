@@ -50,7 +50,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const handleSubmit = async () => {
     setTxnLoading(true)
-    await dispatch(createSynth(inputAddress, wallet, web3.rpcs))
+    await dispatch(createSynth(inputAddress, wallet))
     setTxnLoading(false)
     setShowModal(false)
   }

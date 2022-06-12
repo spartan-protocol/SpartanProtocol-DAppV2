@@ -30,10 +30,8 @@ import {
   convertToWei,
   convertFromWei,
   formatFromWei,
-  // formatFromUnits,
 } from '../../utils/bigNumber'
 import { swapAssetToSynth, swapSynthToAsset } from '../../store/router'
-import { useWeb3 } from '../../store/web3'
 import HelmetLoading from '../../components/Spinner/index'
 import Approval from '../../components/Approval/index'
 import SwapPair from '../Swap/SwapPair'
@@ -44,7 +42,6 @@ import { Icon } from '../../components/Icons/index'
 import { useSparta } from '../../store/sparta'
 import { balanceWidths } from '../Liquidity/Components/Utils'
 import { burnSynth, mintSynth, stirCauldron } from '../../utils/math/router'
-// import { calcSpotValueInBase } from '../../utils/math/utils'
 import {
   useSynth,
   getSynthDetails,
@@ -66,7 +63,6 @@ const Swap = () => {
   const wallet = useWeb3React()
   const synth = useSynth()
   const { t } = useTranslation()
-  const web3 = useWeb3()
   const dispatch = useDispatch()
   const addr = getAddresses()
   const dao = useDao()
@@ -74,7 +70,6 @@ const Swap = () => {
   const reserve = useReserve()
   const sparta = useSparta()
   const location = useLocation()
-  const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -96,7 +91,6 @@ const Swap = () => {
     new URLSearchParams(location.search).get(`type1`),
   )
 
-  const [trigger1, settrigger1] = useState(0)
   const [hasFocus, setHasFocus] = useState(true)
 
   window.addEventListener('focus', () => {
@@ -107,44 +101,28 @@ const Swap = () => {
     setHasFocus(false)
   })
 
-  const getGlobals = () => {
-    dispatch(getSynthGlobalDetails(web3.rpcs))
-    dispatch(getSynthMemberDetails(wallet, web3.rpcs))
-    dispatch(daoMemberDetails(wallet.account))
-  }
   useEffect(() => {
-    if (trigger1 === 0) {
-      getGlobals()
+    const getGlobals = () => {
+      dispatch(getSynthGlobalDetails())
+      dispatch(getSynthMemberDetails(wallet.account))
+      dispatch(daoMemberDetails(wallet.account))
     }
-    const timer = setTimeout(() => {
-      getGlobals()
-      settrigger1(trigger1 + 1)
-    }, 7500)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1])
+    getGlobals() // Run on load
+    const interval = setInterval(() => {
+      getGlobals() // Run on interval
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch, wallet.account])
 
   useEffect(() => {
-    const checkDetails = () => {
-      if (synth.synthArray?.length > 1) {
-        dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-      }
-    }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthArray])
+    dispatch(getSynthDetails(wallet))
+  }, [dispatch, synth.synthArray, wallet])
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
-        dispatch(
-          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
-        )
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthDetails])
+    dispatch(synthVaultWeight())
+  }, [dispatch, synth.synthDetails])
 
   const tryParse = (data) => {
     try {
@@ -155,24 +133,15 @@ const Swap = () => {
   }
 
   useEffect(() => {
-    const { listedPools } = pool
-    const { synthArray } = synth
     const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (synthArray?.length > 0 && listedPools?.length > 0) {
-          dispatch(getSynthGlobalDetails(web3.rpcs))
-          dispatch(getSynthDetails(synthArray, wallet, web3.rpcs))
-          dispatch(getSynthMinting(web3.rpcs))
-        }
+      if (tempChains.includes(getNetwork().chainId)) {
+        dispatch(getSynthGlobalDetails())
+        dispatch(getSynthDetails(wallet))
+        dispatch(getSynthMinting())
       }
     }
     checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [dispatch, pool.listedPools, wallet])
 
   useEffect(() => {
     const { poolDetails } = pool
@@ -548,7 +517,6 @@ const Swap = () => {
         assetSwap1.tokenAddress,
         getSynth(assetSwap2.tokenAddress)?.address,
         wallet,
-        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -563,7 +531,6 @@ const Swap = () => {
         getSynth(assetSwap1.tokenAddress)?.address,
         assetSwap2.tokenAddress,
         wallet,
-        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -573,15 +540,11 @@ const Swap = () => {
   const handleHarvest = async () => {
     setHarvestLoading(true)
     await dispatch(
-      synthHarvestSingle(
-        getSynth(assetSwap2.tokenAddress)?.address,
-        wallet,
-        web3.rpcs,
-      ),
+      synthHarvestSingle(getSynth(assetSwap2.tokenAddress)?.address, wallet),
     )
     setHarvestLoading(false)
     if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
+      dispatch(getSynthDetails(wallet))
     }
   }
 
@@ -626,7 +589,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(getNetwork().chainId) && (
           <>
             {/* MODALS */}
             {showCreateModal && (
@@ -1439,9 +1402,7 @@ const Swap = () => {
             )}
           </>
         )}
-        {network.chainId && !tempChains.includes(network.chainId) && (
-          <WrongNetwork />
-        )}
+        {!tempChains.includes(getNetwork().chainId) && <WrongNetwork />}
       </div>
     </>
   )

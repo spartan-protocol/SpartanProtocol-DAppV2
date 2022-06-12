@@ -84,7 +84,6 @@ export const {
 
 /**
  * Get array of all listed token addresses
- * @param wallet
  */
 export const getListedTokens = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
@@ -116,7 +115,6 @@ export const getListedTokens = () => async (dispatch, getState) => {
 
 /**
  * Get detailed array of token information
- * @param listedTokens @param wallet
  */
 export const getTokenDetails =
   (wallet, chainId) => async (dispatch, getState) => {
@@ -174,7 +172,6 @@ export const getTokenDetails =
 
 /**
  * Return array of curated pool addresses
- * @param wallet
  */
 export const getCuratedPools = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
@@ -193,7 +190,6 @@ export const getCuratedPools = () => async (dispatch, getState) => {
 
 /**
  * Get LP token addresses and setup the object
- * @param tokenDetails
  */
 export const getListedPools = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
@@ -252,7 +248,6 @@ export const getListedPools = () => async (dispatch, getState) => {
 
 /**
  * Add LP wallet-details to final array
- * @param listedPools @param curatedPools @param wallet
  */
 export const getPoolDetails = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoadingFinal(true))

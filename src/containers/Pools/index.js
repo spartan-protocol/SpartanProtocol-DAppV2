@@ -24,7 +24,7 @@ import { useWeb3 } from '../../store/web3'
 import { calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
 import { useDao, daoVaultWeight } from '../../store/dao'
 import SynthItem from './SynthItem'
-import { useSynth } from '../../store/synth'
+import { synthVaultWeight, useSynth } from '../../store/synth'
 import NewPool from './NewPool'
 
 const Overview = () => {
@@ -44,9 +44,17 @@ const Overview = () => {
   const [tableView, setTableView] = useState(true)
 
   useEffect(() => {
-    dispatch(daoVaultWeight())
-    dispatch(bondVaultWeight())
-  }, [dispatch, pool.poolDetails])
+    if (activeTab !== 'synths') {
+      dispatch(daoVaultWeight())
+      dispatch(bondVaultWeight())
+    }
+  }, [activeTab, dispatch, pool.poolDetails])
+
+  useEffect(() => {
+    if (activeTab === 'synths') {
+      dispatch(synthVaultWeight())
+    }
+  }, [activeTab, dispatch, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.poolDetails) {

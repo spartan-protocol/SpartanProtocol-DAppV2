@@ -153,7 +153,7 @@ export const daoMemberDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
   try {
-    if (rpcs.length > 0) {
+    if (walletAddr && rpcs.length > 0) {
       const contract = getDaoContract(null, rpcs)
       let awaitArray = [contract.callStatic.mapMember_lastTime(walletAddr)]
       awaitArray = await Promise.all(awaitArray)

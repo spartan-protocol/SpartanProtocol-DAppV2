@@ -13,13 +13,11 @@ import { spartaUpgrade } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
-import { useWeb3 } from '../../store/web3'
 
 const Upgrade = () => {
   const addr = getAddresses()
   const pool = usePool()
   const dispatch = useDispatch()
-  const web3 = useWeb3()
   const wallet = useWeb3React()
   const { t } = useTranslation()
 
@@ -66,7 +64,7 @@ const Upgrade = () => {
 
   const handleUpgrade = async () => {
     setUpgradeLoading(true)
-    await dispatch(spartaUpgrade(wallet, web3.rpcs))
+    await dispatch(spartaUpgrade(wallet))
     setUpgradeLoading(false)
   }
 

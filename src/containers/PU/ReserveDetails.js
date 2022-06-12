@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import { getReservePOLDetails, useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
-import { useWeb3 } from '../../store/web3'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { getPool, getToken } from '../../utils/math/utils'
 import { getNetwork, tempChains } from '../../utils/web3'
@@ -15,24 +14,16 @@ const ReserveDetails = () => {
   const pool = usePool()
   const dispatch = useDispatch()
   const reserve = useReserve()
-  const web3 = useWeb3()
   const sparta = useSparta()
   const network = getNetwork()
 
   const [selection, setSelection] = useState('')
 
   useEffect(() => {
-    if (
-      tempChains.includes(network.chainId) &&
-      pool.curatedPools &&
-      pool.poolDetails
-    ) {
-      dispatch(
-        getReservePOLDetails(pool.curatedPools, pool.poolDetails, web3.rpcs),
-      )
+    if (tempChains.includes(network.chainId)) {
+      dispatch(getReservePOLDetails())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.curatedPools, pool.poolDetails])
+  }, [dispatch, network.chainId, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.curatedPools || !reserve.polDetails || !pool.poolDetails) {

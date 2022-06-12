@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
@@ -6,10 +6,8 @@ import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import Row from 'react-bootstrap/Row'
-import { useDispatch } from 'react-redux'
 import spartaIconAlt from '../../assets/tokens/sparta-synth.svg'
 import { usePool } from '../../store/pool'
-import { synthVaultWeight, useSynth } from '../../store/synth'
 import { useWeb3 } from '../../store/web3'
 import {
   BN,
@@ -21,9 +19,9 @@ import { Tooltip } from '../../components/Tooltip/index'
 import styles from './styles.module.scss'
 import { getSynth } from '../../utils/math/utils'
 import { stirCauldron } from '../../utils/math/router'
+import { useSynth } from '../../store/synth'
 
 const SynthTableItem = ({ asset, synthApy }) => {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
@@ -42,18 +40,6 @@ const SynthTableItem = ({ asset, synthApy }) => {
     BN(getSynthSupply())
       .div(BN(getSynthSupply()).plus(getSynthStir()))
       .times(100)
-
-  useEffect(() => {
-    const checkWeight = () => {
-      if (pool.poolDetails?.length > 1) {
-        dispatch(
-          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
-        )
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthDetails, pool.poolDetails])
 
   return (
     <>

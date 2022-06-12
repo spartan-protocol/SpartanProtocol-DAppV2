@@ -281,7 +281,13 @@ const AssetSelect = (props) => {
     const walletType = getWalletType()
     if (walletType === 'MM' && !isBNB(asset)) {
       dispatch(
-        watchAsset(asset.actualAddr, asset.symbol, '18', asset.iconUrl, wallet),
+        watchAsset(
+          asset.actualAddr,
+          asset.symbol,
+          '18',
+          asset.iconUrl,
+          wallet.account,
+        ),
       )
     }
   }

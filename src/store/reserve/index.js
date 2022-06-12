@@ -48,11 +48,10 @@ export const {
  */
 export const getReserveGlobalDetails = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const { web3 } = getState()
+  const { rpcs } = getState().web3
   const addr = getAddresses()
-  const contract = getReserveContract(null, web3.rpcs)
-  const spartaContract = getSpartaV2Contract(null, web3.rpcs)
-  // const busdpContract = getTokenContract(addr.busdp)
+  const contract = getReserveContract(null, rpcs)
+  const spartaContract = getSpartaV2Contract(null, rpcs)
   try {
     let awaitArray = [
       contract.callStatic.emissions(),
@@ -60,14 +59,12 @@ export const getReserveGlobalDetails = () => async (dispatch, getState) => {
       tempChains.includes(getNetwork().chainId)
         ? contract.callStatic.globalFreeze()
         : false,
-      // busdpContract.callStatic.balanceOf(addr.reserve),
     ]
     awaitArray = await Promise.all(awaitArray)
     const globalDetails = {
       emissions: awaitArray[0],
       spartaBalance: awaitArray[1].toString(),
       globalFreeze: awaitArray[2],
-      // busdpBalance: awaitArray[3].toString(),
     }
     dispatch(updateGlobalDetails(globalDetails))
   } catch (error) {
@@ -80,16 +77,18 @@ export const getReserveGlobalDetails = () => async (dispatch, getState) => {
  * Get the Reserve POL details
  * @returns {object}
  */
-export const getReservePOLDetails =
-  (curatedPools, poolDetails, rpcUrls) => async (dispatch) => {
-    dispatch(updateLoading(true))
-    const addr = getAddresses()
-    let awaitArray = []
-    for (let i = 0; i < curatedPools.length; i++) {
-      const poolContract = getTokenContract(curatedPools[i], null, rpcUrls)
-      awaitArray.push(poolContract.callStatic.balanceOf(addr.reserve))
-    }
-    try {
+export const getReservePOLDetails = () => async (dispatch, getState) => {
+  dispatch(updateLoading(true))
+  const { curatedPools, poolDetails } = getState().pool
+  try {
+    if (poolDetails.length > 0 && curatedPools.length > 0) {
+      const { rpcs } = getState().web3
+      const addr = getAddresses()
+      let awaitArray = []
+      for (let i = 0; i < curatedPools.length; i++) {
+        const poolContract = getTokenContract(curatedPools[i], null, rpcs)
+        awaitArray.push(poolContract.callStatic.balanceOf(addr.reserve))
+      }
       awaitArray = await Promise.all(awaitArray)
       const polDetails = []
       for (let i = 0; i < curatedPools.length; i++) {
@@ -102,12 +101,12 @@ export const getReservePOLDetails =
           spartaLocked: spartaLocked.toString(),
         })
       }
-
       dispatch(updatePolDetails(polDetails))
-    } catch (error) {
-      dispatch(updateError(error))
     }
-    dispatch(updateLoading(false))
+  } catch (error) {
+    dispatch(updateError(error))
   }
+  dispatch(updateLoading(false))
+}
 
 export default reserveSlice.reducer

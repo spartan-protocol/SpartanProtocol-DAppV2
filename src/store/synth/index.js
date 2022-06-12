@@ -75,30 +75,33 @@ export const {
  * Get the global synth details
  * @returns {object} minimumDepositTime, totalWeight, erasToEarn, blockDelay, vaultClaim, stakedSynthLength
  */
-export const getSynthGlobalDetails = (rpcUrls) => async (dispatch) => {
+export const getSynthGlobalDetails = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getSynthVaultContract(null, rpcUrls)
+  const { rpcs } = getState().web3
   try {
-    let awaitArray = [
-      contract.callStatic.minimumDepositTime(),
-      contract.callStatic.erasToEarn(),
-      contract.callStatic.vaultClaim(),
-      contract.callStatic.genesis(),
-      // contract.callStatic.map30DVaultRevenue(),
-      // contract.callStatic.mapPast30DVaultRevenue(),
-      getSynthFactoryContract(null, rpcUrls).callStatic.synthCount(),
-    ]
-    awaitArray = await Promise.all(awaitArray)
-    const globalDetails = {
-      minTime: awaitArray[0].toString(),
-      erasToEarn: awaitArray[1].toString(),
-      vaultClaim: awaitArray[2].toString(),
-      genesis: awaitArray[3].toString(),
-      // recentRevenue: awaitArray[].toString(),
-      // lastMonthRevenue: awaitArray[].toString(),
-      synthCount: awaitArray[4].toString(),
+    if (rpcs.length > 0) {
+      const contract = getSynthVaultContract(null, rpcs)
+      let awaitArray = [
+        contract.callStatic.minimumDepositTime(),
+        contract.callStatic.erasToEarn(),
+        contract.callStatic.vaultClaim(),
+        contract.callStatic.genesis(),
+        // contract.callStatic.map30DVaultRevenue(),
+        // contract.callStatic.mapPast30DVaultRevenue(),
+        getSynthFactoryContract(null, rpcs).callStatic.synthCount(),
+      ]
+      awaitArray = await Promise.all(awaitArray)
+      const globalDetails = {
+        minTime: awaitArray[0].toString(),
+        erasToEarn: awaitArray[1].toString(),
+        vaultClaim: awaitArray[2].toString(),
+        genesis: awaitArray[3].toString(),
+        // recentRevenue: awaitArray[].toString(),
+        // lastMonthRevenue: awaitArray[].toString(),
+        synthCount: awaitArray[4].toString(),
+      }
+      dispatch(updateGlobalDetails(globalDetails))
     }
-    dispatch(updateGlobalDetails(globalDetails))
   } catch (error) {
     dispatch(updateError(error))
   }
@@ -109,32 +112,39 @@ export const getSynthGlobalDetails = (rpcUrls) => async (dispatch) => {
  * Get the member's synth details
  * @returns depositTime
  */
-export const getSynthMemberDetails = (wallet, rpcUrls) => async (dispatch) => {
-  dispatch(updateLoading(true))
-  const contract = getSynthVaultContract(null, rpcUrls)
-  try {
-    let awaitArray = [contract.callStatic.mapMember_depositTime(wallet.account)]
-    awaitArray = await Promise.all(awaitArray)
-    const member = {
-      depositTime: awaitArray[0].toString(),
+export const getSynthMemberDetails =
+  (walletAddr) => async (dispatch, getState) => {
+    dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
+    try {
+      if (walletAddr && rpcs.length > 0) {
+        const contract = getSynthVaultContract(null, rpcs)
+        let awaitArray = [contract.callStatic.mapMember_depositTime(walletAddr)]
+        awaitArray = await Promise.all(awaitArray)
+        const member = {
+          depositTime: awaitArray[0].toString(),
+        }
+        dispatch(updateMember(member))
+      }
+    } catch (error) {
+      dispatch(updateError(error))
     }
-    dispatch(updateMember(member))
-  } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
-}
 
 /**
  * Get the global synthMinting bool (from router)
  * @returns {bool} synthMinting
  */
-export const getSynthMinting = (rpcUrls) => async (dispatch) => {
+export const getSynthMinting = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getRouterContract(rpcUrls)
+  const { rpcs } = getState().web3
   try {
-    const synthMinting = await contract.callStatic.synthMinting()
-    dispatch(updateSynthMinting(synthMinting))
+    if (rpcs.length > 0) {
+      const contract = getRouterContract(rpcs)
+      const synthMinting = await contract.callStatic.synthMinting()
+      dispatch(updateSynthMinting(synthMinting))
+    }
   } catch (error) {
     dispatch(updateError(error))
   }
@@ -143,36 +153,37 @@ export const getSynthMinting = (rpcUrls) => async (dispatch) => {
 
 /**
  * Get the synth addresses and setup the object
- * @param tokenArray
  * @returns synthArray
  */
 export const getSynthArray = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const addr = getAddresses()
   const { listedTokens } = getState().pool
-  const { rpcs } = getState().web3
-  const contract = getSynthFactoryContract(null, rpcs)
   try {
-    let tempArray = []
-    for (let i = 0; i < listedTokens.length; i++) {
-      if (
-        listedTokens[i] === addr.spartav1 ||
-        listedTokens[i] === addr.spartav2
-      ) {
-        tempArray.push(addr.bnb)
-      } else {
-        tempArray.push(contract.callStatic.getSynth(listedTokens[i]))
+    if (listedTokens.length > 0) {
+      const { rpcs } = getState().web3
+      const contract = getSynthFactoryContract(null, rpcs)
+      let tempArray = []
+      for (let i = 0; i < listedTokens.length; i++) {
+        if (
+          listedTokens[i] === addr.spartav1 ||
+          listedTokens[i] === addr.spartav2
+        ) {
+          tempArray.push(addr.bnb)
+        } else {
+          tempArray.push(contract.callStatic.getSynth(listedTokens[i]))
+        }
       }
+      const synthArray = []
+      tempArray = await Promise.all(tempArray)
+      for (let i = 0; i < tempArray.length; i++) {
+        synthArray.push({
+          tokenAddress: listedTokens[i],
+          address: tempArray[i] === addr.bnb ? false : tempArray[i],
+        })
+      }
+      dispatch(updateSynthArray(synthArray))
     }
-    const synthArray = []
-    tempArray = await Promise.all(tempArray)
-    for (let i = 0; i < tempArray.length; i++) {
-      synthArray.push({
-        tokenAddress: listedTokens[i],
-        address: tempArray[i] === addr.bnb ? false : tempArray[i],
-      })
-    }
-    dispatch(updateSynthArray(synthArray))
   } catch (error) {
     dispatch(updateError(error))
   }
@@ -181,14 +192,15 @@ export const getSynthArray = () => async (dispatch, getState) => {
 
 /**
  * Get the synth details relevant to the member
- * @param synthArray @param wallet
  * @returns [synthDetails]
  */
-export const getSynthDetails =
-  (synthArray, wallet, rpcUrls) => async (dispatch) => {
-    dispatch(updateLoading(true))
-    const contract = getSynthVaultContract(wallet, rpcUrls)
-    try {
+export const getSynthDetails = (wallet) => async (dispatch, getState) => {
+  dispatch(updateLoading(true))
+  const { synthArray } = getState().synth
+  try {
+    if (synthArray.length > 0) {
+      const { rpcs } = getState().web3
+      const contract = getSynthVaultContract(wallet, rpcs)
       let tempArray = []
       for (let i = 0; i < synthArray.length; i++) {
         if (!wallet.account || synthArray[i].address === false) {
@@ -199,7 +211,7 @@ export const getSynthDetails =
           const synthContract = getSynthContract(
             synthArray[i].address,
             wallet,
-            rpcUrls,
+            rpcs,
           )
           tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
           tempArray.push(
@@ -222,7 +234,7 @@ export const getSynthDetails =
           const synthContract = getSynthContract(
             synthArray[i].address,
             wallet,
-            rpcUrls,
+            rpcs,
           )
           tempArray.push(synthContract.callStatic.collateral()) // lpBalance
           tempArray.push(synthContract.callStatic.totalSupply()) // totalSupply / debt
@@ -243,22 +255,25 @@ export const getSynthDetails =
         })
       }
       dispatch(updateSynthDetails(synthDetails))
-    } catch (error) {
-      dispatch(updateError(error))
     }
-    dispatch(updateLoading(false))
+  } catch (error) {
+    dispatch(updateError(error))
   }
+  dispatch(updateLoading(false))
+}
 
 /**
  * Get the current synthVault's total weight
- * @param synthDetails @param poolDetails
  * @returns spartaWeight
  */
-export const synthVaultWeight =
-  (synthDetails, poolDetails, rpcUrls) => async (dispatch) => {
-    dispatch(updateLoading(true))
-    const contract = getSynthVaultContract(null, rpcUrls)
-    try {
+export const synthVaultWeight = () => async (dispatch, getState) => {
+  dispatch(updateLoading(true))
+  const { synthDetails } = getState().synth
+  const { poolDetails } = getState().pool
+  try {
+    if (synthDetails.length > 0 && poolDetails.length > 0) {
+      const { rpcs } = getState().web3
+      const contract = getSynthVaultContract(null, rpcs)
       const vaultPools = synthDetails.filter(
         (x) => x.address && getPool(x.tokenAddress, poolDetails).curated,
       )
@@ -282,11 +297,12 @@ export const synthVaultWeight =
         totalWeight = totalWeight.toFixed(0).toString()
       }
       dispatch(updateTotalWeight(totalWeight))
-    } catch (error) {
-      dispatch(updateError(error))
     }
-    dispatch(updateLoading(false))
+  } catch (error) {
+    dispatch(updateError(error))
   }
+  dispatch(updateLoading(false))
+}
 
 // --------------------------------------- SYNTH Actions ---------------------------------------
 
@@ -295,13 +311,14 @@ export const synthVaultWeight =
  * @param synth @param amount @param wallet
  */
 export const synthDeposit =
-  (synth, amount, wallet, rpcUrls) => async (dispatch) => {
+  (synth, amount, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getSynthVaultContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
-      txn = await parseTxn(txn, 'synthDeposit', rpcUrls)
+      txn = await parseTxn(txn, 'synthDeposit', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
       dispatch(updateError(error))
@@ -314,13 +331,14 @@ export const synthDeposit =
  * @param {array} synthArray @param wallet
  */
 export const synthHarvest =
-  (synthArray, wallet, rpcUrls) => async (dispatch) => {
+  (synthArray, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getSynthVaultContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
-      txn = await parseTxn(txn, 'synthHarvest', rpcUrls)
+      txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
       dispatch(updateError(error))
@@ -333,14 +351,14 @@ export const synthHarvest =
  * @param synth @param wallet
  */
 export const synthHarvestSingle =
-  (synth, wallet, rpcUrls) => async (dispatch) => {
+  (synth, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getSynthVaultContract(wallet, rpcUrls)
-
+    const { rpcs } = getState().web3
+    const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
-      txn = await parseTxn(txn, 'synthHarvest', rpcUrls)
+      txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
       dispatch(updateError(error))
@@ -354,14 +372,15 @@ export const synthHarvestSingle =
  * @returns withdrawAmount
  */
 export const synthWithdraw =
-  (synth, basisPoints, wallet, rpcUrls) => async (dispatch) => {
+  (synth, basisPoints, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getSynthVaultContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.withdraw(synth, basisPoints, ORs)
-      txn = await parseTxn(txn, 'synthWithdraw', rpcUrls)
+      txn = await parseTxn(txn, 'synthWithdraw', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
       dispatch(updateError(error))
@@ -374,13 +393,14 @@ export const synthWithdraw =
  * @param token
  * @returns synth
  */
-export const createSynth = (token, wallet, rpcUrls) => async (dispatch) => {
+export const createSynth = (token, wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getSynthFactoryContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getSynthFactoryContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcUrls)
+    const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.createSynth(token, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'createSynth', rpcUrls)
+    txn = await parseTxn(txn, 'createSynth', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
     dispatch(updateError(error))

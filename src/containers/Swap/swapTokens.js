@@ -461,7 +461,6 @@ const SwapTokens = () => {
         assetSwap2.tokenAddress,
         BN(getSwap()[0]).times(minAmountFraction).toFixed(0, 1),
         wallet,
-        web3.rpcs,
       ),
     )
     setTxnLoading(false)

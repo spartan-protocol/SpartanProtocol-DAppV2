@@ -167,17 +167,18 @@ export const addNetworkBC = () => async (dispatch) => {
  * @returns {boolean} true if succeeds
  */
 export const getApproval =
-  (tokenAddress, contractAddress, wallet, rpcUrls) => async (dispatch) => {
+  (tokenAddress, contractAddress, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.approve(
         contractAddress,
         convertToWei(1000000000),
         { gasPrice: gPrice },
       )
-      txn = await parseTxn(txn, 'approval', rpcUrls)
+      txn = await parseTxn(txn, 'approval', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
       dispatch(updateError(error))
@@ -191,9 +192,10 @@ export const getApproval =
  * @returns {BigNumber?}
  */
 export const getAllowance1 =
-  (tokenAddress, wallet, contractAddress, rpcUrls) => async (dispatch) => {
+  (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
       const allowance1 = await contract.allowance(
         wallet.account,
@@ -212,9 +214,10 @@ export const getAllowance1 =
  * @returns {BigNumber?}
  */
 export const getAllowance2 =
-  (tokenAddress, wallet, contractAddress, rpcUrls) => async (dispatch) => {
+  (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
       const allowance2 = await contract.allowance(
         wallet.account,
@@ -233,11 +236,11 @@ export const getAllowance2 =
  * @returns {boolean} true if succeeds
  */
 export const watchAsset =
-  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage, wallet) =>
+  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage, walletAddr) =>
   async (dispatch) => {
     dispatch(updateLoading(true))
     const connectedWalletType = getWalletWindowObj()
-    if (wallet.account) {
+    if (walletAddr) {
       try {
         const watchingAsset = await connectedWalletType.request({
           method: 'wallet_watchAsset',

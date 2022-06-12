@@ -434,7 +434,6 @@ const LiqAdd = () => {
           convertToWei(addInput2.value),
           assetAdd1.tokenAddress,
           wallet,
-          web3.rpcs,
         ),
       )
     } else {
@@ -444,7 +443,6 @@ const LiqAdd = () => {
           assetAdd1.tokenAddress === addr.spartav2,
           poolAdd1.tokenAddress,
           wallet,
-          web3.rpcs,
         ),
       )
     }

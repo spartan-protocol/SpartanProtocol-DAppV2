@@ -203,22 +203,16 @@ const WalletSelect = (props) => {
   }
 
   useEffect(() => {
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
+      if (tempChains.includes(chainId)) {
         dispatch(getBondDetails(wallet.account))
         dispatch(getDaoDetails(wallet.account))
-        if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
-          dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-        }
+        dispatch(getSynthDetails(wallet))
       }
     }
     checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [dispatch, pool.listedPools, wallet])
 
   // ------------------------------------------------------------------------
 

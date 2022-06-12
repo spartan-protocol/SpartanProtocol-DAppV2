@@ -43,7 +43,7 @@ const Overview = () => {
   const [recentTxns, setrecentTxns] = useState([])
   // const [bnbPrice, setbnbPrice] = useState(0)
   const getHoldings = async () => {
-    dispatch(communityWalletHoldings(wallet.account ? wallet : ''))
+    dispatch(communityWalletHoldings(wallet.account))
     // const _bnbPrice = await axios.get(
     //   'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
     // )
