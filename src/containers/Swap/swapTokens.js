@@ -67,20 +67,17 @@ const SwapTokens = () => {
     new URLSearchParams(location.search).get(`asset2`),
   )
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
-    const { poolDetails } = pool
-
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const getAssetDetails = () => {
       if (focus) {
-        if (poolDetails?.length > 0) {
+        if (pool.poolDetails?.length > 0) {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
@@ -89,17 +86,23 @@ const SwapTokens = () => {
           const _assetParam2 =
             assetParam2 === addr.wbnb ? addr.bnb : assetParam2
           if (
-            poolDetails.find((asset) => asset.tokenAddress === _assetParam1)
+            assetParam1 !== '' &&
+            pool.poolDetails.find(
+              (asset) => asset.tokenAddress === _assetParam1,
+            )
           ) {
-            ;[asset1] = poolDetails.filter(
+            ;[asset1] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === _assetParam1,
             )
             setAssetParam1('')
           }
           if (
-            poolDetails.find((asset) => asset.tokenAddress === _assetParam2)
+            assetParam2 !== '' &&
+            pool.poolDetails.find(
+              (asset) => asset.tokenAddress === _assetParam2,
+            )
           ) {
-            ;[asset2] = poolDetails.filter(
+            ;[asset2] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === _assetParam2,
             )
             setAssetParam2('')
@@ -110,9 +113,9 @@ const SwapTokens = () => {
 
           if (asset2?.tokenAddress === asset1?.tokenAddress) {
             asset2 =
-              asset1?.tokenAddress !== poolDetails[0].tokenAddress
-                ? { tokenAddress: poolDetails[0].tokenAddress }
-                : { tokenAddress: poolDetails[1].tokenAddress }
+              asset1?.tokenAddress !== pool.poolDetails[0].tokenAddress
+                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
+                : { tokenAddress: pool.poolDetails[1].tokenAddress }
           }
 
           if (
@@ -133,13 +136,13 @@ const SwapTokens = () => {
             asset2 = { tokenAddress: addr.bnb }
           }
 
-          asset1 = getItemFromArray(asset1, poolDetails)
-          asset2 = getItemFromArray(asset2, poolDetails)
+          asset1 = getItemFromArray(asset1, pool.poolDetails)
+          asset2 = getItemFromArray(asset2, pool.poolDetails)
           asset1 = asset1.hide
-            ? getItemFromArray(addr.spartav2, poolDetails)
+            ? getItemFromArray(addr.spartav2, pool.poolDetails)
             : asset1
           asset2 = asset2.hide
-            ? getItemFromArray(addr.spartav2, poolDetails)
+            ? getItemFromArray(addr.spartav2, pool.poolDetails)
             : asset2
 
           setAssetSwap1(asset1)
@@ -150,11 +153,14 @@ const SwapTokens = () => {
         }
       }
     }
-
     getAssetDetails()
     balanceWidths()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    addr.bnb,
+    addr.spartav2,
+    addr.wbnb,
+    assetParam1,
+    assetParam2,
     triggerReload,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,57 +170,53 @@ const SwapTokens = () => {
     focus,
   ])
 
-  const getAsset1ExtPrice = async () => {
-    if (assetSwap1 !== '...') {
-      if (assetSwap1.tokenAddress === addr.spartav2) {
-        setAsset1USD(false)
-      } else {
-        setAsset1USD(false)
-        const asset1usd = await getPriceByContract(assetSwap1.tokenAddress)
-        const isCurrent =
-          asset1usd[
-            assetSwap1.tokenAddress === addr.bnb
-              ? addr.wbnb.toLowerCase()
-              : assetSwap1.tokenAddress.toLowerCase()
-          ]
-        if (isCurrent) {
-          setAsset1USD(isCurrent.usd)
-        }
-      }
-    }
-  }
-
-  const getAsset2ExtPrice = async () => {
-    if (assetSwap2 !== '...') {
-      if (assetSwap2.tokenAddress === addr.spartav2) {
-        setAsset2USD(false)
-      } else {
-        setAsset2USD(false)
-        const asset2usd = await getPriceByContract(assetSwap2.tokenAddress)
-        const isCurrent =
-          asset2usd[
-            assetSwap2.tokenAddress === addr.bnb
-              ? addr.wbnb.toLowerCase()
-              : assetSwap2.tokenAddress.toLowerCase()
-          ]
-        if (isCurrent) {
-          setAsset2USD(isCurrent.usd)
-        }
-      }
-    }
-  }
-
   /** Check token1 external price (on asset1 change) */
   useEffect(() => {
+    const getAsset1ExtPrice = async () => {
+      if (assetSwap1.tokenAddress) {
+        if (assetSwap1.tokenAddress === addr.spartav2) {
+          setAsset1USD(false)
+        } else {
+          setAsset1USD(false)
+          const asset1usd = await getPriceByContract(assetSwap1.tokenAddress)
+          const isCurrent =
+            asset1usd[
+              assetSwap1.tokenAddress === addr.bnb
+                ? addr.wbnb.toLowerCase()
+                : assetSwap1.tokenAddress.toLowerCase()
+            ]
+          if (isCurrent) {
+            setAsset1USD(isCurrent.usd)
+          }
+        }
+      }
+    }
     getAsset1ExtPrice()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap1.tokenAddress])
+  }, [addr.bnb, addr.spartav2, addr.wbnb, assetSwap1.tokenAddress])
 
   /** Check token2 external price (on asset2 change) */
   useEffect(() => {
+    const getAsset2ExtPrice = async () => {
+      if (assetSwap2.tokenAddress) {
+        if (assetSwap2.tokenAddress === addr.spartav2) {
+          setAsset2USD(false)
+        } else {
+          setAsset2USD(false)
+          const asset2usd = await getPriceByContract(assetSwap2.tokenAddress)
+          const isCurrent =
+            asset2usd[
+              assetSwap2.tokenAddress === addr.bnb
+                ? addr.wbnb.toLowerCase()
+                : assetSwap2.tokenAddress.toLowerCase()
+            ]
+          if (isCurrent) {
+            setAsset2USD(isCurrent.usd)
+          }
+        }
+      }
+    }
     getAsset2ExtPrice()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap2.tokenAddress])
+  }, [addr.bnb, addr.spartav2, addr.wbnb, assetSwap2.tokenAddress])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -233,6 +235,13 @@ const SwapTokens = () => {
   }
 
   const handleReverseAssets = () => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
     const asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
     window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
@@ -254,11 +263,12 @@ const SwapTokens = () => {
   //= =================================================================================//
   // Functions to get txn Details
 
+  const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
   /**
    * Get swap txn details
    * @returns [output, swapFee, divi1, divi2]
    */
-  const getSwap = () => {
+  const updateSwap = () => {
     if (swapInput1 && assetSwap1 && assetSwap2) {
       const [output, swapFee, divi1, divi2] = swapTo(
         convertToWei(swapInput1.value),
@@ -268,9 +278,8 @@ const SwapTokens = () => {
         assetSwap2.tokenAddress === addr.spartav2,
         assetSwap1.tokenAddress === addr.spartav2,
       )
-      return [output, swapFee, divi1, divi2]
+      setGetSwap([output, swapFee, divi1, divi2])
     }
-    return ['0.00', '0.00', '0.00', '0.00']
   }
 
   const getInput = () => {
@@ -284,7 +293,7 @@ const SwapTokens = () => {
 
   const getOutput = () => {
     const symbol = getToken(assetSwap2.tokenAddress)?.symbol
-    return [getSwap()[0], symbol, t('output')]
+    return [getSwap[0], symbol, t('output')]
   }
 
   const getSpot = () => {
@@ -323,20 +332,11 @@ const SwapTokens = () => {
 
   const getRevenue = () => {
     let result = '0.00'
-    result = BN(getSwap()[1])
-    result = getSwap()[2] ? result.plus(getSwap()[2]) : result
-    result = getSwap()[3] ? result.plus(getSwap()[3]) : result
+    result = BN(getSwap[1])
+    result = getSwap[2] ? result.plus(getSwap[2]) : result
+    result = getSwap[3] ? result.plus(getSwap[3]) : result
     result = result > 0 ? result : '0.00'
     return result
-  }
-
-  //= =================================================================================//
-  // Functions for input handling
-
-  const handleInputChange = () => {
-    if (swapInput1?.value) {
-      swapInput2.value = convertFromWei(getSwap()[0])
-    }
   }
 
   //= =================================================================================//
@@ -419,11 +419,13 @@ const SwapTokens = () => {
   }
 
   useEffect(() => {
+    const handleInputChange = () => {
+      swapInput2.value = convertFromWei(getSwap[0])
+    }
     if (swapInput1?.value) {
       handleInputChange()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2])
+  }, [getSwap, swapInput1?.value, swapInput2])
 
   const handleSwapAssets = async () => {
     let gasSafety = '5000000000000000'
@@ -451,7 +453,7 @@ const SwapTokens = () => {
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
         assetSwap2.tokenAddress,
-        BN(getSwap()[0]).times(minAmountFraction).toFixed(0, 1),
+        BN(getSwap[0]).times(minAmountFraction).toFixed(0, 1),
         wallet,
       ),
     )
@@ -483,7 +485,9 @@ const SwapTokens = () => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
+                    clearInputs()
                     swapInput1.value = convertFromWei(getBalance(1))
+                    updateSwap()
                   }}
                 >
                   {t('balance')}
@@ -510,6 +514,7 @@ const SwapTokens = () => {
                         defaultTab="token"
                         priority="1"
                         filter={['token']}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <OverlayTrigger
@@ -533,6 +538,7 @@ const SwapTokens = () => {
                         id="swapInput1"
                         autoComplete="off"
                         autoCorrect="off"
+                        onChange={() => updateSwap()}
                       />
                     </OverlayTrigger>
 
@@ -644,6 +650,7 @@ const SwapTokens = () => {
                         priority="2"
                         filter={['token']}
                         blackList={[assetSwap1.tokenAddress]}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <FormControl

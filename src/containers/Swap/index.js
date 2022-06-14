@@ -32,15 +32,14 @@ const Swap = () => {
   const [selectedAsset1, setSelectedAsset1] = useState(false)
   const [selectedAsset2, setSelectedAsset2] = useState(false)
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     if (pool.poolDetails) {
       let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
       asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
@@ -49,7 +48,6 @@ const Swap = () => {
       setSelectedAsset1(asset1)
       setSelectedAsset2(asset2)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps

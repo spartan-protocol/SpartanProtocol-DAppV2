@@ -24,7 +24,7 @@ export const reserveSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateGlobalDetails: (state, action) => {
       state.globalDetails = action.payload
@@ -47,30 +47,35 @@ export const {
  * @returns {object} emissions, spartaBalance
  */
 export const getReserveGlobalDetails = () => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { rpcs } = getState().web3
-  const addr = getAddresses()
-  const contract = getReserveContract(null, rpcs)
-  const spartaContract = getSpartaV2Contract(null, rpcs)
-  try {
-    let awaitArray = [
-      contract.callStatic.emissions(),
-      spartaContract.callStatic.balanceOf(addr.reserve),
-      tempChains.includes(getNetwork().chainId)
-        ? contract.callStatic.globalFreeze()
-        : false,
-    ]
-    awaitArray = await Promise.all(awaitArray)
-    const globalDetails = {
-      emissions: awaitArray[0],
-      spartaBalance: awaitArray[1].toString(),
-      globalFreeze: awaitArray[2],
+  const { loading } = getState().reserve
+  if (!loading) {
+    dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
+    try {
+      if (rpcs.length > 0) {
+        const addr = getAddresses()
+        const contract = getReserveContract(null, rpcs)
+        const spartaContract = getSpartaV2Contract(null, rpcs)
+        let awaitArray = [
+          contract.callStatic.emissions(),
+          spartaContract.callStatic.balanceOf(addr.reserve),
+          tempChains.includes(getNetwork().chainId)
+            ? contract.callStatic.globalFreeze()
+            : false,
+        ]
+        awaitArray = await Promise.all(awaitArray)
+        const globalDetails = {
+          emissions: awaitArray[0],
+          spartaBalance: awaitArray[1].toString(),
+          globalFreeze: awaitArray[2],
+        }
+        dispatch(updateGlobalDetails(globalDetails))
+      }
+    } catch (error) {
+      dispatch(updateError(error.reason))
     }
-    dispatch(updateGlobalDetails(globalDetails))
-  } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
 }
 
 /**
@@ -78,35 +83,40 @@ export const getReserveGlobalDetails = () => async (dispatch, getState) => {
  * @returns {object}
  */
 export const getReservePOLDetails = () => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { curatedPools, poolDetails } = getState().pool
-  try {
-    if (poolDetails.length > 0 && curatedPools.length > 0) {
-      const { rpcs } = getState().web3
-      const addr = getAddresses()
-      let awaitArray = []
-      for (let i = 0; i < curatedPools.length; i++) {
-        const poolContract = getTokenContract(curatedPools[i], null, rpcs)
-        awaitArray.push(poolContract.callStatic.balanceOf(addr.reserve))
+  const { loading } = getState().reserve
+  if (!loading) {
+    dispatch(updateLoading(true))
+    const { curatedPools, poolDetails } = getState().pool
+    try {
+      if (poolDetails.length > 0 && curatedPools.length > 0) {
+        const { rpcs } = getState().web3
+        const addr = getAddresses()
+        let awaitArray = []
+        for (let i = 0; i < curatedPools.length; i++) {
+          const poolContract = getTokenContract(curatedPools[i], null, rpcs)
+          awaitArray.push(poolContract.callStatic.balanceOf(addr.reserve))
+        }
+        awaitArray = await Promise.all(awaitArray)
+        const polDetails = []
+        for (let i = 0; i < curatedPools.length; i++) {
+          const pool = poolDetails.filter(
+            (x) => x.address === curatedPools[i],
+          )[0]
+          const lpsLocked = awaitArray[i].toString()
+          const spartaLocked = calcLiqValue(lpsLocked, pool)[0]
+          polDetails.push({
+            tokenAddress: pool.tokenAddress,
+            address: pool.address,
+            spartaLocked: spartaLocked.toString(),
+          })
+        }
+        dispatch(updatePolDetails(polDetails))
       }
-      awaitArray = await Promise.all(awaitArray)
-      const polDetails = []
-      for (let i = 0; i < curatedPools.length; i++) {
-        const pool = poolDetails.filter((x) => x.address === curatedPools[i])[0]
-        const lpsLocked = awaitArray[i].toString()
-        const spartaLocked = calcLiqValue(lpsLocked, pool)[0]
-        polDetails.push({
-          tokenAddress: pool.tokenAddress,
-          address: pool.address,
-          spartaLocked: spartaLocked.toString(),
-        })
-      }
-      dispatch(updatePolDetails(polDetails))
+    } catch (error) {
+      dispatch(updateError(error.reason))
     }
-  } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
 }
 
 export default reserveSlice.reducer

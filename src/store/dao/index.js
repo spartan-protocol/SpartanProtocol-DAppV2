@@ -28,7 +28,7 @@ export const daoSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateGlobal: (state, action) => {
       state.global = action.payload
@@ -104,7 +104,7 @@ export const daoGlobalDetails = () => async (dispatch, getState) => {
     }
     dispatch(updateGlobal(global))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
 }
 
@@ -141,7 +141,7 @@ export const daoVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -163,7 +163,7 @@ export const daoMemberDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateMember(member))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -204,7 +204,7 @@ export const getDaoDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateDaoDetails(daoDetails))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -249,7 +249,7 @@ export const daoProposalDetails =
         dispatch(updateProposal(proposal))
       }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -285,7 +285,7 @@ export const daoDepositTimes = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateLastDeposits(lastDeposits))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -327,7 +327,7 @@ export const proposalWeight = () => async (dispatch, getState) => {
       dispatch(updateProposalWeight(_proposalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -346,7 +346,7 @@ export const daoDeposit =
       txn = await parseTxn(txn, 'daoDeposit', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -364,7 +364,7 @@ export const daoWithdraw = (pool, wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'daoWithdraw', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
 }
 
@@ -381,7 +381,7 @@ export const daoHarvest = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'daoHarvest', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -400,7 +400,7 @@ export const newActionProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -420,7 +420,7 @@ export const newParamProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -440,7 +440,7 @@ export const newAddressProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -460,7 +460,7 @@ export const newGrantProposal =
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -478,7 +478,7 @@ export const voteProposal = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'voteProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -496,7 +496,7 @@ export const removeVote = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'removeVoteProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -514,7 +514,7 @@ export const pollVotes = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'pollVotes', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -532,7 +532,7 @@ export const cancelProposal = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'cancelProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -550,7 +550,7 @@ export const finaliseProposal = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'finaliseProposal', rpcs)
     dispatch(updatePropTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

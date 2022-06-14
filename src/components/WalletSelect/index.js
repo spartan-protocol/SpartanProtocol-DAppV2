@@ -120,6 +120,7 @@ const WalletSelect = (props) => {
   // const [wcConnector, setWcConnector] = useState(false)
   const [pending, setPending] = useState(false)
   // const [wlConnector, setWlConnector] = useState(false)
+  const [triedOnce, setTriedOnce] = useState(false)
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
@@ -144,6 +145,7 @@ const WalletSelect = (props) => {
   const onWalletConnect = useCallback(
     async (x) => {
       setPending(true)
+      setTriedOnce(true)
       if (x.id === 'BC') {
         await dispatch(addNetworkBC())
       } else if (x.id === 'MM') {
@@ -164,8 +166,9 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     if (
-      window.localStorage.getItem('disableWallet') !== '1' &&
       !pending &&
+      !triedOnce &&
+      window.localStorage.getItem('disableWallet') !== '1' &&
       !wallet.account &&
       !wallet.active &&
       !wallet.error
@@ -191,7 +194,14 @@ const WalletSelect = (props) => {
         onWalletConnect(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
       }
     }
-  }, [onWalletConnect, pending, wallet.account, wallet.active, wallet.error])
+  }, [
+    onWalletConnect,
+    pending,
+    triedOnce,
+    wallet.account,
+    wallet.active,
+    wallet.error,
+  ])
 
   const tryParse = (data) => {
     try {

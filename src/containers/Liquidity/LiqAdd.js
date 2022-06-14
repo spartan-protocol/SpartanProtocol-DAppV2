@@ -97,6 +97,7 @@ const LiqAdd = () => {
           const _assetParam1 =
             assetParam1 === addr.wbnb ? addr.bnb : assetParam1
           if (
+            assetParam1 !== '' &&
             pool.poolDetails.find(
               (asset) => asset.tokenAddress === _assetParam1,
             )

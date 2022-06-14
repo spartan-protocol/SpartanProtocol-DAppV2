@@ -49,28 +49,25 @@ const DaoVault = () => {
   const web3 = useWeb3()
 
   const [txnLoading, setTxnLoading] = useState(false)
-  const [trigger0, settrigger0] = useState(0)
   const [showUsd, setShowUsd] = useState(false)
 
   const handleChangeShow = () => {
     setShowUsd(!showUsd)
   }
 
-  const getData = () => {
-    dispatch(daoGlobalDetails())
-    dispatch(daoMemberDetails(wallet.account))
-  }
   useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
+    const getData = () => {
+      dispatch(daoGlobalDetails())
+      dispatch(daoMemberDetails(wallet.account))
     }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
+    getData() // Run on load
+    const interval = setInterval(() => {
+      getData() // Run on interval
     }, 7500)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch, wallet])
 
   useEffect(() => {
     dispatch(getDaoDetails(wallet.account))

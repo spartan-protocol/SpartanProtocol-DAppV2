@@ -31,7 +31,7 @@ export const synthSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateGlobalDetails: (state, action) => {
       state.globalDetails = action.payload
@@ -103,7 +103,7 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
       dispatch(updateGlobalDetails(globalDetails))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -127,7 +127,7 @@ export const getSynthMemberDetails =
         dispatch(updateMember(member))
       }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -146,7 +146,7 @@ export const getSynthMinting = () => async (dispatch, getState) => {
       dispatch(updateSynthMinting(synthMinting))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -185,7 +185,7 @@ export const getSynthArray = () => async (dispatch, getState) => {
       dispatch(updateSynthArray(synthArray))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -257,7 +257,7 @@ export const getSynthDetails = (wallet) => async (dispatch, getState) => {
       dispatch(updateSynthDetails(synthDetails))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -299,7 +299,7 @@ export const synthVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -321,7 +321,7 @@ export const synthDeposit =
       txn = await parseTxn(txn, 'synthDeposit', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -341,7 +341,7 @@ export const synthHarvest =
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -361,7 +361,7 @@ export const synthHarvestSingle =
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -383,7 +383,7 @@ export const synthWithdraw =
       txn = await parseTxn(txn, 'synthWithdraw', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -403,7 +403,7 @@ export const createSynth = (token, wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'createSynth', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

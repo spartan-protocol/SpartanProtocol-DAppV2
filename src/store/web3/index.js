@@ -40,7 +40,7 @@ export const web3Slice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateAddedNetworkMM: (state, action) => {
       state.addedNetworkMM = action.payload
@@ -125,7 +125,7 @@ export const addNetworkMM = () => async (dispatch) => {
       })
       dispatch(updateAddedNetworkMM(addedNetworkMM))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
   } else {
     dispatch(
@@ -153,7 +153,7 @@ export const addNetworkBC = () => async (dispatch) => {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(updateAddedNetworkBC(addedNetworkBC))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
   } else {
     dispatch(updateError('Do you have BinanceChain wallet installed?'))
@@ -181,7 +181,7 @@ export const getApproval =
       txn = await parseTxn(txn, 'approval', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -205,7 +205,7 @@ export const getAllowance1 =
         dispatch(updateAllowance1(allowance1.toString()))
       }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -229,7 +229,7 @@ export const getAllowance2 =
         dispatch(updateAllowance2(allowance2.toString()))
       }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -265,7 +265,7 @@ export const watchAsset =
         }
         dispatch(updateWatchingAsset(watchingAsset))
       } catch (error) {
-        dispatch(updateError(error))
+        dispatch(updateError(error.reason))
       }
     } else {
       dispatch(updateError('Please connect your wallet first'))
@@ -285,7 +285,7 @@ export const getSpartaPrice = () => async (dispatch) => {
     )
     dispatch(updateSpartaPrice(spartaPrice.data['spartan-protocol-token'].usd))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -300,7 +300,7 @@ export const getEventArray = (array) => async (dispatch) => {
     const eventArray = array
     dispatch(updateEventArray(eventArray))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -348,7 +348,7 @@ export const getRPCBlocks = () => async (dispatch) => {
     // console.log(rpcs)
     dispatch(updateRpcs(rpcs))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -360,7 +360,7 @@ export const getGlobalMetrics = () => async (dispatch) => {
     const global = await callGlobalMetrics()
     dispatch(updateMetrics({ global, block }))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

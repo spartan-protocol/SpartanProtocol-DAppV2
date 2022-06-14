@@ -18,7 +18,7 @@ export const routerSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateTxn: (state, action) => {
       state.txn = action.payload
@@ -48,7 +48,7 @@ export const addLiquidity =
       txn = await parseTxn(txn, 'addLiq', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -73,7 +73,7 @@ export const addLiquiditySingle =
       txn = await parseTxn(txn, 'addLiqSingle', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -94,7 +94,7 @@ export const zapLiquidity =
       txn = await parseTxn(txn, 'zapLiq', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -115,7 +115,7 @@ export const removeLiquidityExact =
       txn = await parseTxn(txn, 'remLiq', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -137,7 +137,7 @@ export const removeLiquiditySingle =
       txn = await parseTxn(txn, 'remLiqSingle', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -171,7 +171,7 @@ export const swap =
       txn = await parseTxn(txn, 'swapped', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -201,7 +201,7 @@ export const swapAssetToSynth =
       txn = await parseTxn(txn, 'mintSynth', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -226,7 +226,7 @@ export const swapSynthToAsset =
       txn = await parseTxn(txn, 'burnSynth', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -244,7 +244,7 @@ export const updatePoolStatus = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'unfreeze', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

@@ -31,7 +31,7 @@ export const spartaSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateGlobalDetails: (state, action) => {
       state.globalDetails = action.payload
@@ -92,7 +92,7 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
       dispatch(updateGlobalDetails(globalDetails))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -110,7 +110,7 @@ export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(updateClaimCheck(claimCheck.toString()))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -128,7 +128,7 @@ export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'upgrade', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -146,7 +146,7 @@ export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'fsClaim', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -198,7 +198,7 @@ export const communityWalletHoldings = (walletAddr) => async (dispatch) => {
     }
     dispatch(updateCommunityWallet(communityWallet))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

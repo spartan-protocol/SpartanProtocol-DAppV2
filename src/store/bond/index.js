@@ -28,7 +28,7 @@ export const bondSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateGlobal: (state, action) => {
       state.global = action.payload
@@ -78,7 +78,7 @@ export const bondGlobalDetails = () => async (dispatch, getState) => {
       dispatch(updateGlobal(global))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -127,7 +127,7 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(updateBondDetails(bondDetails))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -166,7 +166,7 @@ export const bondVaultWeight = () => async (dispatch, getState) => {
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -185,7 +185,7 @@ export const allListedAssets = () => async (dispatch, getState) => {
       dispatch(updateListedAssets(listedAssets))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -203,7 +203,7 @@ export const claimBond = (tokenAddr, wallet) => async (dispatch, getState) => {
     txn = await parseTxn(txn, 'bondClaim', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

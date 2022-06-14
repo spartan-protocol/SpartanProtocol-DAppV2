@@ -43,7 +43,7 @@ export const poolSlice = createSlice({
       state.loadingFinal = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateListedTokens: (state, action) => {
       state.listedTokens = action.payload
@@ -108,7 +108,7 @@ export const getListedTokens = () => async (dispatch, getState) => {
       dispatch(updateListedTokens(listedTokens))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -165,7 +165,7 @@ export const getTokenDetails =
         dispatch(updatetokenDetails(tokenDetails))
       }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -183,7 +183,7 @@ export const getCuratedPools = () => async (dispatch, getState) => {
       dispatch(updateCuratedPools(curatedPools))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -241,7 +241,7 @@ export const getListedPools = () => async (dispatch, getState) => {
       dispatch(updateListedPools(listedPools))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -322,7 +322,7 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
       dispatch(updatePoolDetails(poolDetails))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoadingFinal(false))
 }
@@ -345,7 +345,7 @@ export const createPoolADD =
       txn = await parseTxn(txn, 'createPool', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -377,7 +377,7 @@ export const getMonthIncentives = () => async (dispatch, getState) => {
       dispatch(updateIncentives(incentives))
     }
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

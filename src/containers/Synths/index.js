@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -116,14 +116,6 @@ const Swap = () => {
     dispatch(synthVaultWeight())
   }, [dispatch, synth.synthDetails])
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
     const checkDetails = () => {
       if (tempChains.includes(getNetwork().chainId)) {
@@ -136,22 +128,33 @@ const Swap = () => {
   }, [dispatch, pool.listedPools, wallet])
 
   useEffect(() => {
-    const { poolDetails } = pool
-
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const getAssetDetails = () => {
       if (focus) {
-        if (poolDetails?.length > 0) {
+        if (pool.poolDetails?.length > 0) {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
-            ;[asset1] = poolDetails.filter(
+          if (
+            assetParam1 !== '' &&
+            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam1)
+          ) {
+            ;[asset1] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === assetParam1,
             )
             setAssetParam1('')
           }
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
-            ;[asset2] = poolDetails.filter(
+          if (
+            assetParam2 !== '' &&
+            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam2)
+          ) {
+            ;[asset2] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === assetParam2,
             )
             setAssetParam2('')
@@ -194,8 +197,8 @@ const Swap = () => {
             asset2 = { tokenAddress: addr.bnb }
           }
 
-          asset1 = getItemFromArray(asset1, poolDetails)
-          asset2 = getItemFromArray(asset2, poolDetails)
+          asset1 = getItemFromArray(asset1, pool.poolDetails)
+          asset2 = getItemFromArray(asset2, pool.poolDetails)
 
           setAssetSwap1(asset1)
           setAssetSwap2(asset2)
@@ -205,13 +208,17 @@ const Swap = () => {
         }
       }
     }
-
     getAssetDetails()
     balanceWidths()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activeTab,
     pool.poolDetails,
+    focus,
+    typeParam1,
+    assetParam1,
+    assetParam2,
+    addr.bnb,
+    addr.spartav2,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -220,14 +227,16 @@ const Swap = () => {
     window.localStorage.getItem('assetType1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetType2'),
-    focus,
   ])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
-  const getSynth = (tokenAddress) =>
-    synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0]
+  const getSynth = useCallback(
+    (tokenAddress) =>
+      synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0],
+    [synth.synthDetails],
+  )
 
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
@@ -295,7 +304,7 @@ const Swap = () => {
    * Get synth mint txn details
    * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
    */
-  const getMint = () => {
+  const getMint = useCallback(() => {
     if (
       activeTab === 'mint' &&
       swapInput1 &&
@@ -315,13 +324,21 @@ const Swap = () => {
       return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
     }
     return ['0.00', '0.00', '0.00', '0.00', false, false]
-  }
+  }, [
+    activeTab,
+    addr.spartav2,
+    assetSwap1,
+    assetSwap2,
+    getSynth,
+    sparta.globalDetails.feeOnTransfer,
+    swapInput1,
+  ])
 
   /**
    * Get synth burn txn details
    * @returns [tokenOut, slipFee, diviSynth, diviSwap]
    */
-  const getBurn = () => {
+  const getBurn = useCallback(() => {
     if (activeTab === 'burn' && swapInput1 && assetSwap1 && assetSwap2) {
       const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
         convertToWei(swapInput1.value),
@@ -333,7 +350,14 @@ const Swap = () => {
       return [tokenOut, slipFee, diviSynth, diviSwap]
     }
     return ['0.00', '0.00', '0.00', '0.00']
-  }
+  }, [
+    activeTab,
+    addr.spartav2,
+    assetSwap1,
+    assetSwap2,
+    sparta.globalDetails.feeOnTransfer,
+    swapInput1,
+  ])
 
   const getRevenue = () => {
     let result = '0.00'
@@ -349,7 +373,7 @@ const Swap = () => {
   //= =================================================================================//
   // Functions for input handling
 
-  const handleZapInputChange = () => {
+  const handleZapInputChange = useCallback(() => {
     if (activeTab === 'mint') {
       if (swapInput1?.value) {
         swapInput2.value = convertFromWei(getMint()[0], 18)
@@ -357,7 +381,7 @@ const Swap = () => {
     } else if (swapInput1?.value) {
       swapInput2.value = convertFromWei(getBurn()[0], 18)
     }
-  }
+  }, [activeTab, getBurn, getMint, swapInput1?.value, swapInput2])
 
   // GET USD VALUES
   // const getInput1USD = () => {
@@ -486,8 +510,14 @@ const Swap = () => {
 
   useEffect(() => {
     handleZapInputChange()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2, activeTab])
+  }, [
+    swapInput1?.value,
+    swapInput2?.value,
+    assetSwap1,
+    assetSwap2,
+    activeTab,
+    handleZapInputChange,
+  ])
 
   const handleSwapToSynth = async () => {
     const gasSafety = '10000000000000000'

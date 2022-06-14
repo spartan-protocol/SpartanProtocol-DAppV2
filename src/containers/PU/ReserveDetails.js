@@ -15,15 +15,14 @@ const ReserveDetails = () => {
   const dispatch = useDispatch()
   const reserve = useReserve()
   const sparta = useSparta()
-  const network = getNetwork()
 
   const [selection, setSelection] = useState('')
 
   useEffect(() => {
-    if (tempChains.includes(network.chainId)) {
+    if (tempChains.includes(getNetwork().chainId)) {
       dispatch(getReservePOLDetails())
     }
-  }, [dispatch, network.chainId, pool.poolDetails])
+  }, [dispatch, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.curatedPools || !reserve.polDetails || !pool.poolDetails) {
