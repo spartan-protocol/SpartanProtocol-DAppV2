@@ -17,7 +17,6 @@ import { getSynth, getToken } from '../../../utils/math/utils'
 import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
-import { useWeb3 } from '../../../store/web3'
 import { useTheme } from '../../../providers/Theme'
 
 const SynthHarvestAllModal = () => {
@@ -26,7 +25,6 @@ const SynthHarvestAllModal = () => {
   const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
-  const web3 = useWeb3()
   const { t } = useTranslation()
   const { isDark } = useTheme()
   const wallet = useWeb3React()
@@ -53,11 +51,9 @@ const SynthHarvestAllModal = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvest(getArray(), wallet, web3.rpcs))
+    await dispatch(synthHarvest(getArray(), wallet))
     setTxnLoading(false)
-    if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-    }
+    dispatch(getSynthDetails(wallet))
     handleCloseModal()
   }
 
@@ -69,62 +65,60 @@ const SynthHarvestAllModal = () => {
         .map((x) => tempArray.push(x.address))
       setClaimArray(tempArray)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [synth.synthDetails])
 
-  const _getSynth = (synthAddr) => getSynth(synthAddr, synth.synthDetails)
-  const _getToken = (tokenAddr) => getToken(tokenAddr, pool.tokenDetails)
-
-  const getClaimable = (_synth) => {
-    const [reward, baseCapped, synthCapped] = calcCurrentRewardSynth(
-      pool.poolDetails,
-      synth,
-      _synth,
-      sparta.globalDetails,
-      reserve.globalDetails.spartaBalance,
-    )
-    return [reward, baseCapped, synthCapped]
-  }
-
-  const checkValidHarvest = (baseCapped, synthCapped, symbol, reward) => {
-    if (!reserve.globalDetails.emissions) {
-      return [false, t('incentivesDisabled'), '']
-    }
-    if (baseCapped) {
-      return [false, t('baseCap'), '']
-    }
-    if (synthCapped) {
-      return [true, reward, ' SPARTA']
-    }
-    return [true, reward, ` ${symbol}s`]
-  }
-
-  const getFinalArray = () => {
-    const finalArray = []
-    for (let i = 0; i < claimArray.length; i++) {
-      const _synth = _getSynth(claimArray[i])
-      const { symbol } = _getToken(_synth.tokenAddress)
-      const claim = getClaimable(_synth)
-      const valid = checkValidHarvest(claim[1], claim[2], symbol, claim[0])
-      if (valid[0]) {
-        finalArray.push({
-          address: _synth.address,
-          tokenAddress: _synth.tokenAddress,
-          reward: valid[1],
-          rewardString: valid[2],
-          staked: _synth.staked,
-          symbol,
-        })
-      }
-    }
-    return finalArray
-  }
   useEffect(() => {
-    if (claimArray) {
-      setFinalClaimArray(getFinalArray())
+    const getClaimable = (_synth) => {
+      const [reward, baseCapped, synthCapped] = calcCurrentRewardSynth(
+        pool.poolDetails,
+        synth,
+        _synth,
+        sparta.globalDetails,
+        reserve.globalDetails.spartaBalance,
+      )
+      return [reward, baseCapped, synthCapped]
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [claimArray])
+    const checkValidHarvest = (baseCapped, synthCapped, symbol, reward) => {
+      if (!reserve.globalDetails.emissions) {
+        return [false, 'incentivesDisabled', '']
+      }
+      if (baseCapped) {
+        return [false, 'baseCap', '']
+      }
+      if (synthCapped) {
+        return [true, reward, ' SPARTA']
+      }
+      return [true, reward, ` ${symbol}s`]
+    }
+    if (claimArray) {
+      const finalArray = []
+      for (let i = 0; i < claimArray.length; i++) {
+        const _synth = getSynth(claimArray[i], synth.synthDetails)
+        const { symbol } = getToken(_synth.tokenAddress, pool.tokenDetails)
+        const claim = getClaimable(_synth)
+        const valid = checkValidHarvest(claim[1], claim[2], symbol, claim[0])
+        if (valid[0]) {
+          finalArray.push({
+            address: _synth.address,
+            tokenAddress: _synth.tokenAddress,
+            reward: valid[1],
+            rewardString: valid[2],
+            staked: _synth.staked,
+            symbol,
+          })
+        }
+      }
+      setFinalClaimArray(finalArray)
+    }
+  }, [
+    claimArray,
+    pool.poolDetails,
+    pool.tokenDetails,
+    reserve.globalDetails.emissions,
+    reserve.globalDetails.spartaBalance,
+    sparta.globalDetails,
+    synth,
+  ])
 
   // *CHECK === *CHECK
   const estMaxGas = '5000000000000000'
@@ -210,7 +204,7 @@ const SynthHarvestAllModal = () => {
                   {x.symbol}s Claim:
                 </Col>
                 <Col className="text-end output-card">
-                  {formatFromWei(x.reward)} {x.rewardString}
+                  {formatFromWei(t(x.reward))} {x.rewardString}
                 </Col>
               </Row>
             ))}

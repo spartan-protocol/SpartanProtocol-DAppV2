@@ -46,7 +46,7 @@ const Synths = () => {
           `${token?.symbol.substring(0, 10)}s`,
           '18',
           token?.symbolUrl,
-          wallet,
+          wallet.account,
         ),
       )
     }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
@@ -7,9 +7,8 @@ import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import ProgressBar from 'react-bootstrap/ProgressBar'
-import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
-import { synthVaultWeight, useSynth } from '../../store/synth'
+import { useSynth } from '../../store/synth'
 import { useWeb3 } from '../../store/web3'
 import {
   BN,
@@ -27,7 +26,6 @@ import { stirCauldron } from '../../utils/math/router'
 import styles from './styles.module.scss'
 
 const SynthItem = ({ asset, synthApy }) => {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
@@ -54,18 +52,6 @@ const SynthItem = ({ asset, synthApy }) => {
     BN(getSynthSupply())
       .div(BN(getSynthSupply()).plus(getSynthStir()))
       .times(100)
-
-  useEffect(() => {
-    const checkWeight = () => {
-      if (pool.poolDetails?.length > 1) {
-        dispatch(
-          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
-        )
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthDetails, pool.poolDetails])
 
   return (
     <>

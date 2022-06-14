@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -42,7 +42,6 @@ const SynthPositions = () => {
   const [viewPool, setViewPool] = useState('usd')
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
-  const [trigger0, settrigger0] = useState(0)
 
   const isLoading = () => {
     if (!pool.tokenDetails || !pool.poolDetails || !synth.synthDetails) {
@@ -51,17 +50,16 @@ const SynthPositions = () => {
     return false
   }
 
-  const tryParsePool = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
+    const tryParsePool = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const getAssetDetails = () => {
-      if (!isLoading()) {
+      if (pool.poolDetails) {
         window.localStorage.setItem('assetType1', 'synth')
         let asset1 = tryParsePool(window.localStorage.getItem('assetSelected1'))
         asset1 =
@@ -76,20 +74,19 @@ const SynthPositions = () => {
       }
     }
     getAssetDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    isLoading,
+    addr.bnb,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
   ])
 
-  const getWallet = () => {
+  const getWallet = useCallback(() => {
     if (wallet?.account) {
       return wallet.account.toString().toLowerCase()
     }
     return false
-  }
+  }, [wallet.account])
 
   const _getToken = () => getToken(poolPos.tokenAddress, pool.tokenDetails)
 
@@ -101,7 +98,7 @@ const SynthPositions = () => {
     }
   }
 
-  const getFromLS = () => {
+  const getFromLS = useCallback(() => {
     let _position = false
     const _positions = tryParse(
       window.localStorage.getItem('sp_synthpositions'),
@@ -110,22 +107,20 @@ const SynthPositions = () => {
     if (_position) {
       setPosition(_position)
     }
-  }
+  }, [getWallet])
 
-  const getData = () => {
-    getFromLS()
-  }
   useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
+    const getData = () => {
+      getFromLS()
     }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
+    getData() // Run on load
+    const interval = setInterval(() => {
+      getData() // Run on interval
     }, 2000)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+    return () => {
+      clearInterval(interval)
+    }
+  }, [getFromLS])
 
   const updateLS = (queryData, block) => {
     const walletAddr = getWallet()

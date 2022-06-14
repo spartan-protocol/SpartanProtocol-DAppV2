@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
 import Button from 'react-bootstrap/Button'
@@ -52,24 +52,6 @@ const Txns = () => {
   }
   const [items, setItems] = useState([])
 
-  const createPagination = (len) => {
-    let newItem
-    let auxItems = []
-    for (let number = 1; number <= len; number++) {
-      newItem = (
-        <Pagination.Item
-          key={number}
-          active={number === activePage}
-          onClick={() => handleOnClick(number)}
-        >
-          {number}
-        </Pagination.Item>
-      )
-      auxItems = [...auxItems, newItem]
-    }
-    setItems(auxItems)
-  }
-
   const tryParse = (data) => {
     try {
       return JSON.parse(data)
@@ -78,15 +60,14 @@ const Txns = () => {
     }
   }
 
-  const getTxns = () => {
-    const unfiltered = tryParse(window.localStorage.getItem('txnArray'))
-    if (!unfiltered) {
-      return []
+  const updateFiltered = useCallback(() => {
+    const getTxns = () => {
+      const unfiltered = tryParse(window.localStorage.getItem('txnArray'))
+      if (!unfiltered) {
+        return []
+      }
+      return unfiltered
     }
-    return unfiltered
-  }
-
-  const updateFiltered = () => {
     const unfiltered = getTxns()
     const network = tryParse(window.localStorage.getItem('network'))
     if (unfiltered.length > 0 && wallet.account) {
@@ -104,10 +85,10 @@ const Txns = () => {
       setTxnArray([])
       setShowTxns(false)
     }
-  }
+  }, [wallet.account])
+
   useEffect(() => {
     updateFiltered()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     activePage,
     wallet.account,
@@ -118,9 +99,27 @@ const Txns = () => {
     sparta.txn,
     synth.txn,
     web3.txn,
+    updateFiltered,
   ]) // add in any other txn-related deps here
 
-  const updateShown = () => {
+  const updateShown = useCallback(() => {
+    const createPagination = (len) => {
+      let newItem
+      let auxItems = []
+      for (let number = 1; number <= len; number++) {
+        newItem = (
+          <Pagination.Item
+            key={number}
+            active={number === activePage}
+            onClick={() => handleOnClick(number)}
+          >
+            {number}
+          </Pagination.Item>
+        )
+        auxItems = [...auxItems, newItem]
+      }
+      setItems(auxItems)
+    }
     let amountOfPages = 0
     if (txnArray?.length > 0 && wallet.account) {
       setShownArray(
@@ -134,11 +133,11 @@ const Txns = () => {
     } else {
       setShownArray([])
     }
-  }
+  }, [activePage, txnArray, txnsPerPage, wallet.account])
+
   useEffect(() => {
     updateShown()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [txnArray, activePage])
+  }, [txnArray, activePage, updateShown])
 
   const onClear = () => {
     clearTxns(wallet.account)

@@ -24,65 +24,49 @@ import { convertTimeUnits } from '../../utils/math/nonContract'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
 import { bondVaultWeight, getBondDetails, useBond } from '../../store/bond'
-import { useSynth, getSynthDetails } from '../../store/synth'
+import { getSynthDetails } from '../../store/synth'
 import HelmetLoading from '../../components/Spinner/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'
 import { proposalTypes } from './types'
-import { useWeb3 } from '../../store/web3'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
-  const web3 = useWeb3()
-  const synth = useSynth()
   const wallet = useWeb3React()
   const { t } = useTranslation()
-  const network = getNetwork()
 
   const [selectedView, setSelectedView] = useState('current')
 
-  const [trigger0, settrigger0] = useState(0)
-  const getData = () => {
-    if (tempChains.includes(network.chainId)) {
-      dispatch(daoGlobalDetails(web3.rpcs))
-    }
-  }
   useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
+    const getData = () => {
+      if (tempChains.includes(getNetwork().chainId)) {
+        dispatch(daoGlobalDetails())
+      }
     }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 7500)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+    getData() // Run on load
+    const interval = setInterval(() => {
+      getData() // Run on interval
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch])
 
   useEffect(() => {
-    if (tempChains.includes(network.chainId)) {
-      dispatch(daoMemberDetails(wallet, web3.rpcs))
-      dispatch(
-        daoProposalDetails(dao.global?.currentProposal, wallet, web3.rpcs),
-      )
-      dispatch(
-        proposalWeight(
-          dao.global?.currentProposal,
-          pool.poolDetails,
-          web3.rpcs,
-        ),
-      )
-      dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-      dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
-      dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-      dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
-      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
+    if (tempChains.includes(getNetwork().chainId)) {
+      dispatch(daoMemberDetails(wallet.account))
+      dispatch(daoProposalDetails(wallet.account))
+      dispatch(proposalWeight())
+      dispatch(daoVaultWeight())
+      dispatch(bondVaultWeight())
+      dispatch(getDaoDetails(wallet.account))
+      dispatch(getBondDetails(wallet.account))
+      dispatch(getSynthDetails(wallet))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dao.global, dao.newProp])
+  }, [dispatch, wallet, dao.global])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -108,7 +92,7 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(getNetwork().chainId) && (
           <>
             <Row className="mb-3">
               <Col>
@@ -337,9 +321,7 @@ const Overview = () => {
             </Row>
           </>
         )}
-        {network.chainId && !tempChains.includes(network.chainId) && (
-          <WrongNetwork />
-        )}
+        {!tempChains.includes(getNetwork().chainId) && <WrongNetwork />}
       </div>
     </>
   )

@@ -45,33 +45,22 @@ const PoolSelect = () => {
     setShowModal(!showModal)
   }
 
-  const isLoading = () => {
-    if (!pool.poolDetails) {
-      return true
-    }
-    return false
-  }
-
   const searchInput = document.getElementById('searchInput')
 
   const clearSearch = () => {
     searchInput.value = ''
   }
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
-  const getPools = () =>
-    pool.poolDetails
-      .filter((asset) => asset.baseAmount > 0)
-      .sort((a, b) => b.baseAmount - a.baseAmount)
-
   useEffect(() => {
+    const getToken = (tokenAddress) =>
+      pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
     let finalArray = []
     // Add LP token to array
 
-    if (!isLoading()) {
-      const tempArray = getPools()
+    if (pool.poolDetails) {
+      const tempArray = pool.poolDetails
+        .filter((asset) => asset.baseAmount > 0)
+        .sort((a, b) => b.baseAmount - a.baseAmount)
       for (let i = 0; i < tempArray.length; i++) {
         if (tempArray[i].address) {
           finalArray.push({
@@ -100,7 +89,7 @@ const PoolSelect = () => {
             symbol: `${getToken(tempArray[i].tokenAddress)?.symbol}p`,
             balance: tempArray[i].balance,
             baseAmount: formatFromWei(
-              BN(tempArray[i].baseAmount).times(2).times(web3?.spartaPrice),
+              BN(tempArray[i].baseAmount).times(2).times(web3.spartaPrice),
               0,
             ),
             address: tempArray[i].tokenAddress,
@@ -115,8 +104,12 @@ const PoolSelect = () => {
       }
       setLpsArray(finalArray)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails, searchInput?.value])
+  }, [
+    pool.poolDetails,
+    pool.tokenDetails,
+    searchInput?.value,
+    web3.spartaPrice,
+  ])
 
   return (
     <>
@@ -136,7 +129,7 @@ const PoolSelect = () => {
               <Modal.Header closeButton>
                 <Modal.Title>{t('searchPools')}</Modal.Title>
               </Modal.Header>
-              {!isLoading() ? (
+              {pool.poolDetails ? (
                 <Modal.Body>
                   <>
                     <Row className="my-3">

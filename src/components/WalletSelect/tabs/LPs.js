@@ -70,7 +70,7 @@ const LPs = () => {
           `${token.symbol.substring(0, 10)}p`,
           '18',
           token.symbolUrl,
-          wallet,
+          wallet.account,
         ),
       )
     }

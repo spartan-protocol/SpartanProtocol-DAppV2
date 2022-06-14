@@ -19,13 +19,11 @@ import {
 } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { getAddresses } from '../../utils/web3'
-import { useWeb3 } from '../../store/web3'
 
 const BondItem = (props) => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
-  const web3 = useWeb3()
   const addr = getAddresses()
   const { asset } = props
   const { t } = useTranslation()
@@ -47,7 +45,7 @@ const BondItem = (props) => {
 
   const handleTxn = async () => {
     setTxnLoading(true)
-    await dispatch(claimBond(asset.tokenAddress, wallet, web3.rpcs))
+    await dispatch(claimBond(asset.tokenAddress, wallet))
     setTxnLoading(false)
   }
 

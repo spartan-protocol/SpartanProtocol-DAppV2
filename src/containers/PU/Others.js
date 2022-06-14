@@ -17,62 +17,47 @@ const Others = () => {
   const [poolVars, setPoolVars] = useState(false)
   const [poolObj, setPoolObj] = useState(false)
 
-  const tryParsePool = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
-  const isLoading = () => {
-    if (!pool.tokenDetails || !pool.poolDetails || !pool.curatedPools) {
-      return true
-    }
-    return false
-  }
-
   useEffect(() => {
-    const getAssetDetails = () => {
-      if (!isLoading()) {
-        window.localStorage.setItem('assetType1', 'token')
-        let asset1 = tryParsePool(window.localStorage.getItem('assetSelected1'))
-        asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
-        setPoolObj(asset1)
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+    const tryParsePool = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
       }
     }
-    getAssetDetails()
+    if (pool.poolDetails) {
+      window.localStorage.setItem('assetType1', 'token')
+      let asset1 = tryParsePool(window.localStorage.getItem('assetSelected1'))
+      asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
+      setPoolObj(asset1)
+      window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
 
-  const getPoolDetails = async () => {
-    const contract = getPoolContract(poolObj.address, null, web3.rpcs)
-    let awaitArray = [
-      contract.callStatic.stirStamp(),
-      contract.callStatic.synthCap(),
-    ]
-    awaitArray = await Promise.allSettled(awaitArray)
-    const resolved = {
-      stirStamp: checkResolved(awaitArray[0], 'Error').toString(),
-      synthCap: checkResolved(awaitArray[1], 'Error').toString(),
-    }
-    setPoolVars(resolved)
-  }
-
+  // MOVE THIS TO REDUX & CLEAN UP DEPS
   useEffect(() => {
-    if (tempChains.includes(network.chainId) && pool.poolDetails && poolObj) {
+    const getPoolDetails = async () => {
+      const contract = getPoolContract(poolObj.address, null, web3.rpcs)
+      let awaitArray = [
+        contract.callStatic.stirStamp(),
+        contract.callStatic.synthCap(),
+      ]
+      awaitArray = await Promise.allSettled(awaitArray)
+      const resolved = {
+        stirStamp: checkResolved(awaitArray[0], 'Error').toString(),
+        synthCap: checkResolved(awaitArray[1], 'Error').toString(),
+      }
+      setPoolVars(resolved)
+    }
+    if (
+      tempChains.includes(network.chainId) &&
+      pool.poolDetails &&
+      poolObj.address
+    ) {
       getPoolDetails()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails, poolObj])
-
-  // const isLoading = () => {
-  //   if (!poolVars) {
-  //     return true
-  //   }
-  //   return false
-  // }
+  }, [network.chainId, pool.poolDetails, poolObj.address, web3.rpcs])
 
   return (
     <>

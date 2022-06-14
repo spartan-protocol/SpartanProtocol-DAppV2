@@ -30,6 +30,7 @@ import { getLibrary } from './utils/web3React'
 import { BreakpointProvider } from './providers/Breakpoint'
 import { ThemeProvider } from './providers/Theme'
 import { isAppleDevice } from './utils/helpers'
+import { FocusProvider } from './providers/Focus'
 
 ChartJS.register(
   LineElement,
@@ -92,9 +93,11 @@ const Providers = () => (
     <Web3ReactProvider getLibrary={getLibrary}>
       <BrowserRouter>
         <BreakpointProvider>
-          <ThemeProvider>
-            <Layout />
-          </ThemeProvider>
+          <FocusProvider>
+            <ThemeProvider>
+              <Layout />
+            </ThemeProvider>
+          </FocusProvider>
         </BreakpointProvider>
       </BrowserRouter>
     </Web3ReactProvider>

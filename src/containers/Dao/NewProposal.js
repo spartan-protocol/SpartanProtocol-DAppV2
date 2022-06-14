@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -35,14 +35,12 @@ import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
 import { useReserve } from '../../store/reserve'
-import { useWeb3 } from '../../store/web3'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
   const sparta = useSparta()
   const synth = useSynth()
   const pool = usePool()
-  const web3 = useWeb3()
   const reserve = useReserve()
   const wallet = useWeb3React()
   const dao = useDao()
@@ -56,7 +54,7 @@ const NewProposal = () => {
   const [feeConfirm, setfeeConfirm] = useState(false)
   const [inputAddress, setinputAddress] = useState(null)
 
-  const isLoading = () => {
+  const isLoading = useCallback(() => {
     if (
       !pool.tokenDetails ||
       !pool.poolDetails ||
@@ -66,7 +64,7 @@ const NewProposal = () => {
       return true
     }
     return false
-  }
+  }, [dao.proposal, pool.poolDetails, pool.tokenDetails, synth.synthDetails])
 
   const tempHide = [
     'DAO',
@@ -91,12 +89,6 @@ const NewProposal = () => {
   const [inputParam, setinputParam] = useState(null)
   const showParamInput = ['Param', 'Grant']
   const paramInput = document.getElementById('paramInput')
-  const handleParamChange = (newValue) => {
-    if (paramInput) {
-      setinputParam(newValue)
-      paramInput.value = newValue
-    }
-  }
 
   const [addrValid, setaddrValid] = useState(false)
   useEffect(() => {
@@ -129,19 +121,20 @@ const NewProposal = () => {
   }, [selectedType, inputParam])
 
   const [existingPid, setexistingPid] = useState(false)
-  const checkExistingOpen = () => {
-    if (
-      dao.global.currentProposal !== 0 &&
-      dao.proposal?.filter((pid) => pid.open).length > 0
-    ) {
-      setexistingPid(true)
-    } else {
-      setexistingPid(false)
-    }
-  }
-
   const [formValid, setformValid] = useState(false)
+
   useEffect(() => {
+    const checkExistingOpen = () => {
+      if (
+        dao.global.currentProposal !== 0 &&
+        dao.proposal?.filter((pid) => pid.open).length > 0
+      ) {
+        setexistingPid(true)
+      } else {
+        setexistingPid(false)
+      }
+    }
+
     if (!isLoading()) {
       checkExistingOpen()
       if (!existingPid) {
@@ -162,15 +155,28 @@ const NewProposal = () => {
     } else {
       setformValid(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [feeConfirm, addrValid, paramValid, selectedType, existingPid])
+  }, [
+    feeConfirm,
+    addrValid,
+    paramValid,
+    selectedType,
+    existingPid,
+    isLoading,
+    dao.global.currentProposal,
+    dao.proposal,
+  ])
 
   useEffect(() => {
-    handleAddrChange('')
-    handleParamChange('')
+    if (addrInput) {
+      setinputAddress('')
+      addrInput.value = ''
+    }
+    if (paramInput) {
+      setinputParam('')
+      paramInput.value = ''
+    }
     setfeeConfirm(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedType])
+  }, [addrInput, paramInput, selectedType])
 
   const handleOnHide = () => {
     setShowModal(false)
@@ -183,23 +189,16 @@ const NewProposal = () => {
   const handleSubmit = async () => {
     setTxnLoading(true)
     if (selectedType?.type === 'Action') {
-      await dispatch(newActionProposal(selectedType.value, wallet, web3.rpcs))
+      await dispatch(newActionProposal(selectedType.value, wallet))
     } else if (selectedType?.type === 'Param') {
-      await dispatch(
-        newParamProposal(inputParam, selectedType.value, wallet, web3.rpcs),
-      )
+      await dispatch(newParamProposal(inputParam, selectedType.value, wallet))
     } else if (selectedType?.type === 'Address') {
       await dispatch(
-        newAddressProposal(inputAddress, selectedType.value, wallet, web3.rpcs),
+        newAddressProposal(inputAddress, selectedType.value, wallet),
       )
     } else if (selectedType?.type === 'Grant') {
       await dispatch(
-        newGrantProposal(
-          inputAddress,
-          convertToWei(inputParam),
-          wallet,
-          web3.rpcs,
-        ),
+        newGrantProposal(inputAddress, convertToWei(inputParam), wallet),
       )
     }
     setTxnLoading(false)

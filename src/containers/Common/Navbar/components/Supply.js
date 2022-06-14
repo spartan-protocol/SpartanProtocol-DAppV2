@@ -52,18 +52,10 @@ const Supply = () => {
   const [showDropdown, setshowDropdown] = useState(false)
 
   useEffect(() => {
-    if (
-      showDropdown &&
-      tempChains.includes(network.chainId) &&
-      pool.curatedPools &&
-      pool.poolDetails
-    ) {
-      dispatch(
-        getReservePOLDetails(pool.curatedPools, pool.poolDetails, web3.rpcs),
-      )
+    if (showDropdown && tempChains.includes(network.chainId)) {
+      dispatch(getReservePOLDetails())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.curatedPools, pool.poolDetails])
+  }, [dispatch, network.chainId, pool.poolDetails, showDropdown])
 
   const getTVL = () => {
     let tvl = BN(0)

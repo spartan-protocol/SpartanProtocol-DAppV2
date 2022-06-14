@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
-import { useWeb3 } from '../../store/web3'
 import { getNetwork, tempChains } from '../../utils/web3'
 import BondItem from './BondVaultItem'
 import { getBondDetails, useBond } from '../../store/bond'
@@ -17,7 +16,6 @@ import { Icon } from '../../components/Icons/index'
 const BondVault = () => {
   const pool = usePool()
   const bond = useBond()
-  const web3 = useWeb3()
   const wallet = useWeb3React()
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -32,21 +30,11 @@ const BondVault = () => {
   }
 
   useEffect(() => {
-    const { listedPools } = pool
-    const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (listedPools?.length > 0) {
-          dispatch(getBondDetails(listedPools, wallet, web3.rpcs))
-        }
-      }
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
+    if (tempChains.includes(chainId)) {
+      dispatch(getBondDetails(wallet.account))
     }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [dispatch, pool.listedPools, wallet.account])
 
   const isLoading = () => {
     if (!bond.bondDetails) {

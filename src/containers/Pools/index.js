@@ -24,7 +24,7 @@ import { useWeb3 } from '../../store/web3'
 import { calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
 import { useDao, daoVaultWeight } from '../../store/dao'
 import SynthItem from './SynthItem'
-import { useSynth } from '../../store/synth'
+import { synthVaultWeight, useSynth } from '../../store/synth'
 import NewPool from './NewPool'
 
 const Overview = () => {
@@ -44,15 +44,17 @@ const Overview = () => {
   const [tableView, setTableView] = useState(true)
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (pool.poolDetails?.length > 1) {
-        dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-        dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
-      }
+    if (activeTab !== 'synths') {
+      dispatch(daoVaultWeight())
+      dispatch(bondVaultWeight())
     }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
+  }, [activeTab, dispatch, pool.poolDetails])
+
+  useEffect(() => {
+    if (activeTab === 'synths') {
+      dispatch(synthVaultWeight())
+    }
+  }, [activeTab, dispatch, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -99,56 +101,37 @@ const Overview = () => {
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
-  const getTotalDaoWeight = () => {
-    const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
-    if (_amount > 0) {
-      return _amount
-    }
-    return '0.00'
-  }
-
-  const getDaoApy = () => {
-    let revenue = BN(web3.metrics.global[0].daoVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = getTotalDaoWeight().toString()
-    const apy = calcDaoAPY(revenue, baseAmount)
-    return apy.toFixed(2).toString()
-  }
-
-  const isDaoVaultLoading = () => {
-    if (!web3.metrics.global || !bond.totalWeight || !dao.totalWeight) {
-      return true
-    }
-    return false
-  }
-
   useEffect(() => {
-    if (!isDaoVaultLoading()) {
+    const getTotalDaoWeight = () => {
+      const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
+      if (_amount > 0) {
+        return _amount
+      }
+      return '0.00'
+    }
+    const getDaoApy = () => {
+      let revenue = BN(web3.metrics.global[0].daoVault30Day)
+      revenue = revenue.toString()
+      const baseAmount = getTotalDaoWeight().toString()
+      const apy = calcDaoAPY(revenue, baseAmount)
+      return apy.toFixed(2).toString()
+    }
+    if (web3.metrics.global && bond.totalWeight && dao.totalWeight) {
       setDaoApy(getDaoApy())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
-  const isSynthVaultLoading = () => {
-    if (!synth.totalWeight || !web3.metrics.global) {
-      return true
-    }
-    return false
-  }
-
-  const getSynthApy = () => {
-    let revenue = BN(web3.metrics.global[0].synthVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = synth.totalWeight.toString()
-    const apy = calcSynthAPY(revenue, baseAmount)
-    return apy.toFixed(2).toString()
-  }
-
   useEffect(() => {
-    if (!isSynthVaultLoading()) {
+    const getSynthApy = () => {
+      let revenue = BN(web3.metrics.global[0].synthVault30Day)
+      revenue = revenue.toString()
+      const baseAmount = synth.totalWeight.toString()
+      const apy = calcSynthAPY(revenue, baseAmount)
+      return apy.toFixed(2).toString()
+    }
+    if (synth.totalWeight && web3.metrics.global) {
       setSynthApy(getSynthApy())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, synth.totalWeight])
 
   const renderPools = () => {

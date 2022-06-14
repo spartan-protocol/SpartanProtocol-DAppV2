@@ -31,7 +31,7 @@ export const spartaSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateGlobalDetails: (state, action) => {
       state.globalDetails = action.payload
@@ -57,40 +57,42 @@ export const {
   updateCommunityWallet,
 } = spartaSlice.actions
 
-export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
+export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  // const contract1 = getSpartaV1Contract(null, rpcUrls)
-  const contract2 = getSpartaV2Contract(null, rpcUrls)
-
+  const { rpcs } = getState().web3
   try {
-    let awaitArray = [
-      contract2.callStatic.emitting(),
-      // contract.callStatic.minting(),
-      '0', // contract2.callStatic.feeOnTransfer()
-      // contract.callStatic.emissionCurve(),
-      contract2.callStatic.totalSupply(),
-      contract2.callStatic.secondsPerEra(),
-      // contract.callStatic.nextEraTime(),
-      // contract1.callStatic.secondsPerEra(),
-      // contract1.callStatic.totalSupply(),
-      contract2.callStatic.balanceOf(deadAddress),
-    ]
-    awaitArray = await Promise.all(awaitArray)
-    const globalDetails = {
-      emitting: awaitArray[0],
-      // minting: awaitArray[],
-      feeOnTransfer: awaitArray[1].toString(),
-      // emissionCurve: awaitArray[],
-      totalSupply: awaitArray[2].toString(),
-      secondsPerEra: awaitArray[3].toString(),
-      // nextEraTime: awaitArray[],
-      // oldSecondsPerEra: awaitArray[].toString(),
-      // oldTotalSupply: awaitArray[].toString(),
-      deadSupply: awaitArray[4].toString(),
+    if (rpcs.length > 0) {
+      // const contract1 = getSpartaV1Contract(null, rpcUrls)
+      const contract2 = getSpartaV2Contract(null, rpcs)
+      let awaitArray = [
+        contract2.callStatic.emitting(),
+        // contract.callStatic.minting(),
+        '0', // contract2.callStatic.feeOnTransfer()
+        // contract.callStatic.emissionCurve(),
+        contract2.callStatic.totalSupply(),
+        contract2.callStatic.secondsPerEra(),
+        // contract.callStatic.nextEraTime(),
+        // contract1.callStatic.secondsPerEra(),
+        // contract1.callStatic.totalSupply(),
+        contract2.callStatic.balanceOf(deadAddress),
+      ]
+      awaitArray = await Promise.all(awaitArray)
+      const globalDetails = {
+        emitting: awaitArray[0],
+        // minting: awaitArray[],
+        feeOnTransfer: awaitArray[1].toString(),
+        // emissionCurve: awaitArray[],
+        totalSupply: awaitArray[2].toString(),
+        secondsPerEra: awaitArray[3].toString(),
+        // nextEraTime: awaitArray[],
+        // oldSecondsPerEra: awaitArray[].toString(),
+        // oldTotalSupply: awaitArray[].toString(),
+        deadSupply: awaitArray[4].toString(),
+      }
+      dispatch(updateGlobalDetails(globalDetails))
     }
-    dispatch(updateGlobalDetails(globalDetails))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -100,14 +102,15 @@ export const getSpartaGlobalDetails = (rpcUrls) => async (dispatch) => {
  * @param {object} wallet
  * @returns {uint} claimAmount
  */
-export const fallenSpartansCheck = (wallet, rpcUrls) => async (dispatch) => {
+export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getFallenSpartansContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getFallenSpartansContract(wallet, rpcs)
   try {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(updateClaimCheck(claimCheck.toString()))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -115,16 +118,17 @@ export const fallenSpartansCheck = (wallet, rpcUrls) => async (dispatch) => {
 /**
  * Upgrade SPARTA(old V1) to SPARTA(New V2)
  */
-export const spartaUpgrade = (wallet, rpcUrls) => async (dispatch) => {
+export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getSpartaV2Contract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getSpartaV2Contract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcUrls)
+    const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.upgrade({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'upgrade', rpcUrls)
+    txn = await parseTxn(txn, 'upgrade', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -132,16 +136,17 @@ export const spartaUpgrade = (wallet, rpcUrls) => async (dispatch) => {
 /**
  * Claim your wallet portion from the fallenSparta fund
  */
-export const fallenSpartansClaim = (wallet, rpcUrls) => async (dispatch) => {
+export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getFallenSpartansContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getFallenSpartansContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcUrls)
+    const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.claim({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'fsClaim', rpcUrls)
+    txn = await parseTxn(txn, 'fsClaim', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -149,7 +154,7 @@ export const fallenSpartansClaim = (wallet, rpcUrls) => async (dispatch) => {
 /**
  * Community wallet holdings
  */
-export const communityWalletHoldings = (wallet) => async (dispatch) => {
+export const communityWalletHoldings = (walletAddr) => async (dispatch) => {
   dispatch(updateLoading(true))
   const comWal = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
   const abiErc20 = getAbis().erc20
@@ -174,9 +179,9 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
       spartaCont.callStatic.balanceOf(comWal),
       busdCont.callStatic.balanceOf(comWal),
       usdtCont.callStatic.balanceOf(comWal),
-      wallet ? spartaCont.callStatic.balanceOf(wallet.account) : '0',
-      wallet?.account ? busdCont.callStatic.balanceOf(wallet.account) : '0',
-      wallet?.account ? usdtCont.callStatic.balanceOf(wallet.account) : '0',
+      walletAddr ? spartaCont.callStatic.balanceOf(walletAddr) : '0',
+      walletAddr ? busdCont.callStatic.balanceOf(walletAddr) : '0',
+      walletAddr ? usdtCont.callStatic.balanceOf(walletAddr) : '0',
     ]
     awaitArray = await Promise.all(awaitArray)
     const communityWallet = {
@@ -185,15 +190,15 @@ export const communityWalletHoldings = (wallet) => async (dispatch) => {
       busd: awaitArray[1].toString(),
       usdt: awaitArray[2].toString(),
       userSparta: awaitArray[3].toString(),
-      userBnb: wallet?.account
-        ? (await provider.getBalance(wallet.account)).toString()
+      userBnb: walletAddr
+        ? (await provider.getBalance(walletAddr)).toString()
         : '0',
       userBusd: awaitArray[4].toString(),
       userUsdt: awaitArray[5].toString(),
     }
     dispatch(updateCommunityWallet(communityWallet))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

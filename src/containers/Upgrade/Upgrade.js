@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import { ethers } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { formatFromWei } from '../../utils/bigNumber'
@@ -13,60 +12,40 @@ import { spartaUpgrade } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
-import { useWeb3 } from '../../store/web3'
 
 const Upgrade = () => {
   const addr = getAddresses()
   const pool = usePool()
   const dispatch = useDispatch()
-  const web3 = useWeb3()
   const wallet = useWeb3React()
   const { t } = useTranslation()
 
   const [upgradeLoading, setUpgradeLoading] = useState(false)
   const [bnbBalance, setbnbBalance] = useState('0')
-  const [loadingBalance, setloadingBalance] = useState(false)
+  const [trigger0, settrigger0] = useState(0)
 
   const getSpartav1 = () => getToken(addr.spartav1, pool.tokenDetails)
   const getSpartav2 = () => getToken(addr.spartav2, pool.tokenDetails)
 
-  const [trigger0, settrigger0] = useState(0)
-  const getData = async () => {
-    if (
-      wallet?.active &&
-      loadingBalance === false &&
-      ethers.utils.isAddress(wallet.account)
-    ) {
-      setloadingBalance(true)
-      const bnbBal = await wallet.library.getBalance(wallet.account)
-      setbnbBalance(bnbBal.toString())
-      setloadingBalance(false)
-    }
-  }
   useEffect(() => {
-    if (trigger0 === 0) {
-      getData()
+    const getData = async () => {
+      if (wallet?.account) {
+        const bnbBal = await wallet.library.getBalance(wallet.account)
+        setbnbBalance(bnbBal.toString())
+      }
     }
-    const timer = setTimeout(() => {
-      getData()
-      settrigger0(trigger0 + 1)
-    }, 5000)
-    return () => {
-      clearTimeout(timer)
-      settrigger0(0)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0, wallet.account, wallet.balance, wallet.connector])
+    getData() // Run on load
+  }, [trigger0, wallet])
 
   useEffect(() => {
-    if (wallet.status === 'disconnected') {
+    if (!wallet.account) {
       setbnbBalance('0')
     }
-  }, [wallet.status])
+  }, [wallet.account])
 
   const handleUpgrade = async () => {
     setUpgradeLoading(true)
-    await dispatch(spartaUpgrade(wallet, web3.rpcs))
+    await dispatch(spartaUpgrade(wallet))
     setUpgradeLoading(false)
   }
 
@@ -168,8 +147,7 @@ const Upgrade = () => {
               <Card.Footer>
                 <Button
                   className="w-100"
-                  onClick={() => settrigger0(trigger0 + 1)}
-                  disabled={loadingBalance === true}
+                  onClick={() => settrigger0((prev) => prev + 1)}
                 >
                   {t('refreshBalance')}
                 </Button>
