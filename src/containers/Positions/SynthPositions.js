@@ -590,14 +590,14 @@ const SynthPositions = () => {
                   <Col className="text-end ">
                     {isOverall()
                       ? formatFromWei(
-                          viewOverall === 'sparta'
+                          viewOverall === 'units'
                             ? getNetGainSpartaToUsd()
                             : getNetGainUsdToSparta(),
                           2,
                         )
-                      : 'Generate First'}
+                      : 'Generate First'}{' '}
                     <Icon
-                      icon={viewOverall === 'sparta' ? 'usd' : 'spartav2'}
+                      icon={viewOverall === 'units' ? 'usd' : 'spartav2'}
                       className="ms-1"
                       size="15"
                     />
@@ -935,7 +935,7 @@ const SynthPositions = () => {
                 <Col className="text-end ">
                   {isOverall()
                     ? formatFromWei(
-                        viewPool === 'sparta'
+                        viewPool === 'units'
                           ? getPoolNetGainWorthUnit()
                           : getPoolNetGainWorthSparta(),
                         2,
@@ -944,7 +944,7 @@ const SynthPositions = () => {
                   {viewPool === 'usd' && (
                     <Icon icon="spartav2" className="ms-1" size="15" />
                   )}
-                  {!isLoading() && viewPool === 'sparta' && (
+                  {!isLoading() && viewPool === 'units' && (
                     <img
                       src={_getToken().symbolUrl}
                       height="17"
