@@ -11,9 +11,10 @@ import {
   bscRpcsMN,
   deadAddress,
   getAbis,
-  getProviderGasPrice,
+  getNetwork,
   parseTxn,
 } from '../../utils/web3'
+import { BN } from '../../utils/bigNumber'
 
 export const useSparta = () => useSelector((state) => state.sparta)
 
@@ -123,7 +124,10 @@ export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getSpartaV2Contract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.upgrade({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'upgrade', rpcs)
     dispatch(updateTxn(txn))
@@ -141,7 +145,10 @@ export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getFallenSpartansContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.claim({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'fsClaim', rpcs)
     dispatch(updateTxn(txn))

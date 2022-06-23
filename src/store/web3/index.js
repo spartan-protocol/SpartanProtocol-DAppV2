@@ -8,12 +8,11 @@ import {
   bscRpcsMN,
   bscRpcsTN,
   getNetwork,
-  getProviderGasPrice,
   getWalletWindowObj,
   parseTxn,
 } from '../../utils/web3'
 import { getTokenContract } from '../../utils/getContracts'
-import { convertToWei } from '../../utils/bigNumber'
+import { BN, convertToWei } from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
 import { checkResolved } from '../../utils/helpers'
 
@@ -172,7 +171,10 @@ export const getApproval =
     const { rpcs } = getState().web3
     const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.approve(
         contractAddress,
         convertToWei(1000000000),

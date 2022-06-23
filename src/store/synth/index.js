@@ -7,7 +7,7 @@ import {
   getSynthFactoryContract,
   getSynthVaultContract,
 } from '../../utils/getContracts'
-import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
+import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
 import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
 import { BN } from '../../utils/bigNumber'
 
@@ -316,7 +316,10 @@ export const synthDeposit =
     const { rpcs } = getState().web3
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'synthDeposit', rpcs)
       dispatch(updateTxn(txn))
@@ -336,7 +339,10 @@ export const synthHarvest =
     const { rpcs } = getState().web3
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
@@ -356,7 +362,10 @@ export const synthHarvestSingle =
     const { rpcs } = getState().web3
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
@@ -377,7 +386,10 @@ export const synthWithdraw =
     const { rpcs } = getState().web3
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.withdraw(synth, basisPoints, ORs)
       txn = await parseTxn(txn, 'synthWithdraw', rpcs)
@@ -398,7 +410,10 @@ export const createSynth = (token, wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getSynthFactoryContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.createSynth(token, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'createSynth', rpcs)
     dispatch(updateTxn(txn))

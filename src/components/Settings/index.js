@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Button from 'react-bootstrap/Button'
@@ -8,35 +8,28 @@ import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 
+import { useDispatch } from 'react-redux'
 import { Icon } from '../Icons'
 import { Tooltip } from '../Tooltip'
-import { getNetwork, getSettings } from '../../utils/web3'
+import { getNetwork } from '../../utils/web3'
 import { gasRatesMN, gasRatesTN, slipTols, defaultSettings } from './options'
+import { appSettings, useApp } from '../../store/app'
 
 /** Settings panel to change gas rate & slip tolerance etc */
 const Settings = ({ setShowModal, showModal }) => {
   const { t } = useTranslation()
+  const app = useApp()
+  const dispatch = useDispatch()
 
-  const [gasRate, setGasRate] = useState(null)
-  const [slipTolerance, setSlipTolerance] = useState(null)
-
-  useEffect(() => {
-    const lsSettings = getSettings()
-    const isMN = getNetwork().chainId === 56
-    setGasRate(isMN ? lsSettings.gasRateMN : lsSettings.gasRateTN)
-    setSlipTolerance(lsSettings.slipTol)
-  }, [])
+  const [gasRate, setGasRate] = useState(
+    getNetwork().chainId === 56
+      ? app.settings.gasRateMN
+      : app.settings.gasRateTN,
+  )
+  const [slipTolerance, setSlipTolerance] = useState(app.settings.slipTol)
 
   const saveSettings = () => {
-    const lsSettings = getSettings()
-    const isMN = getNetwork().chainId === 56
-    if (isMN) {
-      lsSettings.gasRateMN = gasRate
-    } else {
-      lsSettings.gasRateTN = gasRate
-    }
-    lsSettings.slipTol = slipTolerance
-    window.localStorage.setItem('sp_settings', JSON.stringify(lsSettings))
+    dispatch(appSettings(gasRate, slipTolerance))
     setShowModal(false)
   }
 

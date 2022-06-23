@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { getProviderGasPrice, parseTxn } from '../../utils/web3'
+import { getNetwork, parseTxn } from '../../utils/web3'
 import { getDaoContract, getDaoVaultContract } from '../../utils/getContracts'
 import { BN } from '../../utils/bigNumber'
 import { getPoolShareWeight } from '../../utils/math/utils'
@@ -341,7 +341,10 @@ export const daoDeposit =
     const { rpcs } = getState().web3
     const contract = getDaoContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'daoDeposit', rpcs)
       dispatch(updateTxn(txn))
@@ -359,7 +362,10 @@ export const daoWithdraw = (pool, wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.withdraw(pool, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'daoWithdraw', rpcs)
     dispatch(updateTxn(txn))
@@ -376,7 +382,10 @@ export const daoHarvest = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.harvest({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'daoHarvest', rpcs)
     dispatch(updateTxn(txn))
@@ -395,7 +404,10 @@ export const newActionProposal =
     const { rpcs } = getState().web3
     const contract = getDaoContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.newActionProposal(typeStr, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'newProposal', rpcs)
       dispatch(updatePropTxn(txn))
@@ -414,7 +426,10 @@ export const newParamProposal =
     const { rpcs } = getState().web3
     const contract = getDaoContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newParamProposal(param, typeStr, ORs)
       txn = await parseTxn(txn, 'newProposal', rpcs)
@@ -434,7 +449,10 @@ export const newAddressProposal =
     const { rpcs } = getState().web3
     const contract = getDaoContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newAddressProposal(proposedAddress, typeStr, ORs)
       txn = await parseTxn(txn, 'newProposal', rpcs)
@@ -454,7 +472,10 @@ export const newGrantProposal =
     const { rpcs } = getState().web3
     const contract = getDaoContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.newGrantProposal(recipient, amount, ORs)
       txn = await parseTxn(txn, 'newProposal', rpcs)
@@ -473,7 +494,10 @@ export const voteProposal = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.voteProposal({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'voteProposal', rpcs)
     dispatch(updatePropTxn(txn))
@@ -491,7 +515,10 @@ export const removeVote = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.unvoteProposal({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'removeVoteProposal', rpcs)
     dispatch(updatePropTxn(txn))
@@ -509,7 +536,10 @@ export const pollVotes = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.pollVotes({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'pollVotes', rpcs)
     dispatch(updatePropTxn(txn))
@@ -527,7 +557,10 @@ export const cancelProposal = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.cancelProposal({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'cancelProposal', rpcs)
     dispatch(updatePropTxn(txn))
@@ -545,7 +578,10 @@ export const finaliseProposal = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.finaliseProposal({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'finaliseProposal', rpcs)
     dispatch(updatePropTxn(txn))

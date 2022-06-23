@@ -10,7 +10,7 @@ import {
 } from '../../utils/getContracts'
 import {
   getAddresses,
-  getProviderGasPrice,
+  getNetwork,
   getTwTokenLogo,
   oneWeek,
   parseTxn,
@@ -338,7 +338,10 @@ export const createPoolADD =
     const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const _value = token === addr.bnb ? inputToken : null
       const ORs = { value: _value, gasPrice: gPrice }
       let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
