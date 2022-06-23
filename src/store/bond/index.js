@@ -6,7 +6,7 @@ import {
   getDaoContract,
   getSpartaV2Contract,
 } from '../../utils/getContracts'
-import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
+import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 import { getPoolShareWeight } from '../../utils/math/utils'
 
@@ -198,7 +198,10 @@ export const claimBond = (tokenAddr, wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getDaoContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice(rpcs)
+    // const gPrice = await getProviderGasPrice(rpcs)
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
     let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'bondClaim', rpcs)
     dispatch(updateTxn(txn))

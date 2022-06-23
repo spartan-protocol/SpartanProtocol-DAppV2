@@ -17,6 +17,7 @@ import {
 } from 'chart.js' // chart.js - Tree-shake to only bundle the used modules
 import Layout from './containers/Common/layout'
 
+import appReducer from './store/app'
 import bondReducer from './store/bond'
 import daoReducer from './store/dao'
 import poolReducer from './store/pool'
@@ -59,6 +60,7 @@ BigNumber.config({ FORMAT: globalFormat })
 
 const store = configureStore({
   reducer: {
+    app: appReducer,
     bond: bondReducer,
     dao: daoReducer,
     pool: poolReducer,

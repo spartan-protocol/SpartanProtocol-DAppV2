@@ -17,7 +17,6 @@ import {
   formatShortString,
   getAddresses,
   getItemFromArray,
-  getSettings,
 } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
@@ -40,6 +39,7 @@ import { swapTo } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract, getPriceByContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
+import { useApp } from '../../store/app'
 
 const SwapTokens = () => {
   const { t } = useTranslation()
@@ -51,6 +51,7 @@ const SwapTokens = () => {
   const sparta = useSparta()
   const location = useLocation()
   const focus = useFocus()
+  const app = useApp()
 
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -447,7 +448,7 @@ const SwapTokens = () => {
       }
     }
     setTxnLoading(true)
-    const minAmountFraction = BN(100).minus(getSettings().slipTol).div(100)
+    const minAmountFraction = BN(100).minus(app.settings.slipTol).div(100)
     await dispatch(
       swap(
         convertToWei(swapInput1?.value),

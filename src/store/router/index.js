@@ -1,8 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
+import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
 import { getRouterContract } from '../../utils/getContracts'
+import { BN } from '../../utils/bigNumber'
 
 export const useRouter = () => useSelector((state) => state.router)
 
@@ -39,7 +40,10 @@ export const addLiquidity =
     const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: token === addr.bnb ? inputToken : null,
         gasPrice: gPrice,
@@ -64,7 +68,10 @@ export const addLiquiditySingle =
     const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: token === addr.bnb && fromBase !== true ? input : null,
         gasPrice: gPrice,
@@ -88,7 +95,10 @@ export const zapLiquidity =
     const { rpcs } = getState().web3
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
       txn = await parseTxn(txn, 'zapLiq', rpcs)
@@ -109,7 +119,10 @@ export const removeLiquidityExact =
     const { rpcs } = getState().web3
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.removeLiquidityExact(units, token, ORs)
       txn = await parseTxn(txn, 'remLiq', rpcs)
@@ -130,7 +143,10 @@ export const removeLiquiditySingle =
     const { rpcs } = getState().web3
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.removeLiquidityExactAsym(units, toBase, token, {
         gasPrice: gPrice,
       })
@@ -156,7 +172,10 @@ export const swap =
     const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
@@ -187,7 +206,10 @@ export const swapAssetToSynth =
     const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
@@ -216,7 +238,10 @@ export const swapSynthToAsset =
     const { rpcs } = getState().web3
     const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.swapSynthToAsset(
         inputAmount,
         fromSynth,
@@ -239,7 +264,10 @@ export const updatePoolStatus = (wallet) => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   const contract = getRouterContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice()
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice()
     let txn = await contract.updatePoolStatus({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'unfreeze', rpcs)
     dispatch(updateTxn(txn))
