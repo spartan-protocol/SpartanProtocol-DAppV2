@@ -17,7 +17,6 @@ import {
   formatShortString,
   getAddresses,
   getItemFromArray,
-  getSettings,
 } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
@@ -39,6 +38,8 @@ import { getSwapSpot } from '../../utils/math/nonContract'
 import { swapTo } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract, getPriceByContract } from '../../utils/extCalls'
+import { useFocus } from '../../providers/Focus'
+import { useApp } from '../../store/app'
 
 const SwapTokens = () => {
   const { t } = useTranslation()
@@ -49,6 +50,8 @@ const SwapTokens = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+  const focus = useFocus()
+  const app = useApp()
 
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -65,42 +68,43 @@ const SwapTokens = () => {
     new URLSearchParams(location.search).get(`asset2`),
   )
 
-  const [hasFocus, setHasFocus] = useState(true)
-
-  window.addEventListener('focus', () => {
-    setHasFocus(true)
-  })
-
-  window.addEventListener('blur', () => {
-    setHasFocus(false)
-  })
-
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
-    const { poolDetails } = pool
-
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const getAssetDetails = () => {
-      if (hasFocus) {
-        if (poolDetails?.length > 0) {
+      if (focus) {
+        if (pool.poolDetails?.length > 0) {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
-            ;[asset1] = poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam1,
+          const _assetParam1 =
+            assetParam1 === addr.wbnb ? addr.bnb : assetParam1
+          const _assetParam2 =
+            assetParam2 === addr.wbnb ? addr.bnb : assetParam2
+          if (
+            assetParam1 !== '' &&
+            pool.poolDetails.find(
+              (asset) => asset.tokenAddress === _assetParam1,
+            )
+          ) {
+            ;[asset1] = pool.poolDetails.filter(
+              (asset) => asset.tokenAddress === _assetParam1,
             )
             setAssetParam1('')
           }
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
-            ;[asset2] = poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam2,
+          if (
+            assetParam2 !== '' &&
+            pool.poolDetails.find(
+              (asset) => asset.tokenAddress === _assetParam2,
+            )
+          ) {
+            ;[asset2] = pool.poolDetails.filter(
+              (asset) => asset.tokenAddress === _assetParam2,
             )
             setAssetParam2('')
           }
@@ -110,9 +114,9 @@ const SwapTokens = () => {
 
           if (asset2?.tokenAddress === asset1?.tokenAddress) {
             asset2 =
-              asset1?.tokenAddress !== poolDetails[0].tokenAddress
-                ? { tokenAddress: poolDetails[0].tokenAddress }
-                : { tokenAddress: poolDetails[1].tokenAddress }
+              asset1?.tokenAddress !== pool.poolDetails[0].tokenAddress
+                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
+                : { tokenAddress: pool.poolDetails[1].tokenAddress }
           }
 
           if (
@@ -133,13 +137,13 @@ const SwapTokens = () => {
             asset2 = { tokenAddress: addr.bnb }
           }
 
-          asset1 = getItemFromArray(asset1, poolDetails)
-          asset2 = getItemFromArray(asset2, poolDetails)
+          asset1 = getItemFromArray(asset1, pool.poolDetails)
+          asset2 = getItemFromArray(asset2, pool.poolDetails)
           asset1 = asset1.hide
-            ? getItemFromArray(addr.spartav2, poolDetails)
+            ? getItemFromArray(addr.spartav2, pool.poolDetails)
             : asset1
           asset2 = asset2.hide
-            ? getItemFromArray(addr.spartav2, poolDetails)
+            ? getItemFromArray(addr.spartav2, pool.poolDetails)
             : asset2
 
           setAssetSwap1(asset1)
@@ -150,71 +154,70 @@ const SwapTokens = () => {
         }
       }
     }
-
     getAssetDetails()
     balanceWidths()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    addr.bnb,
+    addr.spartav2,
+    addr.wbnb,
+    assetParam1,
+    assetParam2,
     triggerReload,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected2'),
-    hasFocus,
+    focus,
   ])
-
-  const getAsset1ExtPrice = async () => {
-    if (assetSwap1 !== '...') {
-      if (assetSwap1.tokenAddress === addr.spartav2) {
-        setAsset1USD(false)
-      } else {
-        setAsset1USD(false)
-        const asset1usd = await getPriceByContract(assetSwap1.tokenAddress)
-        const isCurrent =
-          asset1usd[
-            assetSwap1.tokenAddress === addr.bnb
-              ? addr.wbnb.toLowerCase()
-              : assetSwap1.tokenAddress.toLowerCase()
-          ]
-        if (isCurrent) {
-          setAsset1USD(isCurrent.usd)
-        }
-      }
-    }
-  }
-
-  const getAsset2ExtPrice = async () => {
-    if (assetSwap2 !== '...') {
-      if (assetSwap2.tokenAddress === addr.spartav2) {
-        setAsset2USD(false)
-      } else {
-        setAsset2USD(false)
-        const asset2usd = await getPriceByContract(assetSwap2.tokenAddress)
-        const isCurrent =
-          asset2usd[
-            assetSwap2.tokenAddress === addr.bnb
-              ? addr.wbnb.toLowerCase()
-              : assetSwap2.tokenAddress.toLowerCase()
-          ]
-        if (isCurrent) {
-          setAsset2USD(isCurrent.usd)
-        }
-      }
-    }
-  }
 
   /** Check token1 external price (on asset1 change) */
   useEffect(() => {
+    const getAsset1ExtPrice = async () => {
+      if (assetSwap1.tokenAddress) {
+        if (assetSwap1.tokenAddress === addr.spartav2) {
+          setAsset1USD(false)
+        } else {
+          setAsset1USD(false)
+          const asset1usd = await getPriceByContract(assetSwap1.tokenAddress)
+          const isCurrent =
+            asset1usd[
+              assetSwap1.tokenAddress === addr.bnb
+                ? addr.wbnb.toLowerCase()
+                : assetSwap1.tokenAddress.toLowerCase()
+            ]
+          if (isCurrent) {
+            setAsset1USD(isCurrent.usd)
+          }
+        }
+      }
+    }
     getAsset1ExtPrice()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap1.tokenAddress])
+  }, [addr.bnb, addr.spartav2, addr.wbnb, assetSwap1.tokenAddress])
 
   /** Check token2 external price (on asset2 change) */
   useEffect(() => {
+    const getAsset2ExtPrice = async () => {
+      if (assetSwap2.tokenAddress) {
+        if (assetSwap2.tokenAddress === addr.spartav2) {
+          setAsset2USD(false)
+        } else {
+          setAsset2USD(false)
+          const asset2usd = await getPriceByContract(assetSwap2.tokenAddress)
+          const isCurrent =
+            asset2usd[
+              assetSwap2.tokenAddress === addr.bnb
+                ? addr.wbnb.toLowerCase()
+                : assetSwap2.tokenAddress.toLowerCase()
+            ]
+          if (isCurrent) {
+            setAsset2USD(isCurrent.usd)
+          }
+        }
+      }
+    }
     getAsset2ExtPrice()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [assetSwap2.tokenAddress])
+  }, [addr.bnb, addr.spartav2, addr.wbnb, assetSwap2.tokenAddress])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -233,6 +236,13 @@ const SwapTokens = () => {
   }
 
   const handleReverseAssets = () => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
     const asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
     window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
@@ -254,11 +264,12 @@ const SwapTokens = () => {
   //= =================================================================================//
   // Functions to get txn Details
 
+  const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
   /**
    * Get swap txn details
    * @returns [output, swapFee, divi1, divi2]
    */
-  const getSwap = () => {
+  const updateSwap = () => {
     if (swapInput1 && assetSwap1 && assetSwap2) {
       const [output, swapFee, divi1, divi2] = swapTo(
         convertToWei(swapInput1.value),
@@ -268,9 +279,8 @@ const SwapTokens = () => {
         assetSwap2.tokenAddress === addr.spartav2,
         assetSwap1.tokenAddress === addr.spartav2,
       )
-      return [output, swapFee, divi1, divi2]
+      setGetSwap([output, swapFee, divi1, divi2])
     }
-    return ['0.00', '0.00', '0.00', '0.00']
   }
 
   const getInput = () => {
@@ -284,7 +294,7 @@ const SwapTokens = () => {
 
   const getOutput = () => {
     const symbol = getToken(assetSwap2.tokenAddress)?.symbol
-    return [getSwap()[0], symbol, t('output')]
+    return [getSwap[0], symbol, t('output')]
   }
 
   const getSpot = () => {
@@ -323,20 +333,11 @@ const SwapTokens = () => {
 
   const getRevenue = () => {
     let result = '0.00'
-    result = BN(getSwap()[1])
-    result = getSwap()[2] ? result.plus(getSwap()[2]) : result
-    result = getSwap()[3] ? result.plus(getSwap()[3]) : result
+    result = BN(getSwap[1])
+    result = getSwap[2] ? result.plus(getSwap[2]) : result
+    result = getSwap[3] ? result.plus(getSwap[3]) : result
     result = result > 0 ? result : '0.00'
     return result
-  }
-
-  //= =================================================================================//
-  // Functions for input handling
-
-  const handleInputChange = () => {
-    if (swapInput1?.value) {
-      swapInput2.value = convertFromWei(getSwap()[0])
-    }
   }
 
   //= =================================================================================//
@@ -419,11 +420,13 @@ const SwapTokens = () => {
   }
 
   useEffect(() => {
+    const handleInputChange = () => {
+      swapInput2.value = convertFromWei(getSwap[0])
+    }
     if (swapInput1?.value) {
       handleInputChange()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2])
+  }, [getSwap, swapInput1?.value, swapInput2])
 
   const handleSwapAssets = async () => {
     let gasSafety = '5000000000000000'
@@ -445,15 +448,14 @@ const SwapTokens = () => {
       }
     }
     setTxnLoading(true)
-    const minAmountFraction = BN(100).minus(getSettings().slipTol).div(100)
+    const minAmountFraction = BN(100).minus(app.settings.slipTol).div(100)
     await dispatch(
       swap(
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
         assetSwap2.tokenAddress,
-        BN(getSwap()[0]).times(minAmountFraction).toFixed(0, 1),
+        BN(getSwap[0]).times(minAmountFraction).toFixed(0, 1),
         wallet,
-        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -475,15 +477,18 @@ const SwapTokens = () => {
           <Card className="assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto">
+                <Col>
                   <strong>{t('sell')}</strong>
                 </Col>
                 <Col
-                  className="float-end text-end"
+                  xs="auto"
+                  className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
+                    clearInputs()
                     swapInput1.value = convertFromWei(getBalance(1))
+                    updateSwap()
                   }}
                 >
                   {t('balance')}
@@ -501,12 +506,16 @@ const SwapTokens = () => {
               </Row>
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect1">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect1"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         defaultTab="token"
                         priority="1"
                         filter={['token']}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <OverlayTrigger
@@ -522,74 +531,76 @@ const SwapTokens = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0"
+                        className="text-end ms-0 bg-transparent border-0 text-lg"
                         type="number"
                         min="0"
-                        placeholder={`${t('sell')}...`}
+                        step="any"
+                        placeholder="0"
                         id="swapInput1"
                         autoComplete="off"
                         autoCorrect="off"
+                        onChange={() => updateSwap()}
                       />
                     </OverlayTrigger>
 
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap1?.tokenAddress)}
                       <ShareLink url={assetSwap1?.tokenAddress}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap1?.tokenAddress)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(
-                          t,
-                          'pricingData',
-                          asset1USD ||
-                            assetSwap1?.tokenAddress === addr.spartav2
-                            ? 'CoinGecko'
-                            : 'internal pool prices',
-                        )}
-                      >
-                        <span role="button">
-                          ~$
-                          {swapInput1?.value
-                            ? formatFromWei(getInput1USD(), 2)
-                            : '0.00'}
-                          <Icon
-                            icon={
-                              asset1USD ||
+                      {web3.spartaPrice > 0 ? (
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(
+                            t,
+                            'pricingData',
+                            asset1USD ||
                               assetSwap1?.tokenAddress === addr.spartav2
-                                ? 'coinGeckoIcon'
-                                : 'usd'
-                            }
-                            size="14"
-                            className="ms-1"
-                          />
-                        </span>
-                      </OverlayTrigger>
+                              ? 'CoinGecko'
+                              : 'internal pool prices',
+                          )}
+                        >
+                          <span role="button">
+                            ~$
+                            {swapInput1?.value
+                              ? formatFromWei(getInput1USD(), 2)
+                              : '0.00'}
+                            <Icon
+                              icon={
+                                asset1USD ||
+                                assetSwap1?.tokenAddress === addr.spartav2
+                                  ? 'coinGeckoIcon'
+                                  : 'usd'
+                              }
+                              size="14"
+                              className="ms-1"
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      ) : (
+                        ''
+                      )}
                     </Col>
                   </Row>
                 </Col>
@@ -607,9 +618,9 @@ const SwapTokens = () => {
               <Icon
                 icon="swap"
                 size="30"
-                stroke="white"
-                fill="white"
-                className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                stroke="black"
+                fill="black"
+                className="position-relative bg-white rounded-circle px-2 iconOnTop"
               />
             </Col>
           </Row>
@@ -619,10 +630,10 @@ const SwapTokens = () => {
           <Card className="mb-3 assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col>
                   <strong>{t('buy')}</strong>
                 </Col>
-                <Col className="float-end text-end">
+                <Col xs="auto" className="float-end text-end fw-light">
                   {t('balance')}
                   {': '}
                   {pool.poolDetails && formatFromWei(getBalance(2), 4)}
@@ -631,85 +642,90 @@ const SwapTokens = () => {
 
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect2">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect2"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         priority="2"
                         filter={['token']}
                         blackList={[assetSwap1.tokenAddress]}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <FormControl
-                      className="text-end ms-0"
+                      className="text-end ms-0 bg-transparent border-0 text-lg"
                       type="number"
                       min="0"
-                      placeholder={`${t('buy')}...`}
+                      step="any"
+                      placeholder="0"
                       id="swapInput2"
                       disabled
                     />
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap2?.tokenAddress)}
                       <ShareLink url={assetSwap2?.tokenAddress}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap2?.tokenAddress)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
-                      <OverlayTrigger
-                        placement="auto"
-                        overlay={Tooltip(
-                          t,
-                          'pricingData',
-                          asset2USD ||
-                            assetSwap2?.tokenAddress === addr.spartav2
-                            ? 'CoinGecko'
-                            : 'internal pool prices',
-                        )}
-                      >
-                        <span role="button">
-                          ~$
-                          {swapInput2?.value
-                            ? formatFromWei(getInput2USD(), 2)
-                            : '0.00'}
-                          {' ('}
-                          {swapInput1?.value
-                            ? formatFromUnits(getRateSlip(), 2)
-                            : '0.00'}
-                          {'%)'}
-                          <Icon
-                            icon={
-                              asset2USD ||
+                      {web3.spartaPrice > 0 ? (
+                        <OverlayTrigger
+                          placement="auto"
+                          overlay={Tooltip(
+                            t,
+                            'pricingData',
+                            asset2USD ||
                               assetSwap2?.tokenAddress === addr.spartav2
-                                ? 'coinGeckoIcon'
-                                : 'usd'
-                            }
-                            size="14"
-                            className="ms-1 mb-1"
-                          />
-                        </span>
-                      </OverlayTrigger>
+                              ? 'CoinGecko'
+                              : 'internal pool prices',
+                          )}
+                        >
+                          <span role="button">
+                            ~$
+                            {swapInput2?.value
+                              ? formatFromWei(getInput2USD(), 2)
+                              : '0.00'}
+                            {' ('}
+                            {swapInput1?.value
+                              ? formatFromUnits(getRateSlip(), 2)
+                              : '0.00'}
+                            %)
+                            <Icon
+                              icon={
+                                asset2USD ||
+                                assetSwap2?.tokenAddress === addr.spartav2
+                                  ? 'coinGeckoIcon'
+                                  : 'usd'
+                              }
+                              size="14"
+                              className="ms-1 mb-1"
+                            />
+                          </span>
+                        </OverlayTrigger>
+                      ) : (
+                        ''
+                      )}
                     </Col>
                   </Row>
                 </Col>
@@ -761,12 +777,12 @@ const SwapTokens = () => {
             </Col>
           </Row>
 
-          <Row className="">
-            <Col xs="auto" className="">
-              <strong className="">{getOutput()[2]}</strong>
+          <Row>
+            <Col xs="auto">
+              <strong>{getOutput()[2]}</strong>
             </Col>
             <Col className="text-end">
-              <strong className="">
+              <strong>
                 {swapInput1?.value ? formatFromWei(getOutput()[0], 6) : '0.00'}{' '}
                 {getOutput()[1]}
               </strong>

@@ -95,7 +95,7 @@ const AssetSelect = (props) => {
                 onClick={() => setinputAddress(asset.addr)}
                 role="button"
               >
-                <Col xs="auto" className="">
+                <Col xs="auto">
                   <img
                     height="35px"
                     className="rounded-circle"

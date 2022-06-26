@@ -41,7 +41,13 @@ const Assets = () => {
     const walletType = getWalletType()
     if (walletType === 'MM' && !isBNB(asset)) {
       dispatch(
-        watchAsset(asset.address, asset.symbol, '18', asset.symbolUrl, wallet),
+        watchAsset(
+          asset.address,
+          asset.symbol,
+          '18',
+          asset.symbolUrl,
+          wallet.account,
+        ),
       )
     }
   }
@@ -104,8 +110,7 @@ const Assets = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    ~$
-                    {formatFromWei(total, 0)}
+                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -133,7 +138,9 @@ const Assets = () => {
     <>
       {!isLoading() ? (
         <>
-          <Badge className="mb-3">{t('heldInWallet')}</Badge>
+          <Badge bg="secondary" className="mb-3">
+            {t('heldInWallet')}
+          </Badge>
           {pool.tokenDetails
             ?.filter((asset) => asset.balance > 0)
             .sort(
@@ -162,8 +169,12 @@ const Assets = () => {
                     </Col>
                     <Col className="hide-i5">
                       <div className="text-sm-label text-end mt-2">
-                        ~$
-                        {formatFromWei(getUSD(asset.address, asset.balance), 0)}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.address, asset.balance),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   </Row>
@@ -176,7 +187,7 @@ const Assets = () => {
                   <Row>
                     <Col xs="6" className="p-0">
                       <ShareLink url={asset.address}>
-                        <Icon icon="copy" size="22" />
+                        <Icon icon="copy" size="16" />
                       </ShareLink>
                     </Col>
                     {getWalletType() && (
@@ -217,7 +228,7 @@ const Assets = () => {
           {!isLoading() && getTotalValue()}
         </>
       ) : (
-        <Col className="">
+        <Col>
           <HelmetLoading height={100} width={100} />
         </Col>
       )}

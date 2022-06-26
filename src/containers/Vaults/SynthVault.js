@@ -36,47 +36,30 @@ const SynthVault = () => {
   const wallet = useWeb3React()
   const dispatch = useDispatch()
 
-  const [trigger0, settrigger0] = useState(0)
   const [showUsd, setShowUsd] = useState(false)
 
-  const getGlobals = () => {
-    dispatch(getSynthGlobalDetails(web3.rpcs))
-    dispatch(getSynthMemberDetails(wallet, web3.rpcs))
-    dispatch(getSynthMinting(web3.rpcs))
-  }
   useEffect(() => {
-    if (trigger0 === 0) {
-      getGlobals()
+    const getGlobals = () => {
+      dispatch(getSynthGlobalDetails())
+      dispatch(getSynthMemberDetails(wallet.account))
+      dispatch(getSynthMinting())
     }
-    const timer = setTimeout(() => {
-      getGlobals()
-      settrigger0(trigger0 + 1)
-    }, 7500)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger0])
+    getGlobals() // Run on load
+    const interval = setInterval(() => {
+      getGlobals() // Run on interval
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [dispatch, wallet.account])
 
   useEffect(() => {
-    const checkDetails = () => {
-      if (synth.synthArray?.length > 1) {
-        dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-      }
-    }
-    checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthArray])
+    dispatch(getSynthDetails(wallet))
+  }, [dispatch, synth.synthArray, wallet])
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (synth.synthDetails?.length > 1 && pool.poolDetails?.length > 1) {
-        dispatch(
-          synthVaultWeight(synth.synthDetails, pool.poolDetails, web3.rpcs),
-        )
-      }
-    }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [synth.synthDetails])
+    dispatch(synthVaultWeight())
+  }, [dispatch, synth.synthDetails])
 
   const isLoadingApy = () => {
     if (!synth.totalWeight || !web3.metrics.global) {
@@ -190,7 +173,11 @@ const SynthVault = () => {
                 <Row className="my-1">
                   <Col>{t('vaultClaim')}</Col>
                   <Col xs="auto" className="text-end">
-                    {synth.globalDetails?.vaultClaim / 100}%
+                    {formatFromUnits(
+                      BN(synth.globalDetails?.vaultClaim).div(100),
+                      1,
+                    )}
+                    %
                   </Col>
                 </Row>
                 <hr className="my-2" />

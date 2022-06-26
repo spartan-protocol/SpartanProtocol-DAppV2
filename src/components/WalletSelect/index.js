@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
@@ -102,6 +102,8 @@ export const spartanRanks = [
   },
 ]
 
+const network = getNetwork()
+
 const WalletSelect = (props) => {
   const synth = useSynth()
   const pool = usePool()
@@ -114,20 +116,20 @@ const WalletSelect = (props) => {
   const dispatch = useDispatch()
   const { isDark } = useTheme()
 
-  const [network, setNetwork] = useState(getNetwork)
   const [activeTab, setactiveTab] = useState('tokens')
   // const [wcConnector, setWcConnector] = useState(false)
   const [pending, setPending] = useState(false)
   // const [wlConnector, setWlConnector] = useState(false)
+  const [triedOnce, setTriedOnce] = useState(false)
 
   const onChangeNetwork = async (net) => {
     if (net.target.checked === true) {
-      setNetwork(changeNetworkLsOnly(56))
+      changeNetworkLsOnly(56)
     }
     if (net.target.checked === false) {
-      setNetwork(changeNetworkLsOnly(97))
+      changeNetworkLsOnly(97)
     } else {
-      setNetwork(changeNetworkLsOnly(net))
+      changeNetworkLsOnly(net)
     }
     window.location.reload(true)
   }
@@ -140,27 +142,37 @@ const WalletSelect = (props) => {
     window.location.reload(true)
   }
 
-  const onWalletConnect = async (x) => {
-    setPending(true)
-    if (x.id === 'BC') {
-      await dispatch(addNetworkBC())
-    } else if (x.id === 'MM') {
-      await dispatch(addNetworkMM())
-    }
-    window.localStorage.removeItem('disableWallet')
-    window.localStorage.setItem('lastWallet', x.id)
-    wallet.deactivate()
-    const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
-    await wallet.activate(connector)
-    setPending(false)
-  }
+  const onWalletConnect = useCallback(
+    async (x) => {
+      setPending(true)
+      setTriedOnce(true)
+      if (x.id === 'BC') {
+        await dispatch(addNetworkBC())
+      } else if (x.id === 'MM') {
+        await dispatch(addNetworkMM())
+      }
+      window.localStorage.removeItem('disableWallet')
+      window.localStorage.setItem('lastWallet', x.id)
+      wallet.deactivate()
+      const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
+      await wallet.activate(connector)
+      if (!wallet.account) {
+        await wallet.activate(connector)
+      }
+      setPending(false)
+    },
+    [dispatch, wallet, web3.rpcs],
+  )
 
-  const checkWallet = async () => {
+  useEffect(() => {
     if (
+      !pending &&
+      !triedOnce &&
       window.localStorage.getItem('disableWallet') !== '1' &&
       !wallet.account &&
       !wallet.active &&
       !wallet.error
+      // web3.rpcs.length > 0
     ) {
       // *** ADD IN LEDGER FOR TESTING ***
       if (window.localStorage.getItem('lastWallet') === 'BC') {
@@ -182,14 +194,14 @@ const WalletSelect = (props) => {
         onWalletConnect(walletTypes.filter((x) => x.id === 'OOT')[0]) // Fallback to 'injected'
       }
     }
-  }
-
-  useEffect(() => {
-    if (!wallet.account && web3.rpcs.length > 0 && !pending) {
-      checkWallet()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [web3.rpcs])
+  }, [
+    onWalletConnect,
+    pending,
+    triedOnce,
+    wallet.account,
+    wallet.active,
+    wallet.error,
+  ])
 
   const tryParse = (data) => {
     try {
@@ -200,84 +212,80 @@ const WalletSelect = (props) => {
   }
 
   useEffect(() => {
+    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     const checkDetails = () => {
-      if (
-        tempChains.includes(
-          tryParse(window.localStorage.getItem('network'))?.chainId,
-        )
-      ) {
-        if (pool.listedPools?.length > 0) {
-          dispatch(getBondDetails(pool.listedPools, wallet, web3.rpcs))
-          dispatch(getDaoDetails(pool.listedPools, wallet, web3.rpcs))
-        }
-        if (synth.synthArray?.length > 0 && pool.listedPools?.length > 0) {
-          dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-        }
+      if (tempChains.includes(chainId)) {
+        dispatch(getBondDetails(wallet.account))
+        dispatch(getDaoDetails(wallet.account))
+        dispatch(getSynthDetails(wallet))
       }
     }
     checkDetails()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.listedPools])
+  }, [dispatch, pool.listedPools, wallet])
 
   // ------------------------------------------------------------------------
 
-  const rankLoading = () => {
-    if (
-      !pool.tokenDetails ||
-      !pool.poolDetails ||
-      !dao.daoDetails ||
-      !bond.bondDetails ||
-      !synth.synthDetails
-    ) {
-      return true
-    }
-    return false
-  }
-
-  const getWeight = () => {
-    if (wallet.account && pool.poolDetails.length > 1) {
-      const lpWeight = getLPWeights(
-        pool.poolDetails,
-        dao.daoDetails,
-        bond.bondDetails,
-      )
-      const synthWeight = getSynthWeights(synth.synthDetails, pool.poolDetails)
-      const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
-      return convertFromWei(
-        lpWeight.times(2).plus(synthWeight).plus(spartaWeight),
-      )
-    }
-    return '0'
-  }
-
   const [rank, setrank] = useState('Loading')
-  const getRank = () => {
-    if (!tempChains.includes(wallet.chainId)) {
-      setrank('Check Network First')
+  useEffect(() => {
+    const getWeight = () => {
+      if (wallet.account && pool.poolDetails.length > 1) {
+        const lpWeight = getLPWeights(
+          pool.poolDetails,
+          dao.daoDetails,
+          bond.bondDetails,
+        )
+        const synthWeight = getSynthWeights(
+          synth.synthDetails,
+          pool.poolDetails,
+        )
+        const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
+        return convertFromWei(
+          lpWeight.times(2).plus(synthWeight).plus(spartaWeight),
+        )
+      }
+      return '0'
     }
-    if (props.show && !rankLoading()) {
-      const weight = getWeight()
-      const ranksArray = spartanRanks.filter((i) => i.weight < weight)
-      const { length } = ranksArray
-      if (length > 0) {
-        setrank(ranksArray[length - 1].id)
-      } else {
-        setrank('Peasant')
+    const getRank = () => {
+      if (!tempChains.includes(wallet.chainId)) {
+        setrank('Check Network')
+      }
+      if (
+        props.show &&
+        pool.tokenDetails &&
+        pool.poolDetails &&
+        dao.daoDetails &&
+        bond.bondDetails &&
+        synth.synthDetails
+      ) {
+        const weight = getWeight()
+        const ranksArray = spartanRanks.filter((i) => i.weight < weight)
+        const { length } = ranksArray
+        if (length > 0) {
+          setrank(ranksArray[length - 1].id)
+        } else {
+          setrank('Peasant')
+        }
       }
     }
-  }
-
-  const [trigger1, settrigger1] = useState(0)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      getRank()
-      settrigger1(trigger1 + 1)
+    getRank() // Run on load
+    const interval = setInterval(() => {
+      getRank() // Run on interval
     }, 3000)
     return () => {
-      clearTimeout(timer)
+      clearInterval(interval)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trigger1, props.show])
+  }, [
+    addr.spartav2,
+    bond.bondDetails,
+    dao.daoDetails,
+    dispatch,
+    pool.poolDetails,
+    pool.tokenDetails,
+    props.show,
+    synth.synthDetails,
+    wallet.account,
+    wallet.chainId,
+  ])
 
   const getTokenCount = () => {
     if (
@@ -342,7 +350,7 @@ const WalletSelect = (props) => {
                         <Icon
                           icon="copy"
                           className="ms-2 mb-1"
-                          size="18"
+                          size="15"
                           role="button"
                         />
                       </ShareLink>
@@ -396,7 +404,7 @@ const WalletSelect = (props) => {
                     className="btn-sm btn-outline-primary"
                   >
                     {t('tokens')}{' '}
-                    <Badge>
+                    <Badge bg="secondary">
                       {tempChains.includes(wallet.chainId) && getTokenCount()}
                     </Badge>
                   </Nav.Link>
@@ -405,7 +413,7 @@ const WalletSelect = (props) => {
                 <Nav.Item>
                   <Nav.Link bg="secondary" eventKey="lps" className="btn-sm">
                     {t('lps')}{' '}
-                    <Badge>
+                    <Badge bg="secondary">
                       {tempChains.includes(wallet.chainId) && getLpsCount()}
                     </Badge>
                   </Nav.Link>
@@ -414,7 +422,7 @@ const WalletSelect = (props) => {
                 <Nav.Item>
                   <Nav.Link eventKey="synths" className="btn-sm">
                     {t('synths')}{' '}
-                    <Badge>
+                    <Badge bg="secondary">
                       {tempChains.includes(wallet.chainId) && getSynthsCount()}
                     </Badge>
                   </Nav.Link>
@@ -508,7 +516,7 @@ const WalletSelect = (props) => {
               variant="primary"
             >
               {t('viewBscScan')}{' '}
-              <Icon icon="scan" size="14" fill="white" className="mb-1 ms-1" />
+              <Icon icon="scan" size="14" className="mb-1 ms-1" />
             </Button>
             <Button
               size="sm"
@@ -518,12 +526,7 @@ const WalletSelect = (props) => {
               }}
             >
               {t('disconnect')}
-              <Icon
-                icon="walletRed"
-                size="17"
-                fill="white"
-                className="mb-1 ms-1"
-              />
+              <Icon icon="walletRed" size="17" className="mb-1 ms-1" />
             </Button>
           </Modal.Footer>
         ) : (

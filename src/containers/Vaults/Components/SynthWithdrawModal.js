@@ -21,7 +21,6 @@ import {
   synthWithdraw,
 } from '../../../store/synth'
 import { useReserve } from '../../../store/reserve'
-import { useWeb3 } from '../../../store/web3'
 import { useTheme } from '../../../providers/Theme'
 
 const SynthWithdrawModal = (props) => {
@@ -29,7 +28,6 @@ const SynthWithdrawModal = (props) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
-  const web3 = useWeb3()
   const wallet = useWeb3React()
   const addr = getAddresses()
   const reserve = useReserve()
@@ -121,16 +119,14 @@ const SynthWithdrawModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvest([props.synthItem.address], wallet, web3.rpcs))
+    await dispatch(synthHarvest([props.synthItem.address], wallet))
     setHarvestLoading(false)
-    dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
+    dispatch(getSynthDetails(wallet))
   }
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(
-      synthWithdraw(props.synthItem.address, percentage, wallet, web3.rpcs),
-    )
+    await dispatch(synthWithdraw(props.synthItem.address, percentage, wallet))
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -176,7 +172,7 @@ const SynthWithdrawModal = (props) => {
                   {formatFromWei(withdrawal())} {token.symbol}s
                 </Col>
               </Row>
-              <Row className="">
+              <Row>
                 <Col xs="12">
                   <Form.Range
                     id="synthVaultSlider"
@@ -239,7 +235,7 @@ const SynthWithdrawModal = (props) => {
                       {props.claimable[1] + props.claimable[2]} Harvest
                     </Col>
                   </Row>
-                  <Row xs="12" className="">
+                  <Row xs="12">
                     <Col xs="auto" className="text-card">
                       Harvest forfeiting
                     </Col>

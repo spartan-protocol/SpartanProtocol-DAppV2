@@ -40,9 +40,12 @@ export const friends = [
     name: 'Coingecko',
     logo: 'coinGeckoText',
     desc: 'Fundamental analysis of the crypto market including prices, volume & more.',
-    providing: 'SPARTA token listing & DApp pricing data',
-    linkText: ['View Token'],
-    linkUrl: ['https://www.coingecko.com/en/coins/spartan-protocol-token'],
+    providing: 'DEX listing, token listing & DApp pricing data',
+    linkText: ['View Token', 'View DEX'],
+    linkUrl: [
+      'https://www.coingecko.com/en/coins/spartan-protocol-token',
+      'https://www.coingecko.com/en/exchanges/spartan_protocol',
+    ],
   },
   {
     name: 'GitHub',

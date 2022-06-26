@@ -70,7 +70,7 @@ const LPs = () => {
           `${token.symbol.substring(0, 10)}p`,
           '18',
           token.symbolUrl,
-          wallet,
+          wallet.account,
         ),
       )
     }
@@ -120,8 +120,7 @@ const LPs = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    ~$
-                    {formatFromWei(total, 0)}
+                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -140,7 +139,9 @@ const LPs = () => {
 
   return (
     <>
-      <Badge className="mb-3">{t('heldInWallet')}</Badge>
+      <Badge className="mb-3" bg="secondary">
+        {t('heldInWallet')}
+      </Badge>
       {/* HELD LP TOKENS */}
       {!isLoading() &&
         pool.poolDetails
@@ -210,11 +211,12 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2 text-sm-label">
-                        ~$
-                        {formatFromWei(
-                          getUSD(asset.tokenAddress, asset.balance),
-                          0,
-                        )}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.tokenAddress, asset.balance),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   )}
@@ -228,7 +230,7 @@ const LPs = () => {
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" size="22" />
+                      <Icon icon="copy" size="16" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
@@ -271,7 +273,9 @@ const LPs = () => {
         dao.daoDetails?.filter((asset) => asset.staked > 0).length > 0 && (
           <>
             <hr />
-            <Badge className="mb-3">{t('stakedInDaoVault')}</Badge>
+            <Badge bg="secondary" className="mb-3">
+              {t('stakedInDaoVault')}
+            </Badge>
           </>
         )}
       {!isLoading() &&
@@ -341,11 +345,12 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2">
-                        ~$
-                        {formatFromWei(
-                          getUSD(asset.tokenAddress, asset.staked),
-                          0,
-                        )}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.tokenAddress, asset.staked),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   )}
@@ -360,7 +365,7 @@ const LPs = () => {
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
+                      <Icon icon="copy" role="button" size="16" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (
@@ -403,7 +408,9 @@ const LPs = () => {
         bond.bondDetails?.filter((asset) => asset.staked > 0).length > 0 && (
           <>
             <hr />
-            <Badge className="mb-3">{t('stakedInBondVault')}</Badge>
+            <Badge className="mb-3" bg="secondary">
+              {t('stakedInBondVault')}
+            </Badge>
           </>
         )}
       {!isLoading() &&
@@ -471,11 +478,12 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2 text-sm-label">
-                        ~$
-                        {formatFromWei(
-                          getUSD(asset.tokenAddress, asset.staked),
-                          0,
-                        )}
+                        {web3.spartaPrice > 0
+                          ? `~$${formatFromWei(
+                              getUSD(asset.tokenAddress, asset.staked),
+                              0,
+                            )}`
+                          : ''}
                       </div>
                     </Col>
                   )}
@@ -489,7 +497,7 @@ const LPs = () => {
                 <Row>
                   <Col xs="6" className="p-0">
                     <ShareLink url={asset.address}>
-                      <Icon icon="copy" role="button" size="24" />
+                      <Icon icon="copy" role="button" size="16" />
                     </ShareLink>
                   </Col>
                   {getWalletType() && (

@@ -25,6 +25,10 @@
   border-radius: 0 0 0.475rem 0.475rem;
 }
 
+.assetSection {
+  //background-color: $secondary;
+}
+
 body.dark-theme {
   .card {
     background-color: $bg-depth-2-dark;
@@ -38,5 +42,9 @@ body.dark-theme {
 
   .card-footer {
     background-color: $bg-depth-1-dark;
+  }
+
+  .assetSection {
+    background-color: $secondary-dark;
   }
 }

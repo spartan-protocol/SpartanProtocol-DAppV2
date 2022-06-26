@@ -1,8 +1,9 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { getAddresses, getProviderGasPrice, parseTxn } from '../../utils/web3'
+import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
 import { getRouterContract } from '../../utils/getContracts'
+import { BN } from '../../utils/bigNumber'
 
 export const useRouter = () => useSelector((state) => state.router)
 
@@ -18,7 +19,7 @@ export const routerSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateTxn: (state, action) => {
       state.txn = action.payload
@@ -33,21 +34,25 @@ export const { updateLoading, updateError, updateTxn } = routerSlice.actions
  * @param inputToken @param inputBase @param token @param wallet
  */
 export const addLiquidity =
-  (inputToken, inputBase, token, wallet, rpcUrls) => async (dispatch) => {
+  (inputToken, inputBase, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
     const addr = getAddresses()
-    const contract = getRouterContract(wallet, rpcUrls)
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: token === addr.bnb ? inputToken : null,
         gasPrice: gPrice,
       }
       let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
-      txn = await parseTxn(txn, 'addLiq', rpcUrls)
+      txn = await parseTxn(txn, 'addLiq', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -57,21 +62,25 @@ export const addLiquidity =
  * @param input @param fromBase @param token @param wallet
  */
 export const addLiquiditySingle =
-  (input, fromBase, token, wallet, rpcUrls) => async (dispatch) => {
+  (input, fromBase, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
     const addr = getAddresses()
-    const contract = getRouterContract(wallet, rpcUrls)
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: token === addr.bnb && fromBase !== true ? input : null,
         gasPrice: gPrice,
       }
       let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
-      txn = await parseTxn(txn, 'addLiqSingle', rpcUrls)
+      txn = await parseTxn(txn, 'addLiqSingle', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -81,17 +90,21 @@ export const addLiquiditySingle =
  * @param unitsInput @param fromPool @param toPool @param wallet
  */
 export const zapLiquidity =
-  (unitsInput, fromPool, toPool, wallet, rpcUrls) => async (dispatch) => {
+  (unitsInput, fromPool, toPool, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getRouterContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
-      txn = await parseTxn(txn, 'zapLiq', rpcUrls)
+      txn = await parseTxn(txn, 'zapLiq', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -101,17 +114,21 @@ export const zapLiquidity =
  * @param units @param token @param wallet
  */
 export const removeLiquidityExact =
-  (units, token, wallet, rpcUrls) => async (dispatch) => {
+  (units, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getRouterContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
       let txn = await contract.removeLiquidityExact(units, token, ORs)
-      txn = await parseTxn(txn, 'remLiq', rpcUrls)
+      txn = await parseTxn(txn, 'remLiq', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -121,18 +138,22 @@ export const removeLiquidityExact =
  * @param units @param toBase @param token @param wallet
  */
 export const removeLiquiditySingle =
-  (units, toBase, token, wallet, rpcUrls) => async (dispatch) => {
+  (units, toBase, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getRouterContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.removeLiquidityExactAsym(units, toBase, token, {
         gasPrice: gPrice,
       })
-      txn = await parseTxn(txn, 'remLiqSingle', rpcUrls)
+      txn = await parseTxn(txn, 'remLiqSingle', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -144,13 +165,17 @@ export const removeLiquiditySingle =
  * @param inputAmount @param fromToken @param toToken @param wallet
  */
 export const swap =
-  (inputAmount, fromToken, toToken, minAmount, wallet, rpcUrls) =>
-  async (dispatch) => {
+  (inputAmount, fromToken, toToken, minAmount, wallet) =>
+  async (dispatch, getState) => {
     dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
     const addr = getAddresses()
-    const contract = getRouterContract(wallet, rpcUrls)
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
@@ -162,10 +187,10 @@ export const swap =
         minAmount,
         ORs,
       )
-      txn = await parseTxn(txn, 'swapped', rpcUrls)
+      txn = await parseTxn(txn, 'swapped', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -175,12 +200,16 @@ export const swap =
  * @param inputAmount @param fromToken @param toSynth @param wallet
  */
 export const swapAssetToSynth =
-  (inputAmount, fromToken, toSynth, wallet, rpcUrls) => async (dispatch) => {
+  (inputAmount, fromToken, toSynth, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
     const addr = getAddresses()
-    const contract = getRouterContract(wallet, rpcUrls)
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
         value: fromToken === addr.bnb ? inputAmount : null,
         gasPrice: gPrice,
@@ -191,10 +220,10 @@ export const swapAssetToSynth =
         toSynth,
         ORs,
       )
-      txn = await parseTxn(txn, 'mintSynth', rpcUrls)
+      txn = await parseTxn(txn, 'mintSynth', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -204,21 +233,25 @@ export const swapAssetToSynth =
  * @param inputAmount @param fromSynth @param toToken @param wallet
  */
 export const swapSynthToAsset =
-  (inputAmount, fromSynth, toToken, wallet, rpcUrls) => async (dispatch) => {
+  (inputAmount, fromSynth, toToken, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getRouterContract(wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getRouterContract(wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.swapSynthToAsset(
         inputAmount,
         fromSynth,
         toToken,
         { gasPrice: gPrice },
       )
-      txn = await parseTxn(txn, 'burnSynth', rpcUrls)
+      txn = await parseTxn(txn, 'burnSynth', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -226,16 +259,20 @@ export const swapSynthToAsset =
 /**
  * Attempt to unfreeze the protocol
  */
-export const updatePoolStatus = (wallet, rpcUrls) => async (dispatch) => {
+export const updatePoolStatus = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getRouterContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getRouterContract(wallet, rpcs)
   try {
-    const gPrice = await getProviderGasPrice()
+    const { gasRateMN, gasRateTN } = getState().app.settings
+    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    gPrice = BN(gPrice).times(1000000000).toString()
+    // const gPrice = await getProviderGasPrice()
     let txn = await contract.updatePoolStatus({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'unfreeze', rpcUrls)
+    txn = await parseTxn(txn, 'unfreeze', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

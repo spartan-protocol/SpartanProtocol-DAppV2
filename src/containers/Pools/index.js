@@ -9,6 +9,8 @@ import Nav from 'react-bootstrap/Nav'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import PoolItem from './PoolItem'
+import PoolTable from './PoolTable'
+import SynthTable from './SynthTable'
 import { usePool } from '../../store/pool'
 import { getNetwork, tempChains } from '../../utils/web3'
 import { convertToWei, BN } from '../../utils/bigNumber'
@@ -22,7 +24,7 @@ import { useWeb3 } from '../../store/web3'
 import { calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
 import { useDao, daoVaultWeight } from '../../store/dao'
 import SynthItem from './SynthItem'
-import { useSynth } from '../../store/synth'
+import { synthVaultWeight, useSynth } from '../../store/synth'
 import NewPool from './NewPool'
 
 const Overview = () => {
@@ -39,18 +41,20 @@ const Overview = () => {
   const [daoApy, setDaoApy] = useState('0')
   const [synthApy, setSynthApy] = useState('0')
   const [showModal, setShowModal] = useState(false)
-  const [tableView, setTableView] = useState(false)
+  const [tableView, setTableView] = useState(true)
 
   useEffect(() => {
-    const checkWeight = () => {
-      if (pool.poolDetails?.length > 1) {
-        dispatch(daoVaultWeight(pool.poolDetails, web3.rpcs))
-        dispatch(bondVaultWeight(pool.poolDetails, web3.rpcs))
-      }
+    if (activeTab !== 'synths') {
+      dispatch(daoVaultWeight())
+      dispatch(bondVaultWeight())
     }
-    checkWeight()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails])
+  }, [activeTab, dispatch, pool.poolDetails])
+
+  useEffect(() => {
+    if (activeTab === 'synths') {
+      dispatch(synthVaultWeight())
+    }
+  }, [activeTab, dispatch, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -97,57 +101,115 @@ const Overview = () => {
       )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
-  const getTotalDaoWeight = () => {
-    const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
-    if (_amount > 0) {
-      return _amount
-    }
-    return '0.00'
-  }
-
-  const getDaoApy = () => {
-    let revenue = BN(web3.metrics.global[0].daoVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = getTotalDaoWeight().toString()
-    const apy = calcDaoAPY(revenue, baseAmount)
-    return apy.toFixed(2).toString()
-  }
-
-  const isDaoVaultLoading = () => {
-    if (!web3.metrics.global || !bond.totalWeight || !dao.totalWeight) {
-      return true
-    }
-    return false
-  }
-
   useEffect(() => {
-    if (!isDaoVaultLoading()) {
+    const getTotalDaoWeight = () => {
+      const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
+      if (_amount > 0) {
+        return _amount
+      }
+      return '0.00'
+    }
+    const getDaoApy = () => {
+      let revenue = BN(web3.metrics.global[0].daoVault30Day)
+      revenue = revenue.toString()
+      const baseAmount = getTotalDaoWeight().toString()
+      const apy = calcDaoAPY(revenue, baseAmount)
+      return apy.toFixed(2).toString()
+    }
+    if (web3.metrics.global && bond.totalWeight && dao.totalWeight) {
       setDaoApy(getDaoApy())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
-  const isSynthVaultLoading = () => {
-    if (!synth.totalWeight || !web3.metrics.global) {
-      return true
-    }
-    return false
-  }
-
-  const getSynthApy = () => {
-    let revenue = BN(web3.metrics.global[0].synthVault30Day)
-    revenue = revenue.toString()
-    const baseAmount = synth.totalWeight.toString()
-    const apy = calcSynthAPY(revenue, baseAmount)
-    return apy.toFixed(2).toString()
-  }
-
   useEffect(() => {
-    if (!isSynthVaultLoading()) {
+    const getSynthApy = () => {
+      let revenue = BN(web3.metrics.global[0].synthVault30Day)
+      revenue = revenue.toString()
+      const baseAmount = synth.totalWeight.toString()
+      const apy = calcSynthAPY(revenue, baseAmount)
+      return apy.toFixed(2).toString()
+    }
+    if (synth.totalWeight && web3.metrics.global) {
       setSynthApy(getSynthApy())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [web3.metrics.global, synth.totalWeight])
+
+  const renderPools = () => {
+    if (tableView) {
+      return <PoolTable poolItems={getPools()} daoApy={daoApy} />
+    }
+    return getPools().map((asset) => (
+      <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+    ))
+  }
+
+  const renderNewPools = () => {
+    if (getNewPools().length > 0) {
+      if (tableView) {
+        return (
+          <>
+            <PoolTable poolItems={getNewPools()} daoApy={daoApy} />
+          </>
+        )
+      }
+      return (
+        <>
+          {getNewPools().map((asset) => (
+            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+          ))}
+        </>
+      )
+    }
+    return (
+      <>
+        <Col>There are no new/initializing pools</Col>
+      </>
+    )
+  }
+
+  const renderBabies = () => {
+    if (getBabies().length > 0) {
+      if (tableView) {
+        return (
+          <>
+            <PoolTable poolItems={getBabies()} daoApy={daoApy} />
+          </>
+        )
+      }
+      return (
+        <>
+          {getBabies().map((asset) => (
+            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
+          ))}
+        </>
+      )
+    }
+    return (
+      <>
+        <Col>There are no pools below the minimum liquidity threshold</Col>
+      </>
+    )
+  }
+
+  const renderSynths = () => {
+    if (synth.synthDetails) {
+      if (tableView) {
+        return (
+          <>
+            <SynthTable synthItems={getSynths()} synthApy={synthApy} />
+          </>
+        )
+      }
+      return (
+        <>
+          {getSynths().map((asset) => (
+            <SynthItem key={asset.address} asset={asset} synthApy={synthApy} />
+          ))}
+        </>
+      )
+    }
+    return null
+  }
 
   return (
     <>
@@ -156,7 +218,7 @@ const Overview = () => {
           <Row>
             <SummaryItem />
             {/* MOBILE FILTER DROPDOWN -> CHANGE THIS TO NAV-DROPDOWN? */}
-            <Col className="d-block d-sm-none mt-3 mb-1">
+            <Col className="d-flex d-sm-none mt-3 mb-1">
               <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
                 <option value="pools">
                   {t('pools')} ({getPools().length})
@@ -175,7 +237,7 @@ const Overview = () => {
               </Form.Select>
             </Col>
             {/* DESKTOP FILTER NAV ITEMS */}
-            <Col className="d-none d-sm-block mt-3 mb-1">
+            <Col className="d-none d-sm-flex mt-3 mb-1">
               <Nav
                 variant="pills"
                 activeKey={activeTab}
@@ -246,26 +308,16 @@ const Overview = () => {
             </Col>
 
             <Col xs="auto" className="mt-3 mb-1 text-end">
-              <Button
-                onClick={() => setTableView(!tableView)}
-                className="me-1"
-                disabled // ADD TABLE VIEW FUNCTIONALITY & REMOVE DISABLED
-              >
+              <Button onClick={() => setTableView(!tableView)} className="me-1">
                 <Icon
                   icon={tableView ? 'grid' : 'table'}
                   size="13"
-                  fill="white"
                   className="me-1 mb-1"
                 />
                 {t('view')}
               </Button>
               <Button onClick={() => setShowModal(!showModal)}>
-                <Icon
-                  icon="plus"
-                  size="12"
-                  fill="white"
-                  className="me-1 mb-1"
-                />
+                <Icon icon="plus" size="12" className="me-1 mb-1" />
                 {t('createPool')}
               </Button>
             </Col>
@@ -278,55 +330,11 @@ const Overview = () => {
 
           {/* POOL ITEMS */}
           {!isLoading() ? (
-            <Row>
-              {activeTab === 'pools' &&
-                getPools().map((asset) => (
-                  <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
-                ))}
-
-              {activeTab === 'new' && (
-                <>
-                  {getNewPools().length > 0 ? (
-                    getNewPools().map((asset) => (
-                      <PoolItem
-                        key={asset.address}
-                        asset={asset}
-                        daoApy={daoApy}
-                      />
-                    ))
-                  ) : (
-                    <Col>There are no new/initializing pools</Col>
-                  )}
-                </>
-              )}
-
-              {activeTab === 'babies' && (
-                <>
-                  {getBabies().length > 0 ? (
-                    getBabies().map((asset) => (
-                      <PoolItem
-                        key={asset.address}
-                        asset={asset}
-                        daoApy={daoApy}
-                      />
-                    ))
-                  ) : (
-                    <Col>
-                      There are no pools below the minimum liquidity threshold
-                    </Col>
-                  )}
-                </>
-              )}
-
-              {activeTab === 'synths' &&
-                synth.synthDetails &&
-                getSynths().map((asset) => (
-                  <SynthItem
-                    key={asset.address}
-                    asset={asset}
-                    synthApy={synthApy}
-                  />
-                ))}
+            <Row className={`${tableView && ''}`}>
+              {activeTab === 'pools' && renderPools()}
+              {activeTab === 'new' && renderNewPools()}
+              {activeTab === 'babies' && renderBabies()}
+              {activeTab === 'synths' && renderSynths()}
             </Row>
           ) : (
             <HelmetLoading height={150} width={150} />

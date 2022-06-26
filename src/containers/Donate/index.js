@@ -17,9 +17,8 @@ import {
 } from '../../utils/web3'
 import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
-  // BN,
   convertToWei,
-  // formatFromUnits,
+  formatFromUnits,
   formatFromWei,
 } from '../../utils/bigNumber'
 import { useWeb3 } from '../../store/web3'
@@ -33,8 +32,6 @@ const Overview = () => {
   const sparta = useSparta()
   const wallet = useWeb3React()
   const web3 = useWeb3()
-  const apiUrl = apiUrlBQ
-  const header = headerBQ
   const network = getNetwork()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -43,72 +40,71 @@ const Overview = () => {
 
   const [recentTxns, setrecentTxns] = useState([])
   // const [bnbPrice, setbnbPrice] = useState(0)
-  const getHoldings = async () => {
-    dispatch(communityWalletHoldings(wallet.account ? wallet : ''))
-    // const _bnbPrice = await axios.get(
-    //   'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
-    // )
-    // setbnbPrice(_bnbPrice.data.binancecoin.usd)
-    if (network.chainId === 56) {
-      const options = {
-        method: 'POST',
-        url: apiUrl,
-        headers: header,
-        data: {
-          query: `query ($network: EthereumNetwork!,
-            $address: String!,
-            $limit: Int!,
-            $offset: Int!
-            $from: ISO8601DateTime,
-            $till: ISO8601DateTime){
-ethereum(network: $network){
-  transfers(options:{desc: "block.timestamp.time"  asc: "currency.symbol" limit: $limit, offset: $offset},
-    date: {since: $from till: $till },
-    amount: {gt: 0},
-    currency: {in: ["BNB", "0xe9e7cea3dedca5984780bafc599bd69add087d56", "0x55d398326f99059ff775485246999027b3197955", "0x3910db0600eA925F63C36DdB1351aB6E2c6eb102"]},
-    receiver: {is: $address}) {
-
-    block {
-      timestamp {
-        time (format: "%Y-%m-%d %H:%M:%S")
-      }
-    }
-    address: sender {
-      address
-    }
-    currency {
-      symbol
-    }
-    amount
-    transaction {
-      hash
-    }
-  }
-}
-}`,
-          variables: {
-            limit: 10,
-            offset: 0,
-            network: 'bsc',
-            address: '0x588f82a66ee31e59b88114836d11e3d00b3a7916',
-            from: null,
-            till: null,
-            dateFormat: '%Y-%m-%d',
-          },
-        },
-      }
-      const recentDonations = await axios
-        .request(options)
-        .catch((error) => ({ error }))
-      if (!recentDonations.error) {
-        setrecentTxns(recentDonations.data.data.ethereum.transfers)
-      }
-    }
-  }
   useEffect(() => {
+    const getHoldings = async () => {
+      dispatch(communityWalletHoldings(wallet.account))
+      // const _bnbPrice = await axios.get(
+      //   'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
+      // )
+      // setbnbPrice(_bnbPrice.data.binancecoin.usd)
+      if (network.chainId === 56) {
+        const options = {
+          method: 'POST',
+          url: apiUrlBQ,
+          headers: headerBQ,
+          data: {
+            query: `query ($network: EthereumNetwork!,
+              $address: String!,
+              $limit: Int!,
+              $offset: Int!
+              $from: ISO8601DateTime,
+              $till: ISO8601DateTime){
+  ethereum(network: $network){
+    transfers(options:{desc: "block.timestamp.time"  asc: "currency.symbol" limit: $limit, offset: $offset},
+      date: {since: $from till: $till },
+      amount: {gt: 0},
+      currency: {in: ["BNB", "0xe9e7cea3dedca5984780bafc599bd69add087d56", "0x55d398326f99059ff775485246999027b3197955", "0x3910db0600eA925F63C36DdB1351aB6E2c6eb102"]},
+      receiver: {is: $address}) {
+  
+      block {
+        timestamp {
+          time (format: "%Y-%m-%d %H:%M:%S")
+        }
+      }
+      address: sender {
+        address
+      }
+      currency {
+        symbol
+      }
+      amount
+      transaction {
+        hash
+      }
+    }
+  }
+  }`,
+            variables: {
+              limit: 10,
+              offset: 0,
+              network: 'bsc',
+              address: '0x588f82a66ee31e59b88114836d11e3d00b3a7916',
+              from: null,
+              till: null,
+              dateFormat: '%Y-%m-%d',
+            },
+          },
+        }
+        const recentDonations = await axios
+          .request(options)
+          .catch((error) => ({ error }))
+        if (!recentDonations.error) {
+          setrecentTxns(recentDonations.data.data.ethereum.transfers)
+        }
+      }
+    }
     getHoldings()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dispatch, network.chainId, wallet.account])
 
   // const [totalUSD, settotalUSD] = useState(0)
   // useEffect(() => {
@@ -156,8 +152,7 @@ ethereum(network: $network){
     if (inputDonation) {
       inputDonation.value = ''
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAsset])
+  }, [inputDonation, selectedAsset])
 
   const getAsset = (symbol) => {
     if (symbol === 'BNB') {
@@ -464,6 +459,7 @@ ethereum(network: $network){
                           <FormControl
                             type="number"
                             min="0"
+                            step="any"
                             id="inputDonation"
                             placeholder={
                               !selectedAsset
@@ -581,7 +577,7 @@ ethereum(network: $network){
                       <Col>
                         <Row>
                           <Col xs="12" className="float-left output-card">
-                            {i.amount} {i.currency.symbol}
+                            {formatFromUnits(i.amount, 2)} {i.currency.symbol}
                             <div className="description">
                               {t('donatedBy')}:{' '}
                               <a

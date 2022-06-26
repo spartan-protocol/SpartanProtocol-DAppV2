@@ -18,21 +18,16 @@ const AddressConn = () => {
   const target = useRef(null)
 
   useEffect(() => {
-    async function listenAccountsChanged() {
-      window.ethereum?.on('accountsChanged', async () => {
-        document.location.reload(true)
-      })
-      window.BinanceChain?.on('accountsChanged', async () => {
-        document.location.reload(true)
-      })
+    const handleReload = async () => {
+      document.location.reload(true)
     }
-    async function listenNetworkChanged() {
-      window.ethereum?.on('chainChanged', async () => {
-        document.location.reload(true)
-      })
-      window.BinanceChain?.on('chainChanged', async () => {
-        document.location.reload(true)
-      })
+    const listenAccountsChanged = async () => {
+      window.ethereum?.on('accountsChanged', handleReload)
+      window.BinanceChain?.on('accountsChanged', handleReload)
+    }
+    const listenNetworkChanged = async () => {
+      window.ethereum?.on('chainChanged', handleReload)
+      window.BinanceChain?.on('chainChanged', handleReload)
     }
     listenAccountsChanged()
     listenNetworkChanged()
@@ -62,7 +57,7 @@ const AddressConn = () => {
         <Icon
           icon="bnbChainConnected"
           fill={wallet?.account ? 'green' : '#d80000'}
-          size="27"
+          size="24"
         />
         <span className={`${styles.btnText} ms-1`}>
           {wallet?.account

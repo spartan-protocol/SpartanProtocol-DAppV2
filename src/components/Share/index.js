@@ -22,14 +22,6 @@ const Share = ({ showShare, setShowShare }) => {
   const [assetType1, setassetType1] = useState('')
   const [assetType2, setassetType2] = useState('')
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   const validateType = (data) => {
     if (data === 'synth') {
       return 'synth'
@@ -41,6 +33,13 @@ const Share = ({ showShare, setShowShare }) => {
   }
 
   useEffect(() => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     if (pool.poolDetails?.length > 0) {
       const assetSelected1 = tryParse(
         window.localStorage?.getItem('assetSelected1'),
@@ -85,10 +84,8 @@ const Share = ({ showShare, setShowShare }) => {
         )
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    window.location.href,
-    window.location.search,
+    pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,9 +158,7 @@ const Share = ({ showShare, setShowShare }) => {
           <Row>
             <Col xs="auto">{t('copyLink')}</Col>
             <Col>
-              <span className="">
-                {url.length > 50 ? `${url.substr(0, 50)}...` : url}
-              </span>
+              <span>{url.length > 50 ? `${url.substr(0, 50)}...` : url}</span>
             </Col>
             <Col xs="auto" className="text-center">
               <ShareLink url={url}>
@@ -175,7 +170,7 @@ const Share = ({ showShare, setShowShare }) => {
           {/* TWITTER SHARE SECTION */}
           <Row>
             <Col xs="auto">
-              <span className="">{t('shareViaTwiter')}</span>
+              <span>{t('shareViaTwiter')}</span>
             </Col>
             <Col />
             <Col xs="auto">

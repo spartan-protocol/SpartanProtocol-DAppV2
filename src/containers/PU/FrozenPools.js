@@ -5,19 +5,17 @@ import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { usePool } from '../../store/pool'
 import { useReserve } from '../../store/reserve'
-import { useWeb3 } from '../../store/web3'
 import { updatePoolStatus } from '../../store/router'
 
 const PoolStatus = () => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
-  const web3 = useWeb3()
   const reserve = useReserve()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [selectedAsset, setselectedAsset] = useState('')
   const frozenPools = pool.poolDetails?.filter(
     (asset) => asset.frozen && asset.curated,
@@ -65,7 +63,7 @@ const PoolStatus = () => {
             {frozenPools.length > 0 ? (
               <Button
                 className="w-100"
-                onClick={() => history.push(`/swap?asset1=${selectedAsset}`)}
+                onClick={() => navigate(`/swap?asset1=${selectedAsset}`)}
                 disabled={!selectedAsset}
               >
                 Arbitrage
@@ -73,7 +71,7 @@ const PoolStatus = () => {
             ) : (
               <Button
                 className="w-100"
-                onClick={() => dispatch(updatePoolStatus(wallet, web3.rpcs))}
+                onClick={() => dispatch(updatePoolStatus(wallet))}
                 disabled={!reserve.globalDetails.globalFreeze}
               >
                 Un-freeze Protocol

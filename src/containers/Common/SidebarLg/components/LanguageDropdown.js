@@ -187,13 +187,13 @@ const LanguageDropdown = ({ centered }) => {
           <Popover.Body>
             <Row>
               {locales.map((x) => (
-                <Col xs={6} key={x.id} className="">
+                <Col xs={6} key={x.id}>
                   <Button
                     variant="outline-secondary"
                     onClick={() => changeLanguageAction(x.id)}
                     className="w-100 mb-1 p-1"
                   >
-                    <span className="">
+                    <span>
                       <img src={x.flag} alt="Spartan" height="12" />
                       {` ${x.name}`}
                     </span>

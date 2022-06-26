@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import Nav from 'react-bootstrap/Nav'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import { usePool } from '../../store/pool'
@@ -23,7 +23,7 @@ const Overview = () => {
   const { t } = useTranslation()
   const pool = usePool()
   const location = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
   const addr = getAddresses()
   const network = getNetwork()
 
@@ -34,15 +34,14 @@ const Overview = () => {
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [selectedPool, setSelectedPool] = useState(false)
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     if (pool.poolDetails) {
       let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
       if (asset1.tokenAddress === addr.spartav2) {
@@ -51,8 +50,12 @@ const Overview = () => {
       asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
       setSelectedPool(asset1)
     }
+  }, [
+    addr.spartav2,
+    pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.poolDetails, window.localStorage.getItem('assetSelected1')])
+    window.localStorage.getItem('assetSelected1'),
+  ])
 
   useEffect(() => {
     if (tabParam1) {
@@ -112,7 +115,7 @@ const Overview = () => {
                         <Nav.Item className="me-1">
                           <Nav.Link
                             className="btn-sm btn-outline-primary"
-                            onClick={() => history.push(`/swap`)}
+                            onClick={() => navigate(`/swap`)}
                           >
                             {t('swap')}
                           </Nav.Link>
@@ -146,7 +149,7 @@ const Overview = () => {
                             className="btn-sm btn-outline-primary"
                             onClick={() => setShowShareModal(!showShareModal)}
                           >
-                            <Icon icon="connect" size="15" />
+                            <Icon icon="share" size="15" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>

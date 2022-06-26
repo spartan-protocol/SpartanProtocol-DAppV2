@@ -6,10 +6,7 @@
     "prettier",
     "plugin:import/typescript"
   ],
-  "plugins": [
-    "jsx-a11y",
-    "prettier"
-  ],
+  "plugins": ["jsx-a11y", "prettier"],
   "rules": {
     "semi": 0,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
@@ -21,11 +18,14 @@
     "no-nested-ternary": "off",
     "no-underscore-dangle": 0,
     "import/prefer-default-export": "off",
+    "react/function-component-definition": "off",
+    "react/jsx-no-useless-fragment": "off",
     "prettier/prettier": [
-      "error", {
+      "error",
+      {
         "semi": false,
         "endOfLine": "auto"
       }
     ]
   }
-} 
+}

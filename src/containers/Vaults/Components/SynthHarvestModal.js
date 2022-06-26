@@ -22,7 +22,6 @@ import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import spartaIcon from '../../../assets/tokens/sparta-synth.svg'
-import { useWeb3 } from '../../../store/web3'
 import { useTheme } from '../../../providers/Theme'
 
 const SynthHarvestModal = ({ synthItem, buttonValid }) => {
@@ -30,7 +29,6 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
   const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
-  const web3 = useWeb3()
   const synth = useSynth()
   const { t } = useTranslation()
   const { isDark } = useTheme()
@@ -48,11 +46,9 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvestSingle(synthItem.address, wallet, web3.rpcs))
+    await dispatch(synthHarvestSingle(synthItem.address, wallet))
     setTxnLoading(false)
-    if (synth.synthArray?.length > 1) {
-      dispatch(getSynthDetails(synth.synthArray, wallet, web3.rpcs))
-    }
+    dispatch(getSynthDetails(wallet))
     handleCloseModal()
   }
 
@@ -145,7 +141,7 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
           </div>
           {t('harvest')} {_getToken().symbol}s
         </Modal.Header>
-        <Card className="">
+        <Card>
           <Card.Body>
             <Row xs="12" className="my-2">
               <Col xs="12" className="output-card">

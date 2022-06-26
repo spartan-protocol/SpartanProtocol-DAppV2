@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -40,6 +40,7 @@ import { getTimeUntil, getZapSpot } from '../../utils/math/nonContract'
 import { zapLiq } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
+import { useFocus } from '../../providers/Focus'
 
 const SwapLps = () => {
   const { t } = useTranslation()
@@ -50,6 +51,7 @@ const SwapLps = () => {
   const pool = usePool()
   const sparta = useSparta()
   const location = useLocation()
+  const focus = useFocus()
 
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -65,41 +67,34 @@ const SwapLps = () => {
     new URLSearchParams(location.search).get(`asset2`),
   )
 
-  const [hasFocus, setHasFocus] = useState(true)
-
-  window.addEventListener('focus', () => {
-    setHasFocus(true)
-  })
-
-  window.addEventListener('blur', () => {
-    setHasFocus(false)
-  })
-
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
-    const { poolDetails } = pool
-
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const getAssetDetails = () => {
-      if (hasFocus) {
-        if (poolDetails?.length > 0) {
+      if (focus) {
+        if (pool.poolDetails?.length > 0) {
           let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam1)) {
-            ;[asset1] = poolDetails.filter(
+          if (
+            assetParam1 !== '' &&
+            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam1)
+          ) {
+            ;[asset1] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === assetParam1,
             )
             setAssetParam1('')
           }
-          if (poolDetails.find((asset) => asset.tokenAddress === assetParam2)) {
-            ;[asset2] = poolDetails.filter(
+          if (
+            assetParam2 !== '' &&
+            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam2)
+          ) {
+            ;[asset2] = pool.poolDetails.filter(
               (asset) => asset.tokenAddress === assetParam2,
             )
             setAssetParam2('')
@@ -113,16 +108,16 @@ const SwapLps = () => {
             asset2?.tokenAddress === addr.spartav2
           ) {
             asset2 =
-              asset1?.tokenAddress !== poolDetails[0].tokenAddress
-                ? { tokenAddress: poolDetails[0].tokenAddress }
-                : { tokenAddress: poolDetails[1].tokenAddress }
+              asset1?.tokenAddress !== pool.poolDetails[0].tokenAddress
+                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
+                : { tokenAddress: pool.poolDetails[1].tokenAddress }
           }
 
           if (asset1?.tokenAddress === addr.spartav2) {
             asset1 =
-              asset2?.tokenAddress !== poolDetails[0].tokenAddress
-                ? { tokenAddress: poolDetails[0].tokenAddress }
-                : { tokenAddress: poolDetails[1].tokenAddress }
+              asset2?.tokenAddress !== pool.poolDetails[0].tokenAddress
+                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
+                : { tokenAddress: pool.poolDetails[1].tokenAddress }
           }
 
           if (asset2?.address === '') {
@@ -135,7 +130,7 @@ const SwapLps = () => {
               (x) => x.tokenAddress === asset1.tokenAddress,
             )
           ) {
-            asset1 = { tokenAddress: poolDetails[1].tokenAddress }
+            asset1 = { tokenAddress: pool.poolDetails[1].tokenAddress }
           }
 
           if (
@@ -147,13 +142,13 @@ const SwapLps = () => {
             asset2 = { tokenAddress: addr.bnb }
           }
 
-          asset1 = getItemFromArray(asset1, poolDetails)
-          asset2 = getItemFromArray(asset2, poolDetails)
+          asset1 = getItemFromArray(asset1, pool.poolDetails)
+          asset2 = getItemFromArray(asset2, pool.poolDetails)
           asset1 = asset1.hide
-            ? getItemFromArray(addr.bnb, poolDetails)
+            ? getItemFromArray(addr.bnb, pool.poolDetails)
             : asset1
           asset2 = asset2.hide
-            ? getItemFromArray(addr.bnb, poolDetails)
+            ? getItemFromArray(addr.bnb, pool.poolDetails)
             : asset2
 
           setAssetSwap1(asset1)
@@ -164,18 +159,20 @@ const SwapLps = () => {
         }
       }
     }
-
     getAssetDetails()
     balanceWidths()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    addr.bnb,
+    addr.spartav2,
+    assetParam1,
+    assetParam2,
     triggerReload,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected2'),
-    hasFocus,
+    focus,
   ])
 
   const getToken = (tokenAddress) =>
@@ -200,6 +197,13 @@ const SwapLps = () => {
   }
 
   const handleReverseAssets = () => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     const asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
     const asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
     window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
@@ -230,7 +234,7 @@ const SwapLps = () => {
    * Get zap txn details
    * @returns [unitsLP, swapFee, slipRevert, capRevert, poolFrozen]
    */
-  const getZap = () => {
+  const getZap = useCallback(() => {
     if (swapInput1 && assetSwap1 && assetSwap2) {
       const [unitsLP, swapFee, slipRevert, capRevert] = zapLiq(
         convertToWei(swapInput1.value),
@@ -241,7 +245,7 @@ const SwapLps = () => {
       return [unitsLP, swapFee, slipRevert, capRevert, assetSwap1.frozen]
     }
     return ['0.00', '0.00', false, false, false]
-  }
+  }, [assetSwap1, assetSwap2, sparta.globalDetails.feeOnTransfer, swapInput1])
 
   const getInput = () => {
     const symbol = getToken(assetSwap1.tokenAddress)?.symbol
@@ -295,9 +299,9 @@ const SwapLps = () => {
   //= =================================================================================//
   // Functions for input handling
 
-  const handleZapInputChange = () => {
+  const handleZapInputChange = useCallback(() => {
     swapInput2.value = convertFromWei(getZap()[0], 18)
-  }
+  }, [getZap, swapInput2])
 
   //= =================================================================================//
   // Functions for input handling
@@ -410,8 +414,13 @@ const SwapLps = () => {
     if (swapInput1?.value) {
       handleZapInputChange()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapInput1?.value, swapInput2?.value, assetSwap1, assetSwap2])
+  }, [
+    swapInput1?.value,
+    swapInput2.value,
+    assetSwap1,
+    assetSwap2,
+    handleZapInputChange,
+  ])
 
   const handleZap = async () => {
     setTxnLoading(true)
@@ -421,7 +430,6 @@ const SwapLps = () => {
         assetSwap1.address,
         assetSwap2.address,
         wallet,
-        web3.rpcs,
       ),
     )
     setTxnLoading(false)
@@ -439,15 +447,16 @@ const SwapLps = () => {
       {/* Top 'Input' Row */}
       <Row>
         {/* 'From' input box */}
-        <Col xs="12" className="">
+        <Col xs="12">
           <Card className="assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col>
                   <strong>{t('sell')}</strong>
                 </Col>
                 <Col
-                  className="float-end text-end"
+                  xs="auto"
+                  className="float-end text-end fw-light"
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
@@ -470,8 +479,11 @@ const SwapLps = () => {
               </Row>
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect1">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect1"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         defaultTab="pool"
                         priority="1"
@@ -492,10 +504,11 @@ const SwapLps = () => {
                       }
                     >
                       <FormControl
-                        className="text-end ms-0"
+                        className="text-end ms-0 bg-transparent border-0 text-lg"
                         type="number"
                         min="0"
-                        placeholder={`${t('sell')}...`}
+                        step="any"
+                        placeholder="0"
                         id="swapInput1"
                         autoComplete="off"
                         autoCorrect="off"
@@ -504,38 +517,35 @@ const SwapLps = () => {
 
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap1?.address)}
                       <ShareLink url={assetSwap1?.address}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap1?.address)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
-                      ~$
-                      {swapInput1?.value
-                        ? formatFromWei(getInput1USD(), 2)
-                        : '0.00'}
+                      {web3.spartaPrice > 0
+                        ? swapInput1?.value
+                          ? `~$${formatFromWei(getInput1USD(), 2)}`
+                          : '~$0.00'
+                        : ''}
                     </Col>
                   </Row>
                 </Col>
@@ -553,9 +563,9 @@ const SwapLps = () => {
               <Icon
                 icon="swap"
                 size="30"
-                stroke="white"
-                fill="white"
-                className="position-relative bg-primary rounded-circle px-2 iconOnTop"
+                stroke="black"
+                fill="black"
+                className="position-relative bg-white rounded-circle px-2 iconOnTop"
               />
             </Col>
           </Row>
@@ -565,10 +575,10 @@ const SwapLps = () => {
           <Card className="mb-3 assetSection">
             <Card.Body>
               <Row>
-                <Col xs="auto" className="">
+                <Col xs="auto">
                   <strong>{t('buy')}</strong>
                 </Col>
-                <Col className="float-end text-end">
+                <Col className="float-end text-end fw-light">
                   {t('balance')}
                   {': '}
                   {pool.poolDetails && formatFromWei(getBalance(2), 4)}
@@ -577,8 +587,11 @@ const SwapLps = () => {
 
               <Row className="my-1">
                 <Col>
-                  <InputGroup className="m-0">
-                    <InputGroup.Text id="assetSelect2">
+                  <InputGroup className="m-0 py-3">
+                    <InputGroup.Text
+                      id="assetSelect2"
+                      className="bg-transparent border-0"
+                    >
                       <AssetSelect
                         priority="2"
                         filter={['pool']}
@@ -587,52 +600,48 @@ const SwapLps = () => {
                       />
                     </InputGroup.Text>
                     <FormControl
-                      className="text-end ms-0"
+                      className="text-end ms-0 bg-transparent border-0 text-lg"
                       type="number"
                       min="0"
-                      placeholder={`${t('buy')}...`}
+                      step="any"
+                      placeholder="0"
                       id="swapInput2"
                       disabled
                     />
                     <InputGroup.Text
                       role="button"
+                      className="bg-transparent border-0 p-1"
                       tabIndex={-1}
                       onKeyPress={() => clearInputs()}
                       onClick={() => clearInputs()}
                     >
-                      <Icon icon="close" size="10" fill="grey" />
+                      <Icon icon="close" size="16" />
                     </InputGroup.Text>
                   </InputGroup>
 
-                  <Row className="pt-1">
+                  <Row className="pt-1 fw-light">
                     <Col>
                       {formatShortString(assetSwap2?.address)}
                       <ShareLink url={assetSwap2?.address}>
-                        <Icon icon="copy" size="16" className="ms-1 mb-1" />
+                        <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
                         href={getExplorerContract(assetSwap2?.address)}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <Icon
-                          icon="scan"
-                          size="12"
-                          className="ms-1 mb-1"
-                          fill="rgb(170, 205, 255)"
-                        />
+                        <Icon icon="scan" size="14" className="ms-1 mb-1" />
                       </a>
                     </Col>
                     <Col className="text-end">
-                      ~$
-                      {swapInput2?.value
-                        ? formatFromWei(getInput2USD(), 2)
-                        : '0.00'}
-                      {' ('}
-                      {swapInput1?.value
-                        ? formatFromUnits(getRateSlip(), 2)
-                        : '0.00'}
-                      {'%)'}
+                      {web3.spartaPrice > 0
+                        ? swapInput2?.value
+                          ? `~$${formatFromWei(
+                              getInput2USD(),
+                              2,
+                            )} (${formatFromUnits(getRateSlip(), 2)}%)`
+                          : '~$0.00'
+                        : ''}
                     </Col>
                   </Row>
                 </Col>
@@ -684,12 +693,12 @@ const SwapLps = () => {
             </Col>
           </Row>
 
-          <Row className="">
-            <Col xs="auto" className="">
-              <strong className="">{getOutput()[2]}</strong>
+          <Row>
+            <Col xs="auto">
+              <strong>{getOutput()[2]}</strong>
             </Col>
             <Col className="text-end">
-              <strong className="">
+              <strong>
                 {swapInput1?.value ? formatFromWei(getOutput()[0], 6) : '0.00'}{' '}
                 {getOutput()[1]}
               </strong>
@@ -705,7 +714,7 @@ const SwapLps = () => {
           <Col>
             <div className="text-center">{t('newPoolZapConfirm')}</div>
             <Form className="my-2 text-center">
-              <span className="">
+              <span>
                 {`Confirm; your liquidity will be locked for ${
                   getTimeNew()[0]
                 }${getTimeNew()[1]}`}

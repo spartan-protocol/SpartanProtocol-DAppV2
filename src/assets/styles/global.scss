@@ -38,7 +38,10 @@ a {
   grid-area: body;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 30px;
+  padding-bottom: 160px;
   border-top-left-radius: 1.5rem;
   box-shadow: inset $shadow;
   background-color: $bg-depth-0;
@@ -47,14 +50,18 @@ a {
 @media only screen and (max-width: 1023px) {
   .body {
     border-top-left-radius: 0;
-    padding: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
   }
 }
 
 @media only screen and (max-width: 500px) {
   .body {
     border-top-left-radius: 0;
-    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
   }
 }
 
@@ -115,8 +122,8 @@ a {
 
 .token-badge-tight {
   position: absolute;
-  left: 22;
-  top: 12;
+  left: 21;
+  top: 19;
 }
 
 .token-badge-tighter {
@@ -138,6 +145,43 @@ a {
 .iconOnTop {
   bottom: 13px;
   z-index: 1000;
+}
+
+.bnbchainicon {
+  fill: black;
+}
+
+.spartaicon {
+  fill: black;
+}
+
+.orderDesc .down {
+  fill: black;
+}
+
+.orderAsc .up {
+  fill: black;
+}
+
+.assetSelect {
+  background: none;
+  border: none;
+}
+
+.text-lg {
+  font-size: 1.5rem;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 @media only screen and (max-width: 321px) {
@@ -215,5 +259,21 @@ body.dark-theme {
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
+  }
+
+  .bnbchainicon {
+    fill: white;
+  }
+
+  .spartaicon {
+    fill: white;
+  }
+
+  .orderDesc .down {
+    fill: white;
+  }
+
+  .orderAsc .up {
+    fill: white;
   }
 }

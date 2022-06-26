@@ -1,7 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from 'ethers'
@@ -17,6 +17,7 @@ import {
 } from 'chart.js' // chart.js - Tree-shake to only bundle the used modules
 import Layout from './containers/Common/layout'
 
+import appReducer from './store/app'
 import bondReducer from './store/bond'
 import daoReducer from './store/dao'
 import poolReducer from './store/pool'
@@ -29,6 +30,8 @@ import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
 import { BreakpointProvider } from './providers/Breakpoint'
 import { ThemeProvider } from './providers/Theme'
+import { isAppleDevice } from './utils/helpers'
+import { FocusProvider } from './providers/Focus'
 
 ChartJS.register(
   LineElement,
@@ -57,6 +60,7 @@ BigNumber.config({ FORMAT: globalFormat })
 
 const store = configureStore({
   reducer: {
+    app: appReducer,
     bond: bondReducer,
     dao: daoReducer,
     pool: poolReducer,
@@ -69,16 +73,33 @@ const store = configureStore({
   },
 })
 
+if (isAppleDevice()) {
+  const el = document.querySelector('meta[name=viewport]')
+
+  if (el !== null) {
+    let content = el.getAttribute('content')
+    const re = /maximum-scale=[0-9.]+/g
+
+    if (re.test(content)) {
+      content = content.replace(re, 'maximum-scale=1.0')
+    } else {
+      content = [content, 'maximum-scale=1.0'].join(', ')
+    }
+
+    el.setAttribute('content', content)
+  }
+}
+
 const Providers = () => (
   <Provider store={store}>
     <Web3ReactProvider getLibrary={getLibrary}>
       <BrowserRouter>
         <BreakpointProvider>
-          <Switch>
+          <FocusProvider>
             <ThemeProvider>
-              <Route path="/" component={Layout} />
+              <Layout />
             </ThemeProvider>
-          </Switch>
+          </FocusProvider>
         </BreakpointProvider>
       </BrowserRouter>
     </Web3ReactProvider>

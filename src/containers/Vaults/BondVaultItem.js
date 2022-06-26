@@ -19,13 +19,11 @@ import {
 } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { getAddresses } from '../../utils/web3'
-import { useWeb3 } from '../../store/web3'
 
 const BondItem = (props) => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
-  const web3 = useWeb3()
   const addr = getAddresses()
   const { asset } = props
   const { t } = useTranslation()
@@ -47,7 +45,7 @@ const BondItem = (props) => {
 
   const handleTxn = async () => {
     setTxnLoading(true)
-    await dispatch(claimBond(asset.tokenAddress, wallet, web3.rpcs))
+    await dispatch(claimBond(asset.tokenAddress, wallet))
     setTxnLoading(false)
   }
 
@@ -131,13 +129,15 @@ const BondItem = (props) => {
             <Row className="mt-1">
               <Col>{t('finalDate')}</Col>
               <Col xs="auto" className="text-end">
-                {formatDate(
-                  getEndDate(
-                    asset.staked,
-                    asset.lastBlockTime,
-                    asset.claimRate,
-                  ),
-                )}
+                {asset.staked > 0
+                  ? formatDate(
+                      getEndDate(
+                        asset.staked,
+                        asset.lastBlockTime,
+                        asset.claimRate,
+                      ),
+                    )
+                  : '100% Claimed'}
               </Col>
             </Row>
           </Card.Body>

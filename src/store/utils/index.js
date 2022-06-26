@@ -19,7 +19,7 @@ export const utilsSlice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updatePoolDetails: (state, action) => {
       state.poolDetails = action.payload
@@ -46,14 +46,15 @@ export const {
  * Returns the pool's details
  * @returns [ tokenAddress | poolAddress | genesis | baseAmount | tokenAmount | baseAmountPooled | tokenAmountPooled | fees | volume | txCount | poolUnits ]
  */
-export const getPoolDetails = (pool, wallet, rpcUrls) => async (dispatch) => {
+export const getPoolDetails = (pool, wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getUtilsContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getUtilsContract(wallet, rpcs)
   try {
     const poolDetails = await contract.callStatic.getPoolData(pool)
     dispatch(updatePoolDetails(poolDetails))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -64,14 +65,15 @@ export const getPoolDetails = (pool, wallet, rpcUrls) => async (dispatch) => {
  * @param {object} wallet
  * @returns {address} pool
  */
-export const getPool = (token, wallet, rpcUrls) => async (dispatch) => {
+export const getPool = (token, wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getUtilsContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getUtilsContract(wallet, rpcs)
   try {
     const pool = await contract.callStatic.getPool(token)
     dispatch(updatePool(pool))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -82,14 +84,15 @@ export const getPool = (token, wallet, rpcUrls) => async (dispatch) => {
  * @param {object} wallet
  * @returns {address} synth
  */
-export const getSynth = (token, wallet, rpcUrls) => async (dispatch) => {
+export const getSynth = (token, wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const contract = getUtilsContract(wallet, rpcUrls)
+  const { rpcs } = getState().web3
+  const contract = getUtilsContract(wallet, rpcs)
   try {
     const synth = await contract.callStatic.getSynth(token)
     dispatch(updateSynth(synth))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

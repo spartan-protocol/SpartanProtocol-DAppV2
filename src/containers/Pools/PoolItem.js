@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
 import Button from 'react-bootstrap/Button'
@@ -29,7 +29,7 @@ import styles from './styles.module.scss'
 const PoolItem = ({ asset, daoApy }) => {
   const { t } = useTranslation()
   const pool = usePool()
-  const history = useHistory()
+  const navigate = useNavigate()
   const web3 = useWeb3()
   const addr = getAddresses()
   const [showDetails, setShowDetails] = useState(false)
@@ -58,6 +58,11 @@ const PoolItem = ({ asset, daoApy }) => {
   const getDivis = () =>
     curated && pool.incentives
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
+      : 0
+
+  const getVolume = () =>
+    pool.incentives
+      ? pool.incentives.filter((x) => x.address === asset.address)[0].volume
       : 0
 
   const APY = calcAPY(asset, getFees(), getDivis())
@@ -280,7 +285,7 @@ const PoolItem = ({ asset, daoApy }) => {
                             <hr className="my-2" />
                           </Col>
                           <Col xs="12" className="text-center">
-                            All APYs are estimates
+                            {t('apyEstimatedInfo')}
                           </Col>
                         </Row>
                       </Popover.Body>
@@ -330,9 +335,17 @@ const PoolItem = ({ asset, daoApy }) => {
                       : t('notCurated')}
                   </Col>
                 </Row>
-                <hr className="my-0" />
+                <hr className="my-2" />
               </>
             )}
+
+            <Row className="my-1">
+              <Col xs="auto" className="pe-0">
+                Vol 24Hr
+              </Col>
+              <Col className="text-end">${formatFromWei(getVolume(), 0)}</Col>
+            </Row>
+            <hr className="my-2" />
 
             <Row className="my-1">
               <Col xs="auto" className="pe-0">
@@ -349,7 +362,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     {formatShortNumber(convertFromWei(baseAmount))}
                   </Col>
                   <Col className="my-auto px-0">
-                    <ProgressBar style={{ height: '5px' }} className="">
+                    <ProgressBar style={{ height: '5px' }}>
                       <ProgressBar
                         variant={isAtCaps() ? 'danger' : 'success'}
                         key={1}
@@ -365,9 +378,7 @@ const PoolItem = ({ asset, daoApy }) => {
             </Row>
 
             <Row className="my-1">
-              <Col xs="auto" className="">
-                {t('poolDepth')}
-              </Col>
+              <Col xs="auto">{t('poolDepth')}</Col>
               <Col className="text-end">
                 {`$${formatFromWei(poolDepthUsd, 0)}`}
               </Col>
@@ -398,14 +409,12 @@ const PoolItem = ({ asset, daoApy }) => {
                     />
                   </Col>
                 </Row>
-                <hr className="my-0" />
+                <hr className="my-2" />
               </>
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="">
-                {t('spotPrice')}
-              </Col>
+              <Col xs="auto">{t('spotPrice')}</Col>
               <Col className="text-end">
                 {formatFromUnits(tokenValueBase, 2)}
                 <Icon icon="spartav2" className="ms-1" size="15" />
@@ -483,12 +492,12 @@ const PoolItem = ({ asset, daoApy }) => {
                     </ProgressBar>
                   </Col>
                 </Row>
-                <hr className="my-0" />
+                <hr className="my-2" />
               </>
             )}
 
             <Row className="my-1">
-              <Col xs="auto" className="">
+              <Col xs="auto">
                 {t('revenue')}
                 <OverlayTrigger placement="auto" overlay={revenueTooltip}>
                   <span role="button">
@@ -566,7 +575,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   variant="outline-secondary"
                   className="w-100"
                   onClick={() =>
-                    history.push(
+                    navigate(
                       `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
                     )
                   }
@@ -579,9 +588,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   size="sm"
                   variant="outline-secondary"
                   className="w-100"
-                  onClick={() =>
-                    history.push(`/liquidity?asset1=${tokenAddress}`)
-                  }
+                  onClick={() => navigate(`/liquidity?asset1=${tokenAddress}`)}
                 >
                   {t('join')}
                 </Button>
@@ -593,7 +600,7 @@ const PoolItem = ({ asset, daoApy }) => {
                     variant="outline-secondary"
                     className="w-100"
                     disabled={!asset.curated}
-                    onClick={() => history.push('/vaults')}
+                    onClick={() => navigate('/vaults')}
                   >
                     {t('stake')}
                   </Button>

@@ -8,12 +8,11 @@ import {
   bscRpcsMN,
   bscRpcsTN,
   getNetwork,
-  getProviderGasPrice,
   getWalletWindowObj,
   parseTxn,
 } from '../../utils/web3'
 import { getTokenContract } from '../../utils/getContracts'
-import { convertToWei } from '../../utils/bigNumber'
+import { BN, convertToWei } from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
 import { checkResolved } from '../../utils/helpers'
 
@@ -40,7 +39,7 @@ export const web3Slice = createSlice({
       state.loading = action.payload
     },
     updateError: (state, action) => {
-      state.error = action.payload.toString()
+      state.error = action.payload
     },
     updateAddedNetworkMM: (state, action) => {
       state.addedNetworkMM = action.payload
@@ -125,7 +124,7 @@ export const addNetworkMM = () => async (dispatch) => {
       })
       dispatch(updateAddedNetworkMM(addedNetworkMM))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
   } else {
     dispatch(
@@ -153,7 +152,7 @@ export const addNetworkBC = () => async (dispatch) => {
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(updateAddedNetworkBC(addedNetworkBC))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
   } else {
     dispatch(updateError('Do you have BinanceChain wallet installed?'))
@@ -167,20 +166,24 @@ export const addNetworkBC = () => async (dispatch) => {
  * @returns {boolean} true if succeeds
  */
 export const getApproval =
-  (tokenAddress, contractAddress, wallet, rpcUrls) => async (dispatch) => {
+  (tokenAddress, contractAddress, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
+    const { rpcs } = getState().web3
+    const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
-      const gPrice = await getProviderGasPrice(rpcUrls)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.approve(
         contractAddress,
         convertToWei(1000000000),
         { gasPrice: gPrice },
       )
-      txn = await parseTxn(txn, 'approval', rpcUrls)
+      txn = await parseTxn(txn, 'approval', rpcs)
       dispatch(updateTxn(txn))
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -191,17 +194,20 @@ export const getApproval =
  * @returns {BigNumber?}
  */
 export const getAllowance1 =
-  (tokenAddress, wallet, contractAddress, rpcUrls) => async (dispatch) => {
+  (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
+    const { rpcs } = getState().web3
     try {
-      const allowance1 = await contract.allowance(
-        wallet.account,
-        contractAddress,
-      )
-      dispatch(updateAllowance1(allowance1.toString()))
+      if (rpcs.length > 0) {
+        const contract = getTokenContract(tokenAddress, wallet, rpcs)
+        const allowance1 = await contract.allowance(
+          wallet.account,
+          contractAddress,
+        )
+        dispatch(updateAllowance1(allowance1.toString()))
+      }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -212,17 +218,20 @@ export const getAllowance1 =
  * @returns {BigNumber?}
  */
 export const getAllowance2 =
-  (tokenAddress, wallet, contractAddress, rpcUrls) => async (dispatch) => {
+  (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const contract = getTokenContract(tokenAddress, wallet, rpcUrls)
+    const { rpcs } = getState().web3
     try {
-      const allowance2 = await contract.allowance(
-        wallet.account,
-        contractAddress,
-      )
-      dispatch(updateAllowance2(allowance2.toString()))
+      if (rpcs.length > 0) {
+        const contract = getTokenContract(tokenAddress, wallet, rpcs)
+        const allowance2 = await contract.allowance(
+          wallet.account,
+          contractAddress,
+        )
+        dispatch(updateAllowance2(allowance2.toString()))
+      }
     } catch (error) {
-      dispatch(updateError(error))
+      dispatch(updateError(error.reason))
     }
     dispatch(updateLoading(false))
   }
@@ -233,11 +242,11 @@ export const getAllowance2 =
  * @returns {boolean} true if succeeds
  */
 export const watchAsset =
-  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage, wallet) =>
+  (tokenAddress, tokenSymbol, tokenDecimals, tokenImage, walletAddr) =>
   async (dispatch) => {
     dispatch(updateLoading(true))
     const connectedWalletType = getWalletWindowObj()
-    if (wallet.account) {
+    if (walletAddr) {
       try {
         const watchingAsset = await connectedWalletType.request({
           method: 'wallet_watchAsset',
@@ -258,7 +267,7 @@ export const watchAsset =
         }
         dispatch(updateWatchingAsset(watchingAsset))
       } catch (error) {
-        dispatch(updateError(error))
+        dispatch(updateError(error.reason))
       }
     } else {
       dispatch(updateError('Please connect your wallet first'))
@@ -278,7 +287,7 @@ export const getSpartaPrice = () => async (dispatch) => {
     )
     dispatch(updateSpartaPrice(spartaPrice.data['spartan-protocol-token'].usd))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -293,7 +302,7 @@ export const getEventArray = (array) => async (dispatch) => {
     const eventArray = array
     dispatch(updateEventArray(eventArray))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -306,6 +315,7 @@ export const getRPCBlocks = () => async (dispatch) => {
 
   const withTimeout = (millis, promise) => {
     const timeout = new Promise((resolve, reject) =>
+      // eslint-disable-next-line no-promise-executor-return
       setTimeout(
         () => reject(new Error(`Timed out after ${millis} ms.`)),
         millis,
@@ -340,7 +350,7 @@ export const getRPCBlocks = () => async (dispatch) => {
     // console.log(rpcs)
     dispatch(updateRpcs(rpcs))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }
@@ -352,7 +362,7 @@ export const getGlobalMetrics = () => async (dispatch) => {
     const global = await callGlobalMetrics()
     dispatch(updateMetrics({ global, block }))
   } catch (error) {
-    dispatch(updateError(error))
+    dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
 }

@@ -16,13 +16,11 @@ import { Icon } from '../../components/Icons/index'
 import { getToken } from '../../utils/math/utils'
 import { usePool } from '../../store/pool'
 import { BN } from '../../utils/bigNumber'
-import { useWeb3 } from '../../store/web3'
 
 const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
   const pool = usePool()
-  const web3 = useWeb3()
   const addr = getAddresses()
   const { t } = useTranslation()
   const network = getNetwork()
@@ -50,7 +48,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const handleSubmit = async () => {
     setTxnLoading(true)
-    await dispatch(createSynth(inputAddress, wallet, web3.rpcs))
+    await dispatch(createSynth(inputAddress, wallet))
     setTxnLoading(false)
     setShowModal(false)
   }
@@ -83,15 +81,6 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   return (
     <>
-      <Button
-        variant="primary"
-        onClick={() => setShowModal(true)}
-        className="rounded-pill pe-3 subtitle-label"
-      >
-        <Icon icon="plus" size="17" className="me-1 mb-1" />
-        {t('synth')}
-      </Button>
-
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>{t('newSynth')}</Modal.Title>

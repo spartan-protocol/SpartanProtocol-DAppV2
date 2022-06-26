@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -22,7 +22,7 @@ const Swap = () => {
   const { t } = useTranslation()
   const addr = getAddresses()
   const pool = usePool()
-  const history = useHistory()
+  const navigate = useNavigate()
   const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -32,15 +32,14 @@ const Swap = () => {
   const [selectedAsset1, setSelectedAsset1] = useState(false)
   const [selectedAsset2, setSelectedAsset2] = useState(false)
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
-    }
-  }
-
   useEffect(() => {
+    const tryParse = (data) => {
+      try {
+        return JSON.parse(data)
+      } catch (e) {
+        return pool.poolDetails[0]
+      }
+    }
     if (pool.poolDetails) {
       let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
       asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
@@ -49,7 +48,6 @@ const Swap = () => {
       setSelectedAsset1(asset1)
       setSelectedAsset2(asset2)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -105,7 +103,7 @@ const Swap = () => {
                           <Nav.Link
                             eventKey="add"
                             className="btn-sm"
-                            onClick={() => history.push(`/liquidity`)}
+                            onClick={() => navigate(`/liquidity`)}
                           >
                             {t('add')}
                           </Nav.Link>
@@ -114,9 +112,7 @@ const Swap = () => {
                           <Nav.Link
                             eventKey="remove"
                             className="btn-sm"
-                            onClick={() =>
-                              history.push(`/liquidity?tab=remove`)
-                            }
+                            onClick={() => navigate(`/liquidity?tab=remove`)}
                           >
                             {t('remove')}
                           </Nav.Link>
@@ -134,7 +130,7 @@ const Swap = () => {
                             className="btn-sm"
                             onClick={() => setShowShareModal(!showShareModal)}
                           >
-                            <Icon icon="connect" size="15" />
+                            <Icon icon="share" size="17" />
                           </Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
@@ -144,7 +140,7 @@ const Swap = () => {
                               setShowSettingsModal(!showSettingsModal)
                             }
                           >
-                            <Icon icon="settings" size="15" />
+                            <Icon icon="settings" size="18" />
                           </Nav.Link>
                         </Nav.Item>
                       </Nav>
@@ -188,7 +184,7 @@ const Swap = () => {
                 </Col>
               </>
             ) : (
-              <Col className="">
+              <Col>
                 <HelmetLoading height={150} width={150} />
               </Col>
             )}

@@ -52,18 +52,10 @@ const Supply = () => {
   const [showDropdown, setshowDropdown] = useState(false)
 
   useEffect(() => {
-    if (
-      showDropdown &&
-      tempChains.includes(network.chainId) &&
-      pool.curatedPools &&
-      pool.poolDetails
-    ) {
-      dispatch(
-        getReservePOLDetails(pool.curatedPools, pool.poolDetails, web3.rpcs),
-      )
+    if (showDropdown && tempChains.includes(network.chainId)) {
+      dispatch(getReservePOLDetails())
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pool.curatedPools, pool.poolDetails])
+  }, [dispatch, network.chainId, pool.poolDetails, showDropdown])
 
   const getTVL = () => {
     let tvl = BN(0)
@@ -147,9 +139,11 @@ const Supply = () => {
         ref={target}
         aria-hidden="true"
       >
-        <Icon icon="spartav2" size="27" className="me-1" />
+        <Icon icon="spartaNavbar" size="23" className="me-1" />
         <span className={styles.btnText}>
-          {`$${formatFromUnits(web3.spartaPrice, 2)}`}
+          {web3.spartaPrice > 0
+            ? `$${formatFromUnits(web3.spartaPrice, 2)}`
+            : ''}
         </span>
       </div>
 
@@ -255,7 +249,7 @@ const Supply = () => {
                           <div className="mb-3">{t('totalSupplyInfo')}</div>
                           <Row>
                             <Col xs="4" className="text-center">
-                              <Badge bg="primary">{t('burnForSparta')}</Badge>
+                              <Badge bg="progress">{t('burnForSparta')}</Badge>
                             </Col>
                             <Col xs="4" className="text-center">
                               <Badge bg="info">{t('bond')}</Badge>
@@ -283,7 +277,7 @@ const Supply = () => {
                 <Col xs="12 mb-2">
                   <ProgressBar height="10">
                     <ProgressBar
-                      variant="primary"
+                      variant="progress"
                       key={1}
                       now={
                         network.chainId === 56
@@ -367,7 +361,7 @@ const Supply = () => {
                   <ProgressBar>
                     <ProgressBar
                       id="sparta2supply"
-                      variant="primary"
+                      variant="progress"
                       key={2}
                       now={formatFromWei(
                         BN(getCirculatingSupply())

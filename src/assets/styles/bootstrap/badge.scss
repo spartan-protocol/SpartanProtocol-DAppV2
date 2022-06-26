@@ -1,0 +1,11 @@
+@import '../variables.scss';
+
+.badge {
+  color: $text;
+}
+
+body.dark-theme {
+  .badge {
+    color: $text-dark;
+  }
+}

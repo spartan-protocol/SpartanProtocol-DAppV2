@@ -22,7 +22,6 @@ import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useReserve } from '../../../store/reserve'
-import { useWeb3 } from '../../../store/web3'
 import { useTheme } from '../../../providers/Theme'
 
 const DaoDepositModal = (props) => {
@@ -30,7 +29,6 @@ const DaoDepositModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const pool = usePool()
-  const web3 = useWeb3()
   const reserve = useReserve()
   const dao = useDao()
   const wallet = useWeb3React()
@@ -69,14 +67,14 @@ const DaoDepositModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(wallet, web3.rpcs))
+    await dispatch(daoHarvest(wallet))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet, web3.rpcs))
+    dispatch(daoMemberDetails(wallet.account))
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(daoDeposit(pool1.address, deposit(), wallet, web3.rpcs))
+    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -149,7 +147,7 @@ const DaoDepositModal = (props) => {
               {formatFromWei(deposit())} {token.symbol}p
             </Col>
           </Row>
-          <Row className="">
+          <Row>
             <Col xs="12">
               <Form.Range
                 id="daoVaultSlider"
@@ -166,7 +164,7 @@ const DaoDepositModal = (props) => {
               {t('daoVaultDepConf', { symbol: token.symbol })}:
             </Col>
           </Row>
-          <Row xs="12" className="">
+          <Row xs="12">
             <Col xs="auto" className="text-card">
               {t('thisStakeLocked')}:
             </Col>
@@ -205,7 +203,7 @@ const DaoDepositModal = (props) => {
                   deposit to avoid forfeiting any accumulated rewards:
                 </Col>
               </Row>
-              <Row xs="12" className="">
+              <Row xs="12">
                 <Col xs="auto" className="text-card">
                   Harvest forfeiting
                 </Col>
