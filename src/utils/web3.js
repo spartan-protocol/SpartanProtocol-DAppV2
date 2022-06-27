@@ -180,12 +180,12 @@ export const addressesMN = {
 }
 
 export const bscRpcsTN = [
-  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (12/11/21)
-  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (12/11/21)
-  'https://data-seed-prebsc-2-s2.binance.org:8545/', // Good (12/11/21)
-  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (12/11/21)
-  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', // OUT OF SYNC! (12/11/21)
-  // 'https://data-seed-prebsc-2-s1.binance.org:8545/', // BROKEN! (12/11/21)
+  'https://data-seed-prebsc-1-s1.binance.org:8545/', // GOOD - 27JUNE22
+  // 'https://data-seed-prebsc-2-s1.binance.org:8545/', // BAD - 27JUNE22
+  'https://data-seed-prebsc-1-s2.binance.org:8545/', // GOOD - 27JUNE22
+  'https://data-seed-prebsc-2-s2.binance.org:8545/', // GOOD - 27JUNE22
+  'https://data-seed-prebsc-1-s3.binance.org:8545/', // NEUTRAL - 27JUNE22 (Working, but 20K+ Blocks behind)
+  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', // BAD - 27JUNE22
 ]
 
 export const bscRpcsMN = [

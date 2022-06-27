@@ -80,7 +80,6 @@ export const { updateLoading, updateError, updateChainId, updateSettings } =
 
 /** Update chain ID (56 MN or 97 TN) */
 export const appChainId = (chainId) => async (dispatch) => {
-  console.log('debug updateing chain id etc')
   dispatch(updateLoading(true))
   try {
     const addresses = chainId === 56 ? addressesMN : addressesTN

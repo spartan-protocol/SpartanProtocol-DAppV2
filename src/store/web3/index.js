@@ -315,13 +315,12 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
 
   const withTimeout = (millis, promise) => {
-    const timeout = new Promise((resolve, reject) =>
-      // eslint-disable-next-line no-promise-executor-return
+    const timeout = new Promise((resolve, reject) => {
       setTimeout(
         () => reject(new Error(`Timed out after ${millis} ms.`)),
         millis,
-      ),
-    )
+      )
+    })
     return Promise.race([promise, timeout])
   }
 
