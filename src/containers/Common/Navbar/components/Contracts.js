@@ -7,23 +7,22 @@ import Badge from 'react-bootstrap/Badge'
 import Overlay from 'react-bootstrap/Overlay'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import { useDispatch } from 'react-redux'
 import { useReserve } from '../../../../store/reserve'
 import { getExplorerContract } from '../../../../utils/extCalls'
-import {
-  changeNetworkLsOnly,
-  getAddresses,
-  getNetwork,
-} from '../../../../utils/web3'
 import { Icon } from '../../../../components/Icons/index'
+import { appChainId, useApp } from '../../../../store/app'
 
 const btnClass = 'hide-i5 header-btn ms-1 me-3'
 
 const Contracts = () => {
   const { t } = useTranslation()
   const reserve = useReserve()
+  const dispatch = useDispatch()
+
+  const { chainId, addresses } = useApp()
+
   const target = useRef(null)
-  const addr = getAddresses()
-  const network = getNetwork()
 
   const [showDropdown, setshowDropdown] = useState(false)
 
@@ -42,15 +41,8 @@ const Contracts = () => {
     'utils',
   ]
 
-  const onChangeNetwork = async (net) => {
-    if (net.target.checked === true) {
-      changeNetworkLsOnly(56)
-    }
-    if (net.target.checked === false) {
-      changeNetworkLsOnly(97)
-    } else {
-      changeNetworkLsOnly(net)
-    }
+  const onChangeNetwork = async () => {
+    dispatch(appChainId(chainId === 97 ? 56 : 97))
     window.location.reload(true)
   }
 
@@ -83,16 +75,13 @@ const Contracts = () => {
             <h3>{t('Contracts')}</h3>
             <Form className="mb-0">
               <span className="output-card">
-                {t('network')}:{' '}
-                {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                {t('network')}: {chainId === 97 ? ' Testnet' : ' Mainnet'}
                 <Form.Check
                   type="switch"
                   id="custom-switch"
                   className="ms-2 d-inline-flex"
-                  checked={network?.chainId === 56}
-                  onChange={(value) => {
-                    onChangeNetwork(value)
-                  }}
+                  checked={chainId === 56}
+                  onChange={() => onChangeNetwork()}
                 />
               </span>
             </Form>
@@ -112,11 +101,11 @@ const Contracts = () => {
               <Col xs="12">
                 <Row className="text-center p-2">
                   {addrNames
-                    .filter((x) => addr[x] !== '')
+                    .filter((x) => addresses[x] !== '')
                     .map((c) => (
                       <Col key={c} xs={6} className="mb-1 px-1">
                         <a
-                          href={getExplorerContract(addr[c])}
+                          href={getExplorerContract(addresses[c])}
                           target="_blank"
                           rel="noreferrer"
                         >

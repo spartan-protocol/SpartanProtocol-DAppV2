@@ -12,7 +12,7 @@ import PoolItem from './PoolItem'
 import PoolTable from './PoolTable'
 import SynthTable from './SynthTable'
 import { usePool } from '../../store/pool'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import { convertToWei, BN } from '../../utils/bigNumber'
 import HelmetLoading from '../../components/Spinner/index'
 import { useBond, bondVaultWeight } from '../../store/bond'
@@ -26,16 +26,18 @@ import { useDao, daoVaultWeight } from '../../store/dao'
 import SynthItem from './SynthItem'
 import { synthVaultWeight, useSynth } from '../../store/synth'
 import NewPool from './NewPool'
+import { useApp } from '../../store/app'
 
 const Overview = () => {
-  const synth = useSynth()
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const pool = usePool()
-  const web3 = useWeb3()
+
+  const app = useApp()
   const bond = useBond()
   const dao = useDao()
-  const network = getNetwork()
+  const pool = usePool()
+  const synth = useSynth()
+  const web3 = useWeb3()
 
   const [activeTab, setActiveTab] = useState('pools')
   const [daoApy, setDaoApy] = useState('0')
@@ -213,7 +215,7 @@ const Overview = () => {
 
   return (
     <>
-      {tempChains.includes(network.chainId) && (
+      {tempChains.includes(app.chainId) && (
         <>
           <Row>
             <SummaryItem />
@@ -341,9 +343,7 @@ const Overview = () => {
           )}
         </>
       )}
-      {network.chainId && !tempChains.includes(network.chainId) && (
-        <WrongNetwork />
-      )}
+      {!tempChains.includes(app.chainId) && <WrongNetwork />}
     </>
   )
 }

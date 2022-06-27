@@ -2,17 +2,18 @@ import React, { useState } from 'react'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import { useApp } from '../../../store/app'
 import { usePool } from '../../../store/pool'
 import { useSynth } from '../../../store/synth'
 import { BN, convertToWei } from '../../../utils/bigNumber'
-import { formatShortString, getAddresses } from '../../../utils/web3'
+import { formatShortString } from '../../../utils/web3'
 
 const AssetSelect = (props) => {
+  const { addresses } = useApp()
   const pool = usePool()
   const synth = useSynth()
-  const addr = getAddresses()
-  const filter = [addr.spartav1, addr.spartav2]
 
+  const filter = [addresses.spartav1, addresses.spartav2]
   const genericMsg = 'No valid assets'
   const maxCurateMsg =
     'The protocol is currently at its max amount of Curated pools. If you would like to propse a new Curated pool, there must first be a proposal to remove one. This max-Curated limit could however be increased in the future.'

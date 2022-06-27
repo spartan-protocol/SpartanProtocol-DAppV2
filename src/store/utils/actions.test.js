@@ -1,5 +1,4 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-// import { getAddresses, TEST_WALLET } from '../../utils/web3'
 // import {
 //   // getListedPools,
 //   getListedPoolsRange,
@@ -14,8 +13,6 @@ import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 //   // isMember,
 // } from './actions'
 // import * as Types from './types'
-
-// const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock

@@ -19,17 +19,14 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../../utils/bigNumber'
-import {
-  changeNetworkLsOnly,
-  getNetwork,
-  tempChains,
-} from '../../../../utils/web3'
+import { tempChains } from '../../../../utils/web3'
 import { Icon } from '../../../../components/Icons/index'
 import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
 import styles from './styles.module.scss'
 import { Spacer } from '../../../../components/Spacer'
+import { appChainId, useApp } from '../../../../store/app'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -39,7 +36,7 @@ const Supply = () => {
   const reserve = useReserve()
   const target = useRef(null)
   const dispatch = useDispatch()
-  const network = getNetwork()
+  const app = useApp()
 
   // V1 (Protocol) Token Distribution
   const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
@@ -52,10 +49,10 @@ const Supply = () => {
   const [showDropdown, setshowDropdown] = useState(false)
 
   useEffect(() => {
-    if (showDropdown && tempChains.includes(network.chainId)) {
+    if (showDropdown && tempChains.includes(app.chainId)) {
       dispatch(getReservePOLDetails())
     }
-  }, [dispatch, network.chainId, pool.poolDetails, showDropdown])
+  }, [dispatch, app.chainId, pool.poolDetails, showDropdown])
 
   const getTVL = () => {
     let tvl = BN(0)
@@ -118,15 +115,8 @@ const Supply = () => {
     return '0.00'
   }
 
-  const onChangeNetwork = async (net) => {
-    if (net.target.checked === true) {
-      changeNetworkLsOnly(56)
-    }
-    if (net.target.checked === false) {
-      changeNetworkLsOnly(97)
-    } else {
-      changeNetworkLsOnly(net)
-    }
+  const onChangeNetwork = async () => {
+    dispatch(appChainId(app.chainId === 97 ? 56 : 97))
     window.location.reload(true)
   }
 
@@ -167,16 +157,13 @@ const Supply = () => {
               </a>
               <Form className="mb-0">
                 <span className="output-card">
-                  {t('network')}:{' '}
-                  {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                  {t('network')}: {app.chainId === 97 ? ' Testnet' : ' Mainnet'}
                   <Form.Check
                     type="switch"
                     id="custom-switch"
                     className="ms-2 d-inline-flex"
-                    checked={network?.chainId === 56}
-                    onChange={(value) => {
-                      onChangeNetwork(value)
-                    }}
+                    checked={app.chainId === 56}
+                    onChange={() => onChangeNetwork()}
                   />
                 </span>
               </Form>
@@ -280,7 +267,7 @@ const Supply = () => {
                       variant="progress"
                       key={1}
                       now={
-                        network.chainId === 56
+                        app.chainId === 56
                           ? formatFromUnits(
                               BN(distroMnBurnV1).div(300000000).times(100),
                               2,
@@ -293,7 +280,7 @@ const Supply = () => {
                       variant="info"
                       key={2}
                       now={
-                        network.chainId === 56
+                        app.chainId === 56
                           ? formatFromUnits(
                               BN(distroMnBondV1)
                                 .plus(distroMnBondV2)
@@ -309,7 +296,7 @@ const Supply = () => {
                       variant="danger"
                       key={3}
                       now={
-                        network.chainId === 56
+                        app.chainId === 56
                           ? formatFromUnits(
                               BN(convertFromWei(getTotalSupply()))
                                 .minus(distroMnBurnV1)

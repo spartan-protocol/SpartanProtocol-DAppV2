@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
-import { getAddresses, getItemFromArray } from '../../utils/web3'
+import { getItemFromArray } from '../../utils/web3'
 import HelmetLoading from '../../components/Spinner/index'
 import { Icon } from '../../components/Icons/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
@@ -31,15 +31,17 @@ import {
   getToken,
 } from '../../utils/math/utils'
 import { getMemberPositions } from '../../utils/extCalls'
+import { useApp } from '../../store/app'
 
 const PoolPositions = () => {
   const { t } = useTranslation()
-  const pool = usePool()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
   const bond = useBond()
   const dao = useDao()
+  const pool = usePool()
   const web3 = useWeb3()
-  const wallet = useWeb3React()
-  const addr = getAddresses()
 
   const [viewOverall, setViewOverall] = useState('units')
   const [viewPool, setViewPool] = useState('units')
@@ -75,7 +77,7 @@ const PoolPositions = () => {
           asset1.address !== '' &&
           pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
             ? asset1
-            : { tokenAddress: addr.bnb }
+            : { tokenAddress: addresses.bnb }
         asset1 = getItemFromArray(asset1, pool.poolDetails)
         setPoolPos(asset1)
         window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
@@ -83,7 +85,7 @@ const PoolPositions = () => {
     }
     getAssetDetails()
   }, [
-    addr.bnb,
+    addresses.bnb,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),

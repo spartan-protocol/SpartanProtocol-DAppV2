@@ -33,19 +33,20 @@ import { getPool, getToken } from '../../utils/math/utils'
 import { calcCurrentRewardDao } from '../../utils/math/dao'
 import HelmetLoading from '../../components/Spinner/index'
 import DaoVaultItem from './DaoVaultItem'
-import { getAddresses } from '../../utils/web3'
 import { Tooltip } from '../../components/Tooltip/index'
+import { useApp } from '../../store/app'
 
 const DaoVault = () => {
-  const reserve = useReserve()
-  const wallet = useWeb3React()
-  const dao = useDao()
-  const bond = useBond()
-  const pool = usePool()
-  const sparta = useSparta()
-  const addr = getAddresses()
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const bond = useBond()
+  const dao = useDao()
+  const pool = usePool()
+  const reserve = useReserve()
+  const sparta = useSparta()
   const web3 = useWeb3()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -160,7 +161,7 @@ const DaoVault = () => {
   // 0.0023 === 0.0012
   const estMaxGas = '1500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }

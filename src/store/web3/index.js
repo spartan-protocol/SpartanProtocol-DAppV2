@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
@@ -7,7 +6,6 @@ import { ethers } from 'ethers'
 import {
   bscRpcsMN,
   bscRpcsTN,
-  getNetwork,
   getWalletWindowObj,
   parseTxn,
 } from '../../utils/web3'
@@ -94,31 +92,34 @@ export const {
  * @param {string} network - Whether it is 'mainnet' or 'testnet'
  * @returns {boolean} true if succeeds
  */
-export const addNetworkMM = () => async (dispatch) => {
+export const addNetworkMM = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const providerETH = window.ethereum ? window.ethereum : null
-  const network = getNetwork()
-  if (network.chainId === 56) {
-    network.net = 'Mainnet'
-  } else {
-    network.net = 'Testnet'
-  }
-  const chainId = parseInt(network.chainId, 10)
+  const providerETH = window.ethereum ?? null
   if (providerETH) {
     try {
+      const { chainId } = getState().app
+      const network = {
+        chainId: `0x${chainId.toString(16)}`,
+        chainName: chainId === 56 ? 'BNBChain Mainnet' : 'BNBChain Testnet',
+        rpcUrls: chainId === 56 ? bscRpcsMN : bscRpcsTN,
+        blockExplorerUrls:
+          chainId === 97
+            ? ['https://testnet.bscscan.com/']
+            : ['https://bscscan.com/'],
+      }
       const addedNetworkMM = await providerETH.request({
         method: 'wallet_addEthereumChain',
         params: [
           {
-            chainId: `0x${chainId.toString(16)}`,
-            chainName: `BSC ${network.net}`,
+            chainId: network.chainId,
+            chainName: network.chainName,
             nativeCurrency: {
               name: 'BNB',
               symbol: 'bnb',
               decimals: 18,
             },
-            rpcUrls: network.chainId === 97 ? bscRpcsTN : bscRpcsMN,
-            blockExplorerUrls: ['https://bscscan.com/'],
+            rpcUrls: network.rpcUrls,
+            blockExplorerUrls: network.blockExplorerUrls,
           },
         ],
       })
@@ -141,14 +142,13 @@ export const addNetworkMM = () => async (dispatch) => {
  * @param {string} network - Whether it is 'mainnet' or 'testnet'
  * @returns {boolean} true if succeeds
  */
-export const addNetworkBC = () => async (dispatch) => {
+export const addNetworkBC = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const providerBC = window.BinanceChain ? window.BinanceChain : null
-  const network = getNetwork()
-  const chainId = parseInt(network.chainId, 10)
+  const providerBC = window.BinanceChain ?? null
+  const { chainId } = getState().app
   if (providerBC && parseInt(providerBC?.chainId, 16) !== chainId) {
-    const chainIdString = network.chainId === 97 ? 'bsc-testnet' : 'bsc-mainnet'
     try {
+      const chainIdString = chainId === 97 ? 'bsc-testnet' : 'bsc-mainnet'
       const addedNetworkBC = await providerBC.switchNetwork(chainIdString)
       dispatch(updateAddedNetworkBC(addedNetworkBC))
     } catch (error) {
@@ -172,7 +172,8 @@ export const getApproval =
     const contract = getTokenContract(tokenAddress, wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.approve(
@@ -310,7 +311,7 @@ export const getEventArray = (array) => async (dispatch) => {
 /**
  * Get the current blocks from all RPCs
  */
-export const getRPCBlocks = () => async (dispatch) => {
+export const getRPCBlocks = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
 
   const withTimeout = (millis, promise) => {
@@ -326,8 +327,8 @@ export const getRPCBlocks = () => async (dispatch) => {
 
   try {
     let awaitArray = []
-    const network = getNetwork()
-    const rpcUrls = network.chainId === 97 ? bscRpcsTN : bscRpcsMN
+    const { chainId } = getState().app
+    const rpcUrls = chainId === 97 ? bscRpcsTN : bscRpcsMN
     for (let i = 0; i < rpcUrls.length; i++) {
       const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
       awaitArray.push(withTimeout(3000, provider.getBlockNumber()))

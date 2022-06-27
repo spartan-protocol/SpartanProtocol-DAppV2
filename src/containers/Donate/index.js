@@ -10,11 +10,7 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
-import {
-  formatShortString,
-  getNetwork,
-  getWalletProvider,
-} from '../../utils/web3'
+import { formatShortString, getWalletProvider } from '../../utils/web3'
 import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
   convertToWei,
@@ -25,14 +21,15 @@ import { useWeb3 } from '../../store/web3'
 import { getTokenContract } from '../../utils/getContracts'
 import { apiUrlBQ, getExplorerWallet, headerBQ } from '../../utils/extCalls'
 import { Icon } from '../../components/Icons/index'
+import { useApp } from '../../store/app'
 
 const Overview = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const sparta = useSparta()
+  const app = useApp()
   const wallet = useWeb3React()
   const web3 = useWeb3()
-  const network = getNetwork()
 
   const [txnLoading, setTxnLoading] = useState(false)
 
@@ -47,7 +44,7 @@ const Overview = () => {
       //   'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
       // )
       // setbnbPrice(_bnbPrice.data.binancecoin.usd)
-      if (network.chainId === 56) {
+      if (app.chainId === 56) {
         const options = {
           method: 'POST',
           url: apiUrlBQ,
@@ -104,7 +101,7 @@ const Overview = () => {
       }
     }
     getHoldings()
-  }, [dispatch, network.chainId, wallet.account])
+  }, [dispatch, app.chainId, wallet.account])
 
   // const [totalUSD, settotalUSD] = useState(0)
   // useEffect(() => {
@@ -352,7 +349,7 @@ const Overview = () => {
               </Card.Header>
               <Card.Body>
                 <Row>
-                  {network.chainId === 56 && (
+                  {app.chainId === 56 && (
                     <>
                       <Col xs="12" className="my-2">
                         <Row
@@ -473,7 +470,7 @@ const Overview = () => {
                       </Col>
                     </>
                   )}
-                  {network.chainId !== 56 && (
+                  {app.chainId !== 56 && (
                     <>
                       <Col>
                         <div>{t('changeToMainnet')}</div>
@@ -483,7 +480,7 @@ const Overview = () => {
                 </Row>
               </Card.Body>
               <Card.Footer>
-                {network.chainId === 56 && (
+                {app.chainId === 56 && (
                   <>
                     <Button
                       className="w-100"
@@ -593,7 +590,7 @@ const Overview = () => {
                       </Col>
                     </Row>
                   ))}
-                {network.chainId !== 56 && (
+                {app.chainId !== 56 && (
                   <>
                     <Row>
                       <Col>

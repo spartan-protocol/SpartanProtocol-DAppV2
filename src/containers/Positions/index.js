@@ -5,22 +5,24 @@ import Card from 'react-bootstrap/Card'
 import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { Icon } from '../../components/Icons/index'
 import PoolPositions from './PoolPositions'
 import SynthPositions from './SynthPositions'
+import { useApp } from '../../store/app'
 
 const Positions = () => {
   const { t } = useTranslation()
-  const network = getNetwork()
+
+  const app = useApp()
 
   const [activeTab, setActiveTab] = useState('pools')
 
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && network?.chainId === 56 ? (
+        {tempChains.includes(app.chainId) && app.chainId === 56 ? (
           <>
             <Row className="mb-3">
               <Col>
@@ -90,9 +92,7 @@ const Positions = () => {
         ) : (
           <div>{t('changeToMainnet')}</div>
         )}
-        {network.chainId && !tempChains.includes(network.chainId) && (
-          <WrongNetwork />
-        )}
+        {!tempChains.includes(app.chainId) && <WrongNetwork />}
       </div>
     </>
   )

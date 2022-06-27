@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import {
@@ -6,7 +5,7 @@ import {
   getSpartaV2Contract,
   getTokenContract,
 } from '../../utils/getContracts'
-import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import { calcLiqValue } from '../../utils/math/utils'
 
 export const useReserve = () => useSelector((state) => state.reserve)
@@ -53,13 +52,13 @@ export const getReserveGlobalDetails = () => async (dispatch, getState) => {
     const { rpcs } = getState().web3
     try {
       if (rpcs.length > 0) {
-        const addr = getAddresses()
+        const { chainId, addresses } = getState().app
         const contract = getReserveContract(null, rpcs)
         const spartaContract = getSpartaV2Contract(null, rpcs)
         let awaitArray = [
           contract.callStatic.emissions(),
-          spartaContract.callStatic.balanceOf(addr.reserve),
-          tempChains.includes(getNetwork().chainId)
+          spartaContract.callStatic.balanceOf(addresses.reserve),
+          tempChains.includes(chainId)
             ? contract.callStatic.globalFreeze()
             : false,
         ]
@@ -90,11 +89,11 @@ export const getReservePOLDetails = () => async (dispatch, getState) => {
     try {
       if (poolDetails.length > 0 && curatedPools.length > 0) {
         const { rpcs } = getState().web3
-        const addr = getAddresses()
+        const { addresses } = getState().app
         let awaitArray = []
         for (let i = 0; i < curatedPools.length; i++) {
           const poolContract = getTokenContract(curatedPools[i], null, rpcs)
-          awaitArray.push(poolContract.callStatic.balanceOf(addr.reserve))
+          awaitArray.push(poolContract.callStatic.balanceOf(addresses.reserve))
         }
         awaitArray = await Promise.all(awaitArray)
         const polDetails = []

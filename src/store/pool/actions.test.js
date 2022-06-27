@@ -1,5 +1,5 @@
 import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
-// import { getAddresses, TEST_TOKEN } from '../../utils/web3'
+// import { TEST_TOKEN } from '../../utils/web3'
 // import {
 //   routerAddLiq,
 //   routerRemoveLiq,
@@ -11,8 +11,6 @@ import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 //   routerZapLiquidity,
 // } from './actions'
 // import * as Types from './types'
-
-// const addr = getAddresses()
 
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock

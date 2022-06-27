@@ -15,12 +15,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
-import {
-  formatShortString,
-  getAddresses,
-  getItemFromArray,
-  oneWeek,
-} from '../../utils/web3'
+import { formatShortString, getItemFromArray, oneWeek } from '../../utils/web3'
 import {
   BN,
   convertFromWei,
@@ -42,16 +37,18 @@ import { removeLiq, removeLiqAsym } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
+import { useApp } from '../../store/app'
 
 const LiqRemove = () => {
   const dispatch = useDispatch()
-  const web3 = useWeb3()
-  const pool = usePool()
-  const addr = getAddresses()
-  const wallet = useWeb3React()
-  const sparta = useSparta()
   const focus = useFocus()
   const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+  const sparta = useSparta()
+  const web3 = useWeb3()
 
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
@@ -88,9 +85,10 @@ const LiqRemove = () => {
             asset1.address !== '' &&
             pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
               ? asset1
-              : { tokenAddress: addr.bnb }
-          asset2 = asset1.address !== '' ? asset1 : { tokenAddress: addr.bnb }
-          asset3 = { tokenAddress: addr.spartav2 }
+              : { tokenAddress: addresses.bnb }
+          asset2 =
+            asset1.address !== '' ? asset1 : { tokenAddress: addresses.bnb }
+          asset3 = { tokenAddress: addresses.spartav2 }
 
           asset1 = getItemFromArray(asset1, pool.poolDetails)
           asset2 = getItemFromArray(asset2, pool.poolDetails)
@@ -115,16 +113,16 @@ const LiqRemove = () => {
             asset1.address !== '' &&
             pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
               ? asset1
-              : { tokenAddress: addr.bnb }
+              : { tokenAddress: addresses.bnb }
           asset2 = pool.poolDetails.find(
             (x) => x.tokenAddress === asset2.tokenAddress,
           )
             ? asset2
-            : { tokenAddress: addr.spartav2 }
+            : { tokenAddress: addresses.spartav2 }
           asset2 =
             asset2.tokenAddress === asset1.tokenAddress || asset2.address === ''
               ? asset2
-              : { tokenAddress: addr.spartav2 }
+              : { tokenAddress: addresses.spartav2 }
 
           asset1 = getItemFromArray(asset1, pool.poolDetails)
           asset2 = getItemFromArray(asset2, pool.poolDetails)
@@ -141,8 +139,8 @@ const LiqRemove = () => {
     balanceWidths()
   }, [
     activeTab,
-    addr.bnb,
-    addr.spartav2,
+    addresses.bnb,
+    addresses.spartav2,
     focus,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,14 +187,14 @@ const LiqRemove = () => {
       const [tokensOut, swapFee, divi] = removeLiqAsym(
         convertToWei(removeInput1.value),
         poolRemove1,
-        assetRemove1.tokenAddress === addr.spartav2,
+        assetRemove1.tokenAddress === addresses.spartav2,
         sparta.globalDetails.feeOnTransfer,
       )
       setRemLiqAsymState([tokensOut, swapFee, divi])
     }
   }, [
     activeTab,
-    addr.spartav2,
+    addresses.spartav2,
     assetRemove1,
     poolRemove1,
     removeInput1,
@@ -279,7 +277,7 @@ const LiqRemove = () => {
 
   const getOutput1ValueUSD = () => {
     if (assetRemove1 && output1) {
-      if (assetRemove1.tokenAddress === addr.spartav2) {
+      if (assetRemove1.tokenAddress === addresses.spartav2) {
         return BN(output1).times(web3.spartaPrice)
       }
       return calcSpotValueInBase(output1, poolRemove1).times(web3.spartaPrice)
@@ -322,7 +320,7 @@ const LiqRemove = () => {
   // ~0.0032 BNB gas (remSingle+swap) on TN || ~0.0016 BNB on MN
   const estMaxGas = '1600000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addresses.bnb).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -374,7 +372,7 @@ const LiqRemove = () => {
       await dispatch(
         removeLiquiditySingle(
           convertToWei(removeInput1.value),
-          assetRemove1.tokenAddress === addr.spartav2,
+          assetRemove1.tokenAddress === addresses.spartav2,
           poolRemove1.tokenAddress,
           wallet,
         ),
@@ -559,11 +557,13 @@ const LiqRemove = () => {
                             priority="2"
                             filter={['token']}
                             blackList={[
-                              activeTab === 'removeTab1' ? addr.spartav2 : '',
+                              activeTab === 'removeTab1'
+                                ? addresses.spartav2
+                                : '',
                             ]}
                             whiteList={
                               activeTab === 'removeTab2'
-                                ? [addr.spartav2, poolRemove1.tokenAddress]
+                                ? [addresses.spartav2, poolRemove1.tokenAddress]
                                 : ['']
                             }
                             disabled={activeTab === 'removeTab1'}
@@ -723,7 +723,7 @@ const LiqRemove = () => {
                   tokenAddress={poolRemove1?.address}
                   symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
                   walletAddress={wallet?.account}
-                  contractAddress={addr.router}
+                  contractAddress={addresses.router}
                   txnAmount={convertToWei(removeInput1?.value)}
                   assetNumber="1"
                 />

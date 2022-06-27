@@ -12,8 +12,6 @@ import { binanceChainMock, ethereumChainMock } from '../../utils/chain.mock'
 // } from './actions'
 // import * as Types from './types'
 
-// const addr = getAddresses()
-
 window.BinanceChain = binanceChainMock
 window.ethereum = ethereumChainMock
 

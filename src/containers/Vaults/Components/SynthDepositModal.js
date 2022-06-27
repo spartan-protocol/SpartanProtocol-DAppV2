@@ -11,7 +11,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import Approval from '../../../components/Approval/index'
-import { getAddresses, synthHarvestLive } from '../../../utils/web3'
+import { synthHarvestLive } from '../../../utils/web3'
 import {
   useSynth,
   getSynthDetails,
@@ -26,17 +26,19 @@ import { useSparta } from '../../../store/sparta'
 import { useReserve } from '../../../store/reserve'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useTheme } from '../../../providers/Theme'
+import { useApp } from '../../../store/app'
 
 const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const pool = usePool()
-  const synth = useSynth()
-  const sparta = useSparta()
-  const reserve = useReserve()
-  const wallet = useWeb3React()
   const { isDark } = useTheme()
-  const addr = getAddresses()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+  const reserve = useReserve()
+  const sparta = useSparta()
+  const synth = useSynth()
 
   const [percentage, setpercentage] = useState('0')
   const [txnLoading, setTxnLoading] = useState(false)
@@ -105,7 +107,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   // *CHECK === *CHECK
   const estMaxGas = '5000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -278,7 +280,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                   tokenAddress={synth1.address}
                   symbol={`${token.symbol}s`}
                   walletAddress={wallet?.account}
-                  contractAddress={addr.synthVault}
+                  contractAddress={addresses.synthVault}
                   txnAmount={deposit()}
                   assetNumber="1"
                 />

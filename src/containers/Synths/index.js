@@ -18,9 +18,7 @@ import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
 import {
   formatShortString,
-  getAddresses,
   getItemFromArray,
-  getNetwork,
   synthHarvestLive,
   tempChains,
 } from '../../utils/web3'
@@ -59,19 +57,21 @@ import { useDao, daoMemberDetails } from '../../store/dao'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
+import { useApp } from '../../store/app'
 
 const Swap = () => {
-  const wallet = useWeb3React()
-  const synth = useSynth()
-  const { t } = useTranslation()
   const dispatch = useDispatch()
-  const addr = getAddresses()
+  const focus = useFocus()
+  const location = useLocation()
+  const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { chainId, addresses } = useApp()
   const dao = useDao()
   const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
-  const location = useLocation()
-  const focus = useFocus()
+  const synth = useSynth()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -118,14 +118,14 @@ const Swap = () => {
 
   useEffect(() => {
     const checkDetails = () => {
-      if (tempChains.includes(getNetwork().chainId)) {
+      if (tempChains.includes(chainId)) {
         dispatch(getSynthGlobalDetails())
         dispatch(getSynthDetails(wallet))
         dispatch(getSynthMinting())
       }
     }
     checkDetails()
-  }, [dispatch, pool.listedPools, wallet])
+  }, [dispatch, chainId, pool.listedPools, wallet])
 
   useEffect(() => {
     const tryParse = (data) => {
@@ -169,13 +169,13 @@ const Swap = () => {
             window.localStorage.setItem('assetType1', 'token')
             window.localStorage.setItem('assetType2', 'synth')
             if (asset2?.curated !== true) {
-              asset2 = { tokenAddress: addr.bnb }
+              asset2 = { tokenAddress: addresses.bnb }
             }
           } else {
             window.localStorage.setItem('assetType1', 'synth')
             window.localStorage.setItem('assetType2', 'token')
             if (asset1.address === '') {
-              asset1 = { tokenAddress: addr.bnb }
+              asset1 = { tokenAddress: addresses.bnb }
             }
           }
 
@@ -185,7 +185,7 @@ const Swap = () => {
               (x) => x.tokenAddress === asset1.tokenAddress,
             )
           ) {
-            asset1 = { tokenAddress: addr.spartav2 }
+            asset1 = { tokenAddress: addresses.spartav2 }
           }
 
           if (
@@ -194,7 +194,7 @@ const Swap = () => {
               (x) => x.tokenAddress === asset2.tokenAddress,
             )
           ) {
-            asset2 = { tokenAddress: addr.bnb }
+            asset2 = { tokenAddress: addresses.bnb }
           }
 
           asset1 = getItemFromArray(asset1, pool.poolDetails)
@@ -217,8 +217,8 @@ const Swap = () => {
     typeParam1,
     assetParam1,
     assetParam2,
-    addr.bnb,
-    addr.spartav2,
+    addresses.bnb,
+    addresses.spartav2,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -319,14 +319,14 @@ const Swap = () => {
           assetSwap2,
           getSynth(assetSwap2.tokenAddress),
           sparta.globalDetails.feeOnTransfer,
-          assetSwap1.tokenAddress === addr.spartav2,
+          assetSwap1.tokenAddress === addresses.spartav2,
         )
       return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
     }
     return ['0.00', '0.00', '0.00', '0.00', false, false]
   }, [
     activeTab,
-    addr.spartav2,
+    addresses.spartav2,
     assetSwap1,
     assetSwap2,
     getSynth,
@@ -345,14 +345,14 @@ const Swap = () => {
         assetSwap2,
         assetSwap1,
         sparta.globalDetails.feeOnTransfer,
-        assetSwap2.tokenAddress === addr.spartav2,
+        assetSwap2.tokenAddress === addresses.spartav2,
       )
       return [tokenOut, slipFee, diviSynth, diviSwap]
     }
     return ['0.00', '0.00', '0.00', '0.00']
   }, [
     activeTab,
-    addr.spartav2,
+    addresses.spartav2,
     assetSwap1,
     assetSwap2,
     sparta.globalDetails.feeOnTransfer,
@@ -385,7 +385,7 @@ const Swap = () => {
 
   // GET USD VALUES
   // const getInput1USD = () => {
-  //   if (assetSwap1.tokenAddress === addr.spartav2) {
+  //   if (assetSwap1.tokenAddress === addresses.spartav2) {
   //     return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
   //   }
   //   if (swapInput1?.value) {
@@ -398,7 +398,7 @@ const Swap = () => {
 
   // GET USD VALUES
   // const getInput2USD = () => {
-  //   if (assetSwap2.tokenAddress === addr.spartav2) {
+  //   if (assetSwap2.tokenAddress === addresses.spartav2) {
   //     return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
   //   }
   //   if (swapInput2?.value) {
@@ -419,7 +419,7 @@ const Swap = () => {
   const estMaxGasSynthOut = '5000000000000000'
   const estMaxGasSynthIn = '5000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addresses.bnb).balance
     if (activeTab === 'mint') {
       if (BN(bal).isLessThan(estMaxGasSynthOut)) {
         return false
@@ -522,10 +522,10 @@ const Swap = () => {
   const handleSwapToSynth = async () => {
     const gasSafety = '10000000000000000'
     if (
-      assetSwap1?.tokenAddress === addr.bnb ||
-      assetSwap1?.tokenAddress === addr.wbnb
+      assetSwap1?.tokenAddress === addresses.bnb ||
+      assetSwap1?.tokenAddress === addresses.wbnb
     ) {
-      const balance = getToken(addr.bnb)?.balance
+      const balance = getToken(addresses.bnb)?.balance
       if (
         BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
       ) {
@@ -611,7 +611,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(getNetwork().chainId) && (
+        {tempChains.includes(chainId) && (
           <>
             {/* MODALS */}
             {showCreateModal && (
@@ -1282,7 +1282,7 @@ const Swap = () => {
                           <Row className="text-center">
                             {activeTab === 'mint' && (
                               <>
-                                {assetSwap1?.tokenAddress !== addr.bnb &&
+                                {assetSwap1?.tokenAddress !== addresses.bnb &&
                                   wallet?.account &&
                                   swapInput1?.value && (
                                     <Approval
@@ -1292,7 +1292,7 @@ const Swap = () => {
                                           ?.symbol
                                       }
                                       walletAddress={wallet?.account}
-                                      contractAddress={addr.router}
+                                      contractAddress={addresses.router}
                                       txnAmount={convertToWei(
                                         swapInput1?.value,
                                       )}
@@ -1369,7 +1369,7 @@ const Swap = () => {
                                       getToken(assetSwap1.tokenAddress)?.symbol
                                     }s`}
                                     walletAddress={wallet?.account}
-                                    contractAddress={addr.router}
+                                    contractAddress={addresses.router}
                                     txnAmount={convertToWei(swapInput1?.value)}
                                     assetNumber="1"
                                   />
@@ -1407,13 +1407,13 @@ const Swap = () => {
                   <Col>
                     {!isLoading() &&
                       synthCount() > 0 &&
-                      assetSwap1.tokenAddress !== addr.spartav2 &&
+                      assetSwap1.tokenAddress !== addresses.spartav2 &&
                       assetSwap2.tokenAddress !== assetSwap1.tokenAddress && (
                         <SwapPair assetSwap={assetSwap1} />
                       )}
                     {!isLoading() &&
                       synthCount() > 0 &&
-                      assetSwap2.tokenAddress !== addr.spartav2 && (
+                      assetSwap2.tokenAddress !== addresses.spartav2 && (
                         <SwapPair assetSwap={assetSwap2} />
                       )}
                   </Col>
@@ -1424,7 +1424,7 @@ const Swap = () => {
             )}
           </>
         )}
-        {!tempChains.includes(getNetwork().chainId) && <WrongNetwork />}
+        {!tempChains.includes(chainId) && <WrongNetwork />}
       </div>
     </>
   )

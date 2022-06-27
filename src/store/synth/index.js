@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import {
@@ -7,7 +6,7 @@ import {
   getSynthFactoryContract,
   getSynthVaultContract,
 } from '../../utils/getContracts'
-import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
+import { parseTxn } from '../../utils/web3'
 import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
 import { BN } from '../../utils/bigNumber'
 
@@ -157,7 +156,7 @@ export const getSynthMinting = () => async (dispatch, getState) => {
  */
 export const getSynthArray = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const addr = getAddresses()
+  const { addresses } = getState().app
   const { listedTokens } = getState().pool
   try {
     if (listedTokens.length > 0) {
@@ -166,10 +165,10 @@ export const getSynthArray = () => async (dispatch, getState) => {
       let tempArray = []
       for (let i = 0; i < listedTokens.length; i++) {
         if (
-          listedTokens[i] === addr.spartav1 ||
-          listedTokens[i] === addr.spartav2
+          listedTokens[i] === addresses.spartav1 ||
+          listedTokens[i] === addresses.spartav2
         ) {
-          tempArray.push(addr.bnb)
+          tempArray.push(addresses.bnb)
         } else {
           tempArray.push(contract.callStatic.getSynth(listedTokens[i]))
         }
@@ -179,7 +178,7 @@ export const getSynthArray = () => async (dispatch, getState) => {
       for (let i = 0; i < tempArray.length; i++) {
         synthArray.push({
           tokenAddress: listedTokens[i],
-          address: tempArray[i] === addr.bnb ? false : tempArray[i],
+          address: tempArray[i] === addresses.bnb ? false : tempArray[i],
         })
       }
       dispatch(updateSynthArray(synthArray))
@@ -317,7 +316,8 @@ export const synthDeposit =
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
@@ -340,7 +340,8 @@ export const synthHarvest =
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
@@ -363,7 +364,8 @@ export const synthHarvestSingle =
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
@@ -387,7 +389,8 @@ export const synthWithdraw =
     const contract = getSynthVaultContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
@@ -411,7 +414,8 @@ export const createSynth = (token, wallet) => async (dispatch, getState) => {
   const contract = getSynthFactoryContract(wallet, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
-    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    const { chainId } = getState().app
+    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.createSynth(token, { gasPrice: gPrice })

@@ -11,7 +11,6 @@ import Row from 'react-bootstrap/Row'
 import { useDispatch } from 'react-redux'
 import { Icon } from '../Icons'
 import { Tooltip } from '../Tooltip'
-import { getNetwork } from '../../utils/web3'
 import { gasRatesMN, gasRatesTN, slipTols, defaultSettings } from './options'
 import { appSettings, useApp } from '../../store/app'
 
@@ -22,9 +21,7 @@ const Settings = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
 
   const [gasRate, setGasRate] = useState(
-    getNetwork().chainId === 56
-      ? app.settings.gasRateMN
-      : app.settings.gasRateTN,
+    app.chainId === 56 ? app.settings.gasRateMN : app.settings.gasRateTN,
   )
   const [slipTolerance, setSlipTolerance] = useState(app.settings.slipTol)
 
@@ -34,7 +31,7 @@ const Settings = ({ setShowModal, showModal }) => {
   }
 
   const resetDefaults = () => {
-    const isMN = getNetwork().chainId === 56
+    const isMN = app.chainId === 56
     if (isMN) {
       setGasRate(defaultSettings.gasRateMN)
     } else {
@@ -62,7 +59,7 @@ const Settings = ({ setShowModal, showModal }) => {
                 </OverlayTrigger>
                 <br />
                 <ButtonGroup className="mt-2">
-                  {getNetwork().chainId === 56
+                  {app.chainId === 56
                     ? gasRatesMN.map((i) => (
                         <Button
                           key={i}

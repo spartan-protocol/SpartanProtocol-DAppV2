@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Nav from 'react-bootstrap/Nav'
-import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import Metrics from './Components/Metrics'
 import HelmetLoading from '../../components/Spinner/index'
@@ -17,13 +17,14 @@ import SwapTokens from './swapTokens'
 import { getPool } from '../../utils/math/utils'
 import SwapLps from './swapLps'
 import Settings from '../../components/Settings'
+import { useApp } from '../../store/app'
 
 const Swap = () => {
   const { t } = useTranslation()
-  const addr = getAddresses()
+
+  const { chainId, addresses } = useApp()
   const pool = usePool()
   const navigate = useNavigate()
-  const network = getNetwork()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
@@ -64,7 +65,7 @@ const Swap = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(chainId) && (
           <Row>
             {/* MODALS */}
             {showCreateModal && (
@@ -174,11 +175,11 @@ const Swap = () => {
                 </Col>
                 <Col>
                   {pool.poolDetails &&
-                    selectedAsset1.tokenAddress !== addr.spartav2 && (
+                    selectedAsset1.tokenAddress !== addresses.spartav2 && (
                       <Metrics assetSwap={selectedAsset1} />
                     )}
                   {pool.poolDetails &&
-                    selectedAsset2.tokenAddress !== addr.spartav2 && (
+                    selectedAsset2.tokenAddress !== addresses.spartav2 && (
                       <Metrics assetSwap={selectedAsset2} />
                     )}
                 </Col>
@@ -190,9 +191,7 @@ const Swap = () => {
             )}
           </Row>
         )}
-        {network.chainId && !tempChains.includes(network.chainId) && (
-          <WrongNetwork />
-        )}
+        {!tempChains.includes(chainId) && <WrongNetwork />}
       </div>
     </>
   )

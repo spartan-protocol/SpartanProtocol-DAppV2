@@ -8,33 +8,26 @@ import { useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import BondItem from './BondVaultItem'
 import { getBondDetails, useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'
+import { useApp } from '../../store/app'
 
 const BondVault = () => {
-  const pool = usePool()
-  const bond = useBond()
-  const wallet = useWeb3React()
-  const { t } = useTranslation()
   const dispatch = useDispatch()
-  const network = getNetwork()
+  const { t } = useTranslation()
+  const wallet = useWeb3React()
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return getNetwork()
-    }
-  }
+  const app = useApp()
+  const bond = useBond()
+  const pool = usePool()
 
   useEffect(() => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (tempChains.includes(chainId)) {
+    if (tempChains.includes(app.chainId)) {
       dispatch(getBondDetails(wallet.account))
     }
-  }, [dispatch, pool.listedPools, wallet.account])
+  }, [dispatch, app.chainId, pool.listedPools, wallet.account])
 
   const isLoading = () => {
     if (!bond.bondDetails) {
@@ -45,7 +38,7 @@ const BondVault = () => {
 
   return (
     <Row>
-      {tempChains.includes(network.chainId) && (
+      {tempChains.includes(app.chainId) && (
         <>
           <Col lg={4}>
             <Card style={{ minHeight: '230px' }}>
@@ -95,9 +88,7 @@ const BondVault = () => {
           )}
         </>
       )}
-      {network.chainId && !tempChains.includes(network.chainId) && (
-        <WrongNetwork />
-      )}
+      {!tempChains.includes(app.chainId) && <WrongNetwork />}
     </Row>
   )
 }
