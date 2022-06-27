@@ -23,10 +23,13 @@ import spartaSynthIcon from '../../../assets/tokens/sparta-synth.svg'
 import HelmetLoading from '../../Spinner/index'
 import txnTypes from '../txnTypes'
 import { Icon } from '../../Icons/index'
+import { useApp } from '../../../store/app'
 
 const Txns = () => {
   const wallet = useWeb3React()
   const { t } = useTranslation()
+
+  const app = useApp()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
@@ -69,13 +72,12 @@ const Txns = () => {
       return unfiltered
     }
     const unfiltered = getTxns()
-    const network = tryParse(window.localStorage.getItem('network'))
     if (unfiltered.length > 0 && wallet.account) {
       let filtered = unfiltered.filter(
         (group) => group.wallet === wallet.account,
       )[0]?.txns
       if (filtered?.length > 0) {
-        filtered = filtered.filter((txn) => txn.chainId === network.chainId)
+        filtered = filtered.filter((txn) => txn.chainId === app.chainId)
         setShowTxns(true)
       } else {
         setShowTxns(false)
@@ -85,7 +87,7 @@ const Txns = () => {
       setTxnArray([])
       setShowTxns(false)
     }
-  }, [wallet.account])
+  }, [app.chainId, wallet.account])
 
   useEffect(() => {
     updateFiltered()

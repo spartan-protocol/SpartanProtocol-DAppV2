@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
+import { useApp } from '../../store/app'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
 import { checkResolved } from '../../utils/helpers'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import { getPoolContract } from '../../utils/getContracts'
 import AssetSelect from '../../components/AssetSelect'
 import { getPool } from '../../utils/math/utils'
 
 const Others = () => {
-  const web3 = useWeb3()
+  const app = useApp()
   const pool = usePool()
-  const network = getNetwork()
+  const web3 = useWeb3()
 
   const [poolVars, setPoolVars] = useState(false)
   const [poolObj, setPoolObj] = useState(false)
@@ -51,13 +52,13 @@ const Others = () => {
       setPoolVars(resolved)
     }
     if (
-      tempChains.includes(network.chainId) &&
+      tempChains.includes(app.chainId) &&
       pool.poolDetails &&
       poolObj.address
     ) {
       getPoolDetails()
     }
-  }, [network.chainId, pool.poolDetails, poolObj.address, web3.rpcs])
+  }, [app.chainId, pool.poolDetails, poolObj.address, web3.rpcs])
 
   return (
     <>

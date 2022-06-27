@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { ethers } from 'ethers'
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
@@ -8,13 +7,7 @@ import {
   getUtilsContract,
   getTokenContract,
 } from '../../utils/getContracts'
-import {
-  getAddresses,
-  getNetwork,
-  getTwTokenLogo,
-  oneWeek,
-  parseTxn,
-} from '../../utils/web3'
+import { getTwTokenLogo, oneWeek, parseTxn } from '../../utils/web3'
 import { getSecsSince } from '../../utils/math/nonContract'
 import { BN } from '../../utils/bigNumber'
 import { getPoolIncentives } from '../../utils/extCalls'
@@ -90,8 +83,8 @@ export const getListedTokens = () => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   try {
     if (rpcs.length > 0) {
-      const addr = getAddresses()
-      const check = ethers.utils.isAddress(addr.poolFactory)
+      const { addresses } = getState().app
+      const check = ethers.utils.isAddress(addresses.poolFactory)
       const contract = check ? getPoolFactoryContract(null, rpcs) : ''
       const listedTokens = []
       if (check) {
@@ -99,12 +92,12 @@ export const getListedTokens = () => async (dispatch, getState) => {
         for (let i = 0; i < _listedTokens.length; i++) {
           listedTokens.push(_listedTokens[i])
         }
-        const wbnbIndex = listedTokens.findIndex((i) => i === addr.wbnb)
+        const wbnbIndex = listedTokens.findIndex((i) => i === addresses.wbnb)
         if (wbnbIndex > -1) {
-          listedTokens[wbnbIndex] = addr.bnb
+          listedTokens[wbnbIndex] = addresses.bnb
         }
       }
-      listedTokens.push(addr.spartav1, addr.spartav2)
+      listedTokens.push(addresses.spartav1, addresses.spartav2)
       dispatch(updateListedTokens(listedTokens))
     }
   } catch (error) {
@@ -123,13 +116,13 @@ export const getTokenDetails =
     try {
       if (listedTokens.length > 0) {
         const { rpcs } = getState().web3
-        const addr = getAddresses()
+        const { addresses } = getState().app
         let tempArray = []
         for (let i = 0; i < listedTokens.length; i++) {
           const contract = getTokenContract(listedTokens[i], wallet, rpcs)
           tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
           if (wallet.account) {
-            if (listedTokens[i] === addr.bnb) {
+            if (listedTokens[i] === addresses.bnb) {
               tempArray.push(wallet.library.getBalance(wallet.account))
             } else {
               tempArray.push(contract.callStatic.balanceOf(wallet?.account)) // TOKEN BALANCE (2)
@@ -137,13 +130,13 @@ export const getTokenDetails =
           } else {
             tempArray.push('0')
           }
-          if (listedTokens[i] === addr.bnb) {
+          if (listedTokens[i] === addresses.bnb) {
             tempArray.push('BNB')
             tempArray.push(`${window.location.origin}/images/icons/BNB.svg`)
-          } else if (listedTokens[i] === addr.spartav1) {
+          } else if (listedTokens[i] === addresses.spartav1) {
             tempArray.push('SPARTA (old)')
             tempArray.push(`${window.location.origin}/images/icons/SPARTA1.svg`)
-          } else if (listedTokens[i] === addr.spartav2) {
+          } else if (listedTokens[i] === addresses.spartav2) {
             tempArray.push('SPARTA')
             tempArray.push(`${window.location.origin}/images/icons/SPARTA2.svg`)
           } else {
@@ -198,12 +191,12 @@ export const getListedPools = () => async (dispatch, getState) => {
     if (tokenDetails.length > 0) {
       const { rpcs } = getState().web3
       const contract = getUtilsContract(null, rpcs)
-      const addr = getAddresses()
+      const { addresses } = getState().app
       let tempArray = []
       for (let i = 0; i < tokenDetails.length; i++) {
         if (
-          tokenDetails[i].address === addr.spartav1 ||
-          tokenDetails[i].address === addr.spartav2
+          tokenDetails[i].address === addresses.spartav1 ||
+          tokenDetails[i].address === addresses.spartav2
         ) {
           tempArray.push({
             poolAddress: '',
@@ -234,7 +227,7 @@ export const getListedPools = () => async (dispatch, getState) => {
           genesis: tempArray[i].genesis.toString(),
           newPool: getSecsSince(tempArray[i].genesis.toString()) < oneWeek,
           hide:
-            tokenDetails[i].address !== addr.spartav2 &&
+            tokenDetails[i].address !== addresses.spartav2 &&
             tempArray[i].baseAmount.toString() <= 0,
         })
       }
@@ -335,14 +328,14 @@ export const createPoolADD =
   (inputBase, inputToken, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const addr = getAddresses()
     const contract = getPoolFactoryContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId, addresses } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      const _value = token === addr.bnb ? inputToken : null
+      const _value = token === addresses.bnb ? inputToken : null
       const ORs = { value: _value, gasPrice: gPrice }
       let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
       txn = await parseTxn(txn, 'createPool', rpcs)

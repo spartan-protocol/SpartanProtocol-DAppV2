@@ -1,8 +1,15 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { defaultSettings } from '../../components/Settings/options'
-import { getNetwork } from '../../utils/web3'
+import {
+  abisMN,
+  abisTN,
+  addressesMN,
+  addressesTN,
+  changeAbis,
+  changeAddresses,
+  changeChainId,
+} from '../../utils/web3'
 
 export const useApp = () => useSelector((state) => state.app)
 
@@ -29,14 +36,22 @@ export const appSlice = createSlice({
     // assetType4: window.localStorage.getItem('assetSelected1'),
     // lastWallet: window.localStorage.getItem('lastWallet'),
     // disableWallet: window.localStorage.getItem('disableWallet'),
-    // network: window.localStorage.getItem('network'),
+    chainId: changeChainId(
+      parseInt(window.localStorage.getItem('sp_chainId'), 10) ?? 56,
+    ),
     // txnArray: window.localStorage.getItem('txnArray'),
     // sp_positions: window.localStorage.getItem('sp_positions'),
     // sp_synthpositions: window.localStorage.getItem('sp_synthpositions'),
     settings:
       tryParse(window.localStorage.getItem('sp_settings')) ?? defaultSettings,
-    // addresses: window.localStorage.getItem('addresses'),
-    // abis: window.localStorage.getItem('abis'),
+    addresses:
+      tryParse(window.localStorage.getItem('sp_addresses')) ??
+      changeAddresses(
+        parseInt(window.localStorage.getItem('sp_chainId'), 10) ?? 56,
+      ),
+    abis:
+      tryParse(window.localStorage.getItem('sp_abis')) ??
+      changeAbis(parseInt(window.localStorage.getItem('sp_chainId'), 10) ?? 56),
   },
   reducers: {
     updateLoading: (state, action) => {
@@ -45,6 +60,14 @@ export const appSlice = createSlice({
     updateError: (state, action) => {
       state.error = action.payload
     },
+    updateChainId: (state, action) => {
+      state.chainId = action.payload.chainId
+      state.addresses = action.payload.addresses
+      state.abis = action.payload.abis
+      window.localStorage.setItem('sp_chainId', action.payload.chainId)
+      window.localStorage.setItem('sp_addresses', action.payload.addresses)
+      window.localStorage.setItem('sp_abis', action.payload.abis)
+    },
     updateSettings: (state, action) => {
       state.settings = action.payload
       window.localStorage.setItem('sp_settings', JSON.stringify(action.payload))
@@ -52,15 +75,29 @@ export const appSlice = createSlice({
   },
 })
 
-export const { updateLoading, updateError, updateSettings } = appSlice.actions
+export const { updateLoading, updateError, updateChainId, updateSettings } =
+  appSlice.actions
+
+/** Update chain ID (56 MN or 97 TN) */
+export const appChainId = (chainId) => async (dispatch) => {
+  dispatch(updateLoading(true))
+  try {
+    const addresses = chainId === 56 ? addressesMN : addressesTN
+    const abis = chainId === 56 ? abisMN : abisTN
+    dispatch(updateChainId({ chainId, addresses, abis }))
+  } catch (error) {
+    dispatch(updateError(error.reason))
+  }
+  dispatch(updateLoading(false))
+}
 
 /** Update app settings (slip etc) */
 export const appSettings =
   (gasRate, slipTolerance) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
-    const { settings } = getState().app
+    const { settings, chainId } = getState().app
     try {
-      const isMN = getNetwork().chainId === 56
+      const isMN = chainId === 56
       const currentSetts = {
         gasRateMN: isMN ? gasRate : settings.gasRateMN,
         gasRateTN: isMN ? settings.gasRateTN : gasRate,

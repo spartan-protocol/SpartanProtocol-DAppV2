@@ -9,7 +9,7 @@ import LiqAdd from './LiqAdd'
 import LiqRemove from './LiqRemove'
 import { usePool } from '../../store/pool'
 import HelmetLoading from '../../components/Spinner/index'
-import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { balanceWidths } from './Components/Utils'
 import NewPool from '../Pools/NewPool'
@@ -18,14 +18,15 @@ import Metrics from './Components/Metrics'
 import { getPool } from '../../utils/math/utils'
 import Share from '../../components/Share'
 import Settings from '../../components/Settings'
+import { useApp } from '../../store/app'
 
 const Overview = () => {
   const { t } = useTranslation()
-  const pool = usePool()
   const location = useLocation()
   const navigate = useNavigate()
-  const addr = getAddresses()
-  const network = getNetwork()
+
+  const { chainId, addresses } = useApp()
+  const pool = usePool()
 
   const [activeTab, setActiveTab] = useState('add')
   const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
@@ -44,14 +45,14 @@ const Overview = () => {
     }
     if (pool.poolDetails) {
       let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-      if (asset1.tokenAddress === addr.spartav2) {
+      if (asset1.tokenAddress === addresses.spartav2) {
         asset1 = tryParse(window.localStorage.getItem('assetSelected3'))
       }
       asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
       setSelectedPool(asset1)
     }
   }, [
-    addr.spartav2,
+    addresses.spartav2,
     pool.poolDetails,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     window.localStorage.getItem('assetSelected1'),
@@ -77,7 +78,7 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(chainId) && (
           <Row>
             {/* MODALS */}
             {showCreateModal && (
@@ -181,9 +182,7 @@ const Overview = () => {
             )}
           </Row>
         )}
-        {network.chainId && !tempChains.includes(network.chainId) && (
-          <WrongNetwork />
-        )}
+        {!tempChains.includes(chainId) && <WrongNetwork />}
       </div>
     </>
   )

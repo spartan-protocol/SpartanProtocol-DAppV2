@@ -17,18 +17,20 @@ import {
   formatShortNumber,
   formatFromWei,
 } from '../../utils/bigNumber'
-import { getAddresses } from '../../utils/web3'
 import { calcAPY } from '../../utils/math/nonContract'
 import { Tooltip } from '../../components/Tooltip/index'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 import styles from './styles.module.scss'
+import { useApp } from '../../store/app'
 
 const PoolTableItem = ({ asset, daoApy }) => {
-  const { t } = useTranslation()
-  const pool = usePool()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const { addresses } = useApp()
+  const pool = usePool()
   const web3 = useWeb3()
-  const addr = getAddresses()
+
   const { tokenAddress, baseAmount, tokenAmount, curated, baseCap } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
@@ -189,7 +191,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                 className="w-100 mb-2"
                 onClick={() =>
                   navigate(
-                    `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
+                    `/swap?asset1=${tokenAddress}&asset2=${addresses.spartav2}&type1=token&type2=token`,
                   )
                 }
               >

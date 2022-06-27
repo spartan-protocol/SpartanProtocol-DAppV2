@@ -7,16 +7,18 @@ import { useLocation } from 'react-router-dom'
 import DaoVault from './DaoVault'
 import SynthVault from './SynthVault'
 import BondVault from './BondVault'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
 import HelmetLoading from '../../components/Spinner/index'
+import { useApp } from '../../store/app'
 
 const Vaults = () => {
   const { t } = useTranslation()
   const location = useLocation()
+
+  const app = useApp()
   const pool = usePool()
-  const network = getNetwork()
 
   const [mode, setMode] = useState('Dao')
   const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
@@ -27,7 +29,7 @@ const Vaults = () => {
 
   return (
     <>
-      {tempChains.includes(network.chainId) && (
+      {tempChains.includes(app.chainId) && (
         <>
           <Row className="mb-3">
             <Col>
@@ -69,9 +71,7 @@ const Vaults = () => {
           </Row>
         </>
       )}
-      {network.chainId && !tempChains.includes(network.chainId) && (
-        <WrongNetwork />
-      )}
+      {!tempChains.includes(app.chainId) && <WrongNetwork />}
     </>
   )
 }

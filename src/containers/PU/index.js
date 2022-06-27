@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Nav from 'react-bootstrap/Nav'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
 import PoolStatus from './FrozenPools'
@@ -11,11 +11,12 @@ import HelmetLoading from '../../components/Spinner/index'
 import { useWeb3 } from '../../store/web3'
 import ReserveDetails from './ReserveDetails'
 import Others from './Others'
+import { useApp } from '../../store/app'
 
 const Overview = () => {
+  const app = useApp()
   const pool = usePool()
   const web3 = useWeb3()
-  const network = getNetwork()
 
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -29,7 +30,7 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(network.chainId) && (
+        {tempChains.includes(app.chainId) && (
           <>
             <Row className="row-480">
               <Col>
@@ -114,9 +115,7 @@ const Overview = () => {
             </Row>
           </>
         )}
-        {network.chainId && !tempChains.includes(network.chainId) && (
-          <WrongNetwork />
-        )}
+        {!tempChains.includes(app.chainId) && <WrongNetwork />}
       </div>
     </>
   )

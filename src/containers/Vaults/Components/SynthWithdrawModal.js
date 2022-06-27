@@ -13,7 +13,7 @@ import { getToken } from '../../../utils/math/utils'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../utils/math/nonContract'
-import { getAddresses, synthHarvestLive } from '../../../utils/web3'
+import { synthHarvestLive } from '../../../utils/web3'
 import {
   useSynth,
   getSynthDetails,
@@ -22,16 +22,18 @@ import {
 } from '../../../store/synth'
 import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
+import { useApp } from '../../../store/app'
 
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const pool = usePool()
-  const synth = useSynth()
   const wallet = useWeb3React()
-  const addr = getAddresses()
   const reserve = useReserve()
   const { isDark } = useTheme()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+  const synth = useSynth()
 
   const [percentage, setpercentage] = useState(0)
   const [txnLoading, setTxnLoading] = useState(false)
@@ -65,7 +67,7 @@ const SynthWithdrawModal = (props) => {
   // *CHECK*  === *CHECK*
   const estMaxGas = '5000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }

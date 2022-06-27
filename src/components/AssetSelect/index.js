@@ -16,7 +16,7 @@ import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
 import { useSynth } from '../../store/synth'
-import { getAddresses } from '../../utils/web3'
+import { useApp } from '../../store/app'
 
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
@@ -32,12 +32,13 @@ import { getSynth, getToken } from '../../utils/math/utils'
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
-  const addr = getAddresses()
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const synth = useSynth()
-  const pool = usePool()
   const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+  const synth = useSynth()
 
   const [showModal, setShowModal] = useState(false)
   const [activeTab, setActiveTab] = useState(
@@ -45,7 +46,8 @@ const AssetSelect = (props) => {
   )
 
   const isBNB = (asset) => {
-    if (asset.address === addr.bnb && asset.actualAddr === addr.bnb) return true
+    if (asset.address === addresses.bnb && asset.actualAddr === addresses.bnb)
+      return true
     return false
   }
 
@@ -143,7 +145,7 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].tokenAddress === addr.spartav2) {
+            if (tempArray[i].tokenAddress === addresses.spartav2) {
               finalArray.push({
                 type: 'token',
                 icon: (
@@ -275,7 +277,7 @@ const AssetSelect = (props) => {
     }
     getArray()
   }, [
-    addr.spartav2,
+    addresses.spartav2,
     pool.poolDetails,
     pool.tokenDetails,
     props.blackList,

@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
+import { parseTxn } from '../../utils/web3'
 import { getRouterContract } from '../../utils/getContracts'
 import { BN } from '../../utils/bigNumber'
 
@@ -37,15 +36,15 @@ export const addLiquidity =
   (inputToken, inputBase, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId, addresses } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: token === addr.bnb ? inputToken : null,
+        value: token === addresses.bnb ? inputToken : null,
         gasPrice: gPrice,
       }
       let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
@@ -65,15 +64,15 @@ export const addLiquiditySingle =
   (input, fromBase, token, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId, addresses } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: token === addr.bnb && fromBase !== true ? input : null,
+        value: token === addresses.bnb && fromBase !== true ? input : null,
         gasPrice: gPrice,
       }
       let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
@@ -96,7 +95,8 @@ export const zapLiquidity =
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
@@ -120,7 +120,8 @@ export const removeLiquidityExact =
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
@@ -144,7 +145,8 @@ export const removeLiquiditySingle =
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.removeLiquidityExactAsym(units, toBase, token, {
@@ -169,15 +171,15 @@ export const swap =
   async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId, addresses } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: fromToken === addr.bnb ? inputAmount : null,
+        value: fromToken === addresses.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
       let txn = await contract.swap(
@@ -203,15 +205,15 @@ export const swapAssetToSynth =
   (inputAmount, fromToken, toSynth, wallet) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const addr = getAddresses()
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId, addresses } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: fromToken === addr.bnb ? inputAmount : null,
+        value: fromToken === addresses.bnb ? inputAmount : null,
         gasPrice: gPrice,
       }
       let txn = await contract.swapAssetToSynth(
@@ -239,7 +241,8 @@ export const swapSynthToAsset =
     const contract = getRouterContract(wallet, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
-      let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       let txn = await contract.swapSynthToAsset(
@@ -265,7 +268,8 @@ export const updatePoolStatus = (wallet) => async (dispatch, getState) => {
   const contract = getRouterContract(wallet, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
-    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    const { chainId } = getState().app
+    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice()
     let txn = await contract.updatePoolStatus({ gasPrice: gPrice })

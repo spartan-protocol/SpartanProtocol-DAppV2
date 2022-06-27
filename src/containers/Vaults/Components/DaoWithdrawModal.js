@@ -19,19 +19,20 @@ import { getDao, getToken } from '../../../utils/math/utils'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince, getTimeUntil } from '../../../utils/math/nonContract'
-import { getAddresses } from '../../../utils/web3'
 import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
+import { useApp } from '../../../store/app'
 
 const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
+  const { isDark } = useTheme()
   const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const dao = useDao()
   const pool = usePool()
   const reserve = useReserve()
-  const dao = useDao()
-  const wallet = useWeb3React()
-  const { isDark } = useTheme()
-  const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
@@ -64,7 +65,7 @@ const DaoWithdrawModal = (props) => {
   // *CHECK*  === *CHECK*
   const estMaxGas = '1000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }

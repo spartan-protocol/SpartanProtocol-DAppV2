@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
-import { getAddresses, synthHarvestLive } from '../../../utils/web3'
+import { synthHarvestLive } from '../../../utils/web3'
 import { useSynth, getSynthDetails, synthHarvest } from '../../../store/synth'
 import { Icon } from '../../../components/Icons/index'
 import { getSynth, getToken } from '../../../utils/math/utils'
@@ -18,17 +18,19 @@ import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import { useTheme } from '../../../providers/Theme'
+import { useApp } from '../../../store/app'
 
 const SynthHarvestAllModal = () => {
   const dispatch = useDispatch()
+  const { t } = useTranslation()
+  const { isDark } = useTheme()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
   const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
-  const { t } = useTranslation()
-  const { isDark } = useTheme()
-  const wallet = useWeb3React()
-  const addr = getAddresses()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
@@ -123,7 +125,7 @@ const SynthHarvestAllModal = () => {
   // *CHECK === *CHECK
   const estMaxGas = '5000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }

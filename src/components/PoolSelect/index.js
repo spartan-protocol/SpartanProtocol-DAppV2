@@ -16,8 +16,9 @@ import { useWeb3 } from '../../store/web3'
 
 import { Icon } from '../Icons/index'
 import HelmetLoading from '../Spinner/index'
-import { getAddresses, tempChains, getNetwork } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
+import { useApp } from '../../store/app'
 
 /**
  * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
@@ -30,15 +31,13 @@ import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
  */
 const PoolSelect = () => {
   const { t } = useTranslation()
-  const network = getNetwork()
-
-  const addr = getAddresses()
   const navigate = useNavigate()
 
-  const [showModal, setShowModal] = useState(false)
+  const { chainId, addresses } = useApp()
   const pool = usePool()
   const web3 = useWeb3()
 
+  const [showModal, setShowModal] = useState(false)
   const [lpsArray, setLpsArray] = useState([])
 
   const toggleModal = () => {
@@ -124,7 +123,7 @@ const PoolSelect = () => {
       {showModal && (
         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
           {' '}
-          {tempChains.includes(network.chainId) && (
+          {tempChains.includes(chainId) && (
             <>
               <Modal.Header closeButton>
                 <Modal.Title>{t('searchPools')}</Modal.Title>
@@ -200,7 +199,7 @@ const PoolSelect = () => {
                               className="w-100 rounded-pill"
                               onClick={() =>
                                 navigate(
-                                  `/swap?asset1=${asset.address}&asset2=${addr.spartav2}&type1=token&type2=token`,
+                                  `/swap?asset1=${asset.address}&asset2=${addresses.spartav2}&type1=token&type2=token`,
                                 )
                               }
                             >

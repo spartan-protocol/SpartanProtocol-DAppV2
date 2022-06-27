@@ -11,16 +11,18 @@ import { BN, convertFromWei, formatFromWei } from '../../../utils/bigNumber'
 import ShareLink from '../../Share/ShareLink'
 import { Icon } from '../../Icons/index'
 import { calcSpotValueInBase, getPool } from '../../../utils/math/utils'
-import { getAddresses, tempChains } from '../../../utils/web3'
+import { tempChains } from '../../../utils/web3'
 import HelmetLoading from '../../Spinner/index'
+import { useApp } from '../../../store/app'
 
 const Assets = () => {
-  const { t } = useTranslation()
-  const web3 = useWeb3()
-  const pool = usePool()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
-  const addr = getAddresses()
+  const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+  const web3 = useWeb3()
 
   const getWalletType = () => {
     if (window.localStorage.getItem('lastWallet') === 'MM') {
@@ -33,7 +35,7 @@ const Assets = () => {
   }
 
   const isBNB = (asset) => {
-    if (asset.address === addr.bnb) return true
+    if (asset.address === addresses.bnb) return true
     return false
   }
 
@@ -63,7 +65,7 @@ const Assets = () => {
 
   /** @returns {boolean} isSparta */
   const isSparta = (tokenAddr) => {
-    if (tokenAddr === addr.spartav1 || tokenAddr === addr.spartav2) {
+    if (tokenAddr === addresses.spartav1 || tokenAddr === addresses.spartav2) {
       return true
     }
     return false
@@ -83,15 +85,13 @@ const Assets = () => {
     }
     return '0.00'
   }
-  /* eslint no-return-assign: "error" */
 
   const getTotalValue = () => {
     let total = BN(0)
-    pool.tokenDetails
-      ?.filter((asset) => asset.balance > 0)
-      .map(
-        (asset) => (total = total.plus(getUSD(asset.address, asset.balance))),
-      )
+    const _array = pool.tokenDetails?.filter((asset) => asset.balance > 0)
+    for (let i = 0; i < _array.length; i++) {
+      total = total.plus(getUSD(_array[i].address, _array[i].balance))
+    }
 
     if (!total.isZero()) {
       return (

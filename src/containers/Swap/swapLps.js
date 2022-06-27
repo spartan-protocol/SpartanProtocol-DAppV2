@@ -14,12 +14,7 @@ import Form from 'react-bootstrap/Form'
 import Popover from 'react-bootstrap/Popover'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
-import {
-  formatShortString,
-  getAddresses,
-  getItemFromArray,
-  oneWeek,
-} from '../../utils/web3'
+import { formatShortString, getItemFromArray, oneWeek } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
   BN,
@@ -31,6 +26,7 @@ import {
 import { zapLiquidity } from '../../store/router'
 import Approval from '../../components/Approval/index'
 import { useWeb3 } from '../../store/web3'
+import { useApp } from '../../store/app'
 import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
@@ -43,15 +39,16 @@ import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
 
 const SwapLps = () => {
-  const { t } = useTranslation()
-  const web3 = useWeb3()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
-  const addr = getAddresses()
+  const focus = useFocus()
+  const location = useLocation()
+  const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
   const pool = usePool()
   const sparta = useSparta()
-  const location = useLocation()
-  const focus = useFocus()
+  const web3 = useWeb3()
 
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -105,7 +102,7 @@ const SwapLps = () => {
 
           if (
             asset2?.tokenAddress === asset1?.tokenAddress ||
-            asset2?.tokenAddress === addr.spartav2
+            asset2?.tokenAddress === addresses.spartav2
           ) {
             asset2 =
               asset1?.tokenAddress !== pool.poolDetails[0].tokenAddress
@@ -113,7 +110,7 @@ const SwapLps = () => {
                 : { tokenAddress: pool.poolDetails[1].tokenAddress }
           }
 
-          if (asset1?.tokenAddress === addr.spartav2) {
+          if (asset1?.tokenAddress === addresses.spartav2) {
             asset1 =
               asset2?.tokenAddress !== pool.poolDetails[0].tokenAddress
                 ? { tokenAddress: pool.poolDetails[0].tokenAddress }
@@ -121,7 +118,7 @@ const SwapLps = () => {
           }
 
           if (asset2?.address === '') {
-            asset2 = { tokenAddress: addr.bnb }
+            asset2 = { tokenAddress: addresses.bnb }
           }
 
           if (
@@ -139,16 +136,16 @@ const SwapLps = () => {
               (x) => x.tokenAddress === asset2.tokenAddress,
             )
           ) {
-            asset2 = { tokenAddress: addr.bnb }
+            asset2 = { tokenAddress: addresses.bnb }
           }
 
           asset1 = getItemFromArray(asset1, pool.poolDetails)
           asset2 = getItemFromArray(asset2, pool.poolDetails)
           asset1 = asset1.hide
-            ? getItemFromArray(addr.bnb, pool.poolDetails)
+            ? getItemFromArray(addresses.bnb, pool.poolDetails)
             : asset1
           asset2 = asset2.hide
-            ? getItemFromArray(addr.bnb, pool.poolDetails)
+            ? getItemFromArray(addresses.bnb, pool.poolDetails)
             : asset2
 
           setAssetSwap1(asset1)
@@ -162,8 +159,8 @@ const SwapLps = () => {
     getAssetDetails()
     balanceWidths()
   }, [
-    addr.bnb,
-    addr.spartav2,
+    addresses.bnb,
+    addresses.spartav2,
     assetParam1,
     assetParam2,
     triggerReload,
@@ -308,7 +305,7 @@ const SwapLps = () => {
 
   // GET USD VALUES
   const getInput1USD = () => {
-    if (assetSwap1?.tokenAddress === addr.spartav2 && swapInput1?.value) {
+    if (assetSwap1?.tokenAddress === addresses.spartav2 && swapInput1?.value) {
       return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
     }
 
@@ -332,7 +329,7 @@ const SwapLps = () => {
 
   // GET USD VALUES
   const getInput2USD = () => {
-    if (assetSwap2?.tokenAddress === addr.spartav2 && swapInput2?.value) {
+    if (assetSwap2?.tokenAddress === addresses.spartav2 && swapInput2?.value) {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (assetSwap2 && swapInput2?.value) {
@@ -360,13 +357,13 @@ const SwapLps = () => {
   const estMaxGasDoubleSwap = '2000000000000000'
   const estMaxGasSwap = '1500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addresses.bnb).balance
     if (BN(bal).isLessThan(estMaxGasPool)) {
       return false
     }
     if (
-      assetSwap1?.tokenAddress !== addr.spartav2 &&
-      assetSwap2?.tokenAddress !== addr.spartav2
+      assetSwap1?.tokenAddress !== addresses.spartav2 &&
+      assetSwap2?.tokenAddress !== addresses.spartav2
     ) {
       if (BN(bal).isLessThan(estMaxGasDoubleSwap)) {
         return false
@@ -737,7 +734,7 @@ const SwapLps = () => {
               tokenAddress={assetSwap1?.address}
               symbol={`${getToken(assetSwap1.tokenAddress)?.symbol}p`}
               walletAddress={wallet?.account}
-              contractAddress={addr.router}
+              contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}
               assetNumber="1"
             />

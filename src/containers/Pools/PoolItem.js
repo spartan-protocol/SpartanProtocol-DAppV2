@@ -18,21 +18,22 @@ import {
   formatFromWei,
   formatShortNumber,
 } from '../../utils/bigNumber'
-import { getAddresses } from '../../utils/web3'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { calcAPY } from '../../utils/math/nonContract'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 
 import styles from './styles.module.scss'
+import { useApp } from '../../store/app'
 
 const PoolItem = ({ asset, daoApy }) => {
-  const { t } = useTranslation()
-  const pool = usePool()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const { addresses } = useApp()
+  const pool = usePool()
   const web3 = useWeb3()
-  const addr = getAddresses()
-  const [showDetails, setShowDetails] = useState(false)
+
   const {
     tokenAddress,
     baseAmount,
@@ -49,6 +50,8 @@ const PoolItem = ({ asset, daoApy }) => {
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
   const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
+
+  const [showDetails, setShowDetails] = useState(false)
 
   const getFees = () =>
     pool.incentives
@@ -576,7 +579,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   className="w-100"
                   onClick={() =>
                     navigate(
-                      `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
+                      `/swap?asset1=${tokenAddress}&asset2=${addresses.spartav2}&type1=token&type2=token`,
                     )
                   }
                 >

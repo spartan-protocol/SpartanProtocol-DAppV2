@@ -17,6 +17,10 @@
     "no-console": "off",
     "no-nested-ternary": "off",
     "no-underscore-dangle": 0,
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+    ],
     "import/prefer-default-export": "off",
     "react/function-component-definition": "off",
     "react/jsx-no-useless-fragment": "off",

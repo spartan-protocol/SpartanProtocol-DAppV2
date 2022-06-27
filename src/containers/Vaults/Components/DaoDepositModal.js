@@ -14,9 +14,9 @@ import {
   daoMemberDetails,
 } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
+import { useApp } from '../../../store/app'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import Approval from '../../../components/Approval/index'
-import { getAddresses } from '../../../utils/web3'
 import { getDao, getToken } from '../../../utils/math/utils'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
@@ -25,16 +25,17 @@ import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
 
 const DaoDepositModal = (props) => {
-  const [percentage, setpercentage] = useState('0')
   const dispatch = useDispatch()
+  const { isDark } = useTheme()
   const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const dao = useDao()
   const pool = usePool()
   const reserve = useReserve()
-  const dao = useDao()
-  const wallet = useWeb3React()
-  const { isDark } = useTheme()
-  const addr = getAddresses()
 
+  const [percentage, setpercentage] = useState('0')
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
@@ -82,7 +83,7 @@ const DaoDepositModal = (props) => {
   // 0.00088  === 0.0005
   const estMaxGas = '500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -233,7 +234,7 @@ const DaoDepositModal = (props) => {
                 tokenAddress={pool1.address}
                 symbol={`${token.symbol}p`}
                 walletAddress={wallet?.account}
-                contractAddress={addr.dao}
+                contractAddress={addresses.dao}
                 txnAmount={deposit()}
                 assetNumber="1"
               />

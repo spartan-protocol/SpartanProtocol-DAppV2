@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { getUtilsContract } from '../../utils/getContracts'

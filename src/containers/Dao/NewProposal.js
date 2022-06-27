@@ -22,7 +22,7 @@ import {
   newGrantProposal,
 } from '../../store/dao'
 import Approval from '../../components/Approval/index'
-import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import { BN, convertToWei } from '../../utils/bigNumber'
 import { ReactComponent as InvalidIcon } from '../../assets/icons/unchecked.svg'
 import { ReactComponent as ValidIcon } from '../../assets/icons/checked.svg'
@@ -35,18 +35,19 @@ import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
 import { useReserve } from '../../store/reserve'
+import { useApp } from '../../store/app'
 
 const NewProposal = () => {
   const dispatch = useDispatch()
-  const sparta = useSparta()
-  const synth = useSynth()
+  const { t } = useTranslation()
+
+  const { chainId, addresses } = useApp()
+  const dao = useDao()
   const pool = usePool()
   const reserve = useReserve()
+  const sparta = useSparta()
+  const synth = useSynth()
   const wallet = useWeb3React()
-  const dao = useDao()
-  const addr = getAddresses()
-  const { t } = useTranslation()
-  const network = getNetwork()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -212,7 +213,7 @@ const NewProposal = () => {
   // 0.0015 BNB || 0.001 BNB
   const estMaxGas = '1000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -232,7 +233,7 @@ const NewProposal = () => {
       </Button>
       {showModal && (
         <Modal show={showModal} onHide={() => handleOnHide()} centered>
-          {tempChains.includes(network.chainId) && !isLoading() && (
+          {tempChains.includes(chainId) && !isLoading() && (
             <>
               <Modal.Header closeButton>
                 <Modal.Title>{t('newProposal')}</Modal.Title>
@@ -389,17 +390,15 @@ const NewProposal = () => {
               </Modal.Body>
             </>
           )}
-          {network.chainId && !tempChains.includes(network.chainId) && (
-            <WrongNetwork />
-          )}
+          {!tempChains.includes(chainId) && <WrongNetwork />}
           <Modal.Footer>
             <Row className="w-100 text-center">
               {wallet?.account && !existingPid && (
                 <Approval
-                  tokenAddress={addr.spartav2}
+                  tokenAddress={addresses.spartav2}
                   symbol="SPARTA"
                   walletAddress={wallet.account}
-                  contractAddress={addr.dao}
+                  contractAddress={addresses.dao}
                   txnAmount={convertToWei('100')}
                   assetNumber="1"
                 />

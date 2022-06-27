@@ -13,11 +13,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
-import {
-  formatShortString,
-  getAddresses,
-  getItemFromArray,
-} from '../../utils/web3'
+import { formatShortString, getItemFromArray } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
   BN,
@@ -42,16 +38,16 @@ import { useFocus } from '../../providers/Focus'
 import { useApp } from '../../store/app'
 
 const SwapTokens = () => {
-  const { t } = useTranslation()
-  const web3 = useWeb3()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
-  const addr = getAddresses()
+  const focus = useFocus()
+  const location = useLocation()
+  const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { settings, addresses } = useApp()
   const pool = usePool()
   const sparta = useSparta()
-  const location = useLocation()
-  const focus = useFocus()
-  const app = useApp()
+  const web3 = useWeb3()
 
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
@@ -83,9 +79,9 @@ const SwapTokens = () => {
           let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
 
           const _assetParam1 =
-            assetParam1 === addr.wbnb ? addr.bnb : assetParam1
+            assetParam1 === addresses.wbnb ? addresses.bnb : assetParam1
           const _assetParam2 =
-            assetParam2 === addr.wbnb ? addr.bnb : assetParam2
+            assetParam2 === addresses.wbnb ? addresses.bnb : assetParam2
           if (
             assetParam1 !== '' &&
             pool.poolDetails.find(
@@ -125,7 +121,7 @@ const SwapTokens = () => {
               (x) => x.tokenAddress === asset1.tokenAddress,
             )
           ) {
-            asset1 = { tokenAddress: addr.spartav2 }
+            asset1 = { tokenAddress: addresses.spartav2 }
           }
 
           if (
@@ -134,16 +130,16 @@ const SwapTokens = () => {
               (x) => x.tokenAddress === asset2.tokenAddress,
             )
           ) {
-            asset2 = { tokenAddress: addr.bnb }
+            asset2 = { tokenAddress: addresses.bnb }
           }
 
           asset1 = getItemFromArray(asset1, pool.poolDetails)
           asset2 = getItemFromArray(asset2, pool.poolDetails)
           asset1 = asset1.hide
-            ? getItemFromArray(addr.spartav2, pool.poolDetails)
+            ? getItemFromArray(addresses.spartav2, pool.poolDetails)
             : asset1
           asset2 = asset2.hide
-            ? getItemFromArray(addr.spartav2, pool.poolDetails)
+            ? getItemFromArray(addresses.spartav2, pool.poolDetails)
             : asset2
 
           setAssetSwap1(asset1)
@@ -157,9 +153,9 @@ const SwapTokens = () => {
     getAssetDetails()
     balanceWidths()
   }, [
-    addr.bnb,
-    addr.spartav2,
-    addr.wbnb,
+    addresses.bnb,
+    addresses.spartav2,
+    addresses.wbnb,
     assetParam1,
     assetParam2,
     triggerReload,
@@ -175,15 +171,19 @@ const SwapTokens = () => {
   useEffect(() => {
     const getAsset1ExtPrice = async () => {
       if (assetSwap1.tokenAddress) {
-        if (assetSwap1.tokenAddress === addr.spartav2) {
+        if (assetSwap1.tokenAddress === addresses.spartav2) {
           setAsset1USD(false)
         } else {
           setAsset1USD(false)
-          const asset1usd = await getPriceByContract(assetSwap1.tokenAddress)
+          const asset1usd = await getPriceByContract(
+            assetSwap1.tokenAddress === addresses.bnb
+              ? addresses.wbnb
+              : assetSwap1.tokenAddress,
+          )
           const isCurrent =
             asset1usd[
-              assetSwap1.tokenAddress === addr.bnb
-                ? addr.wbnb.toLowerCase()
+              assetSwap1.tokenAddress === addresses.bnb
+                ? addresses.wbnb.toLowerCase()
                 : assetSwap1.tokenAddress.toLowerCase()
             ]
           if (isCurrent) {
@@ -193,21 +193,30 @@ const SwapTokens = () => {
       }
     }
     getAsset1ExtPrice()
-  }, [addr.bnb, addr.spartav2, addr.wbnb, assetSwap1.tokenAddress])
+  }, [
+    addresses.bnb,
+    addresses.spartav2,
+    addresses.wbnb,
+    assetSwap1.tokenAddress,
+  ])
 
   /** Check token2 external price (on asset2 change) */
   useEffect(() => {
     const getAsset2ExtPrice = async () => {
       if (assetSwap2.tokenAddress) {
-        if (assetSwap2.tokenAddress === addr.spartav2) {
+        if (assetSwap2.tokenAddress === addresses.spartav2) {
           setAsset2USD(false)
         } else {
           setAsset2USD(false)
-          const asset2usd = await getPriceByContract(assetSwap2.tokenAddress)
+          const asset2usd = await getPriceByContract(
+            assetSwap2.tokenAddress === addresses.bnb
+              ? addresses.wbnb
+              : assetSwap2.tokenAddress,
+          )
           const isCurrent =
             asset2usd[
-              assetSwap2.tokenAddress === addr.bnb
-                ? addr.wbnb.toLowerCase()
+              assetSwap2.tokenAddress === addresses.bnb
+                ? addresses.wbnb.toLowerCase()
                 : assetSwap2.tokenAddress.toLowerCase()
             ]
           if (isCurrent) {
@@ -217,7 +226,12 @@ const SwapTokens = () => {
       }
     }
     getAsset2ExtPrice()
-  }, [addr.bnb, addr.spartav2, addr.wbnb, assetSwap2.tokenAddress])
+  }, [
+    addresses.bnb,
+    addresses.spartav2,
+    addresses.wbnb,
+    assetSwap2.tokenAddress,
+  ])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -276,8 +290,8 @@ const SwapTokens = () => {
         assetSwap1,
         assetSwap2,
         sparta.globalDetails.feeOnTransfer,
-        assetSwap2.tokenAddress === addr.spartav2,
-        assetSwap1.tokenAddress === addr.spartav2,
+        assetSwap2.tokenAddress === addresses.spartav2,
+        assetSwap1.tokenAddress === addresses.spartav2,
       )
       setGetSwap([output, swapFee, divi1, divi2])
     }
@@ -301,8 +315,8 @@ const SwapTokens = () => {
     let spot = getSwapSpot(
       assetSwap1,
       assetSwap2,
-      assetSwap2.tokenAddress === addr.spartav2,
-      assetSwap1.tokenAddress === addr.spartav2,
+      assetSwap2.tokenAddress === addresses.spartav2,
+      assetSwap1.tokenAddress === addresses.spartav2,
     )
     spot = spot > 0 ? spot : '0.00'
     return reverseRate ? BN(1).div(spot) : spot
@@ -345,7 +359,7 @@ const SwapTokens = () => {
 
   // GET USD VALUES
   const getInput1USD = () => {
-    if (assetSwap1?.tokenAddress === addr.spartav2 && swapInput1?.value) {
+    if (assetSwap1?.tokenAddress === addresses.spartav2 && swapInput1?.value) {
       return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
     }
     if (swapInput1?.value) {
@@ -362,7 +376,7 @@ const SwapTokens = () => {
 
   // GET USD VALUES
   const getInput2USD = () => {
-    if (assetSwap2?.tokenAddress === addr.spartav2 && swapInput2?.value) {
+    if (assetSwap2?.tokenAddress === addresses.spartav2 && swapInput2?.value) {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (swapInput2?.value) {
@@ -387,10 +401,10 @@ const SwapTokens = () => {
   const estMaxGasDoubleSwap = '2000000000000000'
   const estMaxGasSwap = '1500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addresses.bnb).balance
     if (
-      assetSwap1?.tokenAddress !== addr.spartav2 &&
-      assetSwap2?.tokenAddress !== addr.spartav2
+      assetSwap1?.tokenAddress !== addresses.spartav2 &&
+      assetSwap2?.tokenAddress !== addresses.spartav2
     ) {
       if (BN(bal).isLessThan(estMaxGasDoubleSwap)) {
         return false
@@ -431,16 +445,16 @@ const SwapTokens = () => {
   const handleSwapAssets = async () => {
     let gasSafety = '5000000000000000'
     if (
-      assetSwap1?.tokenAddress !== addr.spartav2 &&
-      assetSwap2?.tokenAddress !== addr.spartav2
+      assetSwap1?.tokenAddress !== addresses.spartav2 &&
+      assetSwap2?.tokenAddress !== addresses.spartav2
     ) {
       gasSafety = '10000000000000000'
     }
     if (
-      assetSwap1?.tokenAddress === addr.bnb ||
-      assetSwap1?.tokenAddress === addr.wbnb
+      assetSwap1?.tokenAddress === addresses.bnb ||
+      assetSwap1?.tokenAddress === addresses.wbnb
     ) {
-      const balance = getToken(addr.bnb)?.balance
+      const balance = getToken(addresses.bnb)?.balance
       if (
         BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
       ) {
@@ -448,7 +462,7 @@ const SwapTokens = () => {
       }
     }
     setTxnLoading(true)
-    const minAmountFraction = BN(100).minus(app.settings.slipTol).div(100)
+    const minAmountFraction = BN(100).minus(settings.slipTol).div(100)
     await dispatch(
       swap(
         convertToWei(swapInput1?.value),
@@ -576,7 +590,7 @@ const SwapTokens = () => {
                             t,
                             'pricingData',
                             asset1USD ||
-                              assetSwap1?.tokenAddress === addr.spartav2
+                              assetSwap1?.tokenAddress === addresses.spartav2
                               ? 'CoinGecko'
                               : 'internal pool prices',
                           )}
@@ -589,7 +603,7 @@ const SwapTokens = () => {
                             <Icon
                               icon={
                                 asset1USD ||
-                                assetSwap1?.tokenAddress === addr.spartav2
+                                assetSwap1?.tokenAddress === addresses.spartav2
                                   ? 'coinGeckoIcon'
                                   : 'usd'
                               }
@@ -696,7 +710,7 @@ const SwapTokens = () => {
                             t,
                             'pricingData',
                             asset2USD ||
-                              assetSwap2?.tokenAddress === addr.spartav2
+                              assetSwap2?.tokenAddress === addresses.spartav2
                               ? 'CoinGecko'
                               : 'internal pool prices',
                           )}
@@ -714,7 +728,7 @@ const SwapTokens = () => {
                             <Icon
                               icon={
                                 asset2USD ||
-                                assetSwap2?.tokenAddress === addr.spartav2
+                                assetSwap2?.tokenAddress === addresses.spartav2
                                   ? 'coinGeckoIcon'
                                   : 'usd'
                               }
@@ -794,14 +808,14 @@ const SwapTokens = () => {
       {/* 'Approval/Allowance' row */}
 
       <Row className="text-center mt-3">
-        {assetSwap1?.tokenAddress !== addr.bnb &&
+        {assetSwap1?.tokenAddress !== addresses.bnb &&
           wallet?.account &&
           swapInput1?.value && (
             <Approval
               tokenAddress={assetSwap1?.tokenAddress}
               symbol={getToken(assetSwap1.tokenAddress)?.symbol}
               walletAddress={wallet?.account}
-              contractAddress={addr.router}
+              contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}
               assetNumber="1"
             />

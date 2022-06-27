@@ -7,25 +7,26 @@ import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
 import { formatFromWei } from '../../utils/bigNumber'
-import { getAddresses } from '../../utils/web3'
 import { spartaUpgrade } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
+import { useApp } from '../../store/app'
 
 const Upgrade = () => {
-  const addr = getAddresses()
-  const pool = usePool()
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
   const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
 
   const [upgradeLoading, setUpgradeLoading] = useState(false)
   const [bnbBalance, setbnbBalance] = useState('0')
   const [trigger0, settrigger0] = useState(0)
 
-  const getSpartav1 = () => getToken(addr.spartav1, pool.tokenDetails)
-  const getSpartav2 = () => getToken(addr.spartav2, pool.tokenDetails)
+  const getSpartav1 = () => getToken(addresses.spartav1, pool.tokenDetails)
+  const getSpartav2 = () => getToken(addresses.spartav2, pool.tokenDetails)
 
   useEffect(() => {
     const getData = async () => {

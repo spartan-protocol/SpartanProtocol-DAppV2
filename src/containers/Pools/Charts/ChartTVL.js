@@ -4,12 +4,12 @@ import { useWeb3 } from '../../../store/web3'
 import { BN, convertFromWei } from '../../../utils/bigNumber'
 import { usePool } from '../../../store/pool'
 import { formatDate } from '../../../utils/math/nonContract'
-import { getNetwork } from '../../../utils/web3'
+import { useApp } from '../../../store/app'
 
 const ChartTVL = () => {
-  const web3 = useWeb3()
+  const app = useApp()
   const pool = usePool()
-  const network = getNetwork()
+  const web3 = useWeb3()
 
   const getTVL = (USD) => {
     let tvl = BN(0)
@@ -37,7 +37,7 @@ const ChartTVL = () => {
         ? dataPoints
         : web3.metrics.global.length
     // Hide 'current' on testnet
-    if (pool.poolDetails && network?.chainId === 56 && web3.spartaPrice > 0) {
+    if (pool.poolDetails && app.chainId === 56 && web3.spartaPrice > 0) {
       data1.push(convertFromWei(getTVL(1), 0))
       data2.push(convertFromWei(getTVL(0), 0))
       labels.push('Current')
