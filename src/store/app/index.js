@@ -37,7 +37,7 @@ export const appSlice = createSlice({
     // lastWallet: window.localStorage.getItem('lastWallet'),
     // disableWallet: window.localStorage.getItem('disableWallet'),
     chainId: changeChainId(
-      parseInt(window.localStorage.getItem('sp_chainId'), 10) ?? 56,
+      window.localStorage.getItem('sp_chainId') > 56 ? 97 : 56,
     ),
     // txnArray: window.localStorage.getItem('txnArray'),
     // sp_positions: window.localStorage.getItem('sp_positions'),
@@ -46,12 +46,10 @@ export const appSlice = createSlice({
       tryParse(window.localStorage.getItem('sp_settings')) ?? defaultSettings,
     addresses:
       tryParse(window.localStorage.getItem('sp_addresses')) ??
-      changeAddresses(
-        parseInt(window.localStorage.getItem('sp_chainId'), 10) ?? 56,
-      ),
+      changeAddresses(window.localStorage.getItem('sp_chainId') > 56 ? 97 : 56),
     abis:
       tryParse(window.localStorage.getItem('sp_abis')) ??
-      changeAbis(parseInt(window.localStorage.getItem('sp_chainId'), 10) ?? 56),
+      changeAbis(window.localStorage.getItem('sp_chainId') > 56 ? 97 : 56),
   },
   reducers: {
     updateLoading: (state, action) => {
