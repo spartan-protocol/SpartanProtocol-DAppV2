@@ -14,7 +14,7 @@ import Form from 'react-bootstrap/Form'
 import Popover from 'react-bootstrap/Popover'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
-import { formatShortString, getItemFromArray, oneWeek } from '../../utils/web3'
+import { formatShortString, oneWeek } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
   BN,
@@ -26,26 +26,30 @@ import {
 import { zapLiquidity } from '../../store/router'
 import Approval from '../../components/Approval/index'
 import { useWeb3 } from '../../store/web3'
-import { useApp } from '../../store/app'
+import { appAsset, useApp } from '../../store/app'
 import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { balanceWidths } from '../Liquidity/Components/Utils'
-import { calcLiqValue, calcSpotValueInBase } from '../../utils/math/utils'
+import {
+  calcLiqValue,
+  calcSpotValueInBase,
+  getPool,
+} from '../../utils/math/utils'
 import { getTimeUntil, getZapSpot } from '../../utils/math/nonContract'
 import { zapLiq } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
 
-const SwapLps = () => {
+const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   const dispatch = useDispatch()
   const focus = useFocus()
   const location = useLocation()
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const { addresses } = useApp()
+  const { addresses, asset1, asset2 } = useApp()
   const pool = usePool()
   const sparta = useSparta()
   const web3 = useWeb3()
@@ -54,123 +58,94 @@ const SwapLps = () => {
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
-  const [assetSwap1, setAssetSwap1] = useState('...')
-  const [assetSwap2, setAssetSwap2] = useState('...')
-  const [triggerReload, setTriggerReload] = useState(0)
-  const [assetParam1, setAssetParam1] = useState(
-    new URLSearchParams(location.search).get(`asset1`),
-  )
-  const [assetParam2, setAssetParam2] = useState(
-    new URLSearchParams(location.search).get(`asset2`),
-  )
+  const [loadedInitial, setloadedInitial] = useState(false)
+  const [getZap, setGetZap] = useState(['0.00', '0.00', false, false, false])
 
+  // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
+    if (!loadedInitial && pool.poolDetails.length > 1) {
+      const assetParam1 = new URLSearchParams(location.search).get(`asset1`)
+      const assetParam2 = new URLSearchParams(location.search).get(`asset2`)
+      let _asset1Addr =
+        assetParam1 === addresses.wbnb ? addresses.bnb : assetParam1
+      let _asset2Addr =
+        assetParam2 === addresses.wbnb ? addresses.bnb : assetParam2
+      _asset1Addr = getPool(_asset1Addr, pool.poolDetails).tokenAddress ?? false
+      _asset2Addr = getPool(_asset2Addr, pool.poolDetails).tokenAddress ?? false
+
+      dispatch(appAsset('1', _asset1Addr, 'pool'))
+      dispatch(appAsset('2', _asset2Addr, 'pool'))
+      setloadedInitial(true)
     }
+  }, [
+    addresses.bnb,
+    addresses.wbnb,
+    dispatch,
+    loadedInitial,
+    location.search,
+    pool.poolDetails,
+  ])
+
+  // Check selected assets and validate for zap page
+  useEffect(() => {
     const getAssetDetails = () => {
-      if (focus) {
+      if (loadedInitial && focus) {
         if (pool.poolDetails?.length > 0) {
-          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+          let _asset1Addr = asset1.addr
+          let _asset2Addr = asset2.addr
 
           if (
-            assetParam1 !== '' &&
-            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam1)
+            _asset2Addr === _asset1Addr ||
+            _asset2Addr === addresses.spartav2
           ) {
-            ;[asset1] = pool.poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam1,
-            )
-            setAssetParam1('')
-          }
-          if (
-            assetParam2 !== '' &&
-            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam2)
-          ) {
-            ;[asset2] = pool.poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam2,
-            )
-            setAssetParam2('')
+            _asset2Addr =
+              _asset1Addr !== pool.poolDetails[0].tokenAddress
+                ? pool.poolDetails[0].tokenAddress
+                : pool.poolDetails[1].tokenAddress
           }
 
-          window.localStorage.setItem('assetType1', 'pool')
-          window.localStorage.setItem('assetType2', 'pool')
-
-          if (
-            asset2?.tokenAddress === asset1?.tokenAddress ||
-            asset2?.tokenAddress === addresses.spartav2
-          ) {
-            asset2 =
-              asset1?.tokenAddress !== pool.poolDetails[0].tokenAddress
-                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
-                : { tokenAddress: pool.poolDetails[1].tokenAddress }
+          if (_asset1Addr === addresses.spartav2) {
+            _asset1Addr =
+              _asset2Addr !== pool.poolDetails[0].tokenAddress
+                ? pool.poolDetails[0].tokenAddress
+                : pool.poolDetails[1].tokenAddress
           }
 
-          if (asset1?.tokenAddress === addresses.spartav2) {
-            asset1 =
-              asset2?.tokenAddress !== pool.poolDetails[0].tokenAddress
-                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
-                : { tokenAddress: pool.poolDetails[1].tokenAddress }
+          if (_asset2Addr === '') {
+            _asset2Addr = addresses.bnb
           }
 
-          if (asset2?.address === '') {
-            asset2 = { tokenAddress: addresses.bnb }
+          const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
+          const hide2 = getPool(_asset2Addr, pool.poolDetails).hide
+
+          if (hide1 || !getPool(_asset1Addr, pool.poolDetails)) {
+            _asset1Addr = pool.poolDetails[1].tokenAddress
           }
 
-          if (
-            !asset1 ||
-            !pool.poolDetails.find(
-              (x) => x.tokenAddress === asset1.tokenAddress,
-            )
-          ) {
-            asset1 = { tokenAddress: pool.poolDetails[1].tokenAddress }
+          if (hide2 || !getPool(_asset2Addr, pool.poolDetails)) {
+            _asset2Addr = addresses.bnb
           }
 
-          if (
-            !asset2 ||
-            !pool.poolDetails.find(
-              (x) => x.tokenAddress === asset2.tokenAddress,
-            )
-          ) {
-            asset2 = { tokenAddress: addresses.bnb }
-          }
-
-          asset1 = getItemFromArray(asset1, pool.poolDetails)
-          asset2 = getItemFromArray(asset2, pool.poolDetails)
-          asset1 = asset1.hide
-            ? getItemFromArray(addresses.bnb, pool.poolDetails)
-            : asset1
-          asset2 = asset2.hide
-            ? getItemFromArray(addresses.bnb, pool.poolDetails)
-            : asset2
-
-          setAssetSwap1(asset1)
-          setAssetSwap2(asset2)
-
-          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
+          dispatch(appAsset('1', _asset1Addr, 'pool'))
+          dispatch(appAsset('2', _asset2Addr, 'pool'))
         }
       }
     }
     getAssetDetails()
-    balanceWidths()
   }, [
     addresses.bnb,
     addresses.spartav2,
-    assetParam1,
-    assetParam2,
-    triggerReload,
     pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected2'),
     focus,
+    loadedInitial,
+    asset1.addr,
+    asset2.addr,
+    dispatch,
   ])
+
+  useEffect(() => {
+    balanceWidths()
+  }, [asset1.addr, asset2.addr, loadedInitial, pool.poolDetails])
 
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
@@ -180,33 +155,6 @@ const SwapLps = () => {
 
   const handleConfClear = () => {
     setConfirm(false)
-  }
-
-  const clearInputs = () => {
-    handleConfClear()
-    if (swapInput1) {
-      swapInput1.value = ''
-      swapInput1.focus()
-    }
-    if (swapInput2) {
-      swapInput2.value = ''
-    }
-  }
-
-  const handleReverseAssets = () => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
-    const asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-    const asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-    window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
-    window.localStorage.setItem('assetSelected2', JSON.stringify(asset1))
-    clearInputs()
-    setTriggerReload(triggerReload + 1) // This is to make sure the view reloads without delay (useEffect detects a changed localStorage inconsistently)
   }
 
   const getBalance = (asset) => {
@@ -231,7 +179,7 @@ const SwapLps = () => {
    * Get zap txn details
    * @returns [unitsLP, swapFee, slipRevert, capRevert, poolFrozen]
    */
-  const getZap = useCallback(() => {
+  const updateZap = () => {
     if (swapInput1 && assetSwap1 && assetSwap2) {
       const [unitsLP, swapFee, slipRevert, capRevert] = zapLiq(
         convertToWei(swapInput1.value),
@@ -239,10 +187,27 @@ const SwapLps = () => {
         assetSwap2,
         sparta.globalDetails.feeOnTransfer,
       )
-      return [unitsLP, swapFee, slipRevert, capRevert, assetSwap1.frozen]
+      setGetZap([unitsLP, swapFee, slipRevert, capRevert, assetSwap1.frozen])
     }
-    return ['0.00', '0.00', false, false, false]
-  }, [assetSwap1, assetSwap2, sparta.globalDetails.feeOnTransfer, swapInput1])
+  }
+
+  const clearInputs = () => {
+    handleConfClear()
+    if (swapInput1) {
+      swapInput1.value = ''
+      swapInput1.focus()
+    }
+    if (swapInput2) {
+      swapInput2.value = ''
+    }
+    updateZap()
+  }
+
+  const handleReverseAssets = () => {
+    dispatch(appAsset('1', asset2.addr, 'token'))
+    dispatch(appAsset('2', asset1.addr, 'token'))
+    clearInputs()
+  }
 
   const getInput = () => {
     const symbol = getToken(assetSwap1.tokenAddress)?.symbol
@@ -255,7 +220,7 @@ const SwapLps = () => {
 
   const getOutput = () => {
     const symbol = getToken(assetSwap2.tokenAddress)?.symbol
-    return [getZap()[0], `${symbol}p`, t('output')]
+    return [getZap[0], `${symbol}p`, t('output')]
   }
 
   const getSpot = () => {
@@ -288,7 +253,7 @@ const SwapLps = () => {
 
   const getRevenue = () => {
     let result = '0.00'
-    result = BN(getZap()[1])
+    result = BN(getZap[1])
     result = result > 0 ? result : '0.00'
     return result
   }
@@ -297,7 +262,7 @@ const SwapLps = () => {
   // Functions for input handling
 
   const handleZapInputChange = useCallback(() => {
-    swapInput2.value = convertFromWei(getZap()[0], 18)
+    swapInput2.value = convertFromWei(getZap[0], 18)
   }, [getZap, swapInput2])
 
   //= =================================================================================//
@@ -333,7 +298,7 @@ const SwapLps = () => {
       return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
     }
     if (assetSwap2 && swapInput2?.value) {
-      const [_sparta, _token] = calcLiqValue(getZap()[0], assetSwap2)
+      const [_sparta, _token] = calcLiqValue(getZap[0], assetSwap2)
       return BN(calcSpotValueInBase(_token, assetSwap2))
         .plus(_sparta)
         .times(web3.spartaPrice)
@@ -389,13 +354,13 @@ const SwapLps = () => {
       return [false, t('checkBalance')]
     }
     const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
-    if (getZap()[4]) {
+    if (getZap[4]) {
       return [false, t('poolFrozen')]
     }
-    if (getZap()[2]) {
+    if (getZap[2]) {
       return [false, t('slipTooHigh')]
     }
-    if (getZap()[3]) {
+    if (getZap[3]) {
       return [false, t('poolAtCapacity')]
     }
     if (assetSwap1.newPool) {
@@ -457,8 +422,9 @@ const SwapLps = () => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
+                    clearInputs()
                     swapInput1.value = convertFromWei(getBalance(1))
-                    handleZapInputChange(convertFromWei(getBalance(1)), true)
+                    updateZap()
                   }}
                 >
                   {t('balance')}
@@ -509,6 +475,7 @@ const SwapLps = () => {
                         id="swapInput1"
                         autoComplete="off"
                         autoCorrect="off"
+                        onChange={() => updateZap()}
                       />
                     </OverlayTrigger>
 

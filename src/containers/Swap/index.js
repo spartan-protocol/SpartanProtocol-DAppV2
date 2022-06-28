@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Col from 'react-bootstrap/Col'
@@ -22,7 +22,7 @@ import { useApp } from '../../store/app'
 const Swap = () => {
   const { t } = useTranslation()
 
-  const { chainId, addresses } = useApp()
+  const { addresses, asset1, asset2, chainId } = useApp()
   const pool = usePool()
   const navigate = useNavigate()
 
@@ -30,30 +30,8 @@ const Swap = () => {
   const [showShareModal, setShowShareModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
   const [mode, setMode] = useState('token')
-  const [selectedAsset1, setSelectedAsset1] = useState(false)
-  const [selectedAsset2, setSelectedAsset2] = useState(false)
-
-  useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
-    if (pool.poolDetails) {
-      let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-      asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
-      let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-      asset2 = getPool(asset2.tokenAddress, pool.poolDetails)
-      setSelectedAsset1(asset1)
-      setSelectedAsset2(asset2)
-    }
-  }, [
-    pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-  ])
+  const [assetSwap1, setAssetSwap1] = useState(false)
+  const [assetSwap2, setAssetSwap2] = useState(false)
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -61,6 +39,13 @@ const Swap = () => {
     }
     return false
   }
+
+  useEffect(() => {
+    if (pool.poolDetails.length > 1) {
+      setAssetSwap1(getPool(asset1.addr, pool.poolDetails))
+      setAssetSwap2(getPool(asset2.addr, pool.poolDetails))
+    }
+  }, [asset1.addr, asset2.addr, pool.poolDetails])
 
   return (
     <>
@@ -168,19 +153,29 @@ const Swap = () => {
                           </Nav>
                         </Col>
                       </Row>
-                      {mode === 'token' && <SwapTokens />}
-                      {mode === 'pool' && <SwapLps />}
+                      {mode === 'token' && (
+                        <SwapTokens
+                          assetSwap1={assetSwap1}
+                          assetSwap2={assetSwap2}
+                        />
+                      )}
+                      {mode === 'pool' && (
+                        <SwapLps
+                          assetSwap1={assetSwap1}
+                          assetSwap2={assetSwap2}
+                        />
+                      )}
                     </Card.Body>
                   </Card>
                 </Col>
                 <Col>
-                  {pool.poolDetails &&
-                    selectedAsset1.tokenAddress !== addresses.spartav2 && (
-                      <Metrics assetSwap={selectedAsset1} />
+                  {assetSwap1 &&
+                    assetSwap1.tokenAddress !== addresses.spartav2 && (
+                      <Metrics assetSwap={assetSwap1} />
                     )}
-                  {pool.poolDetails &&
-                    selectedAsset2.tokenAddress !== addresses.spartav2 && (
-                      <Metrics assetSwap={selectedAsset2} />
+                  {assetSwap2 &&
+                    assetSwap2.tokenAddress !== addresses.spartav2 && (
+                      <Metrics assetSwap={assetSwap2} />
                     )}
                 </Col>
               </>
