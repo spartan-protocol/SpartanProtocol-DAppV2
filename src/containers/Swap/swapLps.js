@@ -35,6 +35,7 @@ import {
   calcLiqValue,
   calcSpotValueInBase,
   getPool,
+  getToken,
 } from '../../utils/math/utils'
 import { getTimeUntil, getZapSpot } from '../../utils/math/nonContract'
 import { zapLiq } from '../../utils/math/router'
@@ -59,6 +60,10 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [loadedInitial, setloadedInitial] = useState(false)
+
+  const [token1, settoken1] = useState(false)
+  const [token2, settoken2] = useState(false)
+  const [bnbBalance, setbnbBalance] = useState(false)
   const [getZap, setGetZap] = useState(['0.00', '0.00', false, false, false])
 
   // Check and set selected assets based on URL params ONLY ONCE
@@ -144,11 +149,16 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   ])
 
   useEffect(() => {
+    if (pool.tokenDetails.length > 1) {
+      settoken1(getToken(asset1.addr, pool.tokenDetails))
+      settoken2(getToken(asset2.addr, pool.tokenDetails))
+      setbnbBalance(getToken(addresses.bnb, pool.tokenDetails).balance)
+    }
+  }, [addresses.bnb, asset1.addr, asset2.addr, pool.tokenDetails])
+
+  useEffect(() => {
     balanceWidths()
   }, [asset1.addr, asset2.addr, loadedInitial, pool.poolDetails])
-
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
@@ -210,7 +220,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const getInput = () => {
-    const symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    const { symbol } = token1
     if (swapInput1) {
       const input = swapInput1.value
       return [input, `${symbol}p`]
@@ -219,7 +229,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const getOutput = () => {
-    const symbol = getToken(assetSwap2.tokenAddress)?.symbol
+    const { symbol } = token2
     return [getZap[0], `${symbol}p`, t('output')]
   }
 
@@ -322,19 +332,18 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   const estMaxGasDoubleSwap = '2000000000000000'
   const estMaxGasSwap = '1500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addresses.bnb).balance
-    if (BN(bal).isLessThan(estMaxGasPool)) {
+    if (BN(bnbBalance).isLessThan(estMaxGasPool)) {
       return false
     }
     if (
       assetSwap1?.tokenAddress !== addresses.spartav2 &&
       assetSwap2?.tokenAddress !== addresses.spartav2
     ) {
-      if (BN(bal).isLessThan(estMaxGasDoubleSwap)) {
+      if (BN(bnbBalance).isLessThan(estMaxGasDoubleSwap)) {
         return false
       }
     }
-    if (BN(bal).isLessThan(estMaxGasSwap)) {
+    if (BN(bnbBalance).isLessThan(estMaxGasSwap)) {
       return false
     }
     return true
@@ -353,7 +362,6 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
     if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]
     }
-    const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
     if (getZap[4]) {
       return [false, t('poolFrozen')]
     }
@@ -369,7 +377,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
     if (assetSwap2.newPool && !confirm) {
       return [true, t('confirmLockup')]
     }
-    return [true, `${t('sell')} ${_symbol}p`]
+    return [true, `${t('sell')} ${token1.symbol}p`]
   }
 
   useEffect(() => {
@@ -422,7 +430,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
-                    clearInputs()
+                    swapInput1.focus()
                     swapInput1.value = convertFromWei(getBalance(1))
                     updateZap()
                   }}
@@ -451,7 +459,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
                         defaultTab="pool"
                         priority="1"
                         filter={['pool']}
-                        onClick={handleConfClear}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <OverlayTrigger
@@ -560,7 +568,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
                         priority="2"
                         filter={['pool']}
                         blackList={[assetSwap1.tokenAddress]}
-                        onClick={handleConfClear}
+                        onClick={() => clearInputs()}
                       />
                     </InputGroup.Text>
                     <FormControl
@@ -699,7 +707,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
           {wallet?.account && swapInput1?.value && (
             <Approval
               tokenAddress={assetSwap1?.address}
-              symbol={`${getToken(assetSwap1.tokenAddress)?.symbol}p`}
+              symbol={`${token1.symbol}p`}
               walletAddress={wallet?.account}
               contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}
@@ -732,11 +740,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
             </Button>
             <OverlayTrigger
               placement="auto"
-              overlay={Tooltip(
-                t,
-                'newPool',
-                `${getToken(assetSwap1.tokenAddress)?.symbol}p`,
-              )}
+              overlay={Tooltip(t, 'newPool', `${token1.symbol}p`)}
             >
               <span role="button">
                 <Icon icon="info" className="ms-1" size="17" />

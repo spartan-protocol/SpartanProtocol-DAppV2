@@ -29,7 +29,7 @@ import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { balanceWidths } from '../Liquidity/Components/Utils'
-import { calcSpotValueInBase, getPool } from '../../utils/math/utils'
+import { calcSpotValueInBase, getPool, getToken } from '../../utils/math/utils'
 import { getSwapSpot } from '../../utils/math/nonContract'
 import { swapTo } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
@@ -52,9 +52,14 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
+  const [loadedInitial, setloadedInitial] = useState(false)
+
+  const [token1, settoken1] = useState(false)
+  const [token2, settoken2] = useState(false)
+  const [bnbBalance, setbnbBalance] = useState(false)
   const [asset1USD, setAsset1USD] = useState(false)
   const [asset2USD, setAsset2USD] = useState(false)
-  const [loadedInitial, setloadedInitial] = useState(false)
+  const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
@@ -84,32 +89,30 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   // Check selected assets and validate for swap page
   useEffect(() => {
     const getAssetDetails = () => {
-      if (loadedInitial && focus) {
-        if (pool.poolDetails?.length > 0) {
-          let _asset1Addr = asset1.addr
-          let _asset2Addr = asset2.addr
+      if (loadedInitial && focus && pool.poolDetails?.length > 1) {
+        let _asset1Addr = asset1.addr
+        let _asset2Addr = asset2.addr
 
-          if (_asset2Addr === _asset1Addr) {
-            _asset2Addr =
-              _asset1Addr !== pool.poolDetails[0].tokenAddress
-                ? pool.poolDetails[0].tokenAddress
-                : pool.poolDetails[1].tokenAddress
-          }
-
-          const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
-          const hide2 = getPool(_asset2Addr, pool.poolDetails).hide
-
-          if (hide1 || !getPool(_asset1Addr, pool.poolDetails)) {
-            _asset1Addr = addresses.spartav2
-          }
-
-          if (hide2 || !getPool(_asset2Addr, pool.poolDetails)) {
-            _asset2Addr = addresses.bnb
-          }
-
-          dispatch(appAsset('1', _asset1Addr, 'token'))
-          dispatch(appAsset('2', _asset2Addr, 'token'))
+        if (_asset2Addr === _asset1Addr) {
+          _asset2Addr =
+            _asset1Addr !== pool.poolDetails[0].tokenAddress
+              ? pool.poolDetails[0].tokenAddress
+              : pool.poolDetails[1].tokenAddress
         }
+
+        const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
+        const hide2 = getPool(_asset2Addr, pool.poolDetails).hide
+
+        if (hide1 || !getPool(_asset1Addr, pool.poolDetails)) {
+          _asset1Addr = addresses.spartav2
+        }
+
+        if (hide2 || !getPool(_asset2Addr, pool.poolDetails)) {
+          _asset2Addr = addresses.bnb
+        }
+
+        dispatch(appAsset('1', _asset1Addr, 'token'))
+        dispatch(appAsset('2', _asset2Addr, 'token'))
       }
     }
     getAssetDetails()
@@ -124,6 +127,14 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
     dispatch,
     loadedInitial,
   ])
+
+  useEffect(() => {
+    if (pool.tokenDetails.length > 1) {
+      settoken1(getToken(asset1.addr, pool.tokenDetails))
+      settoken2(getToken(asset2.addr, pool.tokenDetails))
+      setbnbBalance(getToken(addresses.bnb, pool.tokenDetails).balance)
+    }
+  }, [addresses.bnb, asset1.addr, asset2.addr, pool.tokenDetails])
 
   useEffect(() => {
     balanceWidths()
@@ -195,26 +206,19 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
     assetSwap2.tokenAddress,
   ])
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
   const getBalance = (asset) => {
-    let item = ''
     if (asset === 1) {
-      item = assetSwap1
-    } else {
-      item = assetSwap2
+      return token1.balance
     }
-    return getToken(item.tokenAddress)?.balance
+    return token2.balance
   }
 
   //= =================================================================================//
   // Functions to get txn Details
 
-  const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
   /**
    * Get swap txn details
    * @returns [output, swapFee, divi1, divi2]
@@ -230,6 +234,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
         assetSwap1.tokenAddress === addresses.spartav2,
       )
       setGetSwap([output, swapFee, divi1, divi2])
+      swapInput2.value = convertFromWei(output)
     }
   }
 
@@ -251,7 +256,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const getInput = () => {
-    const symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    const { symbol } = token1
     if (swapInput1) {
       const input = swapInput1.value
       return [input, symbol]
@@ -260,7 +265,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const getOutput = () => {
-    const symbol = getToken(assetSwap2.tokenAddress)?.symbol
+    const { symbol } = token2
     return [getSwap[0], symbol, t('output')]
   }
 
@@ -354,16 +359,15 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const estMaxGasDoubleSwap = '2000000000000000'
   const estMaxGasSwap = '1500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addresses.bnb).balance
     if (
       assetSwap1?.tokenAddress !== addresses.spartav2 &&
       assetSwap2?.tokenAddress !== addresses.spartav2
     ) {
-      if (BN(bal).isLessThan(estMaxGasDoubleSwap)) {
+      if (BN(bnbBalance).isLessThan(estMaxGasDoubleSwap)) {
         return false
       }
     }
-    if (BN(bal).isLessThan(estMaxGasSwap)) {
+    if (BN(bnbBalance).isLessThan(estMaxGasSwap)) {
       return false
     }
     return true
@@ -382,18 +386,9 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
     if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]
     }
-    const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    const _symbol = token1.symbol
     return [true, `${t('sell')} ${_symbol}`]
   }
-
-  useEffect(() => {
-    const handleInputChange = () => {
-      swapInput2.value = convertFromWei(getSwap[0])
-    }
-    if (swapInput1?.value) {
-      handleInputChange()
-    }
-  }, [getSwap, swapInput1?.value, swapInput2])
 
   const handleSwapAssets = async () => {
     let gasSafety = '5000000000000000'
@@ -407,11 +402,12 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
       assetSwap1?.tokenAddress === addresses.bnb ||
       assetSwap1?.tokenAddress === addresses.wbnb
     ) {
-      const balance = getToken(addresses.bnb)?.balance
       if (
-        BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
+        BN(bnbBalance)
+          .minus(convertToWei(swapInput1?.value))
+          .isLessThan(gasSafety)
       ) {
-        swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
+        swapInput1.value = convertFromWei(BN(bnbBalance).minus(gasSafety))
       }
     }
     setTxnLoading(true)
@@ -453,7 +449,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
-                    clearInputs()
+                    swapInput1.focus()
                     swapInput1.value = convertFromWei(getBalance(1))
                     updateSwap()
                   }}
@@ -766,7 +762,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
           swapInput1?.value && (
             <Approval
               tokenAddress={assetSwap1?.tokenAddress}
-              symbol={getToken(assetSwap1.tokenAddress)?.symbol}
+              symbol={token1.symbol}
               walletAddress={wallet?.account}
               contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}

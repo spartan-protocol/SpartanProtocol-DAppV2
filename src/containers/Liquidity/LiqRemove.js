@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
@@ -15,7 +15,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
-import { formatShortString, getItemFromArray, oneWeek } from '../../utils/web3'
+import { formatShortString, oneWeek } from '../../utils/web3'
 import {
   BN,
   convertFromWei,
@@ -30,22 +30,26 @@ import Approval from '../../components/Approval/index'
 import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
-import { balanceWidths } from './Components/Utils'
-import { calcLiqValue, calcSpotValueInBase } from '../../utils/math/utils'
+import {
+  calcLiqValue,
+  calcSpotValueInBase,
+  getPool,
+  getToken,
+} from '../../utils/math/utils'
 import { getTimeUntil } from '../../utils/math/nonContract'
 import { removeLiq, removeLiqAsym } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
-import { useApp } from '../../store/app'
+import { appAsset, useApp } from '../../store/app'
 
-const LiqRemove = () => {
+const LiqRemove = ({ assetLiq1, selectedPool }) => {
   const dispatch = useDispatch()
   const focus = useFocus()
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const { addresses } = useApp()
+  const { addresses, asset1, asset2 } = useApp()
   const pool = usePool()
   const sparta = useSparta()
   const web3 = useWeb3()
@@ -54,182 +58,123 @@ const LiqRemove = () => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [confirmAsym, setConfirmAsym] = useState(false)
   const [activeTab, setActiveTab] = useState('removeTab1')
-  const [assetRemove1, setAssetRemove1] = useState('...')
-  const [assetRemove2, setAssetRemove2] = useState('...')
-  const [poolRemove1, setPoolRemove1] = useState('...')
-  const [output1, setoutput1] = useState('0.00')
-  const [output2, setoutput2] = useState('0.00')
-  const [trigger1, settrigger1] = useState(0)
 
-  useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
-    const getAssetDetails = () => {
-      if (focus && pool.poolDetails.length > 0) {
-        if (activeTab === 'removeTab1') {
-          window.localStorage.setItem('assetType1', 'pool')
-          window.localStorage.setItem('assetType2', 'token')
-          window.localStorage.setItem('assetType3', 'token')
-
-          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-          let asset3 = tryParse(window.localStorage.getItem('assetSelected3'))
-
-          asset1 =
-            asset1 &&
-            asset1.address !== '' &&
-            pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-              ? asset1
-              : { tokenAddress: addresses.bnb }
-          asset2 =
-            asset1.address !== '' ? asset1 : { tokenAddress: addresses.bnb }
-          asset3 = { tokenAddress: addresses.spartav2 }
-
-          asset1 = getItemFromArray(asset1, pool.poolDetails)
-          asset2 = getItemFromArray(asset2, pool.poolDetails)
-          asset3 = getItemFromArray(asset3, pool.poolDetails)
-
-          setPoolRemove1(asset1)
-          setAssetRemove1(asset2)
-          setAssetRemove2(asset3)
-
-          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
-          window.localStorage.setItem('assetSelected3', JSON.stringify(asset3))
-        } else if (activeTab === 'removeTab2') {
-          window.localStorage.setItem('assetType1', 'pool')
-          window.localStorage.setItem('assetType2', 'token')
-
-          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-
-          asset1 =
-            asset1 &&
-            asset1.address !== '' &&
-            pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-              ? asset1
-              : { tokenAddress: addresses.bnb }
-          asset2 = pool.poolDetails.find(
-            (x) => x.tokenAddress === asset2.tokenAddress,
-          )
-            ? asset2
-            : { tokenAddress: addresses.spartav2 }
-          asset2 =
-            asset2.tokenAddress === asset1.tokenAddress || asset2.address === ''
-              ? asset2
-              : { tokenAddress: addresses.spartav2 }
-
-          asset1 = getItemFromArray(asset1, pool.poolDetails)
-          asset2 = getItemFromArray(asset2, pool.poolDetails)
-
-          setPoolRemove1(asset1)
-          setAssetRemove1(asset2)
-
-          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
-        }
-      }
-    }
-    getAssetDetails()
-    balanceWidths()
-  }, [
-    activeTab,
-    addresses.bnb,
-    addresses.spartav2,
-    focus,
-    pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected2'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected3'),
-  ])
-
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
-  const removeInput1 = document.getElementById('removeInput1')
-  const removeInput2 = document.getElementById('removeInput2')
-
-  const [remLiqState, setRemLiqState] = useState(['0.00', '0.00'])
-  /**
-   * Get remove liquidity equal (sym) txn details
-   * @returns spartaOutput @returns tokenOutput
-   */
-  const getRemLiq = useCallback(() => {
-    if (activeTab === 'removeTab1' && removeInput1 && poolRemove1) {
-      const [spartaOutput, tokenOutput] = removeLiq(
-        convertToWei(removeInput1.value),
-        poolRemove1,
-        sparta.globalDetails.feeOnTransfer,
-      )
-      setRemLiqState([spartaOutput, tokenOutput])
-    }
-  }, [activeTab, poolRemove1, removeInput1, sparta.globalDetails.feeOnTransfer])
-
+  const [token1, settoken1] = useState(false)
+  const [token2, settoken2] = useState(false)
+  const [tokenPool, settokenPool] = useState(false)
+  const [bnbBalance, setbnbBalance] = useState(false)
   const [remLiqAsymState, setRemLiqAsymState] = useState([
     '0.00',
     '0.00',
     '0.00',
   ])
+  const [output1, setoutput1] = useState('0.00')
+  const [output2, setoutput2] = useState('0.00')
+
+  // Check selected assets and validate for liqRemove page
+  useEffect(() => {
+    const getAssetDetails = () => {
+      if (focus && pool.poolDetails.length > 0) {
+        let _asset1Addr = asset1.addr
+        let _asset2Addr = asset2.addr
+        if (activeTab === 'removeTab1') {
+          _asset1Addr = getPool(_asset1Addr, pool.poolDetails)
+            ? _asset1Addr
+            : addresses.bnb
+          _asset2Addr = _asset1Addr
+
+          dispatch(appAsset('1', _asset1Addr, 'pool'))
+          dispatch(appAsset('2', _asset2Addr, 'token'))
+          dispatch(appAsset('3', addresses.spartav2, 'token'))
+        } else if (activeTab === 'removeTab2') {
+          _asset1Addr =
+            _asset1Addr !== addresses.spartav2 &&
+            getPool(_asset1Addr, pool.poolDetails)
+              ? _asset1Addr
+              : addresses.bnb
+          _asset2Addr = getPool(_asset2Addr, pool.poolDetails)
+            ? _asset2Addr
+            : addresses.spartav2
+          _asset2Addr =
+            _asset2Addr === _asset1Addr || _asset2Addr === addresses.spartav2
+              ? _asset2Addr
+              : addresses.spartav2
+
+          dispatch(appAsset('1', _asset1Addr, 'pool'))
+          dispatch(appAsset('2', _asset2Addr, 'token'))
+        }
+      }
+    }
+    getAssetDetails()
+  }, [
+    activeTab,
+    addresses.bnb,
+    addresses.spartav2,
+    asset1.addr,
+    asset2.addr,
+    dispatch,
+    focus,
+    pool.poolDetails,
+  ])
+
+  // Push complex objects into local state
+  useEffect(() => {
+    if (pool.tokenDetails.length > 1) {
+      settoken1(getToken(asset1.addr, pool.tokenDetails))
+      settoken2(getToken(asset2.addr, pool.tokenDetails))
+      settokenPool(getToken(selectedPool.tokenAddress, pool.tokenDetails))
+      setbnbBalance(getToken(addresses.bnb, pool.tokenDetails).balance)
+    }
+  }, [
+    addresses.bnb,
+    asset1.addr,
+    asset2.addr,
+    pool.tokenDetails,
+    selectedPool.tokenAddress,
+  ])
+
+  const removeInput1 = document.getElementById('removeInput1')
+  const removeInput2 = document.getElementById('removeInput2')
+
+  /**
+   * Get remove liquidity equal (sym) txn details
+   * @returns spartaOutput @returns tokenOutput
+   */
+  const getRemLiq = () => {
+    if (activeTab === 'removeTab1' && removeInput1 && selectedPool) {
+      const [spartaOutput, tokenOutput] = removeLiq(
+        convertToWei(removeInput1.value),
+        selectedPool,
+        sparta.globalDetails.feeOnTransfer,
+      )
+      setoutput1(tokenOutput)
+      setoutput2(spartaOutput)
+    }
+  }
+
   /**
    * Get remove liquidity one-sided (asym) txn details
    * @returns tokensOut @returns swapFee
    */
-  const getRemLiqAsym = useCallback(() => {
-    if (activeTab === 'removeTab2' && removeInput1 && assetRemove1) {
+  const getRemLiqAsym = () => {
+    if (activeTab === 'removeTab2' && removeInput1 && assetLiq1) {
       const [tokensOut, swapFee, divi] = removeLiqAsym(
         convertToWei(removeInput1.value),
-        poolRemove1,
-        assetRemove1.tokenAddress === addresses.spartav2,
+        selectedPool,
+        assetLiq1.tokenAddress === addresses.spartav2,
         sparta.globalDetails.feeOnTransfer,
       )
       setRemLiqAsymState([tokensOut, swapFee, divi])
+      removeInput2.value = convertFromWei(tokensOut)
+      setoutput1(tokensOut)
+      setoutput2('0.00')
     }
-  }, [
-    activeTab,
-    addresses.spartav2,
-    assetRemove1,
-    poolRemove1,
-    removeInput1,
-    sparta.globalDetails.feeOnTransfer,
-  ])
+  }
 
-  const updateRemLiq = useCallback(() => {
+  const updateRemLiq = () => {
     getRemLiq()
     getRemLiqAsym()
-  }, [getRemLiq, getRemLiqAsym])
-
-  useEffect(() => {
-    updateRemLiq()
-  }, [
-    activeTab,
-    assetRemove1.tokenAddress,
-    assetRemove2.tokenAddress,
-    updateRemLiq,
-    trigger1,
-  ])
-
-  useEffect(() => {
-    if (activeTab === 'removeTab1' && removeInput1) {
-      if (removeInput1.value) {
-        setoutput1(remLiqState[1])
-        setoutput2(remLiqState[0])
-      }
-    }
-    if (activeTab === 'removeTab2' && removeInput1 && removeInput2) {
-      if (removeInput1.value) {
-        removeInput2.value = convertFromWei(remLiqAsymState[0])
-        setoutput1(remLiqAsymState[0])
-      }
-    }
-  }, [activeTab, remLiqAsymState, remLiqState, removeInput1, removeInput2])
+  }
 
   const clearInputs = (focusAfter) => {
     setoutput1('0.00')
@@ -256,19 +201,19 @@ const LiqRemove = () => {
 
   const getBalance = (asset) => {
     if (asset === 1) {
-      return poolRemove1?.balance
+      return selectedPool.balance
     }
     if (asset === 2) {
-      return getToken(assetRemove1?.tokenAddress)?.balance
+      return token1.balance
     }
     if (asset === 3) {
-      return getToken(assetRemove2?.tokenAddress)?.balance
+      return token2.balance
     }
-    return poolRemove1?.balance
+    return selectedPool.balance
   }
 
   const getTimeNew = () => {
-    const timeStamp = BN(poolRemove1?.genesis).plus(oneWeek)
+    const timeStamp = BN(selectedPool?.genesis).plus(oneWeek)
     return getTimeUntil(timeStamp, t)
   }
 
@@ -276,32 +221,32 @@ const LiqRemove = () => {
   // Remove liquidity get-value-of functions
 
   const getOutput1ValueUSD = () => {
-    if (assetRemove1 && output1) {
-      if (assetRemove1.tokenAddress === addresses.spartav2) {
+    if (assetLiq1 && output1) {
+      if (assetLiq1.tokenAddress === addresses.spartav2) {
         return BN(output1).times(web3.spartaPrice)
       }
-      return calcSpotValueInBase(output1, poolRemove1).times(web3.spartaPrice)
+      return calcSpotValueInBase(output1, selectedPool).times(web3.spartaPrice)
     }
     return '0.00'
   }
 
   const getLpValueBase = () => {
-    if (assetRemove1 && removeInput1?.value) {
-      return calcLiqValue(convertToWei(removeInput1.value), poolRemove1)[0]
+    if (assetLiq1 && removeInput1?.value) {
+      return calcLiqValue(convertToWei(removeInput1.value), selectedPool)[0]
     }
     return '0.00'
   }
 
   const getLpValueToken = () => {
-    if (assetRemove1 && removeInput1?.value) {
-      return calcLiqValue(convertToWei(removeInput1.value), poolRemove1)[1]
+    if (assetLiq1 && removeInput1?.value) {
+      return calcLiqValue(convertToWei(removeInput1.value), selectedPool)[1]
     }
     return '0.00'
   }
 
   const getLpValueUSD = () => {
-    if (assetRemove1 && removeInput1?.value) {
-      return BN(calcSpotValueInBase(getLpValueToken(), poolRemove1))
+    if (assetLiq1 && removeInput1?.value) {
+      return BN(calcSpotValueInBase(getLpValueToken(), selectedPool))
         .plus(getLpValueBase())
         .times(web3.spartaPrice)
     }
@@ -320,8 +265,7 @@ const LiqRemove = () => {
   // ~0.0032 BNB gas (remSingle+swap) on TN || ~0.0016 BNB on MN
   const estMaxGas = '1600000000000000'
   const enoughGas = () => {
-    const bal = getToken(addresses.bnb).balance
-    if (BN(bal).isLessThan(estMaxGas)) {
+    if (BN(bnbBalance).isLessThan(estMaxGas)) {
       return false
     }
     return true
@@ -334,7 +278,7 @@ const LiqRemove = () => {
     if (removeInput1?.value <= 0) {
       return [false, t('checkInput')]
     }
-    if (poolRemove1.curated && poolRemove1.frozen) {
+    if (selectedPool.curated && selectedPool.frozen) {
       return [false, t('poolFrozen')]
     }
     if (!enoughGas()) {
@@ -343,7 +287,7 @@ const LiqRemove = () => {
     if (BN(convertToWei(removeInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]
     }
-    if (poolRemove1.newPool) {
+    if (selectedPool.newPool) {
       return [false, `${t('unlocksIn')} ${getTimeNew()[0]}${getTimeNew()[1]}`]
     }
     if (activeTab === 'removeTab2' && !confirmAsym) {
@@ -364,7 +308,7 @@ const LiqRemove = () => {
       await dispatch(
         removeLiquidityExact(
           convertToWei(removeInput1.value),
-          poolRemove1.tokenAddress,
+          selectedPool.tokenAddress,
           wallet,
         ),
       )
@@ -372,8 +316,8 @@ const LiqRemove = () => {
       await dispatch(
         removeLiquiditySingle(
           convertToWei(removeInput1.value),
-          assetRemove1.tokenAddress === addresses.spartav2,
-          poolRemove1.tokenAddress,
+          assetLiq1.tokenAddress === addresses.spartav2,
+          selectedPool.tokenAddress,
           wallet,
         ),
       )
@@ -426,9 +370,9 @@ const LiqRemove = () => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
-                    clearInputs()
+                    removeInput1.focus()
                     removeInput1.value = convertFromWei(getBalance(1))
-                    settrigger1((prev) => prev + 1)
+                    updateRemLiq()
                   }}
                 >
                   {t('balance')}:{' '}
@@ -497,12 +441,12 @@ const LiqRemove = () => {
 
                   <Row className="pt-1 fw-light">
                     <Col>
-                      {formatShortString(poolRemove1?.address)}
-                      <ShareLink url={poolRemove1?.address}>
+                      {formatShortString(selectedPool?.address)}
+                      <ShareLink url={selectedPool?.address}>
                         <Icon icon="copy" size="14" className="ms-1 mb-1" />
                       </ShareLink>
                       <a
-                        href={getExplorerContract(poolRemove1?.address)}
+                        href={getExplorerContract(selectedPool?.address)}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -563,7 +507,10 @@ const LiqRemove = () => {
                             ]}
                             whiteList={
                               activeTab === 'removeTab2'
-                                ? [addresses.spartav2, poolRemove1.tokenAddress]
+                                ? [
+                                    addresses.spartav2,
+                                    selectedPool.tokenAddress,
+                                  ]
                                 : ['']
                             }
                             disabled={activeTab === 'removeTab1'}
@@ -583,14 +530,12 @@ const LiqRemove = () => {
 
                       <Row className="pt-1 fw-light">
                         <Col>
-                          {formatShortString(assetRemove1?.tokenAddress)}
-                          <ShareLink url={assetRemove1?.tokenAddress}>
+                          {formatShortString(assetLiq1?.tokenAddress)}
+                          <ShareLink url={assetLiq1?.tokenAddress}>
                             <Icon icon="copy" size="14" className="ms-1 mb-1" />
                           </ShareLink>
                           <a
-                            href={getExplorerContract(
-                              assetRemove1?.tokenAddress,
-                            )}
+                            href={getExplorerContract(assetLiq1?.tokenAddress)}
                             target="_blank"
                             rel="noreferrer"
                           >
@@ -618,7 +563,7 @@ const LiqRemove = () => {
                   {removeInput1?.value > 0
                     ? formatFromUnits(removeInput1?.value, 6)
                     : '0.00'}{' '}
-                  {getToken(poolRemove1?.tokenAddress)?.symbol}p
+                  {tokenPool.symbol}p
                 </Col>
               </Row>
 
@@ -656,7 +601,7 @@ const LiqRemove = () => {
                 <Col className="text-end">
                   <strong>
                     ~{output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
-                    {getToken(assetRemove1?.tokenAddress)?.symbol}
+                    {token1.symbol}
                   </strong>
                 </Col>
               </Row>
@@ -684,10 +629,8 @@ const LiqRemove = () => {
                 <div className="text-center">
                   {t('poolAsymRemoveConfirm', {
                     token1:
-                      getToken(assetRemove1.tokenAddress)?.symbol === 'SPARTA'
-                        ? getToken(poolRemove1.tokenAddress)?.symbol
-                        : 'SPARTA',
-                    token2: getToken(assetRemove1.tokenAddress)?.symbol,
+                      token2.symbol === 'SPARTA' ? tokenPool.symbol : 'SPARTA',
+                    token2: token2.symbol,
                   })}
                   <a
                     href="https://docs.spartanprotocol.org/#/liquidity-pools?id=asymmetric-liquidity-removal-remove-single"
@@ -700,7 +643,7 @@ const LiqRemove = () => {
                 <Form className="my-2 text-center">
                   <span>
                     {t('poolAsymRemoveConfirmShort', {
-                      token1: getToken(assetRemove1.tokenAddress)?.symbol,
+                      token1: token2.symbol,
                     })}
                     <Form.Check
                       type="switch"
@@ -716,12 +659,12 @@ const LiqRemove = () => {
           )}
 
           <Row className="text-center mt-3">
-            {poolRemove1?.tokenAddress &&
+            {selectedPool?.tokenAddress &&
               wallet?.account &&
               removeInput1?.value && (
                 <Approval
-                  tokenAddress={poolRemove1?.address}
-                  symbol={`${getToken(poolRemove1.tokenAddress)?.symbol}p`}
+                  tokenAddress={selectedPool?.address}
+                  symbol={`${tokenPool.symbol}p`}
                   walletAddress={wallet?.account}
                   contractAddress={addresses.router}
                   txnAmount={convertToWei(removeInput1?.value)}
@@ -743,14 +686,10 @@ const LiqRemove = () => {
                     className="anim-spin ms-1"
                   />
                 )}
-                {poolRemove1.newPool && (
+                {selectedPool.newPool && (
                   <OverlayTrigger
                     placement="auto"
-                    overlay={Tooltip(
-                      t,
-                      'newPool',
-                      `${getToken(assetRemove1.tokenAddress)?.symbol}p`,
-                    )}
+                    overlay={Tooltip(t, 'newPool', `${token1.symbol}p`)}
                   >
                     <span role="button">
                       <Icon icon="info" className="ms-1 mb-1" size="17" />

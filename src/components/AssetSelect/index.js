@@ -23,10 +23,10 @@ import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 import { getSynth, getToken } from '../../utils/math/utils'
 
 /**
- * An asset selection dropdown. Selection is pushed into Redux store as 'asset1' or 'asset2'
+ * An asset selection dropdown. Selection is pushed into Redux store as 'asset1', 'asset2' or 'asset3'
  * depending on the 'priority' prop handed over. The Redux action also pushes a copy to localStorage for session handling
- * Can be extended out with 'asset3' etc in the future but the current views will only handle '1' and '2' for now
- * @param {uint} priority '1' or '2'
+ * Can be extended out with 'asset4' etc in the future but the current views will only handle '1', '2' & '3' for now
+ * @param {uint} priority '1' or '2' or '3'
  * @param {string} type 'pools' (Shows SP-p related fields)
  * @param {array} whiteList tokenAddresses [array]
  * @param {array} blackList tokenAddresses [array]
@@ -36,7 +36,7 @@ const AssetSelect = (props) => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
 
-  const { addresses, asset1, asset2 } = useApp()
+  const { addresses, asset1, asset2, asset3 } = useApp()
   const pool = usePool()
   const synth = useSynth()
 
@@ -77,7 +77,10 @@ const AssetSelect = (props) => {
     if (props.priority === '2') {
       return asset2
     }
-    console.log('Error, assetSelect priority not set')
+    if (props.priority === '3') {
+      return asset3
+    }
+    console.log('Error, assetSelect priority invalid or not set')
     return false
   }
 
