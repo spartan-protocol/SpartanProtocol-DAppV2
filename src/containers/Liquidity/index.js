@@ -25,48 +25,46 @@ const Overview = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { chainId, addresses } = useApp()
+  const { addresses, asset1, asset2, asset3, chainId } = useApp()
   const pool = usePool()
 
   const [activeTab, setActiveTab] = useState('add')
-  const [tabParam1] = useState(new URLSearchParams(location.search).get(`tab`))
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showShareModal, setShowShareModal] = useState(false)
   const [showSettingsModal, setShowSettingsModal] = useState(false)
-  const [selectedPool, setSelectedPool] = useState(false)
+  const [assetLiq1, setAssetLiq1] = useState(false)
+  const [assetLiq2, setAssetLiq2] = useState(false)
+  const [assetLiq3, setAssetLiq3] = useState(false)
+  const [loadedInitial, setloadedInitial] = useState(false)
 
   useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
-    if (pool.poolDetails) {
-      let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-      if (asset1.tokenAddress === addresses.spartav2) {
-        asset1 = tryParse(window.localStorage.getItem('assetSelected3'))
-      }
-      asset1 = getPool(asset1.tokenAddress, pool.poolDetails)
-      setSelectedPool(asset1)
+    if (pool.poolDetails.length > 1) {
+      setAssetLiq1(getPool(asset1.addr, pool.poolDetails))
+      setAssetLiq2(getPool(asset2.addr, pool.poolDetails))
+      setAssetLiq3(getPool(asset3.addr, pool.poolDetails))
     }
   }, [
     addresses.spartav2,
+    asset1.addr,
+    asset2.addr,
+    asset3.addr,
     pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
   ])
 
+  // Check and set selected tab based on URL params ONLY ONCE
   useEffect(() => {
-    if (tabParam1) {
-      setActiveTab(tabParam1)
+    if (!loadedInitial) {
+      const tabParam1 = new URLSearchParams(location.search).get(`tab`)
+      if (tabParam1) {
+        setActiveTab(tabParam1)
+      }
+      setloadedInitial(true)
     }
-  }, [tabParam1])
+  }, [loadedInitial, location.search])
 
   useEffect(() => {
     balanceWidths()
-  }, [activeTab])
+  }, [asset1.addr, asset2.addr, loadedInitial, pool.poolDetails, activeTab])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -166,13 +164,27 @@ const Overview = () => {
                       </Nav>
                     </Card.Header>
                     <Card.Body>
-                      {activeTab === 'add' && <LiqAdd />}
-                      {activeTab === 'remove' && <LiqRemove />}
+                      {activeTab === 'add' && (
+                        <LiqAdd
+                          assetLiq1={assetLiq1}
+                          assetLiq2={assetLiq2}
+                          selectedPool={assetLiq3}
+                        />
+                      )}
+                      {activeTab === 'remove' && (
+                        <LiqRemove
+                          selectedPool={assetLiq1}
+                          assetLiq1={assetLiq2}
+                          assetLiq2={assetLiq3}
+                        />
+                      )}
                     </Card.Body>
                   </Card>
                 </Col>
                 <Col>
-                  <Metrics assetSwap={selectedPool} />
+                  <Metrics
+                    assetSwap={activeTab === 'add' ? assetLiq3 : assetLiq1}
+                  />
                 </Col>
               </>
             ) : (

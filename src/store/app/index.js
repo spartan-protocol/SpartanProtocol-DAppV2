@@ -21,19 +21,39 @@ const tryParse = (data) => {
   }
 }
 
+const defaultAsset1 = {
+  id: '1',
+  addr: addressesMN.bnb,
+  type: 'token',
+}
+
+const defaultAsset2 = {
+  id: '2',
+  addr: addressesMN.spartav2,
+  type: 'token',
+}
+
+const defaultAsset3 = {
+  id: '3',
+  addr: addressesMN.bnb,
+  type: 'token',
+}
+
+const defaultAsset4 = {
+  id: '4',
+  addr: addressesMN.spartav2,
+  type: 'token',
+}
+
 export const appSlice = createSlice({
   name: 'app',
   initialState: {
     loading: false,
     error: null,
-    // assetSelected1: window.localStorage.getItem('assetSelected1'),
-    // assetType1: window.localStorage.getItem('assetSelected1'),
-    // assetSelected2: window.localStorage.getItem('assetSelected1'),
-    // assetType2: window.localStorage.getItem('assetSelected1'),
-    // assetSelected3: window.localStorage.getItem('assetSelected1'),
-    // assetType3: window.localStorage.getItem('assetSelected1'),
-    // assetSelected4: window.localStorage.getItem('assetSelected1'),
-    // assetType4: window.localStorage.getItem('assetSelected1'),
+    asset1: tryParse(window.localStorage.getItem('sp_asset1')) ?? defaultAsset1,
+    asset2: tryParse(window.localStorage.getItem('sp_asset2')) ?? defaultAsset2,
+    asset3: tryParse(window.localStorage.getItem('sp_asset3')) ?? defaultAsset3,
+    asset4: tryParse(window.localStorage.getItem('sp_asset4')) ?? defaultAsset4,
     // lastWallet: window.localStorage.getItem('lastWallet'),
     // disableWallet: window.localStorage.getItem('disableWallet'),
     chainId: changeChainId(
@@ -58,6 +78,21 @@ export const appSlice = createSlice({
     updateError: (state, action) => {
       state.error = action.payload
     },
+    updateAsset: (state, action) => {
+      if ([1, '1'].includes(action.payload.id)) {
+        state.asset1 = action.payload
+        window.localStorage.setItem('sp_asset1', JSON.stringify(action.payload))
+      } else if ([2, '2'].includes(action.payload.id)) {
+        state.asset2 = action.payload
+        window.localStorage.setItem('sp_asset2', JSON.stringify(action.payload))
+      } else if ([3, '3'].includes(action.payload.id)) {
+        state.asset3 = action.payload
+        window.localStorage.setItem('sp_asset3', JSON.stringify(action.payload))
+      } else if ([4, '4'].includes(action.payload.id)) {
+        state.asset4 = action.payload
+        window.localStorage.setItem('sp_asset4', JSON.stringify(action.payload))
+      }
+    },
     updateChainId: (state, action) => {
       state.chainId = action.payload.chainId
       state.addresses = action.payload.addresses
@@ -73,8 +108,26 @@ export const appSlice = createSlice({
   },
 })
 
-export const { updateLoading, updateError, updateChainId, updateSettings } =
-  appSlice.actions
+export const {
+  updateLoading,
+  updateError,
+  updateAsset,
+  updateChainId,
+  updateSettings,
+} = appSlice.actions
+
+/** Update selected asset address && type */
+export const appAsset = (id, addr, type) => async (dispatch) => {
+  dispatch(updateLoading(true))
+  if (id && addr && type) {
+    try {
+      dispatch(updateAsset({ id, addr, type }))
+    } catch (error) {
+      dispatch(updateError(error.reason))
+    }
+  }
+  dispatch(updateLoading(false))
+}
 
 /** Update chain ID (56 MN or 97 TN) */
 export const appChainId = (chainId) => async (dispatch) => {

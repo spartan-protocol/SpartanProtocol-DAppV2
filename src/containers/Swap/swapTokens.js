@@ -13,7 +13,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
-import { formatShortString, getItemFromArray } from '../../utils/web3'
+import { formatShortString } from '../../utils/web3'
 import { usePool } from '../../store/pool'
 import {
   BN,
@@ -29,22 +29,22 @@ import { useSparta } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { balanceWidths } from '../Liquidity/Components/Utils'
-import { calcSpotValueInBase } from '../../utils/math/utils'
+import { calcSpotValueInBase, getPool, getToken } from '../../utils/math/utils'
 import { getSwapSpot } from '../../utils/math/nonContract'
 import { swapTo } from '../../utils/math/router'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract, getPriceByContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
-import { useApp } from '../../store/app'
+import { appAsset, useApp } from '../../store/app'
 
-const SwapTokens = () => {
+const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const dispatch = useDispatch()
   const focus = useFocus()
   const location = useLocation()
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const { settings, addresses } = useApp()
+  const { addresses, asset1, asset2, settings } = useApp()
   const pool = usePool()
   const sparta = useSparta()
   const web3 = useWeb3()
@@ -52,120 +52,93 @@ const SwapTokens = () => {
   const [reverseRate, setReverseRate] = useState(false)
   const [showWalletWarning1, setShowWalletWarning1] = useState(false)
   const [txnLoading, setTxnLoading] = useState(false)
-  const [assetSwap1, setAssetSwap1] = useState('...')
-  const [assetSwap2, setAssetSwap2] = useState('...')
+  const [loadedInitial, setloadedInitial] = useState(false)
+
+  const [token1, settoken1] = useState(false)
+  const [token2, settoken2] = useState(false)
+  const [bnbBalance, setbnbBalance] = useState(false)
   const [asset1USD, setAsset1USD] = useState(false)
   const [asset2USD, setAsset2USD] = useState(false)
-  const [triggerReload, setTriggerReload] = useState(0)
-  const [assetParam1, setAssetParam1] = useState(
-    new URLSearchParams(location.search).get(`asset1`),
-  )
-  const [assetParam2, setAssetParam2] = useState(
-    new URLSearchParams(location.search).get(`asset2`),
-  )
+  const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
 
+  // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
+    if (!loadedInitial && pool.poolDetails.length > 1) {
+      const assetParam1 = new URLSearchParams(location.search).get(`asset1`)
+      const assetParam2 = new URLSearchParams(location.search).get(`asset2`)
+      let _asset1Addr =
+        assetParam1 === addresses.wbnb ? addresses.bnb : assetParam1
+      let _asset2Addr =
+        assetParam2 === addresses.wbnb ? addresses.bnb : assetParam2
+      _asset1Addr = getPool(_asset1Addr, pool.poolDetails).tokenAddress ?? false
+      _asset2Addr = getPool(_asset2Addr, pool.poolDetails).tokenAddress ?? false
+
+      dispatch(appAsset('1', _asset1Addr, 'token'))
+      dispatch(appAsset('2', _asset2Addr, 'token'))
+      setloadedInitial(true)
     }
+  }, [
+    addresses.bnb,
+    addresses.wbnb,
+    dispatch,
+    loadedInitial,
+    location.search,
+    pool.poolDetails,
+  ])
+
+  // Check selected assets and validate for swap page
+  useEffect(() => {
     const getAssetDetails = () => {
-      if (focus) {
-        if (pool.poolDetails?.length > 0) {
-          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+      if (loadedInitial && focus && pool.poolDetails?.length > 1) {
+        let _asset1Addr = asset1.addr
+        let _asset2Addr = asset2.addr
 
-          const _assetParam1 =
-            assetParam1 === addresses.wbnb ? addresses.bnb : assetParam1
-          const _assetParam2 =
-            assetParam2 === addresses.wbnb ? addresses.bnb : assetParam2
-          if (
-            assetParam1 !== '' &&
-            pool.poolDetails.find(
-              (asset) => asset.tokenAddress === _assetParam1,
-            )
-          ) {
-            ;[asset1] = pool.poolDetails.filter(
-              (asset) => asset.tokenAddress === _assetParam1,
-            )
-            setAssetParam1('')
-          }
-          if (
-            assetParam2 !== '' &&
-            pool.poolDetails.find(
-              (asset) => asset.tokenAddress === _assetParam2,
-            )
-          ) {
-            ;[asset2] = pool.poolDetails.filter(
-              (asset) => asset.tokenAddress === _assetParam2,
-            )
-            setAssetParam2('')
-          }
-
-          window.localStorage.setItem('assetType1', 'token')
-          window.localStorage.setItem('assetType2', 'token')
-
-          if (asset2?.tokenAddress === asset1?.tokenAddress) {
-            asset2 =
-              asset1?.tokenAddress !== pool.poolDetails[0].tokenAddress
-                ? { tokenAddress: pool.poolDetails[0].tokenAddress }
-                : { tokenAddress: pool.poolDetails[1].tokenAddress }
-          }
-
-          if (
-            !asset1 ||
-            !pool.poolDetails.find(
-              (x) => x.tokenAddress === asset1.tokenAddress,
-            )
-          ) {
-            asset1 = { tokenAddress: addresses.spartav2 }
-          }
-
-          if (
-            !asset2 ||
-            !pool.poolDetails.find(
-              (x) => x.tokenAddress === asset2.tokenAddress,
-            )
-          ) {
-            asset2 = { tokenAddress: addresses.bnb }
-          }
-
-          asset1 = getItemFromArray(asset1, pool.poolDetails)
-          asset2 = getItemFromArray(asset2, pool.poolDetails)
-          asset1 = asset1.hide
-            ? getItemFromArray(addresses.spartav2, pool.poolDetails)
-            : asset1
-          asset2 = asset2.hide
-            ? getItemFromArray(addresses.spartav2, pool.poolDetails)
-            : asset2
-
-          setAssetSwap1(asset1)
-          setAssetSwap2(asset2)
-
-          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
+        if (_asset2Addr === _asset1Addr) {
+          _asset2Addr =
+            _asset1Addr !== pool.poolDetails[0].tokenAddress
+              ? pool.poolDetails[0].tokenAddress
+              : pool.poolDetails[1].tokenAddress
         }
+
+        const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
+        const hide2 = getPool(_asset2Addr, pool.poolDetails).hide
+
+        if (hide1 || !getPool(_asset1Addr, pool.poolDetails)) {
+          _asset1Addr = addresses.spartav2
+        }
+
+        if (hide2 || !getPool(_asset2Addr, pool.poolDetails)) {
+          _asset2Addr = addresses.bnb
+        }
+
+        dispatch(appAsset('1', _asset1Addr, 'token'))
+        dispatch(appAsset('2', _asset2Addr, 'token'))
       }
     }
     getAssetDetails()
-    balanceWidths()
   }, [
     addresses.bnb,
     addresses.spartav2,
     addresses.wbnb,
-    assetParam1,
-    assetParam2,
-    triggerReload,
     pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected2'),
     focus,
+    asset1.addr,
+    asset2.addr,
+    dispatch,
+    loadedInitial,
   ])
+
+  useEffect(() => {
+    if (pool.tokenDetails.length > 1) {
+      settoken1(getToken(asset1.addr, pool.tokenDetails))
+      settoken2(getToken(asset2.addr, pool.tokenDetails))
+      setbnbBalance(getToken(addresses.bnb, pool.tokenDetails).balance)
+    }
+  }, [addresses.bnb, asset1.addr, asset2.addr, pool.tokenDetails])
+
+  useEffect(() => {
+    balanceWidths()
+  }, [asset1.addr, asset2.addr, loadedInitial, pool.poolDetails])
 
   /** Check token1 external price (on asset1 change) */
   useEffect(() => {
@@ -233,52 +206,19 @@ const SwapTokens = () => {
     assetSwap2.tokenAddress,
   ])
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
 
-  const clearInputs = () => {
-    if (swapInput1) {
-      swapInput1.value = ''
-      swapInput1.focus()
-    }
-    if (swapInput2) {
-      swapInput2.value = ''
-    }
-  }
-
-  const handleReverseAssets = () => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
-    const asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-    const asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
-    window.localStorage.setItem('assetSelected1', JSON.stringify(asset2))
-    window.localStorage.setItem('assetSelected2', JSON.stringify(asset1))
-    clearInputs()
-    setTriggerReload(triggerReload + 1) // This is to make sure the view reloads without delay (useEffect detects a changed localStorage inconsistently)
-  }
-
   const getBalance = (asset) => {
-    let item = ''
     if (asset === 1) {
-      item = assetSwap1
-    } else {
-      item = assetSwap2
+      return token1.balance
     }
-    return getToken(item.tokenAddress)?.balance
+    return token2.balance
   }
 
   //= =================================================================================//
   // Functions to get txn Details
 
-  const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
   /**
    * Get swap txn details
    * @returns [output, swapFee, divi1, divi2]
@@ -294,11 +234,29 @@ const SwapTokens = () => {
         assetSwap1.tokenAddress === addresses.spartav2,
       )
       setGetSwap([output, swapFee, divi1, divi2])
+      swapInput2.value = convertFromWei(output)
     }
   }
 
+  const clearInputs = () => {
+    if (swapInput1) {
+      swapInput1.value = ''
+      swapInput1.focus()
+    }
+    if (swapInput2) {
+      swapInput2.value = ''
+    }
+    updateSwap()
+  }
+
+  const handleReverseAssets = () => {
+    dispatch(appAsset('1', asset2.addr, 'token'))
+    dispatch(appAsset('2', asset1.addr, 'token'))
+    clearInputs()
+  }
+
   const getInput = () => {
-    const symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    const { symbol } = token1
     if (swapInput1) {
       const input = swapInput1.value
       return [input, symbol]
@@ -307,7 +265,7 @@ const SwapTokens = () => {
   }
 
   const getOutput = () => {
-    const symbol = getToken(assetSwap2.tokenAddress)?.symbol
+    const { symbol } = token2
     return [getSwap[0], symbol, t('output')]
   }
 
@@ -401,16 +359,15 @@ const SwapTokens = () => {
   const estMaxGasDoubleSwap = '2000000000000000'
   const estMaxGasSwap = '1500000000000000'
   const enoughGas = () => {
-    const bal = getToken(addresses.bnb).balance
     if (
       assetSwap1?.tokenAddress !== addresses.spartav2 &&
       assetSwap2?.tokenAddress !== addresses.spartav2
     ) {
-      if (BN(bal).isLessThan(estMaxGasDoubleSwap)) {
+      if (BN(bnbBalance).isLessThan(estMaxGasDoubleSwap)) {
         return false
       }
     }
-    if (BN(bal).isLessThan(estMaxGasSwap)) {
+    if (BN(bnbBalance).isLessThan(estMaxGasSwap)) {
       return false
     }
     return true
@@ -429,18 +386,9 @@ const SwapTokens = () => {
     if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]
     }
-    const _symbol = getToken(assetSwap1.tokenAddress)?.symbol
+    const _symbol = token1.symbol
     return [true, `${t('sell')} ${_symbol}`]
   }
-
-  useEffect(() => {
-    const handleInputChange = () => {
-      swapInput2.value = convertFromWei(getSwap[0])
-    }
-    if (swapInput1?.value) {
-      handleInputChange()
-    }
-  }, [getSwap, swapInput1?.value, swapInput2])
 
   const handleSwapAssets = async () => {
     let gasSafety = '5000000000000000'
@@ -454,11 +402,12 @@ const SwapTokens = () => {
       assetSwap1?.tokenAddress === addresses.bnb ||
       assetSwap1?.tokenAddress === addresses.wbnb
     ) {
-      const balance = getToken(addresses.bnb)?.balance
       if (
-        BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
+        BN(bnbBalance)
+          .minus(convertToWei(swapInput1?.value))
+          .isLessThan(gasSafety)
       ) {
-        swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
+        swapInput1.value = convertFromWei(BN(bnbBalance).minus(gasSafety))
       }
     }
     setTxnLoading(true)
@@ -500,7 +449,7 @@ const SwapTokens = () => {
                   role="button"
                   aria-hidden="true"
                   onClick={() => {
-                    clearInputs()
+                    swapInput1.focus()
                     swapInput1.value = convertFromWei(getBalance(1))
                     updateSwap()
                   }}
@@ -813,7 +762,7 @@ const SwapTokens = () => {
           swapInput1?.value && (
             <Approval
               tokenAddress={assetSwap1?.tokenAddress}
-              symbol={getToken(assetSwap1.tokenAddress)?.symbol}
+              symbol={token1.symbol}
               walletAddress={wallet?.account}
               contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}

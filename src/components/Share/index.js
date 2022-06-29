@@ -9,92 +9,42 @@ import ShareLink from './ShareLink'
 import { usePool } from '../../store/pool'
 import { Icon } from '../Icons/index'
 import { useTheme } from '../../providers/Theme'
+import { useApp } from '../../store/app'
 
 const Share = ({ showShare, setShowShare }) => {
+  const { isDark } = useTheme()
+  const { t } = useTranslation()
+
+  const { asset1, asset2 } = useApp()
   const pool = usePool()
   const [url, setUrl] = useState('')
-  const { t } = useTranslation()
-  const { isDark } = useTheme()
+
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-  const [asset1, setasset1] = useState('')
-  const [asset2, setasset2] = useState('')
-  const [assetType1, setassetType1] = useState('')
-  const [assetType2, setassetType2] = useState('')
-
-  const validateType = (data) => {
-    if (data === 'synth') {
-      return 'synth'
-    }
-    if (data === 'pool') {
-      return 'pool'
-    }
-    return 'token'
-  }
 
   useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
     if (pool.poolDetails?.length > 0) {
-      const assetSelected1 = tryParse(
-        window.localStorage?.getItem('assetSelected1'),
-      )
-      const assetSelected2 = tryParse(
-        window.localStorage?.getItem('assetSelected2'),
-      )
-      const type1 = validateType(window.localStorage?.getItem('assetType1'))
-      const type2 = validateType(window.localStorage?.getItem('assetType2'))
-      setasset1(assetSelected1)
-      setasset2(assetSelected2)
-      setassetType1(type1)
-      setassetType2(type2)
-
       if (window.location.href.includes('liquidity')) {
         setUrl(
-          `${window.location.href.split('?')[0]}?asset1=${
-            assetSelected1
-              ? encodeURIComponent(assetSelected1.tokenAddress)
-              : ''
-          }`,
+          `${window.location.href.split('?')[0]}?asset1=${encodeURIComponent(
+            asset1.addr,
+          )}`,
         )
       } else if (window.location.href.includes('synths')) {
         setUrl(
           `${window.location.href.split('?')[0]}?asset2=${
-            assetSelected2
-              ? `${encodeURIComponent(assetSelected2.tokenAddress)}`
-              : ''
+            asset2.addr
           }&type1=token&type2=synth`,
         )
       } else {
         setUrl(
-          `${window.location.href.split('?')[0]}?asset1=${
-            assetSelected1
-              ? encodeURIComponent(assetSelected1.tokenAddress)
-              : ''
-          }${
-            assetSelected2
-              ? `&asset2=${encodeURIComponent(assetSelected2.tokenAddress)}`
-              : ''
-          }&type1=${type1}&type2=${type2}`,
+          `${window.location.href.split('?')[0]}?asset1=${encodeURIComponent(
+            asset1.addr,
+          )}${`&asset2=${encodeURIComponent(asset2.addr)}`}`,
         )
       }
     }
-  }, [
-    pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected2'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetType1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetType2'),
-  ])
+  }, [pool.poolDetails, asset1.addr, asset1.type, asset2.addr, asset2.type])
 
   return (
     <>
@@ -108,48 +58,48 @@ const Share = ({ showShare, setShowShare }) => {
             <Col>
               <img
                 height="35px"
-                src={getToken(asset1?.tokenAddress)?.symbolUrl}
-                alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
+                src={getToken(asset1.addr)?.symbolUrl}
+                alt={`${getToken(asset1.addr)?.symbol} icon`}
                 className="mx-2 rounded-circle"
               />
-              {assetType1 === 'synth' && (
+              {asset1.type === 'synth' && (
                 <Icon
                   icon="spartaSynth"
                   size="20"
                   className="token-badge-share"
                 />
               )}
-              {assetType1 === 'pool' && (
+              {asset1.type === 'pool' && (
                 <Icon icon="spartaLp" size="20" className="token-badge-share" />
               )}
               <span className="card-title" style={{ marginLeft: '7px' }}>
-                {getToken(asset1?.tokenAddress)?.symbol}
-                {assetType1 === 'synth' && 's'}
-                {assetType1 === 'pool' && 'p'}
+                {getToken(asset1.addr)?.symbol}
+                {asset1.type === 'synth' && 's'}
+                {asset1.type === 'pool' && 'p'}
               </span>
             </Col>
             <Col>
               <img
                 height="35px"
-                src={getToken(asset2?.tokenAddress)?.symbolUrl}
-                alt={`${getToken(asset1?.tokenAddress)?.symbol} icon`}
+                src={getToken(asset2.addr)?.symbolUrl}
+                alt={`${getToken(asset1.addr)?.symbol} icon`}
                 className="mx-2 rounded-circle"
               />
-              {assetType2 === 'synth' && (
+              {asset2.type === 'synth' && (
                 <Icon
                   icon="spartaSynth"
                   size="20"
                   className="token-badge-share"
                 />
               )}
-              {assetType2 === 'pool' && (
+              {asset2.type === 'pool' && (
                 <Icon icon="spartaLp" size="20" className="token-badge-share" />
               )}
 
               <span className="card-title" style={{ marginLeft: '7px' }}>
-                {getToken(asset2?.tokenAddress)?.symbol}
-                {assetType2 === 'synth' && 's'}
-                {assetType2 === 'pool' && 'p'}
+                {getToken(asset2.addr)?.symbol}
+                {asset2.type === 'synth' && 's'}
+                {asset2.type === 'pool' && 'p'}
               </span>
             </Col>
           </Row>

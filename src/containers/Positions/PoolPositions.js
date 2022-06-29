@@ -8,8 +8,8 @@ import Popover from 'react-bootstrap/Popover'
 import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
+import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
-import { getItemFromArray } from '../../utils/web3'
 import HelmetLoading from '../../components/Spinner/index'
 import { Icon } from '../../components/Icons/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
@@ -31,13 +31,14 @@ import {
   getToken,
 } from '../../utils/math/utils'
 import { getMemberPositions } from '../../utils/extCalls'
-import { useApp } from '../../store/app'
+import { appAsset, useApp } from '../../store/app'
 
 const PoolPositions = () => {
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const { addresses } = useApp()
+  const { addresses, asset1 } = useApp()
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
@@ -61,35 +62,18 @@ const PoolPositions = () => {
   }
 
   useEffect(() => {
-    const tryParsePool = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
     const getAssetDetails = () => {
       if (pool.poolDetails) {
-        window.localStorage.setItem('assetType1', 'pool')
-        let asset1 = tryParsePool(window.localStorage.getItem('assetSelected1'))
-        asset1 =
-          asset1 &&
-          asset1.address !== '' &&
-          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-            ? asset1
-            : { tokenAddress: addresses.bnb }
-        asset1 = getItemFromArray(asset1, pool.poolDetails)
-        setPoolPos(asset1)
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+        let _asset1Addr = asset1.addr
+        _asset1Addr = getPool(_asset1Addr, pool.poolDetails)
+          ? _asset1Addr
+          : addresses.bnb
+        setPoolPos(getPool(_asset1Addr, pool.poolDetails))
+        dispatch(appAsset('1', _asset1Addr, 'pool'))
       }
     }
     getAssetDetails()
-  }, [
-    addresses.bnb,
-    pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-  ])
+  }, [addresses.bnb, asset1.addr, dispatch, pool.poolDetails])
 
   const getWallet = useCallback(() => {
     if (wallet?.account) {

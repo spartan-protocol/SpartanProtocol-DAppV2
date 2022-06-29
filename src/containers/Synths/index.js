@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -18,7 +18,6 @@ import { useWeb3React } from '@web3-react/core'
 import AssetSelect from '../../components/AssetSelect/index'
 import {
   formatShortString,
-  getItemFromArray,
   synthHarvestLive,
   tempChains,
 } from '../../utils/web3'
@@ -57,7 +56,8 @@ import { useDao, daoMemberDetails } from '../../store/dao'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
-import { useApp } from '../../store/app'
+import { appAsset, useApp } from '../../store/app'
+import { getPool, getSynth, getToken } from '../../utils/math/utils'
 
 const Swap = () => {
   const dispatch = useDispatch()
@@ -66,7 +66,7 @@ const Swap = () => {
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const { chainId, addresses } = useApp()
+  const { addresses, asset1, asset2, chainId } = useApp()
   const dao = useDao()
   const pool = usePool()
   const reserve = useReserve()
@@ -81,17 +81,23 @@ const Swap = () => {
   const [txnLoading, setTxnLoading] = useState(false)
   const [activeTab, setActiveTab] = useState('mint')
   const [confirmSynth, setConfirmSynth] = useState(false)
-  const [assetSwap1, setAssetSwap1] = useState('...')
-  const [assetSwap2, setAssetSwap2] = useState('...')
-  const [assetParam1, setAssetParam1] = useState(
-    new URLSearchParams(location.search).get(`asset1`),
-  )
-  const [assetParam2, setAssetParam2] = useState(
-    new URLSearchParams(location.search).get(`asset2`),
-  )
-  const [typeParam1, setTypeParam1] = useState(
-    new URLSearchParams(location.search).get(`type1`),
-  )
+  const [loadedInitial, setloadedInitial] = useState(false)
+
+  const [assetSwap1, setAssetSwap1] = useState(false)
+  const [assetSwap2, setAssetSwap2] = useState(false)
+  const [token1, settoken1] = useState(false)
+  const [token2, settoken2] = useState(false)
+  const [synth1, setsynth1] = useState(false)
+  const [bnbBalance, setbnbBalance] = useState(false)
+  const [getMint, setGetMint] = useState([
+    '0.00',
+    '0.00',
+    '0.00',
+    '0.00',
+    false,
+    false,
+  ])
+  const [getBurn, setGetBurn] = useState(['0.00', '0.00', '0.00', '0.00'])
 
   useEffect(() => {
     const getGlobals = () => {
@@ -127,85 +133,63 @@ const Swap = () => {
     checkDetails()
   }, [dispatch, chainId, pool.listedPools, wallet])
 
+  // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
-    const tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
+    if (!loadedInitial && pool.poolDetails.length > 1) {
+      const assetParam1 = new URLSearchParams(location.search).get(`asset1`)
+      const assetParam2 = new URLSearchParams(location.search).get(`asset2`)
+      const typeParam1 = new URLSearchParams(location.search).get(`type1`)
+      let _asset1Addr =
+        assetParam1 === addresses.wbnb ? addresses.bnb : assetParam1
+      let _asset2Addr =
+        assetParam2 === addresses.wbnb ? addresses.bnb : assetParam2
+      _asset1Addr = getPool(_asset1Addr, pool.poolDetails).tokenAddress ?? false
+      _asset2Addr = getPool(_asset2Addr, pool.poolDetails).tokenAddress ?? false
+      if (typeParam1 === 'synth') {
+        setActiveTab('burn')
       }
+      dispatch(appAsset('1', _asset1Addr, 'token'))
+      dispatch(appAsset('2', _asset2Addr, 'token'))
+      setloadedInitial(true)
     }
+  }, [
+    addresses.bnb,
+    addresses.wbnb,
+    dispatch,
+    loadedInitial,
+    location.search,
+    pool.poolDetails,
+  ])
+
+  // Check selected assets and validate for synth page
+  useEffect(() => {
     const getAssetDetails = () => {
-      if (focus) {
-        if (pool.poolDetails?.length > 0) {
-          let asset1 = tryParse(window.localStorage.getItem('assetSelected1'))
-          let asset2 = tryParse(window.localStorage.getItem('assetSelected2'))
+      if (loadedInitial && focus && pool.poolDetails?.length > 1) {
+        let _asset1Addr = asset1.addr
+        let _asset2Addr = asset2.addr
 
-          if (
-            assetParam1 !== '' &&
-            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam1)
-          ) {
-            ;[asset1] = pool.poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam1,
-            )
-            setAssetParam1('')
+        if (activeTab === 'mint') {
+          if (!getPool(_asset1Addr, pool.poolDetails)) {
+            _asset1Addr = addresses.spartav2
           }
-          if (
-            assetParam2 !== '' &&
-            pool.poolDetails.find((asset) => asset.tokenAddress === assetParam2)
-          ) {
-            ;[asset2] = pool.poolDetails.filter(
-              (asset) => asset.tokenAddress === assetParam2,
-            )
-            setAssetParam2('')
+          if (!getPool(_asset2Addr, pool.poolDetails)?.curated) {
+            _asset2Addr = addresses.bnb
           }
-
-          if (typeParam1 === 'synth') {
-            setActiveTab('burn')
-            setTypeParam1('')
+        } else {
+          if (!getPool(_asset1Addr, pool.poolDetails)?.curated) {
+            _asset1Addr = addresses.bnb
           }
-
-          if (activeTab === 'mint') {
-            window.localStorage.setItem('assetType1', 'token')
-            window.localStorage.setItem('assetType2', 'synth')
-            if (asset2?.curated !== true) {
-              asset2 = { tokenAddress: addresses.bnb }
-            }
-          } else {
-            window.localStorage.setItem('assetType1', 'synth')
-            window.localStorage.setItem('assetType2', 'token')
-            if (asset1.address === '') {
-              asset1 = { tokenAddress: addresses.bnb }
-            }
+          if (!getPool(_asset2Addr, pool.poolDetails)) {
+            _asset2Addr = addresses.spartav2
           }
-
-          if (
-            !asset1 ||
-            !pool.poolDetails.find(
-              (x) => x.tokenAddress === asset1.tokenAddress,
-            )
-          ) {
-            asset1 = { tokenAddress: addresses.spartav2 }
-          }
-
-          if (
-            !asset2 ||
-            !pool.poolDetails.find(
-              (x) => x.tokenAddress === asset2.tokenAddress,
-            )
-          ) {
-            asset2 = { tokenAddress: addresses.bnb }
-          }
-
-          asset1 = getItemFromArray(asset1, pool.poolDetails)
-          asset2 = getItemFromArray(asset2, pool.poolDetails)
-
-          setAssetSwap1(asset1)
-          setAssetSwap2(asset2)
-
-          window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
-          window.localStorage.setItem('assetSelected2', JSON.stringify(asset2))
         }
+
+        dispatch(
+          appAsset('1', _asset1Addr, activeTab === 'mint' ? 'token' : 'synth'),
+        )
+        dispatch(
+          appAsset('2', _asset2Addr, activeTab === 'mint' ? 'synth' : 'token'),
+        )
       }
     }
     getAssetDetails()
@@ -214,29 +198,57 @@ const Swap = () => {
     activeTab,
     pool.poolDetails,
     focus,
-    typeParam1,
-    assetParam1,
-    assetParam2,
     addresses.bnb,
     addresses.spartav2,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected2'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetType1'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetType2'),
+    loadedInitial,
+    asset1.addr,
+    asset2.addr,
+    dispatch,
   ])
 
-  const getToken = (tokenAddress) =>
-    pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
-
-  const getSynth = useCallback(
-    (tokenAddress) =>
-      synth.synthDetails.filter((i) => i.tokenAddress === tokenAddress)[0],
-    [synth.synthDetails],
-  )
+  useEffect(() => {
+    if (
+      pool.tokenDetails.length > 1 &&
+      pool.poolDetails.length > 1 &&
+      synth.synthDetails.length > 1
+    ) {
+      const _token1 = getToken(asset1.addr, pool.tokenDetails)
+      const _token2 = getToken(asset2.addr, pool.tokenDetails)
+      const _pool1 = getPool(asset1.addr, pool.poolDetails)
+      const _pool2 = getPool(asset2.addr, pool.poolDetails)
+      const _synth1 = getSynth(
+        activeTab === 'mint' ? asset2.addr : asset1.addr,
+        synth.synthDetails,
+      )
+      const _bnbBalance = getToken(addresses.bnb, pool.tokenDetails).balance
+      if (_token1) {
+        settoken1(_token1)
+      }
+      if (_token2) {
+        settoken2(_token2)
+      }
+      if (_pool1) {
+        setAssetSwap1(_pool1)
+      }
+      if (_pool2) {
+        setAssetSwap2(_pool2)
+      }
+      if (_synth1?.address) {
+        setsynth1(_synth1)
+      }
+      if (_bnbBalance) {
+        setbnbBalance(_bnbBalance)
+      }
+    }
+  }, [
+    activeTab,
+    addresses.bnb,
+    asset1.addr,
+    asset2.addr,
+    pool.poolDetails,
+    pool.tokenDetails,
+    synth.synthDetails,
+  ])
 
   const swapInput1 = document.getElementById('swapInput1')
   const swapInput2 = document.getElementById('swapInput2')
@@ -248,17 +260,6 @@ const Swap = () => {
   useEffect(() => {
     handleConfClear()
   }, [activeTab])
-
-  const clearInputs = () => {
-    handleConfClear()
-    if (swapInput1) {
-      swapInput1.value = ''
-      swapInput1.focus()
-    }
-    if (swapInput2) {
-      swapInput2.value = ''
-    }
-  }
 
   const _convertTimeUnits = () => {
     if (synth.globalDetails) {
@@ -275,70 +276,52 @@ const Swap = () => {
   // Functions SWAP calculations
 
   const getBalance = (asset) => {
-    let item = ''
-    let type = ''
     if (asset === 1) {
-      item = assetSwap1
-      type = window.localStorage.getItem('assetType1')
-    } else {
-      item = assetSwap2
-      type = window.localStorage.getItem('assetType2')
+      return asset1.type === 'token' ? token1.balance : synth1.balance
     }
-    if (type === 'token') {
-      return getToken(item.tokenAddress)?.balance
-    }
-    if (type === 'synth') {
-      return getSynth(item.tokenAddress)?.balance
-    }
-    return item.balanceTokens
+    return asset2.type === 'token' ? token2.balance : synth1.balance
   }
 
   //= =================================================================================//
   // Functions for SWAP input handling
-  const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab)
-    clearInputs(1)
-  }
-
   /**
    * Get synth mint txn details
    * @returns [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
    */
-  const getMint = useCallback(() => {
+  const doMint = () => {
     if (
       activeTab === 'mint' &&
       swapInput1 &&
       assetSwap1 &&
       assetSwap2 &&
-      getSynth(assetSwap2.tokenAddress)
+      synth1
     ) {
       const [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped] =
         mintSynth(
           convertToWei(swapInput1.value),
           assetSwap1,
           assetSwap2,
-          getSynth(assetSwap2.tokenAddress),
+          synth1,
           sparta.globalDetails.feeOnTransfer,
           assetSwap1.tokenAddress === addresses.spartav2,
         )
-      return [synthOut, slipFee, diviSynth, diviSwap, baseCapped, synthCapped]
+      setGetMint([
+        synthOut,
+        slipFee,
+        diviSynth,
+        diviSwap,
+        baseCapped,
+        synthCapped,
+      ])
+      swapInput2.value = convertFromWei(synthOut, 18)
     }
-    return ['0.00', '0.00', '0.00', '0.00', false, false]
-  }, [
-    activeTab,
-    addresses.spartav2,
-    assetSwap1,
-    assetSwap2,
-    getSynth,
-    sparta.globalDetails.feeOnTransfer,
-    swapInput1,
-  ])
+  }
 
   /**
    * Get synth burn txn details
    * @returns [tokenOut, slipFee, diviSynth, diviSwap]
    */
-  const getBurn = useCallback(() => {
+  const doBurn = () => {
     if (activeTab === 'burn' && swapInput1 && assetSwap1 && assetSwap2) {
       const [tokenOut, slipFee, diviSynth, diviSwap] = burnSynth(
         convertToWei(swapInput1.value),
@@ -347,24 +330,39 @@ const Swap = () => {
         sparta.globalDetails.feeOnTransfer,
         assetSwap2.tokenAddress === addresses.spartav2,
       )
-      return [tokenOut, slipFee, diviSynth, diviSwap]
+      setGetBurn([tokenOut, slipFee, diviSynth, diviSwap])
+      swapInput2.value = convertFromWei(tokenOut, 18)
     }
-    return ['0.00', '0.00', '0.00', '0.00']
-  }, [
-    activeTab,
-    addresses.spartav2,
-    assetSwap1,
-    assetSwap2,
-    sparta.globalDetails.feeOnTransfer,
-    swapInput1,
-  ])
+  }
+
+  const updateMintBurn = () => {
+    doMint()
+    doBurn()
+  }
+
+  const clearInputs = () => {
+    handleConfClear()
+    if (swapInput1) {
+      swapInput1.value = ''
+      swapInput1.focus()
+    }
+    if (swapInput2) {
+      swapInput2.value = ''
+    }
+    updateMintBurn()
+  }
+
+  const toggle = (tab) => {
+    if (activeTab !== tab) setActiveTab(tab)
+    clearInputs(1)
+  }
 
   const getRevenue = () => {
     let result = '0.00'
     if (activeTab === 'mint') {
-      result = BN(getMint()[1]).plus(getMint()[2])
+      result = BN(getMint[1]).plus(getMint[2])
     } else {
-      result = BN(getBurn()[1]).plus(getBurn()[2])
+      result = BN(getBurn[1]).plus(getBurn[2])
     }
     result = result > 0 ? result : '0.00'
     return result
@@ -372,16 +370,6 @@ const Swap = () => {
 
   //= =================================================================================//
   // Functions for input handling
-
-  const handleZapInputChange = useCallback(() => {
-    if (activeTab === 'mint') {
-      if (swapInput1?.value) {
-        swapInput2.value = convertFromWei(getMint()[0], 18)
-      }
-    } else if (swapInput1?.value) {
-      swapInput2.value = convertFromWei(getBurn()[0], 18)
-    }
-  }, [activeTab, getBurn, getMint, swapInput1?.value, swapInput2])
 
   // GET USD VALUES
   // const getInput1USD = () => {
@@ -419,13 +407,12 @@ const Swap = () => {
   const estMaxGasSynthOut = '5000000000000000'
   const estMaxGasSynthIn = '5000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addresses.bnb).balance
     if (activeTab === 'mint') {
-      if (BN(bal).isLessThan(estMaxGasSynthOut)) {
+      if (BN(bnbBalance).isLessThan(estMaxGasSynthOut)) {
         return false
       }
     }
-    if (BN(bal).isLessThan(estMaxGasSynthIn)) {
+    if (BN(bnbBalance).isLessThan(estMaxGasSynthIn)) {
       return false
     }
     return true
@@ -442,7 +429,7 @@ const Swap = () => {
     const [reward, baseCapped, synthCapped] = calcCurrentRewardSynth(
       pool.poolDetails,
       synth,
-      getSynth(assetSwap2.tokenAddress),
+      synth1,
       sparta.globalDetails,
       reserve.globalDetails.spartaBalance,
     )
@@ -460,7 +447,7 @@ const Swap = () => {
     if (getClaimable()[2]) {
       return [true, reward, ' SPARTA']
     }
-    return [true, reward, ` ${getToken(assetSwap2.tokenAddress)?.symbol}s`]
+    return [true, reward, ` ${token2.symbol}s`]
   }
 
   const checkValid = () => {
@@ -476,25 +463,22 @@ const Swap = () => {
     if (BN(convertToWei(swapInput1?.value)).isGreaterThan(getBalance(1))) {
       return [false, t('checkBalance')]
     }
-    const _symbolIn = getToken(assetSwap1.tokenAddress)?.symbol
-    const _symbolOut = getToken(assetSwap2.tokenAddress)?.symbol
+    const _symbolIn = token1.symbol
+    const _symbolOut = token2.symbol
     if (activeTab === 'mint') {
       // if (!synth.synthMinting) {
       //   return [false, t('synthsDisabled')]
       // }
-      if (getMint()[5]) {
+      if (getMint[5]) {
         return [false, t('synthAtCapacity')]
       }
-      if (getMint()[4]) {
+      if (getMint[4]) {
         return [false, t('poolAtCapacity')]
       }
       if (!confirmSynth) {
         return [false, t('confirmLockup')]
       }
-      if (
-        getSynth(assetSwap2.tokenAddress)?.staked > 0 &&
-        secsSinceHarvest() > 300
-      ) {
+      if (synth1.staked > 0 && secsSinceHarvest() > 300) {
         if (!harvestConfirm) {
           return [false, t('confirmHarvest')]
         }
@@ -508,28 +492,18 @@ const Swap = () => {
 
   const synthCount = () => synth.synthDetails.filter((x) => x.address).length
 
-  useEffect(() => {
-    handleZapInputChange()
-  }, [
-    swapInput1?.value,
-    swapInput2?.value,
-    assetSwap1,
-    assetSwap2,
-    activeTab,
-    handleZapInputChange,
-  ])
-
   const handleSwapToSynth = async () => {
     const gasSafety = '10000000000000000'
     if (
       assetSwap1?.tokenAddress === addresses.bnb ||
       assetSwap1?.tokenAddress === addresses.wbnb
     ) {
-      const balance = getToken(addresses.bnb)?.balance
       if (
-        BN(balance).minus(convertToWei(swapInput1?.value)).isLessThan(gasSafety)
+        BN(bnbBalance)
+          .minus(convertToWei(swapInput1?.value))
+          .isLessThan(gasSafety)
       ) {
-        swapInput1.value = convertFromWei(BN(balance).minus(gasSafety))
+        swapInput1.value = convertFromWei(BN(bnbBalance).minus(gasSafety))
       }
     }
     setTxnLoading(true)
@@ -537,7 +511,7 @@ const Swap = () => {
       swapAssetToSynth(
         convertToWei(swapInput1?.value),
         assetSwap1.tokenAddress,
-        getSynth(assetSwap2.tokenAddress)?.address,
+        synth1.address,
         wallet,
       ),
     )
@@ -550,7 +524,7 @@ const Swap = () => {
     await dispatch(
       swapSynthToAsset(
         convertToWei(swapInput1?.value),
-        getSynth(assetSwap1.tokenAddress)?.address,
+        synth1.address,
         assetSwap2.tokenAddress,
         wallet,
       ),
@@ -561,9 +535,7 @@ const Swap = () => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(
-      synthHarvestSingle(getSynth(assetSwap2.tokenAddress)?.address, wallet),
-    )
+    await dispatch(synthHarvestSingle(synth1.address, wallet))
     setHarvestLoading(false)
     if (synth.synthArray?.length > 1) {
       dispatch(getSynthDetails(wallet))
@@ -576,9 +548,7 @@ const Swap = () => {
       !synth.synthDetails ||
       !synth.globalDetails ||
       synth.synthDetails.length <= 0 ||
-      pool.tokenDetails.length <= 0 ||
-      !assetSwap1 ||
-      !assetSwap2
+      pool.tokenDetails.length <= 0
     ) {
       return true
     }
@@ -594,19 +564,15 @@ const Swap = () => {
     }
   }
 
-  const getSynthSupply = () => getSynth(assetSwap2.tokenAddress)?.totalSupply
+  const getSynthSupply = () => synth1.totalSupply
   const getSynthStir = () =>
-    stirCauldron(
-      assetSwap2,
-      assetSwap2.tokenAmount,
-      getSynth(assetSwap2.tokenAddress),
-    )
+    stirCauldron(assetSwap2, assetSwap2.tokenAmount, synth1)
   const getSynthCapPC = () =>
     BN(getSynthSupply())
       .div(BN(getSynthSupply()).plus(getSynthStir()))
       .times(100)
   const getMintedSynthCapPC = () =>
-    BN(getMint()[0]).div(BN(getSynthSupply()).plus(getSynthStir())).times(100)
+    BN(getMint[0]).div(BN(getSynthSupply()).plus(getSynthStir())).times(100)
 
   return (
     <>
@@ -702,13 +668,11 @@ const Swap = () => {
                                       role="button"
                                       aria-hidden="true"
                                       onClick={() => {
+                                        swapInput1.focus()
                                         swapInput1.value = convertFromWei(
                                           getBalance(1),
                                         )
-                                        handleZapInputChange(
-                                          convertFromWei(getBalance(1)),
-                                          true,
-                                        )
+                                        updateMintBurn()
                                       }}
                                     >
                                       {t('balance')}
@@ -744,7 +708,7 @@ const Swap = () => {
                                                 ? ['token']
                                                 : ['synth']
                                             }
-                                            onClick={handleConfClear}
+                                            onClick={() => clearInputs()}
                                           />
                                         </InputGroup.Text>
                                         <OverlayTrigger
@@ -770,6 +734,7 @@ const Swap = () => {
                                             id="swapInput1"
                                             autoComplete="off"
                                             autoCorrect="off"
+                                            onChange={() => updateMintBurn()}
                                           />
                                         </OverlayTrigger>
 
@@ -789,17 +754,13 @@ const Swap = () => {
                                           {formatShortString(
                                             activeTab === 'mint'
                                               ? assetSwap1?.tokenAddress
-                                              : getSynth(
-                                                  assetSwap1?.tokenAddress,
-                                                )?.address,
+                                              : synth1.address,
                                           )}
                                           <ShareLink
                                             url={
                                               activeTab === 'mint'
                                                 ? assetSwap1?.tokenAddress
-                                                : getSynth(
-                                                    assetSwap1?.tokenAddress,
-                                                  )?.address
+                                                : synth1.address
                                             }
                                           >
                                             <Icon
@@ -812,9 +773,7 @@ const Swap = () => {
                                             href={getExplorerContract(
                                               activeTab === 'mint'
                                                 ? assetSwap1?.tokenAddress
-                                                : getSynth(
-                                                    assetSwap1?.tokenAddress,
-                                                  )?.address,
+                                                : synth1.address,
                                             )}
                                             target="_blank"
                                             rel="noreferrer"
@@ -884,7 +843,7 @@ const Swap = () => {
                                             <AssetSelect
                                               priority="2"
                                               filter={['synth']}
-                                              onClick={handleConfClear}
+                                              onClick={() => clearInputs()}
                                             />
                                           </InputGroup.Text>
                                           <FormControl
@@ -902,17 +861,8 @@ const Swap = () => {
 
                                         <Row className="pt-1 fw-light">
                                           <Col>
-                                            {formatShortString(
-                                              getSynth(assetSwap2?.tokenAddress)
-                                                ?.address,
-                                            )}
-                                            <ShareLink
-                                              url={
-                                                getSynth(
-                                                  assetSwap2?.tokenAddress,
-                                                )?.address
-                                              }
-                                            >
+                                            {formatShortString(synth1.address)}
+                                            <ShareLink url={synth1.address}>
                                               <Icon
                                                 icon="copy"
                                                 size="14"
@@ -921,9 +871,7 @@ const Swap = () => {
                                             </ShareLink>
                                             <a
                                               href={getExplorerContract(
-                                                getSynth(
-                                                  assetSwap2?.tokenAddress,
-                                                )?.address,
+                                                synth1.address,
                                               )}
                                               target="_blank"
                                               rel="noreferrer"
@@ -988,7 +936,7 @@ const Swap = () => {
                                             <AssetSelect
                                               priority="2"
                                               filter={['token']}
-                                              onClick={handleConfClear}
+                                              onClick={() => clearInputs()}
                                             />
                                           </InputGroup.Text>
                                           <FormControl
@@ -1126,7 +1074,7 @@ const Swap = () => {
                                   {activeTab === 'mint' && (
                                     <>
                                       {swapInput1?.value
-                                        ? formatFromWei(getMint()[1], 6)
+                                        ? formatFromWei(getMint[1], 6)
                                         : '0.00'}{' '}
                                       SPARTA
                                     </>
@@ -1134,7 +1082,7 @@ const Swap = () => {
                                   {activeTab === 'burn' && (
                                     <>
                                       {swapInput1?.value
-                                        ? formatFromWei(getBurn()[1], 6)
+                                        ? formatFromWei(getBurn[1], 6)
                                         : '0.00'}{' '}
                                       SPARTA
                                     </>
@@ -1169,33 +1117,25 @@ const Swap = () => {
                                   {activeTab === 'mint' && (
                                     <strong>
                                       {swapInput1?.value
-                                        ? formatFromWei(getMint()[0], 6)
+                                        ? formatFromWei(getMint[0], 6)
                                         : '0.00'}{' '}
-                                      {
-                                        getToken(assetSwap2.tokenAddress)
-                                          ?.symbol
-                                      }
-                                      s
+                                      {token2.symbol}s
                                     </strong>
                                   )}
 
                                   {activeTab === 'burn' && (
                                     <strong>
                                       {swapInput1?.value
-                                        ? formatFromWei(getBurn()[0], 6)
+                                        ? formatFromWei(getBurn[0], 6)
                                         : '0.00'}{' '}
-                                      {
-                                        getToken(assetSwap2.tokenAddress)
-                                          ?.symbol
-                                      }
+                                      {token2.symbol}
                                     </strong>
                                   )}
                                 </Col>
                               </Row>
                               {activeTab === 'mint' && (
                                 <>
-                                  {getSynth(assetSwap2.tokenAddress)?.staked >
-                                    0 &&
+                                  {synth1.staked > 0 &&
                                     secsSinceHarvest() > 300 && (
                                       <>
                                         <br />
@@ -1214,8 +1154,7 @@ const Swap = () => {
                                             overlay={Tooltip(
                                               t,
                                               'mintHarvestConfirm',
-                                              getToken(assetSwap2.tokenAddress)
-                                                ?.symbol,
+                                              token2.symbol,
                                             )}
                                           >
                                             <span role="button">
@@ -1287,10 +1226,7 @@ const Swap = () => {
                                   swapInput1?.value && (
                                     <Approval
                                       tokenAddress={assetSwap1?.tokenAddress}
-                                      symbol={
-                                        getToken(assetSwap1.tokenAddress)
-                                          ?.symbol
-                                      }
+                                      symbol={token1.symbol}
                                       walletAddress={wallet?.account}
                                       contractAddress={addresses.router}
                                       txnAmount={convertToWei(
@@ -1301,16 +1237,14 @@ const Swap = () => {
                                   )}
                                 <Col className="hide-if-siblings">
                                   <Row>
-                                    {getSynth(assetSwap2.tokenAddress)?.staked >
-                                      0 &&
+                                    {synth1.staked > 0 &&
                                       secsSinceHarvest() > 300 && (
                                         <Col>
                                           <Button
                                             className="w-100"
                                             onClick={() => handleHarvest()}
                                             disabled={
-                                              getSynth(assetSwap2.tokenAddress)
-                                                .staked <= 0 ||
+                                              synth1.staked <= 0 ||
                                               !enoughGas() ||
                                               reserve.globalDetails
                                                 .globalFreeze ||
@@ -1361,13 +1295,8 @@ const Swap = () => {
                               <>
                                 {wallet?.account && swapInput1?.value && (
                                   <Approval
-                                    tokenAddress={
-                                      getSynth(assetSwap1?.tokenAddress)
-                                        ?.address
-                                    }
-                                    symbol={`${
-                                      getToken(assetSwap1.tokenAddress)?.symbol
-                                    }s`}
+                                    tokenAddress={synth1.address}
+                                    symbol={`${token1.symbol}s`}
                                     walletAddress={wallet?.account}
                                     contractAddress={addresses.router}
                                     txnAmount={convertToWei(swapInput1?.value)}
