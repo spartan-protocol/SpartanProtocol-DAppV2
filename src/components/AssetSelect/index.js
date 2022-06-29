@@ -65,6 +65,7 @@ const AssetSelect = (props) => {
 
   const clearSearch = () => {
     searchInput.value = ''
+    settrigger((prev) => prev + 1)
   }
 
   const addSelection = (item) => {
