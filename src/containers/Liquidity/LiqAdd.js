@@ -52,7 +52,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
   const { t } = useTranslation()
   const wallet = useWeb3React()
 
-  const { addresses, asset1, asset2 } = useApp()
+  const { addresses, asset1, asset2, asset3 } = useApp()
   const pool = usePool()
   const sparta = useSparta()
   const web3 = useWeb3()
@@ -110,44 +110,50 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
     const getAssetDetails = () => {
       if (loadedInitial && focus && pool.poolDetails?.length > 1) {
         let _asset1Addr = asset1.addr
-        let _asset2Addr = asset2.addr
+        let _asset3Addr = asset3.addr
         if (activeTab === 'addTab1') {
           _asset1Addr =
             _asset1Addr !== addresses.spartav2 &&
             getPool(_asset1Addr, pool.poolDetails)
               ? _asset1Addr
               : addresses.bnb
-          _asset2Addr = addresses.spartav2
+          const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
+          if (hide1) {
+            _asset1Addr = addresses.bnb
+          }
+          dispatch(appAsset('1', _asset1Addr, 'token'))
+          dispatch(appAsset('2', addresses.spartav2, 'token'))
+          dispatch(appAsset('3', _asset1Addr, 'pool'))
         } else if (activeTab === 'addTab2') {
           _asset1Addr = getPool(_asset1Addr, pool.poolDetails)
             ? _asset1Addr
-            : addresses.bnb
-          _asset2Addr =
+            : addresses.spartav2
+          _asset3Addr =
             _asset1Addr !== addresses.spartav2
               ? _asset1Addr
-              : getPool(_asset2Addr, pool.poolDetails)
-              ? _asset2Addr
+              : getPool(_asset3Addr, pool.poolDetails)
+              ? _asset3Addr
               : addresses.bnb
+          const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
+          const hide3 = getPool(_asset3Addr, pool.poolDetails).hide
+          if (hide1) {
+            _asset1Addr = addresses.sparta
+          }
+          if (hide3) {
+            _asset3Addr = addresses.bnb
+          }
+          dispatch(appAsset('1', _asset1Addr, 'token'))
+          dispatch(
+            appAsset(
+              '2',
+              _asset1Addr !== addresses.spartav2
+                ? addresses.spartav2
+                : _asset3Addr,
+              'token',
+            ),
+          )
+          dispatch(appAsset('3', _asset3Addr, 'pool'))
         }
-
-        const hide1 = getPool(_asset1Addr, pool.poolDetails).hide
-        const hide2 = getPool(_asset2Addr, pool.poolDetails).hide
-        if (hide1) {
-          _asset1Addr = addresses.bnb
-        }
-        if (hide2) {
-          _asset2Addr = addresses.spartav2
-        }
-
-        dispatch(appAsset('1', _asset1Addr, 'token'))
-        dispatch(appAsset('2', _asset2Addr, 'token'))
-        dispatch(
-          appAsset(
-            '3',
-            _asset1Addr !== addresses.spartav2 ? _asset1Addr : _asset2Addr,
-            'pool',
-          ),
-        )
       }
     }
     getAssetDetails()
@@ -161,6 +167,8 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
     dispatch,
     asset1.addr,
     asset2.addr,
+    asset3.addr,
+    addresses.sparta,
   ])
 
   // Push complex objects into local state
