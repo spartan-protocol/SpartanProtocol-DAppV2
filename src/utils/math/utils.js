@@ -61,10 +61,7 @@ const handleWBNB = (tokenAddr) => {
 export const getToken = (tokenAddr, tokenDetails) => {
   const _addr = handleWBNB(tokenAddr)
   const _token = tokenDetails.filter((i) => i.address === _addr)[0]
-  if (_token !== undefined) {
-    return _token
-  }
-  return false
+  return _token ?? false
 }
 
 /** @returns poolDetails item || false (boolean) */
@@ -73,10 +70,7 @@ export const getPool = (tokenAddr, poolDetails) => {
   const _pool = poolDetails.filter(
     (i) => i.tokenAddress === _addr || i.address === _addr,
   )[0]
-  if (_pool !== undefined) {
-    return _pool
-  }
-  return false
+  return _pool ?? false
 }
 
 /** @returns synthDetails item || false (boolean) */
@@ -85,10 +79,7 @@ export const getSynth = (tokenAddr, synthDetails) => {
   const _synth = synthDetails.filter(
     (i) => i.tokenAddress === _addr || i.address === _addr,
   )[0]
-  if (_synth !== undefined) {
-    return _synth
-  }
-  return false
+  return _synth ?? false
 }
 
 /** @returns daoDetails item || false (boolean) */
@@ -97,10 +88,7 @@ export const getDao = (tokenAddr, daoDetails) => {
   const _dao = daoDetails.filter(
     (i) => i.tokenAddress === _addr || i.address === _addr,
   )[0]
-  if (_dao !== undefined) {
-    return _dao
-  }
-  return false
+  return _dao ?? false
 }
 
 /** @returns bondDetails item || false (boolean) */
@@ -109,10 +97,7 @@ export const getBond = (tokenAddr, bondDetails) => {
   const _bond = bondDetails.filter(
     (i) => i.tokenAddress === _addr || i.address === _addr,
   )[0]
-  if (_bond !== undefined) {
-    return _bond
-  }
-  return false
+  return _bond ?? false
 }
 
 /**

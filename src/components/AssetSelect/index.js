@@ -40,6 +40,7 @@ const AssetSelect = (props) => {
   const pool = usePool()
   const synth = useSynth()
 
+  const [trigger, settrigger] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [assetArray, setAssetArray] = useState([])
   const [activeTab, setActiveTab] = useState(
@@ -255,8 +256,9 @@ const AssetSelect = (props) => {
     props.empty,
     props.filter,
     props.whiteList,
-    searchInput?.value,
+    trigger,
     synth.synthDetails,
+    searchInput?.value,
   ])
 
   const getWalletType = () => {
@@ -421,6 +423,7 @@ const AssetSelect = (props) => {
                   placeholder={t('searchAssets')}
                   type="text"
                   id="searchInput"
+                  onChange={() => settrigger((prev) => prev + 1)}
                 />
                 <InputGroup.Text
                   role="button"

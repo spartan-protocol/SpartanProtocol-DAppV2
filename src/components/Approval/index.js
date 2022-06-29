@@ -18,7 +18,6 @@ import {
 import { BN } from '../../utils/bigNumber'
 import { getToken } from '../../utils/math/utils'
 import { Icon } from '../Icons/index'
-import Notifications from '../Notifications/index'
 
 /**
  * An approval/allowance check + actioner
@@ -45,15 +44,12 @@ const Approval = ({
   const pool = usePool()
   const web3 = useWeb3()
 
-  const [notify, setNotify] = useState(false)
   const [pending, setPending] = useState(false)
   const [valid, setValid] = useState(false)
 
   const handleApproval = async () => {
     setPending(true)
-    setNotify(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
-    setNotify(false)
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
         dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
@@ -123,7 +119,6 @@ const Approval = ({
     <>
       {!valid && (
         <Col>
-          <Notifications show={notify} txnType="approve" />
           <Button
             disabled={!enoughGas()}
             onClick={async () => {
