@@ -15,6 +15,7 @@ import { BN } from '../../utils/bigNumber'
 
 const PoolTable = ({ poolItems, daoApy }) => {
   const { t } = useTranslation()
+
   const pool = usePool()
 
   const [sortBy, setSortBy] = useState({ value: 'liquidity', order: 'desc' })

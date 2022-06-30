@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Nav from 'react-bootstrap/Nav'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import PoolItem from './PoolItem'
 import PoolTable from './PoolTable'
@@ -19,7 +18,6 @@ import { useBond, bondVaultWeight } from '../../store/bond'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../components/Icons/index'
-import { Tooltip } from '../../components/Tooltip/index'
 import { useWeb3 } from '../../store/web3'
 import { calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
 import { useDao, daoVaultWeight } from '../../store/dao'
@@ -68,28 +66,13 @@ const Overview = () => {
   const getPools = () =>
     !isLoading() &&
     pool.poolDetails
-      .filter(
-        (asset) =>
-          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')) &&
-          !asset.newPool,
-      )
+      .filter((asset) => asset.baseAmount > 0 && !asset.newPool)
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getNewPools = () =>
     !isLoading() &&
     pool.poolDetails
       .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
-      .sort((a, b) => b.baseAmount - a.baseAmount)
-
-  const getBabies = () =>
-    !isLoading() &&
-    pool.poolDetails
-      .filter(
-        (asset) =>
-          asset.baseAmount > 0 &&
-          BN(asset.baseAmount).isLessThan(convertToWei('10000')) &&
-          !asset.newPool,
-      )
       .sort((a, b) => b.baseAmount - a.baseAmount)
 
   const getSynths = () =>
@@ -169,30 +152,6 @@ const Overview = () => {
     )
   }
 
-  const renderBabies = () => {
-    if (getBabies().length > 0) {
-      if (tableView) {
-        return (
-          <>
-            <PoolTable poolItems={getBabies()} daoApy={daoApy} />
-          </>
-        )
-      }
-      return (
-        <>
-          {getBabies().map((asset) => (
-            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
-          ))}
-        </>
-      )
-    }
-    return (
-      <>
-        <Col>There are no pools below the minimum liquidity threshold</Col>
-      </>
-    )
-  }
-
   const renderSynths = () => {
     if (synth.synthDetails) {
       if (tableView) {
@@ -230,9 +189,6 @@ const Overview = () => {
                     {t('new')} ({getNewPools().length})
                   </option>
                 )}
-                <option value="babies">
-                  {t('< 10K')} ({getBabies().length})
-                </option>
                 <option value="synths">
                   {t('synths')} ({getSynths().length})
                 </option>
@@ -275,26 +231,6 @@ const Overview = () => {
                   </Nav.Item>
                 )}
                 <Nav.Item>
-                  <Nav.Link eventKey="babies" className="btn-sm">
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'hiddenPools')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="me-1" size="15" />
-                      </span>
-                    </OverlayTrigger>
-                    {t('< 10K')}
-                    <Badge bg="secondary" className="ms-2">
-                      {!isLoading() ? (
-                        getBabies().length
-                      ) : (
-                        <Icon icon="cycle" size="15" className="anim-spin" />
-                      )}
-                    </Badge>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
                   <Nav.Link eventKey="synths" className="btn-sm">
                     {t('synths')}
                     <Badge bg="secondary" className="ms-2">
@@ -335,7 +271,6 @@ const Overview = () => {
             <Row className={`${tableView && ''}`}>
               {activeTab === 'pools' && renderPools()}
               {activeTab === 'new' && renderNewPools()}
-              {activeTab === 'babies' && renderBabies()}
               {activeTab === 'synths' && renderSynths()}
             </Row>
           ) : (
