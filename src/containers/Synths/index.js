@@ -504,6 +504,7 @@ const Swap = () => {
           .isLessThan(gasSafety)
       ) {
         swapInput1.value = convertFromWei(BN(bnbBalance).minus(gasSafety))
+        updateMintBurn()
       }
     }
     setTxnLoading(true)

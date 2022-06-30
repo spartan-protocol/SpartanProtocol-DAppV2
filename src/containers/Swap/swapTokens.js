@@ -408,6 +408,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
           .isLessThan(gasSafety)
       ) {
         swapInput1.value = convertFromWei(BN(bnbBalance).minus(gasSafety))
+        updateSwap()
       }
     }
     setTxnLoading(true)

@@ -418,6 +418,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
         addInput1.value = convertFromWei(
           BN(bnbBalance).minus('5000000000000000'),
         )
+        updateAddLiq()
       }
     }
     setTxnLoading(true)

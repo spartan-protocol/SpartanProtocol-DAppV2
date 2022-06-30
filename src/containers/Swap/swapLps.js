@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -198,6 +198,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
         sparta.globalDetails.feeOnTransfer,
       )
       setGetZap([unitsLP, swapFee, slipRevert, capRevert, assetSwap1.frozen])
+      swapInput2.value = convertFromWei(unitsLP, 18)
     }
   }
 
@@ -267,16 +268,6 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
     result = result > 0 ? result : '0.00'
     return result
   }
-
-  //= =================================================================================//
-  // Functions for input handling
-
-  const handleZapInputChange = useCallback(() => {
-    swapInput2.value = convertFromWei(getZap[0], 18)
-  }, [getZap, swapInput2])
-
-  //= =================================================================================//
-  // Functions for input handling
 
   // GET USD VALUES
   const getInput1USD = () => {
@@ -379,18 +370,6 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
     }
     return [true, `${t('sell')} ${token1.symbol}p`]
   }
-
-  useEffect(() => {
-    if (swapInput1?.value) {
-      handleZapInputChange()
-    }
-  }, [
-    swapInput1?.value,
-    swapInput2.value,
-    assetSwap1,
-    assetSwap2,
-    handleZapInputChange,
-  ])
 
   const handleZap = async () => {
     setTxnLoading(true)
