@@ -65,15 +65,23 @@ const PoolPositions = () => {
     const getAssetDetails = () => {
       if (pool.poolDetails) {
         let _asset1Addr = asset1.addr
-        _asset1Addr = getPool(_asset1Addr, pool.poolDetails)
-          ? _asset1Addr
-          : addresses.bnb
+        _asset1Addr =
+          _asset1Addr !== addresses.spartav2 &&
+          getPool(_asset1Addr, pool.poolDetails)
+            ? _asset1Addr
+            : addresses.bnb
         setPoolPos(getPool(_asset1Addr, pool.poolDetails))
         dispatch(appAsset('1', _asset1Addr, 'pool'))
       }
     }
     getAssetDetails()
-  }, [addresses.bnb, asset1.addr, dispatch, pool.poolDetails])
+  }, [
+    addresses.bnb,
+    addresses.spartav2,
+    asset1.addr,
+    dispatch,
+    pool.poolDetails,
+  ])
 
   const getWallet = useCallback(() => {
     if (wallet?.account) {
