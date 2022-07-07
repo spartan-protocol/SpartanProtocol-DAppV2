@@ -12,6 +12,7 @@ import { ReactComponent as FourText } from '../../assets/brands/four-text.svg'
 import { ReactComponent as GithubText } from '../../assets/brands/github-text.svg'
 import { ReactComponent as ImmunefiText } from '../../assets/brands/immunefi-text.svg'
 import { ReactComponent as MoonlightText } from '../../assets/brands/moonlight-text.svg'
+import { ReactComponent as BubblemapsText } from '../../assets/brands/bubblemaps-text.svg'
 import { ReactComponent as OntoText } from '../../assets/brands/onto-text.svg'
 import { ReactComponent as SpartaText } from '../../assets/brands/sparta-text.svg'
 // FLAGS
@@ -113,6 +114,7 @@ const icons = {
   githubText: GithubText,
   immunefiText: ImmunefiText,
   moonlightText: MoonlightText,
+  bubblemapsText: BubblemapsText,
   ontoText: OntoText,
   spartaText: SpartaText,
   // FLAGS
