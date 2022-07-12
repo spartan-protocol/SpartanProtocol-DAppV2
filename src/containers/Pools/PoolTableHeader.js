@@ -38,7 +38,7 @@ const PoolTableHeader = ({ sortBy, sortTable }) => {
         </th>
         <th
           className="text-start user-select-none"
-          role={!breakpoint.sm && 'button'}
+          role={!breakpoint.sm ? 'button' : null}
           onClick={() => !breakpoint.sm && sortTable('liquidity')}
         >
           <span className="d-block d-sm-none">
