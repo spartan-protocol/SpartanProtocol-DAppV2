@@ -60,44 +60,54 @@ const handleWBNB = (tokenAddr) => {
 /** @returns tokenDetails item || false (boolean) */
 export const getToken = (tokenAddr, tokenDetails) => {
   const _addr = handleWBNB(tokenAddr)
-  const _token = tokenDetails.filter((i) => i.address === _addr)[0]
-  return _token ?? false
+  const _token = tokenDetails
+    ? tokenDetails.filter((i) => i.address === _addr)[0]
+    : false
+  return _token
 }
 
 /** @returns poolDetails item || false (boolean) */
 export const getPool = (tokenAddr, poolDetails) => {
   const _addr = handleWBNB(tokenAddr)
-  const _pool = poolDetails.filter(
-    (i) => i.tokenAddress === _addr || i.address === _addr,
-  )[0]
-  return _pool ?? false
+  const _pool = poolDetails
+    ? poolDetails.filter(
+        (i) => i.tokenAddress === _addr || i.address === _addr,
+      )[0]
+    : false
+  return _pool
 }
 
 /** @returns synthDetails item || false (boolean) */
 export const getSynth = (tokenAddr, synthDetails) => {
   const _addr = handleWBNB(tokenAddr)
-  const _synth = synthDetails.filter(
-    (i) => i.tokenAddress === _addr || i.address === _addr,
-  )[0]
-  return _synth ?? false
+  const _synth = synthDetails
+    ? synthDetails.filter(
+        (i) => i.tokenAddress === _addr || i.address === _addr,
+      )[0]
+    : false
+  return _synth
 }
 
 /** @returns daoDetails item || false (boolean) */
 export const getDao = (tokenAddr, daoDetails) => {
   const _addr = handleWBNB(tokenAddr)
-  const _dao = daoDetails.filter(
-    (i) => i.tokenAddress === _addr || i.address === _addr,
-  )[0]
-  return _dao ?? false
+  const _dao = daoDetails
+    ? daoDetails.filter(
+        (i) => i.tokenAddress === _addr || i.address === _addr,
+      )[0]
+    : false
+  return _dao
 }
 
 /** @returns bondDetails item || false (boolean) */
 export const getBond = (tokenAddr, bondDetails) => {
   const _addr = handleWBNB(tokenAddr)
-  const _bond = bondDetails.filter(
-    (i) => i.tokenAddress === _addr || i.address === _addr,
-  )[0]
-  return _bond ?? false
+  const _bond = bondDetails
+    ? bondDetails.filter(
+        (i) => i.tokenAddress === _addr || i.address === _addr,
+      )[0]
+    : false
+  return _bond
 }
 
 /**
