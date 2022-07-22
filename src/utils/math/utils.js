@@ -76,10 +76,12 @@ export const getPool = (tokenAddr, poolDetails) => {
 /** @returns synthDetails item || false (boolean) */
 export const getSynth = (tokenAddr, synthDetails) => {
   const _addr = handleWBNB(tokenAddr)
-  const _synth = synthDetails.filter(
-    (i) => i.tokenAddress === _addr || i.address === _addr,
-  )[0]
-  return _synth ?? false
+  const _synth = synthDetails
+    ? synthDetails.filter(
+        (i) => i.tokenAddress === _addr || i.address === _addr,
+      )[0]
+    : false
+  return _synth
 }
 
 /** @returns daoDetails item || false (boolean) */

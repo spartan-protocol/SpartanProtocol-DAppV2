@@ -35,7 +35,7 @@ const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
             <Icon icon={sideNavIcon} size="24" />
           </span>
           <Link to="/">
-            <div>
+            <div className="h-100">
               <Icon icon="spartaText" height="100%" width="260" />
             </div>
           </Link>
