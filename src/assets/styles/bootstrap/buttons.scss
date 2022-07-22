@@ -16,7 +16,8 @@
   border: none;
 }
 
-.btn:disabled {
+.btn.disabled {
+  filter: blur(1px);
   background-color: $primary;
   border: none;
   color: $text;
@@ -31,14 +32,17 @@ body.dark-theme {
     color: $text-dark;
   }
 
+  .btn:hover {
+    background-color: $secondary-dark;
+  }
+
   .btn-primary {
     background-color: $primary-dark;
     border: none;
   }
 
-  .btn:disabled {
+  .btn.disabled {
     background-color: $primary-dark;
-    border: none;
     color: $text-dark;
   }
 
