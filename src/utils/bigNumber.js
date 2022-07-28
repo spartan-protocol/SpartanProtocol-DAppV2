@@ -49,7 +49,7 @@ export const formatFromWei = (weiString, decs = 4) => {
     decimals = 2
   }
   if (isNeg) {
-    units.times(-1) // Re-apply the negative value (if applicable) before handing back
+    units = units.times(-1) // Re-apply the negative value (if applicable) before handing back
   }
   units = BN(units).toFormat(decimals)
   return units
@@ -82,7 +82,7 @@ export const formatFromUnits = (unitString, formatDecimals = 0) => {
     decimals = 2
   }
   if (isNeg) {
-    units.times(-1) // Re-apply the negative value (if applicable) before handing back
+    units = units.times(-1) // Re-apply the negative value (if applicable) before handing back
   }
   units = units.toFormat(decimals)
   return units
