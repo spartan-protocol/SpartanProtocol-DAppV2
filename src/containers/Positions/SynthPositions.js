@@ -241,7 +241,7 @@ const SynthPositions = () => {
         (x) =>
           parseIdToAddr(x.id) ===
           getSynth(poolPos.tokenAddress, synth.synthDetails)
-            .address.toString()
+            ?.address.toString()
             .toLowerCase(),
       )[0]
       if (_pos) {
@@ -285,7 +285,7 @@ const SynthPositions = () => {
   const getSynthRedValue = () => {
     const poolDets = getPool(poolPos.tokenAddress, pool.poolDetails)
     const synthDets = getSynth(poolPos.tokenAddress, synth.synthDetails)
-    const totalSynths = BN(synthDets.balance).plus(synthDets.staked)
+    const totalSynths = BN(synthDets?.balance).plus(synthDets?.staked)
     let spartaValue = calcSpotValueInBase(totalSynths, poolDets)
     let usdValue = spartaValue.times(web3.spartaPrice)
     if (spartaValue <= 0) {

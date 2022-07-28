@@ -1065,7 +1065,7 @@ const PoolPositions = () => {
                         </span>
                       </OverlayTrigger>
                     </Col>
-                    <Col className="text-end ">
+                    <Col className="text-end">
                       <strong>
                         {isOverall()
                           ? formatFromWei(getPoolNetGain('token'), 2)
