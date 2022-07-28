@@ -367,7 +367,7 @@ export const calcAPY = (pool, recentFees, recentDivis, days = 30) => {
     // return apr
     return apy
   }
-  return '0.00'
+  return BN(0)
 }
 
 /**
@@ -390,7 +390,7 @@ export const calcDaoAPY = (revenue, baseAmount) => {
     return apy.div(4).times(2)
     // return apy
   }
-  return '0.00'
+  return BN(0)
 }
 
 /**
@@ -423,7 +423,7 @@ export const calcSynthAPY = (revenue, baseAmount) => {
     // return apy.times(4).div(2)
     return apy
   }
-  return '0.00'
+  return BN(0)
 }
 
 /**
