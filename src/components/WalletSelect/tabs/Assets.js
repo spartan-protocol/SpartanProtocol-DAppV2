@@ -25,11 +25,9 @@ const Assets = () => {
   const web3 = useWeb3()
 
   const getWalletType = () => {
-    if (window.localStorage.getItem('lastWallet') === 'MM') {
-      return 'MM'
-    }
-    if (window.localStorage.getItem('lastWallet') === 'TW') {
-      return 'TW'
+    const lastWallet = window.localStorage.getItem('lastWallet')
+    if (['MM', 'TW', 'BRAVE'].includes(lastWallet)) {
+      return lastWallet
     }
     return false
   }
@@ -41,7 +39,7 @@ const Assets = () => {
 
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
-    if (walletType === 'MM' && !isBNB(asset)) {
+    if (['MM', 'BRAVE'].includes(walletType) && !isBNB(asset)) {
       dispatch(
         watchAsset(
           asset.address,
@@ -210,9 +208,11 @@ const Assets = () => {
                               <>
                                 {getWalletType() === 'MM' ? (
                                   <Icon icon="metamask" size="22" />
+                                ) : getWalletType() === 'TW' ? (
+                                  <Icon icon="trustwallet" size="22" />
                                 ) : (
-                                  getWalletType() === 'TW' && (
-                                    <Icon icon="trustwallet" size="22" />
+                                  getWalletType() === 'BRAVE' && (
+                                    <Icon icon="brave" size="22" />
                                   )
                                 )}
                               </>

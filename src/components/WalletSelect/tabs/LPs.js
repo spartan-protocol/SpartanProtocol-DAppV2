@@ -51,11 +51,9 @@ const LPs = () => {
   const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
   const getWalletType = () => {
-    if (window.localStorage.getItem('lastWallet') === 'MM') {
-      return 'MM'
-    }
-    if (window.localStorage.getItem('lastWallet') === 'TW') {
-      return 'TW'
+    const lastWallet = window.localStorage.getItem('lastWallet')
+    if (['MM', 'TW', 'BRAVE'].includes(lastWallet)) {
+      return lastWallet
     }
     return false
   }
@@ -63,7 +61,7 @@ const LPs = () => {
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
     const token = _getToken(asset.tokenAddress)
-    if (walletType === 'MM') {
+    if (['MM', 'BRAVE'].includes(walletType)) {
       dispatch(
         watchAsset(
           asset.address,
@@ -251,13 +249,11 @@ const LPs = () => {
                         >
                           {getWalletType() === 'MM' ? (
                             <Icon icon="metamask" role="button" size="22" />
+                          ) : getWalletType() === 'TW' ? (
+                            <Icon icon="trustwallet" role="button" size="22" />
                           ) : (
-                            getWalletType() === 'TW' && (
-                              <Icon
-                                icon="trustwallet"
-                                role="button"
-                                size="22"
-                              />
+                            getWalletType() === 'BRAVE' && (
+                              <Icon icon="brave" size="22" />
                             )
                           )}
                         </div>
