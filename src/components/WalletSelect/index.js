@@ -134,7 +134,7 @@ const WalletSelect = (props) => {
       setTriedOnce(true)
       if (x.id === 'BC') {
         await dispatch(addNetworkBC())
-      } else if (x.id === 'MM') {
+      } else if (['MM', 'BRAVE'].includes(x.id)) {
         await dispatch(addNetworkMM())
       }
       window.localStorage.removeItem('disableWallet')
@@ -167,6 +167,8 @@ const WalletSelect = (props) => {
         onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'TW')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'BRAVE') {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'BRAVE')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'ON') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'ON')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'CB') {
@@ -429,10 +431,12 @@ const WalletSelect = (props) => {
                   <Button
                     key={x.id}
                     disabled={
-                      (x.id === 'WC' && chainId !== 56) ||
                       (x.id === 'BC' && !window.BinanceChain) ||
-                      (!['WC', 'BC'].includes(x.id) && !window.ethereum) ||
-                      (x.id === 'ON' && !window.ethereum?.isONTO)
+                      (x.id === 'MM' && !window.ethereum?.isMetaMask) ||
+                      (x.id === 'WC' && chainId !== 56) ||
+                      (x.id === 'BRAVE' && !window.ethereum?.isBraveWallet) ||
+                      (x.id === 'ON' && !window.ethereum?.isONTO) ||
+                      (!['WC', 'BC'].includes(x.id) && !window.ethereum)
                     }
                     className="w-100 my-1"
                     onClick={() => {

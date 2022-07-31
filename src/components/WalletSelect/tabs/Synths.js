@@ -27,11 +27,9 @@ const Synths = () => {
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getWalletType = () => {
-    if (window.localStorage.getItem('lastWallet') === 'MM') {
-      return 'MM'
-    }
-    if (window.localStorage.getItem('lastWallet') === 'TW') {
-      return 'TW'
+    const lastWallet = window.localStorage.getItem('lastWallet')
+    if (['MM', 'TW', 'BRAVE'].includes(lastWallet)) {
+      return lastWallet
     }
     return false
   }
@@ -39,7 +37,7 @@ const Synths = () => {
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
     const token = getToken(asset.tokenAddress)
-    if (walletType === 'MM') {
+    if (['MM', 'BRAVE'].includes(walletType)) {
       dispatch(
         watchAsset(
           asset.address,
@@ -320,9 +318,11 @@ const Synths = () => {
                             >
                               {getWalletType() === 'MM' ? (
                                 <Icon icon="metamask" size="22" />
+                              ) : getWalletType() === 'TW' ? (
+                                <Icon icon="trustwallet" size="22" />
                               ) : (
-                                getWalletType() === 'TW' && (
-                                  <Icon icon="trustwallet" size="22" />
+                                getWalletType() === 'BRAVE' && (
+                                  <Icon icon="brave" size="22" />
                                 )
                               )}
                             </div>

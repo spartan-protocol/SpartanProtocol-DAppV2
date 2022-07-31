@@ -88,7 +88,7 @@ export const {
 } = web3Slice.actions
 
 /**
- * Check which network is selected in the MetaMask and prompt to add or change if available
+ * Check which network is selected in MetaMask and prompt to add or change if available
  * @param {string} network - Whether it is 'mainnet' or 'testnet'
  * @returns {boolean} true if succeeds
  */
@@ -138,7 +138,7 @@ export const addNetworkMM = () => async (dispatch, getState) => {
 }
 
 /**
- * Check which network is selected in BC-wallet and prompt to add or change if available
+ * Check which network is selected in BinanceWallet and prompt to add or change if available
  * @param {string} network - Whether it is 'mainnet' or 'testnet'
  * @returns {boolean} true if succeeds
  */
