@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
@@ -34,6 +34,15 @@ const LPs = () => {
   const sparta = useSparta()
 
   const [showUsd, setShowUsd] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const handleChangeShow = () => {
     setShowUsd(!showUsd)
@@ -81,7 +90,7 @@ const LPs = () => {
   const getUSD = (tokenAddr, amount) => {
     if (pool.poolDetails.length > 1) {
       if (_getPool) {
-        return calcLiqValueIn(amount, _getPool(tokenAddr), web3.spartaPrice)[1]
+        return calcLiqValueIn(amount, _getPool(tokenAddr), spartaPrice)[1]
       }
     }
     return '0.00'
@@ -99,7 +108,7 @@ const LPs = () => {
       pool.poolDetails,
       dao.daoDetails,
       bond.bondDetails,
-      web3.spartaPrice,
+      spartaPrice,
     )[1]
     if (total > 0) {
       return (
@@ -118,7 +127,7 @@ const LPs = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
+                    {spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -209,7 +218,7 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2 text-sm-label">
-                        {web3.spartaPrice > 0
+                        {spartaPrice > 0
                           ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.balance),
                               0,
@@ -341,7 +350,7 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2">
-                        {web3.spartaPrice > 0
+                        {spartaPrice > 0
                           ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.staked),
                               0,
@@ -474,7 +483,7 @@ const LPs = () => {
                       onClick={() => handleChangeShow()}
                     >
                       <div className="text-end mt-2 text-sm-label">
-                        {web3.spartaPrice > 0
+                        {spartaPrice > 0
                           ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.staked),
                               0,

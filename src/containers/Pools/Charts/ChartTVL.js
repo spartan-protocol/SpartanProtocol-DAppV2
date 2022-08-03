@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import { useWeb3 } from '../../../store/web3'
 import { BN, convertFromWei } from '../../../utils/bigNumber'
@@ -11,6 +11,16 @@ const ChartTVL = () => {
   const pool = usePool()
   const web3 = useWeb3()
 
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
+
   const getTVL = (USD) => {
     let tvl = BN(0)
 
@@ -18,7 +28,7 @@ const ChartTVL = () => {
       for (let i = 0; i < pool.poolDetails.length; i++) {
         tvl = tvl.plus(pool.poolDetails[i].baseAmount)
       }
-      if (USD) tvl = tvl.times(2).times(web3.spartaPrice)
+      if (USD) tvl = tvl.times(2).times(spartaPrice)
       else tvl = tvl.times(2)
     }
     if (tvl > 0) {
@@ -37,7 +47,7 @@ const ChartTVL = () => {
         ? dataPoints
         : web3.metrics.global.length
     // Hide 'current' on testnet
-    if (pool.poolDetails && app.chainId === 56 && web3.spartaPrice > 0) {
+    if (pool.poolDetails && app.chainId === 56 && spartaPrice > 0) {
       data1.push(convertFromWei(getTVL(1), 0))
       data2.push(convertFromWei(getTVL(0), 0))
       labels.push('Current')

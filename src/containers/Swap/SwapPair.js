@@ -19,7 +19,7 @@ const SwapPair = ({ assetSwap }) => {
       : 0
   const tokenPrice = BN(assetSwap.baseAmount)
     .div(assetSwap.tokenAmount)
-    .times(web3.spartaPrice)
+    .times(web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal)
 
   const spotPrice = BN(assetSwap.baseAmount).div(assetSwap.tokenAmount)
 
@@ -68,7 +68,13 @@ const SwapPair = ({ assetSwap }) => {
                 <h5 className="mb-0">
                   SPARTA
                   <span className="output-card ms-2">
-                    ${formatFromUnits(web3.spartaPrice, 4)}
+                    $
+                    {formatFromUnits(
+                      web3.spartaPrice > 0
+                        ? web3.spartaPrice
+                        : web3.spartaPriceInternal,
+                      4,
+                    )}
                   </span>
                 </h5>
               </Col>

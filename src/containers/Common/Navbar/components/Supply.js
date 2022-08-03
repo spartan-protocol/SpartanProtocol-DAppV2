@@ -47,6 +47,15 @@ const Supply = () => {
   const feeBurn = '848530' // SPARTA burned during feeBurn phase
 
   const [showDropdown, setshowDropdown] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   useEffect(() => {
     if (showDropdown && tempChains.includes(app.chainId)) {
@@ -60,7 +69,7 @@ const Supply = () => {
       for (let i = 0; i < pool.poolDetails.length; i++) {
         tvl = tvl.plus(pool.poolDetails[i].baseAmount)
       }
-      tvl = tvl.times(2).times(web3.spartaPrice)
+      tvl = tvl.times(2).times(spartaPrice)
     }
     if (tvl > 0) {
       return tvl
@@ -110,7 +119,7 @@ const Supply = () => {
   const getMarketCap = () => {
     const circSupply = getCirculatingSupply()
     if (circSupply > 0) {
-      return BN(circSupply).times(web3.spartaPrice)
+      return BN(circSupply).times(spartaPrice)
     }
     return '0.00'
   }
@@ -131,9 +140,7 @@ const Supply = () => {
       >
         <Icon icon="spartaNavbar" size="23" className="me-1" />
         <span className={styles.btnText}>
-          {web3.spartaPrice > 0
-            ? `$${formatFromUnits(web3.spartaPrice, 2)}`
-            : ''}
+          {spartaPrice > 0 ? `$${formatFromUnits(spartaPrice, 2)}` : ''}
         </span>
       </div>
 
@@ -382,6 +389,57 @@ const Supply = () => {
                     ? `${formatFromWei(getBurnedTotal(), 0)}`
                     : 'Loading...'}
                   <Icon icon="fire" className="ms-1" size="15" />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs="12">
+                  <hr />
+                </Col>
+                <Col xs="6" className="popover-text mb-2">
+                  {t('spartaPrice')}
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={
+                      <Popover>
+                        <Popover.Body className="text-center">
+                          {t('spartaPriceCoinGeckoInfo')}
+                        </Popover.Body>
+                      </Popover>
+                    }
+                  >
+                    <span role="button">
+                      <Icon icon="coinGeckoIcon" className="ms-1" size="15" />
+                    </span>
+                  </OverlayTrigger>
+                </Col>
+                <Col xs="6" className="popover-text text-end mb-2">
+                  {web3.spartaPrice > 0
+                    ? `$${formatFromUnits(web3.spartaPrice, 6)}`
+                    : 'Loading...'}
+                  <Spacer className="ms-1" size="15" />
+                </Col>
+                <Col xs="6" className="popover-text mb-2">
+                  {t('spartaPrice')}
+                  <OverlayTrigger
+                    placement="auto"
+                    overlay={
+                      <Popover>
+                        <Popover.Body className="text-center">
+                          {t('spartaPriceInternalInfo')}
+                        </Popover.Body>
+                      </Popover>
+                    }
+                  >
+                    <span role="button">
+                      <Icon icon="usd" className="ms-1" size="15" />
+                    </span>
+                  </OverlayTrigger>
+                </Col>
+                <Col xs="6" className="popover-text text-end mb-2">
+                  {web3.spartaPriceInternal > 0
+                    ? `$${formatFromUnits(web3.spartaPriceInternal, 6)}`
+                    : 'Loading...'}
+                  <Spacer className="ms-1" size="15" />
                 </Col>
               </Row>
             </Popover.Body>

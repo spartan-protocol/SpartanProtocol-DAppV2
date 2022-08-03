@@ -65,6 +65,15 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   const [token2, settoken2] = useState(false)
   const [bnbBalance, setbnbBalance] = useState(false)
   const [getZap, setGetZap] = useState(['0.00', '0.00', false, false, false])
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
@@ -272,7 +281,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   // GET USD VALUES
   const getInput1USD = () => {
     if (assetSwap1?.tokenAddress === addresses.spartav2 && swapInput1?.value) {
-      return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
+      return BN(convertToWei(swapInput1?.value)).times(spartaPrice)
     }
 
     if (assetSwap1 && swapInput1?.value) {
@@ -282,13 +291,13 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
       )
       return BN(calcSpotValueInBase(_token, assetSwap1))
         .plus(_sparta)
-        .times(web3.spartaPrice)
+        .times(spartaPrice)
     }
 
     if (swapInput1?.value) {
       return BN(
         calcSpotValueInBase(convertToWei(swapInput1?.value), assetSwap1),
-      ).times(web3.spartaPrice)
+      ).times(spartaPrice)
     }
     return '0'
   }
@@ -296,18 +305,18 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   // GET USD VALUES
   const getInput2USD = () => {
     if (assetSwap2?.tokenAddress === addresses.spartav2 && swapInput2?.value) {
-      return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
+      return BN(convertToWei(swapInput2?.value)).times(spartaPrice)
     }
     if (assetSwap2 && swapInput2?.value) {
       const [_sparta, _token] = calcLiqValue(getZap[0], assetSwap2)
       return BN(calcSpotValueInBase(_token, assetSwap2))
         .plus(_sparta)
-        .times(web3.spartaPrice)
+        .times(spartaPrice)
     }
     if (swapInput2?.value) {
       return BN(
         calcSpotValueInBase(convertToWei(swapInput2?.value), assetSwap2),
-      ).times(web3.spartaPrice)
+      ).times(spartaPrice)
     }
     return '0'
   }
@@ -492,7 +501,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      {web3.spartaPrice > 0
+                      {spartaPrice > 0
                         ? swapInput1?.value
                           ? `~$${formatFromWei(getInput1USD(), 2)}`
                           : '~$0.00'
@@ -585,7 +594,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      {web3.spartaPrice > 0
+                      {spartaPrice > 0
                         ? swapInput2?.value
                           ? `~$${formatFromWei(
                               getInput2USD(),

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
@@ -23,6 +23,16 @@ const Assets = () => {
   const { addresses } = useApp()
   const pool = usePool()
   const web3 = useWeb3()
+
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const getWalletType = () => {
     const lastWallet = window.localStorage.getItem('lastWallet')
@@ -73,11 +83,11 @@ const Assets = () => {
   const getUSD = (tokenAddr, amount) => {
     if (pool.poolDetails.length > 1 && tempChains.includes(wallet.chainId)) {
       if (isSparta(tokenAddr)) {
-        return BN(amount).times(web3.spartaPrice)
+        return BN(amount).times(spartaPrice)
       }
       if (_getPool) {
         return calcSpotValueInBase(amount, _getPool(tokenAddr)).times(
-          web3.spartaPrice,
+          spartaPrice,
         )
       }
     }
@@ -108,7 +118,7 @@ const Assets = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
+                    {spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -167,7 +177,7 @@ const Assets = () => {
                     </Col>
                     <Col className="hide-i5">
                       <div className="text-sm-label text-end mt-2">
-                        {web3.spartaPrice > 0
+                        {spartaPrice > 0
                           ? `~$${formatFromWei(
                               getUSD(asset.address, asset.balance),
                               0,
