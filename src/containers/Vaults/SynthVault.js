@@ -37,6 +37,15 @@ const SynthVault = () => {
   const dispatch = useDispatch()
 
   const [showUsd, setShowUsd] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   useEffect(() => {
     const getGlobals = () => {
@@ -88,8 +97,7 @@ const SynthVault = () => {
   }
 
   const getUSDFromSparta = () => {
-    if (getTotalWeight() > 0)
-      return BN(getTotalWeight()).times(web3.spartaPrice)
+    if (getTotalWeight() > 0) return BN(getTotalWeight()).times(spartaPrice)
     return '0.00'
   }
 
@@ -104,7 +112,7 @@ const SynthVault = () => {
   const getUSDFromSpartaOwnWeight = () => {
     const _weight = getOwnWeight()
     if (_weight > 0) {
-      return BN(_weight).times(web3.spartaPrice)
+      return BN(_weight).times(spartaPrice)
     }
     return '0.00'
   }

@@ -45,6 +45,15 @@ const SynthPositions = () => {
   const [viewPool, setViewPool] = useState('usd')
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const isLoading = () => {
     if (!pool.tokenDetails || !pool.poolDetails || !synth.synthDetails) {
@@ -151,7 +160,7 @@ const SynthPositions = () => {
     let [spartaValue, usdValue] = calcSpotValueAll(
       pool.poolDetails,
       synth.synthDetails,
-      web3.spartaPrice,
+      spartaPrice,
     )
     if (spartaValue <= 0) {
       spartaValue = '0.00'
@@ -202,13 +211,13 @@ const SynthPositions = () => {
 
   const getNetGainSpartaToUsd = () => {
     const netGainSparta = getNetGain(false)
-    const inUsd = netGainSparta.times(web3.spartaPrice)
+    const inUsd = netGainSparta.times(spartaPrice)
     return inUsd
   }
 
   const getNetGainUsdToSparta = () => {
     const netGainUsd = getNetGain(true)
-    const inSparta = netGainUsd.div(web3.spartaPrice)
+    const inSparta = netGainUsd.div(spartaPrice)
     return inSparta
   }
 
@@ -287,7 +296,7 @@ const SynthPositions = () => {
     const synthDets = getSynth(poolPos.tokenAddress, synth.synthDetails)
     const totalSynths = BN(synthDets?.balance).plus(synthDets?.staked)
     let spartaValue = calcSpotValueInBase(totalSynths, poolDets)
-    let usdValue = spartaValue.times(web3.spartaPrice)
+    let usdValue = spartaValue.times(spartaPrice)
     if (spartaValue <= 0) {
       spartaValue = '0.00'
     }
@@ -313,7 +322,7 @@ const SynthPositions = () => {
   const getPoolNetGainWorthUnit = () => {
     const poolDets = getPool(poolPos.tokenAddress, pool.poolDetails)
     const netGainUsd = getPoolNetHarvest()[1]
-    const inSparta = BN(netGainUsd).div(web3.spartaPrice)
+    const inSparta = BN(netGainUsd).div(spartaPrice)
     const spotRate = getSwapSpot(poolDets, poolDets, false, true)
     const inUnit = inSparta.times(spotRate)
     return inUnit
@@ -321,13 +330,13 @@ const SynthPositions = () => {
 
   // const getPoolNetGainWorthUsd = () => {
   //   const netGainSparta = getPoolNetGain('sparta')
-  //   const inUsd = netGainSparta.times(web3.spartaPrice)
+  //   const inUsd = netGainSparta.times(spartaPrice)
   //   return inUsd
   // }
 
   const getPoolNetGainWorthSparta = () => {
     const netGainUsd = getPoolNetGain('usd')
-    const inSparta = netGainUsd.div(web3.spartaPrice)
+    const inSparta = netGainUsd.div(spartaPrice)
     return inSparta
   }
 

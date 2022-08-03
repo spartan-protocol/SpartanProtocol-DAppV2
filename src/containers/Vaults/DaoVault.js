@@ -51,6 +51,15 @@ const DaoVault = () => {
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [showUsd, setShowUsd] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const handleChangeShow = () => {
     setShowUsd(!showUsd)
@@ -94,7 +103,7 @@ const DaoVault = () => {
 
   const getUSDFromSparta = () => {
     if (getTotalWeight() > 0)
-      return formatFromWei(BN(getTotalWeight()).times(web3.spartaPrice))
+      return formatFromWei(BN(getTotalWeight()).times(spartaPrice))
     return '0.00'
   }
 
@@ -113,7 +122,7 @@ const DaoVault = () => {
   const getUSDFromSpartaOwnWeight = () => {
     const _weight = getOwnWeight()
     if (_weight > 0) {
-      return formatFromWei(BN(_weight).times(web3.spartaPrice))
+      return formatFromWei(BN(_weight).times(spartaPrice))
     }
     return '0.00'
   }

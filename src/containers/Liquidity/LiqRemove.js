@@ -70,6 +70,15 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
   ])
   const [output1, setoutput1] = useState('0.00')
   const [output2, setoutput2] = useState('0.00')
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   // Check selected assets and validate for liqRemove page
   useEffect(() => {
@@ -223,9 +232,9 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
   const getOutput1ValueUSD = () => {
     if (assetLiq1 && output1) {
       if (assetLiq1.tokenAddress === addresses.spartav2) {
-        return BN(output1).times(web3.spartaPrice)
+        return BN(output1).times(spartaPrice)
       }
-      return calcSpotValueInBase(output1, selectedPool).times(web3.spartaPrice)
+      return calcSpotValueInBase(output1, selectedPool).times(spartaPrice)
     }
     return '0.00'
   }
@@ -248,7 +257,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
     if (assetLiq1 && removeInput1?.value) {
       return BN(calcSpotValueInBase(getLpValueToken(), selectedPool))
         .plus(getLpValueBase())
-        .times(web3.spartaPrice)
+        .times(spartaPrice)
     }
     return '0.00'
   }

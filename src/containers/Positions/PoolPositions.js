@@ -48,6 +48,15 @@ const PoolPositions = () => {
   const [viewPool, setViewPool] = useState('units')
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const isLoading = () => {
     if (
@@ -161,7 +170,7 @@ const PoolPositions = () => {
       pool.poolDetails,
       dao.daoDetails,
       bond.bondDetails,
-      web3.spartaPrice,
+      spartaPrice,
     )
     if (spartaValue <= 0) {
       spartaValue = '0.00'
@@ -212,13 +221,13 @@ const PoolPositions = () => {
 
   const getNetGainSpartaToUsd = () => {
     const netGainSparta = getNetGain(false)
-    const inUsd = netGainSparta.times(web3.spartaPrice)
+    const inUsd = netGainSparta.times(spartaPrice)
     return inUsd
   }
 
   const getNetGainUsdToSparta = () => {
     const netGainUsd = getNetGain(true)
-    const inSparta = netGainUsd.div(web3.spartaPrice)
+    const inSparta = netGainUsd.div(spartaPrice)
     return inSparta
   }
 
@@ -288,7 +297,7 @@ const PoolPositions = () => {
       .plus(daoDets.staked)
       .plus(bondDets.staked)
     let [spartaValue, tokenValue] = calcLiqValue(totalLps, poolDets)
-    let usdValue = spartaValue.times(2).times(web3.spartaPrice)
+    let usdValue = spartaValue.times(2).times(spartaPrice)
     if (spartaValue <= 0) {
       spartaValue = '0.00'
     }
@@ -318,7 +327,7 @@ const PoolPositions = () => {
     const netGainSparta = getPoolNetGain('sparta')
     const netGainToken = getPoolNetGain('token')
     const spartaValue = calcSpotValueInBase(netGainToken, _pool)
-    const inUsd = netGainSparta.plus(spartaValue).times(web3.spartaPrice)
+    const inUsd = netGainSparta.plus(spartaValue).times(spartaPrice)
     return inUsd
   }
 

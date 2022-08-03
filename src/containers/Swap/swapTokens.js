@@ -60,6 +60,15 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const [asset1USD, setAsset1USD] = useState(false)
   const [asset2USD, setAsset2USD] = useState(false)
   const [getSwap, setGetSwap] = useState(['0.00', '0.00', '0.00', '0.00'])
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
@@ -318,7 +327,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   // GET USD VALUES
   const getInput1USD = () => {
     if (assetSwap1?.tokenAddress === addresses.spartav2 && swapInput1?.value) {
-      return BN(convertToWei(swapInput1?.value)).times(web3.spartaPrice)
+      return BN(convertToWei(swapInput1?.value)).times(spartaPrice)
     }
     if (swapInput1?.value) {
       if (asset1USD) {
@@ -327,7 +336,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
       // If we have no external pricing data, fallback to internal pricing
       return BN(
         calcSpotValueInBase(convertToWei(swapInput1?.value), assetSwap1),
-      ).times(web3.spartaPrice)
+      ).times(spartaPrice)
     }
     return '0'
   }
@@ -335,7 +344,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   // GET USD VALUES
   const getInput2USD = () => {
     if (assetSwap2?.tokenAddress === addresses.spartav2 && swapInput2?.value) {
-      return BN(convertToWei(swapInput2?.value)).times(web3.spartaPrice)
+      return BN(convertToWei(swapInput2?.value)).times(spartaPrice)
     }
     if (swapInput2?.value) {
       if (asset2USD) {
@@ -344,7 +353,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
       // If we have no external pricing data, fallback to internal pricing
       return BN(
         calcSpotValueInBase(convertToWei(swapInput2?.value), assetSwap2),
-      ).times(web3.spartaPrice)
+      ).times(spartaPrice)
     }
     return '0'
   }
@@ -533,7 +542,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      {web3.spartaPrice > 0 ? (
+                      {spartaPrice > 0 ? (
                         <OverlayTrigger
                           placement="auto"
                           overlay={Tooltip(
@@ -653,7 +662,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                       </a>
                     </Col>
                     <Col className="text-end">
-                      {web3.spartaPrice > 0 ? (
+                      {spartaPrice > 0 ? (
                         <OverlayTrigger
                           placement="auto"
                           overlay={Tooltip(

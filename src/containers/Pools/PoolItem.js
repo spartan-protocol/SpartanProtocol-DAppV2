@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
@@ -34,6 +34,16 @@ const PoolItem = ({ asset, daoApy }) => {
   const pool = usePool()
   const web3 = useWeb3()
 
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
+
   const {
     tokenAddress,
     baseAmount,
@@ -48,8 +58,8 @@ const PoolItem = ({ asset, daoApy }) => {
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
-  const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
-  const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
+  const tokenValueUSD = tokenValueBase.times(spartaPrice)
+  const poolDepthUsd = BN(baseAmount).times(2).times(spartaPrice)
 
   const [showDetails, setShowDetails] = useState(false)
 
@@ -511,7 +521,7 @@ const PoolItem = ({ asset, daoApy }) => {
               <Col className="text-end">
                 $
                 {formatFromWei(
-                  BN(getFees()).plus(getDivis()).times(web3?.spartaPrice),
+                  BN(getFees()).plus(getDivis()).times(spartaPrice),
                   0,
                 )}
               </Col>

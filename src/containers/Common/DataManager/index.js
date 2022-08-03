@@ -34,6 +34,7 @@ import {
   useWeb3,
   getGlobalMetrics,
   updateTxn as updateTxnWeb3,
+  getSpartaPriceInternal,
 } from '../../../store/web3'
 import { addTxn, liveChains } from '../../../utils/web3'
 import { useApp } from '../../../store/app'
@@ -110,6 +111,13 @@ const DataManager = () => {
       dispatch(getPoolDetails(wallet))
     }
   }, [dispatch, wallet, pool.listedPools, app.chainId])
+
+  /** Get internal SPARTA price on poolDetails update */
+  useEffect(() => {
+    if (liveChains.includes(app.chainId)) {
+      dispatch(getSpartaPriceInternal())
+    }
+  }, [dispatch, pool.poolDetails, app.chainId])
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {

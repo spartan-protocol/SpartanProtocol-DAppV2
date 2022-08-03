@@ -8,11 +8,18 @@ import {
   bscRpcsTN,
   getWalletWindowObj,
   parseTxn,
+  stablecoinPools,
 } from '../../utils/web3'
 import { getTokenContract } from '../../utils/getContracts'
-import { BN, convertToWei } from '../../utils/bigNumber'
+import {
+  BN,
+  convertFromWei,
+  convertToWei,
+  formatFromUnits,
+} from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
 import { checkResolved } from '../../utils/helpers'
+import { getPool } from '../../utils/math/utils'
 
 export const useWeb3 = () => useSelector((state) => state.web3)
 
@@ -28,6 +35,7 @@ export const web3Slice = createSlice({
     allowance2: {},
     watchingAsset: false,
     spartaPrice: 0,
+    spartaPriceInternal: 0,
     eventArray: {},
     rpcs: false,
     metrics: false,
@@ -60,6 +68,9 @@ export const web3Slice = createSlice({
     updateSpartaPrice: (state, action) => {
       state.spartaPrice = action.payload
     },
+    updateSpartaPriceInternal: (state, action) => {
+      state.spartaPriceInternal = action.payload
+    },
     updateEventArray: (state, action) => {
       state.eventArray = action.payload
     },
@@ -82,6 +93,7 @@ export const {
   updateAllowance2,
   updateWatchingAsset,
   updateSpartaPrice,
+  updateSpartaPriceInternal,
   updateEventArray,
   updateRpcs,
   updateMetrics,
@@ -289,6 +301,51 @@ export const getSpartaPrice = () => async (dispatch) => {
     dispatch(updateSpartaPrice(spartaPrice.data['spartan-protocol-token'].usd))
   } catch (error) {
     dispatch(updateError(error.reason))
+  }
+  dispatch(updateLoading(false))
+}
+
+/**
+ * Get price of SPARTA token via deepest stablecoin pools (internally derived price)
+ * @returns {uint} spartaPrice
+ */
+export const getSpartaPriceInternal = () => async (dispatch, getState) => {
+  dispatch(updateLoading(true))
+  const { poolDetails } = getState().pool
+  if (poolDetails.length > 1) {
+    const minAmount = 75000 // 75,000 stablecoin units min (ie ~$150k TVL min)
+    try {
+      const _pools = []
+      for (let i = 0; i < stablecoinPools.length; i += 1) {
+        const { tokenAmount, baseAmount } = getPool(
+          stablecoinPools[i],
+          poolDetails,
+        )
+        // Only include pools with $USD TVL > 2 x MinAmount (because we only check the token side which is half of TVL)
+        if (convertFromWei(tokenAmount) > minAmount) {
+          _pools.push({
+            tokenAmount,
+            baseAmount,
+          })
+        }
+      }
+      // Sort by lowest TVL first to give deepest pools the greatest weight in the avg calc
+      _pools.sort(
+        (a, b) => convertFromWei(a.tokenAmount) - convertFromWei(b.tokenAmount),
+      )
+      let spartaPrice = BN(_pools[0].tokenAmount).div(_pools[0].baseAmount) // Get first/lowest weight avg result
+      for (let i = 1; i < _pools.length; i += 1) {
+        // Skip first index and continue
+        spartaPrice = BN(_pools[i].tokenAmount)
+          .div(_pools[i].baseAmount)
+          .plus(spartaPrice)
+          .div(2)
+      }
+      spartaPrice = Number(formatFromUnits(spartaPrice, 6))
+      dispatch(updateSpartaPriceInternal(spartaPrice))
+    } catch (error) {
+      dispatch(updateError(error.reason))
+    }
   }
   dispatch(updateLoading(false))
 }

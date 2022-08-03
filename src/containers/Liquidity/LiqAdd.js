@@ -79,6 +79,15 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
     false,
   ])
   const [outputLp, setOutputLp] = useState('0.00')
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
@@ -296,17 +305,17 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
       return calcSpotValueInBase(
         convertToWei(addInput1.value),
         selectedPool,
-      ).times(web3.spartaPrice)
+      ).times(spartaPrice)
     }
     if (assetLiq1?.tokenAddress === addresses.spartav2 && addInput1?.value) {
-      return BN(convertToWei(addInput1.value)).times(web3.spartaPrice)
+      return BN(convertToWei(addInput1.value)).times(spartaPrice)
     }
     return '0.00'
   }
 
   const getInput2ValueUSD = () => {
     if (assetLiq2 && addInput2?.value) {
-      return BN(convertToWei(addInput2.value)).times(web3.spartaPrice)
+      return BN(convertToWei(addInput2.value)).times(spartaPrice)
     }
     return '0.00'
   }
@@ -329,7 +338,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
     if (assetLiq1 && addInput1?.value) {
       return BN(calcSpotValueInBase(getLpValueToken(), selectedPool))
         .plus(getLpValueBase())
-        .times(web3.spartaPrice)
+        .times(spartaPrice)
     }
     return '0.00'
   }

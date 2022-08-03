@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
@@ -27,10 +27,21 @@ const SynthTableItem = ({ asset, synthApy }) => {
   const synth = useSynth()
   const navigate = useNavigate()
   const web3 = useWeb3()
+
+  const [spartaPrice, setspartaPrice] = useState(0)
+
   const { tokenAddress, baseAmount, tokenAmount } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
-  const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
+  const tokenValueUSD = tokenValueBase.times(spartaPrice)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
   const getSynthSupply = () => _getSynth().totalSupply
@@ -70,9 +81,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
               overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
             >
               <span role="button">
-                {web3.spartaPrice > 0
-                  ? `$${formatFromUnits(tokenValueUSD, 2)}`
-                  : ''}
+                {spartaPrice > 0 ? `$${formatFromUnits(tokenValueUSD, 2)}` : ''}
               </span>
             </OverlayTrigger>
           </div>

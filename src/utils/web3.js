@@ -208,6 +208,12 @@ export const bscRpcsMN = [
   'https://binance.nodereal.io',
 ]
 
+export const stablecoinPools = [
+  '0x511d2fB8458eb46eCcAEeaeAE722cCe769aAe779', // USDTp Mainnet
+  '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c', // BUSDp Mainnet
+  '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7', // USDCp Mainnet
+]
+
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
