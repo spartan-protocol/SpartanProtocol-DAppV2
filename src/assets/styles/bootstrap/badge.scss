@@ -2,6 +2,9 @@
 
 .badge {
   color: $text;
+  &.bg-success {
+    color: $text-dark;
+  }
 }
 
 body.dark-theme {
