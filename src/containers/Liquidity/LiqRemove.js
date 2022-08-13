@@ -607,7 +607,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
                 <Col className="text-end">
                   <strong>
                     ~{output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
-                    {token1.symbol}
+                    {token2.symbol}
                   </strong>
                 </Col>
               </Row>
