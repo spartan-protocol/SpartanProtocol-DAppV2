@@ -360,7 +360,7 @@ const Overview = () => {
 
           {/* POOL ITEMS */}
           {!isLoading() ? (
-            <Row className={`${tableView && ''}`}>
+            <Row>
               <Table className={`${styles.poolTable} table-borderless`}>
                 {['new', 'pools'].includes(activeTab) && (
                   <PoolTableHeader sortTable={sortTable} sortBy={sortBy} />

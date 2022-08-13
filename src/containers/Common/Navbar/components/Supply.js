@@ -4,7 +4,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Popover from 'react-bootstrap/Popover'
 import ProgressBar from 'react-bootstrap/ProgressBar'
-import Badge from 'react-bootstrap/Badge'
 import Overlay from 'react-bootstrap/Overlay'
 import Form from 'react-bootstrap/Form'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
@@ -15,7 +14,6 @@ import { useWeb3 } from '../../../../store/web3'
 import {
   BN,
   convertFromWei,
-  convertToWei,
   formatFromUnits,
   formatFromWei,
 } from '../../../../utils/bigNumber'
@@ -39,12 +37,12 @@ const Supply = () => {
   const app = useApp()
 
   // V1 (Protocol) Token Distribution
-  const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
-  const distroMnBondV1 = '17500000' // SPARTA minted via Bond (V1 TOKEN)
-  // V2 (Protocol) Token Distribution
-  const distroMnBondV2 = '6000000' // SPARTA minted via Bond (V2 TOKEN)
-  // V2 (Protocol) Token Burns
-  const feeBurn = '848530' // SPARTA burned during feeBurn phase
+  // const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
+  // const distroMnBondV1 = '17500000' // SPARTA minted via Bond (V1 TOKEN)
+  // // V2 (Protocol) Token Distribution
+  // const distroMnBondV2 = '6000000' // SPARTA minted via Bond (V2 TOKEN)
+  // // V2 (Protocol) Token Burns
+  // const feeBurn = '848530' // SPARTA burned during feeBurn phase
 
   const [showDropdown, setshowDropdown] = useState(false)
   const [spartaPrice, setspartaPrice] = useState(0)
@@ -86,7 +84,8 @@ const Supply = () => {
   }
 
   const getBurnedTotal = () => {
-    const totalBurned = BN(getDeadSupply()).plus(convertToWei(feeBurn))
+    // const totalBurned = BN(getDeadSupply()).plus(convertToWei(feeBurn))
+    const totalBurned = getDeadSupply()
     if (totalBurned > 0) {
       return totalBurned
     }
@@ -241,17 +240,6 @@ const Supply = () => {
                         </Popover.Header>
                         <Popover.Body className="text-center">
                           <div className="mb-3">{t('totalSupplyInfo')}</div>
-                          <Row>
-                            <Col xs="4" className="text-center">
-                              <Badge bg="progress">{t('burnForSparta')}</Badge>
-                            </Col>
-                            <Col xs="4" className="text-center">
-                              <Badge bg="info">{t('bond')}</Badge>
-                            </Col>
-                            <Col xs="4" className="text-center">
-                              <Badge bg="danger">{t('emission')}</Badge>
-                            </Col>
-                          </Row>
                         </Popover.Body>
                       </Popover>
                     }
@@ -266,62 +254,6 @@ const Supply = () => {
                     ? formatFromWei(getTotalSupply(), 0)
                     : 'Loading...'}
                   <Icon icon="spartav2" className="ms-1" size="15" />
-                </Col>
-
-                <Col xs="12 mb-2">
-                  <ProgressBar height="10">
-                    <ProgressBar
-                      variant="progress"
-                      key={1}
-                      now={
-                        app.chainId === 56
-                          ? formatFromUnits(
-                              BN(distroMnBurnV1).div(300000000).times(100),
-                              2,
-                            )
-                          : '1'
-                      }
-                    />
-                    <ProgressBar variant="black" now={0.5} />
-                    <ProgressBar
-                      variant="info"
-                      key={2}
-                      now={
-                        app.chainId === 56
-                          ? formatFromUnits(
-                              BN(distroMnBondV1)
-                                .plus(distroMnBondV2)
-                                .div(300000000)
-                                .times(100),
-                              2,
-                            )
-                          : '1'
-                      }
-                    />
-                    <ProgressBar variant="black" now={0.5} />
-                    <ProgressBar
-                      variant="danger"
-                      key={3}
-                      now={
-                        app.chainId === 56
-                          ? formatFromUnits(
-                              BN(convertFromWei(getTotalSupply()))
-                                .minus(distroMnBurnV1)
-                                .minus(distroMnBondV1)
-                                .minus(distroMnBondV2)
-                                .div(300000000)
-                                .times(100),
-                              2,
-                            )
-                          : formatFromUnits(
-                              BN(convertFromWei(getTotalSupply()))
-                                .div(300000000)
-                                .times(100),
-                              2,
-                            )
-                      }
-                    />
-                  </ProgressBar>
                 </Col>
 
                 <Col xs="6" className="popover-text mb-2">

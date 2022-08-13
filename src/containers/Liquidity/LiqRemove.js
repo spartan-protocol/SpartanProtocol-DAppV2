@@ -86,21 +86,18 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
       if (focus && pool.poolDetails.length > 0) {
         let _asset1Addr = asset1.addr
         let _asset2Addr = asset2.addr
-        if (activeTab === 'removeTab1') {
-          _asset1Addr = getPool(_asset1Addr, pool.poolDetails)
+        _asset1Addr =
+          _asset1Addr !== addresses.spartav2 &&
+          getPool(_asset1Addr, pool.poolDetails)
             ? _asset1Addr
             : addresses.bnb
+        if (activeTab === 'removeTab1') {
           _asset2Addr = _asset1Addr
 
           dispatch(appAsset('1', _asset1Addr, 'pool'))
           dispatch(appAsset('2', _asset2Addr, 'token'))
           dispatch(appAsset('3', addresses.spartav2, 'token'))
         } else if (activeTab === 'removeTab2') {
-          _asset1Addr =
-            _asset1Addr !== addresses.spartav2 &&
-            getPool(_asset1Addr, pool.poolDetails)
-              ? _asset1Addr
-              : addresses.bnb
           _asset2Addr = getPool(_asset2Addr, pool.poolDetails)
             ? _asset2Addr
             : addresses.spartav2
@@ -610,7 +607,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
                 <Col className="text-end">
                   <strong>
                     ~{output1 > 0 ? formatFromWei(output1, 6) : '0.00'}{' '}
-                    {token1.symbol}
+                    {token2.symbol}
                   </strong>
                 </Col>
               </Row>
