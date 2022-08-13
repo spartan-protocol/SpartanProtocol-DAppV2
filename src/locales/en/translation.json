@@ -49,7 +49,7 @@
   "budget": "Budget",
   "burn": "Burn",
   "burned": "Burned",
-  "burnedInfo": "The SPARTAv2 token has had phases of burns. The tally here includes the total SPARTA burned via feeBurn along with any burned via the dead address since then.",
+  "burnedInfo": "The SPARTAv2 token has had phases of burns. This number is the total SPARTA burned via the dead address.",
   "burnForSparta": "BurnForSparta",
   "burnedSupply": "Burned Supply",
   "burnSynths": "Burn Synths",
