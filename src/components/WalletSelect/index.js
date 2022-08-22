@@ -152,6 +152,7 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     if (
+      window &&
       !pending &&
       !triedOnce &&
       window.localStorage.getItem('disableWallet') !== '1' &&

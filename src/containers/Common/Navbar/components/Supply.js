@@ -8,6 +8,7 @@ import Overlay from 'react-bootstrap/Overlay'
 import Form from 'react-bootstrap/Form'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { useSparta } from '../../../../store/sparta'
 import { usePool } from '../../../../store/pool'
 import { useWeb3 } from '../../../../store/web3'
@@ -373,6 +374,9 @@ const Supply = () => {
                     : 'Loading...'}
                   <Spacer className="ms-1" size="15" />
                 </Col>
+              </Row>
+              <Row>
+                <Link to="/pu" style={{ height: '10px' }} />
               </Row>
             </Popover.Body>
           </Popover>

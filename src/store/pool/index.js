@@ -119,7 +119,7 @@ export const getTokenDetails =
         const { addresses } = getState().app
         let tempArray = []
         for (let i = 0; i < listedTokens.length; i++) {
-          const contract = getTokenContract(listedTokens[i], wallet, rpcs)
+          const contract = getTokenContract(listedTokens[i], null, rpcs)
           tempArray.push(listedTokens[i]) // TOKEN ADDR (1)
           if (wallet.account) {
             if (listedTokens[i] === addresses.bnb) {
@@ -255,7 +255,7 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
           ? curatedPools.includes(listedPools[i].address)
           : false
         const poolContract = validPool
-          ? getPoolContract(listedPools[i].address, wallet, rpcs)
+          ? getPoolContract(listedPools[i].address, null, rpcs)
           : null
         tempArray.push(
           !validPool || !wallet.account
