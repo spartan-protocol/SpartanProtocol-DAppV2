@@ -140,7 +140,7 @@ export const getSynthMinting = () => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   try {
     if (rpcs.length > 0) {
-      const contract = getRouterContract(rpcs)
+      const contract = getRouterContract(null, rpcs)
       const synthMinting = await contract.callStatic.synthMinting()
       dispatch(updateSynthMinting(synthMinting))
     }
@@ -199,7 +199,7 @@ export const getSynthDetails = (wallet) => async (dispatch, getState) => {
   try {
     if (synthArray.length > 0) {
       const { rpcs } = getState().web3
-      const contract = getSynthVaultContract(wallet, rpcs)
+      const contract = getSynthVaultContract(null, rpcs)
       let tempArray = []
       for (let i = 0; i < synthArray.length; i++) {
         if (!wallet.account || synthArray[i].address === false) {
@@ -209,7 +209,7 @@ export const getSynthDetails = (wallet) => async (dispatch, getState) => {
         } else {
           const synthContract = getSynthContract(
             synthArray[i].address,
-            wallet,
+            null,
             rpcs,
           )
           tempArray.push(synthContract.callStatic.balanceOf(wallet.account)) // balance
@@ -232,7 +232,7 @@ export const getSynthDetails = (wallet) => async (dispatch, getState) => {
         } else {
           const synthContract = getSynthContract(
             synthArray[i].address,
-            wallet,
+            null,
             rpcs,
           )
           tempArray.push(synthContract.callStatic.collateral()) // lpBalance

@@ -98,7 +98,7 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
 export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getFallenSpartansContract(wallet, rpcs)
+  const contract = getFallenSpartansContract(null, rpcs)
   try {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(updateClaimCheck(claimCheck.toString()))

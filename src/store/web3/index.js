@@ -212,7 +212,7 @@ export const getAllowance1 =
     const { rpcs } = getState().web3
     try {
       if (rpcs.length > 0) {
-        const contract = getTokenContract(tokenAddress, wallet, rpcs)
+        const contract = getTokenContract(tokenAddress, null, rpcs)
         const allowance1 = await contract.allowance(
           wallet.account,
           contractAddress,
@@ -236,7 +236,7 @@ export const getAllowance2 =
     const { rpcs } = getState().web3
     try {
       if (rpcs.length > 0) {
-        const contract = getTokenContract(tokenAddress, wallet, rpcs)
+        const contract = getTokenContract(tokenAddress, null, rpcs)
         const allowance2 = await contract.allowance(
           wallet.account,
           contractAddress,
