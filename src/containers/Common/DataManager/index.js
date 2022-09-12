@@ -34,38 +34,22 @@ import {
   useWeb3,
   getGlobalMetrics,
   updateTxn as updateTxnWeb3,
+  getSpartaPriceInternal,
 } from '../../../store/web3'
-import {
-  addTxn,
-  changeNetwork,
-  getNetwork,
-  liveChains,
-} from '../../../utils/web3'
+import { addTxn, liveChains } from '../../../utils/web3'
+import { useApp } from '../../../store/app'
 
 const DataManager = () => {
   const dispatch = useDispatch()
   const wallet = useWeb3React()
 
+  const app = useApp()
   const dao = useDao()
   const pool = usePool()
   const router = useRouter()
   const sparta = useSparta()
   const synth = useSynth()
   const web3 = useWeb3()
-
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return getNetwork()
-    }
-  }
-
-  /** On DApp load check network and get the party started */
-  useEffect(() => {
-    const network = tryParse(window.localStorage.getItem('network'))
-    changeNetwork(network?.chainId)
-  }, [])
 
   /** Get the current block from a main RPC */
   useEffect(() => {
@@ -84,14 +68,13 @@ const DataManager = () => {
 
   /** Get the initial arrays (tokens, curated & global details) */
   useEffect(() => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (liveChains.includes(chainId)) {
+    if (liveChains.includes(app.chainId)) {
       dispatch(getListedTokens()) // TOKEN ARRAY
       dispatch(getCuratedPools()) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
       dispatch(getReserveGlobalDetails()) // RESERVE GLOBAL DETAILS
     }
-  }, [dispatch, web3.rpcs])
+  }, [dispatch, web3.rpcs, app.chainId])
 
   /** Check SPARTA token price */
   useEffect(() => {
@@ -106,12 +89,11 @@ const DataManager = () => {
 
   /** Update synthArray & tokenDetails */
   useEffect(() => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (liveChains.includes(chainId)) {
+    if (liveChains.includes(app.chainId)) {
       dispatch(getSynthArray())
-      dispatch(getTokenDetails(wallet, chainId))
+      dispatch(getTokenDetails(wallet, app.chainId))
     }
-  }, [dispatch, wallet, pool.listedTokens])
+  }, [dispatch, wallet, pool.listedTokens, app.chainId])
 
   /** Get listed pools details */
   useEffect(() => {
@@ -125,11 +107,17 @@ const DataManager = () => {
 
   /** Get final pool details */
   useEffect(() => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
-    if (liveChains.includes(chainId)) {
+    if (liveChains.includes(app.chainId)) {
       dispatch(getPoolDetails(wallet))
     }
-  }, [dispatch, wallet, pool.listedPools])
+  }, [dispatch, wallet, pool.listedPools, app.chainId])
+
+  /** Get internal SPARTA price on poolDetails update */
+  useEffect(() => {
+    if (liveChains.includes(app.chainId)) {
+      dispatch(getSpartaPriceInternal())
+    }
+  }, [dispatch, pool.poolDetails, app.chainId])
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {

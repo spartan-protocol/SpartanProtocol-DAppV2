@@ -35,6 +35,12 @@ const walletTypes = [
   //   connector: 'ledger',
   // },
   {
+    id: 'BRAVE',
+    title: 'Brave Wallet',
+    icon: <Icon size={size} icon="brave" />,
+    connector: 'injected',
+  },
+  {
     id: 'ON',
     title: 'ONTO Wallet',
     icon: <Icon size={size} icon="onto" />,

@@ -13,14 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
-import {
-  changeNetworkLsOnly,
-  formatShortString,
-  getAddresses,
-  getNetwork,
-  liveChains,
-  tempChains,
-} from '../../utils/web3'
+import { formatShortString, liveChains, tempChains } from '../../utils/web3'
 import ShareLink from '../Share/ShareLink'
 import Assets from './tabs/Assets'
 import LPs from './tabs/LPs'
@@ -38,6 +31,7 @@ import { getDaoDetails, useDao } from '../../store/dao'
 import { getBondDetails, useBond } from '../../store/bond'
 import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
+import { appChainId, useApp } from '../../store/app'
 
 export const spartanRanks = [
   {
@@ -102,19 +96,18 @@ export const spartanRanks = [
   },
 ]
 
-const network = getNetwork()
-
 const WalletSelect = (props) => {
-  const synth = useSynth()
-  const pool = usePool()
-  const dao = useDao()
-  const bond = useBond()
-  const addr = getAddresses()
-  const web3 = useWeb3()
-  const wallet = useWeb3React()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { isDark } = useTheme()
+  const wallet = useWeb3React()
+
+  const { chainId, addresses } = useApp()
+  const bond = useBond()
+  const dao = useDao()
+  const pool = usePool()
+  const synth = useSynth()
+  const web3 = useWeb3()
 
   const [activeTab, setactiveTab] = useState('tokens')
   // const [wcConnector, setWcConnector] = useState(false)
@@ -122,15 +115,8 @@ const WalletSelect = (props) => {
   // const [wlConnector, setWlConnector] = useState(false)
   const [triedOnce, setTriedOnce] = useState(false)
 
-  const onChangeNetwork = async (net) => {
-    if (net.target.checked === true) {
-      changeNetworkLsOnly(56)
-    }
-    if (net.target.checked === false) {
-      changeNetworkLsOnly(97)
-    } else {
-      changeNetworkLsOnly(net)
-    }
+  const onChangeNetwork = async () => {
+    dispatch(appChainId(chainId === 97 ? 56 : 97))
     window.location.reload(true)
   }
 
@@ -148,7 +134,7 @@ const WalletSelect = (props) => {
       setTriedOnce(true)
       if (x.id === 'BC') {
         await dispatch(addNetworkBC())
-      } else if (x.id === 'MM') {
+      } else if (['MM', 'BRAVE'].includes(x.id)) {
         await dispatch(addNetworkMM())
       }
       window.localStorage.removeItem('disableWallet')
@@ -166,6 +152,7 @@ const WalletSelect = (props) => {
 
   useEffect(() => {
     if (
+      window &&
       !pending &&
       !triedOnce &&
       window.localStorage.getItem('disableWallet') !== '1' &&
@@ -181,13 +168,15 @@ const WalletSelect = (props) => {
         onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'TW')[0])
+      } else if (window.localStorage.getItem('lastWallet') === 'BRAVE') {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'BRAVE')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'ON') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'ON')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'CB') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'CB')[0])
       } else if (
         window.localStorage.getItem('lastWallet') === 'WC' &&
-        network?.chainId === 56 // WalletConnect does not support testnet
+        chainId === 56 // WalletConnect does not support testnet
       ) {
         onWalletConnect(walletTypes.filter((x) => x.id === 'WC')[0])
       } else {
@@ -195,6 +184,7 @@ const WalletSelect = (props) => {
       }
     }
   }, [
+    chainId,
     onWalletConnect,
     pending,
     triedOnce,
@@ -203,16 +193,7 @@ const WalletSelect = (props) => {
     wallet.error,
   ])
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return getNetwork()
-    }
-  }
-
   useEffect(() => {
-    const chainId = tryParse(window.localStorage.getItem('network'))?.chainId
     const checkDetails = () => {
       if (tempChains.includes(chainId)) {
         dispatch(getBondDetails(wallet.account))
@@ -221,7 +202,7 @@ const WalletSelect = (props) => {
       }
     }
     checkDetails()
-  }, [dispatch, pool.listedPools, wallet])
+  }, [chainId, dispatch, pool.listedPools, wallet])
 
   // ------------------------------------------------------------------------
 
@@ -238,7 +219,10 @@ const WalletSelect = (props) => {
           synth.synthDetails,
           pool.poolDetails,
         )
-        const spartaWeight = getToken(addr.spartav2, pool.tokenDetails).balance
+        const spartaWeight = getToken(
+          addresses.spartav2,
+          pool.tokenDetails,
+        ).balance
         return convertFromWei(
           lpWeight.times(2).plus(synthWeight).plus(spartaWeight),
         )
@@ -275,7 +259,7 @@ const WalletSelect = (props) => {
       clearInterval(interval)
     }
   }, [
-    addr.spartav2,
+    addresses.spartav2,
     bond.bondDetails,
     dao.daoDetails,
     dispatch,
@@ -288,11 +272,7 @@ const WalletSelect = (props) => {
   ])
 
   const getTokenCount = () => {
-    if (
-      tempChains.includes(
-        tryParse(window.localStorage.getItem('network'))?.chainId,
-      )
-    ) {
+    if (tempChains.includes(chainId)) {
       if (!pool.tokenDetails || !pool.poolDetails) {
         return <Icon icon="cycle" size="15" className="anim-spin" />
       }
@@ -365,15 +345,13 @@ const WalletSelect = (props) => {
               <Form className="mb-1">
                 <span className="output-card">
                   <strong>{t('network')}:</strong>{' '}
-                  {network.chainId === 97 ? ' Testnet' : ' Mainnet'}
+                  {chainId === 97 ? ' Testnet' : ' Mainnet'}
                   <Form.Check
                     type="switch"
                     id="custom-switch"
                     className="ms-2 d-inline-flex"
-                    checked={network?.chainId === 56}
-                    onChange={(value) => {
-                      onChangeNetwork(value)
-                    }}
+                    checked={chainId === 56}
+                    onChange={() => onChangeNetwork()}
                   />
                 </span>
               </Form>
@@ -441,7 +419,7 @@ const WalletSelect = (props) => {
           {wallet.error && (
             <Alert variant="primary">
               {t('wrongNetwork', {
-                network: network.chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
+                network: chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
               })}
             </Alert>
           )}
@@ -454,10 +432,12 @@ const WalletSelect = (props) => {
                   <Button
                     key={x.id}
                     disabled={
-                      (x.id === 'WC' && network.chainId !== 56) ||
                       (x.id === 'BC' && !window.BinanceChain) ||
-                      (!['WC', 'BC'].includes(x.id) && !window.ethereum) ||
-                      (x.id === 'ON' && !window.ethereum?.isONTO)
+                      (x.id === 'MM' && !window.ethereum?.isMetaMask) ||
+                      (x.id === 'WC' && chainId !== 56) ||
+                      (x.id === 'BRAVE' && !window.ethereum?.isBraveWallet) ||
+                      (x.id === 'ON' && !window.ethereum?.isONTO) ||
+                      (!['WC', 'BC'].includes(x.id) && !window.ethereum)
                     }
                     className="w-100 my-1"
                     onClick={() => {
@@ -486,7 +466,7 @@ const WalletSelect = (props) => {
           ) : (
             <>
               {/* wallet content */}
-              {liveChains.includes(network.chainId) ? (
+              {liveChains.includes(chainId) ? (
                 <>
                   <Row>
                     <Col>

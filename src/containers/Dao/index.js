@@ -19,7 +19,7 @@ import {
   proposalWeight,
 } from '../../store/dao'
 import NewProposal from './NewProposal'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import { convertTimeUnits } from '../../utils/math/nonContract'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
@@ -29,6 +29,7 @@ import HelmetLoading from '../../components/Spinner/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'
 import { proposalTypes } from './types'
+import { useApp } from '../../store/app'
 
 const Overview = () => {
   const dispatch = useDispatch()
@@ -36,13 +37,14 @@ const Overview = () => {
   const dao = useDao()
   const pool = usePool()
   const wallet = useWeb3React()
+  const app = useApp()
   const { t } = useTranslation()
 
   const [selectedView, setSelectedView] = useState('current')
 
   useEffect(() => {
     const getData = () => {
-      if (tempChains.includes(getNetwork().chainId)) {
+      if (tempChains.includes(app.chainId)) {
         dispatch(daoGlobalDetails())
       }
     }
@@ -53,10 +55,10 @@ const Overview = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [dispatch])
+  }, [dispatch, app.chainId])
 
   useEffect(() => {
-    if (tempChains.includes(getNetwork().chainId)) {
+    if (tempChains.includes(app.chainId)) {
       dispatch(daoMemberDetails(wallet.account))
       dispatch(daoProposalDetails(wallet.account))
       dispatch(proposalWeight())
@@ -66,7 +68,7 @@ const Overview = () => {
       dispatch(getBondDetails(wallet.account))
       dispatch(getSynthDetails(wallet))
     }
-  }, [dispatch, wallet, dao.global])
+  }, [dispatch, wallet, dao.global, app.chainId])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -92,7 +94,7 @@ const Overview = () => {
   return (
     <>
       <div className="content">
-        {tempChains.includes(getNetwork().chainId) && (
+        {tempChains.includes(app.chainId) && (
           <>
             <Row className="mb-3">
               <Col>
@@ -321,7 +323,7 @@ const Overview = () => {
             </Row>
           </>
         )}
-        {!tempChains.includes(getNetwork().chainId) && <WrongNetwork />}
+        {!tempChains.includes(app.chainId) && <WrongNetwork />}
       </div>
     </>
   )

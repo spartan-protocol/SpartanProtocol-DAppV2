@@ -8,8 +8,8 @@ import Popover from 'react-bootstrap/Popover'
 import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
+import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
-import { getAddresses, getItemFromArray } from '../../utils/web3'
 import HelmetLoading from '../../components/Spinner/index'
 import { Icon } from '../../components/Icons/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
@@ -29,19 +29,31 @@ import {
 } from '../../utils/math/utils'
 import { getMemberSynthPositions } from '../../utils/extCalls'
 import { useSynth } from '../../store/synth'
+import { appAsset, useApp } from '../../store/app'
 
 const SynthPositions = () => {
+  const dispatch = useDispatch()
   const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses, asset1 } = useApp()
   const pool = usePool()
   const synth = useSynth()
   const web3 = useWeb3()
-  const wallet = useWeb3React()
-  const addr = getAddresses()
 
   const [viewOverall, setViewOverall] = useState('usd')
   const [viewPool, setViewPool] = useState('usd')
   const [poolPos, setPoolPos] = useState(false)
   const [position, setPosition] = useState(false)
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const isLoading = () => {
     if (!pool.tokenDetails || !pool.poolDetails || !synth.synthDetails) {
@@ -51,34 +63,23 @@ const SynthPositions = () => {
   }
 
   useEffect(() => {
-    const tryParsePool = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
-    }
     const getAssetDetails = () => {
       if (pool.poolDetails) {
-        window.localStorage.setItem('assetType1', 'synth')
-        let asset1 = tryParsePool(window.localStorage.getItem('assetSelected1'))
-        asset1 =
-          asset1 &&
-          asset1.address !== '' &&
-          pool.poolDetails.find((x) => x.tokenAddress === asset1.tokenAddress)
-            ? asset1
-            : { tokenAddress: addr.bnb }
-        asset1 = getItemFromArray(asset1, pool.poolDetails)
-        setPoolPos(asset1)
-        window.localStorage.setItem('assetSelected1', JSON.stringify(asset1))
+        let _asset1Addr = asset1.addr
+        _asset1Addr = getSynth(_asset1Addr, synth.synthDetails)?.address
+          ? _asset1Addr
+          : addresses.bnb
+        setPoolPos(getPool(_asset1Addr, pool.poolDetails))
+        dispatch(appAsset('1', _asset1Addr, 'synth'))
       }
     }
     getAssetDetails()
   }, [
-    addr.bnb,
+    addresses.bnb,
+    asset1.addr,
+    dispatch,
     pool.poolDetails,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem('assetSelected1'),
+    synth.synthDetails,
   ])
 
   const getWallet = useCallback(() => {
@@ -159,7 +160,7 @@ const SynthPositions = () => {
     let [spartaValue, usdValue] = calcSpotValueAll(
       pool.poolDetails,
       synth.synthDetails,
-      web3.spartaPrice,
+      spartaPrice,
     )
     if (spartaValue <= 0) {
       spartaValue = '0.00'
@@ -210,13 +211,13 @@ const SynthPositions = () => {
 
   const getNetGainSpartaToUsd = () => {
     const netGainSparta = getNetGain(false)
-    const inUsd = netGainSparta.times(web3.spartaPrice)
+    const inUsd = netGainSparta.times(spartaPrice)
     return inUsd
   }
 
   const getNetGainUsdToSparta = () => {
     const netGainUsd = getNetGain(true)
-    const inSparta = netGainUsd.div(web3.spartaPrice)
+    const inSparta = netGainUsd.div(spartaPrice)
     return inSparta
   }
 
@@ -249,7 +250,7 @@ const SynthPositions = () => {
         (x) =>
           parseIdToAddr(x.id) ===
           getSynth(poolPos.tokenAddress, synth.synthDetails)
-            .address.toString()
+            ?.address.toString()
             .toLowerCase(),
       )[0]
       if (_pos) {
@@ -293,9 +294,9 @@ const SynthPositions = () => {
   const getSynthRedValue = () => {
     const poolDets = getPool(poolPos.tokenAddress, pool.poolDetails)
     const synthDets = getSynth(poolPos.tokenAddress, synth.synthDetails)
-    const totalSynths = BN(synthDets.balance).plus(synthDets.staked)
+    const totalSynths = BN(synthDets?.balance).plus(synthDets?.staked)
     let spartaValue = calcSpotValueInBase(totalSynths, poolDets)
-    let usdValue = spartaValue.times(web3.spartaPrice)
+    let usdValue = spartaValue.times(spartaPrice)
     if (spartaValue <= 0) {
       spartaValue = '0.00'
     }
@@ -321,7 +322,7 @@ const SynthPositions = () => {
   const getPoolNetGainWorthUnit = () => {
     const poolDets = getPool(poolPos.tokenAddress, pool.poolDetails)
     const netGainUsd = getPoolNetHarvest()[1]
-    const inSparta = BN(netGainUsd).div(web3.spartaPrice)
+    const inSparta = BN(netGainUsd).div(spartaPrice)
     const spotRate = getSwapSpot(poolDets, poolDets, false, true)
     const inUnit = inSparta.times(spotRate)
     return inUnit
@@ -329,13 +330,13 @@ const SynthPositions = () => {
 
   // const getPoolNetGainWorthUsd = () => {
   //   const netGainSparta = getPoolNetGain('sparta')
-  //   const inUsd = netGainSparta.times(web3.spartaPrice)
+  //   const inUsd = netGainSparta.times(spartaPrice)
   //   return inUsd
   // }
 
   const getPoolNetGainWorthSparta = () => {
     const netGainUsd = getPoolNetGain('usd')
-    const inSparta = netGainUsd.div(web3.spartaPrice)
+    const inSparta = netGainUsd.div(spartaPrice)
     return inSparta
   }
 

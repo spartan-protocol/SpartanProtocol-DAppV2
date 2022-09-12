@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import {
@@ -6,7 +5,7 @@ import {
   getDaoContract,
   getSpartaV2Contract,
 } from '../../utils/getContracts'
-import { getAddresses, getNetwork, parseTxn } from '../../utils/web3'
+import { parseTxn } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 import { getPoolShareWeight } from '../../utils/math/utils'
 
@@ -67,10 +66,12 @@ export const bondGlobalDetails = () => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   try {
     if (rpcs.length > 0) {
-      const addr = getAddresses()
+      const { addresses } = getState().app
       const contract = getSpartaV2Contract(null, rpcs)
       let awaitArray = []
-      awaitArray.push(contract ? contract.callStatic.balanceOf(addr?.dao) : '0')
+      awaitArray.push(
+        contract ? contract.callStatic.balanceOf(addresses.dao) : '0',
+      )
       awaitArray = await Promise.all(awaitArray)
       const global = {
         spartaRemaining: awaitArray[0].toString(), // Bond allocation left
@@ -200,7 +201,8 @@ export const claimBond = (tokenAddr, wallet) => async (dispatch, getState) => {
   try {
     // const gPrice = await getProviderGasPrice(rpcs)
     const { gasRateMN, gasRateTN } = getState().app.settings
-    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    const { chainId } = getState().app
+    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'bondClaim', rpcs)

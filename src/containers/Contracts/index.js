@@ -3,15 +3,17 @@ import Table from 'react-bootstrap/Table'
 import { useTranslation } from 'react-i18next'
 import { getExplorerContract } from '../../utils/extCalls'
 import { ContractsInfo } from './ContractsInfo'
-import { formatShortString, getAddresses } from '../../utils/web3'
+import { formatShortString } from '../../utils/web3'
 import { Icon } from '../../components/Icons'
+import { useApp } from '../../store/app'
 
 import styles from './styles.module.scss'
 import { writeToClipboard } from '../../components/Share/ShareLink'
 
 const Contracts = () => {
-  const addr = getAddresses()
   const { t } = useTranslation()
+
+  const { addresses } = useApp()
 
   return (
     <>
@@ -23,24 +25,26 @@ const Contracts = () => {
           </tr>
         </thead>
         <tbody>
-          {ContractsInfo.filter((contract) => addr[contract] !== '').map(
+          {ContractsInfo.filter((contract) => addresses[contract] !== '').map(
             (contract) => (
-              <tr key={addr[contract.addrName]}>
+              <tr key={addresses[contract.addrName]}>
                 <td className={styles.firstCol}>
                   <strong>{contract.name}</strong>
                   <br />
                   <span
-                    onClick={() => writeToClipboard(addr[contract.addrName])}
+                    onClick={() =>
+                      writeToClipboard(addresses[contract.addrName])
+                    }
                     role="button"
                     aria-hidden="true"
                   >
-                    {formatShortString(addr[contract.addrName])}
+                    {formatShortString(addresses[contract.addrName])}
                     <Icon icon="copy" size="20" className="float-end" />
                   </span>
                   <br />
                   BSCScan
                   <a
-                    href={getExplorerContract(addr[contract.addrName])}
+                    href={getExplorerContract(addresses[contract.addrName])}
                     target="_blank"
                     rel="noreferrer"
                   >

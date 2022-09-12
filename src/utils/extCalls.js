@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-import { getAddresses, getNetwork } from './web3'
+import { getAddresses, getChainId } from './web3'
 
 export const subgraphAPI =
   'https://api.thegraph.com/subgraphs/name/spartan-protocol/pool-factory'
@@ -17,9 +17,8 @@ export const headerBQ = {
 
 // GET BSCSCAN URL BY CONTRACT ADDRESS
 export const getExplorerContract = (contractAddr) => {
-  const { chainId } = getNetwork()
   let link = `https://bscscan.com/address/${contractAddr}#code`
-  if (chainId === 97) {
+  if (getChainId() === 97) {
     link = `https://testnet.bscscan.com/address/${contractAddr}#code`
   }
   return link
@@ -27,9 +26,8 @@ export const getExplorerContract = (contractAddr) => {
 
 // GET BSCSCAN URL BY WALLET ADDRESS
 export const getExplorerWallet = (wallet) => {
-  const { chainId } = getNetwork()
   let link = `https://bscscan.com/address/${wallet}`
-  if (chainId === 97) {
+  if (getChainId() === 97) {
     link = `https://testnet.bscscan.com/address/${wallet}`
   }
   return link
@@ -37,9 +35,8 @@ export const getExplorerWallet = (wallet) => {
 
 // GET BSCSCAN URL BY TXN HASH
 export const getExplorerTxn = (txnHash) => {
-  const { chainId } = getNetwork()
   let link = `https://bscscan.com/tx/${txnHash}`
-  if (chainId === 97) {
+  if (getChainId() === 97) {
     link = `https://testnet.bscscan.com/tx/${txnHash}`
   }
   return link

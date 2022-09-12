@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { useApp } from '../../store/app'
 import { usePool } from '../../store/pool'
 import {
   getAllowance1,
@@ -16,9 +17,7 @@ import {
 
 import { BN } from '../../utils/bigNumber'
 import { getToken } from '../../utils/math/utils'
-import { getAddresses } from '../../utils/web3'
 import { Icon } from '../Icons/index'
-import Notifications from '../Notifications/index'
 
 /**
  * An approval/allowance check + actioner
@@ -38,21 +37,19 @@ const Approval = ({
   assetNumber,
 }) => {
   const dispatch = useDispatch()
-  const web3 = useWeb3()
-  const pool = usePool()
-  const wallet = useWeb3React()
   const { t } = useTranslation()
-  const addr = getAddresses()
+  const wallet = useWeb3React()
 
-  const [notify, setNotify] = useState(false)
+  const { addresses } = useApp()
+  const pool = usePool()
+  const web3 = useWeb3()
+
   const [pending, setPending] = useState(false)
   const [valid, setValid] = useState(false)
 
   const handleApproval = async () => {
     setPending(true)
-    setNotify(true)
     await dispatch(getApproval(tokenAddress, contractAddress, wallet))
-    setNotify(false)
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
         dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
@@ -111,7 +108,7 @@ const Approval = ({
   // ~0.00047 BNB gas (approval) on TN || ~0.00025 BNB on MN
   const estMaxGas = '250000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -122,7 +119,6 @@ const Approval = ({
     <>
       {!valid && (
         <Col>
-          <Notifications show={notify} txnType="approve" />
           <Button
             disabled={!enoughGas()}
             onClick={async () => {

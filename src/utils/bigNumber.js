@@ -25,26 +25,31 @@ export const convertToWei = (units) => {
 
 /**
  * Shift Wei string to units. Format using globalFormatting
- * @param {string} weiString
+ * @param {string || BigNumber || Number} weiString
  * @returns {string} units
  */
 export const formatFromWei = (weiString, decs = 4) => {
   let decimals = decs
   let units = BN(weiString).shiftedBy(-18)
-  if (units < 0.1 && decimals < 3) {
+  const isNeg = units.isLessThan(0) // Check if we are dealing with a negative number
+  units = units.absoluteValue() // Make sure we only apply rounding logic to a non-negative number
+  if (units.isLessThan(0.1) && decimals < 3) {
     decimals = 3
   }
-  if (units < 0.01 && decimals < 4) {
+  if (units.isLessThan(0.01) && decimals < 4) {
     decimals = 4
   }
-  if (units < 0.001 && decimals < 5) {
+  if (units.isLessThan(0.001) && decimals < 5) {
     decimals = 5
   }
-  if (units < 0.0001 && decimals < 6) {
+  if (units.isLessThan(0.0001) && decimals < 6) {
     decimals = 6
   }
-  if (units <= 0) {
+  if (units.isLessThanOrEqualTo(0)) {
     decimals = 2
+  }
+  if (isNeg) {
+    units = units.times(-1) // Re-apply the negative value (if applicable) before handing back
   }
   units = BN(units).toFormat(decimals)
   return units
@@ -52,28 +57,34 @@ export const formatFromWei = (weiString, decs = 4) => {
 
 /**
  * Format using globalFormatting
- * @param {string} unitString
+ * @param {string || BigNumber || Number} unitString
  * @param {unit} formatDecimals
  * @returns {string} units
  */
 export const formatFromUnits = (unitString, formatDecimals = 0) => {
   let decimals = formatDecimals
-  if (unitString < 0.1 && decimals < 3) {
+  let units = BN(unitString)
+  const isNeg = units.isLessThan(0) // Check if we are dealing with a negative number
+  units = units.absoluteValue() // Make sure we only apply rounding logic to a non-negative number
+  if (units.isLessThan(0.1) && decimals < 3) {
     decimals = 3
   }
-  if (unitString < 0.01 && decimals < 4) {
+  if (units.isLessThan(0.01) && decimals < 4) {
     decimals = 4
   }
-  if (unitString < 0.001 && decimals < 5) {
+  if (units.isLessThan(0.001) && decimals < 5) {
     decimals = 5
   }
-  if (unitString < 0.0001 && decimals < 6) {
+  if (units.isLessThan(0.0001) && decimals < 6) {
     decimals = 6
   }
-  if (unitString <= 0) {
+  if (units.isLessThanOrEqualTo(0)) {
     decimals = 2
   }
-  const units = BN(unitString).toFormat(decimals)
+  if (isNeg) {
+    units = units.times(-1) // Re-apply the negative value (if applicable) before handing back
+  }
+  units = units.toFormat(decimals)
   return units
 }
 

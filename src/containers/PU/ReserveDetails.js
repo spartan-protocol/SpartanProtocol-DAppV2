@@ -8,21 +8,24 @@ import { getReservePOLDetails, useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { getPool, getToken } from '../../utils/math/utils'
-import { getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
+import { useApp } from '../../store/app'
 
 const ReserveDetails = () => {
-  const pool = usePool()
   const dispatch = useDispatch()
+
+  const app = useApp()
+  const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
 
   const [selection, setSelection] = useState('')
 
   useEffect(() => {
-    if (tempChains.includes(getNetwork().chainId)) {
+    if (tempChains.includes(app.chainId)) {
       dispatch(getReservePOLDetails())
     }
-  }, [dispatch, pool.poolDetails])
+  }, [dispatch, app.chainId, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.curatedPools || !reserve.polDetails || !pool.poolDetails) {

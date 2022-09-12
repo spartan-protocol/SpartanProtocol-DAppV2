@@ -56,13 +56,13 @@ export const friends = [
     linkUrl: ['https://github.com/spartan-protocol/spartanswap-contracts'],
   },
   {
-    name: 'Moonlight',
-    logo: 'moonlightText',
+    name: 'Bubblemaps',
+    logo: 'bubblemapsText',
     desc: 'Ground-breaking way of exploring on BSC, visually revealing connections between wallets.',
     providing: 'Custom SPARTA Bubblemap analysis tool',
     linkText: ['View Bubblemap'],
     linkUrl: [
-      'https://bubbles.moonlighttoken.com/bsc/token/0x3910db0600ea925f63c36ddb1351ab6e2c6eb102',
+      'https://app.bubblemaps.io/bsc/token/0x3910db0600ea925f63c36ddb1351ab6e2c6eb102',
     ],
   },
   {

@@ -17,10 +17,11 @@ import {
   voteProposal,
 } from '../../store/dao'
 import { usePool } from '../../store/pool'
+import { useApp } from '../../store/app'
 import { useSparta } from '../../store/sparta'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { getExplorerContract, getExplorerWallet } from '../../utils/extCalls'
-import { formatShortString, getAddresses } from '../../utils/web3'
+import { formatShortString } from '../../utils/web3'
 import { proposalTypes } from './types'
 import {
   formatDate,
@@ -33,16 +34,18 @@ import { realise } from '../../utils/math/synth'
 import { useReserve } from '../../store/reserve'
 
 const ProposalItem = ({ proposal }) => {
-  const dao = useDao()
-  const sparta = useSparta()
-  const pool = usePool()
-  const bond = useBond()
-  const reserve = useReserve()
-  const synth = useSynth()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const addr = getAddresses()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const bond = useBond()
+  const dao = useDao()
+  const pool = usePool()
+  const reserve = useReserve()
+  const sparta = useSparta()
+  const synth = useSynth()
+
   const type = proposalTypes.filter((i) => i.value === proposal.proposalType)[0]
 
   const [voteLoading, setVoteLoading] = useState(false)
@@ -92,7 +95,7 @@ const ProposalItem = ({ proposal }) => {
   const estMaxGasCancel = '150000000000000' // 0.00025 || 0.00015
   const estMaxGasFinal = '5000000000000000' // 0.005 || 0.005
   const enoughGas = (maxGasAmnt) => {
-    const bal = getToken(addr.bnb).balance
+    const bal = getToken(addresses.bnb).balance
     if (BN(bal).isLessThan(maxGasAmnt)) {
       return false
     }

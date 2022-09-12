@@ -6,42 +6,57 @@ import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Nav from 'react-bootstrap/Nav'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
+import Table from 'react-bootstrap/Table'
+import InputGroup from 'react-bootstrap/InputGroup'
+import FormControl from 'react-bootstrap/FormControl'
+import PoolTableHeader from './PoolTableHeader'
 import PoolItem from './PoolItem'
-import PoolTable from './PoolTable'
-import SynthTable from './SynthTable'
 import { usePool } from '../../store/pool'
-import { getNetwork, tempChains } from '../../utils/web3'
-import { convertToWei, BN } from '../../utils/bigNumber'
+import { tempChains } from '../../utils/web3'
+import { BN } from '../../utils/bigNumber'
 import HelmetLoading from '../../components/Spinner/index'
 import { useBond, bondVaultWeight } from '../../store/bond'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../components/Icons/index'
-import { Tooltip } from '../../components/Tooltip/index'
 import { useWeb3 } from '../../store/web3'
-import { calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
+import { calcAPY, calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
 import { useDao, daoVaultWeight } from '../../store/dao'
 import SynthItem from './SynthItem'
 import { synthVaultWeight, useSynth } from '../../store/synth'
 import NewPool from './NewPool'
+import { useApp } from '../../store/app'
+import styles from './styles.module.scss'
+import PoolTableItem from './PoolTableItem'
+import { getToken } from '../../utils/math/utils'
+import SynthTableHeader from './SynthTableHeader'
+import SynthTableItem from './SynthTableItem'
 
 const Overview = () => {
-  const synth = useSynth()
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const pool = usePool()
-  const web3 = useWeb3()
+
+  const app = useApp()
   const bond = useBond()
   const dao = useDao()
-  const network = getNetwork()
+  const pool = usePool()
+  const synth = useSynth()
+  const web3 = useWeb3()
 
   const [activeTab, setActiveTab] = useState('pools')
-  const [daoApy, setDaoApy] = useState('0')
-  const [synthApy, setSynthApy] = useState('0')
   const [showModal, setShowModal] = useState(false)
   const [tableView, setTableView] = useState(true)
+
+  const [daoApy, setDaoApy] = useState('0')
+  const [synthApy, setSynthApy] = useState('0')
+  const [arrayPools, setarrayPools] = useState(false)
+  const [arrayNewPools, setarrayNewPools] = useState(false)
+  const [arraySynths, setarraySynths] = useState(false)
+  const [sortBy, setSortBy] = useState({ value: 'liquidity', order: 'desc' })
+  const [searchQuery, setsearchQuery] = useState(false)
+
+  const searchInput = document.getElementById('searchInput')
 
   useEffect(() => {
     if (activeTab !== 'synths') {
@@ -63,44 +78,116 @@ const Overview = () => {
     return false
   }
 
-  const getPools = () =>
-    !isLoading() &&
-    pool.poolDetails
-      .filter(
-        (asset) =>
-          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')) &&
-          !asset.newPool,
+  // Update the pools (and newPools) array local state
+  useEffect(() => {
+    if (activeTab === 'pools' && pool.poolDetails.length > 1) {
+      // Get initial pools array
+      let tempPoolsArray = pool.poolDetails.filter(
+        (asset) => asset.baseAmount > 0,
       )
-      .sort((a, b) => b.baseAmount - a.baseAmount)
 
-  const getNewPools = () =>
-    !isLoading() &&
-    pool.poolDetails
-      .filter((asset) => asset.baseAmount > 0 && asset.newPool === true)
-      .sort((a, b) => b.baseAmount - a.baseAmount)
+      // Filter initial pools array based on search query
+      if (searchQuery) {
+        tempPoolsArray = tempPoolsArray.filter((asset) =>
+          getToken(asset.tokenAddress, pool.tokenDetails)
+            .symbol.toLowerCase()
+            .includes(searchQuery.toLowerCase()),
+        )
+      }
 
-  const getBabies = () =>
-    !isLoading() &&
-    pool.poolDetails
-      .filter(
-        (asset) =>
-          asset.baseAmount > 0 &&
-          BN(asset.baseAmount).isLessThan(convertToWei('10000')) &&
-          !asset.newPool,
+      // logic to sort by pool name
+      const sortPool = (_tempPoolsArray) => {
+        const finalArray = _tempPoolsArray.sort((a, b) => {
+          const _a = getToken(a.tokenAddress, pool.tokenDetails).symbol
+          const _b = getToken(b.tokenAddress, pool.tokenDetails).symbol
+          const [first, second] = sortBy.order === 'desc' ? [_b, _a] : [_a, _b]
+          if (first > second) {
+            return 1
+          }
+          if (second > first) {
+            return -1
+          }
+          return 0
+        })
+        return finalArray
+      }
+
+      // logic to sort by pool liquidity && caps
+      const sortTvl = (_tempPoolsArray) => {
+        const finalArray = _tempPoolsArray.sort((a, b) => {
+          const _a = a.baseAmount
+          const _b = b.baseAmount
+          const [first, second] = sortBy.order === 'desc' ? [_b, _a] : [_a, _b]
+          return first - second
+        })
+        return finalArray
+      }
+
+      // logic to sort by pool volume
+      const sortVol = (_tempPoolsArray) => {
+        const finalArray = _tempPoolsArray.sort((a, b) => {
+          const _a = pool.incentives.filter((x) => x.address === a.address)[0]
+            .volume
+          const _b = pool.incentives.filter((x) => x.address === b.address)[0]
+            .volume
+          const [first, second] = sortBy.order === 'desc' ? [_b, _a] : [_a, _b]
+          return first - second
+        })
+        return finalArray
+      }
+
+      // logic to sort by pool APY
+      const sortApy = (_tempPoolsArray) => {
+        const finalArray = _tempPoolsArray.sort((a, b) => {
+          const _a = pool.incentives.filter((x) => x.address === a.address)[0]
+          const _b = pool.incentives.filter((x) => x.address === b.address)[0]
+          let apyA = calcAPY(a, _a.fees, _a.incentives)
+          apyA = a.curated && daoApy ? BN(apyA).plus(daoApy) : apyA
+          let apyB = calcAPY(b, _b.fees, _b.incentives)
+          apyB = b.curated && daoApy ? BN(apyB).plus(daoApy) : apyB
+          const [first, second] =
+            sortBy.order === 'desc' ? [apyB, apyA] : [apyA, apyB]
+          return first - second
+        })
+        return finalArray
+      }
+
+      // Sort the pools array by user-selected params
+      if (sortBy.value === 'poolName') {
+        tempPoolsArray = sortPool(tempPoolsArray)
+      } else if (sortBy.value === 'volume' && pool.incentives) {
+        tempPoolsArray = sortVol(tempPoolsArray)
+      } else if (sortBy.value === 'apy' && pool.incentives) {
+        tempPoolsArray = sortApy(tempPoolsArray)
+      } else {
+        tempPoolsArray = sortTvl(tempPoolsArray)
+      }
+
+      setarrayPools(tempPoolsArray.filter((x) => !x.newPool))
+      setarrayNewPools(tempPoolsArray.filter((x) => x.newPool))
+    }
+  }, [
+    searchQuery,
+    pool.poolDetails,
+    sortBy.order,
+    sortBy.value,
+    daoApy,
+    pool.tokenDetails,
+    pool.incentives,
+    activeTab,
+  ])
+
+  // Update the synths array local state
+  useEffect(() => {
+    if (activeTab === 'synths' && pool.poolDetails.length > 1) {
+      setarraySynths(
+        pool.poolDetails.filter((asset) => !asset.newPool && asset.curated),
+        // .sort((a, b) => b.baseAmount - a.baseAmount),
       )
-      .sort((a, b) => b.baseAmount - a.baseAmount)
+    }
+  }, [activeTab, pool.poolDetails])
 
-  const getSynths = () =>
-    !isLoading() &&
-    pool.poolDetails
-      .filter(
-        (asset) =>
-          BN(asset.baseAmount).isGreaterThanOrEqualTo(convertToWei('10000')) &&
-          !asset.newPool &&
-          asset.curated,
-      )
-      .sort((a, b) => b.baseAmount - a.baseAmount)
-
+  // Update the dao apy local state
   useEffect(() => {
     const getTotalDaoWeight = () => {
       const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
@@ -121,6 +208,7 @@ const Overview = () => {
     }
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
+  // Update the synth apy local state
   useEffect(() => {
     const getSynthApy = () => {
       let revenue = BN(web3.metrics.global[0].synthVault30Day)
@@ -134,86 +222,24 @@ const Overview = () => {
     }
   }, [web3.metrics.global, synth.totalWeight])
 
-  const renderPools = () => {
-    if (tableView) {
-      return <PoolTable poolItems={getPools()} daoApy={daoApy} />
+  const sortTable = (column) => {
+    let order = sortBy.order === 'desc' ? 'asc' : 'desc'
+    if (sortBy.value === column) {
+      setSortBy({ value: column, order })
+    } else {
+      order = 'desc'
+      setSortBy({ value: column, order })
     }
-    return getPools().map((asset) => (
-      <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
-    ))
   }
 
-  const renderNewPools = () => {
-    if (getNewPools().length > 0) {
-      if (tableView) {
-        return (
-          <>
-            <PoolTable poolItems={getNewPools()} daoApy={daoApy} />
-          </>
-        )
-      }
-      return (
-        <>
-          {getNewPools().map((asset) => (
-            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
-          ))}
-        </>
-      )
-    }
-    return (
-      <>
-        <Col>There are no new/initializing pools</Col>
-      </>
-    )
-  }
-
-  const renderBabies = () => {
-    if (getBabies().length > 0) {
-      if (tableView) {
-        return (
-          <>
-            <PoolTable poolItems={getBabies()} daoApy={daoApy} />
-          </>
-        )
-      }
-      return (
-        <>
-          {getBabies().map((asset) => (
-            <PoolItem key={asset.address} asset={asset} daoApy={daoApy} />
-          ))}
-        </>
-      )
-    }
-    return (
-      <>
-        <Col>There are no pools below the minimum liquidity threshold</Col>
-      </>
-    )
-  }
-
-  const renderSynths = () => {
-    if (synth.synthDetails) {
-      if (tableView) {
-        return (
-          <>
-            <SynthTable synthItems={getSynths()} synthApy={synthApy} />
-          </>
-        )
-      }
-      return (
-        <>
-          {getSynths().map((asset) => (
-            <SynthItem key={asset.address} asset={asset} synthApy={synthApy} />
-          ))}
-        </>
-      )
-    }
-    return null
+  const clearSearch = () => {
+    searchInput.value = ''
+    setsearchQuery('')
   }
 
   return (
     <>
-      {tempChains.includes(network.chainId) && (
+      {tempChains.includes(app.chainId) && (
         <>
           <Row>
             <SummaryItem />
@@ -221,18 +247,15 @@ const Overview = () => {
             <Col className="d-flex d-sm-none mt-3 mb-1">
               <Form.Select onChange={(e) => setActiveTab(e.target.value)}>
                 <option value="pools">
-                  {t('pools')} ({getPools().length})
+                  {t('pools')} ({arrayPools.length})
                 </option>
-                {getNewPools().length > 0 && (
+                {arrayNewPools.length > 0 && (
                   <option value="new">
-                    {t('new')} ({getNewPools().length})
+                    {t('new')} ({arrayNewPools.length})
                   </option>
                 )}
-                <option value="babies">
-                  {t('< 10K')} ({getBabies().length})
-                </option>
                 <option value="synths">
-                  {t('synths')} ({getSynths().length})
+                  {t('synths')} ({arraySynths.length})
                 </option>
               </Form.Select>
             </Col>
@@ -251,20 +274,20 @@ const Overview = () => {
                     {t('pools')}
                     <Badge bg="secondary" className="ms-2">
                       {!isLoading() ? (
-                        getPools().length
+                        arrayPools.length
                       ) : (
                         <Icon icon="cycle" size="15" className="anim-spin" />
                       )}
                     </Badge>
                   </Nav.Link>
                 </Nav.Item>
-                {getNewPools().length > 0 && (
+                {arrayNewPools.length > 0 && (
                   <Nav.Item>
                     <Nav.Link bg="secondary" eventKey="new" className="btn-sm">
                       {t('new')}
                       <Badge bg="secondary" className="ms-2">
                         {!isLoading() ? (
-                          getNewPools().length
+                          arrayNewPools.length
                         ) : (
                           <Icon icon="cycle" size="15" className="anim-spin" />
                         )}
@@ -273,31 +296,11 @@ const Overview = () => {
                   </Nav.Item>
                 )}
                 <Nav.Item>
-                  <Nav.Link eventKey="babies" className="btn-sm">
-                    <OverlayTrigger
-                      placement="auto"
-                      overlay={Tooltip(t, 'hiddenPools')}
-                    >
-                      <span role="button">
-                        <Icon icon="info" className="me-1" size="15" />
-                      </span>
-                    </OverlayTrigger>
-                    {t('< 10K')}
-                    <Badge bg="secondary" className="ms-2">
-                      {!isLoading() ? (
-                        getBabies().length
-                      ) : (
-                        <Icon icon="cycle" size="15" className="anim-spin" />
-                      )}
-                    </Badge>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
                   <Nav.Link eventKey="synths" className="btn-sm">
                     {t('synths')}
                     <Badge bg="secondary" className="ms-2">
                       {!isLoading() ? (
-                        getSynths().length
+                        arraySynths.length
                       ) : (
                         <Icon icon="cycle" size="15" className="anim-spin" />
                       )}
@@ -323,6 +326,33 @@ const Overview = () => {
             </Col>
           </Row>
 
+          {activeTab !== 'synths' && (
+            <Row className="mt-1">
+              <Col xs="12" sm="4" md="3" xl="2">
+                <InputGroup>
+                  <FormControl
+                    autoComplete="off"
+                    autoCorrect="off"
+                    placeholder={`${t('searchPools')}...`}
+                    type="text"
+                    id="searchInput"
+                    style={{ height: '25px' }}
+                    onChange={(e) => setsearchQuery(e.target.value)}
+                  />
+                  <InputGroup.Text
+                    role="button"
+                    tabIndex={-1}
+                    onKeyPress={() => clearSearch()}
+                    onClick={() => clearSearch()}
+                    className="p-1"
+                  >
+                    <Icon size="12" icon="close" fill="grey" />
+                  </InputGroup.Text>
+                </InputGroup>
+              </Col>
+            </Row>
+          )}
+
           {/* CREATE-POOL MODAL */}
           {showModal && (
             <NewPool setShowModal={setShowModal} showModal={showModal} />
@@ -330,20 +360,90 @@ const Overview = () => {
 
           {/* POOL ITEMS */}
           {!isLoading() ? (
-            <Row className={`${tableView && ''}`}>
-              {activeTab === 'pools' && renderPools()}
-              {activeTab === 'new' && renderNewPools()}
-              {activeTab === 'babies' && renderBabies()}
-              {activeTab === 'synths' && renderSynths()}
+            <Row>
+              <Table className={`${styles.poolTable} table-borderless`}>
+                {['new', 'pools'].includes(activeTab) && (
+                  <PoolTableHeader sortTable={sortTable} sortBy={sortBy} />
+                )}
+                {activeTab === 'synths' && tableView && <SynthTableHeader />}
+
+                {tableView && (
+                  <tbody>
+                    {activeTab === 'pools' &&
+                      arrayPools &&
+                      arrayPools.map((asset) => (
+                        <PoolTableItem
+                          key={asset.address}
+                          asset={asset}
+                          daoApy={daoApy}
+                        />
+                      ))}
+
+                    {activeTab === 'new' &&
+                      arrayNewPools &&
+                      arrayNewPools.map((asset) => (
+                        <PoolTableItem
+                          key={asset.address}
+                          asset={asset}
+                          daoApy={daoApy}
+                        />
+                      ))}
+
+                    {activeTab === 'synths' &&
+                      arraySynths &&
+                      arraySynths.map((asset) => (
+                        <SynthTableItem
+                          key={asset.address}
+                          asset={asset}
+                          synthApy={synthApy}
+                        />
+                      ))}
+                  </tbody>
+                )}
+              </Table>
+
+              {!tableView && (
+                <>
+                  {activeTab === 'pools' &&
+                    (arrayPools
+                      ? arrayPools.map((asset) => (
+                          <PoolItem
+                            key={asset.address}
+                            asset={asset}
+                            daoApy={daoApy}
+                          />
+                        ))
+                      : 'No pools available')}
+
+                  {activeTab === 'new' &&
+                    (arrayNewPools
+                      ? arrayNewPools.map((asset) => (
+                          <PoolItem
+                            key={asset.address}
+                            asset={asset}
+                            daoApy={daoApy}
+                          />
+                        ))
+                      : 'No new pools available')}
+                  {activeTab === 'synths' &&
+                    (arraySynths
+                      ? arraySynths.map((asset) => (
+                          <SynthItem
+                            key={asset.address}
+                            asset={asset}
+                            synthApy={synthApy}
+                          />
+                        ))
+                      : 'No synths available')}
+                </>
+              )}
             </Row>
           ) : (
             <HelmetLoading height={150} width={150} />
           )}
         </>
       )}
-      {network.chainId && !tempChains.includes(network.chainId) && (
-        <WrongNetwork />
-      )}
+      {!tempChains.includes(app.chainId) && <WrongNetwork />}
     </>
   )
 }

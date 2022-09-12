@@ -13,8 +13,6 @@ import Modal from 'react-bootstrap/Modal'
 import { useWeb3React } from '@web3-react/core'
 import Approval from '../../components/Approval/index'
 import {
-  getAddresses,
-  getNetwork,
   getTwTokenInfo,
   getTwTokenLogo,
   getWalletProvider,
@@ -23,6 +21,7 @@ import {
 import { BN, convertToWei, formatFromUnits } from '../../utils/bigNumber'
 import { createPoolADD, usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
+import { useApp } from '../../store/app'
 import { getTokenContract } from '../../utils/getContracts'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { Icon } from '../../components/Icons/index'
@@ -34,12 +33,12 @@ const minBase = 50000
 
 const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
-  const web3 = useWeb3()
-  const wallet = useWeb3React()
-  const pool = usePool()
-  const addr = getAddresses()
   const { t } = useTranslation()
-  const network = getNetwork()
+  const wallet = useWeb3React()
+
+  const { chainId, addresses } = useApp()
+  const pool = usePool()
+  const web3 = useWeb3()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [ratioConfirm, setRatioConfirm] = useState(false)
@@ -83,14 +82,12 @@ const NewPool = ({ setShowModal, showModal }) => {
 
   useEffect(() => {
     const getTokenInfo = async () => {
-      if (getNetwork().chainId === 56) {
+      if (chainId === 56) {
         const info = await getTwTokenInfo(addrInput?.value)
         if (info) {
           setTokenInfo(info)
         }
-        setTokenIcon(
-          await getTwTokenLogo(addrInput?.value, getNetwork().chainId),
-        )
+        setTokenIcon(await getTwTokenLogo(addrInput?.value, chainId))
       }
       const provider = getWalletProvider(null, web3.rpcs)
       const deployed = await provider.getCode(addrInput?.value)
@@ -113,7 +110,7 @@ const NewPool = ({ setShowModal, showModal }) => {
       addrInput?.value?.length === 42 &&
       ethers.utils.isAddress(addrInput?.value)
     ) {
-      if (tempChains.includes(getNetwork().chainId)) {
+      if (tempChains.includes(chainId)) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
         }
@@ -139,6 +136,7 @@ const NewPool = ({ setShowModal, showModal }) => {
     handleSpartaChange,
     handleTokenChange,
     web3.rpcs,
+    chainId,
   ])
 
   const [spartaValid, setSpartaValid] = useState(false)
@@ -232,7 +230,9 @@ const NewPool = ({ setShowModal, showModal }) => {
 
   const priceinUSD = () => {
     let price = BN(spartaInput?.value).div(tokenInput?.value)
-    price = price.times(web3.spartaPrice)
+    price = price.times(
+      web3.spartaPrice > 0 ? web3.spartaPrice : web3.spartaPriceInternal,
+    )
     if (price > 10) {
       return formatFromUnits(price, 2)
     }
@@ -255,7 +255,7 @@ const NewPool = ({ setShowModal, showModal }) => {
   // ~0.0385 BNB gas on TN || ~0.02 BNB on MN
   const estMaxGas = '20000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -285,7 +285,7 @@ const NewPool = ({ setShowModal, showModal }) => {
     <>
       {showModal && (
         <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-          {tempChains.includes(network.chainId) && (
+          {tempChains.includes(chainId) && (
             <>
               <Modal.Header closeButton>
                 <Modal.Title>{t('createPool')}</Modal.Title>
@@ -293,7 +293,7 @@ const NewPool = ({ setShowModal, showModal }) => {
               {!isLoading() ? (
                 <>
                   <Modal.Body>
-                    {network.chainId === 56 && tokenInfo && (
+                    {chainId === 56 && tokenInfo && (
                       <div className="text-sm-label-alt text-center">
                         <>
                           <img
@@ -427,10 +427,10 @@ const NewPool = ({ setShowModal, showModal }) => {
                     <Row xs="12" className="w-100">
                       {wallet?.account && spartaInput?.value > 0 && (
                         <Approval
-                          tokenAddress={addr.spartav2}
+                          tokenAddress={addresses.spartav2}
                           symbol="SPARTA"
                           walletAddress={wallet.account}
-                          contractAddress={addr.poolFactory}
+                          contractAddress={addresses.poolFactory}
                           txnAmount={convertToWei(spartaInput?.value)}
                           assetNumber="1"
                         />
@@ -453,12 +453,12 @@ const NewPool = ({ setShowModal, showModal }) => {
                       </Col>
                       {wallet?.account &&
                         tokenInput?.value > 0 &&
-                        addrInput?.value !== addr.bnb && (
+                        addrInput?.value !== addresses.bnb && (
                           <Approval
                             tokenAddress={addrInput?.value}
                             symbol={tokenSymbol}
                             walletAddress={wallet.account}
-                            contractAddress={addr.poolFactory}
+                            contractAddress={addresses.poolFactory}
                             txnAmount={convertToWei(tokenInput?.value)}
                             assetNumber="2"
                           />
@@ -471,7 +471,7 @@ const NewPool = ({ setShowModal, showModal }) => {
               )}
             </>
           )}
-          {network.chainId && !tempChains.includes(network.chainId) && (
+          {!tempChains.includes(chainId) && (
             <Modal.Body>
               <WrongNetwork />
             </Modal.Body>

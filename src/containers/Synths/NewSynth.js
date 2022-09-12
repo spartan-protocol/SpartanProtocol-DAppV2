@@ -10,20 +10,21 @@ import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../store/synth'
-import { getAddresses, getNetwork, tempChains } from '../../utils/web3'
+import { tempChains } from '../../utils/web3'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { Icon } from '../../components/Icons/index'
 import { getToken } from '../../utils/math/utils'
+import { useApp } from '../../store/app'
 import { usePool } from '../../store/pool'
 import { BN } from '../../utils/bigNumber'
 
 const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
-  const pool = usePool()
-  const addr = getAddresses()
   const { t } = useTranslation()
-  const network = getNetwork()
+  const wallet = useWeb3React()
+
+  const { chainId, addresses } = useApp()
+  const pool = usePool()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [feeConfirm, setfeeConfirm] = useState(false)
@@ -56,7 +57,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
   // ~0.015 BNB gas on TN || ~0.008 BNB on MN
   const estMaxGas = '8000000000000000'
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
@@ -86,7 +87,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
           <Modal.Title>{t('newSynth')}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {tempChains.includes(network.chainId) && (
+          {tempChains.includes(chainId) && (
             <>
               <Modal.Title>Choose Synth Asset to Deploy</Modal.Title>
 
@@ -124,9 +125,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
               </Form>
             </>
           )}
-          {network.chainId && !tempChains.includes(network.chainId) && (
-            <WrongNetwork />
-          )}
+          {!tempChains.includes(chainId) && <WrongNetwork />}
         </Modal.Body>
         <Modal.Footer>
           <Button

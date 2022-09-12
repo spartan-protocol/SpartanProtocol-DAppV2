@@ -50,6 +50,15 @@ const Metrics = ({ assetSwap }) => {
   const [prevAsset, setPrevAsset] = useState('')
   const [stale, setStale] = useState(false)
   const [daoApy, setDaoApy] = useState('0')
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   /** Get the current block from a main RPC */
   const getBlockTimer = useRef(null)
@@ -95,7 +104,7 @@ const Metrics = ({ assetSwap }) => {
 
   const tokenPrice = BN(assetSwap.baseAmount)
     .div(assetSwap.tokenAmount)
-    .times(web3.spartaPrice)
+    .times(spartaPrice)
 
   const getFees = () => {
     let accumulative = BN(0)
@@ -178,7 +187,7 @@ const Metrics = ({ assetSwap }) => {
                 <h6 className="mb-0">
                   SPARTA
                   <span className="output-card ms-2">
-                    ${formatFromUnits(web3.spartaPrice, 4)}
+                    ${formatFromUnits(spartaPrice, 4)}
                   </span>
                 </h6>
               </Col>

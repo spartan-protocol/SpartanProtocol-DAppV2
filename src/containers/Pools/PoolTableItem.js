@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
@@ -17,22 +17,34 @@ import {
   formatShortNumber,
   formatFromWei,
 } from '../../utils/bigNumber'
-import { getAddresses } from '../../utils/web3'
 import { calcAPY } from '../../utils/math/nonContract'
 import { Tooltip } from '../../components/Tooltip/index'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 import styles from './styles.module.scss'
+import { useApp } from '../../store/app'
 
 const PoolTableItem = ({ asset, daoApy }) => {
-  const { t } = useTranslation()
-  const pool = usePool()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const { addresses } = useApp()
+  const pool = usePool()
   const web3 = useWeb3()
-  const addr = getAddresses()
+
+  const [spartaPrice, setspartaPrice] = useState(0)
+
   const { tokenAddress, baseAmount, tokenAmount, curated, baseCap } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
-  const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
+  const tokenValueUSD = tokenValueBase.times(spartaPrice)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const getFees = () =>
     pool.incentives
@@ -60,7 +72,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
   const getTVL = () => {
     let tvl = BN(0)
     tvl = tvl.plus(baseAmount)
-    tvl = tvl.times(2).times(web3?.spartaPrice)
+    tvl = tvl.times(2).times(spartaPrice)
     return tvl > 0 ? tvl : '0.00'
   }
 
@@ -93,9 +105,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
               overlay={Tooltip(t, `$${formatFromUnits(tokenValueUSD, 18)}`)}
             >
               <span role="button">
-                {web3.spartaPrice > 0
-                  ? `$${formatFromUnits(tokenValueUSD, 2)}`
-                  : ''}
+                {spartaPrice > 0 ? `$${formatFromUnits(tokenValueUSD, 2)}` : ''}
               </span>
             </OverlayTrigger>
           </div>
@@ -189,7 +199,7 @@ const PoolTableItem = ({ asset, daoApy }) => {
                 className="w-100 mb-2"
                 onClick={() =>
                   navigate(
-                    `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
+                    `/swap?asset1=${tokenAddress}&asset2=${addresses.spartav2}&type1=token&type2=token`,
                   )
                 }
               >

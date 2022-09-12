@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { getUtilsContract } from '../../utils/getContracts'
@@ -46,10 +45,10 @@ export const {
  * Returns the pool's details
  * @returns [ tokenAddress | poolAddress | genesis | baseAmount | tokenAmount | baseAmountPooled | tokenAmountPooled | fees | volume | txCount | poolUnits ]
  */
-export const getPoolDetails = (pool, wallet) => async (dispatch, getState) => {
+export const getPoolDetails = (pool) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getUtilsContract(wallet, rpcs)
+  const contract = getUtilsContract(null, rpcs)
   try {
     const poolDetails = await contract.callStatic.getPoolData(pool)
     dispatch(updatePoolDetails(poolDetails))
@@ -65,10 +64,10 @@ export const getPoolDetails = (pool, wallet) => async (dispatch, getState) => {
  * @param {object} wallet
  * @returns {address} pool
  */
-export const getPool = (token, wallet) => async (dispatch, getState) => {
+export const getPool = (token) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getUtilsContract(wallet, rpcs)
+  const contract = getUtilsContract(null, rpcs)
   try {
     const pool = await contract.callStatic.getPool(token)
     dispatch(updatePool(pool))
@@ -84,10 +83,10 @@ export const getPool = (token, wallet) => async (dispatch, getState) => {
  * @param {object} wallet
  * @returns {address} synth
  */
-export const getSynth = (token, wallet) => async (dispatch, getState) => {
+export const getSynth = (token) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getUtilsContract(wallet, rpcs)
+  const contract = getUtilsContract(null, rpcs)
   try {
     const synth = await contract.callStatic.getSynth(token)
     dispatch(updateSynth(synth))

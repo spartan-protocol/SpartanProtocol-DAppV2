@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { ethers } from 'ethers'
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
@@ -6,14 +5,7 @@ import {
   getFallenSpartansContract,
   getSpartaV2Contract,
 } from '../../utils/getContracts'
-import {
-  addressesMN,
-  bscRpcsMN,
-  deadAddress,
-  getAbis,
-  getNetwork,
-  parseTxn,
-} from '../../utils/web3'
+import { addressesMN, bscRpcsMN, deadAddress, parseTxn } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 
 export const useSparta = () => useSelector((state) => state.sparta)
@@ -106,7 +98,7 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
 export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getFallenSpartansContract(wallet, rpcs)
+  const contract = getFallenSpartansContract(null, rpcs)
   try {
     const claimCheck = await contract.callStatic.getClaim(wallet.account)
     dispatch(updateClaimCheck(claimCheck.toString()))
@@ -125,7 +117,8 @@ export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
   const contract = getSpartaV2Contract(wallet, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
-    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    const { chainId } = getState().app
+    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.upgrade({ gasPrice: gPrice })
@@ -146,7 +139,8 @@ export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
   const contract = getFallenSpartansContract(wallet, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
-    let gPrice = getNetwork().chainId === 56 ? gasRateMN : gasRateTN
+    const { chainId } = getState().app
+    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice(rpcs)
     let txn = await contract.claim({ gasPrice: gPrice })
@@ -161,53 +155,54 @@ export const fallenSpartansClaim = (wallet) => async (dispatch, getState) => {
 /**
  * Community wallet holdings
  */
-export const communityWalletHoldings = (walletAddr) => async (dispatch) => {
-  dispatch(updateLoading(true))
-  const comWal = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
-  const abiErc20 = getAbis().erc20
-  const provider = new ethers.providers.JsonRpcProvider(bscRpcsMN[0])
-  const spartaCont = new ethers.Contract(
-    addressesMN.spartav2,
-    abiErc20,
-    provider,
-  )
-  const busdCont = new ethers.Contract(
-    '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-    abiErc20,
-    provider,
-  )
-  const usdtCont = new ethers.Contract(
-    '0x55d398326f99059ff775485246999027b3197955',
-    abiErc20,
-    provider,
-  )
-  try {
-    let awaitArray = [
-      spartaCont.callStatic.balanceOf(comWal),
-      busdCont.callStatic.balanceOf(comWal),
-      usdtCont.callStatic.balanceOf(comWal),
-      walletAddr ? spartaCont.callStatic.balanceOf(walletAddr) : '0',
-      walletAddr ? busdCont.callStatic.balanceOf(walletAddr) : '0',
-      walletAddr ? usdtCont.callStatic.balanceOf(walletAddr) : '0',
-    ]
-    awaitArray = await Promise.all(awaitArray)
-    const communityWallet = {
-      bnb: (await provider.getBalance(comWal)).toString(),
-      sparta: awaitArray[0].toString(),
-      busd: awaitArray[1].toString(),
-      usdt: awaitArray[2].toString(),
-      userSparta: awaitArray[3].toString(),
-      userBnb: walletAddr
-        ? (await provider.getBalance(walletAddr)).toString()
-        : '0',
-      userBusd: awaitArray[4].toString(),
-      userUsdt: awaitArray[5].toString(),
+export const communityWalletHoldings =
+  (walletAddr) => async (dispatch, getState) => {
+    dispatch(updateLoading(true))
+    const comWal = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
+    const { erc20 } = getState().app.abis
+    const provider = new ethers.providers.JsonRpcProvider(bscRpcsMN[0])
+    const spartaCont = new ethers.Contract(
+      addressesMN.spartav2,
+      erc20,
+      provider,
+    )
+    const busdCont = new ethers.Contract(
+      '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+      erc20,
+      provider,
+    )
+    const usdtCont = new ethers.Contract(
+      '0x55d398326f99059ff775485246999027b3197955',
+      erc20,
+      provider,
+    )
+    try {
+      let awaitArray = [
+        spartaCont.callStatic.balanceOf(comWal),
+        busdCont.callStatic.balanceOf(comWal),
+        usdtCont.callStatic.balanceOf(comWal),
+        walletAddr ? spartaCont.callStatic.balanceOf(walletAddr) : '0',
+        walletAddr ? busdCont.callStatic.balanceOf(walletAddr) : '0',
+        walletAddr ? usdtCont.callStatic.balanceOf(walletAddr) : '0',
+      ]
+      awaitArray = await Promise.all(awaitArray)
+      const communityWallet = {
+        bnb: (await provider.getBalance(comWal)).toString(),
+        sparta: awaitArray[0].toString(),
+        busd: awaitArray[1].toString(),
+        usdt: awaitArray[2].toString(),
+        userSparta: awaitArray[3].toString(),
+        userBnb: walletAddr
+          ? (await provider.getBalance(walletAddr)).toString()
+          : '0',
+        userBusd: awaitArray[4].toString(),
+        userUsdt: awaitArray[5].toString(),
+      }
+      dispatch(updateCommunityWallet(communityWallet))
+    } catch (error) {
+      dispatch(updateError(error.reason))
     }
-    dispatch(updateCommunityWallet(communityWallet))
-  } catch (error) {
-    dispatch(updateError(error.reason))
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
-}
 
 export default spartaSlice.reducer

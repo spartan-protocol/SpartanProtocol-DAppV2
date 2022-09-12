@@ -6,7 +6,7 @@ const ThemeSwitcher = () => {
   const theme = useTheme()
   return (
     <>
-      <div className="switch d-inline-block ms-2">
+      <div className="switch d-inline-block ms-2 mt-2">
         <label className="switch__label" htmlFor="Switch">
           <input
             type="checkbox"

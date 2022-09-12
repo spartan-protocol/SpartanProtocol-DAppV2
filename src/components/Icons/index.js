@@ -3,6 +3,7 @@ import React from 'react'
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
 import { ReactComponent as BNBChain } from '../../assets/brands/bnbchain.svg'
 import { ReactComponent as BNBChainConnected } from '../../assets/brands/bnbchain-connected.svg'
+import { ReactComponent as Brave } from '../../assets/brands/brave.svg'
 import { ReactComponent as C4Text } from '../../assets/brands/code4rena-text.svg'
 import { ReactComponent as CertikText } from '../../assets/brands/certik-text.svg'
 import { ReactComponent as CoinGeckoIcon } from '../../assets/brands/coingecko-icon.svg'
@@ -12,6 +13,7 @@ import { ReactComponent as FourText } from '../../assets/brands/four-text.svg'
 import { ReactComponent as GithubText } from '../../assets/brands/github-text.svg'
 import { ReactComponent as ImmunefiText } from '../../assets/brands/immunefi-text.svg'
 import { ReactComponent as MoonlightText } from '../../assets/brands/moonlight-text.svg'
+import { ReactComponent as BubblemapsText } from '../../assets/brands/bubblemaps-text.svg'
 import { ReactComponent as OntoText } from '../../assets/brands/onto-text.svg'
 import { ReactComponent as SpartaText } from '../../assets/brands/sparta-text.svg'
 // FLAGS
@@ -104,6 +106,7 @@ const icons = {
   apple: Apple,
   bnbChain: BNBChain,
   bnbChainConnected: BNBChainConnected,
+  brave: Brave,
   c4Text: C4Text,
   certikText: CertikText,
   coinGeckoIcon: CoinGeckoIcon,
@@ -113,6 +116,7 @@ const icons = {
   githubText: GithubText,
   immunefiText: ImmunefiText,
   moonlightText: MoonlightText,
+  bubblemapsText: BubblemapsText,
   ontoText: OntoText,
   spartaText: SpartaText,
   // FLAGS

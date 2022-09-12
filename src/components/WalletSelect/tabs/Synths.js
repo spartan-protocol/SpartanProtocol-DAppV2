@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
@@ -23,15 +23,23 @@ const Synths = () => {
   const synth = useSynth()
   const web3 = useWeb3()
 
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
+
   const getToken = (tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
 
   const getWalletType = () => {
-    if (window.localStorage.getItem('lastWallet') === 'MM') {
-      return 'MM'
-    }
-    if (window.localStorage.getItem('lastWallet') === 'TW') {
-      return 'TW'
+    const lastWallet = window.localStorage.getItem('lastWallet')
+    if (['MM', 'TW', 'BRAVE'].includes(lastWallet)) {
+      return lastWallet
     }
     return false
   }
@@ -39,7 +47,7 @@ const Synths = () => {
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
     const token = getToken(asset.tokenAddress)
-    if (walletType === 'MM') {
+    if (['MM', 'BRAVE'].includes(walletType)) {
       dispatch(
         watchAsset(
           asset.address,
@@ -66,7 +74,7 @@ const Synths = () => {
     if (pool.poolDetails.length > 1) {
       if (_getPool) {
         return calcSpotValueInBase(amount, _getPool(tokenAddr)).times(
-          web3.spartaPrice,
+          spartaPrice,
         )
       }
     }
@@ -108,7 +116,7 @@ const Synths = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
+                    {spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -176,7 +184,7 @@ const Synths = () => {
                     </Col>
                     <Col className="hide-i5">
                       <div className="text-sm-label text-end mt-2">
-                        {web3.spartaPrice > 0
+                        {spartaPrice > 0
                           ? `~$${formatFromWei(
                               getUSD(asset.tokenAddress, asset.balance),
                               0,
@@ -281,7 +289,7 @@ const Synths = () => {
                       </Col>
                       <Col className="hide-i5">
                         <div className="text-sm-label text-end mt-2">
-                          {web3.spartaPrice > 0
+                          {spartaPrice > 0
                             ? `~$${formatFromWei(
                                 getUSD(asset.tokenAddress, asset.staked),
                                 0,
@@ -320,9 +328,11 @@ const Synths = () => {
                             >
                               {getWalletType() === 'MM' ? (
                                 <Icon icon="metamask" size="22" />
+                              ) : getWalletType() === 'TW' ? (
+                                <Icon icon="trustwallet" size="22" />
                               ) : (
-                                getWalletType() === 'TW' && (
-                                  <Icon icon="trustwallet" size="22" />
+                                getWalletType() === 'BRAVE' && (
+                                  <Icon icon="brave" size="22" />
                                 )
                               )}
                             </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
@@ -11,35 +11,45 @@ import { BN, convertFromWei, formatFromWei } from '../../../utils/bigNumber'
 import ShareLink from '../../Share/ShareLink'
 import { Icon } from '../../Icons/index'
 import { calcSpotValueInBase, getPool } from '../../../utils/math/utils'
-import { getAddresses, tempChains } from '../../../utils/web3'
+import { tempChains } from '../../../utils/web3'
 import HelmetLoading from '../../Spinner/index'
+import { useApp } from '../../../store/app'
 
 const Assets = () => {
-  const { t } = useTranslation()
-  const web3 = useWeb3()
-  const pool = usePool()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
-  const addr = getAddresses()
+  const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+  const web3 = useWeb3()
+
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
 
   const getWalletType = () => {
-    if (window.localStorage.getItem('lastWallet') === 'MM') {
-      return 'MM'
-    }
-    if (window.localStorage.getItem('lastWallet') === 'TW') {
-      return 'TW'
+    const lastWallet = window.localStorage.getItem('lastWallet')
+    if (['MM', 'TW', 'BRAVE'].includes(lastWallet)) {
+      return lastWallet
     }
     return false
   }
 
   const isBNB = (asset) => {
-    if (asset.address === addr.bnb) return true
+    if (asset.address === addresses.bnb) return true
     return false
   }
 
   const handleWatchAsset = (asset) => {
     const walletType = getWalletType()
-    if (walletType === 'MM' && !isBNB(asset)) {
+    if (['MM', 'BRAVE'].includes(walletType) && !isBNB(asset)) {
       dispatch(
         watchAsset(
           asset.address,
@@ -63,7 +73,7 @@ const Assets = () => {
 
   /** @returns {boolean} isSparta */
   const isSparta = (tokenAddr) => {
-    if (tokenAddr === addr.spartav1 || tokenAddr === addr.spartav2) {
+    if (tokenAddr === addresses.spartav1 || tokenAddr === addresses.spartav2) {
       return true
     }
     return false
@@ -73,25 +83,23 @@ const Assets = () => {
   const getUSD = (tokenAddr, amount) => {
     if (pool.poolDetails.length > 1 && tempChains.includes(wallet.chainId)) {
       if (isSparta(tokenAddr)) {
-        return BN(amount).times(web3.spartaPrice)
+        return BN(amount).times(spartaPrice)
       }
       if (_getPool) {
         return calcSpotValueInBase(amount, _getPool(tokenAddr)).times(
-          web3.spartaPrice,
+          spartaPrice,
         )
       }
     }
     return '0.00'
   }
-  /* eslint no-return-assign: "error" */
 
   const getTotalValue = () => {
     let total = BN(0)
-    pool.tokenDetails
-      ?.filter((asset) => asset.balance > 0)
-      .map(
-        (asset) => (total = total.plus(getUSD(asset.address, asset.balance))),
-      )
+    const _array = pool.tokenDetails?.filter((asset) => asset.balance > 0)
+    for (let i = 0; i < _array.length; i++) {
+      total = total.plus(getUSD(_array[i].address, _array[i].balance))
+    }
 
     if (!total.isZero()) {
       return (
@@ -110,7 +118,7 @@ const Assets = () => {
                 </Col>
                 <Col>
                   <div className="text-sm-label text-end">
-                    {web3.spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
+                    {spartaPrice > 0 ? `~$${formatFromWei(total, 0)}` : ''}
                   </div>
                 </Col>
               </Row>
@@ -169,7 +177,7 @@ const Assets = () => {
                     </Col>
                     <Col className="hide-i5">
                       <div className="text-sm-label text-end mt-2">
-                        {web3.spartaPrice > 0
+                        {spartaPrice > 0
                           ? `~$${formatFromWei(
                               getUSD(asset.address, asset.balance),
                               0,
@@ -210,9 +218,11 @@ const Assets = () => {
                               <>
                                 {getWalletType() === 'MM' ? (
                                   <Icon icon="metamask" size="22" />
+                                ) : getWalletType() === 'TW' ? (
+                                  <Icon icon="trustwallet" size="22" />
                                 ) : (
-                                  getWalletType() === 'TW' && (
-                                    <Icon icon="trustwallet" size="22" />
+                                  getWalletType() === 'BRAVE' && (
+                                    <Icon icon="brave" size="22" />
                                   )
                                 )}
                               </>

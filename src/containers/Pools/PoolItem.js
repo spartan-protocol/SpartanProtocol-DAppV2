@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Badge from 'react-bootstrap/Badge'
@@ -18,21 +18,32 @@ import {
   formatFromWei,
   formatShortNumber,
 } from '../../utils/bigNumber'
-import { getAddresses } from '../../utils/web3'
 import { Icon } from '../../components/Icons/index'
 import { Tooltip } from '../../components/Tooltip/index'
 import { calcAPY } from '../../utils/math/nonContract'
 import spartaIcon from '../../assets/tokens/spartav2.svg'
 
 import styles from './styles.module.scss'
+import { useApp } from '../../store/app'
 
 const PoolItem = ({ asset, daoApy }) => {
-  const { t } = useTranslation()
-  const pool = usePool()
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  const { addresses } = useApp()
+  const pool = usePool()
   const web3 = useWeb3()
-  const addr = getAddresses()
-  const [showDetails, setShowDetails] = useState(false)
+
+  const [spartaPrice, setspartaPrice] = useState(0)
+
+  useEffect(() => {
+    if (web3.spartaPrice > 0) {
+      setspartaPrice(web3.spartaPrice)
+    } else if (web3.spartaPriceInternal > 0) {
+      setspartaPrice(web3.spartaPriceInternal)
+    }
+  }, [web3.spartaPrice, web3.spartaPriceInternal])
+
   const {
     tokenAddress,
     baseAmount,
@@ -47,8 +58,10 @@ const PoolItem = ({ asset, daoApy }) => {
   } = asset
   const token = pool.tokenDetails.filter((i) => i.address === tokenAddress)[0]
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
-  const tokenValueUSD = tokenValueBase.times(web3?.spartaPrice)
-  const poolDepthUsd = BN(baseAmount).times(2).times(web3?.spartaPrice)
+  const tokenValueUSD = tokenValueBase.times(spartaPrice)
+  const poolDepthUsd = BN(baseAmount).times(2).times(spartaPrice)
+
+  const [showDetails, setShowDetails] = useState(false)
 
   const getFees = () =>
     pool.incentives
@@ -508,7 +521,7 @@ const PoolItem = ({ asset, daoApy }) => {
               <Col className="text-end">
                 $
                 {formatFromWei(
-                  BN(getFees()).plus(getDivis()).times(web3?.spartaPrice),
+                  BN(getFees()).plus(getDivis()).times(spartaPrice),
                   0,
                 )}
               </Col>
@@ -576,7 +589,7 @@ const PoolItem = ({ asset, daoApy }) => {
                   className="w-100"
                   onClick={() =>
                     navigate(
-                      `/swap?asset1=${tokenAddress}&asset2=${addr.spartav2}&type1=token&type2=token`,
+                      `/swap?asset1=${tokenAddress}&asset2=${addresses.spartav2}&type1=token&type2=token`,
                     )
                   }
                 >

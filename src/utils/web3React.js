@@ -4,7 +4,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { ethers } from 'ethers'
-import { getNetwork, changeRpc } from './web3'
+import { changeRpc, getChainId } from './web3'
 
 const pollingInt = 12000
 
@@ -34,8 +34,7 @@ const walletlink = (chainId, rpcUrl) =>
 
 export const connectorsByName = (connectorName, rpcUrls) => {
   // console.log(rpcUrls)
-  const network = getNetwork()
-  const { chainId } = network
+  const chainId = getChainId()
   const rpcItem = changeRpc(chainId, rpcUrls)
   // console.log(rpcItem.url)
   if (connectorName === 'bsc') {

@@ -180,12 +180,12 @@ export const addressesMN = {
 }
 
 export const bscRpcsTN = [
-  'https://data-seed-prebsc-1-s1.binance.org:8545/', // Good (12/11/21)
-  'https://data-seed-prebsc-1-s2.binance.org:8545/', // Good (12/11/21)
-  'https://data-seed-prebsc-2-s2.binance.org:8545/', // Good (12/11/21)
-  'https://data-seed-prebsc-1-s3.binance.org:8545/', // Good (12/11/21)
-  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', // OUT OF SYNC! (12/11/21)
-  // 'https://data-seed-prebsc-2-s1.binance.org:8545/', // BROKEN! (12/11/21)
+  'https://data-seed-prebsc-1-s1.binance.org:8545/', // GOOD - 27JUNE22
+  // 'https://data-seed-prebsc-2-s1.binance.org:8545/', // BAD - 27JUNE22
+  'https://data-seed-prebsc-1-s2.binance.org:8545/', // GOOD - 27JUNE22
+  'https://data-seed-prebsc-2-s2.binance.org:8545/', // GOOD - 27JUNE22
+  'https://data-seed-prebsc-1-s3.binance.org:8545/', // NEUTRAL - 27JUNE22 (Working, but 20K+ Blocks behind)
+  // 'https://data-seed-prebsc-2-s3.binance.org:8545/', // BAD - 27JUNE22
 ]
 
 export const bscRpcsMN = [
@@ -206,6 +206,12 @@ export const bscRpcsMN = [
   'https://rpc.ankr.com/bsc',
   'https://bscrpc.com',
   'https://binance.nodereal.io',
+]
+
+export const stablecoinPools = [
+  '0x511d2fB8458eb46eCcAEeaeAE722cCe769aAe779', // USDTp Mainnet
+  '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c', // BUSDp Mainnet
+  '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7', // USDCp Mainnet
 ]
 
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'
@@ -275,9 +281,9 @@ export const formatShortString = (longString) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} Relevant list of addresses
  */
-export const changeAddresses = (_network) => {
-  const addresses = _network === 97 ? addressesTN : addressesMN
-  window.localStorage.setItem('addresses', JSON.stringify(addresses))
+export const changeAddresses = (_chainId) => {
+  const addresses = _chainId === 97 ? addressesTN : addressesMN
+  window.localStorage.setItem('sp_addresses', JSON.stringify(addresses))
   return addresses
 }
 
@@ -293,12 +299,8 @@ const tryParse = (data) => {
  * Check localStorage for addresses and set default if missing
  * @returns {Object} Relevant list of addresses
  */
-export const getAddresses = () => {
-  const addresses = tryParse(window.localStorage.getItem('addresses'))
-    ? tryParse(window.localStorage.getItem('addresses'))
-    : changeAddresses('testnet') // Change this to 'mainnet' after mainnet is deployed
-  return addresses
-}
+export const getAddresses = () =>
+  tryParse(window.localStorage.getItem('sp_addresses')) ?? changeAddresses()
 
 /**
  * Filter finalArray (or any array) to the scope of the assetAddress
@@ -325,9 +327,9 @@ export const getItemFromArray = (asset, finalArray) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} Relevant list of ABIs
  */
-export const changeAbis = (_network) => {
-  const abis = _network === 97 ? abisTN : abisMN
-  window.localStorage.setItem('abis', JSON.stringify(abis))
+export const changeAbis = (_chainId) => {
+  const abis = _chainId === 97 ? abisTN : abisMN
+  window.localStorage.setItem('sp_abis', JSON.stringify(abis))
   return abis
 }
 
@@ -335,12 +337,8 @@ export const changeAbis = (_network) => {
  * Check localStorage for ABIs and set default if missing
  * @returns {Object} Relevant list of ABIs
  */
-export const getAbis = () => {
-  const abis = tryParse(window.localStorage.getItem('abis'))
-    ? tryParse(window.localStorage.getItem('abis'))
-    : changeAbis('testnet') // Change this to 'mainnet' after mainnet is deployed
-  return abis
-}
+export const getAbis = () =>
+  tryParse(window.localStorage.getItem('sp_abis')) ?? changeAbis(56)
 
 /**
  * Trigger random selection of a relevant RPC URL
@@ -358,8 +356,8 @@ export const changeRpcNew = (rpcUrls) => {
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} RPC URL
  */
-export const changeRpc = (_network, rpcUrls) => {
-  let rpcs = _network === 97 ? bscRpcsTN : bscRpcsMN
+export const changeRpc = (_chainId, rpcUrls) => {
+  let rpcs = _chainId === 97 ? bscRpcsTN : bscRpcsMN
   if (rpcUrls) {
     rpcs = changeRpcNew(rpcUrls)
   }
@@ -369,45 +367,32 @@ export const changeRpc = (_network, rpcUrls) => {
 }
 
 /**
- * Trigger change between mainnet and testnet (localstorage)
- * @param {string} net - 'mainnet' or 'testnet'
- * @returns {Object} chainId (56), net (mainnet), chain (BSC)
- */
-export const changeNetworkLsOnly = (_network) => {
-  const network = _network === 97 ? { chainId: 97 } : { chainId: 56 }
-  window.localStorage.setItem('network', JSON.stringify(network))
-  return network
-}
-
-/**
  * Trigger change between mainnet and testnet
  * @param {string} net - 'mainnet' or 'testnet'
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const changeNetwork = async (_network) => {
-  await changeAbis(_network)
-  await changeAddresses(_network)
-  const network = _network === 97 ? { chainId: 97 } : { chainId: 56 }
-  window.localStorage.setItem('network', JSON.stringify(network))
-  return network
+export const changeChainId = (_chainId) => {
+  changeAbis(_chainId)
+  changeAddresses(_chainId)
+  window.localStorage.setItem('sp_chainId', _chainId)
+  return _chainId
 }
 
 /**
  * Check localStorage for net and set default if missing
  * @returns {Object} chainId (56), net (mainnet), chain (BSC)
  */
-export const getNetwork = () => {
-  const network = tryParse(window.localStorage.getItem('network'))
-    ? tryParse(window.localStorage.getItem('network'))
-    : changeNetwork(56) // Change this to 56 (mainnet) after mainnet is deployed
+export const getChainId = () => {
+  let network = window.localStorage.getItem('sp_chainId')
+  network = network ? parseInt(network, 10) : changeChainId(56)
   return network
 }
 
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider, rpcUrls) => {
-  const network = getNetwork()
+  const chainId = getChainId()
   let provider = new ethers.providers.StaticJsonRpcProvider(
-    changeRpc(network.chainId, rpcUrls),
+    changeRpc(chainId, rpcUrls),
   ) // simple provider unsigned & cached chainId
   if (_provider) {
     provider = _provider.getSigner()
@@ -416,12 +401,11 @@ export const getWalletProvider = (_provider, rpcUrls) => {
 }
 
 // // GET GAS PRICE FROM PROVIDER
-// // eslint-disable-next-line no-unused-vars
 // export const getProviderGasPrice = (rpcUrls) => {
 //   // const provider = getWalletProvider(null, rpcUrls) // TEMP DISABLE
 //   // const gasPrice = provider.getGasPrice() // TEMP DISABLE
 //   const lsSettings = getSettings()
-//   const isMN = getNetwork().chainId === 56
+//   const isMN = getChainId() === 56
 //   const gasPrice = isMN ? lsSettings.gasRateMN : lsSettings.gasRateTN
 //   return BN(gasPrice).times(1000000000).toString()
 // }
@@ -457,7 +441,7 @@ const parseTxnLogs = (txn, txnType) => {
   const member = txn.from
   // get the list of ABIs
   let abiArray = abisMN
-  if (getNetwork().chainId === 97) {
+  if (getChainId === 97) {
     abiArray = abisTN
   }
   // BOND.TXN TYPES
@@ -1163,10 +1147,9 @@ export const clearTxns = async (walletAddr) => {
       txnArray.push({ wallet: walletAddr, txns: [] })
       index = txnArray.findIndex((txn) => txn.wallet === walletAddr)
     }
-    const network = tryParse(window.localStorage.getItem('network'))
     let filtered = txnArray[index].txns
     if (filtered?.length > 0) {
-      filtered = filtered.filter((txn) => txn.chainId !== network.chainId)
+      filtered = filtered.filter((txn) => txn.chainId !== getChainId())
       txnArray[index].txns = filtered
     }
   }

@@ -16,36 +16,40 @@ import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { watchAsset } from '../../store/web3'
 import { useSynth } from '../../store/synth'
-import { getAddresses } from '../../utils/web3'
+import { appAsset, useApp } from '../../store/app'
 
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 import { getSynth, getToken } from '../../utils/math/utils'
 
 /**
- * An asset selection dropdown. Selection is stored in localStorage under 'assetSelected1' or 'assetSelected2'
- * depending on the 'priority' prop handed over.
- * Can be extended out with 'assetSelected3' etc in the future but the current views will only handle '1' and '2' for now
- * @param {uint} priority '1' or '2'
+ * An asset selection dropdown. Selection is pushed into Redux store as 'asset1', 'asset2' or 'asset3'
+ * depending on the 'priority' prop handed over. The Redux action also pushes a copy to localStorage for session handling
+ * Can be extended out with 'asset4' etc in the future but the current views will only handle '1', '2' & '3' for now
+ * @param {uint} priority '1' or '2' or '3'
  * @param {string} type 'pools' (Shows SP-p related fields)
  * @param {array} whiteList tokenAddresses [array]
  * @param {array} blackList tokenAddresses [array]
  */
 const AssetSelect = (props) => {
-  const addr = getAddresses()
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const synth = useSynth()
-  const pool = usePool()
   const wallet = useWeb3React()
 
+  const { addresses, asset1, asset2, asset3 } = useApp()
+  const pool = usePool()
+  const synth = useSynth()
+
+  const [trigger, settrigger] = useState(0)
   const [showModal, setShowModal] = useState(false)
+  const [assetArray, setAssetArray] = useState([])
   const [activeTab, setActiveTab] = useState(
     props.defaultTab ? props.defaultTab : 'all',
   )
 
   const isBNB = (asset) => {
-    if (asset.address === addr.bnb && asset.actualAddr === addr.bnb) return true
+    if (asset.address === addresses.bnb && asset.actualAddr === addresses.bnb)
+      return true
     return false
   }
 
@@ -61,56 +65,26 @@ const AssetSelect = (props) => {
 
   const clearSearch = () => {
     searchInput.value = ''
+    settrigger((prev) => prev + 1)
   }
 
-  const addSelection = (asset) => {
-    const tempAsset = pool.poolDetails.filter(
-      (i) => i.tokenAddress === asset.address,
-    )
-    window.localStorage.setItem(
-      `assetSelected${props.priority}`,
-      JSON.stringify(tempAsset[0]),
-    )
-    window.localStorage.setItem(`assetType${props.priority}`, asset.type)
+  const addSelection = (item) => {
+    dispatch(appAsset(props.priority, item.address, item.type))
   }
 
-  const tryParse = (data) => {
-    try {
-      return JSON.parse(data)
-    } catch (e) {
-      return pool.poolDetails[0]
+  const asset = () => {
+    if (props.priority === '1') {
+      return asset1
     }
-  }
-
-  const [selectedItem, setSelectedItem] = useState(
-    tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
-  )
-  const [selectedType, setSelectedType] = useState(
-    window.localStorage.getItem(`assetType${props.priority}`),
-  )
-
-  useEffect(() => {
-    const _tryParse = (data) => {
-      try {
-        return JSON.parse(data)
-      } catch (e) {
-        return pool.poolDetails[0]
-      }
+    if (props.priority === '2') {
+      return asset2
     }
-    setSelectedItem(
-      _tryParse(window.localStorage.getItem(`assetSelected${props.priority}`)),
-    )
-    setSelectedType(window.localStorage.getItem(`assetType${props.priority}`))
-  }, [
-    pool.poolDetails,
-    props.priority,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem(`assetType${props.priority}`),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    window.localStorage.getItem(`assetSelected${props.priority}`),
-  ])
-
-  const [assetArray, setAssetArray] = useState([])
+    if (props.priority === '3') {
+      return asset3
+    }
+    console.log('Error, assetSelect priority invalid or not set')
+    return false
+  }
 
   const _getToken = (tokenAddress) => getToken(tokenAddress, pool.tokenDetails)
 
@@ -121,21 +95,22 @@ const AssetSelect = (props) => {
     const getArray = () => {
       if (pool.poolDetails) {
         let tempArray = pool.poolDetails.filter(
-          (asset) => !props.empty && !asset.hide,
+          (item) => !props.empty && !item.hide,
         )
 
         if (props.whiteList) {
-          tempArray = tempArray.filter((asset) =>
+          tempArray = tempArray.filter((item1) =>
             props.whiteList.find(
-              (item) => item === asset.tokenAddress || item === asset.address,
+              (item2) =>
+                item2 === item1.tokenAddress || item2 === item1.address,
             ),
           )
         }
 
         if (props.blackList) {
           tempArray = tempArray.filter(
-            (asset) =>
-              props.blackList.find((item) => asset.tokenAddress === item) ===
+            (item1) =>
+              props.blackList.find((item2) => item1.tokenAddress === item2) ===
               undefined,
           )
         }
@@ -143,7 +118,7 @@ const AssetSelect = (props) => {
         for (let i = 0; i < tempArray.length; i++) {
           // Add only sparta
           if (props.filter?.includes('sparta')) {
-            if (tempArray[i].tokenAddress === addr.spartav2) {
+            if (tempArray[i].tokenAddress === addresses.spartav2) {
               finalArray.push({
                 type: 'token',
                 icon: (
@@ -263,8 +238,8 @@ const AssetSelect = (props) => {
           }
         }
         if (searchInput?.value) {
-          finalArray = finalArray.filter((asset) =>
-            asset.symbol
+          finalArray = finalArray.filter((item1) =>
+            item1.symbol
               .toLowerCase()
               .includes(searchInput.value.toLowerCase()),
           )
@@ -275,15 +250,16 @@ const AssetSelect = (props) => {
     }
     getArray()
   }, [
-    addr.spartav2,
+    addresses.spartav2,
     pool.poolDetails,
     pool.tokenDetails,
     props.blackList,
     props.empty,
     props.filter,
     props.whiteList,
-    searchInput?.value,
+    trigger,
     synth.synthDetails,
+    searchInput?.value,
   ])
 
   const getWalletType = () => {
@@ -296,15 +272,15 @@ const AssetSelect = (props) => {
     return false
   }
 
-  const handleWatchAsset = (asset) => {
+  const handleWatchAsset = (item1) => {
     const walletType = getWalletType()
-    if (walletType === 'MM' && !isBNB(asset)) {
+    if (walletType === 'MM' && !isBNB(item1)) {
       dispatch(
         watchAsset(
-          asset.actualAddr,
-          asset.symbol,
+          item1.actualAddr,
+          item1.symbol,
           '18',
-          asset.iconUrl,
+          item1.iconUrl,
           wallet.account,
         ),
       )
@@ -327,58 +303,54 @@ const AssetSelect = (props) => {
         role="button"
       >
         <Col xs="auto" className="position-relative pe-1 ps-0">
-          {selectedType === 'token' && (
+          {asset().type === 'token' && (
             <img
               className="rounded-circle"
               height="40px"
-              src={_getToken(selectedItem?.tokenAddress)?.symbolUrl}
-              alt={`${_getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+              src={_getToken(asset().addr)?.symbolUrl}
+              alt={`${_getToken(asset().addr)?.symbol}icon`}
             />
           )}
 
-          {selectedType === 'pool' && (
+          {asset().type === 'pool' && (
             <>
               <img
                 className="rounded-circle"
                 height="40px"
-                src={_getToken(selectedItem?.tokenAddress)?.symbolUrl}
-                alt={`${_getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+                src={_getToken(asset().addr)?.symbolUrl}
+                alt={`${_getToken(asset().addr)?.symbol}icon`}
               />
               <img
                 src={spartaLpIcon}
                 height="22px"
                 className="token-badge-tight"
-                alt={`${
-                  _getToken(selectedItem?.tokenAddress)?.symbol
-                } LP token icon`}
+                alt={`${_getToken(asset().addr)?.symbol} LP token icon`}
               />
             </>
           )}
 
-          {selectedType === 'synth' && (
+          {asset().type === 'synth' && (
             <>
               <img
                 className="rounded-circle"
                 height="40px"
-                src={_getToken(selectedItem?.tokenAddress)?.symbolUrl}
-                alt={`${_getToken(selectedItem?.tokenAddress)?.symbol}icon`}
+                src={_getToken(asset().addr)?.symbolUrl}
+                alt={`${_getToken(asset().addr)?.symbol}icon`}
               />
               <img
                 src={spartaSynthIcon}
                 height="22px"
                 className="token-badge-tight"
-                alt={`${
-                  _getToken(selectedItem?.tokenAddress)?.symbol
-                } LP token icon`}
+                alt={`${_getToken(asset().addr)?.symbol} LP token icon`}
               />
             </>
           )}
         </Col>
         <Col className="px-1 my-auto overflow-hidden">
           <h4 className="mb-0">
-            {selectedItem && _getToken(selectedItem?.tokenAddress)?.symbol}
-            {selectedType === 'pool' && 'p'}
-            {selectedType === 'synth' && 's'}
+            {_getToken(asset().addr)?.symbol}
+            {asset().type === 'pool' && 'p'}
+            {asset().type === 'synth' && 's'}
             {!props.disabled && (
               <Icon icon="arrowDown" size="13" className="ms-2" />
             )}
@@ -402,8 +374,7 @@ const AssetSelect = (props) => {
                 {t('all')}
               </Nav.Link>
             </Nav.Item>
-            {assetArray.filter((asset) => asset.type === 'token').length >
-              0 && (
+            {assetArray.filter((item) => item.type === 'token').length > 0 && (
               <Nav.Item key="token">
                 <Nav.Link
                   eventKey="token"
@@ -415,7 +386,7 @@ const AssetSelect = (props) => {
                 </Nav.Link>
               </Nav.Item>
             )}
-            {assetArray.filter((asset) => asset.type === 'pool').length > 0 && (
+            {assetArray.filter((item) => item.type === 'pool').length > 0 && (
               <Nav.Item key="pool">
                 <Nav.Link
                   eventKey="pool"
@@ -427,8 +398,7 @@ const AssetSelect = (props) => {
                 </Nav.Link>
               </Nav.Item>
             )}
-            {assetArray.filter((asset) => asset.type === 'synth').length >
-              0 && (
+            {assetArray.filter((item) => item.type === 'synth').length > 0 && (
               <Nav.Item key="synth">
                 <Nav.Link
                   eventKey="synth"
@@ -454,6 +424,7 @@ const AssetSelect = (props) => {
                   placeholder={t('searchAssets')}
                   type="text"
                   id="searchInput"
+                  onChange={() => settrigger((prev) => prev + 1)}
                 />
                 <InputGroup.Text
                   role="button"
@@ -468,18 +439,18 @@ const AssetSelect = (props) => {
           </Row>
 
           {activeTab === 'all' &&
-            assetArray.map((asset) => (
-              <Row key={`${asset.actualAddr}-all`} className="mb-3">
+            assetArray.map((item) => (
+              <Row key={`${item.actualAddr}-all`} className="mb-3">
                 <Col xs="auto" className="position-relative">
                   <div
                     role="button"
                     aria-hidden="true"
                     onClick={() => {
-                      addSelection(asset)
+                      addSelection(item)
                       toggleModal()
                     }}
                   >
-                    {asset.icon}
+                    {item.icon}
                   </div>
                 </Col>
 
@@ -490,13 +461,13 @@ const AssetSelect = (props) => {
                         role="button"
                         aria-hidden="true"
                         onClick={() => {
-                          addSelection(asset)
+                          addSelection(item)
                           toggleModal()
                         }}
                       >
-                        {asset.symbol}
+                        {item.symbol}
                       </strong>
-                      <div>{formatFromWei(asset.balance)}</div>
+                      <div>{formatFromWei(item.balance)}</div>
                     </Col>
                   </Row>
                 </Col>
@@ -504,7 +475,7 @@ const AssetSelect = (props) => {
                 <Col xs="3" md="3" className="text-end p-0 pe-2">
                   <Row>
                     <Col xs="6">
-                      <ShareLink url={asset.actualAddr}>
+                      <ShareLink url={item.actualAddr}>
                         <Icon icon="copy" size="24" className="ms-2" />
                       </ShareLink>
                     </Col>
@@ -513,7 +484,7 @@ const AssetSelect = (props) => {
                         <a
                           href={
                             getWalletType() === 'TW'
-                              ? `trust://add_asset?asset=c20000714_t${asset.actualAddr}`
+                              ? `trust://add_asset?asset=c20000714_t${item.actualAddr}`
                               : '#section'
                           }
                         >
@@ -554,10 +525,10 @@ const AssetSelect = (props) => {
 
           {activeTab !== 'all' &&
             assetArray
-              .filter((asset) => asset.type === activeTab)
-              .map((asset) => (
+              .filter((item) => item.type === activeTab)
+              .map((item) => (
                 <Row
-                  key={asset.actualAddr + activeTab}
+                  key={item.actualAddr + activeTab}
                   className="mb-3 output-card"
                 >
                   <Col xs="auto" className="position-relative">
@@ -565,11 +536,11 @@ const AssetSelect = (props) => {
                       role="button"
                       aria-hidden="true"
                       onClick={() => {
-                        addSelection(asset)
+                        addSelection(item)
                         toggleModal()
                       }}
                     >
-                      {asset.icon}
+                      {item.icon}
                     </div>
                   </Col>
 
@@ -580,13 +551,13 @@ const AssetSelect = (props) => {
                           role="button"
                           aria-hidden="true"
                           onClick={() => {
-                            addSelection(asset)
+                            addSelection(item)
                             toggleModal()
                           }}
                         >
-                          {asset.symbol}
+                          {item.symbol}
                         </strong>
-                        <div>{formatFromWei(asset.balance)}</div>
+                        <div>{formatFromWei(item.balance)}</div>
                       </Col>
                     </Row>
                   </Col>
@@ -594,7 +565,7 @@ const AssetSelect = (props) => {
                   <Col xs="3" md="3" className="text-end p-0 pe-2">
                     <Row>
                       <Col xs="6">
-                        <ShareLink url={asset.actualAddr}>
+                        <ShareLink url={item.actualAddr}>
                           <Icon icon="copy" size="24" className="ms-2" />
                         </ShareLink>
                       </Col>
@@ -603,7 +574,7 @@ const AssetSelect = (props) => {
                           <a
                             href={
                               getWalletType() === 'TW'
-                                ? `trust://add_asset?asset=c20000714_t${asset.actualAddr}`
+                                ? `trust://add_asset?asset=c20000714_t${item.actualAddr}`
                                 : '#section'
                             }
                           >
@@ -611,10 +582,10 @@ const AssetSelect = (props) => {
                               role="button"
                               aria-hidden="true"
                               onClick={() => {
-                                handleWatchAsset(asset)
+                                handleWatchAsset(item)
                               }}
                             >
-                              {!isBNB(asset) && (
+                              {!isBNB(item) && (
                                 <>
                                   {getWalletType() === 'MM' ? (
                                     <Icon

@@ -18,15 +18,17 @@ import {
   isBonded,
 } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
-import { getAddresses } from '../../utils/web3'
+import { useApp } from '../../store/app'
 
 const BondItem = (props) => {
-  const pool = usePool()
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
-  const addr = getAddresses()
-  const { asset } = props
   const { t } = useTranslation()
+  const wallet = useWeb3React()
+
+  const { addresses } = useApp()
+  const pool = usePool()
+
+  const { asset } = props
 
   const [txnLoading, setTxnLoading] = useState(false)
 
@@ -51,7 +53,7 @@ const BondItem = (props) => {
 
   const estMaxGas = ''
   const enoughGas = () => {
-    const bal = getToken(addr.bnb, pool.tokenDetails).balance
+    const bal = getToken(addresses.bnb, pool.tokenDetails).balance
     if (BN(bal).isLessThan(estMaxGas)) {
       return false
     }
