@@ -368,50 +368,60 @@ const WalletSelect = (props) => {
                 </span>
               </Form>
             </Col>
-            <hr className="mt-3" />
-            <Col className="text-center mb-2">
-              <Nav
-                variant="pills"
-                activeKey={activeTab}
-                onSelect={(e) => setactiveTab(e)}
-                className="justify-content-center"
-              >
-                <Nav.Item>
-                  <Nav.Link
-                    eventKey="tokens"
-                    className="btn-sm btn-outline-primary"
+            {wallet.account && (
+              <>
+                <hr className="mt-3" />
+                <Col className="text-center mb-2">
+                  <Nav
+                    variant="pills"
+                    activeKey={activeTab}
+                    onSelect={(e) => setactiveTab(e)}
+                    className="justify-content-center"
                   >
-                    {t('tokens')}{' '}
-                    <Badge bg="secondary">
-                      {tempChains.includes(wallet.chainId) && getTokenCount()}
-                    </Badge>
-                  </Nav.Link>
-                </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link
+                        eventKey="tokens"
+                        className="btn-sm btn-outline-primary"
+                      >
+                        {t('tokens')}{' '}
+                        <Badge bg="secondary">
+                          {tempChains.includes(wallet.chainId) &&
+                            getTokenCount()}
+                        </Badge>
+                      </Nav.Link>
+                    </Nav.Item>
 
-                <Nav.Item>
-                  <Nav.Link bg="secondary" eventKey="lps" className="btn-sm">
-                    {t('lps')}{' '}
-                    <Badge bg="secondary">
-                      {tempChains.includes(wallet.chainId) && getLpsCount()}
-                    </Badge>
-                  </Nav.Link>
-                </Nav.Item>
+                    <Nav.Item>
+                      <Nav.Link
+                        bg="secondary"
+                        eventKey="lps"
+                        className="btn-sm"
+                      >
+                        {t('lps')}{' '}
+                        <Badge bg="secondary">
+                          {tempChains.includes(wallet.chainId) && getLpsCount()}
+                        </Badge>
+                      </Nav.Link>
+                    </Nav.Item>
 
-                <Nav.Item>
-                  <Nav.Link eventKey="synths" className="btn-sm">
-                    {t('synths')}{' '}
-                    <Badge bg="secondary">
-                      {tempChains.includes(wallet.chainId) && getSynthsCount()}
-                    </Badge>
-                  </Nav.Link>
-                </Nav.Item>
-                <Nav.Item className="hide-i5">
-                  <Nav.Link eventKey="txns" className="btn-sm">
-                    <Icon icon="txnsHistory" size="20" />
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Col>
+                    <Nav.Item>
+                      <Nav.Link eventKey="synths" className="btn-sm">
+                        {t('synths')}{' '}
+                        <Badge bg="secondary">
+                          {tempChains.includes(wallet.chainId) &&
+                            getSynthsCount()}
+                        </Badge>
+                      </Nav.Link>
+                    </Nav.Item>
+                    <Nav.Item className="hide-i5">
+                      <Nav.Link eventKey="txns" className="btn-sm">
+                        <Icon icon="txnsHistory" size="20" />
+                      </Nav.Link>
+                    </Nav.Item>
+                  </Nav>
+                </Col>
+              </>
+            )}
           </Row>
         </Modal.Header>
 
