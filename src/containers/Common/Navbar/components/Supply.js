@@ -26,6 +26,7 @@ import { getPOLWeights } from '../../../../utils/math/nonContract'
 import styles from './styles.module.scss'
 import { Spacer } from '../../../../components/Spacer'
 import { appChainId, useApp } from '../../../../store/app'
+import { useBreakpoint } from '../../../../providers/Breakpoint'
 
 const Supply = () => {
   const { t } = useTranslation()
@@ -36,6 +37,7 @@ const Supply = () => {
   const target = useRef(null)
   const dispatch = useDispatch()
   const app = useApp()
+  const breakpoint = useBreakpoint()
 
   // V1 (Protocol) Token Distribution
   // const distroMnBurnV1 = '42414904' // SPARTA minted via BurnForSparta Distro Event (V1 TOKEN)
@@ -139,9 +141,11 @@ const Supply = () => {
         aria-hidden="true"
       >
         <Icon icon="spartaNavbar" size="23" className="me-1" />
-        <span className={styles.btnText}>
-          {spartaPrice > 0 ? `$${formatFromUnits(spartaPrice, 2)}` : ''}
-        </span>
+        {breakpoint.sm && (
+          <span className={styles.btnText}>
+            {spartaPrice > 0 ? `$${formatFromUnits(spartaPrice, 2)}` : ''}
+          </span>
+        )}
       </div>
 
       {showDropdown && (

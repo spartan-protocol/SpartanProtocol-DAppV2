@@ -7,6 +7,7 @@ import { Icon } from '../../../components/Icons/index'
 
 import styles from './styles.module.scss'
 import { useBreakpoint } from '../../../providers/Breakpoint'
+import OnboardModal from './components/Onboarding'
 
 const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
   const breakpoint = useBreakpoint()
@@ -42,6 +43,7 @@ const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
         </>
       )}
       <div className={styles.buttons}>
+        <OnboardModal />
         <AddressConn />
         <Supply />
       </div>

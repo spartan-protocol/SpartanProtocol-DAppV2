@@ -4,6 +4,7 @@ import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
 import { ReactComponent as BNBChain } from '../../assets/brands/bnbchain.svg'
 import { ReactComponent as BNBChainConnected } from '../../assets/brands/bnbchain-connected.svg'
 import { ReactComponent as Brave } from '../../assets/brands/brave.svg'
+import { ReactComponent as BubblemapsText } from '../../assets/brands/bubblemaps-text.svg'
 import { ReactComponent as C4Text } from '../../assets/brands/code4rena-text.svg'
 import { ReactComponent as CertikText } from '../../assets/brands/certik-text.svg'
 import { ReactComponent as CoinGeckoIcon } from '../../assets/brands/coingecko-icon.svg'
@@ -12,10 +13,11 @@ import { ReactComponent as CMCText } from '../../assets/brands/cmc-text.svg'
 import { ReactComponent as FourText } from '../../assets/brands/four-text.svg'
 import { ReactComponent as GithubText } from '../../assets/brands/github-text.svg'
 import { ReactComponent as ImmunefiText } from '../../assets/brands/immunefi-text.svg'
+import { ReactComponent as Mastercard } from '../../assets/brands/mastercard.svg'
 import { ReactComponent as MoonlightText } from '../../assets/brands/moonlight-text.svg'
-import { ReactComponent as BubblemapsText } from '../../assets/brands/bubblemaps-text.svg'
 import { ReactComponent as OntoText } from '../../assets/brands/onto-text.svg'
 import { ReactComponent as SpartaText } from '../../assets/brands/sparta-text.svg'
+import { ReactComponent as Visa } from '../../assets/brands/visa.svg'
 // FLAGS
 import { ReactComponent as TurkeyFlag } from '../../assets/flags/tr.svg'
 // ICONS
@@ -29,6 +31,7 @@ import { ReactComponent as ArrowRight } from '../../assets/icons/arrow-right.svg
 import { ReactComponent as ArrowUp } from '../../assets/icons/arrow-up.svg'
 import { ReactComponent as ArrowExtLeft } from '../../assets/icons/arrow-extend-left.svg'
 import { ReactComponent as ArrowExtRight } from '../../assets/icons/arrow-extend-right.svg'
+import { ReactComponent as BankCards } from '../../assets/icons/bank-cards.svg'
 import { ReactComponent as Close } from '../../assets/icons/close.svg'
 import { ReactComponent as Colosseum } from '../../assets/icons/colosseum.svg'
 import { ReactComponent as Connect } from '../../assets/icons/connect.svg'
@@ -80,13 +83,18 @@ import { ReactComponent as Reddit } from '../../assets/brands/reddit.svg'
 import { ReactComponent as Telegram } from '../../assets/brands/telegram.svg'
 import { ReactComponent as Twitter } from '../../assets/brands/twitter.svg'
 // TOKENS
+import { ReactComponent as Avax } from '../../assets/tokens/avax.svg'
+import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
+import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
+import { ReactComponent as Eth } from '../../assets/tokens/eth.svg'
+import { ReactComponent as Fantom } from '../../assets/tokens/fantom.svg'
+import { ReactComponent as Matic } from '../../assets/tokens/matic.svg'
+import { ReactComponent as Optimism } from '../../assets/tokens/optimism.svg'
 import { ReactComponent as SpartaV1 } from '../../assets/tokens/spartav1.svg'
 import { ReactComponent as SpartaV2 } from '../../assets/tokens/spartav2.svg'
 import { ReactComponent as SpartaNavbar } from '../../assets/tokens/spartanavbar.svg'
 import { ReactComponent as SpartaLP } from '../../assets/tokens/sparta-lp.svg'
 import { ReactComponent as SpartaSynth } from '../../assets/tokens/sparta-synth.svg'
-import { ReactComponent as Bnb } from '../../assets/tokens/bnb.svg'
-import { ReactComponent as Busd } from '../../assets/tokens/busd.svg'
 import { ReactComponent as Usd } from '../../assets/tokens/usd.svg'
 import { ReactComponent as Usdc } from '../../assets/tokens/usdc.svg'
 import { ReactComponent as Usdt } from '../../assets/tokens/usdt.svg'
@@ -115,10 +123,12 @@ const icons = {
   fourText: FourText,
   githubText: GithubText,
   immunefiText: ImmunefiText,
+  mastercard: Mastercard,
   moonlightText: MoonlightText,
   bubblemapsText: BubblemapsText,
   ontoText: OntoText,
   spartaText: SpartaText,
+  visa: Visa,
   // FLAGS
   turkeyFlag: TurkeyFlag,
   // ICONS
@@ -132,6 +142,7 @@ const icons = {
   arrowUp: ArrowUp,
   arrowExtLeft: ArrowExtLeft,
   arrowExtRight: ArrowExtRight,
+  bankCards: BankCards,
   bin: Trash,
   close: Close,
   colosseum: Colosseum,
@@ -184,13 +195,18 @@ const icons = {
   telegram: Telegram,
   twitter: Twitter,
   // TOKENS
+  avax: Avax,
+  bnb: Bnb,
+  busd: Busd,
+  eth: Eth,
+  fantom: Fantom,
+  matic: Matic,
+  optimism: Optimism,
   spartav1: SpartaV1,
   spartav2: SpartaV2,
   spartaNavbar: SpartaNavbar,
   spartaLp: SpartaLP,
   spartaSynth: SpartaSynth,
-  bnb: Bnb,
-  busd: Busd,
   usd: Usd,
   usdc: Usdc,
   usdt: Usdt,
