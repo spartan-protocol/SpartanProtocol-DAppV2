@@ -20,6 +20,8 @@ jobs:
         env:
           REACT_APP_BITQUERY: ${{ secrets.REACT_APP_BITQUERY }}
           REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}
+          REACT_APP_BCONNECT: ${{ secrets.REACT_APP_BCONNECT }}
+          REACT_APP_BCONNECT_URL: ${{ secrets.REACT_APP_BCONNECT_URL }}
       - name: 🚀 Deploy to Netlify
         uses: netlify/actions/cli@master
         env:
