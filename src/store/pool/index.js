@@ -355,7 +355,8 @@ export const getMonthIncentives = () => async (dispatch, getState) => {
   const { listedPools } = getState().pool
   try {
     if (listedPools.length > 0) {
-      const _poolArray = listedPools.filter((x) => x.baseAmount > 0)
+      let _poolArray = listedPools.filter((x) => x.baseAmount > 0)
+      _poolArray = _poolArray.sort((a, b) => b.baseAmount - a.baseAmount)
       const incentives = []
       const _incentives = await getPoolIncentives(_poolArray)
       for (let i = 0; i < _poolArray.length; i++) {
@@ -364,6 +365,7 @@ export const getMonthIncentives = () => async (dispatch, getState) => {
         )
         incentives.push({
           address: _poolArray[i].address,
+          timestamp: index > -1 ? _incentives[index].timestamp : '0',
           incentives: index > -1 ? _incentives[index].incentives30Day : '0',
           fees: index > -1 ? _incentives[index].fees30Day : '0',
           volume: index > -1 ? _incentives[index].volRollingUSD : '0',
