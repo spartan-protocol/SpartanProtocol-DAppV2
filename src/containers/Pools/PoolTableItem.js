@@ -57,10 +57,14 @@ const PoolTableItem = ({ asset, daoApy }) => {
           ?.incentives
       : 0
 
-  const getVol = () =>
-    pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0]?.volume
-      : 0
+  const getVol = () => {
+    if (!pool.incentives) return 0
+    const _item = pool.incentives.filter((x) => x.address === asset.address)[0]
+    if (!_item) return 0
+    const isRecent = pool.incentives[0].timestamp - _item.timestamp < 172800
+    if (!isRecent) return 0
+    return _item.volume
+  }
 
   const APY = calcAPY(asset, getFees(), getDivis())
 
@@ -131,11 +135,11 @@ const PoolTableItem = ({ asset, daoApy }) => {
         </td>
         {/* liquidity */}
         <td className="d-none d-sm-table-cell">
-          {getTVL() > 0 ? `$${formatFromWei(getTVL(), 0)}` : 'Loading...'}
+          {getTVL() > 0 ? `$${formatFromWei(getTVL(), 0)}` : '...'}
         </td>
         {/* volume */}
         <td className="d-none d-sm-table-cell">
-          {getVol() > 0 ? `$${formatFromWei(getVol(), 0)}` : 'Loading...'}
+          {getVol() > 0 ? `$${formatFromWei(getVol(), 0)}` : '...'}
         </td>
         {/* apy */}
         <td>

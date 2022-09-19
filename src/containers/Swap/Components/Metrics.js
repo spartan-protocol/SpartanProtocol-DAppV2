@@ -21,6 +21,7 @@ const Metrics = ({ assetSwap }) => {
   const getBlockTimer = useRef(null)
 
   useEffect(() => {
+    let isCancelled = false
     if (prevAsset !== assetSwap.address) {
       setPoolMetrics([])
       setPrevAsset(assetSwap.address)
@@ -28,7 +29,9 @@ const Metrics = ({ assetSwap }) => {
     const getMetrics = async () => {
       if (assetSwap.address) {
         const metrics = await callPoolMetrics(assetSwap.address)
-        setPoolMetrics(metrics)
+        if (!isCancelled) {
+          setPoolMetrics(metrics)
+        }
       }
     }
     getMetrics() // Run on load
@@ -37,7 +40,10 @@ const Metrics = ({ assetSwap }) => {
         getMetrics()
       }
     }, 20000)
-    return () => clearInterval(getBlockTimer.current)
+    return () => {
+      clearInterval(getBlockTimer.current)
+      isCancelled = true
+    }
   }, [getBlockTimer, assetSwap.address, prevAsset])
 
   useEffect(() => {

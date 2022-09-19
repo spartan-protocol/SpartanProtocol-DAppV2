@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import Card from 'react-bootstrap/Card'
@@ -60,33 +60,41 @@ const Metrics = ({ assetSwap }) => {
     }
   }, [web3.spartaPrice, web3.spartaPriceInternal])
 
-  /** Get the current block from a main RPC */
-  const getBlockTimer = useRef(null)
-
   useEffect(() => {
     dispatch(daoVaultWeight())
     dispatch(bondVaultWeight())
   }, [dispatch, pool.poolDetails])
 
   useEffect(() => {
-    if (prevAsset !== assetSwap.address) {
-      setPoolMetrics([])
-      setPrevAsset(assetSwap.address)
-    }
+    let isCancelled = false
     const getMetrics = async () => {
-      if (assetSwap.address) {
+      if (prevAsset !== assetSwap.address && !isCancelled) {
+        setPoolMetrics([])
+        setPrevAsset(assetSwap.address)
+      }
+      if (!isCancelled) {
         const metrics = await callPoolMetrics(assetSwap.address)
-        setPoolMetrics(metrics)
+        if (!isCancelled) {
+          setPoolMetrics(metrics)
+        }
       }
     }
-    getMetrics() // Run on load
-    getBlockTimer.current = setInterval(async () => {
+
+    if (assetSwap.address) {
+      getMetrics() // Run on load
+    }
+
+    const interval = setInterval(() => {
       if (assetSwap.address) {
         getMetrics() // Run on interval
       }
     }, 20000)
-    return () => clearInterval(getBlockTimer.current)
-  }, [getBlockTimer, assetSwap.address, prevAsset])
+
+    return () => {
+      isCancelled = true
+      clearInterval(interval)
+    }
+  }, [assetSwap.address, prevAsset])
 
   useEffect(() => {
     const dayStart = getUnixStartOfDay()
