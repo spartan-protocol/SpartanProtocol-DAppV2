@@ -73,10 +73,14 @@ const PoolItem = ({ asset, daoApy }) => {
       ? pool.incentives.filter((x) => x.address === asset.address)[0].incentives
       : 0
 
-  const getVolume = () =>
-    pool.incentives
-      ? pool.incentives.filter((x) => x.address === asset.address)[0].volume
-      : 0
+  const getVolume = () => {
+    if (!pool.incentives) return 0
+    const _item = pool.incentives.filter((x) => x.address === asset.address)[0]
+    if (!_item) return 0
+    const isRecent = pool.incentives[0].timestamp - _item.timestamp < 172800
+    if (!isRecent) return 0
+    return _item.volume
+  }
 
   const APY = calcAPY(asset, getFees(), getDivis())
 

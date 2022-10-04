@@ -151,6 +151,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
 
   /** Check token1 external price (on asset1 change) */
   useEffect(() => {
+    let isCancelled = false
     const getAsset1ExtPrice = async () => {
       if (assetSwap1.tokenAddress) {
         if (assetSwap1.tokenAddress === addresses.spartav2) {
@@ -168,13 +169,16 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                 ? addresses.wbnb.toLowerCase()
                 : assetSwap1.tokenAddress.toLowerCase()
             ]
-          if (isCurrent) {
+          if (isCurrent && !isCancelled) {
             setAsset1USD(isCurrent.usd)
           }
         }
       }
     }
     getAsset1ExtPrice()
+    return () => {
+      isCancelled = true
+    }
   }, [
     addresses.bnb,
     addresses.spartav2,
@@ -184,6 +188,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
 
   /** Check token2 external price (on asset2 change) */
   useEffect(() => {
+    let isCancelled = false
     const getAsset2ExtPrice = async () => {
       if (assetSwap2.tokenAddress) {
         if (assetSwap2.tokenAddress === addresses.spartav2) {
@@ -201,13 +206,16 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
                 ? addresses.wbnb.toLowerCase()
                 : assetSwap2.tokenAddress.toLowerCase()
             ]
-          if (isCurrent) {
+          if (isCurrent && !isCancelled) {
             setAsset2USD(isCurrent.usd)
           }
         }
       }
     }
     getAsset2ExtPrice()
+    return () => {
+      isCancelled = true
+    }
   }, [
     addresses.bnb,
     addresses.spartav2,
