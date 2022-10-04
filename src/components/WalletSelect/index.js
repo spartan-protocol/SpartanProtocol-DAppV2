@@ -447,14 +447,14 @@ const WalletSelect = (props) => {
                       (x.id === 'WC' && chainId !== 56) ||
                       (x.id === 'BRAVE' && !window.ethereum?.isBraveWallet) ||
                       (x.id === 'ON' && !window.ethereum?.isONTO) ||
-                      (!['WC', 'BC'].includes(x.id) && !window.ethereum)
+                      (!['WC', 'BC', 'TW'].includes(x.id) && !window.ethereum)
                     }
                     className="w-100 my-1"
                     onClick={() => {
                       onWalletConnect(x)
                     }}
                     href={
-                      x.id === 'TW'
+                      x.id === 'TW' && !window.ethereum?.isTrust
                         ? `trust://open_url?coin_id=20000714&url=${window.location.origin}`
                         : '#section'
                     }

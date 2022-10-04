@@ -34,6 +34,7 @@ const Others = () => {
 
   // MOVE THIS TO REDUX & CLEAN UP DEPS
   useEffect(() => {
+    let isCancelled = false
     const getPoolDetails = async () => {
       const contract = getPoolContract(poolObj.address, null, web3.rpcs)
       let awaitArray = [
@@ -45,10 +46,15 @@ const Others = () => {
         stirStamp: checkResolved(awaitArray[0], 'Error').toString(),
         synthCap: checkResolved(awaitArray[1], 'Error').toString(),
       }
-      setPoolVars(resolved)
+      if (!isCancelled) {
+        setPoolVars(resolved)
+      }
     }
     if (tempChains.includes(chainId) && pool.poolDetails && poolObj.address) {
       getPoolDetails()
+    }
+    return () => {
+      isCancelled = true
     }
   }, [chainId, pool.poolDetails, poolObj.address, web3.rpcs])
 
