@@ -127,7 +127,7 @@ export const addNetworkMM = () => async (dispatch, getState) => {
             chainName: network.chainName,
             nativeCurrency: {
               name: 'BNB',
-              symbol: 'bnb',
+              symbol: 'BNB',
               decimals: 18,
             },
             rpcUrls: network.rpcUrls,
