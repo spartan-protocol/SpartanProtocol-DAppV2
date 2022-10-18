@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
-import { Icon } from '../../../../../components/Icons'
+import { Icon } from '../Icons'
 
 const WelcomeStep = ({ settype, setstep }) => {
   const nextStep = (type) => {

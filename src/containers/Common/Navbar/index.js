@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import AddressConn from './components/AddressConn'
 import Supply from './components/Supply'
@@ -7,10 +7,12 @@ import { Icon } from '../../../components/Icons/index'
 
 import styles from './styles.module.scss'
 import { useBreakpoint } from '../../../providers/Breakpoint'
-import OnboardModal from './components/Onboarding'
+import OnboardModal from '../../../components/Onboarding'
 
 const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
   const breakpoint = useBreakpoint()
+
+  const [showOnboarding, setshowOnboarding] = useState(false)
 
   return (
     <div className={`${styles.navbar} bg-2`}>
@@ -43,7 +45,21 @@ const Navbar = ({ fixed, handleCompact, sideNavIcon, handleSideNavState }) => {
         </>
       )}
       <div className={styles.buttons}>
-        <OnboardModal />
+        <div
+          role="button"
+          className={styles.headerBtn}
+          onClick={() => setshowOnboarding(true)}
+          onKeyPress={() => setshowOnboarding(true)}
+          aria-hidden="true"
+        >
+          <Icon icon="bankCards" size="24" />
+        </div>
+        {showOnboarding && (
+          <OnboardModal
+            showModal={showOnboarding}
+            setshowModal={setshowOnboarding}
+          />
+        )}
         <AddressConn />
         <Supply />
       </div>

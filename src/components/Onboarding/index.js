@@ -6,20 +6,17 @@ import Modal from 'react-bootstrap/Modal'
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
 
-import { Icon } from '../../../../../components/Icons'
-import { useTheme } from '../../../../../providers/Theme'
-import { formatShortString } from '../../../../../utils/web3'
+import { useTheme } from '../../providers/Theme'
+import { formatShortString } from '../../utils/web3'
 
-import styles from '../styles.module.scss'
 import FiatStep from './fiatStep'
 import WalletStep from './walletStep.js'
 import WelcomeStep from './welcomeStep'
 
-const OnboardModal = () => {
+const OnboardModal = ({ showModal, setshowModal }) => {
   const wallet = useWeb3React()
   const { isDark } = useTheme()
 
-  const [showModal, setshowModal] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
   const [step, setstep] = useState(1)
   const [type, settype] = useState('fiat')
@@ -36,15 +33,6 @@ const OnboardModal = () => {
 
   return (
     <>
-      <div
-        role="button"
-        className={styles.headerBtn}
-        onClick={() => setshowModal(true)}
-        onKeyPress={() => setshowModal(true)}
-        aria-hidden="true"
-      >
-        <Icon icon="bankCards" size="24" />
-      </div>
       <Modal show={showModal} onHide={() => setshowModal(false)} centered>
         <Modal.Header
           closeButton

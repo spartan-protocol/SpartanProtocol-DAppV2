@@ -5,9 +5,9 @@ import Button from 'react-bootstrap/Button'
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
 
-import { Icon } from '../../../../../components/Icons'
-import WalletSelect from '../../../../../components/WalletSelect'
-import { formatShortString } from '../../../../../utils/web3'
+import { Icon } from '../Icons'
+import WalletSelect from '../WalletSelect'
+import { formatShortString } from '../../utils/web3'
 
 const WalletStep = ({ setstep }) => {
   const wallet = useWeb3React()
