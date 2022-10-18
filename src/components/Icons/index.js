@@ -1,6 +1,7 @@
 import React from 'react'
 // BRANDS
 import { ReactComponent as Apple } from '../../assets/brands/apple-ios.svg'
+import { ReactComponent as BinanceConnect } from '../../assets/brands/binance-connect.svg'
 import { ReactComponent as BNBChain } from '../../assets/brands/bnbchain.svg'
 import { ReactComponent as BNBChainConnected } from '../../assets/brands/bnbchain-connected.svg'
 import { ReactComponent as Brave } from '../../assets/brands/brave.svg'
@@ -39,6 +40,7 @@ import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
 import { ReactComponent as ContractGreen } from '../../assets/icons/contract-green.svg'
 import { ReactComponent as ContractRed } from '../../assets/icons/contract-red.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
+import { ReactComponent as CurrenciesClr } from '../../assets/icons/currencies-clr.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Dao } from '../../assets/icons/dao.svg'
 import { ReactComponent as Donate } from '../../assets/icons/donate.svg'
@@ -55,6 +57,7 @@ import { ReactComponent as MenuOpen } from '../../assets/icons/menu-open.svg'
 import { ReactComponent as MenuClose } from '../../assets/icons/menu-close.svg'
 import { ReactComponent as Mint } from '../../assets/icons/mint.svg'
 import { ReactComponent as Moon } from '../../assets/icons/moon.svg'
+import { ReactComponent as PaymentMethodsClr } from '../../assets/icons/payment-methods-clr.svg'
 import { ReactComponent as Pool } from '../../assets/icons/pool.svg'
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg'
 import { ReactComponent as Scan } from '../../assets/icons/scan.svg'
@@ -74,6 +77,8 @@ import { ReactComponent as Upgrade } from '../../assets/icons/upgrade.svg'
 import { ReactComponent as Vault } from '../../assets/icons/vault.svg'
 import { ReactComponent as WalletGreen } from '../../assets/icons/wallet-green.svg'
 import { ReactComponent as WalletRed } from '../../assets/icons/wallet-red.svg'
+import { ReactComponent as WorldClr } from '../../assets/icons/world-clr.svg'
+import { ReactComponent as WorldMapClr } from '../../assets/icons/world-map-clr.svg'
 // SOCIALS
 import { ReactComponent as Discord } from '../../assets/brands/discord.svg'
 import { ReactComponent as Gitbook } from '../../assets/brands/gitbook.svg'
@@ -112,6 +117,7 @@ import { useTheme } from '../../providers/Theme'
 const icons = {
   // BRANDS
   apple: Apple,
+  binanceConnect: BinanceConnect,
   bnbChain: BNBChain,
   bnbChainConnected: BNBChainConnected,
   brave: Brave,
@@ -151,6 +157,7 @@ const icons = {
   contractGreen: ContractGreen,
   contractRed: ContractRed,
   copy: Copy,
+  currenciesClr: CurrenciesClr,
   cycle: Cycle,
   dao: Dao,
   donate: Donate,
@@ -167,6 +174,7 @@ const icons = {
   menuClose: MenuClose,
   mint: Mint,
   moon: Moon,
+  paymentMethodsClr: PaymentMethodsClr,
   pool: Pool,
   plus: Plus,
   scan: Scan,
@@ -186,6 +194,8 @@ const icons = {
   vault: Vault,
   walletGreen: WalletGreen,
   walletRed: WalletRed,
+  worldClr: WorldClr,
+  worldMapClr: WorldMapClr,
   // SOCIALS
   discord: Discord,
   gitbook: Gitbook,
