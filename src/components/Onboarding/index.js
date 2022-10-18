@@ -13,7 +13,7 @@ import FiatStep from './fiatStep'
 import WalletStep from './walletStep.js'
 import WelcomeStep from './welcomeStep'
 
-const OnboardModal = ({ showModal, setshowModal }) => {
+const OnboardModal = ({ showModal, setshowModal, defaultAsset = null }) => {
   const wallet = useWeb3React()
   const { isDark } = useTheme()
 
@@ -50,7 +50,9 @@ const OnboardModal = ({ showModal, setshowModal }) => {
             step === 2 && <WalletStep setstep={setstep} /> // Setup/connect/copy wallet address here
           }
           {
-            step === 3 && type === 'fiat' && <FiatStep /> // BinanceConnect iFrame (fiat onboarding)
+            step === 3 && type === 'fiat' && (
+              <FiatStep defaultAsset={defaultAsset} />
+            ) // BinanceConnect iFrame (fiat onboarding)
           }
           {/* {
             step === 3 && type === 'crosschain' && <CrosschainStep /> // Crosschain portal (onboard to BSC from other chain)

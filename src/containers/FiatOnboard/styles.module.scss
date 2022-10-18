@@ -1,0 +1,35 @@
+.parent {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  max-height: 100vh;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.parent::-webkit-scrollbar {
+  display: none;
+}
+
+.first {
+  scroll-snap-align: start;
+  height: calc(100vh - 70px);
+  padding: 30px;
+}
+
+.second {
+  scroll-snap-align: start;
+  height: calc(100vh - 70px);
+  margin-bottom: 75px; // Must be larger than the minus(amount) from 100vh to ensure there is enough room for the scroll-snap-align anchor to reach the top of the viewport
+}
+
+.binanceConnectModule {
+  margin-left: auto;
+  max-width: 500px;
+  height: 100%;
+  max-height: 700px;
+  max-width: 450px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
