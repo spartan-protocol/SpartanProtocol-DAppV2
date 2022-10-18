@@ -6,20 +6,17 @@ import Modal from 'react-bootstrap/Modal'
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
 
-import { Icon } from '../../../../../components/Icons'
-import { useTheme } from '../../../../../providers/Theme'
-import { formatShortString } from '../../../../../utils/web3'
+import { useTheme } from '../../providers/Theme'
+import { formatShortString } from '../../utils/web3'
 
-import styles from '../styles.module.scss'
 import FiatStep from './fiatStep'
 import WalletStep from './walletStep.js'
 import WelcomeStep from './welcomeStep'
 
-const OnboardModal = () => {
+const OnboardModal = ({ showModal, setshowModal, defaultAsset = null }) => {
   const wallet = useWeb3React()
   const { isDark } = useTheme()
 
-  const [showModal, setshowModal] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
   const [step, setstep] = useState(1)
   const [type, settype] = useState('fiat')
@@ -36,15 +33,6 @@ const OnboardModal = () => {
 
   return (
     <>
-      <div
-        role="button"
-        className={styles.headerBtn}
-        onClick={() => setshowModal(true)}
-        onKeyPress={() => setshowModal(true)}
-        aria-hidden="true"
-      >
-        <Icon icon="bankCards" size="24" />
-      </div>
       <Modal show={showModal} onHide={() => setshowModal(false)} centered>
         <Modal.Header
           closeButton
@@ -62,7 +50,9 @@ const OnboardModal = () => {
             step === 2 && <WalletStep setstep={setstep} /> // Setup/connect/copy wallet address here
           }
           {
-            step === 3 && type === 'fiat' && <FiatStep /> // BinanceConnect iFrame (fiat onboarding)
+            step === 3 && type === 'fiat' && (
+              <FiatStep defaultAsset={defaultAsset} />
+            ) // BinanceConnect iFrame (fiat onboarding)
           }
           {/* {
             step === 3 && type === 'crosschain' && <CrosschainStep /> // Crosschain portal (onboard to BSC from other chain)

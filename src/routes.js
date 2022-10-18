@@ -7,6 +7,7 @@ import Synths from './containers/Synths'
 import Vaults from './containers/Vaults'
 import Positions from './containers/Positions'
 import Dao from './containers/Dao'
+import FiatOnboard from './containers/FiatOnboard'
 import Upgrade from './containers/Upgrade'
 import Donate from './containers/Donate'
 import PU from './containers/PU'
@@ -67,6 +68,14 @@ export const routes = [
     name: 'dao',
     icon: 'dao',
     component: <Dao />,
+    layout: '',
+  },
+
+  {
+    path: 'buycrypto',
+    name: 'buyCrypto',
+    icon: 'bankCards',
+    component: <FiatOnboard />,
     layout: '',
   },
 
