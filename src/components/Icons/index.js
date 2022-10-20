@@ -40,6 +40,7 @@ import { ReactComponent as Contract } from '../../assets/icons/contract.svg'
 import { ReactComponent as ContractGreen } from '../../assets/icons/contract-green.svg'
 import { ReactComponent as ContractRed } from '../../assets/icons/contract-red.svg'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
+import { ReactComponent as CrossClr } from '../../assets/icons/cross-clr.svg'
 import { ReactComponent as CurrenciesClr } from '../../assets/icons/currencies-clr.svg'
 import { ReactComponent as Cycle } from '../../assets/icons/cycle.svg'
 import { ReactComponent as Dao } from '../../assets/icons/dao.svg'
@@ -157,6 +158,7 @@ const icons = {
   contractGreen: ContractGreen,
   contractRed: ContractRed,
   copy: Copy,
+  crossClr: CrossClr,
   currenciesClr: CurrenciesClr,
   cycle: Cycle,
   dao: Dao,
