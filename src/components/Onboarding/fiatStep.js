@@ -5,7 +5,7 @@ const FiatStep = ({ defaultAsset }) => (
     src={`${process.env.REACT_APP_BCONNECT_URL}?merchantCode=${
       process.env.REACT_APP_BCONNECT
     }${
-      defaultAsset && `&cryptoCurrency=${defaultAsset}`
+      defaultAsset ? `&cryptoCurrency=${defaultAsset}` : ''
     }&timestamp=${Date.now()}`}
     title="BinanceConnect Onboarding Module"
     width="100%"
