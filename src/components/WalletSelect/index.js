@@ -480,13 +480,17 @@ const WalletSelect = (props) => {
                 <>
                   <Row>
                     <Col>
-                      {activeTab === 'tokens' && props.show && <Assets />}
+                      {activeTab === 'tokens' && props.show && (
+                        <Assets onHide={props.onHide} />
+                      )}
                       {tempChains.includes(wallet.chainId) &&
-                        activeTab === 'lps' && <LPs />}
+                        activeTab === 'lps' && <LPs onHide={props.onHide} />}
                       {tempChains.includes(wallet.chainId) &&
-                        activeTab === 'synths' && <Synths />}
+                        activeTab === 'synths' && (
+                          <Synths onHide={props.onHide} />
+                        )}
                       {tempChains.includes(wallet.chainId) &&
-                        activeTab === 'txns' && <Txns />}
+                        activeTab === 'txns' && <Txns onHide={props.onHide} />}
                     </Col>
                   </Row>
                 </>
