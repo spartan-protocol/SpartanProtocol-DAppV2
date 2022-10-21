@@ -16,9 +16,6 @@ const FiatOnboard = () => {
 
   const [isBlocked, setisBlocked] = useState(false)
 
-  // ADD URL PARAMS LIKE: const assetParam1 = new URLSearchParams(location.search).get(`buy`) ----- "https//url.com?buy=BNB"
-  // SO THAT WE CAN ADD CTAs IN PLACES LIKE WALLETSELECT TO BUY A SPECIFIC ASSET (Skip 1st step in the onboarding iframe)
-
   useEffect(() => {
     const checkUrlBlocked = async () => {
       try {
