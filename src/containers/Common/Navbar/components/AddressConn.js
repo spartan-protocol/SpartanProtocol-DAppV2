@@ -8,12 +8,15 @@ import { Icon } from '../../../../components/Icons'
 
 import styles from './styles.module.scss'
 import { formatShortString } from '../../../../utils/web3'
+import { useBreakpoint } from '../../../../providers/Breakpoint'
 
 const AddressConn = () => {
   const wallet = useWeb3React()
+  const { t } = useTranslation()
+  const breakpoint = useBreakpoint()
+
   const [walletModalShow, setWalletModalShow] = useState(false)
   const [showPopConnect, setShowPopConnect] = useState(false)
-  const { t } = useTranslation()
 
   const target = useRef(null)
 
@@ -62,7 +65,9 @@ const AddressConn = () => {
         <span className={`${styles.btnText} ms-1`}>
           {wallet?.account
             ? formatShortString(wallet.account)
-            : t('connectWallet')}
+            : breakpoint.sm
+            ? t('connectWallet')
+            : t('wallet')}
         </span>
       </div>
       <Overlay

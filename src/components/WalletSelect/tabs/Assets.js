@@ -5,6 +5,7 @@ import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import { useWeb3React } from '@web3-react/core'
+import { Link } from 'react-router-dom'
 import { usePool } from '../../../store/pool'
 import { useWeb3, watchAsset } from '../../../store/web3'
 import { BN, convertFromWei, formatFromWei } from '../../../utils/bigNumber'
@@ -14,8 +15,9 @@ import { calcSpotValueInBase, getPool } from '../../../utils/math/utils'
 import { tempChains } from '../../../utils/web3'
 import HelmetLoading from '../../Spinner/index'
 import { useApp } from '../../../store/app'
+import { validSymbols } from '../../../containers/FiatOnboard/types'
 
-const Assets = () => {
+const Assets = ({ onHide }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const wallet = useWeb3React()
@@ -170,7 +172,12 @@ const Assets = () => {
                 <Col className="align-items-center">
                   <Row>
                     <Col xs="auto" className="float-left">
-                      <strong>{asset.symbol}</strong>
+                      <strong>
+                        {asset.symbol}
+                        <ShareLink url={asset.address}>
+                          <Icon icon="copy" size="16" className="ms-2" />
+                        </ShareLink>
+                      </strong>
                       <div className="text-sm-label">
                         {formatFromWei(asset.balance)}
                       </div>
@@ -194,9 +201,16 @@ const Assets = () => {
                 >
                   <Row>
                     <Col xs="6" className="p-0">
-                      <ShareLink url={asset.address}>
-                        <Icon icon="copy" size="16" />
-                      </ShareLink>
+                      {validSymbols[asset.symbol] ? (
+                        <Link
+                          to={`/buycrypto?asset1=${validSymbols[asset.symbol]}`}
+                          onClick={() => onHide()}
+                        >
+                          <Icon icon="bankCards" size="22" className="ms-1" />
+                        </Link>
+                      ) : (
+                        <div />
+                      )}
                     </Col>
                     {getWalletType() && (
                       <Col xs="6" className="p-0">

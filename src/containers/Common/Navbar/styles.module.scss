@@ -1,6 +1,15 @@
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 
+.headerBtn {
+  align-self: center;
+  border: solid 1px #2d3848;
+  border-radius: 5px;
+  padding: 3px 7px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
 .navbar {
   grid-area: navbar;
   display: flex;

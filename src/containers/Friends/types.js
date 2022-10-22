@@ -3,7 +3,7 @@ export const friends = [
     name: 'Immunefi',
     logo: 'immunefiText',
     desc: 'The leading web3 bug bounty platform, protecting $100 billion in user funds.',
-    providing: '$100k smart contract bug bounty',
+    providing: 'Smart contract bug bounty',
     linkText: ['View Bounty'],
     linkUrl: ['https://www.immunefi.com/bounty/spartanprotocol'],
   },

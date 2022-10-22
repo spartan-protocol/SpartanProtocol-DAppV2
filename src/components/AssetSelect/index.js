@@ -9,6 +9,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import Nav from 'react-bootstrap/Nav'
 import Modal from 'react-bootstrap/Modal'
 
+import { Link } from 'react-router-dom'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/index'
 
@@ -21,6 +22,7 @@ import { appAsset, useApp } from '../../store/app'
 import spartaLpIcon from '../../assets/tokens/sparta-lp.svg'
 import spartaSynthIcon from '../../assets/tokens/sparta-synth.svg'
 import { getSynth, getToken } from '../../utils/math/utils'
+import { validSymbols } from '../../containers/FiatOnboard/types'
 
 /**
  * An asset selection dropdown. Selection is pushed into Redux store as 'asset1', 'asset2' or 'asset3'
@@ -466,6 +468,9 @@ const AssetSelect = (props) => {
                         }}
                       >
                         {item.symbol}
+                        <ShareLink url={item.actualAddr}>
+                          <Icon icon="copy" size="18" className="ms-2" />
+                        </ShareLink>
                       </strong>
                       <div>{formatFromWei(item.balance)}</div>
                     </Col>
@@ -475,9 +480,16 @@ const AssetSelect = (props) => {
                 <Col xs="3" md="3" className="text-end p-0 pe-2">
                   <Row>
                     <Col xs="6">
-                      <ShareLink url={item.actualAddr}>
-                        <Icon icon="copy" size="24" className="ms-2" />
-                      </ShareLink>
+                      {validSymbols[item.symbol] ? (
+                        <Link
+                          to={`/buycrypto?asset1=${validSymbols[item.symbol]}`}
+                          onClick={() => setShowModal(false)}
+                        >
+                          <Icon icon="bankCards" size="22" className="ms-1" />
+                        </Link>
+                      ) : (
+                        <div />
+                      )}
                     </Col>
                     {getWalletType() && (
                       <Col xs="6">
@@ -492,10 +504,10 @@ const AssetSelect = (props) => {
                             role="button"
                             aria-hidden="true"
                             onClick={() => {
-                              handleWatchAsset(asset)
+                              handleWatchAsset(item)
                             }}
                           >
-                            {!isBNB(asset) && (
+                            {!isBNB(item) && (
                               <>
                                 {getWalletType() === 'MM' ? (
                                   <Icon
@@ -556,6 +568,9 @@ const AssetSelect = (props) => {
                           }}
                         >
                           {item.symbol}
+                          <ShareLink url={item.actualAddr}>
+                            <Icon icon="copy" size="18" className="ms-2" />
+                          </ShareLink>
                         </strong>
                         <div>{formatFromWei(item.balance)}</div>
                       </Col>
@@ -565,9 +580,18 @@ const AssetSelect = (props) => {
                   <Col xs="3" md="3" className="text-end p-0 pe-2">
                     <Row>
                       <Col xs="6">
-                        <ShareLink url={item.actualAddr}>
-                          <Icon icon="copy" size="24" className="ms-2" />
-                        </ShareLink>
+                        {validSymbols[item.symbol] ? (
+                          <Link
+                            to={`/buycrypto?asset1=${
+                              validSymbols[item.symbol]
+                            }`}
+                            onClick={() => setShowModal(false)}
+                          >
+                            <Icon icon="bankCards" size="22" className="ms-1" />
+                          </Link>
+                        ) : (
+                          <div />
+                        )}
                       </Col>
                       {getWalletType() && (
                         <Col xs="6">
