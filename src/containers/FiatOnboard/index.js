@@ -48,14 +48,10 @@ const FiatOnboard = () => {
           <Icon icon="bnb" className="mb-2 me-3" size="35" />
           <h5 className="d-inline-block">Purchase 50+ crypto tokens</h5>
           <br />
-          <Button
-            className="mt-3"
-            href="https://www.binancecnt.com/en"
-            target="_blank"
-          >
+          <div>
             <strong>Provided by:</strong>
             <Icon icon="binanceConnect" width="120px" className="ms-2" />
-          </Button>
+          </div>
           <hr />
           {wallet.account && (
             <div>
