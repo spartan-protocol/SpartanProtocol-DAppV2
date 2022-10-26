@@ -1,11 +1,20 @@
 import React from 'react'
 
 export const writeToClipboard = async (text) => {
-  try {
-    await navigator.clipboard.writeText(text)
-    // Need to trigger a toast/alert
-  } catch (error) {
-    console.error('write to clipboard error', error)
+  if (!navigator.clipboard) {
+    try {
+      document.execCommand('copy')
+      // Need to trigger a toast/alert
+    } catch (error) {
+      console.error('write to clipboard error', error)
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(text)
+      // Need to trigger a toast/alert
+    } catch (error) {
+      console.error('write to clipboard error', error)
+    }
   }
 }
 
