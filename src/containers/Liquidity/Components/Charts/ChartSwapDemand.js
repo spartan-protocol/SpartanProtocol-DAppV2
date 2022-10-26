@@ -1,7 +1,7 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
 import { BN } from '../../../../utils/bigNumber'
-import { getUnixStartOfDay } from '../../../../utils/helpers'
+import { getUnixStartOfDay } from '../../../../utils/helpers.ts'
 import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartSwapDemand = (props) => {

@@ -30,7 +30,7 @@ import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
 import { BreakpointProvider } from './providers/Breakpoint'
 import { ThemeProvider } from './providers/Theme'
-import { isAppleDevice } from './utils/helpers'
+import { isAppleDevice } from './utils/helpers.ts'
 import { FocusProvider } from './providers/Focus'
 
 ChartJS.register(

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Bar } from 'react-chartjs-2'
-import { getUnixStartOfDay } from '../../../../utils/helpers'
+import { getUnixStartOfDay } from '../../../../utils/helpers.ts'
 import { formatDate } from '../../../../utils/math/nonContract'
 
 const ChartTxnCount = (props) => {

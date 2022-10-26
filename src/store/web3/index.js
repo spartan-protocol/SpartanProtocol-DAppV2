@@ -18,7 +18,7 @@ import {
   formatFromUnits,
 } from '../../utils/bigNumber'
 import { callGlobalMetrics, getSubGraphBlock } from '../../utils/extCalls'
-import { checkResolved } from '../../utils/helpers'
+import { checkResolved } from '../../utils/helpers.ts'
 import { getPool } from '../../utils/math/utils'
 
 export const useWeb3 = () => useSelector((state) => state.web3)
