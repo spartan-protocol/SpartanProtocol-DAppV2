@@ -20,7 +20,7 @@ import ChartRevenue from './Charts/ChartRevenue'
 import ChartVolume from './Charts/ChartVolume'
 import ChartSwapDemand from './Charts/ChartSwapDemand'
 import ChartTxnCount from './Charts/ChartTxnCount'
-import { getUnixStartOfDay } from '../../../utils/helpers'
+import { getUnixStartOfDay } from '../../../utils/helpers.ts'
 import ChartLPs from './Charts/ChartLPs'
 import { useDao, daoVaultWeight } from '../../../store/dao'
 
