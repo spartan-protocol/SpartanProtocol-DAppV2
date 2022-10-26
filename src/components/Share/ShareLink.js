@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const writeToClipboard = async (text) => {
-  if (!navigator.clipboard) {
+  if (!navigator.clipboard || window.ethereum?.isTrust) {
     try {
       document.execCommand('copy')
       // Need to trigger a toast/alert
