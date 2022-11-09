@@ -22,7 +22,7 @@ import {
 import { useWeb3 } from '../../store/web3'
 import { useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
-import { bondVaultWeight, getBondDetails, useBond } from '../../store/bond'
+import { getBondDetails, useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'
 import {
   calcDaoAPY,
@@ -85,9 +85,8 @@ const DaoVault = () => {
   }, [dispatch, pool.listedPools, wallet.account])
 
   useEffect(() => {
-    dispatch(daoVaultWeight())
-    dispatch(bondVaultWeight())
-  }, [dispatch, pool.poolDetails])
+    dispatch(daoVaultWeight()) // TODO: Absorb this inside any weight-changing actions (when updating: daoDetails || poolDetails)
+  }, [dispatch, dao.daoDetails, pool.poolDetails])
 
   useEffect(() => {
     dispatch(daoDepositTimes(wallet.account))

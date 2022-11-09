@@ -14,7 +14,7 @@ import { callPoolMetrics } from '../../../utils/extCalls'
 import ChartTVL from './Charts/ChartTVL'
 import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
-import { useBond, bondVaultWeight } from '../../../store/bond'
+import { useBond } from '../../../store/bond'
 import { BN, formatFromUnits } from '../../../utils/bigNumber'
 import ChartRevenue from './Charts/ChartRevenue'
 import ChartVolume from './Charts/ChartVolume'
@@ -62,7 +62,6 @@ const Metrics = ({ assetSwap }) => {
 
   useEffect(() => {
     dispatch(daoVaultWeight())
-    dispatch(bondVaultWeight())
   }, [dispatch, pool.poolDetails])
 
   useEffect(() => {

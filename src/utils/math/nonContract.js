@@ -79,7 +79,7 @@ export const calcLiqValueAll = (poolDets, daoDets, bondDets, spartaPrice) => {
   for (let i = 0; i < bondFiltered.length; i++) {
     const bondItem = bondFiltered[i]
     const poolItem = getPool(bondItem.tokenAddress, poolDets)
-    const values = calcLiqValueIn(bondItem.staked, poolItem, spartaPrice)
+    const values = calcLiqValueIn(bondItem.staked ?? '0', poolItem, spartaPrice)
     spartaValue = spartaValue.plus(values[0])
     usdValue = usdValue.plus(values[1])
   }
@@ -120,7 +120,9 @@ export const getLPWeights = (poolDetails, daoDetails, bondDetails) => {
       const bond = getBond(poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
-          BN(poolDetails[i].balance).plus(dao?.staked).plus(bond?.staked),
+          BN(poolDetails[i].balance)
+            .plus(dao.staked ?? '0')
+            .plus(bond.staked ?? '0'),
           poolDetails[i].poolUnits,
           poolDetails[i].baseAmount,
         ),
@@ -144,7 +146,9 @@ export const getVaultWeights = (poolDetails, daoDetails, bondDetails) => {
       const bond = getBond(_poolDetails[i].tokenAddress, bondDetails)
       memberWeight = memberWeight.plus(
         getPoolShareWeight(
-          BN(dao.staked).plus(bond.staked).toString(),
+          BN(dao.staked ?? '0')
+            .plus(bond.staked ?? '0')
+            .toString(),
           _poolDetails[i].poolUnits,
           _poolDetails[i].baseAmount,
         ),

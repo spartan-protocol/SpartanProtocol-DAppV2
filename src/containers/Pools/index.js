@@ -16,7 +16,7 @@ import { usePool } from '../../store/pool'
 import { tempChains } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 import HelmetLoading from '../../components/Spinner/index'
-import { useBond, bondVaultWeight } from '../../store/bond'
+import { useBond } from '../../store/bond'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../components/Icons/index'
@@ -61,7 +61,6 @@ const Overview = () => {
   useEffect(() => {
     if (activeTab !== 'synths') {
       dispatch(daoVaultWeight())
-      dispatch(bondVaultWeight())
     }
   }, [activeTab, dispatch, pool.poolDetails])
 
