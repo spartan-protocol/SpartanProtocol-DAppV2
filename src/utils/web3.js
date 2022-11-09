@@ -12,6 +12,7 @@ import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
 import abiTnReserve from '../ABI/TN/Reserve.json'
 import abiTnRouter from '../ABI/TN/Router.json'
 import abiTnSparta from '../ABI/TN/Sparta.json'
+import abiTnSSUtils from '../ABI/TN/SpartanSwapUtils.json'
 import abiTnSynth from '../ABI/TN/Synth.json'
 import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
 import abiTnSynthVault from '../ABI/TN/SynthVault.json'
@@ -29,6 +30,7 @@ import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
 import abiMnReserve from '../ABI/MN/Reserve.json'
 import abiMnRouter from '../ABI/MN/Router.json'
 import abiMnSparta from '../ABI/MN/Sparta.json'
+import abiMnSSUtils from '../ABI/MN/SpartanSwapUtils.json'
 import abiMnSynth from '../ABI/MN/Synth.json'
 import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnSynthVault from '../ABI/MN/SynthVault.json'
@@ -47,6 +49,7 @@ export const abisTN = {
   reserve: abiTnReserve.abi,
   router: abiTnRouter.abi,
   sparta: abiTnSparta.abi,
+  ssUtils: abiTnSSUtils.abi,
   synth: abiTnSynth.abi,
   synthFactory: abiTnSynthFactory.abi,
   synthVault: abiTnSynthVault.abi,
@@ -65,6 +68,7 @@ export const abisMN = {
   reserve: abiMnReserve.abi,
   router: abiMnRouter.abi,
   sparta: abiMnSparta.abi,
+  ssUtils: abiMnSSUtils.abi,
   synth: abiMnSynth.abi,
   synthFactory: abiMnSynthFactory.abi,
   synthVault: abiMnSynthVault.abi,
@@ -123,6 +127,7 @@ export const addressesTN = {
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   utils: '0x7Ed2B0611308C75C10d5FC34cDA75749e6a6Df7D', // 5c079a33ed87ff5f7286d2a034a78db62660c9ab
+  ssUtils: '0xF218DA99521cE9C8EbE3F42c2375F4a640f42325',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -171,6 +176,7 @@ export const addressesMN = {
   synthFactory: '0x6514C010b8096BC565766949A93f1C370cdf9f38', // 62a39b71f43fc8f59ab5a58dba6f590f5a82e8b6
   synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 62a39b71f43fc8f59ab5a58dba6f590f5a82e8b6
   utils: '0xFC7eAd29ee55EabEC54dBc38bd03852e1fF46D50', // b5afabc003ffe041de6fe552106c8fc526031a5b
+  ssUtils: '0x3B599Dd050a10D224195A921a172fFDB50D9B559',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
