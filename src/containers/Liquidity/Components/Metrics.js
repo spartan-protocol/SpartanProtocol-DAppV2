@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
@@ -22,10 +21,9 @@ import ChartSwapDemand from './Charts/ChartSwapDemand'
 import ChartTxnCount from './Charts/ChartTxnCount'
 import { getUnixStartOfDay } from '../../../utils/helpers.ts'
 import ChartLPs from './Charts/ChartLPs'
-import { useDao, daoVaultWeight } from '../../../store/dao'
+import { useDao } from '../../../store/dao'
 
 const Metrics = ({ assetSwap }) => {
-  const dispatch = useDispatch()
   const web3 = useWeb3()
   const pool = usePool()
   const bond = useBond()
@@ -59,10 +57,6 @@ const Metrics = ({ assetSwap }) => {
       setspartaPrice(web3.spartaPriceInternal)
     }
   }, [web3.spartaPrice, web3.spartaPriceInternal])
-
-  useEffect(() => {
-    dispatch(daoVaultWeight())
-  }, [dispatch, pool.poolDetails])
 
   useEffect(() => {
     let isCancelled = false

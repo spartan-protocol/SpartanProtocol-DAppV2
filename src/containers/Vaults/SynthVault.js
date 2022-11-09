@@ -119,9 +119,9 @@ const SynthVault = () => {
 
   const isLoading = () => {
     if (
-      synth.synthDetails.length > 1 &&
+      synth.synthDetails.length > 0 &&
       synth.globalDetails &&
-      pool.tokenDetails.length > 1
+      pool.tokenDetails.length > 0
     ) {
       return false
     }

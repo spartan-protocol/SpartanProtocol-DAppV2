@@ -12,6 +12,7 @@ import { getSecsSince } from '../../utils/math/nonContract'
 import { BN } from '../../utils/bigNumber'
 import { getPoolIncentives } from '../../utils/extCalls'
 import { bondVaultWeight } from '../bond'
+import { daoVaultWeight } from '../dao'
 
 export const usePool = () => useSelector((state) => state.pool)
 
@@ -315,7 +316,7 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
       }
       dispatch(updatePoolDetails(poolDetails))
       dispatch(bondVaultWeight()) // Weight changing function, so we need to update weight calculations
-      // TODO: DAOVAULT // Weight changing function, so we need to update weight calculations
+      dispatch(daoVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
     dispatch(updateError(error.reason))

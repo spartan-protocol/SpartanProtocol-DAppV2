@@ -209,7 +209,7 @@ const WalletSelect = (props) => {
   const [rank, setrank] = useState('Loading')
   useEffect(() => {
     const getWeight = () => {
-      if (wallet.account && pool.poolDetails.length > 1) {
+      if (wallet.account && pool.poolDetails.length > 0) {
         const lpWeight = getLPWeights(
           pool.poolDetails,
           dao.daoDetails,

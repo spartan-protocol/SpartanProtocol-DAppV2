@@ -104,9 +104,9 @@ const ProposalItem = ({ proposal }) => {
 
   const isLoading = () => {
     if (
-      pool.poolDetails.length > 1 &&
-      dao.daoDetails.length > 1 &&
-      bond.bondDetails.length > 1 &&
+      pool.poolDetails.length > 0 &&
+      dao.daoDetails.length > 0 &&
+      bond.bondDetails.length > 0 &&
       dao.totalWeight &&
       bond.totalWeight
     ) {
@@ -330,7 +330,7 @@ const ProposalItem = ({ proposal }) => {
             <Row>
               <Col>
                 <div className="mb-2">
-                  {synth.synthDetails.length > 1 && getDetails()}
+                  {synth.synthDetails.length > 0 && getDetails()}
                 </div>
               </Col>
             </Row>

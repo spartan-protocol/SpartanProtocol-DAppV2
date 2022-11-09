@@ -22,7 +22,7 @@ import SummaryItem from './SummaryItem'
 import { Icon } from '../../components/Icons/index'
 import { useWeb3 } from '../../store/web3'
 import { calcAPY, calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
-import { useDao, daoVaultWeight } from '../../store/dao'
+import { useDao } from '../../store/dao'
 import SynthItem from './SynthItem'
 import { synthVaultWeight, useSynth } from '../../store/synth'
 import NewPool from './NewPool'
@@ -59,12 +59,6 @@ const Overview = () => {
   const searchInput = document.getElementById('searchInput')
 
   useEffect(() => {
-    if (activeTab !== 'synths') {
-      dispatch(daoVaultWeight())
-    }
-  }, [activeTab, dispatch, pool.poolDetails])
-
-  useEffect(() => {
     if (activeTab === 'synths') {
       dispatch(synthVaultWeight())
     }
@@ -79,7 +73,7 @@ const Overview = () => {
 
   // Update the pools (and newPools) array local state
   useEffect(() => {
-    if (activeTab === 'pools' && pool.poolDetails.length > 1) {
+    if (activeTab === 'pools' && pool.poolDetails.length > 0) {
       // Get initial pools array
       let tempPoolsArray = pool.poolDetails.filter(
         (asset) => asset.baseAmount > 0,
@@ -178,7 +172,7 @@ const Overview = () => {
 
   // Update the synths array local state
   useEffect(() => {
-    if (activeTab === 'synths' && pool.poolDetails.length > 1) {
+    if (activeTab === 'synths' && pool.poolDetails.length > 0) {
       setarraySynths(
         pool.poolDetails.filter((asset) => !asset.newPool && asset.curated),
         // .sort((a, b) => b.baseAmount - a.baseAmount),

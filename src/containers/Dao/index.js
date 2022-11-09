@@ -14,7 +14,6 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
-  daoVaultWeight,
   getDaoDetails,
   proposalWeight,
 } from '../../store/dao'
@@ -62,7 +61,6 @@ const Overview = () => {
       dispatch(daoMemberDetails(wallet.account))
       dispatch(daoProposalDetails(wallet.account))
       dispatch(proposalWeight())
-      dispatch(daoVaultWeight()) // TODO: Absorb this inside any weight-changing actions (when updating: daoDetails || poolDetails)
       dispatch(getDaoDetails(wallet.account))
       dispatch(getBondDetails(wallet.account))
       dispatch(getSynthDetails(wallet))

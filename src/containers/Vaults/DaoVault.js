@@ -15,7 +15,6 @@ import {
   daoHarvest,
   daoGlobalDetails,
   daoMemberDetails,
-  daoVaultWeight,
   daoDepositTimes,
   getDaoDetails,
 } from '../../store/dao'
@@ -85,10 +84,6 @@ const DaoVault = () => {
   }, [dispatch, pool.listedPools, wallet.account])
 
   useEffect(() => {
-    dispatch(daoVaultWeight()) // TODO: Absorb this inside any weight-changing actions (when updating: daoDetails || poolDetails)
-  }, [dispatch, dao.daoDetails, pool.poolDetails])
-
-  useEffect(() => {
     dispatch(daoDepositTimes(wallet.account))
   }, [dao.daoDetails, dispatch, wallet.account])
 
@@ -151,9 +146,9 @@ const DaoVault = () => {
 
   const isLoading = () => {
     if (
-      bond.bondDetails.length > 1 &&
-      dao.daoDetails.length > 1 &&
-      pool.poolDetails.length > 1
+      bond.bondDetails.length > 0 &&
+      dao.daoDetails.length > 0 &&
+      pool.poolDetails.length > 0
     ) {
       return false
     }

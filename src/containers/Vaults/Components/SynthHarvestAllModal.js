@@ -60,7 +60,7 @@ const SynthHarvestAllModal = () => {
   }
 
   useEffect(() => {
-    if (synth.synthDetails.length > 1) {
+    if (synth.synthDetails.length > 0) {
       const tempArray = []
       synth.synthDetails
         .filter((x) => x.staked > 0)

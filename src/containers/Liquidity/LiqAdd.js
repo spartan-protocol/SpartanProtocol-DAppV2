@@ -91,7 +91,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
-    if (!loadedInitial && pool.poolDetails.length > 1) {
+    if (!loadedInitial && pool.poolDetails.length > 0) {
       const assetParam1 = new URLSearchParams(location.search).get(`asset1`)
       const assetParam2 = new URLSearchParams(location.search).get(`asset2`)
       let _asset1Addr =
@@ -117,7 +117,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
   // Check selected assets and validate for liqAdd page
   useEffect(() => {
     const getAssetDetails = () => {
-      if (loadedInitial && focus && pool.poolDetails?.length > 1) {
+      if (loadedInitial && focus && pool.poolDetails?.length > 0) {
         let _asset1Addr = asset1.addr
         let _asset3Addr = asset3.addr
         if (activeTab === 'addTab1') {
@@ -182,7 +182,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
 
   // Push complex objects into local state
   useEffect(() => {
-    if (pool.tokenDetails.length > 1) {
+    if (pool.tokenDetails.length > 0) {
       settoken1(getToken(asset1.addr, pool.tokenDetails))
       settoken2(getToken(asset2.addr, pool.tokenDetails))
       settokenPool(getToken(selectedPool.tokenAddress, pool.tokenDetails))

@@ -135,7 +135,7 @@ const Swap = () => {
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
-    if (!loadedInitial && pool.poolDetails.length > 1) {
+    if (!loadedInitial && pool.poolDetails.length > 0) {
       const assetParam1 = new URLSearchParams(location.search).get(`asset1`)
       const assetParam2 = new URLSearchParams(location.search).get(`asset2`)
       const typeParam1 = new URLSearchParams(location.search).get(`type1`)
@@ -164,7 +164,7 @@ const Swap = () => {
   // Check selected assets and validate for synth page
   useEffect(() => {
     const getAssetDetails = () => {
-      if (loadedInitial && focus && pool.poolDetails?.length > 1) {
+      if (loadedInitial && focus && pool.poolDetails?.length > 0) {
         let _asset1Addr = asset1.addr
         let _asset2Addr = asset2.addr
 
@@ -208,9 +208,9 @@ const Swap = () => {
 
   useEffect(() => {
     if (
-      pool.tokenDetails.length > 1 &&
-      pool.poolDetails.length > 1 &&
-      synth.synthDetails.length > 1
+      pool.tokenDetails.length > 0 &&
+      pool.poolDetails.length > 0 &&
+      synth.synthDetails.length > 0
     ) {
       const _token1 = getToken(asset1.addr, pool.tokenDetails)
       const _token2 = getToken(asset2.addr, pool.tokenDetails)
@@ -538,7 +538,7 @@ const Swap = () => {
     setHarvestLoading(true)
     await dispatch(synthHarvestSingle(synth1.address, wallet))
     setHarvestLoading(false)
-    if (synth.synthArray?.length > 1) {
+    if (synth.synthArray?.length > 0) {
       dispatch(getSynthDetails(wallet))
     }
   }

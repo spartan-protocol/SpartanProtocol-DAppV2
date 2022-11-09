@@ -225,6 +225,17 @@ export const stablecoinPools = [
   '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7', // USDCp Mainnet
 ]
 
+export const exCuratedPools = [
+  // This is for pools that were previous Curated but are not Curated anymore.
+  // Handy for things like the DaoVault where a no-longer-curated asset may still be
+  // staked and will still need to show up in the DaoVault (so users can withdraw etc)
+  '0x972C7278ECFdCF97556F9C53075576a8bC6547ab',
+  '0x511d2fB8458eb46eCcAEeaeAE722cCe769aAe779',
+  '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
+  '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7',
+  '0xCc80f0f3746B4561dd7e6e7Da4b8Cda2FfEbC15a',
+]
+
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
