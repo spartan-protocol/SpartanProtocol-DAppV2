@@ -8,7 +8,6 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { useSynth } from '../../store/synth'
-import { useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
 import spartaIconAlt from '../../assets/tokens/sparta-synth.svg'
 import SynthDepositModal from './Components/SynthDepositModal'
@@ -21,7 +20,6 @@ import SynthHarvestModal from './Components/SynthHarvestModal'
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
   const sparta = useSparta()
-  const reserve = useReserve()
   const synth = useSynth()
   const pool = usePool()
   const wallet = useWeb3React()
@@ -36,13 +34,13 @@ const SynthVaultItem = ({ synthItem }) => {
       synth,
       synthItem,
       sparta.globalDetails,
-      reserve.globalDetails.spartaBalance,
+      sparta.globalDetails.spartaBalance,
     )
     return [synthOut, baseCapped, synthCapped]
   }
 
   const checkValid = () => {
-    if (!reserve.globalDetails.emissions) {
+    if (!sparta.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
     if (getClaimable()[1]) {

@@ -10,7 +10,7 @@ import PoolStatus from './FrozenPools'
 import HelmetLoading from '../../components/Spinner/index'
 import { useWeb3 } from '../../store/web3'
 import ReserveDetails from './ReserveDetails'
-import Others from './Others'
+// import Others from './Others'
 import { useApp } from '../../store/app'
 
 const Overview = () => {
@@ -65,7 +65,7 @@ const Overview = () => {
                       Reserve
                     </Nav.Link>
                   </Nav.Item>
-                  <Nav.Item key="others">
+                  {/* <Nav.Item key="others">
                     <Nav.Link
                       eventKey="others"
                       onClick={() => {
@@ -74,7 +74,7 @@ const Overview = () => {
                     >
                       Others
                     </Nav.Link>
-                  </Nav.Item>
+                  </Nav.Item> */}
                 </Nav>
               </Col>
             </Row>
@@ -86,13 +86,15 @@ const Overview = () => {
                       <Card.Header>Status of RPCs</Card.Header>
                       <Card.Body>
                         {web3?.rpcs ? (
-                          web3.rpcs.map((x) => (
-                            <Row key={x.url}>
-                              <Col>
-                                {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
-                              </Col>
-                            </Row>
-                          ))
+                          web3.rpcs
+                            .filter((x) => x.url)
+                            .map((x) => (
+                              <Row key={x.url}>
+                                <Col>
+                                  {x.url} {x.block} {x.good ? 'OKAY!' : 'BAD!'}
+                                </Col>
+                              </Row>
+                            ))
                         ) : (
                           <Col className="card-480">
                             <HelmetLoading height={150} width={150} />
@@ -111,7 +113,7 @@ const Overview = () => {
                   </Col>
                 )}
               {activeTab === 'reserve' && !isLoading() && <ReserveDetails />}
-              {activeTab === 'others' && !isLoading() && <Others />}
+              {/* {activeTab === 'others' && !isLoading() && <Others />} */}
             </Row>
           </>
         )}

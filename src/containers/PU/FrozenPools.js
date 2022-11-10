@@ -7,14 +7,14 @@ import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { usePool } from '../../store/pool'
-import { useReserve } from '../../store/reserve'
 import { updatePoolStatus } from '../../store/router'
+import { useSparta } from '../../store/sparta'
 
 const PoolStatus = () => {
   const pool = usePool()
   const dispatch = useDispatch()
   const wallet = useWeb3React()
-  const reserve = useReserve()
+  const sparta = useSparta()
   const navigate = useNavigate()
   const [selectedAsset, setselectedAsset] = useState('')
   const frozenPools = pool.poolDetails?.filter(
@@ -30,7 +30,7 @@ const PoolStatus = () => {
           <Card.Header>Ratio-Check Pools</Card.Header>
           <Card.Body>
             Global Freeze:{' '}
-            {reserve.globalDetails.globalFreeze ? 'True' : 'False'}
+            {sparta.globalDetails.globalFreeze ? 'True' : 'False'}
             <br />
             <br />
             {frozenPools.length > 0 ? (
@@ -54,7 +54,7 @@ const PoolStatus = () => {
             ) : (
               <>
                 All curated pools are within their ratio safety levels.
-                {reserve.globalDetails.globalFreeze &&
+                {sparta.globalDetails.globalFreeze &&
                   ' Press the below button to unfreeze the protocol. Be aware you will have to pay some gas.'}
               </>
             )}
@@ -72,7 +72,7 @@ const PoolStatus = () => {
               <Button
                 className="w-100"
                 onClick={() => dispatch(updatePoolStatus(wallet))}
-                disabled={!reserve.globalDetails.globalFreeze}
+                disabled={!sparta.globalDetails.globalFreeze}
               >
                 Un-freeze Protocol
               </Button>

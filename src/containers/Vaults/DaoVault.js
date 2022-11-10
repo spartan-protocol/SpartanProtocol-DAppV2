@@ -19,7 +19,6 @@ import {
   getDaoDetails,
 } from '../../store/dao'
 import { useWeb3 } from '../../store/web3'
-import { useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
 import { getBondDetails, useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'
@@ -44,7 +43,6 @@ const DaoVault = () => {
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const web3 = useWeb3()
 
@@ -136,7 +134,7 @@ const DaoVault = () => {
       bond,
       dao,
       sparta.globalDetails.secondsPerEra,
-      reserve.globalDetails.spartaBalance,
+      sparta.globalDetails.spartaBalance,
     )
     if (reward > 0) {
       return reward
@@ -189,10 +187,10 @@ const DaoVault = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
-    if (!reserve.globalDetails.emissions) {
+    if (!sparta.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
-    if (reserve.globalDetails.globalFreeze) {
+    if (sparta.globalDetails.globalFreeze) {
       return [false, t('globalFreeze')]
     }
     if (getClaimable() <= 0) {
@@ -359,7 +357,7 @@ const DaoVault = () => {
                     </OverlayTrigger>
                   </Col>
                   <Col xs="auto">
-                    {reserve.globalDetails.emissions
+                    {sparta.globalDetails.emissions
                       ? !wallet.account
                         ? t('connectWallet')
                         : `${formatFromWei(getClaimable())} SPARTA`

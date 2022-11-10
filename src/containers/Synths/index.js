@@ -429,14 +429,14 @@ const Swap = () => {
   //     synth,
   //     synth1,
   //     sparta.globalDetails,
-  //     reserve.globalDetails.spartaBalance,
+  //     sparta.globalDetails.spartaBalance,
   //   )
   //   return [reward, baseCapped, synthCapped]
   // }
 
   // const checkValidHarvest = () => {
   //   const reward = formatFromWei(getClaimable()[0], 4)
-  //   if (!reserve.globalDetails.emissions) {
+  //   if (!sparta.globalDetails.emissions) {
   //     return [false, t('incentivesDisabled'), '']
   //   }
   //   if (getClaimable()[1]) {
@@ -1245,14 +1245,14 @@ const Swap = () => {
                                             disabled={
                                               synth1.staked <= 0 ||
                                               !enoughGas() ||
-                                              reserve.globalDetails
+                                              sparta.globalDetails
                                                 .globalFreeze ||
                                               !synthHarvestLive
                                             }
                                           >
                                             {synthHarvestLive
                                               ? enoughGas()
-                                                ? reserve.globalDetails
+                                                ? sparta.globalDetails
                                                     .globalFreeze
                                                   ? t('globalFreeze')
                                                   : t('harvest')

@@ -7,7 +7,6 @@ import {
   updateTxn as updateTxnPool,
   usePool,
 } from '../../../store/pool'
-import { getReserveGlobalDetails } from '../../../store/reserve'
 import { updateTxn as updateTxnRouter, useRouter } from '../../../store/router'
 import {
   updatePropTxn as updateTxnProposal,
@@ -29,6 +28,7 @@ import {
 } from '../../../store/web3'
 import { addTxn, liveChains } from '../../../utils/web3'
 import { useApp } from '../../../store/app'
+import { getReservePOLDetails } from '../../../store/reserve'
 
 const DataManager = () => {
   const dispatch = useDispatch()
@@ -63,7 +63,7 @@ const DataManager = () => {
       dispatch(getListedTokens(wallet)) // TOKEN ARRAY
       dispatch(getCuratedPools()) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
-      dispatch(getReserveGlobalDetails()) // RESERVE GLOBAL DETAILS
+      dispatch(getReservePOLDetails()) // RESERVE POL DETAILS
     }
   }, [dispatch, web3.rpcs, app.chainId, wallet])
 

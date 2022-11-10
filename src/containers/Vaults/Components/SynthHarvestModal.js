@@ -18,7 +18,6 @@ import {
 } from '../../../store/synth'
 import { Icon } from '../../../components/Icons/index'
 import { getToken } from '../../../utils/math/utils'
-import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import spartaIcon from '../../../assets/tokens/sparta-synth.svg'
@@ -33,7 +32,6 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
 
   const { addresses } = useApp()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
 
@@ -62,7 +60,7 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
       synth,
       synthItem,
       sparta.globalDetails,
-      reserve.globalDetails.spartaBalance,
+      sparta.globalDetails.spartaBalance,
     )
     return [reward, baseCapped, synthCapped]
   }
@@ -92,13 +90,13 @@ const SynthHarvestModal = ({ synthItem, buttonValid }) => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
-    if (!reserve.globalDetails.emissions) {
+    if (!sparta.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
     // if (!synth.synthMinting) {
     //   return [false, t('synthsDisabled')]
     // }
-    if (reserve.globalDetails.globalFreeze) {
+    if (sparta.globalDetails.globalFreeze) {
       return [false, t('globalFreeze')]
     }
     if (synth.memberDetails?.totalWeight <= 0) {

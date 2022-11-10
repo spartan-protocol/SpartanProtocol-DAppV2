@@ -14,7 +14,6 @@ import { synthHarvestLive } from '../../../utils/web3'
 import { useSynth, getSynthDetails, synthHarvest } from '../../../store/synth'
 import { Icon } from '../../../components/Icons/index'
 import { getSynth, getToken } from '../../../utils/math/utils'
-import { useReserve } from '../../../store/reserve'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
 import { useTheme } from '../../../providers/Theme'
@@ -28,7 +27,6 @@ const SynthHarvestAllModal = () => {
 
   const { addresses } = useApp()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
 
@@ -76,12 +74,12 @@ const SynthHarvestAllModal = () => {
         synth,
         _synth,
         sparta.globalDetails,
-        reserve.globalDetails.spartaBalance,
+        sparta.globalDetails.spartaBalance,
       )
       return [reward, baseCapped, synthCapped]
     }
     const checkValidHarvest = (baseCapped, synthCapped, symbol, reward) => {
-      if (!reserve.globalDetails.emissions) {
+      if (!sparta.globalDetails.emissions) {
         return [false, 'incentivesDisabled', '']
       }
       if (baseCapped) {
@@ -116,8 +114,8 @@ const SynthHarvestAllModal = () => {
     claimArray,
     pool.poolDetails,
     pool.tokenDetails,
-    reserve.globalDetails.emissions,
-    reserve.globalDetails.spartaBalance,
+    sparta.globalDetails.emissions,
+    sparta.globalDetails.spartaBalance,
     sparta.globalDetails,
     synth,
   ])
@@ -139,13 +137,13 @@ const SynthHarvestAllModal = () => {
     if (!wallet.account) {
       return [false, t('checkWallet')]
     }
-    if (!reserve.globalDetails.emissions) {
+    if (!sparta.globalDetails.emissions) {
       return [false, t('incentivesDisabled')]
     }
     // if (!synth.synthMinting) {
     //   return [false, t('synthsDisabled')]
     // }
-    if (reserve.globalDetails.globalFreeze) {
+    if (sparta.globalDetails.globalFreeze) {
       return [false, t('globalFreeze')]
     }
     if (synth.memberDetails?.totalWeight <= 0 || claimArray.length <= 0) {

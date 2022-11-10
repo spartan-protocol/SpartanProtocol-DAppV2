@@ -20,19 +20,19 @@ import {
   synthHarvest,
   synthWithdraw,
 } from '../../../store/synth'
-import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
 import { useApp } from '../../../store/app'
+import { useSparta } from '../../../store/sparta'
 
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const wallet = useWeb3React()
-  const reserve = useReserve()
   const { isDark } = useTheme()
 
   const { addresses } = useApp()
   const pool = usePool()
+  const sparta = useSparta()
   const synth = useSynth()
 
   const [percentage, setpercentage] = useState(0)
@@ -274,11 +274,11 @@ const SynthWithdrawModal = (props) => {
                               !props.claimable[0] ||
                               !enoughGas() ||
                               !harvestConfirm ||
-                              reserve.globalDetails.globalFreeze
+                              sparta.globalDetails.globalFreeze
                             }
                           >
                             {enoughGas()
-                              ? reserve.globalDetails.globalFreeze
+                              ? sparta.globalDetails.globalFreeze
                                 ? t('globalFreeze')
                                 : t('harvest')
                               : t('checkBnbGas')}

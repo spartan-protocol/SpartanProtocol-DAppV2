@@ -21,8 +21,8 @@ import { getDao, getToken } from '../../../utils/math/utils'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../utils/math/nonContract'
-import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
+import { useSparta } from '../../../store/sparta'
 
 const DaoDepositModal = (props) => {
   const dispatch = useDispatch()
@@ -33,7 +33,7 @@ const DaoDepositModal = (props) => {
   const { addresses } = useApp()
   const dao = useDao()
   const pool = usePool()
-  const reserve = useReserve()
+  const sparta = useSparta()
 
   const [percentage, setpercentage] = useState('0')
   const [txnLoading, setTxnLoading] = useState(false)
@@ -249,11 +249,11 @@ const DaoDepositModal = (props) => {
                       disabled={
                         props.claimable <= 0 ||
                         !enoughGas() ||
-                        reserve.globalDetails.globalFreeze
+                        sparta.globalDetails.globalFreeze
                       }
                     >
                       {enoughGas()
-                        ? reserve.globalDetails.globalFreeze
+                        ? sparta.globalDetails.globalFreeze
                           ? t('globalFreeze')
                           : t('harvest')
                         : t('checkBnbGas')}

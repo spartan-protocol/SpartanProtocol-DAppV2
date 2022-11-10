@@ -18,9 +18,8 @@ import {
   formatFromUnits,
   formatFromWei,
 } from '../../../../utils/bigNumber'
-import { tempChains } from '../../../../utils/web3'
 import { Icon } from '../../../../components/Icons/index'
-import { useReserve, getReservePOLDetails } from '../../../../store/reserve'
+import { useReserve } from '../../../../store/reserve'
 import { getPOLWeights } from '../../../../utils/math/nonContract'
 
 import styles from './styles.module.scss'
@@ -55,12 +54,6 @@ const Supply = () => {
       setspartaPrice(web3.spartaPriceInternal)
     }
   }, [web3.spartaPrice, web3.spartaPriceInternal])
-
-  useEffect(() => {
-    if (showDropdown && tempChains.includes(app.chainId)) {
-      dispatch(getReservePOLDetails())
-    }
-  }, [dispatch, app.chainId, pool.poolDetails, showDropdown])
 
   const getTVL = () => {
     let tvl = BN(0)
@@ -107,9 +100,9 @@ const Supply = () => {
 
   const getCirculatingSupply = () => {
     const totalSupply = BN(getTotalSupply())
-    const reserveSparta = BN(reserve.globalDetails.spartaBalance)
+    const reserveSparta = BN(sparta.globalDetails.spartaBalance)
     const reservePOLSparta = getPOLWeights(reserve.polDetails)
-    const valid = totalSupply > 0 && reserve.globalDetails && reserve.polDetails
+    const valid = totalSupply > 0 && reserve.polDetails
     if (valid) {
       return totalSupply.minus(reserveSparta).minus(reservePOLSparta)
     }
