@@ -39,7 +39,7 @@ const Contracts = () => {
                     aria-hidden="true"
                   >
                     {formatShortString(addresses[contract.addrName])}
-                    <Icon icon="copy" size="20" className="float-end" />
+                    <Icon icon="copy" size="17" className="float-end" />
                   </span>
                   <br />
                   BSCScan
