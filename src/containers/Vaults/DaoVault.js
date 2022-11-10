@@ -81,7 +81,7 @@ const DaoVault = () => {
   useEffect(() => {
     dispatch(getDaoDetails(wallet.account))
     dispatch(getBondDetails(wallet.account))
-  }, [dispatch, pool.listedPools, wallet.account])
+  }, [dispatch, pool.poolDetails, wallet.account])
 
   useEffect(() => {
     dispatch(daoDepositTimes(wallet.account))

@@ -27,7 +27,7 @@ const BondVault = () => {
     if (tempChains.includes(app.chainId)) {
       dispatch(getBondDetails(wallet.account))
     }
-  }, [dispatch, app.chainId, pool.listedPools, wallet.account])
+  }, [dispatch, app.chainId, pool.poolDetails, wallet.account])
 
   const isLoading = () => {
     if (!bond.bondDetails) {

@@ -6,22 +6,15 @@ import Card from 'react-bootstrap/Card'
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import ProgressBar from 'react-bootstrap/ProgressBar'
 import { usePool } from '../../store/pool'
 import { useSynth } from '../../store/synth'
 import { useWeb3 } from '../../store/web3'
-import {
-  BN,
-  convertFromWei,
-  formatFromUnits,
-  formatFromWei,
-  formatShortNumber,
-} from '../../utils/bigNumber'
+import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'
 import spartaIconAlt from '../../assets/tokens/sparta-synth.svg'
 import { Tooltip } from '../../components/Tooltip/index'
 import { calcLiqValue, getSynth } from '../../utils/math/utils'
-import { stirCauldron } from '../../utils/math/router'
+// import { stirCauldron } from '../../utils/math/router'
 
 import styles from './styles.module.scss'
 
@@ -39,7 +32,7 @@ const SynthItem = ({ asset, synthApy }) => {
   const tokenValueBase = BN(baseAmount).div(tokenAmount)
   const tokenValueUSD = tokenValueBase.times(spartaPrice)
 
-  const synthCapTooltip = Tooltip(t, 'synthCap')
+  // const synthCapTooltip = Tooltip(t, 'synthCap')
   const synthPCTooltip = Tooltip(t, 'synthPC')
   const synthURTooltip = Tooltip(t, 'synthUR')
 
@@ -58,11 +51,11 @@ const SynthItem = ({ asset, synthApy }) => {
   const getSynthCollat = () => calcLiqValue(_getSynth().lpBalance, asset)
   const getSynthCollatToken = () =>
     BN(getSynthCollat()[1]).times(2).minus(getSynthSupply())
-  const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
-  const getSynthCapPC = () =>
-    BN(getSynthSupply())
-      .div(BN(getSynthSupply()).plus(getSynthStir()))
-      .times(100)
+  // const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
+  // const getSynthCapPC = () =>
+  //   BN(getSynthSupply())
+  //     .div(BN(getSynthSupply()).plus(getSynthStir()))
+  //     .times(100)
 
   return (
     <>
@@ -119,7 +112,7 @@ const SynthItem = ({ asset, synthApy }) => {
               </Col>
             </Row>
 
-            <Row className="my-1">
+            {/* <Row className="my-1">
               <Col xs="auto" className="text-card pe-0">
                 {t('softCap')}
                 <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
@@ -149,7 +142,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   </Col>
                 </Row>
               </Col>
-            </Row>
+            </Row> */}
 
             <Row className="my-1">
               <Col xs="auto" className="text-card">

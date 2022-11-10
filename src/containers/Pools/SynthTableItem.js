@@ -4,21 +4,15 @@ import { useTranslation } from 'react-i18next'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import ProgressBar from 'react-bootstrap/ProgressBar'
 import Row from 'react-bootstrap/Row'
 import spartaIconAlt from '../../assets/tokens/sparta-synth.svg'
 import { usePool } from '../../store/pool'
 import { useWeb3 } from '../../store/web3'
-import {
-  BN,
-  convertFromWei,
-  formatFromUnits,
-  formatShortNumber,
-} from '../../utils/bigNumber'
+import { BN, formatFromUnits } from '../../utils/bigNumber'
 import { Tooltip } from '../../components/Tooltip/index'
 import styles from './styles.module.scss'
 import { getSynth } from '../../utils/math/utils'
-import { stirCauldron } from '../../utils/math/router'
+// import { stirCauldron } from '../../utils/math/router'
 import { useSynth } from '../../store/synth'
 
 const SynthTableItem = ({ asset, synthApy }) => {
@@ -46,11 +40,11 @@ const SynthTableItem = ({ asset, synthApy }) => {
   const _getSynth = () => getSynth(tokenAddress, synth.synthDetails)
   const getSynthSupply = () => _getSynth().totalSupply
 
-  const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
-  const getSynthCapPC = () =>
-    BN(getSynthSupply())
-      .div(BN(getSynthSupply()).plus(getSynthStir()))
-      .times(100)
+  // const getSynthStir = () => stirCauldron(asset, asset.tokenAmount, _getSynth())
+  // const getSynthCapPC = () =>
+  //   BN(getSynthSupply())
+  //     .div(BN(getSynthSupply()).plus(getSynthStir()))
+  //     .times(100)
 
   return (
     <>
@@ -88,7 +82,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
         </td>
 
         {/* synth cap */}
-        <td className="d-none d-sm-table-cell">
+        {/* <td className="d-none d-sm-table-cell">
           <div>
             {formatShortNumber(convertFromWei(getSynthSupply()))}
             <span>
@@ -107,7 +101,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
               />
             </ProgressBar>
           </div>
-        </td>
+        </td> */}
         {/* depth */}
         <td className="d-none d-sm-table-cell">
           {formatFromUnits(BN(getSynthSupply()).div(tokenAmount).times(100), 2)}

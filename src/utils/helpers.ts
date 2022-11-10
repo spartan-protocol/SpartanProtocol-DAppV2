@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react'
+import { getTwTokenLogo } from './web3'
 
 // Get previous state
 export const usePrevious = (value) => {
@@ -79,4 +80,21 @@ export const anchorLink = (targetEl: string, parentEl: string = '') => {
       target.scrollIntoView({ behavior: 'smooth' })
     }
   }
+}
+
+/**
+ * Obtain the URL of the token's logo
+ * Gets a `const` location first then falls back to trying to find it in the github repo
+ */
+export const getSymbolUrl = (addresses, tokenAddr: string, chainId) => {
+  if (tokenAddr === addresses.bnb) {
+    return `${window.location.origin}/images/icons/BNB.svg`
+  }
+  if (tokenAddr === addresses.spartav1) {
+    return `${window.location.origin}/images/icons/SPARTA1.svg`
+  }
+  if (tokenAddr === addresses.spartav2) {
+    return `${window.location.origin}/images/icons/SPARTA2.svg`
+  }
+  return getTwTokenLogo(tokenAddr, chainId)
 }

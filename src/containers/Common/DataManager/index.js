@@ -3,11 +3,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import {
   getCuratedPools,
-  getListedPools,
   getListedTokens,
-  getMonthIncentives,
-  getPoolDetails,
-  getTokenDetails,
   updateTxn as updateTxnPool,
   usePool,
 } from '../../../store/pool'
@@ -23,18 +19,13 @@ import {
   updateTxn as updateTxnSparta,
   useSparta,
 } from '../../../store/sparta'
-import {
-  useSynth,
-  getSynthArray,
-  updateTxn as updateTxnSynth,
-} from '../../../store/synth'
+import { useSynth, updateTxn as updateTxnSynth } from '../../../store/synth'
 import {
   getRPCBlocks,
   getSpartaPrice,
   useWeb3,
   getGlobalMetrics,
   updateTxn as updateTxnWeb3,
-  getSpartaPriceInternal,
 } from '../../../store/web3'
 import { addTxn, liveChains } from '../../../utils/web3'
 import { useApp } from '../../../store/app'
@@ -69,12 +60,12 @@ const DataManager = () => {
   /** Get the initial arrays (tokens, curated & global details) */
   useEffect(() => {
     if (liveChains.includes(app.chainId)) {
-      dispatch(getListedTokens()) // TOKEN ARRAY
+      dispatch(getListedTokens(wallet)) // TOKEN ARRAY
       dispatch(getCuratedPools()) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
       dispatch(getReserveGlobalDetails()) // RESERVE GLOBAL DETAILS
     }
-  }, [dispatch, web3.rpcs, app.chainId])
+  }, [dispatch, web3.rpcs, app.chainId, wallet])
 
   /** Check SPARTA token price */
   useEffect(() => {
@@ -86,38 +77,6 @@ const DataManager = () => {
       clearInterval(interval)
     }
   }, [dispatch])
-
-  /** Update synthArray & tokenDetails */
-  useEffect(() => {
-    if (liveChains.includes(app.chainId)) {
-      dispatch(getSynthArray())
-      dispatch(getTokenDetails(wallet, app.chainId))
-    }
-  }, [dispatch, wallet, pool.listedTokens, app.chainId])
-
-  /** Get listed pools details */
-  useEffect(() => {
-    dispatch(getListedPools())
-  }, [dispatch, pool.tokenDetails])
-
-  /** Get the 30d rolling incentives for all pools */
-  useEffect(() => {
-    dispatch(getMonthIncentives())
-  }, [dispatch, pool.listedPools])
-
-  /** Get final pool details */
-  useEffect(() => {
-    if (liveChains.includes(app.chainId)) {
-      dispatch(getPoolDetails(wallet))
-    }
-  }, [dispatch, wallet, pool.listedPools, app.chainId])
-
-  /** Get internal SPARTA price on poolDetails update */
-  useEffect(() => {
-    if (liveChains.includes(app.chainId)) {
-      dispatch(getSpartaPriceInternal())
-    }
-  }, [dispatch, pool.poolDetails, app.chainId])
 
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {

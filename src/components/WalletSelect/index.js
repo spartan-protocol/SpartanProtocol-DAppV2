@@ -202,7 +202,7 @@ const WalletSelect = (props) => {
       }
     }
     checkDetails()
-  }, [chainId, dispatch, pool.listedPools, wallet])
+  }, [chainId, dispatch, pool.poolDetails, wallet])
 
   // ------------------------------------------------------------------------
 
