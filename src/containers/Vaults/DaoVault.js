@@ -14,13 +14,12 @@ import {
   useDao,
   daoHarvest,
   daoGlobalDetails,
-  daoMemberDetails,
   daoDepositTimes,
-  getDaoDetails,
+  daoMemberDetails,
 } from '../../store/dao'
 import { useWeb3 } from '../../store/web3'
 import { useSparta } from '../../store/sparta'
-import { getBondDetails, useBond } from '../../store/bond'
+import { useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'
 import {
   calcDaoAPY,
@@ -75,11 +74,6 @@ const DaoVault = () => {
       clearInterval(interval)
     }
   }, [dispatch, wallet])
-
-  useEffect(() => {
-    dispatch(getDaoDetails(wallet.account))
-    dispatch(getBondDetails(wallet.account))
-  }, [dispatch, pool.poolDetails, wallet.account])
 
   useEffect(() => {
     dispatch(daoDepositTimes(wallet.account))

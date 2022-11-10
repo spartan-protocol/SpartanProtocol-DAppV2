@@ -14,7 +14,6 @@ import Approval from '../../../components/Approval/index'
 import { synthHarvestLive } from '../../../utils/web3'
 import {
   useSynth,
-  getSynthDetails,
   synthDeposit,
   synthHarvestSingle,
 } from '../../../store/synth'
@@ -81,7 +80,6 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     setHarvestLoading(true)
     await dispatch(synthHarvestSingle(synth1.address, wallet))
     setHarvestLoading(false)
-    dispatch(getSynthDetails(wallet))
   }
 
   const handleDeposit = async () => {

@@ -7,12 +7,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
-import {
-  useDao,
-  daoHarvest,
-  daoMemberDetails,
-  daoWithdraw,
-} from '../../../store/dao'
+import { useDao, daoHarvest, daoWithdraw } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { getDao, getToken } from '../../../utils/math/utils'
@@ -107,7 +102,6 @@ const DaoWithdrawModal = (props) => {
     setHarvestLoading(true)
     await dispatch(daoHarvest(wallet))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet.account))
   }
 
   const handleWithdraw = async () => {

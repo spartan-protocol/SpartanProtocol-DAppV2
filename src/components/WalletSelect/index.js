@@ -21,14 +21,14 @@ import Synths from './tabs/Synths'
 import Txns from './tabs/Txns'
 import { Icon } from '../Icons/index'
 import { Tooltip } from '../Tooltip/index'
-import { getSynthDetails, useSynth } from '../../store/synth'
+import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { convertFromWei } from '../../utils/bigNumber'
 import { connectorsByName } from '../../utils/web3React'
 import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
-import { getDaoDetails, useDao } from '../../store/dao'
-import { getBondDetails, useBond } from '../../store/bond'
+import { useDao } from '../../store/dao'
+import { useBond } from '../../store/bond'
 import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
 import { appChainId, useApp } from '../../store/app'
@@ -192,17 +192,6 @@ const WalletSelect = (props) => {
     wallet.active,
     wallet.error,
   ])
-
-  useEffect(() => {
-    const checkDetails = () => {
-      if (tempChains.includes(chainId)) {
-        dispatch(getBondDetails(wallet.account))
-        dispatch(getDaoDetails(wallet.account))
-        dispatch(getSynthDetails(wallet))
-      }
-    }
-    checkDetails()
-  }, [chainId, dispatch, pool.poolDetails, wallet])
 
   // ------------------------------------------------------------------------
 

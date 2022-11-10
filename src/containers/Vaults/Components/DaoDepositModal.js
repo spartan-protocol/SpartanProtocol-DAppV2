@@ -7,12 +7,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
-import {
-  useDao,
-  daoDeposit,
-  daoHarvest,
-  daoMemberDetails,
-} from '../../../store/dao'
+import { useDao, daoDeposit, daoHarvest } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { useApp } from '../../../store/app'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -70,7 +65,6 @@ const DaoDepositModal = (props) => {
     setHarvestLoading(true)
     await dispatch(daoHarvest(wallet))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet.account))
   }
 
   const handleDeposit = async () => {

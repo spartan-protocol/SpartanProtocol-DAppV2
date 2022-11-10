@@ -11,7 +11,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthHarvestLive } from '../../../utils/web3'
-import { useSynth, getSynthDetails, synthHarvest } from '../../../store/synth'
+import { useSynth, synthHarvest } from '../../../store/synth'
 import { Icon } from '../../../components/Icons/index'
 import { getSynth, getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
@@ -53,7 +53,6 @@ const SynthHarvestAllModal = () => {
     setTxnLoading(true)
     await dispatch(synthHarvest(getArray(), wallet))
     setTxnLoading(false)
-    dispatch(getSynthDetails(wallet))
     handleCloseModal()
   }
 

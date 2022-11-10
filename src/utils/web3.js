@@ -225,6 +225,30 @@ export const stablecoinPools = [
   '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7', // USDCp Mainnet
 ]
 
+export const synthTokensMN = [
+  '0x0000000000000000000000000000000000000000', // BNB Mainnet
+  '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', // BUSD Mainnet
+  '0x55d398326f99059fF775485246999027B3197955', // USDT Mainnet
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', // USDC Mainnet
+  '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', // BTCB Mainnet
+]
+
+export const synthTokensTN = [
+  '0x0000000000000000000000000000000000000000', // BNB Testnet
+  '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee', // BUSD Testnet
+  '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867', // DAI Testnet
+]
+
+export const getSynthTokens = (chainId) => {
+  if (chainId === 56) {
+    return synthTokensMN
+  }
+  if (chainId === 97) {
+    return synthTokensTN
+  }
+  return [] // fallback to no synths
+}
+
 export const exCuratedPools = [
   // This is for pools that were previous Curated but are not Curated anymore.
   // Handy for things like the DaoVault where a no-longer-curated asset may still be
@@ -240,7 +264,7 @@ export const deadAddress = '0x000000000000000000000000000000000000dEaD'
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
-export const synthHarvestLive = true // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
+export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
   const _tokenAddr = ethers.utils.getAddress(tokenAddr)

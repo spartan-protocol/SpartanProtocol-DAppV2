@@ -8,10 +8,11 @@ import { oneWeek, parseTxn } from '../../utils/web3'
 import { getSecsSince } from '../../utils/math/nonContract'
 import { BN } from '../../utils/bigNumber'
 import { getPoolIncentives } from '../../utils/extCalls'
-import { bondVaultWeight } from '../bond'
-import { daoVaultWeight } from '../dao'
+import { getBondDetails } from '../bond'
+import { getDaoDetails } from '../dao'
 import { getSymbolUrl } from '../../utils/helpers.ts'
-import { getSynthArray } from '../synth'
+// eslint-disable-next-line import/no-cycle
+import { getSynthDetails } from '../synth'
 import { getSpartaPriceInternal } from '../web3'
 
 export const usePool = () => useSelector((state) => state.pool)
@@ -109,7 +110,7 @@ export const getMonthIncentives = () => async (dispatch, getState) => {
 /**
  * Add LP wallet-details to final array
  */
-export const getPoolDetails = (wallet) => async (dispatch, getState) => {
+export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoadingFinal(true))
   const { listedTokens, curatedPools } = getState().pool
   try {
@@ -123,7 +124,7 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
         (x) => !excludedArray.includes(x),
       )
       const awaitArray = await contract.callStatic.getPoolDetails(
-        wallet.account ?? null,
+        walletAddr ?? null,
         _listedTokens,
       )
 
@@ -165,8 +166,8 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
         })
       }
       dispatch(updatePoolDetails(poolDetails))
-      dispatch(bondVaultWeight()) // Weight changing function, so we need to update weight calculations
-      dispatch(daoVaultWeight()) // Weight changing function, so we need to update weight calculations
+      dispatch(getBondDetails(walletAddr)) // Update bondDetails -> bondVaultWeight
+      dispatch(getDaoDetails(walletAddr)) // Update daoDetails -> daoVaultWeight
       dispatch(getMonthIncentives()) // Update the incentive metrics
       dispatch(getSpartaPriceInternal()) // Update internally derived SPARTA price
     }
@@ -179,56 +180,56 @@ export const getPoolDetails = (wallet) => async (dispatch, getState) => {
 /**
  * Get detailed array of token information
  */
-export const getTokenDetails =
-  (wallet, chainId) => async (dispatch, getState) => {
-    dispatch(updateLoading(true))
-    const { listedTokens } = getState().pool
-    try {
-      if (listedTokens.length > 0) {
-        const { rpcs } = getState().web3
-        const { addresses } = getState().app
-        const contract = getSSUtilsContract(null, rpcs)
-        const awaitArray = await contract.callStatic.getTokenDetails(
-          wallet.account ?? null,
-          listedTokens,
-        )
+export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
+  dispatch(updateLoading(true))
+  const { listedTokens } = getState().pool
+  try {
+    if (listedTokens.length > 0) {
+      const { rpcs } = getState().web3
+      const { addresses, chainId } = getState().app
+      const contract = getSSUtilsContract(null, rpcs)
+      const awaitArray = await contract.callStatic.getTokenDetails(
+        walletAddr ?? null,
+        listedTokens,
+      )
 
-        let symbUrls = []
-        for (let i = 0; i < listedTokens.length; i++) {
-          symbUrls.push(getSymbolUrl(addresses, listedTokens[i], chainId))
-        }
-        symbUrls = await Promise.all(symbUrls)
-
-        const tokenDetails = []
-        for (let i = 0; i < awaitArray.length; i++) {
-          tokenDetails.push({
-            address: listedTokens[i],
-            balance: awaitArray[i].balance.toString(),
-            symbol:
-              listedTokens[i] !== addresses.bnb
-                ? awaitArray[i].symbol.toUpperCase()
-                : 'BNB',
-            symbolUrl: symbUrls[i],
-          })
-        }
-        dispatch(updatetokenDetails(tokenDetails))
-        dispatch(getPoolDetails(wallet, chainId)) // Update poolDetails
+      let symbUrls = []
+      for (let i = 0; i < listedTokens.length; i++) {
+        symbUrls.push(getSymbolUrl(addresses, listedTokens[i], chainId))
       }
-    } catch (error) {
-      dispatch(updateError(error.reason))
+      symbUrls = await Promise.all(symbUrls)
+
+      const tokenDetails = []
+      for (let i = 0; i < awaitArray.length; i++) {
+        tokenDetails.push({
+          address: listedTokens[i],
+          balance: awaitArray[i].balance.toString(),
+          symbol:
+            listedTokens[i] !== addresses.bnb
+              ? awaitArray[i].symbol.toUpperCase()
+              : 'BNB',
+          symbolUrl: symbUrls[i],
+        })
+      }
+      dispatch(updatetokenDetails(tokenDetails))
+      dispatch(getPoolDetails(walletAddr)) // Update poolDetails
+      dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     }
-    dispatch(updateLoading(false))
+  } catch (error) {
+    dispatch(updateError(error.reason))
   }
+  dispatch(updateLoading(false))
+}
 
 /**
  * Get array of all listed token addresses
  */
-export const getListedTokens = (wallet) => async (dispatch, getState) => {
+export const getListedTokens = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
   try {
     if (rpcs.length > 0) {
-      const { addresses, chainId } = getState().app
+      const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
       const listedTokens = []
       const _listedTokens = await contract.callStatic.getListedTokens()
@@ -241,8 +242,7 @@ export const getListedTokens = (wallet) => async (dispatch, getState) => {
       }
       listedTokens.push(addresses.spartav1, addresses.spartav2)
       dispatch(updateListedTokens(listedTokens))
-      dispatch(getSynthArray()) // Update synthArray
-      dispatch(getTokenDetails(wallet, chainId)) // Update tokenDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails
     }
   } catch (error) {
     dispatch(updateError(error.reason))
@@ -288,6 +288,7 @@ export const createPoolADD =
       let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
       txn = await parseTxn(txn, 'createPool', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getListedTokens(wallet.account)) // Update listedTokens -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }

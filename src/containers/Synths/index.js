@@ -39,18 +39,16 @@ import { balanceWidths } from '../Liquidity/Components/Utils'
 import { burnSynth } from '../../utils/math/router'
 import {
   useSynth,
-  getSynthDetails,
-  getSynthGlobalDetails,
-  getSynthMemberDetails,
-  getSynthMinting,
+  // getSynthGlobalDetails,
+  // getSynthMemberDetails,
+  // getSynthMinting,
   // synthHarvestSingle,
-  synthVaultWeight,
+  // synthVaultWeight,
 } from '../../store/synth'
 // import { convertTimeUnits, getSecsSince } from '../../utils/math/nonContract'
 import { Tooltip } from '../../components/Tooltip/index'
 // import { calcCurrentRewardSynth } from '../../utils/math/synthVault'
 // import { useReserve } from '../../store/reserve'
-import { daoMemberDetails } from '../../store/dao'
 import ShareLink from '../../components/Share/ShareLink'
 import { getExplorerContract } from '../../utils/extCalls'
 import { useFocus } from '../../providers/Focus'
@@ -99,9 +97,8 @@ const Swap = () => {
 
   useEffect(() => {
     const getGlobals = () => {
-      dispatch(getSynthGlobalDetails())
-      dispatch(getSynthMemberDetails(wallet.account))
-      dispatch(daoMemberDetails(wallet.account))
+      // dispatch(getSynthGlobalDetails())
+      // dispatch(getSynthMemberDetails(wallet.account))
     }
     getGlobals() // Run on load
     const interval = setInterval(() => {
@@ -112,24 +109,19 @@ const Swap = () => {
     }
   }, [dispatch, wallet.account])
 
-  useEffect(() => {
-    dispatch(getSynthDetails(wallet))
-  }, [dispatch, synth.synthArray, wallet])
+  // useEffect(() => {
+  //   dispatch(synthVaultWeight())
+  // }, [dispatch, synth.synthDetails])
 
-  useEffect(() => {
-    dispatch(synthVaultWeight())
-  }, [dispatch, synth.synthDetails])
-
-  useEffect(() => {
-    const checkDetails = () => {
-      if (tempChains.includes(chainId)) {
-        dispatch(getSynthGlobalDetails())
-        dispatch(getSynthDetails(wallet))
-        dispatch(getSynthMinting())
-      }
-    }
-    checkDetails()
-  }, [dispatch, chainId, pool.poolDetails, wallet])
+  // useEffect(() => {
+  //   const checkDetails = () => {
+  //     if (tempChains.includes(chainId)) {
+  //       // dispatch(getSynthGlobalDetails())
+  //       // dispatch(getSynthMinting())
+  //     }
+  //   }
+  //   checkDetails()
+  // }, [dispatch, chainId, pool.poolDetails, wallet])
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
@@ -417,10 +409,10 @@ const Swap = () => {
   }
 
   // const secsSinceHarvest = () => {
-  //   if (dao.member.lastHarvest) {
-  //     return getSecsSince(dao.member.lastHarvest)
-  //   }
-  //   return '0'
+  //   if (dao.member.lastHarvest) { // I think this is meant to be synth.synthDetails[i].lastHarvest
+  //     return getSecsSince(dao.member.lastHarvest) // I think this is meant to be synth.synthDetails[i].lastHarvest
+  //   } // I think this is meant to be synth.synthDetails[i].lastHarvest
+  //   return '0' // I think this is meant to be synth.synthDetails[i].lastHarvest
   // }
 
   // const getClaimable = () => {
@@ -536,24 +528,21 @@ const Swap = () => {
   //   setHarvestLoading(true)
   //   await dispatch(synthHarvestSingle(synth1.address, wallet))
   //   setHarvestLoading(false)
-  //   if (synth.synthArray?.length > 0) {
-  //     dispatch(getSynthDetails(wallet))
-  //   }
   // }
 
   const isLoading = () => {
     if (
       !pool.poolDetails ||
       !synth.synthDetails ||
-      !synth.globalDetails ||
+      // !synth.globalDetails ||
       synth.synthDetails.length <= 0 ||
       pool.tokenDetails.length <= 0
     ) {
       return true
     }
-    if (wallet.account && !synth.member) {
-      return true
-    }
+    // if (wallet.account && !synth.member) {
+    //   return true
+    // }
     return false
   }
 

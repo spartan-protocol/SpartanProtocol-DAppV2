@@ -60,12 +60,12 @@ const DataManager = () => {
   /** Get the initial arrays (tokens, curated & global details) */
   useEffect(() => {
     if (liveChains.includes(app.chainId)) {
-      dispatch(getListedTokens(wallet)) // TOKEN ARRAY
+      dispatch(getListedTokens(wallet.account)) // TOKEN ARRAY
       dispatch(getCuratedPools()) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
       dispatch(getReservePOLDetails()) // RESERVE POL DETAILS
     }
-  }, [dispatch, web3.rpcs, app.chainId, wallet])
+  }, [dispatch, web3.rpcs, app.chainId, wallet.account])
 
   /** Check SPARTA token price */
   useEffect(() => {

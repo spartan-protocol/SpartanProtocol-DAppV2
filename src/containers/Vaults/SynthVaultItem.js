@@ -10,12 +10,11 @@ import { formatFromWei } from '../../utils/bigNumber'
 import { useSynth } from '../../store/synth'
 import { useSparta } from '../../store/sparta'
 import spartaIconAlt from '../../assets/tokens/sparta-synth.svg'
-import SynthDepositModal from './Components/SynthDepositModal'
+// import SynthDepositModal from './Components/SynthDepositModal'
 import SynthWithdrawModal from './Components/SynthWithdrawModal'
 import { Icon } from '../../components/Icons/index'
-import { getTimeSince } from '../../utils/math/nonContract'
 import { calcCurrentRewardSynth } from '../../utils/math/synthVault'
-import SynthHarvestModal from './Components/SynthHarvestModal'
+// import SynthHarvestModal from './Components/SynthHarvestModal'
 
 const SynthVaultItem = ({ synthItem }) => {
   const { t } = useTranslation()
@@ -131,7 +130,7 @@ const SynthVaultItem = ({ synthItem }) => {
               </Col>
             </Row>
 
-            <Row className="my-1">
+            {/* <Row className="my-1">
               <Col>{t('lastHarvest')}</Col>
               <Col xs="auto" className="text-end">
                 {!wallet.account ? (
@@ -147,17 +146,17 @@ const SynthVaultItem = ({ synthItem }) => {
                   </>
                 )}
               </Col>
-            </Row>
+            </Row> */}
           </Card.Body>
           <Card.Footer>
             <Row>
               <Col xs="6" className="pe-1">
-                <SynthDepositModal
+                {/* <SynthDepositModal
                   tokenAddress={synthItem.tokenAddress}
                   disabled={synthItem.balance <= 0}
-                />
+                /> */}
               </Col>
-              <Col xs="6" className="ps-1">
+              <Col xs="12" className="ps-1">
                 <SynthWithdrawModal
                   synthItem={synthItem}
                   disabled={synthItem.staked <= 0}
@@ -165,14 +164,14 @@ const SynthVaultItem = ({ synthItem }) => {
                 />
               </Col>
             </Row>
-            <Row className="mt-2">
+            {/* <Row className="mt-2">
               <Col xs="12">
                 <SynthHarvestModal
                   synthItem={synthItem}
                   buttonValid={checkValid()}
                 />
               </Col>
-            </Row>
+            </Row> */}
           </Card.Footer>
         </Card>
       </Col>

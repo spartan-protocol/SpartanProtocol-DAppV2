@@ -103,10 +103,8 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
           isMember: awaitArray[i].isMember,
         })
       }
-
-      dispatch(bondVaultWeight()) // Weight changing function, so we need to update weight calculations
-
       dispatch(updateBondDetails(bondDetails))
+      dispatch(bondVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
     dispatch(updateError(error.reason))
@@ -130,6 +128,7 @@ export const claimBond = (tokenAddr, wallet) => async (dispatch, getState) => {
     let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'bondClaim', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getBondDetails(wallet.account)) // Update bondDetails
   } catch (error) {
     dispatch(updateError(error.reason))
   }

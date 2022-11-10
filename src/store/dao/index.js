@@ -334,6 +334,7 @@ export const daoDeposit =
       let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'daoDeposit', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getDaoDetails(wallet.account)) // Update daoDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -356,6 +357,7 @@ export const daoWithdraw = (pool, wallet) => async (dispatch, getState) => {
     let txn = await contract.withdraw(pool, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'daoWithdraw', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getDaoDetails(wallet.account)) // Update daoDetails
   } catch (error) {
     dispatch(updateError(error.reason))
   }
@@ -377,6 +379,8 @@ export const daoHarvest = (wallet) => async (dispatch, getState) => {
     let txn = await contract.harvest({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'daoHarvest', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getDaoDetails(wallet.account)) // Update daoDetails
+    dispatch(daoMemberDetails(wallet.account)) // Update daoMemberDetails (daoVault lastHarvest)
   } catch (error) {
     dispatch(updateError(error.reason))
   }

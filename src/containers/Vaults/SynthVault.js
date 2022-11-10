@@ -11,9 +11,8 @@ import {
   useSynth,
   getSynthGlobalDetails,
   synthVaultWeight,
-  getSynthDetails,
-  getSynthMemberDetails,
-  getSynthMinting,
+  // getSynthMemberDetails,
+  // getSynthMinting,
 } from '../../store/synth'
 import SynthVaultItem from './SynthVaultItem'
 import {
@@ -23,7 +22,7 @@ import {
 import { usePool } from '../../store/pool'
 import { Icon } from '../../components/Icons/index'
 import HelmetLoading from '../../components/Spinner/index'
-import SynthHarvestAllModal from './Components/SynthHarvestAllModal'
+// import SynthHarvestAllModal from './Components/SynthHarvestAllModal'
 import { useWeb3 } from '../../store/web3'
 import { synthHarvestLive } from '../../utils/web3'
 import { Tooltip } from '../../components/Tooltip/index'
@@ -50,8 +49,8 @@ const SynthVault = () => {
   useEffect(() => {
     const getGlobals = () => {
       dispatch(getSynthGlobalDetails())
-      dispatch(getSynthMemberDetails(wallet.account))
-      dispatch(getSynthMinting())
+      // dispatch(getSynthMemberDetails(wallet.account))
+      // dispatch(getSynthMinting())
     }
     getGlobals() // Run on load
     const interval = setInterval(() => {
@@ -61,10 +60,6 @@ const SynthVault = () => {
       clearInterval(interval)
     }
   }, [dispatch, wallet.account])
-
-  useEffect(() => {
-    dispatch(getSynthDetails(wallet))
-  }, [dispatch, synth.synthArray, wallet])
 
   useEffect(() => {
     dispatch(synthVaultWeight())
@@ -245,9 +240,9 @@ const SynthVault = () => {
                   </Col>
                 </Row>
               </Card.Body>
-              <Card.Footer xs="12">
+              {/* <Card.Footer xs="12">
                 <SynthHarvestAllModal />
-              </Card.Footer>
+              </Card.Footer> */}
             </>
           ) : (
             <HelmetLoading height={150} width={150} />

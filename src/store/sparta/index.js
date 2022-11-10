@@ -8,6 +8,7 @@ import {
 } from '../../utils/getContracts'
 import { addressesMN, bscRpcsMN, parseTxn } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
+import { getTokenDetails } from '../pool'
 
 export const useSparta = () => useSelector((state) => state.sparta)
 
@@ -110,6 +111,7 @@ export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
     let txn = await contract.upgrade({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'upgrade', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getTokenDetails(wallet.account)) // Update tokenDetails
   } catch (error) {
     dispatch(updateError(error.reason))
   }
