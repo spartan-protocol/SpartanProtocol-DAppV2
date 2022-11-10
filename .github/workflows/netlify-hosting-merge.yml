@@ -11,12 +11,12 @@ jobs:
         uses: actions/checkout@v2
       - name: 🧰 Install Dependencies
         run: yarn install
-      - name: 📦 Build Project
-        run: yarn build
       - name: 🧹 Run Lint
         run: yarn lint
       - name: 🐛 Run Tests
         run: yarn test
+      - name: 📦 Build Project
+        run: yarn build
         env:
           REACT_APP_BITQUERY: ${{ secrets.REACT_APP_BITQUERY }}
           REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}

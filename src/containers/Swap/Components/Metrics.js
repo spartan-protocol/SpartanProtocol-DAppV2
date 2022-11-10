@@ -7,7 +7,7 @@ import { usePool } from '../../../store/pool'
 import { useWeb3 } from '../../../store/web3'
 import { BN, formatFromUnits } from '../../../utils/bigNumber'
 import ChartPrice from './Charts/ChartPrice'
-import { getUnixStartOfDay } from '../../../utils/helpers'
+import { getUnixStartOfDay } from '../../../utils/helpers.ts'
 
 const Metrics = ({ assetSwap }) => {
   const web3 = useWeb3()

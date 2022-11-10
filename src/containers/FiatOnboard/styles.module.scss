@@ -1,7 +1,9 @@
 .parent {
   scroll-snap-type: y mandatory;
   overflow-y: scroll;
-  max-height: 100vh;
+  height: calc(
+    100vh - 150px
+  ); // Remove enough to account for topNav and mobile browser action/address bars
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -13,26 +15,29 @@
 }
 
 .first {
-  scroll-snap-align: start;
-  height: calc(100vh - 70px);
-  padding: 30px;
+  scroll-snap-align: start; // Snap to parent, handle padding in child (for correct scroll-snap alignment)
+  height: 100%;
+}
+
+.firstChild {
+  height: 100%;
+  padding: 10px;
 }
 
 .second {
-  scroll-snap-align: start;
-  height: calc(100vh - 70px);
-  margin-bottom: 75px; // Must be larger than the minus(amount) from 100vh to ensure there is enough room for the scroll-snap-align anchor to reach the top of the viewport
+  scroll-snap-align: start; // Snap to parent, handle padding in child (for correct scroll-snap alignment)
+  height: 100%;
 }
 
-.binanceConnectModule {
+.secondChild {
   margin-left: auto;
   margin-right: auto;
   max-width: 500px;
   height: 100%;
   max-height: 700px;
   max-width: 450px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px;
+  padding-bottom: 30px;
 }
 
 .blocked {

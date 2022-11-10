@@ -61,3 +61,22 @@ export const checkResolved = (settledItem, errorMsg) => {
   }
   return errorMsg
 }
+
+/**
+ * An alternative to html/css anchor / jump links
+ * Using this instead of standard href="#ID" jump links means you can avoid the css-grid breaking behavior by setting a parent element
+ * Another advantage is that it uses smooth scrolling behaviour instead of an instant-jump
+ * @param targetEl ie. if a target element's ID is #first use "first" as the string
+ * @param parentEl enter null if you dont care about css-grid breaking, otherwise enter the element ID of a parent element
+ */
+export const anchorLink = (targetEl: string, parentEl: string = '') => {
+  const target = document.getElementById(targetEl)
+  if (target) {
+    const parent = document.getElementById(parentEl)
+    if (parentEl !== '' && parent) {
+      parent.scrollTo({ behavior: 'smooth', top: target.offsetTop })
+    } else {
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+}
