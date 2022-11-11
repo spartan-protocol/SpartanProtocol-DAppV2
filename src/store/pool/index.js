@@ -165,6 +165,26 @@ export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
           safety: safety.toString(),
         })
       }
+
+      // Add a dummy pool object for SpartaV2
+      poolDetails.push({
+        tokenAddress: addresses.spartav2,
+        address: null,
+        baseAmount: '0',
+        tokenAmount: '0',
+        poolUnits: '0',
+        baseCap: '0',
+        genesis: '0',
+        newPool: false,
+        hide: false,
+        balance: '0',
+        curated: false,
+        frozen: false,
+        oldRate: '0',
+        newRate: '0',
+        safety: '0',
+      })
+
       dispatch(updatePoolDetails(poolDetails))
       dispatch(getBondDetails(walletAddr)) // Update bondDetails -> bondVaultWeight
       dispatch(getDaoDetails(walletAddr)) // Update daoDetails -> daoVaultWeight
