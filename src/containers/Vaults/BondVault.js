@@ -1,33 +1,21 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import { useDispatch } from 'react-redux'
-import { useWeb3React } from '@web3-react/core'
 import WrongNetwork from '../../components/WrongNetwork/index'
-import { usePool } from '../../store/pool'
 import { tempChains } from '../../utils/web3'
 import BondItem from './BondVaultItem'
-import { getBondDetails, useBond } from '../../store/bond'
+import { useBond } from '../../store/bond'
 import { Icon } from '../../components/Icons/index'
 import { useApp } from '../../store/app'
 
 const BondVault = () => {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
 
   const app = useApp()
   const bond = useBond()
-  const pool = usePool()
-
-  useEffect(() => {
-    if (tempChains.includes(app.chainId)) {
-      dispatch(getBondDetails(wallet.account))
-    }
-  }, [dispatch, app.chainId, pool.listedPools, wallet.account])
 
   const isLoading = () => {
     if (!bond.bondDetails) {

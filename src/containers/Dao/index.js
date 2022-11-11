@@ -14,8 +14,6 @@ import {
   daoGlobalDetails,
   daoMemberDetails,
   daoProposalDetails,
-  daoVaultWeight,
-  getDaoDetails,
   proposalWeight,
 } from '../../store/dao'
 import NewProposal from './NewProposal'
@@ -23,8 +21,7 @@ import { tempChains } from '../../utils/web3'
 import { convertTimeUnits } from '../../utils/math/nonContract'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import { usePool } from '../../store/pool'
-import { bondVaultWeight, getBondDetails, useBond } from '../../store/bond'
-import { getSynthDetails } from '../../store/synth'
+import { useBond } from '../../store/bond'
 import HelmetLoading from '../../components/Spinner/index'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'
@@ -62,13 +59,8 @@ const Overview = () => {
       dispatch(daoMemberDetails(wallet.account))
       dispatch(daoProposalDetails(wallet.account))
       dispatch(proposalWeight())
-      dispatch(daoVaultWeight())
-      dispatch(bondVaultWeight())
-      dispatch(getDaoDetails(wallet.account))
-      dispatch(getBondDetails(wallet.account))
-      dispatch(getSynthDetails(wallet))
     }
-  }, [dispatch, wallet, dao.global, app.chainId])
+  }, [dispatch, wallet.account, dao.global, app.chainId])
 
   const isLoading = () => {
     if (!pool.poolDetails) {

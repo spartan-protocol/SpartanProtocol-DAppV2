@@ -294,8 +294,8 @@ const PoolPositions = () => {
     const daoDets = getDao(poolPos.tokenAddress, dao.daoDetails)
     const bondDets = getBond(poolPos.tokenAddress, bond.bondDetails)
     const totalLps = BN(poolDets.balance)
-      .plus(daoDets.staked)
-      .plus(bondDets.staked)
+      .plus(daoDets.staked ?? '0')
+      .plus(bondDets.staked ?? '0')
     let [spartaValue, tokenValue] = calcLiqValue(totalLps, poolDets)
     let usdValue = spartaValue.times(2).times(spartaPrice)
     if (spartaValue <= 0) {

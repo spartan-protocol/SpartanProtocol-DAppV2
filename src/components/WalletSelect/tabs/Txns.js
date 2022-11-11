@@ -286,7 +286,7 @@ const Txns = () => {
         <>
           <Badge className="mb-3">{t('recentTxns')}</Badge>
           <Row className="output-card text-center">
-            {pool.poolDetails.length > 1 && (
+            {pool.poolDetails.length > 0 && (
               <>
                 <Col xs="12">
                   {!isLoading() ? (

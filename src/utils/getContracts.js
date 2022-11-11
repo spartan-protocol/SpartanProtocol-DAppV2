@@ -298,3 +298,17 @@ export const getUtilsContract = (wallet, rpcUrls) => {
   }
   return contract
 }
+
+/**
+ * Get the SpartanSwap Utils contract with signer/provider injected
+ * @returns {uint} contract
+ */
+export const getSSUtilsContract = (wallet, rpcUrls) => {
+  let contract = isAddress(getAddresses().ssUtils)
+  const abiSSUtils = getAbis().ssUtils
+  const provider = getWalletProvider(wallet ? wallet.library : null, rpcUrls)
+  if (contract === true) {
+    contract = new ethers.Contract(getAddresses().ssUtils, abiSSUtils, provider)
+  }
+  return contract
+}

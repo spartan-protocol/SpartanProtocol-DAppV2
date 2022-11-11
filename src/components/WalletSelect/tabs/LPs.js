@@ -88,7 +88,7 @@ const LPs = () => {
 
   /** @returns BN(usdValue) */
   const getUSD = (tokenAddr, amount) => {
-    if (pool.poolDetails.length > 1) {
+    if (pool.poolDetails.length > 0) {
       if (_getPool) {
         return calcLiqValueIn(amount, _getPool(tokenAddr), spartaPrice)[1]
       }

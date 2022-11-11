@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -16,15 +15,15 @@ import { usePool } from '../../store/pool'
 import { tempChains } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 import HelmetLoading from '../../components/Spinner/index'
-import { useBond, bondVaultWeight } from '../../store/bond'
+import { useBond } from '../../store/bond'
 import WrongNetwork from '../../components/WrongNetwork/index'
 import SummaryItem from './SummaryItem'
 import { Icon } from '../../components/Icons/index'
 import { useWeb3 } from '../../store/web3'
-import { calcAPY, calcDaoAPY, calcSynthAPY } from '../../utils/math/nonContract'
-import { useDao, daoVaultWeight } from '../../store/dao'
+import { calcAPY, calcDaoAPY } from '../../utils/math/nonContract'
+import { useDao } from '../../store/dao'
 import SynthItem from './SynthItem'
-import { synthVaultWeight, useSynth } from '../../store/synth'
+// import { synthVaultWeight } from '../../store/synth'
 import NewPool from './NewPool'
 import { useApp } from '../../store/app'
 import styles from './styles.module.scss'
@@ -34,14 +33,13 @@ import SynthTableHeader from './SynthTableHeader'
 import SynthTableItem from './SynthTableItem'
 
 const Overview = () => {
-  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const app = useApp()
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
-  const synth = useSynth()
+  // const synth = useSynth()
   const web3 = useWeb3()
 
   const [activeTab, setActiveTab] = useState('pools')
@@ -49,7 +47,7 @@ const Overview = () => {
   const [tableView, setTableView] = useState(true)
 
   const [daoApy, setDaoApy] = useState('0')
-  const [synthApy, setSynthApy] = useState('0')
+  const [synthApy] = useState('0')
   const [arrayPools, setarrayPools] = useState(false)
   const [arrayNewPools, setarrayNewPools] = useState(false)
   const [arraySynths, setarraySynths] = useState(false)
@@ -58,18 +56,11 @@ const Overview = () => {
 
   const searchInput = document.getElementById('searchInput')
 
-  useEffect(() => {
-    if (activeTab !== 'synths') {
-      dispatch(daoVaultWeight())
-      dispatch(bondVaultWeight())
-    }
-  }, [activeTab, dispatch, pool.poolDetails])
-
-  useEffect(() => {
-    if (activeTab === 'synths') {
-      dispatch(synthVaultWeight())
-    }
-  }, [activeTab, dispatch, pool.poolDetails])
+  // useEffect(() => {
+  //   if (activeTab === 'synths') {
+  //     dispatch(synthVaultWeight())
+  //   }
+  // }, [activeTab, dispatch, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.poolDetails) {
@@ -80,7 +71,7 @@ const Overview = () => {
 
   // Update the pools (and newPools) array local state
   useEffect(() => {
-    if (activeTab === 'pools' && pool.poolDetails.length > 1) {
+    if (activeTab === 'pools' && pool.poolDetails.length > 0) {
       // Get initial pools array
       let tempPoolsArray = pool.poolDetails.filter(
         (asset) => asset.baseAmount > 0,
@@ -179,7 +170,7 @@ const Overview = () => {
 
   // Update the synths array local state
   useEffect(() => {
-    if (activeTab === 'synths' && pool.poolDetails.length > 1) {
+    if (activeTab === 'synths' && pool.poolDetails.length > 0) {
       setarraySynths(
         pool.poolDetails.filter((asset) => !asset.newPool && asset.curated),
         // .sort((a, b) => b.baseAmount - a.baseAmount),
@@ -209,18 +200,18 @@ const Overview = () => {
   }, [web3.metrics.global, bond.totalWeight, dao.totalWeight])
 
   // Update the synth apy local state
-  useEffect(() => {
-    const getSynthApy = () => {
-      let revenue = BN(web3.metrics.global[0].synthVault30Day)
-      revenue = revenue.toString()
-      const baseAmount = synth.totalWeight.toString()
-      const apy = calcSynthAPY(revenue, baseAmount)
-      return apy.toFixed(2).toString()
-    }
-    if (synth.totalWeight && web3.metrics.global) {
-      setSynthApy(getSynthApy())
-    }
-  }, [web3.metrics.global, synth.totalWeight])
+  // useEffect(() => {
+  //   const getSynthApy = () => {
+  //     let revenue = BN(web3.metrics.global[0].synthVault30Day)
+  //     revenue = revenue.toString()
+  //     const baseAmount = synth.totalWeight.toString()
+  //     const apy = calcSynthAPY(revenue, baseAmount)
+  //     return apy.toFixed(2).toString()
+  //   }
+  //   if (synth.totalWeight && web3.metrics.global) {
+  //     setSynthApy(getSynthApy())
+  //   }
+  // }, [web3.metrics.global, synth.totalWeight])
 
   const sortTable = (column) => {
     let order = sortBy.order === 'desc' ? 'asc' : 'desc'

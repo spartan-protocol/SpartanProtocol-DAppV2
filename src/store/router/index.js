@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { parseTxn } from '../../utils/web3'
 import { getRouterContract } from '../../utils/getContracts'
 import { BN } from '../../utils/bigNumber'
+import { getTokenDetails } from '../pool'
 
 export const useRouter = () => useSelector((state) => state.router)
 
@@ -50,6 +51,7 @@ export const addLiquidity =
       let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
       txn = await parseTxn(txn, 'addLiq', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -78,6 +80,7 @@ export const addLiquiditySingle =
       let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
       txn = await parseTxn(txn, 'addLiqSingle', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -103,6 +106,7 @@ export const zapLiquidity =
       let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
       txn = await parseTxn(txn, 'zapLiq', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -128,6 +132,7 @@ export const removeLiquidityExact =
       let txn = await contract.removeLiquidityExact(units, token, ORs)
       txn = await parseTxn(txn, 'remLiq', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -154,6 +159,7 @@ export const removeLiquiditySingle =
       })
       txn = await parseTxn(txn, 'remLiqSingle', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -191,6 +197,7 @@ export const swap =
       )
       txn = await parseTxn(txn, 'swapped', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -224,6 +231,7 @@ export const swapAssetToSynth =
       )
       txn = await parseTxn(txn, 'mintSynth', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -253,6 +261,7 @@ export const swapSynthToAsset =
       )
       txn = await parseTxn(txn, 'burnSynth', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }

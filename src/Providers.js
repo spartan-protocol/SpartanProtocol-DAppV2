@@ -25,7 +25,6 @@ import reserveReducer from './store/reserve'
 import routerReducer from './store/router'
 import spartaReducer from './store/sparta'
 import synthReducer from './store/synth'
-import utilsReducer from './store/utils'
 import web3Reducer from './store/web3'
 import { getLibrary } from './utils/web3React'
 import { BreakpointProvider } from './providers/Breakpoint'
@@ -68,7 +67,6 @@ const store = configureStore({
     router: routerReducer,
     sparta: spartaReducer,
     synth: synthReducer,
-    utils: utilsReducer,
     web3: web3Reducer,
   },
 })

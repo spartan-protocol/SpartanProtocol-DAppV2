@@ -41,7 +41,7 @@ const Swap = () => {
   }
 
   useEffect(() => {
-    if (pool.poolDetails.length > 1) {
+    if (pool.poolDetails.length > 0) {
       setAssetSwap1(getPool(asset1.addr, pool.poolDetails))
       setAssetSwap2(getPool(asset2.addr, pool.poolDetails))
     }

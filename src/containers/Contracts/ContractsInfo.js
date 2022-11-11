@@ -36,6 +36,10 @@ export const ContractsInfo = [
     name: 'Sparta V2',
   },
   {
+    addrName: 'ssUtils',
+    name: 'SpartanSwap Utils',
+  },
+  {
     addrName: 'synthFactory',
     name: 'Synth Factory',
   },

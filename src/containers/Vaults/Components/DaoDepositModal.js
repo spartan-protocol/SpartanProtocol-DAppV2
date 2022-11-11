@@ -7,12 +7,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
 import { useWeb3React } from '@web3-react/core'
-import {
-  useDao,
-  daoDeposit,
-  daoHarvest,
-  daoMemberDetails,
-} from '../../../store/dao'
+import { useDao, daoDeposit, daoHarvest } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { useApp } from '../../../store/app'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -21,8 +16,8 @@ import { getDao, getToken } from '../../../utils/math/utils'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
 import { getSecsSince } from '../../../utils/math/nonContract'
-import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
+import { useSparta } from '../../../store/sparta'
 
 const DaoDepositModal = (props) => {
   const dispatch = useDispatch()
@@ -33,7 +28,7 @@ const DaoDepositModal = (props) => {
   const { addresses } = useApp()
   const dao = useDao()
   const pool = usePool()
-  const reserve = useReserve()
+  const sparta = useSparta()
 
   const [percentage, setpercentage] = useState('0')
   const [txnLoading, setTxnLoading] = useState(false)
@@ -70,7 +65,6 @@ const DaoDepositModal = (props) => {
     setHarvestLoading(true)
     await dispatch(daoHarvest(wallet))
     setHarvestLoading(false)
-    dispatch(daoMemberDetails(wallet.account))
   }
 
   const handleDeposit = async () => {
@@ -249,11 +243,11 @@ const DaoDepositModal = (props) => {
                       disabled={
                         props.claimable <= 0 ||
                         !enoughGas() ||
-                        reserve.globalDetails.globalFreeze
+                        sparta.globalDetails.globalFreeze
                       }
                     >
                       {enoughGas()
-                        ? reserve.globalDetails.globalFreeze
+                        ? sparta.globalDetails.globalFreeze
                           ? t('globalFreeze')
                           : t('harvest')
                         : t('checkBnbGas')}

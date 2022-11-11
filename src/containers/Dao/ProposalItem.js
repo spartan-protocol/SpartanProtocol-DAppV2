@@ -31,7 +31,6 @@ import {
 import { Icon } from '../../components/Icons/index'
 import { useSynth } from '../../store/synth'
 import { realise } from '../../utils/math/synth'
-import { useReserve } from '../../store/reserve'
 
 const ProposalItem = ({ proposal }) => {
   const dispatch = useDispatch()
@@ -42,7 +41,6 @@ const ProposalItem = ({ proposal }) => {
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
 
@@ -104,9 +102,9 @@ const ProposalItem = ({ proposal }) => {
 
   const isLoading = () => {
     if (
-      pool.poolDetails.length > 1 &&
-      dao.daoDetails.length > 1 &&
-      bond.bondDetails.length > 1 &&
+      pool.poolDetails.length > 0 &&
+      dao.daoDetails.length > 0 &&
+      bond.bondDetails.length > 0 &&
       dao.totalWeight &&
       bond.totalWeight
     ) {
@@ -330,7 +328,7 @@ const ProposalItem = ({ proposal }) => {
             <Row>
               <Col>
                 <div className="mb-2">
-                  {synth.synthDetails.length > 1 && getDetails()}
+                  {synth.synthDetails.length > 0 && getDetails()}
                 </div>
               </Col>
             </Row>
@@ -406,7 +404,7 @@ const ProposalItem = ({ proposal }) => {
                       >
                         {!enoughGas(estMaxGasVote)
                           ? t('checkBnbGas')
-                          : reserve.globalDetails.globalFreeze
+                          : sparta.globalDetails.globalFreeze
                           ? t('globalFreeze')
                           : t('addVote')}
                         {voteLoading && (
@@ -464,7 +462,7 @@ const ProposalItem = ({ proposal }) => {
                       >
                         {!enoughGas(estMaxGasFinal)
                           ? t('checkBnbGas')
-                          : reserve.globalDetails.globalFreeze
+                          : sparta.globalDetails.globalFreeze
                           ? t('globalFreeze')
                           : t('finalise')}
                         {finalLoading && (
