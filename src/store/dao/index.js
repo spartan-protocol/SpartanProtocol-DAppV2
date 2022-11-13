@@ -166,9 +166,10 @@ export const getDaoDetails = (walletAddr) => async (dispatch, getState) => {
     const histCuratedPools = [...new Set([...curatedPools, ...exCuratedPools])]
     if (histCuratedPools.length > 0 && poolDetails.length > 0) {
       const { rpcs } = getState().web3
+      const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
       const awaitArray = await contract.callStatic.getDaoDetails(
-        walletAddr,
+        walletAddr ?? addresses.bnb,
         histCuratedPools,
       )
       const daoDetails = []

@@ -124,7 +124,7 @@ export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
         (x) => !excludedArray.includes(x),
       )
       const awaitArray = await contract.callStatic.getPoolDetails(
-        walletAddr ?? null,
+        walletAddr ?? addresses.bnb,
         _listedTokens,
       )
 
@@ -209,7 +209,7 @@ export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
       const { addresses, chainId } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
       const awaitArray = await contract.callStatic.getTokenDetails(
-        walletAddr ?? null,
+        walletAddr ?? addresses.bnb,
         listedTokens,
       )
 

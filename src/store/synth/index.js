@@ -157,7 +157,7 @@ export const getSynthGlobalDetails = () => async (dispatch, getState) => {
  */
 export const getSynthDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const { chainId } = getState().app
+  const { chainId, addresses } = getState().app
   const synthTokens = getSynthTokens(chainId)
   try {
     if (synthTokens.length > 0) {
@@ -165,7 +165,7 @@ export const getSynthDetails = (walletAddr) => async (dispatch, getState) => {
       const contract = getSSUtilsContract(null, rpcs)
 
       const awaitArray = await contract.callStatic.getSynthDetails(
-        walletAddr ?? null,
+        walletAddr ?? addresses.bnb,
         synthTokens,
       )
       const synthDetails = []
