@@ -88,8 +88,11 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
   try {
     if (poolDetails.length > 0) {
       const { rpcs } = getState().web3
+      const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = await contract.callStatic.getBondDetails(walletAddr)
+      const awaitArray = await contract.callStatic.getBondDetails(
+        walletAddr ?? addresses.bnb,
+      )
       const bondDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
         bondDetails.push({
