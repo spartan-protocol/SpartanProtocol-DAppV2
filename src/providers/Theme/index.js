@@ -20,6 +20,10 @@ const ThemeProvider = ({ children }) => {
     if (!darkThemeMq.matches) {
       setIsDark(true)
       document.body.classList.toggle('dark-theme', true)
+    } else {
+      // Do it anyway -> Theme Color could be used later
+      setIsDark(true)
+      document.body.classList.toggle('dark-theme', true)
     }
   }, [])
 
