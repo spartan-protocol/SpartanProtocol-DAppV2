@@ -12,7 +12,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import PoolTableHeader from './PoolTableHeader'
 import PoolItem from './PoolItem'
 import { usePool } from '../../store/pool'
-import { tempChains } from '../../utils/web3'
+import { getSynthTokens, tempChains } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
 import HelmetLoading from '../../components/Spinner/index'
 import { useBond } from '../../store/bond'
@@ -170,13 +170,14 @@ const Overview = () => {
 
   // Update the synths array local state
   useEffect(() => {
-    if (activeTab === 'synths' && pool.poolDetails.length > 0) {
+    if (pool.poolDetails.length > 0) {
       setarraySynths(
-        pool.poolDetails.filter((asset) => !asset.newPool && asset.curated),
-        // .sort((a, b) => b.baseAmount - a.baseAmount),
+        pool.poolDetails.filter((asset) =>
+          getSynthTokens(app.chainId).includes(asset.tokenAddress),
+        ),
       )
     }
-  }, [activeTab, pool.poolDetails])
+  }, [activeTab, pool.poolDetails, app.chainId])
 
   // Update the dao apy local state
   useEffect(() => {
