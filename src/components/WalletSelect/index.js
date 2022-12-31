@@ -31,7 +31,7 @@ import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
 import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
-import { appChainId, useApp } from '../../store/app'
+import { useApp } from '../../store/app'
 
 export const spartanRanks = [
   {
@@ -115,10 +115,10 @@ const WalletSelect = (props) => {
   // const [wlConnector, setWlConnector] = useState(false)
   const [triedOnce, setTriedOnce] = useState(false)
 
-  const onChangeNetwork = async () => {
-    dispatch(appChainId(chainId === 97 ? 56 : 97))
-    window.location.reload(true)
-  }
+  // const onChangeNetwork = async () => {
+  //   dispatch(appChainId(chainId === 97 ? 56 : 97))
+  //   window.location.reload(true)
+  // } temp disable
 
   const onWalletDisconnect = async () => {
     props.onHide()
@@ -139,7 +139,7 @@ const WalletSelect = (props) => {
       }
       window.localStorage.removeItem('disableWallet')
       window.localStorage.setItem('lastWallet', x.id)
-      // wallet.deactivate() // Temporarily disable (troubleshoot TW mobile issues)
+      wallet.deactivate()
       const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
       await wallet.activate(connector)
       if (!wallet.account) {
@@ -340,7 +340,7 @@ const WalletSelect = (props) => {
                     id="custom-switch"
                     className="ms-2 d-inline-flex"
                     checked={chainId === 56}
-                    onChange={() => onChangeNetwork()}
+                    // onChange={() => onChangeNetwork()}
                   />
                 </span>
               </Form>
