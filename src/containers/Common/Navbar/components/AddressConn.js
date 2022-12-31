@@ -25,11 +25,11 @@ const AddressConn = () => {
       document.location.reload(true)
     }
     const listenAccountsChanged = async () => {
-      window.ethereum?.on('accountsChanged', handleReload)
+      // window.ethereum?.on('accountsChanged', handleReload)
       window.BinanceChain?.on('accountsChanged', handleReload)
     }
     const listenNetworkChanged = async () => {
-      window.ethereum?.on('chainChanged', handleReload)
+      // window.ethereum?.on('chainChanged', handleReload)
       window.BinanceChain?.on('chainChanged', handleReload)
     }
     listenAccountsChanged()
