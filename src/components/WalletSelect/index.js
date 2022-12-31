@@ -29,7 +29,7 @@ import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
-import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
+import { addNetworkBC, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
 import { appChainId, useApp } from '../../store/app'
 
