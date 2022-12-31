@@ -135,7 +135,7 @@ const WalletSelect = (props) => {
       if (x.id === 'BC') {
         await dispatch(addNetworkBC())
       } else if (['MM', 'BRAVE', 'TW'].includes(x.id)) {
-        await dispatch(addNetworkMM())
+        // await dispatch(addNetworkMM()) // Temporarily disbale nework change prompt
       }
       window.localStorage.removeItem('disableWallet')
       window.localStorage.setItem('lastWallet', x.id)
