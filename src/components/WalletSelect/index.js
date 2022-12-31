@@ -29,7 +29,7 @@ import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
-import { addNetworkBC, useWeb3 } from '../../store/web3'
+import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
 import { appChainId, useApp } from '../../store/app'
 
@@ -135,11 +135,11 @@ const WalletSelect = (props) => {
       if (x.id === 'BC') {
         await dispatch(addNetworkBC())
       } else if (['MM', 'BRAVE', 'TW'].includes(x.id)) {
-        // await dispatch(addNetworkMM()) // Temporarily disbale nework change prompt
+        await dispatch(addNetworkMM())
       }
       window.localStorage.removeItem('disableWallet')
       window.localStorage.setItem('lastWallet', x.id)
-      wallet.deactivate()
+      // wallet.deactivate() // Temporarily disable (troubleshoot TW mobile issues)
       const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
       await wallet.activate(connector)
       if (!wallet.account) {
