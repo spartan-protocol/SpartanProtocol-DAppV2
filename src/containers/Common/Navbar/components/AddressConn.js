@@ -20,21 +20,21 @@ const AddressConn = () => {
 
   const target = useRef(null)
 
-  useEffect(() => {
-    const handleReload = async () => {
-      document.location.reload(true)
-    }
-    const listenAccountsChanged = async () => {
-      // window.ethereum?.on('accountsChanged', handleReload)
-      window.BinanceChain?.on('accountsChanged', handleReload)
-    }
-    const listenNetworkChanged = async () => {
-      // window.ethereum?.on('chainChanged', handleReload)
-      window.BinanceChain?.on('chainChanged', handleReload)
-    }
-    listenAccountsChanged()
-    listenNetworkChanged()
-  }, [])
+  // useEffect(() => {
+  //   const handleReload = async () => {
+  //     document.location.reload(true)
+  //   }
+  //   const listenAccountsChanged = async () => {
+  //     window.ethereum?.on('accountsChanged', handleReload)
+  //     window.BinanceChain?.on('accountsChanged', handleReload)
+  //   }
+  //   const listenNetworkChanged = async () => {
+  //     window.ethereum?.on('chainChanged', handleReload)
+  //     window.BinanceChain?.on('chainChanged', handleReload)
+  //   }
+  //   listenAccountsChanged()
+  //   listenNetworkChanged()
+  // }, [])
 
   useEffect(() => {
     setShowPopConnect(true)
