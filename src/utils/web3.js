@@ -12,6 +12,7 @@ import abiTnPoolFactory from '../ABI/TN/PoolFactory.json'
 import abiTnReserve from '../ABI/TN/Reserve.json'
 import abiTnRouter from '../ABI/TN/Router.json'
 import abiTnSparta from '../ABI/TN/Sparta.json'
+import abiTnSSUtils from '../ABI/TN/SpartanSwapUtils.json'
 import abiTnSynth from '../ABI/TN/Synth.json'
 import abiTnSynthFactory from '../ABI/TN/SynthFactory.json'
 import abiTnSynthVault from '../ABI/TN/SynthVault.json'
@@ -29,6 +30,7 @@ import abiMnPoolFactory from '../ABI/MN/PoolFactory.json'
 import abiMnReserve from '../ABI/MN/Reserve.json'
 import abiMnRouter from '../ABI/MN/Router.json'
 import abiMnSparta from '../ABI/MN/Sparta.json'
+import abiMnSSUtils from '../ABI/MN/SpartanSwapUtils.json'
 import abiMnSynth from '../ABI/MN/Synth.json'
 import abiMnSynthFactory from '../ABI/MN/SynthFactory.json'
 import abiMnSynthVault from '../ABI/MN/SynthVault.json'
@@ -47,6 +49,7 @@ export const abisTN = {
   reserve: abiTnReserve.abi,
   router: abiTnRouter.abi,
   sparta: abiTnSparta.abi,
+  ssUtils: abiTnSSUtils.abi,
   synth: abiTnSynth.abi,
   synthFactory: abiTnSynthFactory.abi,
   synthVault: abiTnSynthVault.abi,
@@ -65,6 +68,7 @@ export const abisMN = {
   reserve: abiMnReserve.abi,
   router: abiMnRouter.abi,
   sparta: abiMnSparta.abi,
+  ssUtils: abiMnSSUtils.abi,
   synth: abiMnSynth.abi,
   synthFactory: abiMnSynthFactory.abi,
   synthVault: abiMnSynthVault.abi,
@@ -123,6 +127,7 @@ export const addressesTN = {
   synthFactory: '0x53f98fb6BC812A06A830e7faa7Cd7c7D417933C1', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   synthVault: '0xf3Bbc814e74a32BD283Ba9c8009170d37182438B', // a8307cd3719fdde58ec43ee20f2aa0f606c1a607
   utils: '0x7Ed2B0611308C75C10d5FC34cDA75749e6a6Df7D', // 5c079a33ed87ff5f7286d2a034a78db62660c9ab
+  ssUtils: '0xF218DA99521cE9C8EbE3F42c2375F4a640f42325',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0x27c6487C9B115c184Bb04A1Cf549b670a22D2870',
@@ -171,6 +176,7 @@ export const addressesMN = {
   synthFactory: '0x6514C010b8096BC565766949A93f1C370cdf9f38', // 62a39b71f43fc8f59ab5a58dba6f590f5a82e8b6
   synthVault: '0xa6C3288C18505D134445cB4Fe8499da22002F1E0', // 62a39b71f43fc8f59ab5a58dba6f590f5a82e8b6
   utils: '0xFC7eAd29ee55EabEC54dBc38bd03852e1fF46D50', // b5afabc003ffe041de6fe552106c8fc526031a5b
+  ssUtils: '0x3B599Dd050a10D224195A921a172fFDB50D9B559',
   // TOKEN ADDRESSES
   bnb: '0x0000000000000000000000000000000000000000',
   wbnb: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
@@ -219,11 +225,46 @@ export const stablecoinPools = [
   '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7', // USDCp Mainnet
 ]
 
+export const synthTokensMN = [
+  '0x0000000000000000000000000000000000000000', // BNB Mainnet
+  '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', // BUSD Mainnet
+  '0x55d398326f99059fF775485246999027B3197955', // USDT Mainnet
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', // USDC Mainnet
+  '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', // BTCB Mainnet
+]
+
+export const synthTokensTN = [
+  '0x0000000000000000000000000000000000000000', // BNB Testnet
+  '0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee', // BUSD Testnet
+  '0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867', // DAI Testnet
+]
+
+export const getSynthTokens = (chainId) => {
+  if (chainId === 56) {
+    return synthTokensMN
+  }
+  if (chainId === 97) {
+    return synthTokensTN
+  }
+  return [] // fallback to no synths
+}
+
+export const exCuratedPools = [
+  // This is for pools that were previous Curated but are not Curated anymore.
+  // Handy for things like the DaoVault where a no-longer-curated asset may still be
+  // staked and will still need to show up in the DaoVault (so users can withdraw etc)
+  '0x972C7278ECFdCF97556F9C53075576a8bC6547ab',
+  '0x511d2fB8458eb46eCcAEeaeAE722cCe769aAe779',
+  '0xa0Ab4b300E2cCD801178B28e5De0a8F24614B54c',
+  '0xa7a6816323d2521e263B6fBE58cDdEAd41Ea12a7',
+  '0xCc80f0f3746B4561dd7e6e7Da4b8Cda2FfEbC15a',
+]
+
 export const deadAddress = '0x000000000000000000000000000000000000dEaD'
 export const liveChains = [97, 56] // Protocol supported chains - use this wherever having an incomplete mainnet is okay
 export const tempChains = [97, 56] // Currently enabled chains - use this when we need to avoid calling an incomplete mainnet
 export const oneWeek = 604800 // change to 604800 for mainnet
-export const synthHarvestLive = true // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
+export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
   const _tokenAddr = ethers.utils.getAddress(tokenAddr)

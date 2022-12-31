@@ -8,16 +8,16 @@ import Overlay from 'react-bootstrap/Overlay'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { useDispatch } from 'react-redux'
-import { useReserve } from '../../../../store/reserve'
 import { getExplorerContract } from '../../../../utils/extCalls'
 import { Icon } from '../../../../components/Icons/index'
 import { appChainId, useApp } from '../../../../store/app'
+import { useSparta } from '../../../../store/sparta'
 
 const btnClass = 'hide-i5 header-btn ms-1 me-3'
 
 const Contracts = () => {
   const { t } = useTranslation()
-  const reserve = useReserve()
+  const sparta = useSparta()
   const dispatch = useDispatch()
 
   const { chainId, addresses } = useApp()
@@ -58,7 +58,7 @@ const Contracts = () => {
         <Icon
           size="27"
           icon={
-            reserve.globalDetails.globalFreeze ? 'contractRed' : 'contractGreen'
+            sparta.globalDetails.globalFreeze ? 'contractRed' : 'contractGreen'
           }
         />
       </div>
@@ -90,9 +90,9 @@ const Contracts = () => {
               <Badge
                 pill
                 className="ms-1 pt-1"
-                bg={reserve.globalDetails.globalFreeze ? 'primary' : 'success'}
+                bg={sparta.globalDetails.globalFreeze ? 'primary' : 'success'}
               >
-                {reserve.globalDetails.globalFreeze ? t('on') : t('off')}
+                {sparta.globalDetails.globalFreeze ? t('on') : t('off')}
               </Badge>
             </span>
           </Popover.Header>

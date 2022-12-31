@@ -1,9 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { parseTxn } from '../../utils/web3'
-import { getDaoContract, getDaoVaultContract } from '../../utils/getContracts'
+import { exCuratedPools, parseTxn } from '../../utils/web3'
+import {
+  getDaoContract,
+  getDaoVaultContract,
+  getSSUtilsContract,
+} from '../../utils/getContracts'
 import { BN } from '../../utils/bigNumber'
-import { getPoolShareWeight } from '../../utils/math/utils'
+import { getPool, getPoolShareWeight } from '../../utils/math/utils'
 
 export const useDao = () => useSelector((state) => state.dao)
 
@@ -80,26 +84,17 @@ export const {
 export const daoGlobalDetails = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getDaoContract(null, rpcs)
+  const contract = getSSUtilsContract(null, rpcs)
   try {
-    let awaitArray = [
-      contract.callStatic.running(),
-      contract.callStatic.coolOffPeriod(),
-      contract.callStatic.erasToEarn(),
-      contract.callStatic.daoClaim(),
-      contract.callStatic.daoFee(),
-      contract.callStatic.currentProposal(),
-      contract.callStatic.cancelPeriod(),
-    ]
-    awaitArray = await Promise.all(awaitArray)
+    const awaitArray = (await contract.callStatic.getDaoGlobalDetails())[0]
     const global = {
-      running: awaitArray[0], // Dao proposals currently running?
-      coolOffPeriod: awaitArray[1].toString(), // Dao coolOffPeriod
-      erasToEarn: awaitArray[2].toString(), // Dao erasToEarn
-      daoClaim: awaitArray[3].toString(), // Dao daoClaim
-      daoFee: awaitArray[4].toString(), // Dao proposal fee
-      currentProposal: awaitArray[5].toString(), // Dao proposalCount / current PID
-      cancelPeriod: awaitArray[6].toString(), // Dao proposal seconds until can be cancelled
+      running: awaitArray.running, // Dao proposals currently running?
+      coolOffPeriod: awaitArray.coolOffPeriod.toString(), // Dao coolOffPeriod
+      erasToEarn: awaitArray.erasToEarn.toString(), // Dao erasToEarn
+      daoClaim: awaitArray.daoClaim.toString(), // Dao daoClaim
+      daoFee: awaitArray.daoFee.toString(), // Dao proposal fee
+      currentProposal: awaitArray.currentProposal.toString(), // Dao proposalCount / current PID
+      cancelPeriod: awaitArray.cancelPeriod.toString(), // Dao proposal seconds until can be cancelled
     }
     dispatch(updateGlobal(global))
   } catch (error) {
@@ -112,30 +107,22 @@ export const daoGlobalDetails = () => async (dispatch, getState) => {
  */
 export const daoVaultWeight = () => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const { poolDetails } = getState().pool
+  const { curatedPools, poolDetails } = getState().pool
+  const { daoDetails } = getState().dao
   try {
-    if (poolDetails.length > 0) {
-      const { rpcs } = getState().web3
-      const contract = getDaoVaultContract(null, rpcs)
+    if (daoDetails.length > 0 && curatedPools.length > 0) {
       let totalWeight = BN(0)
-      const vaultPools = poolDetails.filter((x) => x.curated && !x.hide)
-      if (vaultPools.length > 0) {
-        const awaitArray = []
-        for (let i = 0; i < vaultPools.length; i++) {
-          awaitArray.push(
-            contract.callStatic.mapTotalPool_balance(vaultPools[i].address),
-          )
-        }
-        const totalStaked = await Promise.all(awaitArray)
-        for (let i = 0; i < totalStaked.length; i++) {
-          totalWeight = totalWeight.plus(
-            getPoolShareWeight(
-              totalStaked[i].toString(),
-              vaultPools[i].poolUnits,
-              vaultPools[i].baseAmount,
-            ),
-          )
-        }
+      const vaultPools = daoDetails.filter((x) =>
+        curatedPools.includes(x.address),
+      )
+      for (let i = 0; i < vaultPools.length; i++) {
+        totalWeight = totalWeight.plus(
+          getPoolShareWeight(
+            vaultPools[i].globalStaked,
+            getPool(vaultPools[i].address, poolDetails).poolUnits,
+            getPool(vaultPools[i].address, poolDetails).baseAmount,
+          ),
+        )
       }
       dispatch(updateTotalWeight(totalWeight.toString()))
     }
@@ -154,10 +141,11 @@ export const daoMemberDetails = (walletAddr) => async (dispatch, getState) => {
   try {
     if (walletAddr && rpcs.length > 0) {
       const contract = getDaoContract(null, rpcs)
-      let awaitArray = [contract.callStatic.mapMember_lastTime(walletAddr)]
-      awaitArray = await Promise.all(awaitArray)
+      const awaitArray = await contract.callStatic.mapMember_lastTime(
+        walletAddr,
+      )
       const member = {
-        lastHarvest: awaitArray[0].toString(),
+        lastHarvest: awaitArray.toString(),
       }
       dispatch(updateMember(member))
     }
@@ -173,34 +161,33 @@ export const daoMemberDetails = (walletAddr) => async (dispatch, getState) => {
  */
 export const getDaoDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
-  const { listedPools } = getState().pool
+  const { curatedPools, poolDetails } = getState().pool
   try {
-    if (listedPools.length > 0) {
+    const histCuratedPools = [...new Set([...curatedPools, ...exCuratedPools])]
+    if (histCuratedPools.length > 0 && poolDetails.length > 0) {
       const { rpcs } = getState().web3
-      const contract = getDaoVaultContract(null, rpcs)
-      let awaitArray = []
-      for (let i = 0; i < listedPools.length; i++) {
-        if (!walletAddr || listedPools[i].baseAmount <= 0) {
-          awaitArray.push('0')
-        } else {
-          awaitArray.push(
-            contract.callStatic.getMemberPoolBalance(
-              listedPools[i].address,
-              walletAddr,
-            ),
-          )
-        }
-      }
-      awaitArray = await Promise.all(awaitArray)
+      const { addresses } = getState().app
+      const contract = getSSUtilsContract(null, rpcs)
+      const awaitArray = await contract.callStatic.getDaoDetails(
+        walletAddr ?? addresses.bnb,
+        histCuratedPools,
+      )
       const daoDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
-        daoDetails.push({
-          tokenAddress: listedPools[i].tokenAddress,
-          address: listedPools[i].address,
-          staked: awaitArray[i].toString(),
-        })
+        const pool = getPool(awaitArray[i].poolAddress, poolDetails)
+        if (pool) {
+          // need to make sure pool exists to avoid needing custom
+          // exCurated const for testnet (mainnet array wont break testnet)
+          daoDetails.push({
+            tokenAddress: pool.tokenAddress,
+            address: awaitArray[i].poolAddress,
+            staked: awaitArray[i].staked.toString(),
+            globalStaked: awaitArray[i].globalStaked.toString(),
+          })
+        }
       }
       dispatch(updateDaoDetails(daoDetails))
+      dispatch(daoVaultWeight()) // Weight changing function, so we need to update weight calculations
     }
   } catch (error) {
     dispatch(updateError(error.reason))
@@ -348,6 +335,7 @@ export const daoDeposit =
       let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'daoDeposit', rpcs)
       dispatch(updateTxn(txn))
+      dispatch(getDaoDetails(wallet.account)) // Update daoDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -370,6 +358,7 @@ export const daoWithdraw = (pool, wallet) => async (dispatch, getState) => {
     let txn = await contract.withdraw(pool, { gasPrice: gPrice })
     txn = await parseTxn(txn, 'daoWithdraw', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getDaoDetails(wallet.account)) // Update daoDetails
   } catch (error) {
     dispatch(updateError(error.reason))
   }
@@ -391,6 +380,8 @@ export const daoHarvest = (wallet) => async (dispatch, getState) => {
     let txn = await contract.harvest({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'daoHarvest', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getDaoDetails(wallet.account)) // Update daoDetails
+    dispatch(daoMemberDetails(wallet.account)) // Update daoMemberDetails (daoVault lastHarvest)
   } catch (error) {
     dispatch(updateError(error.reason))
   }

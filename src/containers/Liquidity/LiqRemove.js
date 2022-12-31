@@ -125,7 +125,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
 
   // Push complex objects into local state
   useEffect(() => {
-    if (pool.tokenDetails.length > 1) {
+    if (pool.tokenDetails.length > 0) {
       settoken1(getToken(asset1.addr, pool.tokenDetails))
       settoken2(getToken(asset2.addr, pool.tokenDetails))
       settokenPool(getToken(selectedPool.tokenAddress, pool.tokenDetails))

@@ -12,57 +12,55 @@ import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { getToken } from '../../../utils/math/utils'
 import { Icon } from '../../../components/Icons/index'
 import spartaIcon from '../../../assets/tokens/sparta-lp.svg'
-import { getSecsSince, getTimeUntil } from '../../../utils/math/nonContract'
 import { synthHarvestLive } from '../../../utils/web3'
 import {
-  useSynth,
-  getSynthDetails,
+  // useSynth,
   synthHarvest,
   synthWithdraw,
 } from '../../../store/synth'
-import { useReserve } from '../../../store/reserve'
 import { useTheme } from '../../../providers/Theme'
 import { useApp } from '../../../store/app'
+import { useSparta } from '../../../store/sparta'
 
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const wallet = useWeb3React()
-  const reserve = useReserve()
   const { isDark } = useTheme()
 
   const { addresses } = useApp()
   const pool = usePool()
-  const synth = useSynth()
+  const sparta = useSparta()
+  // const synth = useSynth()
 
   const [percentage, setpercentage] = useState(0)
   const [txnLoading, setTxnLoading] = useState(false)
   const [harvestLoading, setHarvestLoading] = useState(false)
   const [showModal, setshowModal] = useState(false)
   const [harvestConfirm, setHarvestConfirm] = useState(false)
-  const [withdrawConfirm, setWithdrawConfirm] = useState(false)
+  // const [withdrawConfirm, setWithdrawConfirm] = useState(false)
 
-  const secsSinceHarvest = () => {
-    if (props.synthItem.lastHarvest) {
-      return getSecsSince(props.synthItem.lastHarvest)
-    }
-    return '0'
-  }
+  // const secsSinceHarvest = () => {
+  //   if (props.synthItem.lastHarvest) {
+  //     return getSecsSince(props.synthItem.lastHarvest)
+  //   }
+  //   return '0'
+  // }
 
-  const getLastDeposit = () => {
-    let lastDeposit = '99999999999999999999999999999'
-    if (synth.member.depositTime) {
-      lastDeposit = synth.member.depositTime
-    }
-    return lastDeposit
-  }
+  // const getLastDeposit = () => {
+  //   let lastDeposit = '99999999999999999999999999999'
+  //   if (synth.member.depositTime) {
+  //     lastDeposit = synth.member.depositTime
+  //   }
+  //   return lastDeposit
+  // }
 
-  const getLockedSecs = () => {
-    const depositTime = BN(getLastDeposit())
-    const lockUpSecs = BN(synth.globalDetails.minTime)
-    const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
-    return [units, time]
-  }
+  // const getLockedSecs = () => {
+  //   const depositTime = BN(getLastDeposit())
+  //   const lockUpSecs = BN(synth.globalDetails.minTime)
+  //   const [units, time] = getTimeUntil(depositTime.plus(lockUpSecs), t)
+  //   return [units, time]
+  // }
 
   // *CHECK*  === *CHECK*
   const estMaxGas = '5000000000000000'
@@ -81,17 +79,17 @@ const SynthWithdrawModal = (props) => {
     if (!enoughGas()) {
       return [false, t('checkBnbGas'), false]
     }
-    if (getLockedSecs()[0] > 0) {
-      return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
-    }
+    // if (getLockedSecs()[0] > 0) {
+    //   return [false, `${getLockedSecs()[0]}${getLockedSecs()[1]}`, 'lock']
+    // }
     if (percentage <= 0) {
       return [false, t('checkInput'), false]
     }
-    if (secsSinceHarvest() > 300) {
-      if (!withdrawConfirm) {
-        return [false, t('confirmSelection'), false]
-      }
-    }
+    // if (secsSinceHarvest() > 300) {
+    //   if (!withdrawConfirm) {
+    //     return [false, t('confirmSelection'), false]
+    //   }
+    // }
     return [true, t('withdraw'), false]
   }
 
@@ -99,16 +97,16 @@ const SynthWithdrawModal = (props) => {
     (i) => i.address === props.synthItem.tokenAddress,
   )[0]
 
-  const handleToggles = (selected) => {
-    if (selected === 'harvest') {
-      setHarvestConfirm(true)
-      setWithdrawConfirm(false)
-    }
-    if (selected === 'withdraw') {
-      setHarvestConfirm(false)
-      setWithdrawConfirm(true)
-    }
-  }
+  // const handleToggles = (selected) => {
+  //   if (selected === 'harvest') {
+  //     setHarvestConfirm(true)
+  //     setWithdrawConfirm(false)
+  //   }
+  //   if (selected === 'withdraw') {
+  //     setHarvestConfirm(false)
+  //     setWithdrawConfirm(true)
+  //   }
+  // }
 
   const handleCloseModal = () => {
     setshowModal(false)
@@ -123,7 +121,6 @@ const SynthWithdrawModal = (props) => {
     setHarvestLoading(true)
     await dispatch(synthHarvest([props.synthItem.address], wallet))
     setHarvestLoading(false)
-    dispatch(getSynthDetails(wallet))
   }
 
   const handleWithdraw = async () => {
@@ -192,7 +189,7 @@ const SynthWithdrawModal = (props) => {
                   wallet
                 </Col>
               </Row>
-              {secsSinceHarvest() > 300 && (
+              {/* {secsSinceHarvest() > 300 && (
                 <>
                   <hr />
                   <Row xs="12" className="my-2">
@@ -258,13 +255,13 @@ const SynthWithdrawModal = (props) => {
                     </span>
                   </Form>
                 </>
-              )}
+              )} */}
             </Modal.Body>
             <Modal.Footer>
               <Row className="text-center w-100">
                 <Col xs="12" className="hide-if-prior-sibling">
                   <Row>
-                    {props.claimable[0] && secsSinceHarvest() > 300 && (
+                    {props.claimable[0] && ( // {props.claimable[0] && secsSinceHarvest() > 300 && (
                       <Col>
                         {synthHarvestLive && (
                           <Button
@@ -274,11 +271,11 @@ const SynthWithdrawModal = (props) => {
                               !props.claimable[0] ||
                               !enoughGas() ||
                               !harvestConfirm ||
-                              reserve.globalDetails.globalFreeze
+                              sparta.globalDetails.globalFreeze
                             }
                           >
                             {enoughGas()
-                              ? reserve.globalDetails.globalFreeze
+                              ? sparta.globalDetails.globalFreeze
                                 ? t('globalFreeze')
                                 : t('harvest')
                               : t('checkBnbGas')}

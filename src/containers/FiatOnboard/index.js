@@ -7,13 +7,15 @@ import Row from 'react-bootstrap/Row'
 import { Icon } from '../../components/Icons'
 import FiatStep from '../../components/Onboarding/fiatStep'
 import ShareLink from '../../components/Share/ShareLink'
-import { anchorLink } from '../../utils/helpers.ts'
+import { useBreakpoint } from '../../providers/Breakpoint'
+// import { anchorLink } from '../../utils/helpers.ts'
 import { formatShortString } from '../../utils/web3'
 
 import styles from './styles.module.scss'
 
 const FiatOnboard = () => {
   const wallet = useWeb3React()
+  const breakpoint = useBreakpoint()
 
   const [isBlocked, setisBlocked] = useState(false)
 
@@ -34,49 +36,51 @@ const FiatOnboard = () => {
   return (
     <>
       <Row className={styles.parent} id="fiatParent">
-        <Col className={styles.first} md="6" sm="12">
-          <div className={styles.firstChild} id="first">
-            <h1>Fiat Onboarding</h1>
-            <hr />
-            <Icon icon="currenciesClr" className="mb-2 me-3" size="35" />
-            <h5 className="d-inline-block">Buy crypto with fiat</h5>
-            <br />
-            <Icon icon="paymentMethodsClr" className="mb-2 me-3" size="35" />
-            <h5 className="d-inline-block">Many payment methods</h5>
-            <br />
-            <Icon icon="worldMapClr" className="mb-2 me-3" size="35" />
-            <h5 className="d-inline-block">Supporting 30+ countries</h5>
-            <br />
-            <Icon icon="bnb" className="mb-2 me-3" size="35" />
-            <h5 className="d-inline-block">Purchase 50+ crypto tokens</h5>
-            <br />
-            <div>
-              <strong>Provided by:</strong>
-              <Icon icon="binanceConnect" width="120px" className="ms-2" />
-            </div>
-            <hr />
-            {wallet.account && (
+        {breakpoint.md && (
+          <Col className={styles.first} md="6" sm="12">
+            <div className={styles.firstChild} id="first">
+              <h1>Fiat Onboarding</h1>
+              <hr />
+              <Icon icon="currenciesClr" className="mb-2 me-3" size="35" />
+              <h5 className="d-inline-block">Buy crypto with fiat</h5>
+              <br />
+              <Icon icon="paymentMethodsClr" className="mb-2 me-3" size="35" />
+              <h5 className="d-inline-block">Many payment methods</h5>
+              <br />
+              <Icon icon="worldMapClr" className="mb-2 me-3" size="35" />
+              <h5 className="d-inline-block">Supporting 30+ countries</h5>
+              <br />
+              <Icon icon="bnb" className="mb-2 me-3" size="35" />
+              <h5 className="d-inline-block">Purchase 50+ crypto tokens</h5>
+              <br />
               <div>
-                Your connected wallet: {formatShortString(wallet.account)}{' '}
-                <ShareLink url={wallet.account}>
-                  <Icon icon="copy" size="18" className="ms-2" />
-                </ShareLink>
+                <strong>Provided by:</strong>
+                <Icon icon="binanceConnect" width="120px" className="ms-2" />
               </div>
-            )}
-            <div className="text-center mt-3 d-md-none">
-              <div
-                onClick={() => anchorLink('second', 'fiatParent')}
-                role="button"
-                aria-hidden
-              >
-                <Icon icon="arrowDown" size="25px" />
-              </div>
+              <hr />
+              {wallet.account && (
+                <div>
+                  Your connected wallet: {formatShortString(wallet.account)}{' '}
+                  <ShareLink url={wallet.account}>
+                    <Icon icon="copy" size="18" className="ms-2" />
+                  </ShareLink>
+                </div>
+              )}
+              {/* <div className="text-center mt-3 d-md-none">
+                <div
+                  onClick={() => anchorLink('second', 'fiatParent')}
+                  role="button"
+                  aria-hidden
+                >
+                  <Icon icon="arrowDown" size="25px" />
+                </div>
+              </div> */}
             </div>
-          </div>
-        </Col>
+          </Col>
+        )}
         <Col className={styles.second} id="second" md="6" sm="12">
           <div className={styles.secondChild}>
-            <div className="text-center mb-3 d-md-none">
+            {/* <div className="text-center mb-3 d-md-none">
               <div
                 onClick={() => anchorLink('first', 'fiatParent')}
                 role="button"
@@ -84,7 +88,7 @@ const FiatOnboard = () => {
               >
                 <Icon icon="arrowUp" size="25px" />
               </div>
-            </div>
+            </div> */}
             {isBlocked ? (
               <div className={styles.blocked}>
                 <h1>Blocker Detected</h1>

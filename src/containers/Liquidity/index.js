@@ -38,7 +38,7 @@ const Overview = () => {
   const [loadedInitial, setloadedInitial] = useState(false)
 
   useEffect(() => {
-    if (pool.poolDetails.length > 1) {
+    if (pool.poolDetails.length > 0) {
       setAssetLiq1(getPool(asset1.addr, pool.poolDetails))
       setAssetLiq2(getPool(asset2.addr, pool.poolDetails))
       setAssetLiq3(getPool(asset3.addr, pool.poolDetails))

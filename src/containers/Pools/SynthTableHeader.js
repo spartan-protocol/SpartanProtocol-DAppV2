@@ -8,21 +8,21 @@ import styles from './styles.module.scss'
 const SynthTableHeader = () => {
   const { t } = useTranslation()
 
-  const synthCapTooltip = Tooltip(t, 'synthCap')
+  // const synthCapTooltip = Tooltip(t, 'synthCap')
 
   return (
     <thead>
       <tr className={`${styles.poolTableItem} bg-2`}>
         <th>{t('synth')}</th>
         <th />
-        <th className="d-none d-sm-table-cell">
+        {/* <th className="d-none d-sm-table-cell">
           {t('softCap')}
           <OverlayTrigger placement="auto" overlay={synthCapTooltip}>
             <span role="button">
               <Icon icon="info" className="ms-1 mb-1" size="17" />
             </span>
           </OverlayTrigger>
-        </th>
+        </th> */}
         <th className="d-none d-sm-table-cell">{t('depth')}</th>
         <th>
           APY

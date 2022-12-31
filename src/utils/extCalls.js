@@ -213,10 +213,10 @@ export const getMemberSynthPositions = async (memberAddr) => {
   }
 }
 
-export const getPoolIncentives = async (listedPools) => {
+export const getPoolIncentives = async (poolDetails) => {
   const _poolArray = []
-  for (let i = 0; i < listedPools.length; i++) {
-    _poolArray.push(listedPools[i].address.toString().toLowerCase())
+  for (let i = 0; i < poolDetails.length; i++) {
+    _poolArray.push(poolDetails[i].address.toString().toLowerCase())
   }
   const count = _poolArray.length * 30 <= 1000 ? _poolArray.length * 30 : 1000
   const tokensQuery = `

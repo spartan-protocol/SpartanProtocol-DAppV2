@@ -143,6 +143,7 @@ export const zapLiq = (input, pool1, pool2, feeOnTsf) => {
     poolUnits: _poolUnits,
     baseAmount: _baseAmount,
     tokenAmount: _tokenAmount,
+    baseCap: pool2.baseCap,
   }
   const [unitsLP, slipR, capR] = addLiq(_token2, _pool2, feeOnTsf, _spartaHalf) // Calc LP units
   const swapFee = fee1.plus(fee2)

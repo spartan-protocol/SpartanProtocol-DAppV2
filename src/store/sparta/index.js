@@ -4,9 +4,11 @@ import { useSelector } from 'react-redux'
 import {
   getFallenSpartansContract,
   getSpartaV2Contract,
+  getSSUtilsContract,
 } from '../../utils/getContracts'
-import { addressesMN, bscRpcsMN, deadAddress, parseTxn } from '../../utils/web3'
+import { addressesMN, bscRpcsMN, parseTxn } from '../../utils/web3'
 import { BN } from '../../utils/bigNumber'
+import { getTokenDetails } from '../pool'
 
 export const useSparta = () => useSelector((state) => state.sparta)
 
@@ -55,32 +57,17 @@ export const getSpartaGlobalDetails = () => async (dispatch, getState) => {
   const { rpcs } = getState().web3
   try {
     if (rpcs.length > 0) {
-      // const contract1 = getSpartaV1Contract(null, rpcUrls)
-      const contract2 = getSpartaV2Contract(null, rpcs)
-      let awaitArray = [
-        contract2.callStatic.emitting(),
-        // contract.callStatic.minting(),
-        '0', // contract2.callStatic.feeOnTransfer()
-        // contract.callStatic.emissionCurve(),
-        contract2.callStatic.totalSupply(),
-        contract2.callStatic.secondsPerEra(),
-        // contract.callStatic.nextEraTime(),
-        // contract1.callStatic.secondsPerEra(),
-        // contract1.callStatic.totalSupply(),
-        contract2.callStatic.balanceOf(deadAddress),
-      ]
-      awaitArray = await Promise.all(awaitArray)
+      const contract = getSSUtilsContract(null, rpcs)
+      const awaitArray = (await contract.callStatic.getGlobalDetails())[0]
       const globalDetails = {
-        emitting: awaitArray[0],
-        // minting: awaitArray[],
-        feeOnTransfer: awaitArray[1].toString(),
-        // emissionCurve: awaitArray[],
-        totalSupply: awaitArray[2].toString(),
-        secondsPerEra: awaitArray[3].toString(),
-        // nextEraTime: awaitArray[],
-        // oldSecondsPerEra: awaitArray[].toString(),
-        // oldTotalSupply: awaitArray[].toString(),
-        deadSupply: awaitArray[4].toString(),
+        emitting: awaitArray.emitting,
+        totalSupply: awaitArray.totalSupply.toString(),
+        secondsPerEra: awaitArray.secondsPerEra.toString(),
+        deadSupply: awaitArray.deadSupply.toString(),
+        feeOnTransfer: '0', // Const this for now, can probably remove later but will involve combing the codebase for deps of feeOnTransfer
+        emissions: awaitArray.emissions, // Newly added, will need to change deps of its previous location: reserve.globalDetails.emissions
+        spartaBalance: awaitArray.spartaBalance.toString(), // Newly added, will need to change deps of its previous location: reserve.globalDetails.spartaBalance
+        globalFreeze: awaitArray.globalFreeze, // Newly added, will need to change deps of its previous location: reserve.globalDetails.globalFreeze
       }
       dispatch(updateGlobalDetails(globalDetails))
     }
@@ -124,6 +111,7 @@ export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
     let txn = await contract.upgrade({ gasPrice: gPrice })
     txn = await parseTxn(txn, 'upgrade', rpcs)
     dispatch(updateTxn(txn))
+    dispatch(getTokenDetails(wallet.account)) // Update tokenDetails
   } catch (error) {
     dispatch(updateError(error.reason))
   }

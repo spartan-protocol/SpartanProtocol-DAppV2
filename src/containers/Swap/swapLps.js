@@ -77,7 +77,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
 
   // Check and set selected assets based on URL params ONLY ONCE
   useEffect(() => {
-    if (!loadedInitial && pool.poolDetails.length > 1) {
+    if (!loadedInitial && pool.poolDetails.length > 0) {
       const assetParam1 = new URLSearchParams(location.search).get(`asset1`)
       const assetParam2 = new URLSearchParams(location.search).get(`asset2`)
       let _asset1Addr =
@@ -158,7 +158,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   ])
 
   useEffect(() => {
-    if (pool.tokenDetails.length > 1) {
+    if (pool.tokenDetails.length > 0) {
       settoken1(getToken(asset1.addr, pool.tokenDetails))
       settoken2(getToken(asset2.addr, pool.tokenDetails))
       setbnbBalance(getToken(addresses.bnb, pool.tokenDetails).balance)

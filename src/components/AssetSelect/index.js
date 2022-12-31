@@ -201,8 +201,7 @@ const AssetSelect = (props) => {
           // Add synth to array
           if (props.filter?.includes('synth')) {
             if (
-              getSynth(tempArray[i].tokenAddress, synth.synthDetails)
-                ?.address !== false
+              getSynth(tempArray[i].tokenAddress, synth.synthDetails)?.address
             ) {
               finalArray.push({
                 type: 'synth',

@@ -34,7 +34,6 @@ import { Icon } from '../../components/Icons/index'
 import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { getToken } from '../../utils/math/utils'
-import { useReserve } from '../../store/reserve'
 import { useApp } from '../../store/app'
 
 const tempHide = [
@@ -57,7 +56,6 @@ const NewProposal = () => {
   const { chainId, addresses } = useApp()
   const dao = useDao()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
   const wallet = useWeb3React()
@@ -420,7 +418,7 @@ const NewProposal = () => {
                   >
                     {!wallet.account
                       ? t('checkWallet')
-                      : reserve.globalDetails.globalFreeze
+                      : sparta.globalDetails.globalFreeze
                       ? t('globalFreeze')
                       : t('confirm')}
                     {txnLoading && (

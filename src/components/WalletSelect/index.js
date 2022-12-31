@@ -21,14 +21,14 @@ import Synths from './tabs/Synths'
 import Txns from './tabs/Txns'
 import { Icon } from '../Icons/index'
 import { Tooltip } from '../Tooltip/index'
-import { getSynthDetails, useSynth } from '../../store/synth'
+import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { convertFromWei } from '../../utils/bigNumber'
 import { connectorsByName } from '../../utils/web3React'
 import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
-import { getDaoDetails, useDao } from '../../store/dao'
-import { getBondDetails, useBond } from '../../store/bond'
+import { useDao } from '../../store/dao'
+import { useBond } from '../../store/bond'
 import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
 import { appChainId, useApp } from '../../store/app'
@@ -135,7 +135,7 @@ const WalletSelect = (props) => {
       if (x.id === 'BC') {
         await dispatch(addNetworkBC())
       } else if (['MM', 'BRAVE', 'TW'].includes(x.id)) {
-        await dispatch(addNetworkMM())
+        // await dispatch(addNetworkMM()) // Temporarily disbale nework change prompt
       }
       window.localStorage.removeItem('disableWallet')
       window.localStorage.setItem('lastWallet', x.id)
@@ -193,23 +193,12 @@ const WalletSelect = (props) => {
     wallet.error,
   ])
 
-  useEffect(() => {
-    const checkDetails = () => {
-      if (tempChains.includes(chainId)) {
-        dispatch(getBondDetails(wallet.account))
-        dispatch(getDaoDetails(wallet.account))
-        dispatch(getSynthDetails(wallet))
-      }
-    }
-    checkDetails()
-  }, [chainId, dispatch, pool.listedPools, wallet])
-
   // ------------------------------------------------------------------------
 
   const [rank, setrank] = useState('Loading')
   useEffect(() => {
     const getWeight = () => {
-      if (wallet.account && pool.poolDetails.length > 1) {
+      if (wallet.account && pool.poolDetails.length > 0) {
         const lpWeight = getLPWeights(
           pool.poolDetails,
           dao.daoDetails,

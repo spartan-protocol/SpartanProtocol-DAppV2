@@ -14,7 +14,6 @@ import Approval from '../../../components/Approval/index'
 import { synthHarvestLive } from '../../../utils/web3'
 import {
   useSynth,
-  getSynthDetails,
   synthDeposit,
   synthHarvestSingle,
 } from '../../../store/synth'
@@ -23,7 +22,6 @@ import spartaIcon from '../../../assets/tokens/sparta-synth.svg'
 import { getToken } from '../../../utils/math/utils'
 import { calcCurrentRewardSynth } from '../../../utils/math/synthVault'
 import { useSparta } from '../../../store/sparta'
-import { useReserve } from '../../../store/reserve'
 import { getSecsSince } from '../../../utils/math/nonContract'
 import { useTheme } from '../../../providers/Theme'
 import { useApp } from '../../../store/app'
@@ -36,7 +34,6 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
 
   const { addresses } = useApp()
   const pool = usePool()
-  const reserve = useReserve()
   const sparta = useSparta()
   const synth = useSynth()
 
@@ -83,7 +80,6 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
     setHarvestLoading(true)
     await dispatch(synthHarvestSingle(synth1.address, wallet))
     setHarvestLoading(false)
-    dispatch(getSynthDetails(wallet))
   }
 
   const handleDeposit = async () => {
@@ -99,7 +95,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
       synth,
       synth1,
       sparta.globalDetails,
-      reserve.globalDetails.spartaBalance,
+      sparta.globalDetails.spartaBalance,
     )
     return [reward, baseCapped, synthCapped]
   }
@@ -116,7 +112,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
 
   const checkValidHarvest = () => {
     const reward = formatFromWei(getClaimable()[0], 4)
-    if (!reserve.globalDetails.emissions) {
+    if (!sparta.globalDetails.emissions) {
       return [false, t('incentivesDisabled'), '']
     }
     if (getClaimable()[1]) {
@@ -304,11 +300,11 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
                           disabled={
                             synth1.staked <= 0 ||
                             !enoughGas() ||
-                            reserve.globalDetails.globalFreeze
+                            sparta.globalDetails.globalFreeze
                           }
                         >
                           {enoughGas()
-                            ? reserve.globalDetails.globalFreeze
+                            ? sparta.globalDetails.globalFreeze
                               ? t('globalFreeze')
                               : t('harvest')
                             : t('checkBnbGas')}

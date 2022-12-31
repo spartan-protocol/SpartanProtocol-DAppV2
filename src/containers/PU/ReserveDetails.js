@@ -1,31 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Form from 'react-bootstrap/Form'
-import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
-import { getReservePOLDetails, useReserve } from '../../store/reserve'
+import { useReserve } from '../../store/reserve'
 import { useSparta } from '../../store/sparta'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import { getPool, getToken } from '../../utils/math/utils'
-import { tempChains } from '../../utils/web3'
-import { useApp } from '../../store/app'
 
 const ReserveDetails = () => {
-  const dispatch = useDispatch()
-
-  const app = useApp()
   const pool = usePool()
   const reserve = useReserve()
   const sparta = useSparta()
 
   const [selection, setSelection] = useState('')
-
-  useEffect(() => {
-    if (tempChains.includes(app.chainId)) {
-      dispatch(getReservePOLDetails())
-    }
-  }, [dispatch, app.chainId, pool.poolDetails])
 
   const isLoading = () => {
     if (!pool.curatedPools || !reserve.polDetails || !pool.poolDetails) {
@@ -53,23 +41,35 @@ const ReserveDetails = () => {
                 <tbody>
                   {!isLoading() &&
                     reserve.polDetails.map((pol) => (
-                      <tr key={pol.tokenAddress}>
+                      <tr key={pol.address}>
                         <td>
                           <Form.Check
                             label={
-                              getToken(pol.tokenAddress, pool.tokenDetails)
-                                .symbol
+                              getToken(
+                                getPool(pol.address, pool.poolDetails)
+                                  .tokenAddress,
+                                pool.tokenDetails,
+                              ).symbol
                             }
                             type="radio"
                             name="group1"
-                            id={pol.tokenAddress}
-                            onClick={() => setSelection(pol.tokenAddress)}
+                            id={
+                              (getPool(pol.address, pool.poolDetails)
+                                .tokenAddress,
+                              pool.tokenDetails)
+                            }
+                            onClick={() =>
+                              setSelection(
+                                getPool(pol.address, pool.poolDetails)
+                                  .tokenAddress,
+                                pool.tokenDetails,
+                              )
+                            }
                           />
                         </td>
                         <td>
                           {formatFromWei(
-                            getPool(pol.tokenAddress, pool.poolDetails)
-                              .baseAmount,
+                            getPool(pol.address, pool.poolDetails).baseAmount,
                             0,
                           )}
                         </td>
@@ -77,8 +77,7 @@ const ReserveDetails = () => {
                         <td>
                           {BN(pol.spartaLocked)
                             .div(
-                              getPool(pol.tokenAddress, pool.poolDetails)
-                                .baseAmount,
+                              getPool(pol.address, pool.poolDetails).baseAmount,
                             )
                             .times(100)
                             .toFixed(1)}
@@ -97,10 +96,10 @@ const ReserveDetails = () => {
                       {formatFromWei(sparta.globalDetails.totalSupply, 0)}
                     </td>
                     <td>
-                      {formatFromWei(reserve.globalDetails.spartaBalance, 0)}
+                      {formatFromWei(sparta.globalDetails.spartaBalance, 0)}
                     </td>
                     <td>
-                      {BN(reserve.globalDetails.spartaBalance)
+                      {BN(sparta.globalDetails.spartaBalance)
                         .div(sparta.globalDetails.totalSupply)
                         .times(100)
                         .toFixed(1)}
@@ -112,10 +111,10 @@ const ReserveDetails = () => {
               Change Reserve Asset to{' '}
               {getToken(selection, pool.tokenDetails).symbol}
               -SPP:
-              <li>Reserve.setParams( {selection} )</li>
+              <li>Reserve.setParams({selection})</li>
               <hr />
               Realise {getToken(selection, pool.tokenDetails).symbol}-SPP:
-              <li>Reserve.realisePOL( {selection} )</li>
+              <li>Reserve.realisePOL({selection})</li>
             </Form>
           </Card.Body>
         </Card>
