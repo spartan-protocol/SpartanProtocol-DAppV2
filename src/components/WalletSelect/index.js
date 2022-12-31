@@ -31,7 +31,7 @@ import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
 import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
-import { useApp } from '../../store/app'
+import { appChainId, useApp } from '../../store/app'
 
 export const spartanRanks = [
   {
@@ -115,10 +115,10 @@ const WalletSelect = (props) => {
   // const [wlConnector, setWlConnector] = useState(false)
   const [triedOnce, setTriedOnce] = useState(false)
 
-  // const onChangeNetwork = async () => {
-  //   dispatch(appChainId(chainId === 97 ? 56 : 97))
-  //   window.location.reload(true)
-  // } temp disable
+  const onChangeNetwork = async () => {
+    dispatch(appChainId(chainId === 97 ? 56 : 97))
+    window.location.reload(true)
+  }
 
   const onWalletDisconnect = async () => {
     props.onHide()
@@ -340,7 +340,7 @@ const WalletSelect = (props) => {
                     id="custom-switch"
                     className="ms-2 d-inline-flex"
                     checked={chainId === 56}
-                    // onChange={() => onChangeNetwork()}
+                    onChange={() => onChangeNetwork()}
                   />
                 </span>
               </Form>
