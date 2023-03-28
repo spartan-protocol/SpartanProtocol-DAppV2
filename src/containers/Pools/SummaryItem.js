@@ -15,7 +15,7 @@ const SummaryItem = () => {
         <>
           <Col xs="12" md="6">
             Total Value Locked ($USD)
-            <Card>
+            <Card className="mt-2">
               <Card.Body>
                 <ChartTVL />
               </Card.Body>
@@ -23,7 +23,7 @@ const SummaryItem = () => {
           </Col>
           <Col xs="12" md="6">
             Swap Volume ($USD)
-            <Card>
+            <Card className="mt-2">
               <Card.Body>
                 <ChartVol />
               </Card.Body>

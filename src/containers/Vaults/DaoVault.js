@@ -193,7 +193,7 @@ const DaoVault = () => {
     if (!enoughGas()) {
       return [false, t('checkBnbGas')]
     }
-    return [true, t('harvestAll')]
+    return [true, t('harvest')]
   }
 
   return (

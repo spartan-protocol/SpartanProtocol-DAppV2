@@ -390,16 +390,18 @@ const NewProposal = () => {
           {!tempChains.includes(chainId) && <WrongNetwork />}
           <Modal.Footer>
             <Row className="w-100 text-center">
-              {wallet?.account && !existingPid && (
-                <Approval
-                  tokenAddress={addresses.spartav2}
-                  symbol="SPARTA"
-                  walletAddress={wallet.account}
-                  contractAddress={addresses.dao}
-                  txnAmount={convertToWei('100')}
-                  assetNumber="1"
-                />
-              )}
+              {wallet?.account &&
+                !existingPid &&
+                dao.global.coolOffPeriod !== dao.global.cancelPeriod && (
+                  <Approval
+                    tokenAddress={addresses.spartav2}
+                    symbol="SPARTA"
+                    walletAddress={wallet.account}
+                    contractAddress={addresses.dao}
+                    txnAmount={convertToWei('100')}
+                    assetNumber="1"
+                  />
+                )}
               {existingPid && (
                 <Button className="w-100" disabled>
                   Existing Proposal
@@ -413,7 +415,12 @@ const NewProposal = () => {
                 ) : (
                   <Button
                     className="w-100"
-                    disabled={!wallet.account || !feeConfirm || !formValid}
+                    disabled={
+                      !wallet.account ||
+                      !feeConfirm ||
+                      !formValid ||
+                      dao.global.coolOffPeriod === dao.global.cancelPeriod
+                    }
                     onClick={() => handleSubmit()}
                   >
                     {!wallet.account

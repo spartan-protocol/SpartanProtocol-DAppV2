@@ -261,9 +261,14 @@ const Overview = () => {
                             </Col>
                           </>
                         ) : (
-                          <Col xs="auto">
+                          <Col xs="12" sm="6" lg="8">
                             <Card>
-                              <Card.Body>{t('noOpenProposalsInfo')}</Card.Body>
+                              <Card.Body>
+                                {dao.global.coolOffPeriod ===
+                                dao.global.cancelPeriod
+                                  ? t('noOpenProposalsInfoWithPause')
+                                  : t('noOpenProposalsInfo')}
+                              </Card.Body>
                             </Card>
                           </Col>
                         ))}
