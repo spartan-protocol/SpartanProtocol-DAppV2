@@ -36,14 +36,9 @@ const Overview = () => {
   const communityWallet = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
 
   const [recentTxns, setrecentTxns] = useState([])
-  // const [bnbPrice, setbnbPrice] = useState(0)
   useEffect(() => {
     const getHoldings = async () => {
       dispatch(communityWalletHoldings(wallet.account))
-      // const _bnbPrice = await axios.get(
-      //   'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
-      // )
-      // setbnbPrice(_bnbPrice.data.binancecoin.usd)
       if (app.chainId === 56) {
         const options = {
           method: 'POST',
@@ -102,46 +97,6 @@ const Overview = () => {
     }
     getHoldings()
   }, [dispatch, app.chainId, wallet.account])
-
-  // const [totalUSD, settotalUSD] = useState(0)
-  // useEffect(() => {
-  //   const _spartaUSD = BN(sparta.communityWallet?.sparta).times(
-  //     web3.spartaPrice,
-  //   )
-  //   const _bnbUSD = BN(sparta.communityWallet?.bnb).times(bnbPrice)
-  //   settotalUSD(
-  //     BN(_spartaUSD)
-  //       .plus(_bnbUSD)
-  //       .plus(sparta.communityWallet?.busd)
-  //       .plus(sparta.communityWallet?.usdt)
-  //       .toString(),
-  //   )
-  // }, [
-  //   sparta.communityWallet?.sparta,
-  //   sparta.communityWallet?.bnb,
-  //   sparta.communityWallet?.busd,
-  //   sparta.communityWallet?.usdt,
-  //   bnbPrice,
-  //   web3.spartaPrice,
-  // ])
-
-  // const [totalWidth, settotalWidth] = useState(0)
-  // useEffect(() => {
-  //   settotalWidth(
-  //     BN(totalUSD).div(9000000000000000000000).times(100).toString(),
-  //   )
-  // }, [totalUSD])
-
-  // const [progColor, setprogColor] = useState('primary')
-  // useEffect(() => {
-  //   let _progColor = 'primary'
-  //   if (totalWidth >= 56) {
-  //     _progColor = 'green'
-  //   } else if (totalWidth >= 44) {
-  //     _progColor = 'info'
-  //   }
-  //   setprogColor(_progColor)
-  // }, [totalWidth])
 
   const [selectedAsset, setselectedAsset] = useState(false)
   const inputDonation = document.getElementById('inputDonation')
@@ -247,13 +202,6 @@ const Overview = () => {
                 </Card.Title>
               </Card.Header>
               <Card.Body>
-                {/* <Row>
-                  <Col xs="12" className="output-card mt-1">
-                    Normal text
-                    <div className="description">Subheading:</div>
-                    Normal text
-                  </Col>
-                </Row> */}
                 <Row>
                   <Col xs="12" className="my-2">
                     {t('donationsInfo')}
@@ -301,38 +249,6 @@ const Overview = () => {
                         : formatFromWei(sparta.communityWallet.sparta, 2)}
                     </li>
                   </Col>
-                  {/* <Col xs="12" className="my-2">
-                    <ProgressBar style={{ height: '26px' }}>
-                      <ProgressBar
-                        variant={progColor}
-                        now={totalWidth}
-                        label={
-                          totalWidth > 50 &&
-                          `$${formatFromWei(totalUSD, 0)} (${t('donations')})`
-                        }
-                      />
-                      <ProgressBar
-                        variant="black"
-                        now={100 - totalWidth}
-                        label={
-                          totalWidth <= 50 &&
-                          `$${formatFromWei(totalUSD, 0)} (${t('donations')})`
-                        }
-                      />
-                    </ProgressBar>
-                  </Col> */}
-
-                  {/* <Col xs="12" className="my-2">
-                    <ProgressBar style={{ height: '20px' }}>
-                      <ProgressBar now="55.25" label="$5K (Global AMA)" />
-                      <ProgressBar variant="black" now="0.25" />
-                      <ProgressBar
-                        variant="info"
-                        now="44.5"
-                        label="$4K (Turkey AMA)"
-                      />
-                    </ProgressBar>
-                  </Col> */}
                 </Row>
               </Card.Body>
             </Card>
@@ -520,23 +436,21 @@ const Overview = () => {
                   <Col>
                     <Row>
                       <Col xs="12" className="float-left output-card">
-                        #FridayFor300 Quiz
+                        No campaigns open
                         <div className="description fw-light">
-                          {t('budget')}: 300 SPARTA per week (Via community
-                          donations)
+                          {t('budget')}: N/A
                         </div>
                       </Col>
                     </Row>
                   </Col>
                   <Row>
                     <Col xs="12" className="output-card mt-1">
-                      Each week there is a #LearnToEarn quiz launched on Twitter
-                      for general positive community action and to help drive
-                      community members to actively engage with learning about
-                      the protocol. If you would like to sponsor a quiz prize,
-                      please donate exactly 300 SPARTA and let an admin know
-                      (Telegram or Twitter) if you would like to be tagged in
-                      the tweet as a sponsor.
+                      There are currently no donation campaigns open. If in the
+                      future something big and expensive is planned (like code
+                      audits for V3 for instance) we can consider adding the
+                      info here and taking donations. Until then, smaller
+                      community campaigns can be run in the community channels /
+                      social media.
                     </Col>
                   </Row>
                 </Row>

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { defaultSettings } from '../../components/Settings/options'
+import { BN } from '../../utils/bigNumber'
 import {
   abisMN,
   abisTN,
@@ -70,6 +71,8 @@ export const appSlice = createSlice({
     abis:
       tryParse(window.localStorage.getItem('sp_abis')) ??
       changeAbis(window.localStorage.getItem('sp_chainId') > 56 ? 97 : 56),
+    alertTimestamp:
+      tryParse(window.localStorage.getItem('sp_alerttimestamp')) ?? '0',
   },
   reducers: {
     updateLoading: (state, action) => {
@@ -105,6 +108,13 @@ export const appSlice = createSlice({
       state.settings = action.payload
       window.localStorage.setItem('sp_settings', JSON.stringify(action.payload))
     },
+    updateAlertTimestamp: (state, action) => {
+      state.alertTimestamp = action.payload
+      window.localStorage.setItem(
+        'sp_alerttimestamp',
+        JSON.stringify(action.payload),
+      )
+    },
   },
 })
 
@@ -114,6 +124,7 @@ export const {
   updateAsset,
   updateChainId,
   updateSettings,
+  updateAlertTimestamp,
 } = appSlice.actions
 
 /** Update selected asset address && type */
@@ -160,5 +171,17 @@ export const appSettings =
     }
     dispatch(updateLoading(false))
   }
+
+/** Update alert timestamp */
+export const appAlertTimestamp = () => async (dispatch) => {
+  dispatch(updateLoading(true))
+  try {
+    const timeNow = BN(Date.now()).div(1000).toString()
+    dispatch(updateAlertTimestamp(timeNow))
+  } catch (error) {
+    dispatch(updateError(error.reason))
+  }
+  dispatch(updateLoading(false))
+}
 
 export default appSlice.reducer
