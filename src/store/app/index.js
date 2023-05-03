@@ -64,7 +64,7 @@ export const appSlice = createSlice({
     // sp_positions: window.localStorage.getItem('sp_positions'),
     // sp_synthpositions: window.localStorage.getItem('sp_synthpositions'),
     settings:
-      tryParse(window.localStorage.getItem('sp_settings')) ?? defaultSettings,
+      tryParse(window.localStorage.getItem('sp_settings1')) ?? defaultSettings,
     addresses:
       tryParse(window.localStorage.getItem('sp_addresses')) ??
       changeAddresses(window.localStorage.getItem('sp_chainId') > 56 ? 97 : 56),
@@ -106,7 +106,10 @@ export const appSlice = createSlice({
     },
     updateSettings: (state, action) => {
       state.settings = action.payload
-      window.localStorage.setItem('sp_settings', JSON.stringify(action.payload))
+      window.localStorage.setItem(
+        'sp_settings1',
+        JSON.stringify(action.payload),
+      )
     },
     updateAlertTimestamp: (state, action) => {
       state.alertTimestamp = action.payload
