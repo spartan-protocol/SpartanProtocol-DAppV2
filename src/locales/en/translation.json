@@ -181,7 +181,7 @@
   "gainInfoSingle": "Your NET position based on the sum of the above rows. This is a comparison to if you were to hold USD instead of providing liquidity to the pools (Excluding Harvest Rewards)",
   "gainInfoSingleCoin": "Your NET {{coin}} position based on the sum of the above rows (Excluding Harvest Rewards)",
   "gasRate": "Gas Rate (GWEI)",
-  "gasRateDesc": "Gas is the term used in EVM networks for transaction power. For a transaction to occur, you need to give it some gas, which costs gwei. Mainnet recommended rate is 5 GWEI, you should always confirm the gas rate is correct in your wallet before signing a transaction. (Don't blindly trust the DApp)",
+  "gasRateDesc": "Gas is the term used in EVM networks for transaction power. For a transaction to occur, you need to give it some gas, which costs gwei. Mainnet recommended rate is 3 GWEI, you should always confirm the gas rate is correct in your wallet before signing a transaction. (Don't blindly trust the DApp)",
   "globalFreeze": "Global Freeze",
   "generateFirst": "Generate First",
   "harvest": "Harvest",
