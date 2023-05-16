@@ -47,7 +47,7 @@ const Overview = () => {
   const [tableView, setTableView] = useState(true)
 
   const [daoApy, setDaoApy] = useState('0')
-  const [synthApy] = useState('0')
+  // const [synthApy] = useState('0')
   const [arrayPools, setarrayPools] = useState(false)
   const [arrayNewPools, setarrayNewPools] = useState(false)
   const [arraySynths, setarraySynths] = useState(false)
@@ -387,7 +387,7 @@ const Overview = () => {
                         <SynthTableItem
                           key={asset.address}
                           asset={asset}
-                          synthApy={synthApy}
+                          // synthApy={synthApy}
                         />
                       ))}
                   </tbody>
@@ -423,7 +423,7 @@ const Overview = () => {
                           <SynthItem
                             key={asset.address}
                             asset={asset}
-                            synthApy={synthApy}
+                            // synthApy={synthApy}
                           />
                         ))
                       : 'No synths available')}

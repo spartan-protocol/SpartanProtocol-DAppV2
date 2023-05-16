@@ -39,7 +39,7 @@ const SocialIcons = ({ centered }) => (
     >
       <Icon icon="telegram" size="25" />
     </a>
-    <a
+    {/* <a
       href="https://discord.gg/wQggvntnGk"
       target="_blank"
       rel="noreferrer"
@@ -47,7 +47,7 @@ const SocialIcons = ({ centered }) => (
       className="mx-2"
     >
       <Icon icon="discord" size="25" />
-    </a>
+    </a> */}
   </div>
 )
 

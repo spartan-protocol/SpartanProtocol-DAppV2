@@ -15,7 +15,7 @@ import { getSynth } from '../../utils/math/utils'
 // import { stirCauldron } from '../../utils/math/router'
 import { useSynth } from '../../store/synth'
 
-const SynthTableItem = ({ asset, synthApy }) => {
+const SynthTableItem = ({ asset }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
@@ -108,7 +108,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
           %
         </td>
         {/* apy */}
-        <td>{formatFromUnits(synthApy, 2)}%</td>
+        {/* <td>{formatFromUnits(synthApy, 2)}%</td> */}
         {/* actions (buttons) */}
         <td>
           <Row className="text-center mt-2 me-1">
@@ -120,7 +120,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
                 disabled={!asset.curated}
                 onClick={() => navigate('/vaults?tab=Synth')}
               >
-                {t('stake')}
+                {t('withdraw')}
               </Button>
             </Col>
             <Col xs="12" md="6">
@@ -130,7 +130,7 @@ const SynthTableItem = ({ asset, synthApy }) => {
                 className="w-100 mb-2"
                 onClick={() => navigate(`/synths?asset2=${tokenAddress}`)}
               >
-                {t('forge')}
+                {t('melt')}
               </Button>
             </Col>
           </Row>

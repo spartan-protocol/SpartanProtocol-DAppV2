@@ -1,8 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { Tooltip } from '../../components/Tooltip/index'
-import { Icon } from '../../components/Icons/index'
+// import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+// import { Tooltip } from '../../components/Tooltip/index'
+// import { Icon } from '../../components/Icons/index'
 import styles from './styles.module.scss'
 
 const SynthTableHeader = () => {
@@ -24,14 +24,14 @@ const SynthTableHeader = () => {
           </OverlayTrigger>
         </th> */}
         <th className="d-none d-sm-table-cell">{t('depth')}</th>
-        <th>
+        {/* <th>
           APY
           <OverlayTrigger placement="auto" overlay={Tooltip(t, 'apyVault')}>
             <span role="button">
               <Icon icon="info" size="17" className="ms-1 mb-1" />
             </span>
           </OverlayTrigger>
-        </th>
+        </th> */}
         <th />
       </tr>
     </thead>
