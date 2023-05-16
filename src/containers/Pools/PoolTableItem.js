@@ -68,8 +68,12 @@ const PoolTableItem = ({ asset, daoApy }) => {
 
   const APY = calcAPY(asset, getFees(), getDivis())
 
-  const isAtCaps = () =>
-    BN(baseAmount).gt(BN(baseCap).minus(5000000000000000000000))
+  const isAtCaps = () => {
+    if (BN(baseCap).lt('1000000000000000000000000')) {
+      return BN(baseAmount).gt(BN(baseCap).minus('10000000000000000000000'))
+    }
+    return BN(baseAmount).gt(BN(baseCap).minus('50000000000000000000000'))
+  }
 
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
 
