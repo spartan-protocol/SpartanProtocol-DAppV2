@@ -3,7 +3,8 @@ import { Provider } from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { BrowserRouter } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
-import { Web3ReactProvider } from '@web3-react/core'
+import { WagmiConfig } from 'wagmi'
+import { Web3ReactProvider } from '@web3-react/core' // TODO: Delete and test
 import { ethers } from 'ethers'
 import {
   Chart as ChartJS,
@@ -26,11 +27,12 @@ import routerReducer from './store/router'
 import spartaReducer from './store/sparta'
 import synthReducer from './store/synth'
 import web3Reducer from './store/web3'
-import { getLibrary } from './utils/web3React'
+import { getLibrary } from './utils/web3React' // TODO: Delete and test
 import { BreakpointProvider } from './providers/Breakpoint'
 import { ThemeProvider } from './providers/Theme'
 import { isAppleDevice } from './utils/helpers.ts'
 import { FocusProvider } from './providers/Focus'
+import { web3Config } from './utils/web3config'
 
 ChartJS.register(
   LineElement,
@@ -90,17 +92,19 @@ if (isAppleDevice()) {
 
 const Providers = () => (
   <Provider store={store}>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <BrowserRouter>
-        <BreakpointProvider>
-          <FocusProvider>
-            <ThemeProvider>
-              <Layout />
-            </ThemeProvider>
-          </FocusProvider>
-        </BreakpointProvider>
-      </BrowserRouter>
-    </Web3ReactProvider>
+    <WagmiConfig config={web3Config}>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <BrowserRouter>
+          <BreakpointProvider>
+            <FocusProvider>
+              <ThemeProvider>
+                <Layout />
+              </ThemeProvider>
+            </FocusProvider>
+          </BreakpointProvider>
+        </BrowserRouter>
+      </Web3ReactProvider>
+    </WagmiConfig>
   </Provider>
 )
 

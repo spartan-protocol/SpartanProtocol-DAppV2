@@ -1,6 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { useAccount } from 'wagmi'
 import {
   getCuratedPools,
   getListedTokens,
@@ -32,7 +32,6 @@ import { getReservePOLDetails } from '../../../store/reserve'
 
 const DataManager = () => {
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
 
   const app = useApp()
   const dao = useDao()
@@ -41,6 +40,7 @@ const DataManager = () => {
   const sparta = useSparta()
   const synth = useSynth()
   const web3 = useWeb3()
+  const { address } = useAccount()
 
   /** Get the current block from a main RPC */
   useEffect(() => {
@@ -60,12 +60,12 @@ const DataManager = () => {
   /** Get the initial arrays (tokens, curated & global details) */
   useEffect(() => {
     if (liveChains.includes(app.chainId)) {
-      dispatch(getListedTokens(wallet.account)) // TOKEN ARRAY
+      dispatch(getListedTokens(address)) // TOKEN ARRAY
       dispatch(getCuratedPools()) // CURATED ARRAY
       dispatch(getSpartaGlobalDetails()) // SPARTA GLOBAL DETAILS
       dispatch(getReservePOLDetails()) // RESERVE POL DETAILS
     }
-  }, [dispatch, web3.rpcs, app.chainId, wallet.account])
+  }, [dispatch, web3.rpcs, app.chainId, address])
 
   /** Check SPARTA token price */
   useEffect(() => {
@@ -81,58 +81,58 @@ const DataManager = () => {
   /** Update txnArray whenever a new dao txn is picked up */
   useEffect(() => {
     if (dao.txn.txnType) {
-      addTxn(wallet.account, dao.txn)
+      addTxn(address, dao.txn)
       dispatch(updateTxnDao([]))
     }
-  }, [dao.txn, dispatch, wallet.account])
+  }, [dao.txn, dispatch, address])
 
   /** Update txnArray whenever a new dao-proposal txn is picked up */
   useEffect(() => {
     if (dao.propTxn.txnType) {
-      addTxn(wallet.account, dao.propTxn)
+      addTxn(address, dao.propTxn)
       dispatch(updateTxnProposal([]))
     }
-  }, [dao.propTxn, dispatch, wallet.account])
+  }, [dao.propTxn, dispatch, address])
 
   /** Update txnArray whenever a new pool txn is picked up */
   useEffect(() => {
     if (pool.txn.txnType) {
-      addTxn(wallet.account, pool.txn)
+      addTxn(address, pool.txn)
       dispatch(updateTxnPool([]))
     }
-  }, [dispatch, pool.txn, wallet.account])
+  }, [dispatch, pool.txn, address])
 
   /** Update txnArray whenever a new router txn is picked up */
   useEffect(() => {
     if (router.txn.txnType) {
-      addTxn(wallet.account, router.txn)
+      addTxn(address, router.txn)
       dispatch(updateTxnRouter([]))
     }
-  }, [dispatch, router.txn, wallet.account])
+  }, [dispatch, router.txn, address])
 
   /** Update txnArray whenever a new sparta txn is picked up */
   useEffect(() => {
     if (sparta.txn.txnType) {
-      addTxn(wallet.account, sparta.txn)
+      addTxn(address, sparta.txn)
       dispatch(updateTxnSparta([]))
     }
-  }, [dispatch, sparta.txn, wallet.account])
+  }, [dispatch, sparta.txn, address])
 
   /** Update txnArray whenever a new synth txn is picked up */
   useEffect(() => {
     if (synth.txn.txnType) {
-      addTxn(wallet.account, synth.txn)
+      addTxn(address, synth.txn)
       dispatch(updateTxnSynth([]))
     }
-  }, [dispatch, synth.txn, wallet.account])
+  }, [dispatch, synth.txn, address])
 
   /** Update txnArray whenever a new web3/misc txn is picked up */
   useEffect(() => {
     if (web3.txn.txnType) {
-      addTxn(wallet.account, web3.txn)
+      addTxn(address, web3.txn)
       dispatch(updateTxnWeb3([]))
     }
-  }, [dispatch, wallet.account, web3.txn])
+  }, [dispatch, address, web3.txn])
 
   return <></>
 }

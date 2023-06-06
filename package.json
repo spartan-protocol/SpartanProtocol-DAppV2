@@ -15,7 +15,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.2.0",
-    "@web3-react/core": "^6.1.9",
+    "@web3-react/core": "6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "6.2.13",
     "@web3-react/walletlink-connector": "6.2.14",
@@ -45,6 +45,8 @@
     "resize-observer": "^1.0.3",
     "sass": "^1.49.9",
     "util": "^0.12.4",
+    "viem": "^0.3.50",
+    "wagmi": "^1.1.0",
     "web-vitals": "2.1.4",
     "webpack": "^5.76.0",
     "yarn": "1.22.18"
