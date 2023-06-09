@@ -237,10 +237,10 @@ export const synthVaultWeight = () => async (dispatch, getState) => {
  * @param synth @param amount @param wallet
  */
 export const synthDeposit =
-  (synth, amount, wallet) => async (dispatch, getState) => {
+  (synth, amount, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getSynthVaultContract(wallet, rpcs)
+    const contract = getSynthVaultContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -250,7 +250,7 @@ export const synthDeposit =
       let txn = await contract.deposit(synth, amount, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'synthDeposit', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getSynthDetails(wallet.account)) // Update synthDetails
+      dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -262,10 +262,10 @@ export const synthDeposit =
  * @param {array} synthArray @param wallet
  */
 export const synthHarvest =
-  (synthArray, wallet) => async (dispatch, getState) => {
+  (synthArray, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getSynthVaultContract(wallet, rpcs)
+    const contract = getSynthVaultContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -275,7 +275,7 @@ export const synthHarvest =
       let txn = await contract.harvestAll(synthArray, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> synthDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -287,10 +287,10 @@ export const synthHarvest =
  * @param synth @param wallet
  */
 export const synthHarvestSingle =
-  (synth, wallet) => async (dispatch, getState) => {
+  (synth, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getSynthVaultContract(wallet, rpcs)
+    const contract = getSynthVaultContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -300,7 +300,7 @@ export const synthHarvestSingle =
       let txn = await contract.harvestSingle(synth, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'synthHarvest', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> synthDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -313,10 +313,10 @@ export const synthHarvestSingle =
  * @returns withdrawAmount
  */
 export const synthWithdraw =
-  (synth, basisPoints, wallet) => async (dispatch, getState) => {
+  (synth, basisPoints, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getSynthVaultContract(wallet, rpcs)
+    const contract = getSynthVaultContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -327,7 +327,7 @@ export const synthWithdraw =
       let txn = await contract.withdraw(synth, basisPoints, ORs)
       txn = await parseTxn(txn, 'synthWithdraw', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getSynthDetails(wallet.account)) // Update synthDetails
+      dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -339,10 +339,10 @@ export const synthWithdraw =
  * @param token
  * @returns synth
  */
-export const createSynth = (token, wallet) => async (dispatch, getState) => {
+export const createSynth = (token, signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getSynthFactoryContract(wallet, rpcs)
+  const contract = getSynthFactoryContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app

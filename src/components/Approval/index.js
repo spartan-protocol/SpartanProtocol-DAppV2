@@ -1,9 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
 import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { useAccount, useSigner } from 'wagmi'
 import { useApp } from '../../store/app'
 import { usePool } from '../../store/pool'
 import {
@@ -38,7 +38,8 @@ const Approval = ({
 }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -49,12 +50,12 @@ const Approval = ({
 
   const handleApproval = async () => {
     setPending(true)
-    await dispatch(getApproval(tokenAddress, contractAddress, wallet))
+    await dispatch(getApproval(tokenAddress, contractAddress, signer))
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+        dispatch(getAllowance1(tokenAddress, address, contractAddress))
       } else if (assetNumber === '2') {
-        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+        dispatch(getAllowance2(tokenAddress, address, contractAddress))
       }
     }
   }
@@ -62,9 +63,9 @@ const Approval = ({
   useEffect(() => {
     if (tokenAddress && walletAddress && contractAddress) {
       if (assetNumber === '1') {
-        dispatch(getAllowance1(tokenAddress, wallet, contractAddress))
+        dispatch(getAllowance1(tokenAddress, address, contractAddress))
       } else if (assetNumber === '2') {
-        dispatch(getAllowance2(tokenAddress, wallet, contractAddress))
+        dispatch(getAllowance2(tokenAddress, address, contractAddress))
       }
     }
   }, [
@@ -76,7 +77,8 @@ const Approval = ({
     txnAmount,
     assetNumber,
     dispatch,
-    wallet,
+    signer,
+    address,
   ])
 
   useEffect(() => {

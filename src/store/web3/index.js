@@ -178,10 +178,10 @@ export const addNetworkBC = () => async (dispatch, getState) => {
  * @returns {boolean} true if succeeds
  */
 export const getApproval =
-  (tokenAddress, contractAddress, wallet) => async (dispatch, getState) => {
+  (tokenAddress, contractAddress, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getTokenContract(tokenAddress, wallet, rpcs)
+    const contract = getTokenContract(tokenAddress, signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -207,16 +207,13 @@ export const getApproval =
  * @returns {BigNumber?}
  */
 export const getAllowance1 =
-  (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
+  (tokenAddress, walletAddr, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
     try {
       if (rpcs.length > 0) {
         const contract = getTokenContract(tokenAddress, null, rpcs)
-        const allowance1 = await contract.allowance(
-          wallet.account,
-          contractAddress,
-        )
+        const allowance1 = await contract.allowance(walletAddr, contractAddress)
         dispatch(updateAllowance1(allowance1.toString()))
       }
     } catch (error) {
@@ -231,16 +228,13 @@ export const getAllowance1 =
  * @returns {BigNumber?}
  */
 export const getAllowance2 =
-  (tokenAddress, wallet, contractAddress) => async (dispatch, getState) => {
+  (tokenAddress, walletAddr, contractAddress) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
     try {
       if (rpcs.length > 0) {
         const contract = getTokenContract(tokenAddress, null, rpcs)
-        const allowance2 = await contract.allowance(
-          wallet.account,
-          contractAddress,
-        )
+        const allowance2 = await contract.allowance(walletAddr, contractAddress)
         dispatch(updateAllowance2(allowance2.toString()))
       }
     } catch (error) {

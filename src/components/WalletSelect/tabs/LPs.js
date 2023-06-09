@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { useSparta } from '../../../store/sparta'
 import { watchAsset, useWeb3 } from '../../../store/web3'
@@ -29,9 +29,9 @@ const LPs = () => {
   const dao = useDao()
   const bond = useBond()
   const web3 = useWeb3()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const sparta = useSparta()
+  const { address } = useAccount()
 
   const [showUsd, setShowUsd] = useState(false)
   const [spartaPrice, setspartaPrice] = useState(0)
@@ -77,7 +77,7 @@ const LPs = () => {
           `${token.symbol.substring(0, 10)}p`,
           '18',
           token.symbolUrl,
-          wallet.account,
+          address,
         ),
       )
     }

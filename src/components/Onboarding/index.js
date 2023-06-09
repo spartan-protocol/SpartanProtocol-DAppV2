@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
 
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 import Overlay from 'react-bootstrap/Overlay'
 import Tooltip from 'react-bootstrap/Tooltip'
 
+import { useAccount } from 'wagmi'
 import { useTheme } from '../../providers/Theme'
 import { formatShortString } from '../../utils/web3'
 
@@ -14,8 +14,8 @@ import WalletStep from './walletStep.js'
 import WelcomeStep from './welcomeStep'
 
 const OnboardModal = ({ showModal, setshowModal, defaultAsset = null }) => {
-  const wallet = useWeb3React()
   const { isDark } = useTheme()
+  const { address } = useAccount()
 
   const [showTooltip, setShowTooltip] = useState(false)
   const [step, setstep] = useState(1)
@@ -24,7 +24,7 @@ const OnboardModal = ({ showModal, setshowModal, defaultAsset = null }) => {
   const target = useRef(null)
 
   const handleTooltip = () => {
-    navigator.clipboard.writeText(wallet.account)
+    navigator.clipboard.writeText(address)
     setShowTooltip(true)
     setTimeout(() => {
       setShowTooltip(false)
@@ -66,12 +66,12 @@ const OnboardModal = ({ showModal, setshowModal, defaultAsset = null }) => {
             Back
           </Button>
           <Button
-            disabled={!wallet.account}
+            disabled={!address}
             onClick={() => handleTooltip()}
             ref={target}
           >
-            {wallet.account
-              ? `Copy: ${formatShortString(wallet.account)}`
+            {address
+              ? `Copy: ${formatShortString(address)}`
               : 'No Wallet Connected'}
           </Button>
           <Overlay target={target.current} show={showTooltip} placement="top">

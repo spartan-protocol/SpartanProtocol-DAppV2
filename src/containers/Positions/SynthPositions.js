@@ -7,7 +7,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import Row from 'react-bootstrap/Row'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { useDispatch } from 'react-redux'
 import { usePool } from '../../store/pool'
 import HelmetLoading from '../../components/Spinner/index'
@@ -34,7 +34,7 @@ import { appAsset, useApp } from '../../store/app'
 const SynthPositions = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
 
   const { addresses, asset1 } = useApp()
   const pool = usePool()
@@ -83,11 +83,11 @@ const SynthPositions = () => {
   ])
 
   const getWallet = useCallback(() => {
-    if (wallet?.account) {
-      return wallet.account.toString().toLowerCase()
+    if (address) {
+      return address.toString().toLowerCase()
     }
     return false
-  }, [wallet.account])
+  }, [address])
 
   const _getToken = () => getToken(poolPos.tokenAddress, pool.tokenDetails)
 
@@ -152,7 +152,7 @@ const SynthPositions = () => {
   }
 
   const getOverall = async () => {
-    const [memberPos, block] = await getMemberSynthPositions(wallet.account)
+    const [memberPos, block] = await getMemberSynthPositions(address)
     updateLS(memberPos, block)
   }
 
@@ -656,9 +656,7 @@ const SynthPositions = () => {
                 <Button
                   onClick={() => getOverall()}
                   className="w-100"
-                  disabled={
-                    getSecsSince(position.lastUpdated) < 60 || !wallet.account
-                  }
+                  disabled={getSecsSince(position.lastUpdated) < 60 || !address}
                 >
                   {getSecsSince(position.lastUpdated) < 60
                     ? `${`Wait ${60 - getSecsSince(position.lastUpdated)}`}s`

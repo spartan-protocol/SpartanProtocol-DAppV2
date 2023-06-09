@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import InputGroup from 'react-bootstrap/InputGroup'
@@ -10,6 +9,7 @@ import Nav from 'react-bootstrap/Nav'
 import Modal from 'react-bootstrap/Modal'
 
 import { Link } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 import ShareLink from '../Share/ShareLink'
 import { Icon } from '../Icons/index'
 
@@ -36,7 +36,7 @@ import { validSymbols } from '../../containers/FiatOnboard/types'
 const AssetSelect = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
 
   const { addresses, asset1, asset2, asset3 } = useApp()
   const pool = usePool()
@@ -282,7 +282,7 @@ const AssetSelect = (props) => {
           item1.symbol,
           '18',
           item1.iconUrl,
-          wallet.account,
+          address,
         ),
       )
     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 
 import Button from 'react-bootstrap/Button'
 import Overlay from 'react-bootstrap/Overlay'
@@ -10,7 +10,7 @@ import WalletSelect from '../WalletSelect'
 import { formatShortString } from '../../utils/web3'
 
 const WalletStep = ({ setstep }) => {
-  const wallet = useWeb3React()
+  const { address } = useAccount()
 
   const [walletModalShow, setWalletModalShow] = useState(false)
   const [showTooltip, setShowTooltip] = useState(false)
@@ -18,14 +18,14 @@ const WalletStep = ({ setstep }) => {
   const target = useRef(null)
 
   useEffect(() => {
-    if (walletModalShow && wallet.account) {
+    if (walletModalShow && address) {
       setWalletModalShow(false)
     }
-  }, [walletModalShow, wallet.account])
+  }, [walletModalShow, address])
 
   const copyAndProceed = () => {
     setShowTooltip(true)
-    navigator.clipboard.writeText(wallet.account)
+    navigator.clipboard.writeText(address)
     setTimeout(() => {
       setstep((prev) => prev + 1)
     }, 1000)
@@ -53,11 +53,11 @@ const WalletStep = ({ setstep }) => {
           <Button>Wallet Guide</Button>
         </a>
         <hr />
-        {wallet.account ? (
+        {address ? (
           <>
             <h4>Wallet connected!</h4>
             <p>
-              <strong>Address:</strong> {formatShortString(wallet.account)}
+              <strong>Address:</strong> {formatShortString(address)}
             </p>
             <p>
               You have a wallet connected to the DApp, if you would like to use

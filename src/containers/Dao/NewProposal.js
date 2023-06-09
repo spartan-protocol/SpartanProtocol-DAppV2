@@ -12,7 +12,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { proposalTypes } from './types'
 import {
   useDao,
@@ -58,7 +58,8 @@ const NewProposal = () => {
   const pool = usePool()
   const sparta = useSparta()
   const synth = useSynth()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -187,16 +188,16 @@ const NewProposal = () => {
   const handleSubmit = async () => {
     setTxnLoading(true)
     if (selectedType?.type === 'Action') {
-      await dispatch(newActionProposal(selectedType.value, wallet))
+      await dispatch(newActionProposal(selectedType.value, signer))
     } else if (selectedType?.type === 'Param') {
-      await dispatch(newParamProposal(inputParam, selectedType.value, wallet))
+      await dispatch(newParamProposal(inputParam, selectedType.value, signer))
     } else if (selectedType?.type === 'Address') {
       await dispatch(
-        newAddressProposal(inputAddress, selectedType.value, wallet),
+        newAddressProposal(inputAddress, selectedType.value, signer),
       )
     } else if (selectedType?.type === 'Grant') {
       await dispatch(
-        newGrantProposal(inputAddress, convertToWei(inputParam), wallet),
+        newGrantProposal(inputAddress, convertToWei(inputParam), signer),
       )
     }
     setTxnLoading(false)
@@ -390,13 +391,13 @@ const NewProposal = () => {
           {!tempChains.includes(chainId) && <WrongNetwork />}
           <Modal.Footer>
             <Row className="w-100 text-center">
-              {wallet?.account &&
+              {address &&
                 !existingPid &&
                 dao.global.coolOffPeriod !== dao.global.cancelPeriod && (
                   <Approval
                     tokenAddress={addresses.spartav2}
                     symbol="SPARTA"
-                    walletAddress={wallet.account}
+                    walletAddress={address}
                     contractAddress={addresses.dao}
                     txnAmount={convertToWei('100')}
                     assetNumber="1"
@@ -416,14 +417,14 @@ const NewProposal = () => {
                   <Button
                     className="w-100"
                     disabled={
-                      !wallet.account ||
+                      !address ||
                       !feeConfirm ||
                       !formValid ||
                       dao.global.coolOffPeriod === dao.global.cancelPeriod
                     }
                     onClick={() => handleSubmit()}
                   >
-                    {!wallet.account
+                    {!address
                       ? t('checkWallet')
                       : sparta.globalDetails.globalFreeze
                       ? t('globalFreeze')

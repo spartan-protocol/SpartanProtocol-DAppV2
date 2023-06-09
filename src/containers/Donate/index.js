@@ -9,8 +9,8 @@ import FormControl from 'react-bootstrap/FormControl'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
-import { formatShortString, getWalletProvider } from '../../utils/web3'
+import { useAccount, useSigner } from 'wagmi'
+import { formatShortString } from '../../utils/web3'
 import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
   convertToWei,
@@ -28,7 +28,8 @@ const Overview = () => {
   const { t } = useTranslation()
   const sparta = useSparta()
   const app = useApp()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
   const web3 = useWeb3()
 
   const [txnLoading, setTxnLoading] = useState(false)
@@ -38,7 +39,7 @@ const Overview = () => {
   const [recentTxns, setrecentTxns] = useState([])
   useEffect(() => {
     const getHoldings = async () => {
-      dispatch(communityWalletHoldings(wallet.account))
+      dispatch(communityWalletHoldings(address))
       if (app.chainId === 56) {
         const options = {
           method: 'POST',
@@ -96,7 +97,7 @@ const Overview = () => {
       }
     }
     getHoldings()
-  }, [dispatch, app.chainId, wallet.account])
+  }, [dispatch, app.chainId, address])
 
   const [selectedAsset, setselectedAsset] = useState(false)
   const inputDonation = document.getElementById('inputDonation')
@@ -146,7 +147,7 @@ const Overview = () => {
     setTxnLoading(true)
     const asset = getAsset(selectedAsset)
     if (asset.symbol === 'BNB') {
-      const signer = getWalletProvider(wallet?.library, web3.rpcs)
+      // const signer = getWalletProvider(wallet?.library, web3.rpcs)
       await signer.sendTransaction({
         to: communityWallet,
         value: ethers.utils.parseEther(inputDonation?.value),
@@ -155,7 +156,7 @@ const Overview = () => {
     if (asset.symbol === 'BUSD') {
       const contract = getTokenContract(
         getAsset('BUSD').addr,
-        wallet,
+        signer,
         web3.rpcs,
       )
       await contract.transfer(
@@ -166,7 +167,7 @@ const Overview = () => {
     if (asset.symbol === 'USDT') {
       const contract = getTokenContract(
         getAsset('USDT').addr,
-        wallet,
+        signer,
         web3.rpcs,
       )
       await contract.transfer(
@@ -177,7 +178,7 @@ const Overview = () => {
     if (asset.symbol === 'SPARTA') {
       const contract = getTokenContract(
         getAsset('SPARTA').addr,
-        wallet,
+        signer,
         web3.rpcs,
       )
       await contract.transfer(
@@ -400,7 +401,7 @@ const Overview = () => {
                   <>
                     <Button
                       className="w-100"
-                      disabled={inputDonation?.value <= 0 && wallet?.account}
+                      disabled={inputDonation?.value <= 0 && address}
                       onClick={() => handleDonation()}
                     >
                       {t('donate')}

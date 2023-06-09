@@ -13,7 +13,7 @@ import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
 import { formatShortString, oneWeek } from '../../utils/web3'
@@ -50,7 +50,8 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
   const focus = useFocus()
   const location = useLocation()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2, asset3 } = useApp()
   const pool = usePool()
@@ -365,7 +366,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
     if (selectedPool.address === '0xcE16E8C1224b51Fd455749F48a7D0e5f880231CB') {
       return [false, t('poolRetired')]
     }
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (addInput1?.value <= 0) {
@@ -437,7 +438,8 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
           convertToWei(addInput1.value),
           convertToWei(addInput2.value),
           assetLiq1.tokenAddress,
-          wallet,
+          address,
+          signer,
         ),
       )
     } else {
@@ -446,7 +448,8 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
           convertToWei(addInput1.value),
           assetLiq1.tokenAddress === addresses.spartav2,
           selectedPool.tokenAddress,
-          wallet,
+          address,
+          signer,
         ),
       )
     }
@@ -455,7 +458,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
   }
 
   const checkWallet = (id) => {
-    if (!wallet.account) {
+    if (!address) {
       if (id === 1) {
         setShowWalletWarning1(!showWalletWarning1)
       }
@@ -950,12 +953,12 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
       <Row className="text-center mt-3">
         {assetLiq1?.tokenAddress &&
           assetLiq1?.tokenAddress !== addresses.bnb &&
-          wallet?.account &&
+          address &&
           addInput1?.value && (
             <Approval
               tokenAddress={assetLiq1?.tokenAddress}
               symbol={token1.symbol}
-              walletAddress={wallet?.account}
+              walletAddress={address}
               contractAddress={addresses.router}
               txnAmount={convertToWei(addInput1?.value)}
               assetNumber="1"
@@ -980,12 +983,12 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
         </Col>
         {assetLiq2?.tokenAddress &&
           assetLiq2?.tokenAddress !== addresses.bnb &&
-          wallet?.account &&
+          address &&
           addInput2?.value && (
             <Approval
               tokenAddress={assetLiq2?.tokenAddress}
               symbol={token2.symbol}
-              walletAddress={wallet?.account}
+              walletAddress={address}
               contractAddress={addresses.router}
               txnAmount={convertToWei(addInput2?.value)}
               assetNumber="2"

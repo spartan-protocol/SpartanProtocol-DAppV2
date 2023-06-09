@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { useDao, daoHarvest, daoWithdraw } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
@@ -22,7 +22,8 @@ const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { isDark } = useTheme()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const dao = useDao()
@@ -68,7 +69,7 @@ const DaoWithdrawModal = (props) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet'), false]
     }
     if (!enoughGas()) {
@@ -100,13 +101,13 @@ const DaoWithdrawModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(wallet))
+    await dispatch(daoHarvest(address, signer))
     setHarvestLoading(false)
   }
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(daoWithdraw(pool1.address, wallet))
+    await dispatch(daoWithdraw(pool1.address, address, signer))
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -116,7 +117,7 @@ const DaoWithdrawModal = (props) => {
       <Button
         className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
-        disabled={props.disabled || !wallet.account}
+        disabled={props.disabled || !address}
       >
         {t('withdraw')}
       </Button>

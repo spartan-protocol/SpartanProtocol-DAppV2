@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { useBond } from '../../store/bond'
 import {
   useDao,
@@ -35,7 +35,8 @@ import { realise } from '../../utils/math/synth'
 const ProposalItem = ({ proposal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const bond = useBond()
@@ -54,31 +55,31 @@ const ProposalItem = ({ proposal }) => {
 
   const handleVote = async () => {
     setVoteLoading(true)
-    await dispatch(voteProposal(wallet))
+    await dispatch(voteProposal(signer))
     setVoteLoading(false)
   }
 
   const handleUnvote = async () => {
     setUnvoteLoading(true)
-    await dispatch(removeVote(wallet))
+    await dispatch(removeVote(signer))
     setUnvoteLoading(false)
   }
 
   const handleCancel = async () => {
     setCancelLoading(true)
-    await dispatch(cancelProposal(wallet))
+    await dispatch(cancelProposal(signer))
     setCancelLoading(false)
   }
 
   const handlePoll = async () => {
     setPollLoading(true)
-    await dispatch(pollVotes(wallet))
+    await dispatch(pollVotes(signer))
     setPollLoading(false)
   }
 
   const handleFinal = async () => {
     setFinalLoading(true)
-    await dispatch(finaliseProposal(wallet))
+    await dispatch(finaliseProposal(signer))
     setFinalLoading(false)
   }
 
@@ -346,7 +347,7 @@ const ProposalItem = ({ proposal }) => {
                 <Row className="my-1">
                   <Col xs="auto">{t('yourVotes')}</Col>
                   <Col className="text-end">
-                    {!wallet.account ? (
+                    {!address ? (
                       t('connectWallet')
                     ) : proposal.memberVoted ? (
                       <>
@@ -397,7 +398,7 @@ const ProposalItem = ({ proposal }) => {
                         size="sm"
                         onClick={() => handleVote()}
                         disabled={
-                          !wallet.account ||
+                          !address ||
                           proposal.memberVoted ||
                           !enoughGas(estMaxGasVote)
                         }
@@ -425,7 +426,7 @@ const ProposalItem = ({ proposal }) => {
                         size="sm"
                         onClick={() => handleUnvote()}
                         disabled={
-                          !wallet.account ||
+                          !address ||
                           !proposal.memberVoted ||
                           !enoughGas(estMaxGasVote)
                         }
@@ -454,7 +455,7 @@ const ProposalItem = ({ proposal }) => {
                         size="sm"
                         onClick={() => handleFinal()}
                         disabled={
-                          !wallet.account ||
+                          !address ||
                           !proposal.finalising ||
                           getTimeCooloff()[0] > 0 ||
                           !enoughGas(estMaxGasFinal)
@@ -480,9 +481,7 @@ const ProposalItem = ({ proposal }) => {
                         size="sm"
                         onClick={() => handlePoll()}
                         disabled={
-                          !wallet.account ||
-                          !canPoll() ||
-                          !enoughGas(estMaxGasPoll)
+                          !address || !canPoll() || !enoughGas(estMaxGasPoll)
                         }
                       >
                         {!enoughGas(estMaxGasPoll)
@@ -505,7 +504,7 @@ const ProposalItem = ({ proposal }) => {
                       size="sm"
                       onClick={() => handleCancel()}
                       disabled={
-                        !wallet.account ||
+                        !address ||
                         getTimeCancel()[0] > 0 ||
                         !enoughGas(estMaxGasCancel)
                       }

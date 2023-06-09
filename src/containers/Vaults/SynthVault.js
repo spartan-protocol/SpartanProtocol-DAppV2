@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import {
   useSynth,
@@ -32,7 +32,7 @@ const SynthVault = () => {
   const synth = useSynth()
   const pool = usePool()
   const web3 = useWeb3()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
   const dispatch = useDispatch()
 
   const [showUsd, setShowUsd] = useState(false)
@@ -49,7 +49,7 @@ const SynthVault = () => {
   useEffect(() => {
     const getGlobals = () => {
       dispatch(getSynthGlobalDetails())
-      // dispatch(getSynthMemberDetails(wallet.account))
+      // dispatch(getSynthMemberDetails(address))
       // dispatch(getSynthMinting())
     }
     getGlobals() // Run on load
@@ -59,7 +59,7 @@ const SynthVault = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [dispatch, wallet.account])
+  }, [dispatch, address])
 
   useEffect(() => {
     dispatch(synthVaultWeight())
@@ -210,7 +210,7 @@ const SynthVault = () => {
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
-                    {!wallet.account ? (
+                    {!address ? (
                       t('connectWallet')
                     ) : (
                       <>
@@ -229,7 +229,7 @@ const SynthVault = () => {
                 <Row className="my-1">
                   <Col>{t('percentWeight')}</Col>
                   <Col xs="auto" className="text-end">
-                    {!wallet.account
+                    {!address
                       ? t('connectWallet')
                       : getTotalWeight() > 0 && getOwnWeight() > 0
                       ? `${BN(getOwnWeight())

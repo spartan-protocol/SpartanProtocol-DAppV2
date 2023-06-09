@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { useDao, daoDeposit, daoHarvest } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { useApp } from '../../../store/app'
@@ -23,7 +23,8 @@ const DaoDepositModal = (props) => {
   const dispatch = useDispatch()
   const { isDark } = useTheme()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const dao = useDao()
@@ -63,13 +64,13 @@ const DaoDepositModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(wallet))
+    await dispatch(daoHarvest(address, signer))
     setHarvestLoading(false)
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(daoDeposit(pool1.address, deposit(), wallet))
+    await dispatch(daoDeposit(pool1.address, deposit(), address, signer))
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -85,7 +86,7 @@ const DaoDepositModal = (props) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (!enoughGas()) {
@@ -110,7 +111,7 @@ const DaoDepositModal = (props) => {
       <Button
         className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
-        disabled={props.disabled || !wallet.account}
+        disabled={props.disabled || !address}
       >
         {t('deposit')}
       </Button>
@@ -223,11 +224,11 @@ const DaoDepositModal = (props) => {
         </Modal.Body>
         <Modal.Footer>
           <Row className="text-center w-100">
-            {wallet?.account && (
+            {address && (
               <Approval
                 tokenAddress={pool1.address}
                 symbol={`${token.symbol}p`}
-                walletAddress={wallet?.account}
+                walletAddress={address}
                 contractAddress={addresses.dao}
                 txnAmount={deposit()}
                 assetNumber="1"

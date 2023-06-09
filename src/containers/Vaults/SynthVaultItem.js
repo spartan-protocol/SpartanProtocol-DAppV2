@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { usePool } from '../../store/pool'
 import { formatFromWei } from '../../utils/bigNumber'
 import { useSynth } from '../../store/synth'
@@ -21,7 +21,7 @@ const SynthVaultItem = ({ synthItem }) => {
   const sparta = useSparta()
   const synth = useSynth()
   const pool = usePool()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
 
   const getToken = (_tokenAddress) =>
     pool.tokenDetails.filter((i) => i.address === _tokenAddress)[0]
@@ -94,7 +94,7 @@ const SynthVaultItem = ({ synthItem }) => {
             <Row className="my-1">
               <Col>{t('balance')}</Col>
               <Col xs="auto" className="text-end">
-                {!wallet.account ? (
+                {!address ? (
                   t('connectWallet')
                 ) : (
                   <>
@@ -108,7 +108,7 @@ const SynthVaultItem = ({ synthItem }) => {
             <Row className="my-1">
               <Col>{t('staked')}</Col>
               <Col xs="auto" className="text-end">
-                {!wallet.account ? (
+                {!address ? (
                   t('connectWallet')
                 ) : (
                   <>
@@ -122,7 +122,7 @@ const SynthVaultItem = ({ synthItem }) => {
             <Row className="my-1">
               <Col>{t('harvestable')}</Col>
               <Col xs="auto" className="text-end">
-                {!wallet.account ? (
+                {!address ? (
                   t('connectWallet')
                 ) : (
                   <>{getHarvestable()[1] + getHarvestable()[2]}</>
@@ -133,7 +133,7 @@ const SynthVaultItem = ({ synthItem }) => {
             {/* <Row className="my-1">
               <Col>{t('lastHarvest')}</Col>
               <Col xs="auto" className="text-end">
-                {!wallet.account ? (
+                {!address ? (
                   t('connectWallet')
                 ) : (
                   <>

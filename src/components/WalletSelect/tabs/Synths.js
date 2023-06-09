@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { useWeb3, watchAsset } from '../../../store/web3'
 import { BN, convertFromWei, formatFromWei } from '../../../utils/bigNumber'
@@ -18,10 +18,10 @@ import HelmetLoading from '../../Spinner/index'
 const Synths = () => {
   const { t } = useTranslation()
   const pool = usePool()
-  const wallet = useWeb3React()
   const dispatch = useDispatch()
   const synth = useSynth()
   const web3 = useWeb3()
+  const { address } = useAccount()
 
   const [spartaPrice, setspartaPrice] = useState(0)
 
@@ -54,7 +54,7 @@ const Synths = () => {
           `${token?.symbol.substring(0, 10)}s`,
           '18',
           token?.symbolUrl,
-          wallet.account,
+          address,
         ),
       )
     }
@@ -90,8 +90,8 @@ const Synths = () => {
 
   const getTotalValue = () => {
     let total = BN(0)
-    const addToTotal = (address, input) => {
-      total = total.plus(getUSD(address, input))
+    const addToTotal = (_address, input) => {
+      total = total.plus(getUSD(_address, input))
     }
     synth.synthDetails
       ?.filter((asset) => asset.balance > 0)
