@@ -34,10 +34,11 @@ export const { updateLoading, updateError, updateTxn } = routerSlice.actions
  * @param inputToken @param inputBase @param token @param wallet
  */
 export const addLiquidity =
-  (inputToken, inputBase, token, wallet) => async (dispatch, getState) => {
+  (inputToken, inputBase, token, walletAddr, signer) =>
+  async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId, addresses } = getState().app
@@ -51,7 +52,7 @@ export const addLiquidity =
       let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
       txn = await parseTxn(txn, 'addLiq', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -63,10 +64,11 @@ export const addLiquidity =
  * @param input @param fromBase @param token @param wallet
  */
 export const addLiquiditySingle =
-  (input, fromBase, token, wallet) => async (dispatch, getState) => {
+  (input, fromBase, token, walletAddr, signer) =>
+  async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId, addresses } = getState().app
@@ -80,7 +82,7 @@ export const addLiquiditySingle =
       let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
       txn = await parseTxn(txn, 'addLiqSingle', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -92,10 +94,11 @@ export const addLiquiditySingle =
  * @param unitsInput @param fromPool @param toPool @param wallet
  */
 export const zapLiquidity =
-  (unitsInput, fromPool, toPool, wallet) => async (dispatch, getState) => {
+  (unitsInput, fromPool, toPool, walletAddr, provider) =>
+  async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(provider, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -106,7 +109,7 @@ export const zapLiquidity =
       let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
       txn = await parseTxn(txn, 'zapLiq', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -118,10 +121,10 @@ export const zapLiquidity =
  * @param units @param token @param wallet
  */
 export const removeLiquidityExact =
-  (units, token, wallet) => async (dispatch, getState) => {
+  (units, token, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -132,7 +135,7 @@ export const removeLiquidityExact =
       let txn = await contract.removeLiquidityExact(units, token, ORs)
       txn = await parseTxn(txn, 'remLiq', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -144,10 +147,10 @@ export const removeLiquidityExact =
  * @param units @param toBase @param token @param wallet
  */
 export const removeLiquiditySingle =
-  (units, toBase, token, wallet) => async (dispatch, getState) => {
+  (units, toBase, token, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -159,7 +162,7 @@ export const removeLiquiditySingle =
       })
       txn = await parseTxn(txn, 'remLiqSingle', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -173,11 +176,11 @@ export const removeLiquiditySingle =
  * @param inputAmount @param fromToken @param toToken @param wallet
  */
 export const swap =
-  (inputAmount, fromToken, toToken, minAmount, wallet) =>
+  (inputAmount, fromToken, toToken, minAmount, walletAddr, provider) =>
   async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(provider, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId, addresses } = getState().app
@@ -197,7 +200,7 @@ export const swap =
       )
       txn = await parseTxn(txn, 'swapped', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -243,10 +246,11 @@ export const swapAssetToSynth =
  * @param inputAmount @param fromSynth @param toToken @param wallet
  */
 export const swapSynthToAsset =
-  (inputAmount, fromSynth, toToken, wallet) => async (dispatch, getState) => {
+  (inputAmount, fromSynth, toToken, walletAddr, signer) =>
+  async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getRouterContract(wallet, rpcs)
+    const contract = getRouterContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -261,7 +265,7 @@ export const swapSynthToAsset =
       )
       txn = await parseTxn(txn, 'burnSynth', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getTokenDetails(wallet.account)) // Update tokenDetails -> synthDetails -> poolDetails
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> synthDetails -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -271,10 +275,10 @@ export const swapSynthToAsset =
 /**
  * Attempt to unfreeze the protocol
  */
-export const updatePoolStatus = (wallet) => async (dispatch, getState) => {
+export const updatePoolStatus = (signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getRouterContract(wallet, rpcs)
+  const contract = getRouterContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app

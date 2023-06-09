@@ -1,4 +1,4 @@
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button'
@@ -14,7 +14,7 @@ import { formatShortString } from '../../utils/web3'
 import styles from './styles.module.scss'
 
 const FiatOnboard = () => {
-  const wallet = useWeb3React()
+  const { address } = useAccount()
   const breakpoint = useBreakpoint()
 
   const [isBlocked, setisBlocked] = useState(false)
@@ -58,10 +58,10 @@ const FiatOnboard = () => {
                 <Icon icon="binanceConnect" width="120px" className="ms-2" />
               </div>
               <hr />
-              {wallet.account && (
+              {address && (
                 <div>
-                  Your connected wallet: {formatShortString(wallet.account)}{' '}
-                  <ShareLink url={wallet.account}>
+                  Your connected wallet: {formatShortString(address)}{' '}
+                  <ShareLink url={address}>
                     <Icon icon="copy" size="18" className="ms-2" />
                   </ShareLink>
                 </div>

@@ -6,8 +6,8 @@ import Row from 'react-bootstrap/Row'
 import Nav from 'react-bootstrap/Nav'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useWeb3React } from '@web3-react/core'
 import { Link } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 import ProposalItem from './ProposalItem'
 import {
   useDao,
@@ -33,9 +33,9 @@ const Overview = () => {
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
-  const wallet = useWeb3React()
   const app = useApp()
   const { t } = useTranslation()
+  const { address } = useAccount()
 
   const [selectedView, setSelectedView] = useState('current')
 
@@ -56,11 +56,11 @@ const Overview = () => {
 
   useEffect(() => {
     if (tempChains.includes(app.chainId)) {
-      dispatch(daoMemberDetails(wallet.account))
-      dispatch(daoProposalDetails(wallet.account))
+      dispatch(daoMemberDetails(address))
+      dispatch(daoProposalDetails(address))
       dispatch(proposalWeight())
     }
-  }, [dispatch, wallet.account, dao.global, app.chainId])
+  }, [dispatch, address, dao.global, app.chainId])
 
   const isLoading = () => {
     if (!pool.poolDetails) {

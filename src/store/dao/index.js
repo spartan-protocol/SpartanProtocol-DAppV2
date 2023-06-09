@@ -322,10 +322,10 @@ export const proposalWeight = () => async (dispatch, getState) => {
  * Deposit / Stake LP Tokens (Lock them in the DAOVault)
  */
 export const daoDeposit =
-  (pool, amount, wallet) => async (dispatch, getState) => {
+  (pool, amount, walletAddr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getDaoContract(wallet, rpcs)
+    const contract = getDaoContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -335,7 +335,7 @@ export const daoDeposit =
       let txn = await contract.deposit(pool, amount, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'daoDeposit', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getDaoDetails(wallet.account)) // Update daoDetails
+      dispatch(getDaoDetails(walletAddr)) // Update daoDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }
@@ -345,57 +345,59 @@ export const daoDeposit =
 /**
  * Withdraw / Unstake LP Tokens (Unlock them from the DAO)
  */
-export const daoWithdraw = (pool, wallet) => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
-  try {
-    const { gasRateMN, gasRateTN } = getState().app.settings
-    const { chainId } = getState().app
-    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
-    gPrice = BN(gPrice).times(1000000000).toString()
-    // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.withdraw(pool, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'daoWithdraw', rpcs)
-    dispatch(updateTxn(txn))
-    dispatch(getDaoDetails(wallet.account)) // Update daoDetails
-  } catch (error) {
-    dispatch(updateError(error.reason))
+export const daoWithdraw =
+  (pool, walletAddr, signer) => async (dispatch, getState) => {
+    dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
+    const contract = getDaoContract(signer, rpcs)
+    try {
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
+      let txn = await contract.withdraw(pool, { gasPrice: gPrice })
+      txn = await parseTxn(txn, 'daoWithdraw', rpcs)
+      dispatch(updateTxn(txn))
+      dispatch(getDaoDetails(walletAddr)) // Update daoDetails
+    } catch (error) {
+      dispatch(updateError(error.reason))
+    }
   }
-}
 
 /**
  * Harvest SPARTA DAOVault rewards
  */
-export const daoHarvest = (wallet) => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
-  try {
-    const { gasRateMN, gasRateTN } = getState().app.settings
-    const { chainId } = getState().app
-    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
-    gPrice = BN(gPrice).times(1000000000).toString()
-    // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.harvest({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'daoHarvest', rpcs)
-    dispatch(updateTxn(txn))
-    dispatch(getDaoDetails(wallet.account)) // Update daoDetails
-    dispatch(daoMemberDetails(wallet.account)) // Update daoMemberDetails (daoVault lastHarvest)
-  } catch (error) {
-    dispatch(updateError(error.reason))
+export const daoHarvest =
+  (walletAddr, signer) => async (dispatch, getState) => {
+    dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
+    const contract = getDaoContract(signer, rpcs)
+    try {
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
+      let txn = await contract.harvest({ gasPrice: gPrice })
+      txn = await parseTxn(txn, 'daoHarvest', rpcs)
+      dispatch(updateTxn(txn))
+      dispatch(getDaoDetails(walletAddr)) // Update daoDetails
+      dispatch(daoMemberDetails(walletAddr)) // Update daoMemberDetails (daoVault lastHarvest)
+    } catch (error) {
+      dispatch(updateError(error.reason))
+    }
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
-}
 
 /**
  * New action proposal
  */
 export const newActionProposal =
-  (typeStr, wallet) => async (dispatch, getState) => {
+  (typeStr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getDaoContract(wallet, rpcs)
+    const contract = getDaoContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -415,10 +417,10 @@ export const newActionProposal =
  * New parameter proposal
  */
 export const newParamProposal =
-  (param, typeStr, wallet) => async (dispatch, getState) => {
+  (param, typeStr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getDaoContract(wallet, rpcs)
+    const contract = getDaoContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -439,10 +441,10 @@ export const newParamProposal =
  * New address proposal
  */
 export const newAddressProposal =
-  (proposedAddress, typeStr, wallet) => async (dispatch, getState) => {
+  (proposedAddress, typeStr, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getDaoContract(wallet, rpcs)
+    const contract = getDaoContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -463,10 +465,10 @@ export const newAddressProposal =
  * New grant proposal
  */
 export const newGrantProposal =
-  (recipient, amount, wallet) => async (dispatch, getState) => {
+  (recipient, amount, signer) => async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getDaoContract(wallet, rpcs)
+    const contract = getDaoContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId } = getState().app
@@ -486,10 +488,10 @@ export const newGrantProposal =
 /**
  * Vote for the current open proposal
  */
-export const voteProposal = (wallet) => async (dispatch, getState) => {
+export const voteProposal = (signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
+  const contract = getDaoContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app
@@ -508,10 +510,10 @@ export const voteProposal = (wallet) => async (dispatch, getState) => {
 /**
  * Remove your vote from the current open proposal
  */
-export const removeVote = (wallet) => async (dispatch, getState) => {
+export const removeVote = (signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
+  const contract = getDaoContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app
@@ -530,10 +532,10 @@ export const removeVote = (wallet) => async (dispatch, getState) => {
 /**
  * Poll vote weights and check if proposal is ready to go into finalisation stage
  */
-export const pollVotes = (wallet) => async (dispatch, getState) => {
+export const pollVotes = (signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
+  const contract = getDaoContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app
@@ -552,10 +554,10 @@ export const pollVotes = (wallet) => async (dispatch, getState) => {
 /**
  * Cancel the current open proposal
  */
-export const cancelProposal = (wallet) => async (dispatch, getState) => {
+export const cancelProposal = (signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
+  const contract = getDaoContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app
@@ -574,10 +576,10 @@ export const cancelProposal = (wallet) => async (dispatch, getState) => {
 /**
  * Finalise a proposal
  */
-export const finaliseProposal = (wallet) => async (dispatch, getState) => {
+export const finaliseProposal = (signer) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
+  const contract = getDaoContract(signer, rpcs)
   try {
     const { gasRateMN, gasRateTN } = getState().app.settings
     const { chainId } = getState().app

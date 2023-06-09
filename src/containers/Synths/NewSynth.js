@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../store/synth'
 import { tempChains } from '../../utils/web3'
@@ -21,7 +21,8 @@ import { BN } from '../../utils/bigNumber'
 const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { chainId, addresses } = useApp()
   const pool = usePool()
@@ -49,7 +50,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const handleSubmit = async () => {
     setTxnLoading(true)
-    await dispatch(createSynth(inputAddress, wallet))
+    await dispatch(createSynth(inputAddress, signer))
     setTxnLoading(false)
     setShowModal(false)
   }
@@ -65,7 +66,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (!enoughGas()) {

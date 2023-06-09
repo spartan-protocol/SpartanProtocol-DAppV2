@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { getToken } from '../../../utils/math/utils'
@@ -25,7 +25,8 @@ import { useSparta } from '../../../store/sparta'
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
   const { isDark } = useTheme()
 
   const { addresses } = useApp()
@@ -73,7 +74,7 @@ const SynthWithdrawModal = (props) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet'), false]
     }
     if (!enoughGas()) {
@@ -119,13 +120,15 @@ const SynthWithdrawModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvest([props.synthItem.address], wallet))
+    await dispatch(synthHarvest([props.synthItem.address], address, signer))
     setHarvestLoading(false)
   }
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
-    await dispatch(synthWithdraw(props.synthItem.address, percentage, wallet))
+    await dispatch(
+      synthWithdraw(props.synthItem.address, percentage, address, signer),
+    )
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -135,7 +138,7 @@ const SynthWithdrawModal = (props) => {
       <Button
         className="w-100 btn-sm"
         onClick={() => setshowModal(true)}
-        disabled={props.disabled || !wallet.account}
+        disabled={props.disabled || !address}
       >
         {t('withdraw')}
       </Button>

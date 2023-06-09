@@ -11,7 +11,7 @@ import Button from 'react-bootstrap/Button'
 import Badge from 'react-bootstrap/Badge'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { formatShortString } from '../../utils/web3'
 import { usePool } from '../../store/pool'
@@ -42,7 +42,8 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   const focus = useFocus()
   const location = useLocation()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2, settings } = useApp()
   const pool = usePool()
@@ -391,7 +392,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (swapInput1?.value <= 0) {
@@ -436,7 +437,8 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
         assetSwap1.tokenAddress,
         assetSwap2.tokenAddress,
         BN(getSwap[0]).times(minAmountFraction).toFixed(0, 1),
-        wallet,
+        address,
+        signer,
       ),
     )
     setTxnLoading(false)
@@ -444,7 +446,7 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const checkWallet = () => {
-    if (!wallet.account) {
+    if (!address) {
       setShowWalletWarning1(!showWalletWarning1)
     }
   }
@@ -776,12 +778,12 @@ const SwapTokens = ({ assetSwap1, assetSwap2 }) => {
 
       <Row className="text-center mt-3">
         {assetSwap1?.tokenAddress !== addresses.bnb &&
-          wallet?.account &&
+          address &&
           swapInput1?.value && (
             <Approval
               tokenAddress={assetSwap1?.tokenAddress}
               symbol={token1.symbol}
-              walletAddress={wallet?.account}
+              walletAddress={address}
               contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}
               assetNumber="1"

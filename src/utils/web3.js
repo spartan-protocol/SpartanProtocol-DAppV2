@@ -441,7 +441,7 @@ export const getWalletProvider = (_provider, rpcUrls) => {
     changeRpc(chainId, rpcUrls),
   ) // simple provider unsigned & cached chainId
   if (_provider) {
-    provider = _provider.getSigner()
+    provider = !_provider._isSigner ? _provider.getSigner() : _provider
   }
   return provider
 }

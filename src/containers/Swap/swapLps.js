@@ -12,7 +12,7 @@ import Badge from 'react-bootstrap/Badge'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Form from 'react-bootstrap/Form'
 import Popover from 'react-bootstrap/Popover'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { formatShortString, oneWeek } from '../../utils/web3'
 import { usePool } from '../../store/pool'
@@ -48,7 +48,8 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   const focus = useFocus()
   const location = useLocation()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2 } = useApp()
   const pool = usePool()
@@ -350,7 +351,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (swapInput1?.value <= 0) {
@@ -387,7 +388,8 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
         convertToWei(swapInput1?.value),
         assetSwap1.address,
         assetSwap2.address,
-        wallet,
+        address,
+        signer,
       ),
     )
     setTxnLoading(false)
@@ -395,7 +397,7 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
   }
 
   const checkWallet = () => {
-    if (!wallet.account) {
+    if (!address) {
       setShowWalletWarning1(!showWalletWarning1)
     }
   }
@@ -692,11 +694,11 @@ const SwapLps = ({ assetSwap1, assetSwap2 }) => {
       )}
       {!assetSwap1?.newPool ? (
         <Row className="text-center mt-3">
-          {wallet?.account && swapInput1?.value && (
+          {address && swapInput1?.value && (
             <Approval
               tokenAddress={assetSwap1?.address}
               symbol={`${token1.symbol}p`}
-              walletAddress={wallet?.account}
+              walletAddress={address}
               contractAddress={addresses.router}
               txnAmount={convertToWei(swapInput1?.value)}
               assetNumber="1"

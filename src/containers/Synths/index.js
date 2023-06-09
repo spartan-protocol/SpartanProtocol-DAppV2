@@ -12,7 +12,7 @@ import Badge from 'react-bootstrap/Badge'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import Nav from 'react-bootstrap/Nav'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import {
   formatShortString,
@@ -60,7 +60,8 @@ const Swap = () => {
   const focus = useFocus()
   const location = useLocation()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2, chainId } = useApp()
   // const dao = useDao()
@@ -98,7 +99,7 @@ const Swap = () => {
   useEffect(() => {
     const getGlobals = () => {
       // dispatch(getSynthGlobalDetails())
-      // dispatch(getSynthMemberDetails(wallet.account))
+      // dispatch(getSynthMemberDetails(address))
     }
     getGlobals() // Run on load
     const interval = setInterval(() => {
@@ -107,7 +108,7 @@ const Swap = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [dispatch, wallet.account])
+  }, [dispatch, address])
 
   // useEffect(() => {
   //   dispatch(synthVaultWeight())
@@ -441,7 +442,7 @@ const Swap = () => {
   // }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (swapInput1?.value <= 0) {
@@ -517,7 +518,8 @@ const Swap = () => {
         convertToWei(swapInput1?.value),
         synth1.address,
         assetSwap2.tokenAddress,
-        wallet,
+        address,
+        signer,
       ),
     )
     setTxnLoading(false)
@@ -540,14 +542,14 @@ const Swap = () => {
     ) {
       return true
     }
-    // if (wallet.account && !synth.member) {
+    // if (address && !synth.member) {
     //   return true
     // }
     return false
   }
 
   const checkWallet = () => {
-    if (!wallet.account) {
+    if (!address) {
       setShowWalletWarning1(!showWalletWarning1)
     }
   }
@@ -1210,12 +1212,12 @@ const Swap = () => {
                             {/* {activeTab === 'mint' && (
                               <>
                                 {assetSwap1?.tokenAddress !== addresses.bnb &&
-                                  wallet?.account &&
+                                  address &&
                                   swapInput1?.value && (
                                     <Approval
                                       tokenAddress={assetSwap1?.tokenAddress}
                                       symbol={token1.symbol}
-                                      walletAddress={wallet?.account}
+                                      walletAddress={address}
                                       contractAddress={addresses.router}
                                       txnAmount={convertToWei(
                                         swapInput1?.value,
@@ -1281,11 +1283,11 @@ const Swap = () => {
                             )} */}
                             {activeTab === 'burn' && (
                               <>
-                                {wallet?.account && swapInput1?.value && (
+                                {address && swapInput1?.value && (
                                   <Approval
                                     tokenAddress={synth1.address}
                                     symbol={`${token1.symbol}s`}
-                                    walletAddress={wallet?.account}
+                                    walletAddress={address}
                                     contractAddress={addresses.router}
                                     txnAmount={convertToWei(swapInput1?.value)}
                                     assetNumber="1"
