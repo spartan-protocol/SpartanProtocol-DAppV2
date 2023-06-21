@@ -32,6 +32,13 @@ const { chains, provider } = configureChains(
 
 // const bscConnect = (chainId) =>
 //   new BscConnector({ supportedChainIds: [chainId] })
+const binWalletConnector = new InjectedConnector({
+  options: {
+    name: 'Binance Wallet',
+    getProvider: () =>
+      typeof window !== 'undefined' ? window.BinanceChain : undefined,
+  },
+})
 const injectConnect = new InjectedConnector({ chains })
 // new InjectedConnector({ chains: chainId === 56 ? [bsc] : [bscTestnet] })
 // const ledgerConnect = (chainId, rpcUrl) =>
@@ -60,15 +67,20 @@ const walletlink = new CoinbaseWalletConnector({
   },
 })
 
-const connectors = [injectConnect, walletConnect, walletlink]
+const connectors = [
+  injectConnect,
+  walletConnect,
+  walletlink,
+  binWalletConnector,
+]
 
 export const connectorsByName = (connectorName, connectorsList) => {
   // const chainId = getChainId() // TODO: Try without, otherwise hand random RPC url
   // const rpcItem = changeRpc(chainId, rpcUrls) // TODO: Try without, otherwise hand random RPC url
 
-  // if (connectorName === 'bsc') {
-  //   return bscConnect(chainId)
-  // }
+  if (connectorName === 'binWallet') {
+    return connectorsList[3]
+  }
 
   // if (connectorName === 'ledger') {
   //   return ledgerConnect(chainId, rpcItem.url)

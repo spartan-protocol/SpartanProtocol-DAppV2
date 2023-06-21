@@ -134,7 +134,7 @@ const WalletSelect = (props) => {
       setPending(true)
       setTriedOnce(true)
       window.localStorage.removeItem('lastWallet')
-      if (x.id === 'BC') {
+      if (x.id === 'BW') {
         await dispatch(addNetworkBC())
       } else if (['MM', 'BRAVE', 'TW'].includes(x.id)) {
         await dispatch(addNetworkMM())
@@ -163,8 +163,8 @@ const WalletSelect = (props) => {
       // web3.rpcs.length > 0
     ) {
       // *** ADD IN LEDGER FOR TESTING ***
-      if (window.localStorage.getItem('lastWallet') === 'BC') {
-        onWalletConnect(walletTypes.filter((x) => x.id === 'BC')[0])
+      if (window.localStorage.getItem('lastWallet') === 'BW') {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'BW')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'MM') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
@@ -438,12 +438,12 @@ const WalletSelect = (props) => {
                   <Button
                     key={x.id}
                     disabled={
-                      (x.id === 'BC' && !window.BinanceChain) ||
+                      (x.id === 'BW' && !window.BinanceChain) ||
                       (x.id === 'MM' && !window.ethereum?.isMetaMask) ||
                       (x.id === 'WC' && chainId !== 56) ||
                       (x.id === 'BRAVE' && !window.ethereum?.isBraveWallet) ||
                       (x.id === 'ON' && !window.ethereum?.isONTO) ||
-                      (!['WC', 'BC', 'TW', 'CB'].includes(x.id) &&
+                      (!['WC', 'BW', 'TW', 'CB'].includes(x.id) &&
                         !window.ethereum)
                     }
                     className="w-100 my-1"
