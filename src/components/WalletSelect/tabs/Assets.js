@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import { Link } from 'react-router-dom'
 import { useAccount, useNetwork } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { useWeb3, watchAsset } from '../../../store/web3'
@@ -15,9 +14,8 @@ import { calcSpotValueInBase, getPool } from '../../../utils/math/utils'
 import { tempChains } from '../../../utils/web3'
 import HelmetLoading from '../../Spinner/index'
 import { useApp } from '../../../store/app'
-import { validSymbols } from '../../../containers/FiatOnboard/types'
 
-const Assets = ({ onHide }) => {
+const Assets = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
@@ -195,18 +193,6 @@ const Assets = ({ onHide }) => {
                   style={{ maxWidth: '75px' }}
                 >
                   <Row>
-                    <Col xs="6" className="p-0">
-                      {validSymbols[asset.symbol] ? (
-                        <Link
-                          to={`/buycrypto?asset1=${validSymbols[asset.symbol]}`}
-                          onClick={() => onHide()}
-                        >
-                          <Icon icon="bankCards" size="22" className="ms-1" />
-                        </Link>
-                      ) : (
-                        <div />
-                      )}
-                    </Col>
                     {getWalletType() && (
                       <Col xs="6" className="p-0">
                         <a
