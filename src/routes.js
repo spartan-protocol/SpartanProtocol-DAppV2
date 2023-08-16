@@ -7,9 +7,7 @@ import Synths from './containers/Synths'
 import Vaults from './containers/Vaults'
 import Positions from './containers/Positions'
 import Dao from './containers/Dao'
-import FiatOnboard from './containers/FiatOnboard'
 import Upgrade from './containers/Upgrade'
-// import Donate from './containers/Donate'
 import PU from './containers/PU'
 import Friends from './containers/Friends'
 import Contracts from './containers/Contracts'
@@ -72,28 +70,12 @@ export const routes = [
   },
 
   {
-    path: 'buycrypto',
-    name: 'buyCrypto',
-    icon: 'bankCards',
-    component: <FiatOnboard />,
-    layout: '',
-  },
-
-  {
     path: 'upgrade',
     name: 'upgrade',
     icon: 'upgrade',
     component: <Upgrade />,
     layout: '',
   },
-
-  // {
-  //   path: 'donate',
-  //   name: 'donate',
-  //   icon: 'donate',
-  //   component: <Donate />,
-  //   layout: '',
-  // },
 
   {
     path: 'friends',
