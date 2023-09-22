@@ -10,7 +10,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import Approval from '../../components/Approval/index'
 import {
   getTwTokenInfo,
@@ -34,7 +34,8 @@ const minBase = 50000
 const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { chainId, addresses } = useApp()
   const pool = usePool()
@@ -173,8 +174,8 @@ const NewPool = ({ setShowModal, showModal }) => {
         convertToWei(spartaInput?.value),
         convertToWei(tokenInput?.value),
         addrInput?.value,
-        wallet,
-        web3.rpcs,
+        address,
+        signer,
       ),
     )
     setTxnLoading(false)
@@ -263,7 +264,7 @@ const NewPool = ({ setShowModal, showModal }) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (!enoughGas()) {
@@ -425,11 +426,11 @@ const NewPool = ({ setShowModal, showModal }) => {
 
                   <Modal.Footer className="text-center">
                     <Row xs="12" className="w-100">
-                      {wallet?.account && spartaInput?.value > 0 && (
+                      {address && spartaInput?.value > 0 && (
                         <Approval
                           tokenAddress={addresses.spartav2}
                           symbol="SPARTA"
-                          walletAddress={wallet.account}
+                          walletAddress={address}
                           contractAddress={addresses.poolFactory}
                           txnAmount={convertToWei(spartaInput?.value)}
                           assetNumber="1"
@@ -451,13 +452,13 @@ const NewPool = ({ setShowModal, showModal }) => {
                           )}
                         </Button>
                       </Col>
-                      {wallet?.account &&
+                      {address &&
                         tokenInput?.value > 0 &&
                         addrInput?.value !== addresses.bnb && (
                           <Approval
                             tokenAddress={addrInput?.value}
                             symbol={tokenSymbol}
-                            walletAddress={wallet.account}
+                            walletAddress={address}
                             contractAddress={addresses.poolFactory}
                             txnAmount={convertToWei(tokenInput?.value)}
                             assetNumber="2"

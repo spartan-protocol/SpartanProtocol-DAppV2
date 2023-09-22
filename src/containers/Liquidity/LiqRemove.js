@@ -12,7 +12,7 @@ import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
 import { formatShortString, oneWeek } from '../../utils/web3'
@@ -47,7 +47,8 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
   const dispatch = useDispatch()
   const focus = useFocus()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2 } = useApp()
   const pool = usePool()
@@ -278,7 +279,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (removeInput1?.value <= 0) {
@@ -315,7 +316,8 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
         removeLiquidityExact(
           convertToWei(removeInput1.value),
           selectedPool.tokenAddress,
-          wallet,
+          address,
+          signer,
         ),
       )
     } else {
@@ -324,7 +326,8 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
           convertToWei(removeInput1.value),
           assetLiq1.tokenAddress === addresses.spartav2,
           selectedPool.tokenAddress,
-          wallet,
+          address,
+          signer,
         ),
       )
     }
@@ -333,7 +336,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
   }
 
   const checkWallet = () => {
-    if (!wallet.account) {
+    if (!address) {
       setShowWalletWarning1(!showWalletWarning1)
     }
   }
@@ -665,18 +668,16 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
           )}
 
           <Row className="text-center mt-3">
-            {selectedPool?.tokenAddress &&
-              wallet?.account &&
-              removeInput1?.value && (
-                <Approval
-                  tokenAddress={selectedPool?.address}
-                  symbol={`${tokenPool.symbol}p`}
-                  walletAddress={wallet?.account}
-                  contractAddress={addresses.router}
-                  txnAmount={convertToWei(removeInput1?.value)}
-                  assetNumber="1"
-                />
-              )}
+            {selectedPool?.tokenAddress && address && removeInput1?.value && (
+              <Approval
+                tokenAddress={selectedPool?.address}
+                symbol={`${tokenPool.symbol}p`}
+                walletAddress={address}
+                contractAddress={addresses.router}
+                txnAmount={convertToWei(removeInput1?.value)}
+                assetNumber="1"
+              />
+            )}
             <Col xs="12" sm="4" md="12" className="hide-if-siblings">
               <Button
                 className="w-100"

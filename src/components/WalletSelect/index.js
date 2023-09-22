@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
@@ -11,6 +10,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Badge from 'react-bootstrap/Badge'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { useAccount, useConnect, useDisconnect, useNetwork } from 'wagmi'
 import walletTypes from './walletTypes'
 import { getExplorerWallet } from '../../utils/extCalls'
 import { formatShortString, liveChains, tempChains } from '../../utils/web3'
@@ -24,12 +24,12 @@ import { Tooltip } from '../Tooltip/index'
 import { useSynth } from '../../store/synth'
 import { usePool } from '../../store/pool'
 import { convertFromWei } from '../../utils/bigNumber'
-import { connectorsByName } from '../../utils/web3React'
+import { connectorsByName } from '../../utils/web3config'
 import { getLPWeights, getSynthWeights } from '../../utils/math/nonContract'
 import { getToken } from '../../utils/math/utils'
 import { useDao } from '../../store/dao'
 import { useBond } from '../../store/bond'
-import { addNetworkBC, addNetworkMM, useWeb3 } from '../../store/web3'
+import { addNetworkBC, addNetworkMM } from '../../store/web3'
 import { useTheme } from '../../providers/Theme'
 import { appChainId, useApp } from '../../store/app'
 
@@ -100,14 +100,16 @@ const WalletSelect = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { isDark } = useTheme()
-  const wallet = useWeb3React()
+  const { connectAsync, connectors, error } = useConnect()
+  const { disconnect } = useDisconnect()
+  const { address, isConnected } = useAccount()
+  const { chain } = useNetwork()
 
   const { chainId, addresses } = useApp()
   const bond = useBond()
   const dao = useDao()
   const pool = usePool()
   const synth = useSynth()
-  const web3 = useWeb3()
 
   const [activeTab, setactiveTab] = useState('tokens')
   // const [wcConnector, setWcConnector] = useState(false)
@@ -122,8 +124,7 @@ const WalletSelect = (props) => {
 
   const onWalletDisconnect = async () => {
     props.onHide()
-    wallet.deactivate()
-    window.localStorage.removeItem('walletconnect')
+    await disconnect()
     window.localStorage.setItem('disableWallet', '1')
     window.location.reload(true)
   }
@@ -132,22 +133,22 @@ const WalletSelect = (props) => {
     async (x) => {
       setPending(true)
       setTriedOnce(true)
-      if (x.id === 'BC') {
+      window.localStorage.removeItem('lastWallet')
+      if (x.id === 'BW') {
         await dispatch(addNetworkBC())
       } else if (['MM', 'BRAVE', 'TW'].includes(x.id)) {
         await dispatch(addNetworkMM())
       }
+      if (address) {
+        disconnect()
+      }
+      const connector = await connectorsByName(x.connector, connectors) // This 'await' is important despite common sense :) Pls don't remove!
+      await connectAsync({ connector })
       window.localStorage.removeItem('disableWallet')
       window.localStorage.setItem('lastWallet', x.id)
-      wallet.deactivate()
-      const connector = await connectorsByName(x.connector, web3.rpcs) // This 'await' is important despite common sense :) Pls don't remove!
-      await wallet.activate(connector)
-      if (!wallet.account) {
-        await wallet.activate(connector)
-      }
       setPending(false)
     },
-    [dispatch, wallet, web3.rpcs],
+    [address, connectors, connectAsync, dispatch, disconnect],
   )
 
   useEffect(() => {
@@ -156,14 +157,14 @@ const WalletSelect = (props) => {
       !pending &&
       !triedOnce &&
       window.localStorage.getItem('disableWallet') !== '1' &&
-      !wallet.account &&
-      !wallet.active &&
-      !wallet.error
+      !address &&
+      !isConnected &&
+      !error
       // web3.rpcs.length > 0
     ) {
       // *** ADD IN LEDGER FOR TESTING ***
-      if (window.localStorage.getItem('lastWallet') === 'BC') {
-        onWalletConnect(walletTypes.filter((x) => x.id === 'BC')[0])
+      if (window.localStorage.getItem('lastWallet') === 'BW') {
+        onWalletConnect(walletTypes.filter((x) => x.id === 'BW')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'MM') {
         onWalletConnect(walletTypes.filter((x) => x.id === 'MM')[0])
       } else if (window.localStorage.getItem('lastWallet') === 'TW') {
@@ -188,9 +189,9 @@ const WalletSelect = (props) => {
     onWalletConnect,
     pending,
     triedOnce,
-    wallet.account,
-    wallet.active,
-    wallet.error,
+    address,
+    isConnected,
+    error,
   ])
 
   // ------------------------------------------------------------------------
@@ -198,7 +199,7 @@ const WalletSelect = (props) => {
   const [rank, setrank] = useState('Loading')
   useEffect(() => {
     const getWeight = () => {
-      if (wallet.account && pool.poolDetails.length > 0) {
+      if (address && pool.poolDetails.length > 0) {
         const lpWeight = getLPWeights(
           pool.poolDetails,
           dao.daoDetails,
@@ -219,9 +220,10 @@ const WalletSelect = (props) => {
       return '0'
     }
     const getRank = () => {
-      if (!tempChains.includes(wallet.chainId)) {
-        setrank('Check Network')
-      }
+      // console.log(chain)
+      // if (!tempChains.includes(chain.id)) {
+      //   setrank('Check Network')
+      // }
       if (
         props.show &&
         pool.tokenDetails &&
@@ -256,8 +258,8 @@ const WalletSelect = (props) => {
     pool.tokenDetails,
     props.show,
     synth.synthDetails,
-    wallet.account,
-    wallet.chainId,
+    address,
+    // chain.id,
   ])
 
   const getTokenCount = () => {
@@ -309,13 +311,13 @@ const WalletSelect = (props) => {
         >
           <Row className="ms-auto">
             <Col xs="12">
-              {wallet.account ? (
+              {address ? (
                 <Col>
                   <h4>{t('wallet')}</h4>
                   <span className="output-card">
-                    {formatShortString(wallet.account)}
+                    {formatShortString(address)}
                     <div className="d-inline-block">
-                      <ShareLink url={wallet.account}>
+                      <ShareLink url={address}>
                         <Icon
                           icon="copy"
                           className="ms-2 mb-1"
@@ -357,7 +359,7 @@ const WalletSelect = (props) => {
                 </span>
               </Form>
             </Col>
-            {wallet.account && (
+            {address && (
               <>
                 <hr className="mt-3" />
                 <Col className="text-center mb-2">
@@ -374,8 +376,7 @@ const WalletSelect = (props) => {
                       >
                         {t('tokens')}{' '}
                         <Badge bg="secondary">
-                          {tempChains.includes(wallet.chainId) &&
-                            getTokenCount()}
+                          {tempChains.includes(chain.id) && getTokenCount()}
                         </Badge>
                       </Nav.Link>
                     </Nav.Item>
@@ -388,7 +389,7 @@ const WalletSelect = (props) => {
                       >
                         {t('lps')}{' '}
                         <Badge bg="secondary">
-                          {tempChains.includes(wallet.chainId) && getLpsCount()}
+                          {tempChains.includes(chain.id) && getLpsCount()}
                         </Badge>
                       </Nav.Link>
                     </Nav.Item>
@@ -397,8 +398,7 @@ const WalletSelect = (props) => {
                       <Nav.Link eventKey="synths" className="btn-sm">
                         {t('synths')}{' '}
                         <Badge bg="secondary">
-                          {tempChains.includes(wallet.chainId) &&
-                            getSynthsCount()}
+                          {tempChains.includes(chain.id) && getSynthsCount()}
                         </Badge>
                       </Nav.Link>
                     </Nav.Item>
@@ -415,28 +415,36 @@ const WalletSelect = (props) => {
         </Modal.Header>
 
         <Modal.Body>
-          {wallet.error && (
-            <Alert variant="primary">
-              {t('wrongNetwork', {
-                network: chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
-              })}
-            </Alert>
-          )}
+          {error &&
+            (error.message ===
+            'closeTransport called before connection was established' ? (
+              <Alert variant="primary">
+                Trouble connecting with WalletConnect, please make sure your VPN
+                is switched off
+              </Alert>
+            ) : (
+              <Alert variant="primary">
+                {t('wrongNetwork', {
+                  network: chainId === 97 ? 'BSC Testnet' : 'BSC Mainnet',
+                })}
+              </Alert>
+            ))}
 
           {/* Wallet overview */}
-          {!wallet.account ? (
+          {!address ? (
             <Row>
               {walletTypes.map((x) => (
                 <Col key={x.id} xs="12" sm="6">
                   <Button
                     key={x.id}
                     disabled={
-                      (x.id === 'BC' && !window.BinanceChain) ||
+                      (x.id === 'BW' && !window.BinanceChain) ||
                       (x.id === 'MM' && !window.ethereum?.isMetaMask) ||
                       (x.id === 'WC' && chainId !== 56) ||
                       (x.id === 'BRAVE' && !window.ethereum?.isBraveWallet) ||
                       (x.id === 'ON' && !window.ethereum?.isONTO) ||
-                      (!['WC', 'BC', 'TW'].includes(x.id) && !window.ethereum)
+                      (!['WC', 'BW', 'TW', 'CB'].includes(x.id) &&
+                        !window.ethereum)
                     }
                     className="w-100 my-1"
                     onClick={() => {
@@ -469,17 +477,14 @@ const WalletSelect = (props) => {
                 <>
                   <Row>
                     <Col>
-                      {activeTab === 'tokens' && props.show && (
-                        <Assets onHide={props.onHide} />
+                      {activeTab === 'tokens' && props.show && <Assets />}
+                      {tempChains.includes(chain.id) && activeTab === 'lps' && (
+                        <LPs />
                       )}
-                      {tempChains.includes(wallet.chainId) &&
-                        activeTab === 'lps' && <LPs onHide={props.onHide} />}
-                      {tempChains.includes(wallet.chainId) &&
-                        activeTab === 'synths' && (
-                          <Synths onHide={props.onHide} />
-                        )}
-                      {tempChains.includes(wallet.chainId) &&
-                        activeTab === 'txns' && <Txns onHide={props.onHide} />}
+                      {tempChains.includes(chain.id) &&
+                        activeTab === 'synths' && <Synths />}
+                      {tempChains.includes(chain.id) &&
+                        activeTab === 'txns' && <Txns />}
                     </Col>
                   </Row>
                 </>
@@ -489,10 +494,10 @@ const WalletSelect = (props) => {
             </>
           )}
         </Modal.Body>
-        {wallet.active ? (
+        {isConnected ? (
           <Modal.Footer className="justify-content-center">
             <Button
-              href={getExplorerWallet(wallet.account)}
+              href={getExplorerWallet(address)}
               target="_blank"
               rel="noreferrer"
               size="sm"

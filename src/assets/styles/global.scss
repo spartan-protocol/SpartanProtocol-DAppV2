@@ -8,6 +8,10 @@ body {
   min-height: -webkit-fill-available;
 }
 
+:root {
+  --w3m-z-index: 1000000 !important;
+}
+
 html {
   height: -webkit-fill-available;
 }

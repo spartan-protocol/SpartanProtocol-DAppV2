@@ -98,25 +98,26 @@ export const fallenSpartansCheck = (wallet) => async (dispatch, getState) => {
 /**
  * Upgrade SPARTA(old V1) to SPARTA(New V2)
  */
-export const spartaUpgrade = (wallet) => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { rpcs } = getState().web3
-  const contract = getSpartaV2Contract(wallet, rpcs)
-  try {
-    const { gasRateMN, gasRateTN } = getState().app.settings
-    const { chainId } = getState().app
-    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
-    gPrice = BN(gPrice).times(1000000000).toString()
-    // const gPrice = await getProviderGasPrice(rpcs)
-    let txn = await contract.upgrade({ gasPrice: gPrice })
-    txn = await parseTxn(txn, 'upgrade', rpcs)
-    dispatch(updateTxn(txn))
-    dispatch(getTokenDetails(wallet.account)) // Update tokenDetails
-  } catch (error) {
-    dispatch(updateError(error.reason))
+export const spartaUpgrade =
+  (walletAddr, signer) => async (dispatch, getState) => {
+    dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
+    const contract = getSpartaV2Contract(signer, rpcs)
+    try {
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      // const gPrice = await getProviderGasPrice(rpcs)
+      let txn = await contract.upgrade({ gasPrice: gPrice })
+      txn = await parseTxn(txn, 'upgrade', rpcs)
+      dispatch(updateTxn(txn))
+      dispatch(getTokenDetails(walletAddr)) // Update tokenDetails
+    } catch (error) {
+      dispatch(updateError(error.reason))
+    }
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
-}
 
 /**
  * Claim your wallet portion from the fallenSparta fund

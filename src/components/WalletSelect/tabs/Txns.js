@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import Row from 'react-bootstrap/Row'
 import Table from 'react-bootstrap/Table'
@@ -8,6 +7,7 @@ import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Pagination from 'react-bootstrap/Pagination'
 import { useTranslation } from 'react-i18next'
+import { useAccount } from 'wagmi'
 import { getExplorerTxn } from '../../../utils/extCalls'
 import { clearTxns, formatShortString } from '../../../utils/web3'
 import { useDao } from '../../../store/dao'
@@ -26,8 +26,8 @@ import { Icon } from '../../Icons/index'
 import { useApp } from '../../../store/app'
 
 const Txns = () => {
-  const wallet = useWeb3React()
   const { t } = useTranslation()
+  const { address } = useAccount()
 
   const app = useApp()
   const dao = useDao()
@@ -72,10 +72,9 @@ const Txns = () => {
       return unfiltered
     }
     const unfiltered = getTxns()
-    if (unfiltered.length > 0 && wallet.account) {
-      let filtered = unfiltered.filter(
-        (group) => group.wallet === wallet.account,
-      )[0]?.txns
+    if (unfiltered.length > 0 && address) {
+      let filtered = unfiltered.filter((group) => group.wallet === address)[0]
+        ?.txns
       if (filtered?.length > 0) {
         filtered = filtered.filter((txn) => txn.chainId === app.chainId)
         setShowTxns(true)
@@ -87,13 +86,13 @@ const Txns = () => {
       setTxnArray([])
       setShowTxns(false)
     }
-  }, [app.chainId, wallet.account])
+  }, [app.chainId, address])
 
   useEffect(() => {
     updateFiltered()
   }, [
     activePage,
-    wallet.account,
+    address,
     dao.txn,
     dao.propTxn,
     pool.txn,
@@ -123,7 +122,7 @@ const Txns = () => {
       setItems(auxItems)
     }
     let amountOfPages = 0
-    if (txnArray?.length > 0 && wallet.account) {
+    if (txnArray?.length > 0 && address) {
       setShownArray(
         txnArray.slice(
           (activePage - 1) * txnsPerPage,
@@ -135,14 +134,14 @@ const Txns = () => {
     } else {
       setShownArray([])
     }
-  }, [activePage, txnArray, txnsPerPage, wallet.account])
+  }, [activePage, txnArray, txnsPerPage, address])
 
   useEffect(() => {
     updateShown()
   }, [txnArray, activePage, updateShown])
 
   const onClear = () => {
-    clearTxns(wallet.account)
+    clearTxns(address)
     setActivePage(1)
     updateFiltered()
     updateShown()
@@ -155,7 +154,7 @@ const Txns = () => {
     let sendAmnt = txn.sendAmnt1 ? formatFromWei(txn.sendAmnt1) : ''
     let sendAddr = txn.send1
       ? txn.send1.length > 15
-        ? txn.send1 === wallet.account
+        ? txn.send1 === address
           ? 'Your Wallet'
           : formatShortString(txn.send1)
         : txn.send1
@@ -171,7 +170,7 @@ const Txns = () => {
       sendAmnt = txn.sendAmnt2 ? formatFromWei(txn.sendAmnt2) : ''
       sendAddr = txn.send2
         ? txn.send2.length > 15
-          ? txn.send2 === wallet.account
+          ? txn.send2 === address
             ? 'Your Wallet'
             : formatShortString(txn.send2)
           : txn.send2
@@ -191,7 +190,7 @@ const Txns = () => {
     let recAmnt = txn.recAmnt1 ? formatFromWei(txn.recAmnt1) : ''
     let recAddr = txn.rec1
       ? txn.rec1.length > 15
-        ? txn.rec1 === wallet.account
+        ? txn.rec1 === address
           ? 'Your Wallet'
           : formatShortString(txn.rec1)
         : txn.rec1
@@ -208,7 +207,7 @@ const Txns = () => {
       recAmnt = txn.recAmnt2 ? formatFromWei(txn.recAmnt2) : ''
       recAddr = txn.rec2
         ? txn.rec2.length > 15
-          ? txn.rec2 === wallet.account
+          ? txn.rec2 === address
             ? 'Your Wallet'
             : formatShortString(txn.rec2)
           : txn.rec2
@@ -224,28 +223,28 @@ const Txns = () => {
     return [rec1, rec2]
   }
 
-  const _getToken = (address) => {
+  const _getToken = (_address) => {
     const pools = pool.tokenDetails
-    if (getToken(address, pools)) {
-      return [getToken(address, pools), 'token']
+    if (getToken(_address, pools)) {
+      return [getToken(_address, pools), 'token']
     }
-    if (getPool(address, pool.poolDetails)) {
+    if (getPool(_address, pool.poolDetails)) {
       return [
-        getToken(getPool(address, pool.poolDetails).tokenAddress, pools),
+        getToken(getPool(_address, pool.poolDetails).tokenAddress, pools),
         'pool',
       ]
     }
-    if (getSynth(address, synth.synthDetails)) {
+    if (getSynth(_address, synth.synthDetails)) {
       return [
-        getToken(getSynth(address, synth.synthDetails).tokenAddress, pools),
+        getToken(getSynth(_address, synth.synthDetails).tokenAddress, pools),
         'synth',
       ]
     }
     return false
   }
 
-  const getBadge = (address) => {
-    if (_getToken(address)[1] === 'pool') {
+  const getBadge = (_address) => {
+    if (_getToken(_address)[1] === 'pool') {
       return (
         <img
           height="12px"
@@ -255,7 +254,7 @@ const Txns = () => {
         />
       )
     }
-    if (_getToken(address)[1] === 'synth') {
+    if (_getToken(_address)[1] === 'synth') {
       return (
         <img
           height="12px"
@@ -293,7 +292,7 @@ const Txns = () => {
                     <Table borderless striped>
                       <tbody className="align-middle">
                         {shownArray?.length > 0 &&
-                          wallet.account &&
+                          address &&
                           shownArray?.map((txn) => (
                             <tr
                               key={txn.txnHash + txn.txnIndex}

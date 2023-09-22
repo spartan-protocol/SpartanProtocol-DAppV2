@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { usePool } from '../../store/pool'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import {
@@ -36,7 +36,8 @@ import { useApp } from '../../store/app'
 const DaoVault = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const bond = useBond()
@@ -64,7 +65,7 @@ const DaoVault = () => {
   useEffect(() => {
     const getData = () => {
       dispatch(daoGlobalDetails())
-      dispatch(daoMemberDetails(wallet.account))
+      dispatch(daoMemberDetails(address))
     }
     getData() // Run on load
     const interval = setInterval(() => {
@@ -73,11 +74,11 @@ const DaoVault = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [dispatch, wallet])
+  }, [dispatch, address])
 
   useEffect(() => {
-    dispatch(daoDepositTimes(wallet.account))
-  }, [dao.daoDetails, dispatch, wallet.account])
+    dispatch(daoDepositTimes(address))
+  }, [dao.daoDetails, dispatch, address])
 
   const getTotalWeight = () => {
     const _amount = BN(bond.totalWeight).plus(dao.totalWeight)
@@ -149,7 +150,7 @@ const DaoVault = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(daoHarvest(wallet))
+    await dispatch(daoHarvest(address, signer))
     setTxnLoading(false)
   }
 
@@ -178,7 +179,7 @@ const DaoVault = () => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (!sparta.globalDetails.emissions) {
@@ -308,7 +309,7 @@ const DaoVault = () => {
                     onClick={() => handleChangeShow()}
                     role="button"
                   >
-                    {!wallet.account ? (
+                    {!address ? (
                       t('connectWallet')
                     ) : (
                       <>
@@ -352,7 +353,7 @@ const DaoVault = () => {
                   </Col>
                   <Col xs="auto">
                     {sparta.globalDetails.emissions
-                      ? !wallet.account
+                      ? !address
                         ? t('connectWallet')
                         : `${formatFromWei(getClaimable())} SPARTA`
                       : t('incentivesDisabled')}
@@ -363,7 +364,7 @@ const DaoVault = () => {
                   <Col>{t('lastHarvest')}</Col>
 
                   <Col xs="auto" className="text-end">
-                    {!wallet.account ? (
+                    {!address ? (
                       t('connectWallet')
                     ) : (
                       <>

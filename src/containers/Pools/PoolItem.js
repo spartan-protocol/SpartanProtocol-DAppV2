@@ -108,8 +108,13 @@ const PoolItem = ({ asset, daoApy }) => {
   const poolCapTooltip = Tooltip(t, 'poolCap')
   const poolRatioTooltip = Tooltip(t, 'poolRatio')
 
-  const isAtCaps = () =>
-    BN(baseAmount).gt(BN(baseCap).minus(5000000000000000000000))
+  const isAtCaps = () => {
+    if (BN(baseCap).lt('1000000000000000000000000')) {
+      return BN(baseAmount).gt(BN(baseCap).minus('10000000000000000000000'))
+    }
+    return BN(baseAmount).gt(BN(baseCap).minus('50000000000000000000000'))
+  }
+
   const getDepthPC = () => BN(baseAmount).div(asset.baseCap).times(100)
   const getRatioPC = () => BN(safety).times(100)
   const getScaled = () => {

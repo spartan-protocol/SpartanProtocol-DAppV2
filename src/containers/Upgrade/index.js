@@ -4,7 +4,6 @@ import Upgrade from './Upgrade'
 
 const Overview = () => (
   // const dispatch = useDispatch()
-  // const wallet = useWeb3React()
 
   // useEffect(() => {
   //   const getData = () => {

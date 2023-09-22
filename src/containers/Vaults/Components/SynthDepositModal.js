@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import Approval from '../../../components/Approval/index'
@@ -30,7 +30,8 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { isDark } = useTheme()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -78,13 +79,13 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvestSingle(synth1.address, wallet))
+    await dispatch(synthHarvestSingle(synth1.address, address, signer))
     setHarvestLoading(false)
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(synthDeposit(synth1.address, deposit(), wallet))
+    await dispatch(synthDeposit(synth1.address, deposit(), address, signer))
     setTxnLoading(false)
     handleCloseModal()
   }
@@ -125,7 +126,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (secsUntilUnlocked() !== true) {
@@ -271,11 +272,11 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
           </Card.Body>
           <Card.Footer>
             <Row className="text-center">
-              {wallet?.account && (
+              {address && (
                 <Approval
                   tokenAddress={synth1.address}
                   symbol={`${token.symbol}s`}
-                  walletAddress={wallet?.account}
+                  walletAddress={address}
                   contractAddress={addresses.synthVault}
                   txnAmount={deposit()}
                   assetNumber="1"

@@ -293,10 +293,11 @@ export const getCuratedPools = () => async (dispatch, getState) => {
  * @param inputBase @param inputToken @param token @param wallet
  */
 export const createPoolADD =
-  (inputBase, inputToken, token, wallet) => async (dispatch, getState) => {
+  (inputBase, inputToken, token, walletAddr, signer) =>
+  async (dispatch, getState) => {
     dispatch(updateLoading(true))
     const { rpcs } = getState().web3
-    const contract = getPoolFactoryContract(wallet, rpcs)
+    const contract = getPoolFactoryContract(signer, rpcs)
     try {
       const { gasRateMN, gasRateTN } = getState().app.settings
       const { chainId, addresses } = getState().app
@@ -308,7 +309,7 @@ export const createPoolADD =
       let txn = await contract.createPoolADD(inputBase, inputToken, token, ORs)
       txn = await parseTxn(txn, 'createPool', rpcs)
       dispatch(updateTxn(txn))
-      dispatch(getListedTokens(wallet.account)) // Update listedTokens -> poolDetails
+      dispatch(getListedTokens(walletAddr)) // Update listedTokens -> poolDetails
     } catch (error) {
       dispatch(updateError(error.reason))
     }

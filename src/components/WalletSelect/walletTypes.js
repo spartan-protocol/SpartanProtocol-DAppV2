@@ -5,10 +5,10 @@ const size = '30'
 
 const walletTypes = [
   {
-    id: 'BC',
-    title: 'BinanceChain',
+    id: 'BW',
+    title: 'Binance Wallet',
     icon: <Icon size={size} icon="binanceChain" />,
-    connector: 'bsc',
+    connector: 'binWallet',
   },
   {
     id: 'MM',

@@ -4,8 +4,7 @@ import { useDispatch } from 'react-redux'
 import Badge from 'react-bootstrap/Badge'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import { useWeb3React } from '@web3-react/core'
-import { Link } from 'react-router-dom'
+import { useAccount, useNetwork } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { useWeb3, watchAsset } from '../../../store/web3'
 import { BN, convertFromWei, formatFromWei } from '../../../utils/bigNumber'
@@ -15,16 +14,16 @@ import { calcSpotValueInBase, getPool } from '../../../utils/math/utils'
 import { tempChains } from '../../../utils/web3'
 import HelmetLoading from '../../Spinner/index'
 import { useApp } from '../../../store/app'
-import { validSymbols } from '../../../containers/FiatOnboard/types'
 
-const Assets = ({ onHide }) => {
+const Assets = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
 
   const { addresses } = useApp()
   const pool = usePool()
   const web3 = useWeb3()
+  const { address } = useAccount()
+  const { chain } = useNetwork()
 
   const [spartaPrice, setspartaPrice] = useState(0)
 
@@ -53,13 +52,7 @@ const Assets = ({ onHide }) => {
     const walletType = getWalletType()
     if (['MM', 'BRAVE'].includes(walletType) && !isBNB(asset)) {
       dispatch(
-        watchAsset(
-          asset.address,
-          asset.symbol,
-          '18',
-          asset.symbolUrl,
-          wallet.account,
-        ),
+        watchAsset(asset.address, asset.symbol, '18', asset.symbolUrl, address),
       )
     }
   }
@@ -83,7 +76,7 @@ const Assets = ({ onHide }) => {
 
   /** @returns BN(usdValue) */
   const getUSD = (tokenAddr, amount) => {
-    if (pool.poolDetails.length > 1 && tempChains.includes(wallet.chainId)) {
+    if (pool.poolDetails.length > 1 && tempChains.includes(chain.id)) {
       if (isSparta(tokenAddr)) {
         return BN(amount).times(spartaPrice)
       }
@@ -138,7 +131,7 @@ const Assets = ({ onHide }) => {
   }
 
   const isLoading = () => {
-    if (!pool.poolDetails && tempChains.includes(wallet.chainId)) {
+    if (!pool.poolDetails && tempChains.includes(chain.id)) {
       return true
     }
     return false
@@ -200,18 +193,6 @@ const Assets = ({ onHide }) => {
                   style={{ maxWidth: '75px' }}
                 >
                   <Row>
-                    <Col xs="6" className="p-0">
-                      {validSymbols[asset.symbol] ? (
-                        <Link
-                          to={`/buycrypto?asset1=${validSymbols[asset.symbol]}`}
-                          onClick={() => onHide()}
-                        >
-                          <Icon icon="bankCards" size="22" className="ms-1" />
-                        </Link>
-                      ) : (
-                        <div />
-                      )}
-                    </Col>
                     {getWalletType() && (
                       <Col xs="6" className="p-0">
                         <a

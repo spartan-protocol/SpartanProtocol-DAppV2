@@ -118,24 +118,25 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
 /**
  * Claim a Bond asset by poolAddress *STATE*
  */
-export const claimBond = (tokenAddr, wallet) => async (dispatch, getState) => {
-  dispatch(updateLoading(true))
-  const { rpcs } = getState().web3
-  const contract = getDaoContract(wallet, rpcs)
-  try {
-    // const gPrice = await getProviderGasPrice(rpcs)
-    const { gasRateMN, gasRateTN } = getState().app.settings
-    const { chainId } = getState().app
-    let gPrice = chainId === 56 ? gasRateMN : gasRateTN
-    gPrice = BN(gPrice).times(1000000000).toString()
-    let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
-    txn = await parseTxn(txn, 'bondClaim', rpcs)
-    dispatch(updateTxn(txn))
-    dispatch(getBondDetails(wallet.account)) // Update bondDetails
-  } catch (error) {
-    dispatch(updateError(error.reason))
+export const claimBond =
+  (tokenAddr, walletAddr, signer) => async (dispatch, getState) => {
+    dispatch(updateLoading(true))
+    const { rpcs } = getState().web3
+    const contract = getDaoContract(signer, rpcs)
+    try {
+      // const gPrice = await getProviderGasPrice(rpcs)
+      const { gasRateMN, gasRateTN } = getState().app.settings
+      const { chainId } = getState().app
+      let gPrice = chainId === 56 ? gasRateMN : gasRateTN
+      gPrice = BN(gPrice).times(1000000000).toString()
+      let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
+      txn = await parseTxn(txn, 'bondClaim', rpcs)
+      dispatch(updateTxn(txn))
+      dispatch(getBondDetails(walletAddr)) // Update bondDetails
+    } catch (error) {
+      dispatch(updateError(error.reason))
+    }
+    dispatch(updateLoading(false))
   }
-  dispatch(updateLoading(false))
-}
 
 export default bondSlice.reducer

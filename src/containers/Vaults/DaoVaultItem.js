@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'wagmi'
 import { formatFromWei } from '../../utils/bigNumber'
 import { Icon } from '../../components/Icons/index'
 import { usePool } from '../../store/pool'
@@ -15,7 +15,7 @@ import DaoWithdrawModal from './Components/DaoWithdrawModal'
 
 const DaoVaultItem = ({ i, claimable }) => {
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
   const pool = usePool()
 
   const getToken = (_tokenAddr) =>
@@ -56,7 +56,7 @@ const DaoVaultItem = ({ i, claimable }) => {
             <Row className="my-1">
               <Col>{t('balance')}</Col>
               <Col xs="auto">
-                {!wallet.account ? (
+                {!address ? (
                   t('connectWallet')
                 ) : (
                   <>
@@ -72,7 +72,7 @@ const DaoVaultItem = ({ i, claimable }) => {
             <Row className="my-1">
               <Col>{t('staked')}</Col>
               <Col xs="auto" className="text-end">
-                {!wallet.account ? (
+                {!address ? (
                   t('connectWallet')
                 ) : (
                   <>

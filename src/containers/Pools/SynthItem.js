@@ -18,7 +18,7 @@ import { calcLiqValue, getSynth } from '../../utils/math/utils'
 
 import styles from './styles.module.scss'
 
-const SynthItem = ({ asset, synthApy }) => {
+const SynthItem = ({ asset }) => {
   const { t } = useTranslation()
   const pool = usePool()
   const synth = useSynth()
@@ -95,7 +95,7 @@ const SynthItem = ({ asset, synthApy }) => {
                 </p>
               </Col>
               <Col className="text-end my-auto">
-                <strong className="text-sm-label mb-0 d-inline-block">
+                {/* <strong className="text-sm-label mb-0 d-inline-block">
                   Synth APY
                 </strong>
                 <p className="output-card">
@@ -108,7 +108,7 @@ const SynthItem = ({ asset, synthApy }) => {
                     </span>
                   </OverlayTrigger>
                   {formatFromUnits(synthApy, 2)}%
-                </p>
+                </p> */}
               </Col>
             </Row>
 
@@ -224,7 +224,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   disabled={!asset.curated}
                   onClick={() => navigate('/vaults?tab=Synth')}
                 >
-                  {t('stake')}
+                  {t('withdraw')}
                 </Button>
               </Col>
               <Col>
@@ -234,7 +234,7 @@ const SynthItem = ({ asset, synthApy }) => {
                   className="w-100"
                   onClick={() => navigate(`/synths?asset2=${tokenAddress}`)}
                 >
-                  {t('forge')}
+                  {t('melt')}
                 </Button>
               </Col>
             </Row>

@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount, useSigner } from 'wagmi'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import spartaIcon from '../../assets/tokens/sparta-lp.svg'
@@ -23,7 +23,8 @@ import { useApp } from '../../store/app'
 const BondItem = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const wallet = useWeb3React()
+  const { address } = useAccount()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -47,7 +48,7 @@ const BondItem = (props) => {
 
   const handleTxn = async () => {
     setTxnLoading(true)
-    await dispatch(claimBond(asset.tokenAddress, wallet))
+    await dispatch(claimBond(asset.tokenAddress, address, signer))
     setTxnLoading(false)
   }
 
@@ -61,7 +62,7 @@ const BondItem = (props) => {
   }
 
   const checkValid = () => {
-    if (!wallet.account) {
+    if (!address) {
       return [false, t('checkWallet')]
     }
     if (!enoughGas()) {

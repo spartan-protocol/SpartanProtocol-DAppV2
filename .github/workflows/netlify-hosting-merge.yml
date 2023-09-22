@@ -22,6 +22,7 @@ jobs:
           REACT_APP_GETBLOCK: ${{ secrets.REACT_APP_GETBLOCK }}
           REACT_APP_BCONNECT: ${{ secrets.REACT_APP_BCONNECT }}
           REACT_APP_BCONNECT_URL: ${{ secrets.REACT_APP_BCONNECT_URL }}
+          REACT_APP_WCONNECT_PROJ_ID: ${{ secrets.REACT_APP_WCONNECT_PROJ_ID }}
       - name: 🚀 Deploy to Netlify
         uses: netlify/actions/cli@master
         env:
