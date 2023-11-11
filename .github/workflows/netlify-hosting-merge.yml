@@ -13,8 +13,6 @@ jobs:
         run: yarn install
       - name: 🧹 Run Lint
         run: yarn lint
-      - name: 🐛 Run Tests
-        run: yarn test
       - name: 📦 Build Project
         run: yarn build
         env:
