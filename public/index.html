@@ -2,29 +2,130 @@
 <html lang="en">
   <html>
     <head>
+      <meta
+        http-equiv="Content-Security-Policy"
+        content="
+          default-src 
+            'self'
+          ;
+          object-src
+            'none'
+          ;
+          font-src
+            'self'
+            https://fonts.gstatic.com/s/lato/v24/
+          ;
+          frame-src
+            'self'
+            https://verify.walletconnect.com/
+          ;
+          img-src
+            'self'
+            data:
+            https://explorer-api.walletconnect.com/w3m/v1/getWalletImage/
+            https://raw.githubusercontent.com/spartan-protocol/
+          ;
+          connect-src 
+            'self'
+            wss://relay.walletconnect.com/
+            https://explorer-api.walletconnect.com/
+            wss://www.walletlink.org/rpc
+            https://api.coingecko.com/api/v3/
+            https://api.thegraph.com/subgraphs/name/spartan-protocol/pool-factory
+            https://*.binance.org/
+            https://*.binance.org:8545/
+            https://*.defibit.io/
+            https://*.ninicoin.io/
+            https://rpc.ankr.com/bsc
+            https://bscrpc.com
+            https://binance.nodereal.io
+            https://bsc-mainnet.nodereal.io/v1/
+          ;
+          style-src
+            'self'
+            'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='
+            'sha256-qVDaQ1x40PhTBSEjVT+E933fWU+9vOw7jyaqwXZg544='
+            'sha256-BpIXo2t4PMpYcRKSdfWfooZDwj43moFv9qdVvorxzMQ='
+            'sha256-FQnOZQr+wL1LjLFiFZIgxMry6iA6oB0F3M3SoX0337c='
+            'sha256-TVsaza6EieX5aeYhRsumXPhnOF8ry0U0TLf8cjtv0wc='
+            'sha256-XiPgfRPYe5iPauvkE8oJKOqLTZSVOUW4uO0vuB3CPWI='
+            'sha256-65ntxYMfeca2ZVVDn/j6EujgU4lbYI3CdNSWMo8AybQ='
+            'sha256-jxzCaJhgdrACG6M3Uy540nVXOuJk2ioHVjT0geSBRh4='
+            'sha256-1EisuvHeyOjrWzhCI06zKYufMmDfLUWYoAwMWvdMatA='
+            'sha256-oB2bZZIRUpPDn+fRNMkbDabHcUpb9esl1DBoYsmXPE4='
+            'sha256-9zwzhS+ncFK1/dAWG2XSw6+X4fgxEiyyyL7rL5bYxtA='
+            'sha256-xA4kUh8YqhvzDhtc7eEabRPejD8UGVX3kBkkVk8RjWE='
+            'sha256-7fJ8FHwyTzlWjmn2M0eaGsfykK1g39Y065AWazDvIrE='
+            'sha256-lTrJ+NMAbMl7vcH6k6t66H6ecxhaukJeG7wk3gd5480='
+            'sha256-USM/prvUbLiiIQD6UP/Ip6/iT98uXp+AFJRxtmr0tPI='
+            'sha256-Y60rJVkw9kX+97ZEiwL9/NvZYZv6qoDwQT6+xOTzGeY='
+            'sha256-OFcbnoXUS53tToWiZ6ubOAQDgZSTU78Pa3PXOzntxWA='
+            'sha256-a2Yu7vSLjscpBXRZisiaNh0bISVbQaxX1RArrb01CCM='
+            'sha256-N9ks9qDwYoTfl5AFvXfcSeOlL5V1KBpR7dg6mzjLFsM='
+            'sha256-C7UL+w/jByHH2Cgg5+/CIIZxcdNx8kQUtqClYtdE0vU='
+            'sha256-fEqZzdYmPgvo4I2HM5XyWrqZiankvf3W3N7Qzj+3S98='
+          ;
+        "
+      />
+
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <!-- Primary Meta Tags -->
-      <title>Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain</title>
-      <meta name="title" content="Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain">
-      <meta name="description" content="Community-built & run interface to Spartan Protocol's open DeFi contracts on BNB Chain"/>
-      <link rel="icon" href="%PUBLIC_URL%/images/favicon.ico" sizes="any"><!-- 32×32 -->
-      <link rel="icon" href="%PUBLIC_URL%/images/favicon.svg" type="image/svg+xml">
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/images/touch/homescreen192.png"><!-- 192x192 -->
+      <title>
+        Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain
+      </title>
+      <meta
+        name="title"
+        content="Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain"
+      />
+      <meta
+        name="description"
+        content="Community-built & run interface to Spartan Protocol's open DeFi contracts on BNB Chain"
+      />
+      <link rel="icon" href="%PUBLIC_URL%/images/favicon.ico" sizes="any" />
+      <!-- 32×32 -->
+      <link
+        rel="icon"
+        href="%PUBLIC_URL%/images/favicon.svg"
+        type="image/svg+xml"
+      />
+      <link
+        rel="apple-touch-icon"
+        href="%PUBLIC_URL%/images/touch/homescreen192.png"
+      />
+      <!-- 192x192 -->
 
-      <meta name="author" content="Spartan Protocol Community"/>
+      <meta name="author" content="Spartan Protocol Community" />
       <!-- Open Graph / Facebook -->
-      <meta property="og:type" content="website"/>
-      <meta property="og:url" content="https://DApp.SpartanProtocol.org"/>
-      <meta property="og:title" content="Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain"/>
-      <meta property="og:image" content="%PUBLIC_URL%/images/meta/opengraph-image.png"/>
-      <meta property="og:description" content="Community-built & run interface to Spartan Protocol's open DeFi contracts on BNB Chain"/>
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://DApp.SpartanProtocol.org" />
+      <meta
+        property="og:title"
+        content="Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain"
+      />
+      <meta
+        property="og:image"
+        content="%PUBLIC_URL%/images/meta/opengraph-image.png"
+      />
+      <meta
+        property="og:description"
+        content="Community-built & run interface to Spartan Protocol's open DeFi contracts on BNB Chain"
+      />
       <!-- Twitter -->
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain"/>
-      <meta name="twitter:description" content="Community-built & run interface to Spartan Protocol's open DeFi contracts on BNB Chain"/>
-      <meta name="twitter:url" content="https://DApp.SpartanProtocol.org"/>
-      <meta name="twitter:image" content="%PUBLIC_URL%/images/meta/twitter-image.png"/>
+      <meta
+        name="twitter:title"
+        content="Spartan Protocol DApp | Open DeFi & Stablecoins on BNB Chain"
+      />
+      <meta
+        name="twitter:description"
+        content="Community-built & run interface to Spartan Protocol's open DeFi contracts on BNB Chain"
+      />
+      <meta name="twitter:url" content="https://DApp.SpartanProtocol.org" />
+      <meta
+        name="twitter:image"
+        content="%PUBLIC_URL%/images/meta/twitter-image.png"
+      />
       <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     </head>
     <body>
