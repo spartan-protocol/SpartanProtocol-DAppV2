@@ -8,6 +8,10 @@ import { useSynth } from '../../../store/synth'
 import { BN, convertToWei } from '../../../utils/bigNumber'
 import { formatShortString } from '../../../utils/web3'
 
+/*
+ * @param {string} selectedType - type of asset to select
+ * @param {function} handleAddrChange - function to handle address change
+ */
 const AssetSelect = (props) => {
   const { addresses } = useApp()
   const pool = usePool()

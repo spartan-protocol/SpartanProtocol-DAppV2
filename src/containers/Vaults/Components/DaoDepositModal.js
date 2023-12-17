@@ -19,6 +19,11 @@ import { getSecsSince } from '../../../utils/math/nonContract'
 import { useTheme } from '../../../providers/Theme'
 import { useSparta } from '../../../store/sparta'
 
+/*
+ * @param {string} tokenAddress - address of token
+ * @param {string} claimable - amount of claimable SPARTA
+ * @param {boolean} disabled - boolean to disable button
+ */
 const DaoDepositModal = (props) => {
   const dispatch = useDispatch()
   const { isDark } = useTheme()

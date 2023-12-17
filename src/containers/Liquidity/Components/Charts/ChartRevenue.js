@@ -3,6 +3,10 @@ import { Line } from 'react-chartjs-2'
 import { BN, convertFromWei } from '../../../../utils/bigNumber'
 import { formatDate } from '../../../../utils/math/nonContract'
 
+/*
+ * @param {array} metrics - array of objects for metrics
+ * @param {number} period - number of periods to show
+ */
 const ChartRevenue = (props) => {
   const getChartData = () => {
     const data1 = []

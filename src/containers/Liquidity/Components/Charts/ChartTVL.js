@@ -4,6 +4,11 @@ import { useWeb3 } from '../../../../store/web3'
 import { BN, convertFromWei } from '../../../../utils/bigNumber'
 import { formatDate } from '../../../../utils/math/nonContract'
 
+/*
+ * @param {array} metrics - array of objects for metrics
+ * @param {number} period - number of periods to show
+ * @param {object} poolItem - object for pool
+ */
 const ChartTVL = (props) => {
   const web3 = useWeb3()
 

@@ -96,6 +96,11 @@ export const spartanRanks = [
   },
 ]
 
+/*
+ * @param {bool} show - show/hide modal
+ * @param {function} onHide - function to hide modal
+ * @returns {Node} - returns WalletSelect component
+ */
 const WalletSelect = (props) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()

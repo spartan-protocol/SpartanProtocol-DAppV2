@@ -4,6 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { useWeb3 } from '../../../../store/web3'
 import { formatDate } from '../../../../utils/math/nonContract'
 
+/*
+ * @param {array} metrics - array of objects for metrics
+ * @param {number} tokenPrice - number for token price
+ */
 const ChartPrice = (props) => {
   const { t } = useTranslation()
   const web3 = useWeb3()

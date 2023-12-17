@@ -20,6 +20,9 @@ import {
 import { getToken } from '../../utils/math/utils'
 import { useApp } from '../../store/app'
 
+/*
+ * @param {object} asset - asset object
+ */
 const BondItem = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()

@@ -18,6 +18,12 @@ import { useTheme } from '../../../providers/Theme'
 import { useApp } from '../../../store/app'
 import { useSparta } from '../../../store/sparta'
 
+/*
+ * @param {string} address - address of token
+ * @param {string} tokenAddress - address of token
+ * @param {boolean} disabled - boolean to disable button
+ * @param {string} claimable - amount of claimable SPARTA
+ */
 const DaoWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { isDark } = useTheme()
