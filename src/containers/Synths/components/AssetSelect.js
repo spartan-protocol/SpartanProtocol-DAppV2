@@ -6,6 +6,9 @@ import { usePool } from '../../../store/pool'
 import { useSynth } from '../../../store/synth'
 import { formatShortString } from '../../../utils/web3'
 
+/*
+ * @param {function} handleAddrChange - function to handle address change
+ */
 const AssetSelect = (props) => {
   const pool = usePool()
   const synth = useSynth()

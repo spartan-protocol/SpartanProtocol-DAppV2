@@ -243,6 +243,9 @@ const icons = {
  * @param {string} height height in px (optional)
  * @param {string} width width in px (optional)
  * @param {string} style (optional)
+ * @param {string} fill (optional)
+ * @param {string} stroke (optional)
+ * @param {string} role (optional)
  * @returns {Component} Custom Icon imported as ReactComponent
  */
 export const Icon = (props) => {

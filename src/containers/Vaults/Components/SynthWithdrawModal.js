@@ -22,6 +22,11 @@ import { useTheme } from '../../../providers/Theme'
 import { useApp } from '../../../store/app'
 import { useSparta } from '../../../store/sparta'
 
+/*
+ * @param {object} synthItem - synth object
+ * @param {array} claimable - amount of claimable SPARTA
+ * @param {boolean} disabled - boolean to disable button
+ */
 const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()

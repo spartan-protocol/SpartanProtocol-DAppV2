@@ -5,6 +5,10 @@ import { convertFromWei } from '../../../../utils/bigNumber'
 import { getUnixStartOfDay } from '../../../../utils/helpers.ts'
 import { formatDate } from '../../../../utils/math/nonContract'
 
+/*
+ * @param {array} metrics - array of objects for metrics
+ * @param {number} period - number of periods to show
+ */
 const ChartVolume = (props) => {
   const { t } = useTranslation()
 

@@ -11,6 +11,17 @@ import spartaSynthIcon from '../../../assets/tokens/sparta-synth.svg'
 import { formatFromUnits, formatFromWei } from '../../../utils/bigNumber'
 import { useTheme } from '../../../providers/Theme'
 
+/*
+* @param {string} btnText - text for button
+* @param {string} header - text for modal header
+* @param {string} body - text for modal body
+* @param {string} confirmMessage - text for modal confirm message
+* @param {string} confirmButton - text for modal confirm button
+* @param {array} txnInputs - array of objects for input tokens
+* @param {array} txnOutputs - array of objects for output tokens
+* @param {boolean} btnDisabled - boolean to disable button
+ 
+*/
 const TxnModal = (props) => {
   const { t } = useTranslation()
   const { isDark } = useTheme()

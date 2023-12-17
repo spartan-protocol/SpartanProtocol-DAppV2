@@ -26,10 +26,14 @@ import { getSynth, getToken } from '../../utils/math/utils'
  * An asset selection dropdown. Selection is pushed into Redux store as 'asset1', 'asset2' or 'asset3'
  * depending on the 'priority' prop handed over. The Redux action also pushes a copy to localStorage for session handling
  * Can be extended out with 'asset4' etc in the future but the current views will only handle '1', '2' & '3' for now
- * @param {uint} priority '1' or '2' or '3'
- * @param {string} type 'pools' (Shows SP-p related fields)
- * @param {array} whiteList tokenAddresses [array]
- * @param {array} blackList tokenAddresses [array]
+ * @param defaultTab {string} - The default tab to show on load. Options are 'all', 'token', 'pool' & 'synth'
+ * @param priority {string} - The priority of the asset. Options are '1', '2' & '3'
+ * @param empty {boolean} - If true, the asset will be empty
+ * @param whiteList {array} - An array of addresses to whitelist
+ * @param blackList {array} - An array of addresses to blacklist
+ * @param filter {array} - An array of asset types to filter. Options are 'sparta', 'token', 'pool' & 'synth'
+ * @param onClick {function} - A function to run on click
+ * @param disabled {boolean} - If true, the dropdown will be disabled
  */
 const AssetSelect = (props) => {
   const { t } = useTranslation()

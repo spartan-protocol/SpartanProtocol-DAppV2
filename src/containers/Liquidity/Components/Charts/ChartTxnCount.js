@@ -3,6 +3,11 @@ import { Bar } from 'react-chartjs-2'
 import { getUnixStartOfDay } from '../../../../utils/helpers.ts'
 import { formatDate } from '../../../../utils/math/nonContract'
 
+/*
+ * @param {array} metrics - array of objects for metrics
+ * @param {number} period - number of periods to show
+ *
+ */
 const ChartTxnCount = (props) => {
   const getChartData = () => {
     const data = []
