@@ -12,7 +12,7 @@ import Badge from 'react-bootstrap/Badge'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import Nav from 'react-bootstrap/Nav'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import {
   formatShortString,
@@ -61,7 +61,7 @@ const Swap = () => {
   const location = useLocation()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2, chainId } = useApp()
   // const dao = useDao()
@@ -519,7 +519,7 @@ const Swap = () => {
         synth1.address,
         assetSwap2.tokenAddress,
         address,
-        walletClient,
+        signer,
       ),
     )
     setTxnLoading(false)

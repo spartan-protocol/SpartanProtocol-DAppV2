@@ -9,10 +9,10 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { isAddress } from 'viem'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useAccount, useWalletClient } from 'wagmi'
+import { ethers } from 'ethers'
+import { useAccount, useSigner } from 'wagmi'
 import { proposalTypes } from './types'
 import {
   useDao,
@@ -59,7 +59,7 @@ const NewProposal = () => {
   const sparta = useSparta()
   const synth = useSynth()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -95,7 +95,7 @@ const NewProposal = () => {
   }
 
   useEffect(() => {
-    if (inputAddress?.length === 42 && isAddress(inputAddress)) {
+    if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
       setaddrValid(true)
     } else {
       setaddrValid(false)
@@ -188,18 +188,16 @@ const NewProposal = () => {
   const handleSubmit = async () => {
     setTxnLoading(true)
     if (selectedType?.type === 'Action') {
-      await dispatch(newActionProposal(selectedType.value, walletClient))
+      await dispatch(newActionProposal(selectedType.value, signer))
     } else if (selectedType?.type === 'Param') {
-      await dispatch(
-        newParamProposal(inputParam, selectedType.value, walletClient),
-      )
+      await dispatch(newParamProposal(inputParam, selectedType.value, signer))
     } else if (selectedType?.type === 'Address') {
       await dispatch(
-        newAddressProposal(inputAddress, selectedType.value, walletClient),
+        newAddressProposal(inputAddress, selectedType.value, signer),
       )
     } else if (selectedType?.type === 'Grant') {
       await dispatch(
-        newGrantProposal(inputAddress, convertToWei(inputParam), walletClient),
+        newGrantProposal(inputAddress, convertToWei(inputParam), signer),
       )
     }
     setTxnLoading(false)

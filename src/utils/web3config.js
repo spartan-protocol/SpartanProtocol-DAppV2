@@ -1,4 +1,4 @@
-import { configureChains, createConfig } from 'wagmi'
+import { configureChains, createClient } from 'wagmi'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { bsc, bscTestnet } from 'wagmi/chains'
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect'
@@ -15,14 +15,14 @@ const getProviders = () => {
         rpc: () => ({
           http: bscRpcsMN[i],
         }),
-        // stallTimeout: 1000,
+        stallTimeout: 1000,
       }),
     )
   }
   return rpcList
 }
 
-const { chains, publicClient } = configureChains(
+const { chains, provider } = configureChains(
   [bsc, bscTestnet],
   getProviders(),
   {
@@ -97,7 +97,7 @@ export const connectorsByName = (connectorName, connectorsList) => {
   return connectorsList[0] // Fallback to injected
 }
 
-export const wagmiClient = createConfig({
-  publicClient,
+export const wagmiClient = createClient({
   connectors,
+  provider,
 })

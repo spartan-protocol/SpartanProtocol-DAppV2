@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import { useBond } from '../../store/bond'
 import {
   useDao,
@@ -36,7 +36,7 @@ const ProposalItem = ({ proposal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const bond = useBond()
@@ -55,31 +55,31 @@ const ProposalItem = ({ proposal }) => {
 
   const handleVote = async () => {
     setVoteLoading(true)
-    await dispatch(voteProposal(walletClient))
+    await dispatch(voteProposal(signer))
     setVoteLoading(false)
   }
 
   const handleUnvote = async () => {
     setUnvoteLoading(true)
-    await dispatch(removeVote(walletClient))
+    await dispatch(removeVote(signer))
     setUnvoteLoading(false)
   }
 
   const handleCancel = async () => {
     setCancelLoading(true)
-    await dispatch(cancelProposal(walletClient))
+    await dispatch(cancelProposal(signer))
     setCancelLoading(false)
   }
 
   const handlePoll = async () => {
     setPollLoading(true)
-    await dispatch(pollVotes(walletClient))
+    await dispatch(pollVotes(signer))
     setPollLoading(false)
   }
 
   const handleFinal = async () => {
     setFinalLoading(true)
-    await dispatch(finaliseProposal(walletClient))
+    await dispatch(finaliseProposal(signer))
     setFinalLoading(false)
   }
 

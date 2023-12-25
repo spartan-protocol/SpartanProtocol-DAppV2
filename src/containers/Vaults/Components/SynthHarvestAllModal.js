@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { synthHarvestLive } from '../../../utils/web3'
@@ -24,7 +24,7 @@ const SynthHarvestAllModal = () => {
   const { t } = useTranslation()
   const { isDark } = useTheme()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -52,7 +52,7 @@ const SynthHarvestAllModal = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(synthHarvest(getArray(), address, walletClient))
+    await dispatch(synthHarvest(getArray(), address, signer))
     setTxnLoading(false)
     handleCloseModal()
   }

@@ -6,8 +6,8 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
-import { useAccount, useWalletClient } from 'wagmi'
-import { isAddress } from 'viem'
+import { ethers } from 'ethers'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../store/synth'
 import { tempChains } from '../../utils/web3'
@@ -22,7 +22,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { chainId, addresses } = useApp()
   const pool = usePool()
@@ -41,7 +41,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const [addrValid, setaddrValid] = useState(false)
   useEffect(() => {
-    if (inputAddress?.length === 42 && isAddress(inputAddress)) {
+    if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
       setaddrValid(true)
     } else {
       setaddrValid(false)
@@ -50,7 +50,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const handleSubmit = async () => {
     setTxnLoading(true)
-    await dispatch(createSynth(inputAddress, walletClient))
+    await dispatch(createSynth(inputAddress, signer))
     setTxnLoading(false)
     setShowModal(false)
   }
