@@ -1,5 +1,4 @@
 import { ethers } from 'ethers'
-import { getAddress } from 'viem'
 
 // Testnet ABI Imports
 import axios from 'axios'
@@ -268,7 +267,7 @@ export const oneWeek = 604800 // change to 604800 for mainnet
 export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
-  const _tokenAddr = getAddress(tokenAddr)
+  const _tokenAddr = ethers.utils.getAddress(tokenAddr)
   if (tokenAddr.length > 0) {
     return `c20000714_t${_tokenAddr}`
   }

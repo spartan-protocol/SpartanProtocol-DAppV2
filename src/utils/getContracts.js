@@ -1,7 +1,8 @@
 import { ethers } from 'ethers'
-import { isAddress } from 'viem'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
+
+const isAddress = (addrToCheck) => ethers.utils.isAddress(addrToCheck)
 
 /**
  * Get a BEP20 token contract with signer/provider injected

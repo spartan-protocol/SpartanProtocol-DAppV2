@@ -6,8 +6,8 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
+import { ethers } from 'ethers'
 import { useAccount, useSigner } from 'wagmi'
-import { isAddress } from 'viem'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../store/synth'
 import { tempChains } from '../../utils/web3'
@@ -41,7 +41,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const [addrValid, setaddrValid] = useState(false)
   useEffect(() => {
-    if (inputAddress?.length === 42 && isAddress(inputAddress)) {
+    if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
       setaddrValid(true)
     } else {
       setaddrValid(false)

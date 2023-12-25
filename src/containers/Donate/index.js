@@ -8,8 +8,8 @@ import Row from 'react-bootstrap/Row'
 import FormControl from 'react-bootstrap/FormControl'
 import { useDispatch } from 'react-redux'
 import axios from 'axios'
+import { ethers } from 'ethers'
 import { useAccount, useSigner } from 'wagmi'
-import { parseEther } from 'viem'
 import { formatShortString } from '../../utils/web3'
 import { useSparta, communityWalletHoldings } from '../../store/sparta'
 import {
@@ -150,7 +150,7 @@ const Overview = () => {
       // const signer = getWalletProvider(wallet?.library, web3.rpcs)
       await signer.sendTransaction({
         to: communityWallet,
-        value: parseEther(inputDonation?.value),
+        value: ethers.utils.parseEther(inputDonation?.value),
       })
     }
     if (asset.symbol === 'BUSD') {

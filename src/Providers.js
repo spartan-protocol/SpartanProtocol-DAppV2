@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { BrowserRouter } from 'react-router-dom'
 import BigNumber from 'bignumber.js'
 import { WagmiConfig } from 'wagmi'
+import { ethers } from 'ethers'
 import {
   Chart as ChartJS,
   LineElement,
@@ -40,6 +41,8 @@ ChartJS.register(
   Title,
   Tooltip,
 ) // chart.js - Tree-shake to only bundle the used modules
+
+ethers.utils.Logger.setLogLevel(ethers.utils.Logger.levels.ERROR) // turn off warnings
 
 const globalFormat = {
   prefix: '',
