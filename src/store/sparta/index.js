@@ -1,6 +1,7 @@
+import { ethers } from 'ethers'
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { createPublicClient, getContract, http } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { bsc } from 'viem/chains'
 import {
   getFallenSpartansContract,
@@ -154,21 +155,21 @@ export const communityWalletHoldings =
       chain: bsc,
       transport: http(bscRpcsMN[0]),
     })
-    const spartaCont = getContract({
-      abi: erc20,
-      address: addressesMN.spartav2,
-      publicClient: provider,
-    })
-    const busdCont = getContract({
-      abi: erc20,
-      address: '0xe9e7cea3dedca5984780bafc599bd69add087d56',
-      publicClient: provider,
-    })
-    const usdtCont = getContract({
-      abi: erc20,
-      address: '0x55d398326f99059ff775485246999027b3197955',
-      publicClient: provider,
-    })
+    const spartaCont = new ethers.Contract(
+      addressesMN.spartav2,
+      erc20,
+      provider,
+    )
+    const busdCont = new ethers.Contract(
+      '0xe9e7cea3dedca5984780bafc599bd69add087d56',
+      erc20,
+      provider,
+    )
+    const usdtCont = new ethers.Contract(
+      '0x55d398326f99059ff775485246999027b3197955',
+      erc20,
+      provider,
+    )
     try {
       let awaitArray = [
         spartaCont.callStatic.balanceOf(comWal),

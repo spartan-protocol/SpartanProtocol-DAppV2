@@ -390,12 +390,9 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
     awaitArray = await Promise.allSettled(awaitArray)
     let rpcs = []
     for (let i = 0; i < rpcUrls.length; i++) {
-      let blockStr = checkResolved(awaitArray[i], 0).toString()
-      blockStr = blockStr.endsWith('n') ? blockStr.slice(0, -1) : blockStr
-      const block = Number(blockStr)
       rpcs.push({
         url: rpcUrls[i],
-        block,
+        block: checkResolved(awaitArray[i], 0),
         good: awaitArray[i].status === 'fulfilled',
       })
     }

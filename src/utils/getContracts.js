@@ -1,14 +1,8 @@
-import { createPublicClient, getContract, http, isAddress } from 'viem'
+import { ethers } from 'ethers'
+import { createPublicClient, http, isAddress } from 'viem'
 import { bsc } from 'viem/chains'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
-
-const getClient = (provider) => {
-  if (provider.account) {
-    return { walletClient: provider }
-  }
-  return { publicClient: provider }
-}
 
 /**
  * Get a BEP20 token contract with signer/provider injected
@@ -20,11 +14,7 @@ export const getTokenContract = (tokenAddr, wallet, rpcUrls) => {
   const abiErc20 = getAbis().erc20
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiErc20,
-      address: tokenAddr,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(tokenAddr, abiErc20, provider)
   }
   return contract
 }
@@ -38,11 +28,7 @@ export const getReserveContract = (wallet, rpcUrls) => {
   const abiReserve = getAbis().reserve
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiReserve,
-      address: getAddresses().reserve,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().reserve, abiReserve, provider)
   }
   return contract
 }
@@ -57,11 +43,7 @@ export const getOldBondContract = (bondAddress, wallet, rpcUrls) => {
   const abiBond = getAbis().bond
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiBond,
-      address: bondAddress,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(bondAddress, abiBond, provider)
   }
   return contract
 }
@@ -75,11 +57,11 @@ export const getBondVaultContract = (wallet, rpcUrls) => {
   const abiBondVault = getAbis().bondVault
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiBondVault,
-      address: getAddresses().bondVault,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().bondVault,
+      abiBondVault,
+      provider,
+    )
   }
   return contract
 }
@@ -93,11 +75,7 @@ export const getDaoContract = (wallet, rpcUrls) => {
   const abiDao = getAbis().dao
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiDao,
-      address: getAddresses().dao,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().dao, abiDao, provider)
   }
   return contract
 }
@@ -111,11 +89,11 @@ export const getDaoVaultContract = (wallet, rpcUrls) => {
   const abiDaoVault = getAbis().daoVault
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiDaoVault,
-      address: getAddresses().daoVault,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().daoVault,
+      abiDaoVault,
+      provider,
+    )
   }
   return contract
 }
@@ -126,11 +104,7 @@ export const getLoanContract = (wallet, rpcUrls) => {
   const abiLoan = getAbis().daoLoan
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiLoan,
-      address: getAddresses().loan,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().loan, abiLoan, provider)
   }
   return contract
 }
@@ -141,11 +115,11 @@ export const getLoanVaultContract = (wallet, rpcUrls) => {
   const abiLoanVault = getAbis().daoLoanVault
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiLoanVault,
-      address: getAddresses().loanVault,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().loanVault,
+      abiLoanVault,
+      provider,
+    )
   }
   return contract
 }
@@ -160,11 +134,7 @@ export const getPoolContract = (poolAddress, wallet, rpcUrls) => {
   const abiPool = getAbis().pool
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiPool,
-      address: poolAddress,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(poolAddress, abiPool, provider)
   }
   return contract
 }
@@ -178,11 +148,11 @@ export const getPoolFactoryContract = (wallet, rpcUrls) => {
   const abiPoolFactory = getAbis().poolFactory
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiPoolFactory,
-      address: getAddresses().poolFactory,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().poolFactory,
+      abiPoolFactory,
+      provider,
+    )
   }
   return contract
 }
@@ -196,11 +166,7 @@ export const getRouterContract = (wallet, rpcUrls) => {
   const abiRouter = getAbis().router
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiRouter,
-      address: getAddresses().router,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().router, abiRouter, provider)
   }
   return contract
 }
@@ -214,11 +180,7 @@ export const getSpartaV1Contract = (wallet, rpcUrls) => {
   const abiBase = getAbis().sparta
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiBase,
-      address: getAddresses().spartav1,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().spartav1, abiBase, provider)
   }
   return contract
 }
@@ -232,11 +194,7 @@ export const getSpartaV2Contract = (wallet, rpcUrls) => {
   const abiSparta = getAbis().sparta
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiSparta,
-      address: getAddresses().spartav2,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, provider)
   }
   return contract
 }
@@ -255,11 +213,7 @@ export const getSpartaV2API = () => {
     ),
   })
   if (contract === true) {
-    contract = getContract({
-      abi: abiSparta,
-      address: getAddresses().spartav2,
-      publicClient: client,
-    })
+    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, client)
   }
   return contract
 }
@@ -273,11 +227,11 @@ export const getFallenSpartansContract = (wallet, rpcUrls) => {
   const abiFS = getAbis().fallenSpartans
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiFS,
-      address: getAddresses().fallenSpartans,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().fallenSpartans,
+      abiFS,
+      provider,
+    )
   }
   return contract
 }
@@ -292,11 +246,7 @@ export const getSynthContract = (synthAddress, wallet, rpcUrls) => {
   const abiSynth = getAbis().synth
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiSynth,
-      address: synthAddress,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(synthAddress, abiSynth, provider)
   }
   return contract
 }
@@ -310,11 +260,11 @@ export const getSynthFactoryContract = (wallet, rpcUrls) => {
   const abiSynthFactory = getAbis().synthFactory
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiSynthFactory,
-      address: getAddresses().synthFactory,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().synthFactory,
+      abiSynthFactory,
+      provider,
+    )
   }
   return contract
 }
@@ -328,11 +278,11 @@ export const getSynthVaultContract = (wallet, rpcUrls) => {
   const abiSynthVault = getAbis().synthVault
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiSynthVault,
-      address: getAddresses().synthVault,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(
+      getAddresses().synthVault,
+      abiSynthVault,
+      provider,
+    )
   }
   return contract
 }
@@ -346,11 +296,7 @@ export const getUtilsContract = (wallet, rpcUrls) => {
   const abiUtils = getAbis().utils
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiUtils,
-      address: getAddresses().utils,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().utils, abiUtils, provider)
   }
   return contract
 }
@@ -364,11 +310,7 @@ export const getSSUtilsContract = (wallet, rpcUrls) => {
   const abiSSUtils = getAbis().ssUtils
   const provider = getWalletProvider(wallet ?? null, rpcUrls)
   if (contract === true) {
-    contract = getContract({
-      abi: abiSSUtils,
-      address: getAddresses().ssUtils,
-      ...getClient(provider),
-    })
+    contract = new ethers.Contract(getAddresses().ssUtils, abiSSUtils, provider)
   }
   return contract
 }

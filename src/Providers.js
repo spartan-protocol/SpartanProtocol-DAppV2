@@ -87,7 +87,7 @@ if (isAppleDevice()) {
 
 const Providers = () => (
   <Provider store={store}>
-    <WagmiConfig config={wagmiClient}>
+    <WagmiConfig client={wagmiClient}>
       <BrowserRouter>
         <BreakpointProvider>
           <FocusProvider>
