@@ -12,7 +12,7 @@ import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
 import { formatShortString, oneWeek } from '../../utils/web3'
@@ -48,7 +48,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
   const focus = useFocus()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { addresses, asset1, asset2 } = useApp()
   const pool = usePool()
@@ -317,7 +317,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
           convertToWei(removeInput1.value),
           selectedPool.tokenAddress,
           address,
-          walletClient,
+          signer,
         ),
       )
     } else {
@@ -327,7 +327,7 @@ const LiqRemove = ({ assetLiq1, selectedPool }) => {
           assetLiq1.tokenAddress === addresses.spartav2,
           selectedPool.tokenAddress,
           address,
-          walletClient,
+          signer,
         ),
       )
     }

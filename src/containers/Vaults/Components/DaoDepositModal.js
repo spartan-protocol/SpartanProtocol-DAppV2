@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import { useDao, daoDeposit, daoHarvest } from '../../../store/dao'
 import { usePool } from '../../../store/pool'
 import { useApp } from '../../../store/app'
@@ -29,7 +29,7 @@ const DaoDepositModal = (props) => {
   const { isDark } = useTheme()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const dao = useDao()
@@ -69,13 +69,13 @@ const DaoDepositModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(daoHarvest(address, walletClient))
+    await dispatch(daoHarvest(address, signer))
     setHarvestLoading(false)
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(daoDeposit(pool1.address, deposit(), address, walletClient))
+    await dispatch(daoDeposit(pool1.address, deposit(), address, signer))
     setTxnLoading(false)
     handleCloseModal()
   }

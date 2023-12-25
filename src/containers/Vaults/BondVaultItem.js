@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import { usePool } from '../../store/pool'
 import { BN, formatFromWei } from '../../utils/bigNumber'
 import spartaIcon from '../../assets/tokens/sparta-lp.svg'
@@ -27,7 +27,7 @@ const BondItem = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -51,7 +51,7 @@ const BondItem = (props) => {
 
   const handleTxn = async () => {
     setTxnLoading(true)
-    await dispatch(claimBond(asset.tokenAddress, address, walletClient))
+    await dispatch(claimBond(asset.tokenAddress, address, signer))
     setTxnLoading(false)
   }
 

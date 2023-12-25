@@ -9,7 +9,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useSigner } from 'wagmi'
 import { isAddress } from 'viem'
 import Approval from '../../components/Approval/index'
 import {
@@ -35,7 +35,7 @@ const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
+  const { data: signer } = useSigner()
 
   const { chainId, addresses } = useApp()
   const pool = usePool()
@@ -172,7 +172,7 @@ const NewPool = ({ setShowModal, showModal }) => {
         convertToWei(tokenInput?.value),
         addrInput?.value,
         address,
-        walletClient,
+        signer,
       ),
     )
     setTxnLoading(false)

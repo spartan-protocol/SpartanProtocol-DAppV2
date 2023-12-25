@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useBalance, useWalletClient } from 'wagmi'
+import { useAccount, useBalance, useSigner } from 'wagmi'
 import { formatFromWei } from '../../utils/bigNumber'
 import { spartaUpgrade } from '../../store/sparta'
 import { Icon } from '../../components/Icons/index'
@@ -17,8 +17,8 @@ const Upgrade = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: walletClient } = useWalletClient()
-  const { data: bnbBalance } = useBalance({ address }) // TODO: Note this returns bigint now instead of BigNumber
+  const { data: signer } = useSigner()
+  const { data: bnbBalance } = useBalance({ address })
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -48,7 +48,7 @@ const Upgrade = () => {
 
   const handleUpgrade = async () => {
     setUpgradeLoading(true)
-    await dispatch(spartaUpgrade(address, walletClient))
+    await dispatch(spartaUpgrade(address, signer))
     setUpgradeLoading(false)
   }
 
