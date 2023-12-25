@@ -1,8 +1,6 @@
 import { ethers } from 'ethers'
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { createPublicClient, http } from 'viem'
-import { bsc } from 'viem/chains'
 import {
   getFallenSpartansContract,
   getSpartaV2Contract,
@@ -151,10 +149,7 @@ export const communityWalletHoldings =
     dispatch(updateLoading(true))
     const comWal = '0x588f82a66eE31E59B88114836D11e3d00b3A7916'
     const { erc20 } = getState().app.abis
-    const provider = createPublicClient({
-      chain: bsc,
-      transport: http(bscRpcsMN[0]),
-    })
+    const provider = new ethers.providers.JsonRpcProvider(bscRpcsMN[0])
     const spartaCont = new ethers.Contract(
       addressesMN.spartav2,
       erc20,

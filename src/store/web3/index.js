@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { bsc, bscTestnet } from 'viem/chains'
-import { createPublicClient, http } from 'viem'
+import { ethers } from 'ethers'
 
 import {
   bscRpcsMN,
@@ -381,10 +380,7 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
     const { chainId } = getState().app
     const rpcUrls = chainId === 97 ? bscRpcsTN : bscRpcsMN
     for (let i = 0; i < rpcUrls.length; i++) {
-      const provider = createPublicClient({
-        chain: chainId === 97 ? bscTestnet : bsc,
-        transport: http(rpcUrls[i]),
-      })
+      const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
       awaitArray.push(withTimeout(3000, provider.getBlockNumber()))
     }
     awaitArray = await Promise.allSettled(awaitArray)

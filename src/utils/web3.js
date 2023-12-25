@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
-import { createWalletClient, getAddress, http } from 'viem'
-import { bsc, bscTestnet } from 'viem/chains'
+import { getAddress } from 'viem'
 
 // Testnet ABI Imports
 import axios from 'axios'
@@ -439,12 +438,13 @@ export const getChainId = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider, rpcUrls) => {
   const chainId = getChainId()
-  let client = createWalletClient({
-    chain: chainId === 97 ? bscTestnet : bsc,
-    transport: http(changeRpc(chainId, rpcUrls)),
-  }) // simple public provider unsigned
-  if (_provider) client = _provider
-  return client
+  let provider = new ethers.providers.StaticJsonRpcProvider(
+    changeRpc(chainId, rpcUrls),
+  ) // simple provider unsigned & cached chainId
+  if (_provider) {
+    provider = !_provider._isSigner ? _provider.getSigner() : _provider
+  }
+  return provider
 }
 
 // // GET GAS PRICE FROM PROVIDER

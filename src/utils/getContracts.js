@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
-import { createPublicClient, http, isAddress } from 'viem'
-import { bsc } from 'viem/chains'
+import { isAddress } from 'viem'
 
 import { getAbis, getAddresses, getWalletProvider } from './web3'
 
@@ -206,14 +205,12 @@ export const getSpartaV2Contract = (wallet, rpcUrls) => {
 export const getSpartaV2API = () => {
   let contract = isAddress(getAddresses().spartav2)
   const abiSparta = getAbis().sparta
-  const client = createPublicClient({
-    chain: bsc,
-    transport: http(
-      `https://bsc.getblock.io/?api_key=${process.env.REACT_APP_GETBLOCK}`,
-    ),
-  })
+  const provider = new ethers.providers.JsonRpcProvider(
+    `https://bsc.getblock.io/?api_key=${process.env.REACT_APP_GETBLOCK}`,
+  )
+
   if (contract === true) {
-    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, client)
+    contract = new ethers.Contract(getAddresses().spartav2, abiSparta, provider)
   }
   return contract
 }
