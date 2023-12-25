@@ -46,10 +46,13 @@ export const addLiquidity =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: token === addresses.bnb ? inputToken : null,
+        value: token === addresses.bnb ? inputToken : undefined,
         gasPrice: gPrice,
       }
-      let txn = await contract.addLiquidity(inputToken, inputBase, token, ORs)
+      let txn = await contract.write.addLiquidity(
+        [inputToken, inputBase, token],
+        ORs,
+      )
       txn = await parseTxn(txn, 'addLiq', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
@@ -76,10 +79,13 @@ export const addLiquiditySingle =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: token === addresses.bnb && fromBase !== true ? input : null,
+        value: token === addresses.bnb && fromBase !== true ? input : undefined,
         gasPrice: gPrice,
       }
-      let txn = await contract.addLiquidityAsym(input, fromBase, token, ORs)
+      let txn = await contract.write.addLiquidityAsym(
+        [input, fromBase, token],
+        ORs,
+      )
       txn = await parseTxn(txn, 'addLiqSingle', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
@@ -106,7 +112,10 @@ export const zapLiquidity =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
-      let txn = await contract.zapLiquidity(unitsInput, fromPool, toPool, ORs)
+      let txn = await contract.write.zapLiquidity(
+        [unitsInput, fromPool, toPool],
+        ORs,
+      )
       txn = await parseTxn(txn, 'zapLiq', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
@@ -132,7 +141,7 @@ export const removeLiquidityExact =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = { gasPrice: gPrice }
-      let txn = await contract.removeLiquidityExact(units, token, ORs)
+      let txn = await contract.write.removeLiquidityExact([units, token], ORs)
       txn = await parseTxn(txn, 'remLiq', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
@@ -157,9 +166,12 @@ export const removeLiquiditySingle =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.removeLiquidityExactAsym(units, toBase, token, {
-        gasPrice: gPrice,
-      })
+      let txn = await contract.write.removeLiquidityExactAsym(
+        [units, toBase, token],
+        {
+          gasPrice: gPrice,
+        },
+      )
       txn = await parseTxn(txn, 'remLiqSingle', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getTokenDetails(walletAddr)) // Update tokenDetails -> poolDetails
@@ -188,14 +200,11 @@ export const swap =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: fromToken === addresses.bnb ? inputAmount : null,
+        value: fromToken === addresses.bnb ? inputAmount : undefined,
         gasPrice: gPrice,
       }
-      let txn = await contract.swap(
-        inputAmount,
-        fromToken,
-        toToken,
-        minAmount,
+      let txn = await contract.write.swap(
+        [inputAmount, fromToken, toToken, minAmount],
         ORs,
       )
       txn = await parseTxn(txn, 'swapped', rpcs)
@@ -223,13 +232,11 @@ export const swapAssetToSynth =
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
       const ORs = {
-        value: fromToken === addresses.bnb ? inputAmount : null,
+        value: fromToken === addresses.bnb ? inputAmount : undefined,
         gasPrice: gPrice,
       }
-      let txn = await contract.swapAssetToSynth(
-        inputAmount,
-        fromToken,
-        toSynth,
+      let txn = await contract.write.swapAssetToSynth(
+        [inputAmount, fromToken, toSynth],
         ORs,
       )
       txn = await parseTxn(txn, 'mintSynth', rpcs)
@@ -257,10 +264,8 @@ export const swapSynthToAsset =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.swapSynthToAsset(
-        inputAmount,
-        fromSynth,
-        toToken,
+      let txn = await contract.write.swapSynthToAsset(
+        [inputAmount, fromSynth, toToken],
         { gasPrice: gPrice },
       )
       txn = await parseTxn(txn, 'burnSynth', rpcs)
@@ -285,7 +290,7 @@ export const updatePoolStatus = (signer) => async (dispatch, getState) => {
     let gPrice = chainId === 56 ? gasRateMN : gasRateTN
     gPrice = BN(gPrice).times(1000000000).toString()
     // const gPrice = await getProviderGasPrice()
-    let txn = await contract.updatePoolStatus({ gasPrice: gPrice })
+    let txn = await contract.write.updatePoolStatus([], { gasPrice: gPrice })
     txn = await parseTxn(txn, 'unfreeze', rpcs)
     dispatch(updateTxn(txn))
   } catch (error) {

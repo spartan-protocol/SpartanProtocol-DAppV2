@@ -106,7 +106,7 @@ const WalletSelect = (props) => {
   const dispatch = useDispatch()
   const { isDark } = useTheme()
   const { connectAsync, connectors, error } = useConnect()
-  const { disconnect } = useDisconnect()
+  const { disconnectAsync } = useDisconnect()
   const { address, isConnected } = useAccount()
   const { chain } = useNetwork()
 
@@ -129,7 +129,7 @@ const WalletSelect = (props) => {
 
   const onWalletDisconnect = async () => {
     props.onHide()
-    await disconnect()
+    await disconnectAsync()
     window.localStorage.setItem('disableWallet', '1')
     window.location.reload(true)
   }
@@ -145,7 +145,7 @@ const WalletSelect = (props) => {
         await dispatch(addNetworkMM())
       }
       if (address) {
-        disconnect()
+        await disconnectAsync()
       }
       const connector = await connectorsByName(x.connector, connectors) // This 'await' is important despite common sense :) Pls don't remove!
       await connectAsync({ connector })
@@ -153,7 +153,7 @@ const WalletSelect = (props) => {
       window.localStorage.setItem('lastWallet', x.id)
       setPending(false)
     },
-    [address, connectors, connectAsync, dispatch, disconnect],
+    [address, connectors, connectAsync, dispatch, disconnectAsync],
   )
 
   useEffect(() => {

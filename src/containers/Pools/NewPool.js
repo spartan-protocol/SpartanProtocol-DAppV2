@@ -91,11 +91,11 @@ const NewPool = ({ setShowModal, showModal }) => {
         setTokenIcon(await getTwTokenLogo(addrInput?.value, chainId))
       }
       const provider = getWalletProvider(null, web3.rpcs)
-      const deployed = await provider.getCode(addrInput?.value)
+      const deployed = await provider.getBytecode({ address: addrInput?.value })
       const contract = getTokenContract(addrInput?.value, null, web3.rpcs)
       let symbol = 'TOKEN'
       try {
-        symbol = deployed !== '0x' ? await contract.symbol() : 'TOKEN'
+        symbol = deployed !== '0x' ? await contract.read.symbol() : 'TOKEN'
       } catch (e) {
         console.error(e)
         symbol = 'TOKEN'
