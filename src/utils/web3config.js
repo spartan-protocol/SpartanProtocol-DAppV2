@@ -15,14 +15,14 @@ const getProviders = () => {
         rpc: () => ({
           http: bscRpcsMN[i],
         }),
-        stallTimeout: 1000,
+        // stallTimeout: 1000,
       }),
     )
   }
   return rpcList
 }
 
-const { chains, provider } = configureChains(
+const { chains, publicClient } = configureChains(
   [bsc, bscTestnet],
   getProviders(),
   {
@@ -98,6 +98,6 @@ export const connectorsByName = (connectorName, connectorsList) => {
 }
 
 export const wagmiClient = createConfig({
+  publicClient,
   connectors,
-  provider,
 })
