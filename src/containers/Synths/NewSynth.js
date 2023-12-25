@@ -6,7 +6,7 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useDispatch } from 'react-redux'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { isAddress } from 'viem'
 import AssetSelect from './components/AssetSelect'
 import { createSynth } from '../../store/synth'
@@ -22,7 +22,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { chainId, addresses } = useApp()
   const pool = usePool()
@@ -50,7 +50,7 @@ const NewSynth = ({ setShowModal, showModal }) => {
 
   const handleSubmit = async () => {
     setTxnLoading(true)
-    await dispatch(createSynth(inputAddress, signer))
+    await dispatch(createSynth(inputAddress, walletClient))
     setTxnLoading(false)
     setShowModal(false)
   }

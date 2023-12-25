@@ -13,7 +13,7 @@ import Nav from 'react-bootstrap/Nav'
 import Row from 'react-bootstrap/Row'
 import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import AssetSelect from '../../components/AssetSelect/index'
 import { usePool } from '../../store/pool'
 import { formatShortString, oneWeek } from '../../utils/web3'
@@ -51,7 +51,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
   const location = useLocation()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { addresses, asset1, asset2, asset3 } = useApp()
   const pool = usePool()
@@ -439,7 +439,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
           convertToWei(addInput2.value),
           assetLiq1.tokenAddress,
           address,
-          signer,
+          walletClient,
         ),
       )
     } else {
@@ -449,7 +449,7 @@ const LiqAdd = ({ assetLiq1, assetLiq2, selectedPool }) => {
           assetLiq1.tokenAddress === addresses.spartav2,
           selectedPool.tokenAddress,
           address,
-          signer,
+          walletClient,
         ),
       )
     }

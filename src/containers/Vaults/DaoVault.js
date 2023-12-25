@@ -7,7 +7,7 @@ import Button from 'react-bootstrap/Button'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { usePool } from '../../store/pool'
 import { BN, formatFromUnits, formatFromWei } from '../../utils/bigNumber'
 import {
@@ -37,7 +37,7 @@ const DaoVault = () => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { addresses } = useApp()
   const bond = useBond()
@@ -150,7 +150,7 @@ const DaoVault = () => {
 
   const handleHarvest = async () => {
     setTxnLoading(true)
-    await dispatch(daoHarvest(address, signer))
+    await dispatch(daoHarvest(address, walletClient))
     setTxnLoading(false)
   }
 

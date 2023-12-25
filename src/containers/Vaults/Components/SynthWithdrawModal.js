@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import { getToken } from '../../../utils/math/utils'
@@ -31,7 +31,7 @@ const SynthWithdrawModal = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
   const { isDark } = useTheme()
 
   const { addresses } = useApp()
@@ -125,14 +125,16 @@ const SynthWithdrawModal = (props) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvest([props.synthItem.address], address, signer))
+    await dispatch(
+      synthHarvest([props.synthItem.address], address, walletClient),
+    )
     setHarvestLoading(false)
   }
 
   const handleWithdraw = async () => {
     setTxnLoading(true)
     await dispatch(
-      synthWithdraw(props.synthItem.address, percentage, address, signer),
+      synthWithdraw(props.synthItem.address, percentage, address, walletClient),
     )
     setTxnLoading(false)
     handleCloseModal()
