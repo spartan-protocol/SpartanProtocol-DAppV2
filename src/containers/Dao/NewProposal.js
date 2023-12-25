@@ -9,9 +9,9 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import FloatingLabel from 'react-bootstrap/FloatingLabel'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import { isAddress } from 'viem'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { ethers } from 'ethers'
 import { useAccount, useSigner } from 'wagmi'
 import { proposalTypes } from './types'
 import {
@@ -95,7 +95,7 @@ const NewProposal = () => {
   }
 
   useEffect(() => {
-    if (inputAddress?.length === 42 && ethers.utils.isAddress(inputAddress)) {
+    if (inputAddress?.length === 42 && isAddress(inputAddress)) {
       setaddrValid(true)
     } else {
       setaddrValid(false)
