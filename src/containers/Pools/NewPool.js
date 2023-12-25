@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { ethers } from 'ethers'
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import FormControl from 'react-bootstrap/FormControl'
@@ -10,7 +9,8 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Row from 'react-bootstrap/Row'
 import Modal from 'react-bootstrap/Modal'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
+import { isAddress } from 'viem'
 import Approval from '../../components/Approval/index'
 import {
   getTwTokenInfo,
@@ -35,7 +35,7 @@ const NewPool = ({ setShowModal, showModal }) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { chainId, addresses } = useApp()
   const pool = usePool()
@@ -91,11 +91,11 @@ const NewPool = ({ setShowModal, showModal }) => {
         setTokenIcon(await getTwTokenLogo(addrInput?.value, chainId))
       }
       const provider = getWalletProvider(null, web3.rpcs)
-      const deployed = await provider.getCode(addrInput?.value)
+      const deployed = await provider.getBytecode({ address: addrInput?.value })
       const contract = getTokenContract(addrInput?.value, null, web3.rpcs)
       let symbol = 'TOKEN'
       try {
-        symbol = deployed !== '0x' ? await contract.symbol() : 'TOKEN'
+        symbol = deployed !== '0x' ? await contract.read.symbol() : 'TOKEN'
       } catch (e) {
         console.error(e)
         symbol = 'TOKEN'
@@ -107,10 +107,7 @@ const NewPool = ({ setShowModal, showModal }) => {
       handleSpartaChange('')
       handleTokenChange('')
     }
-    if (
-      addrInput?.value?.length === 42 &&
-      ethers.utils.isAddress(addrInput?.value)
-    ) {
+    if (addrInput?.value?.length === 42 && isAddress(addrInput?.value)) {
       if (tempChains.includes(chainId)) {
         if (prevToken !== addrInput?.value) {
           getTokenInfo()
@@ -175,7 +172,7 @@ const NewPool = ({ setShowModal, showModal }) => {
         convertToWei(tokenInput?.value),
         addrInput?.value,
         address,
-        signer,
+        walletClient,
       ),
     )
     setTxnLoading(false)

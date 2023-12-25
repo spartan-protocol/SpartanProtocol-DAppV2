@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { ethers } from 'ethers'
+import { bsc, bscTestnet } from 'viem/chains'
+import { createPublicClient, http } from 'viem'
 
 import {
   bscRpcsMN,
@@ -188,9 +189,8 @@ export const getApproval =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.approve(
-        contractAddress,
-        convertToWei(1000000000),
+      let txn = await contract.write.approve(
+        [contractAddress, convertToWei(1000000000)],
         { gasPrice: gPrice },
       )
       txn = await parseTxn(txn, 'approval', rpcs)
@@ -213,7 +213,9 @@ export const getAllowance1 =
     try {
       if (rpcs.length > 0) {
         const contract = getTokenContract(tokenAddress, null, rpcs)
-        const allowance1 = await contract.allowance(walletAddr, contractAddress)
+        const allowance1 = (
+          await contract.simulate.allowance([walletAddr, contractAddress])
+        ).result
         dispatch(updateAllowance1(allowance1.toString()))
       }
     } catch (error) {
@@ -234,7 +236,9 @@ export const getAllowance2 =
     try {
       if (rpcs.length > 0) {
         const contract = getTokenContract(tokenAddress, null, rpcs)
-        const allowance2 = await contract.allowance(walletAddr, contractAddress)
+        const allowance2 = (
+          await contract.simulate.allowance([walletAddr, contractAddress])
+        ).result
         dispatch(updateAllowance2(allowance2.toString()))
       }
     } catch (error) {
@@ -380,15 +384,19 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
     const { chainId } = getState().app
     const rpcUrls = chainId === 97 ? bscRpcsTN : bscRpcsMN
     for (let i = 0; i < rpcUrls.length; i++) {
-      const provider = new ethers.providers.StaticJsonRpcProvider(rpcUrls[i]) // simple provider unsigned & cached chainId
+      const provider = createPublicClient({
+        chain: chainId === 97 ? bscTestnet : bsc,
+        transport: http(rpcUrls[i]),
+      })
       awaitArray.push(withTimeout(3000, provider.getBlockNumber()))
     }
     awaitArray = await Promise.allSettled(awaitArray)
     let rpcs = []
     for (let i = 0; i < rpcUrls.length; i++) {
+      const block = checkResolved(awaitArray[i], 0).toString()
       rpcs.push({
         url: rpcUrls[i],
-        block: checkResolved(awaitArray[i], 0),
+        block,
         good: awaitArray[i].status === 'fulfilled',
       })
     }

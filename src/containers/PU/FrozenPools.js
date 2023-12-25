@@ -1,4 +1,4 @@
-import { useSigner } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import React, { useState } from 'react'
 import Col from 'react-bootstrap/Col'
 import Card from 'react-bootstrap/Card'
@@ -13,7 +13,7 @@ import { useSparta } from '../../store/sparta'
 const PoolStatus = () => {
   const pool = usePool()
   const dispatch = useDispatch()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
   const sparta = useSparta()
   const navigate = useNavigate()
   const [selectedAsset, setselectedAsset] = useState('')
@@ -71,7 +71,7 @@ const PoolStatus = () => {
             ) : (
               <Button
                 className="w-100"
-                onClick={() => dispatch(updatePoolStatus(signer))}
+                onClick={() => dispatch(updatePoolStatus(walletClient))}
                 disabled={!sparta.globalDetails.globalFreeze}
               >
                 Un-freeze Protocol

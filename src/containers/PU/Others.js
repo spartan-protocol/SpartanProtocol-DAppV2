@@ -38,13 +38,13 @@ const Others = () => {
     const getPoolDetails = async () => {
       const contract = getPoolContract(poolObj.address, null, web3.rpcs)
       let awaitArray = [
-        contract.callStatic.stirStamp(),
-        contract.callStatic.synthCap(),
+        contract.simulate.stirStamp(),
+        contract.simulate.synthCap(),
       ]
       awaitArray = await Promise.allSettled(awaitArray)
       const resolved = {
-        stirStamp: checkResolved(awaitArray[0], 'Error').toString(),
-        synthCap: checkResolved(awaitArray[1], 'Error').toString(),
+        stirStamp: checkResolved(awaitArray[0], 'Error').result.toString(),
+        synthCap: checkResolved(awaitArray[1], 'Error').result.toString(),
       }
       if (!isCancelled) {
         setPoolVars(resolved)

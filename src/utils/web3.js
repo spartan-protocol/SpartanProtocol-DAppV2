@@ -1,4 +1,5 @@
-import { ethers } from 'ethers'
+import { createPublicClient, decodeEventLog, getAddress, http } from 'viem'
+import { bsc, bscTestnet } from 'viem/chains'
 
 // Testnet ABI Imports
 import axios from 'axios'
@@ -267,7 +268,7 @@ export const oneWeek = 604800 // change to 604800 for mainnet
 export const synthHarvestLive = false // Have this as 'false' until the synth claim % is set to prevent users harvesting accidentally & resetting their timer
 
 export const getTwAssetId = (tokenAddr) => {
-  const _tokenAddr = ethers.utils.getAddress(tokenAddr)
+  const _tokenAddr = getAddress(tokenAddr)
   if (tokenAddr.length > 0) {
     return `c20000714_t${_tokenAddr}`
   }
@@ -437,13 +438,12 @@ export const getChainId = () => {
 // CONNECT WITH PROVIDER (& SIGNER IF WALLET IS CONNECTED)
 export const getWalletProvider = (_provider, rpcUrls) => {
   const chainId = getChainId()
-  let provider = new ethers.providers.StaticJsonRpcProvider(
-    changeRpc(chainId, rpcUrls),
-  ) // simple provider unsigned & cached chainId
-  if (_provider) {
-    provider = !_provider._isSigner ? _provider.getSigner() : _provider
-  }
-  return provider
+  let client = createPublicClient({
+    chain: chainId === 97 ? bscTestnet : bsc,
+    transport: http(changeRpc(chainId, rpcUrls).url),
+  }) // simple public provider unsigned
+  if (_provider) client = _provider
+  return client
 }
 
 // // GET GAS PRICE FROM PROVIDER
@@ -492,10 +492,9 @@ const parseTxnLogs = (txn, txnType) => {
   }
   // BOND.TXN TYPES
   // if (txnType === 'bondDeposit') {
-  //   const iface = new ethers.utils.Interface(abiArray.dao)
   //   const log = txn.logs[txn.logs.length - 1]
   //   // Dao.DepositAsset event (owner, tokenAddress, poolAddress, depositAmount, bondedLP) *** NEEDS CHECKING ***
-  //   const bondLog = iface.parseLog(log).args
+  //   const bondLog = decodeEventLog({ abi: abiArray.dao, ...log }).args
   //   return {
   //     txnHash: txn.transactionHash,
   //     txnIndex: txn.transactionIndex,
@@ -510,10 +509,9 @@ const parseTxnLogs = (txn, txnType) => {
   //   }
   // }
   if (txnType === 'bondClaim') {
-    const iface = new ethers.utils.Interface(abiArray.bondVault)
     const log = txn.logs[txn.logs.length - 1]
     // BondVault.Claimed (owner, poolAddress, amount) *** NEEDS CHECKING ***
-    const claimLog = iface.parseLog(log).args
+    const claimLog = decodeEventLog({ abi: abiArray.bondVault, ...log }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -530,9 +528,8 @@ const parseTxnLogs = (txn, txnType) => {
   // DAO.TXN TYPES
   if (txnType === 'daoDeposit') {
     let log3 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.MemberDeposits event (member, pool, amount)
-    log3 = daoInterface.parseLog(log3).args
+    log3 = decodeEventLog({ abi: abiArray.dao, ...log3 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -548,9 +545,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   if (txnType === 'daoWithdraw') {
     let log1 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.MemberWithdraws event (member, pool, balance)
-    log1 = daoInterface.parseLog(log1).args
+    log1 = decodeEventLog({ abi: abiArray.dao, ...log1 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -565,10 +561,9 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'daoHarvest') {
-    const iface = new ethers.utils.Interface(abiArray.dao)
     const log = txn.logs[txn.logs.length - 1]
     // Dao.Harvest (owner, amount)
-    const harvestLog = iface.parseLog(log).args
+    const harvestLog = decodeEventLog({ abi: abiArray.dao, ...log }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -587,11 +582,9 @@ const parseTxnLogs = (txn, txnType) => {
     let log0 = txn.logs[0] // DaoFee SPARTA.Transfer event (from, to, value)
     let log1 = txn.logs[1] // FeeBurn SPARTA.Transfer event (from, to, value)
     let log3 = txn.logs[txn.logs.length - 1] // DAO.NewProposal event (member, proposalID, proposalType)
-    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
-    log0 = ercInterface.parseLog(log0).args
-    log1 = ercInterface.parseLog(log1).args
-    log3 = daoInterface.parseLog(log3).args
+    log0 = decodeEventLog({ abi: abiArray.erc20, ...log0 }).args
+    log1 = decodeEventLog({ abi: abiArray.erc20, ...log1 }).args
+    log3 = decodeEventLog({ abi: abiArray.dao, ...log3 }).args
     const fee1 = log0.value.toString()
     const fee2 = log1.value.toString()
     return {
@@ -607,9 +600,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   if (txnType === 'voteProposal') {
     let log0 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.NewVote event (member, proposalID, proposalType)
-    log0 = daoInterface.parseLog(log0).args
+    log0 = decodeEventLog({ abi: abiArray.dao, ...log0 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -621,9 +613,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   if (txnType === 'removeVoteProposal') {
     let log0 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.RemovedVote event (member, proposalID, proposalType)
-    log0 = daoInterface.parseLog(log0).args
+    log0 = decodeEventLog({ abi: abiArray.dao, ...log0 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -635,9 +626,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   if (txnType === 'pollVotes') {
     let log0 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.ProposalFinalising event (member, proposalID, timeFinalised, proposalType)
-    log0 = daoInterface.parseLog(log0).args
+    log0 = decodeEventLog({ abi: abiArray.dao, ...log0 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -649,9 +639,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   if (txnType === 'cancelProposal') {
     let log0 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.CancelProposal event (member, proposalID)
-    log0 = daoInterface.parseLog(log0).args
+    log0 = decodeEventLog({ abi: abiArray.dao, ...log0 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -663,9 +652,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   if (txnType === 'finaliseProposal') {
     let log0 = txn.logs[txn.logs.length - 1]
-    const daoInterface = new ethers.utils.Interface(abiArray.dao)
     // DAO.FinalisedProposal event (member, proposalID, proposalType)
-    log0 = daoInterface.parseLog(log0).args
+    log0 = decodeEventLog({ abi: abiArray.dao, ...log0 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -684,10 +672,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // PoolFactory.CreatePool event (token, pool)
     const createLog = logs.filter((x) => x.name === 'CreatePool')[0].args
@@ -713,9 +700,8 @@ const parseTxnLogs = (txn, txnType) => {
   if (txnType === 'addLiq') {
     let log = txn.logs[txn.logs.length - 1]
     const poolAddr = log.address
-    const iface = new ethers.utils.Interface(abiArray.pool)
     // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued)
-    log = iface.parseLog(log).args
+    log = decodeEventLog({ abi: abiArray.pool, ...log }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
@@ -739,10 +725,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Pool.AddLiquidity event (member, tokenAddress, inputBase, inputToken, unitsIssued)
     const liqIndex = logs.findIndex((x) => x.name === 'AddLiquidity')
@@ -775,10 +760,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.pool,
       abiArray.sparta,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
     const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
@@ -808,10 +792,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Pool.RemoveLiquidity event (member, tokenAddress, outputBase, outputToken, unitsClaimed) *** NEEDS CHECKING ***
     const remIndex = logs.findIndex((x) => x.name === 'RemoveLiquidity')
@@ -844,10 +827,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
     const swapIndex = logs.findIndex((x) => x.name === 'Swapped')
@@ -883,10 +865,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     const swapLogs = logs.filter((x) => x.name === 'Swapped')
     const doubleSwap = swapLogs.length > 1
@@ -927,10 +908,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
     let fromBase = true
@@ -964,10 +944,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.sparta,
       abiArray.wbnb,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Pool.Swapped (tokenFrom, tokenTo, recipient, inputAmount, outputAmount, fee)
     let toBase = true
@@ -1006,10 +985,9 @@ const parseTxnLogs = (txn, txnType) => {
   // SPARTA.TXN TYPES
   if (txnType === 'upgrade') {
     const masterAbi = mergeAbis([abiArray.erc20, abiArray.sparta])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // Spartav1.Transfer (Tsf In) (from, to, value)
     const sendAmnt1 = logs[0].args.value
@@ -1029,9 +1007,8 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'fsClaim') {
-    const iface = new ethers.utils.Interface(abiArray.erc20)
     let log = txn.logs[txn.logs.length - 1]
-    log = iface.parseLog(log).args
+    log = decodeEventLog({ abi: abiArray.erc20, ...log }).args
     // FallenSpartans.SpartanClaimed (spartanAddress, amount)
     const recAmnt1 = log.amount
     return {
@@ -1049,9 +1026,8 @@ const parseTxnLogs = (txn, txnType) => {
   }
   // SYNTH.TXN TYPES
   if (txnType === 'synthDeposit') {
-    const iface = new ethers.utils.Interface(abiArray.synthVault)
     let log = txn.logs[txn.logs.length - 1]
-    log = iface.parseLog(log).args
+    log = decodeEventLog({ abi: abiArray.synthVault, ...log }).args
     // SynthVault.MemberDeposits (synth, member, newDeposit)
     const recAmnt1 = log.newDeposit
     return {
@@ -1074,10 +1050,9 @@ const parseTxnLogs = (txn, txnType) => {
       abiArray.pool,
       abiArray.sparta,
     ])
-    const iface = new ethers.utils.Interface(masterAbi)
     const logs = []
     for (let i = 0; i < txn.logs.length; i++) {
-      logs.push(iface.parseLog(txn.logs[i]))
+      logs.push(decodeEventLog({ abi: masterAbi, ...txn.logs[i] }))
     }
     // SynthVault.MemberHarvests (synth, member, amount)
     const harvLogs = logs.filter((x) => x.name === 'MemberHarvests')
@@ -1100,9 +1075,8 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'synthWithdraw') {
-    const iface = new ethers.utils.Interface(abiArray.synthVault)
     let log = txn.logs[txn.logs.length - 1]
-    log = iface.parseLog(log).args
+    log = decodeEventLog({ abi: abiArray.synthVault, ...log }).args
     // SynthVault.MemberWithdraws (synth, member, amount)
     const recAmnt1 = log.amount
     return {
@@ -1119,9 +1093,8 @@ const parseTxnLogs = (txn, txnType) => {
     }
   }
   if (txnType === 'createSynth') {
-    const iface = new ethers.utils.Interface(abiArray.synthFactory)
     let log = txn.logs[txn.logs.length - 1]
-    log = iface.parseLog(log).args
+    log = decodeEventLog({ abi: abiArray.synthFactory, ...log }).args
     // SynthFactory.CreateSynth (token, pool, synth)
     return {
       txnHash: txn.transactionHash,
@@ -1136,8 +1109,7 @@ const parseTxnLogs = (txn, txnType) => {
   if (txnType === 'approval') {
     let log1 = txn.logs[0] // Token.Approval event
     const recToken1 = log1.address // Approved tokenAddr
-    const ercInterface = new ethers.utils.Interface(abiArray.erc20)
-    log1 = ercInterface.parseLog(log1).args
+    log1 = decodeEventLog({ abi: abiArray.erc20, ...log1 }).args
     return {
       txnHash: txn.transactionHash,
       txnIndex: txn.transactionIndex,
