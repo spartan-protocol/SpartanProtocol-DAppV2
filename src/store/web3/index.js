@@ -189,8 +189,9 @@ export const getApproval =
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
       // const gPrice = await getProviderGasPrice(rpcs)
-      let txn = await contract.write.approve(
-        [contractAddress, convertToWei(1000000000)],
+      let txn = await contract.approve(
+        contractAddress,
+        convertToWei(1000000000),
         { gasPrice: gPrice },
       )
       txn = await parseTxn(txn, 'approval', rpcs)
@@ -213,9 +214,7 @@ export const getAllowance1 =
     try {
       if (rpcs.length > 0) {
         const contract = getTokenContract(tokenAddress, null, rpcs)
-        const allowance1 = (
-          await contract.simulate.allowance([walletAddr, contractAddress])
-        ).result
+        const allowance1 = await contract.allowance(walletAddr, contractAddress)
         dispatch(updateAllowance1(allowance1.toString()))
       }
     } catch (error) {
@@ -236,9 +235,7 @@ export const getAllowance2 =
     try {
       if (rpcs.length > 0) {
         const contract = getTokenContract(tokenAddress, null, rpcs)
-        const allowance2 = (
-          await contract.simulate.allowance([walletAddr, contractAddress])
-        ).result
+        const allowance2 = await contract.allowance(walletAddr, contractAddress)
         dispatch(updateAllowance2(allowance2.toString()))
       }
     } catch (error) {
@@ -393,7 +390,9 @@ export const getRPCBlocks = () => async (dispatch, getState) => {
     awaitArray = await Promise.allSettled(awaitArray)
     let rpcs = []
     for (let i = 0; i < rpcUrls.length; i++) {
-      const block = checkResolved(awaitArray[i], 0).toString()
+      let blockStr = checkResolved(awaitArray[i], 0).toString()
+      blockStr = blockStr.endsWith('n') ? blockStr.slice(0, -1) : blockStr
+      const block = Number(blockStr)
       rpcs.push({
         url: rpcUrls[i],
         block,

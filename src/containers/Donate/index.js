@@ -159,10 +159,10 @@ const Overview = () => {
         walletClient,
         web3.rpcs,
       )
-      await contract.write.transfer([
+      await contract.transfer(
         communityWallet,
         convertToWei(inputDonation?.value),
-      ])
+      )
     }
     if (asset.symbol === 'USDT') {
       const contract = getTokenContract(
@@ -170,10 +170,10 @@ const Overview = () => {
         walletClient,
         web3.rpcs,
       )
-      await contract.write.transfer([
+      await contract.transfer(
         communityWallet,
         convertToWei(inputDonation?.value),
-      ])
+      )
     }
     if (asset.symbol === 'SPARTA') {
       const contract = getTokenContract(
@@ -181,10 +181,10 @@ const Overview = () => {
         walletClient,
         web3.rpcs,
       )
-      await contract.write.transfer([
+      await contract.transfer(
         communityWallet,
         convertToWei(inputDonation?.value),
-      ])
+      )
     }
     setTxnLoading(false)
   }

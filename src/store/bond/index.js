@@ -90,9 +90,9 @@ export const getBondDetails = (walletAddr) => async (dispatch, getState) => {
       const { rpcs } = getState().web3
       const { addresses } = getState().app
       const contract = getSSUtilsContract(null, rpcs)
-      const awaitArray = (
-        await contract.simulate.getBondDetails([walletAddr ?? addresses.bnb])
-      ).result
+      const awaitArray = await contract.callStatic.getBondDetails(
+        walletAddr ?? addresses.bnb,
+      )
       const bondDetails = []
       for (let i = 0; i < awaitArray.length; i++) {
         bondDetails.push({
@@ -129,7 +129,7 @@ export const claimBond =
       const { chainId } = getState().app
       let gPrice = chainId === 56 ? gasRateMN : gasRateTN
       gPrice = BN(gPrice).times(1000000000).toString()
-      let txn = await contract.write.claim([tokenAddr], { gasPrice: gPrice })
+      let txn = await contract.claim(tokenAddr, { gasPrice: gPrice })
       txn = await parseTxn(txn, 'bondClaim', rpcs)
       dispatch(updateTxn(txn))
       dispatch(getBondDetails(walletAddr)) // Update bondDetails

@@ -5,8 +5,6 @@
 @import 'bootstrap/scss/variables';
 
 .modal {
-  z-index: 88;
-
   ::-webkit-scrollbar-track {
     border: 1px solid rgba(36, 36, 36, 0.411);
     border-top: none;
@@ -25,10 +23,6 @@
     background-color: $bg-depth-2;
     border: 1px solid rgba(70, 70, 70, 0.705);
   }
-}
-
-.modal-backdrop {
-  z-index: 87;
 }
 
 .modal-content {
