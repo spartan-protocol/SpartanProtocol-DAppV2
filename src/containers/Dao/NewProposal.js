@@ -12,7 +12,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import { isAddress } from 'viem'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { proposalTypes } from './types'
 import {
   useDao,
@@ -59,7 +59,7 @@ const NewProposal = () => {
   const sparta = useSparta()
   const synth = useSynth()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const [txnLoading, setTxnLoading] = useState(false)
   const [showModal, setShowModal] = useState(false)
@@ -188,16 +188,18 @@ const NewProposal = () => {
   const handleSubmit = async () => {
     setTxnLoading(true)
     if (selectedType?.type === 'Action') {
-      await dispatch(newActionProposal(selectedType.value, signer))
+      await dispatch(newActionProposal(selectedType.value, walletClient))
     } else if (selectedType?.type === 'Param') {
-      await dispatch(newParamProposal(inputParam, selectedType.value, signer))
+      await dispatch(
+        newParamProposal(inputParam, selectedType.value, walletClient),
+      )
     } else if (selectedType?.type === 'Address') {
       await dispatch(
-        newAddressProposal(inputAddress, selectedType.value, signer),
+        newAddressProposal(inputAddress, selectedType.value, walletClient),
       )
     } else if (selectedType?.type === 'Grant') {
       await dispatch(
-        newGrantProposal(inputAddress, convertToWei(inputParam), signer),
+        newGrantProposal(inputAddress, convertToWei(inputParam), walletClient),
       )
     }
     setTxnLoading(false)

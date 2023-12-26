@@ -7,7 +7,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import { useTranslation } from 'react-i18next'
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { usePool } from '../../../store/pool'
 import { BN, formatFromWei } from '../../../utils/bigNumber'
 import Approval from '../../../components/Approval/index'
@@ -31,7 +31,7 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
   const { t } = useTranslation()
   const { isDark } = useTheme()
   const { address } = useAccount()
-  const { data: signer } = useSigner()
+  const { data: walletClient } = useWalletClient()
 
   const { addresses } = useApp()
   const pool = usePool()
@@ -79,13 +79,15 @@ const SynthDepositModal = ({ tokenAddress, disabled }) => {
 
   const handleHarvest = async () => {
     setHarvestLoading(true)
-    await dispatch(synthHarvestSingle(synth1.address, address, signer))
+    await dispatch(synthHarvestSingle(synth1.address, address, walletClient))
     setHarvestLoading(false)
   }
 
   const handleDeposit = async () => {
     setTxnLoading(true)
-    await dispatch(synthDeposit(synth1.address, deposit(), address, signer))
+    await dispatch(
+      synthDeposit(synth1.address, deposit(), address, walletClient),
+    )
     setTxnLoading(false)
     handleCloseModal()
   }
