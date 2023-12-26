@@ -205,7 +205,6 @@ export const getPoolDetails = (walletAddr) => async (dispatch, getState) => {
 export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
   dispatch(updateLoading(true))
   const { listedTokens } = getState().pool
-  console.log('debug listedTokens', listedTokens)
   try {
     if (listedTokens.length > 0) {
       const { rpcs } = getState().web3
@@ -241,6 +240,7 @@ export const getTokenDetails = (walletAddr) => async (dispatch, getState) => {
       dispatch(getSynthDetails(walletAddr)) // Update synthDetails
     }
   } catch (error) {
+    console.log('debug error', error)
     dispatch(updateError(error.reason))
   }
   dispatch(updateLoading(false))
